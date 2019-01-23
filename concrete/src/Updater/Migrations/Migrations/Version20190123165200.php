@@ -6,7 +6,7 @@ use Concrete\Core\File\Import\Processor\SvgProcessor;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20181214142100 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20190123165200 extends AbstractMigration implements RepeatableMigrationInterface
 {
     public function upgradeDatabase()
     {
