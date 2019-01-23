@@ -9,6 +9,7 @@ use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Entity\Attribute\Key\Settings\ImageFileSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Error\ErrorList\Error\CustomFieldNotPresentError;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -174,7 +175,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $f = $this->getAttributeValue()->getValue();
         $e = Core::make('helper/validation/error');
         if (!is_object($f)) {
-            $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
+            return new CustomFieldNotPresentError(
+                t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName())
+            );
         }
 
         return $e;

@@ -42,7 +42,7 @@ interface AttributeKeyInterface
     public function getSearchIndexer();
 
     /**
-     * Get the attribute key conteoller.
+     * Get the attribute key controller.
      *
      * @return \Concrete\Core\Attribute\Controller
      */

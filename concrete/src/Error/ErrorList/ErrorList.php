@@ -125,7 +125,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
     /**
      * Add an error message/object or exception to the internal error array (error messages are in plain text if not otherwise specified).
      *
-     * @param \Exception|\Throwable|self|string $e the error(s) to be added
+     * @param \Concrete\Core\Error\ErrorList\Error\ErrorInterface|\Exception|\Throwable|self|string $e the error(s) to be added
      * @param string|null $fieldName
      * @param string|null $fieldDisplayName
      *
