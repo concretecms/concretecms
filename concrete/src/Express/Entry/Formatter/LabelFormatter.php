@@ -24,7 +24,7 @@ class LabelFormatter implements EntryFormatterInterface
      */
     public function format($mask, Entry $entry)
     {
-        return $this->formatter->format($mask, function($key) use ($entry) {
+        return $this->formatter->format($mask, function ($key) use ($entry) {
             if ($key === 'id') {
                 return $entry->getID();
             }
@@ -43,12 +43,10 @@ class LabelFormatter implements EntryFormatterInterface
 
     public function getLabel(Entry $entry)
     {
-        foreach($entry->getEntity()->getAttributes() as $ak) {
+        foreach ($entry->getEntity()->getAttributes() as $ak) {
             if ($ak->getAttributeType()->getAttributeTypeHandle() == 'text') {
                 return $entry->getAttribute($ak);
             }
         }
-
     }
-
 }

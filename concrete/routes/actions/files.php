@@ -17,6 +17,7 @@ $router->all('/rescan', 'File::rescan');
 $router->all('/rescan_multiple', 'File::rescanMultiple');
 $router->all('/star', 'File::star');
 $router->all('/upload', 'File::upload');
+$router->all('/download', 'File::download');
 $router->all('/import_incoming', 'File::importIncoming');
 $router->all('/import_remote', 'File::importRemote');
 $router->all('/folder/add', 'File\Folder::add');

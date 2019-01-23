@@ -73,7 +73,7 @@ class Test extends DashboardPageController
                         );
                         $this->redirect($this->action(''));
                     } catch (Exception $x) {
-                        $this->error->add(t('The following error was found while trying to send the test email:') . '<br />' . nl2br(h($x->getMessage())));
+                        $this->error->add(t('The following error was found while trying to send the test email:') . "\n" . $x->getMessage());
                     }
                 }
             }

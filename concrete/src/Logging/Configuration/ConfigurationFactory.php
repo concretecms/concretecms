@@ -21,9 +21,18 @@ class ConfigurationFactory
         $configuration = $this->config->get('concrete.log.configuration');
         if ($configuration['mode'] == 'advanced' && isset($configuration['advanced']['configuration']['loggers'])) {
             return new AdvancedConfiguration($configuration['advanced']['configuration']);
+        } else {
+            if (isset($configuration['simple']['handler']) && $configuration['simple']['handler'] == 'file') {
+                return new SimpleFileConfiguration(
+                    $configuration['simple']['file']['file'],
+                    $configuration['simple']['core_logging_level']
+                );
+            } else {
+                return new SimpleDatabaseConfiguration($configuration['simple']['core_logging_level']);
+
+            }
         }
 
-        return new SimpleConfiguration($configuration['simple']['core_logging_level']);
     }
 }
 

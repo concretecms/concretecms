@@ -399,9 +399,20 @@ class BlockControl extends Control
 
     public function validate()
     {
-        $b = $this->getPageTypeComposerControlBlockObject($this->page);
-        if (is_object($b)) {
-            $controller = $b->getController();
+        $controller = false;
+        if ($this->page) {
+            $b = $this->getPageTypeComposerControlBlockObject($this->page);
+            if (is_object($b)) {
+                $controller = $b->getController();
+            }
+        } else {
+            // retrieve the block object from the page type defaults
+            $bt = \Concrete\Core\Block\BlockType\BlockType::getByID($this->btID);
+            if ($bt) {
+                $controller = $bt->getController();
+            }
+        }
+        if ($controller) {
             if (method_exists($controller, 'validate_composer')) {
                 $e1 = $controller->validate_composer();
             }

@@ -5,6 +5,9 @@ use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
 use Exception;
@@ -13,8 +16,16 @@ use Concrete\Core\User\User;
 use UserAttributeKey;
 use UserInfo;
 
-class Login extends PageController
+class Login extends PageController implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_SECURITY;
+    }
+
     public $helpers = ['form'];
     protected $locales = [];
 
@@ -209,6 +220,11 @@ class Login extends PageController
 
             return $response;
         } else {
+            $session = $this->app->make('session');
+            $this->logger->notice(
+                t('Session made it to login_complete but was not attached to an authenticated session.'),
+                    ['session' => $session->getId(), 'ip_address' => $_SERVER['REMOTE_ADDR']]
+            );
             $this->error->add(t('User is not registered. Check your authentication controller.'));
             $u->logout();
         }

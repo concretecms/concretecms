@@ -6,7 +6,7 @@ use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Http\Middleware\FractalNegotiatorMiddleware;
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
 use Concrete\Core\Http\Middleware\OAuthAuthenticationMiddleware;
-use Concrete\Core\HTTP\Middleware\OAuthErrorMiddleware;
+use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\ControllerRouteAction;
 use Concrete\Core\Routing\Route;

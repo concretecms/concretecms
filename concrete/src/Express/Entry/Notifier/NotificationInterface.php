@@ -7,7 +7,5 @@ use Concrete\Core\Entity\Express\Form;
 
 interface NotificationInterface
 {
-
-    function notify(Entry $entry, $type);
-
+    public function notify(Entry $entry, $type);
 }

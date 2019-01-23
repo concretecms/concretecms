@@ -282,8 +282,6 @@ return [
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
-        '/account' => VIEW_CORE_THEME,
-        '/account/*' => VIEW_CORE_THEME,
         '/install' => VIEW_CORE_THEME,
         '/login' => [
             VIEW_CORE_THEME,
@@ -1181,6 +1179,9 @@ return [
             'system',
             'site',
             'account',
+
+            // For OIDC authentication
+            'openid',
         ],
     ],
 

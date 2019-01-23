@@ -10,6 +10,7 @@ use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\User\User as UserObject;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,13 +46,17 @@ final class Controller
     /** @var \Concrete\Core\Config\Repository\Repository */
     private $config;
 
+    /** @var \Concrete\Core\User\User The logged in user */
+    private $user;
+
     public function __construct(
         AuthorizationServer $oauthServer,
         EntityManagerInterface $entityManager,
         ServerRequestInterface $request,
         Session $session,
         Token $token,
-        Repository $config
+        Repository $config,
+        UserObject $user = null
     ) {
         $this->oauthServer = $oauthServer;
         $this->entityManager = $entityManager;
@@ -59,6 +64,10 @@ final class Controller
         $this->session = $session;
         $this->token = $token;
         $this->config = $config;
+
+        if ($user && $user->checkLogin()) {
+            $this->user = $user;
+        }
     }
 
     /**
@@ -97,12 +106,31 @@ final class Controller
 
             // Handle login step
             if ($step === self::STEP_LOGIN) {
-                return $this->handleLogin($request);
+                if (!$this->user) {
+                    return $this->handleLogin($request);
+                }
+
+                // We have a fully logged in user, let's just use that
+                $userEntity = $this->entityManager->find(User::class, $this->user->getUserID());
+                $request->setUser($userEntity);
+                $this->storeRequest($request);
+
+                // Update the step
+                $step = $this->determineStep($request);
             }
 
             // Handle authorize step
             if ($step === self::STEP_AUTHORIZE_CLIENT) {
-                return $this->handleAuthorizeClient($request);
+                if ($this->getConsentType($request) !== Client::CONSENT_NONE) {
+                    return $this->handleAuthorizeClient($request);
+                }
+
+                // Otherwise if consent is disabled just mark this request as approved.
+                $request->setAuthorizationApproved(true);
+                $this->storeRequest($request);
+
+                // Update the step
+                $step = $this->determineStep($request);
             }
 
             // We've fallen through all the other steps...
@@ -177,24 +205,28 @@ final class Controller
      * client the access that is being requested.
      *
      * @param \League\OAuth2\Server\RequestTypes\AuthorizationRequest $request
+     *
      * @return \Concrete\Core\Http\Response|\RedirectResponse
+     * @throws \League\OAuth2\Server\Exception\OAuthServerException
      */
     public function handleAuthorizeClient(AuthorizationRequest $request)
     {
         $error = new ErrorList();
+        $client = $request->getClient();
 
         while ($this->request->getMethod() === 'POST') {
 
-            if (!$this->token->validate('oauth_authorize_' . $request->getClient()->getClientKey())) {
+            if (!$this->token->validate('oauth_authorize_' . $client->getClientKey())) {
                 $error->add($this->token->getErrorMessage());
                 break;
             }
 
             $query = $this->request->getParsedBody();
             $authorized = array_get($query, 'authorize_client');
+            $consentType = $this->getConsentType($request);
 
             // User authorized the request
-            if ($authorized) {
+            if ($consentType === Client::CONSENT_NONE || $authorized) {
                 $request->setAuthorizationApproved(true);
                 $this->storeRequest($request);
 
@@ -221,22 +253,82 @@ final class Controller
     private function pruneTokens()
     {
         $now = new \DateTime('now');
+        // Delete access tokens that have no refresh token associated
         $qb = $this->entityManager->createQueryBuilder();
-
-        // Delete all expired refresh tokens
-        $qb->delete(RefreshToken::class, 'token')
+        $items = $qb->select('token')
+            ->from(AccessToken::class, 'token')
             ->where($qb->expr()->lt('token.expiryDateTime', ':now'))
+            ->andWhere($qb->expr()->isNull('token.refreshToken'))
             ->getQuery()->execute([':now' => $now]);
 
-        // Delete all expired access tokens
-        $qb->delete(AccessToken::class, 'token')
+        $this->pruneResults($items);
+
+        // Delete all expired access tokens that have expired refresh tokens
+        $qb = $this->entityManager->createQueryBuilder();
+        $items = $qb->select('token')
+            ->from(AccessToken::class, 'token')
+            ->leftJoin('token.refreshToken', 'refresh')
             ->where($qb->expr()->lt('token.expiryDateTime', ':now'))
+            ->andWhere($qb->expr()->lt('refresh.expiryDateTime', ':now'))
             ->getQuery()->execute([':now' => $now]);
+
+        $this->pruneResults($items);
 
         // Delete all expired auth codes
+        $qb = $this->entityManager->createQueryBuilder();
         $qb->delete(AuthCode::class, 'token')
             ->where($qb->expr()->lt('token.expiryDateTime', ':now'))
             ->getQuery()->execute([':now' => $now]);
+    }
+
+    /**
+     * Loop over a list of results and prune them
+     *
+     * @param $results
+     */
+    private function pruneResults(/*iterable*/ $results)
+    {
+        $buffer = [];
+        foreach ($results as $item) {
+            $buffer[] = $item;
+
+            if (count($buffer) > 50) {
+                $this->clearTokenBuffer($buffer);
+                $buffer = [];
+            }
+        }
+
+        $this->clearTokenBuffer($buffer);
+    }
+
+    /**
+     * Remove items in a buffer from the entity manager
+     *
+     * @param array $buffer
+     */
+    private function clearTokenBuffer(array $buffer)
+    {
+        foreach ($buffer as $bufferItem) {
+            // Clear out associated access token
+            if ($bufferItem instanceof AccessToken) {
+                $refreshToken = $bufferItem->getRefreshToken();
+                if ($refreshToken) {
+                    $this->entityManager->remove($refreshToken);
+                }
+            }
+
+            // Clear out associated refresh token
+            if ($bufferItem instanceof RefreshToken) {
+                $accessToken = $bufferItem->getAccessToken();
+                if ($accessToken) {
+                    $this->entityManager->remove($accessToken);
+                }
+            }
+
+            $this->entityManager->remove($bufferItem);
+        }
+
+        $this->entityManager->flush();
     }
 
     /**
@@ -256,6 +348,19 @@ final class Controller
         $this->storeRequest($request);
 
         return $request;
+    }
+
+    /**
+     * Get the consent type associated with the current request
+     *
+     * @param \League\OAuth2\Server\RequestTypes\AuthorizationRequest $request
+     *
+     * @return int
+     */
+    private function getConsentType(AuthorizationRequest $request)
+    {
+        $client = $request->getClient();
+        return $client instanceof Client ? $client->getConsentType() : Client::CONSENT_SIMPLE;
     }
 
     /**
@@ -376,13 +481,31 @@ final class Controller
      * Create a new authorize login view with the given data in scope
      *
      * @param array $data
+     *
      * @return \Concrete\Core\View\View
+     *
+     * @throws \League\OAuth2\Server\Exception\OAuthServerException
      */
     private function createLoginView(array $data)
     {
+        // Get the client that we're rendering login for
+        $consentType = $this->getConsentType($this->getAuthorizationRequest());
+
+        switch ($consentType) {
+            case Client::CONSENT_NONE:
+                // Don't set anything if the consent type is "none"
+                break;
+
+            case Client::CONSENT_SIMPLE:
+            default:
+                $data['consentView'] = new View('/oauth/consent/simple');
+                break;
+        }
+
+        // Start building a view:
         $contents = new View('/oauth/authorize');
         $contents->setViewTheme('concrete');
-        $contents->setViewTemplate('background_image');
+        $contents->setViewTemplate('background_image.php');
         $contents->addScopeItems($data);
 
         return $contents;

@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, ccmi18n, ccmi18n_filemanager, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH, ConcreteAlert, ConcreteAjaxRequest, ConcreteAjaxSearch, ConcreteEvent, ConcreteFileMenu, ConcreteTree */
+/* global _, ccmi18n, ccmi18n_filemanager, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteAjaxRequest, ConcreteAjaxSearch, ConcreteEvent, ConcreteFileMenu, ConcreteTree */
 
 ;(function(global, $) {
     'use strict';
@@ -433,9 +433,9 @@
             ConcreteEvent.publish('FileManagerSelectFile', { fID: ids });
         } else if (value == 'download') {
             $.each(ids, function(i, id) {
-                itemIDs.push({ 'name': 'item[]', 'value': id });
+                itemIDs.push({ 'name': 'fID[]', 'value': id });
             });
-            my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + $.param(itemIDs);
+            my.$downloadTarget.get(0).src = CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?' + $.param(itemIDs);
         } else {
             ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, ids);
         }
