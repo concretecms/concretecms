@@ -1,49 +1,66 @@
 <?php
+
 namespace Concrete\Core\Logging\Configuration;
 
 use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\Handler\DatabaseHandler;
-use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 
-class SimpleConfiguration implements ConfigurationInterface
+abstract class SimpleConfiguration implements ConfigurationInterface
 {
-
     /**
      * The logging level to care about for all core logs.
-     * @var $level
+     *
+     * @var int
      */
     protected $coreLevel;
 
+    /**
+     * @param int $coreLevel the logging level to care about for all core logs (one of the Monolog\Logger constants)
+     *
+     * @see \Monolog\Logger
+     */
     public function __construct($coreLevel = Logger::DEBUG)
     {
         $this->coreLevel = $coreLevel;
     }
 
-    private function createStandardDatabaseHandler($level)
+    /**
+     * @return int
+     */
+    public function getCoreLevel()
     {
-        $handler = new DatabaseHandler($level);
-        // set a more basic formatter.
-        $output = "%message%";
-        $formatter = new LineFormatter($output, null, true);
-        $handler->setFormatter($formatter);
-        return $handler;
+        return $this->coreLevel;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Logging\Configuration\ConfigurationInterface::createLogger()
+     */
     public function createLogger($channel)
     {
         $logger = new Logger($channel);
+        $level = $this->coreLevel;
         if (!in_array($channel, Channels::getCoreChannels())) {
-            // We create a logger with all channels enabled
-            $logger->pushHandler($this->createStandardDatabaseHandler(Logger::DEBUG));
-        } else {
-            $logger->pushHandler($this->createStandardDatabaseHandler($this->coreLevel));
+            $level = Logger::DEBUG;
         }
+
+        $handler = $this->createHandler($level);
+        $handler->pushProcessor(new PsrLogMessageProcessor());
+        $logger->pushHandler($handler);
+
         return $logger;
     }
 
-
+    /**
+     * Create a handler for a specific log level.
+     *
+     * @param int $level One of the Monolog\Logger constants
+     *
+     * @return \Monolog\Handler\HandlerInterface
+     *
+     * @see \Monolog\Logger
+     */
+    abstract protected function createHandler($level);
 }
-
-
-

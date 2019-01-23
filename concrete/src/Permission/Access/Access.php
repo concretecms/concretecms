@@ -7,10 +7,12 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Logger;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Workflow;
 use PDO;
+use Concrete\Core\Logging\Entry\Permission\Assignment\Assignment as PermissionAssignmentLogEntry;
 
 /**
  * @property \Concrete\Core\Permission\Key\Key $pk
@@ -285,6 +287,14 @@ class Access extends ConcreteObject
         $db = $app->make(Connection::class);
         $db->executeQuery('update PermissionAccess set paIsInUse = 1 where paID = ?', [$this->paID]);
         $this->paIsInUse = true;
+
+        $logger = $app->make(Logger::class);
+        $entry = $app->make(PermissionAssignmentLogEntry::class, [
+           'applier' => new User(),
+           'key' => $this->pk,
+           'access' => $this
+        ]);
+        $logger->log($entry);
     }
 
     /**

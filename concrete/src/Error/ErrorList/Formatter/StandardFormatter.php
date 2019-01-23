@@ -7,6 +7,18 @@ use Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface;
 class StandardFormatter extends AbstractFormatter
 {
     /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Error\ErrorList\Formatter\FormatterInterface::render()
+     */
+    public function render()
+    {
+        return $this->getString();
+    }
+
+    /**
+     * Build an HTML-formatted string describing the errors.
+     *
      * @return string
      */
     public function getString()
@@ -19,7 +31,7 @@ class StandardFormatter extends AbstractFormatter
                 if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
                     $html .= (string) $error;
                 } else {
-                    $html .= h((string) $error);
+                    $html .= nl2br(h((string) $error));
                 }
                 $html .= '</li>';
             }
@@ -27,15 +39,5 @@ class StandardFormatter extends AbstractFormatter
         }
 
         return $html;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Error\ErrorList\Formatter\FormatterInterface::render()
-     */
-    public function render()
-    {
-        return $this->getString();
     }
 }

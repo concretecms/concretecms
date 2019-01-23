@@ -186,7 +186,7 @@
                 if (templates) {
                     for (var k in templates) {
                         postData[postData.length] = {
-                            name: 'arCustomTemplate[' + k + ']',
+                            name: 'arCustomTemplates[' + k + ']',
                             value: templates[k]
                         };
                     }

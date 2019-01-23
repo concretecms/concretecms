@@ -233,7 +233,11 @@ class LoginAttemptService
             return null;
         }
 
-        $this->entityManager->detach($user);
+        /**
+         * I don't know what detach is doing or why it's here, but it's causing an exception on UserSignup
+         * not being a known entity. Much like drugs, `detach` is not the answer
+         */
+        //$this->entityManager->detach($user);
         $this->knownUsers[strtolower($username)] = $user;
         return $user;
     }

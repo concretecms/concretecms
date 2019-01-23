@@ -25,7 +25,7 @@ class UserDeactivatedNotification extends Notification
     /**
      * The user doing the deactivating
      *
-     * @ORM\Column(type="integer", options={"unsigned": true, "nullable": true})
+     * @ORM\Column(type="integer", nullable=true, options={"unsigned": true})
      */
     protected $actorID = null;
 
