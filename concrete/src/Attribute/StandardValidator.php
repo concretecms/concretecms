@@ -34,7 +34,7 @@ class StandardValidator implements ValidatorInterface
     {
         $key = $controller->getAttributeKey();
         $response = new Response();
-        if (method_exists($controller, 'validateForm')) {
+        if ($key && method_exists($controller, 'validateForm')) {
             $controller->setRequest($request);
             $validateResponse = $controller->validateForm($controller->post());
             $response = $this->parseResponse($key, $response, $validateResponse, $includeFieldNotPresentErrors);
@@ -43,14 +43,14 @@ class StandardValidator implements ValidatorInterface
     }
 
     /**
-     * @param AttributeKeyInterface $key
+     * @param Key $key
      * @param Response $response
      * @param mixed $validateResponse
      * @param bool $includeFieldNotPresentErrors
      * @return Response $response
      */
     protected function parseResponse(
-        AttributeKeyInterface $key,
+        Key $key,
         Response $response,
         $validateResponse,
         $includeFieldNotPresentErrors)
@@ -84,7 +84,7 @@ class StandardValidator implements ValidatorInterface
         $key = $controller->getAttributeKey();
         $controller->setAttributeValue($value);
         $response = new Response();
-        if (method_exists($controller, 'validateValue')) {
+        if ($key && method_exists($controller, 'validateValue')) {
             $validateResponse = $controller->validateValue();
             $response = $this->parseResponse($key, $response, $validateResponse, $includeFieldNotPresentErrors);
         }
