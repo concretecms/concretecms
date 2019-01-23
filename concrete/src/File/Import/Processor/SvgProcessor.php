@@ -63,7 +63,7 @@ class SvgProcessor implements ValidatorInterface, PreProcessorInterface
     /**
      * The action that this processor should perform.
      *
-     * @var bool
+     * @var string
      */
     private $action = self::ACTION_SANITIZE;
 

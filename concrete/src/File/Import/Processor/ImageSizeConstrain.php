@@ -115,8 +115,7 @@ class ImageSizeConstrain implements PreProcessorInterface
     /**
      * Set the resize mode.
      *
-     * @param int $constraintMode One of the ImageInterface::THUMBNAIL_... constants
-     * @param mixed $value
+     * @param int $value One of the ImageInterface::THUMBNAIL_... constants
      *
      * @return $this
      *

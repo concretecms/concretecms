@@ -48,8 +48,7 @@ class Sanitizer
     /**
      * Check if a string contains valid XML data.
      *
-     * @param string $filename
-     * @param mixed $data
+     * @param string $data
      *
      * @return bool
      */
@@ -87,10 +86,8 @@ class Sanitizer
     public function checkFile($inputFilename, SanitizerOptions $options = null)
     {
         $data = $this->fileToData($inputFilename);
-        $removedNodes = [];
-        $this->sanitizeData($data, $options, $removedNodes);
 
-        return $removedNodes;
+        return $this->checkData($data, $options);
     }
 
     /**
@@ -113,9 +110,8 @@ class Sanitizer
      * ]
      * </code></pre>
      */
-    public function checkData($inputFilename, SanitizerOptions $options = null)
+    public function checkData($data, SanitizerOptions $options = null)
     {
-        $data = $this->fileToData($inputFilename);
         $removedNodes = [];
         $this->sanitizeData($data, $options, $removedNodes);
         

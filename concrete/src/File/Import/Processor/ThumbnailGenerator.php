@@ -37,7 +37,7 @@ class ThumbnailGenerator implements PostProcessorInterface
      */
     public function shouldPostProcess(ImportingFile $file, ImportOptions $options, Version $importedVersion)
     {
-        return $file->getFileType()->getGenericType() === FileType::T_IMAGE && !$file->getFileType()->isSVG() && $options->isSkipThumbnailGeneration() === false;
+        return $file->getFileType()->getGenericType() === FileType::T_IMAGE && $file->getFileType()->isSVG() !== true && $options->isSkipThumbnailGeneration() === false;
     }
 
     /**

@@ -61,8 +61,6 @@ class ImportOptions
      *
      * @param \Concrete\Core\File\Filesystem $filesystem
      * @param \Concrete\Core\File\StorageLocation\StorageLocationFactory $storageLocationFactory
-     *
-     * @return $this
      */
     public function __construct(Filesystem $filesystem, StorageLocationFactory $storageLocationFactory)
     {
@@ -89,8 +87,7 @@ class ImportOptions
     /**
      * The import process should add a new Version to an existing File.
      *
-     * @param \Concrete\Core\Entity\File\File $folder
-     * @param FileEntity $toFile
+     * @param \Concrete\Core\Entity\File\File $toFile
      *
      * @return $this
      */

@@ -48,8 +48,6 @@ class FileImporter
      * @param \Concrete\Core\File\Import\ProcessorManager $processorManager
      * @param \Concrete\Core\File\Service\Application $applicationFileService
      * @param Incoming $incoming
-     *
-     * @return $this
      */
     public function __construct(Application $app, ProcessorManager $processorManager, ApplicationFileService $applicationFileService, Incoming $incoming)
     {
@@ -332,46 +330,43 @@ class FileImporter
         if (!$incomingFilesystem->has($incomingPath . '/' . $incomingFilename)) {
             throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
         }
-        $needLocalCopy = true;
         $incomingAdapter = $incomingFilesystem->getAdapter();
         if ($incomingAdapter instanceof AbstractAdapter) {
             $localPath = $incomingAdapter->applyPathPrefix($incomingPath . '/' . $incomingFilename);
             if (is_file($localPath)) {
-                $needLocalCopy = false;
+                return $localPath;
             }
         }
-        if ($needLocalCopy) {
-            $fromStream = null;
-            $toStream = null;
+        $fromStream = null;
+        $toStream = null;
+        try {
+            $volatileDirectory = $this->app->make(VolatileDirectory::class);
+            $localPath = $volatileDirectory->getPath() . '/file';
             try {
-                $volatileDirectory = $this->app->make(VolatileDirectory::class);
-                $localPath = $volatileDirectory->getPath() . '/file';
-                try {
-                    $fromStream = $incomingFilesystem->readStream($incomingPath . '/' . $incomingFilename);
-                } catch (Exception $x) {
-                    $fromStream = false;
-                }
-                if ($fromStream === false) {
-                    throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
-                }
-                $toStream = @fopen($localPath);
-                if ($toStream === false) {
-                    throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
-                }
-                if (@stream_copy_to_stream($fromStream, $toStream) === false) {
-                    throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
-                }
-                $copiedLocally = true;
-            } finally {
-                if ($toStream) {
-                    @fclose($toStream);
-                }
-                if ($fromStream) {
-                    @fclose($fromStream);
-                }
+                $fromStream = $incomingFilesystem->readStream($incomingPath . '/' . $incomingFilename);
+            } catch (Exception $x) {
+                $fromStream = false;
+            }
+            if ($fromStream === false) {
+                throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
+            }
+            $toStream = @fopen($localPath);
+            if ($toStream === false) {
+                throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
+            }
+            if (@stream_copy_to_stream($fromStream, $toStream) === false) {
+                throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
+            }
+            $copiedLocally = true;
+
+            return $localPath;
+        } finally {
+            if ($toStream) {
+                @fclose($toStream);
+            }
+            if ($fromStream) {
+                @fclose($fromStream);
             }
         }
-
-        return $localPath;
     }
 }
