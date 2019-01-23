@@ -360,10 +360,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         if (!$when) {
             $when = $dh->getOverridableNow();
         }
-        if ($start && $start > $now) {
+        if ($start && $start > $when) {
             return false;
         }
-        if ($end && $end < $now) {
+        if ($end && $end < $when) {
             return false;
         }
 
