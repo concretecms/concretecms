@@ -19,7 +19,7 @@ class Controller extends AbstractController implements AttributeInterface
     protected $entityManager;
 
     /**
-     * @var \Concrete\Core\Attribute\Key\Key|null
+     * @var \Concrete\Core\Entity\Attribute\Key\Key|null
      */
     protected $attributeKey;
 
