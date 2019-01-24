@@ -164,10 +164,6 @@
             <?=$form->text('submitLabel', $submitLabel); ?>
         </div>
         <div class="form-group">
-            <?=$form->label('submitLabel', t('Submit Button Label')); ?>
-            <?=$form->text('submitLabel', $submitLabel); ?>
-        </div>
-        <div class="form-group">
             <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')); ?></label>
             <div class="radio">
                 <label>
