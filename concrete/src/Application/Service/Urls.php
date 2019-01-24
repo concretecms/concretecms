@@ -132,8 +132,8 @@ class Urls
                     $repo = $em->getRepository(Package::class);
                     $asset->setPackageObject($repo->findOneBy(['pkgHandle' => $packageHandle]));
                 }
+                $url = $asset->getAssetURL();
             }
-            $url = $asset->getAssetURL();
         }
 
         return $url;
