@@ -13,7 +13,6 @@ $url = $ci->getBlockTypeCssURL($blockType);
 if ($url !== '') {
     ?>ConcreteAssetLoader.loadCSS(<?= json_encode($url) ?>);<?php
 }
-?>
 $identifier = strtoupper('BLOCK_CONTROLLER_' . $btHandle);
 if (isset($headerItems) && is_array($headerItems[$identifier])) {
     foreach ($headerItems[$identifier] as $item) {
