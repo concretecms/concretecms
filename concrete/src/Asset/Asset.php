@@ -247,8 +247,20 @@ abstract class Asset implements AssetInterface
         if (!$this->assetHasBeenMapped) {
             $this->mapAssetLocation($this->location);
         }
+        $result = $this->assetURL;
+        if ($result && $this->isAssetLocal() && !preg_match('/\?(.*&)?' . preg_quote(static::OUTPUT_NOCACHE_PARAM, '/') . '=/', $result)) {
+            if ($this->pkg) {
+                $noCacheValue = $this->pkg->getPackageVersion();
+            } else {
+                $app = Application::getFacadeApplication();
+                $config = $app->make('config');
+                $noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db');
+            }
+            $noCacheValue = $this->obfuscateNoCacheValue($noCacheValue);
+            $result .= (strpos($result, '?') === false ? '?' : '&') . static::OUTPUT_NOCACHE_PARAM . '=' . rawurlencode($noCacheValue);
+        }
 
-        return $this->assetURL;
+        return $result;
     }
 
     /**
@@ -524,5 +536,17 @@ abstract class Asset implements AssetInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Obfuscate the value of the query-string parameter used to avoid browser cache problems.
+     *
+     * @param string $noCacheValue
+     *
+     * @return string
+     */
+    protected function obfuscateNoCacheValue($noCacheValue)
+    {
+        return sha1($noCacheValue);
     }
 }

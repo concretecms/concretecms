@@ -27,15 +27,8 @@ foreach ($auth->getScopes() as $scope) {
         <div class="scopes" style="overflow:auto">
             <?php
             if ($additionalScopes) {
-                if (count($additionalScopes) > 1) {
-                    $last = array_pop($additionalScopes);
-                    $scopeString = t('%s, and %s', implode(', ', $additionalScopes), $last);
-                } else {
-                    $scopeString = $additionalScopes[0];
-                }
-
                 ?>
-                <p class="text-center"><?= $scopeString ?></p>
+                <p class="text-center"><?= Punic\Misc::join($additionalScopes) ?></p>
                 <?php
             }
 
