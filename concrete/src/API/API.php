@@ -78,7 +78,8 @@ class API
             $config = [
                 'client_id' => $this->config['credentials']['client_id'],
                 'client_secret' => $this->config['credentials']['client_secret'],
-                'token_url' => $this->baseUrl . '/oauth/2.0/token'
+                'token_url' => $this->baseUrl . '/oauth/2.0/token',
+                'scope' => $this->config['scope'],
             ];
 
             $token = new ClientCredentials($config);
