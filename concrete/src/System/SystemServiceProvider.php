@@ -18,6 +18,7 @@ class SystemServiceProvider extends ServiceProvider
             usort($list, function (array $a, array $b) {
                 $priorityA = isset($a['priority']) ? (int) $a['priority'] : 0;
                 $priorityB = isset($b['priority']) ? (int) $b['priority'] : 0;
+
                 return $priorityB - $priorityA;
             });
             foreach ($list as $item) {
@@ -31,6 +32,7 @@ class SystemServiceProvider extends ServiceProvider
                 if (!$class::isSupported($app)) {
                     continue;
                 }
+
                 return $app->make($class);
             }
             $err = new UserMessageException(t("There's no available mutex class."));
