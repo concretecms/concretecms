@@ -272,7 +272,7 @@ return [
                                     'ttl' => 10
                                 ],
                             ],*/
-                            'prefix'=>'c5_overrides',
+                            'prefix' => 'c5_overrides',
                             'database'=>0 // Use different Redis Databases - optional
                         ],
                     ],
@@ -296,7 +296,7 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix'=>'c5_expensive',
+                            'prefix' => 'c5_expensive',
                             'database'=>0 // Use different Redis Databases - optional
                         ],
                     ],
@@ -312,7 +312,7 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix'=>'c5_object',
+                            'prefix' => 'c5_object',
                             'database'=>0 // Use different Redis Databases - optional
                         ],
                     ],
@@ -361,7 +361,6 @@ return [
         'enable_dashboard_report' => true,
 
         'configuration' => [
-
             /*
              * Configuration mode
              *
@@ -460,7 +459,6 @@ return [
          * @var string "auto", true or false
          */
         'store_form_submissions' => 'auto',
-
     ],
 
     /*
@@ -1120,5 +1118,16 @@ return [
          * @var bool
          */
         'enabled' => false,
+    ],
+
+    'mutex' => [
+        'semaphore' => [
+            'priority' => 100,
+            'class' => Concrete\Core\System\Mutex\SemaphoreMutex::class,
+        ],
+        'file_lock' => [
+            'priority' => 50,
+            'class' => Concrete\Core\System\Mutex\FileLockMutex::class,
+        ],
     ],
 ];
