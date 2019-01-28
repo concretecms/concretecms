@@ -157,7 +157,7 @@ class StandardSitemapProvider implements ProviderInterface
             $site = $this->siteService->getActiveSiteForEditing();
 
             // update $cookieKey to use a valid site id
-            $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $site->getSiteID());
+            $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $site->getSiteTreeID());
             $locale = $site->getDefaultLocale();
             if ($locale && $this->checkPermissions($locale)) {
                 return $locale->getSiteTreeObject();
