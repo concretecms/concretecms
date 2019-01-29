@@ -1,4 +1,22 @@
-# 8.5.0
+# 8.4.4
+
+## Feature Updates
+
+* Improvement for compliance and GDPR: Storage of form data submitted through the form block is now optional. It is a new checkbox in the block (thanks Faker Ben Ali)
+
+## Behavioral Improvements
+
+* Much improved performance in the Stacks panel menu for sites with a lot of stacks – stacks lazily load the blocks within them.
+* Dashboard Welcome Page: hides the "Customize" button if the user does not have permission to edit the page content (thanks marvinde)
+* Allow disabling of Sitemap button in CKEditor concrete5link core plugin (thanks joemeyer)
+* Fixed W3C validation errors in Elemental (thanks MPagel)
+
+## Bug Fixes
+
+* Fix XSS error when certain error messages could contain HTML (thanks mlocati)
+* Fix error where EditorServiceProvider was complaining about array_merge not being a valid array
+* Fixed: GDPR - ConversationMessages are not deleted when a user is deleted (thanks marvinde)
+* Fix typo in list of CKEditor plugins ('applying') (thanks a3020)
 
 # 8.4.3 
 

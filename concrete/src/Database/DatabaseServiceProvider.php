@@ -39,6 +39,7 @@ class DatabaseServiceProvider extends ServiceProvider
         $this->app->bind('Doctrine\DBAL\Connection',
             'Concrete\Core\Database\Connection\Connection');
 
+        $this->app->alias('Concrete\Core\Database\Connection\Connection', 'database/connection');
 
         // Bind EntityManager factory
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactory',

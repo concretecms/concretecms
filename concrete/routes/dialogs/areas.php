@@ -1,8 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
-/*
+/**
  * @var $router \Concrete\Core\Routing\Router
+ * Base path: /ccm/system/dialogs/area
+ * Namespace: Concrete\Controller\Dialog\Area\
  */
 $router->all('/design/', 'Design::view');
 $router->all('/design/reset', 'Design::reset');

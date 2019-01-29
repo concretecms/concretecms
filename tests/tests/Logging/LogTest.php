@@ -5,16 +5,22 @@ namespace Concrete\Tests\Logging;
 use Cascade\Cascade;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Configuration\AdvancedConfiguration;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
 use Concrete\Core\Logging\Configuration\SimpleConfiguration;
+use Concrete\Core\Logging\Configuration\SimpleDatabaseConfiguration;
+use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Illuminate\Filesystem\Filesystem;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -108,7 +114,7 @@ class LogTest extends ConcreteDatabaseTestCase
 
     public function testMoreVerboseDatabaseLogging()
     {
-        $configuration = new SimpleConfiguration(Logger::INFO);
+        $configuration = new SimpleDatabaseConfiguration(Logger::INFO);
 
         $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -117,7 +123,7 @@ class LogTest extends ConcreteDatabaseTestCase
             ->method('createConfiguration')
             ->willReturn($configuration);
 
-        $factory = new LoggerFactory($factory, $this->app->make('director'));
+        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
 
         $logger->debug('This is a debug line.');
@@ -128,6 +134,35 @@ class LogTest extends ConcreteDatabaseTestCase
 
         $r = $this->db->GetAll('select * from Logs');
         $this->assertCount(4, $r);
+    }
+
+    public function testFileLogging()
+    {
+
+        $file = __DIR__ . DIRECTORY_SEPARATOR . '/testing.log';
+
+        $configuration = new SimpleFileConfiguration($file, Logger::INFO);
+
+        $factory = $this->getMockBuilder(ConfigurationFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory->expects($this->once())
+            ->method('createConfiguration')
+            ->willReturn($configuration);
+
+        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
+
+        $logger->debug('This is a debug line.');
+        $logger->emergency('This is an emergency!');
+        $logger->info('This is an info line.');
+        $logger->notice('This is a notice line.');
+        $logger->warning('This is a warning line.', ['object' => 'foo']);
+
+        $filesystem = new Filesystem();
+        $contents = $filesystem->get($file);
+        $this->assertCount(4, explode("\n", trim($contents)));
+        $filesystem->delete($file);
     }
 
     public function testLoggingFacade()
@@ -248,15 +283,59 @@ class LogTest extends ConcreteDatabaseTestCase
             ->method('createConfiguration')
             ->willReturn($configuration);
 
-        $factory = new LoggerFactory($factory, $this->app->make('director'));
+        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
         $this->assertInstanceOf(Logger::class, $logger);
         $this->assertCount(0, $logger->getHandlers());
+        $this->assertCount(1, $logger->getProcessors()); // needs to have psr processor.
 
         $logger = $factory->createLogger('my_logger');
 
         $this->assertCount(2, $logger->getHandlers());
+        $this->assertCount(1, $logger->getProcessors());
     }
+
+    public function testAdvancedLoggingConfigurationAllChannels()
+    {
+        $config = array(
+            'formatters' => array(
+                'dashed' => array(
+                    'format' => "%datetime%-%channel%.%level_name% - %message%\n"
+                ),
+            ),
+            'handlers' => array(
+                'info_file_handler' => array(
+                    'class' => 'Monolog\Handler\StreamHandler',
+                    'level' => 'INFO',
+                    'formatter' => 'dashed',
+                    'stream' => './demo_info.log'
+                ),
+            ),
+            'loggers' => array(
+                Channels::META_CHANNEL_ALL => array(
+                    'handlers' => array('info_file_handler')
+                )
+            )
+        );
+
+        $configuration = new AdvancedConfiguration($config);
+
+        $factory = $this->getMockBuilder(ConfigurationFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory->expects($this->once())
+            ->method('createConfiguration')
+            ->willReturn($configuration);
+
+        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
+        $this->assertInstanceOf(Logger::class, $logger);
+        $this->assertCount(1, $logger->getHandlers());
+        $handlers = $logger->getHandlers();
+        $formatter = $handlers[0]->getFormatter();
+        $this->assertInstanceOf(LineFormatter::class, $formatter);
+    }
+
 
     public function testLegacyLogSupport()
     {

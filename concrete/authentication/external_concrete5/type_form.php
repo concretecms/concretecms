@@ -4,6 +4,10 @@
 </div>
 
 <div class='form-group'>
+    <?=$form->label('displayName', t('Authentication Type Display Name'))?>
+    <?=$form->text('displayName', $this->getAuthenticationTypeDisplayName())?>
+</div>
+<div class='form-group'>
     <?=$form->label('url', t('External concrete5 URL'))?>
     <?=$form->text('url', $data['url'])?>
 </div>
@@ -23,7 +27,7 @@
 <div class='form-group'>
     <div class="input-group">
         <label type="checkbox">
-            <input type="checkbox" name="registration_enabled" value="1" <?= $data['enabled'] ? 'checked' : '' ?>>
+            <input type="checkbox" name="registration_enabled" value="1" <?= array_get($data, 'registration.enabled', false) ? 'checked' : '' ?>>
             <span style="font-weight:normal"><?= t('Allow automatic registration') ?></span>
         </label>
       </span>
@@ -38,7 +42,7 @@
         foreach ($groups as $group) {
             ?>
             <option value="<?= $group->getGroupID() ?>" <?= intval($group->getGroupID(), 10) === intval(
-                $data['group'],
+                array_get($data, 'registration.group'),
                 10) ? 'selected' : '' ?>>
                 <?= $group->getGroupDisplayName(false) ?>
             </option>

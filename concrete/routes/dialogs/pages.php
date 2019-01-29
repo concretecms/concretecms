@@ -3,6 +3,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @var $router \Concrete\Core\Routing\Router
+ * Base path: /ccm/system/dialogs/page
+ * Namespace: Concrete\Controller\Dialog\Page\
  */
 $router->all('/add', 'Add::view');
 $router->all('/add_block', 'AddBlock::view');

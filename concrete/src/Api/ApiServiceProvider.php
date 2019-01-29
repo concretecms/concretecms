@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Api;
 
+use Concrete\Core\Api\OAuth\Server\IdTokenResponse;
 use Concrete\Core\Api\OAuth\Validator\DefaultValidator;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
@@ -22,8 +23,10 @@ use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
+use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use phpseclib\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use Zend\Http\Header\Authorization;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -130,6 +133,10 @@ class ApiServiceProvider extends ServiceProvider
         // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
         $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getKey(self::KEY_PRIVATE));
         $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
+        $this->app->when(AuthorizationServer::class)->needs(ResponseTypeInterface::class)->give(function() {
+            return $this->app->make(IdTokenResponse::class);
+        });
+
         $this->app->extend(AuthorizationServer::class, function (AuthorizationServer $server) {
             $server->setEncryptionKey($this->app->make('config/database')->get('concrete.security.token.encryption'));
 

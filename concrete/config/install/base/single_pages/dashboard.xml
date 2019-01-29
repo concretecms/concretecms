@@ -894,7 +894,7 @@
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
               description="Change login behaviors and setup public profiles." package=""/>
-        <page name="Public Registration" path="/dashboard/system/registration/open"
+        <page name="Account Options" path="/dashboard/system/registration/open"
               filename="/dashboard/system/registration/open.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">

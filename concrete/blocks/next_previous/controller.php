@@ -224,7 +224,7 @@ from
     inner join CollectionVersions cv
         on Pages.cID = cv.cID
 where
-    and Pages.cID <> ?
+    Pages.cID <> ?
     and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
     and cDisplayOrder < ?
     and cParentID = ?
@@ -245,7 +245,7 @@ from
     inner join CollectionVersions cv
         on Pages.cID = cv.cID
 where
-    and Pages.cID <> ?
+    Pages.cID <> ?
     and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
     and cDisplayOrder > ?
     and cParentID = ?

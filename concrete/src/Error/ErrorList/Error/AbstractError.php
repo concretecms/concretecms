@@ -55,9 +55,8 @@ abstract class AbstractError implements HtmlAwareErrorInterface
     /**
      * {@inheritdoc}
      *
-     * @since concrete5 8.5.0a3
-     *
      * @see \Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface::messageContainsHtml()
+     * @since concrete5 8.5.0a3
      */
     public function messageContainsHtml()
     {
@@ -69,9 +68,9 @@ abstract class AbstractError implements HtmlAwareErrorInterface
      *
      * @param bool $value
      *
-     * @since concrete5 8.5.0a3
-     *
      * @return $this
+     *
+     * @since concrete5 8.5.0a3
      */
     public function setMessageContainsHtml($value)
     {

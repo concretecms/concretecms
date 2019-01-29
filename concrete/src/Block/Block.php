@@ -1827,6 +1827,9 @@ EOT
             if ($this->getBlockFilename() != '') {
                 $blockNode->addAttribute('custom-template', $this->getBlockFilename());
             }
+            if ($this->overrideBlockTypeContainerSettings()) {
+                $blockNode->addAttribute('custom-container-settings', $this->enableBlockContainer() ? 1 : 0);
+            }
             if (($this->c instanceof Page) && $this->c->isMasterCollection()) {
                 $mcBlockID = Loader::helper('validation/identifier')->getString(8);
                 ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);

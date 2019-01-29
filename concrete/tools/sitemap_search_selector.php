@@ -85,10 +85,10 @@ if ($callback) {
         $('a[data-tab=' + sst + ']').parent().addClass('active');
         ccm_sitemapSearchSelectorHideBottom();
         $('a[data-tab=sitemap]').click(function() {
-            loadSitemapOverlay('sitemap', '<?= REL_DIR_FILES_TOOLS_REQUIRED; ?>/sitemap_overlay');
+            loadSitemapOverlay('sitemap', CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_overlay');
         });
         $('a[data-tab=explore]').click(function() {
-            loadSitemapOverlay('explore', '<?= REL_DIR_FILES_TOOLS_REQUIRED; ?>/sitemap_overlay?display=flat&cParentID=' + cParentID);
+            loadSitemapOverlay('explore', CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_overlay?display=flat&cParentID=' + cParentID);
         });
         $('a[data-tab=search]').click(function() {
             loadSitemapOverlay('search', '<?= URL::to('/ccm/system/dialogs/page/search'); ?>');

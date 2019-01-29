@@ -120,7 +120,7 @@ class EditProfile extends AccountPageController
             $passwordNew = $data['uPasswordNew'];
             $passwordNewConfirm = $data['uPasswordNewConfirm'];
 
-            $app->make('validator/password')->isValid($passwordNew, $this->error);
+            $app->make('validator/password')->isValidFor($passwordNew, $ui, $this->error);
 
             if ($passwordNew) {
                 if ($passwordNew != $passwordNewConfirm) {

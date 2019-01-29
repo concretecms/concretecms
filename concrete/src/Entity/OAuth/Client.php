@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\OAuth;
 
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
 /**
@@ -14,6 +15,18 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
  */
 class Client implements ClientEntityInterface
 {
+
+    /**
+     * Disable the users ability to allow / deny consent for this client to access details.
+     * This should only be used if a client is fully trusted and owned by this server
+     */
+    const CONSENT_NONE = 0;
+
+    /**
+     * Give the user the option to allow or deny access without changing scopes
+     */
+    const CONSENT_SIMPLE = 1;
+
     /**
      * @ORM\Id @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
@@ -43,6 +56,14 @@ class Client implements ClientEntityInterface
      * @ORM\Column(type="string")
      */
     protected $clientSecret;
+
+    /**
+     * The type of consent this client must get from the user
+     *
+     * @var int
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $consentType = self::CONSENT_SIMPLE;
 
     /**
      * {@inheritdoc}
@@ -134,5 +155,30 @@ class Client implements ClientEntityInterface
     public function setRedirectUri($redirectUri)
     {
         $this->redirectUri = $redirectUri;
+    }
+
+    /**
+     * Get the consent type required by this client
+     *
+     * @return int Client::CONSENT_SIMPLE | Client::CONSENT_NONE
+     */
+    public function getConsentType()
+    {
+        return $this->consentType;
+    }
+
+    /**
+     * Set the level of consent this client must receive from the authenticating user
+     *
+     * @param int $consentType Client::CONSENT_SIMPLE | Client::CONSENT_NONE
+     */
+    public function setConsentType($consentType)
+    {
+        if ($consentType !== self::CONSENT_SIMPLE &&
+            $consentType !== self::CONSENT_NONE) {
+            throw new InvalidArgumentException('Invalid consent type provided.');
+        }
+
+        $this->consentType = $consentType;
     }
 }

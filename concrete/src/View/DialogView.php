@@ -16,6 +16,17 @@ class DialogView extends ConcreteView
         $this->markHeaderAssetPosition();
     }
 
+    public function getViewTemplateFile()
+    {
+        return $this->template;
+    }
+
+    protected function loadViewThemeObject()
+    {
+        return null;
+    }
+
+
     public function outputAssetIntoView($item)
     {
         if ($item instanceof Asset) {
