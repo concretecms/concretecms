@@ -31,6 +31,13 @@ class Connection extends \Doctrine\DBAL\Connection
     protected $supportedCollations;
 
     /**
+     * Overridden params.
+     *
+     * @var array
+     */
+    private $overriddenParams = [];
+
+    /**
      * @deprecated Please use the ORM facade instead of this method:
      * - ORM::entityManager() in the application/site code and core
      * - $pkg->getEntityManager() in packages
@@ -480,7 +487,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function getParams()
     {
-        $result = parent::getParams();
+        $result = $this->overriddenParams + parent::getParams();
         // Forward the connection charset/collate to the default table options
         if (!isset($result['defaultTableOptions']['charset']) && !isset($result['defaultTableOptions']['collate'])) {
             if (isset($result['character_set']) && isset($result['collation'])) {
@@ -529,5 +536,18 @@ class Connection extends \Doctrine\DBAL\Connection
         }
 
         return true;
+    }
+
+    /**
+     * @param string $characterSet
+     * @param string $collation
+     *
+     * @internal
+     */
+    public function refreshCharactersetCollation($characterSet, $collation)
+    {
+        $this->executeQuery('SET NAMES ' . $this->quote($characterSet) . ' COLLATE ' . $this->quote($collation));
+        $this->overriddenParams['character_set'] = $characterSet;
+        $this->overriddenParams['collation'] = $collation;
     }
 }

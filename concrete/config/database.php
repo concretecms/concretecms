@@ -34,10 +34,15 @@ return [
         ],
     ],
 
-    // The preferred database character set (will fallback to 'utf8' if unavailable)
-    'preferred_character_set' => 'utf8mb4',
+    // The preferred database character set (derived from preferred_collation if empty)
+    'preferred_character_set' => '',
 
-    // The preferred database collation - leave empty to use the default collation associated to the character set
-    // (will fallback to 'utf8_general_ci' preferred_character_set is unavailable)
-    'preferred_collation' => '',
+    // The preferred database collation (derived from preferred_character_set if empty)
+    'preferred_collation' => 'utf8mb4_unicode_ci',
+
+    // The fallback database character set to be used when the preferred one can't be applied
+    'fallback_character_set' => 'utf8',
+
+    // The fallback database collation to be used when the preferred one can't be applied
+    'fallback_collation' => 'utf8_unicode_ci',
 ];
