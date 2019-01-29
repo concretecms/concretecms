@@ -7,8 +7,18 @@ use Concrete\Core\Entity\Express\Form;
 
 interface EntryManagerInterface
 {
-    function addEntry(Entity $entity);
-    function deleteEntry(Entry $entry);
-    function saveEntryAttributesForm(Form $form, Entry $entry);
+    /**
+     * Method that create empty entry.
+     *
+     * @return mixed
+     */
+    public function createEntry(Entity $entity);
 
+    public function addEntry(Entity $entity);
+
+    public function deleteEntry(Entry $entry);
+
+    public function saveEntryAttributesForm(Form $form, Entry $entry);
+
+    public function getEntryAttributeValuesForm(Form $form, Entry $entry);
 }

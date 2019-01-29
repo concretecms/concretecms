@@ -7,6 +7,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var bool $invalidateOnIPMismatch */
 /* @var bool $invalidateOnUserAgentMismatch */
+/* @var bool $invalidateInactiveUsers */
+/* @var number $inactiveTime */
 /* @var string $trustedProxyUrl */
 /* @var string $invalidateAction */
 /* @var string $saveAction */
@@ -17,23 +19,33 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <fieldset>
         <legend><?= t('Session Security') ?></legend>
+        <div class="help-block">
+            <?= t('These settings help prevent a user from stealing other logged in user sessions. You may want to configure %s"Trusted Proxies"%s instead', '<a href="' . $trustedProxyUrl . '">', '</a>') ?>
+        </div>
         <div class="form-group">
-
-            <div class="help-block">
-                <?= t('These settings help prevent a user from stealing other logged in user sessions. You may want to configure %s"Trusted Proxies"%s instead', '<a href="' . $trustedProxyUrl . '">', '</a>') ?>
-            </div>
             <div class="checkbox">
                 <label>
                     <?= $form->checkbox('invalidateOnIPMismatch', '1', $invalidateOnIPMismatch) ?>
                     <?= t('Log users out if their IP changes') ?>
             </div>
+        </div>
+        <div class="form-group">
             <div class="checkbox">
                 <label>
                     <?= $form->checkbox('invalidateOnUserAgentMismatch', '1', $invalidateOnUserAgentMismatch) ?>
                     <?= t("Log users out if their browser's user agent changes") ?>
                 </label>
             </div>
-
+        </div>
+        <div class="form-group">
+            <div class="form-inline">
+                <div class="checkbox">
+                    <label>
+                        <?= $form->checkbox('invalidateInactiveUsers','1', $invalidateInactiveUsers) ?>
+                        <?= t("Automatically log out users who are inactive for %s seconds or more.", $form->number('inactiveTime', $inactiveTime, ["style"=>"width:100px; display:inline-block;"])) ?>
+                    </label>
+                </div>
+            </div>
         </div>
     </fieldset>
 

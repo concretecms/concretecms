@@ -46,12 +46,12 @@ class PagerAdapter implements AdapterInterface
             ->setMaxResults($length);
 
         $currentResults = array();
-        $results = $this->itemList->getResults();
-
-        while (count($results) != 0 && count($currentResults) < $length) {
-
+        while (count($currentResults) < $length) {
+            $results = $this->itemList->getResults();
+            if (count($results) === 0) {
+                break;
+            }
             foreach($results as $result) {
-
                 if ($this->checkPermissions($checker, $result)) {
 
                     if (!isset($this->firstResult)) {
@@ -59,13 +59,13 @@ class PagerAdapter implements AdapterInterface
                     }
 
                     $currentResults[] = $result;
+                    if (count($currentResults) >= $length) {
+                        break;
+                    }
                 }
-
             }
-
             $manager->displaySegmentAtCursor($result, $this->itemList);
             $this->itemList->ignorePermissions();
-            $results = $this->itemList->getResults();
         }
 
         $this->itemList->setPermissionsChecker($checker);

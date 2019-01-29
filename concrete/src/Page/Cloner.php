@@ -294,7 +294,7 @@ class Cloner
         $aHandle = $block->getAreaHandle();
         $toID = $destinationCollection->getCollectionID();
         $toCVID = $destinationCollection->getVersionID();
-        $already = (int) $this->connection->fetchColumn(
+        $already = $this->connection->fetchColumn(
             'select bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ? limit 1',
             [$toID, $toCVID, $bID, $aHandle]
         );

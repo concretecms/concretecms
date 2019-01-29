@@ -281,7 +281,7 @@ class Search extends DashboardPageController
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
 
-            $this->app->make('validator/password')->isValid($password, $this->error);
+            $this->app->make('validator/password')->isValidFor($password, $this->user, $this->error);
 
             if (!$this->app->make('helper/validation/token')->validate('change_password')) {
                 $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
@@ -489,15 +489,18 @@ class Search extends DashboardPageController
             'Content-Disposition' => 'attachment; filename=concrete5_users.csv',
         ];
         $app = $this->app;
+        $config = $this->app->make('config');
+        $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
         return StreamedResponse::create(
-            function () use ($app, $result) {
+            function () use ($app, $result, $bom) {
                 $writer = $app->build(
                     UserExporter::class,
                     [
                         'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                     ]
                 );
+                echo $bom;
                 $writer->setUnloadDoctrineEveryTick(50);
                 $writer->insertHeaders();
                 $writer->insertList($result->getItemListObject());

@@ -45,7 +45,7 @@ class DragRequest extends UserInterfaceController
         $dragRequestData = $this->app->make(DragRequestData::class);
         $originalPageIDs = [];
         foreach ($dragRequestData->getOriginalPages() as $originalPage) {
-            $originalPageIDs[] = $originalPage->getCollectionID();
+            $originalPageIDs[] = $originalPage->isAliasPage() ? $originalPage->getCollectionPointerOriginalID() : $originalPage->getCollectionID();
         }
         $this->set('validationToken', $this->app->make('token')->generate($this->validationToken));
         $this->set('dragRequestData', $dragRequestData);

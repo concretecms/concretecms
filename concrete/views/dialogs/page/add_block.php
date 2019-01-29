@@ -3,12 +3,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <script type="text/javascript">
-<?php $ci = Loader::helper("concrete/urls"); ?>
-<?php $url = $ci->getBlockTypeJavaScriptURL($blockType);
-if ($url != '') {
-    ?>
-	ConcreteAssetLoader.loadJavaScript("<?=$url?>");
-<?php 
+<?php
+$ci = Loader::helper("concrete/urls");
+$url = $ci->getBlockTypeJavaScriptURL($blockType);
+if ($url !== '') {
+    ?>ConcreteAssetLoader.loadJavaScript(<?= json_encode($url) ?>);<?php 
+}
+$url = $ci->getBlockTypeCssURL($blockType);
+if ($url !== '') {
+    ?>ConcreteAssetLoader.loadCSS(<?= json_encode($url) ?>);<?php
 }
 $identifier = strtoupper('BLOCK_CONTROLLER_' . $btHandle);
 if (isset($headerItems) && is_array($headerItems[$identifier])) {

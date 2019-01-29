@@ -12,9 +12,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </script>
 
 <script type="text/template" class="version">
-	<tr <% if (cvIsApproved == 1) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>
+	<tr <% if (cvIsApproved) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>
 	data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
-		<td><input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cvID%>" data-version-active="<%-cvIsApproved == 1%>" /></td>
+		<td><input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cvID%>" data-version-active="<%- cvIsApproved ? true : false %>" /></td>
 		<td><span class="ccm-panel-page-versions-version-id"><%-cvID%></span></td>
 		<td class="ccm-panel-page-versions-details">
 
@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 			<% } %>
 			<div class="ccm-panel-page-versions-more-info">
 				<p><?=t('Edit by')?> <%-cvAuthorUserName%></p>
-				<% if (cvIsApproved == 1) { %>
+				<% if (cvIsApproved) { %>
 					<% if (cvApprovedDate && cvApproverUserName) { %>
 						<p><?= t('Approved on'); ?> <%-cvApprovedDate%> <?= t('by'); ?> <%-cvApproverUserName%></p>
 					<% } else if (cvApprovedDate) { %>
@@ -38,14 +38,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
 						<p><?= t('Approved by'); ?> <%-cvApproverUserName%></p>
 					<% } %>
 				<% } %>
-				<% if (cvIsScheduled == 1) { %>
+				<% if (cvIsScheduled) { %>
 					<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledByFor', ' for ')?> <%-cvPublishDate%></p>
 				<% } %>
 			</div>
 			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
 				<div class="popover-inner">
 					<ul class="dropdown-menu">
-						<li><% if (cvIsApproved == 1) { %><span><?=t('Approve')?></span><% } else { %><a href="#" data-version-menu-task="approve" data-version-id="<%-cvID%>"><?=t('Approve')?></a><% } %></li>
+						<li><% if (cvIsApproved) { %><span><?=t('Approve')?></span><% } else { %><a href="#" data-version-menu-task="approve" data-version-id="<%-cvID%>"><?=t('Approve')?></a><% } %></li>
 						<li><a href="#" data-version-menu-task="duplicate" data-version-id="<%-cvID%>"><?=t('Duplicate')?></a></li>
 						<li class="divider"></li>
 						<% if ( ! cIsStack) { %>
@@ -55,8 +55,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 						<% if (cpCanDeletePageVersions) { %>
 						<li class="ccm-menu-item-delete">
-							<span <% if (cvIsApproved != 1) { %>style="display:none"<% } %>><?=t('Delete')?></span>
-							<a <% if (cvIsApproved == 1) { %>style="display:none"<% } %> href="#" data-version-menu-task="delete" data-version-id="<%-cvID%>"><?=t('Delete')?></a>
+							<span <% if (!cvIsApproved) { %>style="display:none"<% } %>><?=t('Delete')?></span>
+							<a <% if (cvIsApproved) { %>style="display:none"<% } %> href="#" data-version-menu-task="delete" data-version-id="<%-cvID%>"><?=t('Delete')?></a>
 						</li>
 						<% } %>
 					</ul>

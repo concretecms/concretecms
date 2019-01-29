@@ -16,7 +16,7 @@ class Open extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
-        if (!empty($this->post('register_notification_email'))) {
+        if ($this->post('register_notification') && !empty($this->post('register_notification_email'))) {
             $emailValidator = $this->app->make(EmailValidator::class, ['testMXRecord' => true]);
             $registerNotificationEmails = explode(',', $this->post('register_notification_email'));
             foreach ($registerNotificationEmails as $key => $registerNotificationEmail) {
@@ -40,14 +40,18 @@ class Open extends DashboardPageController
                     $config->save('concrete.user.registration.enabled', true);
                     $config->save('concrete.user.registration.validate_email', false);
                     $config->save('concrete.user.registration.notification', $this->post('register_notification'));
-                    $config->save('concrete.user.registration.notification_email', implode(',', $registerNotificationEmails));
+                    if ($this->post('register_notification') && !empty($this->post('register_notification_email'))) {
+                        $config->save('concrete.user.registration.notification_email', implode(',', $registerNotificationEmails));
+                    }
                     break;
 
                 case 'validate_email':
                     $config->save('concrete.user.registration.enabled', true);
                     $config->save('concrete.user.registration.validate_email', true);
                     $config->save('concrete.user.registration.notification', $this->post('register_notification'));
-                    $config->save('concrete.user.registration.notification_email', implode(',', $registerNotificationEmails));
+                    if ($this->post('register_notification') && !empty($this->post('register_notification_email'))) {
+                        $config->save('concrete.user.registration.notification_email', implode(',', $registerNotificationEmails));
+                    }
                     break;
 
                 default: // disabled

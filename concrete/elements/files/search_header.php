@@ -40,15 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </a>
             </li>
             <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
-            <li><a href="#" id="ccm-file-manager-upload"
-                data-dialog="add-files"
-                data-image-max-width="<?= $imageMaxWidth ?>"
-                data-image-max-height="<?= $imageMaxHeight ?>"
-                data-image-quality="<?= $jpegQuality ?>"
-                >
-                    <i class="fa fa-upload"></i> <?=t('Upload Files')?>
-                </a>
-            </li>
+            <li><a href="#" id="ccm-file-manager-upload" data-dialog="add-files"><i class="fa fa-upload"></i> <?=t('Upload Files')?></a></li>
         </ul>
     </form>
 </div>

@@ -89,22 +89,29 @@ $db = Loader::db();
             <tbody>
 
             <?php
+            $now = Core::make('date')->getOverridableNow();
             foreach ($surveys as $qsid => $survey) {
                 $block = Block::getByID(intval($survey['bID'], 10));
                 if (!is_object($block)) {
                     continue;
                 }
                 $in_use = (int)$db->getOne(
-                    'SELECT count(*)
-                                FROM CollectionVersionBlocks
-                                INNER JOIN Pages
-                                ON CollectionVersionBlocks.cID = Pages.cID
-                                INNER JOIN CollectionVersions
-                                ON CollectionVersions.cID = Pages.cID
-                                WHERE CollectionVersions.cvIsApproved = 1
-                                AND CollectionVersionBlocks.cvID = CollectionVersions.cvID
-                                AND CollectionVersionBlocks.bID = ?',
-                    array($block->bID));
+                    <<<'EOT'
+SELECT
+    count(*)
+FROM
+    CollectionVersionBlocks
+    INNER JOIN Pages
+        ON CollectionVersionBlocks.cID = Pages.cID
+    INNER JOIN CollectionVersions
+        ON CollectionVersions.cID = Pages.cID
+WHERE
+    CollectionVersions.cvIsApproved = 1 AND (CollectionVersions.cvPublishDate IS NULL OR CollectionVersions.cvPublishDate <= ?) AND (CollectionVersions.cvPublishEndDate IS NULL OR CollectionVersions.cvPublishEndDate >= ?)
+    AND CollectionVersionBlocks.cvID = CollectionVersions.cvID
+    AND CollectionVersionBlocks.bID = ?
+EOT
+                    ,
+                    [$now, $now, $block->bID]);
                 $url = $nh->getLinkToCollection($block->getBlockCollectionObject());
                 ?>
                 <tr>

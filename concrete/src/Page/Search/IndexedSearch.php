@@ -153,6 +153,19 @@ class IndexedSearch
             }
         }
 
+        // add content defined by a page type controller
+        if ($pageController = $c->getPageController()) {
+            $searchableContent = $pageController->getSearchableContent();
+
+            if (strlen(trim($searchableContent))) {
+                $text .= $th->decodeEntities(
+                        strip_tags(str_ireplace($tagsToSpaces, ' ', $searchableContent)),
+                        ENT_QUOTES,
+                        APP_CHARSET
+                    ) . ' ';
+            }
+        }
+
         return $text;
     }
 

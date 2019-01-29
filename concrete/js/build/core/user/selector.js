@@ -22,6 +22,7 @@
         my.$element.append(my._chooseTemplate);
         my.$element.on('click', 'a[data-user-selector-link=choose]', function(e) {
             e.preventDefault();
+            window.$clickedSelector = $(e.delegateTarget);
             $.fn.dialog.open({
                 title: ccmi18n.chooseUser,
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/user/search',
@@ -62,6 +63,9 @@
 
         loadUser: function(uID) {
             var my = this;
+            if(window.$clickedSelector){
+                my.$element = window.$clickedSelector;
+            }
             my.$element.html(my._loadingTemplate({'options': my.options, 'uID': uID}));
 
             $.ajax({

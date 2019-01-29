@@ -8,7 +8,6 @@ use Concrete\Core\Search\Column\Set;
 
 class Item extends SearchResultItem
 {
-
     protected $entry;
 
     public function __construct(SearchResult $result, Set $columns, $item)

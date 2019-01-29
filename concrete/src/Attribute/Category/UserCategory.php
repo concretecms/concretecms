@@ -173,7 +173,7 @@ class UserCategory extends AbstractStandardCategory
      */
     public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
     {
-        $key = parent::import($type, $element);
+        $key = parent::import($type, $element, $package);
         $key->setAttributeKeyDisplayedOnProfile((string) $element['profile-displayed'] == 1);
         $key->setAttributeKeyEditableOnProfile((string) $element['profile-editable'] == 1);
         $key->setAttributeKeyRequiredOnProfile((string) $element['profile-required'] == 1);

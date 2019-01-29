@@ -1,14 +1,18 @@
 <?php
 namespace Concrete\Core\Http\Client;
 
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Zend\Http\Client as ZendClient;
 use Zend\Http\Request as ZendRequest;
 use Zend\Uri\Http as ZendUriHttp;
-use Psr\Log\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
 class Client extends ZendClient implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
     /**
      * @var LoggerInterface|null
      */
@@ -22,6 +26,11 @@ class Client extends ZendClient implements LoggerAwareInterface
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_NETWORK;
     }
 
     /**

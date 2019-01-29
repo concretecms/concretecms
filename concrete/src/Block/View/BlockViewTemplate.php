@@ -250,6 +250,7 @@ class BlockViewTemplate
                 if (file_exists($this->basePath . '/' . $i)) {
                     $identifier = substr($this->basePath, strpos($this->basePath, 'blocks'));
                     // $identifier = 'blocks/page_list', 'blocks/feature', 'blocks/page_list/templates/responsive', etc...
+                    $asset = null;
                     switch ($t) {
                         case 'CSS':
                             $asset = new CssAsset($identifier);
@@ -265,6 +266,19 @@ class BlockViewTemplate
                             $al->registerAsset($asset);
                             $v->requireAsset('javascript', $identifier);
                             break;
+                    }
+                    if ($asset !== null) {
+                        if ($this->obj instanceof Block) {
+                            $pkgID = $this->obj->getPackageID();
+                            if ($pkgID) {
+                                foreach ($this->getPackageList()->getPackages() as $pkg) {
+                                    if ($pkg->getPackageID() == $pkgID) {
+                                        $asset->setPackageObject($pkg);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

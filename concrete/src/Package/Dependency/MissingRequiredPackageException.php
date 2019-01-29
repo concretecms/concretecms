@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Package\Dependency;
 
 use Concrete\Core\Package\Package;
@@ -11,14 +12,14 @@ class MissingRequiredPackageException extends DependencyException
     /**
      * The package that can't be installed.
      *
-     * @var Package
+     * @var \Concrete\Core\Package\Package
      */
     protected $notInstallablePackage;
 
     /**
      * The handle of the package that's not installed.
      *
-     * @var Package
+     * @var string
      */
     protected $missingPackageHandle;
 
@@ -32,7 +33,7 @@ class MissingRequiredPackageException extends DependencyException
     /**
      * Initialize the instance.
      *
-     * @param Package $notInstallablePackage the package that can't be installed
+     * @param \Concrete\Core\Package\Package $notInstallablePackage the package that can't be installed
      * @param string $missingPackageHandle the handle of the package that's not installed
      * @param string|string[]|bool $requirements the version requirements of the package
      */
@@ -69,7 +70,7 @@ class MissingRequiredPackageException extends DependencyException
     /**
      * Get the package that can't be installed.
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getNotInstallablePackage()
     {
@@ -79,7 +80,7 @@ class MissingRequiredPackageException extends DependencyException
     /**
      * Get the handle of the package that's not installed.
      *
-     * @return Package
+     * @return string
      */
     public function getMissingPackageHandle()
     {

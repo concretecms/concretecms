@@ -42,26 +42,39 @@ class UserSignup implements SubjectInterface
     }
 
     /**
-     * @return mixed
+     * @return User
      */
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getNotificationDate()
     {
         return $this->user->getUserDateAdded();
     }
 
     /**
-     * @return mixed
+     * @return User|null
      */
     public function getCreatedBy()
     {
         return $this->createdBy;
     }
 
+    /**
+     * @param User $user
+     */
+    public function setCreatedBy(User $user) {
+        $this->createdBy = $user;
+    }
+
+    /**
+     * @return array|User[]
+     */
     public function getUsersToExcludeFromNotification()
     {
         return is_object($this->createdBy) ? [$this->createdBy] : [];

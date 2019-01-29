@@ -55,8 +55,8 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
         }
         if ($fp->canEditFileContents()) {
             $this->addItem(new DialogLinkItem(
-                    REL_DIR_FILES_TOOLS_REQUIRED . '/files/replace?fID=' . $file->getFileID(),
-                    t('Replace'), t('Replace'), '500', '200')
+                    \URL::to('/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()),
+                    t('Replace'), t('Replace'), '620', 400)
             );
         }
         $this->addItem(new DialogLinkItem(

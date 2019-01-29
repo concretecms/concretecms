@@ -75,8 +75,15 @@ class Controller extends BlockController
         }
 
         $arrAssetBlocks = [];
-        
+
         foreach ($blocks as $b) {
+            if ($b->overrideAreaPermissions()) {
+                $btCacheBlockOutput = false;
+                $btCacheBlockOutputOnPost = false;
+                $btCacheBlockOutputLifetime = 0;
+                break;
+            }
+
             $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
             $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
 

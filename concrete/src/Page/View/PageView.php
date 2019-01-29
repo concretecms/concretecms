@@ -55,6 +55,7 @@ class PageView extends View
 
     public function renderSinglePageByFilename($cFilename, $pkgHandle = null)
     {
+        $this->loadViewThemeObject();
         $env = Environment::get();
         $cFilename = trim($cFilename, '/');
 
@@ -106,7 +107,6 @@ class PageView extends View
 
     public function setupRender()
     {
-        $this->loadViewThemeObject();
         $env = Environment::get();
 
         if (isset($this->innerContentFile)) {
@@ -118,6 +118,7 @@ class PageView extends View
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
             $this->renderSinglePageByFilename($this->c->getCollectionFilename());
         } else {
+            $this->loadViewThemeObject();
             $pt = $this->getPageTemplate();
             $rec = null;
             if ($pt) {
@@ -163,7 +164,7 @@ class PageView extends View
         if ($this->c->hasPageThemeCustomizations()) {
             // page has theme customizations, check if we need to serve an uncached version of the style sheet,
             // either because caching is deactivated or because the version is not approved yet
-            if ($this->c->getVersionObject()->isApproved()) {
+            if ($this->c->getVersionObject()->isApprovedNow()) {
                 // approved page, return handler script if caching is deactivated
                 if (!Config::get('concrete.cache.theme_css')) {
                     return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
@@ -292,7 +293,7 @@ class PageView extends View
             }
         }
         if (!isset($this->pThemeID)) {
-            $this->pThemeID = $this->c->getPageTemplateID();
+            $this->pThemeID = $this->c->getPageTemplateID(); // @TODO kill this code? It looks completely wrong.
         }
     }
 }

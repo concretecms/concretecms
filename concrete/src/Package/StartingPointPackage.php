@@ -483,11 +483,13 @@ class StartingPointPackage extends BasePackage
         $fba = AuthenticationType::add('facebook', 'Facebook');
         $twa = AuthenticationType::add('twitter', 'Twitter');
         $gat = AuthenticationType::add('google', 'Google');
+        $ext = AuthenticationType::add('external_concrete5', 'External concrete5');
 
         $fba->disable();
         $twa->disable();
         $coa->disable();
         $gat->disable();
+        $ext->disable();
 
         \Concrete\Core\Tree\TreeType::add('group');
         \Concrete\Core\Tree\Node\NodeType::add('group');

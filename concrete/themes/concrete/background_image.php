@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php $view->inc('elements/header.php'); ?>
+<?php
+$view->requireAsset('javascript', 'backstretch');
+$view->inc('elements/header.php'); ?>
 
 <div class="container">
 <div class="row">

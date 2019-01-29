@@ -113,8 +113,13 @@ class DefaultDispatcher implements DispatcherInterface
             );
             $stack->setApplication($this->app);
             foreach($route->getMiddlewares() as $middleware) {
+                if (is_string($middleware->getMiddleware())) {
+                    $inflatedMiddleware =  $this->app->make($middleware->getMiddleware());
+                } else {
+                    $inflatedMiddleware = $middleware->getMiddleware();
+                }
                 $stack = $stack->withMiddleware(
-                    $this->app->make($middleware->getMiddleware()),
+                    $inflatedMiddleware,
                     $middleware->getPriority()
                 );
             }

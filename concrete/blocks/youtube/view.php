@@ -85,7 +85,7 @@ if (Page::getCurrentPage()->isEditMode()) {
     ?>" class="youtubeBlock <?php echo $responsiveClass;
     ?>">
         <iframe class="youtube-player" <?php echo $sizeargs;
-        ?> src="//www.youtube.com/embed/<?= $videoID;
+        ?> src="//<?= $youtubeDomain; ?>/embed/<?= $videoID;
         ?><?= $paramstring;
         ?>" allowfullscreen></iframe>
     </div>

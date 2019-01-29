@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a3',
     'version_installed' => '8.5.0a3',
-    'version_db' => '20181112211702', // the key of the latest database migration
+    'version_db' => '20190112000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -26,6 +26,11 @@ return [
      * The current Charset
      */
     'charset' => 'UTF-8',
+
+    /*
+     * The byte-order-mark for the current charset
+     */
+    'charset_bom' => "\xEF\xBB\xBF",
 
     /*
      * Maintenance mode
@@ -50,7 +55,7 @@ return [
          *
          * @var string (message|debug)
          */
-        'detail' => 'message',
+        'detail' => 'debug',
 
         /*
          * Error reporting level
@@ -92,6 +97,19 @@ return [
             'enabled' => true,
             // The chunk size (if empty we'll automatically determine it)
             'chunkSize' => null,
+        ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Export settings
+     * ------------------------------------------------------------------------
+     */
+    'export' => [
+        'csv' => [
+            // Include the BOM (byte-order mark) in generated CSV files?
+            // @var bool
+            'include_bom' => false,
         ],
     ],
 
@@ -320,35 +338,64 @@ return [
      */
     'log' => [
         /*
-         * Log emails
+         * Whether to log emails
          *
          * @var bool
          */
         'emails' => true,
 
         /*
-         * Log Errors
+         * Whether to log Errors
          *
          * @var bool
          */
         'errors' => true,
 
         /*
-         * Log Spam
+         * Whether to log Spam
          *
          * @var bool
          */
         'spam' => false,
 
-        'queries' => [
-            /*
-             * Whether to log database queries or not.
-             *
-             * @var bool
-             */
-            'log' => false,
+        'enable_dashboard_report' => true,
 
-            'clear_on_reload' => false,
+        'configuration' => [
+
+            /*
+             * Configuration mode
+             *
+             * @var string simple|advanced
+             */
+            'mode' => 'simple',
+            'simple' => [
+                /**
+                 * What log level to store core logs in the database
+                 * @var string
+                 */
+                'core_logging_level' => 'NOTICE',
+
+                /**
+                 * Which handle to use
+                 *
+                 * @var string (database|file)
+                 */
+                'handler' => 'database',
+
+                'file' => [
+
+                    /**
+                     * File path to store logs
+                     *
+                     * @var string
+                     */
+                    'file' => '',
+                ],
+            ],
+
+            'advanced' => [
+                'configuration' => []
+            ],
         ],
     ],
     'jobs' => [
@@ -397,6 +444,23 @@ return [
             'address' => null,
             'name' => null,
         ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Form settings
+     * ------------------------------------------------------------------------
+     */
+    'form' => [
+        /*
+         * Whether to store form submissions. Auto means form submissions will be stored, but the block
+         * will offer an option to disable on a per-block basis. True means they will always be stored,
+         * and false means they will never be stored.
+         *
+         * @var string "auto", true or false
+         */
+        'store_form_submissions' => 'auto',
+
     ],
 
     /*
@@ -499,7 +563,7 @@ return [
         /*
          * The threshold (total number of pixels - width x height x number of frames)
          * after which we'll reload images instead of creating in-memory clones.
-         * If empty: unlimited 
+         * If empty: unlimited
          */
         'inplace_image_operations_limit' => 4194304,
         /*
@@ -589,7 +653,16 @@ return [
              *
              * @var boolean
              */
-            'preview_image_popover' => true
+            'preview_image_popover' => true,
+            // SVG sanitization
+            'svg_sanitization' => [
+                // Enable the SVG sanitification?
+                'enabled' => true,
+                // Space-separated list of tags to be kept
+                'allowed_tags' => '',
+                // Space-separated list of attributes to be kept
+                'allowed_attributes' => '',
+            ],
         ],
         'results' => 10,
     ],
@@ -840,6 +913,11 @@ return [
         'password' => [
             'maximum' => 128,
             'minimum' => 5,
+            'required_special_characters' => 0,
+            'required_lower_case' => 0,
+            'required_upper_case' => 0,
+            'reuse' => 0,
+            'custom_regex' => [],
             'hash_portable' => false,
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
@@ -910,6 +988,13 @@ return [
             'invalidate_on_user_agent_mismatch' => true,
 
             'invalidate_on_ip_mismatch' => true,
+
+            'invalidate_inactive_users' => [
+                // Is the automatically logout inactive users setting enabled?
+                'enabled' => false,
+                // Time window (in seconds) for inactive users to be automatically logout
+                'time' => 300,
+            ]
         ],
         'ban' => [
             'ip' => [
@@ -1035,7 +1120,5 @@ return [
          * @var bool
          */
         'enabled' => false,
-
     ],
-
 ];

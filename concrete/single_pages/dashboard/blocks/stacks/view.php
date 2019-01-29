@@ -142,7 +142,7 @@ if (isset($neutralStack)) {
                 </ul>
                 <?php if ($showApprovalButton) { ?>
                     <ul class="nav navbar-nav navbar-right">
-                        <li id="ccm-stack-list-approve-button" class="navbar-form"<?= $vo->isApproved() ? ' style="display: none;"' : '' ?>>
+                        <li id="ccm-stack-list-approve-button" class="navbar-form"<?= $vo->isApprovedNow() ? ' style="display: none;"' : '' ?>>
                             <button class="btn btn-success" onclick="window.location.href='<?=URL::to('/dashboard/blocks/stacks', 'approve_stack', $stackToEdit->getCollectionID(), $token->generate('approve_stack'))?>'"><?=$publishTitle?></button>
                         </li>
                     </ul>

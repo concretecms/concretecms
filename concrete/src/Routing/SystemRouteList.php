@@ -3,7 +3,7 @@ namespace Concrete\Core\Routing;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
-use Concrete\Core\HTTP\Middleware\OAuthErrorMiddleware;
+use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Http\Middleware\ProjectorMiddleware;
 
 class SystemRouteList implements RouteListInterface
@@ -66,6 +66,8 @@ class SystemRouteList implements RouteListInterface
             ->routes('dialogs/blocks.php');
 
         $router->buildGroup()->setRequirements(['identifier' => '[A-Za-z0-9_/.]+'])->routes('rss.php');
+
+        $router->buildGroup()->routes('attributes.php');
 
         $router->buildGroup()->routes('search.php');
 
