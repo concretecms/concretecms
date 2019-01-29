@@ -37,8 +37,8 @@ class Controller extends AttributeTypeController
     {
         $uID = $this->getAttributeValue()->getValue();
         $user = User::getByUserID($uID);
-        $ui = $user->getUserInfoObject();
         if (is_object($user)) {
+            $ui = $user->getUserInfoObject();
             return t('<a href="%s">%s</a>', $user->getUserName(), $ui->getUserPublicProfileUrl());
         }
     }
