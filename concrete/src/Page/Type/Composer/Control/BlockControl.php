@@ -415,9 +415,9 @@ class BlockControl extends Control
         if ($controller) {
             if (method_exists($controller, 'validate_composer')) {
                 $e1 = $controller->validate_composer();
-            }
-            if (is_object($e1)) {
-                return $e1;
+                if (is_object($e1)) {
+                    return $e1;
+                }
             }
         }
     }
