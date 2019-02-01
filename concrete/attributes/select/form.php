@@ -77,7 +77,7 @@ if ($akSelectAllowOtherValues) {
 
 
     ?>
-	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=$value?>" />
+	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=isset($value) ? $value : ''?>" />
 	<script type="text/javascript">
 		$(function() {
 			$('input[data-select-and-add=<?=$akID?>]').selectize({
