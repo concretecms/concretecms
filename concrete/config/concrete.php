@@ -272,12 +272,12 @@ return [
                                     'ttl' => 10
                                 ],
                             ],*/
-                            'prefix'=>'c5_overrides',
-                            'database'=>0 // Use different Redis Databases - optional
+                            'prefix' => 'c5_overrides',
+                            'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
+                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
             ],
             'expensive' => [
                 'drivers' => [
@@ -296,12 +296,12 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix'=>'c5_expensive',
-                            'database'=>0 // Use different Redis Databases - optional
+                            'prefix' => 'c5_expensive',
+                            'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
+                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
             ],
             'object' => [
                 'drivers' => [
@@ -312,12 +312,12 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix'=>'c5_object',
-                            'database'=>0 // Use different Redis Databases - optional
+                            'prefix' => 'c5_object',
+                            'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_ephemeral'// Use this to specify a preferred driver
+                'preferred_driver' => 'core_ephemeral', // Use this to specify a preferred driver
             ],
         ],
 
@@ -361,7 +361,6 @@ return [
         'enable_dashboard_report' => true,
 
         'configuration' => [
-
             /*
              * Configuration mode
              *
@@ -369,13 +368,13 @@ return [
              */
             'mode' => 'simple',
             'simple' => [
-                /**
+                /*
                  * What log level to store core logs in the database
                  * @var string
                  */
                 'core_logging_level' => 'NOTICE',
 
-                /**
+                /*
                  * Which handle to use
                  *
                  * @var string (database|file)
@@ -383,8 +382,7 @@ return [
                 'handler' => 'database',
 
                 'file' => [
-
-                    /**
+                    /*
                      * File path to store logs
                      *
                      * @var string
@@ -394,7 +392,7 @@ return [
             ],
 
             'advanced' => [
-                'configuration' => []
+                'configuration' => [],
             ],
         ],
     ],
@@ -460,7 +458,6 @@ return [
          * @var string "auto", true or false
          */
         'store_form_submissions' => 'auto',
-
     ],
 
     /*
@@ -804,7 +801,7 @@ return [
         'name' => 'CONCRETE5',
         'handler' => 'file',
         'redis' => [
-            'database'=>1 // Use different Redis Databases - optional
+            'database' => 1, // Use different Redis Databases - optional
         ],
         'save_path' => null,
         'max_lifetime' => 7200,
@@ -939,7 +936,7 @@ return [
             'authentication_failure' => [
                 'enabled' => false,
                 'amount' => 5, // The number of failures
-                'duration' => 300 // In so many seconds
+                'duration' => 300, // In so many seconds
             ],
             'message' => 'This user is inactive. Please contact us regarding this account.',
         ],
@@ -994,7 +991,7 @@ return [
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
-            ]
+            ],
         ],
         'ban' => [
             'ip' => [
@@ -1120,5 +1117,16 @@ return [
          * @var bool
          */
         'enabled' => false,
+    ],
+
+    'mutex' => [
+        'semaphore' => [
+            'priority' => 100,
+            'class' => Concrete\Core\System\Mutex\SemaphoreMutex::class,
+        ],
+        'file_lock' => [
+            'priority' => 50,
+            'class' => Concrete\Core\System\Mutex\FileLockMutex::class,
+        ],
     ],
 ];

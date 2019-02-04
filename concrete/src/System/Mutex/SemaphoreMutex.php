@@ -65,9 +65,25 @@ class SemaphoreMutex implements MutexInterface
                         $retry = true; // file may have been deleted in the meanwhile
                         throw new RuntimeException("ftok() failed for path {$filename}");
                     }
+                    $errorDescription = '';
+                    set_error_handler(function ($errno, $errstr) use (&$errorDescription) {
+                        $errorDescription = (string) $errstr;
+                    });
                     $sem = sem_get($semKey, 1);
+                    restore_error_handler();
                     if ($sem === false) {
-                        throw new RuntimeException("sem_get() failed for path {$filename}");
+                        if (preg_match('/^sem_get\(\): failed for key 0x[A-Fa-f0-9]+: No space left on device$/', $errorDescription)) {
+                            // In case we couldn't create the semaphore because the system reached the maximum number of semaphores,
+                            // the system semget() function called by the sem_get() PHP function returns the ENOSPC error code.
+                            // Its default description is
+                            // "No space left on device"
+                            // But it's really misleading.
+                            // @see https://github.com/php/php-src/blob/php-7.3.1/ext/sysvsem/sysvsem.c#L216-L220
+                            // @see http://man7.org/linux/man-pages/man2/semget.2.html#ERRORS
+                            // @see https://www.gnu.org/software/libc/manual/html_node/Error-Codes.html#index-ENOSPC
+                            throw new RuntimeException("The system ran out of semaphores.\nYou have to free some semaphores, or disable semaphore-based mutex.");
+                        }
+                        throw new RuntimeException("sem_get() failed for path {$filename}: {$errorDescription}");
                     }
                 }
                 if (@sem_acquire($sem, true) !== true) {
