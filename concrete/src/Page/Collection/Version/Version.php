@@ -250,7 +250,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         switch ($cvID) {
             case 'ACTIVE':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ? or cvPublishDate is null) order by cvPublishDate desc limit 1';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?) order by cvPublishDate desc limit 1';
                 $v[] = $now;
                 $v[] = $now;
                 break;
