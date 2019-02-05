@@ -4,6 +4,7 @@ namespace Concrete\Tests\Controller;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
+use Concrete\Core\Console\Command\SetDatabaseCharactersetCommand;
 use Concrete\Core\Console\ServiceProvider;
 use Concrete\Core\Database\Connection\Connection;
 use Doctrine\ORM\EntityManager;
@@ -106,6 +107,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             \Concrete\Core\Console\Command\UninstallPackageCommand::class,
             \Concrete\Core\Console\Command\UpdatePackageCommand::class,
             \Concrete\Core\Console\Command\BlacklistClear::class,
+            \Concrete\Core\Console\Command\SetDatabaseCharactersetCommand::class,
             \Concrete\Core\Console\Command\JobCommand::class,
             \Concrete\Core\Console\Command\UpdateCommand::class,
             \Concrete\Core\Console\Command\RescanFilesCommand::class,
