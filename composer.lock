@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75171bfc1a21bb5a76ca7716855a70ca",
+    "content-hash": "f4a4f26184b517d1eb1c9c42f6e30173",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -50,16 +50,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afcb"
+                "reference": "d27a283f3d00b2dd442f86ebe32b91f4f68bd682"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
-                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/d27a283f3d00b2dd442f86ebe32b91f4f68bd682",
+                "reference": "d27a283f3d00b2dd442f86ebe32b91f4f68bd682",
                 "shasum": ""
             },
             "require": {
@@ -85,6 +85,9 @@
                     },
                     "zendframework/zend-code:2.6.3": {
                         "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
+                    },
+                    "zendframework/zend-http:2.6.0": {
+                        "Remove support for the X-Original-Url and X-Rewrite-Url headers": "zendframework/zend-http/no-x-original-url-x-rewrite.patch"
                     }
                 }
             },
@@ -102,7 +105,7 @@
             ],
             "description": "Patches required for concrete5 dependencies",
             "homepage": "https://github.com/concrete5/dependency-patches",
-            "time": "2018-12-03T07:07:31+00:00"
+            "time": "2019-01-30T07:29:14+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
@@ -5770,6 +5773,16 @@
                 "branch-alias": {
                     "dev-master": "2.6-dev",
                     "dev-develop": "2.7-dev"
+                },
+                "patches_applied": {
+                    "hash": "b1172d4359d8b116dcf51b148427b53e41d1ae2a",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches dev-master",
+                            "path": "zendframework/zend-http/no-x-original-url-x-rewrite.patch",
+                            "description": "Remove support for the X-Original-Url and X-Rewrite-Url headers"
+                        }
+                    ]
                 }
             },
             "autoload": {
