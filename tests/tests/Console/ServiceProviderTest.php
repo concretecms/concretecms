@@ -4,7 +4,7 @@ namespace Concrete\Tests\Controller;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
-use Concrete\Core\Console\Command\SetDatabaseCharactersetCommand;
+use Concrete\Core\Console\Command\SetDatabaseCharacterSetCommand;
 use Concrete\Core\Console\ServiceProvider;
 use Concrete\Core\Database\Connection\Connection;
 use Doctrine\ORM\EntityManager;
