@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http;
 
 use Concrete\Controller\Frontend\PageForbidden;
@@ -10,17 +9,14 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
-use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
@@ -97,6 +93,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         if (is_object($c) && !$c->isError()) {
             // Display not found
             $this->request->setCurrentPage($c);
+
             return $this->controller($c->getPageController(), $code, $headers);
         }
 
@@ -259,6 +256,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 $v = new View('/frontend/maintenance_mode');
                 $v->addScopeItems(['c' => $collection]);
                 $request->setCurrentPage($collection);
+
                 return $this->view($v, $code, $headers);
             }
         }
