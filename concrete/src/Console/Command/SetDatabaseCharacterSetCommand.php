@@ -10,7 +10,7 @@ use Concrete\Core\Database\CharacterSetCollation\Manager;
 use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Concrete\Core\Database\DatabaseManager;
 
-class SetDatabaseCharactersetCommand extends Command
+class SetDatabaseCharacterSetCommand extends Command
 {
     protected $canRunAsRoot = false;
 
@@ -54,7 +54,7 @@ EOT
         $params = $connection->getParams();
         if (isset($params['character_set']) && $params['character_set'] === $characterSet && isset($params['collation']) && $params['collation'] === $collation) {
             if (!$this->option('force')) {
-                $this->output->writeln(sprintf('Skipping since the connection "%s" is already using charcter set "%s" and collation "%s"', $connectionName, $characterSet, $collation));
+                $this->output->writeln(sprintf('Skipping since the connection "%s" is already using character set "%s" and collation "%s"', $connectionName, $characterSet, $collation));
 
                 return 0;
             }
