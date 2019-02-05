@@ -107,7 +107,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             \Concrete\Core\Console\Command\UninstallPackageCommand::class,
             \Concrete\Core\Console\Command\UpdatePackageCommand::class,
             \Concrete\Core\Console\Command\BlacklistClear::class,
-            \Concrete\Core\Console\Command\SetDatabaseCharactersetCommand::class,
+            \Concrete\Core\Console\Command\SetDatabaseCharacterSetCommand::class,
             \Concrete\Core\Console\Command\JobCommand::class,
             \Concrete\Core\Console\Command\UpdateCommand::class,
             \Concrete\Core\Console\Command\RescanFilesCommand::class,
