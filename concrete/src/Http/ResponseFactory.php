@@ -277,33 +277,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
 
-        $scheduledVersion = Version::get($collection, 'SCHEDULED');
-        $publishDate = $scheduledVersion->getPublishDate();
-        $publishEndDate = $scheduledVersion->getPublishEndDate();
-        //Check if the active has an end date
-        if (empty($publishEndDate)) $publishEndDate = Version::get($collection, 'ACTIVE')->getPublishEndDate();
-        if ($publishEndDate && !$cp->canViewPageVersions()) {
-            $datetime = $this->app->make('helper/date');
-            $now = $datetime->date('Y-m-d G:i:s');
-            if (strtotime($now) >= strtotime($publishEndDate)) {
-                $scheduledVersion->deny();
-
-                return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
-            }
-        }
-
-        if ($publishDate) {
-            $datetime = $this->app->make('helper/date');
-            $now = $datetime->date('Y-m-d G:i:s');
-
-            if (strtotime($now) >= strtotime($publishDate)) {
-                $scheduledVersion->approve();
-                $collection->loadVersionObject('ACTIVE');
-            }
-        }
-
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
             $collection->loadVersionObject('RECENT');
+        } else {
+            $collection->loadVersionObject('ACTIVE');
         }
 
         $vp = new Checker($collection->getVersionObject());
