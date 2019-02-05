@@ -95,7 +95,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $c = Page::getByPath($item);
 
         if (is_object($c) && !$c->isError()) {
-            return $this->collection($c, $code, $headers);
+            // Display not found
+            $this->request->setCurrentPage($c);
+            return $this->controller($c->getPageController(), $code, $headers);
         }
 
         $cnt = $this->app->make(PageForbidden::class);
@@ -278,11 +280,11 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $scheduledVersion = Version::get($collection, 'SCHEDULED');
         $publishDate = $scheduledVersion->getPublishDate();
         $publishEndDate = $scheduledVersion->getPublishEndDate();
-
-        if ($publishEndDate) {
+        //Check if the active has an end date
+        if (empty($publishEndDate)) $publishEndDate = Version::get($collection, 'ACTIVE')->getPublishEndDate();
+        if ($publishEndDate && !$cp->canViewPageVersions()) {
             $datetime = $this->app->make('helper/date');
             $now = $datetime->date('Y-m-d G:i:s');
-
             if (strtotime($now) >= strtotime($publishEndDate)) {
                 $scheduledVersion->deny();
 
@@ -359,7 +361,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
-
         $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);
