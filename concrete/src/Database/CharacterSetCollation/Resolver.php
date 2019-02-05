@@ -42,6 +42,16 @@ class Resolver
     }
 
     /**
+     * Get the configuration instance.
+     *
+     * @return \Concrete\Core\Config\Repository\Repository
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
      * Get the default character set.
      *
      * @return string Empty string if not set

@@ -55,6 +55,7 @@ class ServiceProvider extends Provider
         Command\FillThumbnailsTableCommand::class,
         Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
+        Command\SetDatabaseCharacterSetCommand::class,
     ];
 
     /**
