@@ -145,6 +145,6 @@ class Parser
     {
         $parts = preg_split('/\s+:\s+/', trim($token), 2);
 
-        return count($parts) === 2 ? $parts : [$token, null];
+        return count($parts) === 2 ? $parts : [$token, ''];
     }
 }
