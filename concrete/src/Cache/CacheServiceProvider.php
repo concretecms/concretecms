@@ -2,8 +2,12 @@
 
 namespace Concrete\Core\Cache;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
+use Psr\Log\LoggerInterface;
 
 class CacheServiceProvider extends ServiceProvider
 {
@@ -21,5 +25,12 @@ class CacheServiceProvider extends ServiceProvider
         $this->app->singleton('cache/page', function () {
             return PageCache::getLibrary();
         });
+        $this->app
+            ->when(CacheClearer::class)
+            ->needs(LoggerInterface::class)
+            ->give(function (Application $app) {
+                $factory = $app->make(LoggerFactory::class);
+                return $factory->createLogger(Channels::CHANNEL_OPERATIONS);
+            });
     }
 }
