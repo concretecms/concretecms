@@ -20,7 +20,7 @@ class SetDatabaseCharacterSetCommand extends Command
 c5:database:charset:set
     {charset : the character set or the collation to be used for the connection}
     {connection? : the name of the connection - if not specified we'll use the default one}
-    {--f|force} : re-apply the character set/collation even if they should already be in use}
+    {--f|force : re-apply the character set/collation even if they should already be in use}
     {--e|environment : The environment, if none specified the global configuration will be used}
 EOT
     ;
