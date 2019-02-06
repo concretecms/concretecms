@@ -11,6 +11,11 @@ class Concrete5UserProcessor
 {
 
     /**
+     * @var User
+     */
+    protected $user;
+
+    /**
      * Invoke this processor
      *
      * @param array $record The given monolog record
@@ -19,9 +24,11 @@ class Concrete5UserProcessor
      */
     public function __invoke(array $record)
     {
-        $u = new User();
-        if ($u->isRegistered()) {
-            $record['extra']['user'] = [$u->getUserID(), $u->getUserName()];
+        if (!isset($this->user)) {
+            $this->user = new User();
+        }
+        if ($this->user->isRegistered()) {
+            $record['extra']['user'] = [$this->user->getUserID(), $this->user->getUserName()];
         }
 
         return $record;
