@@ -53,7 +53,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $processors = $applicationLogger->getProcessors();
         $handlers = $applicationLogger->getHandlers();
         $this->assertCount(1, $handlers);
-        $this->assertCount(0, $processors);
+        $this->assertCount(2, $processors);
         $this->assertInstanceOf(DatabaseHandler::class, $handlers[0]);
         $this->assertEquals(Logger::DEBUG, $handlers[0]->getLevel());
 
@@ -163,6 +163,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $contents = $filesystem->get($file);
         $this->assertCount(4, explode("\n", trim($contents)));
         $filesystem->delete($file);
+
+        $this->assertCount(1, $logger->getHandlers());
+        $this->assertCount(2, $logger->getProcessors()); // needs to have psr processor and the concrete5 processor.
+
     }
 
     public function testLoggingFacade()

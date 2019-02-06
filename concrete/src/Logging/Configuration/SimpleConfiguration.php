@@ -5,6 +5,7 @@ namespace Concrete\Core\Logging\Configuration;
 use Concrete\Core\Logging\Channels;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
 
 abstract class SimpleConfiguration implements ConfigurationInterface
 {
@@ -47,8 +48,10 @@ abstract class SimpleConfiguration implements ConfigurationInterface
         }
 
         $handler = $this->createHandler($level);
-        $handler->pushProcessor(new PsrLogMessageProcessor());
+
         $logger->pushHandler($handler);
+        $logger->pushProcessor(new PsrLogMessageProcessor());
+        $logger->pushProcessor(new Concrete5UserProcessor());
 
         return $logger;
     }
