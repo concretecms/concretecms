@@ -86,6 +86,14 @@ class Channels
     const CHANNEL_NETWORK = 'network';
 
     /**
+     * Channel identifier: operations. Used for routine maintenance operations.
+     *
+     * @var string
+     */
+    const CHANNEL_OPERATIONS = 'operations';
+
+
+    /**
      * Channel identifier: all – Do NOT use this to log to. This is a separate system channel that tells configuration
      * that you want to apply all configuration options to all channels, and listen to all of them.
      *
@@ -111,6 +119,7 @@ class Channels
             self::CHANNEL_SITE_ORGANIZATION,
             self::CHANNEL_NETWORK,
             self::CHANNEL_USERS,
+            self::CHANNEL_OPERATIONS,
         ];
     }
 
