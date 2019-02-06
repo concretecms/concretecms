@@ -61,4 +61,23 @@ class Concrete5UserProcessorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($given, $processor($given));
     }
 
+    public function testProcessorDoesntMakeMoreThanOneUser()
+    {
+        $user = M::mock(User::class);
+        $user->shouldReceive('getUserID')->andReturn(1337);
+        $user->shouldReceive('getUserName')->andReturn('foobaz');
+        $user->shouldReceive('isRegistered')->andReturn(true);
+
+        // Set up the IOC container making sure to flag the ->make() as happening only once
+        $app = M::mock(Application::class);
+        $app->shouldReceive('make')->once()->withArgs([User::class])->andReturn($user);
+
+        // Set up the processor
+        $processor = new Concrete5UserProcessor($app);
+
+        // Run the processor twice
+        $processor([]);
+        $processor([]);
+    }
+
 }
