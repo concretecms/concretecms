@@ -64,16 +64,14 @@ class DefaultDispatcher implements DispatcherInterface
     private function getEarlyDispatchResponse()
     {
         $validator = $this->app->make(SessionValidator::class);
-        if ($validator->hasActiveSession()) {
-            $session = $this->app['session'];
-            if (!$session->has('uID')) {
-                User::verifyAuthTypeCookie();
-            }
+        $session = $this->app['session'];
+        if (!$validator->hasActiveSession() || !$session->has('uID')) {
+            User::verifyAuthTypeCookie();
+        }
 
-            // User may have been logged in, so lets check status again.
-            if ($session->has('uID') && $session->get('uID') > 0 && $response = $this->validateUser()) {
-                return $response;
-            }
+        // User may have been logged in, so lets check status again.
+        if ($validator->hasActiveSession() && $session->has('uID') && $session->get('uID') > 0 && $response = $this->validateUser()) {
+            return $response;
         }
     }
 
