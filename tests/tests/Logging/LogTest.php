@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Logging;
 
 use Cascade\Cascade;
+use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Site;
@@ -15,16 +16,19 @@ use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Illuminate\Filesystem\Filesystem;
+use Mockery as M;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Concrete\Core\Logging\LogEntry;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
@@ -111,10 +115,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertCount(5, $r);
     }
 
-
     public function testMoreVerboseDatabaseLogging()
     {
         $configuration = new SimpleDatabaseConfiguration(Logger::INFO);
+        $configuration->setApplication($this->getNoopProcessorApplication());
 
         $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -142,6 +146,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $file = __DIR__ . DIRECTORY_SEPARATOR . '/testing.log';
 
         $configuration = new SimpleFileConfiguration($file, Logger::INFO);
+        $configuration->setApplication($this->getNoopProcessorApplication());
 
         $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -365,6 +370,22 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals($le3->getLevel(), Logger::NOTICE);
         $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
         $this->assertEquals($le2->getMessage(), 'OMG!');
+    }
+
+    /**
+     * Build an application mock that returns noop processors
+     *
+     * @return M\MockInterface|Application
+     */
+    protected function getNoopProcessorApplication()
+    {
+        $noop = function($data) { return $data; };
+
+        $app = M::mock(Application::class);
+        $app->shouldReceive('make')->withArgs([Concrete5UserProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([PsrLogMessageProcessor::class])->andReturn($noop);
+
+        return $app;
     }
 
 
