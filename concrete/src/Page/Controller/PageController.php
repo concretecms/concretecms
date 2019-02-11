@@ -350,4 +350,12 @@ class PageController extends Controller
     {
         return false;
     }
+
+    /**
+     * Override this method to send content created by the page controller to the indexer
+     */
+    public function getSearchableContent()
+    {
+        return;
+    }
 }

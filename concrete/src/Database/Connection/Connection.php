@@ -3,13 +3,39 @@
 namespace Concrete\Core\Database\Connection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Schema\Column as DbalColumn;
+use Doctrine\DBAL\Schema\Table as DbalTable;
+use Doctrine\DBAL\Types\Type as DbalType;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use ORM;
+use PDO;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
     /** @var EntityManager */
     protected $entityManager;
+
+    /**
+     * The supported character sets and associated default collation.
+     *
+     * @var null|array NULL if not yet initialized; an array with keys (character set - always lower case) and values (default collation for the character set - always lower case) otherwise
+     */
+    protected $supportedCharsets;
+
+    /**
+     * The supported collations and the associated character sets.
+     *
+     * @var null|array NULL if not yet initialized; an array with keys (collation) and values (associated character set) otherwise
+     */
+    protected $supportedCollations;
+
+    /**
+     * Overridden params.
+     *
+     * @var array
+     */
+    private $overriddenParams = [];
 
     /**
      * @deprecated Please use the ORM facade instead of this method:
@@ -404,5 +430,124 @@ class Connection extends \Doctrine\DBAL\Connection
         $this->rollBack();
 
         return true;
+    }
+
+    /**
+     * Get the supported character sets and associated default collation.
+     *
+     * @throws \Exception throws an exception in case of errors
+     *
+     * @return array keys: character set (always lower case); array values: default collation for the character set (always lower case)
+     */
+    public function getSupportedCharsets()
+    {
+        if ($this->supportedCharsets === null) {
+            $supportedCharsets = [];
+            $rs = $this->executeQuery('SHOW CHARACTER SET');
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+                if (!isset($row['Charset']) || !isset($row['Default collation'])) {
+                    throw new Exception(t('Unrecognized result of the "%s" database query.', 'SHOW CHARACTER SET'));
+                }
+                $supportedCharsets[strtolower($row['Charset'])] = strtolower($row['Default collation']);
+            }
+            $this->supportedCharsets = $supportedCharsets;
+        }
+
+        return $this->supportedCharsets;
+    }
+
+    /**
+     * Get the supported collations and the associated character sets.
+     *
+     * @throws \Exception throws an exception in case of errors
+     *
+     * @return array keys: collation (always lower case); array values: associated character set (always lower case)
+     */
+    public function getSupportedCollations()
+    {
+        if ($this->supportedCollations === null) {
+            $supportedCollations = [];
+            $rs = $this->executeQuery('SHOW COLLATION');
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+                if (!isset($row['Collation']) || !isset($row['Charset'])) {
+                    throw new Exception(t('Unrecognized result of the "%s" database query.', 'SHOW COLLATION'));
+                }
+                $supportedCollations[strtolower($row['Collation'])] = strtolower($row['Charset']);
+            }
+            $this->supportedCollations = $supportedCollations;
+        }
+
+        return $this->supportedCollations;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Connection::getParams()
+     */
+    public function getParams()
+    {
+        $result = $this->overriddenParams + parent::getParams();
+        // Forward the connection charset/collate to the default table options
+        if (!isset($result['defaultTableOptions']['charset']) && !isset($result['defaultTableOptions']['collate'])) {
+            if (isset($result['character_set']) && isset($result['collation'])) {
+                if (!isset($result['defaultTableOptions'])) {
+                    $result['defaultTableOptions'] = [];
+                }
+                $result['defaultTableOptions']['charset'] = $result['character_set'];
+                $result['defaultTableOptions']['collate'] = $result['collation'];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if a collation can be used for keys of a specific length.
+     *
+     * @param string $collation the name of a collation
+     * @param int $fieldLength the length (in chars) of a field to be used as key/index
+     *
+     * @return bool
+     */
+    public function isCollationSupportedForKeys($collation, $fieldLength)
+    {
+        $sm = $this->getSchemaManager();
+        $existingTables = array_map('strtolower', $sm->listTableNames());
+        for ($i = 0; ; ++$i) {
+            $tableName = 'tmp_checkCollationFieldLength' . $i;
+            if (!in_array(strtolower($tableName), $existingTables)) {
+                break;
+            }
+        }
+        $column = new DbalColumn('ColumnName', DbalType::getType(DbalType::STRING), ['length' => (int) $fieldLength]);
+        $column->setPlatformOption('collation', (string) $collation);
+        $table = new DbalTable($tableName, [$column]);
+        $table->setPrimaryKey([$column->getName()]);
+        try {
+            $sm->createTable($table);
+        } catch (Exception $x) {
+            // SQLSTATE[42000]: Syntax error or access violation: 1071 Specified key was too long; max key length is XYZ bytes
+            return false;
+        }
+        try {
+            $sm->dropTable($tableName);
+        } catch (Exception $x) {
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string $characterSet
+     * @param string $collation
+     *
+     * @internal
+     */
+    public function refreshCharactersetCollation($characterSet, $collation)
+    {
+        $this->executeQuery('SET NAMES ' . $this->quote($characterSet) . ' COLLATE ' . $this->quote($collation));
+        $this->overriddenParams['character_set'] = $characterSet;
+        $this->overriddenParams['collation'] = $collation;
     }
 }

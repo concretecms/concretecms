@@ -3,8 +3,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @var $router \Concrete\Core\Routing\Router
+ * Base path: /ccm/system/panels
+ * Namespace: Concrete\Controller\Panel\
  */
 $router->all('/add', 'Add::view');
+$router->all('/add/get_stack_contents', 'Add::getStackContents');
 $router->all('/dashboard', 'Dashboard::view');
 $router->all('/dashboard/add_favorite', 'Dashboard::addFavorite');
 $router->all('/dashboard/remove_favorite', 'Dashboard::removeFavorite');

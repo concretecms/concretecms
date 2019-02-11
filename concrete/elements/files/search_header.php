@@ -1,4 +1,18 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+
+/* @var Concrete\Controller\Element\Search\Files\Header $controller */
+/* @var Concrete\Core\Form\Service\Form $form */
+/* @var Concrete\Core\Validation\CSRF\Token $token */
+/* @var Concrete\Core\View\BasicFileView $view */
+/* @var bool $includeBreadcrumb */
+/* @var string|null $breadcrumbClass */
+/* @var Concrete\Core\Url\UrlImmutable $addFolderAction */
+/* @var int $currentFolder */
+/* @var int|null $imageMaxWidth */
+/* @var int|null $imageMaxHeight */
+/* @var int $jpegQuality */
+?>
 
 <div class="ccm-header-search-form ccm-ui" data-header="file-manager">
     <?php if ($includeBreadcrumb) { ?>
@@ -26,10 +40,7 @@
                 </a>
             </li>
             <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
-            <li><a data-dialog="add-files" href="#" id="ccm-file-manager-upload">
-                    <i class="fa fa-upload"></i> <?=t('Upload Files')?>
-                </a>
-            </li>
+            <li><a href="#" id="ccm-file-manager-upload" data-dialog="add-files"><i class="fa fa-upload"></i> <?=t('Upload Files')?></a></li>
         </ul>
     </form>
 </div>

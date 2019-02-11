@@ -12,24 +12,24 @@ use Concrete\Core\View\AbstractView;
 class ControllerRouteAction implements RouteActionInterface
 {
 
-    protected $action;
+    protected $controllerCallback;
 
     /**
      * ControllerRouteCallback constructor. $action is something like
      * \My\Controller::myAction
      * @param string $action
      */
-    public function __construct($action)
+    public function __construct($controllerCallback)
     {
-        $this->action = $action;
+        $this->controllerCallback = $controllerCallback;
     }
 
     /**
      * @return string
      */
-    public function getAction()
+    public function getControllerCallback()
     {
-        return $this->action;
+        return $this->controllerCallback;
     }
 
 
@@ -43,8 +43,7 @@ class ControllerRouteAction implements RouteActionInterface
      */
     public function execute(Request $request, Route $route, $parameters)
     {
-        $request->attributes->set('_controller', $this->getAction());
-
+        $request->attributes->set('_controller', $this->getControllerCallback());
         $app = Facade::getFacadeApplication();
         $controllerResolver = $app->make(ApplicationAwareControllerResolver::class);
         $callback = $controllerResolver->getController($request);

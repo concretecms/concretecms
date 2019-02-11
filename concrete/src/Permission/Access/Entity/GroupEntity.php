@@ -18,7 +18,11 @@ class GroupEntity extends Entity
 
     public function getAccessEntityUsers(PermissionAccess $pa)
     {
-        return $this->group->getGroupMembers();
+        if (is_object($this->group)) {
+            return $this->group->getGroupMembers();
+        }
+
+        return [];
     }
 
     public function getAccessEntityTypeLinkHTML()

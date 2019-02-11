@@ -6,18 +6,28 @@ use League\Fractal\TransformerAbstract;
 class TreeCollectionTransformer extends TransformerAbstract
 {
 
-    public function transform(TreeCollection $collection)
+    /**
+     * Convert an entry to an array
+     * @param \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface $entry
+     * @return array
+     */
+    private function transformEntry(Entry\EntryInterface $entry)
     {
-        $entries = [];
-        foreach($collection->getEntries() as $entry) {
-            $o = new \stdClass();
-            $o->id = $entry->getID();
-            $o->name = $entry->getLabel();
-            $o->icon = (string) $entry->getIcon();
-            $entries[] = $o;
-        }
-        return $entries;
-
+        return [
+            'id' => $entry->getID(),
+            'name' => $entry->getLabel(),
+            'icon' => (string) $entry->getIcon()
+        ];
     }
 
+    /**
+     * Transform treecollections into lists of their entries
+     *
+     * @param \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollection $collection
+     * @return array
+     */
+    public function transform(TreeCollection $collection)
+    {
+        return array_map([$this, 'transformEntry'], $collection->getEntries());
+    }
 }

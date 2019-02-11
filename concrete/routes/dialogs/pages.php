@@ -3,6 +3,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @var $router \Concrete\Core\Routing\Router
+ * Base path: /ccm/system/dialogs/page
+ * Namespace: Concrete\Controller\Dialog\Page\
  */
 $router->all('/add', 'Add::view');
 $router->all('/add_block', 'AddBlock::view');
@@ -33,6 +35,9 @@ $router->all('/edit_external/submit', 'EditExternal::submit');
 $router->all('/location', 'Location::view');
 $router->all('/search', 'Search::view');
 $router->all('/seo', 'Seo::view');
+$router->all('/drag_request', 'DragRequest::view');
+$router->all('/drag_request/submit', 'DragRequest::submit');
+$router->all('/drag_request/copy_all', 'DragRequest::doCopyAll');
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
 $router->all('/advanced_search/submit', 'AdvancedSearch::submit');

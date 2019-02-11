@@ -5,7 +5,7 @@ namespace Concrete\Core\Page\Sitemap\Element;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Url\UrlInterface;
+use League\Url\UrlInterface;
 use SimpleXMLElement;
 
 class SitemapPageAlternativeLanguage extends SitemapElement
@@ -27,7 +27,7 @@ class SitemapPageAlternativeLanguage extends SitemapElement
     /**
      * The URL of the alternative page.
      *
-     * @var \Concrete\Core\Url\UrlInterface
+     * @var \League\Url\UrlInterface
      */
     protected $url;
 
@@ -48,7 +48,7 @@ class SitemapPageAlternativeLanguage extends SitemapElement
     /**
      * @param \Concrete\Core\Multilingual\Page\Section\Section $section
      * @param \Concrete\Core\Page\Page $page
-     * @param \Concrete\Core\Url\UrlInterface $url
+     * @param \League\Url\UrlInterface $url
      */
     public function __construct(Section $section, Page $page, UrlInterface $url)
     {
@@ -80,7 +80,7 @@ class SitemapPageAlternativeLanguage extends SitemapElement
     /**
      * Get the URL of the alternative page.
      *
-     * @return \Concrete\Core\Url\UrlInterface
+     * @return \League\Url\UrlInterface
      */
     public function getUrl()
     {
@@ -90,7 +90,7 @@ class SitemapPageAlternativeLanguage extends SitemapElement
     /**
      * Set the URL of the alternative page.
      *
-     * @param \Concrete\Core\Url\UrlInterface $url
+     * @param \League\Url\UrlInterface $url
      *
      * @return $this
      */

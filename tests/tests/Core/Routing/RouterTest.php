@@ -2,7 +2,11 @@
 namespace Concrete\Tests\Core\Routing;
 
 
+use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Http\Middleware\FractalNegotiatorMiddleware;
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
+use Concrete\Core\Http\Middleware\OAuthAuthenticationMiddleware;
+use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\ControllerRouteAction;
 use Concrete\Core\Routing\Route;
@@ -15,7 +19,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Concrete\Core\Routing\MatchedRoute;
-class TestController
+class TestController extends AbstractController
 {
 
     public function hello()
@@ -69,7 +73,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $route = $router->all('/my/method', 'Something\Controller')->getRoute();
         $this->assertCount(7, $route->getMethods());
 
-        $route = $router->getRoutes()->get('my_method');
+        $route = $router->getRoutes()->get('my_method_all');
         $this->assertInstanceOf(Route::class, $route);
 
         $route = $router->head('/something/special', 'Something\Controller')
@@ -112,15 +116,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $route = $router->get('/hello-world', function() { return 'hello world.'; })
             ->getRoute();
         $this->assertInstanceOf(Route::class, $route);
-        $callback = $router->getAction($route);
+        $callback = $router->resolveAction($route);
         $this->assertInstanceOf(ClosureRouteAction::class, $callback);
 
-        $route = $router->get('/hello-world', 'Concrete\Tests\Core\Routing\TestController')
+        $route = $router->get('/hello-world', 'Concrete\Tests\Core\Routing\TestController::hello')
             ->getRoute();
-        $action = $router->getAction($route);
+        $action = $router->resolveAction($route);
         $this->assertInstanceOf(ControllerRouteAction::class, $action);
-        $action = $action->getAction();
-        $this->assertEquals('Concrete\Tests\Core\Routing\TestController', $action);
+        $this->assertEquals('Concrete\Tests\Core\Routing\TestController::hello', $action->getControllerCallback());
     }
 
     public function testRouteMatchingAndControllerExecution()
@@ -137,8 +140,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(MatchedRoute::class, $route);
         $route = $route->getRoute();
         $this->assertInstanceOf(Route::class, $route);
-        $this->assertEquals('something_hello_world', $route->getName());
-        $action = $router->getAction($route);
+        $this->assertEquals('something_hello_world_get', $route->getName());
+        $action = $router->resolveAction($route);
         $response = $action->execute($request, $route, []);
         $this->assertEquals('oh hai', $response->getContent());
     }
@@ -169,9 +172,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(4, $routes);
 
         // Test prefix and name.
-        $this->assertEquals('/api/v1/hello-world/', $routes->get('api_v1_hello_world')->getPath());
-        $this->assertEquals('/a-fun-test/', $routes->get('a_fun_test')->getPath());
-        $this->assertEquals('/api/v1/status/', $routes->get('api_v1_status')->getPath());
+        $this->assertEquals('/api/v1/hello-world/', $routes->get('api_v1_hello_world_get')->getPath());
+        $this->assertEquals('/a-fun-test/', $routes->get('a_fun_test_post')->getPath());
+        $this->assertEquals('/api/v1/status/', $routes->get('api_v1_status_get')->getPath());
         $this->assertEquals('/api/v1/user/{:user}/', $routes->get('user_details')->getPath());
 
         // Test everything
@@ -189,7 +192,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 return $groupRouter;
             });
 
-        $route = $router->getRoutes()->get('ccm_system_user_remove_group');
+        $route = $router->getRoutes()->get('ccm_system_user_remove_group_post');
         $middlewares = $route->getMiddlewares();
         $this->assertCount(2, $middlewares);
         $this->assertEquals('Concrete\Tests\Core\Routing\AnotherMiddleware', $middlewares[1]->getMiddleware());
@@ -199,11 +202,72 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $requirements = $route->getRequirements();
         $this->assertCount(1, $requirements);
         $this->assertEquals('[A-Za-z0-9_/.]+', $requirements['identifier']);
-        $action = $router->getAction($route);
+        $action = $router->resolveAction($route);
         $this->assertInstanceOf(ControllerRouteAction::class, $action);
-        $controller = $action->getAction();
+        $controller = $action->getControllerCallback();
 
         $this->assertEquals('Concrete\Controller\Backend\User::removeGroup', $controller);
+    }
+
+    public function testMultipleGroups()
+    {
+        $router = new Router(new RouteCollection(), new RouteActionFactory());
+        $api = $router->buildGroup()
+            ->setPrefix('/ccm/api/v1')
+            ->scope('api')
+            ->addMiddleware(OAuthErrorMiddleware::class)
+            ->addMiddleware(OAuthAuthenticationMiddleware::class);
+
+        $api->buildGroup()
+            ->setPrefix('/system')
+            ->routes(function($groupRouter) {
+                $groupRouter->get('/info', 'Concrete\Tests\Core\Routing\TestController::hello');
+                $groupRouter->get('/status', 'Concrete\Tests\Core\Routing\TestController::status');
+                return $groupRouter;
+            });
+
+        $api->buildGroup()->scope('users')
+            ->addMiddleware(FractalNegotiatorMiddleware::class)
+            ->routes(function($groupRouter) {
+                $groupRouter->get('/users', 'Concrete\Tests\Core\Routing\TestController::hello');
+                $groupRouter->post('/user/add', 'Concrete\Tests\Core\Routing\TestController::status');
+                return $groupRouter;
+            });
+        $api->buildGroup()->scope('products')
+            ->routes(function($groupRouter) {
+                $groupRouter->get('/products', 'Concrete\Tests\Core\Routing\TestController::hello');
+                $groupRouter->post('/products/add', 'Concrete\Tests\Core\Routing\TestController::status');
+                return $groupRouter;
+            });
+
+        $routes = $router->getRoutes();
+        $this->assertEquals(6, count($routes));
+        $route = $router->getRoutes()->get('ccm_api_v1_system_status_get');
+        $middlewares = $route->getMiddlewares();
+        $scope = $route->getOption('oauth_scopes');
+
+        $this->assertCount(2, $middlewares);
+        $this->assertEquals('/ccm/api/v1/system/status/', $route->getPath());
+        $this->assertEquals('api', $scope);
+
+        $route = $router->getRoutes()->get('ccm_api_v1_products_add_post');
+        $middlewares = $route->getMiddlewares();
+        $scope = $route->getOption('oauth_scopes');
+        $methods = $route->getMethods();
+
+        $this->assertCount(2, $middlewares);
+        $this->assertEquals('/ccm/api/v1/products/add/', $route->getPath());
+        $this->assertCount(1, $methods);
+        $this->assertEquals('POST', $methods[0]);
+        $this->assertEquals('api,products', $scope);
+
+        $route = $router->getRoutes()->get('ccm_api_v1_users_get');
+        $scope = $route->getOption('oauth_scopes');
+        $middlewares = $route->getMiddlewares();
+        $this->assertCount(3, $middlewares);
+        $this->assertEquals(FractalNegotiatorMiddleware::class, $middlewares[2]->getMiddleware());
+        $this->assertEquals('api,users', $scope);
+
     }
 
 }

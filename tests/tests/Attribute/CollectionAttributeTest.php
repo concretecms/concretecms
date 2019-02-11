@@ -31,6 +31,7 @@ class CollectionAttributeTest extends AttributeTestCase
             'CollectionAttributeValues',
             'Pages',
             'PageSearchIndex',
+            'PageTypes',
             'CollectionSearchIndexAttributes',
             'CollectionVersions',
             'CollectionVersionBlocks',

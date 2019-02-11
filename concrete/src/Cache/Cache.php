@@ -1,12 +1,10 @@
 <?php
 namespace Concrete\Core\Cache;
 
-use Core;
-use Config;
+use Concrete\Core\Support\Facade\Application;
 use Psr\Cache\CacheItemInterface;
 use Stash\Driver\BlackHole;
 use Stash\Driver\Composite;
-use Stash\Interfaces\ItemInterface;
 use Stash\Pool;
 
 /**
@@ -48,46 +46,79 @@ abstract class Cache implements FlushableInterface
      */
     protected function loadConfig($level)
     {
-        $drivers = array();
-        $driver_configs = Config::get("concrete.cache.levels.{$level}.drivers", array());
+        $app = Application::getFacadeApplication();
+        $drivers = [];
+        $driverConfigs = $app['config']->get("concrete.cache.levels.{$level}.drivers", []);
+        $preferredDriverName = $app['config']->get("concrete.cache.levels.{$level}.preferred_driver", null);
 
-        foreach ($driver_configs as $driver_build) {
-            if (!$driver_build) {
-                continue;
-            }
-
-            $class = array_get($driver_build, 'class', '');
-            if ($class && class_exists($class)) {
-                $implements = class_implements($class);
-
-                // Make sure that the provided class implements the DriverInterface
-                if (isset($implements['Stash\Interfaces\DriverInterface'])) {
-                    /** @var \Stash\Interfaces\DriverInterface $temp_driver */
-
-
-                    if ($options = array_get($driver_build, 'options', null)) {
-                        $temp_driver = new $class($options);
-                    } else {
-                        $temp_driver = new $class;
-                    }
-
-                    $drivers[] = $temp_driver;
-                } else {
-                    throw new \RuntimeException('Cache driver class must implement \Stash\Interfaces\DriverInterface.');
+        // Load the preferred driver(s) first
+        if (!empty($preferredDriverName)) {
+            if (is_array($preferredDriverName)) {
+                foreach ($preferredDriverName as $driverName) {
+                    $preferredDriver = array_get($driverConfigs, $driverName, []);
+                    $drivers[] = $this->buildDriver($preferredDriver);
                 }
+            } else {
+                $preferredDriver = array_get($driverConfigs, $preferredDriverName, []);
+                $drivers[] = $this->buildDriver($preferredDriver);
+            }
+        }
+        // If we dont have any perferred drivers or preferred drivers available
+        // Build Everything
+        if (empty($drivers)) {
+            foreach ($driverConfigs as $driverConfig) {
+                if (!$driverConfig) {
+                    continue;
+                }
+
+                $drivers[] = $this->buildDriver($driverConfig);
             }
         }
 
+        // Remove any empty arrays for an accurate count
+        array_filter($drivers);
         $count = count($drivers);
         if ($count > 1) {
             $driver = new Composite(['drivers' => $drivers]);
         } elseif ($count === 1) {
-            $driver = $drivers[0];
+            reset($drivers);
+            $driver = current($drivers);
         } else {
             $driver = new BlackHole();
         }
 
         return $driver;
+    }
+
+    /**
+     * Function used to build a driver from a driverConfig array.
+     *
+     * @param array $driverConfig The config item belonging to the driver
+     *
+     * @return null|\Stash\Interfaces\DriverInterface
+     */
+    private function buildDriver(array $driverConfig)
+    {
+        $class = array_get($driverConfig, 'class', '');
+        if ($class && class_exists($class)) {
+            $implements = class_implements($class);
+
+            // Make sure that the provided class implements the DriverInterface
+            if (isset($implements['Stash\Interfaces\DriverInterface'])) {
+                /* @var \Stash\Interfaces\DriverInterface $tempDriver */
+
+                // Only add if the driver is available
+                if ($class::isAvailable()) {
+                    $tempDriver = new $class(array_get($driverConfig, 'options', null));
+
+                    return $tempDriver;
+                }
+            } else {
+                throw new \RuntimeException('Cache driver class must implement \Stash\Interfaces\DriverInterface.');
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -186,9 +217,10 @@ abstract class Cache implements FlushableInterface
      */
     public static function disableAll()
     {
-        Core::make('cache/request')->disable();
-        Core::make('cache/expensive')->disable();
-        Core::make('cache')->disable();
+        $app = Application::getFacadeApplication();
+        $app->make('cache/request')->disable();
+        $app->make('cache/expensive')->disable();
+        $app->make('cache')->disable();
     }
 
     /**
@@ -196,8 +228,9 @@ abstract class Cache implements FlushableInterface
      */
     public static function enableAll()
     {
-        Core::make('cache/request')->enable();
-        Core::make('cache/expensive')->enable();
-        Core::make('cache')->enable();
+        $app = Application::getFacadeApplication();
+        $app->make('cache/request')->enable();
+        $app->make('cache/expensive')->enable();
+        $app->make('cache')->enable();
     }
 }

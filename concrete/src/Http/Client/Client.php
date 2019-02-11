@@ -1,14 +1,18 @@
 <?php
 namespace Concrete\Core\Http\Client;
 
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use GuzzleHttp\Client as GuzzleHttpClient;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Log\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
 class Client extends GuzzleHttpClient implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
 
     /**
      * @var GuzzleHttpClient
@@ -28,6 +32,11 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_NETWORK;
     }
 
     /**

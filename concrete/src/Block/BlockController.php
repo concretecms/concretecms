@@ -17,6 +17,7 @@ use Database;
 use Events;
 use Package;
 use Page;
+use Concrete\Core\Error\ErrorList\ErrorList;
 
 class BlockController extends \Concrete\Core\Controller\AbstractController
 {
@@ -137,9 +138,20 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         $this->blockViewRenderOverride = $view;
     }
 
+    /**
+     * Used to validate a blocks data before saving to the database
+     * Generally should return an empty ErrorList if valid
+     * Custom Packages may return a boolean value
+     *
+     * @param $args array|string|null
+     * @version <= 8.4.3 Method returns ErrorList|boolean
+     * @version 8.5.0a3 Method returns ErrorList
+     * @return ErrorList|boolean
+     */
     public function validate($args)
     {
-        return true;
+        $e = $this->app->make(ErrorList::class);
+        return $e;
     }
 
     public function getBlockControllerData()
@@ -414,6 +426,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         // we have to do this this way because we need a bID
         $this->importAdditionalData($b, $blockNode);
 
+        // now we handle container settings
+        $bCustomContainerSettings = (string) $blockNode['custom-container-settings'];
+        if ($bCustomContainerSettings === '0' || $bCustomContainerSettings === '1') {
+            $b->setCustomContainerSettings($bCustomContainerSettings);
+        }
+
         // now we handle the styles
         if (isset($blockNode->style)) {
             $set = StyleSet::import($blockNode->style);
@@ -517,6 +535,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return [$method, $parameters];
     }
 
+    /**
+     * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
+     * It can also be used to perform system operations, accordingly to the current action.
+     *
+     * @param mixed $task,... The arguments to build the URL (variable number of arguments).
+     *
+     * @return \Concrete\Core\Url\UrlImmutable|null Return NULL in case of problems
+     */
     public function getActionURL($task)
     {
         try {
@@ -528,7 +554,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     $b = $this->block;
                 }
 
-                if ($this->getAction() == 'view') {
+                $action = $this->getAction();
+                if ($action === 'view' || strpos($action, 'action_') === 0) {
                     $c = Page::getCurrentPage();
                     if (is_object($b) && is_object($c)) {
                         $arguments = func_get_args();
@@ -542,7 +569,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     $arguments = array_merge(array('/ccm/system/block/action/edit',
                         $c->getCollectionID(),
                         urlencode($this->getAreaObject()->getAreaHandle()),
-                        $this->block->getBLockID(),
+                        $this->block->getBlockID(),
                     ), func_get_args());
 
                     return call_user_func_array(array('\URL', 'to'), $arguments);
@@ -559,7 +586,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 return call_user_func_array(array('\URL', 'to'), $arguments);
 
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
 
     }

@@ -108,7 +108,7 @@ class Template
         return $template;
     }
 
-    public function getIcons()
+    public static function getIcons()
     {
         $f = Core::make('helper/file');
 

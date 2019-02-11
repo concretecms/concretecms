@@ -1,37 +1,43 @@
 <?php
+
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use URL;
 use Concrete\Core\Page\EditResponse;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class AddExternal extends BackendInterfacePageController
 {
     protected $viewPath = '/dialogs/page/add_external';
 
-    protected function canAccess()
-    {
-        return $this->permissions->canAddExternalLink();
-    }
-
     public function view()
     {
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('name', '');
+        $this->set('link', '');
+        $this->set('openInNewWindow', true);
+        $this->set('isEditingExisting', false);
     }
 
     public function submit()
     {
         if ($this->validateAction()) {
-            $request = \Request::getInstance();
+            $post = $this->request->request;
             $this->page->addCollectionAliasExternal(
-                $request->request->get('name'),
-                $request->request->get('link'),
-                $request->request->get('openInNewWindow')
+                $post->get('name'),
+                $post->get('link'),
+                $post->get('openInNewWindow')
             );
 
             $r = new EditResponse();
             $r->setPage($this->page);
-            $r->setRedirectURL(URL::to('/dashboard/sitemap'));
+            $r->setRedirectURL($this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/sitemap']));
             $r->outputJSON();
         }
+    }
+
+    protected function canAccess()
+    {
+        return $this->permissions->canAddExternalLink();
     }
 }

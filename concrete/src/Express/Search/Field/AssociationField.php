@@ -84,18 +84,26 @@ class AssociationField extends AbstractField
 
                 if (is_array($selected)) {
                     $spoofedAssociation = new Entry\ManyAssociation();
+                    $spoofedAssociation->setAssociation($this->association);
                     foreach($selected as $id) {
                         $selectedEntry = new Entry();
                         $selectedEntry->setID($id);
-                        $spoofedAssociation->getSelectedEntriesCollection()->add($selectedEntry);
+
+                        $selectedAssociationEntry = new Entry\AssociationEntry();
+                        $selectedAssociationEntry->setEntry($selectedEntry);
+                        $selectedAssociationEntry->setAssociation($spoofedAssociation);
+
+                        $spoofedAssociation->getSelectedEntriesCollection()->add($selectedAssociationEntry);
                     }
-                    $spoofedAssociation->setAssociation($this->association);
                 } else {
                     $selectedEntry = new Entry();
                     $selectedEntry->setID($selected);
                     $spoofedAssociation = new Entry\OneAssociation();
                     $spoofedAssociation->setAssociation($this->association);
-                    $spoofedAssociation->setSelectedEntry($selectedEntry);
+                    $selectedAssociationEntry = new Entry\AssociationEntry();
+                    $selectedAssociationEntry->setEntry($selectedEntry);
+                    $selectedAssociationEntry->setAssociation($spoofedAssociation);
+                    $spoofedAssociation->setSelectedEntry($selectedAssociationEntry);
                 }
 
                 $spoofedEntry = new Entry();

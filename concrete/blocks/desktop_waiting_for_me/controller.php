@@ -39,18 +39,15 @@ class Controller extends BlockController
             $filterValues[$filter->getKey()] = $filter->getName();
         }
 
-        $filter = null;
-        if ($this->request->query->has('filter')) {
-            $filter = $this->request->query->get('filter');
-            $this->set('activeFilter', h($filter));
-        }
-
         $u = new \User();
         $list = $this->app->make(AlertList::class, ['user' => $u]);
-        if ($filter) {
-            $activeFilter = $filterList->getFilterByKey($filter);
-            if ($activeFilter) {
-                $activeFilter->filterAlertList($list);
+        $filter = (string) $this->request->query->get('filter');
+        if ($filter !== '') {
+            $filterObject = $filterList->getFilterByKey($filter);
+            if ($filterObject) {
+                $filterObject->filterAlertList($list);
+            } else {
+                $filter = '';
             }
         }
         $pagination = $list->getPagination();
@@ -63,6 +60,7 @@ class Controller extends BlockController
         $this->set('filterValues', $filterValues);
         $this->set('token', $this->app->make('token'));
         $this->set('pagination', $pagination);
+        $this->set('filter', $filter);
     }
 
     public function action_reload_results()

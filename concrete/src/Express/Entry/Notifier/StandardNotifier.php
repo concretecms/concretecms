@@ -7,7 +7,6 @@ use Concrete\Core\Entity\Express\Form;
 
 class StandardNotifier extends AbstractNotifier
 {
-
     protected $notifications;
 
     public function __construct()
@@ -22,10 +21,8 @@ class StandardNotifier extends AbstractNotifier
 
     public function sendNotifications(NotificationListInterface $notifications, Entry $entry, $updateType)
     {
-        foreach($notifications->getNotifications() as $notification) {
+        foreach ($notifications->getNotifications() as $notification) {
             $notification->notify($entry, $updateType);
         }
     }
-
-
 }

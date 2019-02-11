@@ -15,6 +15,8 @@ use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
@@ -33,6 +35,7 @@ use JobSet;
 use League\Tactician\Bernard\QueueableCommand;
 use Log;
 use Page;
+use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
 use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,30 +87,9 @@ class Application extends Container
     {
         \Events::dispatch('on_shutdown');
 
-        $config = $this['config'];
-
         if ($this->isInstalled()) {
             if (!isset($options['jobs']) || $options['jobs'] == false) {
                 $this->handleScheduledJobs();
-            }
-
-            $logger = new Logger();
-            $r = Request::getInstance();
-
-            if ($config->get('concrete.log.queries.log') &&
-                (!isset($options['log_queries']) || $options['log_queries'] == false)) {
-                $connection = Database::getActiveConnection();
-                if ($logger->shouldLogQueries($r)) {
-                    $loggers = [];
-                    $configuration = $connection->getConfiguration();
-                    $loggers[] = $configuration->getSQLLogger();
-                    $configuration->setSQLLogger(null);
-                    if ($config->get('concrete.log.queries.clear_on_reload')) {
-                        $logger->clearQueryLog();
-                    }
-
-                    $logger->write($loggers);
-                }
             }
 
             foreach (\Database::getConnections() as $connection) {
@@ -322,7 +304,7 @@ class Application extends Container
      */
     public static function isRunThroughCommandLineInterface()
     {
-        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli';
+        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli' || PHP_SAPI === 'phpdbg';
     }
 
     /**
@@ -460,6 +442,15 @@ class Application extends Container
         if (is_object($object)) {
             if ($object instanceof ApplicationAwareInterface) {
                 $object->setApplication($this);
+            }
+        }
+
+            if ($object instanceof LoggerAwareInterface) {
+                $logger = $this->make('log/factory')->createLogger($object->getLoggerChannel());
+                $object->setLogger($logger);
+            } elseif ($object instanceof PsrLoggerAwareInterface) {
+                $logger = $this->make('log/factory')->createLogger(Channels::CHANNEL_APPLICATION);
+                $object->setLogger($logger);
             }
         }
 

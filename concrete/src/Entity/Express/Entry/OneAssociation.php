@@ -28,10 +28,5 @@ class OneAssociation extends Association
         $this->selectedEntries->add($selected_entry);
     }
 
-    public function clearSelectedEntry()
-    {
-        $this->selectedEntries = new ArrayCollection();
-    }
-
 
 }

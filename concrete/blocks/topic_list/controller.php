@@ -17,6 +17,7 @@ class Controller extends BlockController
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btTopicList';
+    protected $btExportPageColumns = ['cParentID'];
 
     public function getBlockTypeDescription()
     {

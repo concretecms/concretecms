@@ -16,6 +16,14 @@ use BlockType;
 use URL;
 use View;
 
+/**
+ * Work with the rendered view of a block
+ *
+ * <code>
+ * $b = $this->getBlockObject();
+ * $bv = new BlockView($b);
+ * </code>
+ */
 class BlockView extends AbstractView
 {
     protected $block;
@@ -30,6 +38,13 @@ class BlockView extends AbstractView
     protected $showControls = true;
     protected $didPullFromOutputCache = false;
 
+    /**
+     * Construct a block view object
+     *
+     * @param mixed $mixed block or block type to view
+     *
+     * @return void
+     */
     protected function constructView($mixed)
     {
         if ($mixed instanceof Block) {
@@ -90,14 +105,9 @@ class BlockView extends AbstractView
     }
 
     /**
-     * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
-     * <code>
-     *     <a href="<?=$view->action('get_results')?>">Get the results</a>
-     * </code>.
+     * @deprecated In views, use $controller->getActionURL() using the same arguments.
      *
-     * @param string $task
-     *
-     * @return string $url
+     * @return \Concrete\Core\Url\UrlImmutable|null
      */
     public function action($task)
     {
@@ -212,12 +222,19 @@ class BlockView extends AbstractView
         }
     }
 
+    /**
+     * Echo block contents
+     *
+     * @param array $scopeItems array of items to render (outputContent, blockViewHeaderFile, blockViewFooterFile)
+     *
+     * @return void
+     */
     public function renderViewContents($scopeItems)
     {
         $shouldRender = function() {
             $app = Application::getFacadeApplication();
 
-            // If you hook into this event and use `preventRendering()`
+            // If you hook into this event and use `preventRendering()`,
             // you can prevent the block from being displayed.
             $event = new BlockBeforeRender($this->block);
             $app->make('director')->dispatch('on_block_before_render', $event);

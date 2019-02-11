@@ -2,6 +2,9 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Handler\DatabaseHandler;
+use Concrete\Core\Logging\Levels;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LogList;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -11,34 +14,46 @@ use Request;
 
 class Logs extends DashboardPageController
 {
+    protected function isReportEnabled()
+    {
+        $config = $this->app->make('config');
+        $enabled = $config->get('concrete.log.enable_dashboard_report');
+        return $enabled;
+    }
+
     public function clear($token = '', $channel = false)
     {
-        $valt = $this->app->make('helper/validation/token');
-        if ($valt->validate('', $token)) {
-            if (!$channel) {
-                Log::clearAll();
+        if ($this->isReportEnabled()) {
+            $valt = $this->app->make('helper/validation/token');
+            if ($valt->validate('', $token)) {
+                if (!$channel) {
+                    DatabaseHandler::clearAll();
+                } else {
+                    DatabaseHandler::clearByChannel($channel);
+                }
+                $this->redirect('/dashboard/reports/logs');
             } else {
-                Log::clearByChannel($channel);
+                $this->redirect('/dashboard/reports/logs');
             }
-            $this->redirect('/dashboard/reports/logs');
-        } else {
-            $this->redirect('/dashboard/reports/logs');
         }
         $this->view();
     }
 
     public function view($page = 0)
     {
+
+        $this->set('isReportEnabled', $this->isReportEnabled());
+
         $this->requireAsset('selectize');
 
         $levels = [];
         foreach (Log::getLevels() as $level) {
-            $levels[$level] = Log::getLevelDisplayName($level);
+            $levels[$level] = Levels::getLevelDisplayName($level);
         }
 
         $channels = ['' => t('All Channels')];
-        foreach (Log::getChannels() as $channel) {
-            $channels[$channel] = Log::getChannelDisplayName($channel);
+        foreach (Channels::getChannels() as $channel) {
+            $channels[$channel] = Channels::getChannelDisplayName($channel);
         }
 
         $r = Request::getInstance();
@@ -62,64 +77,68 @@ class Logs extends DashboardPageController
 
     public function csv($token = '')
     {
-        $valt = $this->app->make('helper/validation/token');
-        if (!$valt->validate('', $token)) {
-            $this->redirect('/dashboard/reports/logs');
-        } else {
-            $list = $this->getFilteredList();
-            $entries = $list->get(0);
+        if ($this->isReportEnabled()) {
 
-            $fileName = 'Log Search Results';
+            $valt = $this->app->make('helper/validation/token');
+            if (!$valt->validate('', $token)) {
+                $this->redirect('/dashboard/reports/logs');
+            } else {
+                $list = $this->getFilteredList();
+                $entries = $list->get(0);
 
-            header('Content-Type: text/csv');
-            header('Cache-control: private');
-            header('Pragma: public');
-            $date = date('Ymd');
-            header('Content-Disposition: attachment; filename=' . $fileName . "_form_data_{$date}.csv");
+                $fileName = 'Log Search Results';
 
-            $fp = fopen('php://output', 'w');
+                header('Content-Type: text/csv');
+                header('Cache-control: private');
+                header('Pragma: public');
+                $date = date('Ymd');
+                header('Content-Disposition: attachment; filename=' . $fileName . "_form_data_{$date}.csv");
 
-            // write the columns
-            $row = [
-                t('Date'),
-                t('Level'),
-                t('Channel'),
-                t('User'),
-                t('Message'),
-            ];
+                $fp = fopen('php://output', 'w');
 
-            fputcsv($fp, $row);
-
-            foreach ($entries as $ent) {
-                $uID = $ent->getUserID();
-                if (empty($uID)) {
-                    $user = t('Guest');
-                } else {
-                    $u = User::getByUserID($uID);
-                    if (is_object($u)) {
-                        $user = $u->getUserName();
-                    } else {
-                        $user = tc('Deleted user', 'Deleted (id: %s)', $uID);
-                    }
-                }
-
+                // write the columns
                 $row = [
-                    $ent->getDisplayTimestamp(),
-                    $ent->getLevelName(),
-                    $ent->getChannelDisplayName(),
-                    $user,
-                    $ent->getMessage(),
+                    t('Date'),
+                    t('Level'),
+                    t('Channel'),
+                    t('User'),
+                    t('Message'),
                 ];
 
                 fputcsv($fp, $row);
-            }
 
-            fclose($fp);
-            die;
+                foreach ($entries as $ent) {
+                    $uID = $ent->getUserID();
+                    if (empty($uID)) {
+                        $user = t('Guest');
+                    } else {
+                        $u = User::getByUserID($uID);
+                        if (is_object($u)) {
+                            $user = $u->getUserName();
+                        } else {
+                            $user = tc('Deleted user', 'Deleted (id: %s)', $uID);
+                        }
+                    }
+
+                    $row = [
+                        $ent->getDisplayTimestamp(),
+                        $ent->getLevelName(),
+                        $ent->getChannelDisplayName(),
+                        $user,
+                        $ent->getMessage(),
+                    ];
+
+                    fputcsv($fp, $row);
+                }
+
+                fclose($fp);
+                die;
+            }
         }
+        $this->view();
     }
 
-    public function getFilteredList()
+    protected function getFilteredList()
     {
         $list = new LogList();
 
@@ -143,16 +162,19 @@ class Logs extends DashboardPageController
 
     public function deleteLog($logID, $token = '')
     {
-        $valt = $this->app->make('helper/validation/token');
-        if ($valt->validate('', $token) && !empty($logID)) {
-            $log = LogEntry::getByID($logID);
-            if (is_object($log)) {
-                $log->delete();
+        if ($this->isReportEnabled()) {
+
+            $valt = $this->app->make('helper/validation/token');
+            if ($valt->validate('', $token) && !empty($logID)) {
+                $log = LogEntry::getByID($logID);
+                if (is_object($log)) {
+                    $log->delete();
+                }
+                $this->redirect('/dashboard/reports/logs');
+            } else {
+                $this->redirect('/dashboard/reports/logs');
             }
-            $this->redirect('/dashboard/reports/logs');
-        } else {
-            $this->redirect('/dashboard/reports/logs');
+            $this->view();
         }
-        $this->view();
     }
 }

@@ -3,6 +3,9 @@
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\CharacterSetCollation\Exception as CharacterSetCollationException;
+use Concrete\Core\Database\CharacterSetCollation\Resolver;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\Preconditions\PdoMysqlExtension;
@@ -34,15 +37,22 @@ class Installer
     protected $options;
 
     /**
+     * @var \Concrete\Core\Database\CharacterSetCollation\Resolver
+     */
+    protected $characterSetCollationResolver;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $application the application instance
      * @param InstallerOptions $options the options to be used by the installer
+     * @param \Concrete\Core\Database\CharacterSetCollation\Resolver $characterSetCollationResolver
      */
-    public function __construct(Application $application, InstallerOptions $options)
+    public function __construct(Application $application, InstallerOptions $options, Resolver $characterSetCollationResolver)
     {
         $this->application = $application;
         $this->options = $options;
+        $this->characterSetCollationResolver = $characterSetCollationResolver;
     }
 
     /**
@@ -88,12 +98,16 @@ class Installer
         }
         $databaseManager = $this->application->make(DatabaseManager::class);
         try {
-            return $databaseManager->getFactory()->createConnection($databaseConfiguration);
+            $connection = $databaseManager->getFactory()->createConnection($databaseConfiguration);
         } catch (Exception $x) {
             throw new UserMessageException($x->getMessage(), $x->getCode(), $x);
         } catch (Throwable $x) {
             throw new UserMessageException($x->getMessage(), $x->getCode());
         }
+
+        $connection = $this->setPreferredCharsetCollation($connection);
+
+        return $connection;
     }
 
     /**
@@ -176,5 +190,58 @@ class Installer
         }
 
         return $result;
+    }
+
+    /**
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     *
+     * @return \Concrete\Core\Database\Connection\Connection
+     */
+    private function setPreferredCharsetCollation(Connection $connection)
+    {
+        // Let's get the currently configured connection charset and collation
+        $connectionParams = $connection->getParams();
+        $connectionCharset = isset($connectionParams['character_set']) ? $this->characterSetCollationResolver->normalizeCharacterSet($connectionParams['character_set']) : '';
+        $connectionCollation = isset($connectionParams['collation']) ? $this->characterSetCollationResolver->normalizeCollation($connectionParams['collation']) : '';
+        try {
+            list($characterSet, $collation) = $this->characterSetCollationResolver->resolveCharacterSetAndCollation($connection);
+        } catch (CharacterSetCollationException $x) {
+            // Unsupported character set and/or collation
+            return $connection;
+        }
+        if ($connectionCharset === $characterSet && $connectionCollation === $collation) {
+            // No changes required
+            return $connection;
+        }
+
+        return $this->reconfigureCharacterSetCollation($connection, $characterSet, $collation);
+    }
+
+    /**
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     * @param string $characterSet
+     * @param string $collation
+     *
+     * @return \Concrete\Core\Database\Connection\Connection
+     */
+    private function reconfigureCharacterSetCollation(Connection $connection, $characterSet, $collation)
+    {
+        $configuration = $this->getOptions()->getConfiguration();
+        $defaultConnectionName = isset($configuration['database']['default-connection']) ? $configuration['database']['default-connection'] : '';
+        if (!$defaultConnectionName) {
+            // We should always have a default connection name, but don't break the process if it's not so
+            return $connection;
+        }
+        $defaultConnectionConfiguration = isset($configuration['database']['connections'][$defaultConnectionName]) ? $configuration['database']['connections'][$defaultConnectionName] : null;
+        if (!is_array($defaultConnectionConfiguration)) {
+            // We should always have the configuration of the default connection name, but don't break the process if it's not so
+            return $connection;
+        }
+        $configuration['database']['connections'][$defaultConnectionName]['character_set'] = $characterSet;
+        $configuration['database']['connections'][$defaultConnectionName]['collation'] = $collation;
+        $this->getOptions()->setConfiguration($configuration);
+        $connection->close();
+
+        return $this->createConnection();
     }
 }

@@ -11,7 +11,7 @@ use Concrete\Core\System\Info;
 use Concrete\Core\System\Status\QueueStatus;
 
 $router->get('/system/info', function() {
-    return new Info();
+    return new \League\Fractal\Resource\Item(new Info(), new \Concrete\Core\System\InfoTransformer());
 });
 
 $router->get('/system/status/queue', function() use ($app){

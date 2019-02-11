@@ -31,7 +31,7 @@ if (isset($objects)) {
     }
 }
 
-$canEdit = $permissionsCallback($ak, $permissionsArguments);
+$canEdit = $permissionsCallback($ak, isset($permissionsArguments) ? $permissionsArguments : null);
 ?>
 <div class="row">
     <div class="editable-attribute-wrapper">

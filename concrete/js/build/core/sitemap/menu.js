@@ -23,7 +23,7 @@
 	ConcretePageMenu.prototype = Object.create(ConcreteMenu.prototype);
 
 	ConcretePageMenu.prototype.setupMenuOptions = function($menu) {
-		var my = this, 
+		var my = this,
 			parent = ConcreteMenu.prototype,
 			cID = $menu.attr('data-search-page-menu');
 
@@ -39,7 +39,7 @@
 				onComplete: function() {
 					if (my.options.sitemap) {
 						var tree = my.options.sitemap.getTree(),
-							node = tree.getNodeByKey(cID);
+							node = tree.getNodeByKey(String(cID));
 
 						node.remove();
 					}
@@ -58,7 +58,7 @@
 				onComplete: function() {
 					if (my.options.sitemap) {
 						var tree = my.options.sitemap.getTree(),
-							node = tree.getNodeByKey(cID);
+							node = tree.getNodeByKey(String(cID));
 
 						node.removeChildren();
 					}

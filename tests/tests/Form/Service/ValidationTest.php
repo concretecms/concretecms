@@ -29,7 +29,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
 
         /* @var \Concrete\Core\Error\ErrorList\ErrorList $e */
         $e = $val->getError();
-        $this->assertEquals('<ul class="ccm-error"><li>Field "empty" is invalid</li><li>Field "notInteger" is invalid</li><li>Field "notEmail" is invalid</li></ul>', (string) $e);
+        $this->assertEquals('<ul class="ccm-error"><li>Field &quot;empty&quot; is invalid</li><li>Field &quot;notInteger&quot; is invalid</li><li>Field &quot;notEmail&quot; is invalid</li></ul>', (string) $e);
 
         $this->assertEquals(true, $e->containsField('empty'));
         $this->assertEquals(false, $e->containsField('notEmpty'));

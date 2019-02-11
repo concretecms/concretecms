@@ -622,6 +622,21 @@ Dropzone.prototype.defaultOptions.resizeQuality = ' . ($this->app->make(BitmapFo
         if ($maxHeight > 0) {
             $content .= "Dropzone.prototype.defaultOptions.resizeHeight = {$maxHeight};\n";
         }
+        if ($maxWidth > 0 || $maxHeight > 0) {
+            $content .= <<<'EOT'
+Dropzone.prototype.defaultOptions.accept = function(file, done) {
+    if (file && file.type === 'image/gif') {
+        this.options.resizeWidth = null;
+        this.options.resizeHeight = null;
+    } else {
+        this.options.resizeWidth = Dropzone.prototype.defaultOptions.resizeWidth;
+        this.options.resizeHeight = Dropzone.prototype.defaultOptions.resizeHeight;
+    }
+    return done();
+};
+EOT
+            ;
+        }
 
         return $this->createJavascriptResponse($content);
     }

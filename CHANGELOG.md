@@ -1,4 +1,49 @@
-# 8.5.0
+# 8.4.4
+
+## Feature Updates
+
+* Improvement for compliance and GDPR: Storage of form data submitted through the form block is now optional. It is a new checkbox in the block (thanks Faker Ben Ali)
+
+## Behavioral Improvements
+
+* Much improved performance in the Stacks panel menu for sites with a lot of stacks – stacks lazily load the blocks within them.
+* Dashboard Welcome Page: hides the "Customize" button if the user does not have permission to edit the page content (thanks marvinde)
+* Allow disabling of Sitemap button in CKEditor concrete5link core plugin (thanks joemeyer)
+* Fixed W3C validation errors in Elemental (thanks MPagel)
+
+## Bug Fixes
+
+* Fix XSS error when certain error messages could contain HTML (thanks mlocati)
+* Fix error where EditorServiceProvider was complaining about array_merge not being a valid array
+* Fixed: GDPR - ConversationMessages are not deleted when a user is deleted (thanks marvinde)
+* Fix typo in list of CKEditor plugins ('applying') (thanks a3020)
+
+# 8.4.3 
+
+## Behavioral Improvements
+
+* The word ‘Action’ is now properly localized in in-page notifications (thanks mlocati)
+* The icon of external links now more clearly distinguishes them from page aliases (thanks mlocati)
+* Create collection handle when aliasing the homepage (thanks mlocati)
+
+## Bug Fixes
+
+* Bug Fix: Tags block - support mixed case tag names when setting selected tag class (thanks MrKarlDilkington)
+* Fixed bug where archived notification alerts were showing up in Waiting for Me.
+* Fix PHP 7.2 count error in Calendar Dashboard Colors system page (thanks altinkonline)
+* Fix Page::movePageDisplayOrderToSibling() when working with aliases (thanks mlocati)
+* Fixed incorrectly returning object instead of text string when working with textarea attributes under some circumstances.
+* Fixed Exception in Marketplace.php after site/project has been removed from community account
+* Fixed accidentally deleting all FileSets when deleting a user (thanks deek87)
+* Fix alternative canonical URL not installing properly when set during installation (thanks a3020)
+* Fixed: Deactivating users in bulk fails in 8.4.2 when a workflow is attached to the permission.
+* Fixed Express Entry association view on owned element when creating elements showing a list of all entries instead of none.
+* Fixing permission checker on image_uploading / thumbnail options page (thanks deek87)
+* Fix package installer not checking dependencies on other packages (thanks acohin)
+* Avoid errors in editing express entry detail block on PHP 7.2 under certain circumstances (thanks hissy)
+* Fixed: Datepicker options has no effect in 8.4.2 (thanks alexeytrusov)
+* Require pagination asset from express entry list block (thanks hissy)
+
 
 # 8.4.2
 
@@ -24,7 +69,7 @@
 * Fixed inability to upgrade to 8.4.1 from 5.7.5.13.
 * Fix JavascriptLocalizedAsset::getAssetContents when concrete5 is installed in subdirectory (thanks mlocati)
 * Fix infinite redirection visiting existing dirs when seo.trailing_slash is false (thanks mlocati)
-* Fixed: Duplicated seo.trailing_slash definition (thanks mlocati)
+* Fixed: Duplicated seo.trailing\_slash definition (thanks mlocati)
 * Made it impossible to store XSS in calendar event names.
 
 ## Developer Updates

@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
+use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Http\Middleware\ProjectorMiddleware;
 
 class SystemRouteList implements RouteListInterface
@@ -32,7 +34,7 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->setNamespace('Concrete\Controller\Backend')->setPrefix('/ccm/system/file')
             ->routes('actions/files.php');
 
-        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog')->setPrefix('/ccm/system/dialogs/conversation')
+        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Conversation')->setPrefix('/ccm/system/dialogs/conversation')
             ->routes('dialogs/conversations.php');
 
         $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Type')
@@ -65,6 +67,8 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->setRequirements(['identifier' => '[A-Za-z0-9_/.]+'])->routes('rss.php');
 
+        $router->buildGroup()->routes('attributes.php');
+
         $router->buildGroup()->routes('search.php');
 
         $router->buildGroup()->routes('express.php');
@@ -77,12 +81,6 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('misc.php');
 
-        $router->buildGroup()
-            ->setPrefix('/ccm/api/v1')
-            ->addMiddleware(ProjectorMiddleware::class)
-            ->addMiddleware(APIAuthenticatorMiddleware::class)
-            ->routes('api/system.php')
-            ->routes('api/site.php');
     }
 
 

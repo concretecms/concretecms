@@ -96,6 +96,7 @@ return [
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
         'core_bus' => '\Concrete\Core\Foundation\Bus\BusServiceProvider',
+        'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation' => '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -116,15 +117,14 @@ return [
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
+        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
-        'core_oauth2' => '\Concrete\Core\Authentication\OAuth2\OAuth2ServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
-        'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
@@ -142,6 +142,7 @@ return [
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
         'core_auth_google' => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
+        'core_auth_external_concrete5' => '\Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceProvider',
 
         // Validator
         'core_validator' => '\Concrete\Core\Validator\ValidatorServiceProvider',
@@ -155,7 +156,6 @@ return [
 
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
-        'core_api' => 'Concrete\Core\API\APIServiceProvider',
     ],
 
     /*
@@ -174,7 +174,6 @@ return [
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
         'Element' => '\Concrete\Core\Support\Facade\Element',
         'Log' => '\Concrete\Core\Support\Facade\Log',
-        'API' => '\Concrete\Core\Support\Facade\API',
         'Image' => '\Concrete\Core\Support\Facade\Image',
         'Config' => '\Concrete\Core\Support\Facade\Config',
         'URL' => '\Concrete\Core\Support\Facade\Url',
@@ -299,6 +298,14 @@ return [
 
     /*
      * File Types
+     * Keys are the type name
+     * Values are arrays with:
+     * - comma-separated extensions
+     * - file type
+     * - handle of an importer (or false)
+     * - handle of the inline viewer (of false)
+     * - handle of the editor
+     * - handle of the package
      */
     'file_types' => [
         'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
@@ -309,7 +316,7 @@ return [
         'HTML' => ['htm,html', FileType::T_IMAGE],
         'Flash' => ['swf', FileType::T_IMAGE, 'image'],
         'Icon' => ['ico', FileType::T_IMAGE],
-        'SVG' => ['svg', FileType::T_IMAGE],
+        'SVG' => ['svg', FileType::T_IMAGE, false, 'image'],
         'Windows Video' => ['asf,wmv', FileType::T_VIDEO, false, 'video'],
         'Quicktime' => ['mov,qt', FileType::T_VIDEO, false, 'video'],
         'AVI' => ['avi', FileType::T_VIDEO, false, 'video'],
@@ -629,9 +636,9 @@ return [
         'core/calendar/admin' => [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
-		'core/avatar' => [
-			['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
-		],
+        'core/avatar' => [
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+        ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -711,7 +718,7 @@ return [
                 ['javascript', 'moment'],
                 ['javascript', 'fullcalendar'],
                 ['javascript', 'fullcalendar/localization'],
-                ['css', 'fullcalendar']
+                ['css', 'fullcalendar'],
             ],
         ],
         'dropzone' => [
@@ -732,11 +739,11 @@ return [
                 ['javascript', 'ace'],
             ],
         ],
-		'core/avatar' => [
-			[
-				['javascript', 'core/avatar'],
-			],
-		],
+        'core/avatar' => [
+            [
+                ['javascript', 'core/avatar'],
+            ],
+        ],
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
@@ -1117,7 +1124,7 @@ return [
             [
                 ['javascript', 'jquery'],
                 ['javascript', 'core/country-stateprovince-link'],
-            ]
+            ],
         ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
         'core/legacy' => [
@@ -1169,6 +1176,17 @@ return [
         'persistent' => false,
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
+    ],
+
+    'api' => [
+        'scopes' => [
+            'system',
+            'site',
+            'account',
+
+            // For OIDC authentication
+            'openid',
+        ],
     ],
 
     // HTTP middleware for processing http requests
