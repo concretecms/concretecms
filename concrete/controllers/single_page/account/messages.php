@@ -169,7 +169,7 @@ class Messages extends AccountPageController
             $u = new User();
             $sender = UserInfo::getByID($u->getUserID());
             $r = $sender->sendPrivateMessage($this->get('recipient'), $this->post('msgSubject'), $this->post('msgBody'), $this->get('msg'));
-            if ($r instanceof \Concrete\Core\Helper\Validation\Error) {
+            if ($r instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
                 $this->error = $r;
             } else {
                 if ($this->post('msgID') > 0) {
