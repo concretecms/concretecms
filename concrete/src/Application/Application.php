@@ -443,7 +443,6 @@ class Application extends Container
             if ($object instanceof ApplicationAwareInterface) {
                 $object->setApplication($this);
             }
-        }
 
             if ($object instanceof LoggerAwareInterface) {
                 $logger = $this->make('log/factory')->createLogger($object->getLoggerChannel());
