@@ -523,19 +523,17 @@ class Search extends DashboardPageController
             $this->user = $ui;
             $this->assignment = $pke->getMyAssignment();
             $this->canEdit = $up->canEditUser();
-            if ($this->canEdit) {
-                $this->canActivateUser = $tp->canActivateUser() && $me->getUserID() != $ui->getUserID();
-                $this->canEditAvatar = $this->assignment->allowEditAvatar();
-                $this->canEditUserName = $this->assignment->allowEditUserName();
-                $this->canEditLanguage = $this->assignment->allowEditDefaultLanguage();
-                $this->canEditTimezone = $this->assignment->allowEditTimezone();
-                $this->canEditEmail = $this->assignment->allowEditEmail();
-                $this->canEditPassword = $this->assignment->allowEditPassword();
-                $this->canSignInAsUser = $tp->canSudo() && $me->getUserID() != $ui->getUserID();
-                $this->canDeleteUser = $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
-                $this->canAddGroup = $tp->canAccessGroupSearch();
-                $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
-            }
+            $this->canActivateUser = $this->canEdit && $tp->canActivateUser() && $me->getUserID() != $ui->getUserID();
+            $this->canEditAvatar = $this->canEdit && $this->assignment->allowEditAvatar();
+            $this->canEditUserName = $this->canEdit && $this->assignment->allowEditUserName();
+            $this->canEditLanguage = $this->canEdit && $this->assignment->allowEditDefaultLanguage();
+            $this->canEditTimezone = $this->canEdit && $this->assignment->allowEditTimezone();
+            $this->canEditEmail = $this->canEdit && $this->assignment->allowEditEmail();
+            $this->canEditPassword = $this->canEdit && $this->assignment->allowEditPassword();
+            $this->canSignInAsUser = $this->canEdit && $tp->canSudo() && $me->getUserID() != $ui->getUserID();
+            $this->canDeleteUser = $this->canEdit && $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
+            $this->canAddGroup = $this->canEdit && $tp->canAccessGroupSearch();
+            $this->allowedEditAttributes = $this->canEdit && $this->assignment->getAttributesAllowedArray();
             $this->set('user', $ui);
             $this->set('canEditAvatar', $this->canEditAvatar);
             $this->set('canEditUserName', $this->canEditUserName);
