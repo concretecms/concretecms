@@ -91,8 +91,8 @@ return [
     'providers' => [
         // Note, the order of these first few is important - we need events early for other service providers, but it depends on some things.
         'core_system' => '\Concrete\Core\System\SystemServiceProvider',
-        'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
+        'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
         'core_bus' => '\Concrete\Core\Foundation\Bus\BusServiceProvider',
