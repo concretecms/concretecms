@@ -2,8 +2,6 @@
 namespace Concrete\Core\System\Status;
 
 use Bernard\Driver;
-use Concrete\Core\API\Resource\TransformableInterface;
-use Concrete\Core\API\Transformer\System\Status\QueueStatusTransformer;
 use Concrete\Core\Application\Application;
 
 class QueueStatusQueue implements \JsonSerializable
