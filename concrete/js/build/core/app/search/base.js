@@ -523,7 +523,7 @@
         }
 
 		if (type == 'progressive') {
-			var op = new ConcreteProgressiveOperation({
+			new ConcreteProgressiveOperation({
 				url: $option.attr('data-bulk-action-url'),
 				data: itemIDs,
 				title: $option.attr('data-bulk-action-title'),

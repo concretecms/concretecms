@@ -627,16 +627,8 @@
 		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_check_in?cID=" + cID + "&ccm_token=" + CCM_SECURITY_TOKEN);
 	};
 
-	ConcreteSitemap.submitDragRequest = function() {
+    ConcreteSitemap.submitDragRequest = function($form) {
 
-		var origCID = $('#origCID').val();
-		//var destParentID = $('#destParentID').val();
-		var destCID = $('#destCID').val();
-		var dragMode = $('#dragMode').val();
-		var destSibling = $('#destSibling').val();
-		var ctask = $("input[name=ctask]:checked").val();
-		var copyAll = $("input[name=copyAll]:checked").val();
-		var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
 		var params = {
 			ccm_token: $form.find('input[name="validationToken"]').val(),
 			dragMode: $form.find('input[name="dragMode"]').val(),
