@@ -13,10 +13,6 @@ class Client extends ZendClient implements LoggerAwareInterface
 {
 
     use LoggerAwareTrait;
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger = null;
 
     /**
      * Get the currently configured logger.
