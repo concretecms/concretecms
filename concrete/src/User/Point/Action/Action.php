@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\User\Point\Action;
 
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Support\Facade\Facade;
 use Database;
 use Environment;
 use Concrete\Core\Package\PackageList;
@@ -8,6 +10,7 @@ use Group;
 use Core;
 use User;
 use UserInfo;
+use \Exception;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
 
 class Action
@@ -283,8 +286,9 @@ class Action
 
             return $upe;
         } catch (Exception $e) {
-            Log::addEntry(t("Error saving user point record: %s", $e->getMessage()), 'exceptions');
-
+            $app = Facade::getFacadeApplication();
+            $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_USERS);
+            $logger->error(t("Error saving user point record: %s", $e->getMessage()));
             return false;
         }
 

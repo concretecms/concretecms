@@ -18,12 +18,17 @@ class RouteGroupBuilder
      * A path prefix for all routes.
      * @var string
      */
-    protected $prefix;
+    protected $prefix = '';
 
     /**
      * The ability to set a common namespace for all classes within a group
      */
-    protected $namespace;
+    protected $namespace = '';
+
+    /**
+     * Define one or more scope (comma-delimited) that apply to this route. Used with API routes.
+     */
+    protected $scope = '';
 
     /**
      * @var RouteMiddleware[]
@@ -58,20 +63,51 @@ class RouteGroupBuilder
      */
     public function setPrefix($prefix)
     {
-        $this->prefix = $prefix;
+        $this->prefix .= '/' . trim($prefix, '/');
         return $this;
     }
 
     /**
-     * @param string $middlewareClassname
+     * @param string $scope
+     */
+    public function scope($scope)
+    {
+        if ($this->scope == '') {
+            $this->scope = $scope;
+        } else {
+            $this->scope .= ',' . $scope;
+        }
+        return $this;
+    }
+
+    public function buildGroup()
+    {
+        $group = new RouteGroupBuilder($this->router);
+        $group->scope($this->scope);
+        foreach($this->middlewares as $middleware) {
+            $group->addMiddleware($middleware);
+        }
+        $group->setPrefix($this->prefix);
+        $group->setNamespace($this->namespace);
+        $group->setRequirements($this->requirements);
+        return $group;
+    }
+
+
+    /**
+     * @param string|object $middleware
      * @return $this
      */
-    public function addMiddleware($middlewareClassname, $priority = 10)
+    public function addMiddleware($middleware, $priority = 10)
     {
-        $middleware = new RouteMiddleware();
-        $middleware->setMiddleware($middlewareClassname);
-        $middleware->setPriority($priority);
-        $this->middlewares[] = $middleware;
+        if (!($middleware instanceof RouteMiddleware)) {
+            $routeMiddleware = new RouteMiddleware();
+            $routeMiddleware->setMiddleware($middleware);
+            $routeMiddleware->setPriority($priority);
+        } else {
+            $routeMiddleware = $middleware;
+        }
+        $this->middlewares[] = $routeMiddleware;
         return $this;
     }
 
@@ -90,7 +126,7 @@ class RouteGroupBuilder
     {
         // first, normalize the namespace
         $namespace = trim($namespace, '\\');
-        $this->namespace = $namespace;
+        $this->namespace .= $namespace;
         return $this;
     }
 
@@ -123,8 +159,7 @@ class RouteGroupBuilder
     protected function processNamespace(Route $route)
     {
         if ($this->namespace) {
-            $action = $this->router->getAction($route);
-            if ($action instanceof ControllerRouteAction) {
+            if (is_string($route->getAction()) && !(strpos($route->getAction(), '\\') === 0)) {
                 $controller = [$this->namespace, trim($route->getAction(), '\\')];
                 $route->setAction(implode('\\', $controller));
             }
@@ -138,6 +173,12 @@ class RouteGroupBuilder
         }
     }
 
+    protected function processScope(Route $route)
+    {
+        $route->setOption('oauth_scopes', $this->scope);
+    }
+
+
     protected function sendFromGroupToRouter(RouteCollection $routeCollection, Router $router)
     {
         foreach($routeCollection->getIterator() as $name => $route) {
@@ -145,6 +186,7 @@ class RouteGroupBuilder
             $this->processPrefix($route);
             $this->processMiddlewares($route);
             $this->processNamespace($route);
+            $this->processScope($route);
             $router->addRoute($route);
         }
     }

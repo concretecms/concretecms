@@ -7,7 +7,7 @@ use Concrete\Core\Page\Type\Composer\Control\Type\Type;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class PageTypeComposercontrolType extends AbstractCategory
+class PageTypeComposerControlType extends AbstractCategory
 {
 
     public function getItemCategoryDisplayName()

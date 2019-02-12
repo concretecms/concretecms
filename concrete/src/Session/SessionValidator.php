@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Session;
 
+use Carbon\Carbon;
+use Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
@@ -29,7 +31,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
 
     /** @var \Concrete\Core\Permission\IPService */
     private $ipService;
-    
+
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
@@ -55,6 +57,28 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         $ip = $session->get('CLIENT_REMOTE_ADDR');
         $agent = $session->get('CLIENT_HTTP_USER_AGENT');
         $request_agent = $this->request->server->get('HTTP_USER_AGENT');
+
+        // Validate against the current uOnlineCheck. This will determine if the user has been inactive for too long.
+        if ($this->shouldValidateUserActivity($session)) {
+            $threshold = $this->getUserActivityThreshold();
+            if ((time() - $session->get('uOnlineCheck')) > $threshold) {
+                $this->logger->debug(t('Session Invalidated. Session was inactive for more than %s seconds', $threshold));
+                $invalidate = true;
+            }
+        }
+
+        // Validate against the `valid_since` config item
+        $validSinceTimestamp = (int) $this->config->get(AutomatedLogout::ITEM_SESSION_INVALIDATE);
+
+        if ($validSinceTimestamp) {
+            $validSince = Carbon::createFromTimestamp($validSinceTimestamp, 'utc');
+            $created = Carbon::createFromTimestamp($session->getMetadataBag()->getCreated());
+
+            if ($created->lessThan($validSince)) {
+                $this->logger->debug('Session Invalidated. Session was created before "valid_since" setting.');
+                $invalidate = true;
+            }
+        }
 
         // Validate the request IP
         if ($this->shouldCompareIP() && $ip && $ip != $request_ip) {
@@ -93,6 +117,18 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         }
 
         return $invalidate;
+    }
+
+    public function shouldValidateUserActivity(SymfonySession $session)
+    {
+        return $this->config->get('concrete.security.session.invalidate_inactive_users.enabled') &&
+            $session->has('uID') && $session->get('uID') > 0 && $session->has('uOnlineCheck') &&
+            $session->get('uOnlineCheck') > 0;
+    }
+
+    public function getUserActivityThreshold()
+    {
+        return $this->config->get('concrete.security.session.invalidate_inactive_users.time');
     }
 
     public function hasActiveSession()

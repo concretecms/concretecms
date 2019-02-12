@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
 use Concrete\Core\Console\ServiceProvider;
 use Concrete\Core\Database\Connection\Connection;
+use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
@@ -106,15 +107,22 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             \Concrete\Core\Console\Command\UninstallPackageCommand::class,
             \Concrete\Core\Console\Command\UpdatePackageCommand::class,
             \Concrete\Core\Console\Command\BlacklistClear::class,
+            \Concrete\Core\Console\Command\SetDatabaseCharacterSetCommand::class,
+            \Concrete\Core\Console\Command\QueueProcessCommand::class,
             \Concrete\Core\Console\Command\JobCommand::class,
             \Concrete\Core\Console\Command\UpdateCommand::class,
+            \Concrete\Core\Console\Command\RescanFilesCommand::class,
             \Concrete\Core\Console\Command\FillThumbnailsTableCommand::class,
             \Concrete\Core\Console\Command\GenerateSitemapCommand::class,
             \Concrete\Core\Console\Command\RefreshEntitiesCommand::class,
             \Doctrine\DBAL\Tools\Console\Command\ImportCommand::class,
             \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand::class,
+            \Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\EntityRegionCommand::class,
             \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand::class,
             \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryRegionCommand::class,
             \Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand::class,
             \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand::class,
             \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand::class,

@@ -56,20 +56,20 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                             var ctt = $('select[name=copyTreeTo]').val();
                             if (ctt > 0 && ctf > 0 && ctt != ctf) {
                                 new ConcreteProgressiveOperation({
-                                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/copy_all',
+                                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
                                     data: [
                                         {'name': 'origCID', 'value': ctf},
                                         {'name': 'destCID', 'value': ctt},
                                         {'name': 'copyChildrenOnly', 'value': true},
-                                        {'name': 'multilingual', 'value': true}
+                                        {name: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>, value: <?= json_encode($token->generate('/dialogs/page/drag_request'))?>}
                                     ],
                                     title: "<?=t('Copy Locale Tree')?>",
                                     onComplete: function() {
-                                        window.location.href = "<?=$this->action('tree_copied')?>";
+                                        window.location.href = <?=json_encode((string) $this->action('tree_copied')) ?>;
                                     }
                                 });
                             } else {
-                                alert("<?=t('You must choose two separate multilingual sections to copy from/to')?>");
+                                alert(<?= json_encode(t('You must choose two separate multilingual sections to copy from/to')) ?>);
                             }
                             return false;
                         });

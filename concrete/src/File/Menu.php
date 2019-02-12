@@ -55,14 +55,20 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
         }
         if ($fp->canEditFileContents()) {
             $this->addItem(new DialogLinkItem(
-                    REL_DIR_FILES_TOOLS_REQUIRED . '/files/replace?fID=' . $file->getFileID(),
-                    t('Replace'), t('Replace'), '500', '200')
+                    \URL::to('/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()),
+                    t('Replace'), t('Replace'), '620', 400)
             );
         }
         $this->addItem(new DialogLinkItem(
                 \URL::to('/ccm/system/dialogs/file/folder?fID=' . $file->getFileID()),
                 t('Move to Folder'), t('Move to Folder'), '500', '450')
         );
+        if ($fp->canEditFilePermissions()) {
+            $this->addItem(new DialogLinkItem(
+                \URL::to('/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()),
+                t('Storage Location'), t('Storage Location'), '500', '400')
+            );
+        }
         if ($fp->canCopyFile()) {
             $this->addItem(new LinkItem('#', t('Duplicate'), [
                 'data-file-manager-action' => 'duplicate',

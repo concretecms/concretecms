@@ -1,18 +1,19 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Account;
 
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\AccountPageController;
-use Config;
 use Exception;
-use UserAttributeKey;
 
 class EditProfile extends AccountPageController
 {
+    public $helpers = ['form', 'date'];
+
     public function view()
     {
         $profile = $this->get('profile');
@@ -33,6 +34,27 @@ class EditProfile extends AccountPageController
             $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
         }
         $this->set('locales', $locales);
+
+        $service = $this->app->make(CategoryService::class);
+        $categoryEntity = $service->getByHandle('user');
+        $category = $categoryEntity->getController();
+        $setManager = $category->getSetManager();
+        $attributeSets = [];
+        foreach ($setManager->getAttributeSets() as $set) {
+            foreach ($set->getAttributeKeys() as $ak) {
+                if ($ak->isAttributeKeyEditableOnProfile()) {
+                    $attributeSets[$set->getAttributeSetDisplayName()][] = $ak;
+                }
+            }
+        }
+        $this->set('attributeSets', $attributeSets);
+        $unassignedAttributes = [];
+        foreach ($setManager->getUnassignedAttributeKeys() as $ak) {
+            if ($ak->isAttributeKeyEditableOnProfile()) {
+                $unassignedAttributes[] = $ak;
+            }
+        }
+        $this->set('unassignedAttributes', $unassignedAttributes);
     }
 
     public function save_complete()
@@ -98,7 +120,7 @@ class EditProfile extends AccountPageController
             $passwordNew = $data['uPasswordNew'];
             $passwordNewConfirm = $data['uPasswordNewConfirm'];
 
-            $app->make('validator/password')->isValid($passwordNew, $this->error);
+            $app->make('validator/password')->isValidFor($passwordNew, $ui, $this->error);
 
             if ($passwordNew) {
                 if ($passwordNew != $passwordNewConfirm) {
@@ -123,7 +145,8 @@ class EditProfile extends AccountPageController
 
         if (!$this->error->has()) {
             $data['uEmail'] = $email;
-            if (Config::get('concrete.misc.user_timezones')) {
+            $config = $this->app->make('config');
+            if ($config->get('concrete.misc.user_timezones')) {
                 $data['uTimezone'] = $this->post('uTimezone');
             }
 

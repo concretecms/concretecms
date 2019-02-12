@@ -69,7 +69,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
         $this->request = $request;
         $this->urlResolver = $urlResolver;
         $this->formService = $formService;
-        $this->securimage = new Securimage(['no_session' => PHP_SAPI === 'cli']);
+        $this->securimage = new Securimage(['no_session' => PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg']);
         $this->securimage->image_width = 190;
         $this->securimage->image_height = 60;
         $this->securimage->image_bg_color = new Securimage_Color(227, 218, 237);

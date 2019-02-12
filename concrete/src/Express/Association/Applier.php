@@ -7,7 +7,6 @@ use Concrete\Core\Entity\Express\ManyToManyAssociation;
 use Concrete\Core\Entity\Express\ManyToOneAssociation;
 use Concrete\Core\Entity\Express\OneToManyAssociation;
 use Concrete\Core\Entity\Express\OneToOneAssociation;
-use Concrete\Core\Express\EntryList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -62,23 +61,30 @@ class Applier
         } else {
             // We clear out the one association
             $selectedEntry = $oneAssociation->getSelectedEntries()->get(0);
-            $oneAssociation->setSelectedEntries(new ArrayCollection());
+            foreach($oneAssociation->getSelectedEntriesCollection() as $selectedAssociationEntry) {
+                $this->entityManager->remove($selectedAssociationEntry);
+            }
             if ($selectedEntry) {
                 // let's loop through the inverse association and remove this one from it.
                 $inversedAssociation = $this->getInverseAssociation($association);
                 $manyAssociation = $selectedEntry->getEntryAssociation($inversedAssociation);
                 if ($manyAssociation) {
-                    $collection = $manyAssociation->getSelectedEntriesCollection();
-                    if ($collection) {
-                        $collection->removeElement($entry);
-                        $manyAssociation->setSelectedEntries(new ArrayCollection($collection->getValues()));
-                        $this->entityManager->persist($manyAssociation);
+                    foreach($manyAssociation->getSelectedEntriesCollection() as $selectedAssociationEntry) {
+                        if ($selectedAssociationEntry->getEntry()->getId() == $entry->getId()) {
+                            $this->entityManager->remove($selectedAssociationEntry);
+                        }
                     }
+                    $this->entityManager->flush();
                 }
             }
         }
 
-        $oneAssociation->getSelectedEntries()->add($associatedEntry);
+        $associatedAssociationEntry = new Entry\AssociationEntry();
+        $associatedAssociationEntry->setEntry($associatedEntry);
+        $associatedAssociationEntry->setAssociation($oneAssociation);
+        $this->entityManager->persist($associatedAssociationEntry);
+
+        $oneAssociation->getSelectedEntriesCollection()->add($associatedAssociationEntry);
         $this->entityManager->persist($oneAssociation);
         $this->entityManager->flush();
 
@@ -97,8 +103,14 @@ class Applier
         if (!$collection) {
             $collection = new ArrayCollection();
         }
+        $displayOrder = count($collection);
 
-        $collection->add($entry);
+        $associationEntry = new Entry\AssociationEntry();
+        $associationEntry->setEntry($entry);
+        $associationEntry->setDisplayOrder($displayOrder);
+        $associationEntry->setAssociation($manyAssociation);
+
+        $collection->add($associationEntry);
         $manyAssociation->setSelectedEntries($collection);
 
         $this->entityManager->persist($manyAssociation);
@@ -107,148 +119,210 @@ class Applier
 
     public function associateOneToMany(Association $association, Entry $entry, $associatedEntries)
     {
-        // First create the owning entry association
+
+        // Let's first get the inverse association, because we're going to need. it.
+        $inversedAssociation = $this->getInverseAssociation($association);
+
+        // Let's get an array of entry IDs so we can use in_array() easily.
+        $associatedEntryIDs = [];
+        foreach($associatedEntries as $associatedEntry) {
+            $associatedEntryIDs[] = $associatedEntry->getId();
+        }
+
+        // Next create the owning entry association
         $manyAssociation = $entry->getEntryAssociation($association);
         if (!is_object($manyAssociation)) {
             $manyAssociation = new Entry\ManyAssociation();
             $manyAssociation->setAssociation($association);
             $manyAssociation->setEntry($entry);
         }
+        $this->entityManager->persist($manyAssociation);
 
-        foreach($associatedEntries as $selectedEntry) {
-            $inversedAssociation = $this->getInverseAssociation($association);
-            $oneAssociation = $selectedEntry->getEntryAssociation($inversedAssociation);
-            if ($oneAssociation) {
-                // Let's see if THAT entry relates back to this.
-                $oneEntry = $oneAssociation->getSelectedEntry();
-                if ($oneEntry) {
-                    $oneEntryAssociation = $oneEntry->getEntryAssociation($association);
-                    if ($oneEntryAssociation) {
-                        $oneEntryAssociation->getSelectedEntriesCollection()->removeElement($selectedEntry);
-                        $this->entityManager->persist($oneEntryAssociation);
+        $existingSelectedEntryIDs = [];
+        $displayOrder = 0;
+        foreach ($manyAssociation->getSelectedEntriesCollection() as $manyAssociationSelectedEntry) {
+            $manyAssociationSelectedEntryID = $manyAssociationSelectedEntry->getEntry()->getID();
+            $existingSelectedEntryIDs[] = $manyAssociationSelectedEntryID;
+            if (!in_array($manyAssociationSelectedEntryID, $associatedEntryIDs)) {
+                // Since this is not passed in associatedEntries, but it is currently present, we need to remove it.
+                $this->entityManager->remove($manyAssociationSelectedEntry);
+            } else {
+                $displayOrder = $manyAssociationSelectedEntry->getDisplayOrder();
+            }
+        }
+
+        // Have to flush here, because of the remove() statement above. If we wait it doesn't get applied.
+        $this->entityManager->flush();
+
+        // Prepare to add new entries.
+        if ($displayOrder > 0) {
+            $displayOrder++;
+        }
+
+        // Now, let's add entries to the owning side that don't currently exist in the owning side.
+        foreach($associatedEntries as $associatedEntry) {
+            if (!in_array($associatedEntry->getId(), $existingSelectedEntryIDs)) {
+                $associationEntry = new Entry\AssociationEntry();
+                $associationEntry->setEntry($associatedEntry);
+                $associationEntry->setAssociation($manyAssociation);
+                $associationEntry->setDisplayOrder($displayOrder);
+                $this->entityManager->persist($associationEntry);
+                $manyAssociation->getSelectedEntriesCollection()->add($associationEntry);
+                $displayOrder++;
+
+                // Let's make sure that the entry we're attempt to add to this entry, isn't already
+                // bound to another entry. If it is, we need to remove that inverse.
+                $associationEntryOneAssociation = $associatedEntry->getEntryAssociation($inversedAssociation);
+                if ($associationEntryOneAssociation) {
+                    // Let's see if THAT entry relates back to this.
+                    $oneEntry = $associationEntryOneAssociation->getSelectedEntry();
+                    if ($oneEntry) {
+                        $oneEntryManyAssociation = $oneEntry->getEntryAssociation($association);
+                        if ($oneEntryManyAssociation) {
+                            foreach($oneEntryManyAssociation->getSelectedEntriesCollection() as $oneEntryAssociationEntry) {
+                                if ($oneEntryAssociationEntry->getEntry()->getId() == $associatedEntry->getId()) {
+                                    $this->entityManager->remove($oneEntryAssociationEntry);
+                                }
+                            }
+                            $this->entityManager->flush();
+                        }
                     }
                 }
+            }
+        }
+
+        $this->entityManager->flush();
+
+
+        // Lets clear out the existing one associations.
+        // Let's combine our arrays and filter out duplicates.
+        $relevantInverseEntryIDs = array_unique(array_merge($associatedEntryIDs, $existingSelectedEntryIDs));
+        foreach($relevantInverseEntryIDs as $entryID) {
+            $inverseEntry = $this->entityManager->find(Entry::class, $entryID);
+            $oneAssociation = $inverseEntry->getEntryAssociation($inversedAssociation);
+            if ($oneAssociation) {
                 $this->entityManager->remove($oneAssociation);
             }
         }
 
         $this->entityManager->flush();
 
-        foreach($manyAssociation->getSelectedEntries() as $manyAssociationSelectedEntry) {
-            $manyAssociation->getSelectedEntriesCollection()->removeElement($manyAssociationSelectedEntry);
-        }
-        $this->entityManager->persist($manyAssociation);
-        $this->entityManager->flush();
+        foreach($relevantInverseEntryIDs as $entryID) {
+            $inverseEntry = $this->entityManager->find(Entry::class, $entryID);
+            $oneAssociation = new Entry\OneAssociation();
+            $oneAssociation->setAssociation($inversedAssociation);
+            $oneAssociation->setEntry($inverseEntry);
+            $this->entityManager->persist($oneAssociation);
 
-        $manyAssociation->setSelectedEntries($associatedEntries);
-        $this->entityManager->persist($manyAssociation);
-        $this->entityManager->flush();
-
-        // Now, we go to the inverse side, and we get all possible entries.
-        $entity = $association->getTargetEntity();
-        $list = new EntryList($entity);
-        $list->ignorePermissions();
-        $possibleResults = $list->getResults();
-        foreach($possibleResults as $possibleResult) {
-            $inversedAssociation = $this->getInverseAssociation($association);
-            $oneAssociation = $possibleResult->getEntryAssociation($inversedAssociation);
-            if (!is_object($oneAssociation)) {
-                $oneAssociation = new Entry\OneAssociation();
-                $oneAssociation->setAssociation($inversedAssociation);
-                $oneAssociation->setEntry($possibleResult);
-            }
-
-            $collection = $oneAssociation->getSelectedEntriesCollection();
-
-            if (in_array($possibleResult, $associatedEntries)) {
-                // If the item appears in the request (meaning we want it to be selected):
-                if (count($collection) == 0) {
-                    // Nothing is currently selected, so we have to add this one.
-                    $oneAssociation->setSelectedEntry($entry);
-                    $this->entityManager->persist($oneAssociation);
-                } else {
-                    foreach($collection as $result) {
-                        if ($result->getId() == $entry->getId()) {
-                            // The result is already selected, so we don't reselect it.
-                            continue;
-                        } else {
-                            // We are currently set to a different result. So we need to delete this association and
-                            // Set it to this one.
-                            $oneAssociation->clearSelectedEntry();
-                            $this->entityManager->persist($oneAssociation);
-                        }
-                    }
-                }
-            } else {
-                if (count($collection) > 0) {
-                    foreach($collection as $result) {
-                        if ($result->getId() == $entry->getId()) {
-                            // The result is currently in the collection, so let's remove the association entirely..
-                            $this->entityManager->remove($oneAssociation);
-                        }
-                    }
-                }
+            if (in_array($entryID, $associatedEntryIDs)) {
+                // Select $entry for the toOne side of the association.
+                $oneAssociationEntry = new Entry\AssociationEntry();
+                $oneAssociationEntry->setEntry($entry);
+                $oneAssociationEntry->setAssociation($oneAssociation);
+                $oneAssociation->setSelectedEntry($oneAssociationEntry);
+                $this->entityManager->persist($oneAssociation);
             }
         }
-
         $this->entityManager->flush();
     }
 
     public function associateManyToMany(Association $association, Entry $entry, $associatedEntries)
     {
-        // First create the owning entry association
+        // Let's first get the inverse association, because we're going to need. it.
+        $inversedAssociation = $this->getInverseAssociation($association);
+
+        // Let's get an array of entry IDs so we can use in_array() easily.
+        $associatedEntryIDs = [];
+        foreach($associatedEntries as $associatedEntry) {
+            $associatedEntryIDs[] = $associatedEntry->getId();
+        }
+
+        // Next create the owning entry association
         $manyAssociation = $entry->getEntryAssociation($association);
         if (!is_object($manyAssociation)) {
             $manyAssociation = new Entry\ManyAssociation();
             $manyAssociation->setAssociation($association);
             $manyAssociation->setEntry($entry);
         }
-        $manyAssociation->setSelectedEntries($associatedEntries);
         $this->entityManager->persist($manyAssociation);
+
+        $existingSelectedEntryIDs = [];
+        $displayOrder = 0;
+        foreach ($manyAssociation->getSelectedEntriesCollection() as $manyAssociationSelectedEntry) {
+            $manyAssociationSelectedEntryID = $manyAssociationSelectedEntry->getEntry()->getID();
+            $existingSelectedEntryIDs[] = $manyAssociationSelectedEntryID;
+            if (!in_array($manyAssociationSelectedEntryID, $associatedEntryIDs)) {
+                // Since this is not passed in associatedEntries, but it is currently present, we need to remove it.
+                $this->entityManager->remove($manyAssociationSelectedEntry);
+            } else {
+                $displayOrder = $manyAssociationSelectedEntry->getDisplayOrder();
+            }
+        }
+
+        // Have to flush here, because of the remove() statement above. If we wait it doesn't get applied.
         $this->entityManager->flush();
 
-        // Now, we go to the inverse side, and we get all possible entries.
-        $entity = $association->getTargetEntity();
-        $list = new EntryList($entity);
-        $list->ignorePermissions();
-        $possibleResults = $list->getResults();
-        foreach($possibleResults as $possibleResult) {
-            $inversedAssociation = $this->getInverseAssociation($association);
-            $manyAssociation = $possibleResult->getEntryAssociation($inversedAssociation);
+        // Prepare to add new entries.
+        if ($displayOrder > 0) {
+            $displayOrder++;
+        }
+
+        // Now, let's add entries to the owning side that don't currently exist in the owning side.
+        foreach($associatedEntries as $associatedEntry) {
+            if (!in_array($associatedEntry->getId(), $existingSelectedEntryIDs)) {
+                $associationEntry = new Entry\AssociationEntry();
+                $associationEntry->setEntry($associatedEntry);
+                $associationEntry->setAssociation($manyAssociation);
+                $associationEntry->setDisplayOrder($displayOrder);
+                $this->entityManager->persist($associationEntry);
+                $manyAssociation->getSelectedEntriesCollection()->add($associationEntry);
+                $displayOrder++;
+            }
+        }
+
+        $this->entityManager->flush();
+
+        $relevantInverseEntryIDs = array_unique(array_merge($associatedEntryIDs, $existingSelectedEntryIDs));
+        foreach($relevantInverseEntryIDs as $entryID) {
+            $inverseEntry = $this->entityManager->find(Entry::class, $entryID);
+            $manyAssociation = $inverseEntry->getEntryAssociation($inversedAssociation);
             if (!is_object($manyAssociation)) {
                 $manyAssociation = new Entry\ManyAssociation();
                 $manyAssociation->setAssociation($inversedAssociation);
-                $manyAssociation->setEntry($possibleResult);
+                $manyAssociation->setEntry($inverseEntry);
             }
 
-            $collection = $manyAssociation->getSelectedEntriesCollection();
 
-            if (in_array($possibleResult, $associatedEntries)) {
+            if (in_array($entryID, $associatedEntryIDs)) {
+                $selectedEntries = $manyAssociation->getSelectedEntries();
                 // If the item appears in the request (meaning we want it to be selected):
-                if (!$collection->contains($entry)) {
-                    $collection->add($entry);
+                if (!$selectedEntries->contains($entry)) {
+                    $associationEntry = new Entry\AssociationEntry();
+                    $associationEntry->setAssociation($manyAssociation);
+                    $associationEntry->setEntry($entry);
+                    $associationEntry->setDisplayOrder(count($selectedEntries));
+                    $manyAssociation->getSelectedEntriesCollection()->add($associationEntry);
                 }
-                $newCollection = new ArrayCollection($collection->getValues());
-                $manyAssociation->setSelectedEntries($newCollection);
                 $this->entityManager->persist($manyAssociation);
             } else {
-                if (count($collection) > 0) {
-                    foreach($collection as $result) {
-                        if ($result->getId() == $entry->getId()) {
-                            $collection->removeElement($entry);
-                            $manyAssociation->setSelectedEntries(new ArrayCollection($collection->getValues()));
-                            $this->entityManager->persist($manyAssociation);
+                $selectedEntriesCollection = $manyAssociation->getSelectedEntriesCollection();
+                if (count($selectedEntriesCollection) > 0) {
+                    foreach($selectedEntriesCollection as $result) {
+                        if ($result->getEntry()->getId() == $entry->getId()) {
+                            $this->entityManager->remove($result);
                         }
                     }
                 }
             }
         }
-
         $this->entityManager->flush();
     }
 
     public function associateOneToOne(Association $association, Entry $entry, Entry $associatedEntry)
     {
+        // Locate the inverse association
+        $inversedAssociation = $this->getInverseAssociation($association);
+
         $oneAssociation = $entry->getEntryAssociation($association);
         if (!is_object($oneAssociation)) {
             $oneAssociation = new Entry\OneAssociation();
@@ -257,23 +331,30 @@ class Applier
         } else {
             // We clear out the one association
             $selectedEntry = $oneAssociation->getSelectedEntries()->get(0);
-            $oneAssociation->setSelectedEntries(new ArrayCollection());
+            $oneAssociationCollection = $oneAssociation->getSelectedEntriesCollection();
+            foreach($oneAssociationCollection as $oneAssociationEntry) {
+                $this->entityManager->remove($oneAssociationEntry);
+            }
             if ($selectedEntry) {
                 // let's loop through the inverse association and remove this one from it.
-                $inversedAssociation = $this->getInverseAssociation($association);
                 $otherOneAssociation = $selectedEntry->getEntryAssociation($inversedAssociation);
                 if ($otherOneAssociation) {
-                    $otherOneAssociation->clearSelectedEntry();
+                    $otherOneAssociationCollection = $otherOneAssociation->getSelectedEntriesCollection();
+                    foreach($otherOneAssociationCollection as $otherOneAssociationEntry) {
+                        $this->entityManager->remove($otherOneAssociationEntry);
+                    }
                     $this->entityManager->persist($otherOneAssociation);
                 }
             }
         }
 
-        $oneAssociation->setSelectedEntry($associatedEntry);
+        $associationAssociatedEntry = new Entry\AssociationEntry();
+        $associationAssociatedEntry->setEntry($associatedEntry);
+        $associationAssociatedEntry->setAssociation($oneAssociation);
+        $oneAssociation->setSelectedEntry($associationAssociatedEntry);
         $this->entityManager->persist($oneAssociation);
         $this->entityManager->flush();
 
-        $inversedAssociation = $this->getInverseAssociation($association);
         $oneAssociation = $associatedEntry->getEntryAssociation($inversedAssociation);
 
         if (!is_object($oneAssociation)) {
@@ -282,22 +363,28 @@ class Applier
             $oneAssociation->setEntry($associatedEntry);
         } else {
             $selectedEntry = $oneAssociation->getSelectedEntries()->get(0);
-            $oneAssociation->clearSelectedEntry();
+            $oneAssociationCollection = $oneAssociation->getSelectedEntriesCollection();
+            foreach($oneAssociationCollection as $oneAssociationEntry) {
+                $this->entityManager->remove($oneAssociationEntry);
+            }
             if ($selectedEntry) {
                 // let's loop through the inverse association and remove this one from it.
                 $otherInversedAssociation = $this->getInverseAssociation($inversedAssociation);
                 $otherOneAssociation = $selectedEntry->getEntryAssociation($otherInversedAssociation);
                 if ($otherOneAssociation) {
-                    $otherOneAssociation->clearSelectedEntry();
-                    $this->entityManager->persist($otherOneAssociation);
+                    $otherOneAssociationCollection = $otherOneAssociation->getSelectedEntriesCollection();
+                    foreach($otherOneAssociationCollection as $otherOneAssociationEntry) {
+                        $this->entityManager->remove($otherOneAssociationEntry);
+                    }
                 }
             }
-
-            $this->entityManager->persist($oneAssociation);
             $this->entityManager->flush();
         }
 
-        $oneAssociation->setSelectedEntry($entry);
+        $associationAssociatedEntry = new Entry\AssociationEntry();
+        $associationAssociatedEntry->setEntry($entry);
+        $associationAssociatedEntry->setAssociation($oneAssociation);
+        $oneAssociation->setSelectedEntry($associationAssociatedEntry);
         $this->entityManager->persist($oneAssociation);
         $this->entityManager->flush();
 
@@ -308,19 +395,39 @@ class Applier
         $entryAssociation = $entry->getEntryAssociation($association);
         if ($entryAssociation) {
             $inversedAssociation = $this->getInverseAssociation($association);
-
             $associatedEntries = $entryAssociation->getSelectedEntriesCollection();
             foreach($associatedEntries as $associatedEntry) {
-                $associatedEntryAssociation = $associatedEntry->getEntryAssociation($inversedAssociation);
+                $associatedEntryAssociation = $associatedEntry->getEntry()->getEntryAssociation($inversedAssociation);
                 if (is_object($associatedEntryAssociation)) {
-                    $associatedEntryAssociation->removeSelectedEntry($entry);
-                    $this->entityManager->persist($associatedEntryAssociation);
+                    foreach($associatedEntryAssociation->getSelectedEntriesCollection() as $associatedAssociationEntry) {
+                        if ($associatedAssociationEntry->getEntry()->getId() == $entry->getId()) {
+                            $this->entityManager->remove($associatedAssociationEntry);
+                        }
+                    }
                 }
+                $this->entityManager->remove($associatedEntry);
             }
+
+            $this->entityManager->flush();
 
             $this->entityManager->remove($entryAssociation);
             $this->entityManager->flush();
+
+            if (isset($associatedEntryAssociation)) {
+                $this->rescanAssociationDisplayOrder($associatedEntryAssociation);
+            }
         }
+    }
+
+    private function rescanAssociationDisplayOrder(Entry\Association $association)
+    {
+        $displayOrder = 0;
+        foreach($association->getSelectedEntriesCollection() as $selectedEntry) {
+            $selectedEntry->setDisplayOrder($displayOrder);
+            $this->entityManager->persist($selectedEntry);
+            $displayOrder++;
+        }
+        $this->entityManager->flush();
     }
 
     protected function getInverseAssociation(Association $association)

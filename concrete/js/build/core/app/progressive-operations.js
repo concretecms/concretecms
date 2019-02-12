@@ -1,8 +1,7 @@
-!function (global, $) {
-	'use strict';
+;(function(global, $) {
+    'use strict';
 
 	function ConcreteProgressiveOperation(options) {
-		'use strict';
 		var my = this;
 		options = $.extend({
 			url: '',
@@ -38,7 +37,7 @@
 			my.options.element.find('div.progress').addClass('progress-striped active');
 			my.options.element.find('div.progress-bar').css('width', '100%');
 		}
-	}
+	};
 
 	ConcreteProgressiveOperation.prototype.poll = function(queue, token, remaining) {
 		var my = this,
@@ -86,7 +85,7 @@
 				}
 			}
 		});
-	}
+	};
 
 	ConcreteProgressiveOperation.prototype.startPolling = function(queue, token, remaining) {
 		var my = this;
@@ -105,7 +104,7 @@
 		}
 
 		my.poll(queue, token, remaining);
-	}
+	};
 
 	ConcreteProgressiveOperation.prototype.execute = function() {
 		var my = this;
@@ -118,7 +117,7 @@
 		if (my.options.response) {
 			// We have already performed the submit as part of another operation,
 			// like a concrete5 ajax form submission
-			my.startPolling(my.options.response.queue, my.options.response.token, my.options.response.remaining)
+			my.startPolling(my.options.response.queue, my.options.response.token, my.options.response.remaining);
 		} else {
 			$.concreteAjax({
 				loader: false,
@@ -127,12 +126,12 @@
 				data: my.options.data,
 				dataType: 'json',
 				success: function(r) {
-					my.startPolling(r.queue, r.token, r.remaining)
+					my.startPolling(r.queue, r.token, r.remaining);
 				}
 			});
 		}
-	}
+	};
 
 	global.ConcreteProgressiveOperation = ConcreteProgressiveOperation;
 
-}(this, $);
+})(this, jQuery);

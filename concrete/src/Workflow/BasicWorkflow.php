@@ -167,7 +167,14 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $users = $nk->getCurrentlyActiveUsers($wp);
         $loc = Localization::getInstance();
         $loc->pushActiveContext('email');
-        $dt = $wp->getWorkflowProgressDateAdded();
+        switch ($message[0]) {
+            case 'approve':
+            case 'cancel':
+                $dt = $wp->getWorkflowProgressDateLastAction();
+                break;
+            default:
+                $dt = $wp->getWorkflowProgressDateAdded();
+        }
         $dh = Core::make('helper/date');
 
         if (Config::get('concrete.email.workflow_notification.address')){

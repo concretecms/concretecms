@@ -54,7 +54,9 @@ class ServiceProvider extends Provider
         Command\GenerateSitemapCommand::class,
         Command\QueueProcessCommand::class,
         Command\FillThumbnailsTableCommand::class,
+        Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
+        Command\SetDatabaseCharacterSetCommand::class,
     ];
 
     /**

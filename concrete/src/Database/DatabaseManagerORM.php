@@ -1,18 +1,16 @@
 <?php
+
 namespace Concrete\Core\Database;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Package\Package;
 use Doctrine\ORM\EntityManager;
-use Database;
 
 class DatabaseManagerORM
 {
     /**
      * The application instance.
      *
-     * @var Application
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
@@ -21,16 +19,18 @@ class DatabaseManagerORM
     /**
      * Create a new database ORM manager instance.
      *
-     * @param Application $app
+     * @param \Concrete\Core\Application\Application $app
      */
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
     public function entityManager()
     {
-        return $this->app->make('Doctrine\ORM\EntityManager');
+        return $this->app->make(EntityManager::class);
     }
-
 }

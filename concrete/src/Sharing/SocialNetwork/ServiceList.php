@@ -5,30 +5,43 @@ class ServiceList
 {
     protected static function getServices()
     {
-        $services = array(
-            array('facebook', 'Facebook', 'facebook'),
-            array('twitter', 'Twitter', 'twitter'),
-            array('instagram', 'Instagram', 'instagram'),
-            array('tumblr', 'Tumblr', 'tumblr-square'),
-            array('github', 'Github', 'github-square'),
-            array('dribbble', 'Dribbble', 'dribbble'),
-            array('pinterest', 'Pinterest', 'pinterest'),
-            array('youtube', 'Youtube', 'youtube'),
-            array('linkedin', 'LinkedIn', 'linkedin-square'),
-            array('soundcloud', 'Soundcloud', 'soundcloud'),
-            array('foursquare', 'Foursquare', 'foursquare'),
-            array('flickr', 'Flickr', 'flickr'),
-            array('googleplus', 'Google Plus', 'google-plus-square'),
-            array('reddit', 'Reddit', 'reddit'),
-            array('steam', 'Steam', 'steam'),
-            array('vine', 'Vine', 'vine'),
-            array('stumbleupon', 'Stumbleupon', 'stumbleupon'),
-            array('skype', 'Skype', 'skype'),
-            array('personal_website', 'Personal Website', 'external-link'),
-        );
+        $services = [
+            ['facebook', 'Facebook', 'facebook'],
+            ['twitter', 'Twitter', 'twitter'],
+            ['instagram', 'Instagram', 'instagram'],
+            ['tumblr', 'Tumblr', 'tumblr-square'],
+            ['github', 'Github', 'github-square'],
+            ['dribbble', 'Dribbble', 'dribbble'],
+            ['pinterest', 'Pinterest', 'pinterest'],
+            ['youtube', 'Youtube', 'youtube'],
+            ['linkedin', 'LinkedIn', 'linkedin-square'],
+            ['soundcloud', 'Soundcloud', 'soundcloud'],
+            ['foursquare', 'Foursquare', 'foursquare'],
+            ['flickr', 'Flickr', 'flickr'],
+            ['googleplus', 'Google Plus', 'google-plus-square'],
+            ['reddit', 'Reddit', 'reddit'],
+            ['steam', 'Steam', 'steam'],
+            ['vine', 'Vine', 'vine'],
+            ['stumbleupon', 'Stumbleupon', 'stumbleupon'],
+            ['skype', 'Skype', 'skype'],
+            ['vk', 'Vkontakte', 'vk'],
+            ['personal_website', 'Personal Website', 'external-link'],
+        ];
 
+        // if additional social media services have been defined in custom config, append to built-in list or override
         if ($additionalSocialNetworks = \Config::get('concrete.social.additional_services')) {
-            $services = $additionalSocialNetworks + $services;
+            $serviceArray = [];
+            $additionalKeyArray = [];
+
+            // create arrays to merge using service handle as key, allows for overriding
+            foreach ($services as $service) {
+                $serviceArray[$service[0]] = $service;
+            }
+            foreach ($additionalSocialNetworks as $service) {
+                $additionalKeyArray[$service[0]] = $service;
+            }
+
+            $services = array_values(array_merge($additionalKeyArray + $serviceArray));
         }
 
         return $services;
@@ -37,10 +50,12 @@ class ServiceList
     public static function get()
     {
         $services = static::getServices();
-        $return = array();
+        $return = [];
         foreach ($services as $serviceArray) {
             $o = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2], isset($serviceArray[3]) ? $serviceArray[3] : null);
-            $return[] = $o;
+            if ($o) {
+                $return[] = $o;
+            }
         }
 
         return $return;

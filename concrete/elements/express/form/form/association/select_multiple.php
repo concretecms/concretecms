@@ -5,32 +5,32 @@
         <label class="control-label"><?=$label?></label>
     <?php } ?>
     <?php
-    if (!empty($entities)) {
-        foreach ($entities as $entity) {
+    if (!empty($allEntries)) {
+        foreach ($allEntries as $entry) {
             ?>
             <div class="checkbox">
                 <label>
                     <input
                         type="checkbox"
                         <?php
-                        if (isset($selectedEntities)) {
-                            foreach($selectedEntities as $selectedEntity) {
-                                if ($selectedEntity->getID() == $entity->getID()) {
+                        if (isset($selectedEntries)) {
+                            foreach($selectedEntries as $selectedEntry) {
+                                if ($selectedEntry->getID() == $entry->getID()) {
                                     print 'checked';
                                 }
                             }
                         }
                         ?>
                         name="express_association_<?=$control->getId()?>[]"
-                        value="<?=$entity->getId()?>"
+                        value="<?=$entry->getId()?>"
                     >
-                    <?=$formatter->getEntryDisplayName($control, $entity)?>
+                    <?=$formatter->getEntryDisplayName($control, $entry)?>
                 </label>
             </div>
             <?php
         }
     } else {
-        ?><p><?=t('No entity found.')?></p><?php
+        ?><p><?=t('No available entries found.')?></p><?php
     }
     ?>
 </div>

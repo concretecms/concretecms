@@ -6,6 +6,7 @@ use Config;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
+use Concrete\Core\File\Incoming;
 
 class Application
 {
@@ -43,9 +44,10 @@ class Application
      */
     public function getIncomingDirectoryContents()
     {
-        $incoming_file_information = array();
-        $fs = StorageLocation::getDefault()->getFileSystemObject();
-        $items = $fs->listContents(REL_DIR_FILES_INCOMING);
+        $app = ApplicationFacade::getFacadeApplication();
+        $incoming = $app->make(Incoming::class);
+        $fs = $incoming->getIncomingFilesystem();
+        $items = $fs->listContents($incoming->getIncomingPath());
 
         return $items;
     }

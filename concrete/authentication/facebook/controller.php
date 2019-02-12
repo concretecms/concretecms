@@ -83,7 +83,7 @@ class Controller extends GenericOauth2TypeController
                         \Log::Error(t('Error detaching account : %s', $e->getMessage()));
                             $this->showError(t('Error detaching account'));
                     }
-                    $this->showSuccess(t('Successfully detached'));
+                    $this->showSuccess(t('Successfully detached.'));
                     exit();
                 } else {
                     $this->showError(t('No user id found'));

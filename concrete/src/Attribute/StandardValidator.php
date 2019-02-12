@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Application\Application;
@@ -11,6 +12,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\Field;
 use Concrete\Core\Validation\Response;
 use Concrete\Core\Entity\Attribute\Type as TypeEntity;
+use Concrete\Core\Validation\ResponseInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class StandardValidator implements ValidatorInterface
@@ -32,50 +34,59 @@ class StandardValidator implements ValidatorInterface
     {
         $key = $controller->getAttributeKey();
         $response = new Response();
-        if (method_exists($controller, 'validateForm')) {
+        if ($key && method_exists($controller, 'validateForm')) {
             $controller->setRequest($request);
             $validateResponse = $controller->validateForm($controller->post());
-            if ($validateResponse instanceof ErrorList) {
-                foreach($validateResponse->getList() as $error) {
-                    if (!($error instanceof FieldNotPresentError) || $includeFieldNotPresentErrors) {
-                        $response->getErrorObject()->add($error);
-                    }
-                }
-            } else if ($validateResponse instanceof ErrorInterface) {
-                if (!($validateResponse instanceof FieldNotPresentError) || $includeFieldNotPresentErrors) {
-                    $response->getErrorObject()->add($validateResponse);
-                }
-            } else if ($validateResponse == false) {
-                if ($includeFieldNotPresentErrors) {
-                    $response->getErrorObject()->add(new FieldNotPresentError(new Field($key->getAttributeKeyDisplayName())));
-                }
-            }
-        }
-        if ($response->getErrorObject()->has()) {
-            $response->setIsValid(false);
+            $response = $this->parseResponse($key, $response, $validateResponse, $includeFieldNotPresentErrors);
         }
         return $response;
     }
 
-    public function validateCurrentAttributeValue(Controller $controller, AttributeValueInterface $value)
+    /**
+     * @param Key $key
+     * @param Response $response
+     * @param mixed $validateResponse
+     * @param bool $includeFieldNotPresentErrors
+     * @return Response $response
+     */
+    protected function parseResponse(
+        Key $key,
+        Response $response,
+        $validateResponse,
+        $includeFieldNotPresentErrors)
+    {
+        if ($validateResponse instanceof ErrorList) {
+            foreach ($validateResponse->getList() as $error) {
+                if (!($error instanceof FieldNotPresentError) || $includeFieldNotPresentErrors) {
+                    $response->setIsValid(false);
+                    $response->getErrorObject()->add($error);
+                }
+            }
+        } else if ($validateResponse instanceof ErrorInterface) {
+            if (!($validateResponse instanceof FieldNotPresentError) || $includeFieldNotPresentErrors) {
+                $response->setIsValid(false);
+                $response->getErrorObject()->add($validateResponse);
+            }
+        } else if ($validateResponse == false) {
+            if ($includeFieldNotPresentErrors) {
+                $response->setIsValid(false);
+                $response->getErrorObject()->add(new FieldNotPresentError(new Field($key->getAttributeKeyDisplayName())));
+            }
+        }
+        return $response;
+    }
+
+    public function validateCurrentAttributeValue(
+        Controller $controller,
+        AttributeValueInterface $value,
+        $includeFieldNotPresentErrors = true)
     {
         $key = $controller->getAttributeKey();
         $controller->setAttributeValue($value);
         $response = new Response();
-        if (method_exists($controller, 'validateValue')) {
+        if ($key && method_exists($controller, 'validateValue')) {
             $validateResponse = $controller->validateValue();
-            if ($validateResponse instanceof ErrorList) {
-                foreach($validateResponse->getList() as $error) {
-                    $response->getErrorObject()->add($error);
-                }
-            } else if ($validateResponse instanceof ErrorInterface) {
-                $response->getErrorObject()->add($validateResponse);
-            } else if ($validateResponse == false) {
-                $response->getErrorObject()->add(new FieldNotPresentError(new Field($key->getAttributeKeyDisplayName())));
-            }
-        }
-        if ($response->getErrorObject()->has()) {
-            $response->setIsValid(false);
+            $response = $this->parseResponse($key, $response, $validateResponse, $includeFieldNotPresentErrors);
         }
         return $response;
     }

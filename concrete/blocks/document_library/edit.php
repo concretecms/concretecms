@@ -17,7 +17,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <?=$form->label('folderID', t('File Folder'))?>
         <?php
         $folders = [0 => '* Any folder'] + iterator_to_array($folders);
-        echo $form->select('folderID', $folders, $folderID ?: 0);
+        echo $form->select('folderID', $folders, empty($folderID) ? 0 : $folderID);
         ?>
     </div>
     <?php if (count($fileSets)) { ?>
@@ -56,21 +56,21 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
     <div class="form-group">
         <?=$form->label('tags', t('Filter By Tag (optional)'))?>
-        <?=$form->text('tags', $tags)?>
+        <?=$form->text('tags', isset($tags) ? $tags : '')?>
     </div>
 
     <div class="form-group">
         <?=$form->label('audience', t('Audience Contribution'))?>
         <div class="checkbox"><label>
-                <?=$form->checkbox('allowFileUploading', 1, $allowFileUploading, array('data-options-toggle' => 'enable-uploads'))?>
+                <?=$form->checkbox('allowFileUploading', 1, !empty($allowFileUploading), array('data-options-toggle' => 'enable-uploads'))?>
                 <?=t('Enable Uploads.')?>
             </label></div>
         <div class="checkbox"><label>
-                <?=$form->checkbox('allowInPageFileManagement', 1, $allowInPageFileManagement)?>
+                <?=$form->checkbox('allowInPageFileManagement', 1, !empty($allowInPageFileManagement))?>
                 <?=t('Enable File Property Editing.')?>
             </label></div>
         <div class="checkbox"><label>
-                <?=$form->checkbox('onlyCurrentUser', 1, $onlyCurrentUser)?>
+                <?=$form->checkbox('onlyCurrentUser', 1, !empty($onlyCurrentUser))?>
                 <?=t('Only show files owned by current logged-in user.')?>
             </label></div>
 
@@ -90,7 +90,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                     $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetName();
                 }
             }
-            print $form->select('addFilesToSetID', $sets, $addFilesToSetID);
+            print $form->select('addFilesToSetID', $sets, isset($addFilesToSetID) ? $addFilesToSetID : null);
             ?>
     </div>
 
@@ -101,7 +101,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 <div class="ccm-tab-content" id="ccm-tab-content-header">
 
     <div class="checkbox"><label>
-            <?=$form->checkbox('enableSearch', 1, $enableSearch, array('data-options-toggle' => 'search'))?>
+            <?=$form->checkbox('enableSearch', 1, !empty($enableSearch), array('data-options-toggle' => 'search'))?>
             <?=t('Enable Search')?>
         </label>
     </div>
@@ -121,9 +121,9 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     <div class="form-group">
         <?=$form->label('orderBy', t('Sort By'))?>
         <div class="form-inline">
-            <?=$form->select('orderBy', $orderByOptions, $orderBy);?>
+            <?=$form->select('orderBy', $orderByOptions, isset($orderBy) ? $orderBy : null);?>
             <label class="checkbox-inline">
-                <?=$form->checkbox('displayOrderDesc', 1, $displayOrderDesc)?>
+                <?=$form->checkbox('displayOrderDesc', 1, !empty($displayOrderDesc))?>
                 <?=t('Descending')?>
             </label>
         </div>
@@ -134,19 +134,19 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <div class="form-group">
             <?=$form->label('headerBackgroundColor', t('Header Background'))?>
             <div>
-                <?=$color->output('headerBackgroundColor', $headerBackgroundColor)?>
+                <?=$color->output('headerBackgroundColor', isset($headerBackgroundColor) ? $headerBackgroundColor : null)?>
             </div>
         </div>
         <div class="form-group">
             <?=$form->label('headerBackgroundColorActiveSort', t('Header Background (Active Sort)'))?>
             <div>
-                <?=$color->output('headerBackgroundColorActiveSort', $headerBackgroundColorActiveSort)?>
+                <?=$color->output('headerBackgroundColorActiveSort', isset($headerBackgroundColorActiveSort) ? $headerBackgroundColorActiveSort : null)?>
             </div>
         </div>
         <div class="form-group">
             <?=$form->label('headerTextColor', t('Header Text Color'))?>
             <div>
-                <?=$color->output('headerTextColor', $headerTextColor)?>
+                <?=$color->output('headerTextColor', isset($headerTextColor) ? $headerTextColor : null)?>
             </div>
         </div>
     </fieldset>
@@ -156,11 +156,11 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 <div class="ccm-tab-content" id="ccm-tab-content-results">
     <div class="form-group">
         <?=$form->label('tableName', t('Table Name'))?>
-        <?=$form->text('tableName', $tableName, array('maxlength' => '128'))?>
+        <?=$form->text('tableName', isset($tableName) ? $tableName : '', array('maxlength' => '128'))?>
     </div>
     <div class="form-group">
         <?=$form->label('tableDescription', t('Table Description'))?>
-        <?=$form->text('tableDescription', $tableDescription, array('maxlength' => '128'))?>
+        <?=$form->text('tableDescription', isset($tableDescription) ? $tableDescription : '', array('maxlength' => '128'))?>
     </div>
     <div class="form-group">
         <?=$form->label('displayLimit', t('Items Per Page'))?>
@@ -186,7 +186,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     </div>
     <div class="form-group" data-options="height-mode">
         <?=$form->label('fixedHeightSize', t('Fixed Height Size'))?>
-        <?=$form->text('fixedHeightSize', $fixedHeightSize)?>
+        <?=$form->text('fixedHeightSize', isset($fixedHeightSize) ? $fixedHeightSize : '')?>
     </div>
 
     <fieldset>
@@ -214,11 +214,11 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <legend><?=t('Thumbnail Settings')?></legend>
         <div class="form-group">
             <?=$form->label('maxThumbWidth', t('Width'))?>
-            <?=$form->text('maxThumbWidth', $maxThumbWidth)?>
+            <?=$form->text('maxThumbWidth', isset($maxThumbWidth) ? $maxThumbWidth : '')?>
         </div>
         <div class="form-group">
             <?=$form->label('maxThumbHeight', t('Height'))?>
-            <?=$form->text('maxThumbHeight', $maxThumbHeight)?>
+            <?=$form->text('maxThumbHeight', isset($maxThumbHeight) ? $maxThumbHeight : '')?>
         </div>
     </fieldset>
 
@@ -240,13 +240,13 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             <?=$form->label('', t('Table Striping'))?>
             <div class="radio">
                 <label>
-                    <?=$form->radio('tableStriped', 0, $tableStriped)?>
+                    <?=$form->radio('tableStriped', 0, isset($tableStriped) ? $tableStriped : null)?>
                     <?=t('Off (all rows the same color)')?>
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <?=$form->radio('tableStriped', 1, $tableStriped)?>
+                    <?=$form->radio('tableStriped', 1, isset($tableStriped) ? $tableStriped : null)?>
                     <?=t('On (change color of alternate rows)')?>
                 </label>
             </div>
@@ -255,7 +255,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <div class="form-group" data-options="table-striped">
             <?=$form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color'))?>
             <div>
-                <?=$color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate)?>
+                <?=$color->output('rowBackgroundColorAlternate', isset($rowBackgroundColorAlternate) ? $rowBackgroundColorAlternate : null)?>
             </div>
         </div>
     </fieldset>

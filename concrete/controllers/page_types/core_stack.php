@@ -22,7 +22,7 @@ class CoreStack extends PageTypeController
 
     public function on_start()
     {
-        $stacksPage = Page::getByPath('/dashboard/blocks/stacks');
+        $stacksPage = Page::getByPath(STACKS_LISTING_PAGE_PATH);
         $stacksPerms = new Permissions($stacksPage);
 
         // Make sure we can view the stacks page

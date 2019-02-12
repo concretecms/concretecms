@@ -108,14 +108,19 @@ class DefaultDispatcher implements DispatcherInterface
         $callDispatcher = false;
         try {
             $route = $this->router->matchRoute($request)->getRoute();
-            $dispatcher = new RouteActionDispatcher($this->router, $route);
+            $dispatcher = new RouteDispatcher($this->router, $route, []);
             $stack = new MiddlewareStack(
                 new DispatcherDelegate($dispatcher)
             );
             $stack->setApplication($this->app);
             foreach($route->getMiddlewares() as $middleware) {
+                if (is_string($middleware->getMiddleware())) {
+                    $inflatedMiddleware =  $this->app->make($middleware->getMiddleware());
+                } else {
+                    $inflatedMiddleware = $middleware->getMiddleware();
+                }
                 $stack = $stack->withMiddleware(
-                    $this->app->make($middleware->getMiddleware()),
+                    $inflatedMiddleware,
                     $middleware->getPriority()
                 );
             }

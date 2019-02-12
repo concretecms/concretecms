@@ -20,7 +20,7 @@ class Exporter implements ItemInterface
         $p = $pageNode->addChild('page');
         $p->addAttribute('name', $app->make('helper/text')->entities($mixed->getCollectionName()));
         $p->addAttribute('path', $mixed->getCollectionPath());
-        $p->addAttribute('public-date', $mixed->getCollectionDatePUblic());
+        $p->addAttribute('public-date', $mixed->getCollectionDatePublic());
         $p->addAttribute('filename', $mixed->getCollectionFilename());
         $p->addAttribute('pagetype', $mixed->getPageTypeHandle());
         $template = Template::getByID($mixed->getPageTemplateID());

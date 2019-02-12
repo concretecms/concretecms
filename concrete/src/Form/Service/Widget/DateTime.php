@@ -296,7 +296,7 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_dt_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}_dt',
@@ -309,8 +309,8 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
-})
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'nope');
+});
 </script>
 EOT;
         }
@@ -397,7 +397,7 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}',
@@ -409,7 +409,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'nope');
 });
 </script>
 EOT;

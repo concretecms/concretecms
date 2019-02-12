@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global ConcreteAjaxRequest, ccm_doProgressiveOperation, ConcreteEvent, ConcreteAlert */
+/* global ConcreteAjaxRequest, ConcreteProgressiveOperation, ConcreteEvent, ConcreteAlert */
 
 /* Base search class for AJAX forms in the UI */
 ;(function(global, $) {
@@ -14,7 +14,8 @@
             'beforeSubmit': my.before,
             'complete': my.complete,
             'data': {},
-            error: null
+            error: null,
+            skipResponseValidation: false
         }, options);
         if (!options.data) {
             options.data = {};
@@ -54,9 +55,7 @@
     };
 
     ConcreteAjaxForm.prototype.handleProgressiveOperation = function(resp, onComplete) {
-        var my = this,
-            url = my.$form.attr('action') ? my.$form.attr("action") : my.options.url,
-            params = my.$form.formToArray(true);
+        var my = this;
 
         jQuery.fn.dialog.hideLoader();
 
@@ -67,7 +66,7 @@
                 onComplete(resp);
             }
         });
-    }
+    };
 
     ConcreteAjaxForm.prototype.error = function(r, my, callback) {
         ConcreteAjaxRequest.prototype.error(r, my);
@@ -95,7 +94,7 @@
     };
 
     ConcreteAjaxForm.prototype.success = function(resp, my, callback) {
-        if (my.validateResponse(resp)) {
+        if (my.options.skipResponseValidation || my.validateResponse(resp)) {
             if (callback) {
                 if (my.options.progressiveOperation) {
                     my.handleProgressiveOperation(resp, function(r) {

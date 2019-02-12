@@ -332,6 +332,7 @@ const USER_INVALID = 20;
 const USER_INACTIVE = 21;
 const USER_NON_VALIDATED = 22;
 const USER_SESSION_EXPIRED = 23;
+const USER_PASSWORD_RESET = 24;
 const COLLECTION_MASTER_UNAUTH = 30;
 const COLLECTION_PRIVATE = 40;
 const BLOCK_NOT_AVAILABLE = 50;
@@ -341,6 +342,8 @@ defined('DEFAULT_ERROR_REPORTING') or define('DEFAULT_ERROR_REPORTING', E_ALL & 
 const DEBUG_DISPLAY_PRODUCTION = 0;
 const DEBUG_DISPLAY_ERRORS = 1;
 const DEBUG_DISPLAY_ERRORS_SQL = 2; // not used
+
+/* -- Deprecated - use the Channels class instead */
 const LOG_TYPE_EMAILS = 'sent_emails';
 const LOG_TYPE_EXCEPTIONS = 'exceptions';
 

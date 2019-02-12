@@ -12,5 +12,4 @@ class Result extends SearchResult
 
         return $node;
     }
-
 }

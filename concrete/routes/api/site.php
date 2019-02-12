@@ -12,6 +12,8 @@ use Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider;
 $router->get('/site/trees', function() use ($app) {
     $provider = $app->make(StandardSitemapProvider::class);
     $collection = $provider->getTreeCollection();
-    return $collection;
+    return new \League\Fractal\Resource\Item(
+        $collection,
+        new \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionTransformer()
+    );
 });
-

@@ -5,11 +5,11 @@
     <label class="control-label"><?=$label?></label>
     </div>
     <?php
-    if (count($entities)) {
+    if (count($selectedEntries)) {
         ?>
-        <?php foreach ($entities as $entity) {
+        <?php foreach ($selectedEntries as $entry) {
     ?>
-            <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getID())?>"><?=$formatter->getEntryDisplayName($control, $entity)?></a></div>
+            <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entry->getID())?>"><?=$formatter->getEntryDisplayName($control, $entry)?></a></div>
         <?php 
 }
         ?>

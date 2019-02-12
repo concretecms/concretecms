@@ -12,6 +12,7 @@ class RoutingServiceProvider extends Provider
     public function register()
     {
         $this->app->singleton(Router::class);
+        $this->app->singleton(RouterInterface::class, Router::class);
         $this->app->bind(RouteActionFactoryInterface::class, function() {
             return new RouteActionFactory();
         });

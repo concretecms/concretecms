@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<?php if (is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {
+<?php if (isset($template) && is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {
     $form = Loader::helper('form');
     ?>
       

@@ -47,6 +47,14 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="control-label"><?=t("Enable Searching by Associations")?></label>
+
+            <div data-container="search-associations">
+
+            </div>
+        </div>
     </fieldset>
 
 </div>
@@ -161,6 +169,18 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     <% }); %>
 </script>
 
+<script type="text/template" data-template="express-association-search-list">
+    <% _.each(associations, function(association) { %>
+    <div class="checkbox"><label>
+            <input type="checkbox" name="searchAssociations[]" value="<%=association.associationID%>"
+            <% var associationID = association.associationID + ''; %>
+            <% if (_.contains(selected, associationID)) { %> checked<% } %>>
+            <%=association.associationName%>
+        </label>
+    </div>
+    <% }); %>
+</script>
+
 <script type="text/template" data-template="express-attribute-link-list">
     <% _.each(attributes, function(attribute) { %>
     <div class="checkbox"><label>
@@ -178,6 +198,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     Concrete.event.publish('block.express_entry_list.open', {
         'searchProperties': <?=json_encode($searchProperties)?>,
         'searchPropertiesSelected': <?=json_encode($searchPropertiesSelected)?>,
+        'searchAssociations': <?=json_encode($searchAssociations)?>,
+        'searchAssociationsSelected': <?=json_encode($searchAssociationsSelected)?>,
         'linkedPropertiesSelected': <?=json_encode($linkedPropertiesSelected)?>
     });
 </script>

@@ -34,7 +34,7 @@ class PackageProviderFactoryTest extends PHPUnit_Framework_TestCase
      * Test PackageProviderFactory if a package controller with no interfaces is passed
      * This is de default behavior.
      *
-     * @covers PackageProviderFactory::getEntityManagerProvider
+     * @covers \Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory::getEntityManagerProvider
      */
     public function testGetEntityManagerProviderDefaultBehavior()
     {
@@ -47,7 +47,7 @@ class PackageProviderFactoryTest extends PHPUnit_Framework_TestCase
      * Test PackageProviderFactory if a package controller with a
      * ProviderInterface interface is passed.
      *
-     * @covers PackageProviderFactory::getEntityManagerProvider
+     * @covers \Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory::getEntityManagerProvider
      */
     public function testGetEntityManagerProviderWithProviderInterface()
     {
@@ -60,7 +60,7 @@ class PackageProviderFactoryTest extends PHPUnit_Framework_TestCase
      * Test PackageProviderFactory if a package controller with a
      * ProviderAggregateInterface is passed
      *
-     * @covers PackageProviderFactory::getEntityManagerProvider
+     * @covers \Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory::getEntityManagerProvider
      */
 //    public function testGetEntityManagerProviderWithProviderAggregateInterface()
 //    {

@@ -17,6 +17,6 @@ class EventsServiceProvider extends ServiceProvider
         $this->app->bindIf(EventDispatcherInterface::class, EventDispatcher::class, true);
 
         // Add the 'director' alias in a backwards compatible way.
-        $this->app->bindIf('director', EventDispatcherInterface::class, true);
+        $this->app->alias(EventDispatcherInterface::class, 'director');
     }
 }
