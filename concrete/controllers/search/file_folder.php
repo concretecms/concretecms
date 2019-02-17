@@ -13,9 +13,10 @@ use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Support\Facade\Url as URL;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
+use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FileFolder extends AbstractController
@@ -61,7 +62,7 @@ class FileFolder extends AbstractController
                 $query = $search->getQuery();
                 $provider = $app->make(SearchProvider::class);
                 $ilr = $provider->getSearchResultFromQuery($query);
-                $ilr->setBaseURL(URL::to('/ccm/system/search/files/preset', $search->getID()));
+                $ilr->setBaseURL(Url::to('/ccm/system/search/files/preset', $search->getID()));
             }
 
             $searchRequest->addToSearchRequest('folder', $folder->getTreeNodeID());
@@ -71,7 +72,7 @@ class FileFolder extends AbstractController
             if (!isset($folder)) {
                 $folder = $this->filesystem->getRootFolder();
             }
-            $u = new \User();
+            $u = new User();
             $list = $folder->getFolderItemList($u, $this->request);
             $fields = $this->request->get('field');
             $filters = [];
@@ -131,7 +132,7 @@ class FileFolder extends AbstractController
                 $manager->sortListByCursor($list, $list->getActiveSortDirection());
             }
 
-            $ilr = new Result($columns, $list, URL::to('/ccm/system/file/folder/contents'));
+            $ilr = new Result($columns, $list, Url::to('/ccm/system/file/folder/contents'));
             if ($filters) {
                 $ilr->setFilters($filters);
             }
@@ -147,7 +148,7 @@ class FileFolder extends AbstractController
                     'active' => false,
                     'name' => $node->getTreeNodeDisplayName(),
                     'folder' => $node->getTreeNodeID(),
-                    'url' => (string) URL::to('/ccm/system/file/folder/contents'),
+                    'url' => (string) Url::to('/ccm/system/file/folder/contents'),
                     'menu' => $node->getTreeNodeMenu(),
                 ];
             }
@@ -157,7 +158,7 @@ class FileFolder extends AbstractController
                 'name' => $folder->getTreeNodeDisplayName(),
                 'folder' => $folder->getTreeNodeID(),
                 'menu' => $folder->getTreeNodeMenu(),
-                'url' => (string) URL::to('/ccm/system/file/folder/contents'),
+                'url' => (string) Url::to('/ccm/system/file/folder/contents'),
             ];
         }
 
