@@ -491,7 +491,7 @@
         var my = this;
         my.$element.on('click', '.dropdown-menu li', function() {
             var action = $(this).parent().attr('data-action');
-            var itemsPerPage = $(this).data('items-per-page');
+            var itemsPerPage = parseInt($(this).data('items-per-page'));
             if (action && itemsPerPage) {
                 my.ajaxUpdate(action + '?fSearchItemsPerPage=' + itemsPerPage);
                 $(this).parents('.input-group-btn').removeClass('open');
