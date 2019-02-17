@@ -13,6 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /* @var int|null $imageMaxHeight */
 /* @var int $jpegQuality */
 /* @var array $itemsPerPageOptions */
+/* @var int $itemsPerPage */
 ?>
 
 <div class="ccm-ui" data-header="file-manager">
