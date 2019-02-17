@@ -83,7 +83,10 @@ class FileFolder extends AbstractController
 
             $provider = $app->make(SearchProvider::class);
             $itemsPerPage = (int) $this->request->get('fSearchItemsPerPage');
-            if (empty($itemsPerPage)) {
+
+            // Check if the $itemsPerPage value is not greater than those allowed
+            $maxItemsPerPageOption = (int) max($provider->getItemsPerPageOptions());
+            if (empty($itemsPerPage) || $itemsPerPage > $maxItemsPerPageOption) {
                 $itemsPerPage = $provider->getItemsPerPage();
             }
 
