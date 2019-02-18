@@ -99,7 +99,7 @@ class ObjectManager
     }
 
 
-    public function duplicateObject(ExpressEntity $entity)
+    public function duplicateObject(ExpressEntity $entity,$saveInSessionDuplicatedControlsMapping = false)
     {
         $clonedEntity=clone $entity;
         $newHandle=$this->entityHandleGenerator->generate($clonedEntity);
@@ -137,12 +137,14 @@ class ObjectManager
             $mappingClonedAssociation[$association->getId()]=$clonedAssociation;
         }
         $duplicatedFormsMapping=[];
+        $duplicatedControlsMapping = [];
         //duplicate forms
         foreach ($entity->getForms() as $form) {
             /**
              * @var $form Form
              */
             $duplicatedForm=clone $form;
+            $duplicatedForm->setId(null);
             $duplicatedForm->setEntity($clonedEntity);
             $clonedEntity->getForms()->add($duplicatedForm);
             $duplicatedForm->setFieldSets(new ArrayCollection());
@@ -152,9 +154,11 @@ class ObjectManager
                 /**
                  * @var $fieldSet FieldSet
                  */
-                $set = clone $fieldSet;
-                $set->setForm($duplicatedForm);
-                $duplicatedForm->getFieldSets()->add($set);
+                $clonedSet = clone $fieldSet;
+                $clonedSet->setId(null);
+                $clonedSet->setControls(new ArrayCollection());
+                $clonedSet->setForm($duplicatedForm);
+                $duplicatedForm->getFieldSets()->add($clonedSet);
                 /**
                  * @var $fieldSet FieldSet
                  */
@@ -164,13 +168,14 @@ class ObjectManager
                 foreach ($fieldSet->getControls() as $control) {
                     $clonedControl=clone $control;
                     $clonedControl->setId((new UuidGenerator())->generate($this->entityManager, $clonedControl));
-                    $clonedControl->setFieldSet($set);
+                    $clonedControl->setFieldSet($clonedSet);
                     if ($clonedControl instanceof AssociationControl && $control instanceof AssociationControl) {
                         $clonedControl->setAssociation($mappingClonedAssociation[$control->getAssociation()->getId()]);
                     } elseif ($clonedControl instanceof  AttributeKeyControl && $control instanceof AttributeKeyControl) {
                         $clonedControl->setAttributeKey($attributeKeysMapping[$control->getAttributeKey()->getAttributeKeyHandle()]);
                     }
-                    $fieldSet->getControls()->add($clonedControl);
+                    $clonedSet->getControls()->add($clonedControl);
+                    $duplicatedControlsMapping[$control->getId()] = $clonedControl->getId();
                 }
             }
         }
@@ -182,6 +187,11 @@ class ObjectManager
         }
         $this->entityManager->persist($clonedEntity);
         $this->entityManager->flush();
+        if ($saveInSessionDuplicatedControlsMapping){
+            $session = $this->app->make('session');
+            $session->set('express_entity.duplicate.controls_mapping', $duplicatedControlsMapping);
+        }
+
         return $clonedEntity;
     }
 

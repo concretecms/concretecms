@@ -169,8 +169,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 if ($this->displayCaptcha) {
                     $validator->addRoutine(
                         new CaptchaRoutine(
-                        $this->app->make('helper/validation/captcha')
-                    )
+                            $this->app->make('helper/validation/captcha')
+                        )
                     );
                 }
 
@@ -472,6 +472,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $entityManager->persist($fieldSet);
             $entityManager->flush();
         } else {
+            //when block is edited from core_scrapbook_display (copied block)
+            if (isset($data['submit_form_scrapbook_display'])) {
+                $this->exFormID = $this->duplicateEntityExpress(false,true);
+                unset($data['submit_form_scrapbook_display']);
+            }
+
             // We check save the order as well as potentially deleting orphaned controls.
 
             /* @var Form $form */
@@ -500,6 +506,19 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $existingControlIDs = [];
         foreach ($existingControls as $control) {
             $existingControlIDs[] = $control->getId();
+        }
+
+        $duplicatedControlsMapping = (array)$session->get('express_entity.duplicate.controls_mapping');
+        foreach ($duplicatedControlsMapping as  $idControlSession=>$newIdControlSession){
+            foreach ($requestControls as $key => $requestControl){
+                if ($requestControl == $idControlSession){
+                    $requestControls[$key] = $newIdControlSession;
+                }
+            }
+            if (isset($sessionControls[$idControlSession])){
+                $sessionControls[$newIdControlSession] = $sessionControls[$idControlSession];
+                unset($sessionControls[$idControlSession]);
+            }
         }
 
         // Now, let's loop through our request controls
@@ -851,18 +870,20 @@ class Controller extends BlockController implements NotificationProviderInterfac
      * @param $update boolean if we like to save block type data after duplication
      * @return int cloned express form entity id
      */
-    public function duplicateEntityExpress($update=false)
+    public function duplicateEntityExpress($update=false, $saveInSessionDuplicatedControlsMapping=false)
     {
         $form=$this->getFormEntity();
         $objectManager=$this->app->make('express');
         if (is_object($form)) {
             $entity = $form->getEntity();
-            $duplicatedEntity = $objectManager->duplicateObject($entity);
+            $duplicatedEntity = $objectManager->duplicateObject($entity,$saveInSessionDuplicatedControlsMapping);
             foreach ($duplicatedEntity->getForms() as $f) {
                 if ($form->getName()==$f->getName()) {
                     $this->exFormID=$f->getId();
                     if ($update) {
-                        $this->save(['exFormID'=>$f->getId()]);
+                        $data = (array)$this;
+                        $data['exFormID'] = $f->getId();
+                        $this->save($data);
                     }
                     return $f->getId();
                     break;
@@ -870,4 +891,5 @@ class Controller extends BlockController implements NotificationProviderInterfac
             }
         }
     }
+
 }
