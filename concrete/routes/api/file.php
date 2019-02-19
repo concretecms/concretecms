@@ -18,7 +18,7 @@ $router->get('/file/info/{fID}', function($fID) {
     if (is_object($file)) {
         return new \League\Fractal\Resource\Item($file, new \Concrete\Core\File\FileTransformer());
     } else {
-        return [];
+        return \Symfony\Component\HttpFoundation\JsonResponse::create(['error'=>t('File not found.')], 404);
     }
 
 
