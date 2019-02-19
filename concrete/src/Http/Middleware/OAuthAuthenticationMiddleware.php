@@ -3,6 +3,8 @@
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Http\PSR7\GuzzleFactory;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfoRepository;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer;
@@ -35,11 +37,14 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
     public function __construct(
         ResourceServer $oauth,
         GuzzleFactory $psrFactory,
+        UserInfoRepository $userRepository,
         HttpFoundationFactory $foundationFactory
     ) {
         $this->oauth = $oauth;
         $this->psrFactory = $psrFactory;
         $this->foundationFactory = $foundationFactory;
+        $this->userRepository = $userRepository;
+        $this->concreteRequest = \Concrete\Core\Http\Request::getInstance();
     }
 
     /**
@@ -62,12 +67,20 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
         $request->attributes->add($newRequest->attributes->all());
 
         // Handle route scope
-        if ($route && $routeScopes = $route->getOption('oauth_scopes')) {
-            $requestScopes = $request->attributes->get('oauth_scopes');
+        if ($route) {
+            if ($routeScopes = $route->getOption('oauth_scopes')) {
+                $requestScopes = $request->attributes->get('oauth_scopes');
 
-            if (!array_intersect((array) $routeScopes, (array) $requestScopes)) {
-                throw new OAuthServerException(
-                    'Endpoint out of scope.', 1, 'invalid_request', 400, 'Try reauthorizing with the proper scope.'
+                if (!array_intersect((array)$routeScopes, (array)$requestScopes)) {
+                    throw new OAuthServerException(
+                        'Endpoint out of scope.', 1, 'invalid_request', 400, 'Try reauthorizing with the proper scope.'
+                    );
+                }
+            }
+
+            if ($userId = $request->attributes->get('oauth_user_id')) {
+                $this->concreteRequest->setCustomRequestUser(
+                    $this->userRepository->getByID($userId)
                 );
             }
         }

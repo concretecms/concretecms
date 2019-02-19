@@ -20,6 +20,7 @@ use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use League\OAuth2\Server\Exception\OAuthServerException;
 
 final class Controller
 {
@@ -128,9 +129,7 @@ final class Controller
                 // Otherwise if consent is disabled just mark this request as approved.
                 $request->setAuthorizationApproved(true);
                 $this->storeRequest($request);
-
-                // Update the step
-                $step = $this->determineStep($request);
+                return $this->oauthServer->completeAuthorizationRequest($request, $response);
             }
 
             // We've fallen through all the other steps...
