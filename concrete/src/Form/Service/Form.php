@@ -470,7 +470,7 @@ class Form
                 }
                 $str .= '</optgroup>';
             } else {
-                $str .= '<option value="' . $k . '"';
+                $str .= '<option value="' . h($k) . '"';
                 if ((string) $k === (string) $selectedValue) {
                     $str .= ' selected="selected"';
                 }
