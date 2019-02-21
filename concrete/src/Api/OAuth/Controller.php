@@ -83,7 +83,10 @@ final class Controller
             $response = $this->oauthServer->respondToAccessTokenRequest($this->request, new Response());
 
             // We generated a new token, let's prune old ones
-            $this->pruneTokens();
+            // Unfortunately, this code does not work. We had a bidirectional one-to-one from access token to
+            // refresh token that wasn't working and populating properly, and this code needs to be rewritten.
+            // In the meantime we're going to disable pruning.
+            // $this->pruneTokens();
 
             return $response;
         } catch (\Exception $e) {
@@ -129,7 +132,6 @@ final class Controller
                 // Otherwise if consent is disabled just mark this request as approved.
                 $request->setAuthorizationApproved(true);
                 $this->storeRequest($request);
-                return $this->oauthServer->completeAuthorizationRequest($request, $response);
             }
 
             // We've fallen through all the other steps...
