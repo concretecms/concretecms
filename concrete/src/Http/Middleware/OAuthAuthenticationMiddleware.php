@@ -44,7 +44,6 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
         $this->psrFactory = $psrFactory;
         $this->foundationFactory = $foundationFactory;
         $this->userRepository = $userRepository;
-        $this->concreteRequest = \Concrete\Core\Http\Request::getInstance();
     }
 
     /**
@@ -79,7 +78,10 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
             }
 
             if ($userId = $request->attributes->get('oauth_user_id')) {
-                $this->concreteRequest->setCustomRequestUser(
+                /**
+                 * @var $request \Concrete\Core\Http\Request
+                 */
+                $request->setCustomRequestUser(
                     $this->userRepository->getByID($userId)
                 );
             }
