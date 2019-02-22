@@ -761,7 +761,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $masterC = $pType->getPageTypePageTemplateDefaultPageObject();
             $db->executeQuery(
                 'update Pages set cInheritPermissionsFromCID = ? where cID = ?',
-                [(int) $masterC->getCollectionID(), $c->getCollectioniD()]
+                [(int) $masterC->getCollectionID(), $c->getCollectionID()]
             );
         }
 
