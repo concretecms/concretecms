@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, ccmi18n, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH, Concrete, ConcreteAjaxSearch, ConcreteAlert, ConcreteEvent */
+/* global _, ccmi18n, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, Concrete, ConcreteAjaxSearch, ConcreteAlert, ConcreteEvent */
 
 ;(function(global, $) {
     'use strict';
