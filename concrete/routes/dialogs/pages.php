@@ -33,6 +33,7 @@ $router->all('/edit_external/submit', 'EditExternal::submit');
 $router->all('/location', 'Location::view');
 $router->all('/search', 'Search::view');
 $router->all('/seo', 'Seo::view');
+$router->all('/sitemap_selector', 'SitemapSelector::view');
 $router->all('/drag_request', 'DragRequest::view');
 $router->all('/drag_request/submit', 'DragRequest::submit');
 $router->all('/drag_request/copy_all', 'DragRequest::doCopyAll');
