@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface as UserInterfaceController;
@@ -32,7 +31,6 @@ class SitemapSelector extends UserInterfaceController
 
     public function view()
     {
-
         $this->requireAsset('core/sitemap');
 
         /** @var $sanitizer SanitizeService */
@@ -50,8 +48,6 @@ class SitemapSelector extends UserInterfaceController
         } else {
             $this->set('selectMode', '');
         }
-
-
     }
 
     protected function canAccess()
@@ -59,7 +55,5 @@ class SitemapSelector extends UserInterfaceController
         $siteHelper = $this->app->make('helper/concrete/dashboard/sitemap');
 
         return $siteHelper->canRead();
-
     }
-
 }
