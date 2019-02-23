@@ -16,6 +16,7 @@ use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -145,6 +146,7 @@ class ApiServiceProvider extends ServiceProvider
 
 
             // Enable client_credentials grant type with 1 hour ttl
+            $server->enableGrantType($this->app->make(PasswordGrant::class), $oneHourTTL);
             $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
             $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
 
