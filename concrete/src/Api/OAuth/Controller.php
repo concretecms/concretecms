@@ -10,6 +10,9 @@ use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\User\User as UserObject;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
@@ -22,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use League\OAuth2\Server\Exception\OAuthServerException;
 
-final class Controller
+final class Controller implements LoggerAwareInterface
 {
 
     const STEP_LOGIN = 1;
@@ -50,6 +53,8 @@ final class Controller
     /** @var \Concrete\Core\User\User The logged in user */
     private $user;
 
+    use LoggerAwareTrait;
+
     public function __construct(
         AuthorizationServer $oauthServer,
         EntityManagerInterface $entityManager,
@@ -71,6 +76,11 @@ final class Controller
         }
     }
 
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_API;
+    }
+
     /**
      * Handle authorization
      *
@@ -82,11 +92,7 @@ final class Controller
         try {
             $response = $this->oauthServer->respondToAccessTokenRequest($this->request, new Response());
 
-            // We generated a new token, let's prune old ones
-            // Unfortunately, this code does not work. We had a bidirectional one-to-one from access token to
-            // refresh token that wasn't working and populating properly, and this code needs to be rewritten.
-            // In the meantime we're going to disable pruning.
-            // $this->pruneTokens();
+            $this->pruneTokens();
 
             return $response;
         } catch (\Exception $e) {
@@ -259,7 +265,6 @@ final class Controller
         $items = $qb->select('token')
             ->from(AccessToken::class, 'token')
             ->where($qb->expr()->lt('token.expiryDateTime', ':now'))
-            ->andWhere($qb->expr()->isNull('token.refreshToken'))
             ->getQuery()->execute([':now' => $now]);
 
         $this->pruneResults($items);
@@ -268,9 +273,7 @@ final class Controller
         $qb = $this->entityManager->createQueryBuilder();
         $items = $qb->select('token')
             ->from(AccessToken::class, 'token')
-            ->leftJoin('token.refreshToken', 'refresh')
             ->where($qb->expr()->lt('token.expiryDateTime', ':now'))
-            ->andWhere($qb->expr()->lt('refresh.expiryDateTime', ':now'))
             ->getQuery()->execute([':now' => $now]);
 
         $this->pruneResults($items);
@@ -312,7 +315,10 @@ final class Controller
         foreach ($buffer as $bufferItem) {
             // Clear out associated access token
             if ($bufferItem instanceof AccessToken) {
-                $refreshToken = $bufferItem->getRefreshToken();
+                // We have to use this method of retrieving the entity because the refresh token
+                // is not accurately being set on the Access token entity for some reason.
+                $refreshToken = $this->entityManager->getRepository(RefreshToken::class)
+                    ->findOneByAccessToken($bufferItem);
                 if ($refreshToken) {
                     $this->entityManager->remove($refreshToken);
                 }
