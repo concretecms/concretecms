@@ -16,6 +16,9 @@ class ColumnSet extends Set
     public function getAttributeKeyColumn($akHandle)
     {
         $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);
+        if ($ak === null) {
+            return null;
+        }
         $col = new UserAttributeKeyColumn($ak);
         return $col;
     }

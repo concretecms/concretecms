@@ -21,7 +21,7 @@ foreach ($auth->getScopes() as $scope) {
     <div style="flex: 1; flex-shrink: 1; display: flex; flex-direction: column; justify-content: center">
         <h3 class="scope-title text-center">"<strong><?= h($client->getName()) ?></strong>"</h3>
         <h4 class="scope-description text-center">
-            <strong><?= t('would like access to your account') ?></strong>
+            <strong><?= t('This client would like to access the following data:') ?></strong>
         </h4>
 
         <div class="scopes" style="overflow:auto">

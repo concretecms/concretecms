@@ -388,7 +388,7 @@ class Application extends Container
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
         $this['app_relative_path'] = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $home), '/');
 
-        $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
+        $args = $this->isRunThroughCommandLineInterface() && isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
         $detector = new EnvironmentDetector();
 
