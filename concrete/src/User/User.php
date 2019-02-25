@@ -229,19 +229,19 @@ class User extends ConcreteObject
             $this->superUser = false;
             $this->uDefaultLanguage = null;
             $this->uTimezone = null;
-            if ($validator->hasActiveSession() || $this->uID) {
-                if ($req->hasCustomRequestUser()) {
-                    $ux = $req->getCustomRequestUser();
-                    if ($ux && is_object($ux)) {
-                        $this->uID = $ux->getUserID();
-                        $this->uName = $ux->getUserName();
-                        $this->superUser = $ux->getUserID() == USER_SUPER_ID;
-                        if ($ux->getUserDefaultLanguage()) {
-                            $this->uDefaultLanguage = $ux->getUserDefaultLanguage();
-                        }
-                        $this->uTimezone = $ux->getUserTimezone();
+            if ($req->hasCustomRequestUser()) {
+                $ux = $req->getCustomRequestUser();
+                if ($ux && is_object($ux)) {
+                    $this->uID = $ux->getUserID();
+                    $this->uName = $ux->getUserName();
+                    $this->superUser = $ux->getUserID() == USER_SUPER_ID;
+                    if ($ux->getUserDefaultLanguage()) {
+                        $this->uDefaultLanguage = $ux->getUserDefaultLanguage();
                     }
-                } else if ($session->has('uID')) {
+                    $this->uTimezone = $ux->getUserTimezone();
+                }
+            } else if ($validator->hasActiveSession() || $this->uID) {
+                if ($session->has('uID')) {
                     $this->uID = $session->get('uID');
                     $this->uName = $session->get('uName');
                     $this->uTimezone = $session->get('uTimezone');
