@@ -145,11 +145,17 @@ class ApiServiceProvider extends ServiceProvider
             $oneDayTTL = new \DateInterval('P1D');
 
 
-            // Enable client_credentials grant type with 1 hour ttl
-            $server->enableGrantType($this->app->make(PasswordGrant::class), $oneHourTTL);
-            $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
-            $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
+            $config = $this->app->make('config');
 
+            if ($config->get('concrete.api.grant_types.password_credentials')) {
+                $server->enableGrantType($this->app->make(PasswordGrant::class), $oneHourTTL);
+            }
+            if ($config->get('concrete.api.grant_types.client_credentials')) {
+                $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
+            }
+            if ($config->get('concrete.api.grant_types.authorization_code')) {
+                $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
+            }
             return $server;
         });
 

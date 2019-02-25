@@ -1117,6 +1117,17 @@ return [
          * @var bool
          */
         'enabled' => false,
+
+        /**
+         * Which grant types do we allow to connect to the API
+         *
+         * @var array
+         */
+        'grant_types' => [
+            'client_credentials' => true,
+            'authorization_code' => true,
+            'password_credentials' => false,
+        ],
     ],
 
     'mutex' => [
