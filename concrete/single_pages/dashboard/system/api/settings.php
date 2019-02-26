@@ -14,12 +14,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </div>
     </div>
 
-    <div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <button class="btn btn-primary pull-right" type="submit"><?=t("Save")?></button>
-        </div>
-    </div>
-</form>
 
 <?php if ($enable_api) { ?>
     <section>
@@ -41,4 +35,32 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <hr>
         <div><a href="<?=URL::to('/dashboard/system/api/integrations', 'add')?>" class="btn btn-default btn-xs"><?=t('Add Integration')?></a></div>
     </section>
+
+    <section>
+        <h3><?=t('Enabled Grant Types')?></h3>
+        <div class="help-block"><?=t('Choose which OAuth2 grant types you want to have access to the API for this site.')?></div>
+
+        <?php foreach($availableGrantTypes as $key => $label) {
+            $enabled = false;
+            if (isset($grantTypes[$key]) && $grantTypes[$key] === true) {
+                $enabled = true;
+            }
+            ?>
+            <div class="checkbox">
+                <label>
+                    <?=$form->checkbox('enabledGrantTypes[]', $key, $enabled)?>
+                    <?=$label?>
+                </label>
+            </div>
+        <?php } ?>
+
+    </section>
+
 <?php } ?>
+
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <button class="btn btn-primary pull-right" type="submit"><?=t("Save")?></button>
+        </div>
+    </div>
+</form>

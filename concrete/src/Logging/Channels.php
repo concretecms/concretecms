@@ -92,6 +92,12 @@ class Channels
      */
     const CHANNEL_OPERATIONS = 'operations';
 
+    /**
+     * Channel identifier: operations. Used for routine maintenance operations.
+     *
+     * @var string
+     */
+    const CHANNEL_API = 'api';
 
     /**
      * Channel identifier: all – Do NOT use this to log to. This is a separate system channel that tells configuration
@@ -120,6 +126,7 @@ class Channels
             self::CHANNEL_NETWORK,
             self::CHANNEL_USERS,
             self::CHANNEL_OPERATIONS,
+            self::CHANNEL_API,
         ];
     }
 
@@ -167,6 +174,8 @@ class Channels
                 return tc('Log channel', 'Site Organization');
             case self::CHANNEL_USERS:
                 return tc('Log channel', 'Users');
+            case self::CHANNEL_API:
+                return tc('Log channel', 'API');
             default:
                 return tc('Log channel', $text->unhandle($channel));
         }

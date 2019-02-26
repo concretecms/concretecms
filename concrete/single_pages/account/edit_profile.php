@@ -14,7 +14,7 @@
         <?php if (Config::get('concrete.misc.user_timezones')) { ?>
             <div class="form-group">
                 <?= $form->label('uTimezone', t('Time Zone')); ?>
-                <?= $form->select('uTimezone', $helper_date->getTimezones(), ($profile->getUserTimezone() ? $profile->getUserTimezone() : date_default_timezone_get())); ?>
+                <?= $form->select('uTimezone', $date->getTimezones(), ($profile->getUserTimezone() ? $profile->getUserTimezone() : date_default_timezone_get())); ?>
             </div>
         <?php } ?>
 
