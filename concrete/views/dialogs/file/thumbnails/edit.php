@@ -55,9 +55,12 @@ if ($type_version) {
     return;
 }
 
-$app = Application::getFacadeApplication();
-$config = $app->make('config');
-$saveAreaBackgroundColor = $config->get('concrete.file_manager.images.image_editor_save_area_background_color');
+$saveAreaBackgroundColor = $type_version->getSaveAreaBackgroundColor();
+if (empty($saveAreaBackgroundColor)) {
+    $app = Application::getFacadeApplication();
+    $config = $app->make('config');
+    $saveAreaBackgroundColor = $config->get('concrete.file_manager.images.image_editor_save_area_background_color');
+}
 
 $view->addScopeItems([
     'fv' => $file_version,
