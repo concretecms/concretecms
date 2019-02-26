@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Logging\Processor;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\User\User;
 
 /**
@@ -11,9 +12,21 @@ class Concrete5UserProcessor
 {
 
     /**
-     * @var User
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * The cached user instance
+     *
+     * @var User|null
      */
     protected $user;
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Invoke this processor
@@ -24,14 +37,27 @@ class Concrete5UserProcessor
      */
     public function __invoke(array $record)
     {
-        if (!isset($this->user)) {
-            $this->user = new User();
-        }
-        if ($this->user->isRegistered()) {
-            $record['extra']['user'] = [$this->user->getUserID(), $this->user->getUserName()];
+        $user = $this->getLoggedInUser();
+
+        if ($user && $user->isRegistered()) {
+            $record['extra']['user'] = [$user->getUserID(), $user->getUserName()];
         }
 
         return $record;
+    }
+
+    /**
+     * Resolve a user intance from the IOC container and cache it
+     *
+     * @return User|mixed
+     */
+    protected function getLoggedInUser()
+    {
+        if (!$this->user) {
+            $this->user = $this->app->make(User::class);
+        }
+
+        return $this->user;
     }
 
 }

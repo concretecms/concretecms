@@ -8,15 +8,13 @@ use Zend\Http\Request as ZendRequest;
 use Zend\Uri\Http as ZendUriHttp;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Exception;
+use Throwable;
 
 class Client extends ZendClient implements LoggerAwareInterface
 {
 
     use LoggerAwareTrait;
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger = null;
 
     /**
      * Get the currently configured logger.
@@ -58,7 +56,13 @@ class Client extends ZendClient implements LoggerAwareInterface
         $logger = $this->getLogger();
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
-            $body = $response->getBody();
+            try {
+                $body = $response->getBody();
+            } catch (Exception $x) {
+                $body = '';
+            } catch (Throwable $x) {
+                $body = '';
+            }
             if (mb_strlen($body) <= 200) {
                 $shortBody = $body;
             } else {

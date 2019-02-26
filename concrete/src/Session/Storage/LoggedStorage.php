@@ -193,7 +193,7 @@ class LoggedStorage implements SessionStorageInterface, LoggerAwareInterface
      */
     public function regenerate($destroy = false, $lifetime = null)
     {
-        $this->logDebug('Regenerating session', ['destroy' => $destroy, 'lifetime' => $lifetime]);
+        $this->logInfo('Regenerating session', ['destroy' => $destroy, 'lifetime' => $lifetime]);
 
         return $this->wrappedStorage->start();
     }
@@ -220,7 +220,7 @@ class LoggedStorage implements SessionStorageInterface, LoggerAwareInterface
      */
     public function clear()
     {
-        $this->logDebug('Clearing Session.');
+        $this->logInfo('Clearing Session.');
 
         $metadata = $this->getMetadataBag();
         $lifetime = $metadata->getLifetime();

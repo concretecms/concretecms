@@ -103,7 +103,7 @@ class SessionValidatorTest extends PHPUnit_Framework_TestCase
         $this->validator->setLogger($logger);
 
         // Don't invalidate
-        $logger->expects($this->once())->method('debug');
+        $logger->expects($this->once())->method('notice');
         $this->session->expects($this->once())->method('invalidate');
         $this->validator->handleSessionValidation($this->session);
     }
@@ -121,7 +121,7 @@ class SessionValidatorTest extends PHPUnit_Framework_TestCase
         $this->validator->setLogger($logger);
 
         // Invalidate
-        $logger->expects($this->once())->method('debug');
+        $logger->expects($this->once())->method('notice');
         $this->session->expects($this->once())->method('invalidate');
         $this->validator->handleSessionValidation($this->session);
     }
