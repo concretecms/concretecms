@@ -533,7 +533,10 @@ class Search extends DashboardPageController
             $this->canSignInAsUser = $this->canEdit && $tp->canSudo() && $me->getUserID() != $ui->getUserID();
             $this->canDeleteUser = $this->canEdit && $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
             $this->canAddGroup = $this->canEdit && $tp->canAccessGroupSearch();
-            $this->allowedEditAttributes = $this->canEdit && $this->assignment->getAttributesAllowedArray();
+            $this->allowedEditAttributes = [];
+            if ($this->canEdit) {
+                $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
+            }
             $this->set('user', $ui);
             $this->set('canEditAvatar', $this->canEditAvatar);
             $this->set('canEditUserName', $this->canEditUserName);
