@@ -1,3 +1,9 @@
+# 8.4.5
+
+## Bug Fixes
+
+* Fixes a vulnerability which permitted authenticated users to view the contents of arbitrary messages sent through the My Account section.
+
 # 8.4.4
 
 ## Feature Updates
