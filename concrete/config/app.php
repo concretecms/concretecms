@@ -475,6 +475,9 @@ return [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
         ],
+        'core/imageeditor/control/colors' => [
+            ['javascript', 'js/image-editor/controls/colors.js'],
+        ],
         'core/duration' => [
             ['javascript', 'js/duration.js'],
             ['css', 'css/duration.css'],

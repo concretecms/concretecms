@@ -129,7 +129,7 @@ Kinetic.Text.prototype.rasterize = function(e) {
     contextPrototype = Object.getPrototypeOf(document.createElement('canvas').getContext('2d'));
     originalFunction = contextPrototype.drawImage;
   } catch (e) {
-    originalFunction = null; 
+    originalFunction = null;
   }
   if (originalFunction) {
     contextPrototype.drawImage = function() {
@@ -438,7 +438,6 @@ im.save = function saveImage() {
 
             im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
             im.stage.setScale(1);
-            im.background.hide();
             im.foreground.hide();
             im.stage.setHeight(im.saveHeight + 100);
             im.stage.setWidth(im.saveWidth + 100);
@@ -457,7 +456,6 @@ im.save = function saveImage() {
                 height: im.saveHeight,
                 callback: function saveImageDataUrlCallback(url) {
                     im.stage.setPosition(oldStagePosition);
-                    im.background.show();
                     im.foreground.show();
                     im.stage.setScale(oldScale);
                     im.stage.setHeight(oldHeight);
@@ -706,7 +704,11 @@ im.foreground = new Kinetic.Layer();
 im.stage.add(im.background);
 im.stage.add(im.foreground);
 im.bgimage = new Image();
-im.saveArea = new Kinetic.Rect();
+var saveAreaOptions = {};
+if (settings.saveAreaBackgroundColor) {
+  saveAreaOptions.fill = settings.saveAreaBackgroundColor;
+}
+im.saveArea = new Kinetic.Rect(saveAreaOptions);
 im.background.add(im.saveArea);
 im.bind('load', function(){
   im.saveArea.setFillPatternImage(im.bgimage);
