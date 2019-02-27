@@ -27,8 +27,9 @@
         // LEGACY SUPPORT
         return $(this).each(function() {
             $(this).unbind('click.make-dialog').bind('click.make-dialog', function(e) {
+                e.preventDefault();
                 if ($(this).hasClass('ccm-dialog-launching')) {
-                    return false;
+                    return;
                 }
 
                 $(this).addClass('ccm-dialog-launching');
@@ -60,7 +61,6 @@
                     launcher: $(this)
                 };
                 $.fn.dialog.open(obj);
-                return false;
             });
         });
     };

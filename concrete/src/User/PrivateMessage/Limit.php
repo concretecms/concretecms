@@ -18,7 +18,7 @@ class Limit
      *
      * @return bool
      */
-    public function isOverLimit($uID)
+    public static function isOverLimit($uID)
     {
         if (Config::get('concrete.user.private_messages.throttle_max') == 0) {
             return false;
@@ -42,7 +42,7 @@ class Limit
         }
     }
 
-    public function getErrorObject()
+    public static function getErrorObject()
     {
         $ve = Loader::helper('validation/error');
         $ve->add(t('You may not send more than %s messages in %s minutes', Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')));

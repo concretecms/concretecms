@@ -482,7 +482,7 @@
 
 
             $(element).find('div.ccm-panel-add-block-stack-item').each(function () {
-                var stack, me = $(this), dragger = me.find('img.ccm-panel-add-block-stack-item-handle');
+                var stack, me = $(this), dragger = me.find('.ccm-panel-add-block-stack-item-handle');
                 stack = new Concrete.Stack($(this), my, dragger, next_area);
 
                 stack.setPeper(dragger);

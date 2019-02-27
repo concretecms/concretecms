@@ -2333,7 +2333,7 @@ EOT
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             // No passed cHandle, and there is an existing handle.
             $cHandle = $this->getCollectionHandle();
-        } elseif (!$isHomePage && !Core::make('helper/validation/strings')->notempty($data['cHandle'])) {
+        } elseif (!$isHomePage && (!isset($data['cHandle']) || !Core::make('helper/validation/strings')->notempty($data['cHandle']))) {
             // no passed cHandle, and no existing handle
             // make the handle out of the title
             $cHandle = $txt->urlify($cName);

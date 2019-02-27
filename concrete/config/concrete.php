@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a1',
     'version_installed' => '9.0.0a1',
-    'version_db' => '20190215000000', // the key of the latest database migration
+    'version_db' => '20190227000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -941,8 +941,8 @@ return [
             'allowed_characters' => [
                 'boundary' => 'A-Za-z0-9',
                 'middle' => 'A-Za-z0-9_\.',
-                'requirement_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
-                'error_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
+                'requirement_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), and underscores (not at the beginning/end).',
+                'error_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), and underscores (not at the beginning/end).',
             ],
         ],
         'password' => [
@@ -1156,6 +1156,17 @@ return [
          * @var bool
          */
         'enabled' => false,
+
+        /**
+         * Which grant types do we allow to connect to the API
+         *
+         * @var array
+         */
+        'grant_types' => [
+            'client_credentials' => true,
+            'authorization_code' => true,
+            'password_credentials' => false,
+        ],
     ],
 
     'mutex' => [
