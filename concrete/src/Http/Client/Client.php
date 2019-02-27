@@ -8,17 +8,13 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use Psr\Http\Message\RequestInterface;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Exception;
+use Throwable;
 
 class Client extends GuzzleHttpClient implements LoggerAwareInterface
 {
 
     use LoggerAwareTrait;
-
-    /**
-     * @var GuzzleHttpClient
-     */
-    protected $client;
-
     /**
      * @var LoggerInterface|null
      */
@@ -60,7 +56,13 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
         $logger = $this->getLogger();
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
-            $body = $response->getBody();
+            try {
+                $body = $response->getBody();
+            } catch (Exception $x) {
+                $body = '';
+            } catch (Throwable $x) {
+                $body = '';
+            }
             if (mb_strlen($body) <= 200) {
                 $shortBody = $body;
             } else {

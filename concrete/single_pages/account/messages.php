@@ -185,8 +185,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			<?php break;
         case 'send':
         case 'reply':
-        case 'write': ?>
-
+        case 'write':
+            if (!isset($msgSubject)) {
+                $msgSubject = '';
+            }
+            if (!isset($msgBody)) {
+                $msgBody = '';
+            }
+            ?>
 		<div id="ccm-profile-message-compose">
 			<form method="post" action="<?=$view->action('send'); ?>">
 

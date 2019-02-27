@@ -133,7 +133,19 @@ class Messages extends AccountPageController
     public function reply($boxID, $msgID)
     {
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        $msg = UserPrivateMessage::getByID($msgID);
+        $u = new User();
+        $ui = UserInfo::getByID($u->getUserID());
+        $mailbox = UserPrivateMessageMailbox::get($ui, UserPrivateMessageMailbox::MBTYPE_INBOX);
+        $msg = UserPrivateMessage::getByID($msgID, $mailbox);
+        if (!$msg) {
+            $this->error->add(t('Message not found.'));
+        } elseif (!$ui->canReadPrivateMessage($msg)) {
+            $this->error->add(t('Access Denied.'));
+        }
+        if ($this->error->has()) {
+            $this->flash('error', $this->error->toText());
+            $this->redirect('/account/messages');
+        }
         $uID = $msg->getMessageRelevantUserID();
         $this->validateUser($uID);
         $this->set('backURL', View::url('/account/messages', 'view_message', $boxID, $msgID));
@@ -169,7 +181,7 @@ class Messages extends AccountPageController
             $u = new User();
             $sender = UserInfo::getByID($u->getUserID());
             $r = $sender->sendPrivateMessage($this->get('recipient'), $this->post('msgSubject'), $this->post('msgBody'), $this->get('msg'));
-            if ($r instanceof \Concrete\Core\Helper\Validation\Error) {
+            if ($r instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
                 $this->error = $r;
             } else {
                 if ($this->post('msgID') > 0) {
@@ -190,7 +202,7 @@ class Messages extends AccountPageController
 
     public function reply_complete($box, $msgID)
     {
-        $this->reply($box, $msgID);
+        return $this->reply($box, $msgID);
     }
 
     public function on_before_render()

@@ -144,7 +144,12 @@ class Client implements ClientEntityInterface
      */
     public function getRedirectUri()
     {
-        return $this->redirectUri;
+        /**
+         * Note – An empty redirect URL will still trigger League's redirect URI check, because it's looking for
+         * is_string() and this returns an empty string. So let's use the falsy check to turn even empty strings
+         * into nulls.
+         */
+        return $this->redirectUri ? $this->redirectUri : null;
     }
 
     /**

@@ -18,6 +18,18 @@ class Settings extends DashboardPageController
         }
         $this->set("enable_api", $enable_api);
 
+        $grantTypes = (array) $config->get('concrete.api.grant_types');
+        $this->set('grantTypes', $grantTypes);
+        $this->set('availableGrantTypes', $this->getAvailableGrantTypes());
+    }
+
+    protected function getAvailableGrantTypes()
+    {
+        return [
+            'client_credentials' => t('Client Credentials'),
+            'authorization_code' => t('Authorization Code'),
+            'password_credentials' => t('Password Credentials'),
+        ];
     }
 
     public function submit()
@@ -28,7 +40,18 @@ class Settings extends DashboardPageController
 
         if (!$this->error->has()) {
             $enable_api = $this->request->request->get("enable_api") ? true : false;
-            $this->app->make('config')->save('concrete.api.enabled', $enable_api);
+            $config = $this->app->make('config');
+            $config->save('concrete.api.enabled', $enable_api);
+
+            if ($enable_api) {
+                $enabledGrantTypes = (array)$this->request->request->get('enabledGrantTypes');
+                foreach ($this->getAvailableGrantTypes() as $type => $label) {
+                    $key = "concrete.api.grant_types.{$type}";
+                    $enabled = in_array($type, $enabledGrantTypes);
+                    $config->save($key, $enabled);
+                }
+            }
+            
             $this->flash('success', t("API Settings updated successfully."));
             return $this->redirect('/dashboard/system/api/settings');
         }

@@ -5,7 +5,6 @@ set -o nounset
 
 AUTO_REPOSITORY_OWNER='concrete5'
 AUTO_REPOSITORY_NAME='concrete5'
-AUTO_PROCESS_BRANCH='develop'
 AUTO_COMMIT_NAME_BASE='Automatic assets rebuilding'
 AUTO_COMMIT_AUTHOR_NAME='concrete5 TravisCI Bot'
 AUTO_COMMIT_AUTHOR_EMAIL='concrete5-bot@concrete5.org'
@@ -16,8 +15,13 @@ if test "${TRAVIS_PULL_REQUEST:-}" != 'false'; then
     exit 0
 fi
 
-if test "${TRAVIS_BRANCH:-}" != "${AUTO_PROCESS_BRANCH}"; then
-    printf '%s: skipping because pushing to "%s" instead of "%s".\n' "${AUTO_COMMIT_NAME_BASE}" "${TRAVIS_BRANCH:-}" "${AUTO_PROCESS_BRANCH}"
+if test -n "${TRAVIS_TAG:-}"; then
+    printf '%s: skipping because the the current build is for a git tag.\n' "${AUTO_COMMIT_NAME_BASE}"
+    exit 0
+fi
+
+if test -z "${TRAVIS_BRANCH:-}"; then
+    printf '%s: skipping because the current branch is not available.\n' "${AUTO_COMMIT_NAME_BASE}"
     exit 0
 fi
 
@@ -87,5 +91,5 @@ git config user.name "${AUTO_COMMIT_AUTHOR_NAME}"
 git config user.email "${AUTO_COMMIT_AUTHOR_EMAIL}"
 git commit -m "${AUTO_COMMIT_NAME}"
 git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/${AUTO_REPOSITORY_OWNER}/${AUTO_REPOSITORY_NAME}.git"
-git push deploy "${AUTO_PROCESS_BRANCH}" -vvv
+git push deploy "${TRAVIS_BRANCH}" -vvv
 printf '%s: repository updated.\n' "${AUTO_COMMIT_NAME_BASE}"

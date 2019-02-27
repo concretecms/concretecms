@@ -168,7 +168,7 @@ class Validation
         // the validate parameter says is required
         foreach ($this->fields as $f) {
             $validate = $f->validate;
-            $field = $f->field;
+            $field = isset($f->field) ? $f->field : null;
             $fieldValue = isset($this->data[$field]) ? $this->data[$field] : null;
             switch ($validate) {
                 case self::VALID_NOT_EMPTY:

@@ -321,7 +321,7 @@ class Stack extends Page implements ExportableInterface
      *
      * @return int
      */
-    protected function getMultilingualSectionID()
+    public function getMultilingualSectionID()
     {
         if (!isset($this->multilingualSectionID)) {
             $db = Database::connection();
