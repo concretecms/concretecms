@@ -3,11 +3,9 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
-use Concrete\Core\Foundation\Bus\Bus;
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
-use League\Tactician\Bernard\QueueableCommand;
 use Request;
 use View;
 
@@ -320,12 +318,4 @@ abstract class AbstractController implements ApplicationAwareInterface
         return $this->app->executeCommand($command);
     }
 
-    /**
-     * Dispatches a command to the command queue.
-     * @param QueueableCommand $command
-     */
-    public function queueCommand(QueueableCommand $command)
-    {
-        return $this->app->queueCommand($command);
-    }
 }

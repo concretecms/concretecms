@@ -11,6 +11,7 @@
         options = $.extend({
             'progressiveOperation': false,
             'progressiveOperationTitle': '',
+            'progressiveOperationElement': null,
             'beforeSubmit': my.before,
             'complete': my.complete,
             'data': {},
@@ -62,6 +63,7 @@
         new ConcreteProgressiveOperation({
             response: resp,
             title: my.options.progressiveOperationTitle,
+            element: my.options.progressiveOperationElement,
             onComplete: function() {
                 onComplete(resp);
             }

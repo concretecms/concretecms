@@ -8,6 +8,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
+use Concrete\Core\Foundation\Queue\BernardSubscriber;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\SystemRouteList;
@@ -18,7 +19,6 @@ use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Request as SymphonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
-use Concrete\Core\Foundation\Bus\Bus;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
@@ -122,6 +122,14 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $this->initializeRoutes($config);
         $this->initializeFileTypes($config);
 
+        /*
+         * ----------------------------------------------------------------------------
+         * Certain components subscribing to the actions of other components.
+         * ----------------------------------------------------------------------------
+         */
+        $this->initializeEvents($app);
+
+
         // If we're not in the CLI SAPI, lets do additional booting for HTTP
         if (!$this->app->isRunThroughCommandLineInterface()) {
             return $this->bootHttpSapi($config, $app);
@@ -191,6 +199,20 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $config = $app->make('config');
 
         return $config;
+    }
+
+    /**
+     * Some components create events that other components need to listen to. Register them here, but only
+     * if the CMS is installed.
+     * @param Application $app
+     */
+    private function initializeEvents(Application $app)
+    {
+        if ($app->isInstalled()) {
+            $subscriber = $app->make(BernardSubscriber::class);
+            $dispatcher = $app->make('director');
+            $dispatcher->addSubscriber($subscriber);
+        }
     }
 
     /**

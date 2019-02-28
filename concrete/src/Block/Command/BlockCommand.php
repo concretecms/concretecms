@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Block\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class BlockCommand implements CommandInterface
 {

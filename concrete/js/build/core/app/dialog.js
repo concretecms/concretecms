@@ -258,7 +258,8 @@
                 options = {};
             if ($form.attr("data-dialog-form-processing") == 'progressive') {
                 options.progressiveOperation = true;
-                options.progressiveOperationElement = 'div[data-dialog-form-element=progress-bar]';
+                options.progressiveOperationElement = $('div[data-dialog-form-element=progress-bar]');
+                options.progressiveOperationTitle = $form.attr('data-dialog-form-processing-title');
             }
             $form.concreteAjaxForm(options);
         });

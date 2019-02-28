@@ -2,15 +2,15 @@
 
 namespace Concrete\Core\File\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
-use League\Tactician\Bernard\QueueableCommand;
+use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
-class RescanFileCommand extends FileCommand implements QueueableCommand
+class RescanFileCommand extends FileCommand implements BatchableCommandInterface
 {
 
-    public function getName()
+    public function getBatchHandle()
     {
         return 'rescan_file';
     }
+
 
 }

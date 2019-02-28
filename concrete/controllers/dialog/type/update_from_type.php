@@ -4,10 +4,12 @@ namespace Concrete\Controller\Dialog\Type;
 use Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Foundation\Queue\Batch\Processor;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsBatchProcessFactory;
 use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand;
 use Page;
 use PageTemplate;
@@ -154,17 +156,12 @@ class UpdateFromType extends BackendInterfaceController
             ];
         }
 
-        foreach ($records as $record) {
-            $this->queueCommand(new UpdatePageTypeDefaultsCommand(
-                $pageTypeDefaultPage->getCollectionID(),
-                $record['cID'], $record['cvID'], $record['blocksToUpdate'],
-                $record['blocksToAdd']
-            ));
-        }
 
-        $queueService = $this->app->make(QueueService::class);
-        $queue = $queueService->get('update_page_type_defaults');
-        return $queue;
+        $factory = new UpdatePageTypeDefaultsBatchProcessFactory($pageTypeDefaultPage);
+        $processor = $this->app->make(Processor::class);
+        return $processor->process($factory, $records, [
+            'message' => t('All child pages updated successfully')
+        ]);
     }
 
     public function submit($ptID, $pTemplateID)
@@ -186,11 +183,7 @@ class UpdateFromType extends BackendInterfaceController
             return;
         }
 
-        $queue = $this->queueForPageTypeUpdate($pageTypeDefaultPage);
-        $response = new EnqueueItemsResponse($queue, [
-            'message' => t('All child pages updated successfully')
-        ]);
-        return $response;
+        return $this->queueForPageTypeUpdate($pageTypeDefaultPage);
     }
 
     protected function canAccess()

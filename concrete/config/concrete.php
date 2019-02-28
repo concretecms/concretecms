@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a1',
     'version_installed' => '9.0.0a1',
-    'version_db' => '20190227000000', // the key of the latest database migration
+    'version_db' => '20190227100000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -344,6 +344,28 @@ return [
          * @var string (redis|database)
          */
         'driver' => 'database',
+
+
+        /*
+         * Default queue to use
+         *
+         * @var string
+         */
+        'default' => 'default',
+
+        /*
+         * If we're consuming the queue through polling, how many entries do we do at a time
+         *
+         * @var int
+         */
+        'polling_batch' => [
+            'default' => 10,
+            'rescan_file' => 5,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+
 
     ],
 

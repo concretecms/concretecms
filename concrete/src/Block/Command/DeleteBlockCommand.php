@@ -2,13 +2,12 @@
 
 namespace Concrete\Core\Block\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
-use League\Tactician\Bernard\QueueableCommand;
+use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
-class DeleteBlockCommand extends BlockCommand implements QueueableCommand
+class DeleteBlockCommand extends BlockCommand implements BatchableCommandInterface
 {
 
-    public function getName()
+    public function getBatchHandle()
     {
         return 'delete_block';
     }

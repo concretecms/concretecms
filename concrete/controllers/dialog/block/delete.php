@@ -2,8 +2,10 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\Command\DeleteBlockBatchProcessFactory;
 use Concrete\Core\Block\Command\DeleteBlockCommand;
 use Concrete\Core\Block\Events\BlockDelete;
+use Concrete\Core\Foundation\Queue\Batch\Processor;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
@@ -67,22 +69,14 @@ class Delete extends BackendInterfaceBlockController
         if ($this->validateAction()) {
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {
                 $queue = $this->app->make(QueueService::class);
-                $q = $queue->get('delete_block');
                 $blocks = $this->block->queueForDefaultsUpdate($_POST);
-                foreach($blocks as $b) {
-                    $command = new DeleteBlockCommand(
-                        $b['bID'], $b['cID'], $b['cvID'], $b['arHandle']
-                    );
-                    $this->queueCommand($command);
-                }
-
-
-                $response = new EnqueueItemsResponse($q, [
+                $factory = new DeleteBlockBatchProcessFactory();
+                $processor = $this->app->make(Processor::class);
+                return $processor->process($factory, $blocks, [
                     'bID' => $this->block->getBlockID(),
                     'aID' => $this->area->getAreaID(),
                     'message' => t('All child blocks deleted successfully.')
                 ]);
-                return $response;
             }
         }
     }

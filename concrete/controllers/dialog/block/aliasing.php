@@ -3,8 +3,10 @@ namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand;
+use Concrete\Core\Block\Command\DefaultsBlockBatchProcessFactory;
 use Concrete\Core\Block\Command\UpdateDefaultsBlockCommand;
 use Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand;
+use Concrete\Core\Foundation\Queue\Batch\Processor;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Page\EditResponse;
@@ -41,25 +43,12 @@ class Aliasing extends BackendInterfaceBlockController
                     $queue = $this->app->make(QueueService::class);
                     $q = $queue->get('update_defaults');
                     $blocks = $this->block->queueForDefaultsAliasing($_POST);
-
-                    foreach ($blocks as $b) {
-                        if ($b['action'] == 'update_forked_alias') {
-                            $command = UpdateForkedAliasDefaultsBlockCommand::class;
-                        } else {
-                            $command = AddAliasDefaultsBlockCommand::class;
-                        }
-
-                        $command = new $command(
-                            $this->block->getBlockID(), $c->getCollectionID(),
-                            $c->getVersionID(), $this->request->query->get('arHandle'),
-                            $b['bID'], $b['cID'], $b['cvID'], $b['arHandle']
-                        );
-                        $this->queueCommand($command);
-                    }
-
-                    $response = new EnqueueItemsResponse($q);
-                    return $response;
-
+                    $factory = new DefaultsBlockBatchProcessFactory($b, $c, $this->request->query->get('arHandle'));
+                    /**
+                     * @var $processor Processor
+                     */
+                    $processor = $this->app->make(Processor::class);
+                    return $processor->process($factory, $blocks);
                 }
             }
         }

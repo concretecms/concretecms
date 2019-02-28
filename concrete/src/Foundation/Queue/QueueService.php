@@ -5,17 +5,17 @@ namespace Concrete\Core\Foundation\Queue;
 use Bernard\Message;
 use Bernard\Producer;
 use Bernard\Queue;
-use Bernard\QueueFactory\PersistentFactory;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Queue\Batch;
 use Concrete\Core\Events\EventDispatcher;
+use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
 use Concrete\Core\Job\Job;
 use Concrete\Core\Job\JobQueue;
 use Concrete\Core\Job\QueueableJob;
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Mutex\MutexBusyException;
-use League\Tactician\Bernard\QueueableCommand;
+use Doctrine\ORM\EntityManager;
 
 /**
  * A handy wrapper for calling Bernard functions using the full API.
@@ -30,7 +30,7 @@ class QueueService
     protected $app;
 
     /**
-     * @var PersistentFactory
+     * @var QueueFactory
      */
     protected $factory;
 
@@ -54,11 +54,20 @@ class QueueService
         $this->app = $app;
         $this->config = $config;
         $this->mutexGeneratorFactory = $mutexGeneratorFactory;
-        $this->factory = new PersistentFactory(
+        $this->factory = new QueueFactory(
             $this->app->make('queue/driver'),
             $this->app->make('queue/serializer')
         );
         $this->producer = new Producer($this->factory, $this->app->make(EventDispatcher::class));
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getDefaultQueueHandle()
+    {
+        return $this->config->get('concrete.queue.default');
     }
 
     /**
@@ -91,7 +100,7 @@ class QueueService
 
     public function getJobQueue(QueueableJob $job)
     {
-        return new JobQueue($job, $this->app, $this);
+        return $this->app->make(JobQueue::class, ['job' => $job]);
     }
 
     /**
@@ -117,10 +126,10 @@ class QueueService
         $this->push($queue, $mixed);
     }
 
-    private function getPollingMax(Queue $queue)
+    private function getPollingMax(string $batch)
     {
-        if (strpos((string) $queue, 'job_') === 0) {
-            $job = Job::getByHandle(substr((string) $queue, 4));
+        if (strpos($batch, 'job_') === 0) {
+            $job = Job::getByHandle(substr($batch, 4));
             if ($job) {
                 if ($job instanceof QueueableJob) {
                     $max = $job->getJobQueueBatchSize();
@@ -128,21 +137,22 @@ class QueueService
             }
         }
         if (!isset($max)) {
-            $max = $this->config->get(sprintf('app.queue.polling_batch.%s', (string) $queue));
+            $max = $this->config->get(sprintf('concrete.queue.polling_batch.%s', $batch));
             if (!$max) {
-                $max = $this->config->get('app.queue.polling_batch.default');
+                $max = $this->config->get('concrete.queue.polling_batch.default');
             }
         }
 
         return $max;
     }
-    public function consumeFromPoll(Queue $queue)
+    public function consumeBatchFromPoll(Batch $batch)
     {
-        $max = $this->getPollingMax($queue);
+        $maxMessages = $this->getPollingMax($batch->getBatchHandle());
+        $queue = $this->get($this->getDefaultQueueHandle());
         try {
             $this->consume($queue, [
                 'stop-when-empty' => true,
-                'max-messages' => $max
+                'max-messages' => $maxMessages
             ]);
         } catch (MutexBusyException $exception) {
             return false;

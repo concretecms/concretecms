@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class PageCommand implements CommandInterface
 {

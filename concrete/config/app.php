@@ -94,8 +94,9 @@ return [
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
+        'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
-        'core_bus' => '\Concrete\Core\Foundation\Bus\BusServiceProvider',
+        'core_bus' => '\Concrete\Core\Foundation\Command\DispatcherServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
@@ -1199,26 +1200,16 @@ return [
     ],
 
     'commands' => [
-        ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler', 'rescan_file'],
-        ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler', 'rescan_multilingual_page'],
-        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler', 'delete_page'],
-        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler', 'delete_page_forever'],
-        ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler', 'copy_page'],
-        ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler', 'delete_block'],
-        ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler', 'update_defaults'],
-        ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler', 'update_defaults'],
-        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler', 'update_page_type_defaults'],
+        ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
+        ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
+        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
+        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler'],
+        ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler'],
+        ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler'],
+        ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler'],
+        ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler'],
+        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler'],
         ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
-    ],
-
-    'queue' => [
-        'polling_batch' => [
-            'default' => 50,
-            'rescan_file' => 10,
-            'delete_page' => 100,
-            'delete_page_forever' => 100,
-            'copy_page' => 10,
-        ],
     ],
 
     'api' => [

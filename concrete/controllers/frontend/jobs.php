@@ -1,9 +1,8 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
+use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponseFactory;
 use Concrete\Core\Job\QueueableJob;
-use Concrete\Core\Job\Response\EnqueueJobResponse;
 use Controller;
 use stdClass;
 use Job;
@@ -110,8 +109,12 @@ class Jobs extends Controller
                 if ($job instanceof QueueableJob && $job->supportsQueue()) {
                     $q = $job->markStarted();
                     $job->start($q);
-
-                    return new EnqueueJobResponse($job);
+                    /**
+                     * @var $responseFactory BatchProcessorResponseFactory
+                     */
+                    $q->saveBatch();
+                    $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
+                    return $responseFactory->createResponse($q->getBatch());
 
 
                     /*
