@@ -78,7 +78,9 @@ abstract class Command extends SymfonyCommand
         // Once we have constructed the command, we'll set the description and other
         // related properties of the command. If a signature wasn't used to build
         // the command we'll set the arguments and the options on this command.
-        $this->setDescription($this->description);
+        if ((string) $this->description !== '') {
+            $this->setDescription($this->description);
+        }
         $this->setHidden($this->hidden);
         if (! isset($this->signature)) {
             $this->specifyParameters();
