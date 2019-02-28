@@ -1212,10 +1212,4 @@ return [
         ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
     ],
 
-    'api' => [
-
-        'base_url' => '/ccm/api/v1'
-
-    ],
-
 ];
