@@ -9,6 +9,7 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Foundation\Command\Dispatcher;
 use Concrete\Core\Foundation\Command\DispatcherFactory;
 use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
+use Concrete\Core\Foundation\Queue\Batch\BatchProgressUpdater;
 use Concrete\Core\Foundation\Queue\Batch\Processor;
 use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponse;
 use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponseFactory;
@@ -45,6 +46,9 @@ class BatchTest extends \PHPUnit_Framework_TestCase
         $dispatcherFactory = $this->getMockBuilder(DispatcherFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $batchProcessUpdater = $this->getMockBuilder(BatchProgressUpdater::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $dispatcher = $this->getMockBuilder(Dispatcher::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -64,7 +68,7 @@ class BatchTest extends \PHPUnit_Framework_TestCase
         $batch = new Batch();
 
         $batchFactory->expects($this->once())
-            ->method('getBatch')
+            ->method('createOrGetBatch')
             // Be sure to pass the method argument(s)
             // as array, even if you only have one
             // argument!
@@ -73,7 +77,7 @@ class BatchTest extends \PHPUnit_Framework_TestCase
             )
             ->willReturn($batch);
 
-        $processor = new Processor($dispatcherFactory, $batchFactory, $batchProcessorResponseFactory);
+        $processor = new Processor($dispatcherFactory, $batchFactory, $batchProcessUpdater, $batchProcessorResponseFactory);
 
         $file1 = $this->buildFile(1);
         $file2 = $this->buildFile(4);
