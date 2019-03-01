@@ -120,7 +120,7 @@ class CalendarEventOccurrence
     public function isAllDay()
     {
         $diff = $this->getEnd() - $this->getStart();
-        if ($diff == 0) {
+        if ($diff == 86399) {
             return true;
         }
 
