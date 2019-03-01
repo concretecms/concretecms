@@ -331,8 +331,11 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->checkGroupJoin();
         $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
         $orX = $this->getQueryObject()->expr()->orX();
-        $query->select('u.uID')->from('Users','u')->leftJoin('u','UserGroups','ug','u.uID=ug.uID')->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
-        $orX->add($this->getQueryObject()->expr()->like('g.gPath', "'" . $group->getGroupPath() . "/%'"));
+        $query->select('u.uID')->from('Users','u')
+            ->leftJoin('u','UserGroups','ug','u.uID=ug.uID')
+            ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
+        $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPath_'.$group->getGroupID()));
+        $this->getQueryObject()->setParameter('groupPath_'.$group->getGroupID(),$group->getGroupPath() . '/%');
         $orX->add($this->getQueryObject()->expr()->eq('g.gID', $group->getGroupID()));
         $query->where($orX);
         if ($inGroup) {
@@ -381,26 +384,32 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $groupIDs = [];
         $orX = $this->getQueryObject()->expr()->orX();
 
+        $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
+
         foreach ($groups as $group) {
             if ($group instanceof \Concrete\Core\User\Group\Group) {
-                if ($inGroups) {
-                    $orX->add($this->getQueryObject()->expr()->like('g.gPath', "'" . $group->getGroupPath() . "/%'"));
-                } else {
-                    $orX->add($this->getQueryObject()->expr()->notLike('g.gPath', "'" . $group->getGroupPath() . "/%'"));
-                }
+                $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPathChild_'.$group->getGroupID()));
+                $this->getQueryObject()->setParameter('groupPathChild_'.$group->getGroupID(),$group->getGroupPath() . '/%');
+
                 $groupIDs[] = $group->getGroupID();
             }
         }
         if (is_array($groups) && count($groups) > 0) {
+            $query->select('u.uID')->from('Users','u')
+                ->leftJoin('u','UserGroups','ug','u.uID=ug.uID')
+                ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
+            $orX->add($this->getQueryObject()->expr()->in('g.gID', $groupIDs));
+            $query->where($orX)->andWhere($this->getQueryObject()->expr()->isNotNull('g.gID'));
             if ($inGroups) {
-                $orX->add($this->getQueryObject()->expr()->in('g.gID', $groupIDs));
-                $this->getQueryObject()->andWhere($orX, $this->getQueryObject()->expr()->isNotNull('g.gID'));
+                $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->in('u.uID', $query->getSQL()));
             } else {
-                $orX->add($this->getQueryObject()->expr()->notIn('g.gID', $groupIDs));
-                $orX->add($this->getQueryObject()->expr()->isNull('g.gID'));
-                $this->getQueryObject()->andWhere($orX);
+                $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->notIn('u.uID', $query->getSQL()));
+                $this->getQueryObject()->setParameter('groupIDs',$groupIDs, \Concrete\Core\Database\Connection\Connection::PARAM_INT_ARRAY);
             }
         }
+
+
+
     }
 
     /**
