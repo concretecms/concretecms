@@ -104,7 +104,7 @@
 		}
 
 		my.poll(batch, token, remaining);
-	}
+	};
 
     ConcreteProgressiveOperation.prototype.initProgressBar = function() {
 		var my = this,
@@ -117,7 +117,7 @@
 		if ($wrapper.find('div.progress-bar').length < 1) {
             $wrapper.append(html);
         }
-    }
+    };
 
 
 	ConcreteProgressiveOperation.prototype.execute = function() {
