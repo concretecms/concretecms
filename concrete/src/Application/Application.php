@@ -7,8 +7,10 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Foundation\Command\Dispatcher;
+use Concrete\Core\Foundation\Command\DispatcherFactory;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
@@ -32,7 +34,6 @@ use Exception;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use League\Tactician\Bernard\QueueableCommand;
 use Log;
 use Page;
 use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
@@ -40,7 +41,6 @@ use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use View;
-use Concrete\Core\Foundation\Bus\Bus;
 
 class Application extends Container
 {
@@ -48,14 +48,17 @@ class Application extends Container
     protected $environment = null;
     protected $packages = [];
 
-    protected $commandBus;
+    /**
+     * @var Dispatcher
+     */
+    protected $commandDispatcher;
 
-    public function getCommandBus()
+    public function getCommandDispatcher()
     {
-        if (!isset($this->commandBus)) {
-            $this->commandBus = $this->make(Bus::class);
+        if (!isset($this->commandDispatcher)) {
+            $this->commandDispatcher = $this->make(DispatcherFactory::class)->getDispatcher();
         }
-        return $this->commandBus;
+        return $this->commandDispatcher;
     }
 
     /**
@@ -64,16 +67,7 @@ class Application extends Container
      */
     public function executeCommand(CommandInterface $command)
     {
-        return $this->getCommandBus()->executeCommand($command);
-    }
-
-    /**
-     * Dispatches a command to the command queue.
-     * @param QueueableCommand $command
-     */
-    public function queueCommand(QueueableCommand $command)
-    {
-        return $this->getCommandBus()->queueCommand($command);
+        return $this->getCommandDispatcher()->dispatch($command);
     }
 
     /**

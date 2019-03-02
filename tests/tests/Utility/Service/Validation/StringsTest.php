@@ -53,9 +53,6 @@ class StringsTest extends PHPUnit_Framework_TestCase
             [true, 'a.little.lengthy.but.fine@dept.example.com', false],
             [true, 'other.email-with-dash@example.com', false],
             [true, 'test@concrete5.org', false],
-
-            //mx validation
-            [true, 'test@concrete5.org', true],
         ];
     }
 

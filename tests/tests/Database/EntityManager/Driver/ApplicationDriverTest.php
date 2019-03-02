@@ -318,7 +318,7 @@ class ApplicationDriverTest extends PHPUnit_Framework_TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest(\Exception $e)
+    protected function onNotSuccessfulTest($e)
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();

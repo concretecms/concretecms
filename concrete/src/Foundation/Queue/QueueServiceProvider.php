@@ -2,24 +2,21 @@
 
 namespace Concrete\Core\Foundation\Queue;
 
-use Bernard\BernardEvents;
 use Bernard\Consumer;
-use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Normalizer\EnvelopeNormalizer;
 use Bernard\Normalizer\PlainMessageNormalizer;
 use Bernard\Producer;
-use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\ClassNameRouter;
+use Concrete\Core\Foundation\Command\DispatcherFactory;
+use Concrete\Core\Foundation\Command\SynchronousBus;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
-use Concrete\Core\Foundation\Queue\Mutex\QueueMutexGenerator;
+use Concrete\Core\Foundation\Queue\Receiver\QueueCommandMessageReceiver;
+use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
 use Concrete\Core\Foundation\Service\Provider;
 use League\Tactician\Bernard\QueueableCommand;
-use League\Tactician\Bernard\Receiver\SeparateBusReceiver;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
-use Concrete\Core\Events\EventDispatcher;
+use League\Tactician\Bernard\QueueCommandNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class QueueServiceProvider extends Provider
 {
@@ -36,21 +33,17 @@ class QueueServiceProvider extends Provider
         $this->app->singleton(SerializerManager::class, function($app) {
             $manager = new SerializerManager();
             $manager->addNormalizer(new EnvelopeNormalizer());
+            $manager->addNormalizer(new QueueCommandNormalizer());
+            $manager->addNormalizer(new ObjectNormalizer());
             $manager->addNormalizer(new PlainMessageNormalizer());
-            $manager->addNormalizer(new GetSetMethodNormalizer());
             return $manager;
         });
 
-        $this->app->singleton('queue/router', function($app) {
-            $bus = $app->make('command/bus');
-            $receiver = new SeparateBusReceiver($bus->getSyncBus());
+        $this->app->singleton('queue/consumer', function($app) {
+            $dispatcher = $app->make(DispatcherFactory::class)->getDispatcher();
+            $receiver = new QueueCommandMessageReceiver($dispatcher);
             $router = new ClassNameRouter();
             $router->add(QueueableCommand::class, $receiver);
-            return $router;
-        });
-
-        $this->app->singleton('queue/consumer', function($app) {
-            $router = $app->make('queue/router');
             return new Consumer($router, $app->make('director'));
         });
 
@@ -61,7 +54,7 @@ class QueueServiceProvider extends Provider
 
         $this->app->singleton('queue/producer', function($app) {
             $driver = $app->make('queue/driver');
-            $factory = new PersistentFactory($driver, $app->make('queue/serializer'));
+            $factory = new QueueFactory($driver, $app->make('queue/serializer'));
             $producer = new Producer($factory, $this->app->make('director'));
             return $producer;
         });
@@ -69,9 +62,5 @@ class QueueServiceProvider extends Provider
         $this->app->singleton('queue', function($app) {
             return $app->make(QueueService::class);
         });
-
-        $subscriber = $this->app->make(BernardSubscriber::class);
-        $dispatcher = $this->app->make('director');
-        $dispatcher->addSubscriber($subscriber);
     }
 }

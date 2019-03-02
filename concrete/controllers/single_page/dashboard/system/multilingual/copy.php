@@ -2,14 +2,13 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Controller\Panel\Multilingual;
-use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Multilingual\Page\Section\Processor\MultilingualProcessorTarget;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Page\Command\RescanMultilingualPageCommand;
-use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Command\RescanMultilingualPageBatchProcessFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Foundation\Queue\Batch\Processor;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -40,12 +39,9 @@ class Copy extends DashboardSitePageController
                 $queue = $this->app->make(QueueService::class);
                 $q = $queue->get('rescan_multilingual_page');
                 $section = Section::getByID($_REQUEST['locale']);
-                $target = new MultilingualProcessorTarget($section);
-                foreach($target->getItems() as $item) {
-                    $command = new RescanMultilingualPageCommand($item['cID']);
-                    $this->queueCommand($command);
-                }
-                return new EnqueueItemsResponse($q);
+                $factory = new RescanMultilingualPageBatchProcessFactory();
+                $processor = $this->app->make(Processor::class);
+                return $processor->process($factory, $section);
             }
         }
     }

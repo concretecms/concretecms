@@ -3,9 +3,11 @@ namespace Concrete\Controller\Backend\Page;
 
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Foundation\Queue\Batch\Processor;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Page\Command\CopyPageCommand;
+use Concrete\Core\Page\Command\DeletePageForeverBatchProcessFactory;
 use Concrete\Core\Page\Command\DeletePageForeverCommand;
 use Concrete\Core\Page\Page;
 
@@ -34,10 +36,17 @@ class SitemapDeleteForever extends AbstractController
                     $pages = $c->populateRecursivePages([], ['cID' => $c->getCollectionID()], $c->getCollectionParentID(), 0, $includeThisPage);
                     // business if the queue dies.
                     usort($pages, ['\Concrete\Core\Page\Page', 'queueForDeletionSort']);
+
+                    $ids = [];
+
                     foreach ($pages as $page) {
-                        $command = new DeletePageForeverCommand($page['cID']);
-                        $this->queueCommand($command);
+                        $ids[] = $page['cID'];
                     }
+
+                    $factory = new DeletePageForeverBatchProcessFactory();
+                    $processor = $this->app->make(Processor::class);
+                    return $processor->process($factory, $ids);
+
                 }
             }
 

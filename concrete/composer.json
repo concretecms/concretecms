@@ -28,8 +28,8 @@
   },
   "bin": [ "bin/concrete5" ],
   "require": {
-    "php": ">=5.5.9",
-    "doctrine/dbal": "~2.9",
+    "php": ">=7.1.3",
+    "doctrine/dbal": "~2.5",
     "symfony/class-loader": "3.*",
     "symfony/http-foundation": "^3.4.17",
     "symfony/routing": "3.*",
@@ -91,6 +91,8 @@
     "league/fractal": "^0.17.0",
     "bernard/bernard": "1.0.0-alpha9",
     "league/tactician-bernard": "^0.6.0",
+    "league/pipeline": "^1.0",
+    "symfony/property-access": "3.*",
     "theorchard/monolog-cascade": "0.5.*"
   },
   "extra": {

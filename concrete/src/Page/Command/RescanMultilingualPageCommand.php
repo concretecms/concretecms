@@ -2,12 +2,12 @@
 
 namespace Concrete\Core\Page\Command;
 
-use League\Tactician\Bernard\QueueableCommand;
+use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
-class RescanMultilingualPageCommand extends PageCommand implements QueueableCommand
+class RescanMultilingualPageCommand extends PageCommand implements BatchableCommandInterface
 {
 
-    public function getName()
+    public function getBatchHandle()
     {
         return 'rescan_multilingual_page';
     }

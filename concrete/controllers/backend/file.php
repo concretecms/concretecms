@@ -6,6 +6,7 @@ use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
@@ -14,7 +15,9 @@ use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Service\VolatileDirectory;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
+use Concrete\Core\Foundation\Queue\Batch\BatchDispatcher;
+use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
+use Concrete\Core\Foundation\Queue\Batch\Processor;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as CorePage;
@@ -98,16 +101,9 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('canEditFileContents');
-        $queue = $this->app->make(QueueService::class);
-        $q = $queue->get('rescan_file');
-
-        foreach ($files as $f) {
-            $command = new RescanFileCommand($f->getFileID());
-            $this->queueCommand($command);
-        }
-
-        $response = new EnqueueItemsResponse($q);
-        return $response;
+        $factory = new RescanFileBatchProcessFactory();
+        $processor = $this->app->make(Processor::class);
+        return $processor->process($factory, $files);
     }
 
     public function approveVersion()

@@ -2,13 +2,12 @@
 
 namespace Concrete\Core\Block\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
-use League\Tactician\Bernard\QueueableCommand;
+use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
-class UpdateForkedAliasDefaultsBlockCommand extends DefaultsBlockCommand implements QueueableCommand
+class UpdateForkedAliasDefaultsBlockCommand extends DefaultsBlockCommand implements BatchableCommandInterface
 {
 
-    public function getName()
+    public function getBatchHandle()
     {
         return 'update_defaults';
     }

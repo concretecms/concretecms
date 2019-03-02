@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\File\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class FileCommand implements CommandInterface
 {
