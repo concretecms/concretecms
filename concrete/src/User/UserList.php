@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User;
 
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\UserListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
@@ -329,13 +330,16 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $group = \Concrete\Core\User\Group\Group::getByName($group);
         }
         $this->checkGroupJoin();
+        $app = Application::getFacadeApplication();
+        /** @var $likeBuilder LikeBuilder */
+        $likeBuilder = $app->make(LikeBuilder::class);
         $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
         $orX = $this->getQueryObject()->expr()->orX();
         $query->select('u.uID')->from('Users','u')
             ->leftJoin('u','UserGroups','ug','u.uID=ug.uID')
             ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
         $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPath_'.$group->getGroupID()));
-        $this->getQueryObject()->setParameter('groupPath_'.$group->getGroupID(),$group->getGroupPath() . '/%');
+        $this->getQueryObject()->setParameter('groupPath_'.$group->getGroupID(),$likeBuilder->escapeForLike($group->getGroupPath()). '/%');
         $orX->add($this->getQueryObject()->expr()->eq('g.gID', $group->getGroupID()));
         $query->where($orX);
         if ($inGroup) {
@@ -383,13 +387,15 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->checkGroupJoin();
         $groupIDs = [];
         $orX = $this->getQueryObject()->expr()->orX();
-
+        $app = Application::getFacadeApplication();
+        /** @var $likeBuilder LikeBuilder */
+        $likeBuilder = $app->make(LikeBuilder::class);
         $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
 
         foreach ($groups as $group) {
             if ($group instanceof \Concrete\Core\User\Group\Group) {
                 $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPathChild_'.$group->getGroupID()));
-                $this->getQueryObject()->setParameter('groupPathChild_'.$group->getGroupID(),$group->getGroupPath() . '/%');
+                $this->getQueryObject()->setParameter('groupPathChild_'.$group->getGroupID(), $likeBuilder->escapeForLike($group->getGroupPath()). '/%');
 
                 $groupIDs[] = $group->getGroupID();
             }
