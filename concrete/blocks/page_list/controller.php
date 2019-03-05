@@ -380,6 +380,19 @@ class Controller extends BlockController
             return false;
         }
 
+        if ($method === 'action_filter_by_date') {
+            // Parameter 0 must be set
+            if (!isset($parameters[0]) || $parameters[0] < 0 || $parameters[0] > 9999) {
+                return false;
+            }
+            // Parameter 1 can be null
+            if (isset($parameters[1])) {
+                if ($parameters[1] < 1 || $parameters[1] > 12) {
+                    return false;
+                }
+            }
+        }
+
         return parent::isValidControllerTask($method, $parameters);
     }
 
