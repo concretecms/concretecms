@@ -93,7 +93,7 @@ class DateTime
      *
      * @return string
      */
-    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = array())
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = [])
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -309,7 +309,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'nope');
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'off');
 });
 </script>
 EOT;
@@ -345,7 +345,7 @@ EOT;
      *
      * @return string
      */
-    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = array())
+    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = [])
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -409,7 +409,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'nope');
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'off');
 });
 </script>
 EOT;
