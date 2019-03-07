@@ -39,6 +39,7 @@ if ($c->isEditMode()) {
                 <?php } ?>
 
                 events: '<?=$view->action('get_events')?>',
+                nextDayThreshold: '00:00:00',
 
                 eventRender: function(event, element) {
                     <?php if ($controller->supportsLightbox()) { ?>
