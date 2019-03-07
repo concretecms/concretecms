@@ -7,6 +7,8 @@ use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
@@ -119,6 +121,12 @@ class Search extends DashboardPageController
             case 'sudo':
                 $this->setupUser($uID);
                 if ($this->canSignInAsUser && $this->app->make('helper/validation/token')->validate()) {
+                    $logger = $this->app->make(LoggerFactory::class)
+                        ->createLogger(Channels::CHANNEL_USERS);
+                    $me = new User();
+                    $signInUser = UserInfo::getByID($uID);
+                    $logger->notice(t('User %s used the dashboard to sign in as user %s',
+                        $me->getUserName(), $signInUser->getUserName()));
                     User::loginByUserID($uID);
                     $this->redirect('/');
                 }
@@ -533,7 +541,10 @@ class Search extends DashboardPageController
             $this->canSignInAsUser = $this->canEdit && $tp->canSudo() && $me->getUserID() != $ui->getUserID();
             $this->canDeleteUser = $this->canEdit && $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
             $this->canAddGroup = $this->canEdit && $tp->canAccessGroupSearch();
-            $this->allowedEditAttributes = $this->canEdit && $this->assignment->getAttributesAllowedArray();
+            $this->allowedEditAttributes = [];
+            if ($this->canEdit) {
+                $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
+            }
             $this->set('user', $ui);
             $this->set('canEditAvatar', $this->canEditAvatar);
             $this->set('canEditUserName', $this->canEditUserName);

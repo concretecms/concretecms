@@ -427,7 +427,9 @@ return [
         'fullcalendar/print' => [
             ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
         ],
-
+        'vue'=> [
+            ['javascript', 'js/vue.js', ['minify' => false, 'combine' => false]],
+        ],
         'html5-shiv' => [
             [
                 'javascript-conditional',
@@ -636,7 +638,7 @@ return [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
         'core/avatar' => [
-            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]]
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
@@ -740,6 +742,9 @@ return [
         ],
         'core/avatar' => [
             [
+                ['javascript', 'dropzone'],
+                ['javascript-localized', 'dropzone'],
+                ['javascript','vue'],
                 ['javascript', 'core/avatar'],
             ],
         ],

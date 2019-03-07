@@ -321,7 +321,7 @@ class Stack extends Page implements ExportableInterface
      *
      * @return int
      */
-    protected function getMultilingualSectionID()
+    public function getMultilingualSectionID()
     {
         if (!isset($this->multilingualSectionID)) {
             $db = Database::connection();
@@ -460,13 +460,13 @@ class Stack extends Page implements ExportableInterface
         Area::getOrCreate($localizedStackPage, STACKS_AREA_NAME);
         $localizedStackCID = $localizedStackPage->getCollectionID();
         $db = Database::connection();
-        $db->executeQuery('
-            insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+        $db->update(
+            'Stacks',
             [
-                $name,
-                $localizedStackCID,
-                $this->getStackType(),
-                $section->getCollectionID()
+                'stMultilingualSection' => $section->getCollectionID(),
+            ],
+            [
+                'cID' => $localizedStackCID,
             ]
         );
         $localizedStack = static::getByID($localizedStackCID);

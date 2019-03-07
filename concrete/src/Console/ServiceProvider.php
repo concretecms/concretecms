@@ -107,7 +107,14 @@ class ServiceProvider extends Provider
     {
         if ($this->installed()) {
             // Set the doctrine helperset to the CLI
-            $this->cli->setHelperSet($this->app->call([ConsoleRunner::class, 'createHelperSet']));
+            $doctrineHelperSet = $this->app->call([ConsoleRunner::class, 'createHelperSet']);
+            if ($this->cli->getHelperSet()) {
+                foreach ($doctrineHelperSet as $key => $helper) {
+                    $this->cli->getHelperSet()->set($helper, $key);
+                }
+            } else {
+                $this->cli->setHelperSet($doctrineHelperSet);
+            }
 
             // Add Doctrine ConsoleRunner commands
             ConsoleRunner::addCommands($this->cli);

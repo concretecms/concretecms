@@ -62,7 +62,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         if ($this->shouldValidateUserActivity($session)) {
             $threshold = $this->getUserActivityThreshold();
             if ((time() - $session->get('uOnlineCheck')) > $threshold) {
-                $this->logger->debug(t('Session Invalidated. Session was inactive for more than %s seconds', $threshold));
+                $this->logger->notice(t('Session Invalidated. Session was inactive for more than %s seconds', $threshold));
                 $invalidate = true;
             }
         }
@@ -75,7 +75,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
             $created = Carbon::createFromTimestamp($session->getMetadataBag()->getCreated());
 
             if ($created->lessThan($validSince)) {
-                $this->logger->debug('Session Invalidated. Session was created before "valid_since" setting.');
+                $this->logger->notice('Session Invalidated. Session was created before "valid_since" setting.');
                 $invalidate = true;
             }
         }
@@ -83,7 +83,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         // Validate the request IP
         if ($this->shouldCompareIP() && $ip && $ip != $request_ip) {
             if ($this->logger) {
-                $this->logger->debug('Session Invalidated. Session IP "{session}" did not match provided IP "{client}".',
+                $this->logger->notice('Session Invalidated. Session IP "{session}" did not match provided IP "{client}".',
                     array(
                         'session' => $ip,
                         'client' => $request_ip, ));
@@ -95,7 +95,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         // Validate the request user agent
         if ($this->shouldCompareAgent() && $agent && $agent != $request_agent) {
             if ($this->logger) {
-                $this->logger->debug('Session Invalidated. Session user agent "{session}" did not match provided agent "{client}"',
+                $this->logger->notice('Session Invalidated. Session user agent "{session}" did not match provided agent "{client}"',
                     array(
                         'session' => $agent,
                         'client' => $request_agent, ));
@@ -134,7 +134,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     public function hasActiveSession()
     {
         $cookie = $this->app['cookie'];
-        return $cookie->has($this->config->get('concrete.session.name'));
+        return $cookie->has($this->config->get('concrete.session.name')) || $cookie->has('ccmAuthUserHash');
     }
 
     /**
