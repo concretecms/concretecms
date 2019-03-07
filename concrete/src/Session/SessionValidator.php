@@ -134,7 +134,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     public function hasActiveSession()
     {
         $cookie = $this->app['cookie'];
-        return $cookie->has($this->config->get('concrete.session.name'));
+        return $cookie->has($this->config->get('concrete.session.name')) || $cookie->has('ccmAuthUserHash');
     }
 
     /**
