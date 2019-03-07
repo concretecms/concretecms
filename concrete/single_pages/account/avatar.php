@@ -12,11 +12,10 @@ $save_url = $save_url->setQuery(array(
 
 	<p><?php echo t('Change the picture attached to my posts.')?></p>
 
-    <avatar-cropper
-            height="<?= Config::get('concrete.icons.user_avatar.height') ?>"
-            width="<?= Config::get('concrete.icons.user_avatar.width') ?>"
-            uploadurl="<?= $save_url?>"
-            src="<?= $profile->getUserAvatar()->getPath() ?>">
+    <avatar-cropper v-bind:height="<?= Config::get('concrete.icons.user_avatar.height') ?>"
+                    v-bind:width="<?= Config::get('concrete.icons.user_avatar.width') ?>"
+                    uploadurl="<?= $save_url?>"
+                    src="<?= $profile->getUserAvatar()->getPath() ?>">
     </avatar-cropper>
 
     <?php if ($profile->hasAvatar()) { ?>
