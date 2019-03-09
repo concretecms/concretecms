@@ -161,6 +161,7 @@ class GroupTest extends UserTestCase
         $groupA = Group::add('Group A', 'This is a test group A');
         $groupB = Group::add('Group B', 'This is a test group B');
         $groupC = Group::add('Group C', 'This is a test group C');
+        $groupD = Group::add('Group D', 'This is a test group D - Child of C', $groupC);
 
         $users = [
             ['zxcvz1231', 'andrew@concrete5.org'],
@@ -211,5 +212,33 @@ class GroupTest extends UserTestCase
         $list3->filterByGroup($groupB, false);
         $results = $list3->getResults();
         $this->assertEquals(3, count($results));
+
+        // Check for child groups as well
+        $user = \UserInfo::getByName('zxsdfer');
+        $user = $user->getUserObject();
+        $user->enterGroup($groupD);
+
+
+        $user = \UserInfo::getByName('zxcvz1231');
+        $user = $user->getUserObject();
+        $user->enterGroup($groupC);
+        $user->exitGroup($groupA);
+
+        $list4 = new UserList();
+        $list4->filterByInAnyGroup([$groupC], false);
+        $results = $list4->getResults();
+        $this->assertEquals(7, count($results));
+
+
+        $list5 = new UserList();
+        $list5->filterByInAnyGroup([$groupC, $groupA], false);
+        $results = $list5->getResults();
+        $this->assertEquals(5, count($results));
+
+
+        $list6 = new UserList();
+        $list6->filterByInAnyGroup([$groupB, $groupA], true);
+        $results = $list6->getResults();
+        $this->assertEquals(8, count($results));
     }
 }

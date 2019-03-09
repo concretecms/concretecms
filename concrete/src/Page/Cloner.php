@@ -160,7 +160,7 @@ class Cloner
                 'stName' => $newPage->getCollectionName(),
                 'cID' => $newPage->getCollectionID(),
                 'stType' => $page->getStackType(),
-                'stMultilingualSection' => $page->getMultilingualSectionID(),
+                'stMultilingualSection' => 0,
             ]);
             $newPage = Stack::getByID($newPage->getCollectionID());
             if ($page->isNeutralStack()) {
