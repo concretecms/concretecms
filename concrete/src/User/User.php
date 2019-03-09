@@ -239,7 +239,12 @@ class User extends ConcreteObject
                         $this->uDefaultLanguage = $ux->getUserDefaultLanguage();
                     }
                     $this->uTimezone = $ux->getUserTimezone();
+                } elseif ($ux === -1) {
+                    $this->uID = -1;
+                    $this->uName = t('Guest');
+
                 }
+                $this->uGroups = $this->_getUserGroups(true);
             } else if ($validator->hasActiveSession() || $this->uID) {
                 if ($session->has('uID')) {
                     $this->uID = $session->get('uID');
