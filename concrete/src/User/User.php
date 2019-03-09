@@ -250,10 +250,10 @@ class User extends ConcreteObject
                     }
                     $this->superUser = ($session->get('uID') == USER_SUPER_ID) ? true : false;
                 }
-                $this->uGroups = $this->_getUserGroups();
-                if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
-                    $session->set('uGroups', $this->uGroups);
-                }
+            }
+            $this->uGroups = $this->_getUserGroups();
+            if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
+                $session->set('uGroups', $this->uGroups);
             }
         }
     }
