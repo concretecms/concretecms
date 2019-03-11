@@ -6,19 +6,19 @@ use Database;
 
 class LogList extends DatabaseItemList
 {
-    protected $autoSortColumns = array('logID', 'level');
+    protected $autoSortColumns = ['logID', 'level'];
     protected $sortBy = 'logID';
     protected $sortByDirection = 'desc';
 
     public function __construct()
     {
-        $this->setQuery("select Logs.logID from Logs");
+        $this->setQuery('select Logs.logID from Logs');
     }
 
     public function get($itemsToGet = 100, $offset = 0)
     {
         $r = parent::get($itemsToGet, intval($offset));
-        $entries = array();
+        $entries = [];
         foreach ($r as $row) {
             $e = LogEntry::getByID($row['logID']);
             if (is_object($e)) {
@@ -32,7 +32,7 @@ class LogList extends DatabaseItemList
     public function filterByKeywords($keywords)
     {
         $db = Database::get();
-        $this->filter(false, "message like " . $db->qstr('%' . $keywords . '%'));
+        $this->filter(false, 'message like ' . $db->qstr('%' . $keywords . '%'));
     }
 
     public function filterByChannel($channel)

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Core\Logging\Channels;
@@ -18,6 +17,7 @@ class Logs extends DashboardPageController
     {
         $config = $this->app->make('config');
         $enabled = $config->get('concrete.log.enable_dashboard_report');
+
         return $enabled;
     }
 
@@ -41,7 +41,6 @@ class Logs extends DashboardPageController
 
     public function view($page = 0)
     {
-
         $this->set('isReportEnabled', $this->isReportEnabled());
 
         $this->requireAsset('selectize');
@@ -89,7 +88,6 @@ class Logs extends DashboardPageController
     public function csv($token = '')
     {
         if ($this->isReportEnabled()) {
-
             $valt = $this->app->make('helper/validation/token');
             if (!$valt->validate('', $token)) {
                 $this->redirect('/dashboard/reports/logs');
@@ -187,7 +185,6 @@ class Logs extends DashboardPageController
     public function deleteLog($logID, $token = '')
     {
         if ($this->isReportEnabled()) {
-
             $valt = $this->app->make('helper/validation/token');
             if ($valt->validate('', $token) && !empty($logID)) {
                 $log = LogEntry::getByID($logID);
