@@ -56,7 +56,7 @@ class GroupEntity extends Entity
             $ingids[] = $group->getGroupID();
         }
         $instr = implode(',', $ingids);
-        $peIDs = $db->GetCol('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group\' and paeg.gID in (' . $instr . ')');
+        $peIDs = $db->GetCol('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group\' and paeg.gID in (?)',array($instr));
         if (is_array($peIDs)) {
             foreach ($peIDs as $peID) {
                 $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
