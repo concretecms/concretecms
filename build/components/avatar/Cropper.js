@@ -27,10 +27,6 @@ export default {
             imageWidth: 0,
             saving: false,
             currentimage: null,
-            uploadurl: null,
-            src: null,
-            width: null,
-            height: null
         }
     },
 
