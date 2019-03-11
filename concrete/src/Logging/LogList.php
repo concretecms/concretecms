@@ -45,7 +45,7 @@ class LogList extends DatabaseItemList
         $db = Database::get();
         if (is_array($levels)) {
             $lth = '(';
-            for ($i = 0; $i < count($levels); ++$i) {
+            for ($i = 0, $iMax = count($levels); $i < $iMax; ++$i) {
                 if ($i > 0) {
                     $lth .= ',';
                 }
