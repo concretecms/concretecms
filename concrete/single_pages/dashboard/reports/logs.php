@@ -39,25 +39,41 @@ if ($isReportEnabled) {
         </div>
     </div>
 
-    <div class="form-group">
-        <?=$form->label('channel', t('Channel'))?>
-        <div class="ccm-search-field-content">
-            <?=$form->select('channel', $channels)?>
-            <?php if (isset($selectedChannel)) { ?>
-            <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearSelectedChannelLogs()" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', \Concrete\Core\Logging\Channels::getChannelDisplayName($selectedChannel))?></a>
-            <script>
-                clearSelectedChannelLogs = function() {
-                    ConcreteAlert.confirm(
-                        <?= json_encode(t('Are you sure you want to clear the %s channel logs?', \Concrete\Core\Logging\Channels::getChannelDisplayName($selectedChannel))); ?>,
-                        function() {
-                            location.href = "<?= $controller->action('clear', $valt->generate(), $selectedChannel); ?>";
-                        },
-                        'btn-danger',
-                        <?= json_encode(t('Delete')); ?>
-                    );
-                };
-            </script>
-            <?php }?>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <?=$form->label('channel', t('Channel'))?>
+                <div class="ccm-search-field-content">
+                    <?=$form->select('channel', $channels)?>
+                    <?php if (isset($selectedChannel)) { ?>
+                        <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearSelectedChannelLogs()" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', \Concrete\Core\Logging\Channels::getChannelDisplayName($selectedChannel))?></a>
+                        <script>
+                            clearSelectedChannelLogs = function() {
+                                ConcreteAlert.confirm(
+                                    <?= json_encode(t('Are you sure you want to clear the %s channel logs?', \Concrete\Core\Logging\Channels::getChannelDisplayName($selectedChannel))); ?>,
+                                    function() {
+                                        location.href = "<?= $controller->action('clear', $valt->generate(), $selectedChannel); ?>";
+                                    },
+                                    'btn-danger',
+                                    <?= json_encode(t('Delete')); ?>
+                                );
+                            };
+                        </script>
+                    <?php }?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <?=$form->label('date_from', t('Date From'))?>
+            <div class="ccm-search-field-content">
+                <?= $wdt->date('date_from', $date_from); ?>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <?=$form->label('date_to', t('Date To'))?>
+            <div class="ccm-search-field-content">
+                <?= $wdt->date('date_to', $date_to); ?>
+            </div>
         </div>
     </div>
 
