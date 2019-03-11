@@ -32,7 +32,7 @@ class GroupSetEntity extends Entity
             $ingids[] = $key;
         }
         $instr = implode(',', $ingids);
-        $peIDs = $db->GetCol('select peID from PermissionAccessEntityGroupSets paegs inner join GroupSetGroups gsg on paegs.gsID = gsg.gsID where gsg.gID in (' . $instr . ')');
+        $peIDs = $db->GetCol('select peID from PermissionAccessEntityGroupSets paegs inner join GroupSetGroups gsg on paegs.gsID = gsg.gsID where gsg.gID in (?)',array($instr));
         if (is_array($peIDs)) {
             foreach ($peIDs as $peID) {
                 $entity = Entity::getByID($peID);
