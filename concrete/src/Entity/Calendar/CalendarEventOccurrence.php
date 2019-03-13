@@ -120,7 +120,7 @@ class CalendarEventOccurrence
 
     public function isAllDay()
     {
-        $dayDuration = Carbon::create($occurrence->getStart())->startOfDay()->secondsUntilEndOfDay();
+        $dayDuration = Carbon::create($this->getStart())->startOfDay()->secondsUntilEndOfDay();
         $diff = $this->getEnd() - $this->getStart();
         if ($diff == $dayDuration) {
             return true;
