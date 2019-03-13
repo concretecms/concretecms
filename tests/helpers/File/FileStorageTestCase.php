@@ -21,6 +21,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
         'TreeTypes',
         'TreeNodeTypes',
         'TreeNodes',
+        'TreeFileFolderNodes',
         'TreeFileNodes',
         'TreeNodePermissionAssignments',
         'PermissionKeys',
