@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File;
 
 use Concrete\Core\Entity\File\File as FileEntity;
@@ -10,6 +9,7 @@ use Concrete\Core\File\ImportProcessor\ProcessorInterface;
 use Concrete\Core\File\ImportProcessor\SvgSanitizerProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Exception;
 use League\Flysystem\AdapterInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -271,9 +271,16 @@ class Importer
             return self::E_FILE_INVALID_EXTENSION;
         }
 
+        $fsl = null;
         if ($fr instanceof FileEntity) {
             $fsl = $fr->getFileStorageLocationObject();
-        } else {
+        } elseif ($fr instanceof FileFolder) {
+            // get the storage location of the folder
+            $fsl = $fr->getTreeNodeStorageLocationObject();
+        }
+
+        // use the default storage location if we don't have a valid one
+        if (!is_object($fsl)) {
             $fsl = $this->app->make(StorageLocationFactory::class)->fetchDefault();
         }
         if (!($fsl instanceof StorageLocation)) {
