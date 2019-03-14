@@ -2,7 +2,6 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
-use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
@@ -75,7 +74,7 @@ class Stack extends Page implements ExportableInterface
      * @param string $cvID
      * @param TreeInterface|null $site
      * @param int $multilingualContentSource
-     * 
+     *
      * @return Stack|false|null
      */
     public static function getByName($stackName, $cvID = 'RECENT', TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
@@ -96,7 +95,7 @@ class Stack extends Page implements ExportableInterface
                     $ms = self::getMultilingualSectionFromType($multilingualContentSource);
                 }
                 $sql = 'select cID from Stacks where stName = ?';
-                $q = array($stackName);
+                $q = [$stackName];
                 if ($ms) {
                     $sql .= ' and (stMultilingualSection = ? or stMultilingualSection = 0)';
                     $q[] = $ms->getCollectionID();
@@ -123,7 +122,7 @@ class Stack extends Page implements ExportableInterface
             $db = Database::connection();
             $cID = $db->fetchColumn(
                 'select cID from Stacks where stName = ? and stMultilingualSection = 0',
-                array($stackName)
+                [$stackName]
             );
         }
 
@@ -159,7 +158,7 @@ class Stack extends Page implements ExportableInterface
 
     private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
-        $data = array();
+        $data = [];
         $data['name'] = $name;
         if (!$name) {
             $data['name'] = t('No Name');
@@ -175,7 +174,7 @@ class Stack extends Page implements ExportableInterface
         $stackCID = $page->getCollectionID();
         //$siteTreeID = $parent->getSiteTreeObject()->getSiteTreeID();
         //$v = array($name, $stackCID, $type, $siteTreeID);
-        $v = array($name, $stackCID, $type);
+        $v = [$name, $stackCID, $type];
         $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
 
         $stack = static::getByID($stackCID);
@@ -202,6 +201,7 @@ class Stack extends Page implements ExportableInterface
     public static function addGlobalArea($area)
     {
         $parent = \Page::getByPath(STACKS_PAGE_PATH);
+
         return self::addStackToCategory($parent, $area, static::ST_TYPE_GLOBAL_AREA);
     }
 
@@ -222,7 +222,7 @@ class Stack extends Page implements ExportableInterface
     {
         $db = Database::connection();
 
-        return $db->GetOne('select stType from Stacks where cID = ?', array($this->getCollectionID()));
+        return $db->GetOne('select stType from Stacks where cID = ?', [$this->getCollectionID()]);
     }
 
     /**
@@ -245,7 +245,7 @@ class Stack extends Page implements ExportableInterface
 
             $db = Database::connection();
             $stackName = $data['stackName'];
-            $db->Execute('update Stacks set stName = ? WHERE cID = ?', array($stackName, $this->getCollectionID()));
+            $db->Execute('update Stacks set stName = ? WHERE cID = ?', [$stackName, $this->getCollectionID()]);
         }
 
         return $worked;
@@ -271,7 +271,7 @@ class Stack extends Page implements ExportableInterface
         parent::delete();
         $db = Database::connection();
 
-        return $db->Execute('delete from Stacks where cID = ?', array($this->getCollectionID()));
+        return $db->Execute('delete from Stacks where cID = ?', [$this->getCollectionID()]);
     }
 
     /**
@@ -281,7 +281,7 @@ class Stack extends Page implements ExportableInterface
     {
         $db = Database::connection();
 
-        return $db->GetOne('select stName from Stacks where cID = ?', array($this->getCollectionID()));
+        return $db->GetOne('select stName from Stacks where cID = ?', [$this->getCollectionID()]);
     }
 
     /**
@@ -300,6 +300,7 @@ class Stack extends Page implements ExportableInterface
     {
         return new \Concrete\Core\Export\Item\Stack();
     }
+
     /**
      * @return bool|string
      */
@@ -326,7 +327,7 @@ class Stack extends Page implements ExportableInterface
     {
         if (!isset($this->multilingualSectionID)) {
             $db = Database::connection();
-            $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', array($this->getCollectionID()));
+            $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', [$this->getCollectionID()]);
             $this->multilingualSectionID = $cID ? (int) $cID : 0;
         }
 
@@ -352,13 +353,13 @@ class Stack extends Page implements ExportableInterface
         return $result;
     }
 
-/*
-    public function updateMultilingualSection(Section $section)
-    {
-        $db = Database::connection();
-        $db->Execute('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
-    }
-*/
+    /*
+        public function updateMultilingualSection(Section $section)
+        {
+            $db = Database::connection();
+            $db->Execute('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
+        }
+    */
 
     /**
      * Returns the collection ID of the locale.neutral version of this stack (or null if this instance is already the neutral version).
@@ -426,7 +427,7 @@ class Stack extends Page implements ExportableInterface
     	               Pages.cParentID = ? and Stacks.stMultilingualSection = ?
                     limit 1
                 ',
-                array($neutralID, $section->getCollectionID())
+                [$neutralID, $section->getCollectionID()]
             );
             if ($localizedID) {
                 $localized = static::getByID($localizedID, $cvID);
