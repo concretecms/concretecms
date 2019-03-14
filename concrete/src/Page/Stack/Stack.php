@@ -46,9 +46,9 @@ class Stack extends Page
     /**
      * @param string $path
      * @param string $version
-     * @param TreeInterface|null $siteTree
+     * \Concrete\Core\Site\Tree\TreeInterface|null $siteTree
      *
-     * @return bool|Page
+     * @return bool|\Concrete\Core\Page\Page
      */
     public static function getByPath($path, $version = 'RECENT', TreeInterface $siteTree = null)
     {
@@ -61,9 +61,9 @@ class Stack extends Page
     }
 
     /**
-     * @param $stackName
+     * @param string $stackName
      *
-     * @return Stack
+     * @return self
      */
     public static function getOrCreateGlobalArea($stackName)
     {
@@ -78,10 +78,10 @@ class Stack extends Page
     /**
      * @param string $stackName
      * @param string $cvID
-     * @param TreeInterface|null $site
+     * \Concrete\Core\Site\Tree\TreeInterface|null $site
      * @param int $multilingualContentSource
      *
-     * @return Stack|false|null
+     * @return self|false|null
      */
     public static function getByName($stackName, $cvID = 'RECENT', TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
@@ -139,7 +139,7 @@ class Stack extends Page
      * @param int    $cID
      * @param string $cvID
      *
-     * @return Stack|false
+     * @return \Concrete\Core\Page\Page|self|false
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
@@ -153,7 +153,7 @@ class Stack extends Page
     }
 
     /**
-     * @param Stack $stack
+     * @param \Concrete\Core\Page\Stack\Stack $stack
      *
      * @return bool
      */
@@ -163,11 +163,11 @@ class Stack extends Page
     }
 
     /**
-     * @param Page $parent
+     * @param \Concrete\Core\Page\Page $parent
      * @param $name
      * @param int $type
      *
-     * @return Stack|false
+     * @return self|false
      */
     private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
@@ -198,7 +198,7 @@ class Stack extends Page
     /**
      * @param $type
      *
-     * @return Section|false|null
+     * @return \Concrete\Core\Multilingual\Page\Section\Section|false|null
      */
     protected static function getMultilingualSectionFromType($type)
     {
@@ -219,7 +219,7 @@ class Stack extends Page
     /**
      * @param $area
      *
-     * @return Stack|false
+     * @return self|false
      */
     public static function addGlobalArea($area)
     {
@@ -230,9 +230,9 @@ class Stack extends Page
 
     /**
      * @param $stack
-     * @param Folder|null $folder
+     * @param \Concrete\Core\Page\Stack\Folder\Folder|null $folder
      *
-     * @return Stack|false
+     * @return self|false
      */
     public static function addStack($stack, Folder $folder = null)
     {
@@ -369,7 +369,7 @@ class Stack extends Page
     /**
      * Returns the multilingual section associated to this stack (or null if it's the language-neutral version).
      *
-     * @return Section|null
+     * @return \Concrete\Core\Multilingual\Page\Section\Section|null
      */
     public function getMultilingualSection()
     {
@@ -418,7 +418,7 @@ class Stack extends Page
      *
      * @param string|int $cvID
      *
-     * @return Stack|null
+     * @return self|null
      */
     public function getNeutralStack($cvID = 'RECENT')
     {
@@ -434,10 +434,10 @@ class Stack extends Page
     /**
      * Returns the localized version of this stack.
      *
-     * @param Section $section
+     * @param \Concrete\Core\Multilingual\Page\Section\Section $section
      * @param string|int $cvID
      *
-     * @return static|null
+     * @return self|null
      */
     public function getLocalizedStack(Section $section, $cvID = 'RECENT')
     {
@@ -473,7 +473,7 @@ class Stack extends Page
     }
 
     /**
-     * @param Section $section
+     * @param \Concrete\Core\Multilingual\Page\Section\Section $section
      *
      * @return self
      */
