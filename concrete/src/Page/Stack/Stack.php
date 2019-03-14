@@ -73,9 +73,10 @@ class Stack extends Page implements ExportableInterface
     /**
      * @param string $stackName
      * @param string $cvID
+     * @param TreeInterface|null $site
      * @param int $multilingualContentSource
-     *
-     * @return Page
+     * 
+     * @return Stack|false|null
      */
     public static function getByName($stackName, $cvID = 'RECENT', TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
