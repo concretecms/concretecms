@@ -44,6 +44,13 @@ class Stack extends Page implements ExportableInterface
         }
     }
 
+    /**
+     * @param string $path
+     * @param string $version
+     * @param TreeInterface|null $siteTree
+     *
+     * @return bool|Page
+     */
     public static function getByPath($path, $version = 'RECENT', TreeInterface $siteTree = null)
     {
         $c = parent::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'), $version, $siteTree);
@@ -156,6 +163,13 @@ class Stack extends Page implements ExportableInterface
         return $stack->getPageTypeHandle() == STACKS_PAGE_TYPE;
     }
 
+    /**
+     * @param Page $parent
+     * @param $name
+     * @param int $type
+     *
+     * @return Stack|false
+     */
     private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
         $data = [];
@@ -182,6 +196,11 @@ class Stack extends Page implements ExportableInterface
         return $stack;
     }
 
+    /**
+     * @param $type
+     *
+     * @return Section|false|null
+     */
     protected static function getMultilingualSectionFromType($type)
     {
         $detector = Core::make('multilingual/detector');
@@ -198,6 +217,11 @@ class Stack extends Page implements ExportableInterface
         return $ms;
     }
 
+    /**
+     * @param $area
+     *
+     * @return Stack|false
+     */
     public static function addGlobalArea($area)
     {
         $parent = \Page::getByPath(STACKS_PAGE_PATH);
@@ -205,6 +229,12 @@ class Stack extends Page implements ExportableInterface
         return self::addStackToCategory($parent, $area, static::ST_TYPE_GLOBAL_AREA);
     }
 
+    /**
+     * @param $stack
+     * @param Folder|null $folder
+     *
+     * @return Stack|false
+     */
     public static function addStack($stack, Folder $folder = null)
     {
         $parent = \Page::getByPath(STACKS_PAGE_PATH);
@@ -296,6 +326,9 @@ class Stack extends Page implements ExportableInterface
         return true;
     }
 
+    /**
+     * @return \Concrete\Core\Export\Item\ItemInterface|\Concrete\Core\Export\Item\Stack|\Concrete\Core\Page\Exporter
+     */
     public function getExporter()
     {
         return new \Concrete\Core\Export\Item\Stack();
