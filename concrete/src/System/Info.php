@@ -179,7 +179,7 @@ class Info
                     switch (count($chunks)) {
                         case 1:
                             if ($chunks[0] === '') {
-                                continue;
+                                continue 2;
                             }
                             $section = $chunks[0];
                             break;

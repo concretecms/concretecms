@@ -36,9 +36,12 @@ class Thumbnails extends DashboardPageController
                 return $this->app->make(ResponseFactoryInterface::class)->redirect($this->action(''), 302);
             }
         }
+        $config = $this->app->make('config');
         $this->set('type', $type);
         $this->set('sizingModes', $this->getSizingModes());
         $this->set('sizingModeHelps', $this->getSizingModeHelps());
+        $imageManipulationLibrary = $config->get('concrete.file_manager.images.manipulation_library');
+        $this->set('manipulationLibrarySupportsAnimations', (string) $imageManipulationLibrary !== '' && $imageManipulationLibrary !== 'gd'); 
         if ($type->getID() && $type->isRequired()) {
             $this->set('allowConditionalThumbnails', false);
         } else {
@@ -142,6 +145,7 @@ class Thumbnails extends DashboardPageController
                 $type->setSizingMode($sizingMode);
             }
             $type->setIsUpscalingEnabled($post->get('ftUpscalingEnabled') ? true : false);
+            $type->setKeepAnimations($post->get('ftKeepAnimations'));
             if ($ftTypeID === 'new' || !$type->isRequired()) {
                 $fileSetOption = $post->get('fileSetOption');
                 if (!in_array($fileSetOption, array_keys($this->getFileSetOptions()), true)) {

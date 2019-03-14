@@ -192,8 +192,10 @@ class BitmapFormat
      */
     public function getFormatImagineSaveOptions($format)
     {
-        $result = [];
         $format = $this->normalizeFormat($format);
+        $result = [
+            'format' => $format,
+        ];
         switch ($format) {
             case static::FORMAT_PNG:
                 $result['png_compression_level'] = $this->getDefaultPngCompressionLevel();

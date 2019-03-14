@@ -16,10 +16,11 @@ if (isset($user) && is_object($user)) {
     <div data-container="editable-fields">
 
         <section>
+            <h3><?=t('Basic Details')?></h3>
             <div class="row">
 
                 <div class="col-md-6">
-                    <h4><?= t('Basic Details') ?></h4>
+                    <h4><?= t('Login &amp; Email') ?></h4>
                     <div class="row">
                         <div class="col-md-4"><p><?= t('Username') ?></p></div>
                         <div class="col-md-8"><p><span
@@ -191,6 +192,7 @@ if (isset($user) && is_object($user)) {
         </section>
 
         <section>
+            <h3><?=t('Custom Attributes')?></h3>
 
             <?php foreach ($attributeSets as $set) : ?>
                 <h4><?php echo $set->getAttributeSetDisplayName()?></h4>
@@ -224,6 +226,7 @@ if (isset($user) && is_object($user)) {
                 ]); ?>
             <?php endif; ?>
         </section>
+
 
     </div>
 

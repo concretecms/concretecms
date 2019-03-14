@@ -19,6 +19,11 @@ class ConnectionFactory
         $this->driver_manager = $driver_manager;
     }
 
+    /**
+     * @param \ArrayAccess|array $config
+     *
+     * @return \Concrete\Core\Database\Connection\Connection|\Doctrine\DBAL\Connection
+     */
     public function createConnection($config)
     {
         $driver = $this->driver_manager->driver(array_get($config, 'driver', ''));
@@ -48,7 +53,9 @@ class ConnectionFactory
             }
         }
 
-        return new $wrapperClass($params, $driver);
+        $connection =  new $wrapperClass($params, $driver);
+        $connection->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'json_array');
+        return $connection;
     }
 
     /**

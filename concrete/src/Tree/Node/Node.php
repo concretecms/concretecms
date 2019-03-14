@@ -472,6 +472,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         }
         if ($this->getTreeNodeParentID() != $newParent->getTreeNodeID()) {
             $db = Database::connection();
+            $existingDisplayOrder = $this->treeNodeDisplayOrder;
             $treeNodeDisplayOrder = (int) $db->fetchColumn('select count(treeNodeDisplayOrder) from TreeNodes where treeNodeParentID = ?', [$newParent->getTreeNodeID()]);
             $db->executeQuery('update TreeNodes set treeNodeParentID = ?, treeNodeDisplayOrder = ? where treeNodeID = ?', [$newParent->getTreeNodeID(), $treeNodeDisplayOrder, $this->treeNodeID]);
             if (!$this->overrideParentTreeNodePermissions()) {
@@ -479,10 +480,17 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             }
             $oldParent = $this->getTreeNodeParentObject();
             if (is_object($oldParent)) {
-                $oldParent->rescanChildrenDisplayOrder();
+                // Instead of just rescanning all the nodes (which could take a long time),
+                // let's just update all the nodes with display order above this one to be their current
+                // order - 1
+                $db->executeQuery(
+                    'update TreeNodes set treeNodeDisplayOrder = (treeNodeDisplayOrder - 1) 
+where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
+                    [$existingDisplayOrder, $oldParent->getTreeNodeID()]
+                );
+                //$oldParent->rescanChildrenDisplayOrder();
                 $oldParent->updateDateModified();
             }
-            $newParent->rescanChildrenDisplayOrder();
             $newParent->updateDateModified();
             $this->treeNodeParentID = $newParent->getTreeNodeID();
             $this->treeNodeDisplayOrder = $treeNodeDisplayOrder;
@@ -638,6 +646,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         $parent = $this->getTreeNodeParentObject();
         if (is_object($parent)) {
             $parent->updateDateModified();
+            $parent->rescanChildrenDisplayOrder();
         }
 
         if (!$this->childNodesLoaded) {

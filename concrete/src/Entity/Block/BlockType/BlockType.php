@@ -20,6 +20,7 @@ use Package;
 use Page;
 use User;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Database\Connection\Connection;
 
 /**
  * @ORM\Entity
@@ -365,17 +366,25 @@ class BlockType
      */
     public function getCount($ignoreUnapprovedVersions = false)
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $now = $app->make('date')->getOverridableNow();
         if ($ignoreUnapprovedVersions) {
-            $count = $db->GetOne(
-                        "SELECT count(btID) FROM Blocks b
-                                            WHERE btID=?
-                                            AND EXISTS (
-                                                SELECT 1 FROM CollectionVersionBlocks cvb
-                                                INNER JOIN CollectionVersions cv ON cv.cID=cvb.cID AND cv.cvID=cvb.cvID
-                                                WHERE b.bID=cvb.bID AND cv.cvIsApproved=1
-                                            )",
-                        array($this->btID));
+            $count = $db->GetOne(<<<'EOT'
+SELECT
+    count(btID)
+FROM
+    Blocks b
+    INNER JOIN CollectionVersionBlocks cvb
+        ON b.bID=cvb.bID
+    INNER JOIN CollectionVersions cv
+        ON cvb.cID=cv.cID AND cvb.cvID=cv.cvID AND cv.cvIsApproved=1 AND (cv.cvPublishDate IS NULL OR cv.cvPublishDate <= ?) AND (cv.cvPublishEndDate IS NULL OR cv.cvPublishEndDate >= ?)
+WHERE
+    b.btID = ?
+EOT
+                ,
+                [$now, $now, $this->btID]
+            );
         } else {
             $count = $db->GetOne("SELECT count(btID) FROM Blocks WHERE btID = ?", array($this->btID));
         }

@@ -8,10 +8,26 @@ use Concrete\Core\Asset\AssetPointer;
 
 class ResponseAssetGroup
 {
+    /**
+     * @var self|null
+     */
     protected static $group = null;
+
+    /**
+     * @var \Concrete\Core\Asset\AssetPointer[]
+     */
     protected $providedAssetGroupUnmatched = array();
+
+    /**
+     * @var array
+     */
     protected $outputAssets = array();
 
+    /**
+     * Get an instance of this singleton.
+     *
+     * @return self
+     */
     public static function get()
     {
         if (null === self::$group) {
@@ -35,7 +51,9 @@ class ResponseAssetGroup
     }
 
     /**
-     * Assets.
+     * Add an asset that should be loaded in the header.
+     *
+     * @param \Concrete\Core\Asset\Asset $item
      */
     public function addHeaderAsset($item)
     {
@@ -43,18 +61,34 @@ class ResponseAssetGroup
     }
 
     /**
-     * Function responsible for adding footer items within the context of a view.
+     * Add an asset that should be loaded in the footer.
+     *
+     * @param \Concrete\Core\Asset\Asset $item
      */
     public function addFooterAsset($item)
     {
         $this->addOutputAssetAt($item, Asset::ASSET_POSITION_FOOTER);
     }
 
+    /**
+     * Add an asset at the position that's defined in the asset.
+     *
+     * @param \Concrete\Core\Asset\Asset $asset
+     */
     public function addOutputAsset(Asset $asset)
     {
         $this->addOutputAssetAt($asset, $asset->getAssetPosition());
     }
 
+    /**
+     * Add an asset at a specific position.
+     *
+     * @param \Concrete\Core\Asset\Asset $item
+     * @param string $position Whether the asset should be loaded in the header or in the footer.
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_HEADER
+     * @see \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_FOOTER
+     */
     protected function addOutputAssetAt($item, $position)
     {
         if (!isset($this->outputAssets[$position])) {
@@ -65,10 +99,17 @@ class ResponseAssetGroup
     }
 
     /**
-     * Responsible for a number of things.
+     * Get a list of assets that need to be outputted.
+     *
+     * Responsible for a number of things:
      * 1. Gets the required assets and adds them to the output assets array (which also contains other assets we have specifically asked for.)
      * 2. Returns the assets with the non-post-process-able assets FIRST, in the order in which they were added, with post-processable assets
      * grouped after. We also make sure to maintain the proper position.
+     *
+     * @return array[
+     *  'H' => \Concrete\Core\Asset\Asset[]
+     *  'F' => \Concrete\Core\Asset\Asset[]
+     * ]
      */
     public function getAssetsToOutput()
     {
@@ -170,6 +211,9 @@ class ResponseAssetGroup
 
     /**
      * Notes in the current request that a particular asset has already been provided.
+     *
+     * @param string $assetType E.g. 'css' or 'javascript'.
+     * @param string|false $assetHandle E.g. 'core/colorpicker'.
      */
     public function markAssetAsIncluded($assetType, $assetHandle = false)
     {
@@ -194,6 +238,9 @@ class ResponseAssetGroup
     /**
      * Adds a required asset to this request. This asset will attempt to be output or included
      * when a view is rendered.
+     *
+     * @param \Concrete\Core\Asset\AssetGroup|\Concrete\Core\Asset\Asset|string $assetType
+     * @param string|false $assetHandle used when $assetType is a string, to form the group $assetType/$assetHandle to define a new AssetPointer instance
      */
     public function requireAsset($assetType, $assetHandle = false)
     {
@@ -217,12 +264,19 @@ class ResponseAssetGroup
 
     /**
      * Returns all required assets.
+     *
+     * @return \Concrete\Core\Asset\AssetGroup
      */
     public function getRequiredAssets()
     {
         return $this->requiredAssetGroup;
     }
 
+    /**
+     * @param \Concrete\Core\Asset\Asset $asset
+     *
+     * @return bool
+     */
     protected function filterProvidedAssets($asset)
     {
         foreach ($this->providedAssetGroup->getAssetPointers() as $pass) {
@@ -244,6 +298,8 @@ class ResponseAssetGroup
 
     /**
      * Returns only assets that are required but that aren't also in the providedAssetGroup.
+     *
+     * @return \Concrete\Core\Asset\Asset[]
      */
     public function getRequiredAssetsToOutput()
     {

@@ -1,43 +1,32 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Config\DirectFileSaver;
-use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\FileLoader;
+use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Console\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Config;
 use Exception;
+use Illuminate\Filesystem\Filesystem;
 
 class ConfigCommand extends Command
 {
-    const OPERATION_GET = 'get';
-    const OPERATION_SET = 'set';
 
-    /**
-     * @var Repository
-     */
+    protected $description = 'Set or get configuration parameters.';
+
+    protected $signature = 'c5:config 
+        {action : Either "get" or "set"} 
+        {item : The config item EG: "concrete.debug.detail"} 
+        {value? : The value to set}
+        {--e|environment : The environment, if none specified the global configuration will be used}
+        {--g|generated-overrides : Save to generated overrides}';
+
+    /** @var Repository */
     protected $repository;
 
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
-        $this
-            ->setName('c5:config')
-            ->setDescription('Set or get configuration parameters.')
-            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to accomplish (' . implode('|', $this->getAllowedOperations()) . ')')
-            ->addArgument('item', InputArgument::REQUIRED, 'The configuration item (eg: concrete.debug.display_errors)')
-            ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration item')
-            ->addEnvOption()
-            ->setCanRunAsRoot(false)
-            ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
-            ->addOption('generated-overrides', 'g', InputOption::VALUE_NONE, 'Set this option to save configurations to the generated_overrides folder')
-        ;
         $this->setHelp(<<<EOT
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
@@ -45,59 +34,29 @@ concrete5 %command.name% set concrete.test_item 1
 The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
 concrete5 %command.name% set concrete.test_item '1'
 
-Returns codes:
-  0 operation completed successfully
-  $errExitCode errors occurred
-
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
 EOT
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function handle(Repository $config, Filesystem $filesystem)
     {
-        $default_environment = \Config::getEnvironment();
+        $repository = $this->getRepository($config, $filesystem);
 
-        $environment = $input->getOption('environment') ?: $default_environment;
-
-        $file_system = new Filesystem();
-        $file_loader = new FileLoader($file_system);
-        if ($input->getOption('generated-overrides')) {
-            $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
-        } else {
-            $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
-        }
-        $this->repository = new Repository($file_loader, $file_saver, $environment);
-
-        $item = $input->getArgument('item');
-        switch ($input->getArgument('operation')) {
-            case self::OPERATION_GET:
-                $output->writeln($this->serialize($this->repository->get($item)));
+        $item = $this->argument('item');
+        switch ($this->argument('action')) {
+            case 'get':
+                $this->doGetAction($repository, $item);
                 break;
 
-            case self::OPERATION_SET:
-                $value = $input->getArgument('value');
-                if (!isset($value)) {
-                    throw new Exception('Missing new configuration value');
-                }
-
-                $this->repository->save($item, $this->unserialize($value));
+            case 'set':
+                $this->doSetAction($repository, $item);
                 break;
 
             default:
-                throw new Exception('Invalid operation specified. Allowed operations: ' . implode(', ', $this->getAllowedOperations()));
+                $this->output->error('Invalid action specified, please specify either "set" or "get"');
+                break;
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getAllowedOperations()
-    {
-        return [
-            self::OPERATION_GET,
-            self::OPERATION_SET,
-        ];
     }
 
     /**
@@ -130,7 +89,7 @@ EOT
 
             case 'integer':
             case 'double':
-                $result = (string) $value;
+                $result = (string)$value;
                 break;
 
             case 'string':
@@ -169,9 +128,57 @@ EOT
     {
         $result = json_decode($value, true);
         if (is_null($result) && trim(strtolower($value)) !== 'null') {
-            return (string) $value;
+            return (string)$value;
         }
 
         return $result;
+    }
+
+    /**
+     * Complete a requested get action
+     *
+     * @param $repository
+     * @param $item
+     */
+    private function doGetAction($repository, $item)
+    {
+        $this->output->writeln($this->serialize($repository->get($item)));
+    }
+
+    /**
+     * Complete a requested set action
+     *
+     * @param Repository $repository
+     * @param string $item
+     */
+    private function doSetAction(Repository $repository, $item)
+    {
+        if (!$this->hasArgument('value')) {
+            $this->output->error('A value must be provided when using the "set" action.');
+        }
+
+        $value = $this->argument('value');
+        $repository->save($item, $this->unserialize($value));
+    }
+
+    /**
+     * @param \Concrete\Core\Config\Repository\Repository $config
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @return \Concrete\Core\Config\Repository\Repository
+     */
+    private function getRepository(Repository $config, Filesystem $filesystem)
+    {
+        $default_environment = $config->getEnvironment();
+
+        $environment = $this->option('environment') ?: $default_environment;
+
+        $file_loader = new FileLoader($filesystem);
+        if ($this->option('generated-overrides')) {
+            $file_saver = new FileSaver($filesystem, $environment == $default_environment ? null : $environment);
+        } else {
+            $file_saver = new DirectFileSaver($filesystem, $environment == $default_environment ? null : $environment);
+        }
+
+        return new Repository($file_loader, $file_saver, $environment);
     }
 }

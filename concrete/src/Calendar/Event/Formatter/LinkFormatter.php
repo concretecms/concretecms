@@ -62,12 +62,15 @@ class LinkFormatter implements LinkFormatterInterface
         if (!$value) {
             $value = t('(No Title)');
         }
+
+        $value = h($value);
+
         $page = $occurrence->getEvent()->getPageObject();
         $href = 'javascript:void(0)';
         if (!$occurrence->getVersion()->isApproved()) {
             // Output a tooltip with text that makes it clear that there are unpublished changes
             $value .= sprintf(
-                '<i class="fa fa-exclamation-circle z-indexable z-1000" data-toggle="tooltip" data-placement="bottom" title="%s"></i>',
+                '<i class="launch-tooltip fa fa-exclamation-circle z-indexable z-1000" data-toggle="tooltip" data-placement="bottom" title="%s"></i>',
                 t('This event has unpublished versions.')
             );
         }

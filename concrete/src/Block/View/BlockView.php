@@ -16,6 +16,14 @@ use BlockType;
 use URL;
 use View;
 
+/**
+ * Work with the rendered view of a block
+ *
+ * <code>
+ * $b = $this->getBlockObject();
+ * $bv = new BlockView($b);
+ * </code>
+ */
 class BlockView extends AbstractView
 {
     protected $block;
@@ -30,6 +38,13 @@ class BlockView extends AbstractView
     protected $showControls = true;
     protected $didPullFromOutputCache = false;
 
+    /**
+     * Construct a block view object
+     *
+     * @param mixed $mixed block or block type to view
+     *
+     * @return void
+     */
     protected function constructView($mixed)
     {
         if ($mixed instanceof Block) {
@@ -90,58 +105,13 @@ class BlockView extends AbstractView
     }
 
     /**
-     * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
-     * <code>
-     *     <a href="<?=$this->action('get_results')?>">Get the results</a>
-     * </code>.
+     * @deprecated In views, use $controller->getActionURL() using the same arguments.
      *
-     * @param string $task
-     *
-     * @return string $url
+     * @return \Concrete\Core\Url\UrlImmutable|null
      */
     public function action($task)
     {
-        try {
-            if ($this->viewToRender == 'add') {
-                $c = $this->area->getAreaCollectionObject();
-                $arguments = array('/ccm/system/block/action/add',
-                    $c->getCollectionID(),
-                    urlencode($this->area->getAreaHandle()),
-                    $this->blockType->getBlockTypeID(),
-                    $task,
-                );
-
-                return call_user_func_array(array('\URL', 'to'), $arguments);
-            } elseif (is_object($this->block)) {
-                if (is_object($this->block->getProxyBlock())) {
-                    $b = $this->block->getProxyBlock();
-                } else {
-                    $b = $this->block;
-                }
-
-                if ($this->viewToRender == 'edit') {
-                    $c = $this->area->getAreaCollectionObject();
-                    $arguments = array('/ccm/system/block/action/edit',
-                        $c->getCollectionID(),
-                        urlencode($this->area->getAreaHandle()),
-                        $b->getBlockID(),
-                        $task,
-                    );
-
-                    return call_user_func_array(array('\URL', 'to'), $arguments);
-                } else {
-                    $c = Page::getCurrentPage();
-                    if (is_object($b) && is_object($c)) {
-                        $arguments = func_get_args();
-                        $arguments[] = $b->getBlockID();
-                        array_unshift($arguments, $c);
-
-                        return call_user_func_array(array('\URL', 'page'), $arguments);
-                    }
-                }
-            }
-        } catch (Exception $e) {
-        }
+        return call_user_func_array([$this->controller, 'getActionURL'], func_get_args());
     }
 
     public function startRender()
@@ -252,12 +222,19 @@ class BlockView extends AbstractView
         }
     }
 
+    /**
+     * Echo block contents
+     *
+     * @param array $scopeItems array of items to render (outputContent, blockViewHeaderFile, blockViewFooterFile)
+     *
+     * @return void
+     */
     public function renderViewContents($scopeItems)
     {
         $shouldRender = function() {
             $app = Application::getFacadeApplication();
 
-            // If you hook into this event and use `preventRendering()`
+            // If you hook into this event and use `preventRendering()`,
             // you can prevent the block from being displayed.
             $event = new BlockBeforeRender($this->block);
             $app->make('director')->dispatch('on_block_before_render', $event);

@@ -6,6 +6,9 @@ use Request;
 use URL;
 use Core;
 
+/**
+ * Abstract view class
+ */
 abstract class AbstractView
 {
     protected static $requestInstance;
@@ -29,12 +32,16 @@ abstract class AbstractView
 
     public static function getRequestInstance()
     {
-        if (null === self::$requestInstance) {
+        if (!self::$requestInstance instanceof View) {
             View::setRequestInstance(new View());
         }
 
         return self::$requestInstance;
     }
+
+    /**
+     * @param mixed $mixed object to view
+     */
 
     public function __construct($mixed = false)
     {
@@ -51,6 +58,12 @@ abstract class AbstractView
     {
         array_pop(View::$requestInstances);
         self::$requestInstance = last(View::$requestInstances);
+
+        if (self::$requestInstance === false) {
+            // 'last' can return false if there are no request instances.
+            // In that case a fresh instance should be retrieved.
+            self::$requestInstance = View::getInstance();
+        }
     }
 
     abstract public function start($state);
@@ -218,6 +231,12 @@ abstract class AbstractView
     }
 
     /**
+     * Get an instance of the View.
+     *
+     * Note: In versions before 8.5.0a3, this method may
+     * return 'false' if it's called after the page
+     * is rendered (for example in middleware).
+     *
      * @return View
      */
     public static function getInstance()

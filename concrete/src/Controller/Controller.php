@@ -1,12 +1,10 @@
 <?php
 namespace Concrete\Core\Controller;
 
-use Concrete\Core\Application\Application;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Concrete\Core\Support\Facade\Facade;
-use Request;
-use PageTheme;
-use View;
-use Route;
+use Concrete\Core\View\View;
 
 class Controller extends AbstractController
 {
@@ -16,7 +14,7 @@ class Controller extends AbstractController
     protected $controllerActionPath;
     protected $themeViewTemplate;
 
-    public function setViewObject(\Concrete\Core\View\AbstractView $view)
+    public function setViewObject(View $view)
     {
         $this->view = $view;
     }
@@ -32,36 +30,33 @@ class Controller extends AbstractController
 
     public function getTheme()
     {
-        if (is_object($this->view)) {
-            $tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
-            if ($tmpTheme) {
-                return $tmpTheme[0];
-            }
-        }
-
-        if (isset($this->theme)) {
-            return $this->theme;
-        }
+        return $this->theme;
     }
 
     public function setThemeViewTemplate($template)
     {
         $this->themeViewTemplate = $template;
     }
+
+    /**
+     * Returns the wrapper file that holds the content of the view. Usually view.php
+     * @return string
+     */
     public function getThemeViewTemplate()
     {
-        if (isset($this->themeViewTemplate)) {
+        if (isset($this->view)) {
+            $templateFromView = $this->view->getViewTemplateFile();
+        }
+
+        if (isset($this->themeViewTemplate) && $templateFromView == FILENAME_THEMES_VIEW) {
             return $this->themeViewTemplate;
         }
 
-        if (is_object($this->view)) {
-            $tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
-            if ($tmpTheme && isset($tmpTheme[1])) {
-                return $tmpTheme[1];
-            }
+        if (!isset($templateFromView)) {
+            $templateFromView = FILENAME_THEMES_VIEW;
         }
 
-        return FILENAME_THEMES_VIEW;
+        return $templateFromView;
     }
 
     public function getControllerActionPath()

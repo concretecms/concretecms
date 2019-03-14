@@ -45,7 +45,7 @@ class NotificationTest extends PHPUnit_Framework_TestCase
          * @var \Concrete\Core\Notification\Subscription\Manager
          */
         $subscriptions = $manager->getSubscriptions();
-        $this->assertEquals(6, count($subscriptions));
+        $this->assertEquals(7, count($subscriptions));
     }
 
     protected function getUserSignup()

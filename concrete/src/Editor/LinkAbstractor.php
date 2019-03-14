@@ -11,11 +11,15 @@
 namespace Concrete\Core\Editor;
 
 use Core;
-use File;
 use Page;
 use URL;
 use Sunra\PhpSimple\HtmlDomParser;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Entity\File\File;
+use Concrete\Core\Backup\ContentExporter;
 
 class LinkAbstractor extends ConcreteObject
 {
@@ -83,29 +87,32 @@ class LinkAbstractor extends ConcreteObject
      */
     public static function translateFrom($text)
     {
+        $app = Application::getFacadeApplication();
+        $entityManager = $app->make(EntityManagerInterface::class);
+        $resolver = $app->make(ResolverManagerInterface::class);
+        
         $text = preg_replace(
             [
                 '/{CCM:BASE_URL}/i',
             ],
             [
-                \Core::getApplicationURL(),
+                Application::getApplicationURL(),
             ],
             $text
         );
 
         // now we add in support for the links
-        $text = preg_replace_callback(
-            '/{CCM:CID_([0-9]+)}/i',
-            function ($matches) {
-                $cID = $matches[1];
+        $text = static::replacePlaceholder(
+            $text,
+            '{CCM:CID_([0-9]+)}',
+            function ($cID) use ($resolver) {
                 if ($cID > 0) {
                     $c = Page::getByID($cID, 'ACTIVE');
                     if ($c->isActive()) {
-                        return (string) \URL::to($c);
+                        return $resolver->resolve([$c]);
                     }
                 }
-            },
-            $text
+            }
         );
 
         // now we add in support for the files that we view inline
@@ -114,8 +121,8 @@ class LinkAbstractor extends ConcreteObject
         if (is_object($r)) {
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
-                $fo = \File::getByID($fID);
-                if (is_object($fo)) {
+                $fo = $entityManager->find(File::class, $fID);
+                if ($fo !== null) {
                     $style = (string) $picture->style;
                     // move width px to width attribute and height px to height attribute
                     $widthPattern = "/(?:^width|[^-]width):\\s([0-9]+)px;?/i";
@@ -173,35 +180,39 @@ class LinkAbstractor extends ConcreteObject
         }
 
         // now we add in support for the links
-        $text = preg_replace_callback(
-            '/{CCM:FID_([0-9]+)}/i',
-            function ($matches) {
-                $fID = $matches[1];
+        $text = static::replacePlaceholder(
+            $text,
+            '{CCM:FID_([0-9]+)}',
+            function ($fID) use ($entityManager) {
                 if ($fID > 0) {
-                    $f = File::getByID($fID);
-                    if (is_object($f)) {
+                    $f = $entityManager->find(File::class, $fID);
+                    if ($f !== null) {
                         return $f->getURL();
                     }
                 }
-            },
-            $text
+            }
         );
 
         // now files we download
-        $text = preg_replace_callback(
-            '/{CCM:FID_DL_([0-9]+)}/i',
-            function ($matches) {
-                $fID = $matches[1];
+        $currentPage = null;
+        $text = static::replacePlaceholder(
+            $text,
+            '{CCM:FID_DL_([0-9]+)}',
+            function ($fID) use ($resolver, &$currentPage) {
                 if ($fID > 0) {
-                    $c = Page::getCurrentPage();
-                    if (is_object($c)) {
-                        return URL::to('/download_file', 'view', $fID, $c->getCollectionID());
-                    } else {
-                        return URL::to('/download_file', 'view', $fID);
+                    $args = ['/download_file', 'view', $fID];
+                    if ($currentPage === null) {
+                        $currentPage = Page::getCurrentPage();
+                        if (!$currentPage || $currentPage->isError()) {
+                            $currentPage = false;
+                        }
                     }
+                    if ($currentPage !== false) {
+                        $args[] = $currentPage->getCollectionID();
+                    }
+                    return $resolver->resolve($args);
                 }
-            },
-            $text
+            }
         );
 
         // snippets
@@ -219,12 +230,17 @@ class LinkAbstractor extends ConcreteObject
      */
     public static function translateFromEditMode($text)
     {
+        $app = Application::getFacadeApplication();
+        $entityManager = $app->make(EntityManagerInterface::class);
+        $resolver = $app->make(ResolverManagerInterface::class);
+        $appUrl = Application::getApplicationURL();
+
         $text = preg_replace(
             [
                 '/{CCM:BASE_URL}/i',
             ],
             [
-                \Core::getApplicationURL(),
+                $appUrl,
             ],
             $text
         );
@@ -232,7 +248,7 @@ class LinkAbstractor extends ConcreteObject
         //page links...
         $text = preg_replace(
             '/{CCM:CID_([0-9]+)}/i',
-            \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=\\1',
+            $appUrl . '/' . DISPATCHER_FILENAME . '?cID=\\1',
             $text
         );
 
@@ -250,38 +266,36 @@ class LinkAbstractor extends ConcreteObject
                     }
                 }
 
-                $picture->outertext = '<img src="' . URL::to(
+                $picture->outertext = '<img src="' . $resolver->resolve([
                         '/download_file',
                         'view_inline',
                         $fID
-                    ) . '" ' . $attrString . '/>';
+                    ]) . '" ' . $attrString . '/>';
             }
 
             $text = (string) $r->restore_noise($r);
         }
 
         // now we add in support for the links
-        $text = preg_replace_callback(
-            '/{CCM:FID_([0-9]+)}/i',
-            function ($matches) {
-                $fID = $matches[1];
+        $text = static::replacePlaceholder(
+            $text,
+            '{CCM:FID_([0-9]+)}',
+            function ($fID) use ($resolver) {
                 if ($fID > 0) {
-                    return URL::to('/download_file', 'view_inline', $fID);
+                    return $resolver->resolve(['/download_file', 'view_inline', $fID]);
                 }
-            },
-            $text
+            }
         );
 
         //file downloads...
-        $text = preg_replace_callback(
-            '/{CCM:FID_DL_([0-9]+)}/i',
-            function ($matches) {
-                $fID = $matches[1];
+        $text = static::replacePlaceholder(
+            $text,
+            '{CCM:FID_DL_([0-9]+)}',
+            function ($fID) use ($resolver) {
                 if ($fID > 0) {
-                    return URL::to('/download_file', 'view', $fID);
+                    return $resolver->resolve(['/download_file', 'view', $fID]);
                 }
-            },
-            $text
+            }
         );
 
         return $text;
@@ -303,18 +317,22 @@ class LinkAbstractor extends ConcreteObject
      */
     public static function export($text)
     {
-        $text = preg_replace_callback(
-            '/{CCM:CID_([0-9]+)}/i',
-            ['\Concrete\Core\Backup\ContentExporter', 'replacePageWithPlaceHolderInMatch'],
-            $text
+        $text = static::replacePlaceholder(
+            $text,
+            '{CCM:CID_([0-9]+)}',
+            function ($cID) {
+                return ContentExporter::replacePageWithPlaceHolderInMatch($cID);
+            }
         );
 
-        $text = preg_replace_callback(
-            '/{CCM:FID_DL_([0-9]+)}/i',
-            ['\Concrete\Core\Backup\ContentExporter', 'replaceFileWithPlaceHolderInMatch'],
-            $text
+        $text = static::replacePlaceholder(
+            $text,
+            '{CCM:FID_DL_([0-9]+)}',
+            function ($cID) {
+                return ContentExporter::replaceFileWithPlaceHolderInMatch($cID);
+            }
         );
-
+        
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
         if (is_object($r)) {
@@ -330,5 +348,37 @@ class LinkAbstractor extends ConcreteObject
         }
 
         return $text;
+    }
+
+    /**
+     * Replace a placeholder.
+     *
+     * @param string $text the text that may contain placeholders to be replaced
+     * @param string $pattern the regular expression (without enclosing '/') that captures the placeholder
+     * @param callable $resolver a callback that replaces the captured placeholder value
+     * @param bool $caseSensitive is $pattern case sensitive?
+     *
+     * @return string
+     *
+     * @since concrete5 8.5.0a3
+     */
+    protected static function replacePlaceholder($text, $pattern, callable $resolver, $caseSensitive = false)
+    {
+        $regex = "/{$pattern}/";
+        if (!$caseSensitive) {
+            $regex .= 'i';
+        }
+        if (!preg_match_all($regex, $text, $matches)) {
+            return $text;
+        }
+        $replaces = array_combine($matches[0], $matches[1]);
+        if (!$caseSensitive) {
+            $replaces = array_change_key_case($replaces, CASE_UPPER);
+        }
+        foreach (array_keys($replaces) as $key) {
+            $replaces[$key] = (string) $resolver($replaces[$key]);
+        }
+
+        return $caseSensitive ? strtr($text, $replaces) : str_ireplace(array_keys($replaces), array_values($replaces), $text);
     }
 }

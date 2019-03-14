@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/imagestage.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/image.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/actions.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideOut.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideout.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/jquerybinding.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_end.js',
@@ -110,6 +110,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/remote-marketplace.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/table.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/base.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/preset-selector.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/field-selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/progressive-operations.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
@@ -480,7 +482,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
+        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.0/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
     };

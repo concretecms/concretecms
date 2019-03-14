@@ -30,7 +30,7 @@ else {
         if (!$b->getProxyBlock() && !$supportsInlineEdit) {
             ?>
             <div class="ccm-buttons dialog-buttons">
-                <a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary"><?= t('Save') ?></a>
+                <a href="javascript:$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary"><?= t('Save') ?></a>
                 <a style="float:left" href="javascript:void(0)" class="btn btn-default btn-hover-danger" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></a>
             </div>
             <?php
