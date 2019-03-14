@@ -6,9 +6,11 @@ use Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Utility\IPAddress;
-use Psr\Log\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
@@ -20,6 +22,9 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
  */
 class SessionValidator implements SessionValidatorInterface, LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
     /** @var \Concrete\Core\Application\Application */
     private $app;
 
@@ -32,9 +37,6 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     /** @var \Concrete\Core\Permission\IPService */
     private $ipService;
 
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
     public function __construct(Application $app, Repository $config, Request $request, IPService $ipService, LoggerInterface $logger = null)
     {
         $this->app = $app;
@@ -42,6 +44,11 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         $this->request = $request;
         $this->ipService = $ipService;
         $this->logger = $logger;
+    }
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_AUTHENTICATION;
     }
 
     /**

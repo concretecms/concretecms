@@ -188,7 +188,9 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
                 $errors
             ]);
 
-            $this->logger->info($entry->getMessage(), $entry->getContext());
+            $context = $entry->getContext();
+            $context['ip_address'] = (string) $this->ipService->getRequestIPAddress();
+            $this->logger->info($entry->getMessage(), $context);
         }
     }
 
