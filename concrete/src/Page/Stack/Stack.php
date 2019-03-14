@@ -2,7 +2,6 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
-use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
 use Concrete\Core\Site\Tree\TreeInterface;
@@ -19,7 +18,7 @@ use Concrete\Core\Entity\Site\Site;
  *
  * \@package Concrete\Core\Page\Stack
  */
-class Stack extends Page implements ExportableInterface
+class Stack extends Page
 {
     const ST_TYPE_USER_ADDED = 0;
     const ST_TYPE_GLOBAL_AREA = 20;
