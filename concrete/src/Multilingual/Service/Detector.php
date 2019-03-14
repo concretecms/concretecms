@@ -21,7 +21,7 @@ class Detector
      *
      * @return Section|null
      */
-    public static function getPreferredSection()
+    public function getPreferredSection()
     {
         $app = Facade::getFacadeApplication();
         $site = $app->make('site')->getSite();
@@ -122,7 +122,7 @@ class Detector
                 if ($this->isEnabled()) {
                     $ms = Section::getBySectionOfSite($c);
                     if (!$ms) {
-                        $ms = static::getPreferredSection();
+                        $ms = $this->getPreferredSection();
                     }
                     if ($ms) {
                         $locale = $ms->getLocale();
@@ -151,7 +151,7 @@ class Detector
      *
      * @return bool
      */
-    public static function isEnabled()
+    public function isEnabled()
     {
         $app = Facade::getFacadeApplication();
         $cache = $app->make('cache/request');
