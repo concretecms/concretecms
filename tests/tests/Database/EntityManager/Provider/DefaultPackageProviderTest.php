@@ -40,7 +40,7 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
     /**
      * Test packages with removed getPackageEntityPath() method.
      *
-     * @covers DefaultPackageProvider::getDrivers
+     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithGetPackageEntityPath()
     {
@@ -57,7 +57,7 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
     /**
      * Test package with default driver and not existing source directory.
      *
-     * @covers DefaultPackageProvider::getDrivers
+     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithNoExistingSrcDirectory()
     {
@@ -71,7 +71,7 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
     /**
      * Covers real word case of a package with $appVersionRequired < 8.0.0.
      *
-     * @covers DefaultPackageProvider::getDrivers
+     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithLegacyNamespaceAndLegacyAnnotationReader()
     {
@@ -92,7 +92,7 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
     /**
      * Covers real word case of a package with $appVersionRequired >= 8.0.0.
      *
-     * @covers DefaultPackageProvider::getDrivers
+     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithDefaultNamespaceAndDefaultAnnotationReader()
     {
@@ -113,7 +113,7 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
     /**
      * Covers package with additional namespaces and with $appVersionRewuired >= 8.0.0.
      *
-     * @covers DefaultPackageProvider::getDrivers
+     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithAdditionalNamespaces()
     {

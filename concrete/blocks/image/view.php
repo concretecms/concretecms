@@ -5,6 +5,12 @@ if (is_object($f) && $f->getFileID()) {
     if ($f->getTypeObject()->isSVG()) {
         $tag = new \HtmlObject\Image();
         $tag->src($f->getRelativePath());
+         if ($maxWidth > 0) {
+            $tag->width($maxWidth);
+        }
+        if ($maxHeight > 0) {
+            $tag->height($maxHeight);
+        }
         $tag->addClass('ccm-svg');
     } elseif ($maxWidth > 0 || $maxHeight > 0) {
         $im = $app->make('helper/image');

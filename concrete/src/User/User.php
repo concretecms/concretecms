@@ -3,6 +3,10 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Entry\Group\EnterGroup;
+use Concrete\Core\Logging\Entry\Group\ExitGroup;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
@@ -89,7 +93,7 @@ class User extends ConcreteObject
 
         $aeu = $config->get('concrete.misc.access_entity_updated');
         if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
-            self::refreshUserGroups();
+            $this->refreshUserGroups();
         }
 
         $invalidate = $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
@@ -120,6 +124,9 @@ class User extends ConcreteObject
 
                 $session->set('uOnlineCheck', time());
                 if (($session->get('uOnlineCheck') - $session->get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
+                    // This code throttles the writing of uLastOnline to the database, so that we're not constantly
+                    // updating the Users table. If you need to have the exact up to date metric on when a session
+                    // last looked at a page, use uOnlineCheck.
                     $db->query("update Users set uLastOnline = ? where uID = ?", array($session->get('uOnlineCheck'), $this->uID));
                     $session->set('uLastOnline', $session->get('uOnlineCheck'));
                 }
@@ -162,9 +169,9 @@ class User extends ConcreteObject
             }
             $v = array($username);
             if ($config->get('concrete.user.registration.email_registration')) {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uEmail = ?";
+                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uEmail = ?";
             } else {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";
+                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uName = ?";
             }
 
             $db = $app->make('Concrete\Core\Database\Connection\Connection');
@@ -176,21 +183,25 @@ class User extends ConcreteObject
                 if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
                 } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
-                    $this->uID = $row['uID'];
-                    $this->uName = $row['uName'];
-                    $this->uIsActive = $row['uIsActive'];
-                    $this->uTimezone = $row['uTimezone'];
-                    $this->uDefaultLanguage = $row['uDefaultLanguage'];
-                    $this->uLastPasswordChange = $row['uLastPasswordChange'];
-                    $this->uGroups = $this->_getUserGroups($disableLogin);
-                    if ($row['uID'] == USER_SUPER_ID) {
-                        $this->superUser = true;
+                    if ($row['uIsPasswordReset']) {
+                        $this->loadError(USER_PASSWORD_RESET);
                     } else {
-                        $this->superUser = false;
-                    }
-                    $this->recordLogin();
-                    if (!$disableLogin) {
-                        $this->persist();
+                        $this->uID = $row['uID'];
+                        $this->uName = $row['uName'];
+                        $this->uIsActive = $row['uIsActive'];
+                        $this->uTimezone = $row['uTimezone'];
+                        $this->uDefaultLanguage = $row['uDefaultLanguage'];
+                        $this->uLastPasswordChange = $row['uLastPasswordChange'];
+                        $this->uGroups = $this->_getUserGroups($disableLogin);
+                        if ($row['uID'] == USER_SUPER_ID) {
+                            $this->superUser = true;
+                        } else {
+                            $this->superUser = false;
+                        }
+                        $this->recordLogin();
+                        if (!$disableLogin) {
+                            $this->persist();
+                        }
                     }
                 } elseif ($row['uID'] && !$row['uIsActive']) {
                     $this->loadError(USER_INACTIVE);
@@ -218,19 +229,24 @@ class User extends ConcreteObject
             $this->superUser = false;
             $this->uDefaultLanguage = null;
             $this->uTimezone = null;
-            if ($validator->hasActiveSession() || $this->uID) {
-                if ($req->hasCustomRequestUser()) {
-                    $ux = $req->getCustomRequestUser();
-                    if ($ux && is_object($ux)) {
-                        $this->uID = $ux->getUserID();
-                        $this->uName = $ux->getUserName();
-                        $this->superUser = $ux->getUserID() == USER_SUPER_ID;
-                        if ($ux->getUserDefaultLanguage()) {
-                            $this->uDefaultLanguage = $ux->getUserDefaultLanguage();
-                        }
-                        $this->uTimezone = $ux->getUserTimezone();
+            if ($req->hasCustomRequestUser()) {
+                $ux = $req->getCustomRequestUser();
+                if ($ux && is_object($ux)) {
+                    $this->uID = $ux->getUserID();
+                    $this->uName = $ux->getUserName();
+                    $this->superUser = $ux->getUserID() == USER_SUPER_ID;
+                    if ($ux->getUserDefaultLanguage()) {
+                        $this->uDefaultLanguage = $ux->getUserDefaultLanguage();
                     }
-                } else if ($session->has('uID')) {
+                    $this->uTimezone = $ux->getUserTimezone();
+                } elseif ($ux === -1) {
+                    $this->uID = -1;
+                    $this->uName = t('Guest');
+
+                }
+                $this->uGroups = $this->_getUserGroups(true);
+            } else if ($validator->hasActiveSession() || $this->uID) {
+                if ($session->has('uID')) {
                     $this->uID = $session->get('uID');
                     $this->uName = $session->get('uName');
                     $this->uTimezone = $session->get('uTimezone');
@@ -418,6 +434,11 @@ class User extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $events = $app['director'];
+        $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_AUTHENTICATION);
+        $logger->info(t('Logout from user {user} (ID {id}) requested'), [
+            'user' => $this->getUserName(),
+            'id' => $this->getUserID(),
+        ]);
 
         // First, we check to see if we have any collection in edit mode
         $this->unloadCollectionEdit();

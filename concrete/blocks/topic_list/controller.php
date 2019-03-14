@@ -17,6 +17,7 @@ class Controller extends BlockController
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btTopicList';
+    protected $btExportPageColumns = ['cParentID'];
 
     public function getBlockTypeDescription()
     {
@@ -87,6 +88,7 @@ class Controller extends BlockController
         if ($topic) {
             $nodeName = $topic->getTreeNodeName();
             $nodeName = strtolower($nodeName); // convert to lowercase
+            $nodeName = preg_replace('/[[:space:]]+/', '-', $nodeName);
             $nodeName = Core::make('helper/text')->encodePath($nodeName); // urlencode
             return \URL::page($c, 'topic', $topic->getTreeNodeID(), $nodeName);
         } else {

@@ -31,9 +31,13 @@ if ($b->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 <script type="text/javascript">
 <?php
 
-$url = (string) $ci->getBlockTypeJavaScriptURL($bt);
+$url = $ci->getBlockTypeJavaScriptURL($bt);
 if ($url !== '') {
     ?>ConcreteAssetLoader.loadJavaScript(<?= json_encode($url) ?>);<?php
+}
+$url = $ci->getBlockTypeCssURL($bt);
+if ($url !== '') {
+    ?>ConcreteAssetLoader.loadCSS(<?= json_encode($url) ?>);<?php
 }
 if (isset($headerItems) && is_array($headerItems)) {
     $identifier = 'BLOCK_CONTROLLER_' . strtoupper($btHandle);

@@ -92,12 +92,6 @@ class Controller extends BlockController implements FileTrackableInterface
 
         $this->requireAsset('javascript', 'jquery');
         $this->requireAsset('responsive-slides');
-
-        $al->register('javascript', 'responsiveslides', 'blocks/image_slider/responsiveslides.js');
-        $this->requireAsset('javascript', 'blocks/image_slider/responsiveslides');
-
-        $al->register('css', 'responsiveslides', 'blocks/image_slider/responsiveslides.css');
-        $this->requireAsset('css', 'blocks/image_slider/responsiveslides');
     }
 
     public function getEntries()

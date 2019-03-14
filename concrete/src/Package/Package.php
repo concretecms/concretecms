@@ -603,14 +603,16 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getChangelogContents()
     {
-        $result = '';
-        $file = $this->getPackagePath() . '/CHANGELOG';
-        if (is_file($file)) {
-            $contents = $this->app->make('helper/file')->getContents($file);
-            $result = nl2br(h($contents));
+        $prefix = $this->getPackagePath() . '/';
+        foreach (['CHANGELOG', 'CHANGELOG.txt', 'CHANGELOG.md'] as $name) {
+            $file = $prefix . $name;
+            if (is_file($file)) {
+                $contents = $this->app->make('helper/file')->getContents($file);
+                return nl2br(h($contents));
+            }
         }
 
-        return $result;
+        return '';
     }
 
     /**

@@ -22,6 +22,7 @@ class Entity implements ItemInterface
         $node->addAttribute('handle', $entity->getHandle());
         $node->addAttribute('plural_handle', $entity->getPluralHandle());
         $node->addAttribute('name', $entity->getName());
+        $node->addAttribute('supports_custom_display_order', $entity->supportsCustomDisplayOrder() ? '1' : '');
         $node->addAttribute('include_in_public_list', $entity->getIncludeInPublicList() ? '1' : '');
         $node->addAttribute('description', h($entity->getDescription()));
         $node->addAttribute('default_view_form', $entity->getDefaultViewForm()->getID());

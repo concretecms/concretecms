@@ -27,7 +27,7 @@ class EmptyDatabase implements ConnectionOptionsPreconditionInterface
      */
     public function getName()
     {
-        return t('Database is empty');
+        return t('Database should be empty');
     }
 
     /**

@@ -26,6 +26,12 @@ class WhoopsServiceProvider extends Provider
 
         if (Misc::isCommandLine()) {
             $cli_handler = new PlainTextHandler();
+            if (method_exists($cli_handler, 'setDumper')) {
+                // Available since Whoops 2.1.10
+                $cli_handler->setDumper(function ($var) {
+                    var_dump_safe($var, true, 2);
+                });
+            }
             $cli_handler->addTraceFunctionArgsToOutput(true);
             $cli_handler->addTraceToOutput(true);
             $run->pushHandler($cli_handler);

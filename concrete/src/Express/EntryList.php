@@ -6,11 +6,12 @@ use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
-class EntryList extends DatabaseItemList implements PermissionableListItemInterface
+class EntryList extends DatabaseItemList implements PermissionableListItemInterface, PaginationProviderInterface
 {
 
     protected $category;
@@ -75,19 +76,12 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     }
 
 
-    /**
-     * Gets the pagination object for the query.
-     *
-     * @return Pagination
-     */
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct e.exEntryID)')->setMaxResults(1);
         });
-        $pagination = new Pagination($this, $adapter);
-
-        return $pagination;
+        return $adapter;
     }
 
     public function getResult($queryRow)
@@ -136,6 +130,22 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         $this->permissionsChecker = -1;
     }
 
+    /**
+     * Sorts this list by date added ascending.
+     */
+    public function sortByDateAdded()
+    {
+        $this->query->orderBy('e.exEntryDateCreated', 'asc');
+    }
+
+    /**
+     * Sorts this list by date added descending.
+     */
+    public function sortByDateAddedDescending()
+    {
+        $this->query->orderBy('e.exEntryDateCreated', 'desc');
+    }
+
     public function createQuery()
     {
         $table = $this->category->getIndexedSearchTable();
@@ -162,16 +172,34 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
                 // we have a match.
                 $entryAssociation = $entry->getEntryAssociation($targetAssociation);
                 if ($entryAssociation) {
-                    $table = 'ase' . $entryAssociation->getID();
-                    $this->query->innerJoin('e', 'ExpressEntityAssociationSelectedEntries', $table, 'e.exEntryID = ' . $table . '.exSelectedEntryID');
-                    $this->query->andWhere($table . '.id = :entryAssociationID' . $entryAssociation->getID());
-                    $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $entryAssociation->getID());
+                    $entryAssociationTable = 'a' . $entryAssociation->getID();
+                    $entryAssociationEntriesTable = 'ae' . $entryAssociation->getID();
+
+                    $this->query->innerJoin('e', 'ExpressEntityEntryAssociations', $entryAssociationTable, 'e.exEntryID = ' . $entryAssociationTable . '.exEntryID');
+                    $this->query->innerJoin($entryAssociationTable, 'ExpressEntityAssociationEntries', $entryAssociationEntriesTable, $entryAssociationTable . '.id = ' . $entryAssociationEntriesTable . '.association_id');
+
+                    $this->query->andWhere($entryAssociationTable . '.association_id = :entryAssociationID' . $entryAssociation->getID());
+                    $this->query->andWhere($entryAssociationEntriesTable . '.exEntryID = :selectedEntryID' . $entryAssociation->getID());
+                    $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $association->getID());
+                    $this->query->setParameter('selectedEntryID' . $entryAssociation->getID(), $entry->getID());
                 } else {
                     $this->query->andWhere('1 = 0');
                 }
             }
         }
     }
+
+    /**
+     * Filters by a user ID.
+     *
+     * @param integer $userID
+     */
+    public function filterByAuthorUserID($userID)
+    {
+        $this->query->andWhere('e.uID = :userID');
+        $this->query->setParameter('userID', $userID);
+    }
+
 
 
 }

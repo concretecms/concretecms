@@ -17,7 +17,7 @@ interface TranslatorAdapterRepositoryInterface
      *
      * @param string $handle
      * @param string $locale
-     * @param TranslatorAdapter $translator
+     * @param TranslatorAdapterInterface $translator
      */
     public function registerTranslatorAdapter($handle, $locale, TranslatorAdapterInterface $translatorAdapter);
 

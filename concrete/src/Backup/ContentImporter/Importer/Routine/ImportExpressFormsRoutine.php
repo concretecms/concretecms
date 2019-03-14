@@ -29,31 +29,31 @@ class ImportExpressFormsRoutine extends AbstractRoutine
                         $form = $em->find('Concrete\Core\Entity\Express\Form', (string) $formNode['id']);
                         if (!is_object($form)) {
                             $form = new Form();
-                            $form->setId((string) $formNode['id']);
-                        }
-                        $form->setName((string) $formNode['name']);
-                        if (isset($formNode->fieldsets)) {
-                            $fieldSetPosition = 0;
-                            foreach($formNode->fieldsets->fieldset as $fieldSetNode) {
-                                $fieldset = new FieldSet();
-                                $fieldset->setDescription((string) $fieldSetNode['description']);
-                                $fieldset->setTitle((string) $fieldSetNode['title']);
-                                $fieldset->setPosition($fieldSetPosition);
-                                if (isset($fieldSetNode->controls)) {
-                                    $manager = \Core::make('express/control/type/manager');
-                                    $controlPosition = 0;
-                                    foreach($fieldSetNode->controls->control as $controlNode) {
-                                        $type = $manager->driver((string) $controlNode['type']);
-                                        $control = $type->getImporter()->import($controlNode, $entity);
-                                        $control->setFieldSet($fieldset);
-                                        $control->setPosition($controlPosition);
-                                        $fieldset->getControls()->add($control);
-                                        $controlPosition++;
+                            $form->setId((string)$formNode['id']);
+                            $form->setName((string)$formNode['name']);
+                            if (isset($formNode->fieldsets)) {
+                                $fieldSetPosition = 0;
+                                foreach ($formNode->fieldsets->fieldset as $fieldSetNode) {
+                                    $fieldset = new FieldSet();
+                                    $fieldset->setDescription((string)$fieldSetNode['description']);
+                                    $fieldset->setTitle((string)$fieldSetNode['title']);
+                                    $fieldset->setPosition($fieldSetPosition);
+                                    if (isset($fieldSetNode->controls)) {
+                                        $manager = \Core::make('express/control/type/manager');
+                                        $controlPosition = 0;
+                                        foreach ($fieldSetNode->controls->control as $controlNode) {
+                                            $type = $manager->driver((string)$controlNode['type']);
+                                            $control = $type->getImporter()->import($controlNode, $entity);
+                                            $control->setFieldSet($fieldset);
+                                            $control->setPosition($controlPosition);
+                                            $fieldset->getControls()->add($control);
+                                            $controlPosition++;
+                                        }
                                     }
+                                    $form->getFieldSets()->add($fieldset);
+                                    $fieldset->setForm($form);
+                                    $fieldSetPosition++;
                                 }
-                                $form->getFieldSets()->add($fieldset);
-                                $fieldset->setForm($form);
-                                $fieldSetPosition++;
                             }
                         }
                         $entity->getForms()->add($form);

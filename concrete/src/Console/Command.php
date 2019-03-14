@@ -6,21 +6,146 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Environment\User;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
+use LogicException;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Input\ArrayInput;
 use Throwable;
 
+/**
+ * Concrete5 base command class
+ * Large swaths of this class have been copied from illuminate/config 5.2 and 5.5
+ * so you may refer to their documentation for some things.
+ */
 abstract class Command extends SymfonyCommand
 {
+
+    /** @var InputInterface */
+    protected $input;
+
+    /** @var \Concrete\Core\Console\OutputStyle */
+    protected $output;
+
+    /** @var string */
+    protected $name = '';
+
+    /** @var string */
+    protected $description = '';
+
+    /** @var bool */
+    protected $hidden = false;
+
+    /**
+     * The command signature
+     * @see https://laravel.com/docs/5.5/artisan#defining-input-expectations
+     * ex: `config:set {item} {value} {--quiet}`
+     *
+     * Argument: `{item}`
+     * Argument array: `{item*}`
+     * Optional argument: `{item?}`
+     * Optional with default: `{item=foo}`
+     * Argument with description: `{item : The config "item" to set}`
+     *
+     * Option: `{--quiet}`
+     * Option with value: `{--ignore=}`
+     * Option array: `{--ignore=*}`
+     * Option with default: `{--ignore=default}`
+     * Short option: `{--Q|quiet}`
+     * Option with description: `{--ignore=default : The item to ignore}`
+     *
+     * @var string
+     */
+    protected $signature;
+
     /**
      * The return code we should return when an exception is thrown while running the command.
      *
      * @var int
      */
     const RETURN_CODE_ON_FAILURE = 1;
+
+    public function __construct($name = null)
+    {
+        if ($this->signature) {
+            $this->configureUsingFluentDefinition();
+        } else {
+            parent::__construct($this->name ?: $name);
+        }
+
+        // Once we have constructed the command, we'll set the description and other
+        // related properties of the command. If a signature wasn't used to build
+        // the command we'll set the arguments and the options on this command.
+        if ((string) $this->description !== '') {
+            $this->setDescription($this->description);
+        }
+        $this->setHidden($this->hidden);
+        if (! isset($this->signature)) {
+            $this->specifyParameters();
+        }
+    }
+
+    /**
+     * Configure the console command using a fluent definition.
+     *
+     * @return void
+     */
+    protected function configureUsingFluentDefinition()
+    {
+        list($name, $arguments, $options) = Parser::parse($this->signature);
+        parent::__construct($this->name = $name);
+        // After parsing the signature we will spin through the arguments and options
+        // and set them on this command. These will already be changed into proper
+        // instances of these "InputArgument" and "InputOption" Symfony classes.
+        foreach ($arguments as $argument) {
+            $this->getDefinition()->addArgument($argument);
+        }
+        foreach ($options as $option) {
+            $this->getDefinition()->addOption($option);
+        }
+    }
+
+    /**
+     * Specify the arguments and options on the command.
+     *
+     * @return void
+     */
+    protected function specifyParameters()
+    {
+        // We will loop through all of the arguments and options for the command and
+        // set them all on the base command instance. This specifies what can get
+        // passed into these commands as "parameters" to control the execution.
+        foreach ($this->getArguments() as $arguments) {
+            call_user_func_array([$this, 'addArgument'], $arguments);
+        }
+        foreach ($this->getOptions() as $options) {
+            call_user_func_array([$this, 'addOption'], $options);
+        }
+    }
+
+    /**
+     * Get the arguments for this command
+     *
+     * If $this->signature is specified, this method has no effect.
+     * @return array [[$name, $mode = null, $description = '', $default = null], ...]
+     */
+    protected function getArguments()
+    {
+        return [];
+    }
+
+    /**
+     * Get the options for this command
+     *
+     * If $this->signature is specified, this method has no effect.
+     * @return array [[$name, $shortcut = null, $mode = null, $description = '', $default = null], ...]
+     */
+    protected function getOptions()
+    {
+        return [];
+    }
 
     /**
      * The name of the CLI option that allows running CLI commands as root without confirmation.
@@ -53,16 +178,12 @@ abstract class Command extends SymfonyCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        try {
-            return parent::run($input, $output);
-        } catch (Exception $x) {
-            $error = $x;
-        } catch (Throwable $x) {
-            $error = $x;
-        }
-        $this->writeError($output, $error);
+        // Store the input and output
+        $this->input = $input;
+        $this->output = new OutputStyle($input, $output);
 
-        return static::RETURN_CODE_ON_FAILURE;
+        // Run the command
+        return parent::run($this->input, $this->output);
     }
 
     /**
@@ -82,37 +203,43 @@ abstract class Command extends SymfonyCommand
      *
      * @param OutputInterface $output
      * @param Exception|Throwable $error
+     * @deprecated Use $this->output to manage your output
+     * @see OutputStyle::error()
      */
     protected function writeError(OutputInterface $output, $error)
     {
-        $message = trim($error->getMessage()) . "\n";
-        if ($output->getVerbosity() >= $output::VERBOSITY_VERBOSE) {
+        $result = [trim($error->getMessage())];
+
+        // If the output is verbose, add file and location
+        if ($output->isVerbose()) {
             $file = $error->getFile();
             if ($file) {
-                $message .= "\nFile:\n$file";
-                if ($error->getLine()) {
-                    $message .= ':' . $error->getLine();
-                }
-                $message .= "\n";
-            }
-            if ($output->getVerbosity() >= $output::VERBOSITY_VERY_VERBOSE) {
-                $trace = $error->getTraceAsString();
-                if ($trace) {
-                    $message .= "\nTrace:\n$trace\n";
-                }
+                $result[] = "File: {$file}" . ($error->getLine() ? ':' . $error->getLine() : '');
             }
         }
-        $output->writeln('<error>' . $message . '</error>');
+
+        // If the output is very verbose, add stacktrace
+        if ($output->isVeryVerbose()) {
+            $trace = $error->getTraceAsString();
+            $result[] = 'Trace:';
+            $result[] = $trace;
+        }
+
+        $this->output->error($result);
     }
 
     /**
      * Add the "env" option to the command options.
      *
-     * @return $this
+     * @return Command
      */
     protected function addEnvOption()
     {
-        $this->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)');
+        $this->addOption(
+            'env',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'The environment (if not specified, we\'ll work with the configuration item valid for all environments)');
 
         return $this;
     }
@@ -184,4 +311,210 @@ abstract class Command extends SymfonyCommand
             }
         }
     }
+
+    /**
+     * This method is overridden to pipe execution to the handle method hiding input and output
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return mixed
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        if (!method_exists($this, 'handle')) {
+            throw new LogicException('You must define the public handle() method in the command implementation.');
+        }
+
+        return $this->getApplication()->getConcrete5()->call([$this, 'handle']);
+    }
+
+    /**
+     * Call another console command.
+     *
+     * @param  string  $command
+     * @param  array   $arguments
+     * @return int
+     */
+    public function call($command, array $arguments = [])
+    {
+        $arguments['command'] = $command;
+        return $this->getApplication()->find($command)->run(
+            new ArrayInput($arguments), $this->output
+        );
+    }
+
+    /**
+     * Call another console command silently.
+     *
+     * @param  string  $command
+     * @param  array   $arguments
+     * @return int
+     */
+    public function callSilent($command, array $arguments = [])
+    {
+        $arguments['command'] = $command;
+        return $this->getApplication()->find($command)->run(
+            new ArrayInput($arguments), new NullOutput
+        );
+    }
+
+    /**
+     * Determine if the given argument is present.
+     *
+     * @param  string|int  $name
+     * @return bool
+     */
+    public function hasArgument($name)
+    {
+        return $this->input->hasArgument($name);
+    }
+
+    /**
+     * Get the value of a command argument.
+     *
+     * @param  string|null  $key
+     * @return string|array
+     */
+    public function argument($key = null)
+    {
+        if (is_null($key)) {
+            return $this->input->getArguments();
+        }
+        return $this->input->getArgument($key);
+    }
+
+    /**
+     * Get all of the arguments passed to the command.
+     *
+     * @return array
+     */
+    public function arguments()
+    {
+        return $this->argument();
+    }
+
+    /**
+     * Determine if the given option is present.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function hasOption($name)
+    {
+        return $this->input->hasOption($name);
+    }
+
+    /**
+     * Get the value of a command option.
+     *
+     * @param  string  $key
+     * @return string|array
+     */
+    public function option($key = null)
+    {
+        if (is_null($key)) {
+            return $this->input->getOptions();
+        }
+        return $this->input->getOption($key);
+    }
+
+    /**
+     * Get all of the options passed to the command.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        return $this->option();
+    }
+
+    /**
+     * Confirm a question with the user.
+     *
+     * @param  string $question
+     * @param  bool $default
+     * @return bool
+     */
+    public function confirm($question, $default = false)
+    {
+        return $this->output->confirm($question, $default);
+    }
+
+    /**
+     * Prompt the user for input.
+     *
+     * @param  string $question
+     * @param  string $default
+     * @return string
+     */
+    public function ask($question, $default = null)
+    {
+        return $this->output->ask($question, $default);
+    }
+
+    /**
+     * Prompt the user for input with auto completion.
+     *
+     * @param string $question
+     * @param array $choices
+     * @param string $default
+     * @param null $attempts
+     * @param null $strict
+     * @return string
+     */
+    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
+    {
+        return $this->output->askWithCompletion($question, $choices, $default, $attempts, $strict);
+    }
+
+    /**
+     * Prompt the user for input but hide the answer from the console.
+     *
+     * @param  string $question
+     * @param  bool $fallback
+     * @return string
+     */
+    public function secret($question, $fallback = true)
+    {
+        return $this->output->secret($question, $fallback);
+    }
+
+    /**
+     * Give the user a single choice from an array of answers.
+     *
+     * @param  string $question
+     * @param  array $choices
+     * @param  string $default
+     * @param  mixed $attempts
+     * @param  bool $multiple
+     * @return string
+     */
+    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    {
+        return $this->output->choice($question, $choices, $default, $attempts, $multiple);
+    }
+
+    /**
+     * Format input to textual table.
+     *
+     * @param  array $headers
+     * @param  \Illuminate\Contracts\Support\Arrayable|array $rows
+     * @param  string $tableStyle
+     * @param  array $columnStyles
+     * @return void
+     */
+    public function table(array $headers, array $rows, $tableStyle = 'default', array $columnStyles = [])
+    {
+        $this->output->table($headers, $rows, $tableStyle, $columnStyles);
+    }
+
+    /**
+     * @inheritdoc
+     * @return \Symfony\Component\Console\Application|\Concrete\Core\Console\Application
+     */
+    public function getApplication()
+    {
+        return parent::getApplication();
+    }
+
 }

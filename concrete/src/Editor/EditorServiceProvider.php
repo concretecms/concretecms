@@ -65,6 +65,8 @@ class EditorServiceProvider extends ServiceProvider
                 'about' => [t('About'), t('This plugin displays the editor version, online documentation links, and licensing information.')],
                 // https://ckeditor.com/cke4/addon/autogrow
                 'autogrow' => [t('Auto Grow'), t('The editor will automatically expand and shrink vertically depending on its content.')],
+                // https://ckeditor.com/cke4/addon/autolink
+                'autolink' => [t('Auto Link'), t('This plugin turns pasted URL text into links. The URL text must include the protocol type such as HTTP and HTTPS.')],
                 // https://ckeditor.com/cke4/addon/a11yhelp
                 'a11yhelp' => [t('Accessibility Help'), t('This plugin displays information about the keyboard usage using the ALT+0 combination.')],
                 // https://ckeditor.com/cke4/addon/basicstyles
@@ -89,6 +91,8 @@ class EditorServiceProvider extends ServiceProvider
                 'divarea' => [t('Div Editing Area'), t('This plugin uses a <div> element (instead of the <iframe> element) as the editable area. Much similar to inline editing, it allows the content to inherit styles from host page.')],
                 // https://ckeditor.com/cke4/addon/elementspath
                 'elementspath' => [t('Elements Path'), t('This plugin displays the list of HTML elements at the current cursor position.')],
+                // https://ckeditor.com/cke4/addon/emoji
+                'emoji' => [t('Emoji'), t('This plugin adds autocomplete for inserting Unicode emoji characters. Typing a colon ( : ) followed by at least two additional characters will list available emojis.')],
                 // https://ckeditor.com/cke4/addon/enterkey
                 'enterkey' => [t('Enter Key'), t('This plugin defines the Enter key (line breaking) behavior.')],
                 // https://ckeditor.com/cke4/addon/entities

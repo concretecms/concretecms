@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-ui ccm-search-fields-advanced-dialog">
+<div class="ccm-ui ccm-search-fields-advanced-dialog" data-dialog="advanced-search">
 
     <?php
         $tabs = [
@@ -13,17 +13,14 @@
         echo Core::make('helper/concrete/ui')->tabs($tabs);
     ?>
 
-    <form class="ccm-search-fields ccm-search-fields-none" data-form="advanced-search" method="post" action="<?=$controller->getSubmitAction()?>">
+    <form data-form="advanced-search" method="post" action="<?=$controller->getSubmitAction()?>">
 
         <div class="ccm-tab-content" id="ccm-tab-content-fields">
 
-            <div class="form-group">
-                <button class="btn btn-primary" type="button" data-button-action="add-field"><?=t('Add Field')?></button>
-            </div>
-            <!-- <hr/> -->
-            <div data-container="search-fields" class="ccm-search-fields-advanced">
+            <?php
+                print $searchFieldSelectorElement->render();
+            ?>
 
-            </div>
         </div>
 
         <div class="ccm-tab-content" id="ccm-tab-content-columns">
@@ -55,6 +52,13 @@
                     <p><?= t('There is no search preset.'); ?></p>
                 <?php } ?>
             </div>
+
+            <script type="text/javascript">
+                $(function() {
+                    $('div[data-dialog=advanced-search]').concreteAdvancedSearchPresetSelector();
+                })
+            </script>
+
         <?php } ?>
 
     </form>
@@ -89,24 +93,3 @@
     </div>
 
 <?php } ?>
-
-<script type="text/template" data-template="search-field-row">
-    <div class="ccm-search-fields-row">
-        <select data-action="<?=$controller->getAddFieldAction()?>" name="field[]" class="ccm-search-choose-field form-control">
-            <option value=""><?=t('** Select Field')?></option>
-            <?php foreach($manager->getGroups() as $group) { ?>
-                <optgroup label="<?=$group->getName()?>">
-                    <?php foreach($group->getFields() as $field) { ?>
-                        <option value="<?=$field->getKey()?>" <% if (typeof(field) != 'undefined' && field.key == '<?=$field->getKey()?>') { %> selected <% } %>><?=$field->getDisplayName()?></option>
-                    <?php } ?>
-                </optgroup>
-            <?php } ?>
-        </select>
-        <div class="form-group"><% if (typeof(field) != 'undefined') { %><%=field.element%><% } %></div>
-        <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
-    </div>
-</script>
-
-<script type="text/json" data-template="default-query">
-    <?=$defaultQuery?>
-</script>

@@ -38,7 +38,9 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         $pl->sortByName();
         $pl->filterByPageTypeID($configuredTarget->getPageTypeID());
         $pl->sortByName();
-        $pl->filterBySite($site);
+        if (is_object($site)) {
+            $pl->filterBySite($site);
+        }
         $pages = $pl->get();
         if (count($pages) > 1) {
             $navigation = \Core::make('helper/navigation');

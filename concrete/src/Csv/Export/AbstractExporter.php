@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Csv\Export;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
@@ -6,6 +7,9 @@ use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Search\ItemList\Database\ItemList;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Writer;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -15,14 +19,14 @@ abstract class AbstractExporter
     /**
      * The CSV Writer instance.
      *
-     * @var Writer
+     * @var \League\Csv\Writer
      */
     private $writer;
 
     /**
      * The attribute category.
      *
-     * @var CategoryInterface
+     * @var \Concrete\Core\Attribute\Category\CategoryInterface|null
      */
     private $category;
 
@@ -34,15 +38,74 @@ abstract class AbstractExporter
     private $attributeKeysAndControllers;
 
     /**
+     * Unload doctrine entities every X ticks (0 for never).
+     *
+     * @var int
+     */
+    private $unloadDoctrineEveryTick = 0;
+
+    /**
+     * Remaining ticks before unloading Doctrine entities.
+     *
+     * @var int|null
+     */
+    private $ticksUntilUnload = null;
+
+    /**
      * Initialize the instance.
      *
-     * @param CategoryInterface $category the attribute category
-     * @param Writer $writer the CSV Writer instance
+     * @param \League\Csv\Writer $writer the CSV Writer instance
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface|null $category the attribute category
      */
-    protected function __construct(Writer $writer, CategoryInterface $category)
+    protected function __construct(Writer $writer, CategoryInterface $category = null)
     {
         $this->setWriter($writer);
-        $this->setCategory($category);
+        if ($category !== null) {
+            $this->setCategory($category);
+        }
+    }
+
+    /**
+     * Set the number of ticks after which doctrine entities should be unloaded (0 for never).
+     *
+     * @param int $value
+     *
+     * @return $this
+     */
+    public function setUnloadDoctrineEveryTick($value)
+    {
+        $this->unloadDoctrineEveryTick = max(0, (int) $value);
+        $this->ticksUntilUnload = $this->unloadDoctrineEveryTick ?: null;
+
+        return $this;
+    }
+
+    /**
+     * Get the number of ticks after which doctrine entities should be unloaded (0 for never).
+     *
+     * @return int
+     */
+    public function getUnloadDoctrineEveryTick()
+    {
+        return $this->unloadDoctrineEveryTick;
+    }
+
+    /**
+     * Add a tick (to be used to unload Doctrine entities).
+     *
+     * @return $this
+     */
+    public function tick()
+    {
+        if ($this->ticksUntilUnload !== null) {
+            --$this->ticksUntilUnload;
+            if ($this->ticksUntilUnload < 1) {
+                $this->unloadDoctrineEntities();
+                $this->ticksUntilUnload = $this->unloadDoctrineEveryTick;
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -117,21 +180,21 @@ abstract class AbstractExporter
     /**
      * Set the CSV Writer instance.
      *
-     * @param Writer $writer
+     * @param \League\Csv\Writer $writer
      *
      * @return $this
      */
     protected function setWriter(Writer $writer)
     {
         $this->writer = $writer;
-        
+
         return $this;
     }
-    
+
     /**
      * Get the CSV Writer instance.
      *
-     * @return Writer
+     * @return \League\Csv\Writer
      */
     protected function getWriter()
     {
@@ -141,7 +204,7 @@ abstract class AbstractExporter
     /**
      * Set the attribute category to be used to export the data.
      *
-     * @param CategoryInterface $category
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
      *
      * @return $this
      */
@@ -156,7 +219,7 @@ abstract class AbstractExporter
     /**
      * Get the attribute category to be used to export the data.
      *
-     * @return CategoryInterface
+     * @return \Concrete\Core\Attribute\Category\CategoryInterface|null
      */
     protected function getCategory()
     {
@@ -231,6 +294,7 @@ abstract class AbstractExporter
             $listResult = $list->getResult($row);
             $object = $this->getObjectFromListResult($list, $listResult);
             yield iterator_to_array($this->projectObject($object));
+            $this->tick();
         }
     }
 
@@ -243,12 +307,33 @@ abstract class AbstractExporter
     {
         if ($this->attributeKeysAndControllers === null) {
             $list = [];
-            foreach ($this->category->getList() as $attributeKey) {
-                $list[] = [$attributeKey, $attributeKey->getController()];
+            $category = $this->getCategory();
+            if ($category !== null) {
+                foreach ($category->getList() as $attributeKey) {
+                    $list[] = [$attributeKey, $attributeKey->getController()];
+                }
             }
             $this->attributeKeysAndControllers = $list;
         }
 
         return $this->attributeKeysAndControllers;
+    }
+
+    /**
+     * Unload every Doctrine entites, and reset the state of this instance.
+     */
+    protected function unloadDoctrineEntities()
+    {
+        $this->attributeKeysAndControllers = null;
+        $app = Application::getFacadeApplication();
+        $entityManager = $app->make(EntityManagerInterface::class);
+        $entityManager->clear();
+        $category = $this->getCategory();
+        if ($category !== null) {
+            $categoryClass = ClassUtils::getClass($category);
+            if (!$entityManager->getMetadataFactory()->isTransient($categoryClass)) {
+                $entityManager->merge($category);
+            }
+        }
     }
 }

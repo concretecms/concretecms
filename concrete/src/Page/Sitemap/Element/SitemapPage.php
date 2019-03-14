@@ -4,8 +4,8 @@ namespace Concrete\Core\Page\Sitemap\Element;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Url\UrlInterface;
 use DateTime;
+use League\Url\UrlInterface;
 use SimpleXMLElement;
 
 class SitemapPage extends SitemapElement
@@ -69,7 +69,7 @@ class SitemapPage extends SitemapElement
     /**
      * The URL of the page.
      *
-     * @var \Concrete\Core\Url\UrlInterface
+     * @var \League\Url\UrlInterface
      */
     protected $url;
 
@@ -137,7 +137,7 @@ class SitemapPage extends SitemapElement
     /**
      * Get the URL of the page.
      *
-     * @return \Concrete\Core\Url\UrlInterface
+     * @return \League\Url\UrlInterface
      */
     public function getUrl()
     {
@@ -147,7 +147,7 @@ class SitemapPage extends SitemapElement
     /**
      * Set the URL of the page.
      *
-     * @param \Concrete\Core\Url\UrlInterface $url
+     * @param \League\Url\UrlInterface $url
      *
      * @return $this
      */
@@ -293,7 +293,7 @@ class SitemapPage extends SitemapElement
                 $prefix2 = $indenter . $indenter;
             } else {
                 $prefix = '';
-                $prefix = '';
+                $prefix2 = '';
             }
             $loc = h((string) $this->getUrl());
             $result = [

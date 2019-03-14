@@ -21,7 +21,7 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
     protected $adapters = [];
 
     /**
-     * @param TranslatorFactoryInterface $translatorFactory
+     * @param TranslatorAdapterFactoryInterface $translatorFactory
      */
     public function __construct(TranslatorAdapterFactoryInterface $translatorAdapterFactory)
     {

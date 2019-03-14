@@ -42,6 +42,7 @@ class FileListTest extends FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
+            'Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet',
         ]);
     }
 
@@ -237,7 +238,7 @@ class FileListTest extends FileStorageTestCase
             'another.txt' => $sample,
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
-            'awesome-o' => $sample,
+            'awesome-o.txt' => $sample,
             'image.png' => $image,
         ];
 
@@ -312,7 +313,7 @@ class FileListTest extends FileStorageTestCase
             'another.txt' => $sample,
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
-            'awesome-o' => $sample,
+            'awesome-o.txt' => $sample,
             'image.png' => $image,
         ];
 

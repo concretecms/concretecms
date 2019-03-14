@@ -30,17 +30,47 @@ $resetText = tc(/*i18n: a text to be asked to the users to confirm the global pa
                         </label>
                     </div>
                 </div>
-                <div class="form-group" data-group="user-deactivation-days">
-                    <label class="control-label"><?=t('Threshold')?></label>
-                    <div class="form-inline">
-                        <p><?=t('Deactivate users when they have not logged in for %s days',
-                            $form->number('userDeactivationDays', $userDeactivationDays, ['style' => 'width: 100px'])
-                        )?></p>
+                <div class="well" data-group="user-deactivation-days">
+                    <div class="form-group">
+                        <label class="control-label"><?=t('Threshold')?></label>
+                        <div class="form-inline">
+                            <p><?=t('Deactivate users when they have not logged in for %s days',
+                                $form->number('userDeactivationDays', $userDeactivationDays, ['style' => 'width: 100px'])
+                            )?></p>
+                        </div>
+                    </div>
+
+                    <div class="help-block">
+                        <?=t('Note: You will need to run the "Deactivate Users" job in order for these deactivations to actually occur.')?>
+                    </div>
                 </div>
 
-                <div class="help-block">
-                    <?=t('Note: You will need to run the "Deactivate Users" job in order for these deactivations to actually occur.')?>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <?=$form->checkbox('enableLogoutDeactivation', 1, $enableLogoutDeactivation)?>
+                            <?=t('Automatically deactivate users after failed login attempts.')?>
+                        </label>
+                    </div>
                 </div>
+                <div class="well" data-group="user-deactivation-logins">
+                    <div class="form-group" data-group="user-deactivation-logins">
+                        <label class="control-label"><?=t('Threshold')?></label>
+                        <div class="form-inline">
+                            <p>
+                                <?= t('Deactivate users once they have failed %s login(s) within %s seconds',
+                                    $form->number('userLoginAmount', $userLoginAmount, ['style' => 'width: 100px']),
+                                    $form->number('userLoginDuration', $userLoginDuration, ['style' => 'width: 100px'])
+                                ) ?>
+                            </p>
+
+                            <div class="help-block">
+                                <?=t('Note: Any person can attempt to log into any account, causing account deactivation')?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </fieldset>
 
 
@@ -61,6 +91,13 @@ $resetText = tc(/*i18n: a text to be asked to the users to confirm the global pa
             $('div[data-group=user-deactivation-days]').show();
         } else {
             $('div[data-group=user-deactivation-days]').hide();
+        }
+    }).trigger('change');
+    $('input[name=enableLogoutDeactivation]').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('div[data-group=user-deactivation-logins]').show();
+        } else {
+            $('div[data-group=user-deactivation-logins]').hide();
         }
     }).trigger('change');
 </script>

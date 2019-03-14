@@ -11,21 +11,41 @@ interface TypeInterface
 {
 
     /**
-     * @return mixed
+     * Get available type subscriptions
+     *
+     * @return \Concrete\Core\Notification\Subscription\SubscriptionInterface[]
      */
-    function getAvailableSubscriptions();
-    function getSubscription(SubjectInterface $subject);
-    function createNotification(SubjectInterface $subject);
+    public function getAvailableSubscriptions();
 
     /**
-     * @return NotifierInterface
+     * Get a subscription for a specific subject
+     *
+     * @param \Concrete\Core\Notification\Subject\SubjectInterface $subject
+     *
+     * @return \Concrete\Core\Notification\Subscription\SubscriptionInterface
      */
-    function getNotifier();
+    public function getSubscription(SubjectInterface $subject);
 
     /**
-     * @return FilterInterface[]
+     * Create a notification for a specific subject
+     *
+     * @param \Concrete\Core\Notification\Subject\SubjectInterface $subject
+     *
+     * @return \Concrete\Core\Express\Entry\Notifier\NotificationInterface
      */
-    function getAvailableFilters();
+    public function createNotification(SubjectInterface $subject);
 
+    /**
+     * Get the notifier this type should use
+     *
+     * @return \Concrete\Core\Notification\Notifier\NotifierInterface
+     */
+    public function getNotifier();
 
+    /**
+     * Get available notification filters
+     *
+     * @return \Concrete\Core\Notification\Alert\Filter\FilterInterface[]
+     */
+    public function getAvailableFilters();
 }

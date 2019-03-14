@@ -448,6 +448,15 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         $this->forms = $forms;
     }
 
+    public function getForm($name)
+    {
+        foreach($this->getForms() as $form) {
+            if ($form->getName() == $name) {
+                return $form;
+            }
+        }
+    }
+
     /**
      * @return mixed
      */

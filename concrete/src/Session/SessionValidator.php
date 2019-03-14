@@ -1,12 +1,16 @@
 <?php
 namespace Concrete\Core\Session;
 
+use Carbon\Carbon;
+use Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Utility\IPAddress;
-use Psr\Log\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
@@ -18,6 +22,9 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
  */
 class SessionValidator implements SessionValidatorInterface, LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
     /** @var \Concrete\Core\Application\Application */
     private $app;
 
@@ -29,9 +36,6 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
 
     /** @var \Concrete\Core\Permission\IPService */
     private $ipService;
-    
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
 
     public function __construct(Application $app, Repository $config, Request $request, IPService $ipService, LoggerInterface $logger = null)
     {
@@ -40,6 +44,11 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         $this->request = $request;
         $this->ipService = $ipService;
         $this->logger = $logger;
+    }
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_AUTHENTICATION;
     }
 
     /**
@@ -56,10 +65,32 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         $agent = $session->get('CLIENT_HTTP_USER_AGENT');
         $request_agent = $this->request->server->get('HTTP_USER_AGENT');
 
+        // Validate against the current uOnlineCheck. This will determine if the user has been inactive for too long.
+        if ($this->shouldValidateUserActivity($session)) {
+            $threshold = $this->getUserActivityThreshold();
+            if ((time() - $session->get('uOnlineCheck')) > $threshold) {
+                $this->logger->notice(t('Session Invalidated. Session was inactive for more than %s seconds', $threshold));
+                $invalidate = true;
+            }
+        }
+
+        // Validate against the `valid_since` config item
+        $validSinceTimestamp = (int) $this->config->get(AutomatedLogout::ITEM_SESSION_INVALIDATE);
+
+        if ($validSinceTimestamp) {
+            $validSince = Carbon::createFromTimestamp($validSinceTimestamp, 'utc');
+            $created = Carbon::createFromTimestamp($session->getMetadataBag()->getCreated());
+
+            if ($created->lessThan($validSince)) {
+                $this->logger->notice('Session Invalidated. Session was created before "valid_since" setting.');
+                $invalidate = true;
+            }
+        }
+
         // Validate the request IP
         if ($this->shouldCompareIP() && $ip && $ip != $request_ip) {
             if ($this->logger) {
-                $this->logger->debug('Session Invalidated. Session IP "{session}" did not match provided IP "{client}".',
+                $this->logger->notice('Session Invalidated. Session IP "{session}" did not match provided IP "{client}".',
                     array(
                         'session' => $ip,
                         'client' => $request_ip, ));
@@ -71,7 +102,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         // Validate the request user agent
         if ($this->shouldCompareAgent() && $agent && $agent != $request_agent) {
             if ($this->logger) {
-                $this->logger->debug('Session Invalidated. Session user agent "{session}" did not match provided agent "{client}"',
+                $this->logger->notice('Session Invalidated. Session user agent "{session}" did not match provided agent "{client}"',
                     array(
                         'session' => $agent,
                         'client' => $request_agent, ));
@@ -95,10 +126,22 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         return $invalidate;
     }
 
+    public function shouldValidateUserActivity(SymfonySession $session)
+    {
+        return $this->config->get('concrete.security.session.invalidate_inactive_users.enabled') &&
+            $session->has('uID') && $session->get('uID') > 0 && $session->has('uOnlineCheck') &&
+            $session->get('uOnlineCheck') > 0;
+    }
+
+    public function getUserActivityThreshold()
+    {
+        return $this->config->get('concrete.security.session.invalidate_inactive_users.time');
+    }
+
     public function hasActiveSession()
     {
         $cookie = $this->app['cookie'];
-        return $cookie->has($this->config->get('concrete.session.name'));
+        return $cookie->has($this->config->get('concrete.session.name')) || $cookie->has('ccmAuthUserHash');
     }
 
     /**

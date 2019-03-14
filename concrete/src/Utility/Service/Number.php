@@ -54,6 +54,8 @@ class Number
     /**
      * Checks if a given string is valid representation of a number in the current locale.
      *
+     * @param string $string
+     *
      * @return bool
      *
      * @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
@@ -65,6 +67,8 @@ class Number
 
     /**
      * Checks if a given string is valid representation of an integer in the current locale.
+     *
+     * @param int|float|string $string
      *
      * @return bool
      *
@@ -78,7 +82,7 @@ class Number
     /**
      * Format a number with grouped thousands and localized decimal point/thousands separator.
      *
-     * @param number $number The number being formatted
+     * @param int|float|string $number The number being formatted
      * @param int|null $precision [default: null] The wanted precision; if null or not specified the complete localized number will be returned
      *
      * @return string
@@ -97,7 +101,7 @@ class Number
      * @param bool $trim [default: true] Remove spaces and new lines at the start/end of $string?
      * @param int|null $precision [default: null] The wanted precision; if null or not specified the complete number will be returned
      *
-     * @return null|number
+     * @return int|float|null
      *
      * @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
      */
@@ -118,10 +122,10 @@ class Number
     /**
      * Formats a size (measured in bytes, KB, MB, ...).
      *
-     * @param number $size The size to be formatted, in bytes
+     * @param int|float|string $size The size to be formatted, in bytes
      * @param string $forceUnit = '' Set to 'bytes', 'KB', 'MB', 'GB' or 'TB' if you want to force the unit, leave empty to automatically determine the unit
      *
-     * @return string|mixed If $size is not numeric, the function returns $size (untouched), otherwise it returns the size with the correct usits (GB, MB, ...) and formatted following the locale rules
+     * @return string|mixed If $size is not numeric, the function returns $size (untouched), otherwise it returns the size with the correct unit (GB, MB, ...) and formatted following the locale rules
      *
      * @example formatSize(0) returns '0 bytes'
      * @example formatSize(1) returns '1 byte'
@@ -163,7 +167,7 @@ class Number
     /**
      * Nice and elegant function for converting memory. Thanks to @lightness races in orbit on Stackoverflow.
      *
-     * @param $val
+     * @param string $val
      *
      * @return int|string
      */

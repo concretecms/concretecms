@@ -1,11 +1,15 @@
 <?php
 namespace Concrete\Core\Http;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Http\Middleware\DelegateInterface;
 use Concrete\Core\Http\Middleware\MiddlewareDelegate;
 use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Http\Middleware\StackInterface;
+use Concrete\Core\Http\PSR7\GuzzleFactory;
+use GuzzleHttp\Psr7\ServerRequest;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Http\Client\Adapter\Curl as CurlHttpAdapter;
 use Zend\Http\Client\Adapter\Proxy as SocketHttpAdapter;
 
@@ -67,6 +71,11 @@ class HttpServiceProvider extends ServiceProvider
             $factory = $app->make(Client\Factory::class);
 
             return $factory->createFromConfig($app->make('config'), SocketHttpAdapter::class);
+        });
+
+        $this->app->bind(ServerRequestInterface::class, ServerRequest::class);
+        $this->app->bind(ServerRequest::class, function(Application $app) {
+            return $app->make(GuzzleFactory::class)->createRequest($app->make(Request::class));
         });
     }
 }
