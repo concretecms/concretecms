@@ -98,6 +98,8 @@ class Detector
      * Set the locale associated to the 'site' localization context.
      *
      * @param Page $c The page to be used to determine the site locale (if null we'll use the current page)
+     *
+     * @throws \Exception
      */
     public function setupSiteInterfaceLocalization(Page $c = null)
     {
@@ -150,6 +152,8 @@ class Detector
      * Check if there's some multilingual section.
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function isEnabled()
     {
