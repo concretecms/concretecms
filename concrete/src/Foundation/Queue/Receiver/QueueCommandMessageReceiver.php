@@ -3,12 +3,9 @@
 namespace Concrete\Core\Foundation\Queue\Receiver;
 
 use Bernard\Message;
-use Concrete\Core\Foundation\Command\AsynchronousBusInterface;
 use Concrete\Core\Foundation\Command\Dispatcher;
-use Concrete\Core\Foundation\Command\SynchronousBusInterface;
 use League\Tactician\Bernard\QueueCommand;
-use League\Tactician\Bernard\Receiver;
-use League\Tactician\CommandBus;
+use Concrete\Core\Foundation\Command\SynchronousBus;
 
 /**
  * Receives a Message from a Consumer and handles it. Checks to see if the message is a QueueCommand; if it is,
@@ -33,9 +30,7 @@ final class QueueCommandMessageReceiver
         if ($message instanceof QueueCommand) {
             $command = $message->getCommand();
         }
-
-        $bus = $this->dispatcher->getBusForCommand($command);
-        return $bus->build($this->dispatcher)->handle($command);
+        return $this->dispatcher->dispatch($command, SynchronousBus::getHandle());
     }
 
     /**
