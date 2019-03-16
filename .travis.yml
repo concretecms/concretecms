@@ -74,7 +74,7 @@ matrix:
     - name: Test with PHP 7.1 (lowest composer dependencies)
       php: '7.1'
       before_script:
-        - COMPOSER_PREFER_LOWEST=1 ./.travis/composer-deps.sh
+        - COMPOSER_FLAGS='--prefer-lowest' ./.travis/composer-deps.sh
       script:
         - composer test
 
