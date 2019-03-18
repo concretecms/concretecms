@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0',
     'version_installed' => '8.5.0',
-    'version_db' => '20190301133300', // the key of the latest database migration
+    'version_db' => '20190317123600', // the key of the latest database migration
 
     /*
      * Installation status
@@ -991,18 +991,6 @@ return [
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
-            ],
-        ],
-        'ban' => [
-            'ip' => [
-                // Is the automatic ban system enabled?
-                'enabled' => true,
-                // Maximum number of login attempts before banning the IP address
-                'attempts' => 5,
-                // Time window (in seconds) for past failed login attempts
-                'time' => 300,
-                // Ban duration (in minutes) when <attempts> failed logins occurred in the past <time> seconds
-                'length' => 10,
             ],
         ],
         'misc' => [

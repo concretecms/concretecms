@@ -170,6 +170,11 @@ class Manager extends CoreManager
         return $this->app->make(SiteType::class);
     }
 
+    public function createIpAccessControlCategoryDriver()
+    {
+        return $this->app->make(IpAccessControlCategory::class);
+    }
+
     public function getPackageItems(Package $package)
     {
         $items = array();

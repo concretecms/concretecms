@@ -197,6 +197,7 @@ return [
         'geolocator_library',
         'group',
         'group_set',
+        'ip_access_control_category',
         'job',
         'mail_importer',
         'permission_access_entity_type',
@@ -268,6 +269,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
     ],
 
     /*
