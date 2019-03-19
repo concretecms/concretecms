@@ -183,8 +183,8 @@ class IpAccessControlRange
      */
     public function setIpRange(RangeInterface $value)
     {
-        $this->setIpFrom($value->getStartAddress()->getComparableString());
-        $this->setIpTo($value->getEndAddress()->getComparableString());
+        $this->setIpFrom($value->getComparableStartString());
+        $this->setIpTo($value->getComparableEndString());
         $this->ipRange = $value;
 
         return $this;
