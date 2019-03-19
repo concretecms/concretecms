@@ -301,7 +301,7 @@ class Service
             $cID = $connection->fetchColumn('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', [$data[0], $data[1]]);
         }
         if (!$cID) {
-            $cID = Page::getHomePageID() ?: 1;
+            $cID = (int) Page::getHomePageID();
         }
         $tree->setSiteHomePageID($cID);
         $tree->setLocale($locale);
