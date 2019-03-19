@@ -1,4 +1,6 @@
 <?php
+
+use Concrete\Core\Error\ErrorList\Error\AbstractError;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Localization\Localization;
@@ -361,7 +363,16 @@ switch ($installStep) {
                             <?php
                             foreach ($warnings->getList() as $warning) {
                                 ?>
-                                <div><?= nl2br(h($warning)) ?></div><?php
+                                <div>
+                                    <?php
+                                    if ($warning instanceof AbstractError && $warning->messageContainsHtml()) {
+                                        echo $warning->getMessage();
+                                    } else {
+                                        echo nl2br(h($warning));
+                                    }
+                                    ?>
+                                </div>
+                                <?php
                             }
                             ?>
                             <div class="checkbox">

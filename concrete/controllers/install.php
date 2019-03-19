@@ -359,14 +359,14 @@ class Install extends Controller
                         case PreconditionResult::STATE_PASSED:
                             break;
                         case PreconditionResult::STATE_WARNING:
-                            $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            $warnings->addHtml('<span class="label label-warning">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             break;
                         case PreconditionResult::STATE_FAILED:
                         default:
                             if ($precondition->isOptional()) {
-                                $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                                $warnings->addHtml('<span class="label label-warning">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             } else {
-                                $error->add($precondition->getName() . ': ' . $check->getMessage());
+                                $error->addHtml('<span class="label label-danger">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             }
                             break;
                     }
@@ -490,7 +490,7 @@ class Install extends Controller
                         break;
                     case PreconditionResult::STATE_FAILED:
                     default:
-                        $e->add($precondition->getName() . ': ' . $check->getMessage());
+                        $e->addHtml('<span class="label label-danger">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                         break;
                 }
             }
