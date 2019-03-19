@@ -2,8 +2,8 @@
 
 namespace Concrete\Core\Package\ItemCategory;
 
-use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Entity\Permission\IpAccessControlCategory as Entity;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -56,7 +56,7 @@ class IpAccessControlCategory extends AbstractCategory
      */
     public function removeItem($ipAccessControlCategory)
     {
-        if ($ipAccessControlCategory instanceof Geolocator && $ipAccessControlCategory->getIpAccessControlCategoryID() !== null) {
+        if ($ipAccessControlCategory instanceof Entity && $ipAccessControlCategory->getIpAccessControlCategoryID() !== null) {
             $app = Application::getFacadeApplication();
             $em = $app->make(EntityManagerInterface::class);
             $em->remove($ipAccessControlCategory);

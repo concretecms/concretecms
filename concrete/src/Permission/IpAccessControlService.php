@@ -355,7 +355,7 @@ class IpAccessControlService implements LoggerAwareInterface
      * Delete the recorded events.
 
      *
-     * @param int|null $maxAge the maximum age (in seconds) of the records (specify an empty value to delete all records)
+     * @param int|null $minAge the minimum age (in seconds) of the records (specify an empty value to delete all records)
      *
      * @return int the number of records deleted
      */

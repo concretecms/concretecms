@@ -17,16 +17,32 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class BlacklistClear extends Command
 {
+    /**
+     * Value for the '--automatic-bans' option: all bans.
+     *
+     * @var string
+     */
+    const DELETE_AUTOMATIC_BANS_ALL = 'all';
+
+    /**
+     * Value for the '--automatic-bans' option: expired bans.
+     *
+     * @var string
+     */
+    const DELETE_AUTOMATIC_BANS_EXPIRED = 'expired';
+
     protected function configure()
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $automaticBansAll = static::DELETE_AUTOMATIC_BANS_ALL;
+        $automaticBansExpired = static::DELETE_AUTOMATIC_BANS_EXPIRED;
         $this
             ->setName('c5:blacklist:clear')
             ->setDescription('Clear blacklist-related data')
-            ->addArgument('handle', InputArgument::IS_ARRAY, 'List of IP Access Control Category handles', ['failed_login'])
+            ->addArgument('handle', InputArgument::IS_ARRAY, 'List of IP Access Control Category handles (if not specified: apply to all the categories)')
             ->addEnvOption()
             ->addOption('min-age', 'm', InputOption::VALUE_REQUIRED, 'Clear events older that this number of seconds (0 for all)')
-            ->addOption('automatic-bans', 'b', InputOption::VALUE_REQUIRED, 'Clear automatic bans ("expired" to only delete expired bans, "all" to delete the current bans too)')
+            ->addOption('automatic-bans', 'b', InputOption::VALUE_REQUIRED, "Clear automatic bans (\"{$automaticBansExpired}\" to only delete expired bans, \"{$automaticBansAll}\" to delete the current bans too)")
             ->addOption('list', 'l', InputOption::VALUE_NONE, 'List the available IP Access Control Category handles')
             ->addOption('failed-login-age', 'f', InputOption::VALUE_REQUIRED, '*DEPRECATED* use --min-age')
             ->setHelp(<<<EOT
@@ -67,11 +83,8 @@ EOT
         $automaticBans = $input->getOption('automatic-bans');
         if ($automaticBans !== null) {
             switch ($automaticBans) {
-                case 'expired':
-                    $onlyExpired = true;
-                    break;
-                case 'all':
-                    $onlyExpired = false;
+                case static::DELETE_AUTOMATIC_BANS_ALL:
+                case static::DELETE_AUTOMATIC_BANS_EXPIRED:
                     break;
                 default:
                     throw new UserMessageException('Invalid value of the --automatic-bans option: valid values are "expired" and "all".');
@@ -81,18 +94,23 @@ EOT
             throw new UserMessageException('Please specify at least one of the options --min-age option or --automatic-bans');
         }
         $repo = $app->make(EntityManagerInterface::class)->getRepository(IpAccessControlCategory::class);
-        $categories = [];
-        foreach ($input->getArgument('handle') as $handle) {
-            $category = $repo->findOneBy(['handle' => $handle]);
-            if ($category === null) {
-                throw new UserMessageException(sprintf('Unknown IP Access Control Category handle: "%s"', $handle));
-            }
-            if (!in_array($category, $categories, true)) {
-                $categories[] = $category;
+        $handles = $input->getArgument('handle');
+        if ($handles === []) {
+            $categories = $repo->findAll();
+        } else {
+            $categories = [];
+            foreach ($input->getArgument('handle') as $handle) {
+                $category = $repo->findOneBy(['handle' => $handle]);
+                if ($category === null) {
+                    throw new UserMessageException(sprintf('Unknown IP Access Control Category handle: "%s"', $handle));
+                }
+                if (!in_array($category, $categories, true)) {
+                    $categories[] = $category;
+                }
             }
         }
         if (empty($categories)) {
-            throw new UserMessageException('No IP Access Control Category handle specified');
+            throw new UserMessageException('No IP Access Control Category found');
         }
         foreach ($categories as $category) {
             $output->writeln("# {$category->getName()}");

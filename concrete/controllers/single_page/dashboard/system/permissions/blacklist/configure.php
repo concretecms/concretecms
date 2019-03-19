@@ -133,11 +133,10 @@ class Configure extends Blacklist
 
     /**
      * @param string $name
-     * @param mixed $dbg
      *
      * @return int|null
      */
-    protected function getPostedSeconds($name, $dbg = false)
+    protected function getPostedSeconds($name)
     {
         $post = $this->request->request;
         $unit = $post->get("{$name}Unit");

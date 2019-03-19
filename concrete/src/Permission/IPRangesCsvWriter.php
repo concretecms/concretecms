@@ -71,8 +71,7 @@ class IPRangesCsvWriter
     /**
      * A generator that takes a collection of IPRange/IpAccessControlRange ranges and converts it to CSV rows.
      *
-     * @param \Concrete\Core\Permission\IPRange[]|\Concrete\Core\Entity\Permission\IpAccessControlRange[]|\Generator $list
-     * @param mixed $ranges
+     * @param \Concrete\Core\Permission\IPRange[]|\Concrete\Core\Entity\Permission\IpAccessControlRange[]|\Generator $ranges
      *
      * @return array[]|\Generator
      */
