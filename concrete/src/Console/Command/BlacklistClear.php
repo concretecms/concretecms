@@ -126,13 +126,23 @@ EOT
             }
             if ($automaticBans !== null) {
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_QUIET) {
-                    if ($onlyExpired) {
-                        $output->write('Deleting the expired automatic bans... ');
-                    } else {
-                        $output->write('Deleting all the automatic bans... ');
+                    switch ($automaticBans) {
+                        case static::DELETE_AUTOMATIC_BANS_ALL:
+                            $output->write('Deleting all the automatic bans... ');
+                            break;
+                        case static::DELETE_AUTOMATIC_BANS_EXPIRED:
+                            $output->write('Deleting the expired automatic bans... ');
+                            break;
                     }
                 }
-                $count = $service->deleteAutomaticBlacklist($onlyExpired);
+                switch ($automaticBans) {
+                    case static::DELETE_AUTOMATIC_BANS_ALL:
+                        $count = $service->deleteAutomaticBlacklist(false);
+                        break;
+                    case static::DELETE_AUTOMATIC_BANS_EXPIRED:
+                        $count = $service->deleteAutomaticBlacklist(true);
+                        break;
+                }
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_QUIET) {
                     $output->writeln("{$count} records deleted.");
                 }
