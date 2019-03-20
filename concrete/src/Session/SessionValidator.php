@@ -145,6 +145,19 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     }
 
     /**
+     * Get the current session (if it exists).
+     *
+     * @return \Symfony\Component\HttpFoundation\Session\Session|null
+     */
+    public function getActiveSession()
+    {
+        if ($this->hasActiveSession()) {
+            return $this->app->make('session');
+        }
+        return null;
+    }
+
+    /**
      * @return bool
      */
     private function shouldCompareIP()
