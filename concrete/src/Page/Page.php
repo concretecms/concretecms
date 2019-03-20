@@ -3223,8 +3223,12 @@ EOT
 
             $children = $this->getCollectionChildren();
             if (count($children) > 0) {
+                $myCollectionID = $this->getCollectionID();
                 foreach ($children as $child) {
-                    $child->rescanCollectionPath();
+                    // Let's avoid recursion caused by potentially malformed data
+                    if ($child->getCollectionID() !== $myCollectionID) {
+                        $child->rescanCollectionPath();
+                    }
                 }
             }
         //}
