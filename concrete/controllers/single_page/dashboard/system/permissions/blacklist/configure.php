@@ -71,7 +71,7 @@ class Configure extends Blacklist
             if ($post->get('banDurationUnlimited')) {
                 $category->setBanDuration(null);
             } else {
-                $banDuration = $this->getPostedSeconds('banDuration', true);
+                $banDuration = $this->getPostedSeconds('banDuration');
                 if ($banDuration !== null && $banDuration > 0) {
                     $category->setBanDuration($banDuration);
                 } else {
