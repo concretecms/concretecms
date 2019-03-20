@@ -629,7 +629,7 @@
 
 	ConcreteSitemap.refreshCopyOperations = function() {
 		ccm_triggerProgressiveOperation(
-			CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
+			CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all?process=1',
 			[],
 			ccmi18n_sitemap.copyProgressTitle,
 			function() {
