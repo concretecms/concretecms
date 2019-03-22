@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -39,17 +40,6 @@ class Version20190322093418 extends AbstractMigration
      */
     public function upgradeDatabase()
     {
-        $em = $this->connection->createEntityManager();
-
-        $qb = $em->createQueryBuilder();
-        $query = $qb->select('ak')
-            ->from(AttributeKey::class, 'ak')
-            ->innerJoin('ak.type', 'at')
-            ->where('at.atHandle = :atHandle')
-            ->setParameter('atHandle', 'number')
-            ->getQuery()
-        ;
-
         $checkForClear = $this->getObjectAttributesForClearingCheck();
 
         foreach ($checkForClear as $class => $keys) {
@@ -153,7 +143,9 @@ class Version20190322093418 extends AbstractMigration
 
             $stmt = $qb->select('u.uID')->from('Users', 'u')->execute();
             while ($row = $stmt->fetch()) {
-                $ui = UserInfo::getByID($row['uID']);
+                $ui = $this->app->make(UserInfoRepository::class)
+                    ->getByID($row['uID'])
+                ;
 
                 $this->clearAttributeValues($ui, $attributeKeyHandles);
             }
