@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Attribute\Controller;
 
 use Concrete\Core\Page\Page;
@@ -22,8 +21,6 @@ class NumberTypeTest extends CollectionAttributeTest
 
     /**
      * Tests that clearing the target attribute sets its database value to null.
-     *
-     * @return void
      */
     public function testClearAttribute()
     {
@@ -39,8 +36,6 @@ class NumberTypeTest extends CollectionAttributeTest
     /**
      * Tests that the number attribute's database column's default value matches
      * with the default value set to it after clearing the attribute.
-     *
-     * @return void
      */
     public function testDefaultValueConsistencyWithDatabase()
     {
@@ -87,7 +82,7 @@ class NumberTypeTest extends CollectionAttributeTest
     public function attributeHandles()
     {
         return [
-            ['test_number']
+            ['test_number'],
         ];
     }
 
@@ -100,7 +95,6 @@ class NumberTypeTest extends CollectionAttributeTest
      * value.
      *
      * @param  Page   $object The page object for which to insert
-     * @return void
      */
     protected function insertSearchIndexDatabaseDefaults(Page $object)
     {
@@ -115,13 +109,14 @@ class NumberTypeTest extends CollectionAttributeTest
      * from the search index table.
      *
      * @param  Page   $object The page object for which to get the value
+     *
      * @return mixed          The value from the database
      */
     protected function getSearchIndexAttributeDatabaseValue(Page $object)
     {
         $selectQuery =
-            "SELECT ak_test_number FROM CollectionSearchIndexAttributes " .
-            "WHERE cID =?"
+            'SELECT ak_test_number FROM CollectionSearchIndexAttributes ' .
+            'WHERE cID =?'
         ;
 
         // Get the default value for the attribute in the search index table

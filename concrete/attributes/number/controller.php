@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Number;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;

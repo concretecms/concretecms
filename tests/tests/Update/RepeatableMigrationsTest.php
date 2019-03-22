@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Update;
 
 use Concrete\Core\Updater\Migrations\Configuration;

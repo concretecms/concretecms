@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
@@ -125,12 +124,11 @@ class Version20190322093418 extends AbstractMigration
      * assigned for the number attribute, it will be cleared to set the database
      * column's value to the attribute type's default.
      *
-     * @param  string $class The name of the class for which to check through
-     *                       the list of entries.
+     * @param  string $class the name of the class for which to check through
+     *                       the list of entries
      * @param  string[] $attributeKeyHandles An array of all number attribute
      *                                       key handles that should be checked
      *                                       for clearing
-     * @return void
      */
     private function checkObjectForAttributeClearing(
         $class,
@@ -181,11 +179,10 @@ class Version20190322093418 extends AbstractMigration
      * Clears the attribute values for the given object and each of the
      * attribute keys passed in the second parameter.
      *
-     * @param AttributeObjectInterface $object The target object to clear the
-     *                                         attributes for.
+     * @param AttributeObjectInterface $object the target object to clear the
+     *                                         attributes for
      * @param string[] $attributeKeyHandles An array of attribute key handles
      *                                      that need to be cleared
-     * @return void
      */
     private function clearAttributeValues(
         AttributeObjectInterface $object,
