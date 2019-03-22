@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Tests\Attribute\Controller;
+namespace Concrete\Tests\Attribute\Type;
 
 use Concrete\Core\Page\Page;
 use Concrete\Tests\Attribute\CollectionAttributeTest;
