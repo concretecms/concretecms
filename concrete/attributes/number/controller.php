@@ -12,7 +12,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 {
     protected $searchIndexFieldDefinition = [
         'type' => 'decimal',
-        'options' => ['precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false],
+        'options' => ['precision' => 14, 'scale' => 4, 'default' => null, 'notnull' => false],
     ];
 
     public function getIconFormatter()
