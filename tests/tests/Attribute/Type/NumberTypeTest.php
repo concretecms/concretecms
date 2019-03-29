@@ -105,7 +105,7 @@ class NumberTypeTest extends CollectionAttributeTest
     }
 
     /**
-     * Gets the database default value for the given object's target attribute
+     * Gets the current database value for the given object's target attribute
      * from the search index table.
      *
      * @param  Page   $object The page object for which to get the value
@@ -119,7 +119,6 @@ class NumberTypeTest extends CollectionAttributeTest
             'WHERE cID =?'
         ;
 
-        // Get the current value for the attribute in the search index table.
         return $this->connection()->query(
             $selectQuery,
             [$object->getCollectionID()]
