@@ -119,8 +119,7 @@ class NumberTypeTest extends CollectionAttributeTest
             'WHERE cID =?'
         ;
 
-        // Get the default value for the attribute in the search index table
-        // assigned by the database column's default settings.
+        // Get the current value for the attribute in the search index table.
         return $this->connection()->query(
             $selectQuery,
             [$object->getCollectionID()]
