@@ -6,9 +6,6 @@
 Welcome to the official repository for concrete5 development! concrete5 is an open source CMS built by people from 
 around the world. Want to get involved? Check out our [contributor guide](https://github.com/concrete5/concrete5/blob/develop/CONTRIBUTING.md) for more info.
 
-## Activity
-[![Throughput Graph](https://graphs.waffle.io/concrete5/concrete5/throughput.svg)](https://waffle.io/concrete5/concrete5/metrics)
-
 ## Documentation
 
 If you're looking for concrete5 documentation, you'll want to navigate over to [documentation.concrete5.org](https://documentation.concrete5.org). 
