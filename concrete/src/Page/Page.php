@@ -57,6 +57,7 @@ use Environment;
 use Group;
 use Session;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents including blocks, page metadata, page permissions.
@@ -3578,8 +3579,9 @@ EOT
      **/
     public static function addHomePage(TreeInterface $siteTree = null)
     {
+        $app = Application::getFacadeApplication();
         // creates the home page of the site
-        $db = Database::connection();
+        $db = $app->make(Connection::class);
 
         $cParentID = 0;
         $uID = HOME_UID;
@@ -3601,6 +3603,11 @@ EOT
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $r->execute($v);
+        if (!$siteTree->getSiteHomePageID()) {
+            $siteTree->setSiteHomePageID($cID);
+            $em = $app->make(EntityManagerInterface::class);
+            $em->flush($siteTree);
+        }
         $pc = self::getByID($cID, 'RECENT');
 
         return $pc;
