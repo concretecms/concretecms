@@ -104,7 +104,7 @@
                     }
                 });
             });
-            $('input[name=defaultTextColor]').option('change', function() {
+            $('input[name=defaultTextColor]').on('change', function() {
                 var color = $(this).val();
                 $('table[data-table=category-colors] input[type=checkbox]').each(function() {
                     if (!$(this).is(':checked')) {
