@@ -92,9 +92,9 @@ class Activate extends BackendInterfaceController
 
                     if (!in_array($function, $workflowRequestActions)) {
                         if ('activate' == $function) {
-                            $ui->triggerActivate('activate', $u);
+                            $ui->triggerActivate('activate', $u->getUserID());
                         } else {
-                            $ui->triggerDeactivate($u);
+                            $ui->triggerDeactivate($u->getUserID());
                         }
                         ++$count;
                     }
