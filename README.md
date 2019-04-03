@@ -1,13 +1,9 @@
 [![TravisCI Build Status](https://travis-ci.org/concrete5/concrete5.svg?branch=develop)](https://travis-ci.org/concrete5/concrete5)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/concrete5/concrete5?branch=develop&svg=true)](https://ci.appveyor.com/project/concrete5/concrete5)
-[![Issues Ready To Start](https://badge.waffle.io/concrete5/concrete5.png?label=help%20wanted&title=Ready)](https://github.com/concrete5/concrete5/labels/help%20wanted)
 [![Join Slack](https://slack.concrete5.org/badge.svg)](https://slack.concrete5.org/)
 
 Welcome to the official repository for concrete5 development! concrete5 is an open source CMS built by people from 
 around the world. Want to get involved? Check out our [contributor guide](https://github.com/concrete5/concrete5/blob/develop/CONTRIBUTING.md) for more info.
-
-## Activity
-[![Throughput Graph](https://graphs.waffle.io/concrete5/concrete5/throughput.svg)](https://waffle.io/concrete5/concrete5/metrics)
 
 ## Documentation
 
