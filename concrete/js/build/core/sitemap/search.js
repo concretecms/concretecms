@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, ccmi18n, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH, Concrete, ConcreteAjaxSearch, ConcreteAlert, ConcreteEvent */
+/* global _, ccmi18n, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, Concrete, ConcreteAjaxSearch, ConcreteAlert, ConcreteEvent */
 
 ;(function(global, $) {
     'use strict';
@@ -109,7 +109,7 @@
         $.fn.dialog.open({
             width: w,
             height: '100%',
-            href: CCM_TOOLS_PATH + '/sitemap_search_selector',
+            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/sitemap_selector',
             modal: true,
             title: ccmi18n_sitemap.pageLocationTitle,
             onClose: function() {
@@ -188,7 +188,7 @@
                                     '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="360" dialog-height="250" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deletePage + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/delete_from_sitemap?cID=<%=item.cID%>">' + ccmi18n_sitemap.deletePage + '</a></li>',
                                 '<% } %>',
                                 '<li class="divider" data-sitemap-mode="explore"></li>',
-                                '<li data-sitemap-mode="explore"><a class="dialog-launch" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" href="' + CCM_TOOLS_PATH + '/sitemap_search_selector?sitemap_select_mode=move_copy_delete&cID=<%=item.cID%>">' + ccmi18n_sitemap.moveCopyPage + '</a></li>',
+                                '<li data-sitemap-mode="explore"><a class="dialog-launch" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/sitemap_selector?sitemap_select_mode=move_copy_delete&cID=<%=item.cID%>">' + ccmi18n_sitemap.moveCopyPage + '</a></li>',
                                 '<li data-sitemap-mode="explore"><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore?cNodeID=<%=item.cID%>&task=send_to_top">' + ccmi18n_sitemap.sendToTop + '</a></li>',
                                 '<li data-sitemap-mode="explore"><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore?cNodeID=<%=item.cID%>&task=send_to_bottom">' + ccmi18n_sitemap.sendToBottom + '</a></li>',
                                 '<% if (item.numSubpages > 0) { %>',

@@ -10,15 +10,18 @@
     $action = $view->action('add_link');
     $tokenString = 'add_link';
     $buttonText = t('Add');
-    if (is_object($link)) {
+    if (isset($link) && is_object($link)) {
         $url = $link->getURL();
         $ssHandle = $link->getServiceHandle();
         $action = $view->action('edit_link', $link->getID());
         $tokenString = 'edit_link';
         $buttonText = t('Save');
-    } ?>
+    } else {
+        $link = null;
+    }
+    ?>
 
-    <?php if (is_object($link)) {
+    <?php if ($link !== null) {
         ?>
         <div class="ccm-dashboard-header-buttons">
             <button data-dialog="delete-link" class="btn btn-danger"><?php echo t("Delete Link"); ?></button>

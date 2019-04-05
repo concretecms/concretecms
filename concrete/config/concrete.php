@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.6.0a1',
     'version_installed' => '8.6.0a1',
-    'version_db' => '20190309000000', // the key of the latest database migration
+    'version_db' => '20190301133300', // the key of the latest database migration
 
     /*
      * Installation status
@@ -1138,6 +1138,14 @@ return [
         'file_lock' => [
             'priority' => 50,
             'class' => Concrete\Core\System\Mutex\FileLockMutex::class,
+        ],
+    ],
+
+    'social' => [
+        'additional_services' => [
+            // Add here a list of arrays like this:
+            // ['service_handle', 'Service Name', 'icon']
+            // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
         ],
     ],
 ];

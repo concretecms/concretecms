@@ -9,7 +9,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
-use Exception;
+use Exception as BaseException;
 use Illuminate\Filesystem\Filesystem;
 use Throwable;
 
@@ -98,7 +98,7 @@ class Manager
                 $error = null;
                 try {
                     $updated = $this->convertTable($connection, $tableName, $characterSet, $collation);
-                } catch (Exception $x) {
+                } catch (BaseException $x) {
                     $error = $x;
                 } catch (Throwable $x) {
                     $error = $x;

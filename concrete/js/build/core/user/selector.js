@@ -27,7 +27,13 @@
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/user/search',
                 width: '90%',
                 modal: true,
-                height: '70%'
+                height: '70%',
+                onOpen: function() {
+                    ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
+                    ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function (e, data) {
+                        my.loadUser(data.uID);
+                    });
+                }
             });
         });
 
@@ -35,12 +41,7 @@
             my.loadUser(my.options.uID);
         }
 
-        ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
         ConcreteEvent.unsubscribe('UserSearchDialogAfterSelectUser.core');
-        ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {
-            my.loadUser(data.uID);
-        });
-
         ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser.core', function(e) {
             jQuery.fn.dialog.closeTop();
         });

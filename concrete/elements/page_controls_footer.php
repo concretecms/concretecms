@@ -499,7 +499,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $date = $dateHelper->formatDate($publishDate);
                             $time = $dateHelper->formatTime($publishDate);
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
-                            $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">' . t('Publish Now') . '</a>';
+                            if ($canApprovePageVersions && !$c->isCheckedOut()) {
+                                $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">' . t('Publish Now') . '</a>';
+                            } else {
+                                $button = '';
+                            }
                             echo $cih->notify(array(
                                 'title' => t('Publish Pending.'),
                                 'text' => $message,

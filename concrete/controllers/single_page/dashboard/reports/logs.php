@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Core\Logging\Channels;
@@ -18,6 +17,7 @@ class Logs extends DashboardPageController
     {
         $config = $this->app->make('config');
         $enabled = $config->get('concrete.log.enable_dashboard_report');
+
         return $enabled;
     }
 
@@ -41,7 +41,6 @@ class Logs extends DashboardPageController
 
     public function view($page = 0)
     {
-
         $this->set('isReportEnabled', $this->isReportEnabled());
 
         $this->requireAsset('selectize');
@@ -57,10 +56,17 @@ class Logs extends DashboardPageController
         }
 
         $r = Request::getInstance();
+
+        $wdt = $this->app->make('helper/form/date_time');
+        $date_from = $wdt->translate('date_from', $r->query->all());
+        $date_to = $wdt->translate('date_to', $r->query->all());
+
         $query = http_build_query([
             'channel' => $r->query->get('channel'),
             'keywords' => $r->query->get('keywords'),
             'level' => $r->query->get('level'),
+            'date_from' => $date_from,
+            'date_to' => $date_to,
         ]);
 
         $list = $this->getFilteredList();
@@ -72,13 +78,16 @@ class Logs extends DashboardPageController
         $this->set('levels', $levels);
         $this->set('channels', $channels);
 
+        $this->set('wdt', $wdt);
+        $this->set('date_from', $date_from);
+        $this->set('date_to', $date_to);
+
         $this->set('query', $query);
     }
 
     public function csv($token = '')
     {
         if ($this->isReportEnabled()) {
-
             $valt = $this->app->make('helper/validation/token');
             if (!$valt->validate('', $token)) {
                 $this->redirect('/dashboard/reports/logs');
@@ -157,13 +166,25 @@ class Logs extends DashboardPageController
             $list->filterByKeywords($r->query->get('keywords'));
         }
 
+        $wdt = $this->app->make('helper/form/date_time');
+        $date_from = $wdt->translate('date_from', $r->query->all());
+        $date_to = $wdt->translate('date_to', $r->query->all());
+
+        $date = $this->app->make('date');
+
+        if ($date_from != '' && $date->toDB($date_from) !== false) {
+            $list->filterByTime(strtotime($date_from), '>=');
+        }
+        if ($date_to != '' && $date->toDB($date_to) !== false) {
+            $list->filterByTime(strtotime($date_to), '<=');
+        }
+
         return $list;
     }
 
     public function deleteLog($logID, $token = '')
     {
         if ($this->isReportEnabled()) {
-
             $valt = $this->app->make('helper/validation/token');
             if ($valt->validate('', $token) && !empty($logID)) {
                 $log = LogEntry::getByID($logID);
