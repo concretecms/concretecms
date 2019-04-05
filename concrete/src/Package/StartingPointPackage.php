@@ -688,7 +688,7 @@ class StartingPointPackage extends BasePackage
             ]
         );
 
-        $home = Page::getByID(1, 'RECENT');
+        $home = Page::getByID(Page::getHomePageID(), 'RECENT');
         $home->assignPermissions($g1, ['view_page']);
         $home->assignPermissions(
             $g3,

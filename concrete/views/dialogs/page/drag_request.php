@@ -36,7 +36,12 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
     if ($singleOriginalPage === null) {
         echo t('What do you wish to do?');
     } else {
-        echo t('You dragged "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+        if ($dragRequestData->getDragMode() === 'none') {
+            echo t('You selected to move/copy "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+        } else {
+            echo t('You dragged "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+        }
+
     }
     ?>
 </div>

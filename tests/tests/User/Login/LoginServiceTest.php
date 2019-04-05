@@ -17,6 +17,8 @@ use Concrete\Core\User\Login\LoginAttemptService;
 use Concrete\Core\User\Login\LoginService;
 use Concrete\Tests\User\Login\MockUser;
 use Doctrine\ORM\EntityManagerInterface;
+use IPLib\Address\AddressInterface;
+use IPLib\Address\IPv4;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit_Framework_TestCase;
@@ -36,6 +38,7 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase
         $config = M::mock(Repository::class);
         $attemptService = M::mock(LoginAttemptService::class);
         $ipService = M::mock(IPService::class);
+        $mockIpObject = M::mock(IPv4::class);
         $entityManager = M::mock(EntityManagerInterface::class);
         $entityManager->shouldIgnoreMissing($entityManager);
 
@@ -46,6 +49,9 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase
 
         $attempt = M::mock(LoginAttempt::class);
 
+        $mockIpObject->shouldReceive('__toString')->andReturn('127.0.0.1');
+
+        $ipService->shouldReceive('getRequestIPAddress')->andReturn($mockIpObject);
         $service = new LoginService($config, $attemptService, $ipService, $entityManager, $request);
         $service->setLogger($logger);
         $service->setApplication($app);
@@ -68,10 +74,17 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase
         $attempt->shouldReceive('getMessage')->andReturn('Foo did login!');
         $attempt->shouldReceive('getContext')->andReturn([1,2,3]);
 
+        $mockContext = [
+            1,
+            2,
+            3,
+            'ip_address' => '127.0.0.1'
+        ];
+
         // Set the real expectation we care about
         $logger->shouldReceive('info')->once()->withArgs([
             'Foo did login!',
-            [1,2,3]
+            $mockContext,
         ]);
 
         // Run the test

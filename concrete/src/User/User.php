@@ -239,7 +239,12 @@ class User extends ConcreteObject
                         $this->uDefaultLanguage = $ux->getUserDefaultLanguage();
                     }
                     $this->uTimezone = $ux->getUserTimezone();
+                } elseif ($ux === -1) {
+                    $this->uID = -1;
+                    $this->uName = t('Guest');
+
                 }
+                $this->uGroups = $this->_getUserGroups(true);
             } else if ($validator->hasActiveSession() || $this->uID) {
                 if ($session->has('uID')) {
                     $this->uID = $session->get('uID');
@@ -429,6 +434,11 @@ class User extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $events = $app['director'];
+        $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_AUTHENTICATION);
+        $logger->info(t('Logout from user {user} (ID {id}) requested'), [
+            'user' => $this->getUserName(),
+            'id' => $this->getUserID(),
+        ]);
 
         // First, we check to see if we have any collection in edit mode
         $this->unloadCollectionEdit();
