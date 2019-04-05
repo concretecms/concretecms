@@ -13,21 +13,18 @@ class Version20190405171430 extends AbstractMigration implements RepeatableMigra
 
     public function upgradeDatabase()
     {
-        $sp = Page::getByPath('/dashboard/system/registration/password_requirements');
-        if (is_object($sp) && !$sp->isError()) {
-            $this->createSinglePage('/dashboard/system/registration/password_requirements', 'Password Requirements', [
-                'meta_keywords' => implode(', ', [
-                    'password',
-                    'requirements',
-                    'code',
-                    'key',
-                    'login',
-                    'registration',
-                    'security',
-                    'nist',
-                ])
-            ]);
-        }
+        $this->createSinglePage('/dashboard/system/registration/password_requirements', 'Password Requirements', [
+            'meta_keywords' => implode(', ', [
+                'password',
+                'requirements',
+                'code',
+                'key',
+                'login',
+                'registration',
+                'security',
+                'nist',
+            ])
+        ]);
 
         $this->refreshEntities();
     }
