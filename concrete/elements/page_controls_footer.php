@@ -495,7 +495,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         }
                     } else {
                         $publishDate = $vo->getPublishDate();
-                        if ($publishDate) {
+                        if ($publishDate && $dateHelper->toDateTime() < $dateHelper->toDateTime($publishDate)) {
                             $date = $dateHelper->formatDate($publishDate);
                             $time = $dateHelper->formatTime($publishDate);
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
