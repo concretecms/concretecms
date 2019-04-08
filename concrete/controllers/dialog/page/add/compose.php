@@ -33,17 +33,20 @@ class Compose extends Controller
         }
 
         $canApprove = false;
-        if ($parent->overrideTemplatePermissions()){
-            $parentPermission= new Permissions($parent);
-            if ($parentPermission->canApprovePageVersions()) {
-                $canApprove = true;
+        if (!$e->has()) {
+            if ($parent->overrideTemplatePermissions()) {
+                $parent = Page::getByID($cParentID);
+                $parentPermission = new Permissions($parent);
+                if ($parentPermission->canApprovePageVersions()) {
+                    $canApprove = true;
+                }
+            } else {
+                if ($ptp->canApprovePageVersions()) {
+                    $canApprove = true;
+                }
             }
-        } else {
-            if ($ptp->canApprovePageVersions()) {
-                $canApprove = true;
-            }
+            $this->set('canApprove', $canApprove);
         }
-        $this->set('canApprove', $canApprove);
 
         if (!$e->has()) {
             $this->view = new DialogView('/dialogs/page/add/compose');
