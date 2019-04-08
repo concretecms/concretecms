@@ -425,7 +425,7 @@ class Form
             $selectedValue = (string) $valueOrMiscFields;
         }
         if ($selectedValue !== '') {
-            $miscFields['ccm-passed-value'] = $selectedValue;
+            $miscFields['ccm-passed-value'] = h($selectedValue);
         }
         $requestValue = $this->getRequestValue($key);
         if (is_array($requestValue) && isset($requestValue[0]) && is_string($requestValue[0])) {
