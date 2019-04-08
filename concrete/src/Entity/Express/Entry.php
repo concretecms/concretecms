@@ -135,7 +135,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
-            $ak = $this->getEntity()->getAttributeKeyCategory()->getByHandle($ak);
+            $ak = $this->getEntity()->getAttributeKeyCategory()->getAttributeKeyByHandle($ak);
         }
         $value = false;
         if (is_object($ak)) {
