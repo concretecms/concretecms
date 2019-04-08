@@ -10,11 +10,13 @@ $composer = Core::make("helper/concrete/composer");
         <div class="dialog-buttons">
             <button type="button" data-dialog-action="cancel" class="btn btn-default pull-left"><?=t('Cancel')?></button>
             <div class="btn-group pull-right">
-                <button type="button" data-dialog-action="submit" value="preview" data-page-type-composer-form-btn="preview" class="btn btn-success"><?=t('Edit Mode')?></button>
-                <button style="margin-right: 0;" type="button" data-composer-dialog-action="publish" value="publish" class="btn btn-primary"><?=t('Publish Page')?></button>
-                <button style="padding-right: 5px; padding-left: 5px; width: 35px;" data-page-type-composer-form-btn="schedule" type="button" class="btn btn-primary">
-                    <i class="fa fa-clock-o"></i>
-                </button>
+                <button type="button" style="margin-right: 5px;" data-dialog-action="submit" value="preview" data-page-type-composer-form-btn="preview" class="btn btn-success"><?=t('Edit Mode')?></button>
+                <?php if ($canApprove) {?>
+                    <button style="margin-right: 0;" type="button" data-composer-dialog-action="publish" value="publish" class="btn btn-primary"><?=t('Publish Page')?></button>
+                    <button style="padding-right: 5px; padding-left: 5px; width: 35px;" data-page-type-composer-form-btn="schedule" type="button" class="btn btn-primary">
+                        <i class="fa fa-clock-o"></i>
+                    </button>
+                <?php } ?>
             </div>
         </div>
     </form>

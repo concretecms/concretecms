@@ -32,6 +32,19 @@ class Compose extends Controller
             $e->add(t('Invalid parent page.'));
         }
 
+        $canApprove = false;
+        if ($parent->overrideTemplatePermissions()){
+            $parentPermission= new Permissions($parent);
+            if ($parentPermission->canApprovePageVersions()) {
+                $canApprove = true;
+            }
+        } else {
+            if ($ptp->canApprovePageVersions()) {
+                $canApprove = true;
+            }
+        }
+        $this->set('canApprove', $canApprove);
+
         if (!$e->has()) {
             $this->view = new DialogView('/dialogs/page/add/compose');
             $this->set('parent', $parent);
