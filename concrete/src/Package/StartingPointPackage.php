@@ -7,7 +7,6 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
-use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Localization\Localization;
@@ -17,7 +16,6 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
-use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
@@ -30,9 +28,6 @@ use Doctrine\ORM\Tools\Setup;
 use Exception;
 use Group;
 use GroupTree;
-use Hautelook\Phpass\PasswordHash;
-use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use Package as BasePackage;
 use Page;
 use PermissionKey;
 use Throwable;
@@ -42,7 +37,7 @@ use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Application\Application;
 
-class StartingPointPackage extends BasePackage
+class StartingPointPackage extends Package
 {
     protected $DIR_PACKAGES_CORE = DIR_STARTING_POINT_PACKAGES_CORE;
     protected $DIR_PACKAGES = DIR_STARTING_POINT_PACKAGES;

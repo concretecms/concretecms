@@ -10,6 +10,7 @@ use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\PreconditionService;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
+use Concrete\Core\Package\StartingPointPackage;
 use Concrete\Core\Support\Facade\Application;
 use Database;
 use DateTimeZone;
@@ -513,8 +514,10 @@ EOT
                 'starting-point',
                 'elemental_blank',
                 function (Question $question, InputInterface $input) {
-                    return new ChoiceQuestion($question->getQuestion(), ['elemental_blank', 'elemental_full'],
-                        $question->getDefault());
+                    $available = array_map(function($item) { return $item->getPackageHandle(); }, StartingPointPackage::getAvailableList());
+                    $available = array_unique(array_merge($available, ['elemental_blank', 'elemental_full']));
+
+                    return new ChoiceQuestion($question->getQuestion(), $available, $question->getDefault());
                 },
             ],
             'admin-email',
@@ -616,10 +619,12 @@ EOT
                 $requiredPreconditions[] = $precondition;
             }
         }
-        foreach ([
+
+        $preconditionList = [
             'Checking required preconditions:' => $requiredPreconditions,
             'Checking optional preconditions:' => $optionalPreconditions,
-        ] as $text => $preconditions) {
+        ];
+        foreach ($preconditionList as $text => $preconditions) {
             if (empty($preconditions)) {
                 continue;
             }
@@ -765,10 +770,11 @@ EOT
                 $requiredPreconditions[] = $precondition;
             }
         }
-        foreach ([
+        $preconditionList = [
             'Checking required configuration preconditions:' => $requiredPreconditions,
             'Checking optional configuration preconditions:' => $optionalPreconditions,
-        ] as $text => $preconditions) {
+        ];
+        foreach ($preconditionList as $text => $preconditions) {
             if (empty($preconditions)) {
                 continue;
             }
