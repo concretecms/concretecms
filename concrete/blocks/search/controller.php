@@ -118,6 +118,13 @@ class Controller extends BlockController
     protected $hColor = '#EFE795';
 
     /**
+     * Whether or not to search all sites
+     *
+     * @var bool
+     */
+    protected $search_all;
+
+    /**
      * {@inheritdoc}
      */
     public function getBlockTypeName()
@@ -300,6 +307,7 @@ class Controller extends BlockController
     public function edit()
     {
         $this->set('pageSelector', $this->app->make('helper/form/page_selector'));
+        $this->set('searchAll', $this->search_all);
     }
 
     /**
@@ -323,6 +331,7 @@ class Controller extends BlockController
             'baseSearchPath' => '',
             'postTo_cID' => null,
             'resultsURL' => '',
+            'search_all' => 0,
         ];
         switch ($data['baseSearchPath']) {
             case 'THIS':
@@ -340,11 +349,14 @@ class Controller extends BlockController
                     }
                 }
                 break;
+            case 'ALL':
+                $args['search_all'] = true;
+                break;
         }
         if ($args['baseSearchPath'] === '/') {
             $args['baseSearchPath'] = '';
         }
-        
+
         switch ($data['resultsPageKind']) {
             case 'CID':
                 if ($data['postTo_cID']) {
@@ -372,6 +384,12 @@ class Controller extends BlockController
         $query = (string) $this->request->request('query');
 
         $ipl = new PageList();
+
+        //If Search All is enabled set search site tree to all.
+        if ((int) $this->search_all === 1) {
+            $ipl->setSiteTreeToAll();
+        }
+
         $aksearch = false;
         $akIDs = $this->request->request('akID');
         if (is_array($akIDs)) {

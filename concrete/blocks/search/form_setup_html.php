@@ -11,6 +11,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Block\View\BlockView $view */
 /* @var Concrete\Core\Form\Service\Widget\PageSelector $pageSelector */
 
+$sites = Site::getList();
+
 if (!$controller->indexExists()) {
     ?>
     <div class="ccm-error"><?= t('The search index does not appear to exist. This block will not function until the reindex job has been run at least once in the dashboard.') ?></div>
@@ -48,9 +50,17 @@ if (!$controller->indexExists()) {
         <div class="radio">
             <label>
                 <?= $form->radio('baseSearchPath', 'EVERYWHERE', $baseSearchPath === 'EVERYWHERE') ?>
-                <?= t('Everywhere') ?>
+                <?= t('In the Current Site') ?>
             </label>
         </div>
+        <?php if (count($sites) > 1) : ?>
+            <div class="radio">
+                <label>
+                    <?= $form->radio('baseSearchPath', 'ALL', (int) $searchAll === 1) ?>
+                    <?= t('In all Sites') ?>
+                </label>
+            </div>
+        <?php endif; ?>
         <div class="radio">
             <label>
                 <?= $form->radio('baseSearchPath', 'THIS', $baseSearchPath === 'THIS') ?>
