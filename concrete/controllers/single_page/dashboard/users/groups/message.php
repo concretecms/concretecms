@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Groups;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\User;
@@ -70,7 +71,6 @@ class Message extends DashboardPageController
         }
 
         $this->flash('success', t('Message Successfully sent.'));
-        $this->view();
-        return null;
+        return Redirect::to('/dashboard/users/groups/message');
     }
 }
