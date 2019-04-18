@@ -80,7 +80,7 @@ var ConcretePageComposerDetail = {
             newElements.bind('change', function() {
                 my.saver.requestSave();
             });
-    
+
             newElements.bind('keyup', function() {
                 my.saver.requestSave(true);
             });
@@ -167,8 +167,11 @@ var ConcretePageComposerDetail = {
         });
 
         ConcreteEvent.subscribe('PanelComposerPublish',function(e, data) {
-
-            my.disableAutosave();
+            // Disable the autosaver completely so that it is not posting a
+            // request after the publish event has been called. This could
+            // otherwise lead to an extra version being created for the page
+            // after the publish action has been already called.
+            my.saver.disable();
             var submitSuccess = false;
             $.concreteAjax({
                 data: data.data,
