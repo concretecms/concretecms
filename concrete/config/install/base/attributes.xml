@@ -6,6 +6,7 @@
         <category handle="file" allow-sets="1" package=""/>
         <category handle="site" allow-sets="1" package=""/>
         <category handle="event" allow-sets="1" package=""/>
+        <category handle="site_type" allow-sets="1" package=""/>
     </attributecategories>
     <attributetypes>
         <attributetype handle="text" name="Text" package="">
@@ -158,6 +159,13 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="site" name="Site" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
             </categories>
         </attributetype>
     </attributetypes>

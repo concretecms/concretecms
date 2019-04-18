@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Url\Resolver;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Url;
+use Concrete\Core\Entity\Site\SkeletonTree;
 
 class PageUrlResolver implements UrlResolverInterface
 {
@@ -11,6 +13,11 @@ class PageUrlResolver implements UrlResolverInterface
     public function __construct(PathUrlResolver $path_url_resolver)
     {
         $this->pathUrlResolver = $path_url_resolver;
+    }
+
+    protected function resolveWithPageId(Page $page, array $arguments)
+    {
+        return $this->resolveWithResolver('/?cID=' . $page->getCollectionID(), $arguments);
     }
 
     public function resolve(array $arguments, $resolved = null)
@@ -24,10 +31,15 @@ class PageUrlResolver implements UrlResolverInterface
             $page = head($arguments);
         }
 
-        if (isset($page) && $page instanceof \Concrete\Core\Page\Page) {
+        if (isset($page) && $page instanceof Page) {
 
             if ($externalUrl = $page->getCollectionPointerExternalLink()) {
                 return $externalUrl;
+            }
+
+            $tree = $page->getSiteTreeObject();
+            if (is_object($tree) && $tree instanceof SkeletonTree) {
+                return $this->resolveWithPageId($page, $arguments);
             }
 
             if ($path = $page->getCollectionPath()) {
@@ -40,7 +52,7 @@ class PageUrlResolver implements UrlResolverInterface
             }
 
             // otherwise, it's a page object with no path yet, which happens when pages aren't yet approved
-            return $this->resolveWithResolver('/?cID=' . $page->getCollectionID(), $arguments);
+            return $this->resolveWithPageId($page, $arguments);
         }
 
         return null;

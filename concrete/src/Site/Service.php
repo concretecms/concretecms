@@ -3,6 +3,7 @@ namespace Concrete\Core\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Key\SiteKey;
+use Concrete\Core\Entity\Site\Domain;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
@@ -13,7 +14,8 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Punic\Comparer;
-
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Site\User\Group\Service as GroupService;
 class Service
 {
     /**
@@ -42,6 +44,11 @@ class Service
     protected $cache;
 
     /**
+     * @var GroupService
+     */
+    protected $groupService;
+
+    /**
      * @param EntityManagerInterface $entityManager
      */
     public function setEntityManager($entityManager)
@@ -50,18 +57,27 @@ class Service
     }
 
     /**
+     * Service constructor.
      * @param EntityManagerInterface $entityManager
      * @param Application $app
-     * @param \Illuminate\Config\Repository $configRepository
+     * @param Repository $configRepository
      * @param ResolverFactory $resolverFactory
+     * @param GroupService $groupService
      */
-    public function __construct(EntityManagerInterface $entityManager, Application $app, \Illuminate\Config\Repository $configRepository, ResolverFactory $resolverFactory)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Application $app,
+        Repository $configRepository,
+        ResolverFactory $resolverFactory,
+        GroupService $groupService
+    )
     {
         $this->app = $app;
         $this->entityManager = $entityManager;
         $this->config = $configRepository;
         $this->cache = $this->app->make('cache/request');
         $this->resolverFactory = $resolverFactory;
+        $this->groupService = $groupService;
     }
 
     /**
@@ -348,4 +364,22 @@ class Service
     {
         return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();
     }
+
+    public function getSiteDomains(Site $site)
+    {
+        $domains = $this->entityManager->getRepository(Domain::class)
+            ->findBySite($site);
+        return $domains;
+    }
+
+    public function getSiteByDomain($domain)
+    {
+        $domain = $this->entityManager->getRepository(Domain::class)
+            ->findOneByDomain($domain);
+        if ($domain) {
+            $factory = new Factory($this->config);
+            return $factory->createEntity($domain->getSite());
+        }
+    }
+
 }

@@ -488,6 +488,13 @@
                 <category handle="conversation_message" />
             </categories>
         </permissionaccessentitytype>
+        <permissionaccessentitytype handle="site_group" name="Site Group" package="">
+            <categories>
+                <category handle="page" />
+                <category handle="page_type" />
+                <category handle="basic_workflow" package=""/>
+            </categories>
+        </permissionaccessentitytype>
     </permissionaccessentitytypes>
 
     <workflowprogresscategories>
