@@ -18,9 +18,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <section class="ccm-ui">
-    <header><?= t('Composer - %s', $pagetype->getPageTypeDisplayName()) ?></header>
+    <header><?= t('Composer - %s', $pagetype->getPageTypeDisplayName()); ?></header>
     <form method="post" data-panel-detail-form="compose">
-        <?= $ui->display('panel', '/page/composer') ?>
+        <?= $ui->display('panel', '/page/composer'); ?>
 
         <?php $composer->display($pagetype, $c); ?>
     </form>
@@ -43,7 +43,7 @@ var ConcretePageComposerDetail = {
             beforeSubmit: function() {
                 my.saving = true;
             },
-            url: <?= json_encode($controller->action('autosave')) ?>,
+            url: <?= json_encode($controller->action('autosave')); ?>,
             success: function(r) {
                 my.saving = false;
                 $('#ccm-page-type-composer-form-save-status').html(r.message).show();
@@ -104,7 +104,7 @@ var ConcretePageComposerDetail = {
                         });
                     },
                     {
-                        idleTimeout: <?= $idleTimeout ?>
+                        idleTimeout: <?= $idleTimeout; ?>
                     }
                 )
                 .data('SaveCoordinator');
@@ -113,11 +113,11 @@ var ConcretePageComposerDetail = {
         ?>
 
         $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
-            if (confirm(<?= json_encode(t('This will remove this draft and it cannot be undone. Are you sure?')) ?>)) {
+            if (confirm(<?= json_encode(t('This will remove this draft and it cannot be undone. Are you sure?')); ?>)) {
                 my.disableAutosave();
                 $.concreteAjax({
-                    url: <?= json_encode($controller->action('discard')) ?>,
-                    data: {cID: <?= $cID ?>},
+                    url: <?= json_encode($controller->action('discard')); ?>,
+                    data: {cID: <?= $cID; ?>},
                     success: function(r) {
                         window.location.href = r.redirectURL;
                     }
@@ -128,7 +128,7 @@ var ConcretePageComposerDetail = {
         $('button[data-page-type-composer-form-btn=preview]').on('click', function() {
             my.disableAutosave();
             function redirect() {
-                window.location.href = CCM_DISPATCHER_FILENAME + <?= json_encode('?cID=' . $cID . '&ctask=check-out&' . $token->getParameter()) ?>;
+                window.location.href = CCM_DISPATCHER_FILENAME + <?= json_encode('?cID=' . $cID . '&ctask=check-out&' . $token->getParameter()); ?>;
             }
             if (!my.saving) {
                 my.saveDraft(redirect);
@@ -141,7 +141,7 @@ var ConcretePageComposerDetail = {
             my.disableAutosave();
             var submitSuccess = false;
             my.$form.concreteAjaxForm({
-                url: <?= json_encode($controller->action('save_and_exit')) ?>,
+                url: <?= json_encode($controller->action('save_and_exit')); ?>,
                 success: function(r) {
                     submitSuccess = true;
                     window.location.href = r.redirectURL;
@@ -175,7 +175,7 @@ var ConcretePageComposerDetail = {
             var submitSuccess = false;
             $.concreteAjax({
                 data: data.data,
-                url: <?= json_encode($controller->action('publish')) ?>,
+                url: <?= json_encode($controller->action('publish')); ?>,
                 success: function(r) {
                     submitSuccess = true;
                     window.location.href = r.redirectURL;
