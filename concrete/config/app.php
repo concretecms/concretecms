@@ -884,6 +884,7 @@ return [
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'jquery/touch-punch'],
+                ['javascript', 'selectize'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'dashboard'],

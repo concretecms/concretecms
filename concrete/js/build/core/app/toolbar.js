@@ -180,7 +180,7 @@
 
 	}
 
-   function setupMobileNav(){
+   function setupMobileNav() {
         $('.ccm-toolbar-mobile-menu-button').click(function(){
             $(this).toggleClass('ccm-mobile-close');   // slide out mobile nav
             $('.ccm-mobile-menu-overlay').slideToggle();
@@ -216,7 +216,15 @@
         });
     }
 
-	function activateIntelligentSearchResults() {
+    function setupSiteListMenuItem() {
+        $('select[data-select=ccm-header-site-list]').show().selectize({
+            'onItemAdd': function(option) {
+                window.location.href = option;
+            }
+        });
+    }
+
+    function activateIntelligentSearchResults() {
 		if ($("#ccm-intelligent-search-results div:visible").length == 0) {
 			$("#ccm-intelligent-search-results").hide();
 		}
@@ -336,6 +344,7 @@
 				setupTooltips();
 				setupPageAlerts();
 				setupHelpNotifications();
+				setupSiteListMenuItem();
                 setupMobileNav();
 			}
 		},

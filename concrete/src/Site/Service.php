@@ -2,20 +2,28 @@
 namespace Concrete\Core\Site;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Category\SiteTypeCategory;
 use Concrete\Core\Attribute\Key\SiteKey;
+use Concrete\Core\Entity\Attribute\Value\SiteTypeValue;
 use Concrete\Core\Entity\Site\Domain;
+use Concrete\Core\Entity\Site\Group\Relation;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Type;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
+use Concrete\Core\Site\Type\Controller\Manager;
+use Concrete\Core\User\Group\Group;
 use Doctrine\ORM\EntityManagerInterface;
 use Punic\Comparer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Site\User\Group\Service as GroupService;
+use Concrete\Core\Site\Type\Skeleton\Service as SkeletonService;
+
 class Service
 {
     /**
@@ -193,7 +201,62 @@ class Service
 
         $this->entityManager->refresh($site);
 
+        $service = $this->app->make(SkeletonService::class);
+        $skeleton = $service->getSkeleton($type);
+        if ($skeleton) {
+            $service->publishSkeletonToSite($skeleton, $site);
+        }
+
+        // Add the default groups
+        $parent = Group::add($name, '', $this->groupService->getSiteParentGroup());
+        $groups = $this->groupService->getSiteTypeGroups($type);
+        foreach($groups as $group) {
+            /**
+             * @var $group \Concrete\Core\Entity\Site\Group\Group
+             */
+            $siteGroup = Group::add($group->getSiteGroupName(), '', $parent);
+            $relation = new Relation();
+            $relation->setSite($site);
+            $relation->setInstanceGroupID($siteGroup->getGroupID());
+            $relation->setSiteGroup($group);
+            $group->getSiteGroupRelations()->add($relation);
+            $this->entityManager->persist($group);
+        }
+
+        // Add the default attributes
+        $attributes = $this->app->make(SiteTypeCategory::class)->getAttributeValues($skeleton);
+        foreach($attributes as $attribute) {
+            /**
+             * @var $attribute SiteTypeValue
+             */
+            $site->setAttribute($attribute->getAttributeKey(), $attribute->getValueObject());
+        }
+
+        $this->entityManager->flush();
+
+        // Populate all the config values from the default site into this new site.
+        // This is not ideal since it will fail if we don't update it after we add new
+        // config values, but this will have to do for now
+        $default_site = $this->getDefault();
+        $config = $site->getConfigRepository();
+        foreach(['user', 'editor'] as $key) {
+            $config->save($key, $default_site->getConfigRepository()->get($key));
+        }
+
+        /**
+         * @var $manager Manager;
+         */
+        $request = Request::createFromGlobals();
+        $controller = $this->getController($site);
+        $site = $controller->add($site, $request);
+
         return $site;
+    }
+
+    public function getController(Site $site)
+    {
+        $manager = $this->app->make(Manager::class);
+        return $manager->driver($site->getType()->getSiteTypeHandle());
     }
 
     /**
@@ -227,6 +290,19 @@ class Service
      */
     public function delete(Site $site)
     {
+        // Delete group relations
+        $relations = $this->entityManager->getRepository('PortlandLabs\Liberta\Entity\Site\Group\Relation')
+            ->findBySite($site);
+        foreach($relations as $relation) {
+            $this->entityManager->remove($relation);
+        }
+        $this->entityManager->flush();
+
+        // Run the site type controller delete method.
+        $controller = $this->getController($site);
+        $controller->delete($site);
+
+        // Delete attribute values.
         $attributes = SiteKey::getAttributeValues($site);
         foreach ($attributes as $av) {
             $this->entityManager->remove($av);
@@ -234,6 +310,8 @@ class Service
 
         $this->entityManager->flush();
 
+
+        // Delete all pages in the site.
         $r = $this->entityManager->getConnection()
             ->executeQuery('select cID from Pages where siteTreeID = ? and cParentID = 0', [$site->getSiteTreeID()]);
         while ($row = $r->fetch()) {
@@ -243,6 +321,7 @@ class Service
             }
         }
 
+        // Delete the locales
         $locales = $site->getLocales();
         $service = new \Concrete\Core\Localization\Locale\Service($this->entityManager);
 
@@ -250,6 +329,7 @@ class Service
             $service->delete($locale);
         }
 
+        // Finally, remove the site.
         $this->entityManager->remove($site);
         $this->entityManager->flush();
     }
