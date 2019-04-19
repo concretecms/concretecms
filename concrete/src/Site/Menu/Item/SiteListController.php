@@ -69,7 +69,7 @@ class SiteListController extends Controller
                         $selected = false;
                     }
 
-                    $url = \URL::to('/ccm/select_site_and_redirect', $site->getSiteID()) . '?rUri=' . urlencode($request->getRequestURI()) . '&' . $token;
+                    $url = \URL::to('/ccm/site/redirect', $site->getSiteID()) . '?rUri=' . urlencode($request->getRequestURI()) . '&' . $token;
                     $option = new Element('option', $site->getSiteName(), ['selected' => $selected, 'value' => $url]);
                     $select->appendChild($option);
                 }
