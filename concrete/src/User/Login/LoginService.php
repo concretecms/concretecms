@@ -206,10 +206,11 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
             return [];
         }
 
-        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
+        $db = $this->entityManager->getConnection();
+        $queryBuilder = $db->createQueryBuilder();
 
         $rows = $queryBuilder
-            ->select('g.gName', 'u.uID')->from('Groups', 'g')
+            ->select('g.gName', 'u.uID')->from($db->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g')
             ->leftJoin('g', 'UserGroups', 'ug', 'ug.gID=g.gID')
             ->innerJoin('ug', 'Users', 'u', 'ug.uID=u.uID AND (u.uName=? OR u.uEmail=?)')
             ->setParameters([$username, $username])
