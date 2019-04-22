@@ -19,7 +19,7 @@ use PermissionKey;
 use Permissions;
 use stdClass;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use User;
+use Concrete\Core\User\User;
 use UserAttributeKey;
 use UserInfo;
 
@@ -519,7 +519,7 @@ class Search extends DashboardPageController
 
     protected function setupUser($uID)
     {
-        $me = new User();
+        $me = $this->app->make(User::class);
         $ui = UserInfo::getByID($this->app->make('helper/security')->sanitizeInt($uID));
         if (is_object($ui)) {
             $up = new Permissions($ui);

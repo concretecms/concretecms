@@ -27,7 +27,7 @@ class Register extends PageController
         if (!in_array($currentType, $allowedTypes)) {
             return $this->replace('/page_not_found');
         }
-        $u = new User();
+        $u = $this->app->make(User::class);
         $this->set('u', $u);
         if (!$this->displayUserName) {
             // something has overridden this controller and we want to honor that

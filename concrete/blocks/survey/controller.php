@@ -3,7 +3,7 @@ namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
 use Page;
-use User;
+use Concrete\Core\User\User;
 use Core;
 use Database;
 
@@ -96,7 +96,7 @@ class Controller extends BlockController
             return false;
         }
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         $db = Database::connection();
         $bo = $this->getBlockObject();
         if ($this->post('rcID')) {
@@ -149,7 +149,7 @@ class Controller extends BlockController
 
     public function hasVoted()
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         if ($u->isRegistered()) {
             $db = Database::connection();
             $v = [$u->getUserID(), $this->bID, $this->cID];
