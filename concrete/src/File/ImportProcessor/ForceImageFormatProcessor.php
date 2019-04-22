@@ -6,6 +6,10 @@ use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type;
 
+/**
+ * @deprecated Use an implementation of Concrete\Core\File\Import\Processor\PreProcessorInterface
+ * @see \Concrete\Core\File\Import\Processor\PreProcessorInterface
+ */
 class ForceImageFormatProcessor implements ProcessorInterface
 {
     const FORMAT_JPEG = 1;
