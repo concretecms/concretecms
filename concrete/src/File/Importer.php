@@ -9,7 +9,6 @@ use Concrete\Core\File\Import\Processor\LegacyPostProcessor;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Type\FileFolder;
-use Concrete\Core\Tree\Node\Type\FileFolder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
