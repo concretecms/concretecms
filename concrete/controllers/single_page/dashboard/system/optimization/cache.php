@@ -4,7 +4,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Core;
-use User;
 
 class Cache extends DashboardPageController
 {
@@ -18,7 +17,6 @@ class Cache extends DashboardPageController
     {
         if ($this->token->validate('update_cache')) {
             if ($this->isPost()) {
-                $u = new User();
                 $eca = $this->post('ENABLE_BLOCK_CACHE') == 1 ? 1 : 0;
                 $eoc = $this->post('ENABLE_OVERRIDE_CACHE') == 1 ? 1 : 0;
                 $eac = $this->post('ENABLE_ASSET_CACHE') == 1 ? 1 : 0;

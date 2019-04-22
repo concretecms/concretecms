@@ -30,7 +30,6 @@
 
 		<?php
         $av = Loader::helper('concrete/avatar');
-    $u = new User();
 
     foreach ($users as $user) {
         ?>

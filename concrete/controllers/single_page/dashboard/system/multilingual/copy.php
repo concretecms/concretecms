@@ -8,6 +8,7 @@ use Concrete\Core\Multilingual\Page\Section\Processor\Processor;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\User\User;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -33,7 +34,7 @@ class Copy extends DashboardSitePageController
     public function rescan_locale()
     {
         if ($this->token->validate('rescan_locale')) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             if ($u->isSuperUser()) {
                 \Core::make('cache/request')->disable();
                 $section = Section::getByID($_REQUEST['locale']);

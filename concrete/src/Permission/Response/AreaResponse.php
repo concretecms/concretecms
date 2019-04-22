@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 
 class AreaResponse extends Response
 {
@@ -51,7 +52,8 @@ class AreaResponse extends Response
     // convenience function
     public function canViewAreaControls()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

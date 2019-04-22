@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\File\Set;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Legacy\DatabaseItemList;
 use FileSet;
 use Loader;
-use User;
+use Concrete\Core\User\User;
 
 class SetList extends DatabaseItemList
 {
@@ -26,7 +27,7 @@ class SetList extends DatabaseItemList
     {
         switch ($fsType) {
             case FileSet::TYPE_PRIVATE:
-                $u = new User();
+                $u = Application::getFacadeApplication()->make(User::class);
                 $this->filter('FileSets.uID', $u->getUserID());
                 break;
         }
