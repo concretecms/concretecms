@@ -4,12 +4,13 @@ namespace Concrete\Core\Localization\Service;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\User\User;
 use Punic\Calendar;
 use Punic\Comparer;
 use Punic\Misc;
+use Concrete\Core\User\User;
 
 class Date
 {
@@ -432,7 +433,8 @@ class Date
                     if ($request && $request->hasCustomRequestUser()) {
                         $u = $request->getCustomRequestUser();
                     } else {
-                        $u = new User();
+                        $app = Application::getFacadeApplication();
+                        $u = $app->make(User::class);
                     }
                     if (is_object($u) && $u->isRegistered()) {
                         $tz = $u->getUserTimezone();
@@ -888,8 +890,9 @@ class Date
         }
 
         if (Config::get('concrete.misc.user_timezones')) {
-            $u = new User();
-            if ($u && $u->isRegistered()) {
+            $app = Application::getFacadeApplication();
+            $u = $app->make(User::class);
+            if ($u->isRegistered()) {
                 $utz = $u->getUserTimezone();
                 if ($utz) {
                     $tz = new \DateTimeZone($utz);
@@ -933,8 +936,9 @@ class Date
         }
 
         if (Config::get('concrete.misc.user_timezones')) {
-            $u = new User();
-            if ($u && $u->isRegistered()) {
+            $app = Application::getFacadeApplication();
+            $u = $app->make(User::class);
+            if ($u->isRegistered()) {
                 $utz = $u->getUserTimezone();
                 if ($utz) {
                     $tz = new \DateTimeZone($utz);

@@ -1,6 +1,6 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $ui = UserInfo::getByID($u->uID);
 ?>
 

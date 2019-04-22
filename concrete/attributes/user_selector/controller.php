@@ -4,8 +4,8 @@ namespace Concrete\Attribute\UserSelector;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-use UserInfo;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 
 class Controller extends AttributeTypeController
 {
@@ -37,7 +37,7 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         $uID = $this->getAttributeValue()->getValue();
-        $ui = UserInfo::getByUserID($uID);
+        $ui = UserInfo::getByID($uID);
         if (is_object($ui)) {
             return '<a href="'.$ui->getUserPublicProfileUrl().'">'.$ui->getUserName().'</a>';
         }

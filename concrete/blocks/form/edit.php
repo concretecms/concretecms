@@ -7,7 +7,7 @@ $miniSurvey = new MiniSurvey($b);
 $miniSurveyInfo = $miniSurvey->getMiniSurveyBlockInfo($b->getBlockID());
 MiniSurvey::questionCleanup(intval($miniSurveyInfo['questionSetId']), $b->getBlockID());
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $ui = UserInfo::getByID($u->uID);
 ?>
 
