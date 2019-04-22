@@ -79,6 +79,8 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('marketplace.php');
 
+        $router->buildGroup()->routes('permissions.php');
+
         $router->buildGroup()->routes('trees.php');
 
         $router->buildGroup()->routes('site.php');

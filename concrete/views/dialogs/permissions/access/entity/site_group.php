@@ -31,7 +31,7 @@ $(function() {
            url: '<?=$url?>',
            data: {
            'siteGID': groupID,
-           'ccm_token': '<?=Core::make('token')->generate('process')?>'
+           'ccm_token': '<?=Core::make('token')->generate('get_or_create')?>'
            },
            success: function(r) {
                jQuery.fn.dialog.hideLoader();

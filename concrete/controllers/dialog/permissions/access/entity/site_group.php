@@ -66,7 +66,7 @@ class SiteGroup extends Controller
             }
         }
         $accessEntityType = Type::getByHandle('site_group');
-        $url = $accessEntityType->getAccessEntityTypeToolsURL();
+        $url = $accessEntityType->getControllerUrl();
         $this->set('groups', $groups);
         $this->set('url', $url);
     }

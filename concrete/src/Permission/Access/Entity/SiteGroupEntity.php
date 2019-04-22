@@ -4,6 +4,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Concrete\Core\Entity\Permission\SiteGroup;
 use Concrete\Core\Entity\Site\Group\Relation;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Entity\Site\Group\Group;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\SiteAccessInterface;
 use Concrete\Core\Permission\Access\WorkflowAccess;
