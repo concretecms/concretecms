@@ -3,20 +3,21 @@ namespace Concrete\Core\Html;
 
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
+use Concrete\Core\Html\Object\ImageNoScriptFallback;
 use Concrete\Core\Html\Object\Picture;
-use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Theme\Theme;
 use HtmlObject\Image as HtmlObjectImage;
 
 class Image
 {
     /**
-     * @var bool|null if true, this object will return a Picture tag instead of an Image tag
+     * @var bool|null if true, this object will return a Picture element instead of an Image element
      */
     protected $usePictureTag = false;
 
     /**
-     * @var \Concrete\Core\Html\Object\Picture|\HtmlObject\Image
+     * @var \Concrete\Core\Html\Object\Picture|\HtmlObject\Image|\Concrete\Core\Html\Object\ImageNoScriptFallback
      */
     protected $tag;
 
@@ -28,8 +29,10 @@ class Image
     /**
      * @param \Concrete\Core\Entity\File $f
      * @param bool|null $usePictureTag
+     * @param bool|null $lazyLoadNative
+     * @param bool|null $lazyLoadJavaScript
      */
-    public function __construct(File $f = null, $usePictureTag = null)
+    public function __construct(File $f = null, $usePictureTag = null, $lazyLoadNative = null, $lazyLoadJavaScript = null)
     {
         if (!is_object($f)) {
             return false;
@@ -61,16 +64,27 @@ class Image
                     }
                 }
             }
-            $this->tag = Picture::create($sources, $fallbackSrc);
+            $this->tag = Picture::create($sources, $fallbackSrc, $attributes, $lazyLoadNative, $lazyLoadJavaScript);
         } else {
-            // Return a simple image tag.
             $path = $f->getRelativePath();
             if (!$path) {
                 $path = $f->getURL();
             }
-            $this->tag = HtmlObjectImage::create($path);
-            $this->tag->width((string) $f->getAttribute('width'));
-            $this->tag->height((string) $f->getAttribute('height'));
+
+            if ($lazyLoadJavaScript) {
+                // Return a simple img element wrapped in "<noscript></noscript>" and an img element with the
+                // image file path set to "data-src" and the "loading" attribute optionally set to "lazy".
+                $this->tag = ImageNoScriptFallback::create($path, $attributes, $lazyLoadNative);
+            } else {
+                // Return a simple img element.
+                $this->tag = HtmlObjectImage::create($path);
+                $this->tag->width((string) $f->getAttribute('width'));
+                $this->tag->height((string) $f->getAttribute('height'));
+
+                if ($lazyLoadNative) {
+                    $this->tag->loading('lazy');
+                }
+            }
         }
     }
 
@@ -79,7 +93,7 @@ class Image
      *
      * @see https://github.com/Anahkiasen/html-object
      *
-     * @return \Concrete\Core\Html\Object\Picture|\HtmlObject\Image
+     * @return \Concrete\Core\Html\Object\Picture|\HtmlObject\Image|\Concrete\Core\Html\Object\ImageNoScriptFallback
      */
     public function getTag()
     {
