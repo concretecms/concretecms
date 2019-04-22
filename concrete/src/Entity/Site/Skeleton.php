@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Attribute\Key\SiteTypeKey;
 use Concrete\Core\Entity\Attribute\Value\SiteTypeValue;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**

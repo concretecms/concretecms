@@ -7,6 +7,7 @@ use Concrete\Core\Application\UserInterface\Sitemap\JsonFormatter;
 use Concrete\Core\Application\UserInterface\Sitemap\SkeletonSitemapProvider;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\SiteTypeKey;
+use Concrete\Core\Controller\Traits\MultisiteRequiredTrait;
 use Concrete\Core\Entity\Site\Group\Group;
 use Concrete\Core\Entity\Site\SkeletonLocale;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Types extends DashboardPageController
 {
+
+    use MultisiteRequiredTrait;
 
     protected $siteType;
     protected $skeleton;

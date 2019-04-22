@@ -291,7 +291,7 @@ class Service
     public function delete(Site $site)
     {
         // Delete group relations
-        $relations = $this->entityManager->getRepository('PortlandLabs\Liberta\Entity\Site\Group\Relation')
+        $relations = $this->entityManager->getRepository(Relation::class)
             ->findBySite($site);
         foreach($relations as $relation) {
             $this->entityManager->remove($relation);

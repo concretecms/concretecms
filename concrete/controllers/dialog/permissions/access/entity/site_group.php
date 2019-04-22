@@ -1,24 +1,32 @@
 <?php
-namespace Concrete\Controller\Dialog\Permission\Access\Entity;
+namespace Concrete\Controller\Dialog\Permissions\Access\Entity;
 
 use Concrete\Controller\Backend\UserInterface as Controller;
 use Concrete\Core\Permission\Access\Entity\Type;
-use PortlandLabs\Liberta\User\Group\Service;
+use Concrete\Core\Site\User\Group\Service as GroupService;
+use Concrete\Core\Site\Type\Service as SiteTypeService;
 
 class SiteGroup extends Controller
 {
 
+    /**
+     * @var \Concrete\Core\Site\User\Group\Service
+     */
     protected $groupService;
+
+    /**
+     * @var \Concrete\Core\Site\Type\Service
+     */
     protected $siteTypeService;
 
-    public function __construct(Service $service, \Concrete\Core\Site\Type\Service $siteTypeService)
+    public function __construct(GroupService $service, SiteTypeService $siteTypeService)
     {
         $this->groupService = $service;
         $this->siteTypeService = $siteTypeService;
         parent::__construct();
     }
 
-    protected $viewPath = '/dialogs/permission/access/entity/site_group';
+    protected $viewPath = '/dialogs/permissions/access/entity/site_group';
 
     public function canAccess()
     {
@@ -27,16 +35,16 @@ class SiteGroup extends Controller
         return $p->canViewPage();
     }
 
-    public function view($pkCategoryHandle, $id)
+    public function view($pkCategoryHandle, $permissionObjectId)
     {
         $type = false;
         switch($pkCategoryHandle) {
             case 'page_type':
-                $pageType = \Concrete\Core\Page\Type\Type::getByID($id);
+                $pageType = \Concrete\Core\Page\Type\Type::getByID($permissionObjectId);
                 $type = $pageType->getSiteTypeObject();
                 break;
             case 'page':
-                $page = \Page::getByID($id);
+                $page = \Page::getByID($permissionObjectId);
                 if (is_object($page) && !$page->isError()) {
                     $tree = $page->getSiteTreeObject();
                     if (is_object($tree)) {

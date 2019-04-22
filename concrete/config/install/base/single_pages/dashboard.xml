@@ -641,6 +641,7 @@
         <page name="Multiple Site Hosting" path="/dashboard/system/multisite" filename="/dashboard/system/sites/view.php" pagetype="" user="admin" description="" package=""/>
         <page name="Sites &amp; Domains" path="/dashboard/system/multisite/sites" filename="/dashboard/system/multisite/sites/view.php" pagetype="" user="admin" description="" package=""/>
         <page name="Site Types" path="/dashboard/system/multisite/types" filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Multisite Settings" path="/dashboard/system/multisite/settings" filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
 
         <page name="Multilingual" path="/dashboard/system/multilingual" filename="/dashboard/system/multilingual/view.php" pagetype="" description="Run your site in multiple languages." package="">
             <attributes>

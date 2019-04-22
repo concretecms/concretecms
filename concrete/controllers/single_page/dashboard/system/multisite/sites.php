@@ -3,18 +3,20 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Multisite;
 
 use Concrete\Controller\Element\Dashboard\Site\Menu;
 use Concrete\Core\Application\UserInterface\OptionsForm\OptionsForm;
+use Concrete\Core\Controller\Traits\MultisiteRequiredTrait;
 use Concrete\Core\Entity\Site\Domain;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Routing\Redirect;
-use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Site\Type\OptionsFormProvider;
 use Concrete\Core\Url\Url;
 
 class Sites extends DashboardPageController
 {
+
+    use MultisiteRequiredTrait;
 
     public function view()
     {

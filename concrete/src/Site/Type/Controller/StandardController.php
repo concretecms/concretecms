@@ -4,8 +4,8 @@ namespace Concrete\Core\Site\Type\Controller;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Permission\Registry\Applier;
+use Concrete\Core\Permission\Registry\Multisite\Access\DefaultHomePageAccessRegistry;
 use Concrete\Core\Permission\Registry\ObjectAssignment;
-use PortlandLabs\Liberta\Permissions\Registry\Access\DefaultHomePageAccessRegistry;
 use Concrete\Core\Site\Type\Formatter\DefaultFormatter;
 use Concrete\Core\Site\Type\Skeleton\Service;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,8 +39,6 @@ class StandardController implements ControllerInterface
 
     public function addType(Type $type)
     {
-        return $type;
-
         $home = $this->skeletonService->getHomePage($type);
         $this->permissionsApplier->applyAssignment(
             new ObjectAssignment(

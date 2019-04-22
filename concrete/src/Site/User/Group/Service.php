@@ -11,6 +11,9 @@ use Concrete\Core\Entity\Site\Group\Group as SiteGroupEntity;
 class Service
 {
 
+    const PARENT_GROUP_PATH = '/Sites';
+    const PARENT_GROUP_NAME = 'Sites';
+
     protected $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -20,7 +23,7 @@ class Service
 
     public function getSiteParentGroup()
     {
-        return Group::getByPath('/Liberta/Sites');
+        return Group::getByPath(static::PARENT_GROUP_PATH);
     }
 
     public function getSiteTypeGroups(Type $type)

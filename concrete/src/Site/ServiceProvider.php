@@ -20,12 +20,13 @@ class ServiceProvider extends BaseServiceProvider
             return $app->make('Concrete\Core\Site\Type\Service');
         });
 
+        $this->app->singleton(InstallationService::class);
+
         $this->app->bind(NormalizerInterface::class, Normalizer::class);
 
         $this->app->singleton('Concrete\Core\Site\Resolver\DriverInterface', function() use ($app) {
-            $config = $this->app->make('config');
-            $site = $config->get('site');
-            if (isset($site['sites']) && is_array($site['sites']) && count($site['sites']) > 1) {
+            $service = $app->make(InstallationService::class);
+            if ($service->isMultisiteEnabled()) {
                 $resolver = $this->app->make(MultisiteDriver::class);
             } else {
                 $resolver = $this->app->make(StandardDriver::class);
