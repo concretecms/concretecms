@@ -222,7 +222,7 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
             $groups[] = $row['gName'];
         }
 
-        if ($uID === 1) {
+        if ($uID == USER_SUPER_ID) {
             $groups[] = 'SUPER';
         }
 
