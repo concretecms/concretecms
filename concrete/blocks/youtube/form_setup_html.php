@@ -88,7 +88,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                                 $disabledattr['disabled'] = 'disabled';
                             }
                             echo $form->checkbox('modestbranding', 1,  (isset($modestbranding) ? $modestbranding : true), $disabledattr); ?>
-                            <?php echo t("Hide YouTube Logo")?>
+                            <?php echo t("Hide YouTube logo")?>
                         </label>
                     </div>
                 </div>
@@ -138,7 +138,6 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             <div class="form-group">
                 <?php echo $form->text('startTime', isset($startTime) ? $startTime : null);?>
             </div>
-
         </div>
     </fieldset>
     <fieldset>
@@ -146,8 +145,19 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                    <?php echo $form->checkbox('noCookie', 1, $noCookie); ?>
-                    <?php echo t("No Cookie") ?>
+                    <?php echo $form->checkbox('noCookie', 1, (isset($noCookie) ? $noCookie : false)); ?>
+                    <?php echo t('No cookie') ?>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend><?php echo t('Loading Options'); ?></legend>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('lazyLoad', 1, (isset($lazyLoad) ? $lazyLoad : false)); ?>
+                    <?php echo t('Lazy load video')?>
                 </label>
             </div>
         </div>

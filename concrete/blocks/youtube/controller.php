@@ -123,6 +123,8 @@ class Controller extends BlockController
             'startTime' => '',
 
             'noCookie' => false,
+
+            'lazyLoad' => false,
         ];
 
         $args = [
@@ -135,6 +137,7 @@ class Controller extends BlockController
             'showinfo' => $data['showinfo'] ? 1 : 0,
             'controls' => $data['controls'] ? 1 : 0,
             'modestbranding' => $data['modestbranding'] ? 1 : 0,
+            'lazyLoad' => $data['lazyLoad'] ? 1 : 0,
 
             'color' => $data['color'],
 

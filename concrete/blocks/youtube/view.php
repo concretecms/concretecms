@@ -2,6 +2,7 @@
 
 $responsiveClass = 'youtubeBlockResponsive16by9';
 $sizeDisabled = '';
+$lazyLoadAttribute = '';
 
 if ($vWidth && $vHeight) {
     $sizeargs = 'width="' . $vWidth . '" height="' . $vHeight . '"';
@@ -9,6 +10,10 @@ if ($vWidth && $vHeight) {
     $responsiveClass = '';
 } elseif ($sizing == '4:3') {
     $responsiveClass = 'youtubeBlockResponsive4by3';
+}
+
+if (isset($lazyLoad) && $lazyLoad) {
+    $lazyLoadAttribute = 'loading="lazy"';
 }
 
 $params = array();
@@ -79,15 +84,11 @@ if (Page::getCurrentPage()->isEditMode()) {
     </div>
     <?php
     $loc->popActiveContext();
-} else {
-    ?>
-    <div id="youtube<?= $bID;
-    ?>" class="youtubeBlock <?php echo $responsiveClass;
-    ?>">
-        <iframe class="youtube-player" <?php echo $sizeargs;
-        ?> src="//<?= $youtubeDomain; ?>/embed/<?= $videoID;
-        ?><?= $paramstring;
-        ?>" allowfullscreen></iframe>
+} else { ?>
+    <div id="youtube<?= $bID; ?>" class="youtubeBlock <?php echo $responsiveClass; ?>">
+        <iframe class="youtube-player" <?php echo $sizeargs; ?>
+            src="//<?= $youtubeDomain; ?>/embed/<?= $videoID; ?><?= $paramstring; ?>"
+            allow="autoplay" allowfullscreen <?= $lazyLoadAttribute; ?>></iframe>
     </div>
     <?php
-} ?>
+}
