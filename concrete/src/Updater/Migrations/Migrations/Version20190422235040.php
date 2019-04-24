@@ -39,10 +39,17 @@ final class Version20190422235040 extends AbstractMigration implements Repeatabl
 
         $category = Category::getByHandle('site_type');
         if (!is_object($category)) {
-            Category::add('site_type');
+            $category = Category::add('site_type');
+        } else {
+            $category = $category->getController();
         }
 
         $factory = $this->app->make(TypeFactory::class);
+        $types = $factory->getList();
+        foreach ($types as $type) {
+            $category->associateAttributeKeyType($type);
+        }
+
         $siteAttribute = $factory->getByHandle('site');
         if (!$siteAttribute) {
             $siteAttribute = $factory->add('site', t('Site'));

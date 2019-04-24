@@ -16,6 +16,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="textarea" name="Text Area" package="">
@@ -25,6 +26,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="boolean" name="Checkbox" package="">
@@ -34,6 +36,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="date_time" name="Date/Time" package="">
@@ -43,6 +46,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="image_file" name="Image/File" package="">
@@ -50,6 +54,7 @@
                 <category handle="collection"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="number" name="Number" package="">
@@ -59,6 +64,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
 
@@ -69,6 +75,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="address" name="Address" package="">
@@ -76,6 +83,7 @@
                 <category handle="user"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
 
@@ -86,6 +94,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="url" name="URL" package="">
@@ -95,6 +104,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="email" name="Email" package="">
@@ -104,6 +114,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
 
@@ -120,6 +131,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="social_links" name="Social Links" package="">
@@ -131,6 +143,7 @@
             <categories>
                 <category handle="collection"/>
                 <category handle="site"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="calendar_event" name="Calendar Event" package="">
@@ -144,12 +157,14 @@
                 <category handle="user"/>
                 <category handle="file"/>
                 <category handle="site"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="page_selector" name="Page Selector" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="site"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="user_selector" name="User Selector" package="">
@@ -159,6 +174,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="event"/>
+                <category handle="site_type"/>
             </categories>
         </attributetype>
         <attributetype handle="site" name="Site" package="">
