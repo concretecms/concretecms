@@ -51,8 +51,12 @@ class SiteType implements ItemInterface
         $sitetype = $xml->addChild('sitetype');
         $sitetype->addAttribute('name', $type->getSiteTypeName());
         $sitetype->addAttribute('handle', $type->getSiteTypeHandle());
-        $sitetype->addAttribute('theme', $theme->getThemeHandle());
-        $sitetype->addAttribute('home-template', $template->getPageTemplateHandle());
+        if ($theme) {
+            $sitetype->addAttribute('theme', $theme->getThemeHandle());
+        }
+        if ($template) {
+            $sitetype->addAttribute('home-template', $template->getPageTemplateHandle());
+        }
         if (is_object($type->getPackage())) {
             $sitetype->addAttribute('package', $type->getPackageHandle());
         }

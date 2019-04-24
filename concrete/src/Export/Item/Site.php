@@ -1,5 +1,5 @@
 <?php
-namespace PortlandLabs\Liberta\Export\Item;
+namespace Concrete\Core\Export\Item;
 
 use Concrete\Core\Attribute\Category\SiteCategory;
 use Concrete\Core\Export\Item\ItemInterface;
