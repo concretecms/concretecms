@@ -28,7 +28,7 @@ class UserServiceProvider extends ServiceProvider
         if ($this->app->resolved(EventDispatcher::class)) {
             $this->bindEvents($this->app->make(EventDispatcher::class), $subscribers);
         } else {
-            $this->app->extend(EventDispatcher::class, function (EventDispatcher $director) {
+            $this->app->extend(EventDispatcher::class, function (EventDispatcher $director) use ($subscribers) {
                 $this->bindEvents($director, $subscribers);
                 return $director;
             });

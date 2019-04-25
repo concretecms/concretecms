@@ -5,11 +5,13 @@ use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\AbstractSearchProvider;
 use Concrete\Core\Search\ProviderInterface;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\Search\ColumnSet\Available;
 use Concrete\Core\User\Search\ColumnSet\ColumnSet;
 use Concrete\Core\User\Search\ColumnSet\DefaultSet;
 use Concrete\Core\User\Search\Result\Result;
+use Concrete\Core\User\User;
 use Concrete\Core\User\UserList;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Concrete\Core\Entity\Search\SavedUserSearch;
@@ -68,7 +70,7 @@ class SearchProvider extends AbstractSearchProvider
     public function getSearchResultFromQuery(Query $query)
     {
         $result = parent::getSearchResultFromQuery($query);
-        $u = new \User();
+        $u = Application::getFacadeApplication()->make(User::class);
         if (!$u->isSuperUser()) {
             $qb = $result->getItemListObject()->getQueryObject();
             /* @var \Doctrine\DBAL\Query\QueryBuilder $qb */

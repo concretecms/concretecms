@@ -1,13 +1,15 @@
 <?php
 namespace Concrete\Block\DesktopWaitingForMe;
 
-defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Notification\Alert\Filter\FilterListFactory;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Category;
 use Core;
 use Concrete\Core\Notification\Alert\AlertList;
+
+defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
@@ -39,7 +41,7 @@ class Controller extends BlockController
             $filterValues[$filter->getKey()] = $filter->getName();
         }
 
-        $u = new \User();
+        $u = $this->app->make(User::class);
         $list = $this->app->make(AlertList::class, ['user' => $u]);
         $filter = (string) $this->request->query->get('filter');
         if ($filter !== '') {

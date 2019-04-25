@@ -142,7 +142,8 @@ class Access extends ConcreteObject
      */
     public function validate()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

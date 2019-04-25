@@ -3,6 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
 use Concrete\Core\File\Image\BitmapFormat;
+use Concrete\Core\File\Import\Processor\SvgProcessor;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
@@ -10,6 +11,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Exception;
 use Imagine\Image\Box;
+use Imagine\Image\Metadata\ExifMetadataReader;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -29,8 +31,16 @@ class ImageUploading extends DashboardPageController
         $this->set('restrict_max_width', (int) $config->get('concrete.file_manager.restrict_max_width'));
         $this->set('restrict_max_height', (int) $config->get('concrete.file_manager.restrict_max_height'));
 
+        $this->set('svg_processor_action', (string) $config->get('concrete.file_manager.images.svg_sanitization.action'));
+        $this->set('svg_processor_actions', [
+            SvgProcessor::ACTION_DISABLED => t('do not perform any check'),
+            SvgProcessor::ACTION_CHECKVALIDITY => t('check only the XML validity'),
+            SvgProcessor::ACTION_SANITIZE => t('remove potentially harmfull elements'),
+            SvgProcessor::ACTION_REJECT => t('reject files containing potentially harmfull elements'),
+        ]);
+
         $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));
-        $this->set('allow_unsafe_svg', $config->get('concrete.file_manager.images.svg_sanitization.enabled') ? false : true);
+        $this->set('exif_reader_supported', ExifMetadataReader::isSupported());
 
         $thumbnailOptionsURL = null;
         $p = Page::getByPath('/dashboard/system/files/thumbnails/options');
@@ -118,7 +128,7 @@ class ImageUploading extends DashboardPageController
                 $config->save('concrete.file_manager.images.use_exif_data_to_rotate_images', $use_exif_data_to_rotate_images);
                 $config->save('concrete.file_manager.restrict_max_width', $restrict_max_width);
                 $config->save('concrete.file_manager.restrict_max_height', $restrict_max_height);
-                $config->save('concrete.file_manager.images.svg_sanitization.enabled', !(bool) $post->get('allow_unsafe_svg'));
+                $config->save('concrete.file_manager.images.svg_sanitization.action', (string) $post->get('svg_processor_action'));
                 $this->flash('success', t('Image options saved.'));
 
                 return $this->app->make(ResponseFactoryInterface::class)->redirect($this->action(''), 302);

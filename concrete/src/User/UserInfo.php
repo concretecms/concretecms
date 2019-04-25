@@ -438,12 +438,12 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     /**
      * Gets the User object of the current UserInfo object ($this).
      *
-     * @return ConcreteUser
+     * @return \Concrete\Core\User\User
      */
     public function getUserObject()
     {
         // returns a full user object - groups and everything - for this userinfo object
-        $nu = ConcreteUser::getByUserID($this->getUserID());
+        $nu = User::getByUserID($this->getUserID());
 
         return $nu;
     }
@@ -652,7 +652,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function triggerActivate($action = null, $requesterUID = null)
     {
         if ($requesterUID === null) {
-            $u = new User();
+            $u = $this->application->make(User::class);
             $requesterUID = $u->getUserID();
         }
 
@@ -695,7 +695,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function triggerDeactivate($requesterUID = null)
     {
         if ($requesterUID === null) {
-            $u = new User();
+            $u = $this->application->make(User::class);
             $requesterUID = $u->getUserID();
         }
 

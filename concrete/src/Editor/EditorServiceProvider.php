@@ -8,13 +8,14 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Site\Config\Liaison;
 
 class EditorServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->app->singleton(
-            EditorInterface::class,
+            CkeditorEditor::class,
             function (Application $app) {
                 $config = $app->make('site')->getSite()->getConfigRepository();
                 $styles = $config->get('editor.ckeditor4.styles', []);
@@ -34,7 +35,7 @@ class EditorServiceProvider extends ServiceProvider
                 $pluginManager->select($selectedPlugins);
                 $this->registerCkeditorPlugins($pluginManager);
                 $this->registerCorePlugins($pluginManager);
-                $editor = new CkeditorEditor($config, $pluginManager, $styles);
+                $editor = $app->build(CkeditorEditor::class, ['config' => $config, 'pluginManager' => $pluginManager, 'styles' => $styles]);
                 $editor->setToken($app->make('token')->generate('editor'));
 
                 $filePermission = FilePermissions::getGlobal();
@@ -52,7 +53,8 @@ class EditorServiceProvider extends ServiceProvider
                 return $editor;
             }
         );
-        $this->app->alias(EditorInterface::class, 'editor');
+        $this->app->alias(CkeditorEditor::class, EditorInterface::class);
+        $this->app->alias(CkeditorEditor::class, 'editor');
     }
 
     protected function registerCkeditorPlugins(PluginManager $pluginManager)
