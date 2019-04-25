@@ -16,9 +16,9 @@ class Account extends AbstractController
         if (!$user->isRegistered()) {
             return JsonResponse::create(['error' => 'User must be register.'], JsonResponse::HTTP_FORBIDDEN);
         }
-
-        if (!$this->app->make('token')->validate('ccm_remove_pm_new_status')) {
-            return JsonResponse::create(['error' => 'Invalid Token.'], JsonResponse::HTTP_FORBIDDEN);
+        $token = $this->app->make('token');
+        if (!$token->validate('ccm_remove_pm_new_status')) {
+            return JsonResponse::create(['error' => $token->getErrorMessage()], JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $db = $this->app->make(Connection::class);
