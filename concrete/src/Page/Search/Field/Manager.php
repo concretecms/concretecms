@@ -47,7 +47,7 @@ class Manager extends FieldManager
         $app = Facade::getFacadeApplication();
         $siteService = $app->make('site');
         $site = $siteService->getActiveSiteForEditing();
-        $sites = $siteService->getSites();
+        $sites = $siteService->getList();
         if (count($site->getLocales()) > 1) {
             $properties[] = new SiteLocaleField();
         }

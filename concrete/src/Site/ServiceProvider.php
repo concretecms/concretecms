@@ -33,5 +33,8 @@ class ServiceProvider extends BaseServiceProvider
             }
             return $resolver;
         });
+
+        $this->app->singleton('Concrete\Core\Site\User\Group\Service');
+        $this->app->singleton('Concrete\Core\Site\Type\Controller\Manager');
     }
 }

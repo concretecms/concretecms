@@ -155,10 +155,14 @@ class Sites extends DashboardPageController
             $this->render('/dashboard/system/multisite/sites/form');
 
         } else {
-            $list = $service->getList();
-            $this->set('types', $list);
-            $this->set('service', $service);
-            $this->render('/dashboard/system/multisite/sites/select_type');
+            $list = $service->getUserAddedList();
+            if (count($list) == 1) {
+                return $this->redirect('/dashboard/system/multisite/sites/add', $list[0]->getSiteTypeID());
+            } else {
+                $this->set('types', $list);
+                $this->set('service', $service);
+                $this->render('/dashboard/system/multisite/sites/select_type');
+            }
         }
     }
 

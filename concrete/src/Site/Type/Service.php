@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Entity\Site\SkeletonLocale;
 use Concrete\Core\Entity\Site\Type;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Site\Type\Skeleton\Service as SkeletonService;
 use Concrete\Core\Site\User\Group\Service as GroupService;
@@ -87,6 +88,14 @@ class Service
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
             ->findAll();
+    }
+
+    public function getUserAddedList()
+    {
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->neq('siteTypeHandle', 'default'));
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
+            ->matching($criteria);
     }
 
     public function delete(Type $type)

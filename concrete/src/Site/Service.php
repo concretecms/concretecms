@@ -256,7 +256,8 @@ class Service
     public function getController(Site $site)
     {
         $manager = $this->app->make(Manager::class);
-        return $manager->driver($site->getType()->getSiteTypeHandle());
+        $controller = $manager->driver($site->getType()->getSiteTypeHandle());
+        return $controller;
     }
 
     /**
