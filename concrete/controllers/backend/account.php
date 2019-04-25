@@ -17,13 +17,14 @@ class Account extends AbstractController
             return JsonResponse::create(['error' => 'User must be register.'], JsonResponse::HTTP_FORBIDDEN);
         }
 
-        if ($this->app->make('token')->validate('ccm_remove_pm_new_status')) {
-            $db = $this->app->make(Connection::class);
-            $db->update('UserPrivateMessagesTo', ['msgIsNew' => 0],
-                ['msgMailboxID' => Mailbox::MBTYPE_INBOX, 'uID' => $user->getUserID()]);
-            return JsonResponse::create(['remove_inbox_new_message_status' => true], JsonResponse::HTTP_OK);
+        if (!$this->app->make('token')->validate('ccm_remove_pm_new_status')) {
+            return JsonResponse::create(['error' => 'Invalid Token.'], JsonResponse::HTTP_FORBIDDEN);
         }
 
-        return null;
+        $db = $this->app->make(Connection::class);
+        $db->update('UserPrivateMessagesTo', ['msgIsNew' => 0],
+            ['msgMailboxID' => Mailbox::MBTYPE_INBOX, 'uID' => $user->getUserID()]);
+
+        return JsonResponse::create(['remove_inbox_new_message_status' => ['mailbox' => Mailbox::MBTYPE_INBOX]], JsonResponse::HTTP_OK);
     }
 }
