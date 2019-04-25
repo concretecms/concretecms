@@ -104,7 +104,6 @@ class Menu extends ContextMenu
         }
 
         $isAlias = $b->isAlias();
-        $u = new \User();
         $numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
         if ($isAlias) {
             $deleteMessage = t('Do you want to delete this block?');

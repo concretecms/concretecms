@@ -653,8 +653,9 @@ return [
             'preview_image_popover' => true,
             // SVG sanitization
             'svg_sanitization' => [
-                // Enable the SVG sanitification?
-                'enabled' => true,
+                // The operation that the SVG sanitizer should perform.
+                // This must be value of one of the Concrete\Core\File\Import\Processor\SvgProcessor::ACTION_... constants
+                'action' => 'sanitize',
                 // Space-separated list of tags to be kept
                 'allowed_tags' => '',
                 // Space-separated list of attributes to be kept

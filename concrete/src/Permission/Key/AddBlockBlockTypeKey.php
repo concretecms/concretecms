@@ -2,7 +2,8 @@
 namespace Concrete\Core\Permission\Key;
 
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use PermissionKey;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
@@ -10,7 +11,8 @@ class AddBlockBlockTypeKey extends BlockTypeKey
 {
     protected function getAllowedBlockTypeIDs()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $pae = $this->getPermissionAccessObject();
         if (!is_object($pae)) {
             return array();
@@ -53,7 +55,8 @@ class AddBlockBlockTypeKey extends BlockTypeKey
 
     public function validate($bt = false)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

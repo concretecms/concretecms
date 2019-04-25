@@ -23,6 +23,7 @@
 *.tpl normalizetext
 *.txt normalizetext
 *.xml normalizetext
+*.svg text eol=lf
 
 #
 # Binary files
