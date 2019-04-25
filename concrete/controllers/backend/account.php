@@ -4,7 +4,7 @@ namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\User\PrivateMessage\Mailbox;
-use Concrete\Core\User\User;
+use Concrete\Core\User\User as LoggedUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\DBAL\Connection;
 
@@ -12,7 +12,7 @@ class Account extends AbstractController
 {
     public function removeInboxNewMessageStatus()
     {
-        $user = new User();
+        $user = new LoggedUser();
         if (!$user->isRegistered()) {
             return JsonResponse::create(['error' => 'User must be register.'], JsonResponse::HTTP_FORBIDDEN);
         }
