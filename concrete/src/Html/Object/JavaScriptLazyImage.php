@@ -4,7 +4,7 @@ namespace Concrete\Core\Html\Object;
 use HtmlObject\Element;
 use HtmlObject\Image;
 
-class ImageNoScriptFallback extends Element
+class JavaScriptLazyImage extends Element
 {
     /**
      * Whether the element is self closing.
@@ -19,7 +19,7 @@ class ImageNoScriptFallback extends Element
 
     public function __construct($src, $attributes = array(), $lazyLoadNative)
     {
-        $this->noScriptImageFallback($src, $lazyLoadNative);
+        $this->noscriptFallback($src, $lazyLoadNative);
         $this->img($src, $lazyLoadNative);
     }
 
@@ -30,7 +30,7 @@ class ImageNoScriptFallback extends Element
      * @param array $attributes
      * @param bool|null $lazyLoadNative
      *
-     * @return \Concrete\Core\Html\Object\ImageNoScriptFallback
+     * @return \Concrete\Core\Html\Object\JavaScriptLazyImage
      */
     public static function create($src = false, $attributes = array(), $lazyLoadNative = false)
     {
@@ -52,9 +52,9 @@ class ImageNoScriptFallback extends Element
      * @param string $src The file path of an image.
      * @param bool $lazyLoadNative If true, the image "loading" attribute is set to "lazy".
      *
-     * @return \Concrete\Core\Html\Object\ImageNoScriptFallback
+     * @return \Concrete\Core\Html\Object\JavaScriptLazyImage
      */
-    public function noScriptImageFallback($src, $lazyLoadNative)
+    public function noscriptFallback($src, $lazyLoadNative = false)
     {
         $this->nest('<noscript>');
 
@@ -83,7 +83,7 @@ class ImageNoScriptFallback extends Element
      * @param string $src The file path of an image.
      * @param bool $lazyLoadNative If true, the image "loading" attribute is set to "lazy".
      */
-    public function img($src, $lazyLoadNative)
+    public function img($src, $lazyLoadNative = false)
     {
         $img = Image::create();
         $img->src(false);

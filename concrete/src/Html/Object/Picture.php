@@ -36,7 +36,7 @@ class Picture extends Element
         $this->sources($sources, $lazyLoadJavaScript);
 
         if ($lazyLoadJavaScript) {
-            $this->noScriptFallback($fallbackSrc, $lazyLoadNative);
+            $this->noscriptFallback($fallbackSrc, $lazyLoadNative);
         }
 
         $this->fallback($fallbackSrc, $lazyLoadNative, $lazyLoadJavaScript);
@@ -83,7 +83,7 @@ class Picture extends Element
      *
      * @return \Concrete\Core\Html\Object\Picture
      */
-    public function sources($sources, $lazyLoadJavaScript)
+    public function sources($sources, $lazyLoadJavaScript = false)
     {
         $this->nest("<!--[if IE 9]><video style='display: none;'><![endif]-->");
 
@@ -126,7 +126,7 @@ class Picture extends Element
      *
      * @return \Concrete\Core\Html\Object\Picture
      */
-    public function noScriptFallback($src, $lazyLoadNative)
+    public function noscriptFallback($src, $lazyLoadNative = false)
     {
         $this->nest('<noscript>');
 
@@ -160,7 +160,7 @@ class Picture extends Element
      * @param bool $lazyLoadNative If true, the image "loading" attribute is set to "lazy".
      * @param bool $lazyLoadJavaScript If true, the image path is set to a "data-src" attribute.
      */
-    public function fallback($src, $lazyLoadNative, $lazyLoadJavaScript)
+    public function fallback($src, $lazyLoadNative = false, $lazyLoadJavaScript = false)
     {
         $img = Image::create();
         $img->src($src);
