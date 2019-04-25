@@ -134,6 +134,16 @@ class Entities extends DashboardPageController
         }
     }
 
+    public function clear_entity($id = null)
+    {
+        $entity = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity')->findOneById($id);
+
+        if (!is_object($entity)) {
+            $this->error->add(t('Invalid express entity.'));
+        }
+        //TODO if entity found continue with implementation.
+    }
+
     public function edit($id = null)
     {
         $tree = ExpressEntryResults::get();
