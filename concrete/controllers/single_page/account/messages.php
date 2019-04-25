@@ -87,6 +87,7 @@ class Messages extends AccountPageController
         if ($ui->canReadPrivateMessage($msg)) {
             $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
             $msg->markAsRead();
+            $mailbox->removeMessageNewStatus($msg->getMessageID());
             $this->set('subject', $msg->getFormattedMessageSubject());
             $this->set('msgContent', $msg->getMessageBody());
             $this->set('dateAdded', $dh->formatDateTime($msg->getMessageDateAdded(), true));
