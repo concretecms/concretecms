@@ -1,5 +1,5 @@
 <?php
-namespace PortlandLabs\Liberta\Permissions\Registry\Object;
+namespace Concrete\Core\Permission\Registry\Object;
 
 use Concrete\Core\Permission\Registry\AbstractObjectRegistry;
 use Concrete\Core\Permission\Registry\Entry\Object\Object\FileFolder;

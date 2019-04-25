@@ -216,14 +216,6 @@
         });
     }
 
-    function setupSiteListMenuItem() {
-        $('select[data-select=ccm-header-site-list]').show().selectize({
-            'onItemAdd': function(option) {
-                window.location.href = option;
-            }
-        });
-    }
-
     function activateIntelligentSearchResults() {
 		if ($("#ccm-intelligent-search-results div:visible").length == 0) {
 			$("#ccm-intelligent-search-results").hide();
@@ -344,7 +336,6 @@
 				setupTooltips();
 				setupPageAlerts();
 				setupHelpNotifications();
-				setupSiteListMenuItem();
                 setupMobileNav();
 			}
 		},

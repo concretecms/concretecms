@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Permission;
 
+use Concrete\Core\Entity\Site\Group\Group;
 use Doctrine\ORM\Mapping as ORM;
-use PortlandLabs\Liberta\Entity\Site\Group\Group;
 
 /**
  * @ORM\Entity
