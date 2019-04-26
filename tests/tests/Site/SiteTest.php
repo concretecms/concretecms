@@ -9,6 +9,8 @@ use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Concrete\Core\Site\Resolver\StandardDriver;
 use Concrete\Core\Site\Service;
+use Concrete\Core\Site\Type\Controller\Manager;
+use Concrete\Core\Site\Type\Controller\StandardController;
 use Concrete\Theme\Elemental\PageTheme;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -52,9 +54,13 @@ class SiteTest extends PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($repository));
 
+        $siteTypeService = $this->getMockBuilder(\Concrete\Core\Site\Type\Service::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $config = \Core::make('config');
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, \Core::make('app'), $config, $factory);
+        $service = new Service($entityManager, \Core::make('app'), $config, $factory, $siteTypeService);
 
         $retrieved = $service->getDefault();
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $retrieved);
@@ -64,6 +70,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
 
     public function testAdd()
     {
+
         // Last, mock the EntityManager to return the mock of the repository
         $entityManager = $this
             ->getMockBuilder(EntityManager::class)
@@ -82,8 +89,37 @@ class SiteTest extends PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue('Testing'));
 
+        $skeletonService = $this->getMockBuilder(\Concrete\Core\Site\Type\Skeleton\Service::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $groupService = $this->getMockBuilder(\Concrete\Core\Site\User\Group\Service::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $controller = $this->getMockBuilder(StandardController::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $controller->expects($this->once())
+            ->method('add')
+            ->will($this->returnArgument(0));
+
+        $siteTypeService = $this->getMockBuilder(\Concrete\Core\Site\Type\Service::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $siteTypeService->expects($this->once())
+            ->method('getController')
+            ->will($this->returnValue($controller));
+
+        $siteTypeService->expects($this->once())
+            ->method('getSkeletonService')
+            ->will($this->returnValue($skeletonService));
+        $siteTypeService->expects($this->once())
+            ->method('getGroupService')
+            ->will($this->returnValue($groupService));
+
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, \Core::make('app'), $configRepoStub, $factory);
+        $service = new Service($entityManager, \Core::make('app'), $configRepoStub, $factory, $siteTypeService);
         $type = new Type();
         $theme = new PageTheme();
 
@@ -132,7 +168,7 @@ class SiteTest extends PHPUnit_Framework_TestCase
 
         $config = \Core::make('config');
         $factory = new ResolverFactory($app, new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, $app, $config, $factory);
+        $service = new Service($entityManager, $app, $config, $factory, $type_service);
         $default = $service->installDefault();
 
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $default);
@@ -166,9 +202,13 @@ class SiteTest extends PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($repository));
 
+        $siteTypeService = $this->getMockBuilder(\Concrete\Core\Site\Type\Service::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $config = \Core::make('config');
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
-        $service = new Service($entityManager, \Core::make('app'), $config, $factory);
+        $service = new Service($entityManager, \Core::make('app'), $config, $factory, $siteTypeService);
         $cache = new Pool();
         $cache->setDriver(new Ephemeral());
         $service->setCache($cache);
