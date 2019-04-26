@@ -43,6 +43,20 @@ class Service
         return $groups;
     }
 
+    /**
+     * Creates the concrete5 user group that will hold instance groups for this site.
+     */
+    public function createSiteGroup(Site $site)
+    {
+        $name = $site->getSiteName();
+        return Group::add($site->getSiteName(), '', $this->getSiteParentGroup());
+    }
+
+    public function createInstanceGroup(\Concrete\Core\Entity\Site\Group\Group $siteGroup, Group $parent)
+    {
+        return Group::add($siteGroup->getSiteGroupName(), '', $parent);
+    }
+
     public function addGroup(Type $type, $groupName)
     {
         $group = new SiteGroupEntity();

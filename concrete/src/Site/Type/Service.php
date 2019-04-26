@@ -61,35 +61,69 @@ class Service
         $this->siteTypeControllerManager = $siteTypeControllerManager;
     }
 
+    /**
+     * @return SkeletonService
+     */
+    public function getSkeletonService()
+    {
+        return $this->skeletonService;
+    }
+
+    /**
+     * @return GroupService
+     */
+    public function getGroupService()
+    {
+        return $this->groupService;
+    }
+
+    /**
+     * @return Type
+     */
     public function getDefault()
     {
         return $this->getByID(1);
     }
 
+    /**
+     * @return Type
+     */
     public function getByID($typeID)
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
             ->findOneBy(array('siteTypeID' => $typeID));
     }
 
+    /**
+     * @return Type
+     */
     public function getByHandle($typeHandle)
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
             ->findOneBy(array('siteTypeHandle' => $typeHandle));
     }
 
+    /**
+     * @return Type[]
+     */
     public function getByPackage(Package $package)
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
             ->findByPackage($package);
     }
 
+    /**
+     * @return Type[]
+     */
     public function getList()
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
             ->findAll();
     }
 
+    /**
+     * @return Type[]
+     */
     public function getUserAddedList()
     {
         $criteria = new Criteria();

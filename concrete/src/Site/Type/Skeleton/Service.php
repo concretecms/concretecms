@@ -10,20 +10,43 @@ use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Entity\Site\Skeleton;
 use Concrete\Core\Entity\Site\SkeletonLocale;
 use Concrete\Core\Entity\Site\SkeletonTree;
+use Concrete\Core\Localization\Locale\Service as LocaleService;
+use Concrete\Core\Attribute\Category\SiteTypeCategory;
 
 class Service
 {
 
+    /**
+     * @var EntityManagerInterface
+     */
     protected $entityManager;
+
+    /**
+     * @var Application
+     */
     protected $application;
+
+    /**
+     * @var LocaleService
+     */
     protected $localeService;
 
-    public function __construct(Application $application, EntityManagerInterface $entityManager,
-        \Concrete\Core\Localization\Locale\Service $localeService)
+    /**
+     * @var SiteTypeCategory
+     */
+    protected $siteTypeCategory;
+
+    public function __construct(
+        Application $application,
+        EntityManagerInterface $entityManager,
+        LocaleService $localeService,
+        SiteTypeCategory $siteTypeCategory
+    )
     {
         $this->application = $application;
         $this->localeService = $localeService;
         $this->entityManager = $entityManager;
+        $this->siteTypeCategory = $siteTypeCategory;
     }
 
     /**
@@ -50,6 +73,11 @@ class Service
         if (is_object($tree)) {
             return $tree->getSiteHomePageObject();
         }
+    }
+
+    public function getAttributeValues(Skeleton $skeleton)
+    {
+        return $this->siteTypeCategory->getAttributeValues($skeleton);
     }
 
     public function createSkeleton(Type $type, SkeletonLocale $locale)

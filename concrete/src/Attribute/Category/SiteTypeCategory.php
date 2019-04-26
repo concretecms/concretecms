@@ -13,17 +13,6 @@ use Concrete\Core\Site\Type\Skeleton\Service;
 class SiteTypeCategory extends AbstractStandardCategory
 {
 
-    protected $skeletonService;
-
-    public function __construct(
-        Service $skeletonService,
-        Application $application,
-        EntityManager $entityManager)
-    {
-        $this->skeletonService = $skeletonService;
-        parent::__construct($application, $entityManager);
-    }
-
     public function createAttributeKey()
     {
         return new SiteKey();

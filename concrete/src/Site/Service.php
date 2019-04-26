@@ -21,8 +21,7 @@ use Concrete\Core\User\Group\Group;
 use Doctrine\ORM\EntityManagerInterface;
 use Punic\Comparer;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Site\User\Group\Service as GroupService;
-use Concrete\Core\Site\Type\Skeleton\Service as SkeletonService;
+use Concrete\Core\Site\Type\Service as SiteTypeService;
 
 class Service
 {
@@ -52,9 +51,9 @@ class Service
     protected $cache;
 
     /**
-     * @var GroupService
+     * @var SiteTypeService
      */
-    protected $groupService;
+    protected $siteTypeService;
 
     /**
      * @param EntityManagerInterface $entityManager
@@ -64,20 +63,12 @@ class Service
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Service constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param Application $app
-     * @param Repository $configRepository
-     * @param ResolverFactory $resolverFactory
-     * @param GroupService $groupService
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
         Application $app,
         Repository $configRepository,
         ResolverFactory $resolverFactory,
-        GroupService $groupService
+        SiteTypeService $siteTypeService
     )
     {
         $this->app = $app;
@@ -85,7 +76,7 @@ class Service
         $this->config = $configRepository;
         $this->cache = $this->app->make('cache/request');
         $this->resolverFactory = $resolverFactory;
-        $this->groupService = $groupService;
+        $this->siteTypeService = $siteTypeService;
     }
 
     /**
@@ -201,35 +192,40 @@ class Service
 
         $this->entityManager->refresh($site);
 
-        $service = $this->app->make(SkeletonService::class);
-        $skeleton = $service->getSkeleton($type);
+        $skeletonService = $this->siteTypeService->getSkeletonService();
+        $skeleton = $skeletonService->getSkeleton($type);
         if ($skeleton) {
-            $service->publishSkeletonToSite($skeleton, $site);
+            $skeletonService->publishSkeletonToSite($skeleton, $site);
         }
 
         // Add the default groups
-        $parent = Group::add($name, '', $this->groupService->getSiteParentGroup());
-        $groups = $this->groupService->getSiteTypeGroups($type);
-        foreach($groups as $group) {
-            /**
-             * @var $group \Concrete\Core\Entity\Site\Group\Group
-             */
-            $siteGroup = Group::add($group->getSiteGroupName(), '', $parent);
-            $relation = new Relation();
-            $relation->setSite($site);
-            $relation->setInstanceGroupID($siteGroup->getGroupID());
-            $relation->setSiteGroup($group);
-            $group->getSiteGroupRelations()->add($relation);
-            $this->entityManager->persist($group);
+        $groupService = $this->siteTypeService->getGroupService();
+        $parent = $groupService->createSiteGroup($site);
+        $groups = $groupService->getSiteTypeGroups($type);
+        if ($groups) {
+            foreach ($groups as $group) {
+                /**
+                 * @var $group \Concrete\Core\Entity\Site\Group\Group
+                 */
+                $siteGroup = $groupService->createInstanceGroup($group, $parent);
+                $relation = new Relation();
+                $relation->setSite($site);
+                $relation->setInstanceGroupID($siteGroup->getGroupID());
+                $relation->setSiteGroup($group);
+                $group->getSiteGroupRelations()->add($relation);
+                $this->entityManager->persist($group);
+            }
         }
 
         // Add the default attributes
-        $attributes = $this->app->make(SiteTypeCategory::class)->getAttributeValues($skeleton);
-        foreach($attributes as $attribute) {
-            /**
-             * @var $attribute SiteTypeValue
-             */
-            $site->setAttribute($attribute->getAttributeKey(), $attribute->getValueObject());
+        if ($skeleton) {
+            $attributes = $skeletonService->getAttributeValues($skeleton);
+            foreach ($attributes as $attribute) {
+                /**
+                 * @var $attribute SiteTypeValue
+                 */
+                $site->setAttribute($attribute->getAttributeKey(), $attribute->getValueObject());
+            }
         }
 
         $this->entityManager->flush();
@@ -237,10 +233,13 @@ class Service
         // Populate all the config values from the default site into this new site.
         // This is not ideal since it will fail if we don't update it after we add new
         // config values, but this will have to do for now
-        $default_site = $this->getDefault();
+        $defaultSite = $this->getDefault();
+        $defaultSiteConfig = $defaultSite->getConfigRepository();
         $config = $site->getConfigRepository();
-        foreach(['user', 'editor'] as $key) {
-            $config->save($key, $default_site->getConfigRepository()->get($key));
+        if ($defaultSiteConfig) {
+            foreach (['user', 'editor'] as $key) {
+                $config->save($key, $defaultSiteConfig->get($key));
+            }
         }
 
         /**
@@ -255,9 +254,7 @@ class Service
 
     public function getController(Site $site)
     {
-        $manager = $this->app->make(Manager::class);
-        $controller = $manager->driver($site->getType()->getSiteTypeHandle());
-        return $controller;
+        return $this->siteTypeService->getController($site->getType());
     }
 
     /**
@@ -406,7 +403,7 @@ class Service
 
         $site->getLocales()->add($locale);
 
-        $service = $this->app->make('site/type');
+        $service = $this->siteTypeService;
         $type = $service->getDefault();
         $site->setType($type);
 
