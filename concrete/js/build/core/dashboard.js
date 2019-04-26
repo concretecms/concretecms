@@ -141,7 +141,7 @@
                 window.location.href = option;
             }
         });
-    }
+    };
 
     var setupSelects = function() {
 		$('select[data-select=bootstrap]').bootstrapSelectToButton();
