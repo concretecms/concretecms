@@ -233,6 +233,9 @@ class Service
         // Populate all the config values from the default site into this new site.
         // This is not ideal since it will fail if we don't update it after we add new
         // config values, but this will have to do for now
+
+        // This code is not great, let's find a better solution
+        /*
         $defaultSite = $this->getDefault();
         $defaultSiteConfig = $defaultSite->getConfigRepository();
         $config = $site->getConfigRepository();
@@ -241,6 +244,7 @@ class Service
                 $config->save($key, $defaultSiteConfig->get($key));
             }
         }
+        */
 
         /**
          * @var $manager Manager;

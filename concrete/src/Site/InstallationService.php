@@ -141,7 +141,7 @@ class InstallationService
     {
         $group = $this->userGroupService->getSiteParentGroup();
         if (!$group) {
-            Group::add($this->userGroupService::PARENT_GROUP_NAME,
+            Group::add(UserGroupService::PARENT_GROUP_NAME,
                 'Parent group for sites hosted in multisite.',
             null);
         }
