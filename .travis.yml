@@ -3,7 +3,6 @@ language: php
 sudo: false
 
 php:
-- 7.1
 - 7.2
 - 7.3
 - nightly
@@ -19,14 +18,14 @@ env:
 matrix:
   fast_finish: true
   include:
-  - php: 7.1
+  - php: 7.2
     env:
     - DO_PHPUNIT=2
-  - php: 7.1
+  - php: 7.2
     env:
     - DO_CS_PHP=1
     - DO_PHPUNIT=0
-  - php: 7.1
+  - php: 7.2
     env:
     - PREFER_LOWEST="--prefer-lowest"
   - language: node_js
