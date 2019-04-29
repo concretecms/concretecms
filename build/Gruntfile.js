@@ -290,6 +290,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/image.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/size.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/typography.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/color.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/custom.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/inline-toolbar.js'
             ]
         },
