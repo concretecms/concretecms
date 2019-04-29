@@ -28,11 +28,12 @@ class EmailValidatorTest extends TestCase
         $this->assertNotEmpty($error);
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testInvalidInput()
     {
         $validator = new \Concrete\Core\Validator\String\EmailValidator();
-
-        $this->setExpectedException('Exception');
         $validator->isValid($validator);
     }
 }

@@ -193,9 +193,11 @@ class AggregateTrackerTest extends TestCase
         $this->assertEquals($tracker2, $this->tracker->tracker('test'));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testErrorOnMiss()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $this->tracker->tracker('test');
     }
 

@@ -27,11 +27,12 @@ class MaximumLengthValidatorTest extends TestCase
         $this->assertNotEmpty($error);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
     public function testInvalidInput()
     {
         $validator = new \Concrete\Core\Validator\String\MaximumLengthValidator(5);
-
-        $this->setExpectedException('InvalidArgumentException');
         $validator->isValid($validator);
     }
 }

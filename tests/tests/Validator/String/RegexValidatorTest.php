@@ -35,8 +35,6 @@ class RegexValidatorTest extends TestCase
         $validator = new \Concrete\Core\Validator\String\RegexValidator('');
 
         $validator->isValid($validator);
-
-        $this->setExpectedException('RuntimeException');
         $validator->isValid('');
     }
 
