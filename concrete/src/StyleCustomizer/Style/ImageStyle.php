@@ -1,44 +1,69 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer\Style;
 
+use Concrete\Core\File\File;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\StyleCustomizer\Style\Value\ImageValue;
+use Concrete\Core\Support\Facade\Application;
 use Less_Environment;
-use File;
-use Loader;
-use Permissions;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ImageStyle extends Style
 {
+    /**
+     * @param \Concrete\Core\StyleCustomizer\Style\Value\ImageValue|null|false $value
+     *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Style::render()
+     */
     public function render($value = false)
     {
-        $r = \Concrete\Core\Http\ResponseAssetGroup::get();
+        $r = ResponseAssetGroup::get();
         $r->requireAsset('core/style-customizer');
 
-        $strOptions = '';
-        $i = 0;
-        $options['inputName'] = $this->getVariable();
-        if (is_object($value)) {
+        $options = [
+            'inputName' => $this->getVariable(),
+        ];
+        if ($value) {
             $options['value'] = $value->getUrl();
         }
         $strOptions = json_encode($options);
 
-        echo '<span class="ccm-style-customizer-display-swatch-wrapper" data-image-selector="' . $this->getVariable() . '"></span>';
-        echo "<script type=\"text/javascript\">";
-        echo "$(function() { $('span[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
-        echo "</script>";
+        echo <<<EOT
+<span class="ccm-style-customizer-display-swatch-wrapper" data-image-selector="{$this->getVariable()}"></span>
+<script>
+$(function() {
+    $('span[data-image-selector={$this->getVariable()}]').concreteStyleCustomizerImageSelector({$strOptions});
+});
+</script>
+EOT
+        ;
     }
 
-    public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
+    /**
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\ImageValue|null
+     *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Style::getValueFromRequest()
+     */
+    public function getValueFromRequest(ParameterBag $request)
     {
+        $iv = null;
         $image = $request->get($this->getVariable());
-        $image = $image['image'];
+        $image = isset($image['image']) ? $image['image'] : null;
         if ($image) {
+            $app = Application::getFacadeApplication();
+            $nvh = $app->make('helper/validation/numbers');
             $iv = new ImageValue($this->getVariable());
-            if (Loader::helper('validation/numbers')->integer($image)) {
+            if ($nvh->integer($image)) {
                 // it's a file ID.
                 $f = File::getByID($image);
-                if (is_object($f)) {
-                    $fp = new Permissions($f);
+                if ($f) {
+                    $fp = new Checker($f);
                     if ($fp->canViewFile()) {
                         $iv->setFileID($image);
                         $iv->setUrl($f->getRelativePath());
@@ -47,11 +72,18 @@ class ImageStyle extends Style
             } else {
                 $iv->setUrl($image);
             }
-
-            return $iv;
         }
+
+        return $iv;
     }
 
+    /**
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\ImageValue[]
+     *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Style::getValuesFromVariables()
+     */
     public static function getValuesFromVariables($rules = [])
     {
         $values = [];
@@ -64,9 +96,7 @@ class ImageStyle extends Style
                 }
                 $iv = new ImageValue($matches[1]);
                 $iv->setUrl($value);
-                if (is_object($iv)) {
-                    $values[] = $iv;
-                }
+                $values[] = $iv;
             }
         }
 
