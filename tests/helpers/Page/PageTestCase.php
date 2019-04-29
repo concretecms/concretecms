@@ -84,7 +84,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

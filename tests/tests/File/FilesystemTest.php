@@ -22,7 +22,7 @@ class FilesystemTest extends ConcreteDatabaseTestCase
         'TreeNodePermissionAssignments',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->filesystem = new Filesystem();

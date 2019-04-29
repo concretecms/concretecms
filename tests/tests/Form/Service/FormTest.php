@@ -4,9 +4,9 @@ namespace Concrete\Tests\Form\Service;
 
 use Concrete\Core\Http\Request;
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FormTest extends PHPUnit_Framework_TestCase
+class FormTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Form\Service\Form

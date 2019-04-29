@@ -19,7 +19,7 @@ class TextTest extends ConcreteDatabaseTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    public function setUp(): void
     {
         $this->object = new \Concrete\Core\Utility\Service\Text();
     }
@@ -28,7 +28,7 @@ class TextTest extends ConcreteDatabaseTestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->object);
         parent::tearDown();

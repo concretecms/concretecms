@@ -12,10 +12,10 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\View\DialogView;
 use Concrete\Core\View\View;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Concrete\Core\Page\Page;
 
-class ViewTest extends PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
 
     public function testRenderingInstallationView()

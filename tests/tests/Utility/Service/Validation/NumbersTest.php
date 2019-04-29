@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Utility\Service\Validation;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class NumbersTest extends PHPUnit_Framework_TestCase
+class NumbersTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Utility\Service\Validation\Numbers
@@ -15,7 +15,7 @@ class NumbersTest extends PHPUnit_Framework_TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    public function setUp()
     {
         $this->object = new \Concrete\Core\Utility\Service\Validation\Numbers();
     }

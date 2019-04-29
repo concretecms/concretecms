@@ -19,10 +19,10 @@ use Concrete\Tests\User\Login\MockUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 
-class LoginServiceTest extends PHPUnit_Framework_TestCase
+class LoginServiceTest extends TestCase
 {
 
     use MockeryPHPUnitIntegration;

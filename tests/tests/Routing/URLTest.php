@@ -6,10 +6,10 @@ use Config;
 use Core;
 use Monolog\Logger;
 use Page;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use URL;
 
-class URLTest extends PHPUnit_Framework_TestCase
+class URLTest extends TestCase
 {
     /**
      * Here's the expected behavior.
@@ -127,19 +127,19 @@ class URLTest extends PHPUnit_Framework_TestCase
             $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
                 ->disableOriginalConstructor()
                 ->getMock();
-            
+
             $liaison = $this->getMockBuilder(\Concrete\Core\Config\Repository\Liaison::class)
                 ->disableOriginalConstructor()
                 ->getMock();
-            
+
             $liaison->expects($this->any())
                 ->method('get')
                 ->will($this->returnValueMap([
                     ['seo.canonical_url', null, 'https://www2.myawesomesite.com:8080'],
                     ['seo.canonical_url_alternative', null, 'https://www2.myawesomesite.com:8080'],
                 ]));
-            
-            
+
+
             $site->expects($this->once())
                 ->method('getConfigRepository')
                 ->will($this->returnValue($liaison));
@@ -227,7 +227,7 @@ class URLTest extends PHPUnit_Framework_TestCase
             ->getMock();
         try {
             $config->set('concrete.seo.trailing_slash', false);
-            
+
             $request = \Concrete\Core\Http\Request::create('http://xn--mgbh0fb.xn--kgbechtv/services');
             $response = $app->handleURLSlashes($request, $site);
             $this->assertNull($response);
@@ -263,7 +263,7 @@ class URLTest extends PHPUnit_Framework_TestCase
             $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2');
             $response = $app->handleURLSlashes($request, $site);
             $this->assertNull($response);
-    
+
             $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now?bar=1&foo=2');
             $response = $app->handleURLSlashes($request, $site);
             $this->assertEquals('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2', $response->getTargetUrl());

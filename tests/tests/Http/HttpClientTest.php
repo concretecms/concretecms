@@ -8,9 +8,9 @@ use Concrete\Core\Support\Facade\Application;
 use Exception;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Handler\StreamHandler;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class HttpClientTest extends PHPUnit_Framework_TestCase
+class HttpClientTest extends TestCase
 {
     const SKIP_VALID_CERTS = '**skip**';
 

@@ -12,7 +12,7 @@ class DatabaseTest extends ConcreteDatabaseTestCase
         'Users',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $conn = $this->getConnection();
         $pdo = $conn->getConnection();

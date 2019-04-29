@@ -7,13 +7,13 @@ use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\TestHeadersTrait;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @runTestsInSeparateProcesses
  */
-class SessionValidatorTest extends PHPUnit_Framework_TestCase
+class SessionValidatorTest extends TestCase
 {
     use TestHeadersTrait;
 

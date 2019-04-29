@@ -10,10 +10,10 @@ use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\TestHelpers\Search\TestList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class PaginationFactoryTest extends PHPUnit_Framework_TestCase
+class PaginationFactoryTest extends TestCase
 {
     public static function getFakeQuery()
     {

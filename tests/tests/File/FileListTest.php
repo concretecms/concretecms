@@ -90,7 +90,7 @@ class FileListTest extends FileStorageTestCase
         }
     }
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

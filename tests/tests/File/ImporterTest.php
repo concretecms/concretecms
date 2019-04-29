@@ -45,7 +45,7 @@ class ImporterTest extends FileStorageTestCase
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = \Core::make('config');

@@ -4,9 +4,9 @@ namespace Concrete\Tests\Foundation;
 
 use Concrete\Core\Application\Application as ServiceLocator;
 use Concrete\Core\Foundation\Service\ProviderList;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ServiceLocatorTest extends PHPUnit_Framework_TestCase
+class ServiceLocatorTest extends TestCase
 {
     protected $sl;
 

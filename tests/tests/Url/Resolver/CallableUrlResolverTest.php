@@ -11,7 +11,7 @@ class CallableUrlResolverTest extends ResolverTestCase
      */
     protected $urlResolver;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->urlResolver = new \Concrete\Core\Url\Resolver\CallableUrlResolver(function () {});

@@ -10,10 +10,10 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Runtime\Run\DefaultRunner;
 use Concrete\Core\Http\ServerInterface;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultRunnerTest extends PHPUnit_Framework_TestCase
+class DefaultRunnerTest extends TestCase
 {
     public function testReturnsResponseWhenNotInstalled()
     {

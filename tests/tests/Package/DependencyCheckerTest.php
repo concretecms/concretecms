@@ -9,11 +9,11 @@ use Concrete\Core\Package\Dependency\RequiredPackageException;
 use Concrete\Core\Package\Dependency\VersionMismatchException;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use ReflectionClass;
 use ReflectionException;
 
-class DependencyCheckerTest extends PHPUnit_Framework_TestCase
+class DependencyCheckerTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application

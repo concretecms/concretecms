@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Utility;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class IPAddressTest extends PHPUnit_Framework_TestCase
+class IPAddressTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Utility\IPAddress
@@ -18,7 +18,7 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    public function setUp()
     {
         $this->object = new \Concrete\Core\Utility\IPAddress();
     }

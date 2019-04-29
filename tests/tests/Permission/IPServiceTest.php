@@ -31,7 +31,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
      */
     private $ipService;
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->connection()->executeQuery('DELETE FROM FailedLoginAttempts');
@@ -48,7 +48,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->config->set('concrete.security.ban.ip', $this->originalConfig);

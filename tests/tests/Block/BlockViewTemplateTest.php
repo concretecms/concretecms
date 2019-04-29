@@ -7,9 +7,9 @@ use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class BlockViewTemplateTest extends PHPUnit_Framework_TestCase
+class BlockViewTemplateTest extends TestCase
 {
     // Core block, view.php, no custom template.
     public function testCoreBlockView()
@@ -52,6 +52,7 @@ class BlockViewTemplateTest extends PHPUnit_Framework_TestCase
 
     public function testApplicationBlockView()
     {
+        $this->markTestIncomplete('Not implemented');
     }
 
     protected function getMockBlock($handle, $bFilename = null)

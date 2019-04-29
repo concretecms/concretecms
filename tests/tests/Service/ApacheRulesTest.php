@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Service;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ApacheRulesTest extends PHPUnit_Framework_TestCase
+class ApacheRulesTest extends TestCase
 {
     private static $prepared = false;
     /**

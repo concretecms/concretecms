@@ -11,7 +11,7 @@ use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\View\View;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Concrete\Core\Page\Page;
 
 class PageViewTest extends PageTestCase

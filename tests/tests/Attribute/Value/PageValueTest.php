@@ -34,7 +34,7 @@ class PageValueTest extends AttributeValueTestCase
         require_once DIR_TESTS . '/assets/Attribute/Value/RelatedPageController.php';
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->truncateTables();
 

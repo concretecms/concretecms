@@ -10,12 +10,13 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Tests\TestCase;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use League\Csv\Writer;
 use Mockery as M;
 
-class CsvWriterTest extends \PHPUnit_Framework_TestCase
+class CsvWriterTest extends TestCase
 {
 
     public function testCsvValueOrder()

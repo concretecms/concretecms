@@ -15,12 +15,13 @@ use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponse;
 use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponseFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Concrete\Tests\TestCase;
 use Doctrine\ORM\EntityRepository;
 use Queue;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class BatchTest extends \PHPUnit_Framework_TestCase
+class BatchTest extends TestCase
 {
 
     protected function buildFile($fID)

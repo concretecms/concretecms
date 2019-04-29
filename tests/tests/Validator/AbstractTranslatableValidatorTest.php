@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class AbstractTranslatableValidatorTest extends PHPUnit_Framework_TestCase
+class AbstractTranslatableValidatorTest extends TestCase
 {
     public function testClosureMessage()
     {

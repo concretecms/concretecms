@@ -11,7 +11,7 @@ use Concrete\TestHelpers\User\UserTestCase;
 
 class GroupTest extends UserTestCase
 {
-    protected function setUp()
+    public function setUp(): void
     {
         $this->truncateTables();
         parent::setUp();

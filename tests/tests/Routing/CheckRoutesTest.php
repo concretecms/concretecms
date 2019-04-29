@@ -4,9 +4,9 @@ namespace Concrete\Tests\Routing;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class CheckRoutesTest extends PHPUnit_Framework_TestCase
+class CheckRoutesTest extends TestCase
 {
     public function routeDestinationProvider()
     {

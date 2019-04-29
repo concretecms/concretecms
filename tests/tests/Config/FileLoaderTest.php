@@ -5,7 +5,7 @@ namespace Concrete\Tests\Config;
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\Renderer;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * Class FileLoaderTest.
@@ -23,7 +23,7 @@ use PHPUnit_Framework_TestCase;
  *   /application/config/namespace/group.php
  *   /application/config/namespace/environment.group.php
  */
-class FileLoaderTest extends PHPUnit_Framework_TestCase
+class FileLoaderTest extends TestCase
 {
     /** @var FileLoader */
     protected $loader;

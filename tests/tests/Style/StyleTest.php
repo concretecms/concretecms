@@ -4,9 +4,9 @@ namespace Concrete\Tests\Style;
 
 use Environment;
 use PageTheme;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class StyleTest extends PHPUnit_Framework_TestCase
+class StyleTest extends TestCase
 {
     /*
     public static function tearDownAfterClass() {

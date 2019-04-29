@@ -69,7 +69,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
         parent::tearDownAfterClass();
     }
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

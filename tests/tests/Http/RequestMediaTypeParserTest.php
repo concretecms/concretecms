@@ -5,10 +5,10 @@ namespace Concrete\Tests\Http;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\RequestMediaTypeParser;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
 
-class RequestMediaTypeParserTest extends PHPUnit_Framework_TestCase
+class RequestMediaTypeParserTest extends TestCase
 {
     /**
      * @return array
