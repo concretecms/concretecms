@@ -31,7 +31,7 @@ class Picture extends Element
     //////////////////////////// CORE METHODS //////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    public function __construct(array $sources = array(), $fallbackSrc, $attributes = array(), $lazyLoadNative, $lazyLoadJavaScript)
+    public function __construct(array $sources = array(), $fallbackSrc, $attributes = array(), $lazyLoadNative = false, $lazyLoadJavaScript = false)
     {
         $this->sources($sources, $lazyLoadJavaScript);
 

@@ -17,7 +17,7 @@ class JavaScriptLazyImage extends Element
     //////////////////////////// CORE METHODS //////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    public function __construct($src, $attributes = array(), $lazyLoadNative)
+    public function __construct($src, $attributes = array(), $lazyLoadNative = false)
     {
         $this->noscriptFallback($src, $lazyLoadNative);
         $this->img($src, $lazyLoadNative);
