@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "31456f5e1269dfcee8c60bcc11d43ae3",
+    "content-hash": "81b7fd7576cb5ee846e4547027fe7d98",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -3252,7 +3252,7 @@
                     "name": "Michele Locati",
                     "email": "mlocati@gmail.com",
                     "homepage": "https://github.com/mlocati",
-                    "role": "developer"
+                    "role": "Developer"
                 }
             ],
             "description": "Library to handle concrete5 core and package translations",
@@ -5129,7 +5129,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -6247,16 +6247,6 @@
                 "branch-alias": {
                     "dev-master": "2.6-dev",
                     "dev-develop": "2.7-dev"
-                },
-                "patches_applied": {
-                    "hash": "43aec57a6422c48c002031806c8a8ca01b6208cf",
-                    "list": [
-                        {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
-                            "path": "zendframework/zend-code/switch-continue.patch",
-                            "description": "Fix continue switch in FileGenerator and MethodReflection"
-                        }
-                    ]
                 }
             },
             "autoload": {

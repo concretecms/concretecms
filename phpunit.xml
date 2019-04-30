@@ -19,6 +19,9 @@
             <directory suffix=".php">concrete/controllers/</directory>
             <directory suffix="controller.php">concrete/</directory>
             <directory suffix="page_theme.php">concrete/themes/</directory>
+            <exclude>
+                <directory suffix=".php">concrete/vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

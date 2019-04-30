@@ -31,7 +31,7 @@ class DependencyCheckerTest extends TestCase
         self::$checker = self::$app->build(DependencyChecker::class);
     }
 
-    public function testForInstallProvider()
+    public function installProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -143,7 +143,7 @@ class DependencyCheckerTest extends TestCase
     }
 
     /**
-     * @dataProvider testForInstallProvider
+     * @dataProvider installProvider
      *
      * @param Package $package
      * @param array $installedPackages
@@ -156,7 +156,7 @@ class DependencyCheckerTest extends TestCase
         $this->assertEquals($expectedErrors, $errors);
     }
 
-    public function testForUninstallProvider()
+    public function uninstallProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -198,7 +198,7 @@ class DependencyCheckerTest extends TestCase
     }
 
     /**
-     * @dataProvider testForUninstallProvider
+     * @dataProvider uninstallProvider
      *
      * @param Package $package
      * @param array $otherInstalledPackages
