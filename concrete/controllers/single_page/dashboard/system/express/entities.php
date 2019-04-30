@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
 use Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer;
@@ -79,14 +80,14 @@ class Entities extends DashboardPageController
                 }
 
                 $this->flash('success', t('Object added successfully.'));
-                $this->redirect('/dashboard/system/express/entities', 'view_entity', $entity->getId());
+                return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
             }
         }
 
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entities = $r->findAll(array(), array('name' => 'asc'));
         $select = ['' => t('** Choose Entity')];
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             $select[$entity->getID()] = $entity->getEntityDisplayName();
         }
         $this->set('entities', $select);
@@ -116,7 +117,7 @@ class Entities extends DashboardPageController
             $this->entityManager->remove($entity);
             $this->entityManager->flush();
             $this->flash('success', t('Entity deleted successfully.'));
-            $this->redirect('/dashboard/system/express/entities');
+            return Redirect::to('/dashboard/system/express/entities');
         }
 
     }
@@ -134,14 +135,31 @@ class Entities extends DashboardPageController
         }
     }
 
-    public function clear_entity($id = null)
+    /**
+     * @return \Concrete\Core\Routing\RedirectResponse
+     */
+    public function delete_entries()
+    {
+        /** @var \Concrete\Core\Entity\Express\Entity $entity */
+        $entity = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity')->findOneById($this->request->request->get('entity_id'));
+
+        if (!is_object($entity)) {
+            $this->error->add(t('Invalid express entity.'));
+        }
+        //TODO if entity found continue with implementation.
+    }
+
+    public function clear_entries($id = null)
     {
         $entity = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity')->findOneById($id);
 
         if (!is_object($entity)) {
             $this->error->add(t('Invalid express entity.'));
         }
-        //TODO if entity found continue with implementation.
+
+        $this->set('entity', $entity);
+        $this->set('token', new Token());
+        $this->render('/dashboard/system/express/entities/clear_entries');
     }
 
     public function edit($id = null)
@@ -162,10 +180,10 @@ class Entities extends DashboardPageController
             $defaultEditFormID = 0;
             $ownedByID = 0;
             $entities = array('' => t('** No Owner'));
-            foreach($r->findAll() as $ownedByEntity) {
+            foreach ($r->findAll() as $ownedByEntity) {
                 $entities[$ownedByEntity->getID()] = $ownedByEntity->getName();
             }
-            foreach($this->entity->getForms() as $form) {
+            foreach ($this->entity->getForms() as $form) {
                 $forms[$form->getID()] = $form->getName();
             }
             if (is_object($this->entity->getDefaultViewForm())) {
@@ -226,7 +244,7 @@ class Entities extends DashboardPageController
         }
         $viewForm = null;
         $editForm = null;
-        foreach($this->entity->getForms() as $form) {
+        foreach ($this->entity->getForms() as $form) {
             if ($form->getID() == $this->request->request->get('default_edit_form_id')) {
                 $editForm = $form;
             }
@@ -273,7 +291,7 @@ class Entities extends DashboardPageController
             }
 
             $this->flash('success', t('Object updated successfully.'));
-            $this->redirect('/dashboard/system/express/entities', 'view_entity', $entity->getId());
+            return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
         }
     }
 
