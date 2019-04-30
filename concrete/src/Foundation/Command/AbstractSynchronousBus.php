@@ -2,6 +2,7 @@
 namespace Concrete\Core\Foundation\Command;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Foundation\Command\Handler\ApplicationAwareLocator;
 use Concrete\Core\Foundation\Command\Handler\MethodNameInflector\HandleClassNameWithFallbackInflector;
 use Concrete\Core\Foundation\Command\Middleware\BatchUpdatingMiddleware;
 use League\Tactician\CommandBus;
@@ -30,10 +31,9 @@ abstract class AbstractSynchronousBus implements SynchronousBusInterface
      */
     protected function getRequiredMiddleware(Dispatcher $dispatcher)
     {
-        $locator = new InMemoryLocator();
+        $locator = $this->app->make(ApplicationAwareLocator::class);
         foreach($dispatcher->getCommands() as $row) {
-            $handler = $row[0];
-            $command = $row[1];
+            [$handler, $command] = $row;
             $locator->addHandler($handler, $command);
         }
 
