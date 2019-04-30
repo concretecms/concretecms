@@ -38,9 +38,6 @@ matrix:
   allow_failures:
   - php: nightly
 
-before_install:
-  - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-
 before_script:
 - if test $DO_CS_JS -ne 0 || test $DO_BUILDASSETS -ne 0; then ./.travis/setup-build.sh; fi
 - if test $DO_PHPUNIT -ne 0 || test $DO_CS_PHP -ne 0; then ./.travis/composer-deps.sh; fi
@@ -48,8 +45,8 @@ before_script:
 script:
 - if test $DO_CS_PHP -ne 0; then echo 'Testing PHP coding style'; composer phpcs; fi
 - if test $DO_CS_JS -ne 0; then echo 'Testing JS coding style'; pushd build && grunt js:check && popd; fi
-- if test $DO_PHPUNIT -eq 1; then echo 'Running tests'; composer test; fi
-- if test $DO_PHPUNIT -gt 1; then echo 'Running tests (with coverage)'; phpdbg -qrr ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover; fi
+- if test $DO_PHPUNIT -eq 1; then echo 'Running tests'; COMPOSER_MEMORY_LIMIT=-1 composer test; fi
+- if test $DO_PHPUNIT -gt 1; then echo 'Running tests (with coverage)'; COMPOSER_MEMORY_LIMIT=-1 composer coverage; fi
 - if test $DO_BUILDASSETS -ne 0; then ./.travis/rebuild-assets.sh; fi
 
 cache:
