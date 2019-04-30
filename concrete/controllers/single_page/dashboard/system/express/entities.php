@@ -9,7 +9,8 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Validation\CSRF\Token;
+use Concrete\Core\Routing\Redirect;
 
 class Entities extends DashboardPageController
 {
@@ -146,7 +147,19 @@ class Entities extends DashboardPageController
         if (!is_object($entity)) {
             $this->error->add(t('Invalid express entity.'));
         }
-        //TODO if entity found continue with implementation.
+
+        if (!$this->token->validate('clear_entries')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
+        foreach ($entity->getEntries() as $entry){
+            $this->entityManager->remove($entry);
+        }
+
+        $this->entityManager->flush();
+
+        $this->flash('success', t('All Entries were successfully cleared.'));
+        return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
     }
 
     public function clear_entries($id = null)
