@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.1',
-    'version_installed' => '8.5.1',
+    'version' => '8.5.2a1',
+    'version_installed' => '8.5.2a1',
     'version_db' => '20190301133300', // the key of the latest database migration
 
     /*
@@ -661,6 +661,17 @@ return [
                 'allowed_attributes' => '',
             ],
         ],
+        /*
+         * Options for the results per page dropdown
+         *
+         * @var array
+         */
+        'items_per_page_options' => [10, 25, 50, 100, 250],
+        /*
+         * Default number of results per page
+         *
+         * @var int
+         */
         'results' => 10,
     ],
 

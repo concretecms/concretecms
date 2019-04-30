@@ -281,7 +281,7 @@ EOT
                 $confirm = new Question('Would you like to install with these settings? [Y]es / [N]o / [E]dit: ', false);
                 $confirm->setValidator(function ($given) {
                     if (!$given || !preg_match('/^[yne]/i', $given)) {
-                        throw new InvalidArgumentException('Please answer either Y, N or R.');
+                        throw new InvalidArgumentException('Please answer either Y, N or E.');
                     }
 
                     return $given;
