@@ -2,10 +2,8 @@
 namespace Concrete\Core\Foundation\Command;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\Command\Handler\MethodNameInflector\HandleClassNameWithFallbackInflector;
 use Concrete\Core\Foundation\Command\Middleware\BatchUpdatingMiddleware;
-use Illuminate\Config\Repository;
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
@@ -15,12 +13,16 @@ use League\Tactician\Middleware;
 abstract class AbstractSynchronousBus implements SynchronousBusInterface
 {
 
+    use MiddlewareManagerTrait;
+
     /**
-     * @return Middleware[]
+     * @var Application
      */
-    public function getMiddleware()
+    protected $app;
+
+    public function __construct(Application $app)
     {
-        return [];
+        $this->app = $app;
     }
 
     /**
@@ -48,18 +50,15 @@ abstract class AbstractSynchronousBus implements SynchronousBusInterface
     }
 
     /**
-     * @var Application
+     * Build a command bus that submits synchronously
+     *
+     * @param \Concrete\Core\Foundation\Command\Dispatcher $dispatcher
+     *
+     * @return \League\Tactician\CommandBus
      */
-    protected $app;
-
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
-
     public function build(Dispatcher $dispatcher)
     {
         $middleware = array_merge($this->getMiddleware(), $this->getRequiredMiddleware($dispatcher));
-        return new CommandBus($middleware);
+        return $this->app->make(CommandBus::class, ['middleware' => $middleware]);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Foundation\Command;
 
-use League\Tactician\CommandBus;
-
 interface BusInterface
 {
 
@@ -12,7 +10,11 @@ interface BusInterface
     public static function getHandle();
 
     /**
-     * @return CommandBus
+     * Build the command bus
+     *
+     * @param \Concrete\Core\Foundation\Command\Dispatcher $dispatcher
+     *
+     * @return \League\Tactician\CommandBus
      */
     public function build(Dispatcher $dispatcher);
 

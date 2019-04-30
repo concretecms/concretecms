@@ -2,13 +2,13 @@
 namespace Concrete\Core\Foundation\Command;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Error\ErrorList\ErrorList;
-use Illuminate\Config\Repository;
 use League\Tactician\Bernard\QueueMiddleware;
 use League\Tactician\CommandBus;
 
 class AsynchronousBus implements AsynchronousBusInterface
 {
+
+    use MiddlewareManagerTrait;
 
     /**
      * @var Application
@@ -30,12 +30,20 @@ class AsynchronousBus implements AsynchronousBusInterface
         return 'core_async';
     }
 
+    /**
+     * Build a command bus that ultimately submits all sent commands asynchronously
+     *
+     * @param \Concrete\Core\Foundation\Command\Dispatcher $dispatcher
+     *
+     * @return \League\Tactician\CommandBus
+     */
     public function build(Dispatcher $dispatcher)
     {
-        return new CommandBus(
-            [new QueueMiddleware(
-                $this->app->make('queue/producer')
-            )]
-        );
+        $middlewares = $this->getMiddleware();
+        $middlewares[] = $this->app->make(QueueMiddleware::class, [
+            'producer' => $this->app->make('queue/producer')
+        ]);
+
+        return $this->app->make(CommandBus::class, ['middleware' => $middlewares]);
     }
 }
