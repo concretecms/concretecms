@@ -20,14 +20,16 @@ matrix:
   include:
   - php: 7.2
     env:
-    - DO_PHPUNIT=2
-  - php: 7.2
-    env:
     - DO_CS_PHP=1
     - DO_PHPUNIT=0
   - php: 7.2
     env:
     - PREFER_LOWEST="--prefer-lowest"
+  allow_failures:
+  - php: nightly
+  - php: 7.2
+    env:
+      - DO_PHPUNIT=2
   - language: node_js
     dist: trusty
     node_js: lts/*
@@ -35,8 +37,6 @@ matrix:
     - DO_PHPUNIT=0
     - DO_CS_JS=1
     - DO_BUILDASSETS=1
-  allow_failures:
-  - php: nightly
 
 before_script:
 - if test $DO_CS_JS -ne 0 || test $DO_BUILDASSETS -ne 0; then ./.travis/setup-build.sh; fi
