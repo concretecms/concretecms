@@ -38,6 +38,9 @@ matrix:
   allow_failures:
   - php: nightly
 
+before_install:
+  - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
 before_script:
 - if test $DO_CS_JS -ne 0 || test $DO_BUILDASSETS -ne 0; then ./.travis/setup-build.sh; fi
 - if test $DO_PHPUNIT -ne 0 || test $DO_CS_PHP -ne 0; then ./.travis/composer-deps.sh; fi
