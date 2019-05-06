@@ -240,7 +240,7 @@
 			if (event.which == 3) {
 				my.handleMenuClick(event, $row);
 			} else {
-				if (!event.metaKey) {
+				if (!event.metaKey && !event.ctrlKey) {
 					$selected.removeClass('ccm-search-select-selected');
 				}
 				if (!$row.hasClass('ccm-search-select-selected')) {
