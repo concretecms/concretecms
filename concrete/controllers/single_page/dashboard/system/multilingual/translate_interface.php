@@ -10,7 +10,7 @@ use Core;
 use Database;
 use Config;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class TranslateInterface extends DashboardSitePageController
 {
