@@ -6,6 +6,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\Group\Command\AddGroupCommand;
+use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\User;
 use Config;
 use Database;
@@ -40,67 +43,6 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function getPermissionObjectKeyCategoryHandle()
     {
         return false;
-    }
-
-    /**
-     * Takes the numeric id of a group and returns a group object.
-     *
-     * @param string $gID
-     *
-     * @return Group
-     */
-    public static function getByID($gID)
-    {
-        $db = Database::connection();
-        $g = CacheLocal::getEntry('group', $gID);
-        if (is_object($g)) {
-            return $g;
-        }
-
-        $row = $db->fetchAssoc('select * from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' where gID = ?', [$gID]);
-        if ($row) {
-            $g = \Core::make('\Concrete\Core\User\Group\Group');
-            $g->setPropertiesFromArray($row);
-            CacheLocal::set('group', $gID, $g);
-
-            return $g;
-        }
-    }
-
-    /**
-     * Takes the name of a group and returns a group object.
-     *
-     * @param string $gName
-     *
-     * @return Group
-     */
-    public static function getByName($gName)
-    {
-        $db = Database::connection();
-        $row = $db->fetchAssoc('select * from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' where gName = ?', [$gName]);
-        if ($row) {
-            $g = new static();
-            $g->setPropertiesFromArray($row);
-
-            return $g;
-        }
-    }
-
-    /**
-     * @param string $gPath The group path
-     *
-     * @return Group
-     */
-    public static function getByPath($gPath)
-    {
-        $db = Database::connection();
-        $row = $db->fetchAssoc('select * from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' where gPath = ?', [$gPath]);
-        if ($row) {
-            $g = new static();
-            $g->setPropertiesFromArray($row);
-
-            return $g;
-        }
     }
 
     public function export($node)
@@ -159,37 +101,13 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Deletes a group.
+     * @deprecated
+     * Deletes a group. This is deprecated – use the DeleteGroupCommand and the command bus.
      */
     public function delete()
     {
-        // we will NOT let you delete the required groups
-        if ($this->gID == REGISTERED_GROUP_ID || $this->gID == GUEST_GROUP_ID) {
-            return false;
-        }
-
-        // run any internal event we have for group deletion
-        $ge = new DeleteEvent($this);
-        $ge = Events::dispatch('on_group_delete', $ge);
-        if (!$ge->proceed()) {
-            return false;
-        }
-
-        $tree = GroupTree::get();
-        $rootNode = $tree->getRootTreeNodeObject();
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
-        if (is_object($node) && is_object($rootNode)) {
-            $node->populateDirectChildrenOnly();
-            foreach ($node->getChildNodes() as $childnode) {
-                $childnode->move($rootNode);
-            }
-            $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
-            $node->delete();
-        }
-
-        $db = Database::connection();
-        $db->query('DELETE FROM UserGroups WHERE gID = ?', [intval($this->gID)]);
-        $db->query('DELETE FROM ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' WHERE gID = ?', [(int) $this->gID]);
+        $app = Facade::getFacadeApplication();
+        return $app->executeCommand(new DeleteGroupCommand($this->getGroupID()));
     }
 
     public function rescanGroupPath()
@@ -538,54 +456,26 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /** Creates a new user group.
+     * @deprecated
+     * This is deprecated; use the AddGroupCommand and the command bus.
      * @param string $gName
      * @param string $gDescription
      *
      * @return Group
      */
-    public static function add($gName, $gDescription, $parentGroup = false, $pkg = null, $gID = null)
+    public static function add($gName, $gDescription, $parentGroup = false, $pkg = null)
     {
-        $db = Database::connection();
-        $pkgID = 0;
-        if (is_object($pkg)) {
-            $pkgID = $pkg->getPackageID();
+        $app = Facade::getFacadeApplication();
+        $command = new AddGroupCommand();
+        $command->setName($gName);
+        $command->setDescription($gDescription);
+        if ($parentGroup) {
+            $command->setParentGroupID($parentGroup->getGroupID());
         }
-        $data = [
-            'gName' => (string) $gName,
-            'gDescription' => (string) $gDescription,
-            'pkgID' => (int) $pkgID,
-        ];
-        if ($gID) {
-            $data['gID'] = (int) $gID;
+        if ($pkg) {
+            $command->setPackageID($pkg->getPackageID());
         }
-        $db->insert(
-            $db->getDatabasePlatform()->quoteSingleIdentifier('Groups'),
-            $data
-        );
-        
-        $ng = static::getByID($db->lastInsertId());
-        // create a node for this group.
-        $node = null;
-        if (is_object($parentGroup)) {
-            $node = GroupTreeNode::getTreeNodeByGroupID($parentGroup->getGroupID());
-        }
-        if (!is_object($node)) {
-            $tree = GroupTree::get();
-            if (is_object($tree)) {
-                $node = $tree->getRootTreeNodeObject();
-            }
-        }
-
-        if (is_object($node)) {
-            GroupTreeNode::add($ng, $node);
-        }
-
-        $ge = new Event($ng);
-        Events::dispatch('on_group_add', $ge);
-
-        $ng->rescanGroupPath();
-
-        return $ng;
+        return $app->executeCommand($command);
     }
 
     public static function getBadges()
@@ -725,4 +615,48 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
         return $translations;
     }
+
+    /**
+     * Takes the numeric id of a group and returns a group object.
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
+     * @param string $gID
+     *
+     * @return Group
+     */
+    public static function getByID($gID)
+    {
+        $app = Facade::getFacadeApplication();
+        $repository = $app->make(GroupRepository::class);
+        return $repository->getGroupByID($gID);
+    }
+
+    /**
+     * Takes the name of a group and returns a group object.
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
+     * @param string $gName
+     *
+     * @return Group
+     */
+    public static function getByName($gName)
+    {
+        $app = Facade::getFacadeApplication();
+        $repository = $app->make(GroupRepository::class);
+        return $repository->getGroupByName($gName);
+    }
+
+    /**
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
+     * @param string $gPath The group path
+     * @return Group
+     */
+    public static function getByPath($gPath)
+    {
+        $app = Facade::getFacadeApplication();
+        $repository = $app->make(GroupRepository::class);
+        return $repository->getGroupByPath($gPath);
+    }
+
 }

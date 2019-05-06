@@ -35,7 +35,11 @@ class GroupEntity extends Entity
 
     public static function configureFromImport(\SimpleXMLElement $element)
     {
-        $g = Group::getByName((string) $element['name']);
+        if (isset($element['path'])) {
+            $g = Group::getByPath((string) $element['path']);
+        } else {
+            $g = Group::getByName((string)$element['name']);
+        }
         if (!is_object($g)) {
             $g = Group::add((string) $element['name'], (string) $element['description']);
         }
