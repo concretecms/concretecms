@@ -12,6 +12,10 @@ class Info extends DashboardPageController
 
         echo "# concrete5 Version\n".$info->getCoreVersions()."\n\n";
 
+        if ($info->isInstalled()) {
+            echo "# Database Information\nVersion: {$info->getDBMSVersion()}\nSQL Mode: {$info->getDBMSSqlMode()}\n\n";
+        }
+
         echo "# concrete5 Packages\n".($info->getPackages() ?: 'None')."\n\n";
 
         echo "# concrete5 Overrides\n".($info->getOverrides() ?: 'None')."\n\n";
