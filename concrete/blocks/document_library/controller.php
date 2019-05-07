@@ -868,8 +868,8 @@ class Controller extends BlockController
                 );
             case 'title':
                 $view = new BlockView($this->getBlockObject());
-                /** @var UrlImmutable $action */
-                $action = $view->action('navigate');
+                /** @var UrlImmutable $action */ 
+                $action = $this->getActionURL('navigate');
                 $actionPath = $action->getPath();
                 $actionPath->append($folder->getTreeNodeID());
                 $action = $action->setPath($actionPath);
@@ -901,7 +901,7 @@ class Controller extends BlockController
             if ($crumb->getTreeNodeID() == $this->getRootFolder()->getTreeNodeID()) {
                 $action = $this->getBlockObject()->getBlockCollectionObject()->getCollectionLink();
             } else {
-                $action = $view->action('navigate');
+                $action = $this->getActionURL('navigate');
                 $actionPath = $action->getPath();
                 $actionPath->append($crumb->getTreeNodeID());
                 $action = $action->setPath($actionPath);
