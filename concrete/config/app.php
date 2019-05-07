@@ -211,9 +211,9 @@ return [
         'storage_location_type',
         'theme',
         'user_point_action',
+        'workflow',
         'workflow_progress_category',
         'workflow_type',
-        'workflow',
     ],
 
     'importer_routines' => [
