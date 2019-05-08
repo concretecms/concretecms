@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use Concrete\Core\Block\Events\BlockDelete;
+
 use Concrete\Core\Page\Stack\Pile\PileContent;
 
 # Filename: _process.php
@@ -15,16 +15,19 @@ use Concrete\Core\Page\Stack\Pile\PileContent;
 
 // ATTENTION! This file is legacy and needs to die. We are moving it's various pieces into
 // controllers.
+
+/** @var Concrete\Core\Http\ResponseFactory $this */
+/** @var Concrete\Core\Http\Request $request */
+/** @var Concrete\Core\Page\Collection\Collection $c */
+/** @var Concrete\Core\Permission\Checker $cp */
+
 $valt = Loader::helper('validation/token');
-$token = '&' . $valt->getParameter();
 
 // If the user has checked out something for editing, we'll increment the lastedit variable within the database
 $u = new User();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $u->refreshCollectionEdit($c);
 }
-
-$securityHelper = Loader::helper('security');
 
 if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
     switch ($_GET['atask']) {
@@ -119,7 +122,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 $pkr->setRequestedVersionID($v->getVersionID());
                 $pkr->setRequesterUserID($u->getUserID());
                 $u->unloadCollectionEdit($c);
-                $response = $pkr->trigger();
+                $pkr->trigger();
                 header(
                     'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
                 exit;
