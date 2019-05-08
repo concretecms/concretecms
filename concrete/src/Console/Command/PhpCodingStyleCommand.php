@@ -4,6 +4,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Support\CodingStyle\PhpFixer;
+use Concrete\Core\Support\CodingStyle\PhpFixerOptions;
 use PhpCsFixer\Error\ErrorsManager;
 use PhpCsFixer\FixerFileProcessedEvent;
 use RuntimeException;
@@ -16,13 +17,19 @@ class PhpCodingStyleCommand extends Command
 {
     protected $description = 'Check or fix the PHP coding style.';
 
-    protected $signature = <<<'EOT'
+    public function __construct($name = null)
+    {
+        $defaultWebRoot = PhpFixerOptions::getDefaultWebRoot();
+        $this->signature = <<<EOT
 c5:phpcs
 {--no-cache : Specify this flag to turn off the coding style cache}
+{--webroot={$defaultWebRoot} : Specify the webroot}
 {action : Either "fix" or "check"}
 {path*  : The path }
 EOT
-    ;
+        ;
+        parent::__construct($name);
+    }
 
     public function handle(PhpFixer $fixer, EventDispatcherInterface $eventDispatcher)
     {
@@ -48,6 +55,10 @@ EOT
                 throw new RuntimeException(sprintf('The file/directory "%s" is not writable', $path));
             }
             $splFileInfos[] = $splFileInfo;
+        }
+        $webroot = (string) $this->input->getOption('webroot');
+        if ($webroot !== '') {
+            $fixer->getOptions()->setWebRoot($webroot);
         }
         $fixer->getOptions()->setIsCacheDisabled($this->input->getOption('no-cache'));
         list($counters, $changes, $errors) = $fixer->fix($this->input, $this->output, $splFileInfos, $dryRun);

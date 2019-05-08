@@ -146,6 +146,16 @@ class PhpFixerOptions
     }
 
     /**
+     * Get the default absolute path to the web root directory.
+     *
+     * @return string
+     */
+    public static function getDefaultWebRoot()
+    {
+        return DIR_BASE;
+    }
+
+    /**
      * Get the absolute path to the web root directory.
      *
      * @return string
@@ -153,7 +163,7 @@ class PhpFixerOptions
     public function getWebRoot()
     {
         if ($this->webRoot === null) {
-            $this->setWebRoot(DIR_BASE);
+            $this->setWebRoot(static::getDefaultWebRoot());
         }
 
         return $this->webRoot;
