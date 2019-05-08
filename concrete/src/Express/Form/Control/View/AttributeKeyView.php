@@ -18,7 +18,7 @@ class AttributeKeyView extends View
     {
         parent::__construct($context, $control);
         if ($entry = $context->getEntry()) {
-            $this->addScopeItem('value', $entry->getAttributeValueObject($control->getAttributeKey()));
+            $this->addScopeItem('value', $entry->getAttributeValueObject($control->getAttributeKey(), true));
         }
     }
 
