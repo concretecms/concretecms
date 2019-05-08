@@ -26,6 +26,8 @@ class Controller extends BlockController
 
     public function view()
     {
+        $config = $this->app->make('config');
+        $this->set('current_version', $config->get('concrete.version'));
         $this->set('latest_version', Update::getLatestAvailableVersionNumber());
         $local = [];
         $remote = [];
