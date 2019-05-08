@@ -31,7 +31,7 @@ class Version20190504005632 extends AbstractMigration implements RepeatableMigra
             $type = $typeFactory->add('user_group', 'User Group');
         }
 
-        foreach (['collection'] as $handle) {
+        foreach (['site', 'site_type'] as $handle) {
             $category = $categoryService->getByHandle($handle);
             if ($category !== null) {
                 $categoryTypes = $category->getAttributeTypes();
