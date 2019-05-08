@@ -101,7 +101,7 @@ if ($request->query->get('atask') && $valt->validate()) {
                 $obj->response = array(t('Invalid stack.'));
             }
 
-            echo $app->make('helper/json')->encode($obj);
+            echo json_encode($obj);
             exit;
 
             break;
@@ -296,7 +296,7 @@ if ($getRequest('processBlock') && $valt->validate()) {
                     $obj->error = true;
                     $obj->response = $e->getList();
                 }
-                echo $app->make('helper/json')->encode($obj);
+                echo json_encode($obj);
                 exit;
             }
         }
