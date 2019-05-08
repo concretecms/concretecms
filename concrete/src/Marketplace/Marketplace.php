@@ -233,7 +233,7 @@ class Marketplace implements ApplicationAwareInterface
             } catch (Exception $e) {
             }
 
-            if ($filterInstalled && is_array($addons)) {
+            if ($filterInstalled) {
                 $handles = Package::getInstalledHandles();
                 if (is_array($handles)) {
                     $adlist = array();
