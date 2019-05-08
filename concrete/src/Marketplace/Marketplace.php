@@ -186,9 +186,18 @@ class Marketplace implements ApplicationAwareInterface
      */
     public static function checkPackageUpdates()
     {
+        $marketplace = static::getInstance();
+        $skipPackages = $marketplace->config->get('concrete.updates.skip_packages');
+        if ($skipPackages === true) {
+            return;
+        }
+        $skipPackages = preg_split('/\s+/', (string) $skipPackages, -1, PREG_SPLIT_NO_EMPTY);
         $em = \ORM::entityManager();
         $items = self::getAvailableMarketplaceItems(false);
         foreach ($items as $i) {
+            if (in_array($i->getHandle(), $skipPackages)) {
+                continue;
+            }
             $p = Package::getByHandle($i->getHandle());
             if (is_object($p)) {
                 /**
