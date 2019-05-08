@@ -27,6 +27,7 @@
         ConcreteTree.setupTreeEvents();
 
         my.setupEvents();
+        my.setupItemsPerPageOptions();
         my.setupAddFolder();
         my.setupFolderNavigation();
         my.setupFileUploads();
@@ -325,6 +326,13 @@
 
         });
 
+        ConcreteEvent.unsubscribe('FileManagerUpdateFileProperties');
+        ConcreteEvent.subscribe('FileManagerUpdateFileProperties', function(e, r) {
+            if (r.file.fID) {
+                $('[data-file-manager-file=' + r.file.fID + ']').find('.ccm-search-results-name').text(r.file.title);
+            }
+        });
+
     };
 
     ConcreteFileManager.prototype.setupImageThumbnails = function() {
@@ -479,6 +487,26 @@
         return !my.interactionIsDragging;
     };
 
+    ConcreteFileManager.prototype.setupItemsPerPageOptions = function() {
+        var my = this;
+        my.$element.on('click', '.dropdown-menu li', function() {
+            var action = $(this).parent().attr('data-action');
+            var itemsPerPage = parseInt($(this).data('items-per-page'));
+            if (action && itemsPerPage) {
+                my.ajaxUpdate(action + '?fSearchItemsPerPage=' + itemsPerPage);
+                $(this).parents('.input-group-btn').removeClass('open');
+                my.updateActiveItemsPerPageOption(parseInt($(this).text()));
+            }
+            return false;
+        });
+    };
+
+    ConcreteFileManager.prototype.updateActiveItemsPerPageOption = function(itemsPerPage) {
+        var my = this;
+        my.$element.find('.dropdown-menu li').removeClass('active');
+        my.$element.find('.dropdown-menu li[data-items-per-page=' + itemsPerPage + ']').addClass('active');
+        my.$element.find('.dropdown-toggle #selected-option').text(itemsPerPage);
+    };
 
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
@@ -487,6 +515,12 @@
         my.setupBreadcrumb(result);
         my.setupRowDragging();
         my.setupImageThumbnails();
+        if (result.itemsPerPage) {
+            my.updateActiveItemsPerPageOption(parseInt(result.itemsPerPage));
+        }
+        if (result.baseUrl) {
+            my.$element.find('.dropdown-menu').attr('data-action', result.baseUrl);
+        }
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
             my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {
