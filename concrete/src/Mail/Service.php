@@ -497,8 +497,7 @@ class Service
     /**
      * Should an exception be thrown if the delivery fails (if false, the sendMail() method will simply return false on failure).
      *
-     * @param bool $testing
-     * @param mixed $throwOnFailure
+     * @param bool $throwOnFailure
      *
      * @return $this
      */
