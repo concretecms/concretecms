@@ -100,7 +100,6 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
         case 'check-out-first':
             if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApprovePageVersions()) {
                 // checking out the collection for editing
-                $u = new User();
                 $u->loadCollectionEdit($c);
 
                 if ($_REQUEST['ctask'] == 'check-out-add-block') {
@@ -115,7 +114,6 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
 
         case 'approve-recent':
             if ($cp->canApprovePageVersions()) {
-                $u = new User();
                 $pkr = new \Concrete\Core\Workflow\Request\ApprovePageRequest();
                 $pkr->setRequestedPage($c);
                 $v = CollectionVersion::get($c, "RECENT");
