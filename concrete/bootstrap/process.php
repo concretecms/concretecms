@@ -25,25 +25,29 @@ $valt = Loader::helper('validation/token');
 
 // If the user has checked out something for editing, we'll increment the lastedit variable within the database
 $u = new User();
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($request->getMethod() === 'POST') {
     $u->refreshCollectionEdit($c);
 }
 
-if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
-    switch ($_GET['atask']) {
+$getRequest = function ($key, $defaultValue = null) use ($request) {
+    return $request->request->has($key) ? $request->request->get($key) : $request->query->get($key, $defaultValue);
+};
+
+if ($request->query->get('atask') && $valt->validate()) {
+    switch ($request->query->get('atask')) {
         case 'add_stack':
-            $a = Area::get($c, $_GET['arHandle']);
+            $a = Area::get($c, $request->query->get('arHandle'));
             $cx = $c;
             $ax = $a;
 
             if ($a->isGlobalArea()) {
-                $cx = Stack::getByName($_REQUEST['arHandle']);
+                $cx = Stack::getByName($getRequest('arHandle'));
                 $ax = Area::get($cx, STACKS_AREA_NAME);
             }
             $obj = new stdClass();
 
             $ap = new Permissions($ax);
-            $stack = Stack::getByID($_REQUEST['stID']);
+            $stack = Stack::getByID($getRequest('stID'));
             if (is_object($stack)) {
                 if ($ap->canAddStackToArea($stack)) {
                     // we've already run permissions on the stack at this point, at least for viewing the stack.
@@ -63,9 +67,9 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
                     $obj->error = false;
 
                     $db = null;
-                    if (isset($_REQUEST['dragAreaBlockID']) && Core::make('helper/validation/numbers')->integer($_REQUEST['dragAreaBlockID'], 1)) {
+                    if (Core::make('helper/validation/numbers')->integer($getRequest('dragAreaBlockID'), 1)) {
                         $db = Block::getByID(
-                            $_REQUEST['dragAreaBlockID'],
+                            $getRequest('dragAreaBlockID'),
                             isset($this->pageToModify) ? $this->pageToModify : null,
                             isset($this->areaToModify) ? $this->areaToModify : null
                         );
@@ -93,8 +97,8 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
     }
 }
 
-if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
-    switch ($_REQUEST['ctask']) {
+if ($getRequest('ctask') && $valt->validate()) {
+    switch ($getRequest('ctask')) {
         case 'check-out-add-block':
         case 'check-out':
         case 'check-out-first':
@@ -102,7 +106,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 // checking out the collection for editing
                 $u->loadCollectionEdit($c);
 
-                if ($_REQUEST['ctask'] == 'check-out-add-block') {
+                if ($getRequest('ctask') == 'check-out-add-block') {
                     setcookie("ccmLoadAddBlockWindow", "1", -1, DIR_REL . '/');
                     header(
                         'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
@@ -141,24 +145,24 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
     }
 }
 
-if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
+if ($getRequest('ptask') && $valt->validate()) {
 
     // piles !
-    switch ($_REQUEST['ptask']) {
+    switch ($getRequest('ptask')) {
         case 'delete_content':
             //personal scrapbook
-            if ($_REQUEST['pcID'] > 0) {
-                $pc = PileContent::get($_REQUEST['pcID']);
+            if ($getRequest('pcID') > 0) {
+                $pc = PileContent::get($getRequest('pcID'));
                 $p = $pc->getPile();
                 if ($p->isMyPile()) {
                     $pc->delete();
                 }
                 //global scrapbooks
-            } elseif ($_REQUEST['bID'] > 0 && $_REQUEST['arHandle']) {
-                $bID = intval($_REQUEST['bID']);
+            } elseif ($getRequest('bID') > 0 && $getRequest('arHandle')) {
+                $bID = (int) $getRequest('bID');
                 $scrapbookHelper = Loader::helper('concrete/scrapbook');
                 $globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage();
-                $globalScrapbookA = Area::get($globalScrapbookC, $_REQUEST['arHandle']);
+                $globalScrapbookA = Area::get($globalScrapbookC, $getRequest('arHandle'));
                 $block = Block::getById($bID, $globalScrapbookC, $globalScrapbookA);
                 if ($block) { //&& $block->getAreaHandle()=='Global Scrapbook'
                     $bp = new Permissions($block);
@@ -174,27 +178,27 @@ if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
     }
 }
 
-if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->validate()) {
-    if ($_REQUEST['add'] || $_REQUEST['_add']) {
+if ($getRequest('processBlock') && $valt->validate()) {
+    if ($getRequest('add') || $getRequest('_add')) {
         // the user is attempting to add a block of content of some kind
-        $a = Area::get($c, $_REQUEST['arHandle']);
+        $a = Area::get($c, $getRequest('arHandle'));
         if (is_object($a)) {
             $ax = $a;
             $cx = $c;
             if ($a->isGlobalArea()) {
-                $cx = Stack::getByName($_REQUEST['arHandle']);
+                $cx = Stack::getByName($getRequest('arHandle'));
                 $ax = Area::get($cx, STACKS_AREA_NAME);
             }
             $ap = new Permissions($ax);
-            if ($_REQUEST['btask'] == 'alias_existing_block') {
-                if (is_array($_REQUEST['pcID'])) {
+            if ($getRequest('btask') == 'alias_existing_block') {
+                if (is_array($getRequest('pcID'))) {
 
                     // we're taking an existing block and aliasing it to here
-                    foreach ($_REQUEST['pcID'] as $pcID) {
+                    foreach ($getRequest('pcID') as $pcID) {
                         $pc = PileContent::get($pcID);
                         $p = $pc->getPile();
                         if ($p->isMyPile()) {
-                            if ($_REQUEST['deletePileContents']) {
+                            if ($getRequest('deletePileContents')) {
                                 $pc->delete();
                             }
                         }
@@ -226,8 +230,8 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                         }
                     }
                 } else {
-                    if (isset($_REQUEST['bID'])) {
-                        $b = Block::getByID($_REQUEST['bID']);
+                    if ($getRequest('bID')) {
+                        $b = Block::getByID($getRequest('bID'));
                         $b->setBlockAreaObject($ax);
                         $bt = BlockType::getByHandle($b->getBlockTypeHandle());
 
@@ -241,7 +245,7 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
 
                             if (!$bt->isCopiedWhenPropagated()) {
                                 $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
-                                $data['bOriginalID'] = $_REQUEST['bID'];
+                                $data['bOriginalID'] = $getRequest('bID');
                                 $nb = $nvc->addBlock($btx, $ax, $data);
                             } else {
                                 $nb = $b->duplicate($nvc);
@@ -255,12 +259,9 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
 
                 $obj = new stdClass();
                 if (is_object($nb)) {
-                    if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
-                            ->integer(
-                                $_REQUEST['dragAreaBlockID'])
-                    ) {
+                    if (Loader::helper('validation/numbers')->integer($getRequest('dragAreaBlockID'), 1)) {
                         $db = Block::getByID(
-                            $_REQUEST['dragAreaBlockID'],
+                            $getRequest('dragAreaBlockID'),
                             $this->pageToModify,
                             $this->areaToModify);
                         if (is_object($db) && !$db->isError()) {
