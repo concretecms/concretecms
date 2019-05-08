@@ -339,7 +339,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);
-        $c = $collection; // process.php needs this
+        // process.php needs these
+        $c = $collection; 
+        $app = $this->app;
         require DIR_BASE_CORE . '/bootstrap/process.php';
         $u = $this->app->make(User::class);
 

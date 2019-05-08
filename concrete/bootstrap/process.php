@@ -3,6 +3,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Page\Stack\Pile\PileContent;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Http\Request;
 
 # Filename: _process.php
 # Author: Andrew Embler (andrew@concrete5.org)
@@ -20,8 +22,18 @@ use Concrete\Core\Page\Stack\Pile\PileContent;
 /** @var Concrete\Core\Http\Request $request */
 /** @var Concrete\Core\Page\Collection\Collection $c */
 /** @var Concrete\Core\Permission\Checker $cp */
+/** @var Concrete\Core\Application\Application $app */
 
-$valt = Loader::helper('validation/token');
+if (!isset($app)) {
+    // Just in case this file is currently included in a custom place (that is, not in ResponseFactory::collection());
+    $app = Application::getFacadeApplication();
+}
+if (!isset($request)) {
+    // Just in case this file is currently included in a custom place (that is, not in ResponseFactory::collection());
+    $request = $app->make(Request::class);
+}
+
+$valt = $app->make('helper/validation/token');
 
 // If the user has checked out something for editing, we'll increment the lastedit variable within the database
 $u = new User();
@@ -67,7 +79,7 @@ if ($request->query->get('atask') && $valt->validate()) {
                     $obj->error = false;
 
                     $db = null;
-                    if (Core::make('helper/validation/numbers')->integer($getRequest('dragAreaBlockID'), 1)) {
+                    if ($app->make('helper/validation/numbers')->integer($getRequest('dragAreaBlockID'), 1)) {
                         $db = Block::getByID(
                             $getRequest('dragAreaBlockID'),
                             isset($this->pageToModify) ? $this->pageToModify : null,
@@ -89,7 +101,7 @@ if ($request->query->get('atask') && $valt->validate()) {
                 $obj->response = array(t('Invalid stack.'));
             }
 
-            echo Loader::helper('json')->encode($obj);
+            echo $app->make('helper/json')->encode($obj);
             exit;
 
             break;
@@ -109,7 +121,7 @@ if ($getRequest('ctask') && $valt->validate()) {
                 if ($getRequest('ctask') == 'check-out-add-block') {
                     setcookie("ccmLoadAddBlockWindow", "1", -1, DIR_REL . '/');
                     header(
-                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+                        'Location: ' . Application::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
                     exit;
                     break;
                 }
@@ -126,7 +138,7 @@ if ($getRequest('ctask') && $valt->validate()) {
                 $u->unloadCollectionEdit($c);
                 $pkr->trigger();
                 header(
-                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+                    'Location: ' . Application::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
                 exit;
             }
             break;
@@ -136,7 +148,7 @@ if ($getRequest('ctask') && $valt->validate()) {
                 $v = CollectionVersion::get($c, "SCHEDULED");
                 $v->approve(false);
 
-                header('Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME .
+                header('Location: ' . Application::getApplicationURL() . '/' . DISPATCHER_FILENAME .
                     '?cID=' . $c->getCollectionID());
 
                 exit;
@@ -160,7 +172,7 @@ if ($getRequest('ptask') && $valt->validate()) {
                 //global scrapbooks
             } elseif ($getRequest('bID') > 0 && $getRequest('arHandle')) {
                 $bID = (int) $getRequest('bID');
-                $scrapbookHelper = Loader::helper('concrete/scrapbook');
+                $scrapbookHelper = $app->make('helper/concrete/scrapbook');
                 $globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage();
                 $globalScrapbookA = Area::get($globalScrapbookC, $getRequest('arHandle'));
                 $block = Block::getById($bID, $globalScrapbookC, $globalScrapbookA);
@@ -259,7 +271,7 @@ if ($getRequest('processBlock') && $valt->validate()) {
 
                 $obj = new stdClass();
                 if (is_object($nb)) {
-                    if (Loader::helper('validation/numbers')->integer($getRequest('dragAreaBlockID'), 1)) {
+                    if ($app->make('helper/validation/numbers')->integer($getRequest('dragAreaBlockID'), 1)) {
                         $db = Block::getByID(
                             $getRequest('dragAreaBlockID'),
                             $this->pageToModify,
@@ -279,12 +291,12 @@ if ($getRequest('processBlock') && $valt->validate()) {
                     $obj->bID = $nb->getBlockID();
                     $obj->error = false;
                 } else {
-                    $e = Loader::helper('validation/error');
+                    $e = $app->make('helper/validation/error');
                     $e->add(t('Invalid block.'));
                     $obj->error = true;
                     $obj->response = $e->getList();
                 }
-                echo Loader::helper('json')->encode($obj);
+                echo $app->make('helper/json')->encode($obj);
                 exit;
             }
         }
