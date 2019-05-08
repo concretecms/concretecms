@@ -236,7 +236,21 @@ EOL;
      */
     public function outputStandardEditor($key, $content = null)
     {
-        $options = [
+        return $this->outputEditorWithOptions($key, [], $content);
+    }
+
+    /**
+     * Generate the HTML to be placed in a page to display the editor.
+     *
+     * @param string $key the name of the field to be used to POST the editor content
+     * @param array $options custom options
+     * @param string|null $content The initial value of the editor content
+     *
+     * @return string
+     */
+    public function outputEditorWithOptions($key, array $options = [], $content = null)
+    {
+        $options += [
             'disableAutoInline' => true,
         ];
 

@@ -141,6 +141,8 @@ class EditorServiceProvider extends ServiceProvider
                 'pastetext' => [t('Paste As Plain Text'), t('This adds a button to paste clipboard contents as plain text.')],
                 // https://ckeditor.com/cke4/addon/pastefromword
                 'pastefromword' => [t('Paste from Word'), t('This adds a button to paste content from Microsoft Word and maintain original formatting.')],
+                // https://ckeditor.com/cke4/addon/placeholder
+                'placeholder' => [t('Placeholder'), t('This plugin lets you create and edit placeholders (non-editable text fragments).')],
                 // https://ckeditor.com/cke4/addon/preview
                 'preview' => [t('Preview'), t('This plugin adds a button which shows a preview of the document as it will be displayed to end users or printed.')],
                 // https://ckeditor.com/cke4/addon/removeformat

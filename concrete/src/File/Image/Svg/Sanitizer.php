@@ -187,9 +187,17 @@ class Sanitizer
      */
     protected function getLoadFlags()
     {
-        $flags = LIBXML_NONET | LIBXML_NOWARNING | LIBXML_PARSEHUGE | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD;
-        if (defined('LIBXML_BIGLINES')) {
-            $flags |= LIBXML_BIGLINES;
+        $flags = LIBXML_NONET | LIBXML_NOWARNING;
+
+        foreach ([
+            'LIBXML_PARSEHUGE', //  libxml >= 2.7.0
+            'LIBXML_HTML_NOIMPLIED', // libxml >= 2.7.7
+            'LIBXML_HTML_NODEFDTD', // libxml >= 2.7.8
+            'LIBXML_BIGLINES', // libxml >= 2.9.0
+        ] as $flagName) {
+            if (defined($flagName)) {
+                $flags |= constant($flagName);
+            }
         }
 
         return $flags;

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Calendar;
 
 use Doctrine\ORM\Mapping as ORM;
+use Carbon\Carbon;
 
 /**
  * @ORM\Entity
@@ -119,8 +120,9 @@ class CalendarEventOccurrence
 
     public function isAllDay()
     {
+        $dayDuration = Carbon::create($this->getStart())->startOfDay()->secondsUntilEndOfDay();
         $diff = $this->getEnd() - $this->getStart();
-        if ($diff == 0) {
+        if ($diff == $dayDuration) {
             return true;
         }
 
