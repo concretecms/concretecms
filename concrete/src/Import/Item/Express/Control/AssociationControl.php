@@ -23,6 +23,7 @@ class AssociationControl implements ItemInterface
     {
         $control = new \Concrete\Core\Entity\Express\Control\AssociationControl();
         $control->setCustomLabel((string) $xml['custom-label']);
+        $control->setAssociationEntityLabelMask((string) $xml['label-mask']);
         if (((string) $xml['required']) == '1') {
             $control->setIsRequired(true);
         }
