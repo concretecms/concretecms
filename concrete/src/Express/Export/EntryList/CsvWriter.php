@@ -91,6 +91,7 @@ class CsvWriter
         } else {
             yield 'ccm_date_created' => null;
         }
+        yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
         $attributes = $entry->getAttributes();
         foreach ($attributes as $attribute) {
@@ -105,6 +106,7 @@ class CsvWriter
      */
     private function getHeaders(Entity $entity)
     {
+        yield 'publicIdentifier' => 'publicIdentifier';
         yield 'ccm_date_created' => 'dateCreated';
 
         $attributes = $entity->getAttributes();

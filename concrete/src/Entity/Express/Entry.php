@@ -191,6 +191,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $exEntryDateModified;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $publicIdentifier;
+
+    /**
      * @return Entity
      */
     public function getEntity()
@@ -456,4 +461,22 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     {
         $this->author = $author;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicIdentifier()
+    {
+        return $this->publicIdentifier;
+    }
+
+    /**
+     * @param mixed $publicIdentifier
+     */
+    public function setPublicIdentifier($publicIdentifier)
+    {
+        $this->publicIdentifier = $publicIdentifier;
+    }
+
+
 }
