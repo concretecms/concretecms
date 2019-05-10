@@ -97,6 +97,18 @@ class CsvWriter
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKey()->getAttributeKeyHandle() => $attribute->getPlainTextValue();
         }
+
+        $associations = $entry->getAssociations();
+        foreach ($associations as $association) {
+            $output = [];
+            if ($collection = $association->getSelectedEntries()) {
+                foreach($collection as $entry) {
+                    $output[] = $entry->getPublicIdentifier();
+                }
+            }
+            yield $association->getAssociation()->getId() => implode('|', $output);
+        }
+
     }
 
     /**
@@ -112,6 +124,11 @@ class CsvWriter
         $attributes = $entity->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKeyHandle() => $attribute->getAttributeKeyDisplayName();
+        }
+
+        $associations = $entity->getAssociations();
+        foreach ($associations as $association) {
+            yield $association->getId() => $association->getTargetPropertyName();
         }
     }
 

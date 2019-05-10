@@ -271,7 +271,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $associations;
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Express\Entry\Association[]
      */
     public function getAssociations()
     {
