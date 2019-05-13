@@ -33,6 +33,14 @@ class Controller extends BlockController
         return $this->question;
     }
 
+    public function getShowResults() {
+        return $this->showResults;
+    }
+
+    public function getCustomMessage() {
+        return $this->customMessage;
+    }
+
     public function getPollOptions()
     {
         return $this->options;
@@ -194,6 +202,11 @@ class Controller extends BlockController
 
     public function save($args)
     {
+        if (!$args['showResults']) {
+            $args['showResults'] = 0;
+            $args['customMessage'] = '';
+        }
+
         parent::save($args);
         $db = Database::connection();
 
