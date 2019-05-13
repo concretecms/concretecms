@@ -46,6 +46,15 @@ if (!$controller->indexExists()) {
             }
         }
         ?>
+
+        <?php if (count($sites) > 1) : ?>
+        <?= $form->label('', t('User Options')) ?>
+        <div class="form-group">
+            <?= $form->checkbox('allowUserOptions', 'ALLOW', (int) $allowUserOptions === 1) ?>
+            <?= t('Allow users to choose search options') ?>
+        </div>
+        <?php endif; ?>
+
         <?= $form->label('', t('Search for Pages')) ?>
         <div class="radio">
             <label>
