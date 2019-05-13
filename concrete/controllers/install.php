@@ -341,7 +341,7 @@ class Install extends Controller
                 try {
                     $connection = $installer->createConnection();
                 } catch (UserMessageException $x) {
-                    $error->add($x);
+                    $error->add($x->getMessage());
                     $connection = null;
                 }
                 $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();

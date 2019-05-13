@@ -12,6 +12,7 @@ use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Exception;
+use Concrete\Core\Http\Request;
 
 class Marketplace implements ApplicationAwareInterface
 {
@@ -40,6 +41,9 @@ class Marketplace implements ApplicationAwareInterface
     /** @var PathUrlResolver */
     protected $urlResolver;
 
+    /** @var \Concrete\Core\Http\Request */
+    protected $request;
+
     public function setApplication(\Concrete\Core\Application\Application $application)
     {
         $this->app = $application;
@@ -48,8 +52,8 @@ class Marketplace implements ApplicationAwareInterface
         $this->config = $this->app->make('config');
         $this->databaseConfig = $this->app->make('config/database');
         $this->urlResolver = $this->app->make(PathUrlResolver::class);
+        $this->request = $this->app->make(Request::class);
         $this->isConnected = false;
-
         $this->isConnected();
     }
 
@@ -265,9 +269,10 @@ class Marketplace implements ApplicationAwareInterface
         // a. go to its purchase page
         // b. pass you through to the page AFTER connecting.
         $tp = new TaskPermission();
-        $frameURL = $this->config->get('concrete.urls.concrete5');
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+        if ($this->request->getScheme() === 'https') {
             $frameURL = $this->config->get('concrete.urls.concrete5_secure');
+        } else {
+            $frameURL = $this->config->get('concrete.urls.concrete5');
         }
         if ($tp->canInstallPackages()) {
             $csToken = null;

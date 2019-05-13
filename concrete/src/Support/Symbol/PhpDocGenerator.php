@@ -80,7 +80,7 @@ class PhpDocGenerator
      */
     public function describeVar($name, $value)
     {
-        return $this->indentation . '/* @var ' . $this->getVarType($value) . ' ' . ($name[0] === '$' ? '' : '$') . $name . " */\n";
+        return $this->indentation . '/** @var ' . $this->getVarType($value) . ' ' . ($name[0] === '$' ? '' : '$') . $name . " */\n";
     }
 
     /**

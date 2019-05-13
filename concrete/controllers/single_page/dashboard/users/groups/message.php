@@ -16,7 +16,7 @@ class Message extends DashboardPageController
         $groupList = new GroupList();
         foreach ($groupList->getResults() as $group) {
             /** @var \Concrete\Core\User\Group\Group $group */
-            $groups[$group->getGroupID()] = $group->getGroupName();
+            $groups[$group->getGroupID()] = $group->getGroupDisplayName();
         }
 
         $this->set('groups', $groups);
