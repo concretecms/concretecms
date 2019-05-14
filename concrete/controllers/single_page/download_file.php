@@ -126,7 +126,7 @@ class DownloadFile extends PageController
         $configuration = $fsl->getConfigurationObject();
         $fv = $file->getVersion();
         if ($configuration->hasPublicURL()) {
-            return \Redirect::url($fv->getURL())->send();
+            return \Redirect::url($fv->getURL(),'303')->send();
         } else {
             return $fv->forceDownload();
         }
