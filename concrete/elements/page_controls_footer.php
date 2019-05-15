@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 
 $dh = $app->make('helper/concrete/dashboard');
+$sh = $app->make('helper/concrete/dashboard/sitemap');
 
 if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     $cih = $app->make('helper/concrete/ui');
@@ -386,13 +387,20 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     </li>
                     <?php
                 }
-                ?>
-                <li data-guide-toolbar-action="sitemap" class="pull-right hidden-xs">
-                    <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>" title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
-                        <i class="fa fa-files-o"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
-                    </a>
-                </li>
-                <?php
+                if ($sh->canViewSitemapPanel()) {
+                    ?>
+                    <li data-guide-toolbar-action="sitemap" class="pull-right hidden-xs">
+                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
+                           data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
+                           data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
+                           title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
+                            <i class="fa fa-files-o"></i><span
+                                    class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
+                        </a>
+                    </li>
+                    <?php
+                }
+                
                 $items = $ihm->getPageHeaderMenuItems('right');
                 foreach ($items as $ih) {
                     $cnt = $ih->getController();
