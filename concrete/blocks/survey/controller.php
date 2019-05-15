@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
@@ -33,11 +34,13 @@ class Controller extends BlockController
         return $this->question;
     }
 
-    public function getShowResults() {
+    public function getShowResults()
+    {
         return $this->showResults;
     }
 
-    public function getCustomMessage() {
+    public function getCustomMessage()
+    {
         return $this->customMessage;
     }
 
@@ -114,7 +117,7 @@ class Controller extends BlockController
             $c = $this->getCollectionObject();
         }
 
-	if (is_object($c)) {
+        if (is_object($c)) {
             $this->cID = $c->getCollectionID();
         }
 
@@ -141,7 +144,8 @@ class Controller extends BlockController
                     $this->bID,
                     $duID,
                     $ip,
-                    $this->cID, ];
+                    $this->cID,
+                ];
                 $q = "INSERT INTO btSurveyResults (optionID, bID, uID, ipAddress, cID) VALUES (?, ?, ?, ?, ?)";
                 $db->query($q, $v);
                 setcookie("ccmPoll" . $this->bID . '-' . $this->cID, "voted", time() + 1296000, DIR_REL . '/');
@@ -226,7 +230,7 @@ class Controller extends BlockController
         $max = $db->getOne(
             "SELECT MAX(displayOrder) AS maxDisplayOrder FROM btSurveyOptions WHERE bID = " . intval($this->bID));
 
-        $displayOrder = $max ? (int) $max + 1 : 0;
+        $displayOrder = $max ? (int)$max + 1 : 0;
 
         if (isset($args['pollOption']) && is_array($args['pollOption'])) {
             foreach ($args['pollOption'] as $optionName) {
