@@ -10,6 +10,7 @@ use Concrete\Core\User\User;
 use Core;
 use Database;
 use Config;
+use Punic\Misc;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -233,6 +234,7 @@ class TranslateInterface extends DashboardSitePageController
             }
 
             $this->set('translations', $jsonTranslations);
+            $this->set('textDirection', Misc::getCharacterOrder($section->getLocale()) === 'right-to-left' ? 'rtl' : 'ltr');
         } else {
             $this->redirect('/dashboard/system/multilingual/translate_interface');
         }
