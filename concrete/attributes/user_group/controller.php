@@ -49,7 +49,10 @@ class Controller extends AttributeTypeController
             }
         }
         if ($this->akAllowSelectionFromMyGroupsOnly) {
-            $groupList->filterByHavingMembership();
+            $u = $this->app->make(User::class);
+            if (!$u->isSuperUser()) {
+                $groupList->filterByHavingMembership();
+            }
         }
         $groupSelector = $this->app->make(GroupSelector::class, ['groupList' => $groupList]);
         $this->set('value', $value);

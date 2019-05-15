@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Express\Entry\Manager as EntryManager;
 use Concrete\Core\Express\Controller\Manager as ControllerManager;
@@ -77,10 +78,16 @@ class ObjectManager
 
     public function getEntry($entryID)
     {
-        return $this->entityManager
-            ->getRepository('Concrete\Core\Entity\Express\Entry')
-            ->findOneBy(['exEntryID' => $entryID]);
+        $numberValidator = $this->app->make(Numbers::class);
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
+        if ($numberValidator->integer($entryID)) {
+            return $r->findOneBy(['exEntryID' => $entryID]);
+        } else {
+            return $r->findOneBy(['publicIdentifier' => $entryID]);
+        }
     }
+
+
 
     public function deleteEntry($entryID)
     {
