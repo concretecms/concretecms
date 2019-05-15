@@ -3,6 +3,7 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\CodingStyle\PhpFixer;
 use Concrete\Core\Support\CodingStyle\PhpFixerOptions;
 use PhpCsFixer\Error\ErrorsManager;
@@ -23,9 +24,9 @@ class PhpCodingStyleCommand extends Command
         $this->signature = <<<EOT
 c5:phpcs
 {--no-cache : Specify this flag to turn off the coding style cache}
-{--webroot={$defaultWebRoot} : Specify the webroot}
+{--webroot={$defaultWebRoot} : Specify the webroot (use - to auto-detect it)}
 {action : Either "fix" or "check"}
-{path*  : The path }
+{path*  : The path to one or more files or directories }
 EOT
         ;
         parent::__construct($name);
@@ -58,6 +59,9 @@ EOT
         }
         $webroot = (string) $this->input->getOption('webroot');
         if ($webroot !== '') {
+            if ($webroot === '-') {
+                $webroot = $this->detectWebRoot($splFileInfos[0]->getPathname());
+            }
             $fixer->getOptions()->setWebRoot($webroot);
         }
         $fixer->getOptions()->setIsCacheDisabled($this->input->getOption('no-cache'));
@@ -194,5 +198,31 @@ EOT
                 $this->output->writeln('- ' . str_pad($row[0], $headerLength, ' ', STR_PAD_RIGHT) . ': ' . str_pad($row[1], $valueLength, ' ', STR_PAD_LEFT));
             }
         }
+    }
+
+    /**
+     * @param string $startingPoint
+     *
+     * @throws \Concrete\Core\Error\UserMessageException
+     *
+     * @return string
+     */
+    private function detectWebRoot($startingPoint)
+    {
+        if (is_file($startingPoint)) {
+            $startingPoint = dirname($startingPoint);
+        }
+        $startingPoint = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $startingPoint), '/');
+        if (strpos($startingPoint, '/') === false) {
+            throw new UserMessageException('Ubable to detect the webroot');
+        }
+        if (is_file("{$startingPoint}/index.php") && is_file("{$startingPoint}/concrete/dispatcher.php")) {
+            return $startingPoint;
+        }
+        if (preg_match('_^/+$_', $startingPoint) || preg_match('_^\w:/*$_', $startingPoint)) {
+            throw new UserMessageException('Ubable to detect the webroot');
+        }
+
+        return $this->detectWebRoot(dirname($startingPoint));
     }
 }
