@@ -46,6 +46,15 @@ if (!$controller->indexExists()) {
             }
         }
         ?>
+
+        <?php if (count($sites) > 1) { ?>
+        <?= $form->label('', t('User Options')) ?>
+        <div class="form-group">
+            <?= $form->checkbox('allowUserOptions', 'ALLOW', (int) $allowUserOptions === 1) ?>
+            <?= t('Allow users to choose search options') ?>
+        </div>
+        <?php } ?>
+
         <?= $form->label('', t('Search for Pages')) ?>
         <div class="radio">
             <label>
@@ -53,14 +62,14 @@ if (!$controller->indexExists()) {
                 <?= t('In the Current Site') ?>
             </label>
         </div>
-        <?php if (count($sites) > 1) : ?>
+        <?php if (count($sites) > 1) { ?>
             <div class="radio">
                 <label>
                     <?= $form->radio('baseSearchPath', 'ALL', (int) $searchAll === 1) ?>
                     <?= t('In all Sites') ?>
                 </label>
             </div>
-        <?php endif; ?>
+        <?php } ?>
         <div class="radio">
             <label>
                 <?= $form->radio('baseSearchPath', 'THIS', $baseSearchPath === 'THIS') ?>
