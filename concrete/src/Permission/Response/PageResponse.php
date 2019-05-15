@@ -143,15 +143,12 @@ class PageResponse extends Response
             return true;
         }
 
-        $types = Type::getList();
-        foreach($types as $pt) {
-            $ptp = new \Permissions($pt);
-            if ($ptp->canAddPageType()) {
-                return true;
-            }
+        $sh = $app->make('helper/concrete/dashboard/sitemap');
+        if ($sh->canViewSitemapPanel()) {
+            return true;
         }
 
-        $dh = Loader::helper('concrete/dashboard');
+        $dh = $app->make('helper/concrete/dashboard');
         if ($dh->canRead() ||
             $this->canViewPageVersions() ||
             $this->canPreviewPageAsUser() ||
