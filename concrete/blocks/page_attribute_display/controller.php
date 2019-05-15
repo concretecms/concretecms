@@ -3,6 +3,7 @@ namespace Concrete\Block\PageAttributeDisplay;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Database;
 use Core;
@@ -253,6 +254,15 @@ class Controller extends BlockController
         $templateHandle = $this->getTemplateHandle();
         if (in_array($templateHandle, ['date_time', 'boolean'])) {
             $this->render('templates/' . $templateHandle);
+        } else {
+            // check if there is a template that matches the selected attribute
+            $template = \Core::make(BlockViewTemplate::class, [$this->getBlockObject()]);
+            $template->setBlockCustomTemplate("templates/" . $this->attributeHandle . '.php');
+            $info = pathinfo($template->getTemplate());
+
+            if ($info['basename'] != 'view.php') {
+                $this->render('templates/' . $info['filename'] );
+            }
         }
       }
     }
