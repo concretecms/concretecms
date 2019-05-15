@@ -7,66 +7,68 @@ if (!isset($query) || !is_string($query))  {
 }
 ?>
 
-<?php if (isset($error)) : ?>
+<?php if (isset($error)) { ?>
     <?= $error ?>
     <br/><br/>
-<?php endif; ?>
+<?php } ?>
 
 
 <form action="<?= $view->url($resultTarget) ?>" method="get" class="ccm-search-block-form">
 
-    <?php if (isset($title) && ($title !== '')) : ?>
+    <?php if (isset($title) && ($title !== '')) { ?>
         <h3><?= h($title) ?></h3>
-    <?php endif; ?>
+    <?php } ?>
 
-    <?php if ($query === '') : ?>
+    <?php if ($query === '') { ?>
         <input name="search_paths[]" type="hidden" value="<?=htmlentities($baseSearchPath, ENT_COMPAT, APP_CHARSET) ?>" />
-    <?php elseif((isset($_REQUEST['search_paths']) && is_array($_REQUEST['search_paths']))) : ?>
-        <?php foreach ($_REQUEST['search_paths'] as $search_path) : ?>
+    <?php } elseif((isset($_REQUEST['search_paths']) && is_array($_REQUEST['search_paths']))) { ?>
+        <?php foreach ($_REQUEST['search_paths'] as $search_path) { ?>
             <input name="search_paths[]" type="hidden" value="<?= htmlentities($search_path, ENT_COMPAT, APP_CHARSET) ?>" />
-        <?php endforeach; ?>
-    <?php endif; ?>
+        <?php } ?>
+    <?php } ?>
 
     <input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" class="ccm-search-block-text" />
 
-    <?php if (isset($buttonText) && ($buttonText !== '')) : ?>
+    <?php if (isset($buttonText) && ($buttonText !== '')) { ?>
         <input name="submit" type="submit" value="<?=h($buttonText)?>" class="btn btn-default ccm-search-block-submit" />
-    <?php endif; ?>
+    <?php } ?>
 
-    <?php if($allowUserOptions) : ?>
+    <?php if($allowUserOptions) { ?>
         <div>
             <h5><?= t('Advanced Search Options') ?></h5>
             <input type="radio" name="options" value="ALL" <?= $searchAll ? 'checked' : null ?>/> <span style="margin-right:10px;"><?= t('Search All Sites') ?></span>
             <input type="radio" name="options" value="CURRENT" <?= $searchAll ? null : 'checked' ?>/> <span><?= t('Search Current Site') ?></span>
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
     <?php
-    if (isset($do_search) && $do_search) :
-        if (count($results) == 0) : ?>
-            <h4 style="margin-top:32px"><?=t('There were no results found. Please try another keyword or phrase.')?></h4>
-        <?php else :
+    if (isset($do_search) && $do_search) {
+        if (count($results) == 0) { ?>
+            <h4 style="margin-top:32px"><?= t('There were no results found. Please try another keyword or phrase.') ?></h4>
+        <?php } else {
             $tt = Core::make('helper/text'); ?>
 
             <div id="searchResults">
-            <?php foreach ($results as $r) :
-                $currentPageBody = $this->controller->highlightedExtendedMarkup($r->getPageIndexContent(), $query);
-            ?>
-                <div class="searchResult">
-                    <h3><a href="<?=$r->getCollectionLink()?>"><?=$r->getCollectionName()?></a></h3>
-                    <p>
-                        <?php if ($r->getCollectionDescription()): ?>
-                            <?= $this->controller->highlightedMarkup($tt->shortText($r->getCollectionDescription()), $query) ?>
+                <?php foreach ($results as $r) {
+                    $currentPageBody = $this->controller->highlightedExtendedMarkup($r->getPageIndexContent(), $query);
+                    ?>
+                    <div class="searchResult">
+                        <h3><a href="<?= $r->getCollectionLink() ?>"><?= $r->getCollectionName() ?></a></h3>
+                        <p>
+                            <?php if ($r->getCollectionDescription()) { ?>
+                                <?= $this->controller->highlightedMarkup($tt->shortText($r->getCollectionDescription()), $query) ?>
+                                <br/>
+                            <?php } ?>
+
+                            <?= $currentPageBody ?>
+
                             <br/>
-                        <?php endif; ?>
-
-                        <?= $currentPageBody ?>
-
-                        <br/>
-                        <a href="<?=$r->getCollectionLink()?>" class="pageLink"><?= $this->controller->highlightedMarkup($r->getCollectionLink(), $query) ?></a>
-                    </p>
-                </div>
-            <?php endforeach; ?>
+                            <a href="<?= $r->getCollectionLink() ?>" class="pageLink">
+                                <?= $this->controller->highlightedMarkup($r->getCollectionLink(), $query) ?>
+                            </a>
+                        </p>
+                    </div>
+                <?php } ?>
             </div>
 
             <?php
@@ -75,7 +77,7 @@ if (!isset($query) || !is_string($query))  {
                 $showPagination = true;
                 echo $pagination->renderDefaultView();
             }
-        endif;
-    endif; ?>
+        }
+    } ?>
 </form>
 
