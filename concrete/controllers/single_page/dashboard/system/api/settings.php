@@ -41,9 +41,12 @@ class Settings extends DashboardPageController
         if (!$this->error->has()) {
             $enable_api = $this->request->request->get("enable_api") ? true : false;
             $config = $this->app->make('config');
+            $api_previously_enabled = (bool) $config->get('concrete.api.enabled');
             $config->save('concrete.api.enabled', $enable_api);
 
-            if ($enable_api) {
+            if ($enable_api && $api_previously_enabled) {
+                // Why the double check? If we don't do the double check here, we will wipe out these
+                // config values because they aren't in the request until the page is reloaded.
                 $enabledGrantTypes = (array)$this->request->request->get('enabledGrantTypes');
                 foreach ($this->getAvailableGrantTypes() as $type => $label) {
                     $key = "concrete.api.grant_types.{$type}";
