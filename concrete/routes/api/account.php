@@ -19,7 +19,7 @@ $router->all('/account/info', function() use ($app) {
     $userRepository = $app->make(\Concrete\Core\User\UserInfoRepository::class);
     $user = $userRepository->getByID($loggedInUser);
 
-    return new \League\Fractal\Resource\Item($user, function(\Concrete\Core\User\UserInfo $user) {
+    return new \League\Fractal\Resource\Item($user, function (\Concrete\Core\User\UserInfo $user) {
         return [
             'email' => $user->getUserEmail(),
             'firstName' => $user->getAttributeValue('first_name'),
@@ -28,4 +28,4 @@ $router->all('/account/info', function() use ($app) {
             'username' => $user->getUserName()
         ];
     });
-});
+})->setScopes('account:read');

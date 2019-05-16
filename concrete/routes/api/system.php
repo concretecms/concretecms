@@ -11,4 +11,4 @@ use Concrete\Core\System\Info;
 
 $router->get('/system/info', function() {
     return new \League\Fractal\Resource\Item(new Info(), new \Concrete\Core\System\InfoTransformer());
-});
+})->setScopes('system:info:read');

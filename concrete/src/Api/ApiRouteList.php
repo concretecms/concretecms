@@ -23,16 +23,9 @@ class ApiRouteList implements RouteListInterface
             ->addMiddleware(OAuthAuthenticationMiddleware::class)
             ->addMiddleware(FractalNegotiatorMiddleware::class);
 
-        $api->buildGroup()
-            ->scope('system:info:read')
-            ->routes('api/system.php');
-
-        $api->buildGroup()
-            ->scope('site:trees:read')
-            ->routes('api/site.php');
-
-        $api->buildGroup()
-            ->scope('account:read')
-            ->routes('api/account.php');
+        $api->routes('api/system.php');
+        $api->routes('api/account.php');
+        $api->routes('api/site.php');
+        $api->routes('api/file.php');
     }
 }

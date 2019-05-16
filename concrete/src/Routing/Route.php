@@ -114,6 +114,14 @@ class Route extends SymfonyRoute
         return $this->middlewares;
     }
 
-
+    /**
+     * Explicitly sets an OAuth2 scope to a route. This will be used if the route is consumed in an
+     * OAuth2 request.
+     * @param $scope
+     */
+    public function setScopes($scope)
+    {
+        $this->setOption('oauth_scopes', $scope);
+    }
 
 }
