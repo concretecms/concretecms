@@ -7,11 +7,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @var $app \Concrete\Core\Application\Application
  */
 
-use Concrete\Core\File\FileList;
-use Concrete\Core\File\File;
-use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Permission\Checker;
-
 $router->get('/file/{fID}', '\Concrete\Core\File\Api\FilesController::read')
     ->setRequirement('fID' ,'[0-9]+')
     ->setScopes('files:read');
