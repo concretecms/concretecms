@@ -2,19 +2,16 @@
 
 namespace Concrete\Core\File\Api;
 
+use Concrete\Core\Api\ApiController;
 use Concrete\Core\Application\Application;
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\File;
-use Concrete\Core\File\FileList;
 use Concrete\Core\File\FileListTransformer;
 use Concrete\Core\File\FileTransformer;
 use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Checker;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
 
-class FilesController
+class FilesController extends ApiController
 {
 
     /**
@@ -33,28 +30,6 @@ class FilesController
         $this->request = $request;
     }
 
-    /**
-     * @param $message
-     * @param int $code
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    protected function error($message, $code = 400)
-    {
-        $list = new ErrorList();
-        $list->add($message);
-        return $list->createResponse($code);
-    }
-
-    /**
-     * @param $object
-     * @param TransformerAbstract $transformer
-     * @return Item
-     */
-    public function response($object, TransformerAbstract $transformer)
-    {
-        return new Item($object, $transformer);
-    }
-
     public function read($fID)
     {
         $fID = (int) $fID;
@@ -68,7 +43,7 @@ class FilesController
             }
         }
 
-        return $this->response($file, new FileTransformer());
+        return $this->transform($file, new FileTransformer());
     }
 
     public function listFiles()
@@ -79,6 +54,6 @@ class FilesController
         if (!empty($keywords)) {
             $fileList->filterByKeywords($keywords);
         }
-        return $this->response($fileList, new FileListTransformer());
+        return $this->transform($fileList, new FileListTransformer());
     }
 }
