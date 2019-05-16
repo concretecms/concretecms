@@ -416,9 +416,10 @@ class StartingPointPackage extends BasePackage
     {
         $scopes = $this->app->make('config')->get('app.api.scopes');
         $em = $this->app->make(EntityManager::class);
-        foreach($scopes as $scope) {
+        foreach($scopes as $scope => $description) {
             $s = new Scope();
             $s->setIdentifier($scope);
+            $s->setDescription($description);
             $em->persist($s);
             $em->flush();
         }

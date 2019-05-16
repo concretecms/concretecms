@@ -24,7 +24,7 @@ class ApiRouteList implements RouteListInterface
             ->addMiddleware(FractalNegotiatorMiddleware::class);
 
         $api->buildGroup()
-            ->scope('system')
+            ->scope('system:info:read')
             ->routes('api/system.php');
 
         $api->buildGroup()
@@ -32,7 +32,7 @@ class ApiRouteList implements RouteListInterface
             ->routes('api/site.php');
 
         $api->buildGroup()
-            ->scope('account')
+            ->scope('account:read')
             ->routes('api/account.php');
     }
 }

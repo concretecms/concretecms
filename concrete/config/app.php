@@ -1181,12 +1181,16 @@ return [
 
     'api' => [
         'scopes' => [
-            'system',
-            'site',
-            'account',
+            'account:read' => 'Read information about the remotely authenticated user.',
+
+            'files:read' => 'Read detailed information about uploaded files.',
+
+            'site:trees:read' => 'Read information about system site trees.',
+
+            'system:info:read' => 'Read detailed information about the system.',
 
             // For OIDC authentication
-            'openid',
+            'openid' => 'Remotely authenticate into concrete5.',
         ],
     ],
 
