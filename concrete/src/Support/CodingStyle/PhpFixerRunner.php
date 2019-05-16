@@ -8,7 +8,6 @@ use PhpCsFixer\Cache\FileCacheManager;
 use PhpCsFixer\Cache\FileHandler;
 use PhpCsFixer\Cache\NullCacheManager;
 use PhpCsFixer\Cache\Signature;
-use PhpCsFixer\Differ\SebastianBergmannDiffer;
 use PhpCsFixer\Error\ErrorsManager;
 use PhpCsFixer\Linter\Linter;
 use PhpCsFixer\Runner\Runner;
@@ -150,7 +149,7 @@ class PhpFixerRunner
         $runner = new Runner(
             $finder,
             $fixers,
-            new SebastianBergmannDiffer(),
+            new Differ(),
             $this->eventDispatcher,
             $this->errorManager,
             $linter,
