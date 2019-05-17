@@ -34,10 +34,6 @@ class CallableUrlResolver implements UrlResolverInterface
 
     public function resolve(array $arguments, $resolved = null)
     {
-        if ($this->resolver) {
-            return call_user_func($this->resolver, $this, $arguments, $resolved);
-        }
-
-        return null; // @codeCoverageIgnore
+        return $this->resolver ? call_user_func($this->resolver, $this, $arguments, $resolved) : null;
     }
 }
