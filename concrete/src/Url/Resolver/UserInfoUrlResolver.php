@@ -27,11 +27,9 @@ class UserInfoUrlResolver implements UrlResolverInterface
             return $resolved;
         }
 
-        if ($arguments) {
-            $user = head($arguments);
-        }
+        $user = $arguments ? head($arguments) : null;
 
-        if (isset($user) && $user instanceof UserInfo) {
+        if ($user instanceof UserInfo) {
             $site = $this->app->make('site')->getSite();
             if ($site) {
                 $config = $site->getConfigRepository();
