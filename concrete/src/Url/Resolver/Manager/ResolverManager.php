@@ -9,7 +9,7 @@ class ResolverManager implements ResolverManagerInterface
     /**
      * @var string[][]
      */
-    protected $priorityTree;
+    protected $priorityTree = [];
 
     /**
      * @var \Concrete\Core\Url\Resolver\UrlResolverInterface[]
@@ -27,7 +27,6 @@ class ResolverManager implements ResolverManagerInterface
      */
     public function __construct($default_handle = '', UrlResolverInterface $default_resolver = null)
     {
-        $this->priorityTree = [];
         if ($default_resolver) {
             $this->addResolver($default_handle, $default_resolver);
         }
