@@ -56,6 +56,7 @@ class ServiceProvider extends Provider
         Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
         Command\SetDatabaseCharacterSetCommand::class,
+        Command\Express\ExportCommand::class,
     ];
 
     /**
