@@ -434,7 +434,7 @@ var TranslationView = (function() {
         );
         my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '" data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
-          .append(my.UI.$translated[key] = buildTranslatedTextarea(this, my.translation.isTranslated ? my.translation.translations[index] : ''))
+          .append(my.UI.$translated[key] = buildTranslatedTextarea(my, my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
         index++;
       });
