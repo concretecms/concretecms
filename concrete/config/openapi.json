@@ -7,11 +7,6 @@
       "name": "MIT"
     }
   },
-  "servers": [
-    {
-      "url": "{{baseUrl}}"
-    }
-  ],
   "paths": {
     "/openapi.json": {
       "get": {
@@ -152,21 +147,6 @@
     }
   },
   "components": {
-    "securitySchemes": {
-      "oAuth2": {
-        "type": "oauth2",
-        "description": "This API uses OAuth2 with either the client credentials or authorization flow.",
-        "flows": {
-          "clientCredentials": {
-            "tokenUrl": "{{baseUrl}}/oauth/2.0/token"
-          },
-          "authorizationCode": {
-            "tokenUrl": "{{baseUrl}}/oauth/2.0/token",
-            "authorizationUrl": "{{baseUrl}}/oauth/2.0/authorize"
-          }
-        }
-      }
-    },
     "schemas": {
       "AccountResponse": {
         "properties": {
