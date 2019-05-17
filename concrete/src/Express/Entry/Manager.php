@@ -68,6 +68,8 @@ class Manager implements EntryManagerInterface
                 $entry->setAuthor($author);
             }
         }
+        $generator = $this->app->make(PublicIdentifierGenerator::class);
+        $entry->setPublicIdentifier($generator->generate());
         $entry->setEntity($entity);
         if ($entity->supportsCustomDisplayOrder()) {
             $entry->setEntryDisplayOrder($this->getNewDisplayOrder($entity));

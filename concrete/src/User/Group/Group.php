@@ -130,26 +130,6 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $user_list->getResultIDs();
     }
 
-    public function setPermissionsForObject($obj)
-    {
-        $this->pObj = $obj;
-        $db = Database::connection();
-        if ($obj instanceof \Concrete\Core\User\UserInfo) {
-            $uID = $this->pObj->getUserID();
-            if ($uID) {
-                $q = "select gID, ugEntered from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
-                $r = $db->query($q);
-                if ($r) {
-                    $row = $r->fetchRow();
-                    if ($row['gID']) {
-                        $this->inGroup = true;
-                        $this->gDateTimeEntered = $row['ugEntered'];
-                    }
-                }
-            }
-        }
-    }
-
     public function getGroupMembersNum()
     {
         $user_list = new UserList();

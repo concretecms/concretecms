@@ -91,11 +91,24 @@ class CsvWriter
         } else {
             yield 'ccm_date_created' => null;
         }
+        yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
         $attributes = $entry->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKey()->getAttributeKeyHandle() => $attribute->getPlainTextValue();
         }
+
+        $associations = $entry->getAssociations();
+        foreach ($associations as $association) {
+            $output = [];
+            if ($collection = $association->getSelectedEntries()) {
+                foreach($collection as $entry) {
+                    $output[] = $entry->getPublicIdentifier();
+                }
+            }
+            yield $association->getAssociation()->getId() => implode('|', $output);
+        }
+
     }
 
     /**
@@ -105,11 +118,17 @@ class CsvWriter
      */
     private function getHeaders(Entity $entity)
     {
+        yield 'publicIdentifier' => 'publicIdentifier';
         yield 'ccm_date_created' => 'dateCreated';
 
         $attributes = $entity->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKeyHandle() => $attribute->getAttributeKeyDisplayName();
+        }
+
+        $associations = $entity->getAssociations();
+        foreach ($associations as $association) {
+            yield $association->getId() => $association->getTargetPropertyName();
         }
     }
 

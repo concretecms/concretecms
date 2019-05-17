@@ -52,7 +52,11 @@ class AssociationFormView extends AssociationView
         $element = $this->getFormFieldElement($this->control);
         $association = $this->association;
         if ($association->isOwningAssociation()) {
-            $element = 'view';
+            if ($this->entry) {
+                $element = 'view';
+            } else {
+                $element = 'view_entry_missing';
+            }
         }
         $locator = new TemplateLocator('association/' . $element);
 
