@@ -19,7 +19,7 @@ class ResolverManager implements ResolverManagerInterface
 
     /**
      * @param string               $default_handle
-     * @param URLResolverInterface $default_resolver
+     * @param UrlResolverInterface $default_resolver
      */
     public function __construct($default_handle = '', UrlResolverInterface $default_resolver = null)
     {

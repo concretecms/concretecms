@@ -6,25 +6,25 @@ use Concrete\Core\Url\Resolver\UrlResolverInterface;
 interface ResolverManagerInterface
 {
     /**
-     * @return URLResolverInterface|null
+     * @return UrlResolverInterface|null
      */
     public function getDefaultResolver();
 
     /**
      * @param string $handle
      *
-     * @return URLResolverInterface|null
+     * @return UrlResolverInterface|null
      */
     public function getResolver($handle);
 
     /**
      * @param string               $handle
-     * @param URLResolverInterface $resolver
+     * @param UrlResolverInterface $resolver
      * @param int                  $priority The order in which we ask for a url, 1 is first, 1024 is last.
      */
     public function addResolver(
         $handle,
-        URLResolverInterface $resolver,
+        UrlResolverInterface $resolver,
         $priority = 512
     );
 
