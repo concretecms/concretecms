@@ -93,9 +93,8 @@ class RouterUrlResolver implements UrlResolverInterface
     private function resolveRoute($route_handle, $route_parameters)
     {
         $list = $this->getRouteList();
-        $generator = $this->getGenerator();
-
-        if ($route = $list->get($route_handle)) {
+        if ($list->get($route_handle)) {
+            $generator = $this->getGenerator();
             if ($path = $generator->generate($route_handle, $route_parameters, UrlGeneratorInterface::ABSOLUTE_PATH)) {
                 return $this->pathUrlResolver->resolve(array($path));
             }
