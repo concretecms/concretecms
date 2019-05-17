@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
@@ -39,14 +40,14 @@ class Version20190516204806 extends AbstractMigration implements RepeatableMigra
         $this->addScope('files:read');
 
         // set the descriptions
-        $config = $this->app->make('config');
-        $scopeData = $config->get('app.api.scopes');
-
-        $this->setScopeDescription('system:info:read', $scopeData['system:info:read']);
-        $this->setScopeDescription('account:read', $scopeData['account:read']);
-        $this->setScopeDescription('site:trees:read', $scopeData['site:trees:read']);
-        $this->setScopeDescription('files:read', $scopeData['files:read']);
-        $this->setScopeDescription('openid', $scopeData['openid']);
+        $registry = $this->app->make(ScopeRegistryInterface::class);
+        /**
+         * @var $registry ScopeRegistryInterface
+         */
+        foreach($registry->getScopes() as $scope) {
+            // We need to actually set up the descriptions.
+            $this->setScopeDescription($scope->getIdentifier(), $scope->getDescription());
+        }
     }
 
 

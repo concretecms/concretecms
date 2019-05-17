@@ -5,9 +5,7 @@ namespace Concrete\Core\File\Api;
 use Concrete\Core\Api\ApiController;
 use Concrete\Core\Application\Application;
 use Concrete\Core\File\File;
-use Concrete\Core\File\FileListTransformer;
 use Concrete\Core\File\FileTransformer;
-use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Checker;
 
@@ -30,6 +28,13 @@ class FilesController extends ApiController
         $this->request = $request;
     }
 
+    /**
+     * Return detailed information about a file.
+     * 
+     * @param $fID
+     * 
+     * @return \League\Fractal\Resource\Item|\Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function read($fID)
     {
         $fID = (int) $fID;
@@ -44,16 +49,5 @@ class FilesController extends ApiController
         }
 
         return $this->transform($file, new FileTransformer());
-    }
-
-    public function listFiles()
-    {
-        $searchProvider = $this->app->make(SearchProvider::class);
-        $fileList = $searchProvider->getItemList();
-        $keywords = $this->request->get('keywords');
-        if (!empty($keywords)) {
-            $fileList->filterByKeywords($keywords);
-        }
-        return $this->transform($fileList, new FileListTransformer());
     }
 }

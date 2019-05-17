@@ -1178,22 +1178,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-
-    'api' => [
-        'scopes' => [
-            'account:read' => 'Read information about the remotely authenticated user.',
-
-            'files:read' => 'Read detailed information about uploaded files.',
-
-            'site:trees:read' => 'Read information about system site trees.',
-
-            'system:info:read' => 'Read detailed information about the system.',
-
-            // For OIDC authentication
-            'openid' => 'Remotely authenticate into concrete5.',
-        ],
-    ],
-
+    
     // HTTP middleware for processing http requests
     'middleware' => [
         [

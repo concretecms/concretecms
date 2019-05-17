@@ -11,8 +11,11 @@ class ApiController
 {
 
     /**
+     * Returns an error response in the standard concrete5 error response format.
+     * 
      * @param $message
      * @param int $code
+     * 
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     protected function error($message, $code = 400)
@@ -24,8 +27,10 @@ class ApiController
 
     /**
      * Transforms an object using the API transformer
+     * 
      * @param $object
      * @param TransformerAbstract $transformer
+     * 
      * @return Item
      */
     public function transform($object, TransformerAbstract $transformer)

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: derekcameron
- * Date: 2018/12/13
- * Time: 19:38
- */
-
 namespace Concrete\Core\File;
 
 use League\Fractal\TransformerAbstract;
