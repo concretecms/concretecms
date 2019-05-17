@@ -436,7 +436,10 @@
 			cs.ajaxUpdate($(this).attr('action'), data);
 			return false;
 		});
-
+		ConcreteEvent.unsubscribe('SavedPresetSubmit')
+		ConcreteEvent.subscribe('SavedPresetSubmit', function (e, data) {
+			cs.ajaxUpdate(data);
+		})
 		// NEW SEARCH
 		cs.$element.find('div[data-header] form').on('submit', function() {
 			var data = $(this).serializeArray();
