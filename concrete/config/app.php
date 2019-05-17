@@ -1178,18 +1178,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-
-    'api' => [
-        'scopes' => [
-            'system',
-            'site',
-            'account',
-
-            // For OIDC authentication
-            'openid',
-        ],
-    ],
-
+    
     // HTTP middleware for processing http requests
     'middleware' => [
         [

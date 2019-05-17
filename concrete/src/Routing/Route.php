@@ -101,6 +101,11 @@ class Route extends SymfonyRoute
         return $name;
     }
 
+    /**
+     * Adds middleware to the route.
+     * 
+     * @param RouteMiddleware $middleware
+     */
     public function addMiddleware(RouteMiddleware $middleware)
     {
         $this->middlewares[] = $middleware;
@@ -114,6 +119,15 @@ class Route extends SymfonyRoute
         return $this->middlewares;
     }
 
-
+    /**
+     * Explicitly sets an OAuth2 scope to a route. This will be used if the route is consumed in an
+     * OAuth2 request.
+     * 
+     * @param string $scope
+     */
+    public function setScopes($scope)
+    {
+        $this->setOption('oauth_scopes', $scope);
+    }
 
 }
