@@ -232,7 +232,7 @@ class Type extends ConcreteObject
         /** @var $db \Concrete\Core\Database\Connection\Connection */
         $db = $app->make('database')->connection();
         $db->insert('WorkflowTypes',
-            ['wftHandle'=>$wftHandle, 'wftName'=>$wftName, 'pkgID', $pkgID],
+            ['wftHandle'=>$wftHandle, 'wftName'=>$wftName, 'pkgID'=>$pkgID],
             [\PDO::PARAM_STR, \PDO::PARAM_STR, \PDO::PARAM_INT]);
         $id = $db->lastInsertId();
         $est = static::getByID($id);
