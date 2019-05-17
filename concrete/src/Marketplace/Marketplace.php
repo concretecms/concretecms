@@ -191,11 +191,17 @@ class Marketplace implements ApplicationAwareInterface
         if ($skipPackages === true) {
             return;
         }
-        $skipPackages = preg_split('/\s+/', (string) $skipPackages, -1, PREG_SPLIT_NO_EMPTY);
+        if (!$skipPackages) {
+            // In case someone uses false or NULL or an empty string
+            $skipPackages = [];
+        } else {
+            // In case someone uses a single package handle
+            $skipPackages = (array) $skipPackages;
+        }
         $em = \ORM::entityManager();
         $items = self::getAvailableMarketplaceItems(false);
         foreach ($items as $i) {
-            if (in_array($i->getHandle(), $skipPackages)) {
+            if (in_array($i->getHandle(), $skipPackages, true)) {
                 continue;
             }
             $p = Package::getByHandle($i->getHandle());
