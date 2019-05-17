@@ -40,5 +40,6 @@ class UserInfoUrlResolver implements UrlResolverInterface
             return $this->pathUrlResolver->resolve(['/dashboard/users/search', 'view', $user->getUserID()]);
         }
 
+        return null;
     }
 }
