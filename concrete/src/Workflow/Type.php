@@ -3,6 +3,7 @@ namespace Concrete\Core\Workflow;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Package\PackageList;
 
 class Type extends ConcreteObject
@@ -60,10 +61,45 @@ class Type extends ConcreteObject
         }
     }
 
+    /**
+     * Gets all workflows belonging to this type.
+     *
+     * @return Workflow[]
+     */
+    public function getWorkflows() {
+        $workflows = [];
+        $app = Application::getFacadeApplication();
+        /** @var $db \Concrete\Core\Database\Connection\Connection */
+        $db = $app->make('database')->connection();
+        $qb = $db->createQueryBuilder();
+        $qb->select('wfID')->from('Workflows')->where($qb->expr()->eq('wftID',$this->getWorkflowTypeID()));
+        $results = $qb->execute()->fetchColumn();
+        foreach ($results as $result) {
+            $workflow = Workflow::getByID($result);
+            if (is_object($workflow)) {
+                $workflows[] = $workflow;
+            }
+        }
+
+        return $workflows;
+
+    }
+
+    /**
+     * Deletes this workflow type and all workflows belonging to this type.
+     *
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute("delete from WorkflowTypes where wftID = ?", array($this->wftID));
+        $workflows = $this->getWorkflows();
+        foreach ($workflows as $workflow) {
+            $workflow->delete();
+        }
+        $app = Application::getFacadeApplication();
+        /* @var $db \Concrete\Core\Database\Connection\Connection */
+        $db = $app->make('database')->connection();
+        $db->delete('WorkflowTypes',['wftID', $this->getWorkflowTypeID()]);
     }
 
     public static function getListByPackage($pkg)
