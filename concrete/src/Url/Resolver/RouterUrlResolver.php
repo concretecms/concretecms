@@ -35,7 +35,7 @@ class RouterUrlResolver implements UrlResolverInterface
      */
     public function getRouteList()
     {
-        return $this->router->getList();
+        return $this->router->getRoutes();
     }
 
     /**
