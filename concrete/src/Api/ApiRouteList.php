@@ -17,6 +17,9 @@ class ApiRouteList implements RouteListInterface
         $router->buildGroup()->addMiddleware(OAuthErrorMiddleware::class)
             ->routes( 'api/oauth2.php');
 
+        $router->get('/ccm/api/v1/openapi.json', 
+            'Concrete\Core\Api\OpenApi\OpenApiController::outputApiSpec');
+        
         $api = $router->buildGroup()
             ->setPrefix('/ccm/api/v1')
             ->addMiddleware(OAuthErrorMiddleware::class)
