@@ -81,7 +81,7 @@ class RouteUrlResolver implements UrlResolverInterface
                 strtolower(substr($route_handle, 0, 6)) == 'route/' &&
                 is_array($route_parameters)) {
                 $route_handle = substr($route_handle, 6);
-                if ($route = $this->getRouteList()->get($route_handle)) {
+                if ($this->getRouteList()->get($route_handle)) {
                     if ($path = $this->getGenerator()->generate($route_handle, $route_parameters, UrlGeneratorInterface::ABSOLUTE_PATH)) {
                         return $this->pathUrlResolver->resolve(array($path));
                     }
