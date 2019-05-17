@@ -114,6 +114,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             \Concrete\Core\Console\Command\FillThumbnailsTableCommand::class,
             \Concrete\Core\Console\Command\GenerateSitemapCommand::class,
             \Concrete\Core\Console\Command\RefreshEntitiesCommand::class,
+            \Concrete\Core\Console\Command\Express\ExportCommand::class,
             \Doctrine\DBAL\Tools\Console\Command\ImportCommand::class,
             \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand::class,
             \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand::class,
