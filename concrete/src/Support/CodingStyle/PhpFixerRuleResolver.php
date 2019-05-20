@@ -351,9 +351,6 @@ class PhpFixerRuleResolver
             // PHPDoc summary should end in either a full stop, exclamation mark, or question mark.
             'phpdoc_summary' => true,
 
-            // Docblocks should only be used on structural elements.
-            'phpdoc_to_comment' => true,
-
             // PHPDoc should start and end with content, excluding the very first and last line of the docblocks.
             'phpdoc_trim' => true,
 
