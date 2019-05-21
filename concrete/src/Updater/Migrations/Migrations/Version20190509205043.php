@@ -9,9 +9,10 @@ use Concrete\Core\Entity\Express\Control\PublicIdentifierControl;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\PublicIdentifierGenerator;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\ORM\EntityManager;
 
-class Version20190509205043 extends AbstractMigration
+class Version20190509205043 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
