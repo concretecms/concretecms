@@ -34,12 +34,15 @@ class CsvWriterTest extends \PHPUnit_Framework_TestCase
 
         $entity = M::mock(Entity::class);
         $entity->shouldReceive('getAttributes')->andReturn($entityKeys);
+        $entity->shouldReceive('getAssociations')->andReturn([]);
 
         $entry = M::mock(Entry::class);
 
         $created = Carbon::now()->subDays(mt_rand(1, 10000));
         $entry->shouldReceive('getDateCreated')->andReturn($created);
         $entry->shouldReceive('getAttributes')->andReturn($entryKeys);
+        $entry->shouldReceive('getPublicIdentifier')->andReturn('abc');
+        $entry->shouldReceive('getAssociations')->andReturn([]);
 
         $list = M::mock(TestEntryList::class);
         $list->shouldReceive('deliverQueryObject')->andReturnSelf();
@@ -61,6 +64,7 @@ class CsvWriterTest extends \PHPUnit_Framework_TestCase
         $csvWriter->insertEntryList($list);
 
         $this->assertSame([
+            'publicIdentifier' => 'publicIdentifier',
             'ccm_date_created' => 'dateCreated',
             'foo' => 'Foo',
             'bar' => 'Bar',
@@ -69,6 +73,7 @@ class CsvWriterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame([
             [
+                'publicIdentifier' => 'abc',
                 'ccm_date_created' => 'not now',
                 'foo' => 'Foo value',
                 'bar' => 'BAR value',
