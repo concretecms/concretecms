@@ -105,6 +105,15 @@ class Controller extends AttributeTypeController
         return '';
     }
 
+    /**
+     * @return Group
+     */
+    public function getValue()
+    {
+        $group = $this->getGroup($this->getAttributeValue()->getValueObject()->getValue());
+        return $group;
+    }
+
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
