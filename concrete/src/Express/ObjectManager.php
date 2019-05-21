@@ -76,6 +76,11 @@ class ObjectManager
         return $builder;
     }
 
+    /**
+     * Entry ID may be the integer ID or the public identifier
+     * @param int|string $entryID
+     * @return object
+     */
     public function getEntry($entryID)
     {
         $numberValidator = $this->app->make(Numbers::class);
@@ -83,15 +88,28 @@ class ObjectManager
         if ($numberValidator->integer($entryID)) {
             return $r->findOneBy(['exEntryID' => $entryID]);
         } else {
-            return $r->findOneBy(['publicIdentifier' => $entryID]);
+            return $this->getEntryByPublicIdentifier($entryID);
         }
     }
 
-
-
-    public function deleteEntry($entryID)
+    /**
+     * @param $publicIdentifier
+     * @return object
+     */
+    public function getEntryByPublicIdentifier($publicIdentifier)
     {
-        $entry = $this->getEntry($entryID);
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
+        return $r->findOneBy(['publicIdentifier' => $publicIdentifier]);
+    }
+    
+    /**
+     * @param int|Entry $entry
+     */
+    public function deleteEntry($entry)
+    {
+        if (!$entry instanceof Entry) {
+            $entry = $this->getEntry($entry);
+        }
         if ($entry) {
             /**
              * @var $entry Entry
