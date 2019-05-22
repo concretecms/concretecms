@@ -18,7 +18,13 @@ class AttributeKeyView extends View
     {
         parent::__construct($context, $control);
         if ($entry = $context->getEntry()) {
-            $this->addScopeItem('value', $entry->getAttributeValueObject($control->getAttributeKey()));
+            $value = $entry->getAttributeValueObject($control->getAttributeKey());
+            if ($value) {
+                $value = $value->getDisplaySanitizedValue();
+            } else {
+                $value = '';
+            }
+            $this->addScopeItem('value', $value);
         }
     }
 

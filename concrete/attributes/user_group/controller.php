@@ -33,7 +33,7 @@ class Controller extends AttributeTypeController
         $this->loadSettings();
         $value = null;
         if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValue();
+            $value = $this->getAttributeValue()->getValueObject();
         }
         if (!$value) {
             if ($this->request->query->has($this->attributeKey->getAttributeKeyHandle())) {
@@ -88,7 +88,7 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         /** @var \Concrete\Core\User\Group\Group $group */
-        $group = $this->getGroup($this->getAttributeValue()->getValue());
+        $group = $this->getAttributeValue()->getValue();
         if ($group) {
             return $group->getGroupDisplayName();
         }
@@ -98,7 +98,7 @@ class Controller extends AttributeTypeController
     public function getPlainTextValue()
     {
         /** @var \Concrete\Core\User\Group\Group $group */
-        $group = $this->getGroup($this->getAttributeValue()->getValue());
+        $group = $this->getAttributeValue()->getValue();
         if ($group) {
             return $group->getGroupName();
         }
@@ -170,9 +170,10 @@ class Controller extends AttributeTypeController
     public function exportValue(\SimpleXMLElement $akn)
     {
         if (is_object($this->attributeValue)) {
-            $gID = $this->getAttributeValue()->getValue();
-            $group = Group::getByID($gID);
-            $akn->addChild('value', $group->getGroupPath());
+            $group = $this->getAttributeValue()->getValue();
+            if ($group) {
+                $akn->addChild('value', $group->getGroupPath());
+            }
         }
     }
 
