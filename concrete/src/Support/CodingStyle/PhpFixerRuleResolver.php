@@ -194,9 +194,6 @@ class PhpFixerRuleResolver
             // There should be no empty lines after class opening brace.
             'no_blank_lines_after_class_opening' => true,
 
-            // There should not be blank lines between docblock and the documented element.
-            'no_blank_lines_after_phpdoc' => true,
-
             // There must be a comment when fall-through is intentional in a non-empty case body.
             'no_break_comment' => true,
 
@@ -455,6 +452,9 @@ class PhpFixerRuleResolver
 
             // Class names should match the file name.
             'psr4' => $hasFlag(PhpFixer::FLAG_PSR4CLASS) ? true : false,
+
+            // There should not be blank lines between docblock and the documented element.
+            'no_blank_lines_after_phpdoc' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
         ];
 
         if ($onlyAvailableOnes) {
