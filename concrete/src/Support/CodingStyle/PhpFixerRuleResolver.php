@@ -357,9 +357,6 @@ class PhpFixerRuleResolver
             // The correct case must be used for standard PHP types in PHPDoc.
             'phpdoc_types' => true,
 
-            // `@var` and `@type` annotations should not contain the variable name.
-            'phpdoc_var_without_name' => true,
-
             // Replaces `rand`, `srand`, `getrandmax` functions calls with their `mt_*` analogs.
             'random_api_migration' => true,
 
@@ -455,6 +452,9 @@ class PhpFixerRuleResolver
 
             // There should not be blank lines between docblock and the documented element.
             'no_blank_lines_after_phpdoc' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
+
+            // `@var` and `@type` annotations should not contain the variable name.
+            'phpdoc_var_without_name' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
         ];
 
         if ($onlyAvailableOnes) {
