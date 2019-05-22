@@ -10,8 +10,10 @@ use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
 use Concrete\Core\Export\Item\Express\Entry as EntryExporter;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
+use Concrete\Core\Permission\Assignment\ExpressEntryAssignment;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Concrete\Core\Permission\Response\ExpressEntryResponse;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -99,7 +101,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\ExpressEntryResponse';
+        return ExpressEntryResponse::class;
     }
 
     /**
@@ -107,7 +109,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getPermissionAssignmentClassName()
     {
-        return false;
+        return ExpressEntryAssignment::class;
     }
 
     /**
@@ -115,7 +117,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return false;
+        return 'express_entry';
     }
 
     /**
