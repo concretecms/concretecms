@@ -31,14 +31,9 @@ class Type extends ConcreteObject
      */
     public function getAccessEntityTypeClass()
     {
-        $class = overrideable_core_class('Core\\Permission\\Access\\Entity\\'
-            . Loader::helper('text')->camelcase($this->petHandle) . 'Entity',
-            DIRNAME_CLASSES . '/Permission/Access/Entity/'
-            . Loader::helper('text')->camelcase($this->petHandle) . 'Entity.php',
-            $this->getPackageHandle()
-        );
-
-        return $class;
+        $app = Facade::getFacadeApplication();
+        $entity = $app->make('permission/access/entity/factory')->createEntity($this);
+        return get_class($entity);
     }
 
     /** Returns the display name for this access entity type (localized and escaped accordingly to $format)
