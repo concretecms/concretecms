@@ -181,11 +181,6 @@ if (!empty($alternateHreflangTags)) {
 
 <?php
 $v = View::getRequestInstance();
-$u = new User();
-if ($u->isRegistered()) {
-    $v->requireAsset('core/account');
-    $v->addFooterItem('<script type="text/javascript">$(function() { if (window.ccm_enableUserProfileMenu) ccm_enableUserProfileMenu(); });</script>');
-}
 if ($cp) {
     View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
     if ($isEditMode) {
