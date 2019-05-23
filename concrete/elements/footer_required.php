@@ -6,9 +6,12 @@ use Concrete\Core\View\View;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-// Arguments
-/* @var bool $disableTrackingCode: set to true to avoid including the footer tracking code. */
-/* @var bool $display_account_menu: set to true to display the user menu, false to avoid it, null (or not set) to use the default confguration option. */
+/**
+ * Arguments:
+ *
+ * @var bool|null $disableTrackingCode
+ * @var bool|null $display_account_menu
+ */
 
 $app = Application::getFacadeApplication();
 $c = Page::getCurrentPage();

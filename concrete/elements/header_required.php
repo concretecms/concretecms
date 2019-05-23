@@ -7,6 +7,15 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * Arguments:
+ *
+ * @var string|null $pageTitle
+ * @var string|null $pageDescription
+ * @var string|null $pageMetaKeywords
+ * @var bool|null $disableTrackingCode
+ */
+
 $c = Page::getCurrentPage();
 $cp = false;
 $isEditMode = false;
