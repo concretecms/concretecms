@@ -1108,6 +1108,7 @@ return [
         ],
         'core/account' => [
             [
+                ['javascript', 'jquery'],
                 ['javascript', 'core/account'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['css', 'bootstrap/dropdown'],
