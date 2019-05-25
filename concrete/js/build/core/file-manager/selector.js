@@ -13,9 +13,6 @@
             'filters': []
         }, options);
 
-        var dialogOpts = {};
-        dialogOpts.filters = options.filters;
-
         my.$element = $element;
         my.options = options;
         my._chooseTemplate = _.template(my.chooseTemplate, {'options': my.options});
@@ -23,15 +20,10 @@
         my._fileLoadedTemplate = _.template(my.fileLoadedTemplate);
 
         my.$element.append(my._chooseTemplate);
-        my.$element.on('click', 'div.ccm-file-selector-choose-new', function() {
-            ConcreteFileManager.launchDialog(function(data) {
-                my.loadFile(data.fID, function() {
-                    my.$element.closest('form').trigger('change');
-                });
-            }, dialogOpts);
-            return false;
+        my.$element.on('click', 'div.ccm-file-selector-choose-new', function(e) {
+            e.preventDefault();
+            my.chooseNewFile();
         });
-
 
         if (my.options.fID) {
             my.loadFile(my.options.fID);
@@ -49,6 +41,20 @@
             '<div class="ccm-file-selector-file-selected-thumbnail"><%=file.resultsThumbnailImg%></div>' +
             '<div class="ccm-file-selector-file-selected-title"><div><%=file.title%></div></div><div class="clearfix"></div>' +
             '</div>',
+
+        chooseNewFile: function() {
+            var my = this;
+            ConcreteFileManager.launchDialog(
+                function(data) {
+                    my.loadFile(data.fID, function() {
+                        my.$element.closest('form').trigger('change');
+                    });
+                },
+                {
+                    filters: my.options.filters
+                }
+            );
+        },
 
         loadFile: function(fID, callback) {
             var my = this;
