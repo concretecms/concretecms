@@ -351,7 +351,7 @@
                 placement: 'auto',
                 trigger: 'manual'
             });
-            $(this).hover(function(){
+            my.hover(function(){
                 var image = new Image();
                 image.src = my.data('hover-image');
                 if (image.complete) {
@@ -362,6 +362,9 @@
                         my.popover('toggle');
                     });
                 }
+            });
+            my.closest('.ui-dialog').on('dialogclose', function() {
+                my.popover('destroy');
             });
         });
     };
