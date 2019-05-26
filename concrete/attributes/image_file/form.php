@@ -27,24 +27,25 @@ if ($mode == ImageFileSettings::TYPE_FILE_MANAGER) {
         <?php
     } else {
         $form = Core::make('helper/form');
-        $htmlRadioIDPrefix = trim(preg_replace('/\W+/', '-', $view->field('operation')), '-') . '-';
+        $htmlRadioReplaceID = trim(preg_replace('/\W+/', '-', $view->field('operation')), '-') . '-replace';
+        $enableFileCallback = 'document.getElementById(' . json_encode($htmlFileID) . ').disabled = !document.getElementById(' . json_encode($htmlRadioReplaceID) . ').checked'
         ?>
         <input type="hidden" name="<?= $view->field('previousFile') ?>" value="<?= $file->getFileID() ?>" />
         <div class="radio">
             <label>
-                <?= $form->radio($view->field('operation'), 'keep', true, ['id' => "{$htmlRadioIDPrefix}keep"]) ?>
+                <?= $form->radio($view->field('operation'), 'keep', true, ['onchange' => h($enableFileCallback)]) ?>
                 <?= t('Keep existing file (%s)', h($file->getFileName())) ?>
             </label>
         </div>
         <div class="radio">
             <label>
-                <?= $form->radio($view->field('operation'), 'remove', false, ['id' => "{$htmlRadioIDPrefix}remove"]) ?>
+                <?= $form->radio($view->field('operation'), 'remove', false, ['onchange' => h($enableFileCallback)]) ?>
                 <?= t('Remove current file') ?>
             </label>
         </div>
         <div class="radio">
             <label>
-                <?= $form->radio($view->field('operation'), 'replace', false, ['id' => "{$htmlRadioIDPrefix}replace"]) ?>
+                <?= $form->radio($view->field('operation'), 'replace', false, ['id' => $htmlRadioReplaceID, 'onchange' => h($enableFileCallback)]) ?>
                 <?= t('Replace with') ?>
                 <input type="file" name="<?= h($view->field('value')) ?>" id="<?= $htmlFileID ?>" disabled="disabled" />
             </label>
@@ -59,8 +60,11 @@ if ($mode == ImageFileSettings::TYPE_FILE_MANAGER) {
             function (node, eventName, callback) { node.attachEvent('on' + eventName, callback); }
         ;
 
-        hook(window, 'load', function () {
-            var fileElement = document.getElementById(<?= json_encode($htmlFileID) ?>);
+        function initialize() {
+        	var fileElement = document.getElementById(<?= json_encode($htmlFileID) ?>);
+            if (!fileElement) {
+                return false;
+            }
             for (var element = fileElement; element && element != document.body; element = element.parentNode || element.parentElement) {
                 if (typeof element.nodeName === 'string' && element.nodeName.toLowerCase() === 'form') {
                     if (typeof element.enctype !== 'string' || element.enctype === '' || element.enctype.toLowerCase() === 'application/x-www-form-urlencoded') {
@@ -69,21 +73,10 @@ if ($mode == ImageFileSettings::TYPE_FILE_MANAGER) {
                     break;
                 }
             }
-            <?php
-            if ($file !== null) {
-                ?>
-                var options = {},
-                    updateDisabled = function () {
-                        fileElement.disabled = !options.replace.checked;
-                    };
-                for (var optionValues = ['keep', 'remove', 'replace'], i = 0; i < optionValues.length; i++) {
-                    options[optionValues[i]] = document.getElementById(<?= json_encode($htmlRadioIDPrefix) ?> + optionValues[i]);
-                    hook(options[optionValues[i]], 'change', updateDisabled);
-                }
-                <?php
-            }
-            ?>
-        });
+        }
+        if (!initialize()) {
+        	hook(window, 'load', initialize);
+        }
     })();
     </script>
 
