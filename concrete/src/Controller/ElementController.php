@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Filesystem\FileLocator;
@@ -49,11 +50,10 @@ abstract class ElementController extends AbstractController
 
     /**
      * @deprecated
-     * Consider using the Element class instead.
+     * Consider using the Element class instead
      */
     public function render()
     {
         return $this->getViewObject()->render();
     }
-
 }
