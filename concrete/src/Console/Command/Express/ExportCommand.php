@@ -10,6 +10,8 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Doctrine\ORM\EntityManagerInterface;
+use function fclose;
+use SplFileObject;
 
 class ExportCommand extends Command
 {
@@ -77,15 +79,15 @@ class ExportCommand extends Command
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
         // Build writer
-        $stream = fopen('php://stdout', 'wb+');
-        $csv = $factory->createFromStream($stream);
+        $file = new SplFileObject('php://output', 'w');
+        $csv = $factory->createFromFileObject($file);
         $writer = $app->make(CsvWriter::class, [
             'writer' => $csv
         ]);
 
         // Insert BOM if needed
         if ($bom) {
-            fwrite($stream, $bom, strlen($bom));
+            $csv->setOutputBOM($bom);
         }
 
         // Write out data
@@ -94,8 +96,6 @@ class ExportCommand extends Command
         ]);
         $writer->insertHeaders($entity);
         $writer->insertEntryList($entryList);
-
-        fclose($stream);
 
         // Success
         return 0;
