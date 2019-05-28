@@ -2,20 +2,25 @@
 
 namespace Concrete\Core\Site;
 
-use Concrete\Core\Foundation\Service\Provider;
+use Concrete\Core\Application\Application;
+use Concrete\Core\Foundation\Service\Provider as BaseServiceProvider;
+use Concrete\Core\Site\Resolver\DriverInterface;
+use Concrete\Core\Site\Resolver\StandardDriver;
+use Concrete\Core\Site\Service as SiteService;
+use Concrete\Core\Site\Type\Service as SiteTypeService;
 
-class ServiceProvider extends Provider
+class ServiceProvider extends BaseServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('Concrete\Core\Site\Service');
-        $this->app->alias('Concrete\Core\Site\Service', 'site');
+        $this->app->singleton(SiteService::class);
+        $this->app->alias(SiteService::class, 'site');
 
-        $this->app->singleton('Concrete\Core\Site\Type\Service');
-        $this->app->alias('Concrete\Core\Site\Type\Service', 'site/type');
+        $this->app->singleton(SiteTypeService::class);
+        $this->app->alias(SiteTypeService::class, 'site/type');
 
-        $this->app->singleton('Concrete\Core\Site\Resolver\DriverInterface', function ($app) {
-            return $app->make('Concrete\Core\Site\Resolver\StandardDriver');
+        $this->app->singleton(DriverInterface::class, function (Application $app) {
+            return $this->app->make(StandardDriver::class);
         });
     }
 }
