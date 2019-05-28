@@ -1,15 +1,9 @@
 <?php
-namespace Concrete\Core\Filesystem;
 
-use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Filesystem\FileLocator\PackageLocation;
-use Concrete\Core\Filesystem\FileLocator\ThemeElementLocation;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Support\Facade\Facade;
+namespace Concrete\Core\Filesystem;
 
 class ElementManager
 {
-
     protected $registry = [];
 
     public function get($element)
@@ -22,12 +16,13 @@ class ElementManager
                 $element = $o;
             }
             $element->populateFromArguments(func_get_args());
+
             return $element;
         } else {
             $class = new \ReflectionClass(Element::class);
+
             return $class->newInstanceArgs(func_get_args());
         }
-
     }
 
     public function register($element, $object)
@@ -39,5 +34,4 @@ class ElementManager
     {
         unset($this->registry[$element]);
     }
-
 }
