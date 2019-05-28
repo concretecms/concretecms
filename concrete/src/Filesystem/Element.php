@@ -88,21 +88,18 @@ class Element implements LocatableFileInterface
      */
     public function populateFromArguments($args)
     {
-        if (count($args) > 1) {
-            for ($i = 1; $i < count($args); ++$i) {
-                $arg = $args[$i];
-                if ($arg instanceof Page) {
-                    $this->page = $arg;
+        $count = count($args);
+        for ($i = 1; $i < $count; ++$i) {
+            $arg = $args[$i];
+            if ($arg instanceof Page) {
+                $this->page = $arg;
+            } elseif (is_array($arg)) {
+                $this->controllerArguments = $arg;
+                foreach ($arg as $key => $value) {
+                    $this->set($key, $value);
                 }
-                if (is_array($arg)) {
-                    $this->controllerArguments = $arg;
-                    foreach ($arg as $key => $value) {
-                        $this->set($key, $value);
-                    }
-                }
-                if (is_string($arg)) {
-                    $this->pkgHandle = $arg;
-                }
+            } elseif (is_string($arg)) {
+                $this->pkgHandle = $arg;
             }
         }
     }
