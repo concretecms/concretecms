@@ -42,19 +42,27 @@ class SanitizerException extends UserMessageException
      */
     public static function create($errorCode, $customErrorMessage = '')
     {
-        $customErrorMessage = (string) $customErrorMessage;
-        if ($customErrorMessage !== null) {
-            return new static($customErrorMessage, $errorCode);
+        $errorMessage = (string) $customErrorMessage;
+        if ($errorMessage === '') {
+            switch ($errorCode) {
+                case static::ERROR_FAILED_TO_READ_FILE:
+                    $errorMessage = t('Failed to read the SVG file.');
+                    break;
+                case static::ERROR_FAILED_TO_WRITE_FILE:
+                    $errorMessage = t('Failed to write the SVG file.');
+                    break;
+                case static::ERROR_FAILED_TO_PARSE_XML:
+                    $errorMessage = t('Failed to parse the SVG file.');
+                    break;
+                case static::ERROR_FAILED_TO_GENERATE_XML:
+                    $errorMessage = t('Failed to generate the XML of the SVG file.');
+                    break;
+                default:
+                    $errorMessage = t('Unknown SVG error (%s)', $errorCode);
+                    break;
+            }
         }
-        switch ($errorCode) {
-            case static::ERROR_FAILED_TO_READ_FILE:
-                return new static(t('Failed to read the SVG file.'), $errorCode);
-            case static::ERROR_FAILED_TO_WRITE_FILE:
-                return new static(t('Failed to write the SVG file.'), $errorCode);
-            case static::ERROR_FAILED_TO_PARSE_XML:
-                return new static(t('Failed to parse the SVG file.'), $errorCode);
-            case static::ERROR_FAILED_TO_GENERATE_XML:
-                return new static(t('Failed to generate the XML of the SVG file.'), $errorCode);
-        }
+
+        return new static($errorMessage, (int) $errorCode);
     }
 }
