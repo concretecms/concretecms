@@ -4,7 +4,6 @@ namespace Concrete\Core\Form\Service\DestinationPicker;
 
 use ArrayAccess;
 use Concrete\Core\Form\Service\Form;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * A picker for DestinationPicker that allows users specify an external URL.
@@ -66,10 +65,10 @@ class ExternalUrlPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
+    public function decode(array $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         $result = null;
-        $postValue = $data->get($pickerKey);
+        $postValue = array_get($data, $pickerKey);
         if (is_string($postValue)) {
             $postValue = trim($postValue);
             if ($postValue !== '') {

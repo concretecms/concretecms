@@ -3,7 +3,6 @@
 namespace Concrete\Core\Form\Service\DestinationPicker;
 
 use ArrayAccess;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * A picker for DestinationPicker that allows users specify no value.
@@ -51,7 +50,7 @@ class NoDestinationPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
+    public function decode(array $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         return '';
     }

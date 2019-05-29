@@ -3,7 +3,6 @@
 namespace Concrete\Core\Form\Service\DestinationPicker;
 
 use ArrayAccess;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 interface PickerInterface
 {
@@ -37,11 +36,11 @@ interface PickerInterface
     /**
      * Decode the value received via post.
      *
-     * @param \Symfony\Component\HttpFoundation\ParameterBag $data
+     * @param array $data
      * @param string $pickerKey
      * @param array $options
      * @param \ArrayAccess $errors
      * @param string|null $fieldDisplayName
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null);
+    public function decode(array $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null);
 }

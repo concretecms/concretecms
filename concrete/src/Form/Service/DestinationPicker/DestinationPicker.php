@@ -186,6 +186,7 @@ EOT
      * @param string[]|array[] $pickers The list of picker handles. To pass options to the pickers use the handles as keys, and arrays for values.
      * @param \ArrayAccess|null $errors A list to add errors to
      * @param string|null $fieldDisplayName The name of the field (used to describe errors)
+     * @param array|null An array containing the data to be decoded (if null, we'll use the POST data from the current request)
      *
      * @return string[]|mixed[]|null[] Returns two NULLs in case of errors, or the selected picker handle and its value otherwise
      *
@@ -207,17 +208,20 @@ EOT
      * </pre></code>
      * $handle and $value will be NULL if (and only if) errors occurred (added to the $errors parameter).
      */
-    public function decode($key, array $pickers, ArrayAccess $errors = null, $fieldDisplayName = null)
+    public function decode($key, array $pickers, ArrayAccess $errors = null, $fieldDisplayName = null, array $data = null)
     {
         $handle = null;
         $value = null;
-        $which = $this->request->request->get("{$key}__which");
+        if ($data === null) {
+            $data = $this->request->request->all();
+        }
+        $which = array_get($data, "{$key}__which");
         if (is_string($which)) {
             $pickerHandlesWithOptions = $this->getHandlesWithOptions($pickers);
             if (isset($pickerHandlesWithOptions[$which])) {
                 $picker = $this->getPicker($which);
                 $pickerKey = "{$key}_{$which}";
-                $value = $picker->decode($this->request->request, $pickerKey, $pickerHandlesWithOptions[$which], $errors, $fieldDisplayName);
+                $value = $picker->decode($data, $pickerKey, $pickerHandlesWithOptions[$which], $errors, $fieldDisplayName);
                 if ($value !== null) {
                     $handle = $which;
                 }
