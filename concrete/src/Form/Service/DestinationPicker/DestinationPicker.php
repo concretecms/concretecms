@@ -144,7 +144,7 @@ class DestinationPicker
             $picker = $this->getPicker($handle);
             $pickersHeight = max($pickersHeight, $picker->getHeight());
             $pickerKey = "{$key}_{$handle}";
-            $pickerValue = $this->request->isPost() ? $this->request->request->get($pickerKey) : ($selectedPicker === $currentPickerHandle ? $currentValue : null);
+            $pickerValue = $this->request->isPost() ? $this->request->request->get($pickerKey) : ($handle === $currentPickerHandle ? $currentValue : null);
             $pickerHtml = $picker->generate($pickerKey, $options, $pickerValue);
             if ($pickerHtml !== '') {
                 $style = $selectedPicker === $handle ? '' : ' style="display: none"';
