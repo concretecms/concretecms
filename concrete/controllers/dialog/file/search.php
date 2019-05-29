@@ -24,7 +24,7 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
-        $search = new FileFolder();
+        $search = $this->app->build(FileFolder::class);
         $search->search();
         $result = $search->getSearchResultObject();
 

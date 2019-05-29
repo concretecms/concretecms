@@ -6,19 +6,19 @@ use Database;
 
 class LogList extends DatabaseItemList
 {
-    protected $autoSortColumns = array('logID', 'level');
+    protected $autoSortColumns = ['logID', 'level'];
     protected $sortBy = 'logID';
     protected $sortByDirection = 'desc';
 
     public function __construct()
     {
-        $this->setQuery("select Logs.logID from Logs");
+        $this->setQuery('select Logs.logID from Logs');
     }
 
     public function get($itemsToGet = 100, $offset = 0)
     {
         $r = parent::get($itemsToGet, intval($offset));
-        $entries = array();
+        $entries = [];
         foreach ($r as $row) {
             $e = LogEntry::getByID($row['logID']);
             if (is_object($e)) {
@@ -32,7 +32,7 @@ class LogList extends DatabaseItemList
     public function filterByKeywords($keywords)
     {
         $db = Database::get();
-        $this->filter(false, "message like " . $db->qstr('%' . $keywords . '%'));
+        $this->filter(false, 'message like ' . $db->qstr('%' . $keywords . '%'));
     }
 
     public function filterByChannel($channel)
@@ -45,7 +45,7 @@ class LogList extends DatabaseItemList
         $db = Database::get();
         if (is_array($levels)) {
             $lth = '(';
-            for ($i = 0; $i < count($levels); ++$i) {
+            for ($i = 0, $iMax = count($levels); $i < $iMax; ++$i) {
                 if ($i > 0) {
                     $lth .= ',';
                 }
@@ -54,5 +54,12 @@ class LogList extends DatabaseItemList
             $lth .= ')';
             $this->filter(false, "(level in {$lth})");
         }
+    }
+
+    public function filterByTime($time, $comparison = '=')
+    {
+        $db = Database::get();
+        $time = $db->quote($time);
+        $this->userPostQuery .= ' AND time ' . $comparison . ' ' . $time;
     }
 }

@@ -2,7 +2,8 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Utility\Service\Text;
-use \Concrete\Core\Localization\Localization;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\LoggerFactory;
 
 /**
  * Translate text (simple form).
@@ -298,11 +299,30 @@ function output_vars(array $get_defined_vars, $valueOfThis = null, $return = fal
         $get_defined_vars['this'] = $valueOfThis;
     }
     $generator = new Concrete\Core\Support\Symbol\PhpDocGenerator();
-    $phpDoc = $generator->describeVars($get_defined_vars);
+    $phpDoc = $generator->setIsSingleDocBlock(true)->describeVars($get_defined_vars);
     if (!$return) {
         echo '</script><pre>', $phpDoc;
         die();
     }
 
     return $phpDoc;
+}
+
+/**
+ * Easily logs something.
+ * @param mixed $channel
+ * @param $message
+ * @param array $context
+ */
+function core_log($message,
+  $level = \Monolog\Logger::DEBUG,
+  $channel = \Concrete\Core\Logging\Channels::CHANNEL_APPLICATION)
+{
+    $logger = Core::make(LoggerFactory::class)->createLogger($channel);
+    $context = [];
+    if (is_array($message)) {
+        $context = $message[1];
+        $message = $message[0];
+    }
+    $logger->log($level, $message, $context);
 }

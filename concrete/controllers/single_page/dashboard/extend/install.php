@@ -6,7 +6,8 @@ use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
-use Concrete\Core\Logging\Logger;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
 use Concrete\Core\Package\BrokenPackage;
@@ -74,7 +75,7 @@ class Install extends DashboardPageController
                 $r = Package::uninstall($p);
                 if ($this->post('pkgMoveToTrash')) {
                     $r = $pkg->backup();
-                    if (is_object($r)) {
+                    if ($r instanceof ErrorList) {
                         $this->error->add($r);
                     }
                 }
@@ -125,7 +126,8 @@ class Install extends DashboardPageController
                         try {
                             $this->app->make(TranslationsInstaller::class)->installMissingPackageTranslations($p);
                         } catch (Exception $x) {
-                            $logger = $this->app->make(Logger::class);
+                            $logger = $this->app->make(LoggerFactory::class)
+                                ->createLogger(Channels::CHANNEL_PACKAGES);
                             $logger->addError($x);
                         }
                     }

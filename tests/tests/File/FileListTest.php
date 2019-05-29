@@ -238,7 +238,7 @@ class FileListTest extends FileStorageTestCase
             'another.txt' => $sample,
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
-            'awesome-o' => $sample,
+            'awesome-o.txt' => $sample,
             'image.png' => $image,
         ];
 
@@ -313,7 +313,7 @@ class FileListTest extends FileStorageTestCase
             'another.txt' => $sample,
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
-            'awesome-o' => $sample,
+            'awesome-o.txt' => $sample,
             'image.png' => $image,
         ];
 

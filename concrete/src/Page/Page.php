@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
@@ -56,6 +57,7 @@ use Environment;
 use Group;
 use Session;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents including blocks, page metadata, page permissions.
@@ -1898,6 +1900,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl->getThemeID(), $this->cID, $this->vObj->getVersionID()]);
+        $this->themeObject = $pl;
     }
 
     /**
@@ -2058,8 +2061,26 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getFirstChild($sortColumn = 'cDisplayOrder asc')
     {
-        $db = Database::connection();
-        $cID = $db->fetchColumn("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", [$this->cID]);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $now = $app->make('date')->getOverridableNow();
+        $cID = $db->fetchColumn(
+            <<<EOT
+select
+    Pages.cID
+from
+    Pages
+    inner join CollectionVersions
+        on Pages.cID = CollectionVersions.cID
+where
+    cParentID = ?
+    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
+order by
+    {$sortColumn}
+EOT
+            ,
+            [$this->cID, $now, $now]
+        );
         if ($cID && $cID != $this->getSiteHomePageID()) {
             return self::getByID($cID, 'ACTIVE');
         }
@@ -2375,7 +2396,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             // No passed cHandle, and there is an existing handle.
             $cHandle = $this->getCollectionHandle();
-        } elseif (!$isHomePage && !Core::make('helper/validation/strings')->notempty($data['cHandle'])) {
+        } elseif (!$isHomePage && (!isset($data['cHandle']) || !Core::make('helper/validation/strings')->notempty($data['cHandle']))) {
             // no passed cHandle, and no existing handle
             // make the handle out of the title
             $cHandle = $txt->urlify($cName);
@@ -2933,7 +2954,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!$pe->proceed()) {
             return false;
         }
-        Log::addEntry(t('Page "%s" at path "%s" deleted', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
+
+        $app = Facade::getFacadeApplication();
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger->notice(t('Page "%s" at path "%s" deleted',
+            $this->getCollectionName(),
+            $this->getCollectionPath()
+        ));
 
         parent::delete();
 
@@ -2996,7 +3023,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_page_move_to_trash', $pe);
 
         $trash = self::getByPath(Config::get('concrete.paths.trash'));
-        Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
+        $app = Facade::getFacadeApplication();
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger->notice(t('Page "%s" at path "%s" Moved to trash',
+            $this->getCollectionName(),
+            $this->getCollectionPath()
+        ));
+
         $this->move($trash);
         $this->deactivate();
 
@@ -3191,8 +3224,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             $children = $this->getCollectionChildren();
             if (count($children) > 0) {
+                $myCollectionID = $this->getCollectionID();
                 foreach ($children as $child) {
-                    $child->rescanCollectionPath();
+                    // Let's avoid recursion caused by potentially malformed data
+                    if ($child->getCollectionID() !== $myCollectionID) {
+                        $child->rescanCollectionPath();
+                    }
                 }
             }
         //}
@@ -3237,14 +3274,44 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @param int $displayOrder
      * @param int|null $cID The page ID to set the display order for (if empty, we'll use this page)
      */
-    public function updateDisplayOrder($do, $cID = 0)
+    public function updateDisplayOrder($displayOrder, $cID = 0)
     {
+        $displayOrder = (int) $displayOrder;
+
         //this line was added to allow changing the display order of aliases
         if (!intval($cID)) {
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         }
-        $db = Database::connection();
-        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
+
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+
+        $oldDisplayOrder = $db->fetchColumn('SELECT cDisplayOrder FROM Pages WHERE cID = ?', [$cID]);
+
+        // Exit out if the display order for this page doesn't change.
+        if ($oldDisplayOrder === null || $displayOrder === (int) $oldDisplayOrder) {
+            return;
+        }
+
+        // Store the new display order.
+        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$displayOrder, $cID]);
+
+        // Because the display order of another page can be changed,
+        // the page object is retrieved first in order to pass it to the event.
+        $page = $this;
+        if ($cID && (int) $cID !== (int) $this->getCollectionID()) {
+            $page = static::getByID($cID);
+        }
+
+        if ($page->isError()) {
+            return;
+        }
+
+        // Fire an event that the page display order has changed.
+        $event = new DisplayOrderUpdateEvent($page);
+        $event->setOldDisplayOrder($oldDisplayOrder);
+        $event->setNewDisplayOrder($displayOrder);
+        Events::dispatch('on_page_display_order_update', $event);
     }
 
     /**
@@ -3512,8 +3579,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      **/
     public static function addHomePage(TreeInterface $siteTree = null)
     {
+        $app = Application::getFacadeApplication();
         // creates the home page of the site
-        $db = Database::connection();
+        $db = $app->make(Connection::class);
 
         $cParentID = 0;
         $uID = HOME_UID;
@@ -3535,6 +3603,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $r->execute($v);
+        if (!$siteTree->getSiteHomePageID()) {
+            $siteTree->setSiteHomePageID($cID);
+            $em = $app->make(EntityManagerInterface::class);
+            $em->flush($siteTree);
+        }
         $pc = self::getByID($cID, 'RECENT');
 
         return $pc;

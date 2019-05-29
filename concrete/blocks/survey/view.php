@@ -33,6 +33,7 @@ $optionResults = array();
 $graphColors = array();
 $i = 1;
 $totalVotes = 0;
+$optionNamesAbbrev = [];
 foreach ($options as $opt) {
     $optionNamesAbbrev[] = $i;
     $optionResults[] = $opt->getResults();

@@ -8,6 +8,7 @@ use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
 
 /**
  * Handles regular and retina thumbnails. e.g. Each thumbnail type has two versions of itself
@@ -93,6 +94,13 @@ class Version
     protected $keepAnimations;
 
     /**
+     * Background color of the Image Editor save area
+     *
+     * @var string
+     */
+    protected $saveAreaBackgroundColor;
+
+    /**
      * Initialize the instance.
      *
      * @param string $directoryName the name of the directory that contains the thumbnails
@@ -106,8 +114,9 @@ class Version
      * @param int[] $associatedFileSetIDs the IDs of the associated file sets (whose meaning depends on the value of $limitedToFileSets)
      * @param bool $upscalingEnabled Upscaling is enabled?
      * @param bool $keepAnimations Should we create animated thumbnails for animated images?
+     * @param string $saveAreaBackgroundColor Background color of the Image Editor save area
      */
-    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [], $upscalingEnabled = false, $keepAnimations = false)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [], $upscalingEnabled = false, $keepAnimations = false, $saveAreaBackgroundColor = '')
     {
         $this->setDirectoryName($directoryName);
         $this->setHandle($handle);
@@ -120,6 +129,7 @@ class Version
         $this->setAssociatedFileSetIDs($associatedFileSetIDs);
         $this->setIsUpscalingEnabled($upscalingEnabled);
         $this->setKeepAnimations($keepAnimations);
+        $this->setSaveAreaBackgroundColor($saveAreaBackgroundColor);
     }
 
     /**
@@ -384,6 +394,30 @@ class Version
     }
 
     /**
+     * Background color of the Image Editor save area
+     *
+     * @param string $color
+     *
+     * @return $this
+     */
+    public function setSaveAreaBackgroundColor($color)
+    {
+        $this->saveAreaBackgroundColor = $color;
+
+        return $this;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @return string
+     */
+    public function getSaveAreaBackgroundColor()
+    {
+        return $this->saveAreaBackgroundColor;
+    }
+
+    /**
      * Get the display name of the thumbnail sizing mode.
      *
      * @return string
@@ -415,9 +449,16 @@ class Version
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
         $hadImagineImage = $fv->hasImagineImage();
-        if ($this->isKeepAnimations() && $fv->getImagineImage()->layers()->count() > 1) {
-            $thumbnailFormat = BitmapFormat::FORMAT_GIF;
-        } else {
+        $thumbnailFormat = null;
+        if ($this->isKeepAnimations()) {
+            try {
+                if ($fv->getImagineImage()->layers()->count() > 1) {
+                    $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+                }
+            } catch (Exception $x) {
+            }
+        }
+        if ($thumbnailFormat === null) {
             $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
         }
         if (!$hadImagineImage) {

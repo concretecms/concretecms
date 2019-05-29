@@ -162,7 +162,7 @@ class Cloner
                 'stName' => $newPage->getCollectionName(),
                 'cID' => $newPage->getCollectionID(),
                 'stType' => $page->getStackType(),
-                'stMultilingualSection' => $page->getMultilingualSectionID(),
+                'stMultilingualSection' => 0,
             ]);
             $newPage = Stack::getByID($newPage->getCollectionID());
             if ($page->isNeutralStack()) {
@@ -296,7 +296,7 @@ class Cloner
         $aHandle = $block->getAreaHandle();
         $toID = $destinationCollection->getCollectionID();
         $toCVID = $destinationCollection->getVersionID();
-        $already = (int) $this->connection->fetchColumn(
+        $already = $this->connection->fetchColumn(
             'select bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ? limit 1',
             [$toID, $toCVID, $bID, $aHandle]
         );

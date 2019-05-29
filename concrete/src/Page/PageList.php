@@ -14,6 +14,7 @@ use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * An object that allows a filtered list of pages to be returned.
@@ -179,6 +180,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
+        $expr = $query->expr();
         if ($this->includeAliases) {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'Pages', 'pa', 'p.cPointerID = pa.cID')
@@ -208,7 +210,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             case self::PAGE_VERSION_RECENT_UNAPPROVED:
                 $query
                     ->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
-                    ->andWhere('cvIsApproved = 0');
+                    ->andWhere($expr->eq('cvIsApproved', 0));
                 break;
             case self::PAGE_VERSION_SCHEDULED:
                 $now = new \DateTime();
@@ -217,9 +219,19 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
-                $now = new \DateTime();
-                $query->andWhere('cv.cvID = (select cvID from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)) order by cvPublishDate desc limit 1)');
-                $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
+                $app = Application::getFacadeApplication();
+                $nowParameter = $query->createNamedParameter($app->make('date')->getOverridableNow());
+                $query
+                    ->andWhere($expr->eq('cv.cvIsApproved', 1))
+                    ->andWhere($expr->orX(
+                        $expr->isNull('cv.cvPublishDate'),
+                        $expr->lte('cv.cvPublishDate', $nowParameter)
+                    ))
+                    ->andWhere($expr->orX(
+                        $expr->isNull('cv.cvPublishEndDate'),
+                        $expr->gte('cv.cvPublishEndDate', $nowParameter)
+                    ))
+                ;
                 break;
         }
 
@@ -335,6 +347,11 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 $cp = new \Permissions($c);
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('SCHEDULED');
+                }
+            } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT_UNAPPROVED) {
+                $cp = new \Permissions($c);
+                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                    $c->loadVersionObject('RECENT_UNAPPROVED');
                 }
             }
             if (isset($queryRow['cIndexScore'])) {

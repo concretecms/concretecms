@@ -214,6 +214,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Page Changes" path="/dashboard/reports/page_changes" filename="/dashboard/reports/page_changes.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>changes, csv, report</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="" />
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype=""
@@ -763,6 +771,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Export Options" path="/dashboard/system/files/export_options" filename="/dashboard/system/files/export_options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>files, export, csv, bom, encoding</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Optimization" path="/dashboard/system/optimization"
               filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well."
               package=""/>
@@ -879,7 +894,7 @@
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
               description="Change login behaviors and setup public profiles." package=""/>
-        <page name="Public Registration" path="/dashboard/system/registration/open"
+        <page name="Account Options" path="/dashboard/system/registration/open"
               filename="/dashboard/system/registration/open.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -929,7 +944,7 @@
         <page name="Automated Logout" path="/dashboard/system/registration/automated_logout" filename="/dashboard/system/registration/automated_logout.php" pagetype="" description="Automate when users are logged out, or do it manually" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>login, logout, user, agent, ip, change, security, login, session, invalidation, invalid</value>
+                    <value>login, logout, user, agent, ip, change, security, session, invalidation, invalid</value>
                 </attributekey>
             </attributes>
         </page>

@@ -3,6 +3,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @var $router \Concrete\Core\Routing\Router
+ * Base path: /ccm/system/block
+ * Namespace: Concrete\Controller\Backend\
  */
 $router->all('/render/', 'Block::render');
 $router->all('/action/add/{cID}/{arHandle}/{btID}/{action}', 'Block\Action::add')

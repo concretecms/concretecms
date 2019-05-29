@@ -1,9 +1,15 @@
 <?php
+
 namespace Concrete\Core\Error\ErrorList\Error;
 
-interface ErrorInterface extends \JsonSerializable
+use JsonSerializable;
+
+interface ErrorInterface extends JsonSerializable
 {
-
-    function getMessage();
-
+    /**
+     * Get the error message.
+     *
+     * @return string
+     */
+    public function getMessage();
 }

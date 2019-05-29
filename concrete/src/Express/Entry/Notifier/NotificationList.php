@@ -25,7 +25,4 @@ class NotificationList implements NotificationListInterface
     {
         return $this->notifications;
     }
-
-
-
 }

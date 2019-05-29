@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
@@ -31,14 +32,21 @@ interface ValidatorInterface
      * @param Controller $controller
      * @param Request $request
      * @param bool $includeFieldNotPresentErrors
-     * @return mixed
+     * @return ResponseInterface
      */
     function validateSaveValueRequest(Controller $controller, Request $request, $includeFieldNotPresentErrors = true);
 
+
     /**
      * @param Controller $controller
+     * @param AttributeValueInterface $value
+     * @param bool $includeFieldNotPresentErrors
+     * @return ResponseInterface
      */
-    function validateCurrentAttributeValue(Controller $controller, AttributeValueInterface $value);
+    function validateCurrentAttributeValue(
+        Controller $controller,
+        AttributeValueInterface $value,
+        $includeFieldNotPresentErrors = true);
 
 
 }

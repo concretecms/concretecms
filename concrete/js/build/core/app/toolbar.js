@@ -103,10 +103,12 @@
 						panel.isPinned = false;
 						parent.removeClass('ccm-toolbar-page-edit-mode-pinned');
 					}
+                    $this.toggleClass('ccm-launch-panel-loading');
 					panel.toggle();
 				}
 			} else {
-				panel.toggle();
+                $this.toggleClass('ccm-launch-panel-loading');
+                panel.toggle();
 			}
 			return false;
 		});

@@ -82,6 +82,11 @@ class Configuration extends DoctrineMigrationConfiguration
         if (!in_array($criteria, [static::FORCEDMIGRATION_INCLUSIVE, static::FORCEDMIGRATION_EXCLUSIVE], true)) {
             throw new Exception(t('Invalid initial migration criteria.'));
         }
+
+        // Remove possible 'Version' prefix from the migration identifier.
+        // This allows a user to also use VersionXXXXXXXXXXXX, which corresponds with the class name.
+        $reference = str_replace('Version', '', $reference);
+
         $migration = $this->findInitialMigration($reference, $criteria);
         if ($migration === null) {
             throw new Exception(t('Unable to find a migration with identifier %s', $reference));

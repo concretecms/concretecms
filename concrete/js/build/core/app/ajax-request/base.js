@@ -16,7 +16,8 @@
 			},
 			'complete': function() {
 				my.complete(my);
-			}
+			},
+			skipResponseValidation: false
 		}, options);
 		my.options = options;
 		my.execute();
@@ -44,47 +45,24 @@
 		},
 
 		errorResponseToString: function(r) {
-			var result = r.responseText;
-			if (r.responseJSON) {
-				var json = r.responseJSON;
-
-				// first, lets check to see if json.error is an object. Because if it is we've enabled
-				// debug error handling and we have a bunch of interesting information about the error to report.
-				if (typeof json.error === 'object' && $.isArray(json.error.trace)) {
-					result = '<p class="text-danger" style="word-break: break-all"><strong>' + json.error.message + '</strong></p>';
-					result += '<p class="text-muted">' + ccmi18n.errorDetails + '</p>';
-					result += '<table class="table"><tbody>';
-					for (var i = 0; i < json.error.trace.length; i++) {
-						var trace = json.error.trace[i];
-						result += '<tr><td style="word-break: break-all">' + trace.file + '(' + trace.line + '): ' + trace.class + '->' + trace.function + '<td></tr>';
-					}
-					result += '</tbody></table>';
-				} else if ($.isArray(json.errors) && json.errors.length > 0 && typeof json.errors[0] === 'string') {
-					result = '<p class="text-danger" style="word-break: break-all"><strong>' + json.errors.join('\n') + '</strong></p>';
-				} else if (typeof json.error === 'string' && json.error !== '') {
-					result = '<p class="text-danger" style="word-break: break-all"><strong>' + json.error + '</strong></p>';
-				}
-			}
-
-			return result;
+			return ConcreteAjaxRequest.renderErrorResponse(r, true);
 		},
 
 		error: function(r, my) {
 			ConcreteEvent.fire('AjaxRequestError', {
-				'response': r
+				response: r
 			});
-
-			ConcreteAlert.dialog(ccmi18n.error, my.errorResponseToString(r));
+			ConcreteAlert.dialog(ccmi18n.error, ConcreteAjaxRequest.renderErrorResponse(r, true));
 		},
 
 		validateResponse: function(r, callback) {
 			if (r.error) {
 				ConcreteEvent.fire('AjaxRequestError', {
-					'response': r
+					response: r
 				});
 				ConcreteAlert.dialog(
 					ccmi18n.error,
-					'<p class="text-danger">' + r.errors.join("<br/>") + '</p>',
+					ConcreteAjaxRequest.renderJsonError(r),
 					function() {
 						if (callback) {
 							callback(false, r);
@@ -99,7 +77,7 @@
 		},
 
 		success: function(r, my, callback) {
-			if (my.options.dataType != 'json' || my.validateResponse(r)) {
+			if (my.options.dataType != 'json' || my.options.skipResponseValidation || my.validateResponse(r)) {
 				if (callback) {
 					callback(r);
 				}
@@ -113,7 +91,39 @@
 		}
 	};
 
-	// static method
+	// static methods
+	ConcreteAjaxRequest.renderJsonError = function (json, asHtml) {
+		if (!json) {
+			return '';
+		}
+		var toHtml = function(text, index) {
+			if (typeof index === 'number' && $.isArray(json.htmlErrorIndexes) && $.inArray(index, json.htmlErrorIndexes) >= 0) {
+				return text;
+			}
+			return $('<div />').text(text).html().replace(/\n/g, '<br />');
+		};
+		var result = '';
+		if (typeof json.error === 'object' && $.isArray(json.error.trace)) {
+			result = '<p class="text-danger"><strong>' + toHtml(json.error.message) + '</strong></p>';
+			result += '<p class="text-muted">' + ccmi18n.errorDetails + '</p>';
+			result += '<table class="table"><tbody>';
+			for (var i = 0, trace; i < json.error.trace.length; i++) {
+				trace = json.error.trace[i];
+				result += '<tr><td>' + trace.file + '(' + trace.line + '): ' + trace['class'] + '->' + trace['function'] + '<td></tr>';
+			}
+			result += '</tbody></table>';
+		} else if ($.isArray(json.errors) && json.errors.length > 0 && typeof json.errors[0] === 'string') {
+			$.each(json.errors, function (index, text) {
+				result += '<p class="text-danger"><strong>' + toHtml(text, index) + '</strong></p>';
+			});
+		} else if (typeof json.error === 'string' && json.error !== '') {
+			result = '<p class="text-danger" style="word-break: break-all"><strong>' + toHtml(json.error) + '</strong></p>';
+		}
+		return result;
+	};
+	ConcreteAjaxRequest.renderErrorResponse = function (xhr, asHtml) {
+		return ConcreteAjaxRequest.renderJsonError(xhr.responseJSON, asHtml) || xhr.responseText;
+	};
 	ConcreteAjaxRequest.validateResponse = ConcreteAjaxRequest.prototype.validateResponse;
 	ConcreteAjaxRequest.errorResponseToString = ConcreteAjaxRequest.prototype.errorResponseToString;
 

@@ -4,11 +4,13 @@ namespace Concrete\Core\Mail;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use Monolog\Logger;
 use Throwable;
+use Zend\Mail\Address\AddressInterface;
 use Zend\Mail\Header\MessageId as MessageIdHeader;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
@@ -131,6 +133,12 @@ class Service
     protected $throwOnFailure;
 
     /**
+     * Return path address (bounce back email)
+     * @var AddressInterface
+     */
+    private $bounceBackEmail;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $app the application instance
@@ -162,6 +170,7 @@ class Service
         $this->bodyHTML = false;
         $this->testing = false;
         $this->throwOnFailure = false;
+        $this->bounceBackEmail=null;
     }
 
     /**
@@ -496,8 +505,7 @@ class Service
     /**
      * Should an exception be thrown if the delivery fails (if false, the sendMail() method will simply return false on failure).
      *
-     * @param bool $testing
-     * @param mixed $throwOnFailure
+     * @param bool $throwOnFailure
      *
      * @return $this
      */
@@ -545,7 +553,11 @@ class Service
         $replyStr = $this->generateEmailStrings($this->replyto);
 
         $mail = (new Message())->setEncoding(APP_CHARSET);
-
+        //set bounce back email
+        if(!empty($this->bounceBackEmail))
+        {
+            $mail->setSender($this->bounceBackEmail);
+        }
         if (is_array($this->from) && count($this->from)) {
             if ($this->from[0] != '') {
                 $from = $this->from;
@@ -641,7 +653,7 @@ class Service
             if ($this->getTesting()) {
                 throw $sendError;
             }
-            $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
+            $l = new GroupLogger(Channels::CHANNEL_EXCEPTIONS, Logger::CRITICAL);
             $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $sendError->getMessage());
             $l->write($sendError->getTraceAsString());
             if ($config->get('concrete.log.emails')) {
@@ -659,7 +671,7 @@ class Service
 
         // add email to log
         if ($config->get('concrete.log.emails') && !$this->getTesting()) {
-            $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
+            $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
             if ($config->get('concrete.email.enabled')) {
                 if ($sendError === null) {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
@@ -794,5 +806,10 @@ class Service
         }
 
         return $result;
+    }
+
+    public function setBounceBackEmail(AddressInterface $bounceBackEmail)
+    {
+        $this->bounceBackEmail=$bounceBackEmail;
     }
 }

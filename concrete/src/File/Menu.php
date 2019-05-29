@@ -19,6 +19,7 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
 
         $this->setAttribute('data-search-file-menu', $file->getFileID());
         $this->addItem(new LinkItem('#', t('Clear'), ['data-file-manager-action' => 'clear']));
+        $this->addItem(new LinkItem('#', t('Choose New File'), ['data-file-manager-action' => 'choose-new-file']));
         $this->addItem(new DividerItem());
 
         $fp = new \Permissions($file);
@@ -55,8 +56,8 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
         }
         if ($fp->canEditFileContents()) {
             $this->addItem(new DialogLinkItem(
-                    REL_DIR_FILES_TOOLS_REQUIRED . '/files/replace?fID=' . $file->getFileID(),
-                    t('Replace'), t('Replace'), '500', '200')
+                    \URL::to('/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()),
+                    t('Replace'), t('Replace'), '620', 400)
             );
         }
         $this->addItem(new DialogLinkItem(

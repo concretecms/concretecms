@@ -47,10 +47,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected $btInterfaceHeight = 700;
     protected $btCacheBlockOutput = false;
     protected $btTable = 'btExpressForm';
+    protected $btExportPageColumns = ['redirectCID'];
 
     public $notifyMeOnSubmission;
     public $recipientEmail;
     public $replyToEmailControlID;
+    public $storeFormSubmission = 1;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
@@ -115,14 +117,40 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->edit();
         $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
         $this->set('addFilesToFolder', (new Filesystem())->getRootFolder());
+        $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
+        $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
+        $this->set('displayCaptcha', 1);
+    }
+
+    protected function areFormSubmissionsStored()
+    {
+        $config = $this->getFormSubmissionConfigValue();
+        if ($config === true) {
+            return true;
+        }
+        if ($config === 'auto') {
+            return $this->storeFormSubmission; // let the block decide.
+        }
+
+        // else config is false.
+        return false;
+    }
+
+    protected function getFormSubmissionConfigValue()
+    {
+        $config = $this->app->make('config');
+        return $config->get('concrete.form.store_form_submissions');
     }
 
     public function getNotifications()
     {
-        return [
-            new FormBlockSubmissionEmailNotification($this->app, $this),
-            new FormBlockSubmissionNotification($this->app, $this)
-        ];
+        $notifications = [new FormBlockSubmissionEmailNotification($this->app, $this)];
+        //if we don't save data we must not use this notifier because entry is already not saved
+        if ($this->areFormSubmissionsStored()) {
+            array_unshift($notifications, new FormBlockSubmissionNotification($this->app, $this));
+        }
+
+        return $notifications;
     }
 
     public function action_form_success($bID = null)
@@ -145,7 +173,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
             // Important – are other blocks in the system using this form? If so, we don't want to delete it!
             $db = $entityManager->getConnection();
             $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
-            if ($r == 0) {
+            if (0 == $r) {
                 $entityManager->remove($entity);
                 $entityManager->flush();
             }
@@ -175,17 +203,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 }
 
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
-
+                $manager = $controller->getEntryManager($this->request);
+                $entry = $manager->createEntry($entity);
                 $e = $validator->getErrorList();
-
-                $this->set('error', $e);
-
-                if (isset($e) && !$e->has()) {
-                    $manager = $controller->getEntryManager($this->request);
+                if (isset($e) && !$e->has() && $this->areFormSubmissionsStored()) {
                     $entry = $manager->addEntry($entity);
                     $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
-
                     // Check antispam
                     $antispam = $this->app->make('helper/validation/antispam');
                     $submittedData = '';
@@ -202,6 +226,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                         $r = Redirect::page($this->request->getCurrentPage());
                         $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+
                         return $r;
                     }
 
@@ -216,7 +241,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     if ($this->addFilesToFolder) {
                         $folder = $filesystem->getFolder($this->addFilesToFolder);
                     }
-
                     $entityManager->refresh($entry);
 
                     $notifier = $controller->getNotifier($this);
@@ -240,13 +264,27 @@ class Controller extends BlockController implements NotificationProviderInterfac
                             }
                         }
                     }
-
+                }
+                if (isset($e) && !$e->has()) {
+                    if ($this->areFormSubmissionsStored() && isset($values)) {
+                        $submittedAttributeValues = $values;
+                    } else {
+                        $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
+                    }
+                    $notifier = $controller->getNotifier($this);
+                    $notifications = $notifier->getNotificationList();
+                    array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues,$key) {
+                        if (method_exists($notification, "setAttributeValues")) {
+                            $notification->setAttributeValues($submittedAttributeValues);
+                        }
+                    });
+                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
                     $r = null;
                     if ($this->redirectCID > 0) {
                         $c = Page::getByID($this->redirectCID);
                         if (is_object($c) && !$c->isError()) {
                             $r = Redirect::page($c);
-                            $r->setTargetUrl($r->getTargetUrl() . '?form_success=1');
+                            $r->setTargetUrl($r->getTargetUrl() . '?form_success=1&entry=' . $entry->getID());
                         }
                     }
 
@@ -257,6 +295,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     }
 
                     return $processor->deliverResponse($entry, ProcessorInterface::REQUEST_TYPE_ADD, $r);
+                } else {
+                    $this->set('error', $e);
                 }
             }
         }
@@ -296,6 +336,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     if (!$post['question']) {
                         $e = $this->app->make('error');
                         $e->add(t('You must give this question a name.'));
+
                         return new JsonResponse($e);
                     }
                     $controller = $type->getController();
@@ -380,6 +421,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     if (!$post['question']) {
                         $e = $this->app->make('error');
                         $e->add(t('You must give this question a name.'));
+
                         return new JsonResponse($e);
                     }
 
@@ -417,7 +459,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         return new JsonResponse($control);
     }
-
     public function save($data)
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
@@ -445,6 +486,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $name = $data['formName'] ? $data['formName'] : t('Form');
 
         if (!$this->exFormID) {
+            // This is a new submission.
+            $c = \Page::getCurrentPage();
+
             // Create a results node
             $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
             $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($name, $node);
@@ -617,7 +661,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 }
             }
 
-            $position++;
+            ++$position;
         }
 
         // Now, we look through all existing controls to see whether they should be removed.
@@ -675,6 +719,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function edit()
     {
+        $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
+        $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
         $this->requireAsset('core/tree');
         $this->clearSessionControls();
@@ -734,7 +780,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function action_get_type_form()
     {
         $field = explode('|', $this->request->request->get('id'));
-        if ($field[0] == 'attribute_key') {
+        if ('attribute_key' == $field[0]) {
             $type = Type::getByID($field[1]);
             if (is_object($type)) {
                 ob_start();
@@ -748,7 +794,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $obj->showControlName = true;
                 $obj->assets = $this->getAssetsDefinedDuringOutput();
             }
-        } elseif ($field[0] == 'entity_property') {
+        } elseif ('entity_property' == $field[0]) {
             $obj = new \stdClass();
             switch ($field[1]) {
                 case 'text':
@@ -859,7 +905,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function getFormEntity()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
-
         return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
             ->findOneById($this->exFormID);
     }

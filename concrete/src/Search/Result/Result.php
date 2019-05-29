@@ -181,6 +181,7 @@ class Result
         $obj->bulkMenus = $this->getSearchResultBulkMenus();
         $obj->baseUrl = (string) $this->getBaseURL();
         $obj->breadcrumb = $this->getBreadcrumb();
+        $obj->itemsPerPage = $this->pagination->getItemListObject()->getItemsPerPage();
 
         return $obj;
     }

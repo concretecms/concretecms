@@ -380,6 +380,19 @@ class Controller extends BlockController
             return false;
         }
 
+        if ($method === 'action_filter_by_date') {
+            // Parameter 0 must be set
+            if (!isset($parameters[0]) || $parameters[0] < 0 || $parameters[0] > 9999) {
+                return false;
+            }
+            // Parameter 1 can be null
+            if (isset($parameters[1])) {
+                if ($parameters[1] < 1 || $parameters[1] > 12) {
+                    return false;
+                }
+            }
+        }
+
         return parent::isValidControllerTask($method, $parameters);
     }
 
@@ -414,10 +427,14 @@ class Controller extends BlockController
             'cParentID' => null,
         ];
 
+        if (is_numeric($args['cParentID'])) {
+            $args['cParentID'] = intval($args['cParentID']);
+        }
+
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
-        $args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
-        $args['cThisParent'] = ($args['cParentID'] == $this->cPID) ? '1' : '0';
-        $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
+        $args['cThis'] = ($args['cParentID'] === $this->cID) ? '1' : '0';
+        $args['cThisParent'] = ($args['cParentID'] === $this->cPID) ? '1' : '0';
+        $args['cParentID'] = ($args['cParentID'] === 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
         if (!$args['cParentID']) {
             $args['cParentID'] = 0;
         }

@@ -76,7 +76,8 @@
 
 		my.$advancedSearchButton.html(advancedSearchText);
 
-		if (result.query && result.folder && result.folder.treeNodeTypeHandle !== 'search_preset') {
+		// Disabling the search input if we are in advanced search and not in a search preset
+		if (result.query && (!result.folder || (result.folder && result.folder.treeNodeTypeHandle !== 'search_preset'))) {
 			my.$headerSearch.find('div.btn-group').hide(); // hide any fancy button groups we've added here.
 			my.$headerSearchInput.prop('disabled', true);
 			my.$headerSearchInput.attr('placeholder', '');
@@ -239,7 +240,7 @@
 			if (event.which == 3) {
 				my.handleMenuClick(event, $row);
 			} else {
-				if (!event.metaKey) {
+				if (!event.metaKey && !event.ctrlKey) {
 					$selected.removeClass('ccm-search-select-selected');
 				}
 				if (!$row.hasClass('ccm-search-select-selected')) {
@@ -303,7 +304,7 @@
 					});
 				}
 			}
-	
+
 			cs.setupResetButton(result);
 		}
 

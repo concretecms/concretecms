@@ -187,7 +187,7 @@ class SessionFactory implements SessionFactoryInterface
 
         $storage->setOptions($options);
 
-        return $storage;
+        return $app->make(Storage\LoggedStorage::class, [$storage]);
     }
 
     /**

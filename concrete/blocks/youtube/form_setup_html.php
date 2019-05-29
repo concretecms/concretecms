@@ -141,6 +141,17 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
         </div>
     </fieldset>
+    <fieldset>
+        <legend><?php echo t('Privacy Options'); ?></legend>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('noCookie', 1, $noCookie); ?>
+                    <?php echo t("No Cookie") ?>
+                </label>
+            </div>
+        </div>
+    </fieldset>
 </div>
 
 <script>

@@ -1,5 +1,7 @@
 <?php
-
+if (!isset($defaultNewOptionNm)) {
+    $defaultNewOptionNm = null;
+}
 function getAttributeOptionHTML($v)
 {
     if ($v == 'TEMPLATE') {

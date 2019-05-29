@@ -282,8 +282,6 @@ return [
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
-        '/account' => VIEW_CORE_THEME,
-        '/account/*' => VIEW_CORE_THEME,
         '/install' => VIEW_CORE_THEME,
         '/login' => [
             VIEW_CORE_THEME,
@@ -429,7 +427,9 @@ return [
         'fullcalendar/print' => [
             ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
         ],
-
+        'vue'=> [
+            ['javascript', 'js/vue.js', ['minify' => false, 'combine' => false]],
+        ],
         'html5-shiv' => [
             [
                 'javascript-conditional',
@@ -476,6 +476,9 @@ return [
         'core/imageeditor/control/position' => [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
+        ],
+        'core/imageeditor/control/colors' => [
+            ['javascript', 'js/image-editor/controls/colors.js'],
         ],
         'core/duration' => [
             ['javascript', 'js/duration.js'],
@@ -635,7 +638,7 @@ return [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
         'core/avatar' => [
-            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]]
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
@@ -739,6 +742,9 @@ return [
         ],
         'core/avatar' => [
             [
+                ['javascript', 'dropzone'],
+                ['javascript-localized', 'dropzone'],
+                ['javascript','vue'],
                 ['javascript', 'core/avatar'],
             ],
         ],
@@ -1175,15 +1181,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-
-    'api' => [
-        'scopes' => [
-            'system',
-            'site',
-            'account',
-        ],
-    ],
-
+    
     // HTTP middleware for processing http requests
     'middleware' => [
         [

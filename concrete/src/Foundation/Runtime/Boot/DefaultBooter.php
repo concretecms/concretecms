@@ -91,17 +91,17 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
-         * Setup the core service groups.
-         * ----------------------------------------------------------------------------
-         */
-        $this->initializeServiceProviders($app, $config);
-
-        /*
-         * ----------------------------------------------------------------------------
          * Simple legacy constants like APP_CHARSET
          * ----------------------------------------------------------------------------
          */
         $this->initializeLegacyDefinitions($config, $app);
+
+        /*
+         * ----------------------------------------------------------------------------
+         * Setup the core service groups.
+         * ----------------------------------------------------------------------------
+         */
+        $this->initializeServiceProviders($app, $config);
 
         /*
          * ----------------------------------------------------------------------------

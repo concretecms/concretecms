@@ -8,6 +8,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\User;
+use InvalidArgumentException;
 use League\Url\Url;
 
 class Controller extends GenericOauth2TypeController
@@ -106,13 +107,19 @@ class Controller extends GenericOauth2TypeController
                 $url = Url::createFromUrl($passedUrl);
 
                 if (!(string)$url->getScheme() || !(string)$url->getHost()) {
-                    throw new \InvalidArgumentException('No scheme or host provided.');
+                    throw new InvalidArgumentException('No scheme or host provided.');
                 }
 
             } catch (\Exception $e) {
-                throw new \InvalidArgumentException('Invalid URL.');
+                throw new InvalidArgumentException('Invalid URL.');
             }
         }
+
+        $passedName = trim($args['displayName']);
+        if (!$passedName) {
+            throw new InvalidArgumentException('Invalid display name');
+        }
+        $this->authenticationType->setAuthenticationTypeName($passedName);
 
         $config = $this->app->make(Repository::class);
         $config->save('auth.external_concrete5.url', $args['url']);
@@ -130,7 +137,7 @@ class Controller extends GenericOauth2TypeController
     {
         $config = $this->app->make(Repository::class);
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('data', $config->get('auth.external_concrete5', ''));
+        $this->set('data', $config->get('auth.external_concrete5', []));
         $this->set('redirectUri', $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/callback']));
 
         $list = $this->app->make(GroupList::class);
