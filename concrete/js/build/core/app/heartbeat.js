@@ -1,4 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global CCM_DISPATCHER_FILENAME */
 
 ;(function(global, $) {
 'use strict';
