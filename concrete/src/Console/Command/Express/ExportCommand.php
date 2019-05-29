@@ -94,6 +94,7 @@ class ExportCommand extends Command
         $entryList = $app->make(EntryList::class, [
             'entity' => $entity
         ]);
+        $entryList->ignorePermissions();
         $writer->insertHeaders($entity);
         $writer->insertEntryList($entryList);
 
