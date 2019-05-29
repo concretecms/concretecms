@@ -20,6 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
 
+    const DEFAULT_ITEMS_PER_PAGE = 10;
+
     use PackageTrait;
 
     /**
@@ -72,6 +74,12 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      * @ORM\Column(type="integer")
      */
     protected $entity_results_node_id;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $items_per_page = 10;
+
 
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\ExpressKey", mappedBy="entity", cascade={"persist", "remove"})
@@ -360,6 +368,26 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
+     * @return int
+     */
+    public function getItemsPerPage()
+    {
+        if ($this->items_per_page) {
+            return $this->items_per_page;
+        } else {
+            return self::DEFAULT_ITEMS_PER_PAGE;
+        }
+    }
+
+    /**
+     * @param mixed $items_per_page
+     */
+    public function setItemsPerPage($items_per_page)
+    {
+        $this->items_per_page = $items_per_page;
+    }
+
+    /**
      * @param string $format
      * @return string
      */
@@ -418,6 +446,15 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function setForms($forms)
     {
         $this->forms = $forms;
+    }
+
+    public function getForm($name)
+    {
+        foreach($this->getForms() as $form) {
+            if ($form->getName() == $name) {
+                return $form;
+            }
+        }
     }
 
     /**

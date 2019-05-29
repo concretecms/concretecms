@@ -64,7 +64,7 @@ $topic_id = Request::getInstance()->get('topic_id');
                     <td class="ccm-search-results-name">
                         <?php
                         print $menu->getMenuElement();
-                        print $event->getName();
+                        print h($event->getName());
 
                         if (!$occurrence->getVersion()->isApproved()) {
                             print ' <i class="fa fa-exclamation-circle"></i>';

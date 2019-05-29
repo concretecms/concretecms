@@ -770,6 +770,12 @@ class FormTest extends PHPUnit_Framework_TestCase
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => ['One']]]]],
             ],
+            [
+                'select',
+                ['Key', ['One' => 'First', 'Two' => 'Second'], '<Two\'">'],
+                '<select id="Key" name="Key" ccm-passed-value="&lt;Two&#039;&quot;&gt;" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                ['OtherField' => 'OtherValue'],
+            ],
         ];
     }
 

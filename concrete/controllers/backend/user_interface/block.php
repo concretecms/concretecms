@@ -42,14 +42,16 @@ abstract class Block extends Page
         }
         $this->area = $a;
         if (!$a->isGlobalArea()) {
-            $b = \Block::getByID($bID, $this->page, $a);
             $this->set('isGlobalArea', false);
+            $b = \Block::getByID($bID, $this->page, $a);
         } else {
+            $this->set('isGlobalArea', true);
             $stack = \Stack::getByName($arHandle);
             $sc = ConcretePage::getByID($stack->getCollectionID(), 'RECENT');
             $b = \Block::getByID($bID, $sc, STACKS_AREA_NAME);
-            $b->setBlockAreaObject($a); // set the original area object
-            $this->set('isGlobalArea', true);
+            if ($b) {
+                $b->setBlockAreaObject($a); // set the original area object
+            }
         }
         if (!$b) {
             throw new UserMessageException(t('Access Denied'));

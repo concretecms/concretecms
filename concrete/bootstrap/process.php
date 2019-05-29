@@ -59,14 +59,13 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
                     $obj->bID = $nb->getBlockID();
                     $obj->error = false;
 
-                    if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
-                            ->integer(
-                                $_REQUEST['dragAreaBlockID'])
-                    ) {
+                    $db = null;
+                    if (isset($_REQUEST['dragAreaBlockID']) && Core::make('helper/validation/numbers')->integer($_REQUEST['dragAreaBlockID'], 1)) {
                         $db = Block::getByID(
                             $_REQUEST['dragAreaBlockID'],
-                            $this->pageToModify,
-                            $this->areaToModify);
+                            isset($this->pageToModify) ? $this->pageToModify : null,
+                            isset($this->areaToModify) ? $this->areaToModify : null
+                        );
                         if (is_object($db) && !$db->isError()) {
                             $nb->moveBlockToDisplayOrderPosition($db);
                         }

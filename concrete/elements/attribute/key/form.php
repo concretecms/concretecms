@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     $akIsSearchable = 1;
     $asID = 0;
 
-    if (is_object($key)) {
+    if (isset($key) && is_object($key)) {
         if (!isset($akHandle)) {
             $akHandle = $key->getAttributeKeyHandle();
         }
@@ -37,7 +37,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div class="form-group">
             <?= $form->label('akHandle', t('Handle')) ?>
             <div class="input-group">
-                <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
+                <?= $form->text('akHandle', isset($akHandle) ? $akHandle : '', ['autofocus' => 'autofocus']) ?>
                 <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>
@@ -78,7 +78,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             ?>
             <div class="checkbox"><label><?= $form->checkbox('akIsSearchableIndexed', 1,
-                        $akIsSearchableIndexed) ?> <?= $keyword_label ?></label></div>
+                        !empty($akIsSearchableIndexed)) ?> <?= $keyword_label ?></label></div>
             <div class="checkbox"><label><?= $form->checkbox('akIsSearchable', 1,
                         $akIsSearchable) ?> <?= $advanced_label ?></label></div>
         </div>
@@ -98,7 +98,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 $category->getCategoryEntity()->getPackageHandle(), array('key' => $key));
         } else {
             @Loader::element('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
-                array('key' => $key));
+                array('key' => isset($key) ? $key : null));
         }
     ?>
 
@@ -106,7 +106,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 } ?>
 
     <?= $valt->output('add_or_update_attribute') ?>
-    <?php $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), $key); ?>
+    <?php $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), isset($key) ? $key : null); ?>
 
     <?php if (!isset($back)) {
     $back = URL::page($c);
@@ -116,7 +116,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= $back ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
-            <?php if (is_object($key)) {
+            <?php if (isset($key) && is_object($key)) {
     ?>
                 <button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button>
             <?php 

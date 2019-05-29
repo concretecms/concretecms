@@ -8,17 +8,17 @@
             <div class="ccm-block-calendar-event-header">
                 <h3><?php if ($enableLinkToPage && $eventOccurrenceLink) {
     ?>
-                        <a href="<?=$eventOccurrenceLink?>"><?= $event->getName() ?></a>
-                    <?php 
+                        <a href="<?=$eventOccurrenceLink?>"><?= h($event->getName()) ?></a>
+                    <?php
 } else {
     ?>
-                        <?= $event->getName() ?>
-                    <?php 
+                        <?= h($event->getName()) ?>
+                    <?php
 }
     ?>
                 </h3>
             </div>
-        <?php 
+        <?php
 }
     ?>
 
@@ -27,7 +27,7 @@
             <div class="ccm-block-calendar-event-date-time">
                 <?= $formatter->getOccurrenceDateString($occurrence) ?>
             </div>
-        <?php 
+        <?php
 }
     ?>
 
@@ -36,7 +36,7 @@
             <div class="ccm-block-calendar-event-description">
                 <p><?= $event->getDescription() ?></p>
             </div>
-        <?php 
+        <?php
 }
     ?>
 
@@ -51,11 +51,11 @@
 }
     ?>
             </div>
-        <?php 
+        <?php
 }
     ?>
 
 
     </div>
-<?php 
+<?php
 } ?>

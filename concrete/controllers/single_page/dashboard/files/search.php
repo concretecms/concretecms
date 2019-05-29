@@ -15,8 +15,7 @@ class Search extends DashboardPageController
 {
     public function view()
     {
-
-        $header = new Header();
+        $header = $this->app->build(Header::class);
         $this->set('headerMenu', $header);
         $this->set('breadcrumbClass', 'ccm-file-manager-breadcrumb');
         $this->requireAsset('core/file-manager');
@@ -28,7 +27,7 @@ class Search extends DashboardPageController
             $result = $provider->getSearchResultFromQuery($query);
             $result->setBaseURL(\URL::to('/ccm/system/search/files/current'));
         } else {
-            $search = new FileFolder();
+            $search = $this->app->build(FileFolder::class);
             $search->search();
             $result = $search->getSearchResultObject();
             

@@ -1,42 +1,89 @@
 <?php
 namespace Concrete\Core\Marketplace;
 
-use Config;
-use Core;
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\File\Service\File;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Support\Facade\Package;
-use TaskPermission;
-use URL;
+use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Exception;
+use Concrete\Core\Http\Request;
 
-class Marketplace
+class Marketplace implements ApplicationAwareInterface
 {
+
+    use ApplicationAwareTrait;
+
     const E_INVALID_BASE_URL = 20;
     const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
     const E_UNRECOGNIZED_SITE_TOKEN = 22;
     const E_DELETED_SITE_TOKEN = 31;
+    const E_CONNECTION_TIMEOUT = 41;
     const E_GENERAL_CONNECTION_ERROR = 99;
 
     protected $isConnected = false;
     protected $connectionError = false;
 
-    public function __construct()
+    /** @var Repository */
+    protected $config;
+
+    /** @var Repository */
+    protected $databaseConfig;
+
+    /** @var File */
+    protected $fileHelper;
+
+    /** @var PathUrlResolver */
+    protected $urlResolver;
+
+    /** @var \Concrete\Core\Http\Request */
+    protected $request;
+
+    public function setApplication(\Concrete\Core\Application\Application $application)
     {
-        if (!Config::get('concrete.marketplace.enabled')) {
+        $this->app = $application;
+
+        $this->fileHelper = $this->app->make('helper/file');
+        $this->config = $this->app->make('config');
+        $this->databaseConfig = $this->app->make('config/database');
+        $this->urlResolver = $this->app->make(PathUrlResolver::class);
+        $this->request = $this->app->make(Request::class);
+        $this->isConnected = false;
+        $this->isConnected();
+    }
+
+    /**
+     * @param $dbConfig
+     */
+    public function isConnected()
+    {
+        if ($this->isConnected) {
+            return true;
+        }
+
+        if (!$this->config->get('concrete.marketplace.enabled')) {
             $this->connectionError = self::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED;
 
             return;
         }
 
-        $dbConfig = Core::make('config/database');
-        $csToken = $dbConfig->get('concrete.marketplace.token');
+        $csToken = $this->databaseConfig->get('concrete.marketplace.token');
+
+        $this->isConnected = false;
+
         if ($csToken != '') {
-            $fh = Core::make('helper/file');
-            $csiURL = urlencode(Core::getApplicationURL());
-            $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-            $vn = Core::make('helper/validation/numbers');
-            $r = $fh->getContents($url, Config::get('concrete.marketplace.request_timeout'));
-            if ($r == false) {
+            $fh = $this->app->make('helper/file');
+            $csiURL = urlencode($this->getSiteURL());
+            $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+            $vn = $this->app->make('helper/validation/numbers');
+            $r = $this->get($url);
+
+            if ($r === null) {
                 $this->isConnected = true;
             } else {
                 if ($vn->integer($r)) {
@@ -44,8 +91,8 @@ class Marketplace
                     $this->connectionError = $r;
 
                     if ($this->connectionError == self::E_DELETED_SITE_TOKEN) {
-                        $dbConfig->clear('concrete.marketplace.token');
-                        $dbConfig->clear('concrete.marketplace.url_token');
+                        $this->databaseConfig->clear('concrete.marketplace.token');
+                        $this->databaseConfig->clear('concrete.marketplace.url_token');
                     }
                 } else {
                     $this->isConnected = false;
@@ -53,25 +100,62 @@ class Marketplace
                 }
             }
         }
+
+        return $this->isConnected;
     }
 
+    /**
+     * Get the contents of a URL
+     * @param $url
+     * @return string|null
+     */
+    private function get($url)
+    {
+        try {
+            $result = $this->fileHelper->getContents(
+                $url,
+                $this->config->get('concrete.marektplace.request_timeout'));
+        } catch (TimeoutException $e) {
+            // Catch a timeout
+            $this->connectionError = self::E_CONNECTION_TIMEOUT;
+
+            return null;
+        } catch (Exception $e) {
+            $this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
+
+            return null;
+        }
+
+        return $result ?: null;
+    }
+
+    /**
+     * @return static|Marketplace
+     */
     public static function getInstance()
     {
         static $instance;
         if (!isset($instance)) {
-            $m = __CLASS__;
-            $instance = new $m();
+            $instance = Application::make(__CLASS__);
         }
 
         return $instance;
     }
 
+    /**
+     * @param $file
+     * @return int|mixed|string
+     */
     public static function downloadRemoteFile($file)
     {
-        $fh = Core::make('helper/file');
-        $file .= '?csiURL=' . urlencode(Core::getApplicationURL()) . "&csiVersion=" . APP_VERSION;
-        $pkg = $fh->getContents($file, Config::get('concrete.marketplace.request_timeout'));
-        $error = \Core::make('error');
+        // Get the marketplace instance
+        $marketplace = static::getInstance();
+        $file .= '?csiURL=' . urlencode($marketplace->getSiteURL()) . "&csiVersion=" . APP_VERSION;
+
+        // Retreive the package
+        $pkg = $marketplace->get($file);
+
+        $error = $marketplace->app->make('error');
         if (empty($pkg)) {
             $error->add(t('An error occurred while downloading the package.'));
         }
@@ -81,7 +165,7 @@ class Marketplace
 
         $file = time();
         // Use the same method as the Archive library to build a temporary file name.
-        $tmpFile = $fh->getTemporaryDirectory() . '/' . $file . '.zip';
+        $tmpFile = $marketplace->fileHelper->getTemporaryDirectory() . '/' . $file . '.zip';
         $fp = fopen($tmpFile, "wb");
         if ($fp) {
             fwrite($fp, $pkg);
@@ -119,23 +203,23 @@ class Marketplace
 
     public static function getAvailableMarketplaceItems($filterInstalled = true)
     {
-        $fh = Core::make('helper/file');
+        $marketplace = static::getInstance();
+
+        $fh = $marketplace->fileHelper;
         if (!$fh) {
             return array();
         }
 
-        $dbConfig = Core::make('config/database');
-
         // Retrieve the URL contents
-        $csToken = $dbConfig->get('concrete.marketplace.token');
-        $csiURL = urlencode(Core::getApplicationURL());
-        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.purchases');
+        $csToken = $marketplace->databaseConfig->get('concrete.marketplace.token');
+        $csiURL = urlencode($marketplace->getSiteURL());
+        $url = $marketplace->config->get('concrete.urls.concrete5') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-        $json = $fh->getContents($url, Config::get('concrete.marketplace.request_timeout'));
+        $json = $marketplace->get($url);
 
         $addons = array();
 
-        $objects = @Core::make('helper/json')->decode($json);
+        $objects = @$marketplace->app->make('helper/json')->decode($json);
         if (is_array($objects)) {
             try {
                 foreach ($objects as $addon) {
@@ -173,9 +257,8 @@ class Marketplace
 
     public function getSitePageURL()
     {
-        $dbConfig = Core::make('config/database');
-        $token = $dbConfig->get('concrete.marketplace.url_token');
-        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.site_page');
+        $token = $this->databaseConfig->get('concrete.marketplace.url_token');
+        $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.site_page');
 
         return $url . '/' . $token;
     }
@@ -186,56 +269,61 @@ class Marketplace
         // a. go to its purchase page
         // b. pass you through to the page AFTER connecting.
         $tp = new TaskPermission();
-        $frameURL = Config::get('concrete.urls.concrete5');
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-            $frameURL = Config::get('concrete.urls.concrete5_secure');
+        if ($this->request->getScheme() === 'https') {
+            $frameURL = $this->config->get('concrete.urls.concrete5_secure');
+        } else {
+            $frameURL = $this->config->get('concrete.urls.concrete5');
         }
         if ($tp->canInstallPackages()) {
             $csToken = null;
             if (!$this->isConnected()) {
                 if (!$completeURL) {
-                    $completeURL = URL::to('/dashboard/extend/connect', 'connect_complete');
+                    $completeURL = $this->urlResolver->resolve(['/dashboard/extend/connect', 'connect_complete']);
                     $completeURL = $completeURL->setQuery(array(
-                        'ccm_token' => Core::make('token')->generate('marketplace/connect'),
+                        'ccm_token' => $this->app->make('token')->generate('marketplace/connect'),
                     ));
                 }
                 $csReferrer = urlencode($completeURL);
-                $csiURL = urlencode(Core::getApplicationURL());
+                $csiURL = urlencode($this->getSiteURL());
+
                 // this used to be the BASE_URL and not BASE_URL . DIR_REL but I don't have a method for that
                 // and honestly I'm not sure why it needs to be that way
-                $csiBaseURL = urlencode(Core::getApplicationURL());
+                $csiBaseURL = $csiURL;
+
                 if ($this->hasConnectionError()) {
                     if ($this->connectionError == self::E_DELETED_SITE_TOKEN) {
                         $connectMethod = 'view';
-                        try {
-                            $csToken = self::generateSiteToken();
-                        } catch (TimeoutException $exception) {
+                        $csToken = self::generateSiteToken();
+
+                        if (!$csToken && $this->connectionError === self::E_CONNECTION_TIMEOUT) {
                             return '<div class="ccm-error">' .
-                            t('Unable to generate a marketplace token. Request timed out.') .
-                            '</div>';
+                                t('Unable to generate a marketplace token. Request timed out.') .
+                                '</div>';
                         }
                     } else {
                         $csToken = $this->getSiteToken();
                     }
                 } else {
                     // new connection
-                    try {
-                        $csToken = self::generateSiteToken();
-                    } catch (TimeoutException $exception) {
+                    $csToken = self::generateSiteToken();
+
+                    if (!$csToken && $this->connectionError === self::E_CONNECTION_TIMEOUT) {
                         return '<div class="ccm-error">' .
                         t('Unable to generate a marketplace token. Request timed out.') .
                         '</div>';
                     }
                 }
-                $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
+
+                $url = $frameURL . $this->config->get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
-                        \Core::make('site')->getSite()->getSiteName(),
+                        $this->app->make('site')->getSite()->getSiteName(),
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {
-                $csiBaseURL = urlencode(Core::getApplicationURL());
-                $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
+                $csiBaseURL = urlencode($this->getSiteURL());
+                $url = $frameURL . $this->config->get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
             }
+
             if (!$csToken && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(
                     'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
@@ -263,11 +351,6 @@ class Marketplace
         }
     }
 
-    public function isConnected()
-    {
-        return $this->isConnected;
-    }
-
     public function hasConnectionError()
     {
         return $this->connectionError != false;
@@ -275,25 +358,29 @@ class Marketplace
 
     /**
      * @return bool|string
-     *
-     * @throws TimeoutException
      */
     public function generateSiteToken()
     {
-        $fh = Core::make('helper/file');
-        $token = $fh->getContents(
-            Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_new_token'),
-            Config::get('concrete.marketplace.request_timeout'));
-
-        return $token;
+        return $this->get(
+            $this->config->get('concrete.urls.concrete5') .
+            $this->config->get('concrete.urls.paths.marketplace.connect_new_token'));
     }
 
     public static function getSiteToken()
     {
-        $dbConfig = Core::make('config/database');
+        $marketplace = static::getInstance();
+
+        $dbConfig = $marketplace->app->make('config/database');
         $token = $dbConfig->get('concrete.marketplace.token');
 
         return $token;
+    }
+
+    public function getSiteURL()
+    {
+        $url = $this->app->make('url/canonical');
+        $url = rtrim((string) $url, '/');
+        return $url;
     }
 
     public function getMarketplacePurchaseFrame($mp, $width = '100%', $height = '530')
@@ -305,9 +392,9 @@ class Marketplace
                     'Unable to get information about this product.') . '</div>';
             }
             if ($this->isConnected()) {
-                $url = Config::get('concrete.urls.concrete5_secure') . Config::get('concrete.urls.paths.marketplace.checkout');
-                $csiURL = urlencode(Core::getApplicationURL());
-                $csiBaseURL = urlencode(Core::getApplicationURL());
+                $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.marketplace.checkout');
+                $csiURL = urlencode($this->getSiteURL());
+                $csiBaseURL = $csiURL;
                 $csToken = $this->getSiteToken();
                 $url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
             }

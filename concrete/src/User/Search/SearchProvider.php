@@ -99,7 +99,7 @@ class SearchProvider extends AbstractSearchProvider
         return $result;
     }
     
-    function getSavedSearch()
+    public function getSavedSearch()
     {
         return new SavedUserSearch();
     }

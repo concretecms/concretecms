@@ -1,10 +1,14 @@
 <?php
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var Concrete\Core\Page\View\PageView $view */
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
+/* @var Concrete\Core\Form\Service\Widget\Color $form_color */
 /* @var Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails $controller */
 
 if (isset($type)) {
@@ -14,6 +18,7 @@ if (isset($type)) {
     /* @var bool $allowConditionalThumbnails */
     /* @var array $fileSetOptions [if $allowConditionalThumbnails is true] */
     /* @var array $fileSets [if $allowConditionalThumbnails is true] */
+    /* @var bool $manipulationLibrarySupportsAnimations */
     if ($type->getID() !== null && !$type->isRequired()) {
         ?>
         <div class="ccm-dashboard-header-buttons">
@@ -68,7 +73,58 @@ if (isset($type)) {
                     <?= t('Allow upscaling images smaller than the thumbnail size') ?>
                 </label>
             </div>
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('ftKeepAnimations', '1', $type->isKeepAnimations()) ?>
+                    <?= t('Create animated thumbnails for animated images') ?>
+                    <span class="small text-muted" id="ftKeepAnimations-warning" <?= $type->isKeepAnimations() ? '' : ' style="display: none"' ?>>
+                        <br />
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <?php
+                        if ($manipulationLibrarySupportsAnimations) {
+                            ?>
+                            <?= t('Creating animated thumbnails may require a lot of memory and may require more processing time.') ?>
+                            <?php
+                        } else {
+                            $optionsPageName = t('Image Options');
+                            $optionsPage = Page::getByPath('/dashboard/system/files/image_uploading');
+                            if ($optionsPage && !$optionsPage->isError()) {
+                                $optionsPageName = h(t($optionsPage->getCollectionName()));
+                                $optionsPagePermissions = new Checker($optionsPage);
+                                if ($optionsPagePermissions->canViewPage()) {
+                                    $optionsPageName = '<a href="' . h($optionsPage->getCollectionLink()) . '" target="_blank">' . $optionsPageName . '</a>';
+                                }
+                            }
+                            ?>
+                            <?= t('This requires that concrete5 is configured to use the ImageMagick manipulation library.') ?>
+                            <br />
+                            <?= t(/*i18n: %s is the name of a page*/ 'You can configure it in the %s page.', $optionsPageName) ?>
+                            <?php
+                        }
+                        ?>
+                    </span>
+                    <script>
+                    $(document).ready(function() {
+                        $('#ftKeepAnimations')
+                            .on('change', function() {
+                                $('#ftKeepAnimations-warning').toggle(this.checked);
+                            })
+                            .trigger('change')
+                        ;
+                    });
+                    </script>
+                </label>
+            </div>
         </div>
+
+        <div class="form-group">
+            <?= $form->label('ftSaveAreaBackgroundColor', t('Image Editor Background Color')); ?>
+            <div>
+                <?= $form_color->output('ftSaveAreaBackgroundColor', $type->getSaveAreaBackgroundColor(), ['preferredFormat' => 'hex']); ?>
+            </div>
+            <p class="help-block"><?= t('Leave this empty to use a transparent background.'); ?></p>
+        </div>
+
         <?php
         if ($allowConditionalThumbnails) {
             $selectedFileSets = [];

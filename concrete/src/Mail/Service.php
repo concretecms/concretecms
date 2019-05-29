@@ -4,6 +4,7 @@ namespace Concrete\Core\Mail;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
@@ -496,8 +497,7 @@ class Service
     /**
      * Should an exception be thrown if the delivery fails (if false, the sendMail() method will simply return false on failure).
      *
-     * @param bool $testing
-     * @param mixed $throwOnFailure
+     * @param bool $throwOnFailure
      *
      * @return $this
      */
@@ -641,7 +641,7 @@ class Service
             if ($this->getTesting()) {
                 throw $sendError;
             }
-            $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
+            $l = new GroupLogger(Channels::CHANNEL_EXCEPTIONS, Logger::CRITICAL);
             $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $sendError->getMessage());
             $l->write($sendError->getTraceAsString());
             if ($config->get('concrete.log.emails')) {
@@ -659,7 +659,7 @@ class Service
 
         // add email to log
         if ($config->get('concrete.log.emails') && !$this->getTesting()) {
-            $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
+            $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
             if ($config->get('concrete.email.enabled')) {
                 if ($sendError === null) {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
@@ -674,13 +674,16 @@ class Service
             $l->close();
         }
 
+        if ($sendError !== null && $this->isThrowOnFailure()) {
+            if ($resetData) {
+                $this->reset();
+            }
+            throw $sendError;
+        }
+
         // clear data if applicable
         if ($resetData) {
             $this->reset();
-        }
-
-        if ($sendError !== null && $this->isThrowOnFailure()) {
-            throw $sendError;
         }
 
         return $sendError === null;

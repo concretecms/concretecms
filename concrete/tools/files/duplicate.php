@@ -151,7 +151,6 @@ if (!is_array($items)) {
                 cancel.click();
                 Window.location.reload();
             }).fail(function (data) {
-                debugger;
                 if (data.responseJSON && data.responseJSON.errors) {
                     alert(data.responseJSON.errors.join("\n"));
                 } else {

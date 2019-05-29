@@ -9,7 +9,9 @@ use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Routing\SystemRouteList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Route;
 use Illuminate\Config\Repository;
@@ -61,6 +63,13 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
+         * Set configured error reporting
+         * ----------------------------------------------------------------------------
+         */
+        $this->setupErrorReporting($config);
+
+        /*
+         * ----------------------------------------------------------------------------
          * Enable Localization
          * ----------------------------------------------------------------------------
          */
@@ -82,17 +91,17 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
-         * Setup the core service groups.
-         * ----------------------------------------------------------------------------
-         */
-        $this->initializeServiceProviders($app, $config);
-
-        /*
-         * ----------------------------------------------------------------------------
          * Simple legacy constants like APP_CHARSET
          * ----------------------------------------------------------------------------
          */
         $this->initializeLegacyDefinitions($config, $app);
+
+        /*
+         * ----------------------------------------------------------------------------
+         * Setup the core service groups.
+         * ----------------------------------------------------------------------------
+         */
+        $this->initializeServiceProviders($app, $config);
 
         /*
          * ----------------------------------------------------------------------------
@@ -159,13 +168,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             $this->initializePackages($app);
-
-            /**
-             * ----------------------------------------------------------------------------
-             * Load preprocess items
-             * ----------------------------------------------------------------------------.
-             */
-            require DIR_BASE_CORE . '/bootstrap/preprocess.php';
         }
     }
 
@@ -190,6 +192,19 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     }
 
     /**
+     * Setup the configured error reporting.
+     *
+     * @param Repository $config
+     */
+    private function setupErrorReporting(Repository $config)
+    {
+        $error_reporting = $config->get('concrete.debug.error_reporting');
+        if ((string) $error_reporting !== '') {
+            error_reporting((int) $error_reporting);
+        }
+    }
+
+    /**
      * Enable localization.
      *
      * This needs to happen very early in the boot process because the
@@ -211,21 +226,63 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      */
     private function initializeEnvironmentDetection(Application $app)
     {
-        $db_config = [];
-        if (file_exists(DIR_CONFIG_SITE . '/database.php')) {
-            $db_config = include DIR_CONFIG_SITE . '/database.php';
-        }
         $environment = $app->environment();
-        $app->detectEnvironment(function () use ($db_config, $environment, $app) {
-            try {
-                $installed = $app->isInstalled();
+        $app->detectEnvironment(function () use ($environment, $app) {
+            $forceInstalled = \defined('CONCRETE5_INSTALLED') ? CONCRETE5_INSTALLED : getenv('CONCRETE5_INSTALLED');
 
-                return $installed;
+            // Allow overriding installation detection
+            if ($forceInstalled && strtolower($forceInstalled) !== 'auto') {
+                return filter_var($forceInstalled, FILTER_VALIDATE_BOOLEAN) ? $environment : 'install';
+            }
+
+            // Check if config has loaded, if so use that
+            try {
+                return $app->isInstalled() ? $environment : 'install';
             } catch (\Exception $e) {
             }
 
-            return isset($db_config['default-connection']) ? $environment : 'install';
+            // If we have well formed database details defined, we're probably installed
+            if ($this->validateDatabaseDetails($environment)) {
+                return $environment;
+            }
+
+            return 'install';
         });
+    }
+
+    /**
+     * Check whether an environment has well formed database credentials defined
+     *
+     * @param $environment
+     * @return mixed
+     */
+    private function validateDatabaseDetails($environment)
+    {
+        $db_config = [];
+        $configFile = DIR_CONFIG_SITE . '/database.php';
+        $environmentConfig = DIR_CONFIG_SITE . "/{$environment}.database.php";
+
+        // If the database.php file exists, load it first
+        if (file_exists($configFile)) {
+            $db_config = include DIR_CONFIG_SITE . '/database.php';
+        }
+
+        // If there's an environment specific database file, load that too
+        if (file_exists($environmentConfig)) {
+            $db_config = array_merge($db_config, include $environmentConfig);
+        }
+
+        // Make sure the default connection is set
+        $defaultConnection = array_get($db_config, 'default-connection');
+
+        // Make sure we have all the stuff we expect
+        $connection = array_get($db_config, "connections.{$defaultConnection}");
+
+        // Make sure we have all the keys we are expecting
+        return $defaultConnection && $connection &&
+            array_get($connection, 'database') &&
+            array_get($connection, 'username') &&
+            array_get($connection, 'server');
     }
 
     /**
@@ -290,8 +347,19 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      */
     private function initializeRoutes(Repository $config)
     {
-        Route::registerMultiple($config->get('app.routes'));
-        Route::setThemesByRoutes($config->get('app.theme_paths', []));
+        /**
+         * @var $router Router
+         */
+        $router = Route::getFacadeRoot();
+        // Legacy route registration.
+        $router->registerMultiple($config->get('app.routes'));
+
+        // New style
+        $router->loadRouteList(new SystemRouteList());
+
+        // theme paths
+        $this->app->make(ThemeRouteCollection::class)
+            ->setThemesByRoutes($config->get('app.theme_paths', array()));
     }
 
     /**
@@ -317,7 +385,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          * to consider 3rd party libraries (like Symfony for instance) which use
          * those superglobals.
          */
-        if(isset($_POST['__ccm_consider_request_as_xhr']) && $_POST['__ccm_consider_request_as_xhr'] === '1') {
+        if (isset($_POST['__ccm_consider_request_as_xhr']) && $_POST['__ccm_consider_request_as_xhr'] === '1') {
             unset($_POST['__ccm_consider_request_as_xhr']);
             unset($_REQUEST['__ccm_consider_request_as_xhr']);
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';

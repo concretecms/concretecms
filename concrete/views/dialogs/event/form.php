@@ -39,7 +39,7 @@ if (!isset($occurrence) || !$occurrence) {
             <button type="submit" class="btn btn-success pull-right"
                     data-event-dialog-action="publish"><?= t('Publish Event') ?></button>
                 <button type="submit" data-event-dialog-action="save"
-                        class="btn btn-primary pull-right"><?= t('Save &amp; Close') ?></button>
+                        class="btn btn-primary pull-left"><?= t('Save &amp; Close') ?></button>
 
         <?php } else { ?>
             <button type="submit" style="margin-right: 0px" data-event-dialog-action="save"

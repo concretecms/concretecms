@@ -48,7 +48,7 @@ if (is_array($workflowList) && !empty($workflowList)) {
             }
         }
 
-        if ($displayInline) {
+        if (!empty($displayInline)) {
             echo $form;
             echo implode("\n", $buttons);
             echo '</form>';

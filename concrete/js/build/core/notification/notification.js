@@ -38,6 +38,41 @@
             });
         });
 
+        my.$element.on('change', 'div[data-form=notification] select', function(e) {
+            var $form = $(this).closest('form');
+            $form.ajaxSubmit({
+                dataType: 'html',
+                beforeSubmit: function() {
+                    my.showLoader();
+                },
+                success: function(r) {
+                    $('div[data-wrapper=desktop-waiting-for-me]').replaceWith(r);
+                },
+                complete: function() {
+                    my.hideLoader();
+                }
+            });
+        });
+
+        my.$element.on('click', 'div.ccm-pagination-wrapper a', function(e) {
+            e.preventDefault();
+            my.showLoader();
+            window.scrollTo(0, 0);
+            $.concreteAjax({
+                loader: false,
+                dataType: 'html',
+                url: $(this).attr('href'),
+                method: 'get',
+                success: function(r) {
+                    $('div[data-wrapper=desktop-waiting-for-me]').replaceWith(r);
+                },
+                complete: function() {
+                    my.hideLoader();
+                }
+            });
+
+        });
+
         my.$element.on('click', 'a[data-workflow-task]', function(e) {
             var action = $(this).attr('data-workflow-task'),
                 $form = $(this).closest('form'),
@@ -49,18 +84,22 @@
             $form.ajaxSubmit({
                 dataType: 'json',
                 beforeSubmit: function() {
-                    jQuery.fn.dialog.showLoader();
+                    my.showLoader();
                 },
                 success: function(r) {
                     $notification.addClass('animated fadeOut');
-                    jQuery.fn.dialog.hideLoader();
                     setTimeout(function() {
                         $notification.remove();
                         my.handleEmpty();
                     }, 500);
+                },
+                complete: function() {
+                    my.hideLoader();
                 }
             });
         });
+
+        my.$element.find('.dialog-launch').dialog();
     }
 
     ConcreteNotificationList.prototype = {
@@ -71,6 +110,14 @@
             if ($items.length < 1) {
                 my.$element.find('[data-notification-description=empty]').show();
             }
+        },
+
+        showLoader: function() {
+            $('div[data-list=notification]').addClass('ccm-block-desktop-waiting-for-me-loading');
+        },
+
+        hideLoader: function() {
+            $('div[data-list=notification]').removeClass();
         }
 
     };

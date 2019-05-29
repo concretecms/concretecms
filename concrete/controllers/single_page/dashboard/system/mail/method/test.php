@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Mail\Method;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Exception;
+use Concrete\Core\Validator\String\EmailValidator;
 
 class Test extends DashboardPageController
 {
@@ -25,8 +26,8 @@ class Test extends DashboardPageController
                 }
                 if ($mailRecipient === '') {
                     $this->error->add(t('The recipient address of the test email has not been specified.'));
-                } elseif (!$this->app->make('helper/validation/strings')->email($mailRecipient, true)) {
-                    $this->error->add(t("The email address '%s' is not valid.", h($mailRecipient)));
+                } else {
+                    $this->app->make(EmailValidator::class, ['testMXRecord' => true])->isValid($mailRecipient, $this->error);
                 }
                 $numEmails = $this->post('numEmails');
                 if (!$this->app->make('helper/validation/numbers')->integer($numEmails) || ($numEmails = (int) $numEmails) < 1) {
@@ -72,7 +73,7 @@ class Test extends DashboardPageController
                         );
                         $this->redirect($this->action(''));
                     } catch (Exception $x) {
-                        $this->error->add(t('The following error was found while trying to send the test email:') . '<br />' . nl2br(h($x->getMessage())));
+                        $this->error->add(t('The following error was found while trying to send the test email:') . "\n" . $x->getMessage());
                     }
                 }
             }

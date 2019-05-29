@@ -36,7 +36,7 @@
                 if (dialogName == 'link') {
                     // Get a reference to the "Link Info" tab.
                     var infoTab = dialogDefinition.getContents('info');
-                    if (infoTab.get('sitemapBrowse') === null) {
+                    if (infoTab.get('sitemapBrowse') === null && ev.editor.config.sitemap) {
                         infoTab.add({
                                 type: 'button',
                                 id: 'sitemapBrowse',
@@ -48,7 +48,7 @@
                                         height: '70%',
                                         modal: false,
                                         title: ccmi18n_sitemap.choosePage,
-                                        href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+                                        href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/sitemap_selector'
                                     });
                                     ConcreteEvent.unsubscribe('SitemapSelectPage');
                                     ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Asset;
 
+use Concrete\Core\Support\Facade\Application;
 use Localization;
 use URL;
 
@@ -54,7 +55,12 @@ class JavascriptLocalizedAsset extends JavascriptAsset
      */
     public function getAssetContents()
     {
+        $app = Application::getFacadeApplication();
         $assetRoute = $this->getAssetURL();
+        $relativePath = $app->make('app_relative_path');
+        if ($relativePath !== '' && strpos($assetRoute, $relativePath . '/') === 0) {
+            $assetRoute = substr($assetRoute, strlen($relativePath));
+        }
         $prefix = '/' . DISPATCHER_FILENAME . '/';
         if (strpos($assetRoute, $prefix) === 0) {
             $assetRoute = substr($assetRoute, strlen($prefix) - 1);

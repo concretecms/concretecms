@@ -44,6 +44,4 @@ class UserSignupNotification extends Notification
     {
         return new UserSignupListView($this);
     }
-
-
 }

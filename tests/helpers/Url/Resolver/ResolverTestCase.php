@@ -30,12 +30,10 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
     protected function canonicalUrlWithPath($path, $dispatcher = null)
     {
         if ($dispatcher === null) {
-            /** @var \Concrete\Core\Site\Service $site */
             $site = \Core::make('site');
-            $config = $site->getSite()->getConfigRepository();
-            $rewriting = $config->get('seo.url_rewriting');
-            $rewrite_all = $config->get('seo.url_rewriting_all');
-            $trailing_slash = (bool) $config->get('seo.trailing_slash');
+            $siteConfig = $site->getSite()->getConfigRepository();
+            $rewriting = $siteConfig->get('seo.url_rewriting');
+            $rewrite_all = $siteConfig->get('seo.url_rewriting_all');
 
             $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
 
@@ -43,6 +41,9 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
             // in the dashboard, add the dispatcher.
             $dispatcher = (!$rewriting || (!$rewrite_all && $in_dashboard));
         }
+
+        $globalConfig = \Core::make('config');
+        $trailing_slash = (bool) $globalConfig->get('concrete.seo.trailing_slash');
 
         $path = new \Concrete\Core\Url\Components\Path($path, $trailing_slash);
         if ($dispatcher) {

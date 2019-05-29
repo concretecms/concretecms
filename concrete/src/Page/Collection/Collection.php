@@ -15,6 +15,8 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
+use Concrete\Core\Page\Cloner;
+use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -90,9 +92,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Get a collection by ID.
      *
      * @param int $cID The collection ID
-     * @param string|int|false $version the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, a falsy value to not load the collection version, or an integer to retrieve a specific version ID)
+     * @param string|int|false $version the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, a falsy value to not load the collection version, or an integer to retrieve a specific version ID)
      *
-     * @return Collection If the collection is not found, you'll get an empty Collection instance
+     * @return \Concrete\Core\Page\Collection\Collection If the collection is not found, you'll get an empty Collection instance
      */
     public static function getByID($cID, $version = 'RECENT')
     {
@@ -276,7 +278,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getCollectionID()
     {
-        return $this->cID;
+        return $this->cID ? (int) $this->cID : null;
     }
 
     /**
@@ -364,7 +366,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     /**
      * Load a specific collection version (you can retrieve it with the getVersionObject() method).
      *
-     * @param string|int $cvID the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, or an integer to retrieve a specific version ID)
+     * @param string|int $cvID the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
      */
     public function loadVersionObject($cvID = 'ACTIVE')
     {
@@ -504,13 +506,14 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Return the attribute value object with the handle $akHandle of the currently loaded version (if it's loaded).
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $akHandle the attribute key (or its handle)
+     * @param bool $createIfNotExists
      *
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
      */
     public function getAttributeValueObject($akHandle, $createIfNotExists = false)
     {
         if (is_object($this->vObj)) {
-            return $this->vObj->getAttributeValue($akHandle);
+            return $this->vObj->getAttributeValueObject($akHandle, $createIfNotExists);
         }
     }
 
@@ -572,7 +575,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @param string $arHandle the handle of the area
      *
-     * @return Area|null
+     * @return \Concrete\Core\Area\Area|null
      */
     public function getArea($arHandle)
     {
@@ -1176,137 +1179,12 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function duplicateCollection()
     {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
-        $cDate = $dh->getOverridableNow();
+        $app = Application::getFacadeApplication();
+        $cloner = $app->make(Cloner::class);
+        $clonerOptions = $app->build(ClonerOptions::class)->setKeepOriginalAuthor(true);
+        $newCollection = $cloner->cloneCollection($this, $clonerOptions);
 
-        $v = [$cDate, $cDate, $this->cHandle];
-        $r = $db->query('insert into Collections (cDateAdded, cDateModified, cHandle) values (?, ?, ?)', $v);
-        $newCID = $db->Insert_ID();
-
-        if ($r) {
-            // first, we get the creation date of the active version in this collection
-            //$q = "select cvDateCreated from CollectionVersions where cvIsApproved = 1 and cID = {$this->cID}";
-            //$dcOriginal = $db->getOne($q);
-            // now we create the query that will grab the versions we're going to copy
-
-            $qv = "select * from CollectionVersions where cID = '{$this->cID}' order by cvDateCreated asc";
-
-            // now we grab all of the current versions
-            $rv = $db->query($qv);
-            $cvList = [];
-            while ($row = $rv->fetchRow()) {
-                // insert
-                $cvList[] = $row['cvID'];
-                $cDate = date('Y-m-d H:i:s', strtotime($cDate) + 1);
-                $vv = [
-                    $newCID,
-                    $row['cvID'],
-                    $row['cvName'],
-                    $row['cvHandle'],
-                    $row['cvDescription'],
-                    $row['cvDatePublic'],
-                    $cDate,
-                    $row['cvComments'],
-                    $row['cvAuthorUID'],
-                    $row['cvIsApproved'],
-                    $row['pThemeID'],
-                    $row['pTemplateID'],
-                ];
-                $qv = 'insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, pThemeID, pTemplateID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                $db->query($qv, $vv);
-            }
-
-            $ql = "select * from CollectionVersionBlockStyles where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['issID']];
-                $ql = 'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-            $ql = "select * from CollectionVersionAreaStyles where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['arHandle'], $row['issID']];
-                $ql = 'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-
-            $ql = "select * from CollectionVersionThemeCustomStyles where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['pThemeID'], $row['scvlID'], $row['preset'], $row['sccRecordID']];
-                $ql = 'insert into CollectionVersionThemeCustomStyles (cID, cvID, pThemeID, scvlID, preset, sccRecordID) values (?, ?, ?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-
-            $ql = "select * from CollectionVersionBlocksCacheSettings where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['btCacheBlockOutput'], $row['btCacheBlockOutputOnPost'], $row['btCacheBlockOutputForRegisteredUsers'], $row['btCacheBlockOutputLifetime']];
-                $ql = 'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-
-            // now we grab all the blocks we're going to need
-            $cvList = implode(',', $cvList);
-            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll, cbRelationID, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
-            $r = $db->query($q);
-            while ($row = $r->fetchRow()) {
-                $v = [
-                    $newCID,
-                    $row['cvID'],
-                    $row['bID'],
-                    $row['arHandle'],
-                    $row['cbDisplayOrder'],
-                    $row['cbRelationID'],
-                    0,
-                    $row['cbOverrideAreaPermissions'],
-                    $row['cbIncludeAll'],
-                    $row['cbOverrideBlockTypeCacheSettings'],
-                    $row['cbOverrideBlockTypeContainerSettings'],
-                    $row['cbEnableBlockContainer']
-                ];
-                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                $db->query($q, $v);
-                if ($row['cbOverrideAreaPermissions'] != 0) {
-                    $q2 = "select paID, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
-                    $r2 = $db->query($q2);
-                    while ($row2 = $r2->fetchRow()) {
-                        $db->Replace(
-                           'BlockPermissionAssignments',
-                           [
-                               'cID' => $newCID,
-                               'cvID' => $row['cvID'],
-                               'bID' => $row['bID'],
-                               'paID' => $row2['paID'],
-                               'pkID' => $row2['pkID'],
-                           ],
-                           ['cID', 'cvID', 'bID', 'paID', 'pkID'],
-                           true
-                        );
-                    }
-                }
-            }
-
-            // duplicate any attributes belonging to the collection
-            $list = CollectionKey::getAttributeValues($this->vObj);
-            $em = \Database::connection()->getEntityManager();
-            foreach ($list as $av) {
-                /**
-                 * @var PageValue
-                 */
-                $cav = new PageValue();
-                $cav->setPageID($newCID);
-                $cav->setGenericValue($av->getGenericValue());
-                $cav->setVersionID($this->vObj->getVersionID());
-                $cav->setAttributeKey($av->getAttributeKey());
-                $em->persist($cav);
-            }
-            $em->flush();
-
-            return self::getByID($newCID);
-        }
+        return $newCollection;
     }
 
     /**
@@ -1319,53 +1197,15 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function cloneVersion($versionComments, $createEmpty = false)
     {
-        // first, we run the version object's createNew() command, which returns a new
-        // version object, which we can combine with our collection object, so we'll have
-        // our original collection object ($this), and a new collection object, consisting
-        // of our collection + the new version
-        $vObj = $this->getVersionObject();
-        $nvObj = $vObj->createNew($versionComments);
-        $nc = Page::getByID($this->getCollectionID());
-        $nc->vObj = $nvObj;
-        // now that we have the original version object and the cloned version object,
-        // we're going to select all the blocks that exist for this page, and we're going
-        // to copy them to the next version
-        // unless btIncludeAll is set -- as that gets included no matter what
+        $app = Application::getFacadeApplication();
+        $cloner = $app->make(Cloner::class);
+        $clonerOptions = $app->make(ClonerOptions::class)
+            ->setVersionComments($versionComments)
+            ->setCopyContents($createEmpty ? false : true)
+        ;
+        $newVersion = $cloner->cloneCollectionVersion($this->getVersionObject(), $this, $clonerOptions);
 
-        $db = Loader::db();
-        $cID = $this->getCollectionID();
-        $cvID = $vObj->getVersionID();
-        if (!$createEmpty) {
-            $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
-            $r = $db->query($q);
-            if ($r) {
-                while ($row = $r->fetchRow()) {
-                    // now we loop through these, create block objects for all of them, and
-                    // duplicate them to our collection object (which is actually the same collection,
-                    // but different version)
-                    $b = Block::getByID($row['bID'], $this, $row['arHandle']);
-                    if (is_object($b)) {
-                        $b->alias($nc);
-                    }
-                }
-            }
-            // duplicate any area styles
-            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
-            $r = $db->query($q);
-            while ($row = $r->FetchRow()) {
-                $db->Execute(
-                    'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-                    [
-                        $this->getCollectionID(),
-                        $nvObj->getVersionID(),
-                        $row['arHandle'],
-                        $row['issID'],
-                    ]
-                    );
-            }
-        }
-
-        return $nc;
+        return Page::getByID($newVersion->getCollectionID(), $newVersion->getVersionID());
     }
 
     /**

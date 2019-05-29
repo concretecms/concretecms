@@ -135,6 +135,7 @@
                 // need the file manager menu when editing block design.
 //              ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
+                ConcreteMenuManager.$clickProxy.hide();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
                 block.getElem().addClass('ccm-block-edit-inline-active');
 
@@ -185,7 +186,7 @@
                 if (templates) {
                     for (var k in templates) {
                         postData[postData.length] = {
-                            name: 'arCustomTemplate[' + k + ']',
+                            name: 'arCustomTemplates[' + k + ']',
                             value: templates[k]
                         };
                     }
@@ -199,6 +200,7 @@
                 ConcreteToolbar.disable();
                 $.fn.dialog.closeAll();
 
+                ConcreteMenuManager.$clickProxy.hide();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 
                 $.fn.dialog.showLoader();
@@ -480,17 +482,10 @@
 
 
             $(element).find('div.ccm-panel-add-block-stack-item').each(function () {
-                var stack, me = $(this), dragger = me.find('div.stack-name');
+                var stack, me = $(this), dragger = me.find('.ccm-panel-add-block-stack-item-handle');
                 stack = new Concrete.Stack($(this), my, dragger, next_area);
 
                 stack.setPeper(dragger);
-
-                $(this).find('div.block').each(function () {
-                    var block, me = $(this), dragger = me.find('div.block-name');
-                    block = new Concrete.StackBlock($(this), stack, my, dragger, next_area);
-
-                    block.setPeper(dragger);
-                });
             });
 
             $(element).find('div.ccm-panel-add-clipboard-block-item').each(function () {
@@ -625,6 +620,7 @@
             ConcreteMenuManager.enable();
             $('div.ccm-area-edit-inline-active').removeClass('ccm-area-edit-inline-active');
             $('div.ccm-block-edit-inline-active').remove();
+            ConcreteMenuManager.$clickProxy.show();
             $('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');
             $('#ccm-toolbar').css('opacity', 1);
             $('#ccm-inline-toolbar-container').remove();

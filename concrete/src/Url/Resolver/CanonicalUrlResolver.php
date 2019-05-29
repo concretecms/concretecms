@@ -47,40 +47,35 @@ class CanonicalUrlResolver implements UrlResolverInterface
      */
     public function resolve(array $arguments, $resolved = null)
     {
-        $config = null;
         $page = null;
-
+        $site = null;
         // Canonical urls for pages can be different than for the entire site
-        if (count($arguments) && head($arguments) instanceof Page) {
-            /** @var Page $page */
+        if (isset($arguments[0]) && $arguments[0] instanceof Page) {
             $page = head($arguments);
             $tree = $page->getSiteTreeObject();
-
-            if ($tree instanceof SiteTree && $site = $tree->getSite()) {
-                $config = $site->getConfigRepository();
+            if ($tree instanceof SiteTree) {
+                $site = $tree->getSite(); 
             }
         } elseif ($this->cached) {
             return $this->cached;
         }
+        /* @var \Concrete\Core\Page\Page|null $page */
 
-        // Get the config from the current site tree
-        if ($config === null && $this->app->isInstalled()) {
-            $site = $this->app['site']->getSite();
-            if (is_object($site)) {
-                /* @var \Concrete\Core\Entity\Site\Site $site */
-                $config = $site->getConfigRepository();
-            }
+        // Get the site from the current site tree
+        if ($site === null && $this->app->isInstalled()) {
+            $site = $this->app->make('site')->getSite();
         }
+        /* @var \Concrete\Core\Entity\Site\Site|null $site */
 
         // Determine trailing slash setting
-        $trailing_slashes = $config && $config->get('seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
+        $trailing_slashes = $this->app->make('config')->get('concrete.seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
 
         $url = UrlImmutable::createFromUrl('', $trailing_slashes);
 
         $url = $url->setHost(null);
         $url = $url->setScheme(null);
 
-        if ($config && $configUrl = $site->getSiteCanonicalURL()) {
+        if ($site && $configUrl = $site->getSiteCanonicalURL()) {
             $requestScheme = strtolower($this->request->getScheme());
 
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);

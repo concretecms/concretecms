@@ -43,9 +43,9 @@ class UnapproveCalendarEventRequest extends CalendarEventRequest
             if ($event) {
                 // Completely new page.
                 $d->setEmailDescription(t("Event unapproval requested for event \"%s\".",
-                    $event->getName()));
-                $d->setDescription(t("Event: %s", $event->getName()));
-                $d->setInContextDescription(t("Event %s submitted for unapproval.", $event->getName()));
+                    h($event->getName())));
+                $d->setDescription(t("Event: %s", h($event->getName())));
+                $d->setInContextDescription(t("Event %s submitted for unapproval.", h($event->getName())));
                 $d->setShortStatus(t("Event Unapproval"));
             }
         }

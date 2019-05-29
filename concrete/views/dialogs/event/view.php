@@ -13,7 +13,7 @@ $attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
     <?php if (!$occurrence->getVersion()->isApproved()) { ?>
         <div class="alert alert-info"><?=t('This occurrence belongs to an event version that is not yet approved.')?></div>
     <?php } ?>
-    <h3><?=$event->getName()?></h3>
+    <h3><?= h($event->getName()) ?></h3>
     <div><?=$dateFormatter->getOccurrenceDateString($occurrence)?></div>
     <?php if ($url) { ?>
         <strong><a href="<?= $url ?>" target="_blank"><?=t('View Event Page')?></a></strong>

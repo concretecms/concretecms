@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/imagestage.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/image.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/actions.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideOut.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideout.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/jquerybinding.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_end.js',
@@ -110,6 +110,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/remote-marketplace.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/table.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/base.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/preset-selector.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/field-selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/progressive-operations.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
@@ -480,7 +482,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
+        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.0/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
     };
@@ -508,6 +510,49 @@ module.exports = function(grunt) {
         }
     }
 
+
+
+    // Prepare env
+    config.env = {
+        dev: {
+            NODE_ENV: 'development'
+        },
+        prod: {
+            NODE_ENV: 'production'
+        }
+    };
+
+    var configFactory = function(watch) {
+
+        var config = require('laravel-mix/setup/webpack.config');
+
+        return config;
+    };
+
+    // Prepare webpack configuration, the config needs to be loaded in at the very last second
+    config.webpack = {
+        prod: function() {
+            console.log('building for prod');
+            return configFactory();
+        },
+        dev: function() {
+            return configFactory();
+        },
+        watch: function() {
+            var config =  configFactory();
+            config.watch = true;
+            return config;
+        }
+    };
+
+    config["webpack-dev-server"] = {
+        dev: function() {
+            var config = configFactory();
+            return config;
+        }
+    }
+
+
     var watchJS = [];
     var watchCSS = [];
 
@@ -534,6 +579,14 @@ module.exports = function(grunt) {
         config.uglify[key + '_debug'] = target;
         jsTargets.debug.push('newer:uglify:' + key + '_debug');
     }
+
+
+    // Append webpack steps
+    jsTargets.release.push('env:prod');
+    jsTargets.release.push('webpack:prod');
+    jsTargets.debug.push('env:dev');
+    jsTargets.debug.push('webpack:dev');
+
 
     // Let's define the less section (for generating CSS files)
     config.less = {
@@ -609,8 +662,16 @@ module.exports = function(grunt) {
         require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', false, this.async());
     });
 
+    grunt.registerTask('webpack:hot', 'Hot reload webpack build', [
+        'env:dev',
+        'webpack-dev-server:dev'
+    ])
+
+    grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-webpack');
+
     grunt.registerTask('jsOnly:debug', jsTargets.debug);
-    grunt.registerTask('jsOnly:release', jsTargets.release );
+    grunt.registerTask('jsOnly:release', jsTargets.release);
 
     //grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
     //grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);

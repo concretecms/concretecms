@@ -301,6 +301,7 @@ class Install extends Controller
                  * @var $options InstallerOptions
                  */
                 $options = $this->app->make(InstallerOptions::class);
+                $config = $this->app->make('config');
                 $configuration = $post->get('SITE_CONFIG');
                 if (!is_array($configuration)) {
                     $configuration = [];
@@ -314,7 +315,8 @@ class Install extends Controller
                             'database' => $post->get('DB_DATABASE'),
                             'username' => $post->get('DB_USERNAME'),
                             'password' => $post->get('DB_PASSWORD'),
-                            'charset' => 'utf8',
+                            'character_set' => $config->get('database.fallback_character_set'),
+                            'collation' => $config->get('database.fallback_collation'),
                         ],
                     ],
                 ];
@@ -323,7 +325,6 @@ class Install extends Controller
                 $configuration['session-handler'] = $post->get('sessionHandler');
                 $options->setConfiguration($configuration);
 
-                $config = $this->app->make('config');
                 $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
                 $options
                     ->setPrivacyPolicyAccepted($post->get('privacy') == '1' ? true : false)
@@ -340,7 +341,7 @@ class Install extends Controller
                 try {
                     $connection = $installer->createConnection();
                 } catch (UserMessageException $x) {
-                    $error->add($x);
+                    $error->add($x->getMessage());
                     $connection = null;
                 }
                 $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
@@ -358,14 +359,14 @@ class Install extends Controller
                         case PreconditionResult::STATE_PASSED:
                             break;
                         case PreconditionResult::STATE_WARNING:
-                            $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            $warnings->addHtml('<span class="label label-warning">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             break;
                         case PreconditionResult::STATE_FAILED:
                         default:
                             if ($precondition->isOptional()) {
-                                $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                                $warnings->addHtml('<span class="label label-warning">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             } else {
-                                $error->add($precondition->getName() . ': ' . $check->getMessage());
+                                $error->addHtml('<span class="label label-danger">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             }
                             break;
                     }
@@ -489,7 +490,7 @@ class Install extends Controller
                         break;
                     case PreconditionResult::STATE_FAILED:
                     default:
-                        $e->add($precondition->getName() . ': ' . $check->getMessage());
+                        $e->addHtml('<span class="label label-danger">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                         break;
                 }
             }

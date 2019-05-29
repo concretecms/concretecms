@@ -162,6 +162,7 @@ const DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION = 'association';
 const DIRNAME_METADATA_XML = 'xml';
 const DIRNAME_METADATA_YAML = 'yaml';
 const DIRNAME_GEOLOCATION = 'geolocation';
+const DIRNAME_ROUTES = 'routes';
 const REL_DIR_FILES_INCOMING = '/incoming';
 const REL_DIR_FILES_THUMBNAILS = '/thumbnails';
 define('REL_DIR_METADATA_XML', DIRNAME_CONFIG . '/' . DIRNAME_METADATA_XML);
@@ -331,14 +332,18 @@ const USER_INVALID = 20;
 const USER_INACTIVE = 21;
 const USER_NON_VALIDATED = 22;
 const USER_SESSION_EXPIRED = 23;
+const USER_PASSWORD_RESET = 24;
 const COLLECTION_MASTER_UNAUTH = 30;
 const COLLECTION_PRIVATE = 40;
 const BLOCK_NOT_AVAILABLE = 50;
 
 /* -- Debugging and Logging -- */
+defined('DEFAULT_ERROR_REPORTING') or define('DEFAULT_ERROR_REPORTING', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 const DEBUG_DISPLAY_PRODUCTION = 0;
 const DEBUG_DISPLAY_ERRORS = 1;
 const DEBUG_DISPLAY_ERRORS_SQL = 2; // not used
+
+/* -- Deprecated - use the Channels class instead */
 const LOG_TYPE_EMAILS = 'sent_emails';
 const LOG_TYPE_EXCEPTIONS = 'exceptions';
 
@@ -347,7 +352,7 @@ const LOG_TYPE_EXCEPTIONS = 'exceptions';
  * concrete5 depends on some more forgiving error handling.
  * ----------------------------------------------------------------------------
  */
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+error_reporting(DEFAULT_ERROR_REPORTING);
 
 /*
  * ----------------------------------------------------------------------------

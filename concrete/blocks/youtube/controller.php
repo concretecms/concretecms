@@ -48,9 +48,15 @@ class Controller extends BlockController
                 $playListID = $query['list'];
                 $videoID = '';
             } else {
-                $videoID = (isset($query['v'])) ? $query['v'] : $videoID;
+                $videoID = isset($query['v']) ? $query['v'] : $videoID;
                 $videoID = strtok($videoID, '?');
             }
+        }
+
+        if ($this->noCookie) {
+            $this->set('youtubeDomain', 'www.youtube-nocookie.com');
+        } else {
+            $this->set('youtubeDomain', 'www.youtube.com');
         }
 
         if (strpos($videoID, ',') !== false) {
@@ -60,7 +66,7 @@ class Controller extends BlockController
         if ($this->startTimeEnabled == 1 && ($this->startTime === '0' || $this->startTime)) {
             $this->set('startSeconds', $this->convertStringToSeconds($this->startTime));
         }
-        elseif ($params['t']) {
+        elseif (!empty($params['t'])) {
             $this->set('startSeconds', $this->convertStringToSeconds($params['t']));
         }
 
@@ -94,27 +100,64 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $args['title'] = isset($data['title']) ? trim($data['title']) : '';
-        $args['videoURL'] = isset($data['videoURL']) ? trim($data['videoURL']) : '';
-        $args['vHeight'] = isset($data['vHeight']) ? trim($data['vHeight']) : '';
-        $args['vWidth'] = isset($data['vWidth']) ? trim($data['vWidth']) : '';
-        $args['startTime'] = isset($data['startTime']) ? trim($data['startTime']) : '';
+        $data += [
+            'title' => '',
 
-        $args['rel'] = $data['rel'] ? 1 : 0;
-        $args['showinfo'] = $data['showinfo'] ? 1 : 0;
-        $args['autoplay'] = $data['autoplay'] ? 1 : 0;
-        $args['loopEnd'] = $data['loopEnd'] ? 1 : 0;
-        $args['startTimeEnabled'] = $data['startTimeEnabled'] ? 1 : 0;
+            'videoURL' => '',
 
-        $args['modestbranding'] = $data['modestbranding'] ? 1 : 0;
-        $args['iv_load_policy'] = $data['iv_load_policy'] ? 3 : 1;
-        $args['color'] = $data['color'];
-        $args['sizing'] = $data['sizing'];
-        $args['controls'] = $data['controls'] ? 1 : 0;
+            'sizing' => null,
+            'vHeight' => null,
+            'vWidth' => null,
 
-        if ($data['sizing'] != 'fixed') {
-            $args['vHeight'] = '';
-            $args['vWidth'] = '';
+            'showinfo' => false,
+            'controls' => false,
+            'modestbranding' => false,
+
+            'color' => null,
+
+            'rel' => false,
+            'iv_load_policy' => false,
+            'autoplay' => false,
+            'loopEnd' => false,
+            'startTimeEnabled' => false,
+            'startTime' => '',
+
+            'noCookie' => false,
+        ];
+
+        $args = [
+            'title' => trim($data['title']),
+
+            'videoURL' => trim($data['videoURL']),
+
+            'sizing' => $data['sizing'],
+
+            'showinfo' => $data['showinfo'] ? 1 : 0,
+            'controls' => $data['controls'] ? 1 : 0,
+            'modestbranding' => $data['modestbranding'] ? 1 : 0,
+
+            'color' => $data['color'],
+
+            'rel' => $data['rel'] ? 1 : 0,
+            'iv_load_policy' => $data['iv_load_policy'] ? 3 : 1,
+            'autoplay' => $data['autoplay'] ? 1 : 0,
+            'loopEnd' => $data['loopEnd'] ? 1 : 0,
+
+            'startTimeEnabled' => $data['startTimeEnabled'] ? 1 : 0,
+            'startTime' => trim($data['startTime']),
+
+            'noCookie' => $data['noCookie'] ? 1 : 0,
+        ];
+        if ($args['sizing'] === 'fixed') {
+            $args += [
+                'vWidth' => trim($data['vWidth']),
+                'vHeight' => trim($data['vHeight']),
+            ];
+        } else {
+            $args += [
+                'vWidth' => '',
+                'vHeight' => '',
+            ];
         }
 
         parent::save($args);

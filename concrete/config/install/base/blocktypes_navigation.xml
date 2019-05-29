@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="autonav" package=""/>
+        <blocktype handle="page_title" package=""/>
+        <!-- <blocktype handle="core_gathering" package=""/> -->
+        <!-- <blocktype handle="core_gathering_display" package=""/> -->
+        <blocktype handle="faq" package=""/>
+        <blocktype handle="page_list" package=""/>
+        <blocktype handle="next_previous" package=""/>
+        <blocktype handle="date_navigation" package=""/>
+        <blocktype handle="tags" package=""/>
+        <blocktype handle="topic_list" package=""/>
+        <blocktype handle="rss_displayer" package=""/>
+        <blocktype handle="switch_language" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="navigation" name="Navigation" package="">
+            <blocktype handle="autonav"/>
+            <blocktype handle="page_title"/>
+            <!-- <blocktype handle="core_gathering"/> -->
+            <!-- <blocktype handle="core_gathering_display"/> -->
+            <blocktype handle="faq"/>
+            <blocktype handle="page_list"/>
+            <blocktype handle="next_previous"/>
+            <blocktype handle="date_navigation"/>
+            <blocktype handle="tags"/>
+            <blocktype handle="topic_list"/>
+            <blocktype handle="rss_displayer"/>
+            <blocktype handle="switch_language"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

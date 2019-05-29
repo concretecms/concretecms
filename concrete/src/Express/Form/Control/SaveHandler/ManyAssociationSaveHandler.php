@@ -1,15 +1,13 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\SaveHandler;
 
-use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Association\Applier;
-use Concrete\Core\Express\ObjectManager;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class ManyAssociationSaveHandler implements SaveHandlerInterface
+abstract class ManyAssociationSaveHandler implements ManySaveHandlerInterface
 {
     protected $entityManager;
     protected $applier;
@@ -20,13 +18,17 @@ abstract class ManyAssociationSaveHandler implements SaveHandlerInterface
         $this->applier = $applier;
     }
 
-    protected function getAssociatedEntriesFromRequest(Control $control, Request $request)
+    public function getAssociatedEntriesFromRequest(Control $control, Request $request)
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entryIDs = $request->request->get('express_association_' . $control->getId());
-        $associatedEntries = array();
+        $vals = Application::getFacadeApplication()->make('helper/validation/strings');
+        if (!is_array($entryIDs) && $vals->notempty($entryIDs)) {
+            $entryIDs = explode(',', $entryIDs);
+        }
+        $associatedEntries = [];
         if (is_array($entryIDs)) {
-            foreach($entryIDs as $entryID) {
+            foreach ($entryIDs as $entryID) {
                 $associatedEntry = $r->findOneById($entryID);
                 $target = $control->getAssociation()->getTargetEntity();
                 if (is_object($associatedEntry) && $associatedEntry->getEntity()->getID() == $target->getID()) {
@@ -34,8 +36,7 @@ abstract class ManyAssociationSaveHandler implements SaveHandlerInterface
                 }
             }
         }
+
         return $associatedEntries;
     }
-
-
 }

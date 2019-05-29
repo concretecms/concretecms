@@ -263,6 +263,10 @@
                 my.hide(e);
             });
 
+            ConcreteEvent.subscribe('PanelClose', function(e) {
+                my.hide(e);
+            });
+
             my.$menuPointer = $menu;
             ConcreteMenuManager.activeMenu = my;
 

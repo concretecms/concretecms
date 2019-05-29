@@ -136,6 +136,27 @@ class Type
      */
     protected $ftAssociatedFileSets;
 
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $ftKeepAnimations = false;
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @ORM\Column(type="string", nullable=false)
+     *
+     * @var string
+     */
+    protected $ftSaveAreaBackgroundColor = '';
+
+    /**
+     * Initialize the instance.
+     */
     public function __construct()
     {
         $this->ftAssociatedFileSets = new ArrayCollection();
@@ -372,6 +393,54 @@ class Type
     }
 
     /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setKeepAnimations($value)
+    {
+        $this->ftKeepAnimations = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @return bool
+     */
+    public function isKeepAnimations()
+    {
+        return (bool) $this->ftKeepAnimations;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @param string $color
+     *
+     * @return $this
+     */
+    public function setSaveAreaBackgroundColor($color)
+    {
+        $this->ftSaveAreaBackgroundColor = $color;
+
+        return $this;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @return string
+     */
+    public function getSaveAreaBackgroundColor()
+    {
+        return $this->ftSaveAreaBackgroundColor;
+    }
+
+    /**
      * Save this instance to the database.
      */
     public function save()
@@ -439,6 +508,6 @@ class Type
             }
         }
 
-        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs, $this->isUpscalingEnabled());
+        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs, $this->isUpscalingEnabled(), $this->isKeepAnimations(), $this->getSaveAreaBackgroundColor());
     }
 }

@@ -44,7 +44,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 <html<?= $hideDashboardPanel ? '' : ' class="ccm-panel-open ccm-panel-right"'; ?>>
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
-    <?php View::element('header_required', ['disableTrackingCode' => true]); ?>
+    <?php View::element('header_required', ['disableTrackingCode' => true, 'pageTitle' => isset($pageTitle) ? $pageTitle : null]); ?>
     <link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 </head>
 <body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>

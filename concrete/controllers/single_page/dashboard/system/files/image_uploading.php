@@ -30,12 +30,13 @@ class ImageUploading extends DashboardPageController
         $this->set('restrict_max_height', (int) $config->get('concrete.file_manager.restrict_max_height'));
 
         $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));
+        $this->set('allow_unsafe_svg', $config->get('concrete.file_manager.images.svg_sanitization.enabled') ? false : true);
 
         $thumbnailOptionsURL = null;
         $p = Page::getByPath('/dashboard/system/files/thumbnails/options');
         if ($p && !$p->isError()) {
             $pp = new Checker($p);
-            if ($pp->canView()) {
+            if ($pp->canViewPage()) {
                 $thumbnailOptionsURL = (string) $this->app->make(ResolverManager::class)->resolve([$p]);
             }
         }
@@ -117,6 +118,7 @@ class ImageUploading extends DashboardPageController
                 $config->save('concrete.file_manager.images.use_exif_data_to_rotate_images', $use_exif_data_to_rotate_images);
                 $config->save('concrete.file_manager.restrict_max_width', $restrict_max_width);
                 $config->save('concrete.file_manager.restrict_max_height', $restrict_max_height);
+                $config->save('concrete.file_manager.images.svg_sanitization.enabled', !(bool) $post->get('allow_unsafe_svg'));
                 $this->flash('success', t('Image options saved.'));
 
                 return $this->app->make(ResponseFactoryInterface::class)->redirect($this->action(''), 302);

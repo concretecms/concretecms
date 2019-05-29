@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http;
 
 use Concrete\Controller\Frontend\PageForbidden;
@@ -10,7 +9,6 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
-use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
@@ -19,7 +17,7 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -93,7 +91,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $c = Page::getByPath($item);
 
         if (is_object($c) && !$c->isError()) {
-            return $this->collection($c, $code, $headers);
+            // Display not found
+            $this->request->setCurrentPage($c);
+
+            return $this->controller($c->getPageController(), $code, $headers);
         }
 
         $cnt = $this->app->make(PageForbidden::class);
@@ -253,15 +254,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             $smm = $this->config->get('concrete.maintenance_mode');
             if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
-
-                $router = $this->app->make(RouterInterface::class);
-                $tmpTheme = $router->getThemeByRoute('/frontend/maintenance_mode');
-                $v->setViewTheme($tmpTheme[0]);
                 $v->addScopeItems(['c' => $collection]);
                 $request->setCurrentPage($collection);
-                if (isset($tmpTheme[1])) {
-                    $v->setViewTemplate($tmpTheme[1]);
-                }
 
                 return $this->view($v, $code, $headers);
             }
@@ -281,32 +275,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
 
-        $scheduledVersion = Version::get($collection, "SCHEDULED");
-        $publishDate = $scheduledVersion->getPublishDate();
-        $publishEndDate = $scheduledVersion->getPublishEndDate();
-
-        if ($publishEndDate) {
-            $datetime = $this->app->make('helper/date');
-            $now = $datetime->date('Y-m-d G:i:s');
-
-            if (strtotime($now) >= strtotime($publishEndDate)) {
-                $scheduledVersion->deny();
-                return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
-            }
-        }
-
-        if ($publishDate) {
-            $datetime = $this->app->make('helper/date');
-            $now = $datetime->date('Y-m-d G:i:s');
-
-            if (strtotime($now) >= strtotime($publishDate)) {
-                $scheduledVersion->approve();
-                $collection->loadVersionObject('ACTIVE');
-            }
-        }
-
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
             $collection->loadVersionObject('RECENT');
+        } else {
+            $collection->loadVersionObject('ACTIVE');
         }
 
         $vp = new Checker($collection->getVersionObject());
@@ -329,7 +301,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $site = $this->app['site']->getSite();
 
         $response = $cms->handleCanonicalURLRedirection($request, $site);
-        if (!$response) {
+        // Don't handle final URL slashes if it's a page not found to avoid infinite redirections
+        if (!$response && $collection->getCollectionPath() !== '/page_not_found') {
             $response = $cms->handleURLSlashes($request, $site);
         }
         if (isset($response)) {
@@ -347,8 +320,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             // First, we check to see if we need to redirect to a default multilingual section.
             if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
                 // Redirect only if it's the first request, otherwise we can't browse to the root locale
-                $session = $cms->make('session');
-                if (!$session->has('multilingual_default_locale')) {
+                $sessionValidator = $cms->make(SessionValidator::class);
+                if (!($sessionValidator->hasActiveSession() && $cms->make('session')->has('multilingual_default_locale'))) {
                     // Let's retrieve the default language
                     $ms = $dl->getPreferredSection();
                     if (is_object($ms) && !$ms->isDefaultMultilingualSection($site)) {
@@ -363,7 +336,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
-
         $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);

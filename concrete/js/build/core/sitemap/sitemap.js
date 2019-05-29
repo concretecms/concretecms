@@ -8,13 +8,15 @@
 	function ConcreteSitemap($element, options) {
 		var my = this;
 		options = options || {};
+		options.sitemapIndex = Math.max(0, parseInt(options.sitemapIndex, 10) || 0);
 		options = $.extend({
+			isSitemapOverlay: false,
 			displayNodePagination: false,
 			cParentID: 0,
 			siteTreeID: 0,
-			cookieId: 'ConcreteSitemap',
+			cookieId: 'ConcreteSitemap' + (options.sitemapIndex > 0 ? '-' + options.sitemapIndex : ''),
 			includeSystemPages: false,
-            displaySingleLevel: false,
+			displaySingleLevel: false,
 			persist: true,
 			minExpandLevel: false,
 			dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_data',
@@ -24,14 +26,16 @@
 			onSelectNode: false, // this handles when a radio or checkbox in the tree is checked
 			init: false
 		}, options);
+		if (options.sitemapIndex > 0) {
+			options.ajaxData.sitemapIndex = options.sitemapIndex;
+		}
 		my.options = options;
 		my.$element = $element;
 		my.$sitemap = null;
 		my.homeCID = null;
 		my.setupTree();
 		my.setupTreeEvents();
-
-        Concrete.event.publish('ConcreteSitemap', this);
+		Concrete.event.publish('ConcreteSitemap', this);
 
 		return my.$element;
 	}
@@ -104,7 +108,7 @@
 			}
 			if (!my.$element.find('div.ccm-sitemap-locales-wrapper ul').length) {
 				var $menu = $(my.localesWrapperTemplate);
-				var _locale =  _.template(my.localeTemplate);
+				var _locale = _.template(my.localeTemplate);
 				for (var i = 0; i < locales.length; i++) {
 					var data = locales[i];
 					$menu.append(_locale(data));
@@ -128,11 +132,11 @@
 		setupTree: function() {
 			var minExpandLevel,
 				my = this,
-				doPersist = true;
-
-			var treeSelectMode = 1,
+				doPersist = true,
+				treeSelectMode = 1,
 				checkbox = false,
-				classNames = false;
+				classNames = false,
+				dndPerformed = false;
 
 			if (my.options.selectMode == 'single') {
 				checkbox = true;
@@ -173,6 +177,7 @@
 			}
 
 			var ajaxData = $.extend({
+				'isSitemapOverlay': my.options.isSitemapOverlay ? 1 : 0,
 				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 				'cParentID': my.options.cParentID,
 				'siteTreeID': my.options.siteTreeID,
@@ -189,7 +194,7 @@
 
 			my.$element.append(_sitemap);
 			my.$sitemap = my.$element.find('div.ccm-sitemap-tree');
-    		$(my.$sitemap).fancytree({
+			my.$sitemap.fancytree({
 				tabindex: null,
 				titlesTabbable: false,
 				extensions: extensions,
@@ -204,20 +209,20 @@
 						dropMarker: "fa fa-angle-right",
 						error: "fa fa-warning",
 						expanderClosed: "fa fa-plus-square-o",
-						expanderLazy: "fa fa-plus-square-o",  // glyphicon-expand
-						expanderOpen: "fa fa-minus-square-o",  // glyphicon-collapse-down
+						expanderLazy: "fa fa-plus-square-o", // glyphicon-expand
+						expanderOpen: "fa fa-minus-square-o", // glyphicon-collapse-down
 						loading: "fa fa-spin fa-refresh"
 					}
 				},
-                persist: {
-                    // Available options with their default:
-                    cookieDelimiter: "~",    // character used to join key strings
-                    cookiePrefix: my.options.cookieId,
-                    cookie: { // settings passed to jquery.cookie plugin
-                        path: CCM_REL + '/'
-                    }
-                },
-                autoFocus: false,
+				persist: {
+					// Available options with their default:
+					cookieDelimiter: "~", // character used to join key strings
+					cookiePrefix: my.options.cookieId,
+					cookie: { // settings passed to jquery.cookie plugin
+						path: CCM_REL + '/'
+					}
+				},
+				autoFocus: false,
 				classNames: classNames,
 				source: {
 					url: my.options.dataSource,
@@ -236,16 +241,16 @@
 
 				},
 				/*
-                renderNode: function(event, data) {
+				renderNode: function(event, data) {
 					if (my.options.selectMode != false) {
 						$(span).find('.fa').remove();
 					}
-                    my.$sitemap.children('.ccm-pagination-bound').remove();
-                },*/
+					my.$sitemap.children('.ccm-pagination-bound').remove();
+				},*/
 
 				selectMode: treeSelectMode,
 				checkbox: checkbox,
-				minExpandLevel:  minExpandLevel,
+				minExpandLevel: minExpandLevel,
 				clickFolderMode: 2,
 				lazyLoad: function(event, data) {
 					if (!my.options.displaySingleLevel) {
@@ -304,44 +309,47 @@
 				},
 
 				dnd: {
-					preventRecursiveMoves: true, // Prevent dropping nodes on own descendants,
-					focusOnClick: true,
-					preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-
-					dragStart: function(sourceNode, data) {
+					// https://github.com/mar10/fancytree/wiki/ExtDnd
+					focusOnClick: true, // Focus although draggable cancels mousedown event?
+					preventRecursiveMoves: false, // Prevent dropping nodes on own descendants?
+					preventVoidMoves: false, // Prevent dropping nodes 'before self', etc.
+					dragStart: function(sourceNode, data) { // return true to enable dnd
 						if (my.options.selectMode) {
 							return false;
 						}
-                        if (sourceNode.data.cID) {
-							return true;
+						if (!sourceNode.data.cID) {
+							return false;
 						}
-						return false;
-					},
-					dragStop: function(sourceNode, data) {
+						dndPerformed = true;
+						my.$sitemap.addClass('ccm-sitemap-dnd');
 						return true;
 					},
-
-					dragEnter: function(targetNode, data) {
-                        var cID = parseInt(targetNode.data.cID);
-                        if (!targetNode.parent.data.cID && cID !== my.homeCID) { // Home page has no parents, but we still want to be able to hit it.
+					dragEnter: function(targetNode, data) { // return false: disable drag, true: enable drag, string (or string[]) to limit operations ('over', 'before', 'after')
+						if (!data.otherNode) {
+							// data.otherNode may be null for non-fancytree droppables
 							return false;
 						}
-                        if (cID === my.homeCID) {  // Home gets no siblings
+						var hoverCID = parseInt(targetNode.data.cID),
+							draggingCID = parseInt(data.otherNode.data.cID),
+							hoveringHome = targetNode.parent && targetNode.parent.data.cID ? false : true;
+
+						if (!hoverCID || !draggingCID) {
+							// something strange occurred
+							return false;
+						}
+						if (targetNode.data.cAlias) {
+							// destination is an alias
+							return ['before', 'after'];
+						}
+						if (hoverCID === draggingCID) {
+							// we can only copy node under itself
 							return 'over';
-                        }
-
-                        if (cID == data.otherNode.data.cID) {
-                            return false; // can't drag node onto itself.
-                        }
-						if (!data.otherNode.data.cID && data.hitMode == 'after') {
-							return false;
 						}
-
-				        // Prevent dropping a parent below it's own child
-				        if (targetNode.isDescendantOf(data.otherNode)) {
-							return false;
-				        }
-				        return true;
+						if (hoveringHome) {
+							// home gets no siblings
+							return 'over';
+						}
+						return true;
 					},
 					dragDrop: function(targetNode, data) {
 						if (targetNode.parent.data.cID == data.otherNode.parent.data.cID && data.hitMode != 'over') {
@@ -352,7 +360,18 @@
 							// we are dragging either onto a node or into another part of the site
 							my.selectMoveCopyTarget(data.otherNode, targetNode, data.hitMode);
 						}
+					},
+					dragStop: function() {
+						my.$sitemap.removeClass('ccm-sitemap-dnd');
+						setTimeout(function() {
+							dndPerformed = false;
+						}, 0);
 					}
+				}
+			});
+			ConcreteEvent.subscribe('ConcreteMenuShow', function(e, data) {
+				if (dndPerformed) {
+					data.menu.hide();
 				}
 			});
 		},
@@ -366,9 +385,9 @@
 			if (my.options.selectMode || my.options.onClickNode) {
 				return false;
 			}
-            ConcreteEvent.unsubscribe('SitemapDeleteRequestComplete.sitemap');
+			ConcreteEvent.unsubscribe('SitemapDeleteRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapDeleteRequestComplete.sitemap', function(e) {
-	 			var node = my.$sitemap.fancytree('getActiveNode');
+				var node = my.$sitemap.fancytree('getActiveNode');
 				var parent = node.parent;
 				my.reloadNode(parent);
 				$(my.$sitemap).fancytree('getTree').visit(function(node) {
@@ -387,32 +406,37 @@
 					}
 				});
 			});
-            ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
-            ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {
-                var node = my.getTree().getNodeByKey(data.cParentID);
-                if (node) {
-                    my.reloadNode(node);
-                }
-                jQuery.fn.dialog.closeAll();
-            });
-            ConcreteEvent.subscribe('SitemapUpdatePageRequestComplete.sitemap', function(e, data) {
+			ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
+			ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {
+				var node = my.getTree().getNodeByKey(String(data.cParentID));
+				if (node) {
+					my.reloadNode(node);
+				}
+				jQuery.fn.dialog.closeAll();
+			});
+			ConcreteEvent.subscribe('SitemapUpdatePageRequestComplete.sitemap', function(e, data) {
 				try {
-					var node = my.getTree().getNodeByKey(data.cID);
+					var node = my.getTree().getNodeByKey(String(data.cID));
 					var parent = node.parent;
 					if (parent) {
 						my.reloadNode(parent);
 					}
 				} catch(ex) {}
-            });
+			});
+			ConcreteEvent.unsubscribe('PageVersionChanged.deleted');
+			ConcreteEvent.unsubscribe('PageVersionChanged.duplicated');
+			Concrete.event.subscribe(['PageVersionChanged.deleted', 'PageVersionChanged.duplicated'], function(e, data) {
+				my.reloadSelfNodeByCID(data.cID);
+			});
 		},
 
-    	rescanDisplayOrder: function(node) {
+		rescanDisplayOrder: function(node) {
 			var childNodes = node.getChildren(),
 				params = [],
 				i;
 
 			node.setStatus('loading');
-            for (i = 0; i < childNodes.length; i++) {
+			for (i = 0; i < childNodes.length; i++) {
 				var childNode = childNodes[i];
 				params.push({'name': 'cID[]', 'value': childNode.data.cID});
 			}
@@ -422,25 +446,24 @@
 				data: params,
 				url: CCM_TOOLS_PATH + '/dashboard/sitemap_update',
 				success: function(r) {
-                    node.setStatus('ok');
+					node.setStatus('ok');
 					ConcreteAlert.notify({
 					'message': r.message
 					});
 
 				}
 			});
-    	},
+		},
 
-
-    	selectMoveCopyTarget: function(node, destNode, dragMode) {
-    		var my = this;
+		selectMoveCopyTarget: function(node, destNode, dragMode) {
+			var my = this;
 			var dialog_title = ccmi18n_sitemap.moveCopyPage;
 			if (!dragMode) {
 				dragMode = '';
 			}
-			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
-			var dialog_height = 350;
-			var dialog_width = 350;
+			var dialog_url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
+			var dialog_height = 'auto';
+			var dialog_width = 520;
 
 			$.fn.dialog.open({
 				title: dialog_title,
@@ -450,33 +473,38 @@
 				height: dialog_height
 			});
 
-            ConcreteEvent.unsubscribe('SitemapDragRequestComplete.sitemap');
+			ConcreteEvent.unsubscribe('SitemapDragRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapDragRequestComplete.sitemap', function(e, data) {
-				var reloadNode = destNode.parent;
-				if (dragMode == 'over') {
-					reloadNode = destNode;
-				}
-                if (data.task == 'MOVE') {
-                    node.remove();
-                }
-				reloadNode.removeChildren();
+				switch (data.task) {
+					case 'COPY_VERSION':
+						my.reloadSelfNode(destNode);
+						break;
+					default:
+						var reloadNode = destNode.parent;
+						if (dragMode == 'over') {
+							reloadNode = destNode;
+						}
+						if (data.task == 'MOVE') {
+							node.remove();
+						}
+						reloadNode.removeChildren();
 
-				my.reloadNode(reloadNode, function() {
-					if (!destNode.bExpanded) {
-						destNode.setExpanded(true, {noAnimation: true});
-					}
-				});
+						my.reloadNode(reloadNode, function() {
+							if (!destNode.bExpanded) {
+								destNode.setExpanded(true, {noAnimation: true});
+							}
+						});
+				}
 			});
 
-    	},
+		},
 
-
-    	setupNodePagination: function($tree) {
+		setupNodePagination: function($tree) {
 			$tree.find('.ccm-pagination-bound').remove();
-    		var pg = $tree.find('div.ccm-pagination-wrapper'),
+			var pg = $tree.find('div.ccm-pagination-wrapper'),
 				my = this;
-    		if (pg.length) {
-    			pg.find('a:not([disabled])').unbind('click').on('click', function() {
+			if (pg.length) {
+				pg.find('a:not([disabled])').unbind('click').on('click', function() {
 					var href = $(this).attr('href');
 					var root = my.$sitemap.fancytree('getRootNode');
 					jQuery.fn.dialog.showLoader();
@@ -491,23 +519,24 @@
 						}
 					});
 					return false;
-    			});
+				});
 
-	    		pg.addClass('ccm-pagination-bound').appendTo($tree);
+				pg.addClass('ccm-pagination-bound').appendTo($tree);
 			}
-    	},
+		},
 
-    	displaySingleLevel: function(node) {
-    		var my = this,
-    		    /*minExpandLevel = parseInt(node.data.cID) === my.homeCID ? 2 : 3,*/
-    			options = my.options;
+		displaySingleLevel: function(node) {
+			var my = this,
+				/*minExpandLevel = parseInt(node.data.cID) === my.homeCID ? 2 : 3,*/
+				options = my.options;
 
-            (my.options.onDisplaySingleLevel || $.noop).call(this, node);
+			(my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
-    		var root = my.$sitemap.fancytree('getRootNode');
+			var root = my.$sitemap.fancytree('getRootNode');
 			//my.$sitemap.fancytree('option', 'minExpandLevel', minExpandLevel);
 			var ajaxData = $.extend({
-                'dataType': 'json',
+				'dataType': 'json',
+				'isSitemapOverlay': options.isSitemapOverlay ? 1 : 0,
 				'displayNodePagination': options.displayNodePagination ? 1 : 0,
 				'siteTreeID': options.siteTreeID,
 				'cParentID': node.data.cID,
@@ -516,18 +545,18 @@
 			}, options.ajaxData);
 
 			jQuery.fn.dialog.showLoader();
-            return $.ajax({
+			return $.ajax({
 				dataType: 'json',
-                url: options.dataSource,
-                data: ajaxData,
-                success: function(data) {
+				url: options.dataSource,
+				data: ajaxData,
+				success: function(data) {
 					jQuery.fn.dialog.hideLoader();
 					root.removeChildren();
 					root.addChildren(data);
-                    my.setupNodePagination(my.$sitemap, node.data.key);
-                }
-            });
-    	},
+					my.setupNodePagination(my.$sitemap, node.data.key);
+				}
+			});
+		},
 
 		getLoadNodePromise: function(node) {
 			var my = this,
@@ -537,6 +566,7 @@
 					'siteTreeID': options.siteTreeID,
 					'reloadNode': 1,
 					'includeSystemPages': options.includeSystemPages ? 1 : 0,
+					'isSitemapOverlay': options.isSitemapOverlay ? 1 : 0,
 					'displayNodePagination': options.displayNodePagination ? 1 : 0
 				}, options.ajaxData),
 				params = {
@@ -548,7 +578,6 @@
 			return $.ajax(params);
 		},
 
-
 		reloadNode: function(node, onComplete) {
 			this.getLoadNodePromise(node).done(function(data) {
 				node.removeChildren();
@@ -558,6 +587,35 @@
 					onComplete();
 				}
 			});
+		},
+
+		getLoadSelfNodePromise: function(node) {
+			return $.ajax({
+				dataType: 'json',
+				url: this.options.dataSource,
+				data: $.extend({
+					cID: node.data.cID,
+					reloadNode: 1,
+					reloadSelfNode: 1
+				}, this.options.ajaxData)
+			});
+		},
+
+		reloadSelfNode: function(node, onComplete) {
+			this.getLoadSelfNodePromise(node).done(function(data) {
+				var nodeData = data[0];
+				node.setTitle(nodeData.title);
+				if (onComplete) {
+					onComplete();
+				}
+			});
+		},
+
+		reloadSelfNodeByCID: function(cID, onComplete) {
+			var node = cID ? this.getTree().getNodeByKey(String(cID)) : null;
+			if (node) {
+				this.reloadSelfNode(node, onComplete);
+			}
 		}
 	};
 
@@ -565,69 +623,75 @@
 	 * Static methods
 	 */
 
-    ConcreteSitemap.exitEditMode = function(cID) {
-		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_check_in?cID=" + cID  + "&ccm_token=" + CCM_SECURITY_TOKEN);
+	ConcreteSitemap.exitEditMode = function(cID) {
+		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_check_in?cID=" + cID + "&ccm_token=" + CCM_SECURITY_TOKEN);
 	};
 
 	ConcreteSitemap.refreshCopyOperations = function() {
-		ccm_triggerProgressiveOperation(CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', [],	ccmi18n_sitemap.copyProgressTitle, function() {
-			$('.ui-dialog-content').dialog('close');
-			window.location.reload();
-		});
+		ccm_triggerProgressiveOperation(
+			CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all?process=1',
+			[],
+			ccmi18n_sitemap.copyProgressTitle,
+			function() {
+				$('.ui-dialog-content').dialog('close');
+				window.location.reload();
+			}
+		);
 	};
 
-	ConcreteSitemap.submitDragRequest = function() {
-
-		var origCID = $('#origCID').val();
-		//var destParentID = $('#destParentID').val();
-		var destCID = $('#destCID').val();
-		var dragMode = $('#dragMode').val();
-		var destSibling = $('#destSibling').val();
-		var ctask = $("input[name=ctask]:checked").val();
-		var copyAll = $("input[name=copyAll]:checked").val();
-		var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
+	ConcreteSitemap.submitDragRequest = function($form) {
 		var params = {
-
-			'origCID': origCID,
-			'destCID': destCID,
-			'ctask': ctask,
-			'ccm_token': CCM_SECURITY_TOKEN,
-			'copyAll': copyAll,
-			'destSibling': destSibling,
-			'dragMode': dragMode,
-			'saveOldPagePath': saveOldPagePath
+			ccm_token: $form.find('input[name="validationToken"]').val(),
+			dragMode: $form.find('input[name="dragMode"]').val(),
+			destCID: $form.find('input[name="destCID"]').val(),
+			destSibling: $form.find('input[name="destSibling"]').val() || '',
+			origCID: $form.find('input[name="origCID"]').val(),
+			ctask: $("input[name=ctask]:checked").val()
 		};
-
-
-		if (copyAll == 1) {
-
-			var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
+		switch (params.ctask) {
+			case 'MOVE':
+				params.saveOldPagePath = $form.find('input[name="saveOldPagePath"]').is(':checked') ? 1 : 0;
+				break;
+			case 'a-copy-operation':
+				params.ctask = $('input[name="dtask"]:checked').val();
+				break;
+		}
+		var paramsArray = [];
+		$.each(params, function (name, value) {
+			paramsArray.push({name: name, value: value});
+		});
+		if (params.ctask === 'COPY_ALL') {
 			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
-				[{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
-				dialogTitle, function() {
+				CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
+				paramsArray,
+				ccmi18n_sitemap.copyProgressTitle,
+				function() {
 					$('.ui-dialog-content').dialog('close');
-					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
+					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': params.ctask});
 				}
 			);
-
 		} else {
-
 			jQuery.fn.dialog.showLoader();
-
-			$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request', params, function(resp) {
-				// parse response
-				ccm_parseJSON(resp, function() {
-					jQuery.fn.dialog.closeAll();
-					jQuery.fn.dialog.hideLoader();
-					ConcreteAlert.notify({
-					'message': resp.message
+			$.getJSON(
+				CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/submit',
+				params,
+				function(resp) {
+					ccm_parseJSON(resp, function() {
+						jQuery.fn.dialog.closeAll();
+						jQuery.fn.dialog.hideLoader();
+						ConcreteAlert.notify({message: resp.message});
+						ConcreteEvent.publish('SitemapDragRequestComplete', {task: params.ctask});
+						jQuery.fn.dialog.closeTop();
+						jQuery.fn.dialog.closeTop();
 					});
-
-					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
-					jQuery.fn.dialog.closeTop();
-					jQuery.fn.dialog.closeTop();
-				});
+				}
+			).error(function(xhr, status, error) {
+				jQuery.fn.dialog.hideLoader();
+				var msg = error, json = xhr ? xhr.responseJSON : null;
+				if (json && json.error) {
+					msg = json.errors instanceof Array ? json.errors.join('\n') : json.error;
+				}
+				window.alert(msg);
 			});
 		}
 	};

@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Controller\Element\Search\Express\CustomizeResults;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\Search\SearchProvider;
@@ -40,6 +41,11 @@ class CustomizeSearch extends DashboardPageController
                 $set->setDefaultSortColumn($sort, $this->request->request->get('fSearchDefaultSortDirection'));
 
                 $entity->setResultColumnSet($set);
+                $itemsPerPage = (int) $this->request->request->get('fSearchItemsPerPage');
+                if (!$itemsPerPage) {
+                    $itemsPerPage = Entity::DEFAULT_ITEMS_PER_PAGE;
+                }
+                $entity->setItemsPerPage($itemsPerPage);
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
                 $this->flash('success', t('Search preferences saved successfully.'));

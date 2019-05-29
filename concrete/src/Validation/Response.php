@@ -7,9 +7,19 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 class Response implements ResponseInterface
 {
 
+    /**
+     * @var bool
+     */
     protected $valid;
+
+    /**
+     * @var ErrorList
+     */
     protected $error;
 
+    /**
+     * Response constructor.
+     */
     public function __construct()
     {
         $this->setIsValid(true);
@@ -17,7 +27,7 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isValid()
     {
@@ -25,7 +35,7 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @param mixed $valid
+     * @param bool $valid
      */
     public function setIsValid($valid)
     {
@@ -33,7 +43,7 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @return mixed
+     * @return ErrorList
      */
     public function getErrorObject()
     {
@@ -41,10 +51,13 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @param mixed $error
+     * @param ErrorList $error
      */
-    public function setErrorObject($error)
+    public function setErrorObject(ErrorList $error)
     {
+        if ($error->has()) {
+            $this->setIsValid(false);
+        }
         $this->error = $error;
     }
 

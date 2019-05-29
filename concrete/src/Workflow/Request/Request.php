@@ -3,6 +3,7 @@ namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Workflow;
 use Concrete\Core\Workflow\EmptyWorkflow;
@@ -116,15 +117,19 @@ abstract class Request extends ConcreteObject
         }
 
         $pa = $pk->getPermissionAccessObject();
-        $workflows = array();
-        $workflowsStarted = 0;
+        $skipWorkflow = true;
         if (is_object($pa)) {
             $workflows = $pa->getWorkflows();
             foreach ($workflows as $wf) {
                 if ($wf->validateTrigger($this)) {
                     $wp = $this->addWorkflowProgress($wf);
-                    ++$workflowsStarted;
-
+                    $response = $wp->getWorkflowProgressResponseObject();
+                    if ($response instanceof SkippedResponse) {
+                        // Since the response was skipped, we delete the workflow progress operation and keep moving.
+                        $wp->delete();
+                    } else {
+                        $skipWorkflow = false;
+                    }
                     $event = new GenericEvent();
                     $event->setArgument('progress', $wp);
                     Events::dispatch('workflow_triggered', $event);
@@ -132,11 +137,7 @@ abstract class Request extends ConcreteObject
             }
         }
 
-        if (isset($wp)) {
-            return $wp->getWorkflowProgressResponseObject();
-        }
-
-        if ($workflowsStarted == 0) {
+        if ($skipWorkflow) {
             $defaultWorkflow = new EmptyWorkflow();
             $wp = $this->addWorkflowProgress($defaultWorkflow);
 

@@ -8,6 +8,7 @@ use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
 
 /**
  * Handles regular and retina thumbnails. e.g. Each thumbnail type has two versions of itself
@@ -86,6 +87,20 @@ class Version
     protected $associatedFileSetIDs;
 
     /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @var bool
+     */
+    protected $keepAnimations;
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @var string
+     */
+    protected $saveAreaBackgroundColor;
+
+    /**
      * Initialize the instance.
      *
      * @param string $directoryName the name of the directory that contains the thumbnails
@@ -98,8 +113,10 @@ class Version
      * @param bool $limitedToFileSets Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
      * @param int[] $associatedFileSetIDs the IDs of the associated file sets (whose meaning depends on the value of $limitedToFileSets)
      * @param bool $upscalingEnabled Upscaling is enabled?
+     * @param bool $keepAnimations Should we create animated thumbnails for animated images?
+     * @param string $saveAreaBackgroundColor Background color of the Image Editor save area
      */
-    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [], $upscalingEnabled = false)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [], $upscalingEnabled = false, $keepAnimations = false, $saveAreaBackgroundColor = '')
     {
         $this->setDirectoryName($directoryName);
         $this->setHandle($handle);
@@ -111,6 +128,8 @@ class Version
         $this->setLimitedToFileSets($limitedToFileSets);
         $this->setAssociatedFileSetIDs($associatedFileSetIDs);
         $this->setIsUpscalingEnabled($upscalingEnabled);
+        $this->setKeepAnimations($keepAnimations);
+        $this->setSaveAreaBackgroundColor($saveAreaBackgroundColor);
     }
 
     /**
@@ -355,6 +374,50 @@ class Version
     }
 
     /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @param bool $value
+     */
+    public function setKeepAnimations($value)
+    {
+        $this->keepAnimations = (bool) $value;
+    }
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @return bool
+     */
+    public function isKeepAnimations()
+    {
+        return (bool) $this->keepAnimations;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @param string $color
+     *
+     * @return $this
+     */
+    public function setSaveAreaBackgroundColor($color)
+    {
+        $this->saveAreaBackgroundColor = $color;
+
+        return $this;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @return string
+     */
+    public function getSaveAreaBackgroundColor()
+    {
+        return $this->saveAreaBackgroundColor;
+    }
+
+    /**
      * Get the display name of the thumbnail sizing mode.
      *
      * @return string
@@ -385,7 +448,22 @@ class Version
         $ii = $app->make('helper/concrete/file');
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
-        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
+        $hadImagineImage = $fv->hasImagineImage();
+        $thumbnailFormat = null;
+        if ($this->isKeepAnimations()) {
+            try {
+                if ($fv->getImagineImage()->layers()->count() > 1) {
+                    $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+                }
+            } catch (Exception $x) {
+            }
+        }
+        if ($thumbnailFormat === null) {
+            $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
+        }
+        if (!$hadImagineImage) {
+            $fv->releaseImagineImage();
+        }
         $extension = $app->make(BitmapFormat::class)->getFormatFileExtension($thumbnailFormat);
 
         return REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $hi->replaceExtension($filename, $extension));
@@ -475,8 +553,8 @@ class Version
                     }
                 }
             }
-
-            return $result;
         }
+
+        return $result;
     }
 }

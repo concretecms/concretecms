@@ -4,7 +4,7 @@
 <div class="ccm-ui">
     <form method="post" data-dialog-form="duplicate-event" action="<?= $controller->action('submit') ?>">
 
-        <h4><?=$event->getName()?></h4>
+        <h4><?= h($event->getName()) ?></h4>
         <?= $event->getDescription() ?>
 
         <hr/>

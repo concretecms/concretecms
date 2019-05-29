@@ -1,7 +1,9 @@
 <?php
+
 namespace Concrete\Core\Utility\Service\Validation;
 
-use Egulias\EmailValidator\EmailValidator;
+use Concrete\Core\Application\Application;
+use Concrete\Core\Validator\String\EmailValidator;
 
 /**
  * Functions useful for validating strings.
@@ -9,19 +11,29 @@ use Egulias\EmailValidator\EmailValidator;
 class Strings
 {
     /**
-     * Returns true if the provided email is valid.
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * @deprecated Use Concrete\Core\Validator\String\EmailValidator
      *
-     * @param string $em The email address to be tested
-     * @param bool $testMXRecord Set to true if you want to perform dns record validation for the domain, defaults to false
-     * @param bool $strict Strict email validation
+     * @param string $em
+     * @param bool $testMXRecord
+     * @param bool $strict
      *
      * @return bool
      */
     public function email($em, $testMXRecord = false, $strict = false)
     {
-        $validator = new EmailValidator();
+        $validator = $this->app->make(EmailValidator::class, ['testMXRecord' => $testMXRecord, 'strict' => $strict]);
 
-        return $validator->isValid($em, $testMXRecord, $strict);
+        return $validator->isValid($em);
     }
 
     /**

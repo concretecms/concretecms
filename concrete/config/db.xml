@@ -1851,6 +1851,7 @@
     <field name="cvActivateDatetime" type="datetime"/>
     <field name="cvPublishDate" type="datetime" />
     <field name="cvPublishEndDate" type="datetime" />
+    <field name="cvDateApproved" type="datetime" />
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
     </index>
@@ -3137,7 +3138,7 @@
     <index name="cRequiresReindex">
       <col>cRequiresReindex</col>
     </index>
-    <opt for="MySQL" engine="MYISAM"/>
+    <opt for="MySQL&lt;5.6.4" engine="MYISAM"/>
   </table>
 
   <table name="PageThemes">
@@ -4386,6 +4387,9 @@
     </field>
     <field name="lockID" type="string" size="255"/>
     <field name="lockExpires" type="datetime"/>
+    <index name="thumbnailPathIsBuilt">
+    	<col>isBuilt</col>
+    </index>
   </table>
 
 </schema>

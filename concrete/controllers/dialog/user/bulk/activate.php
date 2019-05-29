@@ -9,6 +9,7 @@ use Permissions;
 use UserInfo;
 use Core;
 use Concrete\Core\User\User;
+use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
 class Activate extends BackendInterfaceController
 {
@@ -91,9 +92,9 @@ class Activate extends BackendInterfaceController
 
                     if (!in_array($function, $workflowRequestActions)) {
                         if ('activate' == $function) {
-                            $ui->triggerActivate('activate', $u);
+                            $ui->triggerActivate('activate', $u->getUserID());
                         } else {
-                            $ui->triggerDeactivate($u);
+                            $ui->triggerDeactivate($u->getUserID());
                         }
                         ++$count;
                     }

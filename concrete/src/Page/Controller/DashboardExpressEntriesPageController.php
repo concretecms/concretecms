@@ -1,24 +1,19 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
+use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
-use Concrete\Core\Express\Form\Validator\ValidatorInterface;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
-use Core;
-use GuzzleHttp\Psr7\Stream;
-use League\Csv\Writer;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
@@ -88,6 +83,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
      * Export Express entries into a CSV.
      *
      * @param int|null $treeNodeParentID
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function csv_export($treeNodeParentID = null)
@@ -102,13 +98,16 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv'
+            'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv',
         ];
+        $config = $this->app->make('config');
+        $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
-        return StreamedResponse::create(function() use ($entity, $me) {
+        return StreamedResponse::create(function () use ($entity, $me, $bom) {
             $entryList = new EntryList($entity);
 
-            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'), new Date());
+            $writer = new CsvWriter($this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'), new Date());
+            echo $bom;
             $writer->insertHeaders($entity);
             $writer->insertEntryList($entryList);
         }, 200, $headers);
@@ -150,7 +149,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             }
         }
 
-        if (count($breadcrumb) == 1) {
+        if (1 == count($breadcrumb)) {
             array_pop($breadcrumb);
         }
 
@@ -231,6 +230,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             }
         }
         $this->set('subEntities', $subEntities);
+        $this->set('pageTitle', t('View %s Entry', $entity->getName()));
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 
@@ -262,6 +262,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
+        $this->set('pageTitle', t('Edit %s Entry', $entity->getName()));
         $this->render('/dashboard/express/entries/update', false);
     }
 
@@ -279,30 +280,34 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 ->findOneById($this->request->request->get('entry_id'));
         }
 
-        if ($form !== null) {
-
+        if (null !== $form) {
             $express = $this->app->make('express');
             $controller = $express->getEntityController($entity);
             $processor = $controller->getFormProcessor();
             $validator = $processor->getValidator($this->request);
 
-            if ($entry === null) {
+            if (null === $entry) {
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
             } else {
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_UPDATE);
             }
 
             $this->error = $validator->getErrorList();
-            if (!$this->error->has()) {
-
+            if ($this->error->has()) {
+                if (null === $entry) {
+                    $this->create_entry($entity->getID());
+                } else {
+                    $this->edit_entry($entry->getID());
+                }
+            } else {
                 $notifier = $controller->getNotifier();
                 $notifications = $notifier->getNotificationList();
 
                 $manager = $controller->getEntryManager($this->request);
-                if ($entry === null) {
+                if (null === $entry) {
                     // create
                     $entry = $manager->addEntry($entity);
-                    $manager->saveEntryAttributesForm($form, $entry);
+                    $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
 
                     $this->flash(
@@ -312,7 +317,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                         . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
                     );
-                    $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
+                    if (is_object($entry->getOwnedByEntry())) {
+                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID(), $entry->getOwnedByEntry()->getID()));
+                    } else {
+                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
+                    }
                 } else {
                     // update
                     $manager->saveEntryAttributesForm($form, $entry);

@@ -1,8 +1,13 @@
 <?php
+
 namespace Concrete\Core\Error\Handler;
 
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Http\RequestMediaTypeParser;
+use Concrete\Core\Support\Facade\Application;
 use Config;
+use Exception;
+use Throwable;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
 use Whoops\Util\Misc;
@@ -64,7 +69,7 @@ class JsonErrorHandler extends Handler
         ];
 
         if (Misc::canSendHeaders()) {
-            if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+            if ($this->clientSupportsJson() === true) {
                 header('Content-Type: application/json; charset=' . APP_CHARSET, true);
             } else {
                 header('Content-Type: text/plain; charset=' . APP_CHARSET, true);
@@ -86,5 +91,26 @@ class JsonErrorHandler extends Handler
         return
             !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
             && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+    }
+
+    /**
+     * Check if the client supports JSON.
+     *
+     * @param float $minWeight
+     *
+     * @return bool|null true: yes; false: no; NULL: we weren't able to detect it
+     */
+    private function clientSupportsJson($minWeight = null)
+    {
+        try {
+            $app = Application::getFacadeApplication();
+            $rmrp = $app->make(RequestMediaTypeParser::class);
+
+            return $rmrp->isMediaTypeSupported('application/json', $minWeight);
+        } catch (Exception $x) {
+            return null;
+        } catch (Throwable $x) {
+            return null;
+        }
     }
 }

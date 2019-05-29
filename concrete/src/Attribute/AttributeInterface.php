@@ -46,7 +46,7 @@ interface AttributeInterface
      * A key is mapped with a row from the AttributeKeys table.
      * Use the object for example to retrieve the current attribute handle (e.g. 'meta_title').
      *
-     * @return AttributeKeyInterface
+     * @return AttributeKeyInterface|\Concrete\Core\Entity\Attribute\Key\Key
      */
     public function getAttributeKey();
 

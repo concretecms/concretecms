@@ -19,7 +19,7 @@ class IndexedSearch
     public $searchBatchSize;
     public $searchReindexTimeout;
 
-    private $cPathSections = array();
+    private $cPathSections = [];
     private $searchableAreaNames;
 
     public function __construct()
@@ -43,7 +43,7 @@ class IndexedSearch
         $areas = Config::get('concrete.misc.search_index_area_list');
         $areas = unserialize($areas);
         if (!is_array($areas)) {
-            $areas = array();
+            $areas = [];
         }
 
         return $areas;
@@ -57,9 +57,9 @@ class IndexedSearch
 
     public function matchesArea($arHandle)
     {
-        if (!isset($this->arHandles)) {
+        if (!isset($this->searchableAreaNames)) {
             $searchableAreaNamesInitial = $this->getSavedSearchableAreas();
-            if ($this->getSearchableAreaAction() == 'blacklist') {
+            if ('blacklist' == $this->getSearchableAreaAction()) {
                 $areas = Area::getHandleList();
                 foreach ($areas as $blArHandle) {
                     if (!in_array($blArHandle, $searchableAreaNamesInitial)) {
@@ -87,11 +87,11 @@ class IndexedSearch
     public function reindexPage($page)
     {
         $db = Loader::db();
-        if (is_object($page) && ($page instanceof Collection) && ($page->getAttribute('exclude_search_index') != 1)) {
+        if (is_object($page) && ($page instanceof Collection) && (1 != $page->getAttribute('exclude_search_index'))) {
             $datetime = Loader::helper('date')->getOverridableNow();
             $db->Replace(
                 'PageSearchIndex',
-                array(
+                [
                     'cID' => $page->getCollectionID(),
                     'cName' => $page->getCollectionName(),
                     'cDescription' => $page->getCollectionDescription(),
@@ -99,12 +99,12 @@ class IndexedSearch
                     'cDatePublic' => $page->getCollectionDatePublic(),
                     'content' => $this->getBodyContentFromPage($page),
                     'cDateLastIndexed' => $datetime,
-                ),
-                array('cID'),
+                ],
+                ['cID'],
                 true
             );
         } else {
-            $db->Execute('delete from PageSearchIndex where cID = ?', array($page->getCollectionID()));
+            $db->Execute('delete from PageSearchIndex where cID = ?', [$page->getCollectionID()]);
         }
     }
 
@@ -112,7 +112,7 @@ class IndexedSearch
     {
         $text = '';
 
-        $tagsToSpaces = array(
+        $tagsToSpaces = [
             '<br>',
             '<br/>',
             '<br />',
@@ -123,12 +123,12 @@ class IndexedSearch
             '</div>',
             '</ div>',
             '&nbsp;',
-        );
-        $blarray = array();
+        ];
+        $blarray = [];
         $db = Loader::db();
         $r = $db->Execute(
             'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?',
-            array($c->getCollectionID(), $c->getVersionID())
+            [$c->getCollectionID(), $c->getVersionID()]
         );
         $th = Loader::helper('text');
         while ($row = $r->FetchRow()) {
@@ -150,6 +150,19 @@ class IndexedSearch
                 }
                 unset($b);
                 unset($bi);
+            }
+        }
+
+        // add content defined by a page type controller
+        if ($pageController = $c->getPageController()) {
+            $searchableContent = $pageController->getSearchableContent();
+
+            if (strlen(trim($searchableContent))) {
+                $text .= $th->decodeEntities(
+                        strip_tags(str_ireplace($tagsToSpaces, ' ', $searchableContent)),
+                        ENT_QUOTES,
+                        APP_CHARSET
+                    ) . ' ';
             }
         }
 

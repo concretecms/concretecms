@@ -1,4 +1,5 @@
 <?php
+
 return [
     'default' => 'default',
     'sites' => [
@@ -25,7 +26,7 @@ return [
                 'favicon_fid' => null,
                 // File ID for iPhone home screen icon
                 'iphone_home_screen_thumbnail_fid' => null,
-                // File ID for Windows 8 tile icon 
+                // File ID for Windows 8 tile icon
                 'modern_tile_thumbnail_fid' => null,
                 // Background color for Windows 8 tile icon
                 'modern_tile_thumbnail_bgcolor' => null,
@@ -135,6 +136,7 @@ return [
                 'redirect_home_to_default_locale' => false,
                 'use_browser_detected_locale' => false,
                 'default_source_locale' => 'en_US',
+                'always_track_user_locale' => true,
             ],
             'seo' => [
                 'canonical_tag' => [
@@ -144,6 +146,12 @@ return [
                     'excluded_querystring_parameters' => [
                         'cID',
                         'ccm_token',
+                    ],
+                ],
+                'tracking' => [
+                    'code' => [
+                        'header' => '',
+                        'footer' => '',
                     ],
                 ],
             ],

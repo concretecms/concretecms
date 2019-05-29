@@ -28,7 +28,7 @@ class Options extends DashboardPageController
         $p = Page::getByPath('/dashboard/system/files/image_uploading');
         if ($p && !$p->isError()) {
             $pp = new Checker($p);
-            if ($pp->canView()) {
+            if ($pp->canViewPage()) {
                 $imageOptionsURL = (string) $this->app->make(ResolverManager::class)->resolve([$p]);
             }
         }

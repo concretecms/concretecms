@@ -2,16 +2,18 @@
 namespace Concrete\Core\Entity\Calendar;
 
 use Concrete\Core\Calendar\Utility\Preferences;
+use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Calendar\Calendar\PermissionsManager;
 
 /**
  * @ORM\Entity(repositoryClass="CalendarRepository")
  * @ORM\Table(name="Calendars")
  */
-class Calendar implements ObjectInterface
+class Calendar implements ObjectInterface, AssignableObjectInterface
 {
 
     use AssignableObjectTrait;
@@ -249,4 +251,17 @@ class Calendar implements ObjectInterface
         return '\\Concrete\\Core\\Permission\\Response\\CalendarResponse';
     }
 
+    public function setChildPermissionsToOverride()
+    {
+        return false;
+    }
+
+    public function setPermissionsToOverride()
+    {
+        /**
+         * @var $manager PermissionsManager
+         */
+        $manager = \Core::make(PermissionsManager::class);
+        return $manager->setPermissionsToOverride($this);
+    }
 }

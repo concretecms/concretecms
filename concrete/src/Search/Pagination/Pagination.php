@@ -83,7 +83,7 @@ class Pagination extends Pagerfanta
 
     public function getRouteCollectionFunction()
     {
-        $urlHelper = Core::make('helper/url');;
+        $urlHelper = Core::make('helper/url');
         $list = $this->getItemListObject();
         // Note: We had been using the URL library per a pull request by someone, but it
         // was breaking pagination in the sitemap flat view so that has been reverted.

@@ -372,7 +372,9 @@
                     var $content = $panel.find('.ccm-panel-content');
                     $accordion.removeClass('ccm-panel-header-accordion-dropdown-visible');
                     $title.html($(this).text());
+                    $.fn.dialog.showLoader();
                     $content.load(url + '?cID=' + CCM_CID + '&tab=' + $(this).attr('data-panel-accordion-tab'), function () {
+                        $.fn.dialog.hideLoader();
                         obj.onPanelLoad(this);
                     });
                 });

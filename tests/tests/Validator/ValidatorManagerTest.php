@@ -42,7 +42,7 @@ class ValidatorManagerTest extends PHPUnit_Framework_TestCase
         $manager = new \Concrete\Core\Validator\ValidatorManager();
 
         $this->assertFalse($manager->hasValidator('test'), 'Manager should not initialize with validators.');
-        $manager->setValidator('test', $mock = $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface'));
+        $manager->setValidator('test', $this->createMockFromClass('\Concrete\Core\Validator\ValidatorInterface'));
 
         $this->assertTrue($manager->hasValidator('test'), 'Manager does not properly report set validator');
     }

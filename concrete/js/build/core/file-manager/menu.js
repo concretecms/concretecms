@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, CCM_TOOLS_PATH, CCM_DISPATCHER_FILENAME, ConcreteMenu, ConcreteMenuManager */ 
+/* global _, CCM_DISPATCHER_FILENAME, ConcreteMenu, ConcreteMenuManager */
 
 ;(function(global, $) {
     'use strict';
@@ -40,9 +40,20 @@
 			_.defer(function() { container.$element.html(container._chooseTemplate); });
 			return false;
 		});
+		$menu.find('a[data-file-manager-action=choose-new-file]')
+			.text(container.options.chooseText)
+			.on('click', function(e) {
+				e.preventDefault();
+				var menu = ConcreteMenuManager.getActiveMenu();
+				if (menu) {
+					menu.hide();
+				}
+				container.chooseNewFile();
+			})
+		;
 		$menu.find('a[data-file-manager-action=download]').on('click', function(e) {
 			e.preventDefault();
-			window.frames['ccm-file-manager-download-target'].location= CCM_TOOLS_PATH + '/files/download?fID=' + fID;
+			window.frames['ccm-file-manager-download-target'].location= CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fID;
 		});
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
 			$.concreteAjax({

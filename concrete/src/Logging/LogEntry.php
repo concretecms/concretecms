@@ -4,6 +4,7 @@ namespace Concrete\Core\Logging;
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
+use Monolog\Logger as Monolog;
 
 class LogEntry
 {
@@ -24,7 +25,7 @@ class LogEntry
      */
     public function getLevelName()
     {
-        return Logger::getLevelName($this->level);
+        return Monolog::getLevelName($this->level);
     }
 
     /**
@@ -34,7 +35,7 @@ class LogEntry
      */
     public function getLevelDisplayName()
     {
-        return Logger::getLevelDisplayName($this->level);
+        return Levels::getLevelDisplayName($this->level);
     }
 
     /**
@@ -64,7 +65,7 @@ class LogEntry
      */
     public function getChannelDisplayName()
     {
-        return Logger::getChannelDisplayName($this->channel);
+        return Channels::getChannelDisplayName($this->channel);
     }
 
     /**
@@ -85,19 +86,19 @@ class LogEntry
     public function getLevelIcon()
     {
         switch ($this->getLevel()) {
-            case Logger::EMERGENCY:
+            case Monolog::EMERGENCY:
                 return '<i class="text-danger fa fa-fire launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Logger::CRITICAL:
-            case Logger::ALERT:
+            case Monolog::CRITICAL:
+            case Monolog::ALERT:
                 return '<i class="text-danger fa fa-exclamation-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Logger::ERROR:
-            case Logger::WARNING:
+            case Monolog::ERROR:
+            case Monolog::WARNING:
                 return '<i class="text-warning fa fa-warning launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Logger::NOTICE:
+            case Monolog::NOTICE:
                 return '<i class="fa fa-exclamation launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Logger::INFO:
+            case Monolog::INFO:
                 return '<i class="text-info fa fa-info-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Logger::DEBUG:
+            case Monolog::DEBUG:
                 return '<i class="text-info fa fa-cog launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
         }
     }

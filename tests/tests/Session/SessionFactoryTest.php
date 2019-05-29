@@ -49,6 +49,8 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testAddedToRequest()
     {
+        $this->app[Request::class] = $this->request;
+
         $session = $this->factory->createSession();
 
         $this->assertEquals($session, $this->request->getSession());
@@ -63,23 +65,20 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->skipIfHeadersSent();
 
-        $config = $this->app['config'];
-        $config['concrete.session'] = ['handler' => 'database', 'save_path' => '/tmp'];
-
         // Make the private `getSessionHandler` method accessible
         $reflection = new \ReflectionClass(get_class($this->factory));
         $method = $reflection->getMethod('getSessionHandler');
         $method->setAccessible(true);
 
         // Make sure database session gives us something other than native file session
-        $pdo_handler = $method->invokeArgs($this->factory, [$config]);
+        $pdo_handler = $method->invokeArgs($this->factory, [['handler' => 'database', 'save_path' => '/tmp']]);
         $this->assertNotInstanceOf(
             \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler::class, $pdo_handler);
 
         $config['concrete.session.handler'] = 'file';
         // Make sure file session does give us native file session
         /** @var \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler $native_handler */
-        $native_handler = $method->invokeArgs($this->factory, [$config]);
+        $native_handler = $method->invokeArgs($this->factory, [['handler' => 'file', 'save_path' => '/tmp']]);
         $this->assertInstanceOf(NativeFileSessionHandler::class, $native_handler);
     }
 }

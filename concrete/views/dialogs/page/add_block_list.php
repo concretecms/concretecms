@@ -1,96 +1,93 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-$types = array();
-foreach ($blockTypes as $bt) {
-    if (!$cp->canAddBlockType($bt)) {
-        continue;
-    }
+defined('C5_EXECUTE') or die('Access Denied.');
 
-    $btsets = $bt->getBlockTypeSets();
-    foreach ($btsets as $set) {
-        $types[$set->getBlockTypeSetName()][] = $bt;
-    }
-    if (count($btsets) == 0) {
-        $types['Other'][] = $bt;
-    }
-}
+/* @var Concrete\Core\Permission\Checker $cp */
+/* @var Concrete\Core\Page\Page $c */
 
-for ($i = 0; $i < count($sets); ++$i) {
-    $set = $sets[$i];
-    ?>
+/* @var Concrete\Core\Application\Service\Urls $ci */
 
-<div class="ccm-ui" id="ccm-add-block-list">
+/* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
 
-<section>
-    <legend><?= $set->getBlockTypeSetDisplayName() ?></legend>
-    <ul class="item-select-list">
-        <?php $blockTypes = isset($types[$set->getBlockTypeSetName()]) ? $types[$set->getBlockTypeSetName()] : array();
-    foreach ($blockTypes as $bt) {
-        $btIcon = $ci->getBlockTypeIconURL($bt);
+$id = str_replace('.', '_', uniqid('ccm-add-block-lists-', true));
+?>
+<div id="<?= $id ?>">
+    <div class="input-group">
+        <span class="input-group-addon">
+            <i class="fa fa-search"></i>
+        </span>
+        <input type="search" class="form-control" autofocus="autofocus" />
+    </div>
+    <br />
+    <?php
+    foreach ($blockTypesForSets as $setName => $blockTypes) {
         ?>
-            <li>
-                <a
-                    data-cID="<?= $c->getCollectionID() ?>"
-                    data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
-                    data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
-                    data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
-                    data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
-                    data-has-add-template="<?= $bt->hasAddTemplate() ?>"
-                    data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
-                    data-btID="<?= $bt->getBlockTypeID() ?>"
-                    title="<?= t($bt->getBlockTypeName()) ?>"
-                    href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
-            </li>
-        <?php 
-    }
-    ?>
-    </ul>
-</section>
-
-<?php 
-} ?>
-
-<?php if (is_array($types['Other'])) {
-    ?>
-
-    <section>
-        <legend><?=t('Other')?></legend>
-        <ul class="item-select-list">
-            <?php $blockTypes = $types['Other'];
-    foreach ($blockTypes as $bt) {
-        $btIcon = $ci->getBlockTypeIconURL($bt);
+        <section>
+            <legend><?= $setName ?></legend>
+            <ul class="item-select-list">
+                <?php
+                foreach ($blockTypes as $bt) {
+                    $btIcon = $ci->getBlockTypeIconURL($bt);
+                    ?>
+                    <li>
+                        <a
+                            data-cID="<?= $c->getCollectionID() ?>"
+                            data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
+                            data-block-type-name="<?= h(t($bt->getBlockTypeName())) ?>"
+                            data-block-type-description="<?= h(t($bt->getBlockTypeDescription())) ?>"
+                            data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
+                            data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
+                            data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
+                            data-has-add-template="<?= $bt->hasAddTemplate() ?>"
+                            data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
+                            data-btID="<?= $bt->getBlockTypeID() ?>"
+                            title="<?= h(t($bt->getBlockTypeDescription())) ?>"
+                            href="javascript:void(0)"
+                        ><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </section>
+        <?php
+        }
         ?>
-                <li>
-                    <a
-                        data-cID="<?= $c->getCollectionID() ?>"
-                        data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
-                        data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
-                        data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
-                        data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
-                        data-has-add-template="<?= $bt->hasAddTemplate() ?>"
-                        data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
-                        data-btID="<?= $bt->getBlockTypeID() ?>"
-                        title="<?= t($bt->getBlockTypeName()) ?>"
-                        href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
-                </li>
-            <?php 
-    }
-    ?>
-        </ul>
-    </section>
-
-<?php 
-} ?>
-
+    </div>
 </div>
-
-<script type="text/javascript">
+<script>
     $(function() {
-        $('#ccm-add-block-list').on('click', 'a', function() {
+        var $list = $('#<?= $id ?>'),
+            $search = $list.find('input[type="search"]');
+
+        $search.on('keydown keypress keyup change blur', function() {
+            var search = $.trim($search.val()).toLowerCase();
+            $list.find('section').each(function() {
+                var $section = $(this),
+                    someDisplayed = false;
+                $section.find('li a').each(function() {
+                    var $a = $(this),
+                        $li = $a.closest('li');
+                    if (search === '' || ($a.data('block-type-name') || '').toLowerCase().indexOf(search) >= 0 || ($a.data('block-type-description') || '').toLowerCase().indexOf(search) >= 0) {
+                        $li.show();
+                        someDisplayed = true;
+                    } else {
+                        $li.hide();
+                    }
+                });
+                $section.toggle(someDisplayed);
+            });
+        });
+
+        $list.find('a').on('click', function() {
             ConcreteEvent.publish('AddBlockListAddBlock', {
                 $launcher: $(this)
             });
             return false;
         });
+
+        setTimeout(function() {
+            $search.focus();
+        }, 250);
+
     });
 </script>

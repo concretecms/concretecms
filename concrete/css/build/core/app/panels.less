@@ -388,44 +388,62 @@ div#ccm-panel-add-clipboard-block-list {
     div.block-name {
       border-top: solid 1px rgb(7, 8, 10);
       background: rgb(15, 24, 37);
-      font-weight: bold;
+      font-size: 13px;
       padding-left: 40px;
-      line-height: 40px;
+      padding-right: 40px;
+      padding-bottom: 16px;
+      padding-top: 16px;
+      line-height: @line-height-base;
       color: rgb(115, 124, 142);
+      position: relative;
+      .transition(background-color 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+      &:hover {
+        background-color: #1e252f !important;
+      }
+    }
+
+    div.stack-name {
+      cursor: pointer;
+    }
+
+    .ccm-panel-add-block-stack-item-handle,
+    div.block-name {
       cursor: -moz-grab;
       cursor: -webkit-grab;
       cursor: grab;
     }
 
+    .ccm-panel-add-block-stack-item-handle {
+      img {
+        position: absolute;
+        top: 15px;
+        left: 12px;
+        width: 20px;
+      }
+    }
+    .ccm-stack-expander {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      > i {
+        transition: all 0.4s ease;
+      }
+    }
+    &.ccm-panel-add-block-stack-item-expanded .ccm-stack-expander > i{
+      transform: rotateZ(-180deg);
+    }
+
     div.blocks {
-      height: 60px;
-      overflow: hidden;
       color: #9ea6b6;
       background: #343639;
       position: relative;
       .transition(height 250ms ease-in-out);
-
-      > div.block-count {
-        background: #202834;
-        color: #60728d;
-        .transition(opacity 250ms ease-in-out);
-        line-height: 60px;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding-left: 40px;
-        z-index: 2;
-        cursor: pointer;
-      }
 
       > div.block {
         display: block;
         position: relative;
         min-height: 120px;
         max-height: 290px;
-        float: left;
         width: 100%;
         height: auto;
         border-top: solid 1px bezier;

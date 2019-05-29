@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global NProgress, ccmi18n, ConcreteMenuManager */
+/* global NProgress, ccmi18n, ConcreteMenuManager, ConcreteAjaxRequest, ConcreteAlert */
 
 ;(function(global, $) {
     'use strict';
@@ -13,22 +13,61 @@
         }
     });
     
+    function fixDialogButtons($dialog) {
+        var $ccmButtons = $dialog.find('.dialog-buttons');
+        if ($ccmButtons.length === 0) {
+            return;
+        }
+        if ($.trim($ccmButtons.html()).length === 0) {
+            return;
+        }
+        var $dialogParent = $dialog.parent();
+        if ($dialogParent.find('.ui-dialog-buttonset').length !== 0) {
+        	return;
+        }
+        $dialog.jqdialog('option', 'buttons', [{}]);
+        $dialogParent.find('.ui-dialog-buttonset').remove();
+        $ccmButtons
+            .removeClass()
+            .addClass('ccm-ui')
+            .appendTo($dialogParent.find('.ui-dialog-buttonpane').empty())
+        ;
+    }
+
     $.widget.bridge( "jqdialog", $.concrete.dialog );
     // wrap our old dialog function in the new dialog() function.
     $.fn.dialog = function() {
         // Pass this over to jQuery UI Dialog in a few circumstances
-        if (arguments.length > 0) {
-            $(this).jqdialog(arguments[0], arguments[1], arguments[2]);
-            return;
-        } else if ($(this).is('div')) {
-            $(this).jqdialog();
-            return;
-        }
+        switch (arguments.length) {
+            case 0:
+                if ($(this).is('div')) {
+                    $(this).jqdialog();
+                    return;
+                }
+                break;
+            case 1:
+            	var arg = arguments[0];
+            	if ($.isPlainObject(arg)) {
+            		var originalOpen = arg.open || null;
+            		arg.open = function(e, ui) {
+            			fixDialogButtons($(this));
+            			if (originalOpen) {
+            				originalOpen.call(this, e, ui);
+            			}
+            		};
+            	}
+            	$.fn.jqdialog.call($(this), arg);
+            	return;
+            default:
+            	$.fn.jqdialog.apply($(this), arguments);
+            	return;
+    	}
         // LEGACY SUPPORT
         return $(this).each(function() {
             $(this).unbind('click.make-dialog').bind('click.make-dialog', function(e) {
+                e.preventDefault();
                 if ($(this).hasClass('ccm-dialog-launching')) {
-                    return false;
+                    return;
                 }
     
                 $(this).addClass('ccm-dialog-launching');
@@ -60,7 +99,6 @@
                     launcher: $(this)
                 };
                 $.fn.dialog.open(obj);
-                return false;
             });
         });
     };
@@ -237,6 +275,10 @@
                     // the pages we load while having access to the jqdialog object.
                     // Ensure that the dialog is open prior to evaluating javascript.
                     $('<div />').jqdialog(finalSettings).html(r).jqdialog('open');
+                },
+                error: function(xhr, status, error) {
+                	$.fn.dialog.hideLoader();
+                	ConcreteAlert.dialog(ccmi18n.error, ConcreteAjaxRequest.renderErrorResponse(xhr, true));
                 }
             });
         }
@@ -263,17 +305,8 @@
         $dialog.find('button[data-dialog-action=submit]').on('click', function() {
             $dialog.find('[data-dialog-form]').submit();
         });
-    
-        if ($dialog.find('.dialog-buttons').length > 0) {
-            var html = $dialog.find('.dialog-buttons').html();
-            if (html) {
-                $dialog.jqdialog('option', 'buttons', [{}]);
-                $dialog.parent().find(".ui-dialog-buttonset").remove();
-                $dialog.parent().find(".ui-dialog-buttonpane").html('');
-                $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
-            }
-        }
-    
+        
+        fixDialogButtons($dialog);
     
         // make dialogs
         $dialog.find('.dialog-launch').dialog();

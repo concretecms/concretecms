@@ -9,6 +9,7 @@ use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApp
 use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
 use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Core;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
@@ -136,12 +137,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         // Check if the workflow is not already approved
         if (is_object($req)) {
             if ($this->canApproveWorkflow()) {
-                // Then that means we have the ability to approve the workflow we just started.
-                // In that case, we transparently approve it, and skip the entry notification step.
-                $wpr = $req->approve($wp);
-                $wp->delete();
-
-                return $wpr;
+                return new SkippedResponse();
             } else {
                 $db = Core::make('database')->connection();
                 $db->executeQuery(
@@ -171,7 +167,14 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $users = $nk->getCurrentlyActiveUsers($wp);
         $loc = Localization::getInstance();
         $loc->pushActiveContext('email');
-        $dt = $wp->getWorkflowProgressDateAdded();
+        switch ($message[0]) {
+            case 'approve':
+            case 'cancel':
+                $dt = $wp->getWorkflowProgressDateLastAction();
+                break;
+            default:
+                $dt = $wp->getWorkflowProgressDateAdded();
+        }
         $dh = Core::make('helper/date');
 
         if (Config::get('concrete.email.workflow_notification.address')){

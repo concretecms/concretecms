@@ -3,11 +3,17 @@ namespace Concrete\Core\System;
 
 use Localization;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Package\PackageList;
 
 class Info
 {
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    private $app;
+
     /**
      * @var bool
      */
@@ -73,18 +79,27 @@ class Info
      */
     protected $dbVersion;
 
+    /**
+     * @var string|null
+     */
+    private $dbmsVersion;
+
+    /**
+     * @var string|null
+     */
+    private $dbmsSqlMode;
 
     public function __construct()
     {
         $loc = Localization::getInstance();
         $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
         try {
-            $app = Facade::getFacadeApplication();
-            $config = $app->make('config');
+            $this->app = Facade::getFacadeApplication();
+            $config = $this->app->make('config');
             $maxExecutionTime = ini_get('max_execution_time');
             @set_time_limit(5);
 
-            $this->installed = (bool) $app->isInstalled();
+            $this->installed = (bool) $this->app->isInstalled();
 
             $this->webRootDirectory = DIR_BASE;
 
@@ -138,7 +153,7 @@ class Info
             if ($config->get('concrete.cache.full_page_lifetime')) {
                 $cache[] = sprintf("Full Page Cache Lifetime - %s",
                     $config->get('concrete.cache.full_page_lifetime') == 'default' ?
-                        sprintf('Every %s (default setting).', $app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
+                        sprintf('Every %s (default setting).', $this->app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
                         :
                         (
                         $config->get('concrete.cache.full_page_lifetime') == 'forever' ?
@@ -172,14 +187,14 @@ class Info
             phpinfo();
             $buffer = ob_get_clean();
             $phpinfo = [];
-            if ($app->isRunThroughCommandLineInterface()) {
+            if ($this->app->isRunThroughCommandLineInterface()) {
                 $section = null;
                 foreach (preg_split('/[\r\n]+/', $buffer) as $line) {
                     $chunks = array_map('trim', explode('=>', $line));
                     switch (count($chunks)) {
                         case 1:
                             if ($chunks[0] === '') {
-                                continue;
+                                continue 2;
                             }
                             $section = $chunks[0];
                             break;
@@ -421,5 +436,41 @@ class Info
         return $this->dbVersion;
     }
 
+    /**
+     * @return string
+     */
+    public function getDBMSVersion()
+    {
+        if ($this->dbmsVersion === null) {
+            $this->dbmsVersion = '';
+            if ($this->installed) {
+                try {
+                    $cn = $this->app->make(Connection::class);
+                    $this->dbmsVersion = (string) $cn->fetchColumn('select @@version');
+                } catch (\Exception $x) {
+                }
+            }
+        }
 
+        return $this->dbmsVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDBMSSqlMode()
+    {
+        if ($this->dbmsSqlMode === null) {
+            $this->dbmsSqlMode = '';
+            if ($this->installed) {
+                try {
+                    $cn = $this->app->make(Connection::class);
+                    $this->dbmsSqlMode = (string) $cn->fetchColumn('select @@sql_mode');
+                } catch (\Exception $x) {
+                }
+            }
+        }
+
+        return $this->dbmsSqlMode;
+    }
 }

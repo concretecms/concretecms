@@ -2,10 +2,13 @@
 namespace Concrete\Core\Notification\Type;
 
 use Concrete\Core\Entity\Notification\WorkflowProgressNotification;
+use Concrete\Core\Notification\Alert\Filter\WorkflowFilter;
+use Concrete\Core\Notification\Alert\Filter\WorkflowProgressFilterFactory;
 use Concrete\Core\Notification\Notifier\WorkflowProgressNotifier;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 use Concrete\Core\Workflow\Progress\Progress;
+use Concrete\Core\Workflow\Workflow;
 use Doctrine\ORM\Mapping as ORM;
 
 class WorkflowProgressType extends Type
@@ -47,5 +50,15 @@ class WorkflowProgressType extends Type
         }
     }
 
+    public function getAvailableFilters()
+    {
+        $workflows = Workflow::getList();
+        $filters = [];
+        foreach($workflows as $workflow) {
+            $filters[] = new WorkflowFilter($workflow);
+
+        }
+        return $filters;
+    }
 
 }

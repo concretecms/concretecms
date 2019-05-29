@@ -3,10 +3,12 @@ namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Express\Entry\Manager as EntryManager;
 use Concrete\Core\Express\Controller\Manager as ControllerManager;
+use Symfony\Component\HttpFoundation\Request;
 
 class ObjectManager
 {
@@ -82,10 +84,18 @@ class ObjectManager
 
     public function deleteEntry($entryID)
     {
-        $manager = $this->app->make(EntryManager::class);
         $entry = $this->getEntry($entryID);
-        if (is_object($entry)) {
-            $manager->deleteEntry($entry);
+        if ($entry) {
+            /**
+             * @var $entry Entry
+             */
+            $entity = $entry->getEntity();
+            if ($entity) {
+                $request = Request::createFromGlobals();
+                $controller = $this->getEntityController($entity);
+                $manager = $controller->getEntryManager($request);
+                $manager->deleteEntry($entry);
+            }
         }
     }
 

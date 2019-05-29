@@ -1,30 +1,52 @@
 <?php
 namespace Concrete\Core\Application\Service\Dashboard;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\Tree;
-use Config;
-use PageList;
-use TaskPermission;
-use Cookie;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Closure;
 use stdClass;
-use Permissions;
-use Page;
-use PermissionKey;
 
 class Sitemap
 {
     /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    /**
      * @var bool
      */
-    protected $expandedNodes = array();
+    protected $expandedNodes = [];
+
     /**
      * @var bool
      */
     protected $displayNodePagination = false;
+
+    /**
+     * @var bool
+     */
+    protected $isSitemapOverlay = false;
+
     /**
      * @var bool
      */
     protected $includeSystemPages;
+
+    /**
+     * Sitemap constructor.
+     *
+     * @param \Concrete\Core\Application\Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * @param bool $autoOpen
@@ -40,7 +62,8 @@ class Sitemap
     public function includeSystemPages()
     {
         if (!isset($this->includeSystemPages)) {
-            $this->includeSystemPages = Cookie::get('includeSystemPages');
+            $cookie = $this->app->make('cookie');
+            $this->includeSystemPages = $cookie->get('includeSystemPages');
         }
 
         return $this->includeSystemPages;
@@ -52,7 +75,8 @@ class Sitemap
     public function setIncludeSystemPages($systemPages)
     {
         $this->includeSystemPages = $systemPages;
-        Cookie::set('includeSystemPages', $systemPages);
+        $cookie = $this->app->make('cookie');
+        $cookie->set('includeSystemPages', $systemPages);
     }
 
     /**
@@ -64,6 +88,14 @@ class Sitemap
     }
 
     /**
+     * @param bool $isSitemapOverlay
+     */
+    public function setIsSitemapOverlay($isSitemapOverlay)
+    {
+        $this->isSitemapOverlay = $isSitemapOverlay;
+    }
+
+    /**
      * @param int $cID
      *
      * @return array
@@ -72,7 +104,7 @@ class Sitemap
     {
         $pl = new PageList();
         $pl->setPermissionsChecker(function ($page) {
-            $cp = new \Permissions($page);
+            $cp = new Permissions($page);
 
             return $cp->canViewPageInSitemap();
         });
@@ -84,7 +116,7 @@ class Sitemap
         }
         if (!is_object($parent)) {
             $cID = $parent;
-        } else if ($parent instanceof Tree) {
+        } elseif ($parent instanceof Tree) {
             $pl->setSiteTreeObject($parent);
             $cID = 0;
         }
@@ -95,13 +127,14 @@ class Sitemap
             $results = $pl->getResults();
             $pagination = null;
         } else {
-            $pl->setItemsPerPage(Config::get('concrete.limits.sitemap_pages'));
+            $config = $this->app->make('config');
+            $pl->setItemsPerPage($config->get('concrete.limits.sitemap_pages'));
             $pagination = $pl->getPagination();
             $total = $pagination->getTotalResults();
             $results = $pagination->getCurrentPageResults();
         }
 
-        $nodes = array();
+        $nodes = [];
         foreach ($results as $c) {
             $n = $this->getNode($c, true, $onGetNode);
             if ($n != false) {
@@ -112,7 +145,7 @@ class Sitemap
             if ($this->displayNodePagination && isset($pagination)) {
                 $n = new stdClass();
                 $n->icon = false;
-                $n->addClass = 'ccm-sitemap-explore';
+                $n->extraClasses = 'ccm-sitemap-explore';
                 $n->noLink = true;
                 $n->unselectable = true;
                 $html = $pagination->renderView('dashboard');
@@ -121,13 +154,21 @@ class Sitemap
             } else {
                 $n = new stdClass();
                 $n->icon = false;
-                $n->addClass = 'ccm-sitemap-explore';
+                $n->extraClasses = 'ccm-sitemap-explore';
                 $n->noLink = true;
                 $n->active = false;
                 $n->focus = false;
                 $n->unselectable = true;
-                $n->title = ' ' . t('More Pages to Display. <strong>Next Page &gt;</strong>');
-                $n->href = (string) \URL::to('/dashboard/sitemap/explore/', $cID);
+
+                // Avoids redirecting to the flat view page in an overlay context
+                if ($this->isSitemapOverlay) {
+                    $n->extraClasses = 'ccm-sitemap-open-flat-view';
+                    $n->cParentID = (int) $cID;
+                    $n->title = ' ' . t('More Pages to Display. <strong>Use the Flat View</strong>');
+                } else {
+                    $n->title = ' ' . t('More Pages to Display. <strong>Next Page &gt;</strong>');
+                    $n->href = (string) \URL::to('/dashboard/sitemap/explore/', $cID);
+                }
                 $nodes[] = $n;
             }
         }
@@ -167,14 +208,19 @@ class Sitemap
             $nodeOpen = true;
         }
 
-        $numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
+        if ($c->getCollectionPointerID()) {
+            $numSubpages = 0;
+        } else {
+            $numSubpages = (int) $c->getNumChildren();
+        }
 
         $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
 
         $isInTrash = $c->isInTrash();
 
-        $isTrash = $c->getCollectionPath() == Config::get('concrete.paths.trash');
+        $config = $this->app->make('config');
+        $isTrash = $c->getCollectionPath() == $config->get('concrete.paths.trash');
         if ($isTrash || $isInTrash) {
             $pk = PermissionKey::getByHandle('empty_trash');
             if (!$pk->validate()) {
@@ -206,7 +252,7 @@ class Sitemap
                 $cAlias = 'POINTER';
                 $cID = $c->getCollectionPointerOriginalID();
             } else {
-                $cIconClass = 'fa fa-sign-out';
+                $cIconClass = 'fa fa-external-link';
                 $cAlias = 'LINK';
             }
         }
@@ -232,7 +278,7 @@ class Sitemap
             $node->icon = $cIcon;
         }
         if ($c->isHomePage()) {
-            $node->addClass = 'ccm-page-home';
+            $node->extraClasses = 'ccm-page-home';
             $node->expanded = true;
         }
         if ($nodeOpen) {
@@ -260,11 +306,23 @@ class Sitemap
             $node->children = $this->getSubNodes($cID, $onGetNode);
         }
 
-        if ($onGetNode instanceof \Closure) {
+        if ($onGetNode instanceof Closure) {
             $node = $onGetNode($node);
         }
 
         return $node;
+    }
+
+    public function canViewSitemapPanel()
+    {
+        $types = Type::getList();
+        foreach($types as $pt) {
+            $ptp = new \Permissions($pt);
+            if ($ptp->canAddPageType()) {
+                return true;
+            }
+        }
+        return $this->canRead();
     }
 
     /**
@@ -272,7 +330,7 @@ class Sitemap
      */
     public function canRead()
     {
-        $tp = new TaskPermission();
+        $tp = new Permissions();
 
         return $tp->canAccessSitemap();
     }

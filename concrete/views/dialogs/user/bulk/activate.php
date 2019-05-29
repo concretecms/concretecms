@@ -23,7 +23,7 @@ if (! is_array($users) || count($users) ==0) {
 			echo t('Are you sure you would like to deactivate the following users?');
 			$button = t('Deactivate');
 		}
-		?>?</p>
+		?></p>
 
 	<form method="post" data-dialog-form="save-file-set" action="<?= $controller->action('submit'); ?>">
 		<?php

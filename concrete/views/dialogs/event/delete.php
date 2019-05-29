@@ -8,7 +8,7 @@
             <?= t('Are you sure you want to delete this event? The entire event, all its data and all versions will be deleted.') ?>
         </div>
 
-        <h4><?=$event->getName()?></h4>
+        <h4><?= h($event->getName()) ?></h4>
         <?= $event->getDescription() ?>
 
         <hr/>
