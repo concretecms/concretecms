@@ -250,7 +250,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         switch ($cvID) {
             case 'ACTIVE':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ? or cvPublishDate is null) order by cvPublishDate desc limit 1';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?) order by cvPublishDate desc limit 1';
                 $v[] = $now;
                 $v[] = $now;
                 break;
@@ -360,10 +360,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         if (!$when) {
             $when = $dh->getOverridableNow();
         }
-        if ($start && $start > $now) {
+        if ($start && $start > $when) {
             return false;
         }
-        if ($end && $end < $now) {
+        if ($end && $end < $when) {
             return false;
         }
 
@@ -761,7 +761,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $masterC = $pType->getPageTypePageTemplateDefaultPageObject();
             $db->executeQuery(
                 'update Pages set cInheritPermissionsFromCID = ? where cID = ?',
-                [(int) $masterC->getCollectionID(), $c->getCollectioniD()]
+                [(int) $masterC->getCollectionID(), $c->getCollectionID()]
             );
         }
 

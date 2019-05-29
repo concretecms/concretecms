@@ -23,20 +23,6 @@ class Installer
     const DEFAULT_STARTING_POINT = 'elemental_full';
 
     /**
-     * The default database character set to be used before checking that the preferred charset is available.
-     *
-     * @var string
-     */
-    const DEFAULT_DATABASE_CHARSET = 'utf8';
-
-    /**
-     * The default database collation to be used before checking that the preferred charset is available.
-     *
-     * @var string
-     */
-    const DEFAULT_DATABASE_COLLATION = 'utf8_general_ci';
-
-    /**
      * The application instance.
      *
      * @var Application
@@ -217,10 +203,6 @@ class Installer
         $connectionParams = $connection->getParams();
         $connectionCharset = isset($connectionParams['character_set']) ? $this->characterSetCollationResolver->normalizeCharacterSet($connectionParams['character_set']) : '';
         $connectionCollation = isset($connectionParams['collation']) ? $this->characterSetCollationResolver->normalizeCollation($connectionParams['collation']) : '';
-        if ($connectionCharset !== self::DEFAULT_DATABASE_CHARSET || $connectionCollation !== self::DEFAULT_DATABASE_COLLATION) {
-            // Connection character set and collation have already been configured
-            return $connection;
-        }
         try {
             list($characterSet, $collation) = $this->characterSetCollationResolver->resolveCharacterSetAndCollation($connection);
         } catch (CharacterSetCollationException $x) {

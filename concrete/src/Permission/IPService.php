@@ -4,14 +4,25 @@ namespace Concrete\Core\Permission;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Utility\IPAddress;
 use DateTime;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory as IPFactory;
 use IPLib\Range\RangeInterface;
 
-class IPService
+class IPService implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_SECURITY;
+    }
+
     /**
      * Bit mask for blacklist ranges.
      *
@@ -160,6 +171,7 @@ class IPService
                 ',
                 [$ip->getComparableString()]
             );
+            $this->logger->notice(t('Failed login attempt recorded from IP address %s', $ip->toString(), ['ip_address' => $ip->toString()]));
         }
     }
 
@@ -224,6 +236,9 @@ class IPService
                 $expires = null;
             }
             $this->createRange(IPFactory::rangeFromBoundaries($ip, $ip), static::IPRANGETYPE_BLACKLIST_AUTOMATIC, $expires);
+            $this->logger->warning(t('IP address %s added to blacklist.', $ip->toString(), $expires), [
+                'ip_address' => $ip->toString()
+            ]);
         }
     }
 

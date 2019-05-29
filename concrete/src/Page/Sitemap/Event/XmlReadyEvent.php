@@ -41,7 +41,7 @@ class XmlReadyEvent extends GenericEvent
      */
     public function getDocument()
     {
-        return $this->element;
+        return $this->document;
     }
 
     /**

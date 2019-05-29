@@ -57,6 +57,7 @@ use Environment;
 use Group;
 use Session;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents including blocks, page metadata, page permissions.
@@ -2395,7 +2396,7 @@ EOT
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             // No passed cHandle, and there is an existing handle.
             $cHandle = $this->getCollectionHandle();
-        } elseif (!$isHomePage && !Core::make('helper/validation/strings')->notempty($data['cHandle'])) {
+        } elseif (!$isHomePage && (!isset($data['cHandle']) || !Core::make('helper/validation/strings')->notempty($data['cHandle']))) {
             // no passed cHandle, and no existing handle
             // make the handle out of the title
             $cHandle = $txt->urlify($cName);
@@ -3223,8 +3224,12 @@ EOT
 
             $children = $this->getCollectionChildren();
             if (count($children) > 0) {
+                $myCollectionID = $this->getCollectionID();
                 foreach ($children as $child) {
-                    $child->rescanCollectionPath();
+                    // Let's avoid recursion caused by potentially malformed data
+                    if ($child->getCollectionID() !== $myCollectionID) {
+                        $child->rescanCollectionPath();
+                    }
                 }
             }
         //}
@@ -3574,8 +3579,9 @@ EOT
      **/
     public static function addHomePage(TreeInterface $siteTree = null)
     {
+        $app = Application::getFacadeApplication();
         // creates the home page of the site
-        $db = Database::connection();
+        $db = $app->make(Connection::class);
 
         $cParentID = 0;
         $uID = HOME_UID;
@@ -3597,6 +3603,11 @@ EOT
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $r->execute($v);
+        if (!$siteTree->getSiteHomePageID()) {
+            $siteTree->setSiteHomePageID($cID);
+            $em = $app->make(EntityManagerInterface::class);
+            $em->flush($siteTree);
+        }
         $pc = self::getByID($cID, 'RECENT');
 
         return $pc;

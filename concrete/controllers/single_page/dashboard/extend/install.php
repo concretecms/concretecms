@@ -75,7 +75,7 @@ class Install extends DashboardPageController
                 $r = Package::uninstall($p);
                 if ($this->post('pkgMoveToTrash')) {
                     $r = $pkg->backup();
-                    if (is_object($r)) {
+                    if ($r instanceof ErrorList) {
                         $this->error->add($r);
                     }
                 }

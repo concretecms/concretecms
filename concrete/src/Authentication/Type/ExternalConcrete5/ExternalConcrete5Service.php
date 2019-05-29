@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Authentication\Type\ExternalConcrete5;
 
-use Concrete\Core\Entity\OAuth\AccessToken;
-use League\OAuth2\Server\Exception\OAuthServerException;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\Common\Http\Uri\UriInterface;
 use OAuth\OAuth2\Service\AbstractService;
@@ -12,6 +10,9 @@ use OAuth\OAuth2\Token\TokenInterface;
 
 class ExternalConcrete5Service extends AbstractService
 {
+
+    /** @var string Scope for forcing OIDC */
+    const SCOPE_OPENID= 'openid';
 
     /** @var string Scope for system info */
     const SCOPE_SYSTEM = 'system';
@@ -48,6 +49,9 @@ class ExternalConcrete5Service extends AbstractService
         $token->setAccessToken($body['access_token']);
         $token->setRefreshToken($body['refresh_token']);
         $token->setLifetime($body['expires_in']);
+
+        // Store the id_token as an "extra param"
+        $token->setExtraParams(['id_token' => $body['id_token']]);
 
         return $token;
     }

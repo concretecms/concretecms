@@ -406,18 +406,31 @@ div#ccm-panel-add-clipboard-block-list {
       cursor: pointer;
     }
 
-    img.ccm-panel-add-block-stack-item-handle,
+    .ccm-panel-add-block-stack-item-handle,
     div.block-name {
       cursor: -moz-grab;
       cursor: -webkit-grab;
       cursor: grab;
     }
 
-    img.ccm-panel-add-block-stack-item-handle {
+    .ccm-panel-add-block-stack-item-handle {
+      img {
+        position: absolute;
+        top: 15px;
+        left: 12px;
+        width: 20px;
+      }
+    }
+    .ccm-stack-expander {
       position: absolute;
-      top: 15px;
-      left: 12px;
-      width: 20px;
+      top: 1em;
+      right: 1em;
+      > i {
+        transition: all 0.4s ease;
+      }
+    }
+    &.ccm-panel-add-block-stack-item-expanded .ccm-stack-expander > i{
+      transform: rotateZ(-180deg);
     }
 
     div.blocks {

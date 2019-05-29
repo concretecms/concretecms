@@ -1,5 +1,23 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * DISPLAY PARENT PAGE OPTION
+ *
+ * If you always want to add a parent page:
+ * $controller->setIncludeParentItem(true);
+ *
+ * If you want never to add a parent page:
+ * $controller->setIncludeParentItem(false);
+ *
+ * By default, the parent page will be added if it is the home page.
+ */
+
+/**
+ * First, let's get navigation items.
+ * If you don't want to exclude any pages, you can ignore "exclude_nav" attribute by passing true.
+ * This option is useful for breadcrumbs navigation.
+ * E.g. $navItems = $controller->getNavItems(true);
+ */
 $navItems = $controller->getNavItems();
 $c = Page::getCurrentPage();
 
@@ -117,7 +135,7 @@ if (count($navItems) > 0) {
         if ($ni->hasSubmenu) {
             echo '<ul>'; //opens a dropdown sub-menu
         } else {
-            echo '</li>'; //closes a nav item" onfocus="alert('Stored XSS in SEO Name field')"  autofocus="true"
+            echo '</li>'; //closes a nav item
 
             echo str_repeat('</ul></li>', $ni->subDepth); //closes dropdown sub-menu(s) and their top-level nav item(s)
         }

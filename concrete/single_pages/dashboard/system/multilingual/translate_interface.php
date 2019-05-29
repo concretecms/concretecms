@@ -7,6 +7,7 @@ $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $valt = $app->make('helper/validation/token');
 
 if ($this->controller->getTask() == 'translate_po') {
+    /** @var string $textDirection */
     $url = Url::createFromUrl($this->controller->action('save_translation'));
     $url = $url->setQuery([
         'ccm_token' => $app->make('token')->generate('translate/save'),
@@ -22,7 +23,8 @@ if ($this->controller->getTask() == 'translate_po') {
         saveAction: <?php echo json_encode((string) $url); ?>,
         plurals: <?php echo json_encode($section->getPluralsCases()); ?>,
         translations: <?php echo json_encode($translations); ?>,
-        approvalSupport: false
+        approvalSupport: false,
+        textDirection: <?= json_encode(isset($textDirection) ? (string) $textDirection : '') ?>
       });
       var saveToFileToken = <?php echo json_encode($app->make('token')->generate('export_translations')); ?>;
       $('.ccm-save-to-file').on('click', function() {

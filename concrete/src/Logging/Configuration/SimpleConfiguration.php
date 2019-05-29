@@ -2,11 +2,18 @@
 
 namespace Concrete\Core\Logging\Configuration;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Logging\Channels;
 use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
+use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
 
-abstract class SimpleConfiguration implements ConfigurationInterface
+abstract class SimpleConfiguration implements ConfigurationInterface, ApplicationAwareInterface
 {
+
+    use ApplicationAwareTrait;
+
     /**
      * The logging level to care about for all core logs.
      *
@@ -39,6 +46,10 @@ abstract class SimpleConfiguration implements ConfigurationInterface
      */
     public function createLogger($channel)
     {
+        if (!$this->app) {
+            throw new \RuntimeException('No application instance provided.');
+        }
+
         $logger = new Logger($channel);
         $level = $this->coreLevel;
         if (!in_array($channel, Channels::getCoreChannels())) {
@@ -46,7 +57,10 @@ abstract class SimpleConfiguration implements ConfigurationInterface
         }
 
         $handler = $this->createHandler($level);
+
         $logger->pushHandler($handler);
+        $logger->pushProcessor($this->app->make(PsrLogMessageProcessor::class));
+        $logger->pushProcessor($this->app->make(Concrete5UserProcessor::class));
 
         return $logger;
     }

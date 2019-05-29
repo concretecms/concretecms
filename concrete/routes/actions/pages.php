@@ -3,6 +3,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @var $router \Concrete\Core\Routing\Router
+ * Base path: /ccm/system/page
+ * Namespace: Concrete\Controller\Backend\
  */
 $router->all('/arrange_blocks/', 'Page\ArrangeBlocks::arrange');
 $router->all('/check_in/{cID}/{token}', 'Page::exitEditMode');

@@ -25,7 +25,6 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
     {
         $token = new AccessToken();
 
-        array_map([$token, 'addScope'], $scopes);
         $token->setUserIdentifier($userIdentifier);
 
         return $token;
@@ -70,9 +69,13 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
     {
         /** @var \Concrete\Core\Entity\OAuth\AccessToken $token */
         $token = $this->find($tokenId);
-        $now = new \DateTime('now');
+        if (!$token) {
+            // The token was manually removed.
+            return true;
+        }
 
-        // If we have a token and it hasn't expired...
+        $now = new \DateTime('now');
+        // If we have a token and it has expired...
         if ($token && $token->getExpiryDateTime() < $now) {
             return true;
         }

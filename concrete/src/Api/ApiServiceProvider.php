@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Api;
 
+use Concrete\Core\Api\OAuth\Scope\ScopeRegistry;
+use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
+use Concrete\Core\Api\OAuth\Server\IdTokenResponse;
 use Concrete\Core\Api\OAuth\Validator\DefaultValidator;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
@@ -15,6 +18,7 @@ use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -22,8 +26,10 @@ use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
+use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use phpseclib\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use Zend\Http\Header\Authorization;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -47,6 +53,9 @@ class ApiServiceProvider extends ServiceProvider
             $list->loadRoutes($router);
             $this->registerAuthorizationServer();
         }
+        $this->app->singleton(ScopeRegistryInterface::class, function() {
+            return new ScopeRegistry();
+        });
     }
 
     private function repositoryFactory($factoryClass, $entityClass)
@@ -130,6 +139,10 @@ class ApiServiceProvider extends ServiceProvider
         // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
         $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getKey(self::KEY_PRIVATE));
         $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
+        $this->app->when(AuthorizationServer::class)->needs(ResponseTypeInterface::class)->give(function() {
+            return $this->app->make(IdTokenResponse::class);
+        });
+
         $this->app->extend(AuthorizationServer::class, function (AuthorizationServer $server) {
             $server->setEncryptionKey($this->app->make('config/database')->get('concrete.security.token.encryption'));
 
@@ -137,10 +150,17 @@ class ApiServiceProvider extends ServiceProvider
             $oneDayTTL = new \DateInterval('P1D');
 
 
-            // Enable client_credentials grant type with 1 hour ttl
-            $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
-            $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
+            $config = $this->app->make('config');
 
+            if ($config->get('concrete.api.grant_types.password_credentials')) {
+                $server->enableGrantType($this->app->make(PasswordGrant::class), $oneHourTTL);
+            }
+            if ($config->get('concrete.api.grant_types.client_credentials')) {
+                $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
+            }
+            if ($config->get('concrete.api.grant_types.authorization_code')) {
+                $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
+            }
             return $server;
         });
 

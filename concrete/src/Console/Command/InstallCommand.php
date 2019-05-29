@@ -281,7 +281,7 @@ EOT
                 $confirm = new Question('Would you like to install with these settings? [Y]es / [N]o / [E]dit: ', false);
                 $confirm->setValidator(function ($given) {
                     if (!$given || !preg_match('/^[yne]/i', $given)) {
-                        throw new InvalidArgumentException('Please answer either Y, N or R.');
+                        throw new InvalidArgumentException('Please answer either Y, N or E.');
                     }
 
                     return $given;
@@ -721,8 +721,8 @@ EOT
                             'database' => $options['db-database'],
                             'username' => $options['db-username'],
                             'password' => (string) $options['db-password'],
-                            'character_set' => Installer::DEFAULT_DATABASE_CHARSET,
-                            'collation' => Installer::DEFAULT_DATABASE_COLLATION,
+                            'character_set' => $config->get('database.fallback_character_set'),
+                            'collation' => $config->get('database.fallback_collation'),
                         ],
                     ],
                 ],

@@ -3887,7 +3887,7 @@
 								height: '70%',
 								modal: false,
 								title: ccmi18n_sitemap.choosePage,
-								href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+								href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/sitemap_selector'
 							});
 							ConcreteEvent.unsubscribe('SitemapSelectPage');
 							ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
@@ -6221,7 +6221,7 @@
                                 height: '70%',
                                 modal: false,
                                 title: ccmi18n_sitemap.choosePage,
-                                href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+                                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/sitemap_selector'
                             });
                             ConcreteEvent.unsubscribe('SitemapSelectPage');
                             ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {

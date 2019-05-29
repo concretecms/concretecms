@@ -7,7 +7,7 @@
     if ($service) {
         ?>
             <li>
-                <a target="_blank" href="<?php echo h($link->getURL()); ?>"
+                <a target="_blank" rel="noopener noreferrer" href="<?php echo h($link->getURL()); ?>"
                     aria-label="<?php echo $service->getDisplayName(); ?>"><?php echo $service->getServiceIconHTML(); ?></a>
             </li>
         <?php

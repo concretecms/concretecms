@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Entity\OAuth\Client; ?>
 <?php
 /**
  * @var \Concrete\Core\Entity\OAuth\Client $client
@@ -9,6 +11,9 @@ $clientSecret = isset($clientSecret) ? $clientSecret : null;
 if ($clientSecret && !password_verify($clientSecret, $client->getClientSecret())) {
     $clientSecret = null;
 }
+
+// Get the consent type from the cclient
+$consentType = $client->getConsentType();
 ?>
 
 <div class="ccm-dashboard-header-buttons">
@@ -51,6 +56,28 @@ if ($clientSecret && !password_verify($clientSecret, $client->getClientSecret())
         </div>
     </div>
 
+    <div class="form-group">
+        <label class="control-label"><?=t('User Consent Level')?></label>
+        <div class="checkbox">
+            <div class="form-check">
+                <label class="radio">
+                    <input disabled type="radio" name="consentLevel" value="<?= Client::CONSENT_SIMPLE ?>" <?= $consentType === Client::CONSENT_SIMPLE ? 'checked' : '' ?> />
+                    <?= t('Standard') ?>
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="radio">
+                    <input disabled type="radio" name="consentLevel" value="<?= Client::CONSENT_NONE ?>" <?= $consentType === Client::CONSENT_NONE ? 'checked' : '' ?> />
+                    <?= t('None') ?>
+                </label>
+            </div>
+        </div>
+
+        <div class="consent-warning alert alert-danger <?= $consentType !== Client::CONSENT_NONE ? 'hidden' : '' ?>" >
+            <?= t("Only disable user consent if you trust this integration fully. By disabling user consent, you remove the user's ability to deny access.") ?>
+        </div>
+    </div>
+
 </fieldset>
 
 <div style="display: none">
@@ -66,4 +93,3 @@ if ($clientSecret && !password_verify($clientSecret, $client->getClientSecret())
         </form>
     </div>
 </div>
-

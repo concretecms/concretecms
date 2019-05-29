@@ -33,6 +33,10 @@ if (-Not(Test-Path -PathType Leaf -Path 'C:\tools\gettext\bin\msgen.exe')) {
     Expand-Archive -Path "C:\tools\downloads\gettext$GettextVersion-iconv$IconvVersion.zip" -DestinationPath 'C:\tools\gettext' -Force
 }
 
+# Update the module used to install PowerShell modules
+Write-Host 'Updating PowerShellGet PowerShell module'
+Update-Module -Name PowerShellGet -Force
+
 # Setup VcRedist PowerShell module
 if (-Not(Get-Module -ListAvailable -Name VcRedist)) {
     Write-Host 'Installing VcRedist PowerShell module'
@@ -60,6 +64,7 @@ if (Test-Path -PathType Leaf -Path "$phpInstallPath\php-installed.txt") {
     Install-Php -Version $Env:PHP_VERSION -Architecture $Env:PHP_ARCHITECTURE -ThreadSafe $false -Path $phpInstallPath -TimeZone UTC -InitialPhpIni Production -InstallVC -Force -Verbose
     Set-PhpIniKey -Path $phpInstallPath -Key zend.assertions -Value 1
     Set-PhpIniKey -Path $phpInstallPath -Key assert.exception -Value On
+    Set-PhpIniKey -Path $phpInstallPath -Key memory_limit -Value 256M
     Enable-PhpExtension -Path $phpInstallPath -Extension mbstring,bz2,mysqli,curl,gd,intl,pdo_mysql,xsl,fileinfo,openssl,opcache
     New-Item -ItemType File -Path "$phpInstallPath\php-installed.txt" | Out-Null
 }

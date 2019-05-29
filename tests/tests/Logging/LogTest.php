@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Logging;
 
 use Cascade\Cascade;
+use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Site;
@@ -15,15 +16,19 @@ use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Illuminate\Filesystem\Filesystem;
+use Mockery as M;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Concrete\Core\Logging\LogEntry;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
@@ -52,7 +57,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $processors = $applicationLogger->getProcessors();
         $handlers = $applicationLogger->getHandlers();
         $this->assertCount(1, $handlers);
-        $this->assertCount(0, $processors);
+        $this->assertCount(2, $processors);
         $this->assertInstanceOf(DatabaseHandler::class, $handlers[0]);
         $this->assertEquals(Logger::DEBUG, $handlers[0]->getLevel());
 
@@ -110,10 +115,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertCount(5, $r);
     }
 
-
     public function testMoreVerboseDatabaseLogging()
     {
         $configuration = new SimpleDatabaseConfiguration(Logger::INFO);
+        $configuration->setApplication($this->getNoopProcessorApplication());
 
         $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -141,6 +146,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $file = __DIR__ . DIRECTORY_SEPARATOR . '/testing.log';
 
         $configuration = new SimpleFileConfiguration($file, Logger::INFO);
+        $configuration->setApplication($this->getNoopProcessorApplication());
 
         $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -162,6 +168,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $contents = $filesystem->get($file);
         $this->assertCount(4, explode("\n", trim($contents)));
         $filesystem->delete($file);
+
+        $this->assertCount(1, $logger->getHandlers());
+        $this->assertCount(2, $logger->getProcessors()); // needs to have psr processor and the concrete5 processor.
+
     }
 
     public function testLoggingFacade()
@@ -286,11 +296,55 @@ class LogTest extends ConcreteDatabaseTestCase
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
         $this->assertInstanceOf(Logger::class, $logger);
         $this->assertCount(0, $logger->getHandlers());
+        $this->assertCount(1, $logger->getProcessors()); // needs to have psr processor.
 
         $logger = $factory->createLogger('my_logger');
 
         $this->assertCount(2, $logger->getHandlers());
+        $this->assertCount(1, $logger->getProcessors());
     }
+
+    public function testAdvancedLoggingConfigurationAllChannels()
+    {
+        $config = array(
+            'formatters' => array(
+                'dashed' => array(
+                    'format' => "%datetime%-%channel%.%level_name% - %message%\n"
+                ),
+            ),
+            'handlers' => array(
+                'info_file_handler' => array(
+                    'class' => 'Monolog\Handler\StreamHandler',
+                    'level' => 'INFO',
+                    'formatter' => 'dashed',
+                    'stream' => './demo_info.log'
+                ),
+            ),
+            'loggers' => array(
+                Channels::META_CHANNEL_ALL => array(
+                    'handlers' => array('info_file_handler')
+                )
+            )
+        );
+
+        $configuration = new AdvancedConfiguration($config);
+
+        $factory = $this->getMockBuilder(ConfigurationFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory->expects($this->once())
+            ->method('createConfiguration')
+            ->willReturn($configuration);
+
+        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
+        $this->assertInstanceOf(Logger::class, $logger);
+        $this->assertCount(1, $logger->getHandlers());
+        $handlers = $logger->getHandlers();
+        $formatter = $handlers[0]->getFormatter();
+        $this->assertInstanceOf(LineFormatter::class, $formatter);
+    }
+
 
     public function testLegacyLogSupport()
     {
@@ -316,6 +370,22 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals($le3->getLevel(), Logger::NOTICE);
         $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
         $this->assertEquals($le2->getMessage(), 'OMG!');
+    }
+
+    /**
+     * Build an application mock that returns noop processors
+     *
+     * @return M\MockInterface|Application
+     */
+    protected function getNoopProcessorApplication()
+    {
+        $noop = function($data) { return $data; };
+
+        $app = M::mock(Application::class);
+        $app->shouldReceive('make')->withArgs([Concrete5UserProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([PsrLogMessageProcessor::class])->andReturn($noop);
+
+        return $app;
     }
 
 

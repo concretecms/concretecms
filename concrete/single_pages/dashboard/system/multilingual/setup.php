@@ -207,6 +207,20 @@ foreach ($locales as $locale) {
         </form>
     </div>
 </div>
+
+<?php
+if (isset($mlLink)) {
+    ?>
+    <div class="alert alert-info small">
+        <?= t(
+            'You can configure the user languages in the %s dashboard page.',
+            sprintf('<a href="%s">%s</a>', h($mlLink[1]), h($mlLink[0]))
+        ) ?>
+    </div>
+    <?php
+}
+?>
+
 <script>
 $(document).ready(function() {
     'use strict';

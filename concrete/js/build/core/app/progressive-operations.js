@@ -36,8 +36,13 @@
     				});
     				$("#ccm-dialog-progress-bar").jqdialog('open');
     				*/
-    				var $bar = $(r);
-    				totalItems = $bar.find('[data-total-items]').attr('data-total-items');
+    				try {
+    					totalItems = $.parseJSON(r).totalItems;
+    				} catch (e) {
+    				}
+    				if (typeof totalItems === 'undefined') {
+    					totalItems = $(r).find('[data-total-items]').attr('data-total-items');
+    				}    					
     				var pnotify = new PNotify({
     					text: '<div data-total-items="' + totalItems + '"><span id="ccm-progressive-operation-status">1</span> of ' + totalItems + '</div>',
     					hide: false,

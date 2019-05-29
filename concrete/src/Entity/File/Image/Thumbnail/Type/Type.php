@@ -146,6 +146,15 @@ class Type
     protected $ftKeepAnimations = false;
 
     /**
+     * Background color of the Image Editor save area
+     *
+     * @ORM\Column(type="string", nullable=false)
+     *
+     * @var string
+     */
+    protected $ftSaveAreaBackgroundColor = '';
+
+    /**
      * Initialize the instance.
      */
     public function __construct()
@@ -408,6 +417,30 @@ class Type
     }
 
     /**
+     * Background color of the Image Editor save area
+     *
+     * @param string $color
+     *
+     * @return $this
+     */
+    public function setSaveAreaBackgroundColor($color)
+    {
+        $this->ftSaveAreaBackgroundColor = $color;
+
+        return $this;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @return string
+     */
+    public function getSaveAreaBackgroundColor()
+    {
+        return $this->ftSaveAreaBackgroundColor;
+    }
+
+    /**
      * Save this instance to the database.
      */
     public function save()
@@ -475,6 +508,6 @@ class Type
             }
         }
 
-        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs, $this->isUpscalingEnabled(), $this->isKeepAnimations());
+        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs, $this->isUpscalingEnabled(), $this->isKeepAnimations(), $this->getSaveAreaBackgroundColor());
     }
 }

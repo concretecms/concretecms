@@ -10,6 +10,7 @@ use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\RefreshTokenRepository;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Utility\Service\Validation\Strings;
+use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -38,7 +39,7 @@ class Integrations extends DashboardPageController
         if ($validator->notempty($redirect)) {
             try {
                 $uri = Url::createFromUrl($redirect);
-    
+
                 // Do some simple validation
                 if (!$uri->getHost() || !$uri->getScheme()) {
                     throw new \RuntimeException('Invalid URI');
@@ -81,6 +82,19 @@ class Integrations extends DashboardPageController
             $client = $this->get('client');
             $client->setName($this->request->request->get('name'));
             $client->setRedirectUri((string) $this->request->request->get('redirect'));
+
+            try {
+                $requestConsentType = $this->request->request->get('consentType');
+                if (!is_numeric($requestConsentType)) {
+                    $requestConsentType = Client::CONSENT_SIMPLE;
+                }
+
+                // Try setting the consent type
+                $client->setConsentType((int) $requestConsentType);
+            } catch (InvalidArgumentException $e) {
+                // Default to simple consent
+                $client->setConsentType(Client::CONSENT_SIMPLE);
+            }
 
             $this->entityManager->persist($client);
             $this->entityManager->flush();

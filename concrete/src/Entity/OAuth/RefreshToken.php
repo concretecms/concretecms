@@ -67,6 +67,7 @@ class RefreshToken implements RefreshTokenEntityInterface
      * {@inheritdoc}
      *
      * @see \League\OAuth2\Server\Entities\RefreshTokenEntityInterface::getAccessToken()
+     * @return \Concrete\Core\Entity\OAuth\AccessToken
      */
     public function getAccessToken()
     {
