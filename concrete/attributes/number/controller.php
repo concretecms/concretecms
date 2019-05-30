@@ -20,9 +20,16 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return new FontAwesomeIconFormatter('hashtag');
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see \Concrete\Core\Attribute\AttributeInterface::getDisplayValue()
+     */
     public function getDisplayValue()
     {
-        return (float) ($this->attributeValue->getValue());
+        $value = $this->attributeValue->getValue();
+
+        return $value === null ? '' : (float) $value;
     }
 
     public function getAttributeValueClass()
