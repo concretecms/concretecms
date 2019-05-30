@@ -812,6 +812,9 @@ return [
             'cookie_secure' => false,
             'cookie_httponly' => true,
         ],
+        'remember_me' => [
+            'lifetime' => 1209600, // 2 weeks in seconds
+        ]
     ],
 
     /*
