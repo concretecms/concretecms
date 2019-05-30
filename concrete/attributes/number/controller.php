@@ -80,7 +80,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
-        $value = ($value == false || $value == '0') ? 0 : $value;
         $av->setValue($value);
 
         return $av;
