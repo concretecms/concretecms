@@ -20,6 +20,15 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
 
 /*
  * ----------------------------------------------------------------------------
+ * Check for loadbalanced solutions and add the https flag.
+ * ----------------------------------------------------------------------------
+ */
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
+/*
+ * ----------------------------------------------------------------------------
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
  */
