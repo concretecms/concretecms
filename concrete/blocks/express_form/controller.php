@@ -142,6 +142,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return $config->get('concrete.form.store_form_submissions');
     }
 
+
     public function getNotifications()
     {
         $notifications = [new FormBlockSubmissionEmailNotification($this->app, $this)];
@@ -518,7 +519,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         } else {
             //when block is edited from core_scrapbook_display (copied block)
             if (isset($data['submit_form_scrapbook_display'])) {
-                $this->exFormID = $this->duplicateEntityExpress(false,true);
+                $this->exFormID = $this->duplicateEntityExpress(false, true);
                 unset($data['submit_form_scrapbook_display']);
             }
 
@@ -553,13 +554,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         $duplicatedControlsMapping = (array)$session->get('express_entity.duplicate.controls_mapping');
-        foreach ($duplicatedControlsMapping as  $idControlSession=>$newIdControlSession){
-            foreach ($requestControls as $key => $requestControl){
-                if ($requestControl == $idControlSession){
+        foreach ($duplicatedControlsMapping as  $idControlSession=>$newIdControlSession) {
+            foreach ($requestControls as $key => $requestControl) {
+                if ($requestControl == $idControlSession) {
                     $requestControls[$key] = $newIdControlSession;
                 }
             }
-            if (isset($sessionControls[$idControlSession])){
+            if (isset($sessionControls[$idControlSession])) {
                 $sessionControls[$newIdControlSession] = $sessionControls[$idControlSession];
                 unset($sessionControls[$idControlSession]);
             }
@@ -921,7 +922,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $objectManager=$this->app->make('express');
         if (is_object($form)) {
             $entity = $form->getEntity();
-            $duplicatedEntity = $objectManager->duplicateObject($entity,$saveInSessionDuplicatedControlsMapping);
+            $duplicatedEntity = $objectManager->duplicateObject($entity, $saveInSessionDuplicatedControlsMapping);
             foreach ($duplicatedEntity->getForms() as $f) {
                 if ($form->getName()==$f->getName()) {
                     $this->exFormID=$f->getId();
@@ -936,5 +937,4 @@ class Controller extends BlockController implements NotificationProviderInterfac
             }
         }
     }
-
 }
