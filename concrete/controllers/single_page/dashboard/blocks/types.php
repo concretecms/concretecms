@@ -105,6 +105,9 @@ EOT
             } catch (UserMessageException $e) {
                 $this->flash('error', $e->getMessage());
             }
+            catch (\Doctrine\DBAL\Schema\SchemaException $e) {
+                $this->flash('error', $e->getMessage());
+            }
         } else {
             $this->flash('error', $this->token->getErrorMessage());
         }
