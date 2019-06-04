@@ -13,6 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string[] $trustedHeaders
  * @var array[] $requestForwardedHeaders
  * @var Concrete\Core\Http\Request $request
+ * @var IPLib\Address\AddressInterface|null $currentProxyIP
  */
 ?>
 <form method="post" action="<?= $view->action('save') ?>">
@@ -105,6 +106,16 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <dd><?= h($request->getPort()) ?></dd>
             <dt><?= t('Client IP') ?></dt>
             <dd><?= h($request->getClientIp()) ?></dd>
+            <dt><?= t('Using Proxy') ?></dt>
+            <dd><?= $currentProxyIP === null ? t('No') : t('Yes') ?></dd>
+            <?php
+            if ($currentProxyIP !== null) {
+                ?>
+                <dt><?= t('Proxy IP') ?></dt>
+                <dd><?= h((string) $currentProxyIP) ?></dd>
+                <?php
+            }
+            ?>
         </dl>
     </div>
 

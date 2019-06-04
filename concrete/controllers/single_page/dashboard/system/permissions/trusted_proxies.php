@@ -47,6 +47,15 @@ class TrustedProxies extends DashboardPageController
         $this->set('trustedHeaders', $this->getTrustedHeaderNames());
         $this->set('requestForwardedHeaders', $this->getRequestForwardedHeaders());
         $this->set('request', $this->request);
+        $currentProxyIP = null;
+        if ($this->request->isFromTrustedProxy()) {
+            $clientIP = Factory::addressFromString($this->request->getClientIp());
+            $rawClientIP  = Factory::addressFromString($this->request->server->get('REMOTE_ADDR'));
+            if ((string) $clientIP !== (string) $rawClientIP) {
+                $currentProxyIP = $rawClientIP;
+            }
+        }
+        $this->set('currentProxyIP', $currentProxyIP); 
     }
 
     public function save()
