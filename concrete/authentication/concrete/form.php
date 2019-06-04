@@ -16,14 +16,14 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 		<input name="uPassword" id="uPassword" class="form-control" type="password" />
 	</div>
 
-    <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) : ?>
+    <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) { ?>
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="uMaintainLogin" value="1">
                 <?php echo t('Stay signed in for %s', $dh->describeInterval(Config::get('concrete.session.remember_me.lifetime'))); ?>
             </label>
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
 	<?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
     ?>
