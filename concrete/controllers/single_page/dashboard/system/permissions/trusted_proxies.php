@@ -50,12 +50,12 @@ class TrustedProxies extends DashboardPageController
         $currentProxyIP = null;
         if ($this->request->isFromTrustedProxy()) {
             $clientIP = Factory::addressFromString($this->request->getClientIp());
-            $rawClientIP  = Factory::addressFromString($this->request->server->get('REMOTE_ADDR'));
+            $rawClientIP = Factory::addressFromString($this->request->server->get('REMOTE_ADDR'));
             if ((string) $clientIP !== (string) $rawClientIP) {
                 $currentProxyIP = $rawClientIP;
             }
         }
-        $this->set('currentProxyIP', $currentProxyIP); 
+        $this->set('currentProxyIP', $currentProxyIP);
     }
 
     public function save()
@@ -158,6 +158,22 @@ class TrustedProxies extends DashboardPageController
     }
 
     /**
+     * Get the map from the Symfony header bits to the header names.
+     *
+     * @return array
+     */
+    protected function getLegacySymfonyHeadersMap()
+    {
+        return [
+            'forwarded' => static::HEADERNAME_FORWARDED,
+            'client_ip' => static::HEADERNAME_X_FORWARDED_FOR,
+            'client_host' => static::HEADERNAME_X_FORWARDED_HOST,
+            'client_proto' => static::HEADERNAME_X_FORWARDED_PROTO,
+            'client_port' => static::HEADERNAME_X_FORWARDED_PORT,
+        ];
+    }
+
+    /**
      * Get the currently configured trusted header names.
      *
      * @return string[]
@@ -165,11 +181,21 @@ class TrustedProxies extends DashboardPageController
     protected function getTrustedHeaderNames()
     {
         $result = [];
-        $flags = (int) $this->app->make('config')->get('concrete.security.trusted_proxies.headers');
-        $map = $this->getSymfonyHeadersMap();
-        foreach ($map as $headerFlag => $headerName) {
-            if ((int) $headerFlag & $flags) {
-                $result[] = $headerName;
+        $headers = $this->app->make('config')->get('concrete.security.trusted_proxies.headers');
+        if (is_array($headers)) {
+            $map = $this->getLegacySymfonyHeadersMap();
+            foreach ($map as $legacyHeaderName => $headerName) {
+                if (in_array($legacyHeaderName, $headers, true)) {
+                    $result[] = $headerName;
+                }
+            }
+        } else {
+            $flags = (int) $headers;
+            $map = $this->getSymfonyHeadersMap();
+            foreach ($map as $headerFlag => $headerName) {
+                if ((int) $headerFlag & $flags) {
+                    $result[] = $headerName;
+                }
             }
         }
 
