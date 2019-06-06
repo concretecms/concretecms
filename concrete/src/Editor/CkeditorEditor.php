@@ -304,7 +304,7 @@ EOL;
         $this->config->save('editor.concrete.enable_filemanager', (bool) $request->request->get('enable_filemanager'));
         $this->config->save('editor.concrete.enable_sitemap', (bool) $request->request->get('enable_sitemap'));
 
-        $selected = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
+        $selected = (array) $this->config->get('editor.ckeditor4.plugins.selected_hidden', []);
         $post = $request->request->get('plugin');
         if (is_array($post)) {
             $selected = array_merge($selected, $post);
