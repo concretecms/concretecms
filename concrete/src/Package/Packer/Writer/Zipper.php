@@ -51,8 +51,8 @@ class Zipper implements WriterInterface
      *
      * @param string $zipFilename the absolute path to the ZIP archive to be created
      * @param string $rootDirectory the root directory inside the ZIP archive (empty string to not create a main directory inside the ZIP archive)
-     * @param Filesystem $fs
-     * @param OutputInterface $output
+     * @param \Illuminate\Filesystem\Filesystem $fs
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     public function __construct($zipFilename, $rootDirectory, OutputInterface $output, Filesystem $fs)
     {
