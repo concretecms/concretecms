@@ -1,5 +1,4 @@
 <?php
-use Punic\Misc;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
