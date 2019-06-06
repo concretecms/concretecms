@@ -2,11 +2,19 @@
 
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Command;
+use Concrete\Core\File\Service\VolatileDirectory;
+use Concrete\Core\Package\Offline\Inspector;
+use Concrete\Core\Package\Offline\PackageInfo;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Package\Packer\Filter\FileExcluder;
+use Concrete\Core\Package\Packer\Filter\ShortTagExpander;
+use Concrete\Core\Package\Packer\Filter\SvgIconRasterizer;
+use Concrete\Core\Package\Packer\Filter\TranslationCompiler;
 use Concrete\Core\Package\Packer\PackagePacker;
-use Concrete\Core\Package\Packer\PackagePackerOptions;
+use Concrete\Core\Package\Packer\Writer\SourceUpdater;
+use Concrete\Core\Package\Packer\Writer\Zipper;
 use Concrete\Core\Utility\Service\Validation\Strings as StringsValidator;
 use Exception;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,48 +22,120 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class PackPackageCommand extends Command
 {
-    const PACKAGEFORMAT_LEGACY = 'legacy';
-    const PACKAGEFORMAT_CURRENT = 'current';
+    /**
+     * Convert all short PHP tags to long PHP tags (including short echo tags).
+     *
+     * @var string
+     */
+    const SHORTTAGS_ALL = 'all';
 
     /**
-     * @deprecated use the PackagePackerOptions::CONVERTSHORTTAGS_... constants
+     * Convert short PHP tags to long PHP tags (excluding short echo tags).
+     *
+     * @var string
      */
-    const SHORTTAGS_ALL = PackagePackerOptions::CONVERTSHORTTAGS_ALL;
-    /**
-     * @deprecated use the PackagePackerOptions::CONVERTSHORTTAGS_... constants
-     */
-    const SHORTTAGS_KEEPECHO = PackagePackerOptions::CONVERTSHORTTAGS_KEEPECHO;
-    /**
-     * @deprecated use the PackagePackerOptions::CONVERTSHORTTAGS_... constants
-     */
-    const SHORTTAGS_NO = PackagePackerOptions::CONVERTSHORTTAGS_NO;
+    const SHORTTAGS_KEEPECHO = 'keep-echo';
 
+    /**
+     * Use SHORTTAGS_ALL for concrete5 5.x packages, SHORTTAGS_KEEPECHO for concrete5 8+ packages.
+     *
+     * @var string
+     */
+    const SHORTTAGS_AUTO = 'auto';
+
+    /**
+     * Do not convert any short PHP tags.
+     *
+     * @var string
+     */
+    const SHORTTAGS_NO = 'no';
+
+    /**
+     * Keep files starting with a dot.
+     *
+     * @var string
+     */
     const KEEP_DOT = 'dot';
+
+    /**
+     * Keep translation .po files and icon source .svg files.
+     *
+     * @var string
+     */
     const KEEP_SOURCES = 'sources';
+
+    /**
+     * Keep composer.json files.
+     *
+     * @var string
+     */
     const KEEP_COMPOSER_JSON = 'composer-json';
+
+    /**
+     * Keep composer.json and composer.lock files.
+     *
+     * @var string
+     */
     const KEEP_COMPOSER_LOCK = 'composer-lock';
 
+    /**
+     * Option for boolean/automatic flags: yes.
+     *
+     * @var string
+     */
     const YNA_YES = 'yes';
+
+    /**
+     * Option for boolean/automatic flags: automatic.
+     *
+     * @var string
+     */
     const YNA_AUTO = 'auto';
+
+    /**
+     * Option for boolean/automatic flags: no.
+     *
+     * @var string
+     */
     const YNA_NO = 'no';
 
+    /**
+     * Value of the zip option to be used to automatically determine the .zip file name.
+     *
+     * @var string
+     */
     const ZIPOUT_AUTO = '-';
 
-    public function handle(PackagePacker $packer, StringsValidator $stringsValidator, PackageService $packageService)
+    /**
+     * Execute the command.
+     *
+     * @param \Concrete\Core\Application\Application $app
+     * @param \Concrete\Core\Package\Offline\Inspector $packageInspector
+     * @param \Concrete\Core\Package\Packer\PackagePacker $packer
+     * @param \Concrete\Core\Utility\Service\Validation\Strings $stringsValidator
+     * @param \Concrete\Core\Package\PackageService $packageService
+     */
+    public function handle(Application $app, Inspector $packageInspector, PackagePacker $packer, StringsValidator $stringsValidator, PackageService $packageService)
     {
-        $options = $this->parseInputOptions();
-        $packageDirectory = $this->parseInputArgument($stringsValidator, $packageService);
-        $packer->process($packageDirectory, $options);
+        $packageInfo = $this->parseInputArgument($packageInspector, $stringsValidator, $packageService);
+        $filters = $this->createFilters($app, $packageInfo);
+        $writers = $this->createWriters($app, $packageInfo);
+        $packer->process($packageInfo, $filters, $writers);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Symfony\Component\Console\Command\Command::configure()
+     */
     protected function configure()
     {
-        $zipAuto = static::ZIPOUT_AUTO;
-        $keepDot = static::KEEP_DOT;
-        $keepSources = static::KEEP_SOURCES;
-        $keepComposerJson = static::KEEP_COMPOSER_JSON;
-        $keepComposerLock = static::KEEP_COMPOSER_LOCK;
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $zipAuto = self::ZIPOUT_AUTO;
+        $keepDot = self::KEEP_DOT;
+        $keepSources = self::KEEP_SOURCES;
+        $keepComposerJson = self::KEEP_COMPOSER_JSON;
+        $keepComposerLock = self::KEEP_COMPOSER_LOCK;
+        $errExitCode = self::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:package:pack')
             ->setAliases([
@@ -65,12 +145,12 @@ final class PackPackageCommand extends Command
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a concrete5 package)')
             ->addEnvOption()
-            ->addOption('short-tags', 's', InputOption::VALUE_REQUIRED, 'Expand PHP short tags [' . PackagePackerOptions::CONVERTSHORTTAGS_ALL . '|' . PackagePackerOptions::CONVERTSHORTTAGS_KEEPECHO . '|' . PackagePackerOptions::CONVERTSHORTTAGS_NO . '|' . PackagePackerOptions::CONVERTSHORTTAGS_AUTO . ']', PackagePackerOptions::CONVERTSHORTTAGS_AUTO)
-            ->addOption('compile-icons', 'i', InputOption::VALUE_REQUIRED, 'Compile SVG icons to PNG icons [' . static::YNA_YES . '|' . static::YNA_NO . '|' . static::YNA_AUTO . ']?', static::YNA_AUTO)
-            ->addOption('compile-translations', 't', InputOption::VALUE_REQUIRED, 'Compile source .po translation files to the .mo binary format [' . static::YNA_YES . '|' . static::YNA_NO . '|' . static::YNA_AUTO . ']?', static::YNA_AUTO)
-            ->addOption('keep', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Which files should be stored in the zip archive [' . static::KEEP_DOT . '|' . static::KEEP_SOURCES . '|' . static::KEEP_COMPOSER_JSON . '|' . static::KEEP_COMPOSER_LOCK . ']')
+            ->addOption('short-tags', 's', InputOption::VALUE_REQUIRED, 'Expand PHP short tags [' . self::SHORTTAGS_ALL . '|' . self::SHORTTAGS_KEEPECHO . '|' . self::SHORTTAGS_NO . '|' . self::SHORTTAGS_AUTO . ']', self::SHORTTAGS_AUTO)
+            ->addOption('compile-icons', 'i', InputOption::VALUE_REQUIRED, 'Compile SVG icons to PNG icons [' . self::YNA_YES . '|' . self::YNA_NO . '|' . self::YNA_AUTO . ']?', self::YNA_AUTO)
+            ->addOption('compile-translations', 't', InputOption::VALUE_REQUIRED, 'Compile source .po translation files to the .mo binary format [' . self::YNA_YES . '|' . self::YNA_NO . '|' . self::YNA_AUTO . ']?', self::YNA_AUTO)
+            ->addOption('keep', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Which files should be stored in the zip archive [' . self::KEEP_DOT . '|' . self::KEEP_SOURCES . '|' . self::KEEP_COMPOSER_JSON . '|' . self::KEEP_COMPOSER_LOCK . ']')
             ->addOption('update-source-directory', 'u', InputOption::VALUE_NONE, 'Update the files of the source directory (otherwise it remains untouched)')
-            ->addOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Create a zip archive of the package (and optionally set its path)', static::ZIPOUT_AUTO)
+            ->addOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Create a zip archive of the package (and optionally set its path)', self::ZIPOUT_AUTO)
             ->setHelp(<<<EOT
 You have to specify at least the -z option (to create a zip file) and/or the -u option (to update the package directory).
 
@@ -97,92 +177,137 @@ EOT
     }
 
     /**
-     * Convert the command-line options to a PackagePackerOptions instance.
+     * Get the package details analyzing the command-line arguments.
      *
-     * @throws \Exception in case of invalid command line options
-     *
-     * @return \Concrete\Core\Package\Packer\PackagePackerOptions
-     */
-    protected function parseInputOptions()
-    {
-        $keepMap = [
-            static::KEEP_DOT => FileExcluder::KEEPFILES_DOT,
-            static::KEEP_SOURCES => FileExcluder::KEEPFILES_POT | FileExcluder::KEEPFILES_PO | FileExcluder::KEEPFILES_SVGICON,
-            static::KEEP_COMPOSER_JSON => FileExcluder::KEEPFILES_COMPOSER_JSON,
-            static::KEEP_COMPOSER_LOCK => FileExcluder::KEEPFILES_COMPOSER_LOCK,
-        ];
-        $ynaMap = [
-            static::YNA_YES => true,
-            static::YNA_NO => false,
-            static::YNA_AUTO => null,
-        ];
-        if (!array_key_exists($this->input->getOption('compile-icons'), $ynaMap)) {
-            throw new Exception('Invalid value of the --compile-icons option');
-        }
-        if (!array_key_exists($this->input->getOption('compile-translations'), $ynaMap)) {
-            throw new Exception('Invalid value of the --compile-translations option');
-        }
-
-        $result = PackagePackerOptions::create()
-            ->setOutput($this->output)
-            ->setShortTagsConversion($this->input->getOption('short-tags'))
-            ->setCompileIcons($ynaMap[$this->input->getOption('compile-icons')])
-            ->setCompileTranslations($ynaMap[$this->input->getOption('compile-translations')])
-            ->setKeepFiles(FileExcluder::KEEPFILES_NONE)
-            ->setUpdateSourceFiles($this->input->getOption('update-source-directory'))
-        ;
-        foreach ($this->input->getOption('keep') as $keep) {
-            if (!isset($keepMap[$keep])) {
-                throw new Exception('Invalid value of the --keep option: ' . $keep);
-            }
-            $result->setKeepFiles($result->getKeepFiles() | $keepMap[$keep]);
-        }
-        $zipOption = $this->input->getOption('zip');
-        if ($zipOption === static::ZIPOUT_AUTO) {
-            if ($this->input->getParameterOption(['--zip', '-z']) === false) {
-                $result->setDestinationArchivePath('');
-            } else {
-                $result->setDestinationArchivePathAutomatic();
-            }
-        } elseif ($zipOption === null) {
-            $result->setDestinationArchivePathAutomatic();
-        } else {
-            $result->setDestinationArchivePath($zipOption);
-        }
-        if ($result->isUpdateSourceFiles() === false && $result->isDestinationArchivePathAutomatic() === false && $result->getDestinationArchivePath() === '') {
-            throw new Exception('No operation will be performed: neither a zip archive will be created nor the source directory will be updated');
-        }
-
-        return $result;
-    }
-
-    /**
-     * Convert the command-line argument to the path of the package.
-     *
+     * @param \Concrete\Core\Package\Offline\Inspector $packageInspector
      * @param \Concrete\Core\Utility\Service\Validation\Strings $stringsValidator
      * @param \Concrete\Core\Package\PackageService $packageService
      *
      * @throws \Exception in case of invalid command line arguments
      *
-     * @return string
+     * @return \Concrete\Core\Package\Offline\PackageInfo
      */
-    protected function parseInputArgument(StringsValidator $stringsValidator, PackageService $packageService)
+    protected function parseInputArgument(Inspector $packageInspector, StringsValidator $stringsValidator, PackageService $packageService)
     {
         $packageArgument = $this->input->getArgument('package');
         if (is_dir($packageArgument) && !$stringsValidator->handle($packageArgument)) {
-            return $packageArgument;
+            return $packageInspector->inspectPackageDirectory($packageArgument);
         }
-        $package = null;
-        foreach ($packageService->getAvailablePackages(false) as $p) {
-            if (strcasecmp($packageArgument, $p->getPackageHandle()) === 0) {
-                $package = $p;
-                break;
+        foreach ($packageService->getAvailablePackages(false) as $package) {
+            if (strcasecmp($packageArgument, $package->getPackageHandle()) === 0) {
+                return $packageInspector->inspectPackageDirectory($package->getPackagePath());
             }
         }
-        if ($package === null) {
-            throw new Exception("Unable to find a package with handle '{$packageArgument}'");
+        throw new Exception("Unable to find a package with handle '{$packageArgument}'");
+    }
+
+    /**
+     * Generate the filters analyzing the command-line options.
+     *
+     * @param \Concrete\Core\Application\Application $app
+     * @param \Concrete\Core\Package\Offline\PackageInfo the package info for which the options should be related to
+     * @param PackageInfo $packageInfo
+     *
+     * @throws \Exception in case of invalid command line options
+     *
+     * @return \Concrete\Core\Package\Packer\Filter\FilterInterface[]
+     */
+    protected function createFilters(Application $app, PackageInfo $packageInfo)
+    {
+        $volatileDirectory = $app->make(VolatileDirectory::class);
+        $filters = [];
+        switch ($this->input->getOption('compile-icons')) {
+            case self::YNA_YES:
+                $filters[] = $app->make(SvgIconRasterizer::class, [$packageInfo->getMayorMinimumCoreVersion(), false, $this->output, $volatileDirectory]);
+                break;
+            case self::YNA_AUTO:
+                $filters[] = $app->make(SvgIconRasterizer::class, [$packageInfo->getMayorMinimumCoreVersion(), true, $this->output, $volatileDirectory]);
+                break;
+            case self::YNA_NO:
+                break;
+            default:
+                throw new Exception('Invalid value of the --compile-icons option');
+        }
+        switch ($this->input->getOption('compile-translations')) {
+            case self::YNA_YES:
+                $filters[] = $app->make(TranslationCompiler::class, [false, $this->output, $volatileDirectory]);
+                break;
+            case self::YNA_AUTO:
+                $filters[] = $app->make(TranslationCompiler::class, [true, $this->output, $volatileDirectory]);
+                break;
+            case self::YNA_NO:
+                break;
+            default:
+                throw new Exception('Invalid value of the --compile-icons option');
+        }
+        $shortTags = $this->input->getOption('short-tags');
+        if ($shortTags === self::SHORTTAGS_AUTO) {
+            $shortTags = version_compare($packageInfo->getMayorMinimumCoreVersion(), '8') < 0 ? self::SHORTTAGS_ALL : self::SHORTTAGS_KEEPECHO;
+        }
+        switch ($shortTags) {
+            case self::SHORTTAGS_ALL:
+                $filters[] = $app->make(ShortTagExpander::class, [true, $this->output, $volatileDirectory]);
+                break;
+            case self::SHORTTAGS_KEEPECHO:
+                $filters[] = $app->make(ShortTagExpander::class, [false, $this->output, $volatileDirectory]);
+                break;
+            case self::SHORTTAGS_NO:
+                break;
+            default:
+                throw new Exception('Invalid value of the --short-tags option');
+        }
+        $keepMap = [
+            self::KEEP_DOT => FileExcluder::EXCLUDE_DOT,
+            self::KEEP_SOURCES => FileExcluder::EXCLUDE_POT | FileExcluder::EXCLUDE_PO | FileExcluder::EXCLUDE_SVGICON,
+            self::KEEP_COMPOSER_JSON => FileExcluder::EXCLUDE_COMPOSER_JSON,
+            self::KEEP_COMPOSER_LOCK => FileExcluder::EXCLUDE_COMPOSER_LOCK,
+        ];
+        $keepOptions = $this->input->getOption('keep');
+        $invalidOptions = array_diff($keepOptions, array_keys($keepMap));
+        if (count($invalidOptions) !== 0) {
+            throw new Exception('Invalid values of the --keep option: ' . implode(', ', $invalidOptions));
+        }
+        $excludeFlags = FileExcluder::EXCLUDE_NONE;
+        foreach ($keepMap as $keepOption => $keepOptionFlags) {
+            if (!in_array($keepOption, $keepOptions, true)) {
+                $excludeFlags |= $keepOptionFlags;
+            }
+        }
+        $filters[] = $app->make(FileExcluder::class, [$excludeFlags, $this->output]);
+
+        return $filters;
+    }
+
+    /**
+     * Generate the writers analyzing the command-line options.
+     *
+     * @param \Concrete\Core\Application\Application $app
+     * @param \Concrete\Core\Package\Offline\PackageInfo the package info for which the options should be related to
+     * @param PackageInfo $packageInfo
+     *
+     * @throws \Exception in case of invalid command line options
+     *
+     * @return \Concrete\Core\Package\Packer\Writer\WriterInterface[]
+     */
+    protected function createWriters(Application $app, PackageInfo $packageInfo)
+    {
+        $writers = [];
+        if ($this->input->getOption('update-source-directory')) {
+            $writers[] = $app->make(SourceUpdater::class, [$packageInfo->getPackageDirectory(), $this->output]);
+        }
+        if ($this->input->getParameterOption(['--zip', '-z']) !== false) {
+            $zipOption = (string) $this->input->getOption('zip');
+            if ($zipOption === '' || $zipOption === self::ZIPOUT_AUTO) {
+                $zipFilename = dirname($packageInfo->getPackageDirectory()) . '/' . $packageInfo->getHandle() . '-' . $packageInfo->getVersion() . '.zip';
+            } else {
+                $zipFilename = $zipOption;
+            }
+            $writers[] = $app->make(Zipper::class, [$zipFilename, $packageInfo->getHandle(), $this->output]);
+        }
+        if (empty($writers)) {
+            throw new Exception('No operation will be performed: neither a zip archive will be created nor the source directory will be updated');
         }
 
-        return $package->getPackagePath();
+        return $writers;
     }
 }

@@ -145,11 +145,11 @@ class OfflineInspectorTest extends PHPUnit_Framework_TestCase
             [false, Exception::ERRORCODE_BADPARAM],
         ];
     }
-    
+
     /**
      * @dataProvider invalidPackagesByContentProvider
      *
-     * @param string $filename
+     * @param string $content
      * @param int $expectedExceptionCode
      */
     public function testInvalidPackagesByContent($content, $expectedExceptionCode)

@@ -3,10 +3,17 @@
 namespace Concrete\Core\Package\Offline;
 
 /**
- * Represents package informations extracted from a package controller.php file.
+ * Represents the package details extracted from a package controller.php file.
  */
 class PackageInfo
 {
+    /**
+     * The package directory (normalized, without trailing slashes).
+     *
+     * @var string
+     */
+    private $packageDirectory = '';
+
     /**
      * The package handle.
      *
@@ -50,6 +57,30 @@ class PackageInfo
     public static function create()
     {
         return new static();
+    }
+
+    /**
+     * Get the package directory (normalized, without trailing slashes).
+     *
+     * @return string
+     */
+    public function getPackageDirectory()
+    {
+        return $this->packageDirectory;
+    }
+
+    /**
+     * Set the package directory.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setPackageDirectory($value)
+    {
+        $this->packageDirectory = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', (string) $value), '/');
+
+        return $this;
     }
 
     /**
@@ -159,20 +190,6 @@ class PackageInfo
     }
 
     /**
-     * Set the minimum concrete5 version.
-     *
-     * @param string $value
-     *
-     * @return $this
-     */
-    public function setMinimumCoreVersion($value)
-    {
-        $this->minimumCoreVersion = $value;
-
-        return $this;
-    }
-
-    /**
      * Get the mayor minimum concrete5 version.
      *
      * @return string
@@ -188,5 +205,19 @@ class PackageInfo
         $chunks = array_merge(explode('.', $this->getMinimumCoreVersion()), ['0', '0']);
 
         return (int) $chunks[0] === 5 ? "{$chunks[0]}.{$chunks[1]}" : $chunks[0];
+    }
+
+    /**
+     * Set the minimum concrete5 version.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setMinimumCoreVersion($value)
+    {
+        $this->minimumCoreVersion = $value;
+
+        return $this;
     }
 }

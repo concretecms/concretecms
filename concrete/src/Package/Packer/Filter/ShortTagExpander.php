@@ -8,9 +8,14 @@ use Concrete\Core\Support\ShortTagExpander as Expander;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Expand the short PHP open tags (and optionally the short PHP echo tags).
+ */
 class ShortTagExpander implements FilterInterface
 {
     /**
+     * Should the short PHP echo tags be expanded too?
+     *
      * @var bool
      */
     protected $expandEcho;
@@ -36,7 +41,9 @@ class ShortTagExpander implements FilterInterface
     protected $fs;
 
     /**
-     * @param bool $expandEcho
+     * Initialize the instance.
+     *
+     * @param bool $expandEcho set to tru to expand also short PHP echo tags
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param \Concrete\Core\File\Service\VolatileDirectory $volatileDirectory
      * @param \Concrete\Core\Support\ShortTagExpander $expander
@@ -44,7 +51,7 @@ class ShortTagExpander implements FilterInterface
      */
     public function __construct($expandEcho, OutputInterface $output, VolatileDirectory $volatileDirectory, Expander $expander, Filesystem $fs)
     {
-        $this->expandEcho = $expandEcho;
+        $this->expandEcho = (bool) $expandEcho;
         $this->output = $output;
         $this->volatileDirectory = $volatileDirectory;
         $this->expander = $expander;
@@ -67,7 +74,7 @@ class ShortTagExpander implements FilterInterface
             return [$file];
         }
         if ($this->output->getVerbosity() >= OutputInterface::OUTPUT_NORMAL) {
-            $this->output->writeln(t('Short PHP echo tags expanded in file %s', $file->getRelativePath()));
+            $this->output->writeln(t('Short PHP tags expanded in file %s', $file->getRelativePath()));
         }
         $newFile = tempnam($this->volatileDirectory->getPath(), 'xtag');
         $this->fs->put($newFile, $expandedContents);

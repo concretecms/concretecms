@@ -7,56 +7,106 @@ use SplFileInfo;
 
 class PackerFile
 {
+    /**
+     * File type: other.
+     *
+     * @var int
+     */
     const TYPE_OTHER = 0;
+
+    /**
+     * File type: source .pot translation file.
+     *
+     * @var int
+     */
     const TYPE_TRANSLATIONS_POT = 1;
+
+    /**
+     * File type: source .po translation file.
+     *
+     * @var int
+     */
     const TYPE_TRANSLATIONS_PO = 2;
+
+    /**
+     * File type: package source .svg icon file.
+     *
+     * @var int
+     */
     const TYPE_SVGICON_PACKAGE = 3;
+
+    /**
+     * File type: block type source .svg icon file.
+     *
+     * @var int
+     */
     const TYPE_SVGICON_BLOCKTYPE = 4;
+
+    /**
+     * File type: theme source .svg icon file.
+     *
+     * @var int
+     */
     const TYPE_SVGICON_THEME = 5;
 
     /**
+     * The absolute path to the actual file/directory (with directory separators normalized to '/', without trailing slashes).
+     *
      * @var string
      */
     private $absolutePath;
 
     /**
+     * The path to the file/directory relative to the package root directory (with directory separators normalized to '/', without trailing slashes).
+     *
      * @var string
      */
     private $relativePath;
 
     /**
+     * Is this a directory?
+     *
      * @var bool
      */
     private $isDirectory;
 
     /**
+     * Is this a file that has been modified?
+     *
      * @var bool
      */
     private $isModified;
 
     /**
+     * The name of the file/directory, without the path.
+     *
      * @var string|null
      */
     private $basename;
 
     /**
+     * The extension of the file, lower case without the leading dot.
+     *
      * @var string|null
      */
     private $extension;
 
     /**
+     * The type of the file (one of the TYPE_... constants).
+     *
      * @var int|null
      */
     private $type;
 
     /**
-     * @param string $basePath
-     * @param string $absolutePath
-     * @param bool $isDirectory
-     * @param bool $isModified
-     * @param mixed $relativePath
+     * Initialize the instance.
+     *
+     * @param string $absolutePath the absolute path to the actual file/directory (with directory separators normalized to '/', without trailing slashes)
+     * @param string $relativePath the path to the file/directory relative to the package root directory
+     * @param bool $isDirectory TRUE if it's a directory, FALSE otherwise
+     * @param bool $isModified is this a file that has been modified?
      */
-    private function __construct($absolutePath, $relativePath, $isDirectory, $isModified)
+    protected function __construct($absolutePath, $relativePath, $isDirectory, $isModified)
     {
         $this->absolutePath = $absolutePath;
         $this->relativePath = $relativePath;
@@ -65,8 +115,10 @@ class PackerFile
     }
 
     /**
-     * @param string $basePath
-     * @param \SplFileInfo $fileInfo
+     * Create a new instance of a file/directory as read from the source package directory (marking it as not changed).
+     *
+     * @param string $basePath the absolute path of the package root directory
+     * @param \SplFileInfo $fileInfo the file/directory
      *
      * @throws \InvalidArgumentException
      *
@@ -74,8 +126,8 @@ class PackerFile
      */
     public static function fromSourceFileInfo($basePath, SplFileInfo $fileInfo)
     {
-        $absolutePath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $fileInfo->getPathname()), '/');
         $basePath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $basePath), '/');
+        $absolutePath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $fileInfo->getPathname()), '/');
         $basePathLength = strlen($basePath) + 1;
         if (strlen($absolutePath) <= $basePathLength || strpos($absolutePath, $basePath . '/') !== 0) {
             throw new InvalidArgumentException();
@@ -85,8 +137,10 @@ class PackerFile
     }
 
     /**
-     * @param static $originalFile
-     * @param string $actualSourcePath
+     * Create a new instance of a file, representing a replacement for an existing original package file.
+     *
+     * @param \Concrete\Core\Package\Packer\PackerFile $originalFile the original file that's being replaced
+     * @param string $actualSourcePath the path to actual file that replaces the original file
      *
      * @throws \InvalidArgumentException
      *
@@ -94,23 +148,31 @@ class PackerFile
      */
     public static function newChangedFile(PackerFile $originalFile, $actualSourcePath)
     {
-        if ($originalFile->isDirectory) {
+        if ($originalFile->isDirectory()) {
             throw new InvalidArgumentException();
         }
+        $actualSourcePath = str_replace(DIRECTORY_SEPARATOR, '/', $actualSourcePath);
 
-        return new static(rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $actualSourcePath), '/'), $originalFile->relativePath, false, true);
+        return new static($actualSourcePath, $originalFile->getRelativePath(), false, true);
     }
 
     /**
-     * @param string $absolutePath
-     * @param string $relativePath
+     * Create a new instance of a file, representing a new file added to the package directory.
+     *
+     * @param string $absolutePath the path to actual file that replaces the original file
+     * @param string $relativePath the path to of the file relative to the package root directory
      */
-    public function newlyCreatedFile($absolutePath, $relativePath)
+    public static function newlyCreatedFile($absolutePath, $relativePath)
     {
-        return new static(str_replace(DIRECTORY_SEPARATOR, '/', $absolutePath), str_replace(DIRECTORY_SEPARATOR, '/', $relativePath), false, true);
+        $absolutePath = str_replace(DIRECTORY_SEPARATOR, '/', $absolutePath);
+        $relativePath = trim(str_replace(DIRECTORY_SEPARATOR, '/', $relativePath), '/');
+
+        return new static($absolutePath, $relativePath, false, true);
     }
 
     /**
+     * Get the absolute path to the actual file/directory (with directory separators normalized to '/', without trailing slashes).
+     *
      * @return string
      */
     public function getAbsolutePath()
@@ -119,6 +181,20 @@ class PackerFile
     }
 
     /**
+     * Generate a new absolute path, with a new file extension.
+     *
+     * @param string $newExtension
+     *
+     * @return string
+     */
+    public function getAbsolutePathWithExtension($newExtension)
+    {
+        return $this->getPathWithExtension($this->getAbsolutePath(), $newExtension);
+    }
+
+    /**
+     * Get the path to the file/directory relative to the package root directory (with directory separators normalized to '/', without trailing slashes).
+     *
      * @return string
      */
     public function getRelativePath()
@@ -127,6 +203,20 @@ class PackerFile
     }
 
     /**
+     * Generate a new relative path, with a new file extension.
+     *
+     * @param string $newExtension
+     *
+     * @return string
+     */
+    public function getRelativePathWithExtension($newExtension)
+    {
+        return $this->getPathWithExtension($this->getRelativePath(), $newExtension);
+    }
+
+    /**
+     * Is this a directory?
+     *
      * @return bool
      */
     public function isDirectory()
@@ -135,6 +225,8 @@ class PackerFile
     }
 
     /**
+     * Is this a file that has been modified?
+     *
      * @return bool
      */
     public function isModified()
@@ -143,6 +235,8 @@ class PackerFile
     }
 
     /**
+     * The name of the file/directory, without the path.
+     *
      * @return string
      */
     public function getBasename()
@@ -155,6 +249,8 @@ class PackerFile
     }
 
     /**
+     * Get the extension of the file, lower case without the leading dot.
+     *
      * Lower case, wihout dot.
      *
      * @return string
@@ -162,14 +258,17 @@ class PackerFile
     public function getExtension()
     {
         if ($this->extension === null) {
-            $p = strrpos($this->basename, '.');
-            $this->extension = $p === false ? '' : strtolower(substr($this->basename, $p + 1));
+            $basename = $this->getBasename();
+            $p = strrpos($basename, '.');
+            $this->extension = $p === false ? '' : strtolower(substr($basename, $p + 1));
         }
 
         return $this->extension;
     }
 
     /**
+     * Get the type of the file (one of the TYPE_... constants).
+     *
      * @return int
      */
     public function getType()
@@ -191,5 +290,24 @@ class PackerFile
         }
 
         return $this->type;
+    }
+
+    /**
+     * Change the extension of a path.
+     *
+     * @param string $myPath
+     * @param string $newExtension
+     *
+     * @return string
+     */
+    protected function getPathWithExtension($myPath, $newExtension)
+    {
+        $extension = $this->getExtension();
+        $newExtension = ltrim((string) $newExtension, '.');
+        if ($extension === '') {
+            return $newExtension === '' ? $myPath : rtrim($myPath, '.') . '.' . $newExtension;
+        }
+
+        return substr($myPath, 0, -strlen($extension)) . $newExtension;
     }
 }

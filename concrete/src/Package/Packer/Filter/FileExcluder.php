@@ -5,61 +5,73 @@ namespace Concrete\Core\Package\Packer\Filter;
 use Concrete\Core\Package\Packer\PackerFile;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Filter out files accordingly to their type.
+ */
 class FileExcluder implements FilterInterface
 {
     /**
-     * Files to keep in archive: none.
+     * Files to exclude: none.
      *
      * @var int
      */
-    const KEEPFILES_NONE = 0b0;
+    const EXCLUDE_NONE = 0b0;
 
     /**
-     * Files to keep in archive: files that start with a dot.
+     * Files to exclude: all.
      *
      * @var int
      */
-    const KEEPFILES_DOT = 0b1;
+    const EXCLUDE_ALL = 0b1111111111111111111111111111111;
 
     /**
-     * Files to keep in the archive: translation dictionary files (.pot).
+     * Files to exclude: files that start with a dot.
      *
      * @var int
      */
-    const KEEPFILES_POT = 0b10;
+    const EXCLUDE_DOT = 0b1;
 
     /**
-     * Files to keep in the archive: translation source files (.po).
+     * Files to exclude: translation dictionary files (.pot).
      *
      * @var int
      */
-    const KEEPFILES_PO = 0b100;
+    const EXCLUDE_POT = 0b10;
 
     /**
-     * Files to keep in the archive: icons in SVG format (.svg) for package, themes, block types.
+     * Files to exclude: translation source files (.po).
      *
      * @var int
      */
-    const KEEPFILES_SVGICON = 0b1000;
+    const EXCLUDE_PO = 0b100;
 
     /**
-     * Files to keep in the archive: composer.json files.
+     * Files to exclude: icons in SVG format (.svg) for package, themes, block types.
      *
      * @var int
      */
-    const KEEPFILES_COMPOSER_JSON = 0b10000;
+    const EXCLUDE_SVGICON = 0b1000;
 
     /**
-     * Files to keep in the archive: composer.json and composer.lock files.
+     * Files to exclude: composer.json files.
      *
      * @var int
      */
-    const KEEPFILES_COMPOSER_LOCK = 0b110000; // includes KEEPFILES_COMPOSER_JSON
+    const EXCLUDE_COMPOSER_JSON = 0b10000;
 
     /**
+     * Files to exclude: composer.json and composer.lock files.
+     *
      * @var int
      */
-    protected $keepFiles;
+    const EXCLUDE_COMPOSER_LOCK = 0b110000; // includes EXCLUDE_COMPOSER_JSON
+
+    /**
+     * The EXCLUDE_... bit flags.
+     *
+     * @var int
+     */
+    protected $excludeFiles;
 
     /**
      * @var \Symfony\Component\Console\Output\OutputInterface
@@ -67,12 +79,14 @@ class FileExcluder implements FilterInterface
     protected $output;
 
     /**
-     * @param int $keepFiles
+     * Initialize the instance.
+     *
+     * @param int $excludeFiles the EXCLUDE_... bit flags
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
-    public function __construct($keepFiles, OutputInterface $output)
+    public function __construct($excludeFiles, OutputInterface $output)
     {
-        $this->keepFiles = $keepFiles;
+        $this->excludeFiles = $excludeFiles;
         $this->output = $output;
     }
 
@@ -83,69 +97,67 @@ class FileExcluder implements FilterInterface
      */
     public function apply(PackerFile $file)
     {
-        $basename = $file->getBasename();
-        if (($this->keepFiles & static::KEEPFILES_DOT) === 0 && $basename[0] === '.') {
-            if ($this->output->getVerbosity() >= OutputInterface::OUTPUT_PLAIN) {
-                $this->output->writeln(t('Skipping file starting with a dot: %s', $file->getRelativePath()));
-            }
-
-            return [];
+        $exclusionReason = $this->getExclusionReason($file);
+        if ($exclusionReason === null) {
+            return [$file];
         }
-        if (!$file->isDirectory()) {
-            switch ($file->getType()) {
-                case PackerFile::TYPE_TRANSLATIONS_POT:
-                    if (($this->keepFiles & static::KEEPFILES_POT) === 0) {
-                        if ($this->output->getVerbosity() >= OutputInterface::OUTPUT_PLAIN) {
-                            $this->output->writeln(t('Skipping translation .pot file: %s', $file->getRelativePath()));
-                        }
-
-                        return [];
-                    }
-                    break;
-                case PackerFile::TYPE_TRANSLATIONS_PO:
-                    if (($this->keepFiles & static::KEEPFILES_PO) === 0) {
-                        if ($this->output->getVerbosity() >= OutputInterface::OUTPUT_PLAIN) {
-                            $this->output->writeln(t('Skipping translation .po file: %s', $file->getRelativePath()));
-                        }
-
-                        return [];
-                    }
-                    break;
-                case PackerFile::TYPE_SVGICON_BLOCKTYPE:
-                case PackerFile::TYPE_SVGICON_PACKAGE:
-                case PackerFile::TYPE_SVGICON_THEME:
-                    if (($this->keepFiles & static::KEEPFILES_SVGICON) === 0) {
-                        if ($this->output->getVerbosity() >= OutputInterface::OUTPUT_PLAIN) {
-                            $this->output->writeln(t('Skipping source SVG icon file: %s', $file->getRelativePath()));
-                        }
-
-                        return [];
-                    }
-                    break;
-                default:
-                    switch ($basename) {
-                        case 'composer.json':
-                            if (($this->keepFiles & static::KEEPFILES_COMPOSER_JSON) === 0) {
-                                if ($this->output->getVerbosity() >= OutputInterface::OUTPUT_PLAIN) {
-                                    $this->output->writeln(t('Skipping composer.json file: %s', $file->getRelativePath()));
-                                }
-
-                                return [];
-                            }
-                            break;
-                        case 'composer.lock':
-                            if (($this->keepFiles & static::KEEPFILES_COMPOSER_LOCK) === 0) {
-                                if ($this->output->getVerbosity() >= OutputInterface::OUTPUT_PLAIN) {
-                                    $this->output->writeln(t('Skipping composer.lock file: %s', $file->getRelativePath()));
-                                }
-
-                                return [];
-                            }
-                            break;
-                    }
-            }
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+            $this->output->writeln(t(/*i18n: %1$s is a file/directory name, %2$s is the reason why it's excluded*/'Excluding %1$s: %2$s', $file->getRelativePath(), $exclusionReason));
         }
 
-        return [$file];
+        return [];
+    }
+
+    /**
+     * Should a file be excluded accordingly to the configured flags?
+     *
+     * @param \Concrete\Core\Package\Packer\PackerFile $file
+     *
+     * @return string|null a message describing why a file is excluded, or NULL if the file shouldn't be excluded
+     */
+    protected function getExclusionReason(PackerFile $file)
+    {
+        if ($this->excludeFiles & static::EXCLUDE_DOT) {
+            $basename = $file->getBasename();
+            if ($basename[0] === '.') {
+                return t('The name starts with a dot');
+            }
+        }
+        if ($file->isDirectory()) {
+            return null;
+        }
+        switch ($file->getType()) {
+            case PackerFile::TYPE_TRANSLATIONS_POT:
+                if ($this->excludeFiles & static::EXCLUDE_POT) {
+                    return t('The file is a source .pot translation file.');
+                }
+                break;
+            case PackerFile::TYPE_TRANSLATIONS_PO:
+                if ($this->excludeFiles & static::EXCLUDE_PO) {
+                    return t('The file is a source .po translation file.');
+                }
+                break;
+            case PackerFile::TYPE_SVGICON_BLOCKTYPE:
+            case PackerFile::TYPE_SVGICON_PACKAGE:
+            case PackerFile::TYPE_SVGICON_THEME:
+                if ($this->excludeFiles & static::EXCLUDE_SVGICON) {
+                    return t('The file is a source .svg icon file.');
+                }
+                break;
+        }
+        switch (strtolower($file->getBasename())) {
+            case 'composer.json':
+                if ($this->excludeFiles & static::EXCLUDE_COMPOSER_JSON) {
+                    $this->output->writeln(t('The file is a composer.json file.'));
+                }
+                break;
+            case 'composer.lock':
+                if ($this->excludeFiles & static::EXCLUDE_COMPOSER_LOCK) {
+                    $this->output->writeln(t('The file is a composer.lock file.'));
+                }
+                break;
+        }
+
+        return null;
     }
 }

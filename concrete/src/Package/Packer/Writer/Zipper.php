@@ -8,14 +8,21 @@ use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 use ZipArchive;
 
+/**
+ * Class that generate a ZIP archive containing the package files.
+ */
 class Zipper implements WriterInterface
 {
     /**
+     * The absolute path to the ZIP archive to be created.
+     *
      * @var string
      */
     protected $zipFilename;
 
     /**
+     * The root directory inside the ZIP archive (empty string to not create a main directory inside the ZIP archive).
+     *
      * @var string
      */
     protected $rootDirectory;
@@ -40,8 +47,10 @@ class Zipper implements WriterInterface
     protected $filesToAdd = [];
 
     /**
-     * @param string $zipFilename
-     * @param string $rootDirectory
+     * Initialize the instance.
+     *
+     * @param string $zipFilename the absolute path to the ZIP archive to be created
+     * @param string $rootDirectory the root directory inside the ZIP archive (empty string to not create a main directory inside the ZIP archive)
      * @param Filesystem $fs
      * @param OutputInterface $output
      */
@@ -56,16 +65,19 @@ class Zipper implements WriterInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Package\Packer\Writer\WriterInterface::processFile()
+     * @see \Concrete\Core\Package\Packer\Writer\WriterInterface::add()
      */
-    public function processFile(PackerFile $file)
+    public function add(PackerFile $file)
     {
+        $relativePath = $file->getRelativePath();
         if ($file->isDirectory()) {
-            if (!in_array($file->getRelativePath(), $this->directoriesToAdd, true)) {
-                $this->directoriesToAdd[] = $file->getRelativePath();
+            if (!in_array($relativePath, $this->directoriesToAdd, true)) {
+                $this->directoriesToAdd[] = $relativePath;
             }
         } else {
-            $this->filesToAdd[$file->getRelativePath()] = $file->getAbsolutePath();
+            if (!isset($this->filesToAdd[$relativePath]) || $file->isModified()) {
+                $this->filesToAdd[$relativePath] = $file->getAbsolutePath();
+            }
         }
     }
 
@@ -82,12 +94,7 @@ class Zipper implements WriterInterface
         $zipArchive = $this->createZipArchive();
         $success = false;
         try {
-            if ($this->rootDirectory === '') {
-                $prefix = '';
-            } else {
-                $this->addRootDirectories($zipArchive);
-                $prefix = $this->rootDirectory . '/';
-            }
+            $prefix = $this->addRootDirectory($zipArchive);
             foreach ($this->directoriesToAdd as $directoryToAdd) {
                 $this->addDirectory($zipArchive, $prefix . $directoryToAdd);
             }
@@ -108,6 +115,8 @@ class Zipper implements WriterInterface
     }
 
     /**
+     * Create the ZIP archive.
+     *
      * @throws \RuntimeException
      *
      * @return \ZipArchive
@@ -133,25 +142,29 @@ class Zipper implements WriterInterface
     }
 
     /**
+     * Create the root directory inside the archive (if specified), and returns the prefix for further files/directoryes added to the archive.
+     *
      * @param \ZipArchive $zipArchive
      *
      * @throws \RuntimeException
      */
-    protected function addRootDirectories(ZipArchive $zipArchive)
+    protected function addRootDirectory(ZipArchive $zipArchive)
     {
-        $previous = '';
-        foreach (explode('/', $this->rootDirectory) as $chunk) {
-            if ($previous === '') {
-                $current = $chunk;
-            } else {
-                $current .= '/' . $chunk;
-            }
-            $this->addDirectory($zipArchive, $current);
-            $previous = $current;
+        if ($this->rootDirectory === '') {
+            return '';
         }
+        $path = '';
+        foreach (explode('/', $this->rootDirectory) as $chunk) {
+            $path = ltrim("{$path}/{$chunk}", '/');
+            $this->addDirectory($zipArchive, $path);
+        }
+
+        return $this->rootDirectory . '/';
     }
 
     /**
+     * Add a directory to a ZIP archive.
+     *
      * @param \ZipArchive $zipArchive
      * @param string $relativePath
      *
@@ -169,10 +182,12 @@ class Zipper implements WriterInterface
         if ($err === '') {
             $err = t('Unknown error');
         }
-        throw new RuntimeException(t('Failed to add a directory to the zip archive %1$s: %2$s', $this->zipFilename, $err));
+        throw new RuntimeException(t('Failed to add a directory to the ZIP archive %1$s: %2$s', $this->zipFilename, $err));
     }
 
     /**
+     * Add a directory to a ZIP archive.
+     *
      * @param \ZipArchive $zipArchive
      * @param string $sourceFile
      * @param string $relativePath
@@ -191,6 +206,6 @@ class Zipper implements WriterInterface
         if ($err === '') {
             $err = t('Unknown error');
         }
-        throw new RuntimeException(t('Failed to add the file %1$s to the zip archive %2$s: %3$s', $sourceFile, $this->zipFilename, $err));
+        throw new RuntimeException(t('Failed to add the file %1$s to the ZIP archive %2$s: %3$s', $sourceFile, $this->zipFilename, $err));
     }
 }

@@ -4,15 +4,22 @@ namespace Concrete\Core\Package\Offline;
 
 use Concrete\Core\Utility\Service\Validation\Strings as StringValidator;
 
+/**
+ * Base class for actual parsers that extract informations from package controller files.
+ */
 abstract class Parser
 {
     /**
+     * The string validator service to be used to check the validity of handles.
+     *
      * @var \Concrete\Core\Utility\Service\Validation\Strings
      */
     protected $stringValidator;
 
     /**
-     * @param \Concrete\Core\Utility\Service\Validation\Strings $stringValidator
+     * Initialize the instance.
+     *
+     * @param \Concrete\Core\Utility\Service\Validation\Strings $stringValidator the string validator service to be used to check the validity of handles
      */
     public function __construct(StringValidator $stringValidator)
     {
@@ -20,19 +27,18 @@ abstract class Parser
     }
 
     /**
-     * Determine if this parser can be used for the tokens specified.
+     * Determine if this parser can be used for the specified PHP tokens of the package controlller.php file.
      *
-     * @param array $tokens
+     * @param array $tokens the PHP tokens of the package controlller.php file
      *
      * @return bool
      */
     abstract public function canParseTokens(array $tokens);
 
     /**
-     * Extract package details from the controller.php tokens.
+     * Extract package details from the PHP tokens of the package controller.php file.
      *
-     *
-     * @param array $tokens
+     * @param array $tokens the PHP tokens of the package controlller.php file
      *
      * @throws \Concrete\Core\Package\Offline\Exception in case of problems
      *
@@ -52,7 +58,7 @@ abstract class Parser
     }
 
     /**
-     * Get the regular expression that the controller class name must match.
+     * Get the regular expression that the controller class name must match (without the namespace).
      *
      * @return string
      */
@@ -68,9 +74,9 @@ abstract class Parser
     /**
      * Extract the package handle from the fully-qualified class name.
      *
-     * @param array $tokens
-     * @param string $className
-     * @param int $classStart
+     * @param array $tokens the PHP tokens of the package controlller.php file
+     * @param string $className the  class name of the package controller
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
      *
      * @throws \Concrete\Core\Package\Offline\Exception in case of problems
      *
@@ -79,14 +85,13 @@ abstract class Parser
     abstract protected function getPackageHandleFromClassName(array $tokens, $className, $classStart);
 
     /**
-     * Get the data about the controller class.
+     * Find the package controller class.
      *
-     *
-     * @param array $tokens
+     * @param array $tokens the PHP tokens of the package controlller.php file
      *
      * @throws \Concrete\Core\Package\Offline\Exception in case of problems
      *
-     * @return array[] [$className, $classStart, $classEnd]
+     * @return array[] [$className, $classStart, $classEnd] returns the class name, the index of the first PHP token of the class body (its first '{'}, and the index of the last PHP token of the class body (its last '}'}
      */
     protected function findControllerClass(array $tokens)
     {
@@ -141,10 +146,14 @@ abstract class Parser
     /**
      * Get the package handle.
      *
-     * @param array $tokens
-     * @param string $className
-     * @param string $classStart
-     * @param string $classEnd
+     * @param array $tokens the PHP tokens of the package controlller.php file
+     * @param string $className the  class name of the package controller
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return string
      */
     protected function getPackageHandle(array $tokens, $className, $classStart, $classEnd)
     {
@@ -166,10 +175,14 @@ abstract class Parser
     /**
      * Get the package version.
      *
-     * @param array $tokens
-     * @param string $className
-     * @param string $classStart
-     * @param string $classEnd
+     * @param array $tokens the PHP tokens of the package controlller.php file
+     * @param string $className the  class name of the package controller
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return string
      */
     protected function getPackageVersion(array $tokens, $className, $classStart, $classEnd)
     {
@@ -187,14 +200,18 @@ abstract class Parser
     /**
      * Get the package name.
      *
-     * @param array $tokens
-     * @param string $className
-     * @param string $classStart
-     * @param string $classEnd
+     * @param array $tokens the PHP tokens of the package controlller.php file
+     * @param string $className the  class name of the package controller
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return string
      */
     protected function getPackageName(array $tokens, $className, $classStart, $classEnd)
     {
-        $fromMethod = (string) $this->getMethodReturnValue($tokens, 'getPackageName', $classStart, $classEnd);
+        $fromMethod = (string) $this->getSimpleMethodReturnValue($tokens, 'getPackageName', $classStart, $classEnd);
         if ($fromMethod !== '') {
             return $fromMethod;
         }
@@ -206,16 +223,20 @@ abstract class Parser
     }
 
     /**
-     * Get the package name.
+     * Get the package description.
      *
-     * @param array $tokens
-     * @param string $className
-     * @param string $classStart
-     * @param string $classEnd
+     * @param array $tokens the PHP tokens of the package controlller.php file
+     * @param string $className the  class name of the package controller
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return string
      */
     protected function getPackageDescription(array $tokens, $className, $classStart, $classEnd)
     {
-        $fromMethod = (string) $this->getMethodReturnValue($tokens, 'getPackageDescription', $classStart, $classEnd);
+        $fromMethod = (string) $this->getSimpleMethodReturnValue($tokens, 'getPackageDescription', $classStart, $classEnd);
         if ($fromMethod !== '') {
             return $fromMethod;
         }
@@ -228,12 +249,16 @@ abstract class Parser
     }
 
     /**
-     * Get the package version.
+     * Get the minimum supported core version version.
      *
-     * @param array $tokens
-     * @param string $className
-     * @param string $classStart
-     * @param string $classEnd
+     * @param array $tokens the PHP tokens of the package controlller.php file
+     * @param string $className the  class name of the package controller
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return string
      */
     protected function getPackageMinimumCodeVersion(array $tokens, $className, $classStart, $classEnd)
     {
@@ -245,10 +270,12 @@ abstract class Parser
     /**
      * Get the value of a class property.
      *
-     * @param array $tokens
+     * @param array $tokens the PHP tokens of the package controlller.php file
      * @param string $propertyName
-     * @param int $classStart
-     * @param int $classEnd
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
      *
      * @return mixed
      */
@@ -277,16 +304,8 @@ abstract class Parser
                 if (!is_array($valueTokens[0])) {
                     throw Exception::create(Exception::ERRORCODE_UNSUPPORTED_PROPERTYVALUE, t('Decoding string tokens for property %s is not supported', $propertyName));
                 }
-                switch ($valueTokens[0][0]) {
-                    case T_CONSTANT_ENCAPSED_STRING:
-                        return $this->decodeString($valueTokens[0][1]);
-                    case T_DNUMBER:
-                        return (float) $valueTokens[0][1];
-                    case T_LNUMBER:
-                        return (int) $valueTokens[0][1];
-                    default:
-                        throw Exception::create(Exception::ERRORCODE_UNSUPPORTED_TOKENVALUE, t('Unsupported value %1$s for property %2s', token_name($valueTokens[0][0]), $propertyName));
-                }
+
+                return $this->decodeValueToken($valueTokens, $propertyName);
             }
         }
 
@@ -295,17 +314,20 @@ abstract class Parser
 
     /**
      * Get the return value of a class method.
+     * Get the value returned from a very simple class method (that is, containing only a "return something;").
      *
-     * @param array $tokens
+     * @param array $tokens the PHP tokens of the package controlller.php file
      * @param string $methodName
-     * @param int $classStart
-     * @param int $classEnd
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
      *
      * @return mixed
      */
-    protected function getMethodReturnValue(array $tokens, $methodName, $classStart, $classEnd)
+    protected function getSimpleMethodReturnValue(array $tokens, $methodName, $classStart, $classEnd)
     {
-        $range = $this->getMethodBodyTokenRange($tokens, $methodName, $classStart, $classEnd);
+        $range = $this->getSimpleMethodBodyTokenRange($tokens, $methodName, $classStart, $classEnd);
         if ($range === null) {
             return null;
         }
@@ -326,243 +348,23 @@ abstract class Parser
         if (count($codeTokens) !== 1 || !is_array($codeTokens[0])) {
             throw Exception::create(Exception::ERRORCODE_METHOD_TOO_COMPLEX, t('The body of the %s controller method is too complex', $methodName));
         }
-        switch ($codeTokens[0][0]) {
-            case T_CONSTANT_ENCAPSED_STRING:
-                return $this->decodeString($codeTokens[0][1]);
-            case T_DNUMBER:
-                return (float) $codeTokens[0][1];
-            case T_LNUMBER:
-                return (int) $codeTokens[0][1];
-            default:
-                throw Exception::create(Exception::ERRORCODE_UNSUPPORTED_TOKENVALUE, t('Unsupported return %1$s for method %2s', token_name($codeTokens[0][0]), $methodName));
-        }
+
+        return $this->decodeValueToken($codeTokens, $methodName);
     }
 
     /**
-     * Check if a version is valid.
+     * Get token range of the body of a very simple class method (that is, containing only a "return something;").
      *
-     * @param string|mixed $version
-     *
-     * @return bool
-     */
-    protected function isVersionValid($version)
-    {
-        if (!is_string($version) || $version === '') {
-            return false;
-        }
-
-        return preg_match('/^\d+(\.\d+)*([\w\-]+(\d+(\.\d+)*)?)?$/', $version);
-    }
-
-    /**
-     * Find the index of a token given its type.
-     *
-     * @param array $tokens
-     * @param int[] $tokenIDs
-     * @param int $startIndexInclusive
-     * @param int|null $endIndexExclusive
-     *
-     * @return int|null
-     */
-    protected function findTypedToken(array $tokens, array $tokenIDs, $startIndexInclusive = 0, $endIndexExclusive = null)
-    {
-        if ($endIndexExclusive === null) {
-            $endIndexExclusive = count($tokens);
-        }
-        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
-            $token = $tokens[$index];
-            if (is_array($token) && in_array($token[0], $tokenIDs, true)) {
-                return $index;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Find the index of a text token given its contents.
-     *
-     * @param array $tokens
-     * @param array $tokenContent
-     * @param int $startIndexInclusive
-     * @param int|null $endIndexExclusive
-     *
-     * @return int|null
-     */
-    protected function findTextToken(array $tokens, array $tokenContent, $startIndexInclusive = 0, $endIndexExclusive = null)
-    {
-        if ($endIndexExclusive === null) {
-            $endIndexExclusive = count($tokens);
-        }
-        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
-            if (in_array($tokens[$index], $tokenContent, true)) {
-                return $index;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Strip whitespaces and comments from tokens.
-     *
-     * @param array $tokens
-     * @param int $startIndexInclusive
-     * @param null|mixed $endIndexExclusive
-     *
-     * @return array
-     */
-    protected function stripNonCodeTokens(array $tokens, $startIndexInclusive = 0, $endIndexExclusive = null)
-    {
-        if ($endIndexExclusive === null) {
-            $endIndexExclusive = count($tokens);
-        }
-        $result = [];
-        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
-            $token = $tokens[$index];
-            if (!is_array($token) || !in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
-                $result[] = $token;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Strip t() function calls at the beginning of tokens (if any).
-     *
-     * @param array $tokens
-     *
-     * @return array
-     */
-    protected function stripTFunctionCall(array $tokens)
-    {
-        if (!isset($tokens[0]) || !is_array($tokens[0]) || $tokens[0][0] !== T_STRING) {
-            return $tokens;
-        }
-        if (strcasecmp($tokens[0][1], 't') !== 0) {
-            return $tokens;
-        }
-        array_shift($tokens);
-
-        return $tokens;
-    }
-
-    /**
-     * Strip enclosing parenthesis ("(...)") (if any).
-     *
-     * @param array $tokens
-     *
-     * @return array
-     */
-    protected function stripEnclosingParenthesis(array $tokens)
-    {
-        $numTokens = count($tokens);
-        for (; ;) {
-            if ($numTokens < 2 || $tokens[0] !== '(' || $tokens[$numTokens - 1] !== ')') {
-                return $tokens;
-            }
-            array_pop($tokens);
-            array_shift($tokens);
-            $numTokens -= 2;
-        }
-    }
-
-    /**
-     * Skip to the next non-whitespaces and non-comment from token index.
-     *
-     * @param array $tokens
-     * @param int $startIndexInclusive
-     * @param null|mixed $endIndexExclusive
-     *
-     * @return int|null
-     */
-    protected function skipNonCodeTokens(array $tokens, $startIndexInclusive = 0, $endIndexExclusive = null)
-    {
-        if ($endIndexExclusive === null) {
-            $endIndexExclusive = count($tokens);
-        }
-        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
-            $token = $tokens[$index];
-            if (!is_array($token) || !in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
-                return $index;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Decode a T_CONSTANT_ENCAPSED_STRING string.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    protected function decodeString($string)
-    {
-        $len = strlen($string);
-        if ($len < 2) {
-            throw Exception::create(Exception::ERRORCODE_INVALID_STRING_TOKEN, t('Malformed string: %s', $string));
-        }
-        $enclosing = $string[0];
-        switch ($enclosing) {
-            case '"':
-                $escapeMap = [
-                    '\\' => '\\',
-                    '"' => '"',
-                    'n' => "\n",
-                    'r' => "\r",
-                    't' => "\t",
-                    'v' => "\v",
-                    'e' => "\e",
-                    'f' => "\f",
-                    '$' => '$',
-                ];
-            case "'":
-                $escapeMap = [
-                    '\\' => '\\',
-                    "'" => "'",
-                ];
-                break;
-            default:
-                throw Exception::create(Exception::ERRORCODE_INVALID_STRING_TOKEN, t('Malformed string: %s', $string));
-        }
-        if ($string[$len - 1] !== $enclosing) {
-            throw Exception::create(Exception::ERRORCODE_INVALID_STRING_TOKEN, t('Malformed string: %s', $string));
-        }
-        $result = '';
-        $escaping = false;
-        for ($i = 1; $i < $len - 1; ++$i) {
-            $char = $string[$i];
-            if ($escaping) {
-                if (isset($escapeMap[$char])) {
-                    $result .= $escapeMap[$char];
-                } else {
-                    $result .= '\\' . $char;
-                }
-                $escaping = false;
-            } elseif ($char === '\\') {
-                $escaping = true;
-            } else {
-                $result .= $char;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get token range of the body of a class method.
-     *
-     * @param array $tokens
+     * @param array $tokens the PHP tokens of the package controlller.php file
      * @param string $methodName
-     * @param int $classStart
-     * @param int $classEnd
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
      *
-     * @return int[]|null
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return int[]|null returns null if it can't be detected (for example, for abstract methods), the token index of the opening '{' and the token index of the closing '}' otherwise
      */
-    private function getMethodBodyTokenRange(array $tokens, $methodName, $classStart, $classEnd)
+    protected function getSimpleMethodBodyTokenRange(array $tokens, $methodName, $classStart, $classEnd)
     {
         $nestingLevel = 0;
         for ($index = $classStart + 1; $index < $classEnd; ++$index) {
@@ -592,5 +394,244 @@ abstract class Parser
         }
 
         return null;
+    }
+
+    /**
+     * Check if a version is valid.
+     *
+     * @param string|mixed $version
+     *
+     * @return bool
+     */
+    protected function isVersionValid($version)
+    {
+        if (!is_string($version) || $version === '') {
+            return false;
+        }
+
+        return preg_match('/^\d+(\.\d+)*([\w\-]+(\d+(\.\d+)*)?)?$/', $version);
+    }
+
+    /**
+     * Find the index of a token given its type.
+     *
+     * @param array $tokens the list of PHP tokens where the search should be performed
+     * @param int[] $tokenIDs the list of token identifiers to be searched
+     * @param int $startIndexInclusive the initial index where the search should start (inclusive)
+     * @param int|null $endIndexExclusive the final index where the search should end (exclusive); if null we'll search until the end of the token list
+     *
+     * @return int|null the index of the first token with an ID included in $tokenIDs otherwise; return NULL of none of the token ID have been found
+     */
+    protected function findTypedToken(array $tokens, array $tokenIDs, $startIndexInclusive = 0, $endIndexExclusive = null)
+    {
+        if ($endIndexExclusive === null) {
+            $endIndexExclusive = count($tokens);
+        }
+        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
+            $token = $tokens[$index];
+            if (is_array($token) && in_array($token[0], $tokenIDs, true)) {
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Find the index of a text token given its contents.
+     *
+     * @param array $tokens the list of PHP tokens where the search should be performed
+     * @param string[] $tokenContent the list of token values to be searched
+     * @param int $startIndexInclusive the initial index where the search should start (inclusive)
+     * @param int|null $endIndexExclusive the final index where the search should end (exclusive); if null we'll search until the end of the token list
+     *
+     * @return int|null the index of the first string token found; return NULL of none of the strings have been found
+     */
+    protected function findTextToken(array $tokens, array $tokenContent, $startIndexInclusive = 0, $endIndexExclusive = null)
+    {
+        if ($endIndexExclusive === null) {
+            $endIndexExclusive = count($tokens);
+        }
+        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
+            if (in_array($tokens[$index], $tokenContent, true)) {
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Strip whitespaces and comments from a list of tokens.
+     *
+     * @param array $tokens the list of PHP tokens to be processed
+     * @param int $startIndexInclusive the initial index where the search should start (inclusive)
+     * @param int|null $endIndexExclusive the final index where the search should end (exclusive); if null we'll search until the end of the token list
+     *
+     * @return array
+     */
+    protected function stripNonCodeTokens(array $tokens, $startIndexInclusive = 0, $endIndexExclusive = null)
+    {
+        if ($endIndexExclusive === null) {
+            $endIndexExclusive = count($tokens);
+        }
+        $result = [];
+        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
+            $token = $tokens[$index];
+            if (!is_array($token) || !in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
+                $result[] = $token;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Strip t() function calls at the beginning of a list of tokens tokens (if any).
+     *
+     * @param array $tokens the list of PHP tokens to be processed
+     *
+     * @return array
+     */
+    protected function stripTFunctionCall(array $tokens)
+    {
+        if (!isset($tokens[0]) || !is_array($tokens[0]) || $tokens[0][0] !== T_STRING) {
+            return $tokens;
+        }
+        if (strcasecmp($tokens[0][1], 't') !== 0) {
+            return $tokens;
+        }
+        array_shift($tokens);
+
+        return $tokens;
+    }
+
+    /**
+     * Strip enclosing parenthesis ("(...)") (if any) in a list of tokens.
+     *
+     * @param array $tokens the list of PHP tokens to be processed
+     *
+     * @return array
+     */
+    protected function stripEnclosingParenthesis(array $tokens)
+    {
+        $numTokens = count($tokens);
+        for (; ;) {
+            if ($numTokens < 2 || $tokens[0] !== '(' || $tokens[$numTokens - 1] !== ')') {
+                return $tokens;
+            }
+            array_pop($tokens);
+            array_shift($tokens);
+            $numTokens -= 2;
+        }
+    }
+
+    /**
+     * Skip to the next non-whitespace and non-comment token.
+     *
+     * @param array $tokens the whole list of tokens
+     * @param int $startIndexInclusive the initial index where the search should start (inclusive)
+     * @param int|null $endIndexExclusive the final index where the search should end (exclusive); if null we'll search until the end of the token list
+     *
+     * @return int|null the next index of non-whitespace and non-comment token; NULL when arriving to the end of the array
+     */
+    protected function skipNonCodeTokens(array $tokens, $startIndexInclusive = 0, $endIndexExclusive = null)
+    {
+        if ($endIndexExclusive === null) {
+            $endIndexExclusive = count($tokens);
+        }
+        for ($index = $startIndexInclusive; $index < $endIndexExclusive; ++$index) {
+            $token = $tokens[$index];
+            if (!is_array($token) || !in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the actual PHP value described by a value token.
+     *
+     * @param array $token the token containing the value
+     * @param string $associatedName the name associated to the value (used to display a useful error message),
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return mixed
+     */
+    protected function decodeValueToken(array $token, $associatedName)
+    {
+        switch ($token[0][0]) {
+            case T_CONSTANT_ENCAPSED_STRING:
+                return $this->decodeString($token[0][1]);
+            case T_DNUMBER:
+                return (float) $token[0][1];
+            case T_LNUMBER:
+                return (int) $token[0][1];
+            default:
+                throw Exception::create(Exception::ERRORCODE_UNSUPPORTED_TOKENVALUE, t('Unsupported value %1$s for %2s', token_name($token[0][0]), $associatedName));
+        }
+    }
+
+    /**
+     * Decode the value of a T_CONSTANT_ENCAPSED_STRING token.
+     *
+     * @param string $string the value of a T_CONSTANT_ENCAPSED_STRING token
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return string
+     */
+    protected function decodeString($string)
+    {
+        $len = strlen($string);
+        if ($len < 2) {
+            throw Exception::create(Exception::ERRORCODE_INVALID_STRING_TOKEN, t('Malformed string: %s', $string));
+        }
+        if ($string[0] !== $string[$len - 1]) {
+            throw Exception::create(Exception::ERRORCODE_INVALID_STRING_TOKEN, t('Malformed string: %s', $string));
+        }
+        $enclosing = $string[0];
+        switch ($enclosing) {
+            case '"':
+                $escapeMap = [
+                '\\' => '\\',
+                '"' => '"',
+                'n' => "\n",
+                'r' => "\r",
+                't' => "\t",
+                'v' => "\v",
+                'e' => "\e",
+                'f' => "\f",
+                '$' => '$',
+                ];
+            case "'":
+                $escapeMap = [
+                '\\' => '\\',
+                "'" => "'",
+                ];
+                break;
+            default:
+                throw Exception::create(Exception::ERRORCODE_INVALID_STRING_TOKEN, t('Malformed string: %s', $string));
+        }
+        $string = substr($string, 1, -1);
+        $result = '';
+        for (; ;) {
+            $p = strpos($string, '\\');
+            if ($p === false || !isset($string[$p + 1])) {
+                $result .= $string;
+                break;
+            }
+            $nextChar = $string[$p + 1];
+            $string = substr($string, 2);
+            if (isset($escapeMap[$nextChar])) {
+                $result .= $escapeMap[$nextChar];
+            } else {
+                $result .= '\\' . $nextChar;
+            }
+        }
+
+        return $result;
     }
 }
