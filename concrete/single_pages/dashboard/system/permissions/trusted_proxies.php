@@ -58,42 +58,34 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?php
         }
         ?>
-        <div class="alert alert-info">
-            <p><?= t('Notes: ')?></p>
-            <ul>
-                <li><?= t('The checked headers above will be trusted only when PHP detects that the connection is made via a trusted proxy') ?></li>
-                <li><?= t(/*%s is the name of an HTTP header*/'The %s header should be selected when using RFC 7239', '<code>' . $controller::HEADERNAME_FORWARDED . '</code>') ?>
-                <li><?= t('The other headers starting with %1$s are not standard but are widely used by popular reverse proxies (like %2$s).', '<code>X_...</code>', Misc::join(['Apache mod_proxy', 'Amazon EC2']))?> 
-            </ul>
-            <?php
-            if (count($requestForwardedHeaders) > 0) {
-                ?>
-                <br />
-                <p><?= t('In the current request, the following headers are present (you may want to select them - and only them):')?></p>
-                <ul>
-                    <?php
-                    foreach ($requestForwardedHeaders as $requestForwardedHeaderName => $requestForwardedHeaderValue) {
-                        ?>
-                        <li>
-                            <?php
-                            if (is_string($requestForwardedHeaderValue)) {
-                                echo t('%s (value: %s)', '<code>' . h($requestForwardedHeaderName) . '</code>', '<code>' . h($requestForwardedHeaderValue) . '</code>');
-                            } else {
-                                echo '<code>' . h($requestForwardedHeaderName) . '</code>';
-                            }
-                            ?>
-                        </li>
-                        <?php
-                    }
-                    ?>
-                </ul>
-                <?php
-            }
-            ?>
-        </div>
     </div>
 
     <div class="alert alert-info">
+        <?php
+        if (count($requestForwardedHeaders) > 0) {
+            ?>
+            <p><?= t('In the current request, the following headers are present (you may want to select them - and only them):')?></p>
+            <ul>
+                <?php
+                foreach ($requestForwardedHeaders as $requestForwardedHeaderName => $requestForwardedHeaderValue) {
+                    ?>
+                    <li>
+                        <?php
+                        if (is_string($requestForwardedHeaderValue)) {
+                            echo t('%s (value: %s)', '<code>' . h($requestForwardedHeaderName) . '</code>', '<code>' . h($requestForwardedHeaderValue) . '</code>');
+                        } else {
+                            echo '<code>' . h($requestForwardedHeaderName) . '</code>';
+                        }
+                        ?>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+            <br />
+            <?php
+        }
+        ?>
         <p><?= t('With the currently configured IPs and headers, PHP detected these values:') ?></p>
         <dl class="dl-horizontal">
             <dt><?= t('Protocol') ?></dt>
