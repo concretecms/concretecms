@@ -13,6 +13,7 @@ use Concrete\Core\Package\Packer\Filter\ShortTagExpander;
 use Concrete\Core\Package\Packer\Filter\SvgIconRasterizer;
 use Concrete\Core\Package\Packer\Filter\TranslationCompiler;
 use Concrete\Core\Package\Packer\PackagePacker;
+use Concrete\Core\Package\Packer\Writer\Cloner;
 use Concrete\Core\Package\Packer\Writer\SourceUpdater;
 use Concrete\Core\Package\Packer\Writer\Zipper;
 use Concrete\Core\Utility\Service\Validation\Strings as StringsValidator;
@@ -151,6 +152,8 @@ final class PackPackageCommand extends Command
             ->addOption('keep', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Which files should be stored in the zip archive [' . self::KEEP_DOT . '|' . self::KEEP_SOURCES . '|' . self::KEEP_COMPOSER_JSON . '|' . self::KEEP_COMPOSER_LOCK . ']')
             ->addOption('update-source-directory', 'u', InputOption::VALUE_NONE, 'Update the files of the source directory (otherwise it remains untouched)')
             ->addOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Create a zip archive of the package (and optionally set its path)', self::ZIPOUT_AUTO)
+            ->addOption('copy', 'c', InputOption::VALUE_REQUIRED, 'Copy the package files to another directory')
+            ->addOption('overwrite', 'o', InputOption::VALUE_NONE, 'Copy the package files to another directory even if it already exists')
             ->setHelp(<<<EOT
 You have to specify at least the -z option (to create a zip file) and/or the -u option (to update the package directory).
 
@@ -304,8 +307,11 @@ EOT
             }
             $writers[] = $app->make(Zipper::class, [$zipFilename, $packageInfo->getHandle(), $this->output]);
         }
+        if ($this->input->getOption('copy') !== null) {
+            $writers[] = $app->make(Cloner::class, [$this->input->getOption('copy'), $this->input->getOption('overwrite'), $this->output]);
+        }
         if (empty($writers)) {
-            throw new Exception('No operation will be performed: neither a zip archive will be created nor the source directory will be updated');
+            throw new Exception('No operation will be performed');
         }
 
         return $writers;
