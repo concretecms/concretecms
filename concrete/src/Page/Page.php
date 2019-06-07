@@ -982,7 +982,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         // make the handle out of the title
         $cLink = $ds->sanitizeURL($cLink);
-        $handle = $dt->urlify($cLink);
+        $handle = $dt->urlify($cName);
         $data = [
             'handle' => $handle,
             'name' => $cName,
