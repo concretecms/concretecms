@@ -134,7 +134,7 @@ class Messages extends AccountPageController
     public function reply($boxID, $msgID)
     {
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
         $mailbox = UserPrivateMessageMailbox::get($ui, UserPrivateMessageMailbox::MBTYPE_INBOX);
         $msg = UserPrivateMessage::getByID($msgID, $mailbox);

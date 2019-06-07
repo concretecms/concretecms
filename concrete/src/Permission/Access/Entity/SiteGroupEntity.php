@@ -78,7 +78,7 @@ class SiteGroupEntity extends Entity
             $valid = false;
             $group = $this->getInstanceGroup($site);
             if ($group) {
-                $u = new \User();
+                $u = \Core::make(\Concrete\Core\User\User::class);
                 $valid = $u->inGroup($group);
             }
 

@@ -10,6 +10,7 @@ use Concrete\Core\Logging\Entry\Group\ExitGroup;
 use Concrete\Core\Logging\Entry\Group\UpdateGroup;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Concrete\Core\User\Event\UserGroup as UserGroupEvent;
@@ -42,29 +43,34 @@ class LogSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 
     public function onGroupAdd(Event $event)
     {
-        $this->log(new AddGroup($event->getGroupObject(), new User()));
+        $this->log(new AddGroup($event->getGroupObject(), $this->getCurrentUser()));
     }
 
     public function onGroupUpdate(Event $event)
     {
-        $this->log(new UpdateGroup($event->getGroupObject(), new User()));
+        $this->log(new UpdateGroup($event->getGroupObject(), $this->getCurrentUser()));
     }
 
     public function onGroupDelete(Event $event)
     {
-        $this->log(new DeleteGroup($event->getGroupObject(), new User()));
+        $this->log(new DeleteGroup($event->getGroupObject(), $this->getCurrentUser()));
     }
 
     public function onUserEnterGroup(UserGroupEvent $event)
     {
-        $this->log(new EnterGroup($event->getUserObject(), $event->getGroupObject(), new User()));
+        $this->log(new EnterGroup($event->getUserObject(), $event->getGroupObject(), $this->getCurrentUser()));
     }
 
     public function onUserExitGroup(UserGroupEvent $event)
     {
-        $this->log(new ExitGroup($event->getUserObject(), $event->getGroupObject(), new User()));
+        $this->log(new ExitGroup($event->getUserObject(), $event->getGroupObject(), $this->getCurrentUser()));
     }
 
-
-
+    /**
+     * @return \Concrete\Core\User\User
+     */
+    protected function getCurrentUser()
+    {
+        return Application::getFacadeApplication()->make(User::class);
+    }
 }

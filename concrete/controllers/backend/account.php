@@ -12,7 +12,7 @@ class Account extends AbstractController
 {
     public function removeInboxNewMessageStatus()
     {
-        $user = new LoggedUser();
+        $user = $this->app->make(LoggedUser::class);
         if (!$user->isRegistered()) {
             return JsonResponse::create(['error' => 'User must be register.'], JsonResponse::HTTP_FORBIDDEN);
         }

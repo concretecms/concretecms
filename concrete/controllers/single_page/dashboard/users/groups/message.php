@@ -59,7 +59,7 @@ class Message extends DashboardPageController
         $subject = $this->post('subject');
         $text = $this->post('message');
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         $sender = $u->getUserInfoObject();
 
         if (!$sender) {

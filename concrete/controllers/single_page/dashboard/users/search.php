@@ -123,7 +123,7 @@ class Search extends DashboardPageController
                 if ($this->canSignInAsUser && $this->app->make('helper/validation/token')->validate()) {
                     $logger = $this->app->make(LoggerFactory::class)
                         ->createLogger(Channels::CHANNEL_USERS);
-                    $me = new User();
+                    $me = $this->app->make(User::class);
                     $signInUser = UserInfo::getByID($uID);
                     $logger->notice(t('User %s used the dashboard to sign in as user %s',
                         $me->getUserName(), $signInUser->getUserName()));

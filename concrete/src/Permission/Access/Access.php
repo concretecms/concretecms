@@ -291,7 +291,7 @@ class Access extends ConcreteObject
 
         $logger = $app->make(Logger::class);
         $entry = $app->make(PermissionAssignmentLogEntry::class, [
-           'applier' => new User(),
+           'applier' => $app->make(User::class),
            'key' => $this->pk,
            'access' => $this
         ]);
