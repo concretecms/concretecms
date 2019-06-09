@@ -244,10 +244,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     }
                     $entityManager->refresh($entry);
 
-                    $notifier = $controller->getNotifier($this);
-                    $notifications = $notifier->getNotificationList();
-                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
-
                     foreach ($values as $value) {
                         $value = $value->getValueObject();
                         if ($value instanceof FileProviderInterface) {
