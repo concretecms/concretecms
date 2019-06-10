@@ -29,6 +29,8 @@ $(function() {
                     data: {'exEntityID': $(this).val()},
                     success: function(r) {
                         $searchFieldSelectorContainer.html(r.searchFields);
+                        // activate the search fields.
+                        $('div[data-component=search-field-selector]').concreteSearchFieldSelector({});
                         $customizeContainer.html(r.customize);
                         my.setSearchableProperties(r.attributes);
                         my.setSearchableAssociations(r.associations);

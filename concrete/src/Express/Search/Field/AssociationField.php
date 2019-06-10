@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Express\ManyToOneAssociation;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Form\Context\Registry\ControlRegistry;
+use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 
@@ -72,6 +73,7 @@ class AssociationField extends AbstractField
     public function renderSearchField()
     {
         if ($this->association !== null) {
+            /*
             $registry = \Core::make(ControlRegistry::class);
             $control = new AssociationControl();
             $control->setAssociation($this->association);
@@ -117,6 +119,17 @@ class AssociationField extends AbstractField
             $view->setSupportsLabel(false);
             $renderer = $view->getControlRenderer();
             return $renderer->render();
+            */
+
+            $form = \Core::make(Form::class);
+            $name = 'express_association_' . $this->associationID;
+            $list = new EntryList($this->association->getTargetEntity());
+            $results = $list->getresults();
+            $entries = ['' => t('** Select an entry')];
+            foreach($results as $result) {
+                $entries[$result->getId()] = $result->getLabel();
+            }
+            return $form->select($name, $entries);
         }
     }
 
