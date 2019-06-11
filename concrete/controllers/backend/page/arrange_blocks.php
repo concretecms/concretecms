@@ -37,11 +37,6 @@ class ArrangeBlocks extends Page
         $nvc = $this->page->getVersionToModify();
         $sourceAreaID = intval($_POST['sourceArea']);
         $destinationAreaID = intval($_POST['area']);
-        $affectedAreaIDs = array();
-        $affectedAreaIDs[] = $sourceAreaID;
-        if ($sourceAreaID != $destinationAreaID) {
-            $affectedAreaIDs[] = $destinationAreaID;
-        }
 
         if (Config::get('concrete.permissions.model') == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
@@ -92,7 +87,6 @@ class ArrangeBlocks extends Page
 
             // If the source_area is the only global area
             if ($source_area->isGlobalArea() && !$destination_area->isGlobalArea()) {
-                $cp = new Permissions($nvc);
                 $stack = Stack::getByName($source_area->getAreaHandle());
                 $stackToModify = $stack->getVersionToModify();
                 $nvc->relateVersionEdits($stackToModify);
@@ -101,7 +95,6 @@ class ArrangeBlocks extends Page
             }
 
             if ($destination_area->isGlobalArea()) {
-                $cp = new Permissions($nvc);
                 $stack = Stack::getByName($destination_area->getAreaHandle());
                 $stackToModify = $stack->getVersionToModify();
                 $nvc->relateVersionEdits($stackToModify);
