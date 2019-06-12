@@ -85,6 +85,7 @@ $(function() {
             my.setSearchableProperties(my.options.searchProperties, my.options.searchPropertiesSelected);
             my.setSearchableAssociations(my.options.searchAssociations, my.options.searchAssociationsSelected);
             my.setLinkableProperties(my.options.searchProperties, my.options.linkedPropertiesSelected);
+            $('div[data-component=search-field-selector]').concreteSearchFieldSelector({});
         }
 
 

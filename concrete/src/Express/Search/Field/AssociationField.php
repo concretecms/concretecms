@@ -30,7 +30,7 @@ class AssociationField extends AbstractField
     public function getKey()
     {
         if ($this->association !== null) {
-            return 'association_' . $this->association->getId();
+            return 'express_association_' . $this->association->getId();
         }
     }
 
@@ -73,54 +73,6 @@ class AssociationField extends AbstractField
     public function renderSearchField()
     {
         if ($this->association !== null) {
-            /*
-            $registry = \Core::make(ControlRegistry::class);
-            $control = new AssociationControl();
-            $control->setAssociation($this->association);
-            $control->setId($this->association->getId());
-            $context = new DashboardFormContext();
-            // Is there an entity selected?
-            if (isset($this->data['express_association_' . $this->associationID])) {
-                $selected = $this->data['express_association_' . $this->associationID];
-                // We have to spoof an entry in order for this to be selected. Kind of lame but oh well.
-
-                if (is_array($selected)) {
-                    $spoofedAssociation = new Entry\ManyAssociation();
-                    $spoofedAssociation->setAssociation($this->association);
-                    foreach($selected as $id) {
-                        $selectedEntry = new Entry();
-                        $selectedEntry->setID($id);
-
-                        $selectedAssociationEntry = new Entry\AssociationEntry();
-                        $selectedAssociationEntry->setEntry($selectedEntry);
-                        $selectedAssociationEntry->setAssociation($spoofedAssociation);
-
-                        $spoofedAssociation->getSelectedEntriesCollection()->add($selectedAssociationEntry);
-                    }
-                } else {
-                    $selectedEntry = new Entry();
-                    $selectedEntry->setID($selected);
-                    $spoofedAssociation = new Entry\OneAssociation();
-                    $spoofedAssociation->setAssociation($this->association);
-                    $selectedAssociationEntry = new Entry\AssociationEntry();
-                    $selectedAssociationEntry->setEntry($selectedEntry);
-                    $selectedAssociationEntry->setAssociation($spoofedAssociation);
-                    $spoofedAssociation->setSelectedEntry($selectedAssociationEntry);
-                }
-
-                $spoofedEntry = new Entry();
-                $spoofedEntry->getAssociations()->add($spoofedAssociation);
-                $context->setEntry($spoofedEntry);
-            }
-
-            $view = $registry->getControlView($context, 'express_control_association', [
-                $control
-            ]);
-            $view->setSupportsLabel(false);
-            $renderer = $view->getControlRenderer();
-            return $renderer->render();
-            */
-
             $form = \Core::make(Form::class);
             $name = 'express_association_' . $this->associationID;
             $list = new EntryList($this->association->getTargetEntity());
@@ -129,7 +81,7 @@ class AssociationField extends AbstractField
             foreach($results as $result) {
                 $entries[$result->getId()] = $result->getLabel();
             }
-            return $form->select($name, $entries);
+            return $form->select($name, $entries, $this->data['express_association_' . $this->associationID]);
         }
     }
 
