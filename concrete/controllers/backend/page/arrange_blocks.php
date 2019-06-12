@@ -97,9 +97,8 @@ class ArrangeBlocks extends Page
 
                     return;
                 }
-                $bt = $block->getBlockTypeObject();
-                if (!$destAP->canAddBlock($bt)) {
-                    $e->add(t('You may not add %s to area %s.', t($bt->getBlockTypeName()), $destinationAreaHandle));
+                if (!$destAP->canAddBlock($block)) {
+                    $e->add(t('You may not add %s to area %s.', t($block->getBlockTypeObject()->getBlockTypeName()), $destinationAreaHandle));
 
                     return;
                 }

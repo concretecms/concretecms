@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Permission\Key;
 
+use Concrete\Core\Block\Block;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Support\Facade\Application;
@@ -10,6 +11,20 @@ use PDO;
 
 class AddBlockToAreaAreaKey extends AreaKey
 {
+    /**
+     * Operation identifier: adding a new block to the area.
+     *
+     * @var string
+     */
+    const OPERATION_NEWBLOCK = 'new-block';
+    
+    /**
+     * Operation identifier: moving an existing block from another area.
+     *
+     * @var string
+     */
+    const OPERATION_EXISTINGBLOCK = 'existing-block';
+
     /**
      * {@inheritdoc}
      *
@@ -64,33 +79,55 @@ class AddBlockToAreaAreaKey extends AreaKey
     }
 
     /**
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|\Concrete\Core\Block\Block $blockTypeOrBlock specify a block type when adding a new block, a block instance when adding an existing block.
+     *
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Permission\Key\Key::validate()
      */
-    public function validate($bt = false)
+    public function validate($blockTypeOrBlock = false)
     {
         $u = new User();
         if ($u->isSuperUser()) {
             return true;
         }
-        $types = $this->getAllowedBlockTypeIDs();
-        if ($bt != false) {
-            return in_array($bt->getBlockTypeID(), $types);
+        if ($blockTypeOrBlock instanceof Block) {
+            $types = $this->getAllowedBlockTypeIDsFor(static::OPERATION_EXISTINGBLOCK);
+            $blockType = $blockTypeOrBlock->getBlockTypeObject();
         } else {
-            return count($types) > 0;
+            $types = $this->getAllowedBlockTypeIDsFor(static::OPERATION_NEWBLOCK);
+            $blockType = $blockTypeOrBlock;
         }
+
+        return $blockType ? in_array($blockType->getBlockTypeID(), $types) : !empty($types);
     }
 
     /**
+     * @deprecated Use getAllowedBlockTypeIDsFor(AddBlockToAreaAreaKey::OPERATION_NEWBLOCK)
+     *
      * @return int[]
      */
     protected function getAllowedBlockTypeIDs()
+    {
+        return $this->getAllowedBlockTypeIDsFor(static::OPERATION_NEWBLOCK);
+    }
+
+    /**
+     * Get the list of allowed block type IDs for a specific operation.
+     *
+     * @param string $operation One of the OPERATION_... constants.
+     *
+     * @return int[]
+     */
+    protected function getAllowedBlockTypeIDsFor($operation)
     {
         $u = new User();
         $pae = $this->getPermissionAccessObject();
         if (!is_object($pae)) {
             return [];
+        }
+        if (!in_array($operation, [static::OPERATION_NEWBLOCK, static::OPERATION_EXISTINGBLOCK], true)) {
+            $operation = static::OPERATION_NEWBLOCK;
         }
         $accessEntities = $u->getUserAccessEntityObjects();
         $accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
@@ -105,13 +142,22 @@ class AddBlockToAreaAreaKey extends AreaKey
             if ($dsh->inDashboard()) {
                 $identifier = 'blocktypeids/all';
             } else {
-                $identifier = 'blocktypeids/public';
+                $identifier = 'blocktypeids/public/' . $operation;
             }
             $item = $cache->getItem($identifier);
             if ($item->isMiss()) {
                 $allBTIDs = [];
-                $sql = $dsh->inDashboard() ? 'select btID from BlockTypes' : 'select btID from BlockTypes where btIsInternal = 0';
-                $rs = $db->executeQuery($sql);
+                $params = [];
+                if ($dsh->inDashboard()) {
+                    $sql = 'select btID from BlockTypes';
+                } else {
+                    $sql = 'select btID from BlockTypes where btIsInternal = 0';
+                    if ($operation === static::OPERATION_EXISTINGBLOCK) {
+                        $sql .= ' or btHandle = ?';
+                        $params[] = BLOCK_HANDLE_STACK_PROXY;
+                    }
+                }
+                $rs = $db->executeQuery($sql, $params);
                 while (($btID = $rs->fetchColumn()) !== false) {
                     $allBTIDs[] = (int) $btID;
                 }
