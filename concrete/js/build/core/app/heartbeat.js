@@ -21,6 +21,6 @@
             type: 'GET',
             url: CCM_DISPATCHER_FILENAME + '/ccm/system/heartbeat',
         });
-    );
+    });
 
 })(this, jQuery);
