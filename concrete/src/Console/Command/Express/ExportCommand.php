@@ -10,7 +10,6 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Doctrine\ORM\EntityManagerInterface;
-use function fclose;
 use SplFileObject;
 
 class ExportCommand extends Command
