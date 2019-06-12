@@ -6,6 +6,9 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Site\Service;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Site;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,21 +52,34 @@ class PostLoginLocation
     protected $valn;
 
     /**
+     * @var \Concrete\Core\Site\Service
+     */
+    protected $siteService;
+
+    /**
      * Initialize the instance.
      *
      * @param \Concrete\Core\Config\Repository\Repository $config
      * @param \Symfony\Component\HttpFoundation\Session\Session $session
      * @param \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $resolverManager
-     * @param \Concrete\Core\Utility\Service\Validation\Numbers $valn
      * @param \Concrete\Core\Http\ResponseFactoryInterface $responseFactory
+     * @param \Concrete\Core\Utility\Service\Validation\Numbers $valn
+     * @param \Concrete\Core\Site\Service $siteService
      */
-    public function __construct(Repository $config, Session $session, ResolverManagerInterface $resolverManager, ResponseFactoryInterface $responseFactory, Numbers $valn)
-    {
+    public function __construct(
+        Repository $config,
+        Session $session,
+        ResolverManagerInterface $resolverManager,
+        ResponseFactoryInterface $responseFactory,
+        Numbers $valn,
+        Service $siteService
+    ) {
         $this->config = $config;
         $this->session = $session;
         $this->resolverManager = $resolverManager;
         $this->responseFactory = $responseFactory;
         $this->valn = $valn;
+        $this->siteService = $siteService;
     }
 
     /**
@@ -167,8 +183,10 @@ class PostLoginLocation
      */
     public function getFallbackPostLoginUrl()
     {
-        $homeCid = Page::getHomePageID();
-        $home = $homeCid ? Page::getByID($homeCid) : null;
+        /** @var \Concrete\Core\Entity\Site\Site $site */
+        $site = $this->siteService->getSite();
+        $home = $site->getSiteHomePageObject();
+
         if ($home && !$home->isError()) {
             $result = (string) $this->resolverManager->resolve([$home]);
         } else {

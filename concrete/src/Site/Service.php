@@ -426,7 +426,7 @@ class Service
     /**
      * @return Site|null
      */
-    final public function getSite()
+    public function getSite()
     {
         $item = $this->cache->getItem('site');
         if (!$item->isMiss()) {
@@ -442,7 +442,7 @@ class Service
     /**
      * @return Site|null
      */
-    final public function getActiveSiteForEditing()
+    public function getActiveSiteForEditing()
     {
         return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();
     }
