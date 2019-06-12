@@ -12,6 +12,7 @@ class Heartbeat extends Controller
     {
         $sessionValidator = $this->app->make(SessionValidator::class);
         if ($sessionValidator->hasActiveSession()) {
+            // "Touch" the session so that it remains open
             $this->app->make('session');
         }
 
