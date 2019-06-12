@@ -25,8 +25,6 @@ class Version20190520171430 extends AbstractMigration implements RepeatableMigra
                 'nist',
             ])
         ]);
-
-        $this->refreshEntities();
     }
 
 }
