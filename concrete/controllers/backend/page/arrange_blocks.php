@@ -105,37 +105,34 @@ class ArrangeBlocks extends Page
         }
 
 
-        if ($sourceAreaID !== $destinationAreaID) {
-            if ($destinationArea->isGlobalArea()) {
-                $destinationStack = Stack::getByName($destinationAreaHandle);
-                $destinationStackToModify = $destinationStack->getVersionToModify();
+        if ($destinationArea->isGlobalArea()) {
+            $destinationStack = Stack::getByName($destinationAreaHandle);
+            $destinationStackToModify = $destinationStack->getVersionToModify();
+            $actualDestinationArea = Area::get($destinationStackToModify, STACKS_AREA_NAME);
+            $actualDestinationAreaID = $actualDestinationArea->getAreaID();
+            if ($sourceAreaID !== $destinationAreaID) {
                 $nvc->relateVersionEdits($destinationStackToModify);
                 // If the source area is global, we need to get the block from there rather than from the view controller
                 if ($sourceArea->isGlobalArea()) {
-                    $sourceStackToModify = Stack::getByName($sourceAreaHandle)->getVersionToModify();
+                    $sourceStack = Stack::getByName($sourceAreaHandle);
+                    $sourceStackToModify = $sourceStack->getVersionToModify();
                     $nvc->relateVersionEdits($sourceStackToModify);
                     $block = Block::getByID($movingBlockID, $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
                 } else {
                     $block = Block::getByID($movingBlockID, $nvc, $sourceArea);
                 }
-                $block->move($destinationStackToModify, Area::get($destinationStackToModify, STACKS_AREA_NAME));
-            } elseif ($sourceArea->isGlobalArea()) {
+                $block->move($destinationStackToModify, $actualDestinationArea);
+            }
+            $nvc->relateVersionEdits($destinationStackToModify);
+            $destinationStackToModify->processArrangement($actualDestinationAreaID, $movingBlockID, $otherBlockIDs);
+        } else {
+            if ($sourceAreaID !== $destinationAreaID && $sourceArea->isGlobalArea()) {
                 $sourceStack = Stack::getByName($sourceAreaHandle);
                 $sourceStackToModify = $sourceStack->getVersionToModify();
                 $nvc->relateVersionEdits($sourceStackToModify);
                 $block = Block::getByID($movingBlockID, $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
                 $block->move($nvc, Area::get($nvc, STACKS_AREA_NAME));
             }
-        }
-
-        if ($destinationArea->isGlobalArea()) {
-            $destinationStack = Stack::getByName($destinationAreaHandle);
-            $destinationStackToModify = $destinationStack->getVersionToModify();
-            $actualDestinationArea = Area::get($destinationStackToModify, STACKS_AREA_NAME);
-            $actualDestinationAreaID = $actualDestinationArea->getAreaID();
-            $nvc->relateVersionEdits($destinationStackToModify);
-            $destinationStackToModify->processArrangement($actualDestinationAreaID, $movingBlockID, $otherBlockIDs);
-        } else {
             $nvc->processArrangement($destinationAreaID, $movingBlockID, $otherBlockIDs);
         }
     }
