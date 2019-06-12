@@ -47,7 +47,7 @@ class ArrangeBlocks extends Page
         $destinationAreaID = (int) $post->get('area');
         if ($destinationAreaID === $sourceAreaID) {
             $destinationAreaHandle = $sourceAreaHandle;
-            $desinationArea = $sourceArea;
+            $destinationArea = $sourceArea;
         } else {
             $destinationAreaHandle = $destinationAreaID === 0 ? null : Area::getAreaHandleFromID($destinationAreaID);
             $destinationArea = (string) $destinationAreaHandle === '' ? null : Area::get($nvc, $destinationAreaHandle);
@@ -78,7 +78,7 @@ class ArrangeBlocks extends Page
             // now we get further in. We check to see if we're dealing with both a source AND a destination area.
             // if so, we check the area permissions for the destination area.
             if ($sourceAreaID !== $destinationAreaID) {
-                $destAP = new Checker($desinationArea);
+                $destAP = new Checker($destinationArea);
                 if (!$destAP->canEditAreaContents()) {
                     $e->add(t('You may not arrange the contents of area %s.', $destinationAreaHandle));
 
