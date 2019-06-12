@@ -424,6 +424,9 @@ class Service
     }
 
     /**
+     * Resolve the active site
+     * This method MUST be treated as `final` by extending drivers, but MAY be replaced by a complete override.
+     *
      * @return Site|null
      */
     public function getSite()
@@ -439,7 +442,11 @@ class Service
         return $site;
     }
 
+
     /**
+     * Resolve the active site for editing
+     * This method MUST be treated as `final` by extending drivers, but MAY be replaced by a complete override.
+     *
      * @return Site|null
      */
     public function getActiveSiteForEditing()
