@@ -1,15 +1,13 @@
 <?php
 namespace Concrete\Controller\Backend\Page;
 
-use Area;
-use Block;
 use Concrete\Controller\Backend\UserInterface\Page;
-use Concrete\Core\Page\EditResponse as PageEditResponse;
-use Config;
-use Loader;
-use Permissions;
-use Stack;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Checker;
 
 class ArrangeBlocks extends Page
 {
@@ -68,9 +66,9 @@ class ArrangeBlocks extends Page
 
         $otherBlockIDs = $post->get('blocks', []);
 
-        if (Config::get('concrete.permissions.model') == 'advanced') {
+        if ($this->app->make('config')->get('concrete.permissions.model') == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
-            $ap = new Permissions($sourceArea);
+            $ap = new Checker($sourceArea);
             if (!$ap->canEditAreaContents()) {
                 $e->add(t('You may not arrange the contents of area %s.', $sourceAreaHandle));
 
@@ -79,7 +77,7 @@ class ArrangeBlocks extends Page
             // now we get further in. We check to see if we're dealing with both a source AND a destination area.
             // if so, we check the area permissions for the destination area.
             if ($sourceAreaID !== $destinationAreaID) {
-                $destAP = new Permissions($desinationArea);
+                $destAP = new Checker($desinationArea);
                 if (!$destAP->canEditAreaContents()) {
                     $e->add(t('You may not arrange the contents of area %s.', $destinationAreaHandle));
 
