@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\Backend\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page;
@@ -52,7 +53,7 @@ class ArrangeBlocks extends Page
             $destinationArea = (string) $destinationAreaHandle === '' ? null : Area::get($nvc, $destinationAreaHandle);
             if ($destinationArea === null) {
                 $e->add(t('Unable to find the destination area.'));
-                
+
                 return;
             }
         }
@@ -60,7 +61,7 @@ class ArrangeBlocks extends Page
         $movingBlockID = (int) $post->get('block');
         if ($movingBlockID === 0) {
             $e->add(t('Unable to find the block to be moved.'));
-            
+
             return;
         }
 
@@ -93,7 +94,7 @@ class ArrangeBlocks extends Page
                 }
                 if (!$block) {
                     $e->add(t('Unable to find the block to be moved.'));
-                    
+
                     return;
                 }
                 $bt = $block->getBlockTypeObject();
@@ -106,7 +107,6 @@ class ArrangeBlocks extends Page
             // now, if we get down here we perform the arrangement
             // it will be set to true if we're in simple permissions mode, or if we've passed all the checks
         }
-
 
         if ($destinationArea->isGlobalArea()) {
             $destinationStack = Stack::getByName($destinationAreaHandle);
@@ -126,7 +126,7 @@ class ArrangeBlocks extends Page
                 }
                 if (!$block) {
                     $e->add(t('Unable to find the block to be moved.'));
-                    
+
                     return;
                 }
                 $block->move($destinationStackToModify, $actualDestinationArea);
@@ -140,7 +140,7 @@ class ArrangeBlocks extends Page
                 $block = Block::getByID($movingBlockID, $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
                 if (!$block) {
                     $e->add(t('Unable to find the block to be moved.'));
-                    
+
                     return;
                 }
                 $nvc->relateVersionEdits($sourceStackToModify);
