@@ -424,9 +424,12 @@ class Service
     }
 
     /**
+     * Resolve the active site
+     * This method MUST be treated as `final` by extending drivers, but MAY be replaced by a complete override.
+     *
      * @return Site|null
      */
-    final public function getSite()
+    public function getSite()
     {
         $item = $this->cache->getItem('site');
         if (!$item->isMiss()) {
@@ -439,10 +442,14 @@ class Service
         return $site;
     }
 
+
     /**
+     * Resolve the active site for editing
+     * This method MUST be treated as `final` by extending drivers, but MAY be replaced by a complete override.
+     *
      * @return Site|null
      */
-    final public function getActiveSiteForEditing()
+    public function getActiveSiteForEditing()
     {
         return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();
     }
