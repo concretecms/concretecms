@@ -33,10 +33,11 @@ class ArrangeBlocks extends Page
     protected function performArrangement(PageEditResponse $pc)
     {
         $e = $pc->getError();
+        $post = $this->request->request;
 
         $nvc = $this->page->getVersionToModify();
-        $sourceAreaID = intval($_POST['sourceArea']);
-        $destinationAreaID = intval($_POST['area']);
+        $sourceAreaID = (int) $post->get('sourceArea');
+        $destinationAreaID = (int) $post->get('area');
 
         if (Config::get('concrete.permissions.model') == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
@@ -63,9 +64,9 @@ class ArrangeBlocks extends Page
                 // a block of this type to the destination area.
                 if ($ar->isGlobalArea()) {
                     $stack = Stack::getByName($arHandle);
-                    $b = Block::getByID($_REQUEST['block'], $stack, STACKS_AREA_NAME);
+                    $b = Block::getByID((int) $post->get('block'), $stack, STACKS_AREA_NAME);
                 } else {
-                    $b = Block::getByID($_REQUEST['block'], $nvc, $arHandle);
+                    $b = Block::getByID((int) $post->get('block'), $nvc, $arHandle);
                 }
                 $bt = $b->getBlockTypeObject();
                 if (!$destAP->canAddBlock($bt)) {
@@ -90,7 +91,7 @@ class ArrangeBlocks extends Page
                 $stack = Stack::getByName($source_area->getAreaHandle());
                 $stackToModify = $stack->getVersionToModify();
                 $nvc->relateVersionEdits($stackToModify);
-                $block = Block::getByID($_POST['block'], $stackToModify, Area::get($stackToModify, STACKS_AREA_NAME));
+                $block = Block::getByID((int) $post->get('block'), $stackToModify, Area::get($stackToModify, STACKS_AREA_NAME));
                 $block->move($nvc, Area::get($nvc, STACKS_AREA_NAME));
             }
 
@@ -102,9 +103,9 @@ class ArrangeBlocks extends Page
                 if ($source_area->isGlobalArea()) {
                     $sourceStackToModify = Stack::getByName($source_area->getAreaHandle())->getVersionToModify();
                     $nvc->relateVersionEdits($sourceStackToModify);
-                    $block = Block::getByID($_POST['block'], $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
+                    $block = Block::getByID((int) $post->get('block'), $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
                 } else {
-                    $block = Block::getByID($_POST['block'], $nvc, $source_area);
+                    $block = Block::getByID((int) $post->get('block'), $nvc, $source_area);
                 }
                 $block->move($stackToModify, Area::get($stackToModify, STACKS_AREA_NAME));
             }
