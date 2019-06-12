@@ -87,11 +87,16 @@ class ArrangeBlocks extends Page
                 // a block of this type to the destination area.
                 if ($sourceArea->isGlobalArea()) {
                     $sourceStack = Stack::getByName($sourceAreaHandle);
-                    $b = Block::getByID($movingBlockID, $sourceStack, STACKS_AREA_NAME);
+                    $block = Block::getByID($movingBlockID, $sourceStack, STACKS_AREA_NAME);
                 } else {
-                    $b = Block::getByID($movingBlockID, $nvc, $sourceAreaHandle);
+                    $block = Block::getByID($movingBlockID, $nvc, $sourceAreaHandle);
                 }
-                $bt = $b->getBlockTypeObject();
+                if (!$block) {
+                    $e->add(t('Unable to find the block to be moved.'));
+                    
+                    return;
+                }
+                $bt = $block->getBlockTypeObject();
                 if (!$destAP->canAddBlock($bt)) {
                     $e->add(t('You may not add %s to area %s.', t($bt->getBlockTypeName()), $destinationAreaHandle));
 
@@ -119,6 +124,11 @@ class ArrangeBlocks extends Page
                 } else {
                     $block = Block::getByID($movingBlockID, $nvc, $sourceArea);
                 }
+                if (!$block) {
+                    $e->add(t('Unable to find the block to be moved.'));
+                    
+                    return;
+                }
                 $block->move($destinationStackToModify, $actualDestinationArea);
             }
             $nvc->relateVersionEdits($destinationStackToModify);
@@ -127,8 +137,13 @@ class ArrangeBlocks extends Page
             if ($sourceAreaID !== $destinationAreaID && $sourceArea->isGlobalArea()) {
                 $sourceStack = Stack::getByName($sourceAreaHandle);
                 $sourceStackToModify = $sourceStack->getVersionToModify();
-                $nvc->relateVersionEdits($sourceStackToModify);
                 $block = Block::getByID($movingBlockID, $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
+                if (!$block) {
+                    $e->add(t('Unable to find the block to be moved.'));
+                    
+                    return;
+                }
+                $nvc->relateVersionEdits($sourceStackToModify);
                 $block->move($nvc, Area::get($nvc, STACKS_AREA_NAME));
             }
             $nvc->processArrangement($destinationAreaID, $movingBlockID, $otherBlockIDs);
