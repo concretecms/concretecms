@@ -65,7 +65,17 @@ class ArrangeBlocks extends Page
             return;
         }
 
-        $otherBlockIDs = $post->get('blocks', []);
+        $sortedBlockIDs = $post->get('blocks', []);
+        if (is_array($sortedBlockIDs)) {
+            $sortedBlockIDs = array_values(array_filter(array_map('intval', $sortedBlockIDs)));
+        } else {
+            $sortedBlockIDs = [];
+        }
+        if (!in_array($movingBlockID, $sortedBlockIDs, true)) {
+            $e->add(t('Unable to find the block to be moved.'));
+
+            return;
+        }
 
         if ($this->app->make('config')->get('concrete.permissions.model') == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
@@ -131,7 +141,7 @@ class ArrangeBlocks extends Page
                 $block->move($destinationStackToModify, $actualDestinationArea);
             }
             $nvc->relateVersionEdits($destinationStackToModify);
-            $destinationStackToModify->processArrangement($actualDestinationAreaID, $movingBlockID, $otherBlockIDs);
+            $destinationStackToModify->processArrangement($actualDestinationAreaID, $movingBlockID, $sortedBlockIDs);
         } else {
             if ($sourceAreaID !== $destinationAreaID && $sourceArea->isGlobalArea()) {
                 $sourceStack = Stack::getByName($sourceAreaHandle);
@@ -145,7 +155,7 @@ class ArrangeBlocks extends Page
                 $nvc->relateVersionEdits($sourceStackToModify);
                 $block->move($nvc, Area::get($nvc, STACKS_AREA_NAME));
             }
-            $nvc->processArrangement($destinationAreaID, $movingBlockID, $otherBlockIDs);
+            $nvc->processArrangement($destinationAreaID, $movingBlockID, $sortedBlockIDs);
         }
     }
 }
