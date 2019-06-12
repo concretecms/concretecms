@@ -402,6 +402,9 @@
 				modal: true,
 				title: ccmi18n.search,
 				onOpen: function() {
+                    $('div[data-component=search-field-selector]').concreteSearchFieldSelector({
+                        result: cs.result
+                    });
 					cs.setupSearch();
 				}
 			});
