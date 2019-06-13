@@ -40,8 +40,6 @@ class ArrangeBlocks extends Page
         $sourceArea = (string) $sourceAreaHandle === '' ? null : Area::get($nvc, $sourceAreaHandle);
         if ($sourceArea === null) {
             $e->add(t('Unable to find the source area.'));
-
-            return;
         }
 
         $destinationAreaID = (int) $post->get('area');
@@ -53,16 +51,12 @@ class ArrangeBlocks extends Page
             $destinationArea = (string) $destinationAreaHandle === '' ? null : Area::get($nvc, $destinationAreaHandle);
             if ($destinationArea === null) {
                 $e->add(t('Unable to find the destination area.'));
-
-                return;
             }
         }
 
         $movingBlockID = (int) $post->get('block');
         if ($movingBlockID === 0) {
             $e->add(t('Unable to find the block to be moved.'));
-
-            return;
         }
 
         $sortedBlockIDs = $post->get('blocks', []);
@@ -73,7 +67,9 @@ class ArrangeBlocks extends Page
         }
         if (!in_array($movingBlockID, $sortedBlockIDs, true)) {
             $e->add(t('Unable to find the block to be moved.'));
+        }
 
+        if ($e->has()) {
             return;
         }
 
@@ -82,8 +78,6 @@ class ArrangeBlocks extends Page
             $ap = new Checker($sourceArea);
             if (!$ap->canEditAreaContents()) {
                 $e->add(t('You may not arrange the contents of area %s.', $sourceAreaHandle));
-
-                return;
             }
             // now we get further in. We check to see if we're dealing with both a source AND a destination area.
             // if so, we check the area permissions for the destination area.
@@ -91,8 +85,6 @@ class ArrangeBlocks extends Page
                 $destAP = new Checker($destinationArea);
                 if (!$destAP->canEditAreaContents()) {
                     $e->add(t('You may not arrange the contents of area %s.', $destinationAreaHandle));
-
-                    return;
                 }
                 // we're not done yet. Now we have to check to see whether this user has permission to add
                 // a block of this type to the destination area.
@@ -104,14 +96,12 @@ class ArrangeBlocks extends Page
                 }
                 if (!$block) {
                     $e->add(t('Unable to find the block to be moved.'));
-
-                    return;
-                }
-                if (!$destAP->canAddBlock($block)) {
+                } elseif (!$destAP->canAddBlock($block)) {
                     $e->add(t('You may not add %s to area %s.', t($block->getBlockTypeObject()->getBlockTypeName()), $destinationAreaHandle));
-
-                    return;
                 }
+            }
+            if ($e->has()) {
+                return;
             }
             // now, if we get down here we perform the arrangement
             // it will be set to true if we're in simple permissions mode, or if we've passed all the checks
