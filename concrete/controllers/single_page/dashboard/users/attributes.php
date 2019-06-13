@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\UserKey;
-use Concrete\Core\Attribute\Type;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
@@ -33,7 +33,8 @@ class Attributes extends DashboardAttributesPageController
 
     public function select_type($type = null)
     {
-        $type = Type::getByID($type);
+        $typeFactory = $this->app->make(TypeFactory::class);
+        $type = $typeFactory->getByID($type);
         $this->renderAdd($type,
             \URL::to('/dashboard/users/attributes', 'view')
         );
@@ -42,7 +43,8 @@ class Attributes extends DashboardAttributesPageController
     public function add($type = null)
     {
         $this->select_type($type);
-        $type = Type::getByID($type);
+        $typeFactory = $this->app->make(TypeFactory::class);
+        $type = $typeFactory->getByID($type);
         $this->executeAdd($type, \URL::to('/dashboard/users/attributes', 'view'));
     }
 

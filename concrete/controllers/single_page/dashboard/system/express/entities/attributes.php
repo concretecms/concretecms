@@ -3,7 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
-use Concrete\Core\Attribute\Type;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
@@ -18,8 +18,9 @@ class Attributes extends DashboardAttributesPageController
     public function view($id = null)
     {
         $entity = $this->getEntity($id);
+        $typeFactory = $this->app->make(TypeFactory::class);
         $this->set('entity', $entity);
-        $this->renderList($entity->getAttributes(), Type::getAttributeTypeList());
+        $this->renderList($entity->getAttributes(), $typeFactory->getList());
     }
 
     public function edit($id = null, $akID = null)
@@ -47,7 +48,8 @@ class Attributes extends DashboardAttributesPageController
     public function select_type($id = null, $type = null)
     {
         $this->set('entity', $this->getEntity($id));
-        $type = Type::getByID($type);
+        $typeFactory = $this->app->make(TypeFactory::class);
+        $type = $typeFactory->getByID($type);
         $this->renderAdd($type,
             \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
@@ -56,7 +58,8 @@ class Attributes extends DashboardAttributesPageController
     public function add($id = null, $type = null)
     {
         $this->select_type($id, $type);
-        $type = Type::getByID($type);
+        $typeFactory = $this->app->make(TypeFactory::class);
+        $type = $typeFactory->getByID($type);
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
         $this->executeAdd($type, \URL::to('/dashboard/system/express/entities/attributes', 'view', $id));
