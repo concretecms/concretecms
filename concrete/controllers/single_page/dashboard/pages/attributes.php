@@ -26,7 +26,6 @@ class Attributes extends DashboardAttributesPageController
     {
         $this->edit($akID);
         $key = CollectionKey::getByID($akID);
-        $category = Category::getByHandle('collection');
         $this->executeUpdate($key,
             \URL::to('/dashboard/pages/attributes', 'view')
         );

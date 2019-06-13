@@ -252,7 +252,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
      */
     protected function executeDelete(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
-        $entity = $this->getCategoryObject();
         try {
             if (!$this->token->validate('delete_attribute')) {
                 throw new \Exception($this->token->getErrorMessage());
