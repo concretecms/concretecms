@@ -36,7 +36,7 @@ class Attributes extends DashboardAttributesPageController
         $typeFactory = $this->app->make(TypeFactory::class);
         $type = $typeFactory->getByID($type);
         $this->renderAdd($type,
-            \URL::to('/dashboard/pages/attributes', 'view', $id)
+            \URL::to('/dashboard/pages/attributes', 'view')
         );
     }
 
