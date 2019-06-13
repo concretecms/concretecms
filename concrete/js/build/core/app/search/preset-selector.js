@@ -16,7 +16,7 @@
             e.preventDefault();
             if (!$(e.target).is('button') && $(this).data('action')) {
                 $.fn.dialog.closeTop();
-                my.ajaxUpdate($(this).data('action'));
+                ConcreteEvent.publish('SavedPresetSubmit',$(this).data('action'));
                 my.$resetSearchButton.show();
                 my.$headerSearch.find('div.btn-group').hide();
                 my.$headerSearchInput.prop('disabled', true).val('');
