@@ -8,6 +8,11 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
+    /**
+     * The current express entity.
+     *
+     * @var \Concrete\Core\Entity\Express\Entity|null
+     */
     protected $category;
 
     public function view($id = null)
@@ -68,6 +73,13 @@ class Attributes extends DashboardAttributesPageController
         );
     }
 
+    /**
+     * Get the express entity given its ID.
+     *
+     * @param string $id the entity ID
+     *
+     * @return \Concrete\Core\Entity\Express\Entity|null
+     */
     protected function getEntity($id)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -76,11 +88,23 @@ class Attributes extends DashboardAttributesPageController
         return $this->category;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Page\Controller\DashboardAttributesPageController::getCategoryObject()
+     *
+     * @return \Concrete\Core\Entity\Express\Entity|null
+     */
     protected function getCategoryObject()
     {
         return $this->category;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Page\Controller\DashboardAttributesPageController::getHeaderMenu()
+     */
     protected function getHeaderMenu(CategoryObjectInterface $category)
     {
         return false;

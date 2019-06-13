@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
+    /**
+     * Configure the data for the view so that it can render the list of the attributes.
+     */
     public function renderList()
     {
         $entity = $this->getCategoryObject();
@@ -36,6 +39,12 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('attributeView', $list);
     }
 
+    /**
+     * Configure the data for the view so that it can render the "Add Attribute" page.
+     *
+     * @param \Concrete\Core\Entity\Attribute\Type $type The type of the new attribute
+     * @param \League\Url\UrlInterface|string $backURL the URL to be used when users hit the "Cancel Add" button
+     */
     public function renderAdd($type, $backURL)
     {
         $add = new Form($type);
@@ -46,6 +55,12 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('pageTitle', t('Add Attribute'));
     }
 
+    /**
+     * Configure the data for the view so that it can render the "Edit Attribute" page.
+     *
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key the key to be modified
+     * @param \League\Url\UrlInterface|string $backURL the URL to be used when users hit the "Cancel Add" button
+     */
     public function renderEdit($key, $backURL)
     {
         $edit = new EditKey($key);
@@ -60,19 +75,18 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('headerMenu', $header);
     }
 
+    /**
+     * Sort the attributes belinging to a set, reading the data from the request.
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function sort_attribute_set()
     {
         $entity = $this->getCategoryObject();
         $category = $entity->getAttributeKeyCategory();
         if ($category->getSetManager()->allowAttributeSets()) {
-            /*
-             * @var CategoryInterface
-             */
             $keys = [];
             foreach ((array) $this->request->request->get('akID') as $akID) {
-                /*
-                 * @var AttributeInterface
-                 */
                 $key = $category->getAttributeKeyByID($akID);
                 if (is_object($key)) {
                     $keys[] = $key;
@@ -108,15 +122,31 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     }
 
     /**
-     * @return CategoryObjectInterface
+     * Get the attribute category we are working on.
+     *
+     * @return \Concrete\Core\Attribute\CategoryObjectInterface
      */
     abstract protected function getCategoryObject();
 
+    /**
+     * Get the controller of the element to be placed in the header of the "Attribute List" page.
+     *
+     * @param \Concrete\Core\Attribute\CategoryObjectInterface $category
+     *
+     * @return \Concrete\Core\Controller\ElementController|null
+     */
     protected function getHeaderMenu(CategoryObjectInterface $category)
     {
         return new StandardListHeader($category);
     }
 
+    /**
+     * Create a new attribute key for the specified type, reading the type-specific data from the current request.
+     *
+     * @param \Concrete\Core\Entity\Attribute\Type $type the type of the attribute to be created
+     * @param \League\Url\UrlInterface|string $successURL where to redirect the users when the operation succeedes
+     * @param callable|null $onComplete a callback function that's called right after the new attribute key is created
+     */
     protected function executeAdd(Type $type, $successURL, $onComplete = null)
     {
         $entity = $this->getCategoryObject();
@@ -126,9 +156,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         if (!$response->isValid()) {
             $this->error = $response->getErrorObject();
         } else {
-            /*
-             * @var $category \Concrete\Core\Attribute\Category\CategoryInterface
-             */
             $key = $category->addFromRequest($type, $this->request);
             $this->assignToSetFromRequest($key);
 
@@ -140,6 +167,11 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
+    /**
+     * Assign an attribute key to the set (which is read from the request).
+     *
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
+     */
     protected function assignToSetFromRequest(AttributeKeyInterface $key)
     {
         $request = $this->request;
@@ -185,6 +217,13 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->entityManager->flush();
     }
 
+    /**
+     * Update an existing attribute key, reading the type-specific data from the current request.
+     *
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key the attribute key to be updated
+     * @param \League\Url\UrlInterface|string $successURL where to redirect the users when the operation succeedes
+     * @param callable|null $onComplete a callback function that's called right after the attribute key is updated
+     */
     protected function executeUpdate(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
         $entity = $this->getCategoryObject();
@@ -204,6 +243,13 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
+    /**
+     * Delete an existing attribute key.
+     *
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key the attribute key to be deleted
+     * @param \League\Url\UrlInterface|string $successURL where to redirect the users when the operation succeedes
+     * @param callable|null $onComplete a callback function that's called right after the attribute key is deleted
+     */
     protected function executeDelete(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
         $entity = $this->getCategoryObject();

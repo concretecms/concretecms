@@ -55,6 +55,13 @@ class Attributes extends DashboardAttributesPageController
         );
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Page\Controller\DashboardAttributesPageController::getCategoryObject()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Category
+     */
     protected function getCategoryObject()
     {
         return Category::getByHandle('collection');
