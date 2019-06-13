@@ -18,7 +18,6 @@ use Concrete\Core\Permission\Key\BlockKey as BlockPermissionKey;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Assignment\PageTimedAssignment as PageContentPermissionTimedAssignment;
-use Concrete\Core\Support\Facade\Application;
 
 class PageResponse extends Response
 {
