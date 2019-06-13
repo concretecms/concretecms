@@ -13,6 +13,7 @@ use Concrete\Core\Attribute\Set;
 use Concrete\Core\Attribute\StandardSetManager;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
+use Concrete\Core\Error\UserMessageException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class DashboardAttributesPageController extends DashboardPageController
@@ -254,7 +255,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         try {
             if (!$this->token->validate('delete_attribute')) {
-                throw new \Exception($this->token->getErrorMessage());
+                throw new UserMessageException($this->token->getErrorMessage());
             }
 
             $this->entityManager->remove($key);
@@ -266,7 +267,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
             $this->flash('success', t('Attribute deleted successfully.'));
             $this->redirect($successURL);
-        } catch (Exception $e) {
+        } catch (UserMessageException $e) {
             $this->error = $e;
         }
     }
