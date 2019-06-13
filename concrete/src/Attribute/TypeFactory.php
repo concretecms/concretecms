@@ -1,12 +1,13 @@
 <?php
+
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Gettext\Translations;
 
 /**
@@ -27,7 +28,7 @@ class TypeFactory
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
 
-        return $r->findOneBy(array('atHandle' => $atHandle));
+        return $r->findOneBy(['atHandle' => $atHandle]);
     }
 
     public function getListByPackage(Package $package)
@@ -41,24 +42,7 @@ class TypeFactory
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
 
-        return $r->findOneBy(array('atID' => $atID));
-    }
-
-    protected function installDatabase(AttributeType $type)
-    {
-        $r = $this->environment->getRecord(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_ATTRIBUTE_DB, $type->getPackageHandle());
-        if ($r->exists()) {
-            // db.xml legacy approach
-            \Concrete\Core\Package\Package::installDB($r->file);
-        }
-
-        if (is_dir(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' .
-            DIRNAME_ENTITIES)) {
-            // Refresh the application entities
-            $manager = new DatabaseStructureManager($this->entityManager);
-            $manager->refreshEntities();
-        }
-
+        return $r->findOneBy(['atID' => $atID]);
     }
 
     public function add($atHandle, $atName, $pkg = null)
@@ -92,6 +76,8 @@ class TypeFactory
 
     /**
      * @deprecated
+     *
+     * @param mixed $akCategoryHandle
      */
     public function getAttributeTypeList($akCategoryHandle = false)
     {
@@ -104,10 +90,26 @@ class TypeFactory
     public function exportTranslations()
     {
         $translations = new Translations();
-        foreach($this->getList() as $type) {
+        foreach ($this->getList() as $type) {
             $translations->insert('AttributeTypeName', $type->getAttributeTypeName());
         }
+
         return $translations;
     }
 
+    protected function installDatabase(AttributeType $type)
+    {
+        $r = $this->environment->getRecord(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_ATTRIBUTE_DB, $type->getPackageHandle());
+        if ($r->exists()) {
+            // db.xml legacy approach
+            \Concrete\Core\Package\Package::installDB($r->file);
+        }
+
+        if (is_dir(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' .
+            DIRNAME_ENTITIES)) {
+            // Refresh the application entities
+            $manager = new DatabaseStructureManager($this->entityManager);
+            $manager->refreshEntities();
+        }
+    }
 }
