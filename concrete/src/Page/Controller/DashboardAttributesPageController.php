@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Controller\Element\Attribute\EditKey;
@@ -10,18 +11,12 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Attribute\Set;
 use Concrete\Core\Attribute\StandardSetManager;
-use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
-    /**
-     * @return CategoryObjectInterface
-     */
-    abstract protected function getCategoryObject();
-
     public function renderList()
     {
         $entity = $this->getCategoryObject();
@@ -39,11 +34,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('headerMenu', $this->getHeaderMenu($entity));
 
         $this->set('attributeView', $list);
-    }
-
-    protected function getHeaderMenu(CategoryObjectInterface $category)
-    {
-        return new StandardListHeader($category);
     }
 
     public function renderAdd($type, $backURL)
@@ -68,6 +58,63 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $header = new KeyHeader($key);
         $header->setDashboardPageParameters($this->getRequestActionParameters());
         $this->set('headerMenu', $header);
+    }
+
+    public function sort_attribute_set()
+    {
+        $entity = $this->getCategoryObject();
+        $category = $entity->getAttributeKeyCategory();
+        if ($category->getSetManager()->allowAttributeSets()) {
+            /*
+             * @var CategoryInterface
+             */
+            $keys = [];
+            foreach ((array) $this->request->request->get('akID') as $akID) {
+                /*
+                 * @var AttributeInterface
+                 */
+                $key = $category->getAttributeKeyByID($akID);
+                if (is_object($key)) {
+                    $keys[] = $key;
+                }
+            }
+
+            foreach ($category->getSetManager()->getAttributeSets() as $set) {
+                if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
+                    // Clear the keys
+                    foreach ($set->getAttributeKeyCollection() as $setKey) {
+                        $this->entityManager->remove($setKey);
+                    }
+                    $this->entityManager->flush();
+
+                    $i = 0;
+                    foreach ($keys as $key) {
+                        $setKey = new SetKey();
+                        $setKey->setAttributeKey($key);
+                        $setKey->setAttributeSet($set);
+                        $setKey->setDisplayOrder($i);
+                        $set->getAttributeKeyCollection()->add($setKey);
+                        ++$i;
+                    }
+                    break;
+                }
+            }
+
+            $this->entityManager->persist($set);
+            $this->entityManager->flush();
+
+            return new JsonResponse($set);
+        }
+    }
+
+    /**
+     * @return CategoryObjectInterface
+     */
+    abstract protected function getCategoryObject();
+
+    protected function getHeaderMenu(CategoryObjectInterface $category)
+    {
+        return new StandardListHeader($category);
     }
 
     protected function executeAdd(Type $type, $successURL, $onComplete = null)
@@ -176,54 +223,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $this->redirect($successURL);
         } catch (Exception $e) {
             $this->error = $e;
-        }
-    }
-
-    public function sort_attribute_set()
-    {
-        $entity = $this->getCategoryObject();
-        $category = $entity->getAttributeKeyCategory();
-        if ($category->getSetManager()->allowAttributeSets()) {
-            /*
-             * @var CategoryInterface
-             */
-            $keys = array();
-            foreach ((array) $this->request->request->get('akID') as $akID) {
-                /*
-                 * @var AttributeInterface
-                 */
-                $key = $category->getAttributeKeyByID($akID);
-                if (is_object($key)) {
-                    $keys[] = $key;
-                }
-            }
-
-            foreach ($category->getSetManager()->getAttributeSets() as $set) {
-                if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
-
-                    // Clear the keys
-                    foreach ($set->getAttributeKeyCollection() as $setKey) {
-                        $this->entityManager->remove($setKey);
-                    }
-                    $this->entityManager->flush();
-
-                    $i = 0;
-                    foreach ($keys as $key) {
-                        $setKey = new SetKey();
-                        $setKey->setAttributeKey($key);
-                        $setKey->setAttributeSet($set);
-                        $setKey->setDisplayOrder($i);
-                        $set->getAttributeKeyCollection()->add($setKey);
-                        ++$i;
-                    }
-                    break;
-                }
-            }
-
-            $this->entityManager->persist($set);
-            $this->entityManager->flush();
-
-            return new JsonResponse($set);
         }
     }
 }

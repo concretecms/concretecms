@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Attribute\Key\Category;
@@ -8,11 +9,6 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
-    protected function getCategoryObject()
-    {
-        return Category::getByHandle('user');
-    }
-
     public function view()
     {
         $this->renderList();
@@ -50,11 +46,24 @@ class Attributes extends DashboardAttributesPageController
         $this->executeAdd($type, \URL::to('/dashboard/users/attributes', 'view'));
     }
 
+    /**
+     * @param int $akID
+     */
     public function delete($akID = null)
     {
         $key = UserKey::getByID($akID);
         $this->executeDelete($key,
             \URL::to('/dashboard/users/attributes', 'view')
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Page\Controller\DashboardAttributesPageController::getCategoryObject()
+     */
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('user');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
@@ -9,18 +10,6 @@ class Attributes extends DashboardAttributesPageController
 {
     protected $category;
 
-    protected function getEntity($id)
-    {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $this->category = $r->findOneById($id);
-        return $this->category;
-    }
-
-    protected function getCategoryObject()
-    {
-        return $this->category;
-    }
-
     public function view($id = null)
     {
         $entity = $this->getEntity($id);
@@ -28,16 +17,11 @@ class Attributes extends DashboardAttributesPageController
         $this->renderList($entity->getAttributes(), Type::getAttributeTypeList());
     }
 
-    protected function getHeaderMenu(CategoryObjectInterface $category)
-    {
-        return false;
-    }
-
     public function edit($id = null, $akID = null)
     {
         $this->set('entity', $this->getEntity($id));
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key');
-        $key = $r->findOneBy(array('akID' => $akID));
+        $key = $r->findOneBy(['akID' => $akID]);
         $this->renderEdit($key,
             \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
@@ -49,7 +33,7 @@ class Attributes extends DashboardAttributesPageController
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key');
-        $key = $r->findOneBy(array('akID' => $akID));
+        $key = $r->findOneBy(['akID' => $akID]);
         $this->executeUpdate($key,
             \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
@@ -82,5 +66,23 @@ class Attributes extends DashboardAttributesPageController
         $this->executeDelete($key,
             \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
         );
+    }
+
+    protected function getEntity($id)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $this->category = $r->findOneById($id);
+
+        return $this->category;
+    }
+
+    protected function getCategoryObject()
+    {
+        return $this->category;
+    }
+
+    protected function getHeaderMenu(CategoryObjectInterface $category)
+    {
+        return false;
     }
 }

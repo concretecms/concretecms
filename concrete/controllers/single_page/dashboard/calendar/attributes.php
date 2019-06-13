@@ -1,18 +1,14 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Calendar;
 
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
-use Concrete\Core\Attribute\Key\EventKey;
 
 class Attributes extends DashboardAttributesPageController
 {
-    protected function getCategoryObject()
-    {
-        return Category::getByHandle('event');
-    }
-
     public function view()
     {
         $this->renderList();
@@ -56,5 +52,10 @@ class Attributes extends DashboardAttributesPageController
         $this->executeDelete($key,
             \URL::to('/dashboard/calendar/attributes', 'view')
         );
+    }
+
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('event');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Concrete\Core\Attribute\Key\Category;
@@ -8,11 +9,6 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
-    protected function getCategoryObject()
-    {
-        return Category::getByHandle('collection');
-    }
-
     public function view()
     {
         $this->renderList();
@@ -57,5 +53,10 @@ class Attributes extends DashboardAttributesPageController
         $this->executeDelete($key,
             \URL::to('/dashboard/pages/attributes', 'view')
         );
+    }
+
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('collection');
     }
 }

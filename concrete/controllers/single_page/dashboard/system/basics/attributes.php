@@ -1,26 +1,16 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Controller\Element\Attribute\SiteStandardListHeader;
 use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
-    protected function getCategoryObject()
-    {
-        return Category::getByHandle('site');
-    }
-
-    protected function getHeaderMenu(CategoryObjectInterface $category)
-    {
-        return new SiteStandardListHeader($category);
-    }
-
     public function view()
     {
         $this->renderList();
@@ -64,5 +54,15 @@ class Attributes extends DashboardAttributesPageController
         $this->executeDelete($key,
             \URL::to('/dashboard/system/basics/attributes', 'view')
         );
+    }
+
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('site');
+    }
+
+    protected function getHeaderMenu(CategoryObjectInterface $category)
+    {
+        return new SiteStandardListHeader($category);
     }
 }
