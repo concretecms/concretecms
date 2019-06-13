@@ -2,6 +2,7 @@
 
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
+use Concrete\Core\Support\Facade\Application;
 
 $view = new View('image-editor/editor');
 
@@ -54,19 +55,27 @@ if ($type_version) {
     return;
 }
 
-$view->addScopeItems(
-    array(
-        'fv' => $file_version,
-        'no_bind' => true,
-        'settings' => array(
-            'saveHeight' => $height,
-            'saveWidth' => $width,
-            'saveUrl' => (string) URL::to('/tools/required/files/importers/thumbnail'),
-            'saveData' => array(
-                'isThumbnail' => true,
-                'fID' => $file_version->getFileID(),
-                'fvID' => $file_version->getFileVersionID(),
-                'handle' => $handle,
-            ), ),
-    ));
+$saveAreaBackgroundColor = $type_version->getSaveAreaBackgroundColor();
+if (empty($saveAreaBackgroundColor)) {
+    $app = Application::getFacadeApplication();
+    $config = $app->make('config');
+    $saveAreaBackgroundColor = $config->get('concrete.file_manager.images.image_editor_save_area_background_color');
+}
+
+$view->addScopeItems([
+    'fv' => $file_version,
+    'no_bind' => true,
+    'settings' => [
+        'saveAreaBackgroundColor' => $saveAreaBackgroundColor,
+        'saveHeight' => $height,
+        'saveWidth' => $width,
+        'saveUrl' => (string) URL::to('/tools/required/files/importers/thumbnail'),
+        'saveData' => [
+            'isThumbnail' => true,
+            'fID' => $file_version->getFileID(),
+            'fvID' => $file_version->getFileVersionID(),
+            'handle' => $handle,
+        ],
+    ],
+]);
 echo $view->render();

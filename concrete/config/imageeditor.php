@@ -25,6 +25,19 @@ return array(
         ),
 
         /*
+         * Extension that provides image placement and other default core functionality
+         *
+         * @var array imageeditor.extensions.core/colors
+         */
+        'core/colors' => array(
+            'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionControl,
+            'name' => tc('ImageEditorControlSetName', 'Colors'),
+            'handle' => 'colors',
+            'src' => 'core/imageeditor/control/colors',
+            'view' => 'image-editor/controls/colors',
+        ),
+
+        /*
          * Extension for adding filter management and slideout
          *
          * @var array imageeditor.extensions.core/filter

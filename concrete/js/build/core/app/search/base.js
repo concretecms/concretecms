@@ -402,6 +402,9 @@
 				modal: true,
 				title: ccmi18n.search,
 				onOpen: function() {
+                    $('div[data-component=search-field-selector]').concreteSearchFieldSelector({
+                        result: cs.result
+                    });
 					cs.setupSearch();
 				}
 			});
@@ -436,7 +439,10 @@
 			cs.ajaxUpdate($(this).attr('action'), data);
 			return false;
 		});
-
+		ConcreteEvent.unsubscribe('SavedPresetSubmit');
+		ConcreteEvent.subscribe('SavedPresetSubmit', function (e, data) {
+			cs.ajaxUpdate(data);
+		});
 		// NEW SEARCH
 		cs.$element.find('div[data-header] form').on('submit', function() {
 			var data = $(this).serializeArray();

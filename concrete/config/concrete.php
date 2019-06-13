@@ -661,6 +661,13 @@ return [
                 // Space-separated list of attributes to be kept
                 'allowed_attributes' => '',
             ],
+            /*
+             * Background color of the Image Editor saveArea
+             * Leave empty to use a transparent background
+             *
+             * @var string
+             */
+            'image_editor_save_area_background_color' => '',
         ],
         /*
          * Options for the results per page dropdown

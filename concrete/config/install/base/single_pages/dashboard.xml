@@ -960,6 +960,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Password Requirements" path="/dashboard/system/registration/password_requirements" filename="/dashboard/system/registration/password_requirements.php" pagetype="" description="Set password rule and regulations." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>password, requirements, code, key, login, registration, security, nist</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">

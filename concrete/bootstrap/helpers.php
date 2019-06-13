@@ -299,7 +299,7 @@ function output_vars(array $get_defined_vars, $valueOfThis = null, $return = fal
         $get_defined_vars['this'] = $valueOfThis;
     }
     $generator = new Concrete\Core\Support\Symbol\PhpDocGenerator();
-    $phpDoc = $generator->describeVars($get_defined_vars);
+    $phpDoc = $generator->setIsSingleDocBlock(true)->describeVars($get_defined_vars);
     if (!$return) {
         echo '</script><pre>', $phpDoc;
         die();
