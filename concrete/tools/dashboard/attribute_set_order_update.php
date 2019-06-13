@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $canRead = false;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
-$ch = Page::getByPath('/dashboard/settings/attributes/sets');
+$ch = Page::getByPath('/dashboard/system/attributes/sets');
 $cp = new Permissions($ch);
 if ($cp->canViewPage()) {
     $canRead = true;
