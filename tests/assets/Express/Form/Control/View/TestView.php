@@ -9,9 +9,9 @@ use Concrete\Core\Filesystem\TemplateLocator;
 
 class TestView extends View
 {
-
     /**
      * AttributeKeyView constructor.
+     *
      * @param ContextInterface $context
      * @param AttributeKeyControl $control
      */

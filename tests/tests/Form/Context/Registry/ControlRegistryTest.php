@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Form\Context\Registry;
 
 use Concrete\Core\Entity\Attribute\Type;
@@ -126,6 +125,7 @@ class ContextRegistryTest extends PHPUnit_Framework_TestCase
 
         $akControl = new AttributeKeyControl();
         $akControl->setAttributeKey($ak);
+
         return $akControl;
     }
 
