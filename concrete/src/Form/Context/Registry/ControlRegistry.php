@@ -58,7 +58,7 @@ class ControlRegistry
                 }
             }
         }
-        if ($index) {
+        if ($index !== null) {
             $this->entries[$index] = $entry;
         } else {
             $this->entries[] = $entry;
