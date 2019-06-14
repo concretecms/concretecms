@@ -32,7 +32,7 @@ matrix:
       before_script:
         - ./.travis/composer-deps.sh
       script:
-        - composer phpcs
+        - ./.travis/check-php-coding-style.sh
 
     - name: Check JS coding style
       language: node_js

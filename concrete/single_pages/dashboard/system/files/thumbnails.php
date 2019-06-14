@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Page\View\PageView $view */
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
+/* @var Concrete\Core\Form\Service\Widget\Color $form_color */
 /* @var Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails $controller */
 
 if (isset($type)) {
@@ -115,6 +116,15 @@ if (isset($type)) {
                 </label>
             </div>
         </div>
+
+        <div class="form-group">
+            <?= $form->label('ftSaveAreaBackgroundColor', t('Image Editor Background Color')); ?>
+            <div>
+                <?= $form_color->output('ftSaveAreaBackgroundColor', $type->getSaveAreaBackgroundColor(), ['preferredFormat' => 'hex']); ?>
+            </div>
+            <p class="help-block"><?= t('Leave this empty to use a transparent background.'); ?></p>
+        </div>
+
         <?php
         if ($allowConditionalThumbnails) {
             $selectedFileSets = [];

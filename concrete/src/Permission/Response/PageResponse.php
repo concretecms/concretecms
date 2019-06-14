@@ -145,6 +145,7 @@ class PageResponse extends Response
             return true;
         }
 
+        $app = Application::getFacadeApplication();
         $sh = $app->make('helper/concrete/dashboard/sitemap');
         if ($sh->canViewSitemapPanel()) {
             return true;

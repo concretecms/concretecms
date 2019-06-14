@@ -93,6 +93,13 @@ class CsvWriter
         }
         yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
+        $author = $entry->getAuthor();
+        if ($author) {
+            yield 'author_name' => $author->getUserInfoObject()->getUserDisplayName();
+        } else {
+            yield 'author_name' => null;
+        }
+
         $attributes = $entry->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKey()->getAttributeKeyHandle() => $attribute->getPlainTextValue();
@@ -120,6 +127,7 @@ class CsvWriter
     {
         yield 'publicIdentifier' => 'publicIdentifier';
         yield 'ccm_date_created' => 'dateCreated';
+        yield 'author_name' => 'authorName';
 
         $attributes = $entity->getAttributes();
         foreach ($attributes as $attribute) {

@@ -490,6 +490,9 @@ return [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
         ],
+        'core/imageeditor/control/colors' => [
+            ['javascript', 'js/image-editor/controls/colors.js'],
+        ],
         'core/duration' => [
             ['javascript', 'js/duration.js'],
             ['css', 'css/duration.css'],
@@ -1193,18 +1196,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-
-    'api' => [
-        'scopes' => [
-            'system',
-            'site',
-            'account',
-
-            // For OIDC authentication
-            'openid',
-        ],
-    ],
-
+    
     // HTTP middleware for processing http requests
     'middleware' => [
         [

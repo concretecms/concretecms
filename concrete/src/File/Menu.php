@@ -19,6 +19,7 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
 
         $this->setAttribute('data-search-file-menu', $file->getFileID());
         $this->addItem(new LinkItem('#', t('Clear'), ['data-file-manager-action' => 'clear']));
+        $this->addItem(new LinkItem('#', t('Choose New File'), ['data-file-manager-action' => 'choose-new-file']));
         $this->addItem(new DividerItem());
 
         $fp = new \Permissions($file);

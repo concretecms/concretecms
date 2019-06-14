@@ -1,5 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @var string|null $settingsPage
+ */
+
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $valt = $app->make('helper/validation/token');
 $th = $app->make('helper/text');
@@ -7,9 +11,15 @@ if ($isReportEnabled) {
     ?>
 
 <div class="ccm-dashboard-header-buttons">
-    <?php if (!isset($selectedChannel)) {
+    <?php
+    if ($settingsPage !== null) {
         ?>
-        <a href="javascript:void(0)" class="btn btn-default btn-danger" onclick="clearAllChannelLogs()" ><?=t('Delete all'); ?></a>
+        <a href="<?= h($settingsPage) ?>" class="btn btn-default"><?= t('Settings') ?></a>
+        <?php
+    }
+    if (!isset($selectedChannel)) {
+        ?>
+        <a href="javascript:void(0)" class="btn btn-danger" onclick="clearAllChannelLogs()" ><?=t('Delete all'); ?></a>
         <script>
             clearAllChannelLogs = function() {
                 ConcreteAlert.confirm(
@@ -160,9 +170,12 @@ if ($isReportEnabled) {
 
 <?php
 } else {
-        ?>
-
+    ?>
     <p><?=t('The dashboard log report has been disabled in your logging configuration.'); ?></p>
-
-<?php
+    <?php
+    if ($settingsPage !== null) {
+        ?>
+        <a href="<?= h($settingsPage) ?>" class="btn btn-primary"><?= t('Settings') ?></a>
+        <?php
     }
+}

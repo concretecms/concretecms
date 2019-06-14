@@ -18,8 +18,16 @@ class Thumbnails extends DashboardPageController
 
     const FILESETOPTION_ONLY = 'only';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::$helpers
+     */
+    public $helpers = ['form', 'form/color'];
+
     public function view()
     {
+        $this->requireAsset('core/colorpicker');
         $list = TypeService::getList();
         $this->set('types', $list);
     }
@@ -41,7 +49,7 @@ class Thumbnails extends DashboardPageController
         $this->set('sizingModes', $this->getSizingModes());
         $this->set('sizingModeHelps', $this->getSizingModeHelps());
         $imageManipulationLibrary = $config->get('concrete.file_manager.images.manipulation_library');
-        $this->set('manipulationLibrarySupportsAnimations', (string) $imageManipulationLibrary !== '' && $imageManipulationLibrary !== 'gd'); 
+        $this->set('manipulationLibrarySupportsAnimations', (string) $imageManipulationLibrary !== '' && $imageManipulationLibrary !== 'gd');
         if ($type->getID() && $type->isRequired()) {
             $this->set('allowConditionalThumbnails', false);
         } else {
@@ -146,6 +154,7 @@ class Thumbnails extends DashboardPageController
             }
             $type->setIsUpscalingEnabled($post->get('ftUpscalingEnabled') ? true : false);
             $type->setKeepAnimations($post->get('ftKeepAnimations'));
+            $type->setSaveAreaBackgroundColor($post->get('ftSaveAreaBackgroundColor'));
             if ($ftTypeID === 'new' || !$type->isRequired()) {
                 $fileSetOption = $post->get('fileSetOption');
                 if (!in_array($fileSetOption, array_keys($this->getFileSetOptions()), true)) {
