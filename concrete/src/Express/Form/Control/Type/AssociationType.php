@@ -1,16 +1,26 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Type;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\Type\Item\AssociationItem;
+use Concrete\Core\Express\Form\Control\Validator\AssociationControlValidator;
 use Doctrine\ORM\EntityManager;
 
 class AssociationType implements TypeInterface
 {
+    /**
+     * @var EntityManager 
+     */
     protected $entityManager;
+
+    /**
+     * @var Application 
+     */
+    protected $app;
 
     public function getType()
     {
@@ -19,11 +29,12 @@ class AssociationType implements TypeInterface
 
     public function getValidator()
     {
-        return false;
+        return $this->app->make(AssociationControlValidator::class);
     }
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(Application $app, EntityManager $entityManager)
     {
+        $this->app = $app;
         $this->entityManager = $entityManager;
     }
 

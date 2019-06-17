@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Type;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Support\Manager as CoreManager;
 use Doctrine\ORM\EntityManager;
 
@@ -12,22 +13,22 @@ class Manager extends CoreManager
 
     public function createEntityPropertyDriver()
     {
-        return new EntityPropertyType();
+        return $this->app->make(EntityPropertyType::class);
     }
 
     public function createAttributeKeyDriver()
     {
-        return new AttributeKeyType($this->entityManager);
+        return $this->app->make(AttributeKeyType::class);
     }
 
     public function createAssociationDriver()
     {
-        return new AssociationType($this->entityManager);
+        return $this->app->make(AssociationType::class);
     }
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(Application $app)
     {
-        $this->entityManager = $entityManager;
+        parent::__construct($app);
         $this->driver('entity_property');
         $this->driver('attribute_key');
         $this->driver('association');

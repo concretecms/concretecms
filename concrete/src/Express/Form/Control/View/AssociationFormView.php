@@ -19,6 +19,7 @@ class AssociationFormView extends AssociationView
         // @deprecated – use allEntries and selectedEntries instead
         $this->addScopeItem('entities', $this->allEntries);
         $this->addScopeItem('selectedEntities', $this->selectedEntries);
+        $this->setIsRequired($control->isRequired());
     }
 
     /**

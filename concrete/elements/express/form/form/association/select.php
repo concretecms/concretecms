@@ -4,6 +4,9 @@
     <?php if ($view->supportsLabel()) { ?>
         <label class="control-label" for="<?=$view->getControlID()?>"><?=$label?></label>
     <?php } ?>
+    <?php if ($view->isRequired()) { ?>
+        <span class="text-muted small"><?=t('Required')?></span>
+    <?php } ?>
 
     <?php
     if (!empty($allEntries)) {
