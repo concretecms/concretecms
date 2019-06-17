@@ -23,6 +23,11 @@ class Controller extends AttributeTypeController
     protected $akDisplayGroupsBeneathSpecificParent = false;
     protected $akDisplayGroupsBeneathParentID = 0;
 
+    protected $searchIndexFieldDefinition = [
+        'type' => 'integer',
+        'options' => ['default' => 0, 'notnull' => false],
+    ];
+
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('users');
@@ -174,6 +179,41 @@ class Controller extends AttributeTypeController
             if ($group) {
                 $akn->addChild('value', $group->getGroupPath());
             }
+        }
+    }
+    
+    public function searchForm($list)
+    {
+        $gID = $this->request('gID');
+        if ($gID && is_scalar($gID)) {
+            $group = Group::getByID($gID);
+            if ($group) {
+                $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $group->getGroupID(), '=');
+            }
+        }
+    }
+    
+    public function search()
+    {
+        $gl = new GroupList();
+        $g1 = $gl->getResults();
+        $groups = [];
+        foreach ($g1 as $g) {
+            $gp = new \Permissions($g);
+            if ($gp->canSearchUsersInGroup($g)) {
+                $groups[$g->getGroupID()] = $g->getGroupDisplayName();
+            }
+        }
+
+        $form = $this->app->make('helper/form');
+        print $form->select($this->field('gID'), $groups);
+    }
+    
+    public function getSearchIndexValue()
+    {
+        $group = $this->getAttributeValue()->getValue();
+        if ($group) {
+            return $group->getGroupID();
         }
     }
 
