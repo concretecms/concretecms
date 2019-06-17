@@ -19,15 +19,15 @@ class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
     use ApplicationAwareTrait;
 
     /**
-     * @var Entity 
+     * @var Entity
      */
     protected $entity;
 
     /**
-     * @var Connection 
+     * @var Connection
      */
     protected $connection;
-    
+
     public function __construct(Connection $connection, Entity $entity)
     {
         $this->connection = $connection;
@@ -58,9 +58,9 @@ class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
         /** @var ExpressKey $key */
         if (!$this->connection->tableExists($table)) {
             $indexer = $category->getSearchIndexer();
-            $indexer->createRepository($category);            
+            $indexer->createRepository($category);
         }
-        
+
         foreach ($category->getList() as $key) {
             /** @var SearchIndexerInterface $indexer */
             $indexer = $key->getSearchIndexer();
@@ -68,8 +68,8 @@ class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
             // Update the key tables
             $indexer->updateSearchIndexKeyColumns($category, $key);
         }
-        
-        
+
+
         // Truncate the existing search index
         if ($table) {
             $this->connection->Execute(sprintf('truncate table %s', $table));

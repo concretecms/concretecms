@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\UserGroup;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -134,7 +135,7 @@ class Controller extends AttributeTypeController
     {
         $data = $this->post();
         if (isset($data['value'])) {
-            return $this->createAttributeValue((int) $data['value']);
+            return $this->createAttributeValue((int)$data['value']);
         }
     }
 
@@ -181,7 +182,7 @@ class Controller extends AttributeTypeController
             }
         }
     }
-    
+
     public function searchForm($list)
     {
         $gID = $this->request('gID');
@@ -192,7 +193,7 @@ class Controller extends AttributeTypeController
             }
         }
     }
-    
+
     public function search()
     {
         $gl = new GroupList();
@@ -208,7 +209,7 @@ class Controller extends AttributeTypeController
         $form = $this->app->make('helper/form');
         print $form->select($this->field('gID'), $groups);
     }
-    
+
     public function getSearchIndexValue()
     {
         $group = $this->getAttributeValue()->getValue();
@@ -247,7 +248,7 @@ class Controller extends AttributeTypeController
                 $allowedParent = Group::getByID($this->akDisplayGroupsBeneathParentID);
                 if ($allowedParent) {
                     $parentIDs = [];
-                    foreach($selectedGroup->getParentGroups() as $parentGroup) {
+                    foreach ($selectedGroup->getParentGroups() as $parentGroup) {
                         $parentIDs[] = $parentGroup->getGroupID();
                     }
                     if (!in_array($allowedParent->getGroupID(), $parentIDs)) {
@@ -279,14 +280,14 @@ class Controller extends AttributeTypeController
          * @var $settings UserGroupSettings
          */
         if (isset($key->type)) {
-            $akAllowSelectionFromMyGroupsOnly = (string) $key->type['force-selection-from-my-groups'] == '1'
+            $akAllowSelectionFromMyGroupsOnly = (string)$key->type['force-selection-from-my-groups'] == '1'
                 ? true : false;
-            $akDisplayGroupsBeneathSpecificParent = (string) $key->type['display-groups-beneath-specific-parent'] == '1'
+            $akDisplayGroupsBeneathSpecificParent = (string)$key->type['display-groups-beneath-specific-parent'] == '1'
                 ? true : false;
             $settings->setAllowSelectionFromMyGroupsOnly($akAllowSelectionFromMyGroupsOnly);
             $settings->setDisplayGroupsBeneathSpecificParent($akDisplayGroupsBeneathSpecificParent);
             if ($akDisplayGroupsBeneathSpecificParent) {
-                $parentGroupPath = (string) $key->type['display-groups-parent-group'];
+                $parentGroupPath = (string)$key->type['display-groups-parent-group'];
                 if ($parentGroupPath) {
                     $parentGroup = Group::getByPath($parentGroupPath);
                     if ($parentGroup) {

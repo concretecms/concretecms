@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Job;
 
 use Concrete\Core\Database\Connection\Connection;
@@ -86,7 +87,7 @@ class IndexSearchAll extends QueueableJob
     {
         $pages = $users = $files = $sites = $objects = $entries = 0;
 
-        foreach($this->expressObjectsToQueue() as $id) {
+        foreach ($this->expressObjectsToQueue() as $id) {
             yield self::CLEAR_EXPRESS_ENTITY . $id;
             $objects++;
         }
@@ -108,7 +109,7 @@ class IndexSearchAll extends QueueableJob
             $sites++;
         }
 
-        foreach($this->expressEntriesToQueue() as $id) {
+        foreach ($this->expressEntriesToQueue() as $id) {
             yield "E{$id}";
             $entries++;
         }
@@ -168,7 +169,7 @@ class IndexSearchAll extends QueueableJob
             return t('Indexed pages, users, files, sites and express data.');
         }
     }
-    
+
     protected function clearExpressEntityIndex($id)
     {
         $object = $this->objectManager->getObjectByID($id);
@@ -264,7 +265,7 @@ class IndexSearchAll extends QueueableJob
             yield $id;
         }
     }
-    
+
 
     /**
      * Get Files to add to the queue.

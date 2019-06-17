@@ -14,9 +14,9 @@ class EntryIndexer implements IndexingDriverInterface, ApplicationAwareInterface
 {
 
     use ApplicationAwareTrait;
-    
+
     /**
-     * @var ObjectManager 
+     * @var ObjectManager
      */
     protected $objectManager;
 
@@ -46,6 +46,6 @@ class EntryIndexer implements IndexingDriverInterface, ApplicationAwareInterface
     {
         return false;
     }
-    
+
 
 }
