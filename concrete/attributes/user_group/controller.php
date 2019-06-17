@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\UserGroup;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -22,6 +23,11 @@ class Controller extends AttributeTypeController
     protected $akAllowSelectionFromMyGroupsOnly = false;
     protected $akDisplayGroupsBeneathSpecificParent = false;
     protected $akDisplayGroupsBeneathParentID = 0;
+
+    protected $searchIndexFieldDefinition = [
+        'type' => 'integer',
+        'options' => ['default' => 0, 'notnull' => false],
+    ];
 
     public function getIconFormatter()
     {
@@ -129,7 +135,7 @@ class Controller extends AttributeTypeController
     {
         $data = $this->post();
         if (isset($data['value'])) {
-            return $this->createAttributeValue((int) $data['value']);
+            return $this->createAttributeValue((int)$data['value']);
         }
     }
 
@@ -177,6 +183,41 @@ class Controller extends AttributeTypeController
         }
     }
 
+    public function searchForm($list)
+    {
+        $gID = $this->request('gID');
+        if ($gID && is_scalar($gID)) {
+            $group = Group::getByID($gID);
+            if ($group) {
+                $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $group->getGroupID(), '=');
+            }
+        }
+    }
+
+    public function search()
+    {
+        $gl = new GroupList();
+        $g1 = $gl->getResults();
+        $groups = [];
+        foreach ($g1 as $g) {
+            $gp = new \Permissions($g);
+            if ($gp->canSearchUsersInGroup($g)) {
+                $groups[$g->getGroupID()] = $g->getGroupDisplayName();
+            }
+        }
+
+        $form = $this->app->make('helper/form');
+        print $form->select($this->field('gID'), $groups);
+    }
+
+    public function getSearchIndexValue()
+    {
+        $group = $this->getAttributeValue()->getValue();
+        if ($group) {
+            return $group->getGroupID();
+        }
+    }
+
     public function exportKey($akey)
     {
         $this->loadSettings();
@@ -207,7 +248,7 @@ class Controller extends AttributeTypeController
                 $allowedParent = Group::getByID($this->akDisplayGroupsBeneathParentID);
                 if ($allowedParent) {
                     $parentIDs = [];
-                    foreach($selectedGroup->getParentGroups() as $parentGroup) {
+                    foreach ($selectedGroup->getParentGroups() as $parentGroup) {
                         $parentIDs[] = $parentGroup->getGroupID();
                     }
                     if (!in_array($allowedParent->getGroupID(), $parentIDs)) {
@@ -239,14 +280,14 @@ class Controller extends AttributeTypeController
          * @var $settings UserGroupSettings
          */
         if (isset($key->type)) {
-            $akAllowSelectionFromMyGroupsOnly = (string) $key->type['force-selection-from-my-groups'] == '1'
+            $akAllowSelectionFromMyGroupsOnly = (string)$key->type['force-selection-from-my-groups'] == '1'
                 ? true : false;
-            $akDisplayGroupsBeneathSpecificParent = (string) $key->type['display-groups-beneath-specific-parent'] == '1'
+            $akDisplayGroupsBeneathSpecificParent = (string)$key->type['display-groups-beneath-specific-parent'] == '1'
                 ? true : false;
             $settings->setAllowSelectionFromMyGroupsOnly($akAllowSelectionFromMyGroupsOnly);
             $settings->setDisplayGroupsBeneathSpecificParent($akDisplayGroupsBeneathSpecificParent);
             if ($akDisplayGroupsBeneathSpecificParent) {
-                $parentGroupPath = (string) $key->type['display-groups-parent-group'];
+                $parentGroupPath = (string)$key->type['display-groups-parent-group'];
                 if ($parentGroupPath) {
                     $parentGroup = Group::getByPath($parentGroupPath);
                     if ($parentGroup) {
