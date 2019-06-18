@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Express\Form\Control\View;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
@@ -19,31 +20,7 @@ class AssociationFormView extends AssociationView
         // @deprecated – use allEntries and selectedEntries instead
         $this->addScopeItem('entities', $this->allEntries);
         $this->addScopeItem('selectedEntities', $this->selectedEntries);
-    }
-
-    /**
-     * @param AssociationControl $control
-     *
-     * @return string
-     */
-    protected function getFormFieldElement(AssociationControl $control)
-    {
-        $mode = $control->getEntrySelectorMode();
-        $class = get_class($control->getAssociation());
-        $class = strtolower(str_replace(['Concrete\\Core\\Entity\\Express\\', 'Association'], '', $class));
-        if ('many' == substr($class, -4)) {
-            if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
-                return 'entry_selector_multiple';
-            } else {
-                return 'select_multiple';
-            }
-        } else {
-            if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
-                return 'entry_selector';
-            } else {
-                return 'select';
-            }
-        }
+        $this->setIsRequired($control->isRequired());
     }
 
     public function createTemplateLocator()
@@ -61,5 +38,29 @@ class AssociationFormView extends AssociationView
         $locator = new TemplateLocator('association/' . $element);
 
         return $locator;
+    }
+
+    /**
+     * @param AssociationControl $control
+     *
+     * @return string
+     */
+    protected function getFormFieldElement(AssociationControl $control)
+    {
+        $mode = $control->getEntrySelectorMode();
+        $class = get_class($control->getAssociation());
+        $class = strtolower(str_replace(['Concrete\\Core\\Entity\\Express\\', 'Association'], '', $class));
+        if ('many' == substr($class, -4)) {
+            if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
+                return 'entry_selector_multiple';
+            }
+
+            return 'select_multiple';
+        }
+        if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
+            return 'entry_selector';
+        }
+
+        return 'select';
     }
 }
