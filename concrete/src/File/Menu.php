@@ -31,7 +31,7 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
             );
         }
 
-        if ($fp->canViewFile() && $file->canView()) {
+        if ($fp->canViewFile()) {
             $this->addItem(new LinkItem('#', t('Download'), [
                 'data-file-manager-action' => 'download',
                 'data-file-id' => $file->getFileID()
