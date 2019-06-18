@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <div class="form-group">
     <?php if ($view->supportsLabel()) { ?>
@@ -19,7 +19,7 @@
                         if (isset($selectedEntries)) {
                             foreach($selectedEntries as $selectedEntry) {
                                 if ($selectedEntry->getID() == $entry->getID()) {
-                                    print 'checked';
+                                    echo 'checked';
                                 }
                             }
                         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Express\Form\Control\Validator;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
@@ -23,10 +24,11 @@ class AssociationControlValidator implements ValidatorInterface
         $associationValue = $request->request->get('express_association_' . $control->getId());
         if (!$associationValue) {
             /**
-             * @var $control AssociationControl
+             * @var AssociationControl
              */
             $this->errorList->add(t('You must select a valid %s', $control->getAssociation()->getTargetEntity()->getName()));
         }
+
         return $this->errorList;
     }
 }
