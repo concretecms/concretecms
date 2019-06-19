@@ -20,7 +20,7 @@ use SimpleXMLElement;
 class Controller extends AttributeTypeController
 {
 
-    protected $akAllowSelectionFromMyGroupsOnly = false;
+    protected $akGroupSelectionMethod = false;
     protected $akDisplayGroupsBeneathSpecificParent = false;
     protected $akDisplayGroupsBeneathParentID = 0;
 
@@ -54,7 +54,7 @@ class Controller extends AttributeTypeController
                 $groupList->filterByParentGroup($parent);
             }
         }
-        if ($this->akAllowSelectionFromMyGroupsOnly) {
+        if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP) {
             $u = $this->app->make(User::class);
             if (!$u->isSuperUser()) {
                 $groupList->filterByHavingMembership();
@@ -76,7 +76,7 @@ class Controller extends AttributeTypeController
          * @var $type UserGroupSettings
          */
         $type = $this->getAttributeKeySettings();
-        $type->setAllowSelectionFromMyGroupsOnly(intval($data['akAllowSelectionFromMyGroupsOnly']) > 0 ? true : false);
+        $type->setGroupSelectionMethod($data['akGroupSelectionMethod']);
         $type->setDisplayGroupsBeneathSpecificParent(intval($data['akDisplayGroupsBeneathSpecificParent']) > 0 ? true : false);
         if ($type->displayGroupsBeneathSpecificParent()) {
             $widget = $this->app->make(GroupSelector::class);
@@ -157,7 +157,7 @@ class Controller extends AttributeTypeController
         $ak = $this->getAttributeKey();
         $settings = $ak->getAttributeKeySettings();
         if ($settings) {
-            $this->akAllowSelectionFromMyGroupsOnly = $settings->allowSelectionFromMyGroupsOnly();
+            $this->akGroupSelectionMethod = $settings->getGroupSelectionMethod();
             $this->akDisplayGroupsBeneathSpecificParent = $settings->displayGroupsBeneathSpecificParent();
             $this->akDisplayGroupsBeneathParentID = $settings->getDisplayGroupsBeneathParentID();
         }
@@ -166,7 +166,7 @@ class Controller extends AttributeTypeController
     public function type_form()
     {
         $this->loadSettings();
-        $this->set('akAllowSelectionFromMyGroupsOnly', $this->akAllowSelectionFromMyGroupsOnly);
+        $this->set('akGroupSelectionMethod', $this->akGroupSelectionMethod);
         $this->set('akDisplayGroupsBeneathSpecificParent', $this->akDisplayGroupsBeneathSpecificParent);
         $this->set('akDisplayGroupsBeneathParentID', $this->akDisplayGroupsBeneathParentID);
         $this->set('form', $this->app->make(Form::class));
@@ -222,7 +222,7 @@ class Controller extends AttributeTypeController
     {
         $this->loadSettings();
         $type = $akey->addChild('type');
-        $type->addAttribute('force-selection-from-my-groups', $this->akAllowSelectionFromMyGroupsOnly ? "1" : "");
+        $type->addAttribute('group-selection-method', $this->akGroupSelectionMethod);
         $type->addAttribute('display-groups-beneath-specific-parent',
             $this->akDisplayGroupsBeneathSpecificParent ? "1" : "");
         if ($this->akDisplayGroupsBeneathSpecificParent) {
@@ -257,7 +257,7 @@ class Controller extends AttributeTypeController
                     }
                 }
             }
-            if ($this->akAllowSelectionFromMyGroupsOnly) {
+            if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP) {
                 $u = $this->app->make(User::class);
                 if (!$u->isSuperUser()) {
                     if (!$u->inGroup($selectedGroup)) {
@@ -280,11 +280,10 @@ class Controller extends AttributeTypeController
          * @var $settings UserGroupSettings
          */
         if (isset($key->type)) {
-            $akAllowSelectionFromMyGroupsOnly = (string)$key->type['force-selection-from-my-groups'] == '1'
+            $akGroupSelectionMethod = (string) $key->type['group-selection-method'];
+            $akDisplayGroupsBeneathSpecificParent = (string) $key->type['display-groups-beneath-specific-parent'] == '1'
                 ? true : false;
-            $akDisplayGroupsBeneathSpecificParent = (string)$key->type['display-groups-beneath-specific-parent'] == '1'
-                ? true : false;
-            $settings->setAllowSelectionFromMyGroupsOnly($akAllowSelectionFromMyGroupsOnly);
+            $settings->setGroupSelectionMethod($akGroupSelectionMethod);
             $settings->setDisplayGroupsBeneathSpecificParent($akDisplayGroupsBeneathSpecificParent);
             if ($akDisplayGroupsBeneathSpecificParent) {
                 $parentGroupPath = (string)$key->type['display-groups-parent-group'];

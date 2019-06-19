@@ -1,3 +1,6 @@
+<?php
+use Concrete\Core\Entity\Attribute\Key\Settings\UserGroupSettings;
+?>
 <fieldset>
     <legend><?php echo t('User/Group Options')?></legend>
 
@@ -25,11 +28,14 @@
         <?php echo $form->label( 'akMembersOnly', t('Group Selection') )?>
 
         <div class="radio"><label>
-                <?php echo $form->radio( 'akAllowSelectionFromMyGroupsOnly' , 0, $akAllowSelectionFromMyGroupsOnly)?> <?=t('Allow user to select any group in the list.')?>
+                <?php echo $form->radio( 'akGroupSelectionMethod' , UserGroupSettings::GROUP_SELECTION_METHOD_ALL, $akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_ALL)?> <?=t('Allow user to select any group in the list.')?>
             </label></div>
 
         <div class="radio"><label>
-                <?php echo $form->radio( 'akAllowSelectionFromMyGroupsOnly' , 1, $akAllowSelectionFromMyGroupsOnly)?> <?=t('User may select only those groups they are in.')?>
+                <?php echo $form->radio( 'akGroupSelectionMethod' , UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP, $akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP)?> <?=t('User may select only those groups they are in.')?>
+            </label></div>
+        <div class="radio"><label>
+                <?php echo $form->radio( 'akGroupSelectionMethod' , UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS, $akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS)?> <?=t('Use the "Assign User Group" permission.')?>
             </label></div>
     </div>
 
