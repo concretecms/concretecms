@@ -33,7 +33,8 @@ switch ($displayMode) {
         break;
 }
 
-$timezone = $date->getTimezone('user');
+$timezone = $date->getUserTimeZoneID();
 if ($timezone) {
-    echo '<div class="text-muted"><small>' . $timezone->getName() . '</small></div>';
+    $timezone = $date->getTimezoneDisplayName($timezone);
+    echo '<div class="text-muted"><small>' . $timezone . '</small></div>';
 }
