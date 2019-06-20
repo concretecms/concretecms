@@ -12,6 +12,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\GroupSelector;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\User;
@@ -54,10 +55,14 @@ class Controller extends AttributeTypeController
                 $groupList->filterByParentGroup($parent);
             }
         }
+        $u = $this->app->make(User::class);
         if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP) {
-            $u = $this->app->make(User::class);
             if (!$u->isSuperUser()) {
                 $groupList->filterByHavingMembership();
+            }
+        } else if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS) {
+            if (!$u->isSuperUser()) {
+                $groupList->filterByAssignable();
             }
         }
         $groupSelector = $this->app->make(GroupSelector::class, ['groupList' => $groupList]);
@@ -264,6 +269,12 @@ class Controller extends AttributeTypeController
                         $errorList->add(t('You must be a member of the group %s to add a customer to it.',
                             $selectedGroup->getGroupPath()));
                     }
+                }
+            } else if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS) {
+                $gp = new Checker($selectedGroup);
+                if (!$gp->canAssignGroup()) {
+                    $errorList->add(t('You do not have permission to assign the group %s.',
+                        $selectedGroup->getGroupPath()));
                 }
             }
             return $errorList;
