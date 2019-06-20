@@ -12,15 +12,14 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\GroupSelector;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\User;
-use SimpleXMLElement;
 
 class Controller extends AttributeTypeController
 {
-
-    protected $akAllowSelectionFromMyGroupsOnly = false;
+    protected $akGroupSelectionMethod = false;
     protected $akDisplayGroupsBeneathSpecificParent = false;
     protected $akDisplayGroupsBeneathParentID = 0;
 
@@ -43,7 +42,7 @@ class Controller extends AttributeTypeController
         }
         if (!$value) {
             if ($this->request->query->has($this->attributeKey->getAttributeKeyHandle())) {
-                $value = $this->createAttributeValue((int)$this->request->query->get($this->attributeKey->getAttributeKeyHandle()));
+                $value = $this->createAttributeValue((int) $this->request->query->get($this->attributeKey->getAttributeKeyHandle()));
             }
         }
 
@@ -54,10 +53,14 @@ class Controller extends AttributeTypeController
                 $groupList->filterByParentGroup($parent);
             }
         }
-        if ($this->akAllowSelectionFromMyGroupsOnly) {
-            $u = $this->app->make(User::class);
+        $u = $this->app->make(User::class);
+        if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP) {
             if (!$u->isSuperUser()) {
                 $groupList->filterByHavingMembership();
+            }
+        } elseif ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS) {
+            if (!$u->isSuperUser()) {
+                $groupList->filterByAssignable();
             }
         }
         $groupSelector = $this->app->make(GroupSelector::class, ['groupList' => $groupList]);
@@ -73,23 +76,23 @@ class Controller extends AttributeTypeController
     public function saveKey($data)
     {
         /**
-         * @var $type UserGroupSettings
+         * @var UserGroupSettings
          */
         $type = $this->getAttributeKeySettings();
-        $type->setAllowSelectionFromMyGroupsOnly(intval($data['akAllowSelectionFromMyGroupsOnly']) > 0 ? true : false);
-        $type->setDisplayGroupsBeneathSpecificParent(intval($data['akDisplayGroupsBeneathSpecificParent']) > 0 ? true : false);
+        $type->setGroupSelectionMethod($data['akGroupSelectionMethod']);
+        $type->setDisplayGroupsBeneathSpecificParent((int) ($data['akDisplayGroupsBeneathSpecificParent']) > 0 ? true : false);
         if ($type->displayGroupsBeneathSpecificParent()) {
             $widget = $this->app->make(GroupSelector::class);
-            $group = $widget->getGroupFromGroupTreeRequestValue(intval($data['akDisplayGroupsBeneathParentID']));
+            $group = $widget->getGroupFromGroupTreeRequestValue((int) ($data['akDisplayGroupsBeneathParentID']));
             if ($group) {
                 $type->setDisplayGroupsBeneathParentID($group->getGroupID());
             }
         } else {
             $type->setDisplayGroupsBeneathParentID(0);
         }
+
         return $type;
     }
-
 
     public function getDisplayValue()
     {
@@ -98,6 +101,7 @@ class Controller extends AttributeTypeController
         if ($group) {
             return $group->getGroupDisplayName();
         }
+
         return t('None');
     }
 
@@ -108,6 +112,7 @@ class Controller extends AttributeTypeController
         if ($group) {
             return $group->getGroupName();
         }
+
         return '';
     }
 
@@ -117,6 +122,7 @@ class Controller extends AttributeTypeController
     public function getValue()
     {
         $group = $this->getGroup($this->getAttributeValue()->getValueObject()->getValue());
+
         return $group;
     }
 
@@ -135,7 +141,7 @@ class Controller extends AttributeTypeController
     {
         $data = $this->post();
         if (isset($data['value'])) {
-            return $this->createAttributeValue((int)$data['value']);
+            return $this->createAttributeValue((int) $data['value']);
         }
     }
 
@@ -149,24 +155,10 @@ class Controller extends AttributeTypeController
         }
     }
 
-    protected function loadSettings()
-    {
-        /**
-         * @var $settings UserGroupSettings
-         */
-        $ak = $this->getAttributeKey();
-        $settings = $ak->getAttributeKeySettings();
-        if ($settings) {
-            $this->akAllowSelectionFromMyGroupsOnly = $settings->allowSelectionFromMyGroupsOnly();
-            $this->akDisplayGroupsBeneathSpecificParent = $settings->displayGroupsBeneathSpecificParent();
-            $this->akDisplayGroupsBeneathParentID = $settings->getDisplayGroupsBeneathParentID();
-        }
-    }
-
     public function type_form()
     {
         $this->loadSettings();
-        $this->set('akAllowSelectionFromMyGroupsOnly', $this->akAllowSelectionFromMyGroupsOnly);
+        $this->set('akGroupSelectionMethod', $this->akGroupSelectionMethod);
         $this->set('akDisplayGroupsBeneathSpecificParent', $this->akDisplayGroupsBeneathSpecificParent);
         $this->set('akDisplayGroupsBeneathParentID', $this->akDisplayGroupsBeneathParentID);
         $this->set('form', $this->app->make(Form::class));
@@ -207,7 +199,7 @@ class Controller extends AttributeTypeController
         }
 
         $form = $this->app->make('helper/form');
-        print $form->select($this->field('gID'), $groups);
+        echo $form->select($this->field('gID'), $groups);
     }
 
     public function getSearchIndexValue()
@@ -222,9 +214,9 @@ class Controller extends AttributeTypeController
     {
         $this->loadSettings();
         $type = $akey->addChild('type');
-        $type->addAttribute('force-selection-from-my-groups', $this->akAllowSelectionFromMyGroupsOnly ? "1" : "");
+        $type->addAttribute('group-selection-method', $this->akGroupSelectionMethod);
         $type->addAttribute('display-groups-beneath-specific-parent',
-            $this->akDisplayGroupsBeneathSpecificParent ? "1" : "");
+            $this->akDisplayGroupsBeneathSpecificParent ? '1' : '');
         if ($this->akDisplayGroupsBeneathSpecificParent) {
             $parent = Group::getByID($this->akDisplayGroupsBeneathParentID);
             if ($parent) {
@@ -240,7 +232,7 @@ class Controller extends AttributeTypeController
         $this->loadSettings();
         $selectedGroup = null;
         if (isset($data['value'])) {
-            $selectedGroup = Group::getByID(intval($data['value']));
+            $selectedGroup = Group::getByID((int) ($data['value']));
         }
         if ($selectedGroup) {
             $errorList = new ErrorList();
@@ -257,7 +249,7 @@ class Controller extends AttributeTypeController
                     }
                 }
             }
-            if ($this->akAllowSelectionFromMyGroupsOnly) {
+            if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP) {
                 $u = $this->app->make(User::class);
                 if (!$u->isSuperUser()) {
                     if (!$u->inGroup($selectedGroup)) {
@@ -265,29 +257,34 @@ class Controller extends AttributeTypeController
                             $selectedGroup->getGroupPath()));
                     }
                 }
+            } elseif ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS) {
+                $gp = new Checker($selectedGroup);
+                if (!$gp->canAssignGroup()) {
+                    $errorList->add(t('You do not have permission to assign the group %s.',
+                        $selectedGroup->getGroupPath()));
+                }
             }
-            return $errorList;
-        } else {
-            return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
-        }
-    }
 
+            return $errorList;
+        }
+
+        return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
+    }
 
     public function importKey(\SimpleXMLElement $key)
     {
         $settings = $this->getAttributeKeySettings();
         /**
-         * @var $settings UserGroupSettings
+         * @var UserGroupSettings
          */
         if (isset($key->type)) {
-            $akAllowSelectionFromMyGroupsOnly = (string)$key->type['force-selection-from-my-groups'] == '1'
+            $akGroupSelectionMethod = (string) $key->type['group-selection-method'];
+            $akDisplayGroupsBeneathSpecificParent = (string) $key->type['display-groups-beneath-specific-parent'] == '1'
                 ? true : false;
-            $akDisplayGroupsBeneathSpecificParent = (string)$key->type['display-groups-beneath-specific-parent'] == '1'
-                ? true : false;
-            $settings->setAllowSelectionFromMyGroupsOnly($akAllowSelectionFromMyGroupsOnly);
+            $settings->setGroupSelectionMethod($akGroupSelectionMethod);
             $settings->setDisplayGroupsBeneathSpecificParent($akDisplayGroupsBeneathSpecificParent);
             if ($akDisplayGroupsBeneathSpecificParent) {
-                $parentGroupPath = (string)$key->type['display-groups-parent-group'];
+                $parentGroupPath = (string) $key->type['display-groups-parent-group'];
                 if ($parentGroupPath) {
                     $parentGroup = Group::getByPath($parentGroupPath);
                     if ($parentGroup) {
@@ -300,10 +297,23 @@ class Controller extends AttributeTypeController
         return $settings;
     }
 
-
     public function getAttributeKeySettingsClass()
     {
         return UserGroupSettings::class;
+    }
+
+    protected function loadSettings()
+    {
+        /**
+         * @var UserGroupSettings
+         */
+        $ak = $this->getAttributeKey();
+        $settings = $ak->getAttributeKeySettings();
+        if ($settings) {
+            $this->akGroupSelectionMethod = $settings->getGroupSelectionMethod();
+            $this->akDisplayGroupsBeneathSpecificParent = $settings->displayGroupsBeneathSpecificParent();
+            $this->akDisplayGroupsBeneathParentID = $settings->getDisplayGroupsBeneathParentID();
+        }
     }
 
     private function getGroup($id)
@@ -317,5 +327,4 @@ class Controller extends AttributeTypeController
 
         return $group;
     }
-
 }

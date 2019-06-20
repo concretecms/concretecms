@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,6 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserGroupSettings extends Settings
 {
+    const GROUP_SELECTION_METHOD_ALL = 'A';
+    const GROUP_SELECTION_METHOD_IN_GROUP = 'G';
+    const GROUP_SELECTION_METHOD_PERMISSIONS = 'P';
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
@@ -20,9 +25,9 @@ class UserGroupSettings extends Settings
     protected $akDisplayGroupsBeneathParentID = 0;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
+     * @ORM\Column(type="string", nullable=false)
      */
-    protected $akAllowSelectionFromMyGroupsOnly = false;
+    protected $akGroupSelectionMethod = false;
 
     /**
      * @return mixed
@@ -59,21 +64,16 @@ class UserGroupSettings extends Settings
     /**
      * @return mixed
      */
-    public function allowSelectionFromMyGroupsOnly()
+    public function getGroupSelectionMethod()
     {
-        return $this->akAllowSelectionFromMyGroupsOnly;
+        return $this->akGroupSelectionMethod;
     }
 
     /**
-     * @param mixed $akAllowSelectionFromMyGroupsOnly
+     * @param mixed $akGroupSelectionMethod
      */
-    public function setAllowSelectionFromMyGroupsOnly($akAllowSelectionFromMyGroupsOnly)
+    public function setGroupSelectionMethod($akGroupSelectionMethod)
     {
-        $this->akAllowSelectionFromMyGroupsOnly = $akAllowSelectionFromMyGroupsOnly;
+        $this->akGroupSelectionMethod = $akGroupSelectionMethod;
     }
-
-
-
-
-
 }

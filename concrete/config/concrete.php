@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.6.0a2',
     'version_installed' => '8.6.0a2',
-    'version_db' => '20190522202749', // the key of the latest database migration
+    'version_db' => '20190619141521', // the key of the latest database migration
 
     /*
      * Installation status
@@ -1138,7 +1138,7 @@ return [
         'enabled' => false,
 
         /**
-         * Which grant types do we allow to connect to the API
+         * Which grant types do we allow to connect to the API.
          *
          * @var array
          */
