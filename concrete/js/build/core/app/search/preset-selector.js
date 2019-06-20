@@ -71,19 +71,7 @@
             });
         });
 
-        ConcreteEvent.unsubscribe('SavedSearchDeleted');
-        ConcreteEvent.subscribe('SavedSearchDeleted', function() {
-            $.fn.dialog.closeAll();
-            my.ajaxUpdate(my.$resetSearchButton.data('button-action-url'));
-        });
 
-        ConcreteEvent.unsubscribe('SavedSearchUpdated');
-        ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
-            $.fn.dialog.closeAll();
-            if (data.preset && data.preset.actionURL) {
-                my.ajaxUpdate(data.preset.actionURL);
-            }
-        });
     }
 
 

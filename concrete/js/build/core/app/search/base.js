@@ -447,6 +447,19 @@
 			cs.$headerSearchInput.prop('disabled', true).val('');
 			cs.$headerSearchInput.attr('placeholder', '');
 		});
+		ConcreteEvent.unsubscribe('SavedSearchDeleted');
+		ConcreteEvent.subscribe('SavedSearchDeleted', function() {
+			$.fn.dialog.closeAll();
+			cs.$resetSearchButton.trigger('click');
+		});
+
+		ConcreteEvent.unsubscribe('SavedSearchUpdated');
+		ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
+			$.fn.dialog.closeAll();
+			if (data.preset && data.preset.actionURL) {
+				cs.ajaxUpdate(data.preset.actionURL);
+			}
+		});
 		// NEW SEARCH
 		cs.$element.find('div[data-header] form').on('submit', function() {
 			var data = $(this).serializeArray();
