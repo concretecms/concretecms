@@ -442,6 +442,10 @@
 		ConcreteEvent.unsubscribe('SavedPresetSubmit');
 		ConcreteEvent.subscribe('SavedPresetSubmit', function (e, data) {
 			cs.ajaxUpdate(data);
+			cs.$resetSearchButton.show();
+			cs.$headerSearch.find('div.btn-group').hide();
+			cs.$headerSearchInput.prop('disabled', true).val('');
+			cs.$headerSearchInput.attr('placeholder', '');
 		});
 		// NEW SEARCH
 		cs.$element.find('div[data-header] form').on('submit', function() {

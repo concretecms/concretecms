@@ -17,10 +17,6 @@
             if (!$(e.target).is('button') && $(this).data('action')) {
                 $.fn.dialog.closeTop();
                 ConcreteEvent.publish('SavedPresetSubmit',$(this).data('action'));
-                my.$resetSearchButton.show();
-                my.$headerSearch.find('div.btn-group').hide();
-                my.$headerSearchInput.prop('disabled', true).val('');
-                my.$headerSearchInput.attr('placeholder', '');
             }
         });
 
