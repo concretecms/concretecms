@@ -1138,7 +1138,7 @@ return [
         'enabled' => false,
 
         /**
-         * Which grant types do we allow to connect to the API
+         * Which grant types do we allow to connect to the API.
          *
          * @var array
          */

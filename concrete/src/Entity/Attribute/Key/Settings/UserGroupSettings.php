@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,11 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserGroupSettings extends Settings
 {
-    
     const GROUP_SELECTION_METHOD_ALL = 'A';
     const GROUP_SELECTION_METHOD_IN_GROUP = 'G';
-    CONST GROUP_SELECTION_METHOD_PERMISSIONS = 'P';
-    
+    const GROUP_SELECTION_METHOD_PERMISSIONS = 'P';
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
@@ -76,9 +76,4 @@ class UserGroupSettings extends Settings
     {
         $this->akGroupSelectionMethod = $akGroupSelectionMethod;
     }
-
-
-
-
-
 }
