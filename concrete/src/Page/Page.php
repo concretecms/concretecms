@@ -3124,6 +3124,11 @@ EOT
             if ($siteTree != null) {
                 return $siteTree->getSiteHomePageID();
             }
+        } else {
+            $siteTree = Application::getFacadeApplication()->make('site')->getDefault();
+            if (is_object($siteTree)) {
+                return $siteTree->getSiteHomePageID();
+            }
         }
 
         return null;
