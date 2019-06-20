@@ -315,11 +315,6 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
         });
-        ConcreteEvent.unsubscribe('SavedSearchCreated');
-        ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
-            my.ajaxUpdate(data.search.baseUrl, {});
-
-        });
 
         ConcreteEvent.unsubscribe('FileManagerUpdateFileProperties');
         ConcreteEvent.subscribe('FileManagerUpdateFileProperties', function(e, r) {

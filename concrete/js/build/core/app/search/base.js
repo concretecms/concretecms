@@ -460,6 +460,11 @@
 				cs.ajaxUpdate(data.preset.actionURL);
 			}
 		});
+		ConcreteEvent.unsubscribe('SavedSearchCreated');
+		ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
+			cs.updateResults(data);
+
+		});
 		// NEW SEARCH
 		cs.$element.find('div[data-header] form').on('submit', function() {
 			var data = $(this).serializeArray();

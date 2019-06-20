@@ -51,7 +51,7 @@
                 url: $presetForm.attr('action'),
                 success: function(r) {
                     $.fn.dialog.closeAll();
-                    ConcreteEvent.publish('SavedSearchCreated', {search: r});
+                    ConcreteEvent.publish('SavedSearchCreated', r);
                 }
             });
             return false;
