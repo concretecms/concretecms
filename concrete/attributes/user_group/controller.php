@@ -33,6 +33,40 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('users');
     }
 
+    public function getAssignableGroups()
+    {
+        $groupList = new GroupList();
+        if ($this->akDisplayGroupsBeneathSpecificParent) {
+            $parent = Group::getByID($this->akDisplayGroupsBeneathParentID);
+            if ($parent) {
+                $groupList->filterByParentGroup($parent);
+            }
+        }
+        $groups = $groupList->getResults();
+        $u = $this->app->make(User::class);
+        $filteredList = [];
+        if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_ALL) {
+            $filteredList = $groups;
+        } else {
+            $akGroupSelectionMethod = str_split((string) $this->akGroupSelectionMethod);
+            foreach ($groups as $g) {
+                if (in_array(UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP, $akGroupSelectionMethod)) {
+                    if ($u->inGroup($g) && !in_array($g, $filteredList)) {
+                        $filteredList[] = $g;
+                    }
+                }
+                if (in_array(UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS, $akGroupSelectionMethod)) {
+                    $permissions = new Checker($g);
+                    if ($permissions->canAssignGroup($g) && !in_array($g, $filteredList)) {
+                        $filteredList[] = $g;
+                    }
+                }
+            }
+        }
+
+        return $filteredList;
+    }
+
     public function form()
     {
         $this->loadSettings();
@@ -46,26 +80,9 @@ class Controller extends AttributeTypeController
             }
         }
 
-        $groupList = new GroupList();
-        if ($this->akDisplayGroupsBeneathSpecificParent) {
-            $parent = Group::getByID($this->akDisplayGroupsBeneathParentID);
-            if ($parent) {
-                $groupList->filterByParentGroup($parent);
-            }
-        }
-        $u = $this->app->make(User::class);
-        if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP) {
-            if (!$u->isSuperUser()) {
-                $groupList->filterByHavingMembership();
-            }
-        } elseif ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS) {
-            if (!$u->isSuperUser()) {
-                $groupList->filterByAssignable();
-            }
-        }
-        $groupSelector = $this->app->make(GroupSelector::class, ['groupList' => $groupList]);
         $this->set('value', $value);
-        $this->set('selector', $groupSelector);
+        $this->set('groups', $this->getAssignableGroups());
+        $this->set('form', $this->app->make('helper/form'));
     }
 
     public function getAttributeValueClass()
@@ -79,7 +96,13 @@ class Controller extends AttributeTypeController
          * @var UserGroupSettings
          */
         $type = $this->getAttributeKeySettings();
-        $type->setGroupSelectionMethod($data['akGroupSelectionMethod']);
+        $akGroupSelectionMethod = UserGroupSettings::GROUP_SELECTION_METHOD_ALL;
+        if (isset($data['akGroupSelectionMethodType']) && $data['akGroupSelectionMethodType'] == 'custom') {
+            if (isset($data['akGroupSelectionMethod']) && is_array($data['akGroupSelectionMethod'])) {
+                $akGroupSelectionMethod = implode('', $data['akGroupSelectionMethod']);
+            }
+        }
+        $type->setGroupSelectionMethod($akGroupSelectionMethod);
         $type->setDisplayGroupsBeneathSpecificParent((int) ($data['akDisplayGroupsBeneathSpecificParent']) > 0 ? true : false);
         if ($type->displayGroupsBeneathSpecificParent()) {
             $widget = $this->app->make(GroupSelector::class);
@@ -158,11 +181,29 @@ class Controller extends AttributeTypeController
     public function type_form()
     {
         $this->loadSettings();
-        $this->set('akGroupSelectionMethod', $this->akGroupSelectionMethod);
         $this->set('akDisplayGroupsBeneathSpecificParent', $this->akDisplayGroupsBeneathSpecificParent);
         $this->set('akDisplayGroupsBeneathParentID', $this->akDisplayGroupsBeneathParentID);
         $this->set('form', $this->app->make(Form::class));
         $this->set('groupSelector', $this->app->make(GroupSelector::class));
+
+        $akGroupSelectionMethodInGroup = false;
+        $akGroupSelectionMethodPermissions = false;
+
+        if ($this->akGroupSelectionMethod == UserGroupSettings::GROUP_SELECTION_METHOD_ALL) {
+            $akGroupSelectionMethodType = 'all';
+        } else {
+            $akGroupSelectionMethodType = 'custom';
+            $selectionMethod = str_split($this->akGroupSelectionMethod);
+            if (in_array(UserGroupSettings::GROUP_SELECTION_METHOD_IN_GROUP, $selectionMethod)) {
+                $akGroupSelectionMethodInGroup = true;
+            }
+            if (in_array(UserGroupSettings::GROUP_SELECTION_METHOD_PERMISSIONS, $selectionMethod)) {
+                $akGroupSelectionMethodPermissions = true;
+            }
+        }
+        $this->set('akGroupSelectionMethodType', $akGroupSelectionMethodType);
+        $this->set('akGroupSelectionMethodInGroup', $akGroupSelectionMethodInGroup);
+        $this->set('akGroupSelectionMethodPermissions', $akGroupSelectionMethodPermissions);
     }
 
     public function exportValue(\SimpleXMLElement $akn)
