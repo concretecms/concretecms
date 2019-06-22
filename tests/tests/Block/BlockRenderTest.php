@@ -12,7 +12,7 @@ use Concrete\Core\User\UserInfo;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
-class BlockViewTest extends PageTestCase
+class BlockRenderTest extends PageTestCase
 {
     /** @var \Concrete\Core\Application\Application */
     protected $app;
