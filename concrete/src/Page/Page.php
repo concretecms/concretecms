@@ -3124,12 +3124,20 @@ EOT
             if ($siteTree != null) {
                 return $siteTree->getSiteHomePageID();
             }
-        } else {
-            $siteTree = Application::getFacadeApplication()->make('site')->getDefault();
-            if (is_object($siteTree)) {
-                return $siteTree->getSiteHomePageID();
-            }
         }
+
+        $entityManager = Application::getFacadeApplication()->make(EntityManagerInterface::class);
+
+        try {
+            $site = $entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+                ->findOneBy(['siteIsDefault' => true]);
+            if ($site !== null) {
+                return $site->getSiteHomePageID();
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
 
         return null;
     }
