@@ -2,12 +2,13 @@
 namespace Concrete\Tests\Block;
 
 use Area;
+use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\Login\LoginService;
 use Concrete\Core\User\UserInfo;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,15 +36,24 @@ class BlockRenderTest extends PageTestCase
     {
         parent::__construct($name, $data, $dataName);
 
+        // Basics for the blocks
         $this->tables[] = 'Blocks';
         $this->tables[] = 'Config';
-        $this->tables[] = 'UserGroups';
-        $this->tables[] = 'SystemContentEditorSnippets';
-        $this->tables[] = 'btContentLocal';
-
         $this->metadatas[] = 'Concrete\Core\Entity\Block\BlockType\BlockType';
+        // Logging in/out the users
+        $this->tables[] = 'AuthenticationTypes';
+        // General for the users
         $this->metadatas[] = 'Concrete\Core\Entity\User\User';
         $this->metadatas[] = 'Concrete\Core\Entity\User\UserSignup';
+        // Adding groups
+        $this->tables[] = 'UserGroups';
+        $this->tables[] = 'Trees';
+        $this->tables[] = 'TreeGroupNodes';
+        $this->tables[] = 'TreeTypes';
+        // Adding content blocks
+        $this->tables[] = 'btContentLocal';
+        $this->tables[] = 'SystemContentEditorSnippets';
+        // Adding themes
         $this->metadatas[] = 'Concrete\Core\Entity\Package';
     }
 
@@ -92,16 +102,22 @@ class BlockRenderTest extends PageTestCase
 
     public function testBlockViewChangingScopeVariables()
     {
-        // Add the user
+        AuthenticationType::add('concrete', 'Concrete');
+
+        // Add the user and enter it to the admin group
+        // This will automatically be the superuser as it's the first user
+        // entered to the DB.
         $ui = UserInfo::add([
             'uName' => 'terry',
             'uEmail' => 'terry@tester.org',
         ]);
 
-        // Make it the "current" user and load the collection to edit mode with
-        // that user.
-        $req = Request::getInstance();
-        $req->setCustomRequestUser($ui);
+        // Login as that user
+        $login = $this->app->make(LoginService::class);
+        $login->loginByUserID($ui->getUserID());
+        $ui->getUserObject()->setAuthTypeCookie('concrete');
+
+        // Load the collection to edit mode with that user
         $ui->getUserObject()->loadCollectionEdit($this->c);
 
         // Add the block type and the actual block to the page
@@ -120,6 +136,9 @@ class BlockRenderTest extends PageTestCase
         ob_start();
         $view->renderViewContents($view->getScopeItems());
         $contents = ob_get_clean();
+
+        // Logout the user
+        $ui->getUserObject()->logout(true);
 
         $this->assertContains(
             'data-block-id="' . $block->getBlockID() . '"',
