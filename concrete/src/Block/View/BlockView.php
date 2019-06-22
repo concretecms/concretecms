@@ -250,9 +250,10 @@ class BlockView extends AbstractView
             ob_end_clean();
         }
 
-        // In case the view changes any scope items, the block footer could
-        // otherwise break. This can happen if the block view changes any
-        // local variables such as the `$b` variable.
+        // In case the view changes any scope items, the block header/footer
+        // could break without extracting the scope items again. This can happen
+        // if the block view changes any local variables such as the `$b`
+        // variable which is possible as they can be user defined.
         extract($scopeItems);
 
         // The translatable texts in the block header/footer need to be printed
