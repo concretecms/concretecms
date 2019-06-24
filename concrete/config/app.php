@@ -551,10 +551,7 @@ return [
             ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
         ],
         'moment-timezone' => [
-            ['javascript', 'js/moment-timezone.js', ['minify' => false, 'version' => '0.5.13']],
-        ],
-        'moment-timezone-data' => [
-            ['javascript', 'js/moment-timezone-data.js', ['minify' => false, 'version' => '0.5.13']],
+            ['javascript', 'js/moment-timezone-with-data.js', ['minify' => false, 'version' => '0.5.25']],
         ],
         'bootstrap/dropdown' => [
             ['javascript', 'js/bootstrap/dropdown.js'],
@@ -826,7 +823,6 @@ return [
             [
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
             ],
         ],
         'fancytree' => [
@@ -936,7 +932,6 @@ return [
                 ['javascript', 'selectize'],
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
                 ['javascript', 'core/duration'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
