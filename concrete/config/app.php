@@ -549,6 +549,7 @@ return [
         ],
         'moment' => [
             ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
         'moment-timezone' => [
             ['javascript', 'js/moment-timezone-with-data.js', ['minify' => false, 'version' => '0.5.25']],
@@ -823,6 +824,7 @@ return [
             [
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
+                ['javascript-localized', 'moment'],
             ],
         ],
         'fancytree' => [
