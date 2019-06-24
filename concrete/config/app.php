@@ -548,7 +548,7 @@ return [
             ['css', 'css/fancytree.css', ['minify' => false]],
         ],
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.18.1']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
         ],
         'moment-timezone' => [
             ['javascript', 'js/moment-timezone.js', ['minify' => false, 'version' => '0.5.13']],
