@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Support\Facade\Application;
 use DateTime as PHPDateTime;
 use Exception;
@@ -282,6 +283,8 @@ class DateTime
 
         // Create the Javascript for the calendar
         if ($calendarAutoStart) {
+            $assetList = ResponseAssetGroup::get();
+            $assetList->requireAsset('jquery/ui');
             $dateFormat = json_encode($dh->getJQueryUIDatePickerFormat($shownDateFormat));
             if ($classes) {
                 $beforeShow = 'beforeShow: function() { $(\'#ui-datepicker-div\').addClass(' . json_encode((string) $classes) . '); },';
@@ -388,6 +391,8 @@ EOT;
 
         // Create the Javascript for the calendar
         if ($calendarAutoStart) {
+            $assetList = ResponseAssetGroup::get();
+            $assetList->requireAsset('jquery/ui');
             $dateFormat = json_encode($dh->getJQueryUIDatePickerFormat($shownDateFormat));
             if ($dateTime === null) {
                 $defaultDateJs = "''";
