@@ -3126,6 +3126,19 @@ EOT
             }
         }
 
+        $entityManager = Application::getFacadeApplication()->make(EntityManagerInterface::class);
+
+        try {
+            $site = $entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+                ->findOneBy(['siteIsDefault' => true]);
+            if ($site !== null) {
+                return $site->getSiteHomePageID();
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
+
         return null;
     }
 
