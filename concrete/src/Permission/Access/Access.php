@@ -4,6 +4,7 @@ namespace Concrete\Core\Permission\Access;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Logging\Entry\Permission\Assignment\Assignment as PermissionAssignmentLogEntry;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
@@ -12,7 +13,6 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Workflow;
 use PDO;
-use Concrete\Core\Logging\Entry\Permission\Assignment\Assignment as PermissionAssignmentLogEntry;
 
 /**
  * @property \Concrete\Core\Permission\Key\Key $pk
@@ -293,7 +293,7 @@ class Access extends ConcreteObject
         $entry = $app->make(PermissionAssignmentLogEntry::class, [
            'applier' => $app->make(User::class),
            'key' => $this->pk,
-           'access' => $this
+           'access' => $this,
         ]);
         $logger->log($entry);
     }

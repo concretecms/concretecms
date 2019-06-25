@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Groups;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -14,9 +15,8 @@ use Concrete\Core\Validation\CSRF\Token;
 
 class Message extends DashboardPageController
 {
-
     /**
-     * ID used to send to all groups
+     * ID used to send to all groups.
      */
     const ALL_GROUPS_ID = -2;
 
@@ -32,7 +32,7 @@ class Message extends DashboardPageController
     }
 
     /**
-     * Main endpoint for this singlepage
+     * Main endpoint for this singlepage.
      */
     public function view()
     {
@@ -50,7 +50,7 @@ class Message extends DashboardPageController
     }
 
     /**
-     * Handle actually sending out the emails
+     * Handle actually sending out the emails.
      *
      * @return \Concrete\Core\Routing\RedirectResponse|void
      */
@@ -60,8 +60,9 @@ class Message extends DashboardPageController
         $body = trim($this->post('message'));
 
         // Do some quick validation
-        if (!$this->token->validate('send_message')){
+        if (!$this->token->validate('send_message')) {
             $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+
             return $this->view();
         }
 
@@ -90,11 +91,12 @@ class Message extends DashboardPageController
         $this->sendMessage($subject, $body, $recipients, $this->getSender());
 
         $this->flash('success', t('Message Successfully sent.'));
+
         return Redirect::to('/dashboard/users/groups/message');
     }
 
     /**
-     * Send a message to a list of recipients with limit disabled
+     * Send a message to a list of recipients with limit disabled.
      *
      * @param $subject
      * @param $body
@@ -114,7 +116,7 @@ class Message extends DashboardPageController
     }
 
     /**
-     * Get the user that should be the sender
+     * Get the user that should be the sender.
      *
      * @return \Concrete\Core\User\UserInfo|null
      */
@@ -130,7 +132,7 @@ class Message extends DashboardPageController
     }
 
     /**
-     * Get the recipients
+     * Get the recipients.
      *
      * @return \Concrete\Core\Entity\User\User[]
      */
@@ -147,6 +149,7 @@ class Message extends DashboardPageController
         $group = Group::getByID($groupId);
         if (!$group) {
             $this->error->add(t('Group not found.'));
+
             return null;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\User\Group;
 
 use Concrete\Core\Logging\Channels;
@@ -11,13 +12,12 @@ use Concrete\Core\Logging\Entry\Group\UpdateGroup;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\Event\UserGroup as UserGroupEvent;
 use Concrete\Core\User\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Concrete\Core\User\Event\UserGroup as UserGroupEvent;
 
 class LogSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
-
     use LoggerAwareTrait;
 
     public function getLoggerChannel()
@@ -34,11 +34,6 @@ class LogSubscriber implements EventSubscriberInterface, LoggerAwareInterface
             'on_user_enter_group' => 'onUserEnterGroup',
             'on_user_exit_group' => 'onUserExitGroup',
         ];
-    }
-
-    protected function log(EntryInterface $entry)
-    {
-        $this->logger->info($entry->getMessage(), $entry->getContext());
     }
 
     public function onGroupAdd(Event $event)
@@ -64,6 +59,11 @@ class LogSubscriber implements EventSubscriberInterface, LoggerAwareInterface
     public function onUserExitGroup(UserGroupEvent $event)
     {
         $this->log(new ExitGroup($event->getUserObject(), $event->getGroupObject(), $this->getCurrentUser()));
+    }
+
+    protected function log(EntryInterface $entry)
+    {
+        $this->logger->info($entry->getMessage(), $entry->getContext());
     }
 
     /**
