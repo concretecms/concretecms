@@ -13,7 +13,26 @@
             'appendToOuterDialog': true,
             'selectMode': 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
-
+        (function() {
+            var folderID = null;
+            Object.defineProperty(my, 'currentFolder', {
+                get: function() {
+                    return folderID;
+                },
+                set: function(value) {
+                    value = parseInt(value, 10) || 0;
+                    if (value === folderID) {
+                        return;
+                    }
+                    folderID = value;
+                    setTimeout(function() {
+                        if (folderID === value) {
+                            ConcreteFileManager.getUploaderTemplate(folderID);
+                        }
+                    }, 250);
+                }
+            });
+        })();
         my.currentFolder = 0;
         my.interactionIsDragging = false;
         my.$breadcrumb = $(options.breadcrumbElement);
@@ -234,17 +253,23 @@
             .on('dragover', ConcreteFileManager.onDragOver)
         ;
         $('a[data-dialog=add-files]').on('click', function(e) {
-            ConcreteFileManager.openingFileImporter = true;
             e.preventDefault();
-            $.fn.dialog.open({
-                width: 620,
-                height: 400,
-                modal: true,
-                title: ccmi18n_filemanager.addFiles,
-                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/import?currentFolder=' + my.currentFolder,
-                onOpen: function() {
-                    ConcreteFileManager.openingFileImporter = false;
-                }
+            ConcreteFileManager.openingFileImporter = true;
+            ConcreteFileManager.getUploaderTemplate(my.currentFolder, function(ok, template) {
+                var $dialog = $('<div class="animated fadeIn" />').html(template);
+                $(document.body).append($dialog);
+                $dialog.dialog({
+                    title: ccmi18n_filemanager.addFiles,
+                    width: 620,
+                    modal: true,
+                    escapeClose: true,
+                    dialogClass: 'ccm-ui',
+                    resizable: true,
+                    close: function() {
+                        $dialog.remove();
+                    }
+                });
+                ConcreteFileManager.openingFileImporter = false;
             });
         });
 
@@ -661,6 +686,39 @@
         });
     };
 
+    (function() {
+        var loadedTemplates = {};
+        ConcreteFileManager.getUploaderTemplate = function(folderID, onReady, reload) {
+            if (folderID in loadedTemplates && !reload) {
+                if (onReady) {
+                    onReady(true, loadedTemplates[folderID]);
+                }
+                return;
+            }
+            $.ajax({
+                type: 'GET',
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/import?currentFolder=' + folderID,
+                success: function(r) {
+                    loadedTemplates[folderID] = r;
+                    if (onReady) {
+                        onReady(true, r);
+                    } else {
+                        // Preload assets
+                        var $div = $('<div style="display: none" />').html(r);
+                        $(document.body).append($div);
+                        setTimeout(function() {
+                            $div.remove();
+                        }, 0);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (onReady) {
+                        onReady(false, ConcreteAjaxRequest.renderErrorResponse(xhr, true));
+                    }
+                }
+            });
+        };
+    })();
 
     ConcreteFileManager.launchUploadCompleteDialog = function(files, my) {
         if (files && files.length && files.length > 0) {
