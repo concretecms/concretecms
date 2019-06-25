@@ -79,7 +79,7 @@ class ExternalUrlPicker implements PickerInterface
                         $postValue = null;
                         if ($errors !== null) {
                             if ((string) $fieldDisplayName === '') {
-                                $errors[] = t('The maximum length of %1$s is %s characters.', $fieldDisplayName, $maxLength);
+                                $errors[] = t('The maximum length of %1$s is %2$s characters.', $fieldDisplayName, $maxLength);
                             } else {
                                 $errors[] = t('The maximum length of the external URL is %s characters.', $maxLength);
                             }
