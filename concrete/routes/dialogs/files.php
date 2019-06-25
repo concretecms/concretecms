@@ -46,4 +46,5 @@ $router->all('/advanced_search/preset/delete', 'Preset\Delete::view');
 $router->all('/advanced_search/preset/delete/remove_search_preset', 'Preset\Delete::remove_search_preset');
 
 $router->all('/import', 'Import::view');
+$router->all('/import/refresh-incoming', 'Import::refreshIncoming');
 $router->all('/replace', 'Replace::view');

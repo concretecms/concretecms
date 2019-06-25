@@ -19,8 +19,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var int $chunkSize */
 /* @var Concrete\Core\Entity\File\StorageLocation\StorageLocation $incomingStorageLocation */
 /* @var string $incomingPath */
-/* @var array $incomingContents */
-/* @var string|null $incomingContentsError */
 /* @var Concrete\Core\Entity\File\File|null $replacingFile */
 ?>
 <div class="ccm-ui ccm-file-manager-import-files" id="<?= $formID ?>">
@@ -49,100 +47,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="ccm-tab-content ccm-tab-content-incoming" id="ccm-tab-content-<?= $formID ?>-incoming">
-        <?php
-        if ($incomingContentsError !== null) {
-            ?>
-            <div class="alert alert-danger">
-                <?= nl2br(h($incomingContentsError)) ?>
-            </div>
-            <?php
-        } elseif (empty($incomingContents)) {
-            ?>
-            <div class="alert alert-info">
-                <?= t('No files found in %s for the storage location "%s".', h($incomingPath), h($incomingStorageLocation->getName())) ?>
-            </div>
-            <?php
-        } else {
-            ?>
-            <form method="POST" action="<?= $resolverManager->resolve(['/ccm/system/file/import_incoming']) ?>">
-                <?php $token->output('import_incoming') ?>
-                <?php
-                if ($currentFolder !== null) {
-                    ?><input type="hidden" name="currentFolder" value="<?= $currentFolder->getTreeNodeID() ?> " /><?php
-                }
-                if ($originalPage !== null) {
-                    ?><input type="hidden" name="ocID" value="<?= $originalPage->getCollectionID() ?> " /><?php
-                }
-                if ($replacingFile !== null) {
-                    ?><input type="hidden" name="fID" value="<?= $replacingFile->getFileID() ?> " /><?php
-                }
-                ?>
-                <table class="incoming_file_table table table-striped">
-                    <thead>
-                        <tr>
-                            <th class="incoming_file_table-checkbox">
-                                <?php
-                                if ($replacingFile === null) {
-                                    ?>
-                                    <input type="checkbox" class="ccm-check-all-incoming"/>
-                                    <?php
-                                }
-                                ?>
-                            </th>
-                            <th class="incoming_file_table-thumbnail"></th>
-                            <th class="incoming_file_table-filename"><?= t('Filename') ?></th>
-                            <th class="incoming_file_table-size"><?= t('Size') ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($incomingContents as $index => $file) {
-                            ?>
-                            <tr>
-                                <td class="incoming_file_table-checkbox">
-                                    <?php
-                                    if ($file['allowed']) {
-                                        if ($replacingFile === null) {
-                                            ?>
-                                            <input id="<?=$formID ?>-incoming-<?= $index ?>" type="checkbox" name="send_file[]" class="ccm-file-select-incoming" value="<?= h($file['basename']) ?>" />
-                                            <?php
-                                        } else {
-                                            ?>
-                                            <input id="<?=$formID ?>-incoming-<?= $index ?>" type="radio" name="send_file[]" class="ccm-file-select-incoming" value="<?= h($file['basename']) ?>" required="required" />
-                                            <?php
-                                        }
-                                    } else {
-                                        ?>
-                                        <input type="<?= $replacingFile === null ? 'checkbox' : 'radio' ?>" disabled="disabled" class="launch-tooltip" title="<?= t('File extension not allowed') ?>" />
-                                        <?php
-                                    }
-                                    ?>
-                                </td>
-                                <td class="incoming_file_table-thumbnail"><label for="<?=$formID ?>-incoming-<?= $index ?>"><?= $file['thumbnail'] ?></label></td>
-                                <td class="incoming_file_table-filename"><?php
-                                if ($file['allowed']) {
-                                    ?><label for="<?=$formID ?>-incoming-<?= $index ?>"><?= h($file['basename']) ?></label><?php
-                                } else {
-                                    ?><span class="text-danger launch-tooltip" title="<?= h(t('Invalid file extension')) ?>"><?= h($file['basename']) ?></span><?php
-                                }
-                                ?></td>
-                                <td class="incoming_file_table-size"><?= $file['displaySize'] ?></td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                    </tbody>
-                </table>
-                <div class="checkbox">
-                    <label>
-                        <?= $form->checkbox('removeFilesAfterPost', 1) ?>
-                        <?= t(/*i18n: %1$s is a directory name, %2$s is a storage location name */ 'Remove files from %1$s directory of "%2$s" storage location.', '<code>' . h($incomingPath) . '</code>', $incomingStorageLocation->getDisplayName()) ?>
-                    </label>
-                </div>
-            </form>
-            <?php
-        }
-        ?>
     </div>
 
     <div class="ccm-tab-content ccm-tab-content-remote" id="ccm-tab-content-<?= $formID ?>-remote">
@@ -221,6 +125,128 @@ function handleImportResponse(response, isSingleUploadOperation) {
     );
 }
 
+function refreshIncomingFiles() {
+    var $tab = $dialog.find('.ccm-tab-content-incoming').empty();
+    $tab.append($('<div class="alert alert-info" />').text(<?= json_encode(t('Loading... Please wait.')) ?>));
+    new ConcreteAjaxRequest({
+        url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/import/refresh-incoming',
+        data: {
+            <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>: <?= json_encode($token->generate('ccm-file-import-refresh-incoming')) ?>
+        },
+        success: function(data) {
+            $tab.empty();
+            if (!data || !data.length) {
+                $tab.append($('<div class="alert alert-info" />')
+                    .text(<?= json_encode(t('No files found in %s for the storage location "%s".', h($incomingPath), h($incomingStorageLocation->getName()))) ?>)
+                );
+                return;
+            }
+            var $form;
+            $tab.append($form = $('<form method="POST" />')
+                .attr('action', <?= json_encode((string) $resolverManager->resolve(['/ccm/system/file/import_incoming'])) ?>)
+                .html(<?= json_encode($token->output('import_incoming', true)) ?>)
+            );
+            <?php
+            if ($currentFolder !== null) {
+                ?>
+                $form.append($('<input type="hidden" name="currentFolder" value="<?= $currentFolder->getTreeNodeID() ?>" />'));
+                <?php
+            }
+            if ($originalPage !== null) {
+                ?>
+                $form.append($('<input type="hidden" name="ocID" value="<?= $originalPage->getCollectionID() ?> " />'));
+                <?php
+            }
+            if ($replacingFile !== null) {
+                ?>
+                $form.append($('<input type="hidden" name="fID" value="<?= $replacingFile->getFileID() ?> " />'));
+                <?php
+            }
+            ?>
+            var $tbody;
+            $form.append($('<table class="incoming_file_table table table-striped" />')
+                .append($('<thead />')
+                    .append($('<tr />')
+                        .append($('<th class="incoming_file_table-checkbox" />')
+                            <?php
+                            if ($replacingFile === null) {
+                                ?>
+                                .append($('<input type="checkbox" class="ccm-check-all-incoming" />'))
+                                <?php
+                            }
+                            ?>
+                        )
+                        .append($('<th class="incoming_file_table-thumbnail" />'))
+                        .append($('<th class="incoming_file_table-filename" />')
+                            .text(<?= json_encode(t('Filename')) ?>)
+                        )
+                        .append($('<th class="incoming_file_table-size" />')
+                            .text(<?= json_encode(t('Size')) ?>)
+                        )
+                    )
+                )
+                .append($tbody = $('<tbody />'))
+            );
+            data.forEach(function(file, index) {
+                var $tr, $td;
+                $tbody.append($tr = $('<tr />'));
+                $tr.append($td = $('<td class="incoming_file_table-checkbox" />'));
+                if (file.allowed) {
+                    $td.append($('<input id="<?=$formID ?>-incoming-' + index + '" type="<?= $replacingFile === null ? 'checkbox' : 'radio' ?>" name="send_file[]" class="ccm-file-select-incoming" />')
+                        .val(file.basename)
+                        <?php
+                        if ($replacingFile !== null) {
+                            ?>
+                            .attr('required', 'required')
+                            <?php
+                        }
+                        ?>
+                    );
+                } else {
+                    $td.append($('<input type="<?= $replacingFile === null ? 'checkbox' : 'radio' ?>" disabled="disabled" class="launch-tooltip" />')
+                        .attr('title', <?= json_encode(t('File extension not allowed')) ?>)
+                    );
+                }
+                $tr.append($('<td class="incoming_file_table-thumbnail" />')
+                    .append($('<label for="<?=$formID ?>-incoming-' + index + '" />')
+                        .html(file.thumbnail)
+                    )
+                );
+                $tr.append($td = $('<td class="incoming_file_table-filename" />'));
+                if (file.allowed) {
+                    $td.append($('<label for="<?=$formID ?>-incoming-' + index + '" />')
+                        .text(file.basename)
+                    )
+                } else {
+                    $td.append($('<span class="text-danger launch-tooltip" />')
+                        .attr('title', <?= json_encode(t('Invalid file extension')) ?>)
+                        .text(file.basename)
+                    );
+                }
+                $tr.append($('<td class="incoming_file_table-size" />')
+                    .text(file.displaySize)
+                );
+            });
+            $form.append($('<div class="checkbox" />')
+                .append($('<label />')
+                    .html(<?= json_encode(
+                        $form->checkbox('removeFilesAfterPost', 1)
+                        . ' '
+                        . t(/*i18n: %1$s is a directory name, %2$s is a storage location name */ 'Remove files from %1$s directory of "%2$s" storage location.', '<code>' . h($incomingPath) . '</code>', $incomingStorageLocation->getDisplayName())
+                    ) ?>)
+                )
+            );
+            $form.concreteAjaxForm({
+                skipResponseValidation: true,
+                success: function(r) {
+                    handleImportResponse(r, true);
+                    refreshDialogButtons();
+                }
+            });
+        }
+    });
+}
+
 // Setup dialog buttons
 function refreshDialogButtons() {
     var $dialogButtonPane = $dialogContainer.find('.ui-dialog-buttonpane'),
@@ -228,6 +254,9 @@ function refreshDialogButtons() {
         $leftButtons,
         $rightButtons;
 
+    if (tab) {
+        tab = tab.replace(<?= json_encode($formID . '-') ?>, '');
+    }
     $dialogButtonPane
         .addClass('ccm-ui')
         .empty()
@@ -241,6 +270,9 @@ function refreshDialogButtons() {
             $dialog.jqdialog('close');
         })
     );
+    if (tab === 'incoming') {
+        refreshIncomingFiles();
+    }
     switch (tab) {
         case 'incoming':
         case 'remote':
@@ -320,7 +352,7 @@ EOT
 });
 
 $dialog.on('dialogclose', function() {
-	$dropzone[0].dropzone.destroy();
+    $dropzone[0].dropzone.destroy();
 });
 
 // Setup incoming tab
@@ -334,13 +366,6 @@ if ($replacingFile === null) {
     <?php
 }
 ?>
-$dialog.find('.ccm-tab-content-incoming form').concreteAjaxForm({
-    skipResponseValidation: true,
-    success: function(r) {
-        handleImportResponse(r, true);
-        refreshDialogButtons();
-    }
-});
 
 // Setup incoming tab
 $dialog.find('.ccm-tab-content-remote form').concreteAjaxForm({

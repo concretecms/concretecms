@@ -3,9 +3,11 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
@@ -13,7 +15,6 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Utility\Service\Identifier;
 use Exception;
-use Throwable;
 
 class Import extends UserInterface
 {
@@ -51,6 +52,22 @@ class Import extends UserInterface
     }
 
     /**
+     * @throws \Concrete\Core\Error\UserMessageException
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function refreshIncoming()
+    {
+        $token = $this->app->make('token');
+        if (!$token->validate('ccm-file-import-refresh-incoming')) {
+            throw new UserMessageException($token->getErrorMessage());
+        }
+        $incomingContents = $this->getIncomingFiles();
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($incomingContents);
+    }
+
+    /**
      * Set the helpers for the view.
      */
     protected function setViewHelpers()
@@ -79,19 +96,6 @@ class Import extends UserInterface
         $incoming = $this->app->make(Incoming::class);
         $this->set('incomingStorageLocation', $incoming->getIncomingStorageLocation());
         $this->set('incomingPath', $incoming->getIncomingPath());
-        try {
-            $incomingContents = $this->getIncomingFiles();
-            $incomingContentsError = null;
-        } catch (Exception $e) {
-            $incomingContents = [];
-            $incomingContentsError = $e->getMessage();
-            $incomingContents = $e;
-        } catch (Throwable $e) {
-            $incomingContents = [];
-            $incomingContentsError = $e->getMessage();
-        }
-        $this->set('incomingContents', $incomingContents);
-        $this->set('incomingContentsError', $incomingContentsError);
         $this->set('replacingFile', null);
     }
 
