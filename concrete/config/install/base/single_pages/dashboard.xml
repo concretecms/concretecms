@@ -1135,6 +1135,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Database Character Set" path="/dashboard/system/environment/database_charset" filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, character set, charset, collation, utf8</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Geolocation" path="/dashboard/system/environment/geolocation" filename="/dashboard/system/environment/geolocation.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
