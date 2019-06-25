@@ -319,6 +319,10 @@ EOT
         ) ?>
 });
 
+$dialog.on('dialogclose', function() {
+	$dropzone[0].dropzone.destroy();
+});
+
 // Setup incoming tab
 <?php
 if ($replacingFile === null) {
