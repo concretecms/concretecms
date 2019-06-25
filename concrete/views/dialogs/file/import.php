@@ -25,12 +25,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 <div class="ccm-ui ccm-file-manager-import-files" id="<?= $formID ?>">
     <?= $ui->tabs([
-        ['local', t('Your Computer'), true],
-        ['incoming', t('Incoming Directory')],
-        ['remote', t('Remote Files')],
+        ["{$formID}-local", t('Your Computer'), true],
+        ["{$formID}-incoming", t('Incoming Directory')],
+        ["{$formID}-remote", t('Remote Files')],
     ]) ?>
 
-    <div class="ccm-tab-content" id="ccm-tab-content-local">
+    <div class="ccm-tab-content ccm-tab-content-local" id="ccm-tab-content-<?= $formID ?>-local">
         <form action="<?= $resolverManager->resolve(['/ccm/system/file/upload']) ?>" class="dropzone">
             <?php $token->output() ?>
             <input type="hidden" name="responseFormat" value="dropzone" />
@@ -48,7 +48,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </form>
     </div>
 
-    <div class="ccm-tab-content" id="ccm-tab-content-incoming">
+    <div class="ccm-tab-content ccm-tab-content-incoming" id="ccm-tab-content-<?= $formID ?>-incoming">
         <?php
         if ($incomingContentsError !== null) {
             ?>
@@ -64,7 +64,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?php
         } else {
             ?>
-            <form id="ccm-file-add-incoming-form" method="POST" action="<?= $resolverManager->resolve(['/ccm/system/file/import_incoming']) ?>">
+            <form method="POST" action="<?= $resolverManager->resolve(['/ccm/system/file/import_incoming']) ?>">
                 <?php $token->output('import_incoming') ?>
                 <?php
                 if ($currentFolder !== null) {
@@ -145,8 +145,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         ?>
     </div>
 
-    <div class="ccm-tab-content" id="ccm-tab-content-remote">
-        <form id="ccm-file-add-remote-form" method="POST" action="<?= $resolverManager->resolve(['/ccm/system/file/import_remote']) ?>">
+    <div class="ccm-tab-content ccm-tab-content-remote" id="ccm-tab-content-<?= $formID ?>-remote">
+        <form method="POST" action="<?= $resolverManager->resolve(['/ccm/system/file/import_remote']) ?>">
             <?php $token->output('import_remote') ?>
             <?php
             if ($currentFolder !== null) {
@@ -170,7 +170,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </div>
 
 <script>
-$(document).ready(function() {
+$(document).ready(function() { setTimeout(function() {
+
 var $dialog = $('#' + <?= json_encode($formID) ?>).closest('.ui-dialog-content'),
     $dialogContainer = $dialog.closest('.ui-dialog'),
     uploadedFiles = [];
@@ -248,7 +249,7 @@ function refreshDialogButtons() {
                     .text(<?= json_encode($replacingFile === null ? t('Add Files') : t('Replace File')) ?>)
                     .on('click', function(e) {
                         e.preventDefault();
-                        $dialog.find('#ccm-tab-content-' + tab + ' form').submit();
+                        $dialog.find('.ccm-tab-content-' + tab + ' form').submit();
                     })
                 );
             }
@@ -262,7 +263,7 @@ $dialog.find('ul.nav-tabs a[data-tab]').on('click', function() {
 setTimeout(function() { refreshDialogButtons(); }, 0);
 
 //Setup upload tab
-var $dropzone = $dialog.find('#ccm-tab-content-local form').dropzone({
+var $dropzone = $dialog.find('.ccm-tab-content-local form').dropzone({
     maxFiles: <?= $replacingFile === null ? 'null' : 1 ?>,
     sending: function() {
         $dialogContainer.find('.ui-dialog-buttonpane button').attr('disabled', 'disabled');
@@ -329,7 +330,7 @@ if ($replacingFile === null) {
     <?php
 }
 ?>
-$dialog.find('#ccm-tab-content-incoming form').concreteAjaxForm({
+$dialog.find('.ccm-tab-content-incoming form').concreteAjaxForm({
     skipResponseValidation: true,
     success: function(r) {
         handleImportResponse(r, true);
@@ -338,7 +339,7 @@ $dialog.find('#ccm-tab-content-incoming form').concreteAjaxForm({
 });
 
 // Setup incoming tab
-$dialog.find('#ccm-tab-content-remote form').concreteAjaxForm({
+$dialog.find('.ccm-tab-content-remote form').concreteAjaxForm({
     skipResponseValidation: true,
     success: function(r) {
         handleImportResponse(r, true);
@@ -346,5 +347,5 @@ $dialog.find('#ccm-tab-content-remote form').concreteAjaxForm({
     }
 });
 
-});
+}, 0);});
 </script>
