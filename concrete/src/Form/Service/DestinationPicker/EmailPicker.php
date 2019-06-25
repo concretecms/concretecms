@@ -86,7 +86,7 @@ class EmailPicker implements PickerInterface
                             if ((string) $fieldDisplayName === '') {
                                 $errors[] = t('The maximum length of the email address is %s characters.', $maxLength);
                             } else {
-                                $errors[] = t('The maximum length of %1$s is %s characters.', $fieldDisplayName, $maxLength);
+                                $errors[] = t('The maximum length of %1$s is %2$s characters.', $fieldDisplayName, $maxLength);
                             }
                         }
                     }
