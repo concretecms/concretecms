@@ -886,7 +886,7 @@
               filename="/dashboard/system/permissions/trusted_proxies.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>trusted, proxy, proxies, ip, cloudflare</value>
+                    <value>trusted, proxy, proxies, ip, header, cloudflare</value>
                 </attributekey>
             </attributes>
         </page>
