@@ -202,12 +202,14 @@ class Type extends ConcreteObject
         /** @var $db \Concrete\Core\Database\Connection\Connection */
         $db = $app->make('database')->connection();
         $qb = $db->createQueryBuilder();
-        $qb->select('wfID')->from('WorkflowTypes')
-            ->where($qb->expr('wftHandle'), $wftHandle)->setMaxResults(1);
+        $qb
+            ->select('wftID')
+            ->from('WorkflowTypes')
+            ->where($qb->expr()->eq('wftHandle', $qb->createNamedParameter($wftHandle)))
+            ->setMaxResults(1);
         $wftID = $qb->execute()->fetchColumn();
-        if ($wftID > 0) {
-            return self::getByID($wftID);
-        }
+
+        return $wftID ? self::getByID($wftID) : null;
     }
 
     /**
