@@ -66,7 +66,7 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         $this->assertCount(1, Type::getListByPackage($pkg));
     }
 
-    public function testWorkflowProperties()
+    public function testProperties()
     {
         $pkg = M::mock(Package::class);
         $pkg->shouldReceive('getPackageID')->andReturn(321);
