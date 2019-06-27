@@ -1,14 +1,17 @@
 <?php
+
 namespace Concrete\Core\Workflow;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Support\Facade\Application;
+use PDO;
 
 class Type extends ConcreteObject
 {
     /**
-     * Returns this Workflow Type's ID
+     * Get the ID of this workflow type.
      *
      * @return int
      */
@@ -18,7 +21,7 @@ class Type extends ConcreteObject
     }
 
     /**
-     * Returns this Workflow Type's Handle
+     * Get the handle of this workflow type.
      *
      * @return string
      */
@@ -26,8 +29,9 @@ class Type extends ConcreteObject
     {
         return $this->wftHandle;
     }
+
     /**
-     * Returns this Workflow Type's Name
+     * Get the name of this workflow type.
      *
      * @return string
      */
@@ -37,85 +41,42 @@ class Type extends ConcreteObject
     }
 
     /**
-     * Gets a WorkflowType By ID
+     * Get the ID of the package that created this workflow type.
      *
-     * @param $wftID int
-     * @return Type | null
+     * @return int zero if no package defined this workflow type, the package ID otherwise
      */
-    public static function getByID($wftID)
+    public function getPackageID()
     {
-        $app = Application::getFacadeApplication();
-        /** @var $db \Concrete\Core\Database\Connection\Connection */
-        $db = $app->make('database')->connection();
-        $qb = $db->createQueryBuilder();
-        $qb->select('wftID, pkgID, wftHandle, wftName')
-            ->from('WorkflowTypes')
-            ->where($qb->expr()->eq('wftID', $wftID))->setMaxResults(1);
-
-        $row = $qb->execute()->fetch();
-        if ($row['wftHandle']) {
-            $wt = new static();
-            $wt->setPropertiesFromArray($row);
-
-            return $wt;
-        }
-
-        return null;
+        return $this->pkgID;
     }
 
     /**
-     * Returns a list of WorkflowTypes currently installed
+     * Get the handle of the package that created this workflow type.
      *
-     * @return Type[]
+     * @return string|bool false if no package defined this workflow type, the package handle otherwise
      */
-    public static function getList()
+    public function getPackageHandle()
     {
-        $app = Application::getFacadeApplication();
-        /** @var $db \Concrete\Core\Database\Connection\Connection */
-        $db = $app->make('database')->connection();
-        $list = [];
-        $qb = $db->createQueryBuilder();
-        $qb->select('wftID')->from('WorkflowTypes')->orderBy('wftID', 'asc');
-        $result = $qb->execute()->fetchColumn();
+        $pkgID = $this->getPackageID();
 
-        foreach ($result as $id) {
-            $list[] = static::getByID($id);
-        }
-
-
-        return $list;
-    }
-
-    /**
-     * This function is used to add the workflow type list to an existing XML export file.
-     *
-     * @param \SimpleXMLElement $xml
-     */
-    public static function exportList($xml)
-    {
-        $wtypes = static::getList();
-        $axml = $xml->addChild('workflowtypes');
-        foreach ($wtypes as $wt) {
-            $wtype = $axml->addChild('workflowtype');
-            $wtype->addAttribute('handle', $wt->getWorkflowTypeHandle());
-            $wtype->addAttribute('name', $wt->getWorkflowTypeName());
-            $wtype->addAttribute('package', $wt->getPackageHandle());
-        }
+        return $pkgID ? PackageList::getHandle($pkgID) : false;
     }
 
     /**
      * Gets all workflows belonging to this type.
      *
-     * @return Workflow[]
+     * @return \Concrete\Core\Workflow\Workflow[]
      */
-    public function getWorkflows() {
+    public function getWorkflows()
+    {
         $workflows = [];
         $app = Application::getFacadeApplication();
-        /** @var $db \Concrete\Core\Database\Connection\Connection */
-        $db = $app->make('database')->connection();
+        $db = $app->make(Connection::class);
         $qb = $db->createQueryBuilder();
-        $qb->select('wfID')->from('Workflows')
-            ->where($qb->expr()->eq('wftID',$this->getWorkflowTypeID()));
+        $qb
+            ->select('wfID')
+            ->from('Workflows')
+            ->where($qb->expr()->eq('wftID', $this->getWorkflowTypeID()));
         $results = $qb->execute()->fetchColumn();
         foreach ($results as $result) {
             $workflow = Workflow::getByID($result);
@@ -125,11 +86,10 @@ class Type extends ConcreteObject
         }
 
         return $workflows;
-
     }
 
     /**
-     * Deletes this workflow type and all workflows belonging to this type.
+     * Delete this workflow type and all workflows belonging to this type.
      *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
@@ -140,72 +100,88 @@ class Type extends ConcreteObject
             $workflow->delete();
         }
         $app = Application::getFacadeApplication();
-        /* @var $db \Concrete\Core\Database\Connection\Connection */
-        $db = $app->make('database')->connection();
-        $db->delete('WorkflowTypes',['wftID', $this->getWorkflowTypeID()]);
+        $db = $app->make(Connection::class);
+        $db->delete('WorkflowTypes', ['wftID', $this->getWorkflowTypeID()]);
     }
 
     /**
-     * @param $pkg \Concrete\Core\Package\Package | \Concrete\Core\Entity\Package
-     * @return Type[]
+     * Add a new workflow type.
+     *
+     * @param string $wftHandle The handle of the new workflow type
+     * @param string $wftName The name of the new workflow type
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|null|bool $pkg the package that's creating the new workflow type
+     *
+     * @return \Concrete\Core\Workflow\Type
      */
-    public static function getListByPackage($pkg)
+    public static function add($wftHandle, $wftName, $pkg = false)
     {
-        $list = [];
+        $pkgID = is_object($pkg) ? (int) $pkg->getPackageID() : 0;
         $app = Application::getFacadeApplication();
-        /** @var $db \Concrete\Core\Database\Connection\Connection */
-        $db = $app->make('database')->connection();
+        $db = $app->make(Connection::class);
+        $db->insert(
+            'WorkflowTypes',
+            [
+                'wftHandle' => $wftHandle,
+                'wftName' => $wftName,
+                'pkgID' => $pkgID,
+            ],
+            [
+                PDO::PARAM_STR,
+                PDO::PARAM_STR,
+                PDO::PARAM_INT,
+            ]
+        );
+        $id = $db->lastInsertId();
+
+        return static::getByID($id);
+    }
+
+    /**
+     * Get a workflow type given its ID.
+     *
+     * @param int $wftID
+     *
+     * @return \Concrete\Core\Workflow\Type|null
+     */
+    public static function getByID($wftID)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         $qb = $db->createQueryBuilder();
-        $qb->select('wfID')->from('WorkflowTypes')
-            ->where($qb->expr('pkgID'), $pkg->getPackageID());
-        $result = $qb->execute()->fetchColumn();
-
-        foreach ($result as $id) {
-            $list[] = static::getByID($id);
+        $qb
+            ->select('wftID, pkgID, wftHandle, wftName')
+            ->from('WorkflowTypes')
+            ->where($qb->expr()->eq('wftID', (int) $wftID))
+            ->setMaxResults(1)
+        ;
+        $row = $qb->execute()->fetch();
+        if (!$row) {
+            return null;
         }
+        $wt = new static();
+        $row['wftID'] = (int) $row['wftID'];
+        $row['pkgID'] = (int) $row['pkgID'];
+        $wt->setPropertiesFromArray($row);
 
-
-        return $list;
+        return $wt;
     }
 
     /**
-     * Returns this Workflow Type's Package ID.
-     *
-     * @return int
-     */
-    public function getPackageID()
-    {
-        return (int) $this->pkgID;
-    }
-
-    /**
-     * Returns this Workflow Type's Package handle
-     *
-     * Will return false, if no package.
-     *
-     * @return string|bool
-     */
-    public function getPackageHandle()
-    {
-        return PackageList::getHandle($this->pkgID);
-    }
-
-    /**
-     * Gets a Workflow Type by handle
+     * Gets a Workflow Type by handle.
      *
      * @param $wftHandle
+     *
      * @return Type|null
      */
     public static function getByHandle($wftHandle)
     {
         $app = Application::getFacadeApplication();
-        /** @var $db \Concrete\Core\Database\Connection\Connection */
-        $db = $app->make('database')->connection();
+        $db = $app->make(Connection::class);
         $qb = $db->createQueryBuilder();
         $qb
             ->select('wftID')
             ->from('WorkflowTypes')
-            ->where($qb->expr()->eq('wftHandle', $qb->createNamedParameter($wftHandle)))
+            ->where($qb->expr()->eq('wftHandle', $qb->createNamedParameter((string) $wftHandle)))
             ->setMaxResults(1);
         $wftID = $qb->execute()->fetchColumn();
 
@@ -213,32 +189,70 @@ class Type extends ConcreteObject
     }
 
     /**
-     * Add a new Workflow Type.
+     * Get the list of the currently installed workflow types.
      *
-     * e.g Type::add('wft_handle','Type Name') - for no package
-     * e.g Type::add('wft_handle','Type Name', $pkg) - with package
-     * where $pkg is a Package Object/Entity
-     *
-     * @param $wftHandle string
-     * @param $wftName string
-     * @param \Concrete\Core\Package\Package | \Concrete\Core\Entity\Package | bool $pkg
-     * @return Type|null
+     * @return \Concrete\Core\Workflow\Type[]
      */
-    public static function add($wftHandle, $wftName, $pkg = false)
+    public static function getList()
     {
-        $pkgID = 0;
-        if (is_object($pkg)) {
-            $pkgID = $pkg->getPackageID();
-        }
         $app = Application::getFacadeApplication();
-        /** @var $db \Concrete\Core\Database\Connection\Connection */
-        $db = $app->make('database')->connection();
-        $db->insert('WorkflowTypes',
-            ['wftHandle'=>$wftHandle, 'wftName'=>$wftName, 'pkgID'=>$pkgID],
-            [\PDO::PARAM_STR, \PDO::PARAM_STR, \PDO::PARAM_INT]);
-        $id = $db->lastInsertId();
-        $est = static::getByID($id);
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $qb
+            ->select('wftID')
+            ->from('WorkflowTypes')
+            ->orderBy('wftID', 'asc')
+        ;
+        $list = [];
+        foreach ($qb->execute()->fetchAll() as $row) {
+            $list[] = static::getByID($row['wftID']);
+        }
 
-        return $est;
+        return $list;
+    }
+
+    /**
+     * Get the list of the currently installed workflow types that were created by a package.
+     *
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package $pkg
+     *
+     * @return \Concrete\Core\Workflow\Type[]
+     */
+    public static function getListByPackage($pkg)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $qb
+            ->select('wftID')
+            ->from('WorkflowTypes')
+            ->where($qb->expr()->eq('pkgID', $pkg->getPackageID()))
+        ;
+        $list = [];
+        foreach ($qb->execute()->fetchAll() as $id) {
+            $list[] = static::getByID($id);
+        }
+
+        return $list;
+    }
+
+    /**
+     * Export the currently installed workflow types to XML.
+     *
+     * @param \SimpleXMLElement $xml
+     */
+    public static function exportList($xml)
+    {
+        $wtypes = static::getList();
+        if (empty($wtypes)) {
+            return;
+        }
+        $axml = $xml->addChild('workflowtypes');
+        foreach ($wtypes as $wt) {
+            $wtype = $axml->addChild('workflowtype');
+            $wtype->addAttribute('handle', $wt->getWorkflowTypeHandle());
+            $wtype->addAttribute('name', $wt->getWorkflowTypeName());
+            $wtype->addAttribute('package', $wt->getPackageHandle() ?: '');
+        }
     }
 }
