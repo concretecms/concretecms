@@ -74,6 +74,7 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         $this->assertSame('wft_handle', $type->getWorkflowTypeHandle());
         $this->assertSame('WFT Name', $type->getWorkflowTypeName());
         $this->assertSame(321, $type->getPackageID());
+        $this->assertSame([], $type->getWorkflows());
     }
 
     protected function setUp()

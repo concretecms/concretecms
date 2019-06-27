@@ -77,9 +77,9 @@ class Type extends ConcreteObject
             ->select('wfID')
             ->from('Workflows')
             ->where($qb->expr()->eq('wftID', $this->getWorkflowTypeID()));
-        $results = $qb->execute()->fetchColumn();
-        foreach ($results as $result) {
-            $workflow = Workflow::getByID($result);
+        $rows = $qb->execute()->fetchAll();
+        foreach ($rows as $row) {
+            $workflow = Workflow::getByID($row['wfID']);
             if (is_object($workflow)) {
                 $workflows[] = $workflow;
             }
