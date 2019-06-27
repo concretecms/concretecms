@@ -17,11 +17,6 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         'Workflows',
     ];
 
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-    }
-
     public function testAdd()
     {
         $type = Type::add('new1', 'New type 1');
