@@ -4,6 +4,7 @@ namespace Concrete\Tests\Workflow;
 
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Workflow\Type;
+use Concrete\Core\Workflow\Workflow;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
@@ -15,6 +16,7 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
     protected $tables = [
         'WorkflowTypes',
         'Workflows',
+        'WorkflowProgress',
     ];
 
     public function testAdd()
@@ -70,6 +72,20 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         $this->assertSame('WFT Name', $type->getWorkflowTypeName());
         $this->assertSame(321, $type->getPackageID());
         $this->assertSame([], $type->getWorkflows());
+    }
+
+    public function testDelete()
+    {
+        $this->assertSame([], Type::getList());
+        $type = Type::add('empty', 'Example');
+        $this->assertCount(1, Type::getList());
+        Type::add('basic', 'Example 2');
+        $this->assertCount(2, Type::getList());
+        $this->assertCount(0, $type->getWorkflows());
+        Workflow::add($type, 'WF Name');
+        $this->assertCount(1, $type->getWorkflows());
+        $type->delete();
+        $this->assertCount(1, Type::getList());
     }
 
     protected function setUp()

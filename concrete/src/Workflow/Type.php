@@ -101,7 +101,7 @@ class Type extends ConcreteObject
         }
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->delete('WorkflowTypes', ['wftID', $this->getWorkflowTypeID()]);
+        $db->delete('WorkflowTypes', ['wftID' => $this->getWorkflowTypeID()]);
     }
 
     /**
