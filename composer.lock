@@ -50,16 +50,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "18e19bac383109b3ae05c6197ff955d045a84166"
+                "reference": "5c44552c7f78b6614cba5e05777eb04748ee946d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/18e19bac383109b3ae05c6197ff955d045a84166",
-                "reference": "18e19bac383109b3ae05c6197ff955d045a84166",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/5c44552c7f78b6614cba5e05777eb04748ee946d",
+                "reference": "5c44552c7f78b6614cba5e05777eb04748ee946d",
                 "shasum": ""
             },
             "require": {
@@ -81,7 +81,8 @@
                         "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
                     },
                     "tedivm/jshrink:1.1.0": {
-                        "Fix continue switch in FileGenerator and MethodReflection": "tedivm/jshrink/fix-minifier-loop.patch"
+                        "Fix continue switch in Minifier": "tedivm/jshrink/fix-minifier-loop.patch",
+                        "Update to upstream version 1.3.2": "tedivm/jshrink/update-upstream-1.3.2.patch"
                     },
                     "zendframework/zend-code:2.6.3": {
                         "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
@@ -111,7 +112,7 @@
             ],
             "description": "Patches required for concrete5 dependencies",
             "homepage": "https://github.com/concrete5/dependency-patches",
-            "time": "2019-05-29T16:31:38+00:00"
+            "time": "2019-06-21T12:56:38+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
