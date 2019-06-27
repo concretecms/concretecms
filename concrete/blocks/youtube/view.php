@@ -87,7 +87,7 @@ if (Page::getCurrentPage()->isEditMode()) {
         <iframe class="youtube-player" <?php echo $sizeargs;
         ?> src="//<?= $youtubeDomain; ?>/embed/<?= $videoID;
         ?><?= $paramstring;
-        ?>" allowfullscreen></iframe>
+        ?>" allow="autoplay" allowfullscreen></iframe>
     </div>
     <?php
 } ?>
