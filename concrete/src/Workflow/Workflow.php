@@ -197,7 +197,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
             }
         }
         $cmp = new Comparer();
-        usort($rows, function (Workflow $a, Workflow $b) use ($cmp) {
+        usort($workflows, function (Workflow $a, Workflow $b) use ($cmp) {
             return $cmp->compare($a->getWorkflowDisplayName('text'), $b->getWorkflowDisplayName('text'));
         });
 
@@ -224,7 +224,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
             }
         }
         $cmp = new Comparer();
-        usort($rows, function (Workflow $a, Workflow $b) use ($cmp) {
+        usort($workflows, function (Workflow $a, Workflow $b) use ($cmp) {
             return $cmp->compare($a->getWorkflowDisplayName('text'), $b->getWorkflowDisplayName('text'));
         });
 
