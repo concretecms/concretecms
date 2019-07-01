@@ -85,6 +85,15 @@ class WorkflowTest extends ConcreteDatabaseTestCase
         $this->assertSame(123, $wf->getWorkflowProgressCurrentStatusNum($wp));
     }
 
+    public function testGetList()
+    {
+        $type = Type::add('empty', 'Example');
+        $wf1 = Workflow::add($type, 'WF 1');
+        $wf3 = Workflow::add($type, 'WF 3');
+        $wf2 = Workflow::add($type, 'WF 2');
+        $this->assertEquals([$wf1, $wf2, $wf3], Workflow::getList());
+    }
+
     protected function setUp()
     {
         parent::setUp();
