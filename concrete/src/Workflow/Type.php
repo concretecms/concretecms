@@ -7,6 +7,7 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use PDO;
+use Punic\Comparer;
 
 class Type extends ConcreteObject
 {
@@ -63,7 +64,7 @@ class Type extends ConcreteObject
     }
 
     /**
-     * Gets all workflows belonging to this type.
+     * Gets all workflows belonging to this type, sorted by their display name.
      *
      * @return \Concrete\Core\Workflow\Workflow[]
      */
@@ -80,10 +81,14 @@ class Type extends ConcreteObject
         $rows = $qb->execute()->fetchAll();
         foreach ($rows as $row) {
             $workflow = Workflow::getByID($row['wfID']);
-            if (is_object($workflow)) {
+            if ($workflow !== null) {
                 $workflows[] = $workflow;
             }
         }
+        $cmp = new Comparer();
+        usort($workflows, function (Workflow $a, Workflow $b) use ($cmp) {
+            return $cmp->compare($a->getWorkflowDisplayName('text'), $b->getWorkflowDisplayName('text'));
+        });
 
         return $workflows;
     }
@@ -189,7 +194,7 @@ class Type extends ConcreteObject
     }
 
     /**
-     * Get the list of the currently installed workflow types.
+     * Get the list of the currently installed workflow types, sorted by their name.
      *
      * @return \Concrete\Core\Workflow\Type[]
      */
@@ -207,12 +212,16 @@ class Type extends ConcreteObject
         foreach ($qb->execute()->fetchAll() as $row) {
             $list[] = static::getByID($row['wftID']);
         }
+        $cmp = new Comparer();
+        usort($list, function (Type $a, Type $b) use ($cmp) {
+            return $cmp->compare($a->getWorkflowTypeName(), $b->getWorkflowTypeName());
+        });
 
         return $list;
     }
 
     /**
-     * Get the list of the currently installed workflow types that were created by a package.
+     * Get the list of the currently installed workflow types that were created by a package, sorted by their name.
      *
      * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package $pkg
      *
@@ -232,6 +241,10 @@ class Type extends ConcreteObject
         foreach ($qb->execute()->fetchAll() as $id) {
             $list[] = static::getByID($id);
         }
+        $cmp = new Comparer();
+        usort($list, function (Type $a, Type $b) use ($cmp) {
+            return $cmp->compare($a->getWorkflowTypeName(), $b->getWorkflowTypeName());
+        });
 
         return $list;
     }
