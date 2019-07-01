@@ -180,7 +180,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
     }
 
     /**
-     * Get the list of installed workflows.
+     * Get the list of installed workflows, sorted by the workflow display name.
      *
      * @return \Concrete\Core\Workflow\Workflow[]
      */
@@ -205,7 +205,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
     }
 
     /**
-     * Get the list of workflows installed by a package.
+     * Get the list of workflows installed by a package, sorted by the workflow display name.
      *
      * @param \Concrete\Core\Entity\Package $pkg
      *
