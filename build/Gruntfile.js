@@ -438,6 +438,10 @@ module.exports = function(grunt) {
         ccm_country_stateprovince_link: {
             dest: '<%= DIR_BASE %>/concrete/js/country-stateprovince-link.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/country-stateprovince-link.js'
+        },
+        ccm_country_data_link: {
+            dest: '<%= DIR_BASE %>/concrete/js/country-data-link.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/country-data-link.js'
         }
     };
 
