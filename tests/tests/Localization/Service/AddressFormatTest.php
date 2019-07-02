@@ -141,20 +141,16 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                 'postal_code' => '90017',
             ],
             'expected' => [
-                'text' => (
-                    '877 S Figueroa St' . "\n" .
+                'text' => '877 S Figueroa St' . "\n" .
                     'Los Angeles, %administrative% 90017' . "\n" .
-                    '%country%'
-                ),
-                'html' => (
-                    '<span class="address-line1">877 S Figueroa St</span>' .
+                    '%country%',
+                'html' => '<span class="address-line1">877 S Figueroa St</span>' .
                     '<br>' . "\n" .
                     '<span class="locality">Los Angeles</span>, ' .
                     '<span class="administrative-area">%administrative%</span> ' .
                     '<span class="postal-code">90017</span>' .
                     '<br>' . "\n" .
-                    '<span class="country">%country%</span>'
-                ),
+                    '<span class="country">%country%</span>',
             ],
         ],
         [
@@ -167,14 +163,11 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                 'postal_code' => '10111',
             ],
             'expected' => [
-                'text' => (
-                    '30 Rockefeller Plaza' . "\n" .
+                'text' => '30 Rockefeller Plaza' . "\n" .
                     'NBC Studio 6A' . "\n" .
                     'New York, %administrative% 10111' . "\n" .
-                    '%country%'
-                ),
-                'html' => (
-                    '<span class="address-line1">30 Rockefeller Plaza</span>' .
+                    '%country%',
+                'html' => '<span class="address-line1">30 Rockefeller Plaza</span>' .
                     '<br>' . "\n" .
                     '<span class="address-line2">NBC Studio 6A</span>' .
                     '<br>' . "\n" .
@@ -182,8 +175,7 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                     '<span class="administrative-area">%administrative%</span> ' .
                     '<span class="postal-code">10111</span>' .
                     '<br>' . "\n" .
-                    '<span class="country">%country%</span>'
-                ),
+                    '<span class="country">%country%</span>',
             ],
         ],
         [
@@ -197,14 +189,11 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                 'postal_code' => '75202',
             ],
             'expected' => [
-                'text' => (
-                    '1321 Commerce St' . "\n" .
+                'text' => '1321 Commerce St' . "\n" .
                     '#APT 123, Mr. Smith' . "\n" .
                     'Dallas, %administrative% 75202' . "\n" .
-                    '%country%'
-                ),
-                'html' => (
-                    '<span class="address-line1">1321 Commerce St</span>' .
+                    '%country%',
+                'html' => '<span class="address-line1">1321 Commerce St</span>' .
                     '<br>' . "\n" .
                     '<span class="address-line2">#APT 123, Mr. Smith</span>' .
                     '<br>' . "\n" .
@@ -212,8 +201,7 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                     '<span class="administrative-area">%administrative%</span> ' .
                     '<span class="postal-code">75202</span>' .
                     '<br>' . "\n" .
-                    '<span class="country">%country%</span>'
-                ),
+                    '<span class="country">%country%</span>',
             ],
         ],
         [
@@ -224,19 +212,15 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                 'postal_code' => '00210',
             ],
             'expected' => [
-                'text' => (
-                    'Veneentekijäntie 4 A' . "\n" .
+                'text' => 'Veneentekijäntie 4 A' . "\n" .
                     '00210 Helsinki' . "\n" .
-                    '%country%'
-                ),
-                'html' => (
-                    '<span class="address-line1">Veneentekijäntie 4 A</span>' .
+                    '%country%',
+                'html' => '<span class="address-line1">Veneentekijäntie 4 A</span>' .
                     '<br>' . "\n" .
                     '<span class="postal-code">00210</span> ' .
                     '<span class="locality">Helsinki</span>' .
                     '<br>' . "\n" .
-                    '<span class="country">%country%</span>'
-                ),
+                    '<span class="country">%country%</span>',
             ],
         ],
         [
@@ -247,19 +231,15 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                 'postal_code' => '111 35',
             ],
             'expected' => [
-                'text' => (
-                    'Kungsgatan 44' . "\n" .
+                'text' => 'Kungsgatan 44' . "\n" .
                     '111 35 Stockholm' . "\n" .
-                    '%country%'
-                ),
-                'html' => (
-                    '<span class="address-line1">Kungsgatan 44</span>' .
+                    '%country%',
+                'html' => '<span class="address-line1">Kungsgatan 44</span>' .
                     '<br>' . "\n" .
                     '<span class="postal-code">111 35</span> ' .
                     '<span class="locality">Stockholm</span>' .
                     '<br>' . "\n" .
-                    '<span class="country">%country%</span>'
-                ),
+                    '<span class="country">%country%</span>',
             ],
         ],
         [
@@ -271,20 +251,16 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                 'postal_code' => '28934',
             ],
             'expected' => [
-                'text' => (
-                    'Plaza de España, 1' . "\n" .
+                'text' => 'Plaza de España, 1' . "\n" .
                     '28934 Mostoles %administrative%' . "\n" .
-                    '%country%'
-                ),
-                'html' => (
-                    '<span class="address-line1">Plaza de España, 1</span>' .
+                    '%country%',
+                'html' => '<span class="address-line1">Plaza de España, 1</span>' .
                     '<br>' . "\n" .
                     '<span class="postal-code">28934</span> ' .
                     '<span class="locality">Mostoles</span> ' .
                     '<span class="administrative-area">%administrative%</span>' .
                     '<br>' . "\n" .
-                    '<span class="country">%country%</span>'
-                ),
+                    '<span class="country">%country%</span>',
             ],
         ],
         [
@@ -303,8 +279,7 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                     '196601' . "\n" .
                     '%country%'
                 ),
-                'html' => (
-                    '<span class="address-line1">Леонтьевская ул., 28</span>' .
+                'html' => '<span class="address-line1">Леонтьевская ул., 28</span>' .
                     '<br>' . "\n" .
                     '<span class="locality">Пушкин</span>' .
                     '<br>' . "\n" .
@@ -312,8 +287,7 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
                     '<br>' . "\n" .
                     '<span class="postal-code">196601</span>' .
                     '<br>' . "\n" .
-                    '<span class="country">%country%</span>'
-                ),
+                    '<span class="country">%country%</span>',
             ],
         ],
     ];
