@@ -886,7 +886,7 @@
               filename="/dashboard/system/permissions/trusted_proxies.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>trusted, proxy, proxies, ip, cloudflare</value>
+                    <value>trusted, proxy, proxies, ip, header, cloudflare</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1132,6 +1132,13 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>database, entities, doctrine, orm</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Character Set" path="/dashboard/system/environment/database_charset" filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, character set, charset, collation, utf8</value>
                 </attributekey>
             </attributes>
         </page>

@@ -398,26 +398,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @param string $task
-     * @param null $alternateHandler
-     *
-     * @return string
-     */
-    public function getAreaUpdateAction($task = 'update', $alternateHandler = null)
-    {
-        $valt = Core::make('helper/validation/token');
-        $token = '&'.$valt->getParameter();
-        $c = $this->getAreaCollectionObject();
-        if ($alternateHandler) {
-            $str = $alternateHandler."?atask={$task}&cID=".$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$token;
-        } else {
-            $str = DIR_REL.'/'.DISPATCHER_FILENAME.'?atask='.$task.'&cID='.$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$token;
-        }
-
-        return $str;
-    }
-
-    /**
      * @param Page $c
      */
     public function refreshCache($c)

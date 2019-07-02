@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4a4f26184b517d1eb1c9c42f6e30173",
+    "content-hash": "4f5c41b6f84eb5c87a665a0dfecd1046",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -109,16 +109,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "d27a283f3d00b2dd442f86ebe32b91f4f68bd682"
+                "reference": "18e19bac383109b3ae05c6197ff955d045a84166"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/d27a283f3d00b2dd442f86ebe32b91f4f68bd682",
-                "reference": "d27a283f3d00b2dd442f86ebe32b91f4f68bd682",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/18e19bac383109b3ae05c6197ff955d045a84166",
+                "reference": "18e19bac383109b3ae05c6197ff955d045a84166",
                 "shasum": ""
             },
             "require": {
@@ -147,6 +147,12 @@
                     },
                     "zendframework/zend-http:2.6.0": {
                         "Remove support for the X-Original-Url and X-Rewrite-Url headers": "zendframework/zend-http/no-x-original-url-x-rewrite.patch"
+                    },
+                    "zendframework/zend-mail:2.7.3": {
+                        "Fix idn_to_ascii deprecation warning": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch"
+                    },
+                    "zendframework/zend-validator:2.8.2": {
+                        "Fix idn_to_ascii/idn_to_utf8 deprecation warning": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch"
                     }
                 }
             },
@@ -164,7 +170,7 @@
             ],
             "description": "Patches required for concrete5 dependencies",
             "homepage": "https://github.com/concrete5/dependency-patches",
-            "time": "2019-01-30T07:29:14+00:00"
+            "time": "2019-05-29T16:31:38+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
@@ -1092,7 +1098,7 @@
                     "hash": "f03553f596500df8083abdd1cd87cd1916d1a3f4",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
+                            "from-package": "concrete5/dependency-patches 1.3.0",
                             "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
                             "description": "Fix UnitOfWork::createEntity()"
                         }
@@ -3739,7 +3745,7 @@
                     "hash": "43699395013691839330f8406ee49fa752c163fb",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
+                            "from-package": "concrete5/dependency-patches 1.3.0",
                             "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
                             "description": "Fix minus in regular expressions"
                         }
@@ -4923,7 +4929,7 @@
                     "hash": "b16ca9edf74b2527c4f02cd8f69c7ad1e452545c",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
+                            "from-package": "concrete5/dependency-patches 1.3.0",
                             "path": "tedivm/jshrink/fix-minifier-loop.patch",
                             "description": "Fix continue switch in FileGenerator and MethodReflection"
                         }
@@ -5468,7 +5474,7 @@
                     "hash": "43aec57a6422c48c002031806c8a8ca01b6208cf",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
+                            "from-package": "concrete5/dependency-patches 1.3.0",
                             "path": "zendframework/zend-code/switch-continue.patch",
                             "description": "Fix continue switch in FileGenerator and MethodReflection"
                         }
@@ -5687,7 +5693,7 @@
                     "hash": "b1172d4359d8b116dcf51b148427b53e41d1ae2a",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
+                            "from-package": "concrete5/dependency-patches 1.3.0",
                             "path": "zendframework/zend-http/no-x-original-url-x-rewrite.patch",
                             "description": "Remove support for the X-Original-Url and X-Rewrite-Url headers"
                         }
@@ -5921,6 +5927,16 @@
                 "zf": {
                     "component": "Zend\\Mail",
                     "config-provider": "Zend\\Mail\\ConfigProvider"
+                },
+                "patches_applied": {
+                    "hash": "2eef0fc6a76db7a14e55b9d0717ffd9092bce7ce",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.3.0",
+                            "path": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch",
+                            "description": "Fix idn_to_ascii deprecation warning"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6090,7 +6106,7 @@
                     "hash": "f247c9d47f2ba4ae8d9dfe6d1a25c8627e377753",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
+                            "from-package": "concrete5/dependency-patches 1.3.0",
                             "path": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch",
                             "description": "Fix ArrayObject::unserialize()"
                         }
@@ -6212,6 +6228,16 @@
                 "zf": {
                     "component": "Zend\\Validator",
                     "config-provider": "Zend\\Validator\\ConfigProvider"
+                },
+                "patches_applied": {
+                    "hash": "37d53a3bf7979793505330148334c2e97b2f7a0a",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.3.0",
+                            "path": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch",
+                            "description": "Fix idn_to_ascii/idn_to_utf8 deprecation warning"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6959,7 +6985,7 @@
                     "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.2.0",
+                            "from-package": "concrete5/dependency-patches 1.3.0",
                             "path": "phpunit/phpunit/Getopt-each.patch",
                             "description": "Avoid each() in Getopt"
                         }

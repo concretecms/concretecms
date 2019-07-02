@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Form\Context\Registry;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Express\Form\Context\FormContext;
 use Concrete\Core\Express\Form\Context\ViewContext;
 use Concrete\Core\Express\Form\Control\View\AssociationFormView;
@@ -12,11 +11,10 @@ use Concrete\Core\Express\Form\Control\View\AttributeKeyView;
 
 /**
  * A simple class for registering context to view bindings, in the event that certain contexts ought to
- * deliver different views. (Used by Express Attribute Key View vs Form)
+ * deliver different views. (Used by Express Attribute Key View vs Form).
  */
 class ControlRegistry
 {
-
     public function __construct()
     {
         $this->registerControl('express_control_attribute_key', [
@@ -27,7 +25,6 @@ class ControlRegistry
             [new FormContext(), AssociationFormView::class],
             [new ViewContext(), AssociationView::class],
         ]);
-
     }
 
     /**
@@ -37,7 +34,7 @@ class ControlRegistry
 
     public function registerControl($handle, $entries)
     {
-        foreach($entries as $row) {
+        foreach ($entries as $row) {
             $this->register($row[0], $handle, $row[1]);
         }
     }
@@ -51,14 +48,14 @@ class ControlRegistry
     protected function addOrReplaceEntry(ControlEntry $entry)
     {
         $index = null;
-        foreach($this->entries as $key => $existingEntry) {
+        foreach ($this->entries as $key => $existingEntry) {
             if ($entry->getHandle() == $existingEntry->getHandle()) {
                 if (get_class($existingEntry->getContext()) == get_class($entry->getContext())) {
                     $index = $key;
                 }
             }
         }
-        if ($index) {
+        if ($index !== null) {
             $this->entries[$index] = $entry;
         } else {
             $this->entries[] = $entry;
@@ -67,7 +64,7 @@ class ControlRegistry
 
     protected function getEntryFromContext(ContextInterface $context, $handle)
     {
-        foreach($this->entries as $key => $existingEntry) {
+        foreach ($this->entries as $key => $existingEntry) {
             if ($handle == $existingEntry->getHandle()) {
                 $entryContext = $existingEntry->getContext();
                 if ($context instanceof $entryContext) {
@@ -77,7 +74,7 @@ class ControlRegistry
         }
     }
 
-    public function getControlView(ContextInterface $context, $handle, $arguments = array())
+    public function getControlView(ContextInterface $context, $handle, $arguments = [])
     {
         $entry = $this->getEntryFromContext($context, $handle);
         array_unshift($arguments, $context);
@@ -89,5 +86,4 @@ class ControlRegistry
             );
         }
     }
-
 }

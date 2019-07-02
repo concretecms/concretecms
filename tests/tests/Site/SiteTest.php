@@ -20,8 +20,16 @@ class SiteTest extends PHPUnit_Framework_TestCase
 {
     public function testService()
     {
-        $service = \Core::make('site');
-        $this->assertInstanceOf('Concrete\Core\Site\Service', $service);
+        $singletons = [
+            'site' => \Concrete\Core\Site\Service::class,
+            'site/type' => \Concrete\Core\Site\Type\Service::class,
+        ];
+        foreach ($singletons as $alias => $implementation) {
+            $this->assertInstanceOf($implementation, \Core::make($alias));
+            $this->assertSame(\Core::make($alias), \Core::make($alias), 'Making the alias should always return the same instance');
+            $this->assertSame(\Core::make($implementation), \Core::make($implementation), 'Making the implementation should always return the same instance');
+            $this->assertSame(\Core::make($alias), \Core::make($implementation), 'Making the alias and the implementation should return the same instance');
+        }
     }
 
     public function testGetDefault()
