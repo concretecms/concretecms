@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Attribute\Value;
 
 use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
@@ -78,16 +77,16 @@ class AddressValueTest extends AttributeValueTestCase
                 (
                     '<div class="ccm-address-text">' . "\n" .
                     '<span class="address-line1">123 Fake St.</span>' .
-                    '<br>'. "\n" .
+                    '<br>' . "\n" .
                     '<span class="address-line2">Suite 100</span>' .
-                    '<br>'. "\n" .
+                    '<br>' . "\n" .
                     '<span class="locality">Portland</span>, ' .
                     '<span class="administrative-area">Oregon</span> ' .
                     '<span class="postal-code">90000</span>' .
-                    '<br>'. "\n" .
+                    '<br>' . "\n" .
                     '<span class="country">United States</span>' .
                     "\n" . '</div>'
-                )
+                ),
             ],
         ];
     }
@@ -176,7 +175,6 @@ class AddressValueTest extends AttributeValueTestCase
             'postal_code' => '00001',
         ]));
     }
-
 
     protected function getControllerWithValue()
     {

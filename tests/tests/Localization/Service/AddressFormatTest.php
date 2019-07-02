@@ -666,6 +666,7 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
         $locale
     ) {
         $fullCode = $countryCode . '-' . $areaCode;
+
         return $this->localNames[$locale]['administrative'][$fullCode];
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Form\Service;
 
 use Concrete\Core\Application\Application;
@@ -95,8 +94,10 @@ class Form
         if ($this->request == null) {
             $this->request = $this->app->make(Request::class);
         }
+
         return $this->request;
     }
+
     /**
      * Returns an action suitable for including in a form action property.
      *
@@ -549,8 +550,8 @@ class Form
             $r = ResponseAssetGroup::get();
             $r->requireAsset('core/country-data-link');
             $config = [
-                'hideUnusedStateProvinceField' => !!$configuration['hideUnusedStateProvinceField'],
-                'clearStateProvinceOnChange' => !!$configuration['clearStateProvinceOnChange'],
+                'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
+                'clearStateProvinceOnChange' => (bool) $configuration['clearStateProvinceOnChange'],
             ];
 
             $str .= '<script>$(document).ready(function() {';

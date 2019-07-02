@@ -6,7 +6,6 @@ use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 use CommerceGuys\Addressing\Formatter\DefaultFormatter;
 use CommerceGuys\Addressing\Locale;
 use CommerceGuys\Addressing\Subdivision\Subdivision;
-use Concrete\Core\Support\Facade\Facade;
 
 class Formatter extends DefaultFormatter
 {
@@ -41,7 +40,7 @@ class Formatter extends DefaultFormatter
      * modification only applies in case the 'locale' option has the English
      * language.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function buildView(
         AddressInterface $address,
@@ -71,14 +70,15 @@ class Formatter extends DefaultFormatter
      * This only gets the subdivision values and possibly converts the normally
      * returned codes to subdivision names.
      *
-     * @param  AddressInterface $address       The address for which to fetch
-     *                                         the subdivisions.
-     * @param  AddressFormat    $addressFormat The address format object
+     * @param  AddressInterface $address       the address for which to fetch
+     *                                         the subdivisions
+     * @param  AddressFormat    $addressFormat the address format object
      *                                         defining the used subdivision
-     *                                         fields.
-     * @return array                           An array containing the keys of
+     *                                         fields
+     *
+     * @return array                           an array containing the keys of
      *                                         the subdivision fields and their
-     *                                         corresponding values.
+     *                                         corresponding values
      */
     protected function getSubdivisionValuesWithNames(
         AddressInterface $address,
@@ -121,20 +121,22 @@ class Formatter extends DefaultFormatter
                 break;
             }
         }
+
         return $values;
     }
 
     /**
      * Gets the subdivision's name value.
      *
-     * @param  AddressInterface $address         The address for which to get
-     *                                           the name.
-     * @param  string           $subdivisionCode The subdivision's code to get
-     *                                           the name for.
-     * @return string|null                       A text representation of the
+     * @param  AddressInterface $address         the address for which to get
+     *                                           the name
+     * @param  string           $subdivisionCode the subdivision's code to get
+     *                                           the name for
+     *
+     * @return string|null                       a text representation of the
      *                                           subdivision's name or null if
      *                                           a corresponding text
-     *                                           representation does not exist.
+     *                                           representation does not exist
      */
     protected function getSubdivisionNameValue(
         AddressInterface $address,
@@ -148,6 +150,7 @@ class Formatter extends DefaultFormatter
         if ($useLocalName) {
             return $subdivision->getLocalName();
         }
+
         return $subdivision->getName();
     }
 }

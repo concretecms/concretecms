@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Service;
 
 use CommerceGuys\Addressing\Address;
@@ -39,7 +38,7 @@ class AddressFormat
     /**
      * The constructor for the service.
      *
-     * @param TextService $text The concrete5 text service.
+     * @param TextService $text the concrete5 text service
      */
     public function __construct(TextService $text)
     {
@@ -62,7 +61,7 @@ class AddressFormat
      * Set the options that control how the address will be rendered. These can
      * be passed to the underlying formatter class.
      *
-     * @param array $options The options.
+     * @param array $options the options
      */
     public function setOptions(array $options)
     {
@@ -81,15 +80,16 @@ class AddressFormat
      *   translated to the given locale if translations are available. Otherwise
      *   the will be printed out in their default locale. Default: true.
      *
-     * @param  array       $addressData An array containing the keys and values
-     *                                  for all address lines.
-     * @param  string      $format      The format of the output value, either
-     *                                  'html' (default) or 'text'.
-     * @param  string|null $locale      The locale to be used to translate the
+     * @param  array       $addressData an array containing the keys and values
+     *                                  for all address lines
+     * @param  string      $format      the format of the output value, either
+     *                                  'html' (default) or 'text'
+     * @param  string|null $locale      the locale to be used to translate the
      *                                  country name and possibly the
      *                                  state/province name in case the
-     *                                  configuration is set to do so.
-     * @return string                   The formatted address string.
+     *                                  configuration is set to do so
+     *
+     * @return string                   the formatted address string
      */
     public function format(
         array $addressData,
@@ -179,8 +179,9 @@ class AddressFormat
      * Gets an array of the used local address format keys, i.e. which address
      * lines are used for the country.
      *
-     * @param  string $code A country code.
-     * @return array        An array containing the address line keys.
+     * @param  string $code a country code
+     *
+     * @return array        an array containing the address line keys
      */
     public function getCountryAddressUsedFields($code)
     {
@@ -196,8 +197,9 @@ class AddressFormat
      * Gets an array of the required local address format keys, i.e. which
      * address lines are required for the country.
      *
-     * @param  string $code A country code.
-     * @return array        An array containing the address line keys.
+     * @param  string $code a country code
+     *
+     * @return array        an array containing the address line keys
      */
     public function getCountryAddressRequiredFields($code)
     {
@@ -213,9 +215,10 @@ class AddressFormat
      * Converts the passed locale to the format expected by the underlying
      * address formatting library.
      *
-     * @param  string $locale The locale in the concrete5 format.
-     * @return string         The locale in the address formatting library
-     *                        format.
+     * @param  string $locale the locale in the concrete5 format
+     *
+     * @return string         the locale in the address formatting library
+     *                        format
      */
     protected function convertLocale($locale)
     {
@@ -231,9 +234,10 @@ class AddressFormat
      * Converts the underlying address format field array to the "local" format
      * better understood within the concrete5 context.
      *
-     * @param  array  $sourceFormat An array of the field definitions of the
-     *                              underyling address format repository.
-     * @return array                An array of the local address format keys.
+     * @param  array  $sourceFormat an array of the field definitions of the
+     *                              underyling address format repository
+     *
+     * @return array                an array of the local address format keys
      */
     protected function convertFormat(array $sourceFormat)
     {
@@ -258,9 +262,10 @@ class AddressFormat
     /**
      * Fetches the country's address format from the address format repository.
      *
-     * @param  string $code The country code.
-     * @return \CommerceGuys\Addressing\AddressFormat\AddressFormat The address
-     *         format for the country.
+     * @param  string $code the country code
+     *
+     * @return \CommerceGuys\Addressing\AddressFormat\AddressFormat the address
+     *         format for the country
      */
     protected function getCountryAddressFormat($code)
     {
@@ -277,10 +282,11 @@ class AddressFormat
      * Therefore, this does not have to care about the country specific
      * formatting as there is no country information available.
      *
-     * @param  array  $addressData The address data to print out.
-     * @param  string $format      The display format, 'html' (default) or
-     *                             'text'.
-     * @return string              A text representation of the address.
+     * @param  array  $addressData the address data to print out
+     * @param  string $format      the display format, 'html' (default) or
+     *                             'text'
+     *
+     * @return string              a text representation of the address
      */
     protected function formatWithoutCountry(
         array $addressData,

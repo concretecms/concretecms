@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Context\BasicFormContext;
