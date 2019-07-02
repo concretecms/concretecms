@@ -128,15 +128,15 @@ class Formatter extends DefaultFormatter
     /**
      * Gets the subdivision's name value.
      *
-     * @param  AddressInterface $address         the address for which to get
-     *                                           the name
-     * @param  string           $subdivisionCode the subdivision's code to get
-     *                                           the name for
+     * @param  AddressInterface $address     the address for which to get the
+     *                                       name
+     * @param  Subdivision      $subdivision the subdivision's code to get
+     *                                       the name for
      *
-     * @return string|null                       a text representation of the
-     *                                           subdivision's name or null if
-     *                                           a corresponding text
-     *                                           representation does not exist
+     * @return string|null                   a text representation of the
+     *                                       subdivision's name or null if a
+     *                                       corresponding text representation
+     *                                       does not exist
      */
     protected function getSubdivisionNameValue(
         AddressInterface $address,
