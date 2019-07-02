@@ -82,6 +82,7 @@
 			my.$headerSearchInput.prop('disabled', true);
 			my.$headerSearchInput.attr('placeholder', '');
 			my.$resetSearchButton.show();
+			
 		}
 	};
 

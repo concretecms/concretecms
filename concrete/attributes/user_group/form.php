@@ -6,4 +6,4 @@ $selectGroups = ['' => $noneText];
 foreach($groups as $group) {
     $selectGroups[$group->getGroupID()] = $group->getGroupDisplayName();
 }
-echo $form->select($field, $selectGroups, $value);
+echo $form->select($view->field('value'), $selectGroups, $value);
