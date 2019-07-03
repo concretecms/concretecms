@@ -263,7 +263,11 @@ class EditResponse implements JsonSerializable
             $o->error = true;
             $o->errors = [];
             foreach ($error->getList() as $e) {
-                $o->errors[] = (string) $e;
+                if ($e instanceof Exception) {
+                    $o->errors[] = $e->getMessage();
+                } else {
+                    $o->errors[] = (string)$e;
+                }
             }
         } else {
             $error = (string) $error;
