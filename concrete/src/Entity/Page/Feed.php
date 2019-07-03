@@ -10,6 +10,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -349,18 +350,16 @@ class Feed
             $pl->ignorePermissions();
         } else {
             $vp = \Concrete\Core\Permission\Key\Key::getByHandle('view_page');
-            $guest = \Group::getByID(GUEST_GROUP_ID);
-            $access = GroupEntity::getOrCreate($guest);
-            // we set page permissions to be Guest group only, because
-            // authentication won't work with RSS feeds
-            $pl->setPermissionsChecker(function ($page) use ($vp, $access) {
+            $user = new User();
+            $accessEntites = $user->getUserAccessEntityObjects();
+            $pl->setPermissionsChecker(function ($page) use ($vp, $accessEntites) {
                 $vp->setPermissionObject($page);
                 $pa = $vp->getPermissionAccessObject($page);
                 if (!is_object($pa)) {
                     return false;
                 }
 
-                return $pa->validateAccessEntities([$access]);
+                return $pa->validateAccessEntities($accessEntites);
             });
         }
         $parent = null;
