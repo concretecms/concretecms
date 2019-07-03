@@ -91,8 +91,8 @@ class Controller extends AttributeTypeController
     }
 
     public function searchForm($list) {
-        $PagecID = $this->request('value');
-        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $PagecID, '=');
+        $UserID = $this->request('value');
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $UserID, '=');
         return $list;
     }
 
