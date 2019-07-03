@@ -7,7 +7,6 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Page\FeedEvent;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
@@ -159,6 +158,7 @@ class Feed
 
     /**
      * @param string $format
+     *
      * @return string
      */
     public function getFeedDisplayTitle($format = 'html')
@@ -314,6 +314,7 @@ class Feed
     {
         return \URL::to('/rss/' . $this->getHandle());
     }
+
     /**
      * @ORM\Column(type="boolean")
      */
