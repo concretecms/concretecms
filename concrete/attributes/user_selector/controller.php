@@ -89,4 +89,16 @@ class Controller extends AttributeTypeController
             $avn = $akn->addChild('value', $user->getUserID());
         }
     }
+
+    public function searchForm($list) {
+        $PagecID = $this->request('value');
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $PagecID, '=');
+        return $list;
+    }
+
+    public function search() {
+        $form_selector = $this->app->make('helper/form/user_selector');
+        print $form_selector->selectUser($this->field('value'), $this->request('value'), false);
+    }
+
 }
