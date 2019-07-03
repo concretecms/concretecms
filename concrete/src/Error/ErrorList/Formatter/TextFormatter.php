@@ -27,7 +27,9 @@ class TextFormatter extends AbstractFormatter
         if ($this->error->has()) {
             foreach ($this->error->getList() as $error) {
                 if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
-                    $lines[] = strip_tags((string) $error);
+                    $lines[] = strip_tags((string)$error);
+                } elseif ($error instanceof \Exception) {
+                    $lines[] = $error->getMessage();
                 } else {
                     $lines[] = (string) $error;
                 }

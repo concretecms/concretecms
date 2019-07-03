@@ -32,7 +32,11 @@ class JsonFormatter extends AbstractFormatter
             ];
             $index = 0;
             foreach ($error->getList() as $error) {
-                $o['errors'][] = (string) $error;
+                if ($error instanceof \Exception) {
+                    $o['errors'][] = $error->getMessage();
+                } else {
+                    $o['errors'][] = (string)$error;
+                }
                 if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
                     $o['htmlErrorIndexes'][] = $index;
                 }

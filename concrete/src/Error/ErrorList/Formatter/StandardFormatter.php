@@ -29,7 +29,9 @@ class StandardFormatter extends AbstractFormatter
             foreach ($this->error->getList() as $error) {
                 $html .= '<li>';
                 if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
-                    $html .= (string) $error;
+                    $html .= (string)$error;
+                } elseif ($error instanceof \Exception) {
+                    $html .= nl2br(h($error->getMessage()));
                 } else {
                     $html .= nl2br(h((string) $error));
                 }
