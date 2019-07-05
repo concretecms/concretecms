@@ -4,7 +4,7 @@ namespace Concrete\Controller\Backend;
 use Controller;
 use Loader;
 use stdClass;
-use User as ConcreteUser;
+use Concrete\Core\User\User as ConcreteUser;
 use Page as ConcretePage;
 use Permissions;
 
@@ -15,7 +15,7 @@ class EditorData extends Controller
         if (Loader::helper('validation/token')->validate('editor')) {
             $obj = new stdClass();
             $obj->snippets = array();
-            $u = new ConcreteUser();
+            $u = $this->app->make(ConcreteUser::class);
             if ($u->isRegistered()) {
                 $snippets = \Concrete\Core\Editor\Snippet::getActiveList();
                 foreach ($snippets as $sns) {

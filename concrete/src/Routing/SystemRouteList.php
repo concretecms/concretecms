@@ -53,6 +53,10 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/system/dialogs/page')
             ->routes('dialogs/pages.php');
 
+        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Permissions')
+            ->setPrefix('/ccm/system/dialogs/permissions')
+            ->routes('dialogs/permissions.php');
+
         $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\File')
             ->setPrefix('/ccm/system/dialogs/file')
             ->routes('dialogs/files.php');
@@ -75,7 +79,11 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('marketplace.php');
 
+        $router->buildGroup()->routes('permissions.php');
+
         $router->buildGroup()->routes('trees.php');
+
+        $router->buildGroup()->routes('site.php');
 
         $router->buildGroup()->routes('calendar.php');
 

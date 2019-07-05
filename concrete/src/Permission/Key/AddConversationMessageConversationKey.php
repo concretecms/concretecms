@@ -2,14 +2,16 @@
 namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Permission\Access\ListItem\AddConversationMessageConversationListItem;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddConversationMessageConversationKey extends ConversationKey
 {
     public function getMyAssignment()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $asl = new AddConversationMessageConversationListItem();
         if ($u->isSuperUser()) {
             $asl->setNewConversationMessageApprovalStatus('A');

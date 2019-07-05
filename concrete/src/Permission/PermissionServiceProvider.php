@@ -14,6 +14,7 @@ class PermissionServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $app = $this->app;
         $this->app->singleton('Concrete\Core\Permission\Inheritance\Registry\BlockRegistry');
 
         $this->app
@@ -41,6 +42,10 @@ class PermissionServiceProvider extends ServiceProvider
             $category = $repo->findOneBy(['handle' => 'failed_login']);
 
             return $app->make(IpAccessControlService::class, ['category' => $category]);
+        });
+        
+        $this->app->singleton('permission/access/entity/factory', function() use ($app) {
+            return new Access\Entity\Factory($app);
         });
     }
 }

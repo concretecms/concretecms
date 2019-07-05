@@ -23,7 +23,7 @@ if ($app->make('helper/validation/numbers')->integer($cnvMessageID, 1)) {
             if ($ratingType !== null) {
                 $commentRatingUserID = 0;
                 if (User::isLoggedIn()) {
-                    $user = new User();
+                    $user = $app->make(Concrete\Core\User\User::class);
                     if ($user->isRegistered()) {
                         $commentRatingUserID = (int) $user->getUserID();
                     }

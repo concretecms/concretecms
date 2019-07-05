@@ -5,6 +5,8 @@ use Concrete\Core\Page\Stack\Pile\PileContent;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+$u = Core::make(Concrete\Core\User\User::class);
+
 if (!$u->isRegistered()
     || (!Core::make('token')->validate('tools/clipboard/from') && !Core::make('token')->validate('tools/clipboard/to'))
 ) {
@@ -26,8 +28,6 @@ if (Request::request('task', 'default') === 'delete') {
     }
     $pileContent->delete();
 } else {
-    $u = new User();
-
     $a = Area::get($c, $_REQUEST['arHandle']);
     if ($a->isGlobalArea()) {
         $ax = STACKS_AREA_NAME;

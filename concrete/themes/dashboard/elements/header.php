@@ -28,7 +28,7 @@ if ($config->get('concrete.misc.enable_progressive_page_reindex') && $config->ge
 $view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 $view->addFooterItem('<script type="text/javascript">$(function() { ConcreteDashboard.start(); });</script>');
 
-$u = new User();
+$u = $app->make(Concrete\Core\User\User::class);
 $frontendPageID = $u->getPreviousFrontendPageID();
 if (!$frontendPageID) {
     $backLink = DIR_REL . '/';

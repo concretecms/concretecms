@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.2a1',
-    'version_installed' => '8.5.2a1',
+    'version' => '8.6.0a3',
+    'version_installed' => '8.6.0a3',
     'version_db' => '20190708000000', // the key of the latest database migration
  
     /*
@@ -658,8 +658,9 @@ return [
             'preview_image_popover' => true,
             // SVG sanitization
             'svg_sanitization' => [
-                // Enable the SVG sanitification?
-                'enabled' => true,
+                // The operation that the SVG sanitizer should perform.
+                // This must be value of one of the Concrete\Core\File\Import\Processor\SvgProcessor::ACTION_... constants
+                'action' => 'sanitize',
                 // Space-separated list of tags to be kept
                 'allowed_tags' => '',
                 // Space-separated list of attributes to be kept
@@ -1133,7 +1134,7 @@ return [
         'enabled' => false,
 
         /**
-         * Which grant types do we allow to connect to the API
+         * Which grant types do we allow to connect to the API.
          *
          * @var array
          */

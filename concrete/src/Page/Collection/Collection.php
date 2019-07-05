@@ -29,7 +29,6 @@ use Page;
 use PageCache;
 use Permissions;
 use Stack;
-use User;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -380,7 +379,6 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getVersionToModify()
     {
-        $u = new User();
         $vObj = $this->getVersionObject();
         if ($this->isMasterCollection() || ($vObj->isNew())) {
             return $this;

@@ -261,6 +261,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypeSkeletonsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageContentRoutine',
@@ -353,6 +354,18 @@ return [
         'width' => ['Width', 'NUMBER', false],
         'height' => ['Height', 'NUMBER', false],
         'duration' => ['Duration', 'NUMBER', false],
+    ],
+
+    /*
+     * Importer processors
+     */
+    'import_processors' => [
+        'ccm.file.exists' => Concrete\Core\File\Import\Processor\FileExistingValidator::class,
+        'ccm.file.extension' => Concrete\Core\File\Import\Processor\FileExtensionValidator::class,
+        'ccm.image.autorotate' => Concrete\Core\File\Import\Processor\ImageAutorotator::class,
+        'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
+        'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
+        'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
     ],
 
     /*
@@ -889,6 +902,7 @@ return [
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'jquery/touch-punch'],
+                ['javascript', 'selectize'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'dashboard'],
@@ -904,6 +918,7 @@ return [
                 ['javascript', 'core/app'],
                 ['javascript-conditional', 'respond'],
                 ['javascript-conditional', 'html5-shiv'],
+                ['css', 'selectize'],
                 ['css', 'core/app'],
                 ['css', 'jquery/ui'],
                 ['css', 'font-awesome'],

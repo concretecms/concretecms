@@ -16,7 +16,7 @@ $router->all('/design/', 'Design::view');
 $router->all('/design/reset', 'Design::reset');
 $router->all('/design/submit', 'Design::submit');
 $router->all('/permissions/detail/', 'Permissions::viewDetail');
-$router->all('/permissions/guest_access/', 'Permissions\GuestAccess::__construct');
+$router->all('/permissions/guest_access/', 'Permissions::viewGuestAccess');
 $router->all('/permissions/list/', 'Permissions::viewList');
 $router->all('/delete/', 'Delete::view');
 $router->all('/delete/submit/', 'Delete::submit');

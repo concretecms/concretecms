@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Page\Stack\Stack;
 use Page;
 use Permissions;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\DeletePageRequest;
 use Concrete\Core\Workflow\Request\ApproveStackRequest;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
@@ -406,7 +406,7 @@ class Stacks extends DashboardPageController
                 if (!$this->error->has()) {
                     $sps = new Permissions($s);
                     if ($sps->canDeletePage()) {
-                        $u = new \User();
+                        $u = $this->app->make(User::class);
                         $pkr = new DeletePageRequest();
                         $pkr->setRequestedPage($s);
                         $pkr->setRequesterUserID($u->getUserID());
@@ -441,7 +441,7 @@ class Stacks extends DashboardPageController
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
                 $sps = new Permissions($s);
                 if ($sps->canApprovePageVersions()) {
-                    $u = new User();
+                    $u = $this->app->make(User::class);
                     $v = Version::get($s, 'RECENT');
                     $pkr = new ApproveStackRequest();
                     $pkr->setRequestedPage($s);
@@ -522,7 +522,7 @@ class Stacks extends DashboardPageController
                                 'cName' => $newName,
                                 'cHandle' => str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($newName)),
                             ));
-                            $u = new User();
+                            $u = $this->app->make(User::class);
                             if ($isFolder) {
                                 $pkr = new ApprovePageRequest();
                             } else {
@@ -687,7 +687,7 @@ class Stacks extends DashboardPageController
                 if (!$sps->canDeletePage()) {
                     $this->error->add(t('You do not have access to delete this stack folder.'));
                 } else {
-                    $u = new User();
+                    $u = $this->app->make(User::class);
                     $pkr = new DeletePageRequest();
                     $pkr->setRequestedPage($folder->getPage());
                     $pkr->setRequesterUserID($u->getUserID());

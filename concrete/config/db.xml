@@ -4259,6 +4259,20 @@
     </index>
   </table>
 
+  <table name="TreeFileFolderNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="fslID" type="integer" size="11">
+      <unsigned/>
+    </field>
+    <index name="fslID">
+      <col>fslID</col>
+    </index>
+  </table>
+
   <table name="TreeFileNodes">
     <field name="treeNodeID" type="integer" size="11">
       <unsigned/>

@@ -45,6 +45,22 @@
             </label>
         </div>
     </div>
+
+    <div class="form-group">
+        <label for="showResults" class="control-label"><?= t('Survey Results') ?></label>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="showResults" class="show-custom-message" value="1" <?= $controller->getShowResults() ? 'checked' : null ?> />
+                <span><?= t('Hide Survey Results and Show Custom Message') ?></span>
+            </label>
+        </div>
+    </div>
+    <div class="form-group custom-message-container" style="display: none;">
+        <label for="customMessage" class="control-label"><?= t('Custom Message') ?></label>
+        <input type="text" name="customMessage" value="<?= $controller->getCustomMessage() ?>"
+               class="form-control" placeholder="Thank you for filling out this form!"/>
+    </div>
+
     <div class="form-group">
         <label class="control-label"><?= t('Survey Options') ?></label>
 
@@ -101,4 +117,22 @@
 </div>
 <script type="text/javascript">
     Concrete.event.fire('survey-edit-open');
+
+    $(document).ready(function(){
+      let showCustomMessage = <?= (int)$controller->getShowResults() ?>;
+
+      if(showCustomMessage) {
+        $('.custom-message-container').show();
+      }
+
+      $('.show-custom-message').on('change', function(e){
+        e.preventDefault();
+        if($(this).prop('checked')){
+          $('.custom-message-container').show();
+        }
+        else {
+          $('.custom-message-container').hide();
+        }
+      });
+    });
 </script>
