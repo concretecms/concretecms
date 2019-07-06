@@ -112,7 +112,7 @@ class PageCacheTest extends PHPUnit_Framework_TestCase
                 ['p1', 'p2']
             ));
         $mockPage->expects($this->exactly(2))
-            ->method('getController')
+            ->method('getPageController')
             ->willReturn($mockCtrl);
 
         $this->assertEquals(

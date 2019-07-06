@@ -214,7 +214,7 @@ abstract class PageCache implements FlushableInterface
 
             // Add the "extra" parts to the path that can be added to the URL
             // because the page/page type controller can have request actions.
-            $ctrl = $mixed->getController();
+            $ctrl = $mixed->getPageController();
             if (is_object($ctrl) &&
                 !empty($action = $ctrl->getRequestAction())
             ) {
