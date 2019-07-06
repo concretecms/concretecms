@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Cache\Page;
 
 use Concrete\Core\Cache\FlushableInterface;
@@ -269,6 +268,7 @@ abstract class PageCache implements FlushableInterface
                 $host = $site->getSiteCanonicalURL();
                 if (!empty($host)) {
                     $host = preg_replace('#^https?://#', '', $host);
+
                     return $host;
                 }
             }
