@@ -41,7 +41,7 @@ class LinkAbstractor extends ConcreteObject
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
         if ($r) {
             foreach ($r->find('img') as $img) {
-                $attrString = "";
+                $attrString = '';
                 foreach ($img->attr as $key => $val) {
                     if (!in_array($key, self::$blackListImgAttributes)) {
                         $attrString .= "$key=\"$val\" ";
@@ -125,12 +125,12 @@ class LinkAbstractor extends ConcreteObject
                 if ($fo !== null) {
                     $style = (string) $picture->style;
                     // move width px to width attribute and height px to height attribute
-                    $widthPattern = "/(?:^width|[^-]width):\\s([0-9]+)px;?/i";
+                    $widthPattern = '/(?:^width|[^-]width):\\s([0-9]+)px;?/i';
                     if (preg_match($widthPattern, $style, $matches)) {
                         $style = preg_replace($widthPattern, '', $style);
                         $picture->width = $matches[1];
                     }
-                    $heightPattern = "/(?:^height|[^-]height):\\s([0-9]+)px;?/i";
+                    $heightPattern = '/(?:^height|[^-]height):\\s([0-9]+)px;?/i';
                     if (preg_match($heightPattern, $style, $matches)) {
                         $style = preg_replace($heightPattern, '', $style);
                         $picture->height = $matches[1];
@@ -210,6 +210,7 @@ class LinkAbstractor extends ConcreteObject
                     if ($currentPage !== false) {
                         $args[] = $currentPage->getCollectionID();
                     }
+
                     return $resolver->resolve($args);
                 }
             }
@@ -259,7 +260,7 @@ class LinkAbstractor extends ConcreteObject
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
 
-                $attrString = "";
+                $attrString = '';
                 foreach ($picture->attr as $attr => $val) {
                     if (!in_array($attr, self::$blackListImgAttributes)) {
                         $attrString .= "$attr=\"$val\" ";
@@ -269,7 +270,7 @@ class LinkAbstractor extends ConcreteObject
                 $picture->outertext = '<img src="' . $resolver->resolve([
                         '/download_file',
                         'view_inline',
-                        $fID
+                        $fID,
                     ]) . '" ' . $attrString . '/>';
             }
 
