@@ -90,7 +90,7 @@ class LinkAbstractor extends ConcreteObject
         $app = Application::getFacadeApplication();
         $entityManager = $app->make(EntityManagerInterface::class);
         $resolver = $app->make(ResolverManagerInterface::class);
-        
+
         $text = preg_replace(
             [
                 '/{CCM:BASE_URL}/i',
@@ -321,18 +321,18 @@ class LinkAbstractor extends ConcreteObject
             $text,
             '{CCM:CID_([0-9]+)}',
             function ($cID) {
-                return ContentExporter::replacePageWithPlaceHolderInMatch($cID);
+                return ContentExporter::replacePageWithPlaceHolder($cID);
             }
         );
 
         $text = static::replacePlaceholder(
             $text,
             '{CCM:FID_DL_([0-9]+)}',
-            function ($cID) {
-                return ContentExporter::replaceFileWithPlaceHolderInMatch($cID);
+            function ($fID) {
+                return ContentExporter::replaceFileWithPlaceHolder($fID);
             }
         );
-        
+
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
         if (is_object($r)) {
