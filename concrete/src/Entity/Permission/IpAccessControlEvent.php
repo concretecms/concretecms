@@ -107,7 +107,7 @@ class IpAccessControlEvent
     public function setCategory(IpAccessControlCategory $value)
     {
         $this->category = $value;
-        
+
         return $this;
     }
 
@@ -131,7 +131,7 @@ class IpAccessControlEvent
     public function setSite(Site $value = null)
     {
         $this->site = $value;
-        
+
         return $this;
     }
 
@@ -187,7 +187,7 @@ class IpAccessControlEvent
     public function setDateTime(DateTime $value)
     {
         $this->dateTime = $value;
-        
+
         return $this;
     }
 
@@ -212,7 +212,7 @@ class IpAccessControlEvent
     {
         $this->ip = (string) $value;
         $this->ipAddress = null;
-        
+
         return $this;
     }
 }

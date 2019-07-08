@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission;
 
 use Concrete\Core\Config\Repository\Repository;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission;
 
 use Concrete\Core\Application\Application;
@@ -43,8 +44,8 @@ class PermissionServiceProvider extends ServiceProvider
 
             return $app->make(IpAccessControlService::class, ['category' => $category]);
         });
-        
-        $this->app->singleton('permission/access/entity/factory', function() use ($app) {
+
+        $this->app->singleton('permission/access/entity/factory', function () use ($app) {
             return new Access\Entity\Factory($app);
         });
     }

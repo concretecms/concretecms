@@ -467,8 +467,7 @@ class IpAccessControlService implements LoggerAwareInterface
         }
         $query = $qb->getQuery();
         $result = null;
-        foreach ($query->getResult() as $range)
-        {
+        foreach ($query->getResult() as $range) {
             $result = $range;
             if ($range->getType() & self::IPRANGEFLAG_WHITELIST) {
                 break;

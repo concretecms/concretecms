@@ -9,7 +9,7 @@ return [
     'version' => '8.6.0a3',
     'version_installed' => '8.6.0a3',
     'version_db' => '20190708000000', // the key of the latest database migration
- 
+
     /*
      * Installation status
      *
@@ -603,7 +603,7 @@ return [
             'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
             'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
         ],
-        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer) 
+        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
         // List of package handles that shouldn't be checked for new versions in marketplace (useful for example if the core is upgraded via composer)
         // Set to true to skip all the packages
@@ -838,7 +838,7 @@ return [
         ],
         'remember_me' => [
             'lifetime' => 1209600, // 2 weeks in seconds
-        ]
+        ],
     ],
 
     /*

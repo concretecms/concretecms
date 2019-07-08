@@ -2,17 +2,17 @@
 
 namespace Concrete\Tests\Permission;
 
-use Concrete\Core\Permission\IPService;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use DateTime;
-use IPLib\Factory as IPFactory;
 use Concrete\Core\Entity\Permission\IpAccessControlCategory;
 use Concrete\Core\Entity\Permission\IpAccessControlEvent;
 use Concrete\Core\Entity\Permission\IpAccessControlRange;
-use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Permission\IPService;
 use Concrete\Core\Site\Factory as SiteFactory;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use IPLib\Factory as IPFactory;
 
 class IPServiceTest extends ConcreteDatabaseTestCase
 {
@@ -26,7 +26,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         IpAccessControlEvent::class,
         IpAccessControlRange::class,
     ];
-    
+
     /**
      * @var \Concrete\Core\Entity\Permission\IpAccessControlCategory
      */

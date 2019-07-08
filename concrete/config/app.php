@@ -442,7 +442,7 @@ return [
         'fullcalendar/print' => [
             ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
         ],
-        'vue'=> [
+        'vue' => [
             ['javascript', 'js/vue.js', ['minify' => false, 'combine' => false]],
         ],
         'html5-shiv' => [
@@ -653,7 +653,7 @@ return [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
         'core/avatar' => [
-            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]]
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
@@ -759,7 +759,7 @@ return [
             [
                 ['javascript', 'dropzone'],
                 ['javascript-localized', 'dropzone'],
-                ['javascript','vue'],
+                ['javascript', 'vue'],
                 ['javascript', 'core/avatar'],
             ],
         ],
@@ -1199,7 +1199,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-    
+
     // HTTP middleware for processing http requests
     'middleware' => [
         [

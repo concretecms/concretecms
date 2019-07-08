@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\Permission;
 
 use Concrete\Core\Entity\Site\Group\Group;
@@ -15,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SiteGroup
 {
-
     /**
      * @ORM\Id @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -72,8 +72,4 @@ class SiteGroup
     {
         $this->group = $group;
     }
-
-
-
-
 }

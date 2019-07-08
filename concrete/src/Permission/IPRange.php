@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission;
 
 use Concrete\Core\Entity\Permission\IpAccessControlRange;
@@ -77,6 +78,7 @@ class IPRange
 
     /**
      * @param array $row
+     * @param mixed $dateTimeFormat
      *
      * @return static
      */
