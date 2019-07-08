@@ -850,11 +850,19 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Configure IP Blocking" path="/dashboard/system/permissions/blacklist/configure"
+              filename="/dashboard/system/permissions/blacklist/configure.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="IP Range" path="/dashboard/system/permissions/blacklist/range"
               filename="/dashboard/system/permissions/blacklist/range.php" pagetype="" description="" package="">
             <attributes>
 				<attributekey handle="exclude_nav">
-                    <value>0</value>
+                    <value>1</value>
                 </attributekey>
             </attributes>
         </page>
