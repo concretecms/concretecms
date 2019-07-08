@@ -56,6 +56,7 @@ class Entities extends DashboardPageController
             }
         } else {
             $this->set('error', [$this->token->getErrorMessage()]);
+            $this->view();
         }
     }
 }
