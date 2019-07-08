@@ -11,15 +11,14 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\EditResponse as UserEditResponse;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Exception;
 use Imagine\Image\Box;
-use League\Csv\Writer;
 use PermissionKey;
 use Permissions;
 use stdClass;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Concrete\Core\User\User;
 use UserAttributeKey;
 use UserInfo;
 
@@ -123,7 +122,7 @@ class Search extends DashboardPageController
                 if ($this->canSignInAsUser && $this->app->make('helper/validation/token')->validate()) {
                     $logger = $this->app->make(LoggerFactory::class)
                         ->createLogger(Channels::CHANNEL_USERS);
-                    $me = new User();
+                    $me = $this->app->make(User::class);
                     $signInUser = UserInfo::getByID($uID);
                     $logger->notice(t('User %s used the dashboard to sign in as user %s',
                         $me->getUserName(), $signInUser->getUserName()));

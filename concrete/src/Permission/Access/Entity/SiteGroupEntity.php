@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Entity\Permission\SiteGroup;
+use Concrete\Core\Entity\Site\Group\Group;
 use Concrete\Core\Entity\Site\Group\Relation;
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Entity\Site\Group\Group;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\SiteAccessInterface;
 use Concrete\Core\Permission\Access\WorkflowAccess;
 use Concrete\Core\Workflow\Progress\SiteProgressInterface;
-use URL;
 
 class SiteGroupEntity extends Entity
 {
@@ -20,6 +20,7 @@ class SiteGroupEntity extends Entity
 
     /**
      * @param WorkflowAccess $pa
+     *
      * @return array
      */
     public function getAccessEntityUsers(PermissionAccess $pa)
@@ -32,11 +33,12 @@ class SiteGroupEntity extends Entity
         }
         if ($site) {
             $group = $this->getInstanceGroup($site);
-            if (is_object($group)){
+            if (is_object($group)) {
                 return $group->getGroupMembers();
             }
         }
-        return array();
+
+        return [];
     }
 
     /**
@@ -73,18 +75,18 @@ class SiteGroupEntity extends Entity
         $item = $cache->getItem(sprintf('site_group/%s/%s', $site->getSiteID(), $this->siteGroup->getSiteGroupEntityID()));
         if (!$item->isMiss()) {
             return $item->get();
-        } else {
-            $item->lock();
-            $valid = false;
-            $group = $this->getInstanceGroup($site);
-            if ($group) {
-                $u = new \User();
-                $valid = $u->inGroup($group);
-            }
-
-            $cache->save($item->set($valid));
-            return $valid;
         }
+        $item->lock();
+        $valid = false;
+        $group = $this->getInstanceGroup($site);
+        if ($group) {
+            $u = \Core::make(\Concrete\Core\User\User::class);
+            $valid = $u->inGroup($group);
+        }
+
+        $cache->save($item->set($valid));
+
+        return $valid;
     }
 
     public function getAccessEntityTypeLinkHTML()
@@ -101,17 +103,14 @@ class SiteGroupEntity extends Entity
 
         // Now, we determine which site groups those users derive from.
         $em = \Database::connection()->getEntityManager();
-        $entities = array();
-        foreach($groups as $group) {
+        $entities = [];
+        foreach ($groups as $group) {
             $relations = $em->getRepository(Relation::class)
                 ->findByGroupID($group);
-            foreach($relations as $relation) {
+            foreach ($relations as $relation) {
                 $entity = $em->getRepository(SiteGroup::class)
                     ->findOneByGroup($relation->getSiteGroup());
                 if (is_object($entity)) {
-                    /**
-                     * @var $entity SiteGroup
-                     */
                     $accessEntity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($entity->getPermissionAccessEntityID());
                     if (is_object($accessEntity)) {
                         $entities[] = $accessEntity;
@@ -134,7 +133,7 @@ class SiteGroupEntity extends Entity
         $siteGroupEntity = $r->findOneByGroup($siteGroup);
 
         if (!$siteGroupEntity) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+            $db->Execute('insert into PermissionAccessEntities (petID) values(?)', [$petID]);
             $peID = $db->Insert_ID();
             \Config::save('concrete.misc.access_entity_updated', time());
 
