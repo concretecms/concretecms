@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.6.0a2',
-    'version_installed' => '8.6.0a2',
-    'version_db' => '20190619141521', // the key of the latest database migration
+    'version' => '8.6.0a3',
+    'version_installed' => '8.6.0a3',
+    'version_db' => '20190708000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -603,6 +603,11 @@ return [
             'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
             'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
         ],
+        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
+        'skip_core' => false,
+        // List of package handles that shouldn't be checked for new versions in marketplace (useful for example if the core is upgraded via composer)
+        // Set to true to skip all the packages
+        'skip_packages' => [],
     ],
     'paths' => [
         'trash' => '/!trash',
@@ -831,6 +836,9 @@ return [
             'cookie_secure' => false,
             'cookie_httponly' => true,
         ],
+        'remember_me' => [
+            'lifetime' => 1209600, // 2 weeks in seconds
+        ],
     ],
 
     /*
@@ -1010,18 +1018,6 @@ return [
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
-            ],
-        ],
-        'ban' => [
-            'ip' => [
-                // Is the automatic ban system enabled?
-                'enabled' => true,
-                // Maximum number of login attempts before banning the IP address
-                'attempts' => 5,
-                // Time window (in seconds) for past failed login attempts
-                'time' => 300,
-                // Ban duration (in minutes) when <attempts> failed logins occurred in the past <time> seconds
-                'length' => 10,
             ],
         ],
         'misc' => [

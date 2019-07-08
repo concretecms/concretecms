@@ -1,13 +1,16 @@
 <?php
+
 namespace Concrete\Core\Url\Resolver;
 
+use League\Url\UrlImmutable;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Url\Url;
 use Concrete\Core\Entity\Site\SkeletonTree;
 
 class PageUrlResolver implements UrlResolverInterface
 {
-    /** @var UrlResolverInterface */
+    /**
+     * @var \Concrete\Core\Url\Resolver\PathUrlResolver
+     */
     protected $pathUrlResolver;
 
     public function __construct(PathUrlResolver $path_url_resolver)
@@ -20,6 +23,11 @@ class PageUrlResolver implements UrlResolverInterface
         return $this->resolveWithResolver('/?cID=' . $page->getCollectionID(), $arguments);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Url\Resolver\UrlResolverInterface::resolve()
+     */
     public function resolve(array $arguments, $resolved = null)
     {
         if ($resolved) {
@@ -27,14 +35,12 @@ class PageUrlResolver implements UrlResolverInterface
             return $resolved;
         }
 
-        if ($arguments) {
-            $page = head($arguments);
-        }
+        $page = $arguments ? head($arguments) : null;
 
         if (isset($page) && $page instanceof Page) {
 
             if ($externalUrl = $page->getCollectionPointerExternalLink()) {
-                return $externalUrl;
+                return UrlImmutable::createFromUrl($externalUrl);
             }
 
             $tree = $page->getSiteTreeObject();
@@ -48,7 +54,7 @@ class PageUrlResolver implements UrlResolverInterface
 
             // if there's no path but it's the home page
             if ($page->isHomePage()) {
-                return $this->resolveWithResolver("/", $arguments);
+                return $this->resolveWithResolver('/', $arguments);
             }
 
             // otherwise, it's a page object with no path yet, which happens when pages aren't yet approved
@@ -58,6 +64,12 @@ class PageUrlResolver implements UrlResolverInterface
         return null;
     }
 
+    /**
+     * @param string $path
+     * @param array $arguments
+     *
+     * @return \League\URL\URLInterface
+     */
     protected function resolveWithResolver($path, $arguments)
     {
         array_unshift($arguments, $path);

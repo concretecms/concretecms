@@ -740,6 +740,7 @@ class Service
             $result = new MimePart($this->body);
             $result->setType(Mime::TYPE_TEXT);
             $result->setCharset(APP_CHARSET);
+            $result->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
         }
 
         return $result;
@@ -773,6 +774,7 @@ class Service
             $html = new MimePart($this->bodyHTML);
             $html->setType(Mime::TYPE_HTML);
             $html->setCharset(APP_CHARSET);
+            $html->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
             $inlineAttachments = [];
             foreach ($this->attachments as $attachment) {
                 if ($this->isInlineAttachment($attachment)) {

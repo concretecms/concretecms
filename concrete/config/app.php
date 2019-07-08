@@ -197,6 +197,7 @@ return [
         'geolocator_library',
         'group',
         'group_set',
+        'ip_access_control_category',
         'job',
         'mail_importer',
         'permission_access_entity_type',
@@ -211,9 +212,9 @@ return [
         'storage_location_type',
         'theme',
         'user_point_action',
+        'workflow',
         'workflow_progress_category',
         'workflow_type',
-        'workflow',
     ],
 
     'importer_routines' => [
@@ -269,6 +270,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
     ],
 
     /*
@@ -440,7 +442,7 @@ return [
         'fullcalendar/print' => [
             ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
         ],
-        'vue'=> [
+        'vue' => [
             ['javascript', 'js/vue.js', ['minify' => false, 'combine' => false]],
         ],
         'html5-shiv' => [
@@ -651,7 +653,7 @@ return [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
         'core/avatar' => [
-            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]]
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
@@ -757,7 +759,7 @@ return [
             [
                 ['javascript', 'dropzone'],
                 ['javascript-localized', 'dropzone'],
-                ['javascript','vue'],
+                ['javascript', 'vue'],
                 ['javascript', 'core/avatar'],
             ],
         ],
@@ -1126,6 +1128,7 @@ return [
         ],
         'core/account' => [
             [
+                ['javascript', 'jquery'],
                 ['javascript', 'core/account'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['css', 'bootstrap/dropdown'],
@@ -1196,7 +1199,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-    
+
     // HTTP middleware for processing http requests
     'middleware' => [
         [

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\File;
 
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
@@ -23,19 +24,20 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
         $this->addItem(new DividerItem());
 
         $fp = new \Permissions($file);
-        if ($fp->canViewFile() && $file->canView()) {
+        if ($fp->canViewFile()) {
 
-            $this->addItem(new DialogLinkItem(
-                    REL_DIR_FILES_TOOLS_REQUIRED . '/files/view?fID=' . $file->getFileID(),
-                    t('View'), t('View'), '90%', '75%')
-            );
-        }
+            if ($file->canView()) {
+                $this->addItem(new DialogLinkItem(
+                        REL_DIR_FILES_TOOLS_REQUIRED . '/files/view?fID=' . $file->getFileID(),
+                        t('View'), t('View'), '90%', '75%')
+                );
+            }
 
-        if ($fp->canViewFile() && $file->canView()) {
             $this->addItem(new LinkItem('#', t('Download'), [
                 'data-file-manager-action' => 'download',
                 'data-file-id' => $file->getFileID()
             ]));
+
         }
 
         if ($file->canEdit() && $fp->canEditFileContents()) {
@@ -66,8 +68,8 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
         );
         if ($fp->canEditFilePermissions()) {
             $this->addItem(new DialogLinkItem(
-                \URL::to('/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()),
-                t('Storage Location'), t('Storage Location'), '500', '400')
+                    \URL::to('/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()),
+                    t('Storage Location'), t('Storage Location'), '500', '400')
             );
         }
         if ($fp->canCopyFile()) {

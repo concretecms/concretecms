@@ -862,11 +862,19 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Configure IP Blocking" path="/dashboard/system/permissions/blacklist/configure"
+              filename="/dashboard/system/permissions/blacklist/configure.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="IP Range" path="/dashboard/system/permissions/blacklist/range"
               filename="/dashboard/system/permissions/blacklist/range.php" pagetype="" description="" package="">
             <attributes>
 				<attributekey handle="exclude_nav">
-                    <value>0</value>
+                    <value>1</value>
                 </attributekey>
             </attributes>
         </page>
@@ -898,7 +906,7 @@
               filename="/dashboard/system/permissions/trusted_proxies.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>trusted, proxy, proxies, ip, cloudflare</value>
+                    <value>trusted, proxy, proxies, ip, header, cloudflare</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1144,6 +1152,13 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>database, entities, doctrine, orm</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Character Set" path="/dashboard/system/environment/database_charset" filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, character set, charset, collation, utf8</value>
                 </attributekey>
             </attributes>
         </page>

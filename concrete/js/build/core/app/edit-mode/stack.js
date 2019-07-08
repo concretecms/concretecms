@@ -35,7 +35,6 @@
                 cID: elem.data('cid'),
                 arHandle: area_handle,
                 stID: elem.data('sid'),
-                atask: 'add_stack',
                 ccm_token: CCM_SECURITY_TOKEN
             };
 
@@ -44,7 +43,7 @@
             }
 
             $.fn.dialog.showLoader();
-            $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+            $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/page/add_stack', settings, function (response) {
                 my.handleAddResponse(response, area, dragAreaBlock);
             });
         },

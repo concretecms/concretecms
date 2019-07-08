@@ -21,4 +21,19 @@
 		</geolocator>
 	</geolocators>
 
+    <!-- IP Access Control Categories -->
+    <ipaccesscontrolcategories>
+        <ipaccesscontrolcategory
+            handle="failed_login"
+            enabled="1"
+            name="Failed Login Attempts"
+            max-events="5"
+            time-window="300"
+            ban-duration="600"
+            site-specific="0"
+            log-channel-handle=""
+            package=""
+        />
+    </ipaccesscontrolcategories>
+
 </concrete5-cif>

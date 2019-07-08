@@ -37,7 +37,12 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/permissions/tasks' => t("Control users' ability to do perform specific tasks, such as install packages, alter permissions, etc."),
             '/dashboard/system/permissions/file_types' => t('View and change which file types you permit users to upload to your File Manager.'),
             '/dashboard/system/permissions/files' => t("Control how users interact with your site's File Manager, allowing or disallowing actions like search, upload, replace and more."),
-            '/dashboard/system/permissions/trusted_proxies' => t('If your website uses a reverse proxy (like <a href="%s" target="_blank">Cloudflare</a>), you have to specify here the list of the IP addresses of the proxy, so that concrete5 can detect the actual IP address of the visitors.', 'https://www.cloudflare.com/ips/'),
+            '/dashboard/system/permissions/trusted_proxies' => implode('<br /><br />', [
+                t('If your website uses a reverse proxy (like <a href="%s" target="_blank">Cloudflare</a>), you have to specify here the list of the IP addresses of the proxy, so that concrete5 can detect the actual IP address of the visitors.', 'https://www.cloudflare.com/ips/'),
+                t('The checked headers will be trusted only when PHP detects that the connection is made via a trusted proxy.'),
+                t(/*%s is the name of an HTTP header*/'The %s header should be selected when using RFC 7239.', '<code>FORWARDED</code>'),
+                t('The other headers starting with %1$s are not standard but are widely used by popular reverse proxies (like %2$s).', '<code>X_...</code>', 'Apache mod_proxy/Amazon EC2'),
+            ]),
             '/dashboard/system/basics/editor' => t("Control which set of tools the content-editor toolbar includes (e.g., Simple, Advanced, Office), and the toolbar's spatial dimensions."),
             '/dashboard/system/basics/multilingual' => t('View available language packs installed for the concrete5 Dashboard and editing interface.'),
             '/dashboard/system/basics/multilingual/update' => t('Install new language files and update the outdated ones.<br />You can contribute to translations on %s', '<a href="https://translate.concrete5.org" target="_blank">translate.concrete5.org</a>.'),

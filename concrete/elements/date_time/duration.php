@@ -255,7 +255,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                             <?php foreach ($weekDays as $weekDay) { ?>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" name="<%=options.namespace%>_pdRepeatPeriodWeeksDays_<%=repetition.setID%>[]" value="<?=$weekDay['id']?>" <% if (_.contains(repetition.pdRepeatPeriodWeekDays, '<?=$weekDay['id']?>')) { %> checked <% } %>> <?=h($weekDay['name'])?>
+                                        <input type="checkbox" name="<%=options.namespace%>_pdRepeatPeriodWeeksDays_<%=repetition.setID%>[]" value="<?=$weekDay['id']?>"> <?=h($weekDay['name'])?>
                                     </label>
                                 </div>
                             <?php } ?>

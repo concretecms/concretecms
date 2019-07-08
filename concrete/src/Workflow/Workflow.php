@@ -152,7 +152,11 @@ abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permiss
         $db = Loader::db();
         $wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?', array($name));
         if (!$wfID) {
-            $pkgID = 0;
+            $pkgID = $wt->getPackageID();
+            if (empty($pkgID)) {
+                $pkgID = 0;
+            }
+
             if (is_object($pkg)) {
                 $pkgID = $pkg->getPackageID();
             }
