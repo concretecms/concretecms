@@ -3,7 +3,7 @@
 set -o nounset
 set -o errexit
 
-if test "$TRAVIS_PULL_REQUEST:-" != 'false'; then
+if test "${TRAVIS_PULL_REQUEST:-}" != 'false'; then
     COMMIT_RANGE="$TRAVIS_COMMIT_RANGE"
 else
     COMMIT_RANGE='HEAD~..HEAD'
