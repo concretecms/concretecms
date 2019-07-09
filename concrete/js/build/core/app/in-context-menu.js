@@ -259,7 +259,7 @@
                 my.hide(e);
             });
 
-            $(document).unbind('.concreteMenuDisable').on('click.concreteMenuDisable', function (e) {
+            $(document.body).unbind('.concreteMenuDisable').on('click.concreteMenuDisable', function (e) {
                 my.hide(e);
             });
 
