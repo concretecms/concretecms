@@ -12,7 +12,7 @@ return [
             // Whitespace-separated list of directory names that should not be parsed
             'by_name' => 'vendor',
             // Whitespace-separated list of directory paths (relative to the webroot) that should not be parsed (allowed placeholders: <HANDLE>)
-            'by_path' => 'application/config/doctrine application/files',
+            'by_path' => 'application/config/doctrine application/files tests/assets',
         ],
         // Whitespace-separated list of file paths (relative to the webroot) that are executed before checking the PHP version.
         'bootstrap_files' => 'index.php concrete/dispatcher.php concrete/bin/concrete5',
