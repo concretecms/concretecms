@@ -186,9 +186,24 @@ class Marketplace implements ApplicationAwareInterface
      */
     public static function checkPackageUpdates()
     {
+        $marketplace = static::getInstance();
+        $skipPackages = $marketplace->config->get('concrete.updates.skip_packages');
+        if ($skipPackages === true) {
+            return;
+        }
+        if (!$skipPackages) {
+            // In case someone uses false or NULL or an empty string
+            $skipPackages = [];
+        } else {
+            // In case someone uses a single package handle
+            $skipPackages = (array) $skipPackages;
+        }
         $em = \ORM::entityManager();
         $items = self::getAvailableMarketplaceItems(false);
         foreach ($items as $i) {
+            if (in_array($i->getHandle(), $skipPackages, true)) {
+                continue;
+            }
             $p = Package::getByHandle($i->getHandle());
             if (is_object($p)) {
                 /**
@@ -233,7 +248,7 @@ class Marketplace implements ApplicationAwareInterface
             } catch (Exception $e) {
             }
 
-            if ($filterInstalled && is_array($addons)) {
+            if ($filterInstalled) {
                 $handles = Package::getInstalledHandles();
                 if (is_array($handles)) {
                     $adlist = array();

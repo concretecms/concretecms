@@ -256,6 +256,9 @@ class Update
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
+        if ($config->get('concrete.updates.skip_core')) {
+            return null;
+        }
         $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
         $client->getRequest()
             ->setMethod('POST')

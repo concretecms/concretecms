@@ -315,11 +315,6 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
         });
-        ConcreteEvent.unsubscribe('SavedSearchCreated');
-        ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
-            my.ajaxUpdate(data.search.baseUrl, {});
-
-        });
 
         ConcreteEvent.unsubscribe('FileManagerUpdateFileProperties');
         ConcreteEvent.subscribe('FileManagerUpdateFileProperties', function(e, r) {
@@ -399,9 +394,11 @@
 
         // Hide clear if we're not in choose mode
         if (my.options.selectMode != 'choose') {
+            var $choose = $menu.find('a[data-file-manager-action=choose-new-file]').parent();
             var $clear = $menu.find('a[data-file-manager-action=clear]').parent();
-            $clear.next('li.divider').remove();
+            $choose.next('li.divider').remove();
             $clear.remove();
+            $choose.remove();
         }
 
     };

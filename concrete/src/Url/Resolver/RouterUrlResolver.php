@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Routing\RouterInterface;
@@ -6,10 +7,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RouterUrlResolver implements UrlResolverInterface
 {
-    /** @var \Concrete\Core\Routing\RouterInterface */
+    /**
+     * @var \Concrete\Core\Routing\RouterInterface
+     */
     protected $router;
 
-    /** @var \Concrete\Core\Url\Resolver\PathUrlResolver */
+    /**
+     * @var \Concrete\Core\Url\Resolver\PathUrlResolver
+     */
     protected $pathUrlResolver;
 
     public function __construct(PathUrlResolver $path_url_resolver, RouterInterface $router)
@@ -21,7 +26,7 @@ class RouterUrlResolver implements UrlResolverInterface
     /**
      * Get the url generator from the router.
      *
-     * @return UrlGeneratorInterface
+     * @return \Symfony\Component\Routing\Generator\UrlGeneratorInterface
      */
     public function getGenerator()
     {
@@ -31,11 +36,11 @@ class RouterUrlResolver implements UrlResolverInterface
     /**
      * Get the RouteCollection from the router.
      *
-     * @return RouteCollection
+     * @return \Symfony\Component\Routing\RouteCollection
      */
     public function getRouteList()
     {
-        return $this->router->getList();
+        return $this->router->getRoutes();
     }
 
     /**
@@ -60,16 +65,16 @@ class RouterUrlResolver implements UrlResolverInterface
      *
      * @param array $arguments [ string $handle, array $parameters = array() ]
      *                         The first parameter MUST be prepended with
-     *                         "route/" for it to be tested.
-     * @param \League\URL\URLInterface $resolved
+     *                         "route/" for it to be tested
+     * @param \League\URL\URLInterface|null $resolved
      *
-     * @return \League\URL\URLInterface
+     * @return \League\URL\URLInterface|null
      */
     public function resolve(array $arguments, $resolved = null)
     {
         if (count($arguments) < 3) {
             $route_handle = array_shift($arguments);
-            $route_parameters = count($arguments) ? array_shift($arguments) : array();
+            $route_parameters = count($arguments) ? array_shift($arguments) : [];
 
             // If param1 is a string that starts with "route/" and param2 is an array...
             if (is_string($route_handle) &&
@@ -85,19 +90,18 @@ class RouterUrlResolver implements UrlResolverInterface
     /**
      * Resolve the route.
      *
-     * @param $route_handle
-     * @param $route_parameters
+     * @param string $route_handle
+     * @param array $route_parameters
      *
-     * @return $this|\League\URL\URLInterface|mixed|null
+     * @return \League\URL\URLInterface|null
      */
     private function resolveRoute($route_handle, $route_parameters)
     {
         $list = $this->getRouteList();
-        $generator = $this->getGenerator();
-
-        if ($route = $list->get($route_handle)) {
+        if ($list->get($route_handle)) {
+            $generator = $this->getGenerator();
             if ($path = $generator->generate($route_handle, $route_parameters, UrlGeneratorInterface::ABSOLUTE_PATH)) {
-                return $this->pathUrlResolver->resolve(array($path));
+                return $this->pathUrlResolver->resolve([$path]);
             }
         }
     }

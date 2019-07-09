@@ -338,8 +338,8 @@ class Controller extends BlockController
             $pf = Feed::getByID($this->pfID);
         }
         if ($args['rss'] && !is_object($pf)) {
-            if (!$vs->handle($args['rssHandle'])) {
-                $e->add(t('Your RSS feed must have a valid URL, containing only letters, numbers or underscores'));
+            if (!$vs->alphanum($args['rssHandle'], false, true)) {
+                $e->add(t('Your RSS feed must have a valid URL, containing only letters, numbers or hyphens'));
             }
             if (!$vs->notempty($args['rssTitle'])) {
                 $e->add(t('Your RSS feed must have a valid title.'));

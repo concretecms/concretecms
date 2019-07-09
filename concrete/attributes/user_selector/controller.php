@@ -37,7 +37,7 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         $uID = $this->getAttributeValue()->getValue();
-        $ui = UserInfo::getByUserID($uID);
+        $ui = UserInfo::getByID($uID);
         if (is_object($ui)) {
             return '<a href="'.$ui->getUserPublicProfileUrl().'">'.$ui->getUserName().'</a>';
         }
