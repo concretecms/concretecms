@@ -101,7 +101,7 @@ class AssetsLocalization extends Controller
     'communityDownload' => t('concrete5 Marketplace - Download'),
     'noIE6' => t('concrete5 does not support Internet Explorer 6 in edit mode.'),
     'helpPopupLoginMsg' => t('Get more help on your question by posting it to the concrete5 help center on concrete5.org'),
-    'marketplaceErrorMsg' => t('<p>You package could not be installed.  An unknown error occured.</p>'),
+    'marketplaceErrorMsg' => t('<p>You package could not be installed.  An unknown error occurred.</p>'),
     'marketplaceInstallMsg' => t('<p>Your package will now be downloaded and installed.</p>'),
     'marketplaceLoadingMsg' => t('<p>Retrieving information from the concrete5 Marketplace.</p>'),
     'marketplaceLoginMsg' => t('<p>You must be logged into the concrete5 Marketplace to install add-ons and themes.  Please log in.</p>'),
