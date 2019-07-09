@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
 use Controller;
@@ -662,6 +664,36 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
     'Confirm_remove_attachment' => t('Remove this attachment?'),
 ]) . ');
 ';
+
+        return $this->createJavascriptResponse($content);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getMomentJavascript()
+    {
+        $localeParts = explode('-', str_replace('_', '-', strtolower(Localization::activeLocale())));
+        $alternatives = [];
+        if (isset($localeParts[1])) {
+            $alternatives[] = "{$localeParts[0]}-{$localeParts[1]}";
+        }
+        $alternatives[] = $localeParts[0];
+        $locator = $this->app->make(FileLocator::class);
+        $found = false;
+        foreach ($alternatives as $alternative) {
+            foreach ($alternatives as $alternative) {
+                $r = $locator->getRecord(DIRNAME_JAVASCRIPT . "/i18n/moment/{$alternative}.js");
+                if ($r->exists()) {
+                    $found = true;
+                    $content = file_get_contents($r->getFile()) . ";\n;moment.locale(" . json_encode($alternative) . ");\n";
+                    break;
+                }
+            }
+        }
+        if ($found === false) {
+            $content = '/* moment: no translations for ' . implode(', ', $alternatives) . ' */';
+        }
 
         return $this->createJavascriptResponse($content);
     }
