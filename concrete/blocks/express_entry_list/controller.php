@@ -216,7 +216,11 @@ class Controller extends BlockController
             }
 
             if ($this->request->query->get('keywords') && $this->enableSearch) {
-                $list->filterByKeywords($this->request->query->get('keywords'));
+                $keywords = trim($this->request->query->get('keywords'));
+                $keywords = explode(' ', $keywords);
+                foreach ($keywords  as $keyword) {
+                    $list->filterByKeywords($keyword);
+                }
             }
 
             $tableSearchProperties = [];
