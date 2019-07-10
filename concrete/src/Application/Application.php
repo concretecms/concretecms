@@ -184,10 +184,20 @@ class Application extends Container
      */
     public function handleAutomaticUpdates()
     {
+        $update = false;
         $config = $this['config'];
-        $installed = $config->get('concrete.version_db_installed');
-        $core = $config->get('concrete.version_db');
-        if ($installed < $core) {
+        $installedDb = $config->get('concrete.version_db_installed');
+        $coreDb = $config->get('concrete.version_db');
+        if ($installedDb < $coreDb) {
+            $update = true;
+        } else {
+            $installedVersion = $config->get('concrete.version_installed');
+            $coreVersion = $config->get('concrete.version');
+            if (version_compare($installedVersion, $coreVersion, '<')) {
+                $update = true;
+            }
+        }
+        if ($update) {
             $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
                 Update::updateToCurrentVersion();
             });
