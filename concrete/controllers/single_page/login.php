@@ -77,9 +77,11 @@ class Login extends PageController implements LoggerAwareInterface
             return $this->view();
         }
         $at = AuthenticationType::getByHandle($type);
-        if ($at) {
-            $this->set('authType', $at);
+        if (!$at || !$at->isEnabled()) {
+            throw new AuthenticationTypeFailureException(t('Invalid authentication type.'));
         }
+
+        $this->set('authType', $at);
         if (!method_exists($at->controller, $method)) {
             return $this->view();
         }
@@ -119,6 +121,9 @@ class Login extends PageController implements LoggerAwareInterface
         } else {
             try {
                 $at = AuthenticationType::getByHandle($type);
+                if (!$at->isEnabled()) {
+                    throw new AuthenticationTypeFailureException(t('Invalid authentication type.'));
+                }
                 $user = $at->controller->authenticate();
                 if ($user && $user->isRegistered()) {
                     return $this->finishAuthentication($at, $user);
@@ -306,8 +311,10 @@ class Login extends PageController implements LoggerAwareInterface
         if (strlen($type)) {
             try {
                 $at = AuthenticationType::getByHandle($type);
-                $this->set('authType', $at);
-                $this->set('authTypeElement', $element);
+                if ($at->isEnabled()) {
+                    $this->set('authType', $at);
+                    $this->set('authTypeElement', $element);
+                }
             } catch (\Exception $e) {
                 // Don't fail loudly
             }
@@ -332,7 +339,7 @@ class Login extends PageController implements LoggerAwareInterface
             $u = new User();
             $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
             $session->remove('uRequiredAttributeUserAuthenticationType');
-            if (!$at) {
+            if (!$at || !$at->isEnabled()) {
                 throw new Exception(t('Invalid Authentication Type'));
             }
 
