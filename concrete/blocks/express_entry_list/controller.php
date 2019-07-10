@@ -216,8 +216,7 @@ class Controller extends BlockController
             }
 
             if ($this->request->query->get('keywords') && $this->enableSearch) {
-                $keywords = trim($this->request->query->get('keywords'));
-                $keywords = explode(' ', $keywords);
+                $keywords = preg_split('/\s+/', $this->request->query->get('keywords'), -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($keywords  as $keyword) {
                     $list->filterByKeywords($keyword);
                 }
