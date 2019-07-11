@@ -3,6 +3,7 @@
 namespace Concrete\Core\Error\ErrorList\Formatter;
 
 use Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface;
+use Concrete\Core\Error\UserMessageException;
 
 class TextFormatter extends AbstractFormatter
 {
@@ -26,10 +27,15 @@ class TextFormatter extends AbstractFormatter
         $lines = [];
         if ($this->error->has()) {
             foreach ($this->error->getList() as $error) {
-                if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
-                    $lines[] = strip_tags((string) $error);
+                if ($error instanceof UserMessageException) {
+                    $errorMessage = $error->getMessage();
                 } else {
-                    $lines[] = (string) $error;
+                    $errorMessage = (string) $error;
+                }
+                if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
+                    $lines[] = strip_tags($errorMessage);
+                } else {
+                    $lines[] = $errorMessage;
                 }
             }
         }
