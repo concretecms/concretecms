@@ -207,7 +207,18 @@ class Controller extends BlockController
             $data['displayCaptcha'] = 0;
         }
 
-        $v = [$data['qsID'], $data['surveyName'], $data['submitText'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($data['addFilesToSet']), intval($this->bID)];
+        $v = [
+            $data['qsID'],
+            $data['surveyName'],
+            $data['submitText'],
+            intval($data['notifyMeOnSubmission']),
+            trim($data['recipientEmail'], " ..,"),
+            $data['thankyouMsg'],
+            intval($data['displayCaptcha']),
+            intval($data['redirectCID']),
+            intval($data['addFilesToSet']),
+            intval($this->bID)
+        ];
 
         //is it new?
         if (intval($total) == 0) {

@@ -495,7 +495,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters by page type ID.
      *
-     * @param array | integer $cParentID
+     * @param array | integer $ptID
      */
     public function filterByPageTypeID($ptID)
     {

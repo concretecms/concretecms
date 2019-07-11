@@ -69,7 +69,7 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/system/dialogs/block')
             ->routes('dialogs/blocks.php');
 
-        $router->buildGroup()->setRequirements(['identifier' => '[A-Za-z0-9_/.]+'])->routes('rss.php');
+        $router->buildGroup()->setRequirements(['identifier' => '[A-Za-z0-9-_/.]+'])->routes('rss.php');
 
         $router->buildGroup()->routes('attributes.php');
 
