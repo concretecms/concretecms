@@ -1,16 +1,19 @@
 <?php
+
 namespace Concrete\Block\Form;
 
-use Loader;
-use Core;
 use Concrete\Core\Support\Facade\Application;
+use Core;
+use Loader;
 
 class Statistics
 {
+    public static $sortChoices = ['newest' => 'created DESC', 'chrono' => 'created'];
+
     /**
      * Gets the total number of submissions.
      *
-     * @param string $date Set to a specific day (eg '2014-09-14') to retrieve the submissions in that day.
+     * @param string $date set to a specific day (eg '2014-09-14') to retrieve the submissions in that day
      * @param string $dateTimezone The timezone of the $date parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
      *
      * @return int
@@ -19,16 +22,19 @@ class Statistics
     {
         if ($date) {
             return static::getTotalSubmissionsBetween("$date 00:00:00", "$date 23:59:59", $dateTimezone);
-        } else {
-            return static::getTotalSubmissionsBetween();
         }
+
+            return static::getTotalSubmissionsBetween();
+
     }
+
     /**
      * Gets the total number of submissions in specific date/time ranges.
      *
      * @param string|int|\DateTime $fromDate The start of the period (if empty: from ever). Inclusive. Example: '2014-09-14 08:00:00'.
      * @param string|int|\DateTime $toDate The end of the period (if empty: for ever). Inclusive. Example: '2014-09-14 08:00:00'.
      * @param string $dateTimezone The timezone of the $dateFrom and $dateTo parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
+     * @param mixed $datesTimezone
      *
      * @return number
      */
@@ -43,7 +49,7 @@ class Statistics
             $toDate = $dh->toDB($toDate, $datesTimezone);
         }
         $where = '';
-        $q = array();
+        $q = [];
         if ($fromDate && $toDate) {
             $where = ' where created between ? and ?';
             $q[] = $fromDate;
@@ -57,7 +63,7 @@ class Statistics
         }
         $count = Loader::db()->GetOne('select count(asID) from btFormAnswerSet' . $where, $q);
 
-        return empty($count) ? 0 : intval($count);
+        return empty($count) ? 0 : (int) $count;
     }
 
     public static function loadSurveys($MiniSurvey)
@@ -67,6 +73,7 @@ class Statistics
         $app = Application::getFacadeApplication();
         $dh = $app->make('date');
         $now = $dh->getOverridableNow();
+
         return $db->query('SELECT s.* FROM ' . $MiniSurvey->btTable . ' AS s, Blocks AS b, BlockTypes AS bt
             WHERE s.bID=b.bID AND b.btID=bt.btID AND bt.btHandle="form" AND EXISTS (
             SELECT 1 FROM CollectionVersionBlocks cvb
@@ -75,8 +82,6 @@ class Statistics
             WHERE cvb.bID=s.bID AND p.cIsActive=1
          )', [$now, $now]);
     }
-
-    public static $sortChoices = array('newest' => 'created DESC', 'chrono' => 'created');
 
     public static function buildAnswerSetsArray($questionSet, $orderBy = '', $limit = '')
     {
@@ -96,8 +101,8 @@ class Statistics
             'WHERE aSet.questionSetId=' . $questionSet . ' ORDER BY ' . $orderBySQL . ' ' . $limit;
         $answerSetsRS = $db->query($sql);
         //load answers into a nicer multi-dimensional array
-        $answerSets = array();
-        $answerSetIds = array(0);
+        $answerSets = [];
+        $answerSetIds = [0];
         while ($answer = $answerSetsRS->fetchRow()) {
             //answer set id - question id
             $answerSets[$answer['asID']] = $answer;

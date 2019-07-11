@@ -1,8 +1,8 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/system/dialogs/block
  * Namespace: Concrete\Controller\Dialog\Block\
  */
@@ -21,4 +21,3 @@ $router->all('/permissions/list/', 'Permissions::viewList');
 $router->all('/delete/', 'Delete::view');
 $router->all('/delete/submit/', 'Delete::submit');
 $router->all('/delete/submit_all/', 'Delete::submit_all');
-

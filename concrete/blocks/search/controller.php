@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Search;
 
 use CollectionAttributeKey;
@@ -118,14 +119,14 @@ class Controller extends BlockController
     protected $hColor = '#EFE795';
 
     /**
-     * Whether or not to search all sites
+     * Whether or not to search all sites.
      *
      * @var bool
      */
     protected $search_all;
 
     /**
-     * Whether or not to users can search all sites from the frontend
+     * Whether or not to users can search all sites from the frontend.
      *
      * @var bool
      */

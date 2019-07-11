@@ -51,7 +51,7 @@
                 url: $presetForm.attr('action'),
                 success: function(r) {
                     $.fn.dialog.closeAll();
-                    ConcreteEvent.publish('SavedSearchCreated', {search: r});
+                    ConcreteEvent.publish('SavedSearchCreated', r);
                 }
             });
             return false;
@@ -71,18 +71,7 @@
             });
         });
 
-        ConcreteEvent.unsubscribe('SavedSearchDeleted');
-        ConcreteEvent.subscribe('SavedSearchDeleted', function() {
-            $.fn.dialog.closeAll();
-        });
 
-        ConcreteEvent.unsubscribe('SavedSearchUpdated');
-        ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
-            $.fn.dialog.closeAll();
-            if (data.preset && data.preset.actionURL) {
-                my.ajaxUpdate(data.preset.actionURL);
-            }
-        });
     }
 
 

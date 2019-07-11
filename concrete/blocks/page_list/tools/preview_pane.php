@@ -60,5 +60,5 @@ $customTopicTreeNodeID = $controller->get('customTopicTreeNodeID');
 
 extract($controller->getSets());
 
-require dirname(__FILE__) . '/../view.php';
+require __DIR__ . '/../view.php';
 exit;

@@ -1,10 +1,9 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  */
-
 $router->get('/ccm/system/permissions/access/entity/types/user/get_or_create',
     '\Concrete\Controller\Permissions\Access\Entity\User::getOrCreate');
 $router->get('/ccm/system/permissions/access/entity/types/page_owner/get_or_create',

@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $responsiveClass = 'youtubeBlockResponsive16by9';
 $sizeDisabled = '';
@@ -11,10 +11,10 @@ if ($vWidth && $vHeight) {
     $responsiveClass = 'youtubeBlockResponsive4by3';
 }
 
-$params = array();
+$params = [];
 
 if (isset($playlist)) {
-    $params[] = 'playlist='. $playlist;
+    $params[] = 'playlist=' . $playlist;
     $videoID = '';
 }
 
@@ -44,7 +44,7 @@ if (isset($iv_load_policy) && $iv_load_policy > 0) {
 if (isset($loopEnd) && $loopEnd) {
     $params[] = 'loop=1';
     if (!isset($playlist) && $videoID !== '') {
-        $params[] = 'playlist='.$videoID;
+        $params[] = 'playlist=' . $videoID;
     }
 }
 
@@ -87,7 +87,7 @@ if (Page::getCurrentPage()->isEditMode()) {
         <iframe class="youtube-player" <?php echo $sizeargs;
         ?> src="//<?= $youtubeDomain; ?>/embed/<?= $videoID;
         ?><?= $paramstring;
-        ?>" allowfullscreen></iframe>
+        ?>" allow="autoplay" allowfullscreen></iframe>
     </div>
     <?php
 } ?>
