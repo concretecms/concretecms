@@ -1,14 +1,9 @@
 <?php
-namespace Concrete\Core\Routing;
 
-use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
-use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
-use Concrete\Core\Http\Middleware\ProjectorMiddleware;
+namespace Concrete\Core\Routing;
 
 class SystemRouteList implements RouteListInterface
 {
-
     public function loadRoutes(Router $router)
     {
         $router->buildGroup()->setPrefix('/ccm/system/panels')->setNamespace('Concrete\Controller\Panel')
@@ -88,8 +83,5 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->routes('calendar.php');
 
         $router->buildGroup()->routes('misc.php');
-
     }
-
-
 }

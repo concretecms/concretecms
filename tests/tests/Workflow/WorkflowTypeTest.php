@@ -19,6 +19,13 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         'WorkflowProgress',
     ];
 
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->connection()->exec('delete from Workflows');
+        $this->connection()->exec('delete from WorkflowTypes');
+    }
+
     public function testAdd()
     {
         $type = Type::add('new1', 'New type 1');
@@ -86,12 +93,5 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         $this->assertCount(1, $type->getWorkflows());
         $type->delete();
         $this->assertCount(1, Type::getList());
-    }
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->connection()->exec('delete from Workflows');
-        $this->connection()->exec('delete from WorkflowTypes');
     }
 }

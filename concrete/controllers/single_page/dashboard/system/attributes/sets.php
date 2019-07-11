@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 
+use AttributeSet;
 use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\SetManagerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Loader;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use AttributeSet;
 
 class Sets extends DashboardPageController
 {
@@ -75,7 +76,7 @@ EOT
         $this->category($this->post('categoryID'));
         if ($this->token->validate('add_set')) {
             if (!trim($this->post('asHandle'))) {
-                $this->error->add(t("Specify a handle for your attribute set."));
+                $this->error->add(t('Specify a handle for your attribute set.'));
             } else {
                 $as = AttributeSet::getByHandle($this->post('asHandle'));
                 if (is_object($as)) {
@@ -83,7 +84,7 @@ EOT
                 }
             }
             if (!trim($this->post('asName'))) {
-                $this->error->add(t("Specify a name for your attribute set."));
+                $this->error->add(t('Specify a name for your attribute set.'));
             } else {
                 if (preg_match('/[<>;{}?"`]/', trim($this->post('asName')))) {
                     $this->error->add(t('Name cannot contain the characters: %s',
@@ -92,7 +93,7 @@ EOT
             }
             if (!$this->error->has()) {
                 /**
-                 * @var $manager SetManagerInterface
+                 * @var SetManagerInterface
                  */
                 $manager = $this->category->getController()->getSetManager();
                 if ($manager->allowAttributeSets()) {
@@ -115,7 +116,7 @@ EOT
                 $this->error->add(t('Invalid attribute set.'));
             } else {
                 if (!trim($this->post('asHandle')) && (!$as->isAttributeSetLocked())) {
-                    $this->error->add(t("Specify a handle for your attribute set."));
+                    $this->error->add(t('Specify a handle for your attribute set.'));
                 } else {
                     $asx = AttributeSet::getByHandle($this->post('asHandle'));
                     if (is_object($asx) && $asx->getAttributeSetID() != $as->getAttributeSetID()) {
@@ -123,7 +124,7 @@ EOT
                     }
                 }
                 if (!trim($this->post('asName'))) {
-                    $this->error->add(t("Specify a name for your attribute set."));
+                    $this->error->add(t('Specify a name for your attribute set.'));
                 }
             }
 

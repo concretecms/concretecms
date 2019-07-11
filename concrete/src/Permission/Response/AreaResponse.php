@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Block\Block;
-use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 class AreaResponse extends Response
 {
@@ -12,26 +13,32 @@ class AreaResponse extends Response
     {
         return $this->validate('view_area');
     }
+
     public function canWrite()
     {
         return $this->validate('edit_area_contents');
     }
+
     public function canAdmin()
     {
         return $this->validate('edit_area_permissions');
     }
+
     public function canAddBlocks()
     {
         return $this->validate('add_block_to_area');
     }
+
     public function canAddStacks()
     {
         return $this->validate('add_stack_to_area');
     }
+
     public function canAddStack()
     {
         return $this->validate('add_stack_to_area');
     }
+
     public function canAddLayout()
     {
         return $this->validate('add_layout_to_area');
@@ -40,7 +47,7 @@ class AreaResponse extends Response
     /**
      * Check if a new block can be added to the area, or if an existing block can be moved to it.
      *
-     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|\Concrete\Core\Block\Block $blockTypeOrBlock specify a block type when adding a new block, a block instance when adding an existing block.
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|\Concrete\Core\Block\Block $blockTypeOrBlock specify a block type when adding a new block, a block instance when adding an existing block
      *
      * @return bool
      */
@@ -79,8 +86,8 @@ class AreaResponse extends Response
         $this->canAddStackToArea() ||
         $this->canAddLayoutToArea()) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

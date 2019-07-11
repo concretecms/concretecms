@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Cache\Page;
 
 use Concrete\Core\Cache\FlushableInterface;

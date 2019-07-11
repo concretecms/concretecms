@@ -1,10 +1,9 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  */
-
 $router->all('/ccm/system/tree/load', '\Concrete\Controller\Backend\Tree::load');
 $router->all('/ccm/system/tree/node/load', '\Concrete\Controller\Backend\Tree\Node::load');
 $router->all('/ccm/system/tree/node/load_starting', '\Concrete\Controller\Backend\Tree\Node::load_starting');

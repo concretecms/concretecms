@@ -13,25 +13,6 @@ use Environment;
 class AssetsLocalization extends Controller
 {
     /**
-     * @param string $content
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function createJavascriptResponse($content)
-    {
-        $rf = $this->app->make(ResponseFactoryInterface::class);
-
-        return $rf->create(
-            $content,
-            200,
-            [
-                'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
-                'Content-Length' => strlen($content),
-            ]
-        );
-    }
-
-    /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getCoreJavascript()
@@ -696,5 +677,24 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
         }
 
         return $this->createJavascriptResponse($content);
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function createJavascriptResponse($content)
+    {
+        $rf = $this->app->make(ResponseFactoryInterface::class);
+
+        return $rf->create(
+            $content,
+            200,
+            [
+                'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
+                'Content-Length' => strlen($content),
+            ]
+        );
     }
 }
