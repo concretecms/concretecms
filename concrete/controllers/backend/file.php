@@ -182,6 +182,7 @@ class File extends Controller
     {
         $errors = $this->app->make('error');
         $importedFileVersions = [];
+        $replacingFile = $this->getFileToBeReplaced();
         try {
             if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
                 if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
@@ -192,7 +193,6 @@ class File extends Controller
             if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage(), 401);
             }
-            $replacingFile = $this->getFileToBeReplaced();
             if ($this->request->files->has('file')) {
                 $importedFileVersion = $this->handleUpload('file');
                 if ($importedFileVersion !== null) {
@@ -750,7 +750,7 @@ class File extends Controller
         switch ($this->request->request->get('responseFormat')) {
             case 'dropzone':
                 if ($errors->has()) {
-                    return $responseFactory->create($errors->toText(), 422, ['Content-Type' => 'text/plain; charset='.APP_CHARSET]);
+                    return $responseFactory->create(json_encode($errors->toText()), 422, ['Content-Type' => 'application/json; charset='.APP_CHARSET]);
                 }
                 break;
             default:

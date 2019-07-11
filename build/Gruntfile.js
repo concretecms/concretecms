@@ -156,6 +156,13 @@ module.exports = function(grunt) {
             ]
         },
 
+        fileuploader: {
+            dest: '<%= DIR_BASE %>/concrete/js/file-uploader.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/app/file-uploader.js',
+            ]
+        },
+
         express: {
             dest: '<%= DIR_BASE %>/concrete/js/express.js',
             src: [
