@@ -450,7 +450,6 @@ class Controller extends BlockController
                         $answerDisplay = t('No file specified');
                     }
                 } elseif ($row['inputType'] == 'datetime') {
-
                     $formPage = $this->getCollectionObject();
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
                     if ($formPage) {
@@ -461,7 +460,6 @@ class Controller extends BlockController
                     } else {
                         $answerDisplay = $txt->sanitize($_POST['Question' . $row['msqID']]);
                     }
-
                 } elseif ($row['inputType'] == 'url') {
                     $answerLong = '';
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
@@ -652,7 +650,7 @@ class Controller extends BlockController
 
         //if this block is being edited a second time, remove edited questions with the current bID that are pending replacement
         //if( intval($oldBID) == intval($this->bID) ){
-            $vals = [(int) ($data['oldQsID'])];
+        $vals = [(int) ($data['oldQsID'])];
         $pendingQuestions = $db->getAll('SELECT msqID FROM btFormQuestions WHERE bID=0 && questionSetId=?', $vals);
         foreach ($pendingQuestions as $pendingQuestion) {
             $vals = [(int) ($this->bID), (int) ($pendingQuestion['msqID'])];

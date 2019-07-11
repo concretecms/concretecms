@@ -510,18 +510,15 @@ class Controller extends BlockController
                 return false;
             }
 
-                return true;
-
+            return true;
         }
-            if ($this->includeName || $this->includeDate || $this->displayThumbnail
+        if ($this->includeName || $this->includeDate || $this->displayThumbnail
                 || $this->includeDescription || $this->useButtonForLink
             ) {
-                return false;
-            }
+            return false;
+        }
 
-                return true;
-
-
+        return true;
     }
 
     public function cacheBlockOutput()

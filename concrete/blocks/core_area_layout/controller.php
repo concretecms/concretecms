@@ -117,44 +117,43 @@ class Controller extends BlockController
 
             return;
         }
-            $db = Database::connection();
-            $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', [$this->bID]);
-            if (!$arLayoutID) {
-                $arLayout = $this->addFromPost($post);
-            } else {
-                $arLayout = AreaLayout::getByID($arLayoutID);
-                if ($arLayout instanceof PresetLayout) {
-                    return;
+        $db = Database::connection();
+        $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', [$this->bID]);
+        if (!$arLayoutID) {
+            $arLayout = $this->addFromPost($post);
+        } else {
+            $arLayout = AreaLayout::getByID($arLayoutID);
+            if ($arLayout instanceof PresetLayout) {
+                return;
+            }
+            // save spacing
+            if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
+                $columns = $arLayout->getAreaLayoutColumns();
+                for ($i = 0; $i < count($columns); ++$i) {
+                    $col = $columns[$i];
+                    $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
+                    $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
+                    $col->setAreaLayoutColumnSpan($span);
+                    $col->setAreaLayoutColumnOffset($offset);
                 }
-                // save spacing
-                if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
+            } else {
+                $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
+                if ($post['isautomated']) {
+                    $arLayout->disableAreaLayoutCustomColumnWidths();
+                } else {
+                    $arLayout->enableAreaLayoutCustomColumnWidths();
                     $columns = $arLayout->getAreaLayoutColumns();
                     for ($i = 0; $i < count($columns); ++$i) {
                         $col = $columns[$i];
-                        $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
-                        $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
-                        $col->setAreaLayoutColumnSpan($span);
-                        $col->setAreaLayoutColumnOffset($offset);
-                    }
-                } else {
-                    $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
-                    if ($post['isautomated']) {
-                        $arLayout->disableAreaLayoutCustomColumnWidths();
-                    } else {
-                        $arLayout->enableAreaLayoutCustomColumnWidths();
-                        $columns = $arLayout->getAreaLayoutColumns();
-                        for ($i = 0; $i < count($columns); ++$i) {
-                            $col = $columns[$i];
-                            $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-                            $col->setAreaLayoutColumnWidth($width);
-                        }
+                        $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+                        $col->setAreaLayoutColumnWidth($width);
                     }
                 }
             }
+        }
 
-            $values = ['arLayoutID' => $arLayout->getAreaLayoutID()];
-            parent::save($values);
-
+        $values = ['arLayoutID' => $arLayout->getAreaLayoutID()];
+        parent::save($values);
     }
 
     public function getImportData($blockNode, $page)
@@ -343,10 +342,10 @@ class Controller extends BlockController
         $layout = $this->getAreaLayoutObject();
         $layout->setAreaObject($this->getAreaObject());
         if ($layout) {
-            foreach($layout->getAreaLayoutColumns() as $column) {
+            foreach ($layout->getAreaLayoutColumns() as $column) {
                 $area = $column->getSubAreaObject();
                 if ($area) {
-                    foreach($area->getAreaBlocksArray($c) as $block) {
+                    foreach ($area->getAreaBlocksArray($c) as $block) {
                         $blocks[] = $block;
                     }
                 }
@@ -381,7 +380,6 @@ class Controller extends BlockController
             if (is_callable([$objController, 'registerViewAssets'])) {
                 $arrAssetBlocks[] = $objController;
             }
-
         }
 
         $this->btCacheBlockOutput = $btCacheBlockOutput;

@@ -66,8 +66,7 @@ class Controller extends BlockController
 
         if ($this->startTimeEnabled == 1 && ($this->startTime === '0' || $this->startTime)) {
             $this->set('startSeconds', $this->convertStringToSeconds($this->startTime));
-        }
-        elseif (!empty($params['t'])) {
+        } elseif (!empty($params['t'])) {
             $this->set('startSeconds', $this->convertStringToSeconds($params['t']));
         }
 
@@ -82,8 +81,7 @@ class Controller extends BlockController
             $m = (($key = array_search('m', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
             $s = (($key = array_search('s', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
             $seconds = ($h * 3600) + ($m * 60) + $s;
-        }
-        else {
+        } else {
             $pieces = array_reverse(explode(':', $string));
             $seconds = 0;
             $multipliers = [1, 60, 3600];
