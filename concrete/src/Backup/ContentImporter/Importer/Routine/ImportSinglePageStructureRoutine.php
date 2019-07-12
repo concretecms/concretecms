@@ -41,7 +41,7 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine implements Specif
                         $siteTree = $home->getSiteTreeObject();
                     }
 
-                    if (is_null($siteTree)) {
+                    if ($siteTree === null) {
                         $siteTree = $defaultSite;
                     }
 
