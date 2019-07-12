@@ -16,6 +16,7 @@ matrix:
   allow_failures:
     - name: Test with PHP nightly
     - name: Test with PHP 7.4
+    - name: Check PHP coding style
   include:
 
     - name: Test with PHP 7.1 (with code coverage)
