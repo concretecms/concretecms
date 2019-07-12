@@ -51,6 +51,11 @@ var dropzone = null;
 var optionsStack = [];
 
 /**
+ * The list of uploaded files to be sent to the FileManagerAddFilesComplete event when the upload queue finishes.
+ */
+var uploadedFiles = [];
+
+/**
  * Get the default options for dropzone (also defines the only keys of the user-defined options that are applicable to Dropzone)
  */
 function getDefaultOptions() {
@@ -153,6 +158,10 @@ function startDropzone(customOptions) {
             if (optionsStack.length && optionsStack[optionsStack.length - 1].uploadQueueCompleted) {
                 optionsStack[optionsStack.length - 1].uploadQueueCompleted();
             }
+            if (uploadedFiles.length !== 0) {
+                ConcreteEvent.publish('FileManagerAddFilesComplete', {files: uploadedFiles});
+                uploadedFiles = [];
+            }
         }
     });
     dropzone = new global.Dropzone(
@@ -192,7 +201,9 @@ function handleResponse(response) {
                         if (replacingFileID) {
                             ConcreteEvent.publish('FileManagerReplaceFileComplete', {files: response.files});
                         } else {
-                            ConcreteEvent.publish('FileManagerAddFilesComplete', {files: response.files});
+                            response.files.forEach(function (file) {
+                                uploadedFiles.push(file);
+                            });
                         }
                     }
                 }
