@@ -67,14 +67,18 @@ class DeleteOccurrence extends BackendInterfaceController
             $this->eventService->addEventVersion($eventVersion->getEvent(), $eventVersion->getEvent()->getCalendar(), $eventVersion);
             $this->eventOccurrenceService->delete($eventVersion, $occurrence->getOccurrence());
 
-            $pkr = new ApproveCalendarEventRequest();
-            $pkr->setCalendarEventVersionID($eventVersion->getID());
-            $pkr->setRequesterUserID($u->getUserID());
-            $response = $pkr->trigger();
-            if ($response instanceof Response) {
-                $this->flash('success', t('Event occurrence removed.'));
+            if ($eventVersion->isApproved()) {
+                $pkr = new ApproveCalendarEventRequest();
+                $pkr->setCalendarEventVersionID($eventVersion->getID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                if ($response instanceof Response) {
+                    $this->flash('success', t('Event occurrence removed.'));
+                } else {
+                    $this->flash('success', t('Event occurrence cancellation requested. This must be approved before it is fully removed.'));
+                }
             } else {
-                $this->flash('success', t('Event occurrence cancellation requested. This must be approved before it is fully removed.'));
+                $this->flash('success', t('Event occurrence removed.'));
             }
         }
 

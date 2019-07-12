@@ -105,7 +105,7 @@ $txt = Loader::helper('text');?>
                                     <label>
                                         <?php echo $form->checkbox('akID[]', $key->getAttributeKeyID(), $key->inAttributeSet($set), $disabled)?>
                                         <span><?php echo $key->getAttributeKeyDisplayName()?></span>
-                                        <span class="help-inline"><?php echo $key->getAttributeKeyHandle()?></span>
+                                        <span class="text-muted small"><?php echo $key->getAttributeKeyHandle()?></span>
                                     </label>
                                 </div>
                             <?php
@@ -130,34 +130,35 @@ $txt = Loader::helper('text');?>
 
 <?php
 } elseif ($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set') {
-    ?>
-
-
-
-	<?php if (count($sets) > 0) {
-    ?>
-
-        <ul class="item-select-list ccm-attribute-sortable-set-list">
-			<?php foreach ($sets as $asl) {
-    ?>
-				<li id="asID_<?php echo $asl->getAttributeSetID()?>" class="ccm-item-select-list-sort">
+    /** @var Doctrine\ORM\PersistentCollection $sets */
+    $numSets = empty($sets) ? 0 : count($sets);
+    if ($numSets > 0) {
+        ?>
+        <ul class="item-select-list<?= $numSets > 1 ? ' ccm-attribute-sortable-set-list' : '' ?>">
+            <?php
+            foreach ($sets as $asl) {
+                ?>
+				<li id="asID_<?php echo $asl->getAttributeSetID()?>" class="<?= $numSets > 1 ? ' ccm-item-select-list-sort' : '' ?>">
                     <a href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>">
                         <i class="fa fa-cubes"></i>
                         <?php echo $asl->getAttributeSetDisplayName()?>
                     </a>
-                    <i class="ccm-item-select-list-sort"></i>
+                    <?php
+                    if ($numSets > 1) {
+                        ?>
+                        <i class="ccm-item-select-list-sort"></i>
+                        <?php
+                    }
+                    ?>
 				</li>
-			<?php
-}
-    ?>
-		</ul>
-
-	<?php
-} else {
-    ?>
-		<?php echo t('No attribute sets currently defined.')?>
-	<?php
-}
+                <?php
+            }
+            ?>
+        </ul>
+    <?php
+    } else {
+        echo t('No attribute sets currently defined.');
+    }
     ?>
 
 

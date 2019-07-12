@@ -62,9 +62,7 @@ class Manager extends FieldManager
         $group = [];
         if (count($associations)) {
             foreach($associations as $association) {
-                if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
-                    $group[] = new AssociationField($association);
-                }
+                $group[] = new AssociationField($association);
             }
         }
 

@@ -44,6 +44,7 @@ class DeactivateUsers extends AbstractJob
             $threshold = (int) $config->get('concrete.user.deactivation.login.threshold');
             $now = new \DateTime();
             $now->sub(new \DateInterval('P' . $threshold . 'D'));
+            $timestampDatetimeFormat = $now->format('Y-m-d H:i:s');
             $timestamp = $now->getTimestamp();
 
             // At this point $timestamp is set to the cut off point: accounts within login timestamps older than
@@ -56,7 +57,10 @@ class DeactivateUsers extends AbstractJob
             $userRepository = $em->getRepository(User::class);
             $repository = $app->make(UserInfoRepository::class);
 
-            $r = $db->executeQuery('select uID from Users where uIsActive = 1 and uLastLogin < ?', [$timestamp]);
+            $r = $db->executeQuery(
+                'select uID from Users where uIsActive = 1 and uLastLogin < ? and uDateAdded < ?', 
+                [$timestamp, $timestampDatetimeFormat]
+            );
             $users = 0;
             while ($row = $r->fetch()) {
                 $id = (int) $row['uID'];

@@ -131,6 +131,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/personalize.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/location-panel.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/heartbeat.js',
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
@@ -152,6 +153,13 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/header.js'
+            ]
+        },
+
+        fileuploader: {
+            dest: '<%= DIR_BASE %>/concrete/js/file-uploader.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/app/file-uploader.js',
             ]
         },
 

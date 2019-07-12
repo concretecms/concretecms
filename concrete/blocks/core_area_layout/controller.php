@@ -111,6 +111,7 @@ class Controller extends BlockController
 
         foreach ($arrAssetBlocks as $objController) {
             $objController->on_start();
+            $objController->outputAutoHeaderItems();
             $objController->registerViewAssets();
         }
     }

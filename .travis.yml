@@ -15,6 +15,7 @@ matrix:
   fast_finish: true
   allow_failures:
     - name: Test with PHP nightly
+    - name: Test with PHP 7.4
   include:
 
     - name: Test with PHP 7.1 (with code coverage)
@@ -87,6 +88,13 @@ matrix:
 
     - name: Test with PHP 7.3
       php: '7.3'
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test
+
+    - name: Test with PHP 7.4
+      php: 7.4snapshot
       before_script:
         - ./.travis/composer-deps.sh
       script:

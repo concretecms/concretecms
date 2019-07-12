@@ -41,7 +41,6 @@
 			return false;
 		});
 		$menu.find('a[data-file-manager-action=choose-new-file]')
-			.text(container.options.chooseText)
 			.on('click', function(e) {
 				e.preventDefault();
 				var menu = ConcreteMenuManager.getActiveMenu();
