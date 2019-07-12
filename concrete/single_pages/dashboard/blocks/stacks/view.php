@@ -56,7 +56,6 @@ if (isset($neutralStack)) {
         $a = Area::get($stackToEdit, STACKS_AREA_NAME);
         $cpc = new Permissions($stackToEdit);
         $cpcNeutral = $stackToEdit === $neutralStack ? $cpc : new Permissions($neutralStack);
-        $areaPermissions = new Permissions($a);
         $showApprovalButton = false;
         $hasPendingPageApproval = false;
         $workflowList = PageWorkflowProgress::getList($stackToEdit);
@@ -83,7 +82,7 @@ if (isset($neutralStack)) {
             <div class="container-fluid">
                 <ul class="nav navbar-nav small">
                     <?php
-                    if ($cpc->canEditPageContents() && $areaPermissions->canAddBlocks()) {
+                    if ($cpc->canAddBlocks()) {
                         ?>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>

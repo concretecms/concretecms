@@ -294,7 +294,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\PageResponse';
+        return $this->getPageTypeHandle() === STACKS_PAGE_TYPE ? 'Concrete\\Core\\Permission\\Response\\StackResponse' : '\\Concrete\\Core\\Permission\\Response\\PageResponse';
     }
 
     /**

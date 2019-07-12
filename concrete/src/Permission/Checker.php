@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Permission;
 
+use Concrete\Core\Area\Area;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Response\Response as PermissionResponse;
 use Concrete\Core\Support\Facade\Application;
@@ -27,6 +30,17 @@ class Checker
      */
     public function __construct($object = false)
     {
+        if ($object instanceof Area) {
+            $areaPage = $object->getAreaCollectionObject();
+            if ($areaPage instanceof Page && $areaPage->getPageTypeHandle() === STACKS_PAGE_TYPE) {
+                $object = $areaPage;
+            } elseif ($object->isGlobalArea()) {
+                $stack = Stack::getByName($object->getAreaHandle());
+                if ($stack) {
+                    $object = $stack;
+                }
+            }
+        }
         if ($object) {
             $this->response = PermissionResponse::getResponse($object);
             $r = $this->response->testForErrors();
