@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
 use Controller;
@@ -10,25 +12,6 @@ use Environment;
 
 class AssetsLocalization extends Controller
 {
-    /**
-     * @param string $content
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function createJavascriptResponse($content)
-    {
-        $rf = $this->app->make(ResponseFactoryInterface::class);
-
-        return $rf->create(
-            $content,
-            200,
-            [
-                'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
-                'Content-Length' => strlen($content),
-            ]
-        );
-    }
-
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -101,7 +84,7 @@ class AssetsLocalization extends Controller
     'communityDownload' => t('concrete5 Marketplace - Download'),
     'noIE6' => t('concrete5 does not support Internet Explorer 6 in edit mode.'),
     'helpPopupLoginMsg' => t('Get more help on your question by posting it to the concrete5 help center on concrete5.org'),
-    'marketplaceErrorMsg' => t('<p>You package could not be installed.  An unknown error occured.</p>'),
+    'marketplaceErrorMsg' => t('<p>You package could not be installed.  An unknown error occurred.</p>'),
     'marketplaceInstallMsg' => t('<p>Your package will now be downloaded and installed.</p>'),
     'marketplaceLoadingMsg' => t('<p>Retrieving information from the concrete5 Marketplace.</p>'),
     'marketplaceLoginMsg' => t('<p>You must be logged into the concrete5 Marketplace to install add-ons and themes.  Please log in.</p>'),
@@ -664,5 +647,54 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
 ';
 
         return $this->createJavascriptResponse($content);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getMomentJavascript()
+    {
+        $localeParts = explode('-', str_replace('_', '-', strtolower(Localization::activeLocale())));
+        $alternatives = [];
+        if (isset($localeParts[1])) {
+            $alternatives[] = "{$localeParts[0]}-{$localeParts[1]}";
+        }
+        $alternatives[] = $localeParts[0];
+        $locator = $this->app->make(FileLocator::class);
+        $found = false;
+        foreach ($alternatives as $alternative) {
+            foreach ($alternatives as $alternative) {
+                $r = $locator->getRecord(DIRNAME_JAVASCRIPT . "/i18n/moment/{$alternative}.js");
+                if ($r->exists()) {
+                    $found = true;
+                    $content = file_get_contents($r->getFile()) . ";\n;moment.locale(" . json_encode($alternative) . ");\n";
+                    break;
+                }
+            }
+        }
+        if ($found === false) {
+            $content = '/* moment: no translations for ' . implode(', ', $alternatives) . ' */';
+        }
+
+        return $this->createJavascriptResponse($content);
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function createJavascriptResponse($content)
+    {
+        $rf = $this->app->make(ResponseFactoryInterface::class);
+
+        return $rf->create(
+            $content,
+            200,
+            [
+                'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
+                'Content-Length' => strlen($content),
+            ]
+        );
     }
 }

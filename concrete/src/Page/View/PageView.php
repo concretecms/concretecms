@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\View;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
 use Environment;
 use Events;
@@ -11,7 +12,7 @@ use Concrete\Core\Page\Template as PageTemplate;
 use PageTheme;
 use Permissions;
 use URL;
-use User;
+use Concrete\Core\User\User;
 use View;
 use Config;
 
@@ -233,8 +234,10 @@ class PageView extends View
                 && $this->c->getCollectionPath() != '/page_not_found'
                 && $this->c->getCollectionPath() != '/download_file'
                 && !$this->c->isPageDraft()
-                && !$this->c->isMasterCollection()) {
-                $u = new User();
+                && !$this->c->isMasterCollection()
+            ) {
+                $app = Application::getFacadeApplication();
+                $u = $app->make(User::class);
                 $u->markPreviousFrontendPage($this->c);
             }
         }

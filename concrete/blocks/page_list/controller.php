@@ -1,17 +1,18 @@
 <?php
+
 namespace Concrete\Block\PageList;
 
 use BlockType;
 use CollectionAttributeKey;
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\Topic;
+use Core;
 use Database;
 use Page;
-use Core;
 use PageList;
-use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Tree\Node\Type\Topic;
 
 class Controller extends BlockController
 {
@@ -32,12 +33,12 @@ class Controller extends BlockController
      */
     public function getBlockTypeDescription()
     {
-        return t("List pages based on type, area.");
+        return t('List pages based on type, area.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Page List");
+        return t('Page List');
     }
 
     public function getJavaScriptStrings()
@@ -87,7 +88,7 @@ class Controller extends BlockController
 
         switch ($this->filterDateOption) {
             case 'now':
-                $start = date('Y-m-d').' 00:00:00';
+                $start = date('Y-m-d') . ' 00:00:00';
                 $end = $now;
                 break;
 
@@ -175,7 +176,7 @@ class Controller extends BlockController
 
         $this->list->filterByExcludePageList(false);
 
-        if (intval($this->cParentID) != 0) {
+        if ((int) ($this->cParentID) != 0) {
             $cParentID = ($this->cThis) ? $this->cID : (($this->cThisParent) ? $this->cPID : $this->cParentID);
             if ($this->includeAllDescendents) {
                 $this->list->filterByPath(Page::getByID($cParentID)->getCollectionPath());
@@ -267,24 +268,12 @@ class Controller extends BlockController
         $this->loadKeys();
     }
 
-    protected function loadKeys()
-    {
-        $attributeKeys = [];
-        $keys = CollectionKey::getList();
-        foreach ($keys as $ak) {
-            if ($ak->getAttributeTypeHandle() == 'topics') {
-                $attributeKeys[] = $ak;
-            }
-        }
-        $this->set('attributeKeys', $attributeKeys);
-    }
-
     public function action_filter_by_topic($treeNodeID = false, $topic = false)
     {
         if ($treeNodeID) {
-            $topicObj = Topic::getByID(intval($treeNodeID));
+            $topicObj = Topic::getByID((int) $treeNodeID);
             if (is_object($topicObj) && $topicObj instanceof Topic) {
-                $this->list->filterByTopic(intval($treeNodeID));
+                $this->list->filterByTopic((int) $treeNodeID);
                 $seo = Core::make('helper/seo');
                 $seo->addTitleSegment($topicObj->getTreeNodeDisplayName());
             }
@@ -323,7 +312,7 @@ class Controller extends BlockController
             $this->list->filterByPublicDate($end, '<=');
 
             $seo = Core::make('helper/seo');
-            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true).' '.$year);
+            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true) . ' ' . $year);
             $seo->addTitleSegment($date);
         }
         $this->view();
@@ -338,8 +327,8 @@ class Controller extends BlockController
             $pf = Feed::getByID($this->pfID);
         }
         if ($args['rss'] && !is_object($pf)) {
-            if (!$vs->handle($args['rssHandle'])) {
-                $e->add(t('Your RSS feed must have a valid URL, containing only letters, numbers or underscores'));
+            if (!$vs->alphanum($args['rssHandle'], false, true)) {
+                $e->add(t('Your RSS feed must have a valid URL, containing only letters, numbers or hyphens'));
             }
             if (!$vs->notempty($args['rssTitle'])) {
                 $e->add(t('Your RSS feed must have a valid title.'));
@@ -363,9 +352,9 @@ class Controller extends BlockController
         } elseif (Core::make('helper/validation/numbers')->integer($parameters[0])) {
             // then we're going to treat this as a year.
             $method = 'action_filter_by_date';
-            $parameters[0] = intval($parameters[0]);
+            $parameters[0] = (int) ($parameters[0]);
             if (isset($parameters[1])) {
-                $parameters[1] = intval($parameters[1]);
+                $parameters[1] = (int) ($parameters[1]);
             }
         } else {
             $parameters = $method = null;
@@ -428,7 +417,7 @@ class Controller extends BlockController
         ];
 
         if (is_numeric($args['cParentID'])) {
-            $args['cParentID'] = intval($args['cParentID']);
+            $args['cParentID'] = (int) ($args['cParentID']);
         }
 
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
@@ -447,10 +436,10 @@ class Controller extends BlockController
         $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
-        $args['truncateChars'] = intval($args['truncateChars']);
-        $args['paginate'] = intval($args['paginate']);
-        $args['rss'] = intval($args['rss']);
-        $args['ptID'] = intval($args['ptID']);
+        $args['truncateChars'] = (int) ($args['truncateChars']);
+        $args['paginate'] = (int) ($args['paginate']);
+        $args['rss'] = (int) ($args['rss']);
+        $args['ptID'] = (int) ($args['ptID']);
 
         if (!$args['filterByRelated']) {
             $args['relatedTopicAttributeKeyHandle'] = '';
@@ -506,7 +495,7 @@ class Controller extends BlockController
             $args['filterDateDays'] = null;
         }
 
-        $args['pfID'] = intval($args['pfID']);
+        $args['pfID'] = (int) ($args['pfID']);
         parent::save($args);
     }
 
@@ -519,18 +508,17 @@ class Controller extends BlockController
         if (empty($pages)) {
             if ($this->noResultsMessage) {
                 return false;
-            } else {
-                return true;
             }
-        } else {
-            if ($this->includeName || $this->includeDate || $this->displayThumbnail
+
+            return true;
+        }
+        if ($this->includeName || $this->includeDate || $this->displayThumbnail
                 || $this->includeDescription || $this->useButtonForLink
             ) {
-                return false;
-            } else {
-                return true;
-            }
+            return false;
         }
+
+        return true;
     }
 
     public function cacheBlockOutput()
@@ -544,5 +532,17 @@ class Controller extends BlockController
         }
 
         return  $this->btCacheBlockOutput;
+    }
+
+    protected function loadKeys()
+    {
+        $attributeKeys = [];
+        $keys = CollectionKey::getList();
+        foreach ($keys as $ak) {
+            if ($ak->getAttributeTypeHandle() == 'topics') {
+                $attributeKeys[] = $ak;
+            }
+        }
+        $this->set('attributeKeys', $attributeKeys);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Editor;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
@@ -12,7 +13,7 @@ use Page;
 use Permissions;
 use stdClass;
 use URL;
-use User;
+use Concrete\Core\User\User;
 
 class CkeditorEditor implements EditorInterface
 {
@@ -69,18 +70,24 @@ class CkeditorEditor implements EditorInterface
     protected $styles;
 
     /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    /**
      * Initialize the instance.
      *
      * @param Repository $config
      * @param PluginManager $pluginManager
      * @param array $styles
      */
-    public function __construct(Repository $config, PluginManager $pluginManager, $styles)
+    public function __construct(Repository $config, PluginManager $pluginManager, $styles, Application $app)
     {
         $this->config = $config;
         $this->pluginManager = $pluginManager;
         $this->assets = ResponseAssetGroup::get();
         $this->styles = $styles;
+        $this->app = $app;
     }
 
     /**
@@ -297,7 +304,7 @@ EOL;
         $this->config->save('editor.concrete.enable_filemanager', (bool) $request->request->get('enable_filemanager'));
         $this->config->save('editor.concrete.enable_sitemap', (bool) $request->request->get('enable_sitemap'));
 
-        $selected = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
+        $selected = (array) $this->config->get('editor.ckeditor4.plugins.selected_hidden', []);
         $post = $request->request->get('plugin');
         if (is_array($post)) {
             $selected = array_merge($selected, $post);
@@ -502,7 +509,7 @@ EOL;
     {
         $obj = new stdClass();
         $obj->snippets = [];
-        $u = new User();
+        $u = $this->app->make(User::class);
         if ($u->isRegistered()) {
             $snippets = \Concrete\Core\Editor\Snippet::getActiveList();
             foreach ($snippets as $sns) {

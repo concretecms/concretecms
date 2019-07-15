@@ -129,6 +129,19 @@ class Controller extends BlockController implements FileTrackableInterface
 
     public function getUsedFiles()
     {
+        return array_merge(
+            $this->getUsedFilesImages(),
+            $this->getUsedFilesDownload()
+        );
+    }
+
+    public function getUsedCollection()
+    {
+        return $this->getCollectionObject();
+    }
+
+    protected function getUsedFilesImages()
+    {
         $files = [];
         $matches = [];
         if (preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
@@ -141,9 +154,16 @@ class Controller extends BlockController implements FileTrackableInterface
         return $files;
     }
 
-    public function getUsedCollection()
+    protected function getUsedFilesDownload()
     {
-        return $this->getCollectionObject();
+        preg_match_all('(FID_DL_\d+)', $this->content, $matches);
+
+        return array_map(
+            function ($match) {
+                return (int) (explode('_', $match)[2]);
+            },
+            $matches[0]
+        );
     }
 
     /**

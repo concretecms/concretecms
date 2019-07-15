@@ -60,7 +60,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <div class="ccm-search-field-content">
             <div class="ccm-search-main-lookup-field">
                 <i class="fa fa-search"></i>
-                <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                <?=$form->search('keywords', ['placeholder' => t('Keywords')])?>
             </div>
         </div>
     </div>
@@ -68,20 +68,20 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <div class="form-group">
         <?=$form->label('channel', t('Number of Pages to Display'))?>
         <div class="ccm-search-field-content">
-            <?=$form->select('numResults', array(
+            <?=$form->select('numResults', [
                 '10' => '10',
                 '25' => '25',
                 '50' => '50',
                 '100' => '100',
                 '500' => '500',
-            ), Loader::helper('text')->specialchars($searchRequest['numResults']))?>
+            ], Loader::helper('text')->specialchars($searchRequest['numResults']))?>
         </div>
     </div>
 
     <div class="form-group">
         <?=$form->label('cParentIDSearchField', t('Parent Page'))?>
         <div class="ccm-search-field-content">
-            <?php echo $pageSelector->selectPage('cParentIDSearchField', $cParentIDSearchField ? $cParentIDSearchField : false);?>
+            <?php echo $pageSelector->selectPage('cParentIDSearchField', $cParentIDSearchField ? $cParentIDSearchField : false); ?>
         </div>
     </div>
 
@@ -101,7 +101,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <?=$form->label('cParentAll', t('Filter By:'))?>
         <div class="ccm-search-field-content">
             <div class="checkbox">
-                <label> <?php echo $form->checkbox('noDescription', 1, $descCheck);  ?><?=t('No Meta Description'); ?></label>
+                <label> <?php echo $form->checkbox('noDescription', 1, $descCheck); ?><?=t('No Meta Description'); ?></label>
             </div>
         </div>
     </div>
@@ -148,7 +148,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <?php $seoPageTitle = $cobj->getCollectionName();
                         $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
                         $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $controller->getSiteNameForPage($cobj), $seoPageTitle);
-                        $titleInfo = array('title' => $cID);
+                        $titleInfo = ['title' => $cID];
                         if(strlen($cobj->getAttribute('meta_title')) <= 0) {
                             $titleInfo['style'] = 'background: whiteSmoke';
                         }
@@ -160,7 +160,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <label class="control-label"><?php echo t('Meta Description'); ?></label>
                         <?php $pageDescription = $cobj->getCollectionDescription();
                         $autoDesc = htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET);
-                        $descInfo = array('title' => $cID);
+                        $descInfo = ['title' => $cID];
                         if (strlen($cobj->getAttribute('meta_description')) <= 0) {
                             $descInfo['style'] = 'background: whiteSmoke';
                         }
@@ -172,7 +172,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                     <?php if ($cobj->getCollectionID() != $homeCID) { ?>
                     <div class="form-group">
                         <label class="control-label"><?php echo t('Slug'); ?></label>
-                        <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>
+                        <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), ['title' => $cID, 'class' => 'collectionHandle']); ?>
                         <?php
                         if ($page = Page::getByID($cID)) {
                             $page->rescanCollectionPath();
@@ -242,7 +242,7 @@ $(document).ready(function() {
         data.collection_handle = $('.ccm-seoRow-'+iterator+' input[name="collection_handle"]').val();
         data.ccm_token = $('.ccm-seoRow-'+iterator+' input[name="ccm_token"]').val();
         $.ajax({
-            url: '<?php echo $view->action("saveRecord") ?>',
+            url: '<?php echo $view->action('saveRecord') ?>',
             dataType: 'json',
             type: 'post',
             data: data,
@@ -257,7 +257,7 @@ $(document).ready(function() {
                 } else if (res.message) {
                     alert(res.message);
                 } else {
-                    alert('<?php echo t('An error occured while saving.'); ?>');
+                    alert('<?php echo t('An error occurred while saving.'); ?>');
                 }
             }
         });

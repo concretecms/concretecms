@@ -10,8 +10,10 @@ use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
 use Concrete\Core\Export\Item\Express\Entry as EntryExporter;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
+use Concrete\Core\Permission\Assignment\ExpressEntryAssignment;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Concrete\Core\Permission\Response\ExpressEntryResponse;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -99,7 +101,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\ExpressEntryResponse';
+        return ExpressEntryResponse::class;
     }
 
     /**
@@ -107,7 +109,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getPermissionAssignmentClassName()
     {
-        return false;
+        return ExpressEntryAssignment::class;
     }
 
     /**
@@ -115,7 +117,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return false;
+        return 'express_entry';
     }
 
     /**
@@ -189,6 +191,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $exEntryDateModified;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $publicIdentifier;
 
     /**
      * @return Entity
@@ -266,7 +273,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $associations;
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Express\Entry\Association[]
      */
     public function getAssociations()
     {
@@ -456,4 +463,22 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     {
         $this->author = $author;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicIdentifier()
+    {
+        return $this->publicIdentifier;
+    }
+
+    /**
+     * @param mixed $publicIdentifier
+     */
+    public function setPublicIdentifier($publicIdentifier)
+    {
+        $this->publicIdentifier = $publicIdentifier;
+    }
+
+
 }

@@ -28,6 +28,7 @@ if (is_array($_REQUEST['cID'])) {
 }
 
 if (count($pages) > 0) {
+    $u = Core::make(Concrete\Core\User\User::class);
     if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
         $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
         $pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -117,7 +118,6 @@ if (count($pages) > 0) {
     }
 
     if ($_REQUEST['task'] == 'save_permission_assignments' && Loader::helper("validation/token")->validate('save_permission_assignments')) {
-        $u = new User();
         $permissions = PermissionKey::getList('page');
         $deferred = false;
         foreach ($pages as $c) {
@@ -153,7 +153,6 @@ if (count($pages) > 0) {
             $pkID = key($_REQUEST['pkID']);
             $pk = PermissionKey::getByID($pkID);
             $newPAID = $_REQUEST['pkID'][$pkID];
-            $u = new User();
             $deferred = false;
 
             foreach ($pages as $c) {
@@ -195,7 +194,6 @@ if (count($pages) > 0) {
         $pkID = $_REQUEST['pkID'];
         $pk = PermissionKey::getByID($pkID);
 
-        $u = new User();
         $deferred = false;
 
         foreach ($pages as $c) {

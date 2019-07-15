@@ -82,6 +82,7 @@
 			my.$headerSearchInput.prop('disabled', true);
 			my.$headerSearchInput.attr('placeholder', '');
 			my.$resetSearchButton.show();
+			
 		}
 	};
 
@@ -442,6 +443,28 @@
 		ConcreteEvent.unsubscribe('SavedPresetSubmit');
 		ConcreteEvent.subscribe('SavedPresetSubmit', function (e, data) {
 			cs.ajaxUpdate(data);
+			cs.$resetSearchButton.show();
+			cs.$headerSearch.find('div.btn-group').hide();
+			cs.$headerSearchInput.prop('disabled', true).val('');
+			cs.$headerSearchInput.attr('placeholder', '');
+		});
+		ConcreteEvent.unsubscribe('SavedSearchDeleted');
+		ConcreteEvent.subscribe('SavedSearchDeleted', function() {
+			$.fn.dialog.closeAll();
+			cs.$resetSearchButton.trigger('click');
+		});
+
+		ConcreteEvent.unsubscribe('SavedSearchUpdated');
+		ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
+			$.fn.dialog.closeAll();
+			if (data.preset && data.preset.actionURL) {
+				cs.ajaxUpdate(data.preset.actionURL);
+			}
+		});
+		ConcreteEvent.unsubscribe('SavedSearchCreated');
+		ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
+			cs.updateResults(data);
+
 		});
 		// NEW SEARCH
 		cs.$element.find('div[data-header] form').on('submit', function() {
