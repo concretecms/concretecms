@@ -6,7 +6,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20190716000000 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20190717090600 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     /**
