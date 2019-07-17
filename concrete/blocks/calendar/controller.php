@@ -131,7 +131,7 @@ class Controller extends BlockController
                     $list->filterByAttribute($ak->getAttributeKeyHandle(), $this->filterByTopicID);
                 }
             }
-            $list->filterByStartTimeAfter(strtotime($start));
+            $list->filterByEndTimeAfter(strtotime($start));
             $list->filterByStartTimeBefore(strtotime($end));
             $results = $list->getResults();
 
