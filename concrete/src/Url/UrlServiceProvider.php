@@ -52,5 +52,6 @@ class UrlServiceProvider extends Provider
                 $config = $site->getConfigRepository();
                 return $config->get('seo.canonical_tag.excluded_querystring_parameters');
             });
+        $this->app->singleton(SeoCanonical::class, SeoCanonical::class);
     }
 }
