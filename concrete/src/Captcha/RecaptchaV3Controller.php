@@ -52,9 +52,7 @@ class RecaptchaV3Controller implements CaptchaInterface
         $responseAssets = ResponseAssetGroup::get();
         $responseAssets->requireAsset('recaptcha_v3');
 
-        echo '<input type="hidden" name="recaptcha_key" id="recaptchaKey" value="' . Config::get('recaptchaV3.site_key') . '">';
-        echo '<input type="hidden" name="recaptcha_position" id="badgePosition" value="' . Config::get('recaptchaV3.position') . '">';
-        echo '<div id="grecaptcha-box"></div>';
+        echo '<div id="' . uniqid('hwh') . '" class="grecaptcha-box recaptcha-v3" data-sitekey="' . Config::get('recaptchaV3.site_key') . '" data-badge="' . Config::get('recaptchaV3.position') . '"></div>';
 
     }
 
