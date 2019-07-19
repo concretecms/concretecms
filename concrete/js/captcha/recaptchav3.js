@@ -1,15 +1,16 @@
 function RecaptchaV3() {
-    var siteKey = document.getElementById("recaptchaKey").value;
-    var badgePosition = document.getElementById("badgePosition").value;
-    var clientId = grecaptcha.render('grecaptcha-box', {
-        'sitekey': siteKey,
-        'badge': badgePosition,
-        'size': 'invisible'
-    });
-
-    grecaptcha.ready(function() {
-        grecaptcha.execute(clientId, {
-            action: 'submit'
-        })
+    $(".recaptcha-v3").each(function () {
+        var el = $(this);
+        var clientId = grecaptcha.render($(el).attr("id"), {
+            'sitekey': $(el).attr('data-sitekey'),
+            'badge': $(el).attr('data-badge'),
+            'theme': $(el).attr('data-theme'),
+            'size': 'invisible',
+        });
+        grecaptcha.ready(function () {
+            grecaptcha.execute(clientId, {
+                action: 'submit'
+            })
+        });
     });
 }
