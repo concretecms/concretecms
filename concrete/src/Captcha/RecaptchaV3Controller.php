@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Captcha;
 
-use Concrete\Core\Captcha\CaptchaInterface as CaptchaInterface;
+use Concrete\Core\Captcha\CaptchaInterface;
+use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Support\Facade\Config;
@@ -11,7 +12,7 @@ use Concrete\Core\Support\Facade\Log;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Http\Request;
 
-class RecaptchaV3Controller implements CaptchaInterface
+class RecaptchaV3Controller extends AbstractController implements CaptchaInterface
 
 {
 
@@ -74,16 +75,17 @@ class RecaptchaV3Controller implements CaptchaInterface
     public function check()
     {
 
-        $app = Application::getFacadeApplication();
-        $r = Request::getInstance();
+        $iph = '';
 
-        $iph = (string) $app->make(IPService::class)->getRequestIPAddress();
+        if (Config::get('hw_recaptcha.sendIP') == "yes") {
+            $iph = (string)$app->make(IPService::class)->getRequestIPAddress();
+        }
 
         $qsa = http_build_query(
             array(
                 'secret' => Config::get('recaptchaV3.secret_key'),
                 'remoteip' => $iph,
-                'response' =>  $r->request->get('g-recaptcha-response')
+                'response' => $this->request->request->get('g-recaptcha-response')
             )
         );
 
@@ -127,7 +129,7 @@ class RecaptchaV3Controller implements CaptchaInterface
                     if (isset($formmessage['g-recaptcha-response'])) {
                         unset($formmessage['g-recaptcha-response']);
                     }
-                    Log::addError(t('reCAPTCHAv3 captcha blocked as score returned (' . $data['score'] .  ') is below the threshold set (' . Config::get('hw_recaptcha.score') . ') %s', var_export($formmessage, true)));
+                    Log::addError(t('reCAPTCHAv3 captcha blocked as score returned (' . $data['score'] . ') is below the threshold set (' . Config::get('hw_recaptcha.score') . ') %s', var_export($formmessage, true)));
                 }
                 return false;
 
@@ -147,5 +149,6 @@ class RecaptchaV3Controller implements CaptchaInterface
         Config::save('recaptchaV3.score', $data['score']);
         Config::save('recaptchaV3.position', $data['position']);
         Config::save('recaptchaV3.logscore', $data['logscore']);
+        Config::save('recaptchaV3.sendIP', $data['sendip']);
     }
 }
