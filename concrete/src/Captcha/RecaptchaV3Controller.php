@@ -75,10 +75,11 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
     public function check()
     {
 
+        $app = Application::getFacadeApplication();
         $iph = '';
 
         if (Config::get('recaptchaV3.sendIP') == "yes") {
-            $iph = (string)$this->app->make(IPService::class)->getRequestIPAddress();
+            $iph = (string) $app->make(IPService::class)->getRequestIPAddress();
         }
 
         $qsa = http_build_query(
