@@ -1,5 +1,6 @@
 im.bind('imageload', function () {
-    var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
+    // jshint -W083
+    var cs = settings.controlsets || {}, namespace;
     var running = 0;
     log('Loading ControlSets');
     im.showLoader(ccmi18n_imageeditor.loadingControlSets);
@@ -7,7 +8,7 @@ im.bind('imageload', function () {
     for (namespace in cs) {
         var myns = "ControlSet_" + namespace;
         im.controlSetNamespaces.push(myns);
-        $.ajax(cs[namespace]['src'], {
+        $.ajax(cs[namespace].src, {
             dataType: 'text',
             cache: false,
             namespace: namespace,
@@ -17,7 +18,7 @@ im.bind('imageload', function () {
             },
             success: function (js) {
                 running--;
-                var nso = im.addControlSet(this.myns, js, cs[this.namespace]['element']);
+                var nso = im.addControlSet(this.myns, js, cs[this.namespace].element);
                 log(nso);
                 im.fire('controlSetLoad', nso);
                 if (0 == running) {
@@ -34,6 +35,7 @@ im.bind('imageload', function () {
     }
 });
 im.bind('ControlSetsLoaded', function () {
+    // jshint -W083
     im.fire('LoadingComponents');
     im.showLoader(ccmi18n_imageeditor.loadingComponents);
     var components = settings.components || {}, namespace, running = 0;
@@ -41,7 +43,7 @@ im.bind('ControlSetsLoaded', function () {
 
     for (namespace in components) {
         var myns = "Component_" + namespace;
-        $.ajax(components[namespace]['src'], {
+        $.ajax(components[namespace].src, {
             dataType: 'text',
             cache: false,
             namespace: namespace,
@@ -51,7 +53,7 @@ im.bind('ControlSetsLoaded', function () {
             },
             success: function (js) {
                 running--;
-                var nso = im.addComponent(this.myns, js, components[this.namespace]['element']);
+                var nso = im.addComponent(this.myns, js, components[this.namespace].element);
                 log(nso);
                 im.fire('ComponentLoad', nso);
                 if (0 == running) {
@@ -72,6 +74,7 @@ im.bind('ControlSetsLoaded', function () {
 });
 
 im.bind('ComponentsLoaded', function () { // do this when the control sets finish loading.
+    // jshint -W083
     log('Loading Filters');
     im.showLoader(ccmi18n_imageeditor.loadingFilters);
     var filters = settings.filters || {}, namespace, firstf, active = 0;
@@ -131,7 +134,7 @@ im.bind('ChangeActiveAction', function (e, ns) {
         height = cs.show().height();
     if (cs.length == 0) return;
     cs.hide().height(height).slideDown(function () {
-        $(this).height('')
+        $(this).height('');
     });
 });
 
@@ -147,7 +150,7 @@ im.bind('ChangeActiveComponent', function (e, ns) {
         height = cs.show().height();
     if (cs.length == 0) return;
     cs.hide().height(height).slideDown(function () {
-        $(this).height('')
+        $(this).height('');
     });
 });
 

@@ -79,9 +79,6 @@ if (!$tp->canInstallPackages()) {
 								<h6><?=t('Version History')?></h6>
 								<?=$versionHistory?>
 							</div>
-							<div class="ccm-marketplace-item-information-more">
-								<a href="javascript:void(0)" onclick="ConcreteMarketplace.updatesShowMore(this)"><?=t('More Details')?></a>
-							</div>
 						<?php 
 }
     ?>
@@ -121,9 +118,6 @@ if (!$tp->canInstallPackages()) {
 							<div class="ccm-marketplace-update-changelog">
 								<h6><?=t('Version History')?></h6>
 								<?=$versionHistory?>
-							</div>
-							<div class="ccm-marketplace-item-information-more">
-								<a href="javascript:void(0)" onclick="ConcreteMarketplace.updatesShowMore(this)"><?=t('More Details')?></a>
 							</div>
 						<?php 
 }

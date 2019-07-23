@@ -78,7 +78,7 @@ $publishDate = $v->getPublishDate();
             jQuery.fn.dialog.open({
                 element: 'div[data-dialog=schedule-page]',
                 modal: true,
-                width: 460,
+                width: 'auto',
                 title: '<?=t('Schedule Publishing')?>',
                 height: 'auto',
                 onOpen: function() {

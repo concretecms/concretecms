@@ -1,7 +1,6 @@
 /* Portuguese initialisation for the jQuery UI date picker plugin. */
 (
     function (factory) {
-        debugger;
         if ( typeof define === "function" && define.amd ) {
             // AMD. Register as an anonymous module.
             define([ "../datepicker" ], factory );
@@ -12,7 +11,6 @@
     }
     (
         function (datepicker) {
-            debugger;
             datepicker.regional['pt'] = {
             	closeText: 'Fechar',
             	prevText: 'Anterior',

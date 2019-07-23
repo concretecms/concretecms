@@ -9,7 +9,8 @@
 			<?= t('Enter your email address below. We will send you instructions to reset your password.') ?>
 		</div>
 		<div class="form-group">
-			<input name="uEmail" type="email" placeholder="<?= t('Email Address') ?>" class="form-control" />
+			<label class="control-label" for="uEmail"><?= t('Email Address') ?></label>
+			<input name="uEmail" type="email" id="uEmail" class="form-control" />
 		</div>
 		<button name="resetPassword" class="btn btn-primary btn-block"><?= t('Reset and Email Password') ?></button>
 	</form>

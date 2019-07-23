@@ -1,4 +1,7 @@
-!function (global, $, _) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ConcreteHelpGuideManager */
+
+;(function(global, $) {
     'use strict';
 
     function ConcreteHelpLauncher($element, options) {
@@ -38,8 +41,7 @@
         if (!$notification || !$notification.is(':visible')) {
             return false;
         }
-        var $element = $('[data-help-notification-toggle=\''
-            + $notification.attr('data-help-notification') + '\']');
+        var $element = $('[data-help-notification-toggle=\'' + $notification.attr('data-help-notification') + '\']');
 
         $notification.addClass('animated fadeOut');
         $element.removeClass('fadeOut').addClass('fadeIn');
@@ -48,7 +50,7 @@
             $(this).removeClass('animated fadeOut');
             $(this).dequeue();
         });
-    }
+    };
     // jQuery Plugin
     $.fn.concreteHelpLauncher = function (options) {
         return $.each($(this), function (i, obj) {
@@ -58,4 +60,4 @@
 
     global.ConcreteHelpLauncher = ConcreteHelpLauncher;
 
-}(this, $, _);
+})(window, jQuery);

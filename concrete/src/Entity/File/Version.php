@@ -11,13 +11,15 @@ use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
 use Concrete\Core\File\Exception\InvalidDimensionException;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
-use Concrete\Core\File\Image\Thumbnail\Type\Type;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
+use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Http\Request;
@@ -34,6 +36,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\MountManager;
 use League\Flysystem\Util;
@@ -981,7 +984,6 @@ class Version implements ObjectInterface
      */
     public function buildForceDownloadResponse()
     {
-        $app = Application::getFacadeApplication();
         $fre = $this->getFileResource();
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
@@ -1067,7 +1069,6 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
         $importer = new Importer();
-        $fi = $app->make('helper/file');
         $cf = $app->make('helper/concrete/file');
         $filesystem = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fileName = $this->getFileName();
@@ -1107,9 +1108,11 @@ class Version implements ObjectInterface
         $db->executeQuery('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
 
         if ($deleteFilesAndThumbnails) {
-            $types = Type::getVersionList();
-            foreach ($types as $type) {
-                $this->deleteThumbnail($type);
+            if ($this->getTypeObject()->getGenericType() === FileType::T_IMAGE) {
+                $types = ThumbnailType::getVersionList();
+                foreach ($types as $type) {
+                    $this->deleteThumbnail($type);
+                }
             }
             try {
                 $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
@@ -1144,10 +1147,12 @@ class Version implements ObjectInterface
     /**
      * Update the contents of the file.
      *
-     * @param string $contents
+     * @param string $contents The new content of the file
+     * @param bool $rescanThumbnails Should thumbnails be rescanned as well?
      */
-    public function updateContents($contents)
+    public function updateContents($contents, $rescanThumbnails = true)
     {
+        $this->releaseImagineImage();
         $storage = $this->getFile()->getFileStorageLocationObject();
         if ($storage !== null) {
             $app = Application::getFacadeApplication();
@@ -1164,7 +1169,7 @@ class Version implements ObjectInterface
             $this->logVersionUpdate(self::UT_CONTENTS);
             $fve = new FileVersionEvent($this);
             $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_contents', $fve);
-            $this->refreshAttributes();
+            $this->refreshAttributes($rescanThumbnails);
         }
     }
 
@@ -1217,6 +1222,19 @@ class Version implements ObjectInterface
     public function refreshAttributes($rescanThumbnails = true)
     {
         $app = Application::getFacadeApplication();
+
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        if ($storage !== null) {
+            $fs = $storage->getFileSystemObject();
+            $adapter = $fs->getAdapter();
+            if ($adapter instanceof CachedAdapter) {
+                $cache = $adapter->getCache();
+                $cf = $app->make('helper/concrete/file');
+                $path = Util::normalizePath($cf->prefix($this->fvPrefix, $this->fvFilename));
+                $cache->delete($path);
+            }
+        }
+
         $em = $app->make(EntityManagerInterface::class);
         $fh = $app->make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
@@ -1308,6 +1326,7 @@ class Version implements ObjectInterface
             switch ($mimetype) {
                 case 'image/svg+xml':
                 case 'image/svg-xml':
+                case 'text/plain':
                     if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
                         try {
                             $imageLibrary = $app->make('image/imagick');
@@ -1342,71 +1361,74 @@ class Version implements ObjectInterface
     }
 
     /**
+     * Does the \Imagine\Image\ImageInterface instance have already been loaded?
+     *
+     * @return bool
+     */
+    public function hasImagineImage()
+    {
+        return $this->imagineImage ? true : false;
+    }
+
+    /**
      * Unload the loaded Image instance.
      */
     public function releaseImagineImage()
     {
+        $doGarbageCollection = $this->imagineImage ? true : false;
         $this->imagineImage = null;
+        if ($doGarbageCollection) {
+            gc_collect_cycles();
+        }
     }
 
     /**
-     * Delete and re-create all the thumbnail types (only applicable to image files).
+     * Create missing thumbnails (or re-create all the thumbnails).
+     *
+     * @param bool $deleteExistingThumbnails Set to true to delete existing thumbnails (they will be re-created from scratch)
      *
      * @return bool return true on success, false on failure (file is not an image, problems during image processing, ...)
      */
-    public function rescanThumbnails()
+    public function refreshThumbnails($deleteExistingThumbnails)
     {
         $result = false;
-        if ($this->fvType == \Concrete\Core\File\Type\Type::T_IMAGE) {
+        if ($this->fvType == FileType::T_IMAGE) {
             try {
                 $image = $this->getImagineImage();
                 if ($image) {
-                    $imagewidth = $this->getAttribute('width') ?: $image->getSize()->getWidth();
-                    $imageheight = $this->getAttribute('height') ?: $image->getSize()->getHeight();
-                    $types = Type::getVersionList();
+                    $imageSize = $image->getSize();
+                    unset($image);
+                    $types = ThumbnailType::getVersionList();
+                    $file = $this->getFile();
+                    $fsl = null;
                     foreach ($types as $type) {
-                        // delete the file if it exists
-                        $this->deleteThumbnail($type);
-
-                        // if image is smaller than size requested, don't create thumbnail
-                        if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
-                            continue;
+                        if ($type->shouldExistFor($imageSize->getWidth(), $imageSize->getHeight(), $file)) {
+                            if ($deleteExistingThumbnails) {
+                                $this->deleteThumbnail($type);
+                            } else {
+                                if ($fsl === null) {
+                                    $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                                }
+                                $path = $type->getFilePath($this);
+                                try {
+                                    $exists = $fsl->has($path);
+                                } catch (FileNotFoundException $e) {
+                                    $exists = false;
+                                }
+                                if ($exists) {
+                                    continue;
+                                }
+                            }
+                            $this->generateThumbnail($type);
+                        } else {
+                            // delete the file if it exists
+                            $this->deleteThumbnail($type);
                         }
-
-                        // This should not happen as it is not allowed when creating thumbnail types and both width and height
-                        // are required for Exact sizing but it's here just in case
-                        if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
-                            continue;
-                        }
-
-                        // If requesting an exact size and any of the dimensions requested is larger than the image's
-                        // don't process as we won't get an exact size
-                        if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
-                            continue;
-                        }
-
-                        // if image is the same width as thumbnail, and there's no thumbnail height set,
-                        // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
-                        if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
-                            continue;
-                        }
-
-                        // if image is the same height as thumbnail, and there's no thumbnail width set,
-                        // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
-                        if ($imageheight == $type->getHeight() && (!$type->getWidth() || $imagewidth <= $type->getWidth())) {
-                            continue;
-                        }
-
-                        // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
-                        $this->generateThumbnail($type);
                     }
                     $result = true;
                 }
             } catch (\Imagine\Exception\InvalidArgumentException $e) {
             } catch (\Imagine\Exception\RuntimeException $e) {
-            } finally {
-                unset($image);
-                $this->releaseImagineImage();
             }
         }
 
@@ -1423,19 +1445,30 @@ class Version implements ObjectInterface
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         $image = $this->getImagineImage();
+        $imageSize = $image->getSize();
+        $bitmapFormat = $app->make(BitmapFormat::class);
+        $inplaceOperations = false;
+        $inplacePixelsLimit = (float) $config->get('concrete.misc.inplace_image_operations_limit');
+        if ($inplacePixelsLimit >= 1) {
+            $totalImagePixels = $imageSize->getWidth() * $imageSize->getHeight() * max($image->layers()->count(), 1);
+            if ($totalImagePixels > $inplacePixelsLimit) {
+                $inplaceOperations = true;
+                $this->releaseImagineImage();
+            }
+        }
 
         $filesystem = $this->getFile()
-        ->getFileStorageLocationObject()
-        ->getFileSystemObject();
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
 
         $height = $type->getHeight();
         $width = $type->getWidth();
         if ($height && $width) {
             $size = new Box($width, $height);
         } elseif ($width) {
-            $size = $image->getSize()->widen($width);
+            $size = $imageSize->widen($width);
         } else {
-            $size = $image->getSize()->heighten($height);
+            $size = $imageSize->heighten($height);
         }
 
         // isCropped only exists on the CustomThumbnail type
@@ -1443,30 +1476,37 @@ class Version implements ObjectInterface
             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         } else {
             switch ($type->getSizingMode()) {
-                case Type::RESIZE_EXACT:
+                case ThumbnailType::RESIZE_EXACT:
                     $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
                     break;
-                case Type::RESIZE_PROPORTIONAL:
+                case ThumbnailType::RESIZE_PROPORTIONAL:
                 default:
                     $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
                     break;
             }
         }
+        if ($inplaceOperations) {
+            $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_NOCLONE;
+        }
+        if ($type->isUpscalingEnabled()) {
+            $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_UPSCALE;
+        }
 
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
+        unset($image);
         $thumbnailPath = $type->getFilePath($this);
-        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+        if ($type->isKeepAnimations() && $thumbnail->layers()->count() > 1) {
+            $isAnimation = true;
+            $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+        } else {
+            $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+            $isAnimation = false;
+        }
 
-        switch ($thumbnailFormat) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $mimetype = 'image/jpeg';
-                $thumbnailOptions = ['jpeg_quality' => $config->get('concrete.misc.default_jpeg_image_compression')];
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $mimetype = 'image/png';
-                $thumbnailOptions = ['png_compression_level' => $config->get('concrete.misc.default_png_image_compression')];
-                break;
+        $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
+        $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailFormat);
+        if ($isAnimation) {
+            $thumbnailOptions['animated'] = true;
         }
 
         $filesystem->write(
@@ -1476,19 +1516,22 @@ class Version implements ObjectInterface
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'mimetype' => $mimetype,
             ]
-            );
-
-        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle')) {
-            $this->fvHasListingThumbnail = true;
-        }
-
-        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle')) {
-            $this->fvHasDetailThumbnail = true;
-        }
-
-        unset($size);
+        );
         unset($thumbnail);
-        unset($filesystem);
+        gc_collect_cycles();
+
+        $app['director']->dispatch('on_thumbnail_generate',
+            new \Concrete\Core\File\Event\ThumbnailGenerate($thumbnailPath, $type)
+        );
+
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
+            $this->fvHasListingThumbnail = true;
+            $this->save();
+        }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && !$this->fvHasDetailThumbnail) {
+            $this->fvHasDetailThumbnail = true;
+            $this->save();
+        }
     }
 
     /**
@@ -1534,12 +1577,14 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Resolve a path using the default core path resolver.
-     * Avoid using this method when you have access to the resolver instance.
+     * Get the URL of a thumbnail type.
+     * If the thumbnail is smaller than the image (or if the file does not satisfy the Conditional Thumbnail criterias) you'll get the URL of the image itself.
+     *
+     * Please remark that the path is resolved using the default core path resolver: avoid using this method when you have access to the resolver instance.
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      *
-     * @return string|null
+     * @return string|null return NULL if the thumbnail does not exist and the file storage location is invalid
      *
      * @example /application/files/thumbnails/file_manager_listing/0000/0000/0000/file.png
      */
@@ -1547,13 +1592,19 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
 
+        $path = null;
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
-
-        $path_resolver = $app->make(Resolver::class);
-
-        $path = $path_resolver->getPath($this, $type);
+        if ($type !== null) {
+            $imageWidth = (int) $this->getAttribute('width');
+            $imageHeight = (int) $this->getAttribute('height');
+            $file = $this->getFile();
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                $path_resolver = $app->make(Resolver::class);
+                $path = $path_resolver->getPath($this, $type);
+            }
+        }
         if (!$path) {
             $url = $this->getURL();
             $path = $url ? (string) $url : null;
@@ -1572,30 +1623,22 @@ class Version implements ObjectInterface
     public function getThumbnails()
     {
         $thumbnails = [];
-        $types = Type::getVersionList();
-        $width = $this->getAttribute('width');
-        $height = $this->getAttribute('height');
-        $file = $this->getFile();
-
-        if (!$width || $width < 0) {
+        $imageWidth = (int) $this->getAttribute('width');
+        $imageHeight = (int) $this->getAttribute('height');
+        if ($imageWidth < 1 || $imageHeight < 1) {
             throw new InvalidDimensionException($this->getFile(), $this, t('Invalid dimensions.'));
         }
-
+        $types = ThumbnailType::getVersionList();
+        $file = $this->getFile();
         foreach ($types as $type) {
-            if ($width < $type->getWidth()) {
-                continue;
-            }
-
-            if ($width == $type->getWidth() && (!$type->getHeight() || $height <= $type->getHeight())) {
-                continue;
-            }
-
-            $thumbnailPath = $type->getFilePath($this);
-            $location = $file->getFileStorageLocationObject();
-            $configuration = $location->getConfigurationObject();
-            $filesystem = $location->getFileSystemObject();
-            if ($filesystem->has($thumbnailPath)) {
-                $thumbnails[] = new Thumbnail($type, $configuration->getPublicURLToFile($thumbnailPath));
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                $thumbnailPath = $type->getFilePath($this);
+                $location = $file->getFileStorageLocationObject();
+                $configuration = $location->getConfigurationObject();
+                $filesystem = $location->getFileSystemObject();
+                if ($filesystem->has($thumbnailPath)) {
+                    $thumbnails[] = new Thumbnail($type, $configuration->getPublicURLToFile($thumbnailPath));
+                }
             }
         }
 
@@ -1613,7 +1656,7 @@ class Version implements ObjectInterface
         if ($this->fvHasDetailThumbnail) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
-            $type = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $type = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
             $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
             if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
                 $result .= ' data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
@@ -1636,10 +1679,24 @@ class Version implements ObjectInterface
         if ($this->fvHasListingThumbnail) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
-            $type = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
-            $result = '<img class="ccm-file-manager-list-thumbnail" src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+            $listingType = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
+            $detailType = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $result = '<img class="ccm-file-manager-list-thumbnail ccm-thumbnail-'.$config->get('concrete.file_manager.images.preview_image_size').'" src="' . $this->getThumbnailURL($listingType->getBaseVersion()) . '"';
             if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
-                $result .= '  data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
+                $result .= ' data-at2x="' . $this->getThumbnailURL($listingType->getDoubledVersion()) . '"';
+            }
+            if($config->get('concrete.file_manager.images.preview_image_popover')){
+                $result .= ' data-hover-image="'.$this->getThumbnailURL($detailType->getBaseVersion()).'"';
+            }
+            if ($this->getTypeObject()->isSVG()) {
+                $maxWidth = $detailType->getWidth();
+                if ($maxWidth) {
+                    $result .= ' data-hover-maxwidth="'.$maxWidth.'px"';
+                }
+                $maxHeight = $detailType->getHeight();
+                if ($maxHeight) {
+                    $result .= ' data-hover-maxheight="'.$maxHeight.'px"';
+                }
             }
             $result .= ' />';
         } else {
@@ -1656,6 +1713,8 @@ class Version implements ObjectInterface
      */
     public function deleteThumbnail($type)
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
@@ -1664,8 +1723,20 @@ class Version implements ObjectInterface
         try {
             if ($fsl->has($path)) {
                 $fsl->delete($path);
+
+                $app['director']->dispatch('on_thumbnail_delete',
+                    new \Concrete\Core\File\Event\ThumbnailDelete($path, $type)
+                );
             }
         } catch (FileNotFoundException $e) {
+        }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && $this->fvHasListingThumbnail) {
+            $this->fvHasListingThumbnail = false;
+            $this->save();
+        }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && $this->fvHasDetailThumbnail) {
+            $this->fvHasDetailThumbnail = false;
+            $this->save();
         }
     }
 
@@ -1785,6 +1856,16 @@ class Version implements ObjectInterface
         }
 
         return false;
+    }
+
+    /**
+     * @deprecated use refreshThumbnails(true) instead
+     *
+     * @return bool
+     */
+    public function rescanThumbnails()
+    {
+        return $this->refreshThumbnails(true);
     }
 
     /**

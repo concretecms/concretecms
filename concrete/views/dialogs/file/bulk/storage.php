@@ -1,37 +1,65 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php
+if (!empty($files)) {
 
-<form data-dialog-form="bulk-file-storage" method="post" action="<?=$controller->action('submit')?>">
-    <?php foreach ($files as $f) {
-    ?>
-        <input type="hidden" name="fID[]" value="<?=$f->getFileID()?>" />
-    <?php 
-} ?>
+    // let's check the storage locations to see if all the files use the same and check the correct checkbox
+    $usedStorageLocations = [];
+    $currentStorageLocation = null;
+    foreach ($files as $file) {
+        $fileStorageLocationID = $file->getStorageLocationID();
+        if (!in_array($fileStorageLocationID, $usedStorageLocations)) {
+            $usedStorageLocations[] = $fileStorageLocationID;
+        }
+    }
+    if (count($usedStorageLocations) === 1) {
+        $currentStorageLocation = $usedStorageLocations[0];
+    } ?>
 
-    <div class="ccm-ui">
-        <?php
-        use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
+    <form data-dialog-form="bulk-file-storage" method="post" action="<?= $controller->action('submit'); ?>">
 
-$locations = FileStorageLocation::getList();
-        foreach ($locations as $fsl) {
-            ?>
-            <div class="radio"><label><?=$form->radio('fslID', $fsl->getID()) ?> <?=$fsl->getDisplayName()?></label></div>
-        <?php 
-        } ?>
-    </div>
+        <?php foreach ($files as $file) { ?>
+            <input type="hidden" name="fID[]" value="<?= $file->getFileID(); ?>" />
+        <?php } ?>
 
-    <div class="dialog-buttons">
-        <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-        <button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?=t('Move Location')?></button>
-    </div>
+        <div class="ccm-ui">
+            <?php foreach ($locations as $fsl) { ?>
+                <div class="radio">
+                    <label>
+                        <?= $form->radio('fslID', $fsl->getID(), $currentStorageLocation); ?> <?= $fsl->getDisplayName(); ?>
+                    </label>
+                </div>
+            <?php } ?>
+        </div>
 
-</form>
+        <div class="dialog-buttons">
+            <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
+            <button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?= t('Move Location'); ?></button>
+        </div>
 
-<script type="text/javascript">
-    $(function() {
-        ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
-            if (data.form == 'bulk-file-storage') {
-                ConcreteEvent.publish('FileManagerBulkFileStorageComplete', {files: data.response.files});
-            }
+    </form>
+
+    <script type="text/javascript">
+        $(function() {
+            $('form[data-dialog-form=bulk-file-storage]').on('submit', function () {
+                var params = $('form[data-dialog-form=bulk-file-storage]').formToArray(true);
+                $.concreteAjax({
+                    url: '<?= $controller->action('submit'); ?>',
+                    data: params,
+                    success: function(r) {
+                        jQuery.fn.dialog.closeTop();
+                        ccm_triggerProgressiveOperation(
+                            '<?= $controller->action('change_files_storage_location'); ?>',
+                            params,
+                            <?= json_encode(t('Change files storage location')); ?>,
+                            function (result) {
+                                ConcreteEvent.publish('FileManagerBulkFileStorageComplete', {files: result.files});
+                                ConcreteAlert.notify({message: <?= json_encode(t('File storage locations updated successfully.')); ?>});
+                            }
+                        );
+                    }
+                });
+                return false;
+            });
         });
-    });
-</script>
+    </script>
+<?php } ?>

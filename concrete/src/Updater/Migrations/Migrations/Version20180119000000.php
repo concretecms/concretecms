@@ -7,15 +7,14 @@ use Concrete\Core\Entity\Express\Entity as ExpressEntity;
 use Concrete\Core\Entity\Express\Form as ExpressForm;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20180119000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
+class Version20180119000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {

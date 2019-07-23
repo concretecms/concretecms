@@ -8,7 +8,6 @@ use Concrete\Core\Config\SaverInterface;
 
 class Repository extends \Illuminate\Config\Repository
 {
-
     /**
      * The loader implementation.
      *
@@ -35,21 +34,21 @@ class Repository extends \Illuminate\Config\Repository
      *
      * @var array
      */
-    protected $items = array();
+    protected $items = [];
 
     /**
      * All of the registered packages.
      *
      * @var array
      */
-    protected $packages = array();
+    protected $packages = [];
 
     /**
      * The after load callbacks for namespaces.
      *
      * @var array
      */
-    protected $afterLoad = array();
+    protected $afterLoad = [];
 
     /**
      * A cache of the parsed items.
@@ -75,24 +74,27 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Determine if the given configuration value exists.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return bool
      */
     public function has($key)
     {
         $default = microtime(true);
+
         return $this->get($key, $default) !== $default;
     }
 
     /**
      * Determine if a configuration group exists.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return bool
      */
     public function hasGroup($key)
     {
-        list($namespace, $group, $item) = $this->parseKey($key);
+        list($namespace, $group) = $this->parseKey($key);
 
         return $this->loader->exists($group, $namespace);
     }
@@ -100,8 +102,9 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Get the specified configuration value.
      *
-     * @param  string $key
-     * @param  mixed $default
+     * @param string $key
+     * @param mixed $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -121,9 +124,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Set a given configuration value.
      *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
+     * @param string $key
+     * @param mixed $value
      */
     public function set($key, $value = null)
     {
@@ -136,7 +138,7 @@ class Repository extends \Illuminate\Config\Repository
         // get overwritten if a different item in the group is requested later.
         $this->load($group, $namespace, $collection);
 
-        if (is_null($item)) {
+        if ($item === null) {
             $this->items[$collection] = $value;
         } else {
             array_set($this->items[$collection], $item, $value);
@@ -146,8 +148,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Save a key.
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      *
      * @return bool
      */
@@ -170,7 +172,6 @@ class Repository extends \Illuminate\Config\Repository
      * Clear specific key.
      *
      * @param string $key
-     * @return void
      */
     public function clear($key)
     {
@@ -178,20 +179,17 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
-     * Clear cached items
-     *
-     * @return void
+     * Clear cached items.
      */
     public function clearCache()
     {
-        $this->items = array();
+        $this->items = [];
     }
 
     /**
-     * Clear a namespace (Note: this deletes items permanently)
+     * Clear a namespace (Note: this deletes items permanently).
      *
-     * @param $namespace
-     * @return void
+     * @param string $namespace
      */
     public function clearNamespace($namespace)
     {
@@ -199,98 +197,11 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
-     * Load the configuration group for the key.
-     *
-     * @param  string $group
-     * @param  string $namespace
-     * @param  string $collection
-     * @return void
-     */
-    protected function load($group, $namespace, $collection)
-    {
-        $env = $this->environment;
-
-        // If we've already loaded this collection, we will just bail out since we do
-        // not want to load it again. Once items are loaded a first time they will
-        // stay kept in memory within this class and not loaded from disk again.
-        if (isset($this->items[$collection])) {
-            return;
-        }
-
-        $items = $this->loader->load($env, $group, $namespace);
-
-        // If we've already loaded this collection, we will just bail out since we do
-        // not want to load it again. Once items are loaded a first time they will
-        // stay kept in memory within this class and not loaded from disk again.
-        if (isset($this->afterLoad[$namespace])) {
-            $items = $this->callAfterLoad($namespace, $group, $items);
-        }
-
-        $this->items[$collection] = $items;
-    }
-
-    /**
-     * Call the after load callback for a namespace.
-     *
-     * @param  string $namespace
-     * @param  string $group
-     * @param  array $items
-     * @return array
-     */
-    protected function callAfterLoad($namespace, $group, $items)
-    {
-        $callback = $this->afterLoad[$namespace];
-
-        return call_user_func($callback, $this, $group, $items);
-    }
-
-    /**
-     * Parse an array of namespaced segments.
-     *
-     * @param  string $key
-     * @return array
-     */
-    protected function parseNamespacedSegments($key)
-    {
-        list($namespace, $item) = explode('::', $key);
-
-        // If the namespace is registered as a package, we will just assume the group
-        // is equal to the namespace since all packages cascade in this way having
-        // a single file per package, otherwise we'll just parse them as normal.
-        if (in_array($namespace, $this->packages)) {
-            return $this->parsePackageSegments($key, $namespace, $item);
-        }
-
-        // Next we'll just explode the first segment to get the namespace and group
-        // since the item should be in the remaining segments. Once we have these
-        // two pieces of data we can proceed with parsing out the item's value.
-        $itemSegments = explode('.', $item);
-
-        $groupAndItem = array_slice($this->parseBasicSegments($itemSegments), 1);
-
-        return array_merge([$namespace], $groupAndItem);
-    }
-
-    protected function parsePackageSegments($key, $namespace, $item)
-    {
-        list($namespace, $item) = explode('::', $key);
-
-        // First we'll just explode the first segment to get the namespace and group
-        // since the item should be in the remaining segments. Once we have these
-        // two pieces of data we can proceed with parsing out the item's value.
-        $itemSegments = explode('.', $item);
-
-        $groupAndItem = array_slice($this->parseBasicSegments($itemSegments), 1);
-
-        return array_merge(array($namespace), $groupAndItem);
-    }
-
-    /**
      * Register a package for cascading configuration.
      *
-     * @param  string $package
-     * @param  string $hint
-     * @param  string $namespace
+     * @param string $package
+     * @param string|null $hint
+     * @param string|null $namespace
      */
     public function package($package, $hint = null, $namespace = null)
     {
@@ -301,24 +212,10 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
-     * Get the configuration namespace for a package.
-     *
-     * @param  string|\Concrete\Core\Package\Package $package
-     * @param  string $namespace
-     * @return string
-     */
-    protected function getPackageNamespace($package, $namespace)
-    {
-        $package = is_object($package) ? $package->getPackageHandle() : $package;
-        return $namespace ?: $package;
-    }
-
-    /**
      * Register an after load callback for a given namespace.
      *
-     * @param  string $namespace
-     * @param  \Closure $callback
-     * @return void
+     * @param string $namespace
+     * @param \Closure $callback
      */
     public function afterLoading($namespace, Closure $callback)
     {
@@ -326,25 +223,10 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
-     * Get the collection identifier.
-     *
-     * @param  string $group
-     * @param  string $namespace
-     * @return string
-     */
-    protected function getCollection($group, $namespace = null)
-    {
-        $namespace = $namespace ?: '*';
-
-        return $namespace . '::' . $group;
-    }
-
-    /**
      * Add a new namespace to the loader.
      *
-     * @param  string $namespace
-     * @param  string $hint
-     * @return void
+     * @param string $namespace
+     * @param string $hint
      */
     public function addNamespace($namespace, $hint)
     {
@@ -375,8 +257,7 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Set the loader implementation.
      *
-     * @param  LoaderInterface $loader
-     * @return void
+     * @param LoaderInterface $loader
      */
     public function setLoader(LoaderInterface $loader)
     {
@@ -384,7 +265,7 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
-     * Get the saver implementation
+     * Get the saver implementation.
      *
      * @return SaverInterface
      */
@@ -436,7 +317,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Parse a key into namespace, group, and item.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return array
      */
     public function parseKey($key)
@@ -466,9 +348,167 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
+     * Set the parsed value of a key.
+     *
+     * @param string $key
+     * @param array $parsed
+     */
+    public function setParsedKey($key, $parsed)
+    {
+        $this->parsed[$key] = $parsed;
+    }
+
+    /**
+     * Execute a callable using a specific key value.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param callable $callable
+     *
+     * @return mixed returns the result of $callable
+     */
+    public function withKey($key, $value, callable $callable)
+    {
+        $initialValue = $this->get($key);
+        try {
+            $this->set($key, $value);
+
+            return $callable();
+        } finally {
+            $this->set($key, $initialValue);
+        }
+    }
+
+    /**
+     * Load the configuration group for the key.
+     *
+     * @param string $group
+     * @param string $namespace
+     * @param string $collection
+     */
+    protected function load($group, $namespace, $collection)
+    {
+        $env = $this->environment;
+
+        // If we've already loaded this collection, we will just bail out since we do
+        // not want to load it again. Once items are loaded a first time they will
+        // stay kept in memory within this class and not loaded from disk again.
+        if (isset($this->items[$collection])) {
+            return;
+        }
+
+        $items = $this->loader->load($env, $group, $namespace);
+
+        // If we've already loaded this collection, we will just bail out since we do
+        // not want to load it again. Once items are loaded a first time they will
+        // stay kept in memory within this class and not loaded from disk again.
+        if (isset($this->afterLoad[$namespace])) {
+            $items = $this->callAfterLoad($namespace, $group, $items);
+        }
+
+        $this->items[$collection] = $items;
+    }
+
+    /**
+     * Call the after load callback for a namespace.
+     *
+     * @param string $namespace
+     * @param string $group
+     * @param array $items
+     *
+     * @return array
+     */
+    protected function callAfterLoad($namespace, $group, $items)
+    {
+        $callback = $this->afterLoad[$namespace];
+
+        return call_user_func($callback, $this, $group, $items);
+    }
+
+    /**
+     * Parse an array of namespaced segments.
+     *
+     * @param string $key
+     *
+     * @return array
+     */
+    protected function parseNamespacedSegments($key)
+    {
+        list($namespace, $item) = explode('::', $key);
+
+        // If the namespace is registered as a package, we will just assume the group
+        // is equal to the namespace since all packages cascade in this way having
+        // a single file per package, otherwise we'll just parse them as normal.
+        if (in_array($namespace, $this->packages)) {
+            return $this->parsePackageSegments($key, $namespace, $item);
+        }
+
+        // Next we'll just explode the first segment to get the namespace and group
+        // since the item should be in the remaining segments. Once we have these
+        // two pieces of data we can proceed with parsing out the item's value.
+        $itemSegments = explode('.', $item);
+
+        $groupAndItem = array_slice($this->parseBasicSegments($itemSegments), 1);
+
+        return array_merge([$namespace], $groupAndItem);
+    }
+
+    /**
+     * @param string $key
+     * @param string $namespace
+     * @param string $item
+     *
+     * @return array
+     */
+    protected function parsePackageSegments($key, $namespace, $item)
+    {
+        list($namespace, $item) = explode('::', $key);
+
+        // First we'll just explode the first segment to get the namespace and group
+        // since the item should be in the remaining segments. Once we have these
+        // two pieces of data we can proceed with parsing out the item's value.
+        $itemSegments = explode('.', $item);
+
+        $groupAndItem = array_slice($this->parseBasicSegments($itemSegments), 1);
+
+        return array_merge([$namespace], $groupAndItem);
+    }
+
+    /**
+     * Get the configuration namespace for a package.
+     *
+     * @param string|\Concrete\Core\Package\Package $package
+     * @param string $namespace
+     *
+     * @return string
+     */
+    protected function getPackageNamespace($package, $namespace)
+    {
+        $package = is_object($package) ? $package->getPackageHandle() : $package;
+
+        return $namespace ?: $package;
+    }
+
+    /**
+     * Get the collection identifier.
+     *
+     * @param string $group
+     * @param string $namespace
+     *
+     * @return string
+     */
+    protected function getCollection($group, $namespace = null)
+    {
+        $namespace = $namespace ?: '*';
+
+        return $namespace . '::' . $group;
+    }
+
+    /**
      * Parse an array of basic segments.
      *
-     * @param  array  $segments
+     * @param array $segments
+     *
      * @return array
      */
     protected function parseBasicSegments(array $segments)
@@ -490,17 +530,5 @@ class Repository extends \Illuminate\Config\Repository
 
             return [null, $group, $item];
         }
-    }
-
-    /**
-     * Set the parsed value of a key.
-     *
-     * @param  string  $key
-     * @param  array   $parsed
-     * @return void
-     */
-    public function setParsedKey($key, $parsed)
-    {
-        $this->parsed[$key] = $parsed;
     }
 }

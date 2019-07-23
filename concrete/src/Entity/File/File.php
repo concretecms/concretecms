@@ -7,12 +7,14 @@ use Concrete\Core\File\Event\FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Set\Set;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use FileSet;
 use League\Flysystem\AdapterInterface;
 use Loader;
@@ -306,13 +308,36 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Returns the user ID of the author of the file (if available).
+     * Get the user ID of the author of the file (if available).
      *
      * @return int|null
      */
     public function getUserID()
     {
-        return $this->author ? $this->author->getUserID() : null;
+        $user = $this->getUser();
+
+        return $user ? $user->getUserID() : null;
+    }
+
+    /**
+     * Get the author of the file (if available).
+     *
+     * @return \Concrete\Core\Entity\User\User|null
+     *
+     * @since concrete5 8.5.2
+     */
+    public function getUser()
+    {
+        if ($this->author) {
+            // Check that the user was not deleted
+            try {
+                $this->author->getUserID();
+            } catch (EntityNotFoundException $x) {
+                $this->author = null;
+            }
+        }
+
+        return $this->author;
     }
 
     /**
@@ -327,16 +352,31 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
+     * Get the IDs of the file sets that this file belongs to.
+     *
+     * @return int[]
+     */
+    public function getFileSetIDs()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rows = $db->fetchAll('select fsID from FileSetFiles where fID = ?', [$this->getFileID()]);
+        $ids = array_map('intval', array_map('array_pop', $rows));
+
+        return $ids;
+    }
+
+    /**
+     * Get the file sets that this file belongs to.
+     *
      * @return FileSet[]
      */
     public function getFileSets()
     {
-        $db = Loader::db();
-        $fsIDs = $db->Execute('select fsID from FileSetFiles where fID = ?', [$this->getFileID()]);
         $filesets = [];
-        while ($row = $fsIDs->FetchRow()) {
-            $fs = FileSet::getByID($row['fsID']);
-            if (is_object($fs)) {
+        foreach ($this->getFileSetIDs() as $fsID) {
+            $fs = FileSet::getByID($fsID);
+            if ($fs !== null) {
                 $filesets[] = $fs;
             }
         }

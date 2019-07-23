@@ -6,11 +6,10 @@ use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\ORM\EntityManager;
 
-class Version20180122213656 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
+class Version20180122213656 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
@@ -25,7 +24,7 @@ class Version20180122213656 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {

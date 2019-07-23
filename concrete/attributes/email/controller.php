@@ -8,6 +8,7 @@ use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
+use Concrete\Core\Validator\String\EmailValidator;
 
 class Controller extends DefaultController
 {
@@ -32,9 +33,9 @@ class Controller extends DefaultController
         if (!$data['value']) {
             return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
         } else {
-            $fh = $this->app->make('helper/validation/strings');
-            if (!$fh->email($data['value'])) {
-                return new Error(t('Invalid email address.'), new AttributeField($this->getAttributeKey()));
+            $e = $this->app->make('error');
+            if (!$this->app->make(EmailValidator::class)->isValid($data['value'], $e)) {
+                return new Error($e->toText(), new AttributeField($this->getAttributeKey()));
             } else {
                 return true;
             }
@@ -50,9 +51,7 @@ class Controller extends DefaultController
     {
         $good = true;
         if ($textRepresentation !== '') {
-            $vs = $this->app->make('helper/validation/strings');
-            /* @var \Concrete\Core\Utility\Service\Validation\Strings $vs */
-            if (!$vs->email($textRepresentation)) {
+            if (!$this->app->make(EmailValidator::class)->isValid($textRepresentation)) {
                 $good = false;
                 $warnings->add(t('"%1$s" is not a valid email address for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             }

@@ -1,24 +1,39 @@
 <?php
+
 namespace Concrete\Core\File;
 
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FileListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
-use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Core\Search\PermissionableListItemInterface;
-use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\StickyRequest;
-use Database;
-use Core;
-use Doctrine\DBAL\Query;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Core\Search\Pagination\Pagination;
 use FileAttributeKey;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Exception;
 
 class FileList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
+    /**
+     * @var \Closure|int|null
+     */
+    protected $permissionsChecker;
+
+    protected $paginationPageParameter = 'ccm_paging_fl';
+
+    /**
+     * Columns in this array can be sorted via the request.
+     *
+     * @var array
+     */
+    protected $autoSortColumns = [
+        'fv.fvFilename',
+        'fv.fvTitle',
+        'f.fDateAdded',
+        'fv.fvDateAdded',
+        'fv.fvSize',
+    ];
 
     public function __construct(StickyRequest $req = null)
     {
@@ -34,11 +49,6 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         return $this->permissionsChecker;
     }
 
-    /** @var  \Closure | integer | null */
-    protected $permissionsChecker;
-
-    protected $paginationPageParameter = 'ccm_paging_fl';
-
     public function getPagerManager()
     {
         return new FileListPagerManager($this);
@@ -47,24 +57,6 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function getPagerVariableFactory()
     {
         return new VariableFactory($this, $this->getSearchRequest());
-    }
-
-    /**
-     * Columns in this array can be sorted via the request.
-     *
-     * @var array
-     */
-    protected $autoSortColumns = array(
-        'fv.fvFilename',
-        'fv.fvTitle',
-        'f.fDateAdded',
-        'fv.fvDateAdded',
-        'fv.fvSize',
-    );
-
-    protected function getAttributeKeyClassName()
-    {
-        return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 
     public function setPermissionsChecker(\Closure $checker = null)
@@ -98,7 +90,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
             return $query->resetQueryParts([
                 'groupBy',
-                'orderBy'
+                'orderBy',
             ])->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
@@ -110,6 +102,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct f.fID)')->setMaxResults(1);
         });
+
         return $adapter;
     }
 
@@ -132,7 +125,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
             if ($this->permissionsChecker === -1) {
                 return true;
             } else {
-                return call_user_func_array($this->permissionsChecker, array($mixed));
+                return call_user_func_array($this->permissionsChecker, [$mixed]);
             }
         }
 
@@ -146,25 +139,70 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->filter('fvType', $type);
     }
 
+    /**
+     * Filter the files by their extension.
+     *
+     * @param string|string[] $extension one or more file extensions (with or without leading dot)
+     */
     public function filterByExtension($extension)
     {
-        $this->query->andWhere('fv.fvExtension = :fvExtension');
-        $this->query->setParameter('fvExtension', $extension);
+        $extensions = is_array($extension) ? $extension : [$extension];
+        if (count($extensions) > 0) {
+            $expr = $this->query->expr();
+            $or = $expr->orX();
+            foreach ($extensions as $extension) {
+                $extension = ltrim((string) $extension, '.');
+                $or->add($expr->eq('fv.fvExtension', $this->query->createNamedParameter($extension)));
+                if ($extension === '') {
+                    $or->add($expr->isNull('fv.fvExtension'));
+                }
+            }
+            $this->query->andWhere($or);
+        }
+    }
+
+    /**
+     * Filter the files by their storage location using a storage location object.
+     *
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
+     */
+    public function filterByStorageLocation($storageLocation) {
+        if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+            $this->filterByStorageLocationID($storageLocation->getID());
+        } elseif (!is_object($storageLocation)) {
+            $this->filterByStorageLocationID($storageLocation);
+        } else {
+            throw new Exception(t('Invalid file storage location.'));
+        }
+    }
+
+    /**
+     * Filter the files by their storage location using a storage location id.
+     *
+     * @param int $fslID storage location id
+     */
+    public function filterByStorageLocationID($fslID)
+    {
+        $fslID = (int) $fslID;
+        $this->query->andWhere('f.fslID = :fslID');
+        $this->query->setParameter('fslID', $fslID);
     }
 
     /**
      * Filters by "keywords" (which searches everything including filenames,
      * title, users who uploaded the file, tags).
+     *
+     * @param string $keywords
      */
     public function filterByKeywords($keywords)
     {
-        $expressions = array(
+        $expressions = [
             $this->query->expr()->like('fv.fvFilename', ':keywords'),
             $this->query->expr()->like('fv.fvDescription', ':keywords'),
             $this->query->expr()->like('fv.fvTitle', ':keywords'),
             $this->query->expr()->like('fv.fvTags', ':keywords'),
             $this->query->expr()->eq('uName', ':keywords'),
-        );
+        ];
 
         $keys = FileAttributeKey::getSearchableIndexedList();
         foreach ($keys as $ak) {
@@ -172,7 +210,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $expressions[] = $cnt->searchKeywords($keywords, $this->query);
         }
         $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 
@@ -192,6 +230,9 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters the file list by file size (in kilobytes).
+     *
+     * @param int|float $from
+     * @param int|float $to
      */
     public function filterBySize($from, $to)
     {
@@ -205,6 +246,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filters by public date.
      *
      * @param string $date
+     * @param string $comparison
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
@@ -244,6 +286,8 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by "tags" only.
+     *
+     * @param string $tags
      */
     public function filterByTags($tags)
     {
@@ -269,5 +313,10 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function sortByFileSetDisplayOrder()
     {
         $this->query->orderBy('fsDisplayOrder', 'asc');
+    }
+
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 }

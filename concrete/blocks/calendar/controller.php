@@ -1,19 +1,70 @@
 <?php
+
 namespace Concrete\Block\Calendar;
 
-use Concrete\Core\Html\Object\HeadLink;
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
+use Concrete\Core\Html\Object\HeadLink;
 use Core;
 use Page;
-use Concrete\Core\Calendar\CalendarServiceProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController
 {
     public $helpers = ['form'];
+
+    /**
+     * @var int|null
+     */
+    public $caID;
+
+    /**
+     * @var string|null
+     */
+    public $calendarAttributeKeyHandle;
+
+    /**
+     * @var int|null
+     */
+    public $filterByTopicAttributeKeyID;
+
+    /**
+     * @var int|null
+     */
+    public $filterByTopicID;
+
+    /**
+     * @var string|null
+     */
+    public $viewTypes;
+
+    /**
+     * @var string|null
+     */
+    public $viewTypesOrder;
+
+    /**
+     * @var string|null
+     */
+    public $defaultView;
+
+    /**
+     * @var int|null
+     */
+    public $navLinks;
+
+    /**
+     * @var int|null
+     */
+    public $eventLimit;
+
+    /**
+     * @var string|null
+     */
+    public $lightboxProperties;
 
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 475;
@@ -21,12 +72,12 @@ class Controller extends BlockController
 
     public function getBlockTypeDescription()
     {
-        return t("Displays a month view calendar on a page.");
+        return t('Displays a month view calendar on a page.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Calendar");
+        return t('Calendar');
     }
 
     public function on_start()
@@ -80,7 +131,7 @@ class Controller extends BlockController
                     $list->filterByAttribute($ak->getAttributeKeyHandle(), $this->filterByTopicID);
                 }
             }
-            $list->filterByStartTimeAfter(strtotime($start));
+            $list->filterByEndTimeAfter(strtotime($start));
             $list->filterByStartTimeBefore(strtotime($end));
             $results = $list->getResults();
 
@@ -93,8 +144,16 @@ class Controller extends BlockController
                 $obj = new \stdClass();
                 $obj->id = $occurrence->getID();
                 $obj->title = $event->getName();
-                $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
-                $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());
+                $repetition = $occurrence->getRepetition();
+                if ($repetition->isStartDateAllDay()) {
+                    $obj->allDay = true;
+                    $obj->start = $service->formatCustom('Y-m-d', $occurrence->getStart());
+                    $obj->end = $service->formatCustom('Y-m-d', $occurrence->getEnd());
+                } else {
+                    $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
+                    $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());
+
+                }
                 $obj->backgroundColor = $background;
                 $obj->borderColor = $background;
                 $obj->textColor = $text;
@@ -171,7 +230,7 @@ class Controller extends BlockController
             case 'description':
             case 'date':
             case 'linkToPage':
-                return "";
+                return '';
             default:
                 $akID = substr($key, 3);
                 $ak = EventKey::getByID($akID);
@@ -188,7 +247,7 @@ class Controller extends BlockController
         if (is_object($event)) {
             switch ($key) {
                 case 'title':
-                    return '<h3>' . $event->getName() . '</h3>';
+                    return '<h3>' . h($event->getName()) . '</h3>';
                 case 'description':
                     return $event->getDescription();
                 case 'date':
@@ -268,7 +327,7 @@ class Controller extends BlockController
     public function save($args)
     {
         if ('specific' == $args['chooseCalendar']) {
-            $args['caID'] = intval($args['caID']);
+            $args['caID'] = (int) $args['caID'];
             $args['calendarAttributeKeyHandle'] = '';
         }
         if ('site' == $args['chooseCalendar']) {

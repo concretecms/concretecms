@@ -68,7 +68,7 @@ class Group extends Tree
         $db = Database::connection();
         $tree = GroupTree::get();
         $rootNode = $tree->getRootTreeNodeObject();
-        $rows = $db->GetCol('select Groups.gID from Groups left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null');
+        $rows = $db->GetCol('select Groups.gID from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null');
         foreach ($rows as $gID) {
             $g = static::getByID($gID);
             GroupTreeNode::add($g, $rootNode);

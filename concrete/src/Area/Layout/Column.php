@@ -133,7 +133,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     {
         $db = Database::connection();
         $row = $db->GetRow('select cID, arHandle from Areas where arID = ?', array($this->arID));
-        if ($row['cID'] && $row['arHandle']) {
+        if ($row && !empty($row['cID']) && $row['arHandle']) {
             $c = Page::getByID($row['cID']);
             $area = Area::get($c, $row['arHandle']);
 
@@ -177,6 +177,18 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         return 0;
     }
 
+    public function getSubAreaObject()
+    {
+        $layout = $this->getAreaLayoutObject();
+        if ($layout) {
+            $a = $layout->getAreaObject();
+            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
+            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+            return $as;
+        }
+    }
+
     /**
      * @param bool $disableControls
      */
@@ -185,9 +197,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         $layout = $this->getAreaLayoutObject();
         $a = $layout->getAreaObject();
         if (is_object($a)) {
-            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
-            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
-            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+            $as = $this->getSubAreaObject();
             if ($disableControls) {
                 $as->disableControls();
             }

@@ -3,6 +3,7 @@
 namespace Concrete\Core\Form\Service;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Service\CountryList;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -58,6 +59,13 @@ class Form
     protected $ah;
 
     /**
+     * The Request instance.
+     *
+     * @var \Concrete\Core\Http\Request|null
+     */
+    private $request;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $app
@@ -70,10 +78,32 @@ class Form
     }
 
     /**
+     * Set the request instance.
+     *
+     * @param Request $request
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * @return \Concrete\Core\Http\Request
+     */
+    protected function getRequest()
+    {
+        if ($this->request == null) {
+            $this->request = $this->app->make(Request::class);
+        }
+        return $this->request;
+    }
+    /**
      * Returns an action suitable for including in a form action property.
      *
      * @param string $action
      * @param string $task
+     *
+     * @return \League\URL\URLInterface
      */
     public function action($action, $task = null)
     {
@@ -177,7 +207,7 @@ class Form
         }
 
         $checked = false;
-        if ($isChecked && \Request::request($_field) === null && !\Request::isPost()) {
+        if ($isChecked && $this->getRequest()->get($_field) === null && $this->getRequest()->getMethod() !== 'POST') {
             $checked = true;
         } else {
             $requestValue = $this->getRequestValue($key);
@@ -395,7 +425,7 @@ class Form
             $selectedValue = (string) $valueOrMiscFields;
         }
         if ($selectedValue !== '') {
-            $miscFields['ccm-passed-value'] = $selectedValue;
+            $miscFields['ccm-passed-value'] = h($selectedValue);
         }
         $requestValue = $this->getRequestValue($key);
         if (is_array($requestValue) && isset($requestValue[0]) && is_string($requestValue[0])) {
@@ -427,7 +457,7 @@ class Form
                 }
                 $str .= '</optgroup>';
             } else {
-                $str .= '<option value="' . $k . '"';
+                $str .= '<option value="' . h($k) . '"';
                 if ((string) $k === (string) $selectedValue) {
                     $str .= ' selected="selected"';
                 }
@@ -445,6 +475,7 @@ class Form
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
      * @param string $selectedCountryCode the code of the Country to be initially selected
      * @param array $configuration Configuration options. Supported keys are:
+     * - 'noCountryText': the text to be displayed when no country is selected
      * - 'required': do users must choose a Country?
      * - 'allowedCountries': an array containing a list of acceptable Country codes. If not set, all the countries will be selectable.
      * - 'linkStateProvinceField': set to true to look for text fields that have a "data-countryfield" attribute with the same value as this Country field name (updating the Country select will automatically update the State/Province list).
@@ -453,6 +484,7 @@ class Form
     public function selectCountry($key, $selectedCountryCode = '', array $configuration = [], array $miscFields = [])
     {
         $configuration += [
+            'noCountryText' => '',
             'required' => false,
             'allowedCountries' => null,
             'linkStateProvinceField' => false,
@@ -493,7 +525,7 @@ class Form
             $id = $key;
         }
         if ($selectedCountryCode === '' || !$configuration['required']) {
-            $optionValues = ['' => ''];
+            $optionValues = ['' => (string) $configuration['noCountryText']];
         } else {
             $optionValues = [];
         }
@@ -552,11 +584,25 @@ class Form
         }
         $str = "<select id=\"$key\" name=\"{$key}[]\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
-            $str .= '<option value="' . $k . '"';
-            if (in_array($k, $selectedValues)) {
-                $str .= ' selected="selected"';
+            if (is_array($text)) {
+                if (count($text) > 0) {
+                    $str .= '<optgroup label="' . h($k) . '">';
+                    foreach ($text as $k1 => $text1) {
+                        $str .= '<option value="' . h($k1) . '"';
+                        if (in_array($k1, $selectedValues)) {
+                            $str .= ' selected="selected"';
+                        }
+                        $str .= '>' . h($text1) . '</option>';
+                    }
+                    $str .= '</optgroup>';
+                }
+            } else {
+                $str .= '<option value="' . h($k) . '"';
+                if (in_array($k, $selectedValues)) {
+                    $str .= ' selected="selected"';
+                }
+                $str .= '>' . h($text) . '</option>';
             }
-            $str .= '>' . $text . '</option>';
         }
         $str .= '</select>';
 
@@ -625,20 +671,20 @@ EOT;
      */
     protected function processRequestValue($key, $type = 'post')
     {
-        $arr = ($type == 'post') ? $_POST : $_GET;
+        $bag = $type == 'post' ? $this->getRequest()->request : $this->getRequest()->query;
         if (strpos($key, '[') !== false) {
             $key = str_replace(']', '', $key);
             $key = explode('[', trim($key, '['));
-            $v2 = $this->ah->get($arr, $key);
-            if (isset($v2)) {
+            $v2 = $this->ah->get($bag->all(), $key);
+            if ($v2 !== null) {
                 if (is_string($v2)) {
                     return $this->th->specialchars($v2);
                 } else {
                     return $v2;
                 }
             }
-        } elseif (isset($arr[$key]) && is_string($arr[$key])) {
-            return $this->th->specialchars($arr[$key]);
+        } elseif ($bag->has($key) && is_string($s = $bag->get($key))) {
+            return $this->th->specialchars($s);
         }
 
         return false;

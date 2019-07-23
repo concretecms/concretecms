@@ -20,13 +20,11 @@
   }
 })();
 
-var control_sets = [], components = [], filters = [];
 var ImageEditor = function (settings) {
-    "use strict";
     if (settings === undefined) return this;
     settings.pixelRatio = 1;
-    var im = this, x, round = function (float) {
-        return Math.round(float)
+    var im = this, round = function (float) {
+        return Math.round(float);
     };
     im.saveData = settings.saveData || {};
     im.saveUrl = settings.saveUrl;
@@ -71,24 +69,24 @@ var ImageEditor = function (settings) {
             return $(selector, im.domContext);
         },
         log = function () {
-            if (settings.debug === true && typeof console !== 'undefined') {
+            if (settings.debug === true && typeof window.console !== 'undefined') {
                 var args = arguments;
                 if (args.length == 1) args = args[0];
-                console.log(args);
+                window.console.log(args);
             }
         },
         warn = function () {
-            if (settings.debug === true && typeof console !== 'undefined') {
+            if (settings.debug === true && typeof window.console !== 'undefined') {
                 var args = arguments;
                 if (args.length == 1) args = args[0];
-                console.warn(args);
+                window.console.warn(args);
             }
         },
         error = function () {
-            if (typeof console !== 'undefined') {
+            if (typeof window.console !== 'undefined') {
                 var args = arguments;
                 if (args.length == 1) args = args[0];
-                console.error("Image Editor Error: " + args);
+                window.console.error("Image Editor Error: " + args);
             }
         };
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Block;
 
 use Database;
@@ -26,13 +27,13 @@ class CacheSettings
 
             $bID = $b->getBlockID();
             $db = Database::get();
-            $r = $db->GetRow('select * from CollectionVersionBlocksCacheSettings where
+            $r = $db->fetchAssoc('select * from CollectionVersionBlocksCacheSettings where
               cID = ? and cvID = ? and arHandle = ? and bID = ?',
-                array(
+                [
                     $cID, $cvID, $arHandle, $bID,
-                )
+                ]
             );
-            if ($r['bID']) {
+            if ($r) {
                 $o = new static();
                 $o->btCacheBlockOutput = (bool) $r['btCacheBlockOutput'];
                 $o->btCacheBlockOutputOnPost = (bool) $r['btCacheBlockOutputOnPost'];

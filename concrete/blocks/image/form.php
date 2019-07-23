@@ -1,5 +1,12 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @var Concrete\Core\Form\Service\DestinationPicker\DestinationPicker $destinationPicker
+ * @var array $imageLinkPickers
+ * @var string $imageLinkHandle
+ * @var mixed $imageLinkValue
+ */
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $ps = $app->make('helper/form/page_selector');
 $al = $app->make('helper/concrete/asset_library');
@@ -28,37 +35,14 @@ $al = $app->make('helper/concrete/asset_library');
     <legend><?php echo t('HTML'); ?></legend>
 
     <div class="form-group">
-        <?php
-        $options = [
-            0 => t('None'),
-            1 => t('Page'),
-            2 => t('External URL'),
-            3 => t('File')
-        ];
-
-        echo $form->label('imageLinkType', t('Image Link'));
-        echo $form->select('linkType', $options, $linkType);
-        ?>
-    </div>
-
-    <div id="imageLinkTypePage" style="display: none;" class="form-group">
-        <?php
-        echo $form->label('internalLinkCID', t('Page'));
-        echo $ps->selectPage('internalLinkCID', $internalLinkCID);
-        ?>
-    </div>
-
-    <div id="imageLinkTypeExternal" style="display: none;" class="form-group">
-        <?php
-        echo $form->label('externalLink', t('External URL'));
-        echo $form->text('externalLink', $externalLink);
-        ?>
-    </div>
-
-    <div id="imageLinkTypeFile" style="display: none;" class="form-group">
-        <?php
-        echo $form->label('fileLinkID', t('File'));
-        echo $al->file('ccm-b-file', 'fileLinkID', t('Choose File'), $linkFile);
+        <?= $form->label('imageLink', t('Image Link')) ?>
+        <?=
+            $destinationPicker->generate(
+                'imageLink',
+                $imageLinkPickers,
+                $imageLinkHandle,
+                $imageLinkValue
+            )
         ?>
     </div>
 
@@ -66,7 +50,7 @@ $al = $app->make('helper/concrete/asset_library');
         <div class="checkbox">
             <label>
             <?php
-            echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', $openLinkInNewWindow);
+            echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', isset($openLinkInNewWindow) ? $openLinkInNewWindow : false);
             echo t('Open link in new window');
             ?>
             </label>
@@ -76,14 +60,14 @@ $al = $app->make('helper/concrete/asset_library');
     <div class="form-group">
         <?php
         echo $form->label('altText', t('Alt Text'));
-        echo $form->text('altText', $altText, ['maxlength' => 255]);
+        echo $form->text('altText', isset($altText) ? $altText : '', ['maxlength' => 255]);
         ?>
     </div>
 
     <div class="form-group">
         <?php
         echo $form->label('title', t('Title'));
-        echo $form->text('title', $title, ['maxlength' => 255]);
+        echo $form->text('title', isset($title) ? $title : '', ['maxlength' => 255]);
         ?>
     </div>
 </fieldset>
@@ -108,7 +92,7 @@ $al = $app->make('helper/concrete/asset_library');
                 <div class="checkbox">
                 <label>
                     <?php
-                    echo $form->checkbox('cropImage', 1, $cropImage);
+                    echo $form->checkbox('cropImage', 1, isset($cropImage) ? $cropImage : false);
                     echo t('Crop Image');
                     ?>
                 </label>
@@ -118,7 +102,7 @@ $al = $app->make('helper/concrete/asset_library');
             <div class="form-group">
                 <?php echo $form->label('maxWidth', t('Max Width')); ?>
                 <div class="input-group">
-                    <?php echo $form->number('maxWidth', $maxWidth, ['min' => 0]); ?>
+                    <?php echo $form->number('maxWidth', isset($maxWidth) ? $maxWidth : '', ['min' => 0]); ?>
                     <span class="input-group-addon"><?php echo t('px'); ?></span>
                 </div>
             </div>
@@ -126,7 +110,7 @@ $al = $app->make('helper/concrete/asset_library');
             <div class="form-group">
                 <?php echo $form->label('maxHeight', t('Max Height')); ?>
                 <div class="input-group">
-                    <?php echo $form->number('maxHeight', $maxHeight, ['min' => 0]); ?>
+                    <?php echo $form->number('maxHeight', isset($maxHeight) ? $maxHeight : '', ['min' => 0]); ?>
                     <span class="input-group-addon"><?php echo t('px'); ?></span>
                 </div>
             </div>
@@ -135,17 +119,13 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <script>
-refreshImageLinkTypeControls = function() {
-    var linkType = $('#linkType').val();
-    $('#imageLinkTypePage').toggle(linkType == 1);
-    $('#imageLinkTypeExternal').toggle(linkType == 2);
-    $('#imageLinkTypeFile').toggle(linkType == 3);
-    $('#imageLinkOpenInNewWindow').toggle(linkType > 0);
-};
-
 $(document).ready(function() {
-    $('#linkType').change(refreshImageLinkTypeControls);
-
+    $('#imageLink__which')
+        .change(function() {
+        	$('#imageLinkOpenInNewWindow').toggle($('#imageLink__which').val() !== 'none');
+        })
+        .trigger('change')
+    ;
     $('#constrainImage').on('change', function() {
         $('div[data-fields=constrain-image]').toggle($(this).is(':checked'));
 
@@ -155,7 +135,5 @@ $(document).ready(function() {
             $('#maxHeight').val('');
         }
     }).trigger('change');
-
-    refreshImageLinkTypeControls();
 });
 </script>

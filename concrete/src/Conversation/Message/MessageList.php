@@ -5,6 +5,8 @@ use Loader;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Legacy\DatabaseItemList;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\Connection\Connection;
 
 class MessageList extends DatabaseItemList
 {
@@ -71,9 +73,18 @@ class MessageList extends DatabaseItemList
 
     public function filterByKeywords($keywords)
     {
-        $this->addToQuery('inner join Conversations cnv on cnvm.cnvID = cnv.cnvID left join CollectionVersions cv on (cnv.cID = cv.cID and cv.cvIsApproved = 1)');
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $now = $app->make('date')->getOverridableNow();
+        $nowSql = $db->quote($now);
+        $this->addToQuery(<<<EOT
+inner join Conversations cnv
+    on cnvm.cnvID = cnv.cnvID
+left join CollectionVersions cv
+    on cnv.cID = cv.cID and cv.cvIsApproved = 1 and (cv.cvPublishDate is null or cv.cvPublishDate <= {$nowSql}) and (cv.cvPublishEndDate is null or cv.cvPublishEndDate >= {$nowSql})
+EOT
+        );
 
-        $db = Loader::db();
         $qk = $db->quote('%' . $keywords . '%');
         $this->filter(false, "(cnvMessageSubject like $qk or cnvMessageBody like $qk or cvName like $qk)");
     }

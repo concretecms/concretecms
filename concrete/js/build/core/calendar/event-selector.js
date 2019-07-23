@@ -1,17 +1,19 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteEvent */
+
+;(function(global, $) {
     'use strict';
 
     function ConcreteCalendarEventSelector($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'chooseText': 'Choose Event',
-                'loadingText': ccmi18n.loadingText,
-                'inputName': 'eventID',
-                'calendarID': 0,
-                'closeOnComplete': true,
-                'eventID': 0
-            }, options);
+        var my = this;
+        options = $.extend({
+            'chooseText': 'Choose Event',
+            'loadingText': ccmi18n.loadingText,
+            'inputName': 'eventID',
+            'calendarID': 0,
+            'closeOnComplete': true,
+            'eventID': 0
+        }, options);
 
         my.$element = $element;
         my.options = options;
@@ -38,7 +40,7 @@
         ConcreteEvent.unsubscribe('CalendarEventSearchDialogSelectEvent');
         ConcreteEvent.subscribe('CalendarEventSearchDialogSelectEvent', function(e, data) {
             if (my.options.closeOnComplete) {
-                jQuery.fn.dialog.closeTop();
+                $.fn.dialog.closeTop();
             }
             my.loadEvent(data.id);
         });
@@ -79,15 +81,15 @@
                 }
             });
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteCalendarEventSelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteCalendarEventSelector($(this), options);
         });
-    }
+    };
 
     global.ConcreteCalendarEventSelector = ConcreteCalendarEventSelector;
 
-}(this, $);
+})(this, jQuery);

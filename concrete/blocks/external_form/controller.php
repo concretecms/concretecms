@@ -5,7 +5,7 @@ use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController
 {
-    public $helpers = ['file'];
+    public $helpers = ['file', 'form'];
     protected $btTable = 'btExternalForm';
     protected $btInterfaceWidth = 420;
     protected $btInterfaceHeight = 175;
@@ -92,12 +92,6 @@ class Controller extends BlockController
 
     public function runAction($method, $parameters = [])
     {
-        if (in_array($method, ['add', 'edit'])) {
-            parent::runAction($method, $parameters);
-
-            return;
-        }
-
         $controller = $this->getController();
         if ($controller) {
             $controller->runAction($method, $parameters);
@@ -105,6 +99,8 @@ class Controller extends BlockController
                 $this->set($key, $value);
             }
         }
+
+        parent::runAction($method, $parameters);
     }
 
     public function add()

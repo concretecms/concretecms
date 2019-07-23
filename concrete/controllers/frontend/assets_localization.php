@@ -1,7 +1,10 @@
 <?php
+
 namespace Concrete\Controller\Frontend;
 
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
 use Controller;
@@ -41,7 +44,7 @@ class AssetsLocalization extends Controller
     'collapse' => t('Collapse'),
     'error' => t('Error'),
     'errorDetails' => t('Details'),
-    'deleteBlockConfirm' => t('Delete Block'),
+    'deleteBlockTitle' => t('Delete'),
     'deleteBlock' => t('Block Deleted'),
     'deleteBlockMsg' => t('The block has been removed successfully.'),
     'addBlock' => t('Add Block'),
@@ -100,7 +103,7 @@ class AssetsLocalization extends Controller
     'communityDownload' => t('concrete5 Marketplace - Download'),
     'noIE6' => t('concrete5 does not support Internet Explorer 6 in edit mode.'),
     'helpPopupLoginMsg' => t('Get more help on your question by posting it to the concrete5 help center on concrete5.org'),
-    'marketplaceErrorMsg' => t('<p>You package could not be installed.  An unknown error occured.</p>'),
+    'marketplaceErrorMsg' => t('<p>You package could not be installed.  An unknown error occurred.</p>'),
     'marketplaceInstallMsg' => t('<p>Your package will now be downloaded and installed.</p>'),
     'marketplaceLoadingMsg' => t('<p>Retrieving information from the concrete5 Marketplace.</p>'),
     'marketplaceLoginMsg' => t('<p>You must be logged into the concrete5 Marketplace to install add-ons and themes.  Please log in.</p>'),
@@ -597,11 +600,54 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
      */
     public function getDropzoneJavascript()
     {
-        $content =
-'Dropzone.prototype.defaultOptions.dictDefaultMessage = ' . json_encode(t('Drop files here or click to upload.')) . ';
-Dropzone.prototype.defaultOptions.dictFallbackMessage = ' . json_encode(t("Your browser does not support drag'n'drop file uploads.")) . ';
-Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please use the fallback form below to upload your files like in the olden days.')) . ';
-';
+        $config = $this->app->make('config');
+        $token = $this->app->make('token');
+        $options = [
+            'dictDefaultMessage' => t('Drop files here or click to upload.'),
+            'dictFallbackMessage' => t("Your browser does not support drag'n'drop file uploads."),
+            'dictFallbackText' => t('Please use the fallback form below to upload your files like in the olden days.'),
+            'dictFallbackText' => t('Please use the fallback form below to upload your files like in the olden days.'),
+            'dictFileTooBig' => t('File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.'),
+            'dictInvalidFileType' => t('You can\'t upload files of this type.'),
+            'dictResponseError' => t('Server responded with {{statusCode}} code.'),
+            'dictCancelUpload' => t('Cancel upload'),
+            'dictCancelUploadConfirmation' => t('Are you sure you want to cancel this upload?'),
+            'dictRemoveFile' => t('Remove file'),
+            'dictMaxFilesExceeded' => t('You can not upload any more files.'),
+            'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
+            'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
+            'chunkSize' => $this->getDropzoneChunkSize(),
+            'params' => [
+                $token::DEFAULT_TOKEN_NAME => $token->generate(),
+            ],
+        ];
+        $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
+        if ($maxWidth > 0) {
+            $options['resizeWidth'] = $maxWidth;
+        }
+        $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
+        if ($maxHeight > 0) {
+            $options['resizeHeight'] = $maxHeight;
+        }
+        $content = '';
+        foreach ($options as $optionKey => $optionValue) {
+            $content .= 'Dropzone.prototype.defaultOptions[' . json_encode($optionKey) . '] = ' . json_encode($optionValue) . ";\n";
+        }
+        if ($maxWidth > 0 || $maxHeight > 0) {
+            $content .= <<<'EOT'
+Dropzone.prototype.defaultOptions.accept = function(file, done) {
+    if (file && file.type === 'image/gif') {
+        this.options.resizeWidth = null;
+        this.options.resizeHeight = null;
+    } else {
+        this.options.resizeWidth = Dropzone.prototype.defaultOptions.resizeWidth;
+        this.options.resizeHeight = Dropzone.prototype.defaultOptions.resizeHeight;
+    }
+    return done();
+};
+EOT
+            ;
+        }
 
         return $this->createJavascriptResponse($content);
     }
@@ -630,5 +676,69 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
 ';
 
         return $this->createJavascriptResponse($content);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getMomentJavascript()
+    {
+        $localeParts = explode('-', str_replace('_', '-', strtolower(Localization::activeLocale())));
+        $alternatives = [];
+        if (isset($localeParts[1])) {
+            $alternatives[] = "{$localeParts[0]}-{$localeParts[1]}";
+        }
+        $alternatives[] = $localeParts[0];
+        $locator = $this->app->make(FileLocator::class);
+        $found = false;
+        foreach ($alternatives as $alternative) {
+            foreach ($alternatives as $alternative) {
+                $r = $locator->getRecord(DIRNAME_JAVASCRIPT . "/i18n/moment/{$alternative}.js");
+                if ($r->exists()) {
+                    $found = true;
+                    $content = file_get_contents($r->getFile()) . ";\n;moment.locale(" . json_encode($alternative) . ");\n";
+                    break;
+                }
+            }
+        }
+        if ($found === false) {
+            $content = '/* moment: no translations for ' . implode(', ', $alternatives) . ' */';
+        }
+
+        return $this->createJavascriptResponse($content);
+    }
+
+    /**
+     * @return int
+     */
+    private function getDropzoneChunkSize()
+    {
+        $config = $this->app->make('config');
+        $chunkSize = (int) $config->get('concrete.upload.chunking.chunkSize');
+
+        return $chunkSize > 0 ? $chunkSize : $this->getDropzoneAutomaticChunkSize();
+    }
+
+    /**
+     * @return int
+     */
+    private function getDropzoneAutomaticChunkSize()
+    {
+        $nh = $this->app->make('helper/number');
+        // Maximum size of an uploaded file, minus a small value (just in case)
+        $uploadMaxFilesize = (int) $nh->getBytes(ini_get('upload_max_filesize')) - 100;
+        // Max size of post data allowed, minus enough space to consider other posted fields.
+        $postMaxSize = (int) $nh->getBytes(ini_get('post_max_size')) - 10000;
+        if ($uploadMaxFilesize < 1 && $postMaxSize < 1) {
+            return 2000000;
+        }
+        if ($uploadMaxFilesize < 1) {
+            return $postMaxSize;
+        }
+        if ($postMaxSize < 1) {
+            return $uploadMaxFilesize;
+        }
+        
+        return min($uploadMaxFilesize, $postMaxSize);
     }
 }

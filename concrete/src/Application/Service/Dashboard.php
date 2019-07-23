@@ -469,7 +469,6 @@ class DefaultDashboardMenu extends DashboardMenu
         '/dashboard/sitemap/search',
         '/dashboard/files/search',
         '/dashboard/files/sets',
-        '/dashboard/reports/statistics',
         '/dashboard/reports/forms',
     ];
 }

@@ -69,7 +69,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
         $this->request = $request;
         $this->urlResolver = $urlResolver;
         $this->formService = $formService;
-        $this->securimage = new Securimage(['no_session' => PHP_SAPI === 'cli']);
+        $this->securimage = new Securimage(['no_session' => PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg']);
         $this->securimage->image_width = 190;
         $this->securimage->image_height = 60;
         $this->securimage->image_bg_color = new Securimage_Color(227, 218, 237);
@@ -257,8 +257,12 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
         } else {
             $inputName = static::DEFAULT_INPUT_NAME;
         }
+        $checkCode = $this->request->get($inputName);
+        if (!is_string($checkCode)) {
+            $checkCode = '';
+        }
 
-        return $this->securimage->check($this->request->get($inputName));
+        return $this->securimage->check($checkCode);
     }
 
     /**

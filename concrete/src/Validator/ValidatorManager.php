@@ -1,22 +1,29 @@
 <?php
+
 namespace Concrete\Core\Validator;
 
+use ArrayAccess;
+
+/**
+ * A generic validator manager interface that enables validating against many validators at once.
+ */
 class ValidatorManager implements ValidatorManagerInterface
 {
-    /** @var ValidatorInterface[] */
-    protected $validators = array();
+    /**
+     * The list of registered validators.
+     *
+     * @var \Concrete\Core\Validator\ValidatorInterface[]
+     */
+    protected $validators = [];
 
     /**
-     * Get the validator requirements in the form of an array keyed by it's respective error code.
+     * {@inheritdoc}
      *
-     * Example:
-     *    [ self::E_TOO_SHORT => 'Must be at least 10 characters' ]
-     *
-     * @return string[]
+     * @see \Concrete\Core\Validator\ValidatorInterface::getRequirementStrings()
      */
     public function getRequirementStrings()
     {
-        $strings = array();
+        $strings = [];
         foreach ($this->getValidators() as $validator) {
             $validator_strings = $validator->getRequirementStrings();
             $strings = array_merge($strings, $validator_strings);
@@ -26,9 +33,9 @@ class ValidatorManager implements ValidatorManagerInterface
     }
 
     /**
-     * Get a list of all validators.
+     * {@inheritdoc}
      *
-     * @return ValidatorInterface[] Array of validators keyed by their handles
+     * @see \Concrete\Core\Validator\ValidatorManagerInterface::getValidators()
      */
     public function getValidators()
     {
@@ -36,11 +43,9 @@ class ValidatorManager implements ValidatorManagerInterface
     }
 
     /**
-     * Does a validator with this handle exist.
+     * {@inheritdoc}
      *
-     * @param string $handle
-     *
-     * @return bool
+     * @see \Concrete\Core\Validator\ValidatorManagerInterface::hasValidator()
      */
     public function hasValidator($handle)
     {
@@ -48,12 +53,9 @@ class ValidatorManager implements ValidatorManagerInterface
     }
 
     /**
-     * Add a validator to the stack.
-     * Validators are unique by handle, so adding a validator with the same handle as a validator in the stack
-     * replaces the old validator with the new one.
+     * {@inheritdoc}
      *
-     * @param string $handle
-     * @param \Concrete\Core\Validator\ValidatorInterface $validator
+     * @see \Concrete\Core\Validator\ValidatorManagerInterface::setValidator()
      */
     public function setValidator($handle, ValidatorInterface $validator = null)
     {
@@ -61,16 +63,11 @@ class ValidatorManager implements ValidatorManagerInterface
     }
 
     /**
-     * Is this mixed value valid based on the added validators.
+     * {@inheritdoc}
      *
-     * @param mixed             $mixed Can be any value
-     * @param \ArrayAccess|null $error The error object that will contain the error strings
-     *
-     * @return bool
-     *
-     * @throws \InvalidArgumentException Invalid mixed value type passed.
+     * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, \ArrayAccess $error = null)
+    public function isValid($mixed, ArrayAccess $error = null)
     {
         $valid = true;
         foreach ($this->getValidators() as $validator) {

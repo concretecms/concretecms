@@ -19,7 +19,7 @@ class Controller extends AbstractController implements AttributeInterface
     protected $entityManager;
 
     /**
-     * @var \Concrete\Core\Attribute\Key\Key|null
+     * @var \Concrete\Core\Entity\Attribute\Key\Key|null
      */
     protected $attributeKey;
 
@@ -226,8 +226,10 @@ class Controller extends AbstractController implements AttributeInterface
     public function getAttributeValueObject()
     {
         $class = $this->getAttributeValueClass();
-        if ($class && $this->attributeValue) {
+        if ($class && $this->attributeValue && !empty($this->attributeValue->getAttributeValueID())) {
             $result = $this->entityManager->find($class, $this->attributeValue->getGenericValue());
+        } elseif ($class && $this->attributeValue) {
+            $result=$this->attributeValue;
         } else {
             $result = null;
         }
@@ -400,7 +402,7 @@ class Controller extends AbstractController implements AttributeInterface
         if ($this->attributeValue) {
             $av = new AttributeTypeView($this->attributeValue);
         } elseif ($this->attributeKey) {
-           $av = new AttributeTypeView($this->attributeKey);
+            $av = new AttributeTypeView($this->attributeKey);
         } elseif (isset($this->attributeType)) {
             $av = new AttributeTypeView($this->attributeType);
         } else {
@@ -421,16 +423,28 @@ class Controller extends AbstractController implements AttributeInterface
     }
 
     /**
-     * Get the ID to use for label elements.
-     *
+     * Get the ID to use for label elements. Not applicable in form views that do
+     * not contain <label>
      * @return string
      */
-    public function getLabelID()
+    public function getControlID()
     {
         return $this->field('value');
     }
 
     /**
+     * Get the ID to use for label elements.
+     * @deprecated
+     * @return string
+     */
+    public function getLabelID()
+    {
+        return $this->getControlID();
+    }
+
+    /**
+     * @deprecated . This should be handled by the templates including <label> tags and using
+     * getControlID() within them.
      * @param string|bool $customText
      */
     public function label($customText = false)
@@ -441,7 +455,7 @@ class Controller extends AbstractController implements AttributeInterface
             $text = $customText;
         }
         $form = $this->app->make('helper/form');
-        echo $form->label($this->getLabelID(), $text);
+        echo $form->label($this->getControlID(), $text);
     }
 
     /**
@@ -491,7 +505,7 @@ class Controller extends AbstractController implements AttributeInterface
     {
         $request = array_merge($this->request->request->all(), $this->request->query->all());
         $req = ($this->requestArray == false) ? $request : $this->requestArray;
-        if ($this->attributeKey && is_array($req['akID'])) {
+        if ($this->attributeKey && isset($req['akID']) && is_array($req['akID'])) {
             $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
             if ($field) {
                 return $p[$field];

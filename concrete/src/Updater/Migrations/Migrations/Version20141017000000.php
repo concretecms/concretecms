@@ -7,13 +7,11 @@ use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
-use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Exception;
 
-class Version20141017000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20141017000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
@@ -28,7 +26,7 @@ class Version20141017000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeSchema()
      */
     public function upgradeSchema(Schema $schema)
     {
@@ -55,7 +53,7 @@ class Version20141017000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {

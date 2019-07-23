@@ -1,22 +1,17 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n_filemanager, CCM_IMAGE_PATH, ConcreteFileManager, ConcreteFileMenu, ConcreteEvent */
 
-!function(global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcreteFileSelector($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'chooseText': ccmi18n_filemanager.chooseNew,
-                'inputName': 'concreteFile',
-                'fID': false,
-                'filters': []
-            }, options);
-
-        var dialogOpts = {};
-        dialogOpts.filters = options.filters;
+        var my = this;
+        options = $.extend({
+            'chooseText': ccmi18n_filemanager.chooseNew,
+            'inputName': 'concreteFile',
+            'fID': false,
+            'filters': []
+        }, options);
 
         my.$element = $element;
         my.options = options;
@@ -25,15 +20,10 @@
         my._fileLoadedTemplate = _.template(my.fileLoadedTemplate);
 
         my.$element.append(my._chooseTemplate);
-        my.$element.on('click', 'div.ccm-file-selector-choose-new', function() {
-            ConcreteFileManager.launchDialog(function(data) {
-                my.loadFile(data.fID, function() {
-                    my.$element.closest('form').trigger('change');
-                });
-            }, dialogOpts);
-            return false;
+        my.$element.on('click', 'div.ccm-file-selector-choose-new', function(e) {
+            e.preventDefault();
+            my.chooseNewFile();
         });
-
 
         if (my.options.fID) {
             my.loadFile(my.options.fID);
@@ -51,6 +41,20 @@
             '<div class="ccm-file-selector-file-selected-thumbnail"><%=file.resultsThumbnailImg%></div>' +
             '<div class="ccm-file-selector-file-selected-title"><div><%=file.title%></div></div><div class="clearfix"></div>' +
             '</div>',
+
+        chooseNewFile: function() {
+            var my = this;
+            ConcreteFileManager.launchDialog(
+                function(data) {
+                    my.loadFile(data.fID, function() {
+                        my.$element.closest('form').trigger('change');
+                    });
+                },
+                {
+                    filters: my.options.filters
+                }
+            );
+        },
 
         loadFile: function(fID, callback) {
             var my = this;
@@ -70,21 +74,32 @@
                         concreteMenu.show(event);
                     }
                 });
+                ConcreteEvent.unsubscribe('ConcreteTreeDeleteTreeNode');
+                ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function(e, data) {
+                    if (data.node && data.node.treeJSONObject) {
+                        var fID = data.node.treeJSONObject.fID;
+                        if (fID) {
+                            $('[data-file-selector]').find('.ccm-file-selector-file-selected input[value=' + fID + ']').each(function(index, element) {
+                                _.defer(function() { my.$element.html(my._chooseTemplate); });
+                            });
+                        }
+                    }
+                });
                 if (callback) {
                     callback(r);
                 }
             });
         }
 
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteFileSelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteFileSelector($(this), options);
         });
-    }
+    };
 
     global.ConcreteFileSelector = ConcreteFileSelector;
 
-}(this, $);
+})(this, jQuery);

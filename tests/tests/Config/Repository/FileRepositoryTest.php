@@ -33,7 +33,7 @@ class FileRepositoryTest extends ConcreteDatabaseTestCase
         $this->repository->save($key, $group);
         $this->assertEquals($group, $this->repository->get($key, false));
 
-        $this->files->delete(DIR_APPLICATION . "/config/generated_overrides/{$group}.php");
+        $this->files->delete(DIR_CONFIG_SITE . "/generated_overrides/{$group}.php");
     }
 
     public function testSaveNamespace()
@@ -46,6 +46,6 @@ class FileRepositoryTest extends ConcreteDatabaseTestCase
         $this->repository->save($key, $namespace);
         $this->assertEquals($namespace, $this->repository->get($key, false));
 
-        $this->files->deleteDirectory(DIR_APPLICATION . "/config/generated_overrides/{$namespace}/");
+        $this->files->deleteDirectory(DIR_CONFIG_SITE . "/generated_overrides/{$namespace}/");
     }
 }

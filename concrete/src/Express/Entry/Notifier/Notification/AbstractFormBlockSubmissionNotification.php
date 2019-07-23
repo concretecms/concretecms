@@ -7,7 +7,6 @@ use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 
 abstract class AbstractFormBlockSubmissionNotification implements NotificationInterface
 {
-
     protected $blockController;
     protected $app;
 
@@ -16,6 +15,4 @@ abstract class AbstractFormBlockSubmissionNotification implements NotificationIn
         $this->blockController = $blockController;
         $this->app = $app;
     }
-
-
 }

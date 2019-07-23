@@ -64,7 +64,7 @@ class Resolver
         $defer = $configuration instanceof DeferredConfigurationInterface;
 
         // Get the path from the storage
-        $path = $this->getStoredThumnbailPath(
+        $path = $this->getStoredThumbnailPath(
             $file_id,
             $version_id,
             $storage_location_id,
@@ -96,7 +96,7 @@ class Resolver
     }
 
     /**
-     * Get the stored path for a file.
+     * @deprecated Use getStoredThumbnailPath
      *
      * @param int $file_id
      * @param int $version_id
@@ -107,6 +107,22 @@ class Resolver
      * @return null|string
      */
     protected function getStoredThumnbailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format)
+    {
+        return $this->getStoredThumbnailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format);
+    }
+
+    /**
+     * Get the stored path for a file.
+     *
+     * @param int $file_id
+     * @param int $version_id
+     * @param int $storage_location_id
+     * @param string $thumbnail_handle
+     * @param string $format
+     *
+     * @return null|string
+     */
+    protected function getStoredThumbnailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format)
     {
         $builder = $this->connection->createQueryBuilder();
         $query = $builder
@@ -171,18 +187,20 @@ class Resolver
      * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storage
      * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
      * @param string $format
-     * @return string
+     * @return string|null
      */
     protected function determineThumbnailPath(Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration, $format)
     {
-        $path = $thumbnail->getFilePath($file_version, $format);
-
-        if ($configuration instanceof DeferredConfigurationInterface) {
-            // Lets defer getting the path from the configuration until we know we need to
-            return $path;
+        if ($thumbnail->shouldExistFor($file_version->getAttribute('width'), $file_version->getAttribute('height'), $file_version->getFile())) {
+            $path = $thumbnail->getFilePath($file_version, $format);
+    
+            if ($configuration instanceof DeferredConfigurationInterface) {
+                // Lets defer getting the path from the configuration until we know we need to
+                return $path;
+            }
+    
+            return $configuration->getRelativePathToFile($path);
         }
-
-        return $configuration->getRelativePathToFile($path);
     }
 
     /**
@@ -220,13 +238,13 @@ class Resolver
     }
 
     /**
-     * @deprecated Use getStoredThumnbailPath
+     * @deprecated Use getStoredThumbnailPath
      */
     protected function getStoredPath($file_id, $version_id, $storage_location_id, $thumbnail_handle)
     {
         $versionObject = $this->connection->getEntityManager()->find(Version::class, ['fID' => $file_id, 'fvID' => $version_id]);
         
-        return $this->getStoredThumnbailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $this->formatService->getFormatForFile($versionObject));
+        return $this->getStoredThumbnailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $this->formatService->getFormatForFile($versionObject));
     }
 
     /**

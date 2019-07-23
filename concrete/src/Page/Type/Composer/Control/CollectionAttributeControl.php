@@ -2,6 +2,8 @@
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Attribute\Context\ComposerContext;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\Field\Field;
 use Concrete\Core\Validation\ResponseInterface;
 use Controller;
 use CollectionAttributeKey;
@@ -177,40 +179,44 @@ class CollectionAttributeControl extends Control
     public function validate()
     {
         $ak = $this->getAttributeKeyObject();
+        $e = \Core::make('error');
         if (is_object($ak)) {
-            $e = \Core::make('error');
             if ($this->isFormSubmission()) {
                 $controller = $ak->getController();
                 $validator = $controller->getValidator();
-                $control = $this->getPageTypeComposerFormLayoutSetControlObject();
                 $response = $validator->validateSaveValueRequest(
-                    $controller, \Request::createFromGlobals()
+                    $controller,
+                    \Request::createFromGlobals(),
+                    $this->isPageTypeComposerFormControlRequiredOnThisRequest()
                 );
                 /**
                  * @var $response ResponseInterface
                  */
-                if (!$response->isValid()) {
-                    $error = $response->getErrorObject();
-                    $e->add($error);
-                }
             } else {
                 $value = $this->getPageTypeComposerControlDraftValue();
                 if (!is_object($value)) {
-                    $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-                    $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
+                    if ($this->isPageTypeComposerFormControlRequiredOnThisRequest()) {
+                        $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+                        $e->add(
+                            new FieldNotPresentError(
+                                new Field($control->getPageTypeComposerControlLabel())
+                            )
+                        );
+                    }
                 } else {
                     $controller = $ak->getController();
                     $validator = $controller->getValidator();
-                    $response = $validator->validateCurrentAttributeValue($controller, $value);
-                    if (!$response->isValid()) {
-                        $error = $response->getErrorObject();
-                        $e->add($error);
-                    }
+                    $response = $validator->validateCurrentAttributeValue($controller, $value,
+                        $this->isPageTypeComposerFormControlRequiredOnThisRequest());
                 }
             }
 
-            return $e;
+            if (isset($response) && !$response->isValid()) {
+                $error = $response->getErrorObject();
+                $e->add($error);
+            }
         }
+        return $e;
     }
 
     public function addAssetsToRequest(Controller $cnt)

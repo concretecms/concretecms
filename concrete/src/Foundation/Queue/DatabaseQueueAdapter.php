@@ -191,7 +191,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
                 $statement = $this->db->prepare("
                     select *
                     from QueueMessages
-                    where queue_id = ? and handle is null or timeout + {$timeout} < {$microtimeInt}
+                    where queue_id = ? and (handle is null or timeout + {$timeout} < {$microtimeInt})
                     limit {$maxMessages}
                     for update
                 ");

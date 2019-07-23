@@ -1,16 +1,14 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Validation\ResponseInterface;
-use Config;
-use Loader;
-use User;
-use UserAttributeKey;
-use UserInfo;
+use Concrete\Core\Support\Facade\UserInfo;
+use Concrete\Core\User\User;
 
 class Register extends PageController
 {
@@ -21,6 +19,8 @@ class Register extends PageController
     public function on_start()
     {
         $allowedTypes = ['validate_email', 'enabled'];
+        $token = $this->app->make('token');
+        $this->set('token', $token);
         $config = $this->app->make(Repository::class);
         $currentType = $config->get('concrete.user.registration.type');
 
@@ -40,11 +40,32 @@ class Register extends PageController
         $this->set('displayUserName', $displayUserName);
         $this->requireAsset('css', 'core/frontend/captcha');
         $this->set('renderer', new Renderer(new FrontendFormContext()));
+
+        $service = $this->app->make(CategoryService::class);
+        $categoryEntity = $service->getByHandle('user');
+        $category = $categoryEntity->getController();
+        $setManager = $category->getSetManager();
+        $attributeSets = [];
+        foreach ($setManager->getAttributeSets() as $set) {
+            foreach ($set->getAttributeKeys() as $ak) {
+                if ($ak->isAttributeKeyEditableOnRegister()) {
+                    $attributeSets[$set->getAttributeSetDisplayName()][] = $ak;
+                }
+            }
+        }
+        $this->set('attributeSets', $attributeSets);
+        $unassignedAttributes = [];
+        foreach ($setManager->getUnassignedAttributeKeys() as $ak) {
+            if ($ak->isAttributeKeyEditableOnRegister()) {
+                $unassignedAttributes[] = $ak;
+            }
+        }
+        $this->set('unassignedAttributes', $unassignedAttributes);
     }
 
     public function forward($cID = 0)
     {
-        $this->set('rcID', Loader::helper('security')->sanitizeInt($cID));
+        $this->set('rcID', $this->app->make('helper/security')->sanitizeInt($cID));
     }
 
     public function do_register()
@@ -76,44 +97,13 @@ class Register extends PageController
                 }
             }
 
-            if (!$vals->email($_POST['uEmail'])) {
-                $e->add(t('Invalid email address provided.'));
-            } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-                $e->add(t('The email address %s is already in use. Please choose another.', $_POST['uEmail']));
-            }
-
             if ($this->displayUserName) {
-                if (strlen($username) < $config->get('concrete.user.username.minimum')) {
-                    $e->add(t(
-                        'A username must be at least %s characters long.',
-                        $config->get('concrete.user.username.minimum')
-                    ));
-                }
-
-                if (strlen($username) > $config->get('concrete.user.username.maximum')) {
-                    $e->add(t(
-                        'A username cannot be more than %s characters long.',
-                        $config->get('concrete.user.username.maximum')
-                    ));
-                }
-
-                if (strlen($username) >= $config->get('concrete.user.username.minimum') && strlen($username) <= $config->get('concrete.user.username.maximum') && !$valc->username($username)) {
-                    if ($config->get('concrete.user.username.allow_spaces')) {
-                        $e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    } else {
-                        $e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    }
-                }
-                if (!$valc->isUniqueUsername($username)) {
-                    $e->add(t('The username %s already exists. Please choose another', $username));
-                }
+                $this->app->make('validator/user/name')->isValid($username, $e);
             }
 
-            if ($username == USER_SUPER) {
-                $e->add(t('Invalid Username'));
-            }
+            $this->app->make('validator/user/email')->isValid($_POST['uEmail'], $e);
 
-            \Core::make('validator/password')->isValid($password, $e);
+            $this->app->make('validator/password')->isValid($password, $e);
 
             $displayConfirmPasswordField = $config->get('concrete.user.registration.display_confirm_password_field');
             if ($password && $displayConfirmPasswordField) {
@@ -132,9 +122,6 @@ class Register extends PageController
                     $this->request,
                     $uak->isAttributeKeyRequiredOnRegister()
                 );
-                /**
-                 * @var ResponseInterface
-                 */
                 if (!$response->isValid()) {
                     $error = $response->getErrorObject();
                     $e->add($error);
@@ -185,7 +172,7 @@ class Register extends PageController
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
                     if ($config->get('concrete.email.register_notification.address')) {
-                        $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
+                        $mh->from($config->get('concrete.email.register_notification.address'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
@@ -207,7 +194,7 @@ class Register extends PageController
                 // if this is successful, uID is loaded into session for this user
 
                 $rcID = $this->post('rcID');
-                $nh = Loader::helper('validation/numbers');
+                $nh = $this->app->make('helper/validation/numbers');
                 if (!$nh->integer($rcID)) {
                     $rcID = 0;
                 }

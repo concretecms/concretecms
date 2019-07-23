@@ -6,13 +6,16 @@ $form = Core::make('helper/form');
 $color = Core::make('helper/form/color');
 $preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
 
+if (!isset($calendar) || !is_object($calendar)) {
+    $calendar = null;
+}
 $calendarName = null;
 $buttonText = t('Add Calendar');
 $enableMoreDetails = false;
 $eventPageParentID = 0;
 $eventPageTypeID = 0;
 $eventPageAttributeKeyHandle = '';
-if (is_object($calendar)) {
+if ($calendar !== null) {
     $calendarName = $calendar->getName();
     $enableMoreDetails = $calendar->enableMoreDetails();
     if ($enableMoreDetails == 'C') {
@@ -32,7 +35,7 @@ if (is_object($calendar)) {
     <?=Loader::helper('validation/token')->output('submit')?>
     <fieldset>
         <legend><?=t('Summary')?></legend>
-        <?php if (is_object($calendar)) {
+        <?php if ($calendar !== null) {
     ?>
             <input type="hidden" name="caID" value="<?=$calendar->getID()?>" />
         <?php
@@ -84,7 +87,7 @@ if (is_object($calendar)) {
         <div data-more-details-group="associate" style="display: none">
             <div class="form-group">
                 <?=$form->label('eventPageAssociatedID', t('Link to Page'))?>
-                <?=Core::make('helper/form/page_selector')->selectPage('eventPageAssociatedID', $eventPageAssociatedID)?>
+                <?=Core::make('helper/form/page_selector')->selectPage('eventPageAssociatedID', isset($eventPageAssociatedID) ? $eventPageAssociatedID : null)?>
             </div>
             <div class="help-block">
                 <?=t('<strong>Important</strong>: The page that you link to should contain a Calendar Event block or custom code that can render a specific calendar occurrence.')?>

@@ -5,10 +5,6 @@ use Concrete\Controller\Panel\Dashboard as DashboardPanel;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-if (Request::getInstance()->get('_ccm_dashboard_external')) {
-    return;
-}
-
 $app = Application::getFacadeApplication();
 
 $html = $app->make('helper/html');
@@ -48,7 +44,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 <html<?= $hideDashboardPanel ? '' : ' class="ccm-panel-open ccm-panel-right"'; ?>>
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
-    <?php View::element('header_required', ['disableTrackingCode' => true]); ?>
+    <?php View::element('header_required', ['disableTrackingCode' => true, 'pageTitle' => isset($pageTitle) ? $pageTitle : null]); ?>
     <link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 </head>
 <body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>

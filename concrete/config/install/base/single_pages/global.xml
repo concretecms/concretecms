@@ -10,6 +10,11 @@
             </attributes>
         </page>
 
+        <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="" global="true" >
+            <area name="Main"/>
+        </page>
+
+
         <page name="Trash" path="/!trash" filename="/!trash/view.php" pagetype="" description="" package="" global="true">
             <attributes>
                 <attributekey handle="icon_dashboard">

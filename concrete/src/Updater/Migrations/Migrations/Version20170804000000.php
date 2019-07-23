@@ -2,20 +2,26 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet as ThumbnailTypeFileSet;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20170804000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
+class Version20170804000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {
+        $this->refreshEntities([
+            ThumbnailTypeEntity::class,
+            ThumbnailTypeFileSet::class,
+        ]);
+
         $type = Type::getByHandle('file_manager_detail');
         if ($type) {
             /*

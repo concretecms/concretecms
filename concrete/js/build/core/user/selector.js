@@ -1,15 +1,17 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, CCM_DISPATCHER_FILENAME, ccmi18n, ConcreteAjaxRequest, ConcreteAlert, ConcreteEvent */
+
+;(function(global, $) {
     'use strict';
 
     function ConcreteUserSelector($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'chooseText': ccmi18n.chooseUser,
-                'loadingText': ccmi18n.loadingText,
-                'inputName': 'uID',
-                'uID': 0
-            }, options);
+        var my = this;
+        options = $.extend({
+            'chooseText': ccmi18n.chooseUser,
+            'loadingText': ccmi18n.loadingText,
+            'inputName': 'uID',
+            'uID': 0
+        }, options);
 
         my.$element = $element;
         my.options = options;
@@ -25,7 +27,13 @@
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/user/search',
                 width: '90%',
                 modal: true,
-                height: '70%'
+                height: '70%',
+                onOpen: function() {
+                    ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
+                    ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function (e, data) {
+                        my.loadUser(data.uID);
+                    });
+                }
             });
         });
 
@@ -33,12 +41,7 @@
             my.loadUser(my.options.uID);
         }
 
-        ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
         ConcreteEvent.unsubscribe('UserSearchDialogAfterSelectUser.core');
-        ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {
-            my.loadUser(data.uID);
-        });
-
         ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser.core', function(e) {
             jQuery.fn.dialog.closeTop();
         });
@@ -80,15 +83,15 @@
                 }
             });
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteUserSelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteUserSelector($(this), options);
         });
-    }
+    };
 
     global.ConcreteUserSelector = ConcreteUserSelector;
 
-}(this, $);
+})(this, jQuery);

@@ -1,4 +1,7 @@
-(function (window, $, _, Concrete) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, Concrete, ConcretePanelManager, CCM_CID, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN */
+
+;(function(window, $) {
     'use strict';
 
     /**
@@ -56,4 +59,4 @@
 
     });
 
-}(window, jQuery, _, Concrete));
+})(window, jQuery);

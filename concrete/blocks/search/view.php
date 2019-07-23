@@ -19,8 +19,10 @@ if (!isset($query) || !is_string($query)) {
 
     } elseif (isset($_REQUEST['search_paths']) && is_array($_REQUEST['search_paths'])) {
         foreach ($_REQUEST['search_paths'] as $search_path) {
+            if (is_string($search_path)) {
             ?><input name="search_paths[]" type="hidden" value="<?=htmlentities($search_path, ENT_COMPAT, APP_CHARSET) ?>" /><?php
 
+            }
         }
     }
     ?><input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" class="ccm-search-block-text" /><?php

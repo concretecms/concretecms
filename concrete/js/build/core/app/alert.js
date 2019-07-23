@@ -1,31 +1,32 @@
-/**
- * Simple alert using dialog class.
- */
-PNotify.prototype.options.styling = {
-    container: "ccm-notification",
-    notice: "ccm-notification-warning",
-    notice_icon: "glyphicon glyphicon-exclamation-sign",
-    info: "ccm-notification-info",
-    info_icon: "glyphicon glyphicon-info-sign",
-    success: "ccm-notification-success",
-    success_icon: "glyphicon glyphicon-ok-sign",
-    error: "ccm-notification-danger",
-    error_icon: "glyphicon glyphicon-warning-sign",
-    closer: "ccm-notification-closer",
-    pin_up: false,
-    pin_down: false
-};
-PNotify.prototype.options.width = '400px';
-PNotify.prototype.options.addclass = 'ccm-ui';
-PNotify.prototype.options.animate = {
-    animate: true,
-    in_class: 'fadeIn',
-    out_class: 'bounceOutRight'
-};
-PNotify.prototype.options.buttons.closer_hover = false;
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global PNotify, ccmi18n */
 
-!function(global, $) {
+;(function(global, $) {
     'use strict';
+
+    // Simple alert using dialog class.
+    PNotify.prototype.options.styling = {
+        container: "ccm-notification",
+        notice: "ccm-notification-warning",
+        notice_icon: "glyphicon glyphicon-exclamation-sign",
+        info: "ccm-notification-info",
+        info_icon: "glyphicon glyphicon-info-sign",
+        success: "ccm-notification-success",
+        success_icon: "glyphicon glyphicon-ok-sign",
+        error: "ccm-notification-danger",
+        error_icon: "glyphicon glyphicon-warning-sign",
+        closer: "ccm-notification-closer",
+        pin_up: false,
+        pin_down: false
+    };
+    PNotify.prototype.options.width = '400px';
+    PNotify.prototype.options.addclass = 'ccm-ui';
+    PNotify.prototype.options.animate = {
+        animate: true,
+        in_class: 'fadeIn',
+        out_class: 'bounceOutRight'
+    };
+    PNotify.prototype.options.buttons.closer_hover = false;
 
     var ConcreteAlert = {
 
@@ -59,10 +60,10 @@ PNotify.prototype.options.buttons.closer_hover = false;
 
         confirm: function(message, onConfirmation, btnClass, btnText) {
 
-            var btnClass = btnClass ? 'btn ' + btnClass : 'btn btn-primary',
-                btnText = btnText ? btnText : ccmi18n.go,
-                $div = $('<div id="ccm-popup-confirmation" class="ccm-ui"><div id="ccm-popup-confirmation-message">' +
-                    message + '</div>');
+            var $div = $('<div id="ccm-popup-confirmation" class="ccm-ui"><div id="ccm-popup-confirmation-message">' + message + '</div>');
+
+            btnClass = btnClass ? 'btn ' + btnClass : 'btn btn-primary';
+            btnText = btnText ? btnText : ccmi18n.go;
 
             $div.dialog({
                 title: ccmi18n.confirm,
@@ -143,4 +144,4 @@ PNotify.prototype.options.buttons.closer_hover = false;
 
     global.ConcreteAlert = ConcreteAlert;
 
-}(this, $);
+})(this, jQuery);

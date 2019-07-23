@@ -81,6 +81,9 @@ class Design extends BackendInterfaceBlockController
 
             if (is_object($set)) {
                 $pr->setAdditionalDataAttribute('issID', $set->getID());
+                if ($this->area->isGlobalArea()) {
+                    $b->setBlockAreaObject($this->area); // We need this for CSS: https://github.com/concrete5/concrete5/issues/3135
+                }
                 $style = new CustomStyle($set, $b, $this->page->getCollectionThemeObject());
                 $css = $style->getCSS();
                 if ($css !== '') {

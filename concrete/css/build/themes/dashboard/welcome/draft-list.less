@@ -1,0 +1,33 @@
+div.ccm-block-desktop-draft-list {
+
+  border: 1px solid #dddfdf;
+  background-color: #fff;
+  padding: 20px;
+
+  h3 {
+    padding-bottom: 5px;
+    margin-top: 0px;
+    border-bottom: 1px solid #d6d6d8;
+    font-weight: normal;
+    margin-bottom: 20px;
+  }
+
+  .draft-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+
+    &-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 0 10px 0;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #dddfdf;
+
+      &:last-of-type {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+  }
+}

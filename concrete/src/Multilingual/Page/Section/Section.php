@@ -115,7 +115,7 @@ class Section extends Page
             if (!isset($tree)) {
                 $tree = $page->getSiteTreeObject();
             }
-            
+
             if ($tree instanceof SiteTree) {
                 $returnID = $tree->getSiteHomePageID();
             }
@@ -328,9 +328,7 @@ class Section extends Page
                 }
             }
 
-            $v = [$mpRelationID, $newPage->getCollectionID(), $ms->getLocale()];
-
-            if (!$isNew) {
+            if ($isNew) {
                 $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
 
                 if ($cID > 0) {
@@ -341,7 +339,12 @@ class Section extends Page
                 }
             }
 
-            $v[] = $ms->getLanguage();
+            $v = [
+                $mpRelationID,
+                $newPage->getCollectionID(),
+                $ms->getLocale(),
+                $ms->getLanguage()
+            ];
 
             $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
 

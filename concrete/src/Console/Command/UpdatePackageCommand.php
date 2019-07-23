@@ -22,6 +22,7 @@ class UpdatePackageCommand extends Command
                 'c5:update-package',
             ])
             ->addEnvOption()
+            ->setCanRunAsRoot(false)
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Update all the installed packages')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('packages', InputArgument::IS_ARRAY, 'The handle of the package to be updated (multiple values allowed)')

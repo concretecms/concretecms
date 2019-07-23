@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Application\Application;
@@ -37,7 +38,7 @@ class PreconditionService
     }
 
     /**
-     * Get the preconditions.
+     * Get the pre-configuration preconditions.
      *
      * @param bool $includeWebPreconditions
      *
@@ -46,13 +47,27 @@ class PreconditionService
     public function getPreconditions($includeWebPreconditions = true)
     {
         $result = [];
-        $list = $this->config->get('install.preconditions');
-        foreach ($list as $className) {
-            if (!$className) {
-                continue;
+        foreach ($this->getAllPreconditions() as $instance) {
+            if (!$instance instanceof OptionsPreconditionInterface) {
+                if ($includeWebPreconditions || !$instance instanceof WebPreconditionInterface) {
+                    $result[] = $instance;
+                }
             }
-            $instance = $this->getPreconditionByClassName($className);
-            if ($includeWebPreconditions || !$instance instanceof WebPreconditionInterface) {
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the post-configuration preconditions.
+     *
+     * @return OptionsPreconditionInterface[]
+     */
+    public function getOptionsPreconditions()
+    {
+        $result = [];
+        foreach ($this->getAllPreconditions() as $instance) {
+            if ($instance instanceof OptionsPreconditionInterface) {
                 $result[] = $instance;
             }
         }
@@ -101,6 +116,24 @@ class PreconditionService
         $result = $this->app->make($className);
         if (!$result instanceof PreconditionInterface) {
             throw new Exception(sprintf('The class %1$s should implement the interface %2$s', $className, PreconditionInterface::class));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all the defined preconditions, of any kind.
+     *
+     * @return PreconditionInterface[]
+     */
+    private function getAllPreconditions()
+    {
+        $result = [];
+        $list = $this->config->get('install.preconditions');
+        foreach ($list as $className) {
+            if ($className) {
+                $result[] = $this->getPreconditionByClassName($className);
+            }
         }
 
         return $result;

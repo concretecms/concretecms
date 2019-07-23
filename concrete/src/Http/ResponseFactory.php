@@ -6,9 +6,9 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
-use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
@@ -17,14 +17,13 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\Session\SessionValidator;
+use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Concrete\Core\Http\Service\Ajax;
-use Concrete\Core\User\PostLoginLocation;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
@@ -78,13 +77,12 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
         if ($this->app->make(Ajax::class)->isAjaxRequest($this->request)) {
-            $loc = $this->localization;
-            $loc->pushActiveContext(Localization::CONTEXT_SITE);
+            $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),
                 'errors' => [t('Page not found')],
             ];
-            $loc->popActiveContext();
+            $this->localization->popActiveContext();
 
             return $this->json($responseData, $code, $headers);
         }
@@ -93,7 +91,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $c = Page::getByPath($item);
 
         if (is_object($c) && !$c->isError()) {
-            return $this->collection($c, $code, $headers);
+            // Display not found
+            $this->request->setCurrentPage($c);
+
+            return $this->controller($c->getPageController(), $code, $headers);
         }
 
         $cnt = $this->app->make(PageForbidden::class);
@@ -143,10 +144,13 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     public function view(View $view, $code = Response::HTTP_OK, $headers = [])
     {
         $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
+        try {
+            $contents = $view->render();
 
-        $contents = $view->render();
-
-        return $this->create($contents, $code, $headers);
+            return $this->create($contents, $code, $headers);
+        } finally {
+            $this->localization->popActiveContext();
+        }
     }
 
     /**
@@ -154,59 +158,64 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = [])
     {
-        $request = $this->request;
+        $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
+        try {
+            $request = $this->request;
 
-        if ($response = $controller->on_start()) {
-            return $response;
-        }
-
-        if ($controller instanceof PageController) {
-            if ($controller->isReplaced()) {
-                return $this->controller($controller->getReplacement(), $code, $headers);
-            }
-            $controller->setupRequestActionAndParameters($request);
-
-            $response = $controller->validateRequest();
-            // If validaterequest returned a response
-            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+            if ($response = $controller->on_start()) {
                 return $response;
+            }
+
+            if ($controller instanceof PageController) {
+                if ($controller->isReplaced()) {
+                    return $this->controller($controller->getReplacement(), $code, $headers);
+                }
+                $controller->setupRequestActionAndParameters($request);
+
+                $response = $controller->validateRequest();
+                // If validaterequest returned a response
+                if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                    return $response;
+                } else {
+                    // If validateRequest did not return true
+                    if ($response == false) {
+                        return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
+                    }
+                }
+
+                $requestTask = $controller->getRequestAction();
+                $requestParameters = $controller->getRequestActionParameters();
+                $response = $controller->runAction($requestTask, $requestParameters);
+                if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                    return $response;
+                }
+                if ($controller->isReplaced()) {
+                    return $this->controller($controller->getReplacement(), $code, $headers);
+                }
             } else {
-                // If validateRequest did not return true
-                if ($response == false) {
-                    return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
+                if ($response = $controller->runAction('view')) {
+                    return $response;
                 }
             }
 
-            $requestTask = $controller->getRequestAction();
-            $requestParameters = $controller->getRequestActionParameters();
-            $response = $controller->runAction($requestTask, $requestParameters);
-            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-                return $response;
-            }
-            if ($controller->isReplaced()) {
-                return $this->controller($controller->getReplacement(), $code, $headers);
-            }
-        } else {
-            if ($response = $controller->runAction('view')) {
-                return $response;
-            }
-        }
+            $view = $controller->getViewObject();
 
-        $view = $controller->getViewObject();
-
-        // Mobile theme
-        if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
-            $md = $this->app->make(MobileDetect::class);
-            if ($md->isMobile()) {
-                $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
-                if ($mobileTheme instanceof Theme) {
-                    $view->setViewTheme($mobileTheme);
-                    $controller->setTheme($mobileTheme);
+            // Mobile theme
+            if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
+                $md = $this->app->make(MobileDetect::class);
+                if ($md->isMobile()) {
+                    $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
+                    if ($mobileTheme instanceof Theme) {
+                        $view->setViewTheme($mobileTheme);
+                        $controller->setTheme($mobileTheme);
+                    }
                 }
             }
-        }
 
-        return $this->view($view, $code, $headers);
+            return $this->view($view, $code, $headers);
+        } finally {
+            $this->localization->popActiveContext();
+        }
     }
 
     /**
@@ -243,17 +252,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         // maintenance mode
         if ($collection->getCollectionPath() != '/login') {
             $smm = $this->config->get('concrete.maintenance_mode');
-            if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
+            if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
-
-                $router = $this->app->make(RouterInterface::class);
-                $tmpTheme = $router->getThemeByRoute('/frontend/maintenance_mode');
-                $v->setViewTheme($tmpTheme[0]);
                 $v->addScopeItems(['c' => $collection]);
                 $request->setCurrentPage($collection);
-                if (isset($tmpTheme[1])) {
-                    $v->setViewTemplate($tmpTheme[1]);
-                }
 
                 return $this->view($v, $code, $headers);
             }
@@ -273,19 +275,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
 
-        $scheduledVersion = Version::get($collection, "SCHEDULED");
-        if ($publishDate = $scheduledVersion->cvPublishDate) {
-            $datetime = $this->app->make('helper/date');
-            $now = $datetime->date('Y-m-d G:i:s');
-
-            if (strtotime($now) >= strtotime($publishDate)) {
-                $scheduledVersion->approve();
-                $collection->loadVersionObject('ACTIVE');
-            }
-        }
-
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
             $collection->loadVersionObject('RECENT');
+        } else {
+            $collection->loadVersionObject('ACTIVE');
         }
 
         $vp = new Checker($collection->getVersionObject());
@@ -308,7 +301,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $site = $this->app['site']->getSite();
 
         $response = $cms->handleCanonicalURLRedirection($request, $site);
-        if (!$response) {
+        // Don't handle final URL slashes if it's a page not found to avoid infinite redirections
+        if (!$response && $collection->getCollectionPath() !== '/page_not_found') {
             $response = $cms->handleURLSlashes($request, $site);
         }
         if (isset($response)) {
@@ -326,8 +320,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             // First, we check to see if we need to redirect to a default multilingual section.
             if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
                 // Redirect only if it's the first request, otherwise we can't browse to the root locale
-                $session = $cms->make('session');
-                if (!$session->has('multilingual_default_locale')) {
+                $sessionValidator = $cms->make(SessionValidator::class);
+                if (!($sessionValidator->hasActiveSession() && $cms->make('session')->has('multilingual_default_locale'))) {
                     // Let's retrieve the default language
                     $ms = $dl->getPreferredSection();
                     if (is_object($ms) && !$ms->isDefaultMultilingualSection($site)) {
@@ -342,7 +336,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
-
         $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);

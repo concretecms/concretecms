@@ -13,9 +13,10 @@ if ($canUpgrade) {
         </a>
     </div>
 
-
-   <?php if (is_object($update)) {
-    ?>
+   <?php if (is_object($update)) { ?>
+        <div class="alert alert-warning">
+            <p><?= t('Before updating, it is highly recommended to make a full site backup. A full site backup consists of site files and site database export. Please consult your hosting provider for guidance on backup processes.'); ?></p>
+        </div>
 
         <div class="ccm-dashboard-update-details-wrapper">
 

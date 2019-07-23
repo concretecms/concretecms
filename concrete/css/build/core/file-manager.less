@@ -5,6 +5,20 @@
 
 
 /**
+ * Preview Image Popover
+ */
+@import "../vendor/bootstrap/popovers.less";
+//since the popover must be placed in body to prevent clipping in a modal situation we need to include not namespaced
+// styles here and adjust the z-Index
+.popover {
+  z-index: @index-level-dialog-content-click-proxy;
+  max-width: none;
+  img {
+    max-width: 75vw;
+  }
+}
+
+/**
  * File Results List Wrapper
  */
 .ccm-ui .ccm-file-manager-list-wrapper {
@@ -18,8 +32,14 @@
 table.ccm-file-manager-list {
   img.ccm-file-manager-list-thumbnail,
   img.ccm-generic-thumbnail {
-    width: 30px;
-    height: 30px;
+    &.ccm-thumbnail-small {
+      width: 30px;
+      height: 30px;
+    }
+    &.ccm-thumbnail-full{
+      width: auto;
+      height: auto;
+    }
   }
   td.ccm-search-results-icon {
     i {
@@ -109,7 +129,7 @@ div#ccm-popover-menu-container {
 /**
  * Upload Dialog
  */
-div#ccm-file-manager-import-files {
+div.ccm-file-manager-import-files {
   form.dropzone {
     .transition(0.1s linear all);
     .dz-default.dz-message {
@@ -129,8 +149,38 @@ div#ccm-file-manager-import-files {
       }
     }
 
-    min-height: 340px;
     border: 2px dashed #09f;
+  }
+  textarea[name="url_upload"] {
+    resize: vertical;
+    white-space: nowrap;
+  }
+  form.dropzone, textarea[name="url_upload"] {
+    min-height: 340px;
+  }
+  table.incoming_file_table {
+    .incoming_file_table-checkbox, .incoming_file_table-thumbnail, .incoming_file_table-filename, .incoming_file_table-size {
+        vertical-align: middle;
+    }
+    td.incoming_file_table-checkbox, td.incoming_file_table-thumbnail {
+        text-align: center;
+    }
+    td.incoming_file_table-filename {
+        text-align: left;
+    }
+    td.incoming_file_table-size {
+        text-align: right;
+    }
+    .incoming_file_table-checkbox {
+        width: 1px;
+    }
+    .incoming_file_table-thumbnail {
+        width: 48px;
+    }
+    .incoming_file_table-size {
+        width: 1px;
+        white-space: nowrap;
+    }
   }
 }
 

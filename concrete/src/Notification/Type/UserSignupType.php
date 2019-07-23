@@ -3,6 +3,7 @@ namespace Concrete\Core\Notification\Type;
 
 use Concrete\Core\Entity\Notification\UserSignupNotification;
 use Concrete\Core\Entity\User\UserSignup;
+use Concrete\Core\Notification\Alert\Filter\StandardFilter;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 
@@ -31,6 +32,11 @@ class UserSignupType extends Type
     public function getAvailableSubscriptions()
     {
         return array($this->createSubscription());
+    }
+
+    public function getAvailableFilters()
+    {
+        return [new StandardFilter($this, 'user_signup', t('User signups'), 'usersignupnotification')];
     }
 
 

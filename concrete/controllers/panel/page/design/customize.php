@@ -159,7 +159,7 @@ class Customize extends BackendInterfacePageController
                 $cscv = $csc->getVersionToModify();
                 $cscv->resetCustomThemeStyles();
                 $vo = $csc->getVersionObject();
-                if ($vo->isApproved()) {
+                if ($vo->isApprovedNow()) {
                     $vo = $cscv->getVersionObject();
                     $vo->approve();
                 }

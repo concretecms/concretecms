@@ -18,7 +18,6 @@ class DashboardManager extends AbstractManager
             '/dashboard/users/groups' => t('View, search for, add, and edit groups. Click a group to edit it. Groups are useful for organizing users and setting permissions for multiple users simultaneously.'),
             '/dashboard/users/add_group' => t('Create a new group to organize and classify users. Choose an expiration date to remove users automatically.'),
             '/dashboard/reports/forms' => t("View responses to your site's forms. Submitted form data is collected here."),
-            '/dashboard/reports/statistics' => t('View graphs showing recent site traffic, registration, page creation and downloaded files.'),
             '/dashboard/reports/surveys' => t('The results of completed survey blocks are logged here. Find out what your users have submitted.'),
             '/dashboard/reports/logs' => t('View a record of errors your site has encountered, and a log of outgoing email messages sent by your site.'),
             '/dashboard/pages/themes' => t("Themes change the overall design of your site's pages. Activating a theme will apply it to every page in your site. Preview allows you to see how your content will look when the new theme is applied. Inspect lists the Page Types a theme uses. Customize allows you to change certain properties of your theme's styles, if allowed."),
@@ -38,6 +37,12 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/permissions/tasks' => t("Control users' ability to do perform specific tasks, such as install packages, alter permissions, etc."),
             '/dashboard/system/permissions/file_types' => t('View and change which file types you permit users to upload to your File Manager.'),
             '/dashboard/system/permissions/files' => t("Control how users interact with your site's File Manager, allowing or disallowing actions like search, upload, replace and more."),
+            '/dashboard/system/permissions/trusted_proxies' => implode('<br /><br />', [
+                t('If your website uses a reverse proxy (like <a href="%s" target="_blank">Cloudflare</a>), you have to specify here the list of the IP addresses of the proxy, so that concrete5 can detect the actual IP address of the visitors.', 'https://www.cloudflare.com/ips/'),
+                t('The checked headers will be trusted only when PHP detects that the connection is made via a trusted proxy.'),
+                t(/*%s is the name of an HTTP header*/'The %s header should be selected when using RFC 7239.', '<code>FORWARDED</code>'),
+                t('The other headers starting with %1$s are not standard but are widely used by popular reverse proxies (like %2$s).', '<code>X_...</code>', 'Apache mod_proxy/Amazon EC2'),
+            ]),
             '/dashboard/system/basics/editor' => t("Control which set of tools the content-editor toolbar includes (e.g., Simple, Advanced, Office), and the toolbar's spatial dimensions."),
             '/dashboard/system/basics/multilingual' => t('View available language packs installed for the concrete5 Dashboard and editing interface.'),
             '/dashboard/system/basics/multilingual/update' => t('Install new language files and update the outdated ones.<br />You can contribute to translations on %s', '<a href="https://translate.concrete5.org" target="_blank">translate.concrete5.org</a>.'),
@@ -63,7 +68,7 @@ class DashboardManager extends AbstractManager
             '/dashboard/users/attributes' => t('Store data about your users-- like site preferences, birthdays, bios and more. Control which elements are available for users to update themselves.'),
             '/dashboard/users/add' => t('Manually create new user accounts for your concrete5 site.'),
             '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.'),
-            '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.'),
+            '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.') . ' ' . t('Auto-rotate images accordingly to EXIF metadata.') . '<br />' . t('Set PNG and JPEG compression options.'),
         ]);
 
         $message = new Message();

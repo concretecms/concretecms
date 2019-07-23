@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Cache\OpCache;
@@ -23,6 +24,14 @@ class InstallerOptions
      * @var bool
      */
     protected $autoAttachEnabled = false;
+
+
+    /**
+     * Whether the user has accepted the privacy policy from the front-end installation
+     *
+     * @var bool
+     */
+    protected $privacyPolicyAccepted = false;
 
     /**
      * The installation configuration options (persisted as /application/config/site_install.php).
@@ -89,6 +98,8 @@ class InstallerOptions
     {
         $this->filesystem = $filesystem;
     }
+
+
 
     /**
      * If the database already exists and is valid, lets just attach to it rather than installing over it?
@@ -185,6 +196,29 @@ class InstallerOptions
 
         return $this;
     }
+
+    /**
+     * Returns whether privacy policy is accepted
+     *
+     * @return boolean
+     */
+    public function isPrivacyPolicyAccepted()
+    {
+        return $this->privacyPolicyAccepted;
+    }
+
+    /**
+     * Set the privacy policy status
+     *
+     * @param boolean $privacyPolicyAccepted
+     */
+    public function setPrivacyPolicyAccepted($privacyPolicyAccepted)
+    {
+        $this->privacyPolicyAccepted = $privacyPolicyAccepted;
+
+        return $this;
+    }
+
 
     /**
      * Get the handle of the starting point.
@@ -390,6 +424,7 @@ class InstallerOptions
             ];
         }
         $this
+            ->setPrivacyPolicyAccepted($siteInstallUser['privacyPolicy'])
             ->setConfiguration($siteInstall)
             ->setUserEmail($siteInstallUser['userEmail'])
             ->setUserPasswordHash($siteInstallUser['userPasswordHash'])
@@ -418,6 +453,7 @@ class InstallerOptions
             'siteLocaleId' => $this->getSiteLocaleId(),
             'uiLocaleId' => $this->getUiLocaleId(),
             'serverTimeZone' => $this->getServerTimeZoneId(),
+            'privacyPolicy' => $this->isPrivacyPolicyAccepted()
         ]);
         $siteInstallUser = $render->render();
         if (@$this->filesystem->put(DIR_CONFIG_SITE . '/site_install.php', $siteInstall) === false) {

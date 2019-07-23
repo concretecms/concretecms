@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Cache\CacheClearer;
@@ -13,10 +14,13 @@ use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Http\DispatcherInterface;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Package;
+use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
@@ -29,6 +33,7 @@ use Job;
 use JobSet;
 use Log;
 use Page;
+use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
 use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,30 +56,9 @@ class Application extends Container
     {
         \Events::dispatch('on_shutdown');
 
-        $config = $this['config'];
-
         if ($this->isInstalled()) {
             if (!isset($options['jobs']) || $options['jobs'] == false) {
                 $this->handleScheduledJobs();
-            }
-
-            $logger = new Logger();
-            $r = Request::getInstance();
-
-            if ($config->get('concrete.log.queries.log') &&
-                (!isset($options['log_queries']) || $options['log_queries'] == false)) {
-                $connection = Database::getActiveConnection();
-                if ($logger->shouldLogQueries($r)) {
-                    $loggers = [];
-                    $configuration = $connection->getConfiguration();
-                    $loggers[] = $configuration->getSQLLogger();
-                    $configuration->setSQLLogger(null);
-                    if ($config->get('concrete.log.queries.clear_on_reload')) {
-                        $logger->clearQueryLog();
-                    }
-
-                    $logger->write($loggers);
-                }
             }
 
             foreach (\Database::getConnections() as $connection) {
@@ -192,13 +176,31 @@ class Application extends Container
         return false;
     }
 
+    /**
+     * Check if the core needs to be updated, and if so, updates it.
+     *
+     * @throws \Concrete\Core\System\Mutex\MutexBusyException throws a MutexBusyException exception if there upgrade process is already running
+     * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
+     */
     public function handleAutomaticUpdates()
     {
+        $update = false;
         $config = $this['config'];
-        $installed = $config->get('concrete.version_db_installed');
-        $core = $config->get('concrete.version_db');
-        if ($installed < $core) {
-            Update::updateToCurrentVersion();
+        $installedDb = $config->get('concrete.version_db_installed');
+        $coreDb = $config->get('concrete.version_db');
+        if ($installedDb < $coreDb) {
+            $update = true;
+        } else {
+            $installedVersion = $config->get('concrete.version_installed');
+            $coreVersion = $config->get('concrete.version');
+            if (version_compare($installedVersion, $coreVersion, '<')) {
+                $update = true;
+            }
+        }
+        if ($update) {
+            $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
+                Update::updateToCurrentVersion();
+            });
         }
     }
 
@@ -281,7 +283,7 @@ class Application extends Container
      */
     public static function isRunThroughCommandLineInterface()
     {
-        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli';
+        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli' || PHP_SAPI === 'phpdbg';
     }
 
     /**
@@ -292,12 +294,11 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
-        $siteConfig = $site->getConfigRepository();
-        $trailing_slashes = $siteConfig->get('seo.trailing_slash');
         $path = $request->getPathInfo();
-
         // If this isn't the homepage
         if ($path && $path != '/') {
+            $config = $this->make('config');
+            $trailing_slashes = $config->get('concrete.seo.trailing_slash');
             // If the trailing slash doesn't match the config, return a redirect response
             if (($trailing_slashes && substr($path, -1) != '/') ||
                 (!$trailing_slashes && substr($path, -1) == '/')) {
@@ -338,7 +339,7 @@ class Application extends Container
                 }
                 $canonicalUrl = UrlImmutable::createFromUrl(
                     $canonicalUrlString,
-                    (bool) $siteConfig->get('seo.trailing_slash')
+                    (bool) $globalConfig->get('concrete.seo.trailing_slash')
                 );
                 // Set the parts of the current URL that are specified in the canonical URL, including host,
                 // scheme, port. Set scheme first so that our port can use the magic "set if necessary" method.
@@ -397,7 +398,7 @@ class Application extends Container
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
         $this['app_relative_path'] = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $home), '/');
 
-        $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
+        $args = $this->isRunThroughCommandLineInterface() && isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
         $detector = new EnvironmentDetector();
 
@@ -412,13 +413,23 @@ class Application extends Container
      *
      * @return mixed
      *
-     * @throws BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function build($concrete, array $parameters = [])
     {
         $object = parent::build($concrete, $parameters);
-        if (is_object($object) && $object instanceof ApplicationAwareInterface) {
-            $object->setApplication($this);
+        if (is_object($object)) {
+            if ($object instanceof ApplicationAwareInterface) {
+                $object->setApplication($this);
+            }
+
+            if ($object instanceof LoggerAwareInterface) {
+                $logger = $this->make('log/factory')->createLogger($object->getLoggerChannel());
+                $object->setLogger($logger);
+            } elseif ($object instanceof PsrLoggerAwareInterface) {
+                $logger = $this->make('log/factory')->createLogger(Channels::CHANNEL_APPLICATION);
+                $object->setLogger($logger);
+            }
         }
 
         return $object;

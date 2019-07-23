@@ -15,6 +15,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
     protected $tables = [
+        'Groups',
         'FileStorageLocationTypes',
         'FileImageThumbnailTypes',
         'TreeTypes',

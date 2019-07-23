@@ -241,7 +241,7 @@ $dh = Core::make('helper/date');
 
         <form class="form-inline" method="get" action="#">
             <input type="text" class="form-control" autocomplete="off" name="fsKeywords"
-                   value="<?= h($_REQUEST['fsKeywords']) ?>" placeholder="<?= t('Search') ?>">
+                   value="<?= isset($_REQUEST['fsKeywords']) ? h($_REQUEST['fsKeywords']) : '' ?>" placeholder="<?= t('Search') ?>">
             <select data-select="bootstrap" name="fsType">
                 <option
                     value="<?= FileSet::TYPE_PUBLIC ?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?= t('Public Sets') ?></option>

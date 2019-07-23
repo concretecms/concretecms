@@ -1,4 +1,7 @@
-(function (window, $, _, Concrete) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, Concrete, ConcreteAlert, ccmi18n, CCM_SECURITY_TOKEN, CCM_DISPATCHER_FILENAME */ 
+
+(function (window, $) {
     'use strict';
 
     /**
@@ -26,13 +29,12 @@
                 dragAreaBlockID = dragAreaBlock.getId();
             }
 
-            jQuery.fn.dialog.closeAll();
+            $.fn.dialog.closeAll();
 
             var settings = {
                 cID: elem.data('cid'),
                 arHandle: area_handle,
                 stID: elem.data('sid'),
-                atask: 'add_stack',
                 ccm_token: CCM_SECURITY_TOKEN
             };
 
@@ -41,7 +43,7 @@
             }
 
             $.fn.dialog.showLoader();
-            $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+            $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/page/add_stack', settings, function (response) {
                 my.handleAddResponse(response, area, dragAreaBlock);
             });
         },
@@ -55,5 +57,4 @@
 
     });
 
-
-}(window, jQuery, _, Concrete));
+})(window, jQuery);

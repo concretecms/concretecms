@@ -2,19 +2,17 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
-use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20171121000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20171121000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeSchema()
      */
     public function upgradeSchema(Schema $schema)
     {
@@ -45,12 +43,12 @@ class Version20171121000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {
         $db = $this->connection;
-        $db->executeQuery("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = '' AND (path LIKE '%.jpg' OR path LIKE '%.jpeg' OR path LIKE '%.pjpg' OR path LIKE '%.pjpeg')", [ThumbnailFormatService::FORMAT_JPEG]);
-        $db->executeQuery("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = ''", [ThumbnailFormatService::FORMAT_PNG]);
+        $db->executeQuery("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = '' AND (path LIKE '%.jpg' OR path LIKE '%.jpeg' OR path LIKE '%.pjpg' OR path LIKE '%.pjpeg')", [BitmapFormat::FORMAT_JPEG]);
+        $db->executeQuery("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = ''", [BitmapFormat::FORMAT_PNG]);
     }
 }

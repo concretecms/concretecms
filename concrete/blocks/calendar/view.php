@@ -1,10 +1,15 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+if (!isset($calendar) || !is_object($calendar)) {
+    $calendar = null;
+}
 $c = Page::getCurrentPage();
-if ($c->isEditMode()) { ?>
-    <div class="ccm-edit-mode-disabled-item"><?=t('Calendar disabled in edit mode.')?></div>
-<?php
-} elseif (is_object($calendar) && $permissions->canViewCalendar()) { ?>
+if ($c->isEditMode()) {
+    $loc = Localization::getInstance();
+    $loc->pushActiveContext(Localization::CONTEXT_UI);
+    ?><div class="ccm-edit-mode-disabled-item"><?=t('Calendar disabled in edit mode.')?></div><?php
+    $loc->popActiveContext();
+} elseif ($calendar !== null && $permissions->canViewCalendar()) { ?>
     <div class="ccm-block-calendar-wrapper" data-calendar="<?=$bID?>"></div>
 
     <script>
@@ -34,6 +39,13 @@ if ($c->isEditMode()) { ?>
                 <?php } ?>
 
                 events: '<?=$view->action('get_events')?>',
+                nextDayThreshold: '00:00:00',
+                eventDataTransform: function(event) {
+                    if(event.allDay) {
+                        event.end = moment(event.end).add(1, 'days')
+                    }
+                    return event;
+                },
 
                 eventRender: function(event, element) {
                     <?php if ($controller->supportsLightbox()) { ?>

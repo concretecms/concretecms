@@ -317,10 +317,6 @@ div#ccm-panel-dashboard {
   div.ccm-panel-header-accordion {
     nav {
 
-      ul.ccm-panel-header-accordion-dropdown:after {
-        border-color: #97aabc transparent;
-      }
-
       li > a:hover {
         background-color: #3f4750;
       }
@@ -334,6 +330,10 @@ div#ccm-panel-dashboard {
         color: #97aabc;
         background-color: #414d59;
         .box-shadow(inset 10px 1px 10px rgba(0, 0, 0, 0.12));
+
+        &:after {
+          border-color: #97aabc transparent;
+        }
 
         &:hover {
           background-color: #333c46;
@@ -388,44 +388,62 @@ div#ccm-panel-add-clipboard-block-list {
     div.block-name {
       border-top: solid 1px rgb(7, 8, 10);
       background: rgb(15, 24, 37);
-      font-weight: bold;
+      font-size: 13px;
       padding-left: 40px;
-      line-height: 40px;
+      padding-right: 40px;
+      padding-bottom: 16px;
+      padding-top: 16px;
+      line-height: @line-height-base;
       color: rgb(115, 124, 142);
+      position: relative;
+      .transition(background-color 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+      &:hover {
+        background-color: #1e252f !important;
+      }
+    }
+
+    div.stack-name {
+      cursor: pointer;
+    }
+
+    .ccm-panel-add-block-stack-item-handle,
+    div.block-name {
       cursor: -moz-grab;
       cursor: -webkit-grab;
       cursor: grab;
     }
 
+    .ccm-panel-add-block-stack-item-handle {
+      img {
+        position: absolute;
+        top: 15px;
+        left: 12px;
+        width: 20px;
+      }
+    }
+    .ccm-stack-expander {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      > i {
+        transition: all 0.4s ease;
+      }
+    }
+    &.ccm-panel-add-block-stack-item-expanded .ccm-stack-expander > i{
+      transform: rotateZ(-180deg);
+    }
+
     div.blocks {
-      height: 60px;
-      overflow: hidden;
       color: #9ea6b6;
       background: #343639;
       position: relative;
       .transition(height 250ms ease-in-out);
-
-      > div.block-count {
-        background: #202834;
-        color: #60728d;
-        .transition(opacity 250ms ease-in-out);
-        line-height: 60px;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding-left: 40px;
-        z-index: 2;
-        cursor: pointer;
-      }
 
       > div.block {
         display: block;
         position: relative;
         min-height: 120px;
         max-height: 290px;
-        float: left;
         width: 100%;
         height: auto;
         border-top: solid 1px bezier;
@@ -896,7 +914,7 @@ div.ccm-panel-header-accordion {
       }
     }
 
-    ul.ccm-panel-header-accordion-dropdown:after {
+    span:after {
       content: "";
       width: 0;
       height: 0;
@@ -912,7 +930,7 @@ div.ccm-panel-header-accordion {
 
 div.ccm-panel-header-accordion-dropdown-visible {
   nav {
-    ul.ccm-panel-header-accordion-dropdown:after {
+    span:after {
       border-width: 0px 6px 6px 6px;
     }
   }
@@ -1338,10 +1356,6 @@ div.ccm-panel-header-accordion {
 
   nav {
 
-    ul.ccm-panel-header-accordion-dropdown:after {
-      border-color: #999 transparent;
-    }
-
     li > a:hover {
       background-color: #111215;
     }
@@ -1353,6 +1367,11 @@ div.ccm-panel-header-accordion {
     span {
       color: #999;
       background-color: #202226;
+
+      &:after {
+        border-color: #999 transparent;
+      }
+
       &:hover {
         background-color: #111215;
       }
@@ -1367,5 +1386,3 @@ div.ccm-panel-header-accordion-dropdown-visible {
     }
   }
 }
-
-

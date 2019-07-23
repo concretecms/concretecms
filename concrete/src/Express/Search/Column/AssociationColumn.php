@@ -18,12 +18,16 @@ class AssociationColumn extends Column
 
     public function getColumnKey()
     {
-        return 'association_' . $this->association->getId();
+        if (is_object($this->association)) {
+            return 'association_' . $this->association->getId();
+        }
     }
 
     public function getColumnName()
     {
-        return $this->association->getTargetEntity()->getName();
+        if (is_object($this->association)) {
+            return $this->association->getTargetEntity()->getName();
+        }
     }
 
     public function getAssociation()

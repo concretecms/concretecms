@@ -1,113 +1,180 @@
 <?php
+
 namespace Concrete\Core\Cookie;
 
 use Concrete\Core\Http\Request;
-use Symfony\Component\HttpFoundation\Cookie as CookieObject;
 
+/**
+ * A class that holds operations performed on both request and response cookies.
+ *
+ * To work only on request cookies, use the Request class.
+ * To work only on response cookies, use the ResponseCookieJar class.
+ */
 class CookieJar
 {
-    protected $cookies = array();
-    protected $clearedCookies = array();
+    /**
+     * The object containing the request cookies.
+     *
+     * @var \Concrete\Core\Http\Request
+     */
     protected $request;
 
     /**
-     * Adds a CookieObject to the cookie pantry.
+     * The object containing the response cookies.
      *
-     * @param string $name The cookie name
-     * @param string|null $value The value of the cookie
-     * @param int $expire The number of seconds until the cookie expires
-     * @param string $path The path for the cookie
-     * @param null|string $domain The domain the cookie is available to
-     * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
-     * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
-     *
-     * @return \Symfony\Component\HttpFoundation\Cookie
+     * @var \Concrete\Core\Cookie\ResponseCookieJar
      */
-    public function set(
-        $name,
-        $value = null,
-        $expire = 0,
-        $path = '/',
-        $domain = null,
-        $secure = false,
-        $httpOnly = true
-    ) {
-        $cookie = new CookieObject($name, $value, $expire, $path, $domain, $secure, $httpOnly);
-        $this->add($cookie);
-
-        return $cookie;
-    }
+    protected $responseCookies;
 
     /**
-     * Adds a CookieObject to the array of cookies for the object.
+     * Initialize the instance.
      *
-     * @param CookieObject $cookie
+     * @param Request $request the object containing the request cookies
+     * @param ResponseCookieJar $responseCookies the object containing the response cookies
      */
-    public function add($cookie)
+    public function __construct(Request $request, ResponseCookieJar $responseCookies)
     {
-        $this->cookies[] = $cookie;
+        $this->setRequest($request);
+        $this->responseCookies = $responseCookies;
     }
 
     /**
-     * Used to determine if the cookie key exists in the pantry.
+     * Get the object containing the response cookies.
      *
-     * @param string $cookie
+     * @return \Concrete\Core\Cookie\ResponseCookieJar
+     */
+    public function getResponseCookies()
+    {
+        return $this->responseCookies;
+    }
+
+    /**
+     * Does a cookie exist in the request or response cookies?
+     *
+     * @param string $name
      *
      * @return bool
      */
-    public function has($cookie)
+    public function has($name)
     {
-        return $this->getRequest()->cookies->has($cookie);
-    }
+        if (in_array($name, $this->responseCookies->getClearedCookies(), true)) {
+            return false;
+        }
 
-    public function clear($cookie)
-    {
-        $this->clearedCookies[] = $cookie;
+        return $this->request->cookies->has($name) || $this->responseCookies->hasCookie($name);
     }
 
     /**
-     * @param string $name    The key the cookie is stored under
-     * @param mixed  $default A value to return if the cookie isn't set
+     * Get the value of a cookie (from response or from request) given its name.
+     *
+     * @param string $name The key the cookie
+     * @param mixed $default The value to return if the cookie isn't set
      *
      * @return mixed
      */
     public function get($name, $default = null)
     {
-        if (!$this->has($name)) {
+        $responseCookie = $this->responseCookies->getCookieByName($name);
+        if ($responseCookie !== null) {
+            return $responseCookie->getValue();
+        }
+        if (in_array($name, $this->responseCookies->getClearedCookies(), true)) {
             return $default;
         }
 
-        return $this->getRequest()->cookies->get($name);
+        return $this->getRequest()->cookies->get($name, $default);
     }
 
     /**
-     * @return CookieObject[]
+     * Get a list of cookie names and values (both from response and from request).
+     *
+     * @return array array keys are the cookie names, array values are the cookie values
      */
-    public function getCookies()
+    public function getAll()
     {
-        return $this->cookies;
-    }
+        $result = [];
+        $clearedRequestCookies = $this->responseCookies->getClearedCookies();
+        foreach ($this->request->cookies->all() as $name => $value) {
+            if (!in_array($name, $clearedRequestCookies, true)) {
+                $result[$name] = $value;
+            }
+        }
+        foreach ($this->responseCookies->getCookies() as $cookie) {
+            if ($cookie->getExpiresTime() !== 0 && $cookie->isCleared()) {
+                unset($result[$cookie->getName()]);
+            } else {
+                $result[$cookie->getName()] = $cookie->getValue();
+            }
+        }
 
-    public function getClearedCookies()
-    {
-        return $this->clearedCookies;
+        return $result;
     }
 
     /**
-     * Set a request for this cookie jar
-     * @param \Concrete\Core\Cookie\Request $request
+     * Set the request for this cookie jar.
+     *
+     * @param \Concrete\Core\Http\Request $request
      */
     public function setRequest(Request $request)
     {
         $this->request = $request;
     }
 
+    /**
+     * @deprecated Use ->getResponseCookies()->addCookie() or $app->make(ResponseCookieJar::class)->addCookie()
+     *
+     * @param string $name
+     * @param string|null $value
+     * @param int $expire
+     * @param string $path
+     * @param null|string $domain
+     * @param bool $secure
+     * @param bool $httpOnly
+     *
+     * @return \Symfony\Component\HttpFoundation\Cookie
+     */
+    public function set($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true)
+    {
+        return $this->responseCookies->addCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
+    }
+
+    /**
+     * @deprecated Use ->getResponseCookies()->addCookieObject() or $app->make(ResponseCookieJar::class)->addCookieObject()
+     *
+     * @param \Symfony\Component\HttpFoundation\Cookie $cookie
+     */
+    public function add($cookie)
+    {
+        $this->responseCookies->addCookieObject($cookie);
+    }
+
+    /**
+     * @deprecated Use ->getResponseCookies()->clear() or $app->make(ResponseCookieJar::class)->clear()
+     *
+     * @param string $name
+     */
+    public function clear($name)
+    {
+        $this->responseCookies->clear($name);
+    }
+
+    /**
+     * @deprecated Use ->getResponseCookies()->getCookies() or $app->make(ResponseCookieJar::class)->getCookies()
+     *
+     * @return \Symfony\Component\HttpFoundation\Cookie[]
+     */
+    public function getCookies()
+    {
+        return $this->responseCookies->getCookies();
+    }
+
+    /**
+     * Get the request for this cookie jar.
+     *
+     * @return \Concrete\Core\Http\Request
+     */
     protected function getRequest()
     {
-        if (!$this->request) {
-            $this->request = \Request::getInstance();
-        }
-
         return $this->request;
     }
 }

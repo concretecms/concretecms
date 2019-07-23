@@ -4,6 +4,7 @@ namespace Concrete\Core\Legacy\Controller;
 use Controller;
 use Environment;
 use BlockType;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\View\DialogView;
 
 class ToolController extends Controller
@@ -34,6 +35,8 @@ class ToolController extends Controller
             $v = new DialogView($query);
             $v->setViewRootDirectoryName(DIRNAME_TOOLS);
             $this->setViewObject($v);
+        } else {
+            return $this->app->make(ResponseFactoryInterface::class)->notFound('');
         }
     }
 

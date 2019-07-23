@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Core\File\ImportProcessor;
 
-use Concrete\Core\File\Type\Type;
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\File\Image\BitmapFormat;
+use Concrete\Core\File\Type\Type;
 
 class ForceImageFormatProcessor implements ProcessorInterface
 {
@@ -45,19 +47,20 @@ class ForceImageFormatProcessor implements ProcessorInterface
     {
         switch ($this->getFormat()) {
             case self::FORMAT_JPEG:
-                $extension = 'jpg';
+                $format = BitmapFormat::FORMAT_JPEG;
             default:
-                $extension = 'jpg';
+                $format = BitmapFormat::FORMAT_JPEG;
                 break;
         }
 
-        if ($extension) {
-            $fr = $version->getFileResource();
-            $image = \Image::load($fr->read());
+        if ($format !== null) {
+            $bitmapFormat = \Core::make(BitmapFormat::class);
+            $extension = $bitmapFormat->getFormatFileExtension($format);
+            $image = $version->getImagineImage();
             $filename = $version->getFileName();
             $service = \Core::make('helper/file');
             $newFilename = $service->replaceExtension($filename, $extension);
-            $version->updateContents($image->get($extension));
+            $version->updateContents($image->get($format, $bitmapFormat->getFormatImagineSaveOptions($format)));
             $version->rename($newFilename);
         }
     }

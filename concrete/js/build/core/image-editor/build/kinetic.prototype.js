@@ -83,9 +83,9 @@ Kinetic.Image.prototype.getImageData = function() {
 /////////////////////////////
 //      Kinetic.Layer      //
 /////////////////////////////
-Kinetic.Layer.prototype._cacheddraw = (new Kinetic.Layer).draw;
+Kinetic.Layer.prototype._cacheddraw = (new Kinetic.Layer()).draw;
 Kinetic.Layer.prototype.draw = function() {
-  if (typeof im === 'undefined' || typeof im.trigger === 'undefined') {
+  if (typeof global.im === 'undefined' || typeof global.im.trigger === 'undefined') {
     return this._cacheddraw();
   }
   //im.trigger('beforeredraw',this);

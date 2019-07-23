@@ -1,5 +1,9 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global Tourist, ccmi18n_helpGuides, ConcreteEvent, ConcreteHelpGuideManager */
+
+;(function(global, $) {
 	'use strict';
+
 	var i18n = ccmi18n_helpGuides['add-page'];
 	var steps = [{
 		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
@@ -31,7 +35,7 @@
 		my: 'right center',
 		at: 'left center',
 		setup: function(tour, options) {
-			return {target: $('ul.ccm-panel-sitemap-list li a').eq(0)}
+			return {target: $('ul.ccm-panel-sitemap-list li a').eq(0)};
 		}
 	},{
 		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
@@ -41,7 +45,7 @@
 		my: 'right center',
 		at: 'left center',
 		setup: function(tour, options) {
-			return {target: $('div#ccm-sitemap-panel-sitemap')}
+			return {target: $('div#ccm-sitemap-panel-sitemap')};
 		}
 	}];
 
@@ -62,4 +66,4 @@
 
 	ConcreteHelpGuideManager.register('add-page', tour);
 
-}(window, jQuery);
+})(window, jQuery);

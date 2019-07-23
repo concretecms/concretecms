@@ -1,35 +1,51 @@
 <?php
+
 namespace Concrete\Core\Validator;
 
+use ArrayAccess;
+use Closure;
+
+/**
+ * A generic validator cabable of describing itself and validating mixed values using closures.
+ */
 class ClosureValidator implements ValidatorInterface
 {
-    /** @var \Closure */
+    /**
+     * The closure that handles validation.
+     *
+     * @var \Closure
+     */
     protected $validator_closure;
 
-    /** @var \Closure */
+    /**
+     * The closure that returns requirements.
+     *
+     *@var \Closure
+     */
     protected $requirements_closure;
 
     /**
      * ClosureValidator constructor.
      *
-     * @param \Closure $validator_closure function(ClosureValidator $validator,
-     *                                             mixed $passed,
-     *                                             \Concrete\Core\Error $error = null): bool
+     * @param \Closure $validator_closure function(ClosureValidator $validator, mixed $passed, \Concrete\Core\Error $error = null): bool
      * @param \Closure $requirements_closure function(ClosureValidator $validator): array
+     *
+     * @example
      */
-    public function __construct(\Closure $validator_closure, \Closure $requirements_closure)
+    public function __construct(Closure $validator_closure, Closure $requirements_closure)
     {
         $this->validator_closure = $validator_closure;
         $this->requirements_closure = $requirements_closure;
     }
 
     /**
-     * Set the closure that handls validation
-     * function(ClosureValidator $validator, mixed $passed, \Concrete\Core\Error $error = null): bool.
+     * Set the closure that handles validation.
      *
      * @param \Closure $validator_closure
+     *
+     * @example function(ClosureValidator $validator, mixed $passed, \Concrete\Core\Error $error = null): bool
      */
-    public function setValidatorClosure(\Closure $validator_closure)
+    public function setValidatorClosure(Closure $validator_closure)
     {
         $this->validator_closure = $validator_closure;
     }
@@ -37,20 +53,19 @@ class ClosureValidator implements ValidatorInterface
     /**
      * Set the closure that returns requirements.
      *
-     * @param \Closure $requirements_closure function(ClosureValidator $validator): array
+     * @param \Closure $requirements_closure
+     *
+     * @example function(ClosureValidator $validator): array
      */
-    public function setRequirementsClosure(\Closure $requirements_closure)
+    public function setRequirementsClosure(Closure $requirements_closure)
     {
         $this->requirements_closure = $requirements_closure;
     }
 
     /**
-     * Get the validator requirements in the form of an array keyed by it's respective error code.
+     * {@inheritdoc}
      *
-     * Example:
-     *    [ self::E_TOO_SHORT => 'Must be at least 10 characters' ]
-     *
-     * @return string[]
+     * @see \Concrete\Core\Validator\ValidatorInterface::getRequirementStrings()
      */
     public function getRequirementStrings()
     {
@@ -60,16 +75,11 @@ class ClosureValidator implements ValidatorInterface
     }
 
     /**
-     * Is this mixed value valid.
+     * {@inheritdoc}
      *
-     * @param mixed             $mixed Can be any value
-     * @param \ArrayAccess|null $error
-     *
-     * @return bool
-     *
-     * @throws \InvalidArgumentException Invalid mixed value type passed.
+     * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, \ArrayAccess $error = null)
+    public function isValid($mixed, ArrayAccess $error = null)
     {
         $closure = $this->validator_closure;
 

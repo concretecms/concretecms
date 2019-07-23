@@ -44,7 +44,7 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
             $mri->setType('themes');
             $mri->execute();
             $items = $mri->getPage();
-            if (is_object($items[0])) {
+            if (isset($items[0]) && is_object($items[0])) {
                 $this->set('remoteItem', $items[0]);
             }
         }

@@ -1,7 +1,7 @@
-/* jshint unused:vars, undef:true, jquery:true */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
 /* global ConcreteMenu */
 
-(function(global, $) {
+;(function(global, $) {
   'use strict';
 
   function ConcreteStackMenu($element, options) {
@@ -48,4 +48,4 @@
 
   global.ConcreteStackMenu = ConcreteStackMenu;
 
-})(this, $);
+})(this, jQuery);

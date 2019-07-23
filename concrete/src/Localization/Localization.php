@@ -8,6 +8,7 @@ use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Exception;
 use Punic\Data as PunicData;
+use Throwable;
 use Zend\I18n\Translator\Translator as ZendTranslator;
 
 class Localization
@@ -181,6 +182,30 @@ class Localization
     }
 
     /**
+     * Execute a function using a specific localization context.
+     *
+     * @param string $context The translation context to use when running $callback (default contexts are defined by the Localization::CONTEXT_... constants).
+     * @param callable $callback
+     *
+     * @return mixed return the result of $callback
+     *
+     * @since concrete5 8.5.0a2
+     */
+    public function withContext($context, callable $callback)
+    {
+        $this->pushActiveContext($context);
+        try {
+            return $callback();
+        } finally {
+            try {
+                $this->popActiveContext();
+            } catch (Exception $x) {
+            } catch (Throwable $x) {
+            }
+        }
+    }
+
+    /**
      * Gets the translator adapter object for the given context from the
      * translator adapter repository.
      *
@@ -252,7 +277,7 @@ class Localization
     /**
      * Gets the locale for the active context.
      *
-     * @param string
+     * @return string
      */
     public function getLocale()
     {

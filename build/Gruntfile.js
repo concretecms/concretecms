@@ -31,9 +31,10 @@ module.exports = function(grunt) {
             beforeJS: true,
             dest: '<%= DIR_BASE %>/concrete/js/build/core/image-editor/image-editor.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_start.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/kinetic.prototype.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/imageeditor.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/history.js.js',
+                //'<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/history.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/events.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/elements.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/controls.js',
@@ -43,9 +44,10 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/imagestage.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/image.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/actions.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideOut.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideout.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/jquerybinding.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_end.js',
             ]
         }
     };
@@ -101,7 +103,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/panels.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/dialog.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/alert.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/newsflow.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/editable-field/container.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/page-reindexing.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/in-context-menu.js',
@@ -109,6 +110,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/remote-marketplace.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/table.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/base.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/preset-selector.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/field-selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/progressive-operations.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
@@ -128,6 +131,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/personalize.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/location-panel.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/heartbeat.js',
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
@@ -149,6 +153,13 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/header.js'
+            ]
+        },
+
+        fileuploader: {
+            dest: '<%= DIR_BASE %>/concrete/js/file-uploader.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/app/file-uploader.js',
             ]
         },
 
@@ -479,7 +490,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
+        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.0/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
     };
@@ -490,6 +501,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-newer');
 
     // Now let's build the final configuration for Grunt.
@@ -505,6 +517,49 @@ module.exports = function(grunt) {
             jsTargets.debug.push('newer:concat:' + concatKey);
         }
     }
+
+
+
+    // Prepare env
+    config.env = {
+        dev: {
+            NODE_ENV: 'development'
+        },
+        prod: {
+            NODE_ENV: 'production'
+        }
+    };
+
+    var configFactory = function(watch) {
+
+        var config = require('laravel-mix/setup/webpack.config');
+
+        return config;
+    };
+
+    // Prepare webpack configuration, the config needs to be loaded in at the very last second
+    config.webpack = {
+        prod: function() {
+            console.log('building for prod');
+            return configFactory();
+        },
+        dev: function() {
+            return configFactory();
+        },
+        watch: function() {
+            var config =  configFactory();
+            config.watch = true;
+            return config;
+        }
+    };
+
+    config["webpack-dev-server"] = {
+        dev: function() {
+            var config = configFactory();
+            return config;
+        }
+    }
+
 
     var watchJS = [];
     var watchCSS = [];
@@ -532,6 +587,14 @@ module.exports = function(grunt) {
         config.uglify[key + '_debug'] = target;
         jsTargets.debug.push('newer:uglify:' + key + '_debug');
     }
+
+
+    // Append webpack steps
+    jsTargets.release.push('env:prod');
+    jsTargets.release.push('webpack:prod');
+    jsTargets.debug.push('env:dev');
+    jsTargets.debug.push('webpack:dev');
+
 
     // Let's define the less section (for generating CSS files)
     config.less = {
@@ -571,6 +634,15 @@ module.exports = function(grunt) {
         }
     };
 
+    config.jshint = {
+        options: {
+        },
+        all: [
+            '<%=DIR_BASE%>/concrete/js/build/core/**/*.js',
+            '!<%=DIR_BASE%>/concrete/js/build/core/image-editor/build/**/*.js',
+            '!<%=DIR_BASE%>/concrete/js/build/core/app/json.js',
+        ]
+    };
 
     // Set Grunt tasks
     grunt.initConfig(config);
@@ -598,14 +670,23 @@ module.exports = function(grunt) {
         require('./tasks/git-skipper.js')(grunt, config, parameters, 'all', false, this.async());
     });
 
+    grunt.registerTask('webpack:hot', 'Hot reload webpack build', [
+        'env:dev',
+        'webpack-dev-server:dev'
+    ])
+
+    grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-webpack');
+
     grunt.registerTask('jsOnly:debug', jsTargets.debug);
-    grunt.registerTask('jsOnly:release', jsTargets.release );
+    grunt.registerTask('jsOnly:release', jsTargets.release);
 
     //grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
     //grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
     grunt.registerTask('js:debug', ['jsOnly:debug', 'gitskip-on:js']);
     grunt.registerTask('js:release', ['jsOnly:release', 'gitskip-off:js']);
     grunt.registerTask('js', 'js:release');
+    grunt.registerTask('js:check', ['concat:image_editor', 'jshint:all']);
 
     grunt.registerTask('css:debug', ['less:debug', 'gitskip-on:css']);
     grunt.registerTask('css:release', ['less:release', 'gitskip-off:css']);

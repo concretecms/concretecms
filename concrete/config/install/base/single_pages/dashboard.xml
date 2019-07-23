@@ -179,16 +179,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <!--
-        <page name="Statistics" path="/dashboard/reports/statistics" filename="/dashboard/reports/statistics.php"
-              pagetype="" description="View your site activity." package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>hits, pageviews, visitors, activity</value>
-                </attributekey>
-            </attributes>
-        </page>
-        //-->
         <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype=""
               description="Get submission data." package="">
             <attributes>
@@ -221,6 +211,14 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>forms, log, error, email, mysql, exception, survey, history</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Page Changes" path="/dashboard/reports/page_changes" filename="/dashboard/reports/page_changes.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>changes, csv, report</value>
                 </attributekey>
             </attributes>
         </page>
@@ -559,21 +557,21 @@
             </attributes>
         </page>
 
+        <page name="Reset Edit Mode" path="/dashboard/system/basics/reset_edit_mode" filename="/dashboard/system/basics/reset_edit_mode.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>checkin, check-in, check, force</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
         <page name="Express" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
               description="Express" package=""/>
 
         <page name="Data Objects" path="/dashboard/system/express/entities" filename="/dashboard/system/express/entities.php" pagetype=""
               description="" package="">
-
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value>1</value>
-                </attributekey>
-            </attributes>
-
         </page>
 
         <page name="Attributes" path="/dashboard/system/express/entities/attributes"
@@ -757,11 +755,11 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Image Uploading" path="/dashboard/system/files/image_uploading"
+        <page name="Image Options" path="/dashboard/system/files/image_uploading"
               filename="/dashboard/system/files/image_uploading.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>uploading, upload, images, image, resizing, manager</value>
+                    <value>uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality, compression, png, jpg, jpeg</value>
                 </attributekey>
             </attributes>
         </page>
@@ -770,6 +768,13 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>security, alternate storage, hide files</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Export Options" path="/dashboard/system/files/export_options" filename="/dashboard/system/files/export_options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>files, export, csv, bom, encoding</value>
                 </attributekey>
             </attributes>
         </page>
@@ -877,11 +882,19 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Trusted Proxies" path="/dashboard/system/permissions/trusted_proxies"
+              filename="/dashboard/system/permissions/trusted_proxies.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>trusted, proxy, proxies, ip, header, cloudflare</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
               description="Change login behaviors and setup public profiles." package=""/>
-        <page name="Public Registration" path="/dashboard/system/registration/open"
+        <page name="Account Options" path="/dashboard/system/registration/open"
               filename="/dashboard/system/registration/open.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -923,6 +936,24 @@
         </page>
         <page name="Notification Settings" path="/dashboard/system/registration/notification"
               filename="/dashboard/system/registration/notification.php" pagetype="" description="" package="">
+        </page>
+
+        <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
+              filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
+        </page>
+        <page name="Automated Logout" path="/dashboard/system/registration/automated_logout" filename="/dashboard/system/registration/automated_logout.php" pagetype="" description="Automate when users are logged out, or do it manually" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>login, logout, user, agent, ip, change, security, session, invalidation, invalid</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Password Requirements" path="/dashboard/system/registration/password_requirements" filename="/dashboard/system/registration/password_requirements.php" pagetype="" description="Set password rule and regulations." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>password, requirements, code, key, login, registration, security, nist</value>
+                </attributekey>
+            </attributes>
         </page>
 
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
@@ -1104,6 +1135,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Database Character Set" path="/dashboard/system/environment/database_charset" filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, character set, charset, collation, utf8</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Geolocation" path="/dashboard/system/environment/geolocation" filename="/dashboard/system/environment/geolocation.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -1122,6 +1160,32 @@
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="API" path="/dashboard/system/api" filename="/dashboard/system/api/view.php"
+              pagetype="" description="" package="">
+        </page>
+        <page name="API Settings" path="/dashboard/system/api/settings"
+              filename="/dashboard/system/api/settings.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>API, programming, public, app</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="API Integrations" path="/dashboard/system/api/integrations" filename="/dashboard/system/api/integrations.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
         <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
             <attributes>
                 <attributekey handle="desktop_priority">
@@ -1255,7 +1319,24 @@
     <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
         <area name="Main">
             <blocks>
-                <block type="desktop_waiting_for_me" />
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_waiting_for_me" />
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_draft_list" />
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
             </blocks>
         </area>
     </page>

@@ -181,7 +181,10 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         // now we clean up any WorkflowRequests that aren't in use any longer
         $cnt = $db->fetchColumn('select count(wpID) from WorkflowProgress where wrID = ?', array($this->wrID));
         if ($cnt == 0) {
-            $wr->delete();
+
+            // We used to delete this but we might need it around for attaching to an EmptyWorkflow if we're
+            // skipping workflows.
+            //$wr->delete();
 
             if (!($this->getWorkflowObject() instanceof EmptyWorkflow)) {
                 // Remove the associated notification

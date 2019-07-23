@@ -124,7 +124,7 @@ class Thumbnailer extends \Concrete\Core\Controller\Controller
     private function getDimensions($thumbnail)
     {
         $matches = null;
-        if (preg_match('/ccm_(\d+)x(\d+)(?:_([10]))?/', $thumbnail['thumbnailTypeHandle'], $matches)) {
+        if (preg_match('/^ccm_(\d+)x(\d+)(?:_([10]))?$/', $thumbnail['thumbnailTypeHandle'], $matches)) {
             return array_pad(array_slice($matches, 1), 3, 0);
         }
     }

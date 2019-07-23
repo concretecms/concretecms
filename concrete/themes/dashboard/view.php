@@ -25,10 +25,10 @@ $view->inc('elements/header.php');
     </div>
 
     <?php
-    echo '<div class="ccm-search-results-breadcrumb">'; // We output the DIV even if it's empty because some pages might add to it via javascript
+    // We output the DIV even if it's empty because some pages might add to it via javascript ?>
+    <div class="ccm-search-results-breadcrumb <?= (isset($breadcrumbClass)) ? $breadcrumbClass : ''; ?>">
 
-    if (isset($breadcrumb) && (!empty($breadcrumb))) {
-        ?>
+    <?php if (isset($breadcrumb) && (!empty($breadcrumb))) { ?>
         <ol class="breadcrumb">
             <?php
             foreach ($breadcrumb as $value) {

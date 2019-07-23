@@ -40,7 +40,9 @@ class AttributeKeyControl extends Control
 
     public function getControlLabel()
     {
-        return $this->getAttributeKey()->getAttributeKeyDisplayName();
+        if ($this->getAttributeKey()) {
+            return $this->getAttributeKey()->getAttributeKeyDisplayName();
+        }
     }
 
     public function getType()

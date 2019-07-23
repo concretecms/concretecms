@@ -11,7 +11,7 @@ class CustomThumbnail extends ThumbnailVersion
 
     protected $path;
     protected $cropped;
-  
+
     /**
      * CustomThumbnail constructor.
      * @param int $width
@@ -27,7 +27,7 @@ class CustomThumbnail extends ThumbnailVersion
         $cropped = (int) $cropped;
         $this->path = $path;
         $this->cropped = (bool) $cropped;
-        parent::__construct(REL_DIR_FILES_CACHE, "ccm_{$width}x{$height}_{$cropped}", 'Custom', $width, $height, false, $sizingMode);
+        parent::__construct(REL_DIR_FILES_CACHE, "ccm_{$width}x{$height}_{$cropped}", 'Custom', $width, $height, false, $sizingMode, false, [], true);
     }
 
     public function getFilePath(FileVersion $fv)

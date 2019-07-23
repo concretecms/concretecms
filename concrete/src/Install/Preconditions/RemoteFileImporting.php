@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Install\Preconditions;
 
 use Concrete\Core\Foundation\Environment\FunctionInspector;

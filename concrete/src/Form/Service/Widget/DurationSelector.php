@@ -6,6 +6,7 @@ use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
+use Punic\Calendar as PunicCalendar;
 
 class DurationSelector
 {
@@ -66,6 +67,7 @@ class DurationSelector
             'allowRepeat' => $allowRepeat,
             'allowMultiple' => $allowMultiple,
             'namespace' => $namespace,
+            'timeFormat' => PunicCalendar::has12HoursClock() ? 12 : 24,
         );
 
         $args = json_encode($args);

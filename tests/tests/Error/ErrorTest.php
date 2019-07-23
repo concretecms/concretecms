@@ -63,7 +63,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('first_name', $field->getDisplayName());
         $this->assertEquals('This is a standard error', $error->getMessage());
         $json = json_encode($error);
-        $this->assertEquals('{"message":"This is a standard error","field":{"element":"first_name","name":"first_name"}}',
+        $this->assertEquals('{"message":"This is a standard error","messageContainsHtml":false,"field":{"element":"first_name","name":"first_name"}}',
             $json);
     }
 

@@ -1,9 +1,10 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global CCM_DISPATCHER_FILENAME, ConcreteAlert */
+
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteCalendarAdmin($element) {
-		'use strict';
-		var my = this;
 
 		// List View
 		$element.find('table[data-table=event-list] tbody tr').each(function() {
@@ -20,7 +21,6 @@
 	}
 
 	ConcreteCalendarAdmin.setupVersionsTable = function($table) {
-		var my = this;
 		$table.on('click', 'input[name=eventVersionID]', function () {
 			var eventVersionID = $(this).val();
 			if (eventVersionID == -1) {
@@ -79,9 +79,9 @@
 				}
 			});
 		});
-	}
+	};
 
 
 	global.ConcreteCalendarAdmin = ConcreteCalendarAdmin;
 
-}(this, $);
+})(this, jQuery);

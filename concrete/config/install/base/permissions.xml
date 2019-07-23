@@ -345,6 +345,12 @@
             </access>
         </permissionkey>
 
+        <permissionkey handle="edit_topic_tree" name="Edit Topic Tree" package="" category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+
     </permissionkeys>
 
     <systemcaptcha>

@@ -234,4 +234,16 @@ abstract class ItemList
     {
         return $this->getResults();
     }
+
+    /**
+     * Allow to modify the auto-pagination parameters and the auto-sorting parameters
+     * 
+     * @param mixed $nameSpace Content that will be added to the parameters
+     */
+    public function setNameSpace($nameSpace)
+    {
+        $this->paginationPageParameter .= '_' . $nameSpace;
+        $this->sortColumnParameter .= '_' . $nameSpace;
+        $this->sortDirectionParameter .= '_' . $nameSpace;
+    }
 }

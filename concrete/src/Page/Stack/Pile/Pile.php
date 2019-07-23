@@ -78,7 +78,7 @@ class Pile extends ConcreteObject
      *
      * @return Pile
      */
-    public function create($name)
+    public static function create($name)
     {
         $db = Loader::db();
         $u = new User();
@@ -97,7 +97,7 @@ class Pile extends ConcreteObject
      *
      * @return Pile
      */
-    public function get($pID)
+    public static function get($pID)
     {
         $db = Loader::db();
         $v = array($pID);
@@ -120,7 +120,7 @@ class Pile extends ConcreteObject
      *
      * @return Pile
      */
-    public function getOrCreate($name)
+    public static function getOrCreate($name)
     {
         $db = Loader::db();
         $u = new User();
@@ -178,7 +178,7 @@ class Pile extends ConcreteObject
     /**
      * @return Pile
      */
-    public function getDefault()
+    public static function getDefault()
     {
         $db = Loader::db();
         // checks to see if we're registered, or if we're a visitor. Either way, we get a pile entry
@@ -203,7 +203,7 @@ class Pile extends ConcreteObject
     /**
      * @return Pile
      */
-    public function createDefaultPile()
+    public static function createDefaultPile()
     {
         $db = Loader::db();
         // for the sake of data integrity, we're going to ensure that a general pile does not exist
@@ -233,7 +233,7 @@ class Pile extends ConcreteObject
     /**
      * @return array
      */
-    public function getMyPiles()
+    public static function getMyPiles()
     {
         $db = Loader::db();
 

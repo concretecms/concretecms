@@ -7,6 +7,13 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
     $selectorFormFactor = $configuredTarget->getSelectorFormFactor();
     $startingPointPageID = $configuredTarget->getStartingPointPageID();
+} else {
+    if (!isset($selectorFormFactor)) {
+        $selectorFormFactor = null;
+    }
+    if (!isset($startingPointPageID)) {
+        $startingPointPageID = null;
+    }
 }
 ?>
 

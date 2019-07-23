@@ -36,7 +36,7 @@ class Extractor
         $themesPresetsParser = new C5TLParserThemePresets();
         $configFilesParser = new C5TLParserConfigFiles();
 
-        $configFilesParser->parseDirectory(DIR_BASE, '');
+        $configFilesParser->parseDirectory(DIR_BASE, '', $translations);
 
         $processApplication = [
             DIRNAME_BLOCKS => [$phpParser, $blockTemplatesParser],

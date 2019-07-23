@@ -36,6 +36,13 @@ EOT
         $output->writeln('Installed - ' . ($info->isInstalled() ? 'Yes' : 'No'));
         $output->writeln($info->getCoreVersions());
 
+        if ($info->isInstalled()) {
+            $output->writeln('');
+            $output->writeln('<info># Database Information</info>');
+            $output->writeln('Version - ' . $info->getDBMSVersion());
+            $output->writeln('SQL Mode - ' . $info->getDBMSSqlMode());
+        }
+
         $output->writeln('');
         $output->writeln('<info># Paths</info>');
         $output->writeln('Web root - ' . $info->getWebRootDirectory());

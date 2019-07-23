@@ -26,8 +26,8 @@
 
     <fieldset>
         <legend><?=t('Category Colors')?></legend>
-
-        <?php if (count($topics)) {
+    
+        <?php if (!empty($topics) && is_array($topics)) {
     ?>
             <table class="table" data-table="category-colors">
                 <thead>
@@ -104,7 +104,7 @@
                     }
                 });
             });
-            $('input[name=defaultTextColor]').option('change', function() {
+            $('input[name=defaultTextColor]').on('change', function() {
                 var color = $(this).val();
                 $('table[data-table=category-colors] input[type=checkbox]').each(function() {
                     if (!$(this).is(':checked')) {

@@ -1,16 +1,16 @@
 <?php
+
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\Connection\Timezone;
+use Concrete\Core\Database\CharacterSetCollation\Exception as CharacterSetCollationException;
+use Concrete\Core\Database\CharacterSetCollation\Resolver;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\Preconditions\PdoMysqlExtension;
 use Concrete\Core\Package\StartingPointPackage;
-use Concrete\Core\Url\UrlImmutable;
-use DateTimeZone;
 use Exception;
-use Punic\Misc as PunicMisc;
 use Throwable;
 
 class Installer
@@ -37,15 +37,22 @@ class Installer
     protected $options;
 
     /**
+     * @var \Concrete\Core\Database\CharacterSetCollation\Resolver
+     */
+    protected $characterSetCollationResolver;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $application the application instance
      * @param InstallerOptions $options the options to be used by the installer
+     * @param \Concrete\Core\Database\CharacterSetCollation\Resolver $characterSetCollationResolver
      */
-    public function __construct(Application $application, InstallerOptions $options)
+    public function __construct(Application $application, InstallerOptions $options, Resolver $characterSetCollationResolver)
     {
         $this->application = $application;
         $this->options = $options;
+        $this->characterSetCollationResolver = $characterSetCollationResolver;
     }
 
     /**
@@ -73,35 +80,70 @@ class Installer
     }
 
     /**
-     * @return \Concrete\Core\Error\ErrorList\ErrorList
+     * Create a new Connection instance using the values specified in the options.
+     *
+     * @throws \Concrete\Core\Error\UserMessageException throws a UserMessageException in case of problems
+     *
+     * @return \Concrete\Core\Database\Connection\Connection
+     */
+    public function createConnection()
+    {
+        $pdoCheck = $this->application->make(PdoMysqlExtension::class)->performCheck();
+        if ($pdoCheck->getState() !== PreconditionResult::STATE_PASSED) {
+            throw new UserMessageException($pdoCheck->getMessage());
+        }
+        $databaseConfiguration = $this->getDefaultConnectionConfiguration();
+        if ($databaseConfiguration === null) {
+            throw new UserMessageException(t('The configuration is missing the required database connection parameters.'));
+        }
+        $databaseManager = $this->application->make(DatabaseManager::class);
+        try {
+            $connection = $databaseManager->getFactory()->createConnection($databaseConfiguration);
+        } catch (Exception $x) {
+            throw new UserMessageException($x->getMessage(), $x->getCode(), $x);
+        } catch (Throwable $x) {
+            throw new UserMessageException($x->getMessage(), $x->getCode());
+        }
+
+        $connection = $this->setPreferredCharsetCollation($connection);
+
+        return $connection;
+    }
+
+    /**
+     * Get the StartingPointPackage instance.
+     *
+     * @param bool $fallbackToDefault Fallback to the default one if the starting point handle is not defined?
+     *
+     * @throws UserMessageException
+     *
+     * @return StartingPointPackage
+     */
+    public function getStartingPoint($fallbackToDefault)
+    {
+        $handle = $this->getOptions()->getStartingPointHandle();
+        if ($handle === '') {
+            if (!$fallbackToDefault) {
+                throw new UserMessageException(t('The starting point has not been defined.'));
+            }
+            $handle = static::DEFAULT_STARTING_POINT;
+        }
+        $result = StartingPointPackage::getClass($handle);
+        if ($result === null) {
+            throw new UserMessageException(t('Invalid starting point: %s', $handle));
+        }
+        $result->setInstallerOptions($this->getOptions());
+
+        return $result;
+    }
+
+    /**
+     * @deprecated Use the OptionsPreconditionInterface preconditions
+     * @see \Concrete\Core\Install\PreconditionService::getOptionsPreconditions()
      */
     public function checkOptions()
     {
-        $errors = $this->application->make('error');
-        /* @var \Concrete\Core\Error\ErrorList\ErrorList $errors */
-        try {
-            $serverTimeZone = $this->options->getServerTimeZone(false);
-        } catch (Exception $x) {
-            $errors->add($x);
-            $serverTimeZone = null;
-        }
-        try {
-            $this->checkConnection($serverTimeZone);
-        } catch (Exception $x) {
-            $errors->add($x);
-        }
-        try {
-            $this->getStartingPoint(false);
-        } catch (Exception $x) {
-            $errors->add($x);
-        }
-        try {
-            $this->checkCanonicalUrls();
-        } catch (Exception $x) {
-            $errors->add($x);
-        }
-
-        return $errors;
+        return $this->application->make('error');
     }
 
     /**
@@ -151,125 +193,55 @@ class Installer
     }
 
     /**
-     * Check if the database connection is correctly configured.
+     * @param \Concrete\Core\Database\Connection\Connection $connection
      *
-     * @param DateTimeZone|null $serverTimeZone The PHP time zone that should be compatible with the connection
-     *
-     * @throws UserMessageException
+     * @return \Concrete\Core\Database\Connection\Connection
      */
-    protected function checkConnection(DateTimeZone $serverTimeZone = null)
+    private function setPreferredCharsetCollation(Connection $connection)
     {
-        $pdoCheck = $this->application->make(PdoMysqlExtension::class)->performCheck();
-        if ($pdoCheck->getState() !== PreconditionResult::STATE_PASSED) {
-            throw new UserMessageException($pdoCheck->getMessage());
-        }
-        $databaseConfiguration = $this->getDefaultConnectionConfiguration();
-        if ($databaseConfiguration === null) {
-            throw new UserMessageException(t('The configuration is missing the required database connection parameters.'));
-        }
-        $databaseManager = $this->application->make(DatabaseManager::class);
-        /* @var DatabaseManager $databaseManager */
+        // Let's get the currently configured connection charset and collation
+        $connectionParams = $connection->getParams();
+        $connectionCharset = isset($connectionParams['character_set']) ? $this->characterSetCollationResolver->normalizeCharacterSet($connectionParams['character_set']) : '';
+        $connectionCollation = isset($connectionParams['collation']) ? $this->characterSetCollationResolver->normalizeCollation($connectionParams['collation']) : '';
         try {
-            $db = $databaseManager->getFactory()->createConnection($databaseConfiguration);
-            /* @var \Concrete\Core\Database\Connection\Connection $db */
-        } catch (Exception $x) {
-            throw new UserMessageException($x->getMessage(), $x->getCode(), $x);
-        } catch (Throwable $x) {
-            throw new UserMessageException($x->getMessage(), $x->getCode());
+            list($characterSet, $collation) = $this->characterSetCollationResolver->resolveCharacterSetAndCollation($connection);
+        } catch (CharacterSetCollationException $x) {
+            // Unsupported character set and/or collation
+            return $connection;
         }
-        if ($this->getOptions()->isAutoAttachEnabled() === false) {
-            $existingTables = [];
-            foreach ($db->fetchAll('show tables') as $row) {
-                $existingTables[] = array_shift($row);
-            }
-            $numExistingTables = count($existingTables);
-            if ($numExistingTables > 0) {
-                throw new UserMessageException(t2(
-                    'There is already %s table in this database. concrete5 must be installed in an empty database.',
-                    'There are already %s tables in this database. concrete5 must be installed in an empty database.',
-                    $numExistingTables
-                ));
-            }
-        }
-        try {
-            $supported = false;
-            foreach ($db->fetchAll('show engines') as $engine) {
-                $engine = array_change_key_case($engine, CASE_LOWER);
-                if (isset($engine['engine']) && strtolower($engine['engine']) == 'innodb') {
-                    $supported = true;
-                    break;
-                }
-            }
-            if (!$supported) {
-                throw new UserMessageException(t('Your MySQL database does not support InnoDB database tables. These are required.'));
-            }
-        } catch (Exception $x) {
-            // we're going to just proceed and hope for the best.
-        } catch (Throwable $x) {
-            // we're going to just proceed and hope for the best.
+        if ($connectionCharset === $characterSet && $connectionCollation === $collation) {
+            // No changes required
+            return $connection;
         }
 
-        if ($serverTimeZone !== null) {
-            $ctz = $this->application->make(Timezone::class, ['connection' => $db]);
-            /* @var Timezone $ctz */
-            $deltaTimezone = $ctz->getDeltaTimezone($serverTimeZone);
-            if ($deltaTimezone !== null) {
-                $error = $ctz->describeDeltaTimezone($deltaTimezone);
-                $suggestTimezones = $ctz->getCompatibleTimezones();
-                if (!empty($suggestTimezones)) {
-                    $error .= ' ' . t('These are the time zones compatible with the database one: %s', PunicMisc::join($suggestTimezones));
-                }
-                throw new UserMessageException($error);
-            }
-        }
+        return $this->reconfigureCharacterSetCollation($connection, $characterSet, $collation);
     }
 
     /**
-     * Get the StartingPointPackage instance.
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     * @param string $characterSet
+     * @param string $collation
      *
-     * @param bool $fallbackToDefault Fallback to the default one if the starting point handle is not defined?
-     *
-     * @throws UserMessageException
-     *
-     * @return StartingPointPackage
+     * @return \Concrete\Core\Database\Connection\Connection
      */
-    public function getStartingPoint($fallbackToDefault)
-    {
-        $handle = $this->getOptions()->getStartingPointHandle();
-        if ($handle === '') {
-            if (!$fallbackToDefault) {
-                throw new UserMessageException(t('The starting point has not been defined.'));
-            }
-            $handle = static::DEFAULT_STARTING_POINT;
-        }
-        $result = StartingPointPackage::getClass($handle);
-        if ($result === null) {
-            throw new UserMessageException(t('Invalid starting point: %s', $handle));
-        }
-        $result->setInstallerOptions($this->getOptions());
-
-        return $result;
-    }
-
-    /**
-     * Check that the canonical URLs are well formatted.
-     *
-     * @throws UserMessageException
-     */
-    protected function checkCanonicalUrls()
+    private function reconfigureCharacterSetCollation(Connection $connection, $characterSet, $collation)
     {
         $configuration = $this->getOptions()->getConfiguration();
-        foreach ([
-            'canonical-url' => t('The canonical URL must have the http:// scheme or the https:// scheme'),
-            'canonical-url-alternative' => t('The alternative canonical URL must have the http:// scheme or the https:// scheme'),
-        ] as $handle => $error) {
-            if (isset($configuration[$handle]) && $configuration[$handle] !== '') {
-                $url = UrlImmutable::createFromUrl($configuration[$handle]);
-                if (!preg_match('/^https?/i', $url->getScheme())) {
-                    throw new UserMessageException($error);
-                }
-                $configuration[$handle] = (string) $url;
-            }
+        $defaultConnectionName = isset($configuration['database']['default-connection']) ? $configuration['database']['default-connection'] : '';
+        if (!$defaultConnectionName) {
+            // We should always have a default connection name, but don't break the process if it's not so
+            return $connection;
         }
+        $defaultConnectionConfiguration = isset($configuration['database']['connections'][$defaultConnectionName]) ? $configuration['database']['connections'][$defaultConnectionName] : null;
+        if (!is_array($defaultConnectionConfiguration)) {
+            // We should always have the configuration of the default connection name, but don't break the process if it's not so
+            return $connection;
+        }
+        $configuration['database']['connections'][$defaultConnectionName]['character_set'] = $characterSet;
+        $configuration['database']['connections'][$defaultConnectionName]['collation'] = $collation;
+        $this->getOptions()->setConfiguration($configuration);
+        $connection->close();
+
+        return $this->createConnection();
     }
 }

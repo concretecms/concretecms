@@ -24,17 +24,24 @@ class EventRepetitionService
         return $r->findOneByRepetitionID($id);
     }
 
+    /**
+     * @param string $namespace
+     * @param Calendar $calendar
+     * @param \Concrete\Core\Http\Request $request
+     *
+     * @return \Concrete\Core\Entity\Calendar\CalendarEventRepetition[]
+     */
     public function translateFromRequest($namespace, Calendar $calendar, $request)
     {
         $sets = $request->request->get($namespace . '_repetitionSetID');
-        $r = $request->request->all();
+        $r = $request->request;
 
         $repetitions = array();
 
         foreach($sets as $repetitionSetID) {
 
-            $dateStart = $r[$namespace . '_pdStartDate_' . $repetitionSetID];
-            $dateEnd = $r[$namespace . '_pdEndDate_' . $repetitionSetID];
+            $dateStart = $r->get($namespace . '_pdStartDate_' . $repetitionSetID);
+            $dateEnd = $r->get($namespace . '_pdEndDate_' . $repetitionSetID);
             if ($dateStart || $dateEnd) {
 
                 // create a Repetition object
@@ -49,7 +56,7 @@ class EventRepetitionService
                 $timezone = new \DateTimeZone($timezone);
                 $pd->setTimezone($timezone);
 
-                if ($r[$namespace . '_pdStartDateAllDayActivate_' . $repetitionSetID]) {
+                if ($r->get($namespace . '_pdStartDateAllDayActivate_' . $repetitionSetID)) {
                     $pd->setStartDateAllDay(true);
                     $pd->setEndDateAllDay(true);
                     $dateStart = date('Y-m-d 00:00:00', strtotime($dateStart));
@@ -57,24 +64,24 @@ class EventRepetitionService
                 } else {
                     $pd->setStartDateAllDay(0);
                     // Grab the times.
-                    $dateStart = date('Y-m-d H:i:s', strtotime($dateStart . ' ' . $r[$namespace . '_pdStartDateSelectTime_' . $repetitionSetID]));
-                    $dateEnd = date('Y-m-d H:i:s', strtotime($dateEnd . ' ' . $r[$namespace . '_pdEndDateSelectTime_' . $repetitionSetID]));
+                    $dateStart = date('Y-m-d H:i:s', strtotime($dateStart . ' ' . $r->get($namespace . '_pdStartDateSelectTime_' . $repetitionSetID)));
+                    $dateEnd = date('Y-m-d H:i:s', strtotime($dateEnd . ' ' . $r->get($namespace . '_pdEndDateSelectTime_' . $repetitionSetID)));
                 }
 
                 $pd->setStartDate($dateStart);
                 $pd->setEndDate($dateEnd);
 
-                if ($r[$namespace . '_pdRepeatPeriod_' . $repetitionSetID] && $r[$namespace . '_pdRepeat_' . $repetitionSetID]) {
-                    if ($r[$namespace . '_pdRepeatPeriod_' . $repetitionSetID] == 'daily') {
+                if ($r->get($namespace . '_pdRepeatPeriod_' . $repetitionSetID) && $r->get($namespace . '_pdRepeat_' . $repetitionSetID)) {
+                    if ($r->get($namespace . '_pdRepeatPeriod_' . $repetitionSetID) == 'daily') {
                         $pd->setRepeatPeriod($pd::REPEAT_DAILY);
-                        $pd->setRepeatEveryNum($r[$namespace . '_pdRepeatPeriodDaysEvery_' . $repetitionSetID]);
-                    } elseif ($r[$namespace . '_pdRepeatPeriod_' . $repetitionSetID] == 'weekly') {
+                        $pd->setRepeatEveryNum($r->get($namespace . '_pdRepeatPeriodDaysEvery_' . $repetitionSetID));
+                    } elseif ($r->get($namespace . '_pdRepeatPeriod_' . $repetitionSetID) == 'weekly') {
                         $pd->setRepeatPeriod($pd::REPEAT_WEEKLY);
-                        $pd->setRepeatEveryNum($r[$namespace . '_pdRepeatPeriodWeeksEvery_' . $repetitionSetID]);
-                        $pd->setRepeatPeriodWeekDays($r[$namespace . '_pdRepeatPeriodWeeksDays_' . $repetitionSetID]);
-                    } elseif ($r[$namespace . '_pdRepeatPeriod_' . $repetitionSetID] == 'monthly') {
+                        $pd->setRepeatEveryNum($r->get($namespace . '_pdRepeatPeriodWeeksEvery_' . $repetitionSetID));
+                        $pd->setRepeatPeriodWeekDays($r->get($namespace . '_pdRepeatPeriodWeeksDays_' . $repetitionSetID));
+                    } elseif ($r->get($namespace . '_pdRepeatPeriod_' . $repetitionSetID) == 'monthly') {
                         $pd->setRepeatPeriod($pd::REPEAT_MONTHLY);
-                        $repeat_by = $r[$namespace . '_pdRepeatPeriodMonthsRepeatBy_' . $repetitionSetID];
+                        $repeat_by = $r->get($namespace . '_pdRepeatPeriodMonthsRepeatBy_' . $repetitionSetID);
                         $repeat = $pd::MONTHLY_REPEAT_WEEKLY;
                         switch ($repeat_by) {
                             case 'week':
@@ -85,7 +92,7 @@ class EventRepetitionService
                                 break;
                             case 'lastweekday':
                                 $repeat = $pd::MONTHLY_REPEAT_LAST_WEEKDAY;
-                                $dotw = $r[$namespace . '_pdRepeatPeriodMonthsRepeatLastDay_' . $repetitionSetID];
+                                $dotw = $r->get($namespace . '_pdRepeatPeriodMonthsRepeatLastDay_' . $repetitionSetID);
                                 if (!$dotw) {
                                     $dotw = 0;
                                 }
@@ -94,10 +101,10 @@ class EventRepetitionService
                         }
 
                         $pd->setRepeatMonthBy($repeat);
-                        $pd->setRepeatEveryNum($r[$namespace . '_pdRepeatPeriodMonthsEvery_' . $repetitionSetID]);
+                        $pd->setRepeatEveryNum($r->get($namespace . '_pdRepeatPeriodMonthsEvery_' . $repetitionSetID));
                     }
 
-                    $pdEndRepeatDate = $r[$namespace . '_pdEndRepeatDate_' . $repetitionSetID];
+                    $pdEndRepeatDate = $r->get($namespace . '_pdEndRepeatDate_' . $repetitionSetID);
                     if ($pdEndRepeatDate == 'date') {
                         $pd->setRepeatPeriodEnd($this->formDateTime->translate($namespace . '_pdEndRepeatDateSpecific_' . $repetitionSetID));
                     } else {
@@ -109,8 +116,8 @@ class EventRepetitionService
 
                 $reuseExisting = false;
                 $comparator = new Comparator();
-                if ($r[$namespace . '_repetitionID_' . $repetitionSetID]) {
-                    $pdEntity = $this->getByID($r[$namespace . '_repetitionID_' . $repetitionSetID]);
+                if ($r->get($namespace . '_repetitionID_' . $repetitionSetID)) {
+                    $pdEntity = $this->getByID($r->get($namespace . '_repetitionID_' . $repetitionSetID));
                     if ($pdEntity) {
                         $repetitionObject = $pdEntity->getRepetitionObject();
                         // If the object is the same as the one we have stored in the db, reuse the same object.

@@ -1,26 +1,29 @@
 <?php defined('C5_EXECUTE') or die('Access denied.');
 $form = Core::make('helper/form');
+$dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Service\Date */
 /* @var Concrete\Core\Form\Service\Form $form */
 ?>
 
 <form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
 
 	<div class="form-group">
-		<label class="control-label"><?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?></label>
-		<input name="uName" class="form-control" autofocus="autofocus" />
+		<label class="control-label" for="uName"><?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?></label>
+		<input name="uName" id="uName" class="form-control" autofocus="autofocus" />
 	</div>
 
 	<div class="form-group">
-		<label class="control-label"><?=t('Password')?></label>
-		<input name="uPassword" class="form-control" type="password" />
+		<label class="control-label" for="uPassword"><?=t('Password')?></label>
+		<input name="uPassword" id="uPassword" class="form-control" type="password" />
 	</div>
 
-	<div class="checkbox">
-		<label>
-			<input type="checkbox" name="uMaintainLogin" value="1">
-			<?= t('Stay signed in for two weeks') ?>
-		</label>
-	</div>
+    <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) { ?>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="uMaintainLogin" value="1">
+                <?php echo t('Stay signed in for %s', $dh->describeInterval(Config::get('concrete.session.remember_me.lifetime'))); ?>
+            </label>
+        </div>
+    <?php } ?>
 
 	<?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
     ?>

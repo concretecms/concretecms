@@ -3,12 +3,11 @@
 namespace Concrete\TestHelpers\Database;
 
 use CacheLocal;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
 use Core;
-use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOConnection;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use ORM;
 use PHPUnit_Extensions_Database_DataSet_CompositeDataSet;
@@ -146,14 +145,24 @@ abstract class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_Test
     }
 
     /**
-     * Import tables from $this->tables.
+     * Get the names of the tables to be imported from the xml files.
+     *
+     * @return string[]
+     */
+    protected function getTables()
+    {
+        return $this->tables;
+    }
+
+    /**
+     * Import tables from $this->getTables().
      */
     protected function importTables()
     {
         $connection = $this->connection();
 
         // Filter out any tables that have already been imported
-        $tables = array_filter($this->tables, function ($table) {
+        $tables = array_filter($this->getTables(), function ($table) {
             return !isset(static::$existingTables[$table]);
         });
 
@@ -262,7 +271,7 @@ abstract class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_Test
     {
         // Convert the given partial into sql create statements
         $schema = Schema::loadFromXMLElement($xml, $connection);
-        $queries = $schema->toSql(new MySqlPlatform());
+        $queries = $schema->toSql($connection->getDatabasePlatform());
 
         // Run queries
         foreach ($queries as $query) {

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Support\Facade\Application;
 use DateTime as PHPDateTime;
 use Exception;
@@ -93,7 +94,7 @@ class DateTime
      *
      * @return string
      */
-    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = array())
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = [])
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -282,6 +283,8 @@ class DateTime
 
         // Create the Javascript for the calendar
         if ($calendarAutoStart) {
+            $assetList = ResponseAssetGroup::get();
+            $assetList->requireAsset('jquery/ui');
             $dateFormat = json_encode($dh->getJQueryUIDatePickerFormat($shownDateFormat));
             if ($classes) {
                 $beforeShow = 'beforeShow: function() { $(\'#ui-datepicker-div\').addClass(' . json_encode((string) $classes) . '); },';
@@ -296,7 +299,7 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_dt_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}_dt',
@@ -309,8 +312,8 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
-})
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'off');
+});
 </script>
 EOT;
         }
@@ -345,7 +348,7 @@ EOT;
      *
      * @return string
      */
-    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = array())
+    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = [])
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -375,7 +378,7 @@ EOT;
         // Build HTML
         $datePickerOptionsAsJSON = json_encode($datePickerOptions, JSON_FORCE_OBJECT);
         $shownDateFormat = $dh->getPHPDatePattern();
-        $html = '<div class="form-inline">';
+        $html = '<div>';
         $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
         $html .= '<input type="text" id="' . $id . '_pub" class="form-control ccm-input-date"';
         if (!$calendarAutoStart && $dateTime !== null) {
@@ -388,6 +391,8 @@ EOT;
 
         // Create the Javascript for the calendar
         if ($calendarAutoStart) {
+            $assetList = ResponseAssetGroup::get();
+            $assetList->requireAsset('jquery/ui');
             $dateFormat = json_encode($dh->getJQueryUIDatePickerFormat($shownDateFormat));
             if ($dateTime === null) {
                 $defaultDateJs = "''";
@@ -397,7 +402,7 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}',
@@ -409,7 +414,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'off');
 });
 </script>
 EOT;

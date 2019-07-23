@@ -21,7 +21,7 @@ foreach ($sets as $set) {
                 'saveAction' => $saveAction,
                 'clearAction' => $clearAction,
                 'permissionsCallback' => $permissionsCallback,
-                'permissionArguments' => $permissionsArguments,
+                'permissionArguments' => isset($permissionsArguments) ? $permissionsArguments : null,
             )
         );
     }

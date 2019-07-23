@@ -1,4 +1,5 @@
 <?php
+
 return [
     'default' => 'default',
     'sites' => [
@@ -20,6 +21,18 @@ return [
                  */
                 'display_account_menu' => true,
             ],
+            'misc' => [
+                // File ID for favicon
+                'favicon_fid' => null,
+                // File ID for iPhone home screen icon
+                'iphone_home_screen_thumbnail_fid' => null,
+                // File ID for Windows 8 tile icon
+                'modern_tile_thumbnail_fid' => null,
+                // Background color for Windows 8 tile icon
+                'modern_tile_thumbnail_bgcolor' => null,
+                // theme-color meta-tag (eg color of toolbar for Chrome 39+ on Android)
+                'browser_toolbar_color' => null,
+            ],
             'editor' => [
                 'concrete' => [
                     'enable_filemanager' => true,
@@ -29,7 +42,7 @@ return [
                     'custom_config_options' => '',
                     'editor_function_options' => '',
                     'plugins' => [
-                        'selected' => [
+                        'selected_default' => [
                             'autogrow',
                             'a11yhelp',
                             'basicstyles',
@@ -123,6 +136,7 @@ return [
                 'redirect_home_to_default_locale' => false,
                 'use_browser_detected_locale' => false,
                 'default_source_locale' => 'en_US',
+                'always_track_user_locale' => true,
             ],
             'seo' => [
                 'canonical_tag' => [
@@ -132,6 +146,12 @@ return [
                     'excluded_querystring_parameters' => [
                         'cID',
                         'ccm_token',
+                    ],
+                ],
+                'tracking' => [
+                    'code' => [
+                        'header' => '',
+                        'footer' => '',
                     ],
                 ],
             ],

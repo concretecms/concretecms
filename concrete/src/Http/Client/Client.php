@@ -1,18 +1,20 @@
 <?php
 namespace Concrete\Core\Http\Client;
 
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Zend\Http\Client as ZendClient;
 use Zend\Http\Request as ZendRequest;
 use Zend\Uri\Http as ZendUriHttp;
-use Psr\Log\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Exception;
+use Throwable;
 
 class Client extends ZendClient implements LoggerAwareInterface
 {
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger = null;
+
+    use LoggerAwareTrait;
 
     /**
      * Get the currently configured logger.
@@ -22,6 +24,11 @@ class Client extends ZendClient implements LoggerAwareInterface
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_NETWORK;
     }
 
     /**
@@ -49,7 +56,13 @@ class Client extends ZendClient implements LoggerAwareInterface
         $logger = $this->getLogger();
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
-            $body = $response->getBody();
+            try {
+                $body = $response->getBody();
+            } catch (Exception $x) {
+                $body = '';
+            } catch (Throwable $x) {
+                $body = '';
+            }
             if (mb_strlen($body) <= 200) {
                 $shortBody = $body;
             } else {

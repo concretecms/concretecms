@@ -82,6 +82,11 @@ class Configuration extends DoctrineMigrationConfiguration
         if (!in_array($criteria, [static::FORCEDMIGRATION_INCLUSIVE, static::FORCEDMIGRATION_EXCLUSIVE], true)) {
             throw new Exception(t('Invalid initial migration criteria.'));
         }
+
+        // Remove possible 'Version' prefix from the migration identifier.
+        // This allows a user to also use VersionXXXXXXXXXXXX, which corresponds with the class name.
+        $reference = str_replace('Version', '', $reference);
+
         $migration = $this->findInitialMigration($reference, $criteria);
         if ($migration === null) {
             throw new Exception(t('Unable to find a migration with identifier %s', $reference));
@@ -162,7 +167,7 @@ class Configuration extends DoctrineMigrationConfiguration
             foreach (array_reverse($forcedMigrationKeys) as $forcedMigrationKey) {
                 $migration = $allMigrations[$forcedMigrationKey];
                 if ($migration->isMigrated() && !$migration->getMigration() instanceof RepeatableMigrationInterface) {
-                    throw new Exception(t('The migration %s has already been executed, and can\'t be executed again.'));
+                    throw new Exception(t('The migration %s has already been executed, and can\'t be executed again.', $migration->getVersion()));
                 }
                 $forcedMigrations[$forcedMigrationKey] = $migration;
             }

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<database name="phpunitTesting">
+		<table_data name="Users">
+			<row>
+				<field name="uID">1</field>
+				<field name="uName">admin</field>
+				<field name="uEmail">master@example.com</field>
+				<field name="uPassword"></field>
+				<field name="uIsActive">1</field>
+				<field name="uIsFullRecord">1</field>
+				<field name="uDateAdded">2018-06-21 16:31:48</field>
+				<field name="uLastPasswordChange">2018-06-21 16:31:48</field>
+				<field name="uHasAvatar">0</field>
+				<field name="uIsPasswordReset">0</field>
+			</row>
+		</table_data>
+	</database>
+</mysqldump>

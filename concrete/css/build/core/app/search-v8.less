@@ -26,6 +26,10 @@ div.ccm-header-search-form {
     border-left: 0px;
   }
 
+  .dropdown-toggle {
+    border-right: 0px;
+  }
+
   input {
     border-right-width: 0px !important;
   }
@@ -36,10 +40,7 @@ div.ccm-header-search-form {
     width: 90vw;
 
     input.form-control {
-      .border-top-left-radius(4px) !important;
-      .border-bottom-left-radius(4px) !important;
-      .border-top-right-radius(0px) !important;
-      .border-bottom-right-radius(0px) !important;
+      .border-radius(0px);
     }
 
 
@@ -139,10 +140,14 @@ div.ui-dialog {
   div.ccm-header-search-form {
     width: auto;
     box-sizing: content-box;
-    padding-top: 4px;
+    padding-top: 18px;
     padding-bottom: 4px;
-    background-color: rgba(71, 181, 251, 0.11);
+    background-color: #fff;
     .border-top-radius(4px);
+
+    form {
+      right: 18px;
+    }
 
     div.input-group {
       float: right;
@@ -151,7 +156,7 @@ div.ui-dialog {
   }
 
   div.table-responsive {
-    margin: -20px -26px -20px -26px;
+    margin: -15px -26px -20px -26px;
   }
   div.ccm-search-results-breadcrumb {
     display: inline-block;
@@ -159,6 +164,7 @@ div.ui-dialog {
     height: 15px;
     top: 10px;
     left: 10px;
+    z-index: 2;
     ol {
       margin-bottom: 0px;
       li a, li span {

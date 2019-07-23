@@ -398,27 +398,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @param string $task
-     * @param null $alternateHandler
-     *
-     * @return string
-     */
-    public function getAreaUpdateAction($task = 'update', $alternateHandler = null)
-    {
-        $valt = Core::make('helper/validation/token');
-        $token = '&'.$valt->getParameter();
-        $step = ($_REQUEST['step']) ? '&step='.$_REQUEST['step'] : '';
-        $c = $this->getAreaCollectionObject();
-        if ($alternateHandler) {
-            $str = $alternateHandler."?atask={$task}&cID=".$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$step.$token;
-        } else {
-            $str = DIR_REL.'/'.DISPATCHER_FILENAME.'?atask='.$task.'&cID='.$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$step.$token;
-        }
-
-        return $str;
-    }
-
-    /**
      * @param Page $c
      */
     public function refreshCache($c)
@@ -795,6 +774,11 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $this->arOverrideCollectionPermissions = $area->overrideCollectionPermissions();
             $this->arInheritPermissionsFromAreaOnCID = $area->getAreaCollectionInheritID();
             $this->arID = $area->getAreaID();
+
+            $area = $this;
+            array_map(function($ab) use ($area) {
+                $ab->setBlockAreaObject($this);
+            }, $this->areaBlocksArray);
         }
     }
 
@@ -807,7 +791,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $currentPage = Page::getCurrentPage();
         $blocks = array();
         foreach ($blocksTmp as $ab) {
-            $ab->setBlockAreaObject($this);
             if (is_object($currentPage) && $currentPage->getCollectionID() != $this->c->getCollectionID()) {
                 // this is useful for rendering areas from one page
                 // onto the next and including interactive elements

@@ -2,12 +2,15 @@
 
 <?php
 $cp = new Permissions($calendar);
+if (!isset($occurrence) || !$occurrence) {
+    $occurrence = null;
+}
 ?>
 <div class="ccm-ui">
     <form method="post" class="ccm-event-add form-stacked">
 
         <?php
-        if ($occurrence) {
+        if ($occurrence !== null) {
             ?>
             <input type="hidden" name="versionOccurrenceID" value="<?= $occurrence->getID() ?>"/>
             <?php
@@ -19,14 +22,14 @@ $cp = new Permissions($calendar);
 
             <?php
         }
-        Element::get('event/form', array('calendar' => $calendar, 'occurrence' => $occurrence ?: null))->render();
+        Element::get('event/form', array('calendar' => $calendar, 'occurrence' => $occurrence))->render();
         ?>
     </form>
 </div>
 <div class="dialog-buttons">
     <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
 
-    <?php if ($cp->canApproveCalendarEvent() || $occurrence) {
+    <?php if ($occurrence !== null || $cp->canApproveCalendarEvent()) {
         $showButtonGroup = true;
     } else {
         $showButtonGroup = false;
@@ -36,7 +39,7 @@ $cp = new Permissions($calendar);
             <button type="submit" class="btn btn-success pull-right"
                     data-event-dialog-action="publish"><?= t('Publish Event') ?></button>
                 <button type="submit" data-event-dialog-action="save"
-                        class="btn btn-primary pull-right"><?= t('Save &amp; Close') ?></button>
+                        class="btn btn-primary pull-left"><?= t('Save &amp; Close') ?></button>
 
         <?php } else { ?>
             <button type="submit" style="margin-right: 0px" data-event-dialog-action="save"

@@ -5,6 +5,7 @@
     <p><?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://developers.facebook.com/apps/'); ?></p>
     <p><?php echo t('Add the "Facebook Login" product to a Facebook app.'); ?></p>
     <p><?php echo t('Set the "Valid OAuth redirect URIs" to: %s', ' <code>'.URL::to('/ccm/system/authentication/oauth2/facebook/callback').'</code>'); ?></p>
+    <p><?php echo t('Set the "Deauthorize Callback URL" to: %s', ' <code>'.URL::to('/login/callback/facebook/revoke').'</code>'); ?></p>
 </div>
 
 <div class='form-group'>

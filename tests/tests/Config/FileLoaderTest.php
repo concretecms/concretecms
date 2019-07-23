@@ -50,7 +50,7 @@ class FileLoaderTest extends PHPUnit_Framework_TestCase
         $this->namespace = md5(time() . uniqid());
         $this->environment = md5(time() . uniqid());
 
-        $path = DIR_APPLICATION . '/config/';
+        $path = DIR_CONFIG_SITE . '/';
         $this->loader->addNamespace($this->namespace, $path . $this->namespace);
 
         $paths = [

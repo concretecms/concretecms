@@ -1,12 +1,15 @@
 <?php
+
 namespace Concrete\Core\Mail;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use Monolog\Logger;
+use Throwable;
 use Zend\Mail\Header\MessageId as MessageIdHeader;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
@@ -122,6 +125,13 @@ class Service
     protected $testing;
 
     /**
+     * Should we throw an exception if the delivery fails?
+     *
+     * @var false
+     */
+    protected $throwOnFailure;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $app the application instance
@@ -152,6 +162,7 @@ class Service
         $this->body = false;
         $this->bodyHTML = false;
         $this->testing = false;
+        $this->throwOnFailure = false;
     }
 
     /**
@@ -298,8 +309,8 @@ class Service
             }
         }
 
-        if (isset($from)) {
-            $this->from($from[0], $from[1]);
+        if (isset($from) && is_array($from) && isset($from[0])) {
+            $this->from($from[0], isset($from[1]) ? $from[1] : null);
         }
         $this->template = $template;
         $this->subject = $subject;
@@ -368,7 +379,7 @@ class Service
     }
 
     /**
-     * @param MailImporter $importer
+     * @param \Concrete\Core\Mail\Importer\MailImporter $importer
      * @param array $data
      */
     public function enableMailResponseProcessing($importer, $data)
@@ -484,6 +495,30 @@ class Service
     }
 
     /**
+     * Should an exception be thrown if the delivery fails (if false, the sendMail() method will simply return false on failure).
+     *
+     * @param bool $throwOnFailure
+     *
+     * @return $this
+     */
+    public function setIsThrowOnFailure($throwOnFailure)
+    {
+        $this->throwOnFailure = (bool) $throwOnFailure;
+
+        return $this;
+    }
+
+    /**
+     * Should an exception be thrown if the delivery fails (if false, the sendMail() method will simply return false on failure).
+     *
+     * @return bool
+     */
+    public function isThrowOnFailure()
+    {
+        return $this->throwOnFailure;
+    }
+
+    /**
      * Set additional message headers.
      *
      * @param array $headers
@@ -498,9 +533,9 @@ class Service
      *
      * @param bool $resetData Whether or not to reset the service to its default when this method is done
      *
-     * @throws Exception Throws an exception if the delivery fails and if the service is in "testing" state
+     * @throws Exception Throws an exception if the delivery fails and if the service is in "testing" state or throwOnFailure is true
      *
-     * @return bool Returns true upon success, or false if the delivery fails and if the service is not in "testing" state
+     * @return bool Returns true upon success, or false if the delivery fails and if the service is not in "testing" state and throwOnFailure is false
      */
     public function sendMail($resetData = true)
     {
@@ -568,8 +603,7 @@ class Service
             $emptyPart->setType(Mime::TYPE_TEXT);
             $emptyPart->setCharset(APP_CHARSET);
             $body->addPart($emptyPart);
-        }
-        elseif ($textPart !== null && $htmlPart !== null) {
+        } elseif ($textPart !== null && $htmlPart !== null) {
             $alternatives = new MimeMessage();
             $alternatives->addPart($textPart);
             $alternatives->addPart($htmlPart);
@@ -593,19 +627,23 @@ class Service
 
         $mail->setBody($body);
 
-        $sent = false;
-        try {
-            if ($config->get('concrete.email.enabled')) {
+        $sendError = null;
+        if ($config->get('concrete.email.enabled')) {
+            try {
                 $this->transport->send($mail);
+            } catch (Exception $x) {
+                $sendError = $x;
+            } catch (Throwable $x) {
+                $sendError = $x;
             }
-            $sent = true;
-        } catch (Exception $e) {
+        }
+        if ($sendError !== null) {
             if ($this->getTesting()) {
-                throw $e;
+                throw $sendError;
             }
-            $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
-            $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
-            $l->write($e->getTraceAsString());
+            $l = new GroupLogger(Channels::CHANNEL_EXCEPTIONS, Logger::CRITICAL);
+            $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $sendError->getMessage());
+            $l->write($sendError->getTraceAsString());
             if ($config->get('concrete.log.emails')) {
                 $l->write(t('Template Used') . ': ' . $this->template);
                 $l->write(t('To') . ': ' . $toStr);
@@ -621,9 +659,9 @@ class Service
 
         // add email to log
         if ($config->get('concrete.log.emails') && !$this->getTesting()) {
-            $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
+            $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
             if ($config->get('concrete.email.enabled')) {
-                if ($sent) {
+                if ($sendError === null) {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
                 } else {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT') . '**');
@@ -636,12 +674,19 @@ class Service
             $l->close();
         }
 
+        if ($sendError !== null && $this->isThrowOnFailure()) {
+            if ($resetData) {
+                $this->reset();
+            }
+            throw $sendError;
+        }
+
         // clear data if applicable
         if ($resetData) {
             $this->reset();
         }
 
-        return $sent;
+        return $sendError === null;
     }
 
     /**
@@ -695,6 +740,7 @@ class Service
             $result = new MimePart($this->body);
             $result->setType(Mime::TYPE_TEXT);
             $result->setCharset(APP_CHARSET);
+            $result->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
         }
 
         return $result;
@@ -707,7 +753,8 @@ class Service
      *
      * @return bool
      */
-    protected function isInlineAttachment(MimePart $attachment) {
+    protected function isInlineAttachment(MimePart $attachment)
+    {
         return $this->bodyHTML !== false
             && $attachment->getId()
             && in_array((string) $attachment->getDisposition(), ['', Mime::DISPOSITION_INLINE], true)
@@ -727,6 +774,7 @@ class Service
             $html = new MimePart($this->bodyHTML);
             $html->setType(Mime::TYPE_HTML);
             $html->setCharset(APP_CHARSET);
+            $html->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
             $inlineAttachments = [];
             foreach ($this->attachments as $attachment) {
                 if ($this->isInlineAttachment($attachment)) {

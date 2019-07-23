@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Form\Service;
 
+use Concrete\Core\Http\Request;
 use Core;
 use PHPUnit_Framework_TestCase;
 
@@ -13,38 +14,15 @@ class FormTest extends PHPUnit_Framework_TestCase
     protected static $formHelper;
 
     /**
-     * @var array
+     * @var \Concrete\Core\Http\Request
      */
-    protected $initialState;
+    protected static $request;
 
     public static function setUpBeforeClass()
     {
-        self::$formHelper = Core::make('helper/form');
-    }
-
-    protected function setUp()
-    {
-        $this->initialState = [
-            'get' => $_GET,
-            'post' => $_POST,
-            'request' => $_REQUEST,
-            'requestMethod' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null,
-        ];
-        $_GET = [];
-        $_POST = [];
-        $_REQUEST = [];
-        unset($_SERVER['REQUEST_METHOD']);
-    }
-
-    protected function tearDown()
-    {
-        $_GET = $this->initialState['get'];
-        $_POST = $this->initialState['post'];
-        $_REQUEST = $this->initialState['request'];
-        unset($_SERVER['REQUEST_METHOD']);
-        if (isset($this->initialState['REQUEST_METHOD'])) {
-            $_SERVER['REQUEST_METHOD'] = $this->initialState['REQUEST_METHOD'];
-        }
+        self::$request = new Request();
+        self::$formHelper = Core::make('helper/form', ['request' => self::$request]);
+        self::$formHelper->setRequest(self::$request);
     }
 
     public function providerTestCreateElements()
@@ -792,6 +770,12 @@ class FormTest extends PHPUnit_Framework_TestCase
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => ['One']]]]],
             ],
+            [
+                'select',
+                ['Key', ['One' => 'First', 'Two' => 'Second'], '<Two\'">'],
+                '<select id="Key" name="Key" ccm-passed-value="&lt;Two&#039;&quot;&gt;" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                ['OtherField' => 'OtherValue'],
+            ],
         ];
     }
 
@@ -805,12 +789,10 @@ class FormTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateElements($method, array $args, $expected, array $post = [])
     {
-        if (!empty($post)) {
-            $_SERVER['REQUEST_METHOD'] = 'POST';
-            foreach ($post as $k => $v) {
-                $_REQUEST[$k] = $v;
-                $_POST[$k] = $v;
-            }
+        if (empty($post)) {
+            self::$request->initialize();
+        } else {
+            self::$request->initialize([], $post, [], [], [], ['REQUEST_METHOD' => 'POST']);
         }
         $calculated = call_user_func_array([static::$formHelper, $method], $args);
         if (strpos($expected, '**UNIQUENUMBER**') === false) {

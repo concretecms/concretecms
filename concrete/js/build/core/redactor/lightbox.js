@@ -1,13 +1,20 @@
-// concrete5 Redactor functionality
-if (typeof RedactorPlugins === 'undefined') var RedactorPlugins = {};
+/* jshint unused:vars, undef:true */
 
-RedactorPlugins.concrete5lightbox = function() {
+/* concrete5 Redactor functionality */
+;(function(global) {
+    'use strict';
 
-    return {
-        init: function()
-        {
-            this.opts.concrete5.lightbox = true;
-        }
+    if (typeof global.RedactorPlugins === 'undefined') global.RedactorPlugins = {};
 
+    global.RedactorPlugins.concrete5lightbox = function() {
+
+        return {
+            init: function()
+            {
+                this.opts.concrete5.lightbox = true;
+            }
+    
+        };
     };
-}
+
+})(this);

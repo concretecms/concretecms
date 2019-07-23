@@ -133,6 +133,12 @@ foreach ($locales as $locale) {
                 </label>
             </div>
         </div>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('alwaysTrackUserLocale', 1, $alwaysTrackUserLocale) ?>
+                <span><?= t('Always track user locale.') ?> <i class="launch-tooltip control-label fa fa-question-circle" title="<?= h(t('Tracking user locales requires the creation of session cookies. Disable this option to avoid tracking user locale in case the session cookie is not yet set.')) ?>"></i></span>
+            </label>
+        </div>
     </div>
     <script>
         $(document).ready(function() {
@@ -201,6 +207,20 @@ foreach ($locales as $locale) {
         </form>
     </div>
 </div>
+
+<?php
+if (isset($mlLink)) {
+    ?>
+    <div class="alert alert-info small">
+        <?= t(
+            'You can configure the user languages in the %s dashboard page.',
+            sprintf('<a href="%s">%s</a>', h($mlLink[1]), h($mlLink[0]))
+        ) ?>
+    </div>
+    <?php
+}
+?>
+
 <script>
 $(document).ready(function() {
     'use strict';

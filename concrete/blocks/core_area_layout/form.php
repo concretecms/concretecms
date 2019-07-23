@@ -42,7 +42,7 @@
 	<li data-grid-form-view="themegrid">
 		<label for="themeGridColumns"><?=t("Columns:")?></label>
 		<input type="text" name="themeGridColumns" id="themeGridColumns" style="width: 40px" <?php if ($controller->getTask() == 'add') {
-    ?>  data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$themeGridMaxColumns?>" <?php 
+    ?>  data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?= isset($themeGridMaxColumns) ? $themeGridMaxColumns : '' ?>" <?php 
 } ?> value="<?=$columnsNum?>" />
 		<?php if ($controller->getTask() == 'edit') {
     // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
@@ -63,15 +63,15 @@
 	</li>
 	<li data-grid-form-view="custom">
 		<label for="columns"><?=t("Spacing:")?></label>
-		<input name="spacing" id="spacing" type="text" style="width: 40px" data-input="number" data-minimum="0" data-maximum="1000" value="<?=$spacing?>" />
+		<input name="spacing" id="spacing" type="text" style="width: 40px" data-input="number" data-minimum="0" data-maximum="1000" value="<?=isset($spacing) ? $spacing : ''?>" />
 	</li>
-	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <?php if (!$iscustom) {
+	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <?php if (empty($iscustom)) {
     ?>ccm-inline-toolbar-icon-selected<?php 
 } ?>"><a href="#" data-layout-button="toggleautomated"><i class="fa fa-lock"></i></a>
-		<input type="hidden" name="isautomated" value="<?php if ($iscustom) {
-    ?>0<?php 
-} else {
+		<input type="hidden" name="isautomated" value="<?php if (empty($iscustom)) {
     ?>1<?php 
+} else {
+    ?>0<?php 
 } ?>" />
 	</li>
 	<?php if ($controller->getTask() == 'edit') {

@@ -18,7 +18,7 @@ $faqEntryCount = 1;
                 <div class="faq-entry-content">
                     <a name="<?php echo $bID . $faqEntryCount; ?>"></a>
                     <h3><?php echo $row['title']; ?></h3>
-                    <p><?php echo $row['description']; ?></p>
+                    <?php echo $row['description']; ?>
                 </div>
                 <?php
                 ++$faqEntryCount;

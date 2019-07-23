@@ -2,10 +2,13 @@
 
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version as FileVersion;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
 
 /**
  * Handles regular and retina thumbnails. e.g. Each thumbnail type has two versions of itself
@@ -63,6 +66,41 @@ class Version
     protected $sizingMode;
 
     /**
+     * Upscaling is enabled?
+     *
+     * @var bool
+     */
+    protected $upscalingEnabled;
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @var bool
+     */
+    protected $limitedToFileSets;
+
+    /**
+     * Associated file set IDs (whose meaning depends on the value of limitedToFileSets).
+     *
+     * @var int[]
+     */
+    protected $associatedFileSetIDs;
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @var bool
+     */
+    protected $keepAnimations;
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @var string
+     */
+    protected $saveAreaBackgroundColor;
+
+    /**
      * Initialize the instance.
      *
      * @param string $directoryName the name of the directory that contains the thumbnails
@@ -72,8 +110,13 @@ class Version
      * @param int|null $height the height of the thumbnails (or the maximum height in case of proportional sizing)
      * @param bool $isDoubledVersion is this a high-DPI thumbnail type version?
      * @param string $sizingMode the thumbnail sizing mode (one of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants)
+     * @param bool $limitedToFileSets Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     * @param int[] $associatedFileSetIDs the IDs of the associated file sets (whose meaning depends on the value of $limitedToFileSets)
+     * @param bool $upscalingEnabled Upscaling is enabled?
+     * @param bool $keepAnimations Should we create animated thumbnails for animated images?
+     * @param string $saveAreaBackgroundColor Background color of the Image Editor save area
      */
-    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [], $upscalingEnabled = false, $keepAnimations = false, $saveAreaBackgroundColor = '')
     {
         $this->setDirectoryName($directoryName);
         $this->setHandle($handle);
@@ -82,6 +125,11 @@ class Version
         $this->setHeight($height);
         $this->isDoubledVersion = (bool) $isDoubledVersion;
         $this->setSizingMode($sizingMode);
+        $this->setLimitedToFileSets($limitedToFileSets);
+        $this->setAssociatedFileSetIDs($associatedFileSetIDs);
+        $this->setIsUpscalingEnabled($upscalingEnabled);
+        $this->setKeepAnimations($keepAnimations);
+        $this->setSaveAreaBackgroundColor($saveAreaBackgroundColor);
     }
 
     /**
@@ -258,6 +306,118 @@ class Version
     }
 
     /**
+     * Is upscaling enabled?
+     *
+     * @param bool $value
+     */
+    public function setIsUpscalingEnabled($value)
+    {
+        $this->upscalingEnabled = (bool) $value;
+    }
+
+    /**
+     * Is upscaling enabled?
+     *
+     * @return bool
+     */
+    public function isUpscalingEnabled()
+    {
+        return (bool) $this->upscalingEnabled;
+    }
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setLimitedToFileSets($value)
+    {
+        $this->limitedToFileSets = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @return bool
+     */
+    public function isLimitedToFileSets()
+    {
+        return $this->limitedToFileSets;
+    }
+
+    /**
+     * Set the IDs of the associated file sets (whose meaning depends on the value of limitedToFileSets).
+     *
+     * @param int[] $value
+     *
+     * @return $this
+     */
+    public function setAssociatedFileSetIDs(array $value)
+    {
+        $this->associatedFileSetIDs = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the IDs of associated file sets (whose meaning depends on the value of limitedToFileSets).
+     *
+     * @return int[]
+     */
+    public function getAssociatedFileSetIDs()
+    {
+        return $this->associatedFileSetIDs;
+    }
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @param bool $value
+     */
+    public function setKeepAnimations($value)
+    {
+        $this->keepAnimations = (bool) $value;
+    }
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @return bool
+     */
+    public function isKeepAnimations()
+    {
+        return (bool) $this->keepAnimations;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @param string $color
+     *
+     * @return $this
+     */
+    public function setSaveAreaBackgroundColor($color)
+    {
+        $this->saveAreaBackgroundColor = $color;
+
+        return $this;
+    }
+
+    /**
+     * Background color of the Image Editor save area
+     *
+     * @return string
+     */
+    public function getSaveAreaBackgroundColor()
+    {
+        return $this->saveAreaBackgroundColor;
+    }
+
+    /**
      * Get the display name of the thumbnail sizing mode.
      *
      * @return string
@@ -288,17 +448,113 @@ class Version
         $ii = $app->make('helper/concrete/file');
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
-        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
-        switch ($thumbnailFormat) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $extension = 'jpg';
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $extension = 'png';
-                break;
+        $hadImagineImage = $fv->hasImagineImage();
+        $thumbnailFormat = null;
+        if ($this->isKeepAnimations()) {
+            try {
+                if ($fv->getImagineImage()->layers()->count() > 1) {
+                    $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+                }
+            } catch (Exception $x) {
+            }
         }
+        if ($thumbnailFormat === null) {
+            $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
+        }
+        if (!$hadImagineImage) {
+            $fv->releaseImagineImage();
+        }
+        $extension = $app->make(BitmapFormat::class)->getFormatFileExtension($thumbnailFormat);
 
         return REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $hi->replaceExtension($filename, $extension));
+    }
+
+    /**
+     * Check if this thumbnail type version should exist for an image with the specified dimensions.
+     *
+     * @param int $imageWidth The original image width
+     * @param int $imageHeight The original image height
+     * @param File|null $file The File instance to check file sets against
+     *
+     * @return bool
+     */
+    public function shouldExistFor($imageWidth, $imageHeight, File $file = null)
+    {
+        $result = false;
+        $imageWidth = (int) $imageWidth;
+        $imageHeight = (int) $imageHeight;
+        if ($imageWidth > 0 && $imageHeight > 0) {
+            // We have both image dimensions
+            $thumbnailWidth = (int) $this->getWidth() ?: 0;
+            $thumbnailHeight = (int) $this->getHeight() ?: 0;
+            switch ($this->getSizingMode()) {
+                case ThumbnailType::RESIZE_EXACT:
+                    // Both the thumbnail width and height must be set
+                    if ($thumbnailWidth > 0 && $thumbnailHeight > 0) {
+                        // None of the thumbnail dimensions can be greater that image ones
+                        if ($this->isUpscalingEnabled()) {
+                            $result = true;
+                        } else {
+                            if ($thumbnailWidth <= $imageWidth && $thumbnailHeight <= $imageHeight) {
+                                // Thumbnail must not be the same size as the image
+                                if ($thumbnailWidth !== $imageWidth || $thumbnailHeight !== $imageHeight) {
+                                    $result = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ThumbnailType::RESIZE_PROPORTIONAL:
+                default:
+                    if ($thumbnailWidth > 0 || $thumbnailHeight > 0) {
+                        if ($this->isUpscalingEnabled()) {
+                            $result = true;
+                        } else {
+                            if ($thumbnailWidth > 0 && $thumbnailHeight > 0) {
+                                // Both the thumbnail width and height are set
+                                // At least one thumbnail dimension must be smaller that the corresponding image dimension
+                                if ($thumbnailWidth < $imageWidth || $thumbnailHeight < $imageHeight) {
+                                    $result = true;
+                                }
+                            } elseif ($thumbnailWidth > 0) {
+                                // Only the thumbnail width is set: the thumbnail must be narrower than the image.
+                                if ($thumbnailWidth < $imageWidth) {
+                                    $result = true;
+                                }
+                            } elseif ($thumbnailHeight > 0) {
+                                // Only the thumbnail height is set: the thumbnail must be shorter than the image.
+                                if ($thumbnailHeight < $imageHeight) {
+                                    $result = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            if ($result === true && $file !== null) {
+                $fileSetIDs = $this->getAssociatedFileSetIDs();
+                if ($this->isLimitedToFileSets()) {
+                    // Thumbnail only if the file is in the specified file sets
+                    if (empty($fileSetIDs)) {
+                        $result = false;
+                    } else {
+                        $valid = array_intersect($fileSetIDs, $file->getFileSetIDs());
+                        if (empty($valid)) {
+                            $result = false;
+                        }
+                    }
+                } else {
+                    // Thumbnail only if the file is NOT in the specified file sets
+                    if (!empty($fileSetIDs)) {
+                        $blocking = array_intersect($fileSetIDs, $file->getFileSetIDs());
+                        if (!empty($blocking)) {
+                            $result = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 }

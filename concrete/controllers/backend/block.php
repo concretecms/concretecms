@@ -14,11 +14,9 @@ class Block extends BackendInterfaceBlockController
         $loc = Localization::getInstance();
         $loc->setActiveContext(Localization::CONTEXT_SITE);
 
-        $c = $this->block->getBlockCollectionObject();
         $dl = Core::make('multilingual/detector');
         $dl->setupSiteInterfaceLocalization($this->page);
 
-        $btc = $this->block->getInstance();
         $bv = new BlockView($this->block);
         if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
             $this->area->enableGridContainer();

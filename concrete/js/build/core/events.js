@@ -1,9 +1,13 @@
-(function (global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _ */
+
+;(function(global, $) {
     'use strict';
+
     global.Concrete = global.Concrete || {};
     global.console = global.console || {};
 
-    global.ConcreteEvent = (function (ns, $) {
+    global.ConcreteEvent = (function (ns) {
         var target = $('<span />'), debug = false;
 
         var hasGroup = typeof global.console.group === 'function' && typeof global.console.groupEnd === 'function',
@@ -144,6 +148,6 @@
 
         ns.event = ConcreteEvent;
         return ConcreteEvent;
-    }(global.Concrete, jQuery));
+    }(global.Concrete));
 
-}(window, jQuery));
+})(window, jQuery);

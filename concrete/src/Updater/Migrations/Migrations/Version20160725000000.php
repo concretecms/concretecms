@@ -25,10 +25,10 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 
-class Version20160725000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20160725000000 extends AbstractMigration implements LongRunningMigrationInterface
 {
     use AddPageDraftsBooleanTrait;
 
@@ -48,7 +48,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {
@@ -58,7 +58,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
         $this->prepareProblematicEntityTables();
-        $this->installEntities(['Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version']);
+        $this->installEntities(['Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version', 'Concrete\Core\Entity\File\Image\Thumbnail\Type\Type']);
         $this->installOtherEntities();
         $this->installSite();
         $this->importAttributeTypes();
@@ -547,15 +547,18 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
                     if (!$count) {
                         $rowA = $this->connection->fetchAssoc('select * from _atAddressSettings where akID = ?', [$akID]);
                         if ($rowA['akID']) {
-                            $countries = $this->connection->fetchAll('select * from _atAddressCustomCountries where akID = ?', [$akID]);
-                            if (!$countries) {
-                                $countries = [];
+                            $countries = [];
+                            foreach ($this->connection->fetchAll('select * from _atAddressCustomCountries where akID = ?', [$akID]) as $customCountryRow) {
+                                if ($customCountryRow['country']) {
+                                    $countries[] = $customCountryRow['country'];
+                                }
                             }
                             $this->connection->insert('atAddressSettings', [
                                 'akHasCustomCountries' => $rowA['akHasCustomCountries'],
                                 'akDefaultCountry' => $rowA['akDefaultCountry'],
                                 'customCountries' => json_encode($countries),
                                 'akID' => $akID,
+                                'akGeolocateCountry' => 0,
                             ]);
                         }
                     }
@@ -778,9 +781,9 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
 
         $desktopSet->addBlockType($bt);
 
-        $bt = BlockType::getByHandle('desktop_waiting_for_me');
+        $bt = BlockType::getByHandle('desktop_draft_list');
         if (!is_object($bt)) {
-            $bt = BlockType::installBlockType('desktop_waiting_for_me');
+            $bt = BlockType::installBlockType('desktop_draft_list');
         }
 
         $desktopSet->addBlockType($bt);
@@ -1361,9 +1364,10 @@ EOT
             $result[] = $cID;
             $cParentID = $this->connection->fetchColumn('SELECT cParentID FROM Pages WHERE cID = ?', [$cID]);
             if ($cParentID) {
-                $result = array_merge($result, $this->getCollectionIdTrail($cParentID)); 
+                $result = array_merge($result, $this->getCollectionIdTrail($cParentID));
             }
         }
+
         return $result;
     }
 }

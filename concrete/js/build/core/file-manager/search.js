@@ -1,11 +1,13 @@
-! function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n, ccmi18n_filemanager, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteAjaxRequest, ConcreteAjaxSearch, ConcreteEvent, ConcreteFileMenu, ConcreteTree */
+
+;(function(global, $) {
     'use strict';
 
     function ConcreteFileManager($element, options) {
-        'use strict';
         var my = this;
         options = $.extend({
-            'breadcrumbElement': 'div.ccm-search-results-breadcrumb',
+            'breadcrumbElement': 'div.ccm-search-results-breadcrumb.ccm-file-manager-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
             'appendToOuterDialog': true,
@@ -25,18 +27,17 @@
         ConcreteTree.setupTreeEvents();
 
         my.setupEvents();
+        my.setupItemsPerPageOptions();
         my.setupAddFolder();
         my.setupFolderNavigation();
         my.setupFileUploads();
         my.setupFileDownloads();
-
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
 
     ConcreteFileManager.prototype.setupRowDragging = function() {
         var my = this,
-            currentItems,
             $undroppables = my.$element.find('tr[data-file-manager-tree-node-type!=file_folder]');
 
 
@@ -163,7 +164,7 @@
 
             });
         }
-    }
+    };
 
     ConcreteFileManager.prototype.setupBreadcrumb = function(result) {
         var my = this;
@@ -200,7 +201,7 @@
                 });
             }
         }
-    }
+    };
 
     ConcreteFileManager.prototype.setupFileDownloads = function() {
         var my = this;
@@ -215,91 +216,27 @@
     };
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
-        var my = this,
-            $fileUploader = $('#ccm-file-manager-upload'),
-            $maxWidth = $fileUploader.data('image-max-width'),
-            $maxHeight = $fileUploader.data('image-max-height'),
-            $imageResize = ($maxWidth > 0 && $maxHeight > 0),
-            $quality = $fileUploader.data('image-quality'),
-            errors = [],
-            files = [],
-            error_template = _.template(
-                '<ul><% _(errors).each(function(error) { %>' +
-                '<li><strong><%- error.name %></strong><p><%- error.error %></p></li>' +
-                '<% }) %></ul>'),
-            args = {
-                url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
-                dataType: 'json',
-                disableImageResize: !$imageResize,
-                imageQuality: ($quality > 0 ? $quality : 85),
-                imageMaxWidth: ($maxWidth > 0 ? $maxWidth : 1920),
-                imageMaxHeight: ($maxHeight > 0 ? $maxHeight : 1080),
-                error: function(r) {
-                    var message = r.responseText,
-                        name = this.files[0].name;
-
-                    try {
-                        message = jQuery.parseJSON(message).errors;
-                        _(message).each(function(error) {
-                            errors.push({ name: name, error: error });
-                        });
-                    } catch (e) {
-                        errors.push({ name: name, error: message });
-                    }
-                },
-                progressall: function(e, data) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({ 'progress': progress }));
-                },
-                start: function() {
-                    errors = [];
-                    $('<div />', { 'id': 'ccm-file-upload-progress-wrapper' }).html(my._templateFileProgress({ 'progress': 100 })).appendTo(document.body);
-                    $.fn.dialog.open({
-                        title: ccmi18n_filemanager.uploadProgress,
-                        width: 400,
-                        height: 50,
-                        onClose: function($dialog) {
-                            $dialog.jqdialog('destroy').remove();
-                        },
-                        element: $('#ccm-file-upload-progress-wrapper'),
-                        modal: true
-                    });
-                },
-                done: function(e, data) {
-                    files.push(data.result[0]);
-                },
-                stop: function() {
-                    jQuery.fn.dialog.closeTop();
-
-                    if (errors.length) {
-                        ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({ errors: errors }));
-                    } else {
-                        my._launchUploadCompleteDialog(files);
-                        files = [];
-                    }
-                }
-            };
-
-        $fileUploader.fileupload(args);
-
-        $fileUploader.bind('fileuploadsubmit', function(e, data) {
-            data.formData = {
-                currentFolder: my.currentFolder,
-                ccm_token: my.options.upload_token
-            }
-        });
-
+        var my = this;
+        my.fileUploaderOptions = {
+        	folderID: function() {
+        		return my.currentFolder;
+        	}
+        };
+        window.ccm_fileUploader.start(my.fileUploaderOptions);
+        var $dialog = this.$element.closest('.ui-dialog-content');
+        if ($dialog.length !== 0) {
+        	$dialog.on('dialogclose', function() {
+        		window.ccm_fileUploader.stop(my.fileUploaderOptions);
+        	});
+        }
         $('a[data-dialog=add-files]').on('click', function(e) {
             e.preventDefault();
             $.fn.dialog.open({
                 width: 620,
-                height: 500,
+                height: 400,
                 modal: true,
                 title: ccmi18n_filemanager.addFiles,
-                href: CCM_DISPATCHER_FILENAME + '/tools/required/files/import?currentFolder=' + my.currentFolder,
-                onClose: function() {
-                    my.refreshResults();
-                }
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/import?currentFolder=' + my.currentFolder
             });
         });
 
@@ -307,13 +244,18 @@
 
     ConcreteFileManager.prototype.refreshResults = function(files) {
         var my = this;
-        my.loadFolder(this.currentFolder, false, true);
-    }
+        if (this.currentFolder) {
+            my.loadFolder(this.currentFolder, false, true);
+        } else {
+            // re-trigger a file search
+            $('div[data-header=file-manager] form').trigger('submit');
+        }
+    };
 
     ConcreteFileManager.prototype._launchUploadCompleteDialog = function(files) {
         var my = this;
         ConcreteFileManager.launchUploadCompleteDialog(files, my);
-    }
+    };
 
     ConcreteFileManager.prototype.setupFolders = function(result) {
         var my = this;
@@ -332,7 +274,7 @@
                 }
             }
         });
-    }
+    };
 
     ConcreteFileManager.prototype.setupEvents = function() {
         var my = this;
@@ -365,13 +307,54 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
         });
-        ConcreteEvent.unsubscribe('SavedSearchCreated');
-        ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
-            my.ajaxUpdate(data.search.baseUrl, {});
 
+        ConcreteEvent.unsubscribe('FileManagerUpdateFileProperties');
+        ConcreteEvent.subscribe('FileManagerUpdateFileProperties', function(e, r) {
+            if (r.file.fID) {
+                $('[data-file-manager-file=' + r.file.fID + ']').find('.ccm-search-results-name').text(r.file.title);
+            }
         });
 
-    }
+    };
+
+    ConcreteFileManager.prototype.setupImageThumbnails = function() {
+        $('.ccm-file-manager-list-thumbnail[data-hover-image]').each(function( e ){
+            var my = $(this),
+                style = [],
+                maxWidth = my.data('hover-maxwidth'),
+                maxHeight = my.data('hover-maxheight');
+            if (maxWidth) {
+                style.push('max-width: ' + maxWidth);
+            }
+            if (maxHeight) {
+                style.push('max-height: ' + maxHeight);
+            }
+            style = style.length === 0 ? '' : (' style="' + style.join('; ') + '"');
+            my.popover({
+                animation: true,
+                html: true,
+                content: '<img class="img-responsive" src="'+my.data('hover-image')+'" alt="Thumbnail"' + style + '/>',
+                container: 'body',
+                placement: 'auto',
+                trigger: 'manual'
+            });
+            my.hover(function(){
+                var image = new Image();
+                image.src = my.data('hover-image');
+                if (image.complete) {
+                    my.popover('toggle');
+                }
+                else {
+                    image.addEventListener('load', function() {
+                        my.popover('toggle');
+                    });
+                }
+            });
+            my.closest('.ui-dialog').on('dialogclose', function() {
+                my.popover('destroy');
+            });
+        });
+    };
 
     ConcreteFileManager.prototype.showMenu = function($element, $menu, event) {
         var my = this;
@@ -381,8 +364,7 @@
             container: my
         });
         concreteMenu.show(event);
-    }
-
+    };
 
     ConcreteFileManager.prototype.activateMenu = function($menu) {
         var my = this;
@@ -404,12 +386,14 @@
 
         // Hide clear if we're not in choose mode
         if (my.options.selectMode != 'choose') {
+            var $choose = $menu.find('a[data-file-manager-action=choose-new-file]').parent();
             var $clear = $menu.find('a[data-file-manager-action=clear]').parent();
-            $clear.next('li.divider').remove();
+            $choose.next('li.divider').remove();
             $clear.remove();
+            $choose.remove();
         }
 
-    }
+    };
 
     ConcreteFileManager.prototype.setupBulkActions = function() {
         var my = this;
@@ -430,7 +414,7 @@
                 ConcreteEvent.publish('ConcreteMenuShow', { menu: my, menuElement: $(this).parent() });
             }
         });
-    }
+    };
 
     ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, ids) {
         var my = this,
@@ -441,9 +425,9 @@
             ConcreteEvent.publish('FileManagerSelectFile', { fID: ids });
         } else if (value == 'download') {
             $.each(ids, function(i, id) {
-                itemIDs.push({ 'name': 'item[]', 'value': id });
+                itemIDs.push({ 'name': 'fID[]', 'value': id });
             });
-            my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(itemIDs);
+            my.$downloadTarget.get(0).src = CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?' + $.param(itemIDs);
         } else {
             ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, ids);
         }
@@ -452,7 +436,7 @@
 
     ConcreteFileManager.prototype.reloadFolder = function() {
         this.loadFolder(this.currentFolder);
-    }
+    };
 
     ConcreteFileManager.prototype.setupAddFolder = function() {
         var my = this;
@@ -460,7 +444,7 @@
             $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
             $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
 
-            jQuery.fn.dialog.open({
+            $.fn.dialog.open({
                 element: 'div[data-dialog=add-file-manager-folder]',
                 modal: true,
                 width: 320,
@@ -475,12 +459,12 @@
             });
             e.preventDefault();
         });
-    }
+    };
 
     ConcreteFileManager.prototype.setupFolderNavigation = function() {
         $('a[data-launch-dialog=navigate-file-manager]').on('click', function(e) {
             e.preventDefault();
-            jQuery.fn.dialog.open({
+            $.fn.dialog.open({
                 width: '560',
                 height: '500',
                 modal: true,
@@ -488,13 +472,33 @@
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/jump_to_folder',
             });
         });
-    }
+    };
 
     ConcreteFileManager.prototype.hoverIsEnabled = function($element) {
         var my = this;
         return !my.interactionIsDragging;
-    }
+    };
 
+    ConcreteFileManager.prototype.setupItemsPerPageOptions = function() {
+        var my = this;
+        my.$element.on('click', '.dropdown-menu li', function() {
+            var action = $(this).parent().attr('data-action');
+            var itemsPerPage = parseInt($(this).data('items-per-page'));
+            if (action && itemsPerPage) {
+                my.ajaxUpdate(action + '?fSearchItemsPerPage=' + itemsPerPage);
+                $(this).parents('.input-group-btn').removeClass('open');
+                my.updateActiveItemsPerPageOption(parseInt($(this).text()));
+            }
+            return false;
+        });
+    };
+
+    ConcreteFileManager.prototype.updateActiveItemsPerPageOption = function(itemsPerPage) {
+        var my = this;
+        my.$element.find('.dropdown-menu li').removeClass('active');
+        my.$element.find('.dropdown-menu li[data-items-per-page=' + itemsPerPage + ']').addClass('active');
+        my.$element.find('.dropdown-toggle #selected-option').text(itemsPerPage);
+    };
 
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
@@ -502,7 +506,13 @@
         my.setupFolders(result);
         my.setupBreadcrumb(result);
         my.setupRowDragging();
-
+        my.setupImageThumbnails();
+        if (result.itemsPerPage) {
+            my.updateActiveItemsPerPageOption(parseInt(result.itemsPerPage));
+        }
+        if (result.baseUrl) {
+            my.$element.find('.dropdown-menu').attr('data-action', result.baseUrl);
+        }
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
             my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {
@@ -523,13 +533,13 @@
             });
         }
 
-    }
+    };
 
     ConcreteFileManager.prototype.loadFolder = function(folderID, url, showRecentFirst) {
         var my = this;
         var data = my.getSearchData();
         if (!url) {
-            var url = my.options.result.baseUrl;
+            url = my.options.result.baseUrl;
         } else {
             // dynamically update baseUrl because we're coming to this folder via
             // something like the breadcrumb
@@ -558,7 +568,7 @@
         my.ajaxUpdate(url, data);
 
         my.$element.find('#ccm-file-manager-upload input[name=currentFolder]').val(my.currentFolder);
-    }
+    };
 
     ConcreteFileManager.prototype.getResultMenu = function(results) {
         var my = this;
@@ -567,7 +577,7 @@
             my.activateMenu($menu);
         }
         return $menu;
-    }
+    };
 
     /**
      * Static Methods
@@ -611,12 +621,12 @@
                     } else if (!options.multipleSelection && multipleItemsSelected) {
                         if (data.fID.length > 1) {
                             $('.ccm-search-bulk-action option:first-child').prop('selected', 'selected');
-                            alert(ccmi18n_filemanager.chosenTooMany);
+                            window.alert(ccmi18n_filemanager.chosenTooMany);
                             return;
                         }
                         data.fID = data.fID[0];
                     }
-                    jQuery.fn.dialog.closeTop();
+                    $.fn.dialog.closeTop();
                     callback(data);
                 });
             }
@@ -653,17 +663,17 @@
                 modal: true,
                 data: data,
                 onClose: function() {
-                    var data = { filemanager: my }
+                    var data = { filemanager: my };
                     ConcreteEvent.publish('FileManagerUploadCompleteDialogClose', data);
                 },
                 onOpen: function() {
-                    var data = { filemanager: my }
+                    var data = { filemanager: my };
                     ConcreteEvent.publish('FileManagerUploadCompleteDialogOpen', data);
                 },
                 title: ccmi18n_filemanager.uploadComplete
             });
         }
-    }
+    };
 
 
     $.fn.concreteFileManager = function(options) {
@@ -675,4 +685,4 @@
     global.ConcreteFileManager = ConcreteFileManager;
     //global.ConcreteFileManagerMenu = ConcreteFileManagerMenu;
 
-}(window, $);
+})(window, jQuery);

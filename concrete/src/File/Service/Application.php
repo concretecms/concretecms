@@ -4,7 +4,9 @@ namespace Concrete\Core\File\Service;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Config;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
+use Concrete\Core\File\Incoming;
 
 class Application
 {
@@ -30,15 +32,7 @@ class Application
         }
         $app = ApplicationFacade::getFacadeApplication();
         $format = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
-        switch ($format) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $extension = 'jpg';
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $extension = 'png';
-                break;
-        }
+        $extension = $app->make(BitmapFormat::class)->getFormatFileExtension($format);
         $hi = $app->make('helper/file');
         $filename = $hi->replaceExtension($filename, $extension);
 
@@ -50,9 +44,10 @@ class Application
      */
     public function getIncomingDirectoryContents()
     {
-        $incoming_file_information = array();
-        $fs = StorageLocation::getDefault()->getFileSystemObject();
-        $items = $fs->listContents(REL_DIR_FILES_INCOMING);
+        $app = ApplicationFacade::getFacadeApplication();
+        $incoming = $app->make(Incoming::class);
+        $fs = $incoming->getIncomingFilesystem();
+        $items = $fs->listContents($incoming->getIncomingPath());
 
         return $items;
     }

@@ -2,13 +2,13 @@
 
     im.setActiveElement(im.stage);
 
-    window.c5_image_editor = im; // Safe keeping
-    window.im = im;
+    global.c5_image_editor = im; // Safe keeping
+    global.im = im;
     return im;
 };
 
 $.fn.ImageEditor = function (settings) {
-    (settings === undefined && (settings = {}));
+    if (settings === undefined) settings = {};
     settings.imageload = $.fn.dialog.hideLoader;
     var self = $(this);
     settings.container = self[0];
@@ -22,8 +22,8 @@ $.fn.ImageEditor = function (settings) {
     self.height("-=30");
     $('div.editorcontrols').height(self.height() - 90);
     self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
-    (settings.width === undefined && (settings.width = self.width()));
-    (settings.height === undefined && (settings.height = self.height()));
+    if(settings.width === undefined) settings.width = self.width();
+    if(settings.height === undefined) settings.height = self.height();
     $.fn.dialog.showLoader();
     var im = new ImageEditor(settings);
 
@@ -53,7 +53,7 @@ $.fn.ImageEditor = function (settings) {
         $(this).attr('disabled', true);
         im.save();
     }).end().children('button.cancel').click(function () {
-        if (confirm(ccmi18n_imageeditor.areYouSure))
+        if (window.confirm(ccmi18n_imageeditor.areYouSure))
             $.fn.dialog.closeTop();
     });
 

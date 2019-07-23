@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Core\Updater;
 
+use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\Package;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\ApplicationUpdate\DiagnosticFactory;
 use Config;
-use Concrete\Core\Cache\OpCache;
-use Concrete\Core\Support\Facade\Application;
 
 class ApplicationUpdate
 {
@@ -41,6 +42,7 @@ class ApplicationUpdate
     {
         return $this->version;
     }
+
     /**
      * Returns the version identifier (equals to the name of the directory under the updates directory).
      *
@@ -97,7 +99,7 @@ class ApplicationUpdate
     /**
      * Parse an update dir and returns an ApplicationUpdate instance.
      *
-     * @param $dir The base name of the directory under the updates directory
+     * @param string $dir The base name of the directory under the updates directory
      *
      * @return ApplicationUpdate|null Returns null if there's no update in the $dir directory, or an ApplicationUpdate instance if $dir is ok
      */
@@ -128,7 +130,7 @@ class ApplicationUpdate
     /**
      * Given the current update object, sends information to concrete5.org to determine updatability.
      *
-     * @return \Concrete\Core\Updater\ApplicationUpdateDiagnostic
+     * @return \Concrete\Core\Updater\ApplicationUpdate\Diagnostic
      */
     public function getDiagnosticObject()
     {

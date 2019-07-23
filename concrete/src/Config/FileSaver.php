@@ -20,7 +20,7 @@ class FileSaver implements SaverInterface
 
     protected function getStorageDirectory()
     {
-        return DIR_APPLICATION . '/config/generated_overrides';
+        return DIR_CONFIG_SITE . '/generated_overrides';
     }
 
     protected function getFilename($group, $path = null)

@@ -23,15 +23,15 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
  */
-/** @var \Concrete\Core\Application\Application $cms */
-$cms = require DIR_APPLICATION . '/bootstrap/start.php';
-$cms->instance('app', $cms);
+/** @var \Concrete\Core\Application\Application $app */
+$app = require DIR_APPLICATION . '/bootstrap/start.php';
+$app->instance('app', $app);
 
 // Bind fully application qualified class names
-$cms->instance('Concrete\Core\Application\Application', $cms);
-$cms->instance('Illuminate\Container\Container', $cms);
+$app->instance('Concrete\Core\Application\Application', $app);
+$app->instance('Illuminate\Container\Container', $app);
 
 // Boot the runtime
-$cms->getRuntime()->boot();
+$app->getRuntime()->boot();
 
-return $cms;
+return $app;

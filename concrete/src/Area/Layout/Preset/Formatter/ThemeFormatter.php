@@ -30,7 +30,7 @@ class ThemeFormatter implements FormatterInterface
         }
 
         if (!isset($element)) {
-            $element = new Element('div');
+            $element = '';
         }
 
         return $element;

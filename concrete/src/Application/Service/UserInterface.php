@@ -195,31 +195,12 @@ class UserInterface
     }
 
     /**
+     * @deprecated The Newsflow Overlay feature has been removed
+     *
      * @return bool
      */
     public function showNewsflowOverlay()
     {
-        $tp = new \TaskPermission();
-        $c = Page::getCurrentPage();
-        if (Config::get('concrete.external.news_overlay') && $tp->canViewNewsflow() && '/dashboard/news' != $c->getCollectionPath()) {
-            $u = new ConcreteUser();
-            $nf = $u->config('NEWSFLOW_LAST_VIEWED');
-            if ('FIRSTRUN' == $nf) {
-                return false;
-            }
-
-            if (Config::get('concrete.maintenance_mode') && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate()) {
-                return false;
-            }
-
-            if (!$nf) {
-                return true;
-            }
-            if (time() - $nf > NEWSFLOW_VIEWED_THRESHOLD) {
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -404,7 +385,7 @@ class UserInterface
                 }
                 $text .= '<div>' . $singleButton . '</div>';
             } else {
-                $text .= '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button><ul class="dropdown-menu">';
+                $text .= '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . ' <span class="caret"></span></button><ul class="dropdown-menu">';
                 foreach ($arguments['buttons'] as $button) {
                     $text .= '<li>' . $button . '</li>';
                 }

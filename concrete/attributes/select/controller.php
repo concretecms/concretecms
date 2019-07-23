@@ -275,10 +275,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         } else {
                             $option = $this->getOptionByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
                             if (!is_object($option)) {
+                                $displayOrder = 0;
+                                if ($optionList) {
+                                    $displayOrder = count($optionList->getOptions());
+                                }
                                 $option = new SelectValueOption();
                                 $option->setOptionList($optionList);
                                 $option->setIsEndUserAdded(true);
-                                $option->setDisplayOrder(count($optionList));
+                                $option->setDisplayOrder($displayOrder);
                                 $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue']));
                             }
                         }
@@ -300,9 +304,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                                 } else {
                                     $option = $this->getOptionByValue(trim($value), $this->attributeKey);
                                     if (!is_object($option)) {
+                                        $displayOrder = 0;
+                                        if ($optionList) {
+                                            $displayOrder = count($optionList->getOptions());
+                                        }
                                         $option = new SelectValueOption();
                                         $option->setOptionList($optionList);
-                                        $option->setDisplayOrder(count($optionList));
+                                        $option->setDisplayOrder($displayOrder);
                                         $option->setSelectAttributeOptionValue(trim($value));
                                         $option->setIsEndUserAdded(true);
                                     }
@@ -532,9 +540,32 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
     {
+        $now = $this->app->make('date')->getOverridableNow();
         $db = Database::get();
-        $q = 'select atSelectOptions.value, atSelectOptions.avSelectOptionID, count(atSelectOptions.avSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.avSelectOptionID = atSelectOptions.avSelectOptionID where Pages.cIsActive = 1 and CollectionAttributeValues.akID = ? ';
-        $v = [$this->attributeKey->getAttributeKeyID()];
+        $q = <<<'EOT'
+select
+    atSelectOptions.value,
+    atSelectOptions.avSelectOptionID,
+    count(atSelectOptions.avSelectOptionID) as total
+from
+    Pages
+    inner join CollectionVersions
+        on Pages.cID = CollectionVersions.cID
+        and CollectionVersions.cvIsApproved = 1
+        and (CollectionVersions.cvPublishDate is null or CollectionVersions.cvPublishDate <= ?)
+        and (CollectionVersions.cvPublishEndDate is null or CollectionVersions.cvPublishEndDate >= ?)
+    inner join CollectionAttributeValues
+        on CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID
+    inner join atSelectOptionsSelected
+        on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID)
+    inner join atSelectOptions
+        on atSelectOptionsSelected.avSelectOptionID = atSelectOptions.avSelectOptionID
+where
+    Pages.cIsActive = 1
+    and CollectionAttributeValues.akID = ?
+EOT
+        ;
+        $v = [$now, $now, $this->attributeKey->getAttributeKeyID()];
         if (is_object($parentPage)) {
             $v[] = $parentPage->getCollectionID();
             $q .= 'and cParentID = ?';
@@ -732,7 +763,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return SelectSettings::class;
     }
 
-    public function getLabelID()
+    public function getControlID()
     {
         return $this->field('atSelectOptionValue');
     }
@@ -803,10 +834,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 }
                 if ($selectedOption === null) {
                     if ($settings->getAllowOtherValues()) {
+                        $displayOrder = 0;
+                        if ($optionList) {
+                            $displayOrder = count($optionList->getOptions());
+                        }
                         $selectedOption = new SelectValueOption();
                         $selectedOption->setOptionList($optionList);
                         $selectedOption->setIsEndUserAdded(true);
-                        $selectedOption->setDisplayOrder(count($optionList));
+                        $selectedOption->setDisplayOrder($displayOrder);
                         $selectedOption->setSelectAttributeOptionValue($optionText);
                         $optionList->getOptions()->add($selectedOption);
                     } elseif (isset($deletedOptions[$optionText])) {

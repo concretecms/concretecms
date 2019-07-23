@@ -3,14 +3,12 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
-use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Exception;
 
-class Version20141024000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20141024000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
@@ -25,7 +23,7 @@ class Version20141024000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeSchema()
      */
     public function upgradeSchema(Schema $schema)
     {
@@ -47,7 +45,7 @@ class Version20141024000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {

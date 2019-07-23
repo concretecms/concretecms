@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Block\View;
 
+use Concrete\Core\Block\Events\BlockBeforeRender;
+use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
 use Config;
 use Area;
@@ -9,10 +12,16 @@ use Environment;
 use User;
 use Page;
 use Concrete\Core\Block\Block;
-use BlockType;
-use URL;
 use View;
 
+/**
+ * Work with the rendered view of a block.
+ *
+ * <code>
+ * $b = $this->getBlockObject();
+ * $bv = new BlockView($b);
+ * </code>
+ */
 class BlockView extends AbstractView
 {
     protected $block;
@@ -27,6 +36,11 @@ class BlockView extends AbstractView
     protected $showControls = true;
     protected $didPullFromOutputCache = false;
 
+    /**
+     * Construct a block view object.
+     *
+     * @param mixed $mixed block or block type to view
+     */
     protected function constructView($mixed)
     {
         if ($mixed instanceof Block) {
@@ -87,58 +101,13 @@ class BlockView extends AbstractView
     }
 
     /**
-     * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
-     * <code>
-     *     <a href="<?=$this->action('get_results')?>">Get the results</a>
-     * </code>.
+     * @deprecated in views, use $controller->getActionURL() using the same arguments
      *
-     * @param string $task
-     *
-     * @return string $url
+     * @return \Concrete\Core\Url\UrlImmutable|null
      */
     public function action($task)
     {
-        try {
-            if ($this->viewToRender == 'add') {
-                $c = $this->area->getAreaCollectionObject();
-                $arguments = array('/ccm/system/block/action/add',
-                    $c->getCollectionID(),
-                    urlencode($this->area->getAreaHandle()),
-                    $this->blockType->getBlockTypeID(),
-                    $task,
-                );
-
-                return call_user_func_array(array('\URL', 'to'), $arguments);
-            } elseif (is_object($this->block)) {
-                if (is_object($this->block->getProxyBlock())) {
-                    $b = $this->block->getProxyBlock();
-                } else {
-                    $b = $this->block;
-                }
-
-                if ($this->viewToRender == 'edit') {
-                    $c = $this->area->getAreaCollectionObject();
-                    $arguments = array('/ccm/system/block/action/edit',
-                        $c->getCollectionID(),
-                        urlencode($this->area->getAreaHandle()),
-                        $b->getBlockID(),
-                        $task,
-                    );
-
-                    return call_user_func_array(array('\URL', 'to'), $arguments);
-                } else {
-                    $c = Page::getCurrentPage();
-                    if (is_object($b) && is_object($c)) {
-                        $arguments = func_get_args();
-                        $arguments[] = $b->getBlockID();
-                        array_unshift($arguments, $c);
-
-                        return call_user_func_array(array('\URL', 'page'), $arguments);
-                    }
-                }
-            }
-        } catch (Exception $e) {
-        }
+        return call_user_func_array([$this->controller, 'getActionURL'], func_get_args());
     }
 
     public function startRender()
@@ -163,7 +132,7 @@ class BlockView extends AbstractView
             }
         }
         $customFilenameToRender = null;
-        if (!in_array($this->viewToRender, array('view', 'add', 'edit', 'scrapbook'))) {
+        if (!in_array($this->viewToRender, ['view', 'add', 'edit', 'scrapbook'])) {
             // then we're trying to render a custom view file, which we'll pass to the bottom functions as $_filename
             $customFilenameToRender = $view . '.php';
             $view = 'view';
@@ -243,14 +212,36 @@ class BlockView extends AbstractView
 
     protected function onBeforeGetContents()
     {
-        if (in_array($this->viewPerformed, array('scrapbook', 'view'))) {
-            $this->controller->runAction('on_page_view', array($this));
+        if (in_array($this->viewPerformed, ['scrapbook', 'view'])) {
+            $this->controller->runAction('on_page_view', [$this]);
             $this->controller->outputAutoHeaderItems();
         }
     }
 
+    /**
+     * Echo block contents.
+     *
+     * @param array $scopeItems array of items to render (outputContent, blockViewHeaderFile, blockViewFooterFile)
+     */
     public function renderViewContents($scopeItems)
     {
+        $shouldRender = function () {
+            $app = Application::getFacadeApplication();
+
+            // If you hook into this event and use `preventRendering()`,
+            // you can prevent the block from being displayed.
+            $event = new BlockBeforeRender($this->block);
+            $app->make('director')->dispatch('on_block_before_render', $event);
+
+            return $event->proceed();
+        };
+
+        if (!$shouldRender()) {
+            return;
+        }
+
+        unset($shouldRender);
+
         extract($scopeItems);
         if (!$this->outputContent) {
             ob_start();
@@ -258,6 +249,12 @@ class BlockView extends AbstractView
             $this->outputContent = ob_get_contents();
             ob_end_clean();
         }
+
+        // In case the view changes any scope items, the block header/footer
+        // could break without extracting the scope items again. This can happen
+        // if the block view changes any local variables such as the `$b`
+        // variable which is possible as they can be user defined.
+        extract($scopeItems);
 
         // The translatable texts in the block header/footer need to be printed
         // out in the system language.
@@ -271,6 +268,7 @@ class BlockView extends AbstractView
         $this->controller->registerViewAssets($this->outputContent);
 
         $this->onBeforeGetContents();
+        $this->fireOnBlockOutputEvent();
         echo $this->outputContent;
         $this->onAfterGetContents();
 
@@ -353,7 +351,7 @@ class BlockView extends AbstractView
         return $base;
     }
 
-    public function inc($fileToInclude, $args = array())
+    public function inc($fileToInclude, $args = [])
     {
         extract($args);
         extract($this->getScopeItems());
@@ -425,7 +423,7 @@ class BlockView extends AbstractView
 
         if (!$this->outputContent) {
             $this->didPullFromOutputCache = false;
-            if (in_array($this->viewToRender, array('view', 'add', 'edit', 'composer'))) {
+            if (in_array($this->viewToRender, ['view', 'add', 'edit', 'composer'])) {
                 $method = $this->viewToRender;
             } else {
                 $method = 'view';
@@ -443,7 +441,7 @@ class BlockView extends AbstractView
                 }
             }
 
-            $parameters = array();
+            $parameters = [];
             if (!$passthru) {
                 $this->controller->runAction($method, $parameters);
             }
@@ -459,5 +457,24 @@ class BlockView extends AbstractView
         $v = View::getInstance();
 
         return $v->getThemePath();
+    }
+
+    /**
+     * Fire an event just before the block is outputted on the page.
+     *
+     * Custom code can modify the block contents before
+     * the block contents are 'echoed' out on the page.
+     *
+     * @since 8.4.1
+     */
+    private function fireOnBlockOutputEvent()
+    {
+        $event = new BlockOutput($this->block);
+        $event->setContents($this->outputContent);
+
+        $app = Application::getFacadeApplication();
+        $app->make('director')->dispatch('on_block_output', $event);
+
+        $this->outputContent = $event->getContents();
     }
 }

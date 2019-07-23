@@ -19,12 +19,12 @@ foreach ($customTemplates as $template) {
 }
 
 if ($cp->canViewPage()) {
-    if ($_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
+    if (isset($_POST['task']) && $_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
         $sec = Loader::helper('security');
         $label = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomLabel']);
         $template = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
         $description = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlDescription']);
-        $required = $sec->sanitizeInt($_POST['ptComposerFormLayoutSetControlRequired']);
+        $required = $sec->sanitizeInt(isset($_POST['ptComposerFormLayoutSetControlRequired']) ? $_POST['ptComposerFormLayoutSetControlRequired'] : null);
         $control->updateFormLayoutSetControlCustomLabel($label);
         $control->updateFormLayoutSetControlCustomTemplate($template);
         $control->updateFormLayoutSetControlDescription($description);

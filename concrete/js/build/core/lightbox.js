@@ -1,8 +1,9 @@
-/**
- * Event triggers for the lightbox plugin.
- */
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+
+/* Event triggers for the lightbox plugin. */
+;(function(global, $) {
     'use strict';
+
     $('a[data-concrete5-link-lightbox=image]').each(function() {
         var me = $(this);
         me.magnificPopup({
@@ -52,4 +53,4 @@
         });
     });
 
-}(this, $);
+})(this, jQuery);

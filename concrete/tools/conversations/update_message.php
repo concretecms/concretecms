@@ -11,7 +11,7 @@ $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 
-if (!Loader::helper('validation/token')->validate('add_conversation_message', $_POST['token'])) {
+if (!Loader::helper('validation/token')->validate('edit_conversation_message', $_POST['token'])) {
     $ve->add(t('Invalid conversation post token.'));
 }
 if (!$vs->notempty($_POST['cnvMessageBody'])) {

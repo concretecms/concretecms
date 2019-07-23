@@ -1,19 +1,28 @@
 <?php
+
 namespace Concrete\Core\Validator\String;
 
+use ArrayAccess;
 use Concrete\Core\Validator\AbstractTranslatableValidator;
+use InvalidArgumentException;
 
 /**
  * Validate the length of a string.
- *
- * \@package Concrete\Core\Validator\String
  */
 class MinimumLengthValidator extends AbstractTranslatableValidator
 {
-    /** Too short */
+    /**
+     * Too short.
+     *
+     * @var int
+     */
     const E_TOO_SHORT = 1;
 
-    /** @var int The minimum length */
+    /**
+     * The minimum length.
+     *
+     * @var int
+     */
     protected $minimum_length;
 
     /**
@@ -24,20 +33,18 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     public function __construct($minimum_length)
     {
         $this->minimum_length = $minimum_length;
-
-        $this->setRequirementString(self::E_TOO_SHORT, function (MinimumLengthValidator $validator, $code) {
-
-            return sprintf(
-                'Must be at least %s characters long.',
-                $validator->getMinimumLength());
-        });
-
-        $this->setErrorString(self::E_TOO_SHORT, function (MinimumLengthValidator $validator, $code, $mixed) {
-            return sprintf(
-                'String \"%s\" must be at least %s characters long.',
-                $mixed,
-                $validator->getMinimumLength());
-        });
+        $this->setRequirementString(
+            self::E_TOO_SHORT,
+            function (MinimumLengthValidator $validator, $code) {
+                return t('Must be at least %s characters long.', $validator->getMinimumLength());
+            }
+        );
+        $this->setErrorString(
+            self::E_TOO_SHORT,
+            function (MinimumLengthValidator $validator, $code, $mixed) {
+                return t('String "%s" must be at least %s characters long.', $mixed, $validator->getMinimumLength());
+            }
+        );
     }
 
     /**
@@ -51,7 +58,7 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Set the minimum length.
+     * Set the minimum length allowed.
      *
      * @param int $minimum_length
      */
@@ -61,19 +68,14 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Is this mixed value valid.
+     * {@inheritdoc}
      *
-     * @param mixed             $mixed Can be any value
-     * @param \ArrayAccess|null $error
-     *
-     * @return bool
-     *
-     * @throws \InvalidArgumentException Invalid mixed value type passed.
+     * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, \ArrayAccess $error = null)
+    public function isValid($mixed, ArrayAccess $error = null)
     {
-        if (!is_string($mixed) && !is_null($mixed)) {
-            throw new \InvalidArgumentException('Invalid type supplied to validator.');
+        if ($mixed !== null && !is_string($mixed)) {
+            throw new InvalidArgumentException(t('Invalid type supplied to validator.'));
         }
 
         if ($this->getMinimumLength() > strlen($mixed)) {

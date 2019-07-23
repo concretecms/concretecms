@@ -24,15 +24,15 @@ require __DIR__ . '/bootstrap/autoload.php';
  * Begin concrete5 startup.
  * ----------------------------------------------------------------------------
  */
-/** @var \Concrete\Core\Application\Application $cms */
-$cms = require __DIR__ . '/bootstrap/start.php';
+$app = require __DIR__ . '/bootstrap/start.php';
+/** @var \Concrete\Core\Application\Application $app */
 
 /*
  * ----------------------------------------------------------------------------
  * Run the runtime.
  * ----------------------------------------------------------------------------
  */
-$runtime = $cms->getRuntime();
+$runtime = $app->getRuntime();
 if ($response = $runtime->run()) {
 
     /*
@@ -40,7 +40,7 @@ if ($response = $runtime->run()) {
      * Shut it down.
      * ------------------------------------------------------------------------
      */
-    $cms->shutdown();
+    $app->shutdown();
 } else {
-    return $cms;
+    return $app;
 }

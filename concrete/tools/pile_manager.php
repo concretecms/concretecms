@@ -32,6 +32,8 @@ if (Request::request('task', 'default') === 'delete') {
     if ($a->isGlobalArea()) {
         $ax = STACKS_AREA_NAME;
         $cx = Stack::getByName($_REQUEST['arHandle']);
+    } else {
+        $cx = $ax = null;
     }
     $b = Block::getByID($_REQUEST['bID'], $cx, $ax);
     if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {

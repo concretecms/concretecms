@@ -8,11 +8,6 @@
  *
  * You can do a lot of things in this file.
  *
- * ## Set a theme by route:
- *
- * Route::setThemeByRoute('/login', 'greek_yogurt');
- *
- *
  * ## Register a class override.
  *
  * $app->bind('helper/feed', function() {

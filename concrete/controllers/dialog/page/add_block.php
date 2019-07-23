@@ -79,10 +79,15 @@ class AddBlock extends BackendInterfacePageController
     {
         $pc = new PageEditResponse($this->error);
         $pc->setPage($this->page);
-        if ($this->validateAction() || is_object($this->blockType)
-            && !$this->blockType->hasAddTemplate()
-            && Loader::helper('validation/token')->validate()
-        ) {
+        if (is_object($this->blockType) && !$this->blockType->hasAddTemplate()) {
+            $token = $this->app->make('token');
+            if (!$token->validate()) {
+                $this->error->add($token->getErrorMessage());
+            }
+        } else {
+            $this->validateAction();
+        }
+        if (!$this->error->has()) {
             $data = $_POST;
             $bt = $this->blockType;
             $u = new User();
