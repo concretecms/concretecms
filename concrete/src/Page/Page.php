@@ -933,7 +933,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q2 = 'insert into PagePaths (cID, cPath, ppIsCanonical, ppGeneratedFromURLSlugs) values (?, ?, ?, ?)';
         $v2 = [$newCID, $cPath.'/'.$handle, 1, 1];
         $db->executeQuery($q2, $v2);
-
+        $pe = new Event(\Page::getByID($newCID));
+        Events::dispatch('on_page_alias_add', $pe);
         return $newCID;
     }
 
@@ -1079,6 +1080,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function removeThisAlias()
     {
+        $pe = new DeletePageEvent($this);
+        Events::dispatch('on_page_alias_delete', $pe);
+
         if ($this->isExternalLink()) {
             $this->delete();
         } elseif ($this->isAliasPage()) {
