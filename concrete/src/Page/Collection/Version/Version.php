@@ -325,6 +325,28 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
     }
 
+    public function getAttribute($ak, $mode = false)
+    {
+        $app = Facade::getFacadeApplication();
+        $cache = $app->make('cache/request');
+        $item = $cache->getItem(sprintf(
+            '/page/%s/%s/attribute/%s/%s',
+            (int) $this->getCollectionID(),
+            (int) $this->getVersionID(),
+            'ak_' . (is_object($ak) ? $ak->getAttributeKeyHandle() : $ak),
+            $mode?:'default'
+        ));
+
+        if (!$item->isMiss()) {
+            return $item->get();
+        } else {
+            $v = parent::getAttribute($ak, $mode);
+            $cache->save($item->set($v));
+
+            return $v;
+        }
+    }
+
     /**
      * Is this version approved?
      *
