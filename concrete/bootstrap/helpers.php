@@ -334,7 +334,7 @@ function core_log($message,
  * @param  array   $parameters
  * @return mixed
  */
-function app($abstract = null, $parameters = [])
+function app($abstract = null, array $parameters = [])
 {
     $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
