@@ -27,4 +27,16 @@ class Application extends Facade
 
         return $url;
     }
+
+    /**
+     * Resolve the given type from the container.
+     *
+     * @param  string  $abstract
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public static function make($abstract, array $parameters = [])
+    {
+        return static::$app->make($abstract, $parameters);
+    }
 }

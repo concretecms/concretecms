@@ -6,6 +6,11 @@ namespace Concrete\Core\Support\Facade;
  */
 abstract class Facade
 {
+    /**
+     * The application instance behind the facade.
+     *
+     * @var \Concrete\Core\Application\Application
+     */
     protected static $app;
 
     /**
