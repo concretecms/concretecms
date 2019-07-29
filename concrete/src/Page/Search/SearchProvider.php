@@ -58,6 +58,7 @@ class SearchProvider extends AbstractSearchProvider
     {
         $site = \Core::make('site')->getActiveSiteForEditing();
         $list = new PageList();
+        $list->includeAliases();
         $list->setSiteTreeObject($site);
         return $list;
     }
