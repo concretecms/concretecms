@@ -377,8 +377,9 @@ class EditorServiceProvider extends ServiceProvider
                 $defaultConfig = $siteService->getDefault()->getConfigRepository();
             }
 
-            // Load in default selected plugins
+            // Load in default selected plugins and hidden selected plugins
             $selectedPlugins = (array) $defaultConfig->get('editor.ckeditor4.plugins.selected_default', []);
+            $selectedPlugins = array_merge($selectedPlugins, (array) $defaultConfig->get('editor.ckeditor4.plugins.selected_hidden', []));
         }
 
         return $selectedPlugins;
