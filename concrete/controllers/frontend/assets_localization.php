@@ -606,7 +606,6 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             'dictDefaultMessage' => t('Drop files here or click to upload.'),
             'dictFallbackMessage' => t("Your browser does not support drag'n'drop file uploads."),
             'dictFallbackText' => t('Please use the fallback form below to upload your files like in the olden days.'),
-            'dictFallbackText' => t('Please use the fallback form below to upload your files like in the olden days.'),
             'dictFileTooBig' => t('File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.'),
             'dictInvalidFileType' => t('You can\'t upload files of this type.'),
             'dictResponseError' => t('Server responded with {{statusCode}} code.'),
