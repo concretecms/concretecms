@@ -30,6 +30,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-tab-content" id="ccm-tab-content-local">
         <form class="dropzone">
+            <div class="dz-default dz-message"><span><?= t('Drop files here or click to upload.') ?></span></div>
         </form>
     </div>
 
@@ -195,7 +196,6 @@ EOT
 
 $dialog.jqdialog('option', 'buttons', [{}]);
 $dialogContainer.find('.ui-dialog-buttonset').remove();
-
 window.ccm_fileUploader.start(uploaderOptions);
 $dialog.on('dialogclose', function() {
     window.ccm_fileUploader.stop(uploaderOptions);
