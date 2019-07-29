@@ -291,8 +291,6 @@ class Section extends Page
     {
         $db = Database::get();
 
-        $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
-
         if (static::isMultilingualSection($newPage)) {
             $ms = static::getByID($newPage->getCollectionID());
         } else {
@@ -303,6 +301,13 @@ class Section extends Page
         } else {
             $msx = static::getBySectionOfSite($oldPage);
         }
+
+        if (is_object($ms) && is_object($msx) && $ms->getLocale() === $msx->getLocale()) {
+            $mpRelationID = self::getMultilingualPageRelationID($newPage->getCollectionID());
+        } else {
+            $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
+        }
+
         $isNew = false;
         if (is_object($ms)) {
             if (!$mpRelationID) {
