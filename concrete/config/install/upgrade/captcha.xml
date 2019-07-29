@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <systemcaptcha>
+        <library handle="recaptchaV3" name="reCAPTCHA v3" package="" activated="0"/>
+    </systemcaptcha>
+
+</concrete5-cif>
