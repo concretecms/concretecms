@@ -696,6 +696,9 @@ return [
         'core/country-stateprovince-link' => [
             ['javascript', 'js/country-stateprovince-link.js', ['minify' => false]],
         ],
+        'core/country-data-link' => [
+            ['javascript', 'js/country-data-link.js', ['minify' => false]],
+        ],
     ],
     'asset_groups' => [
         'jquery/ui' => [
@@ -1144,6 +1147,12 @@ return [
             [
                 ['javascript', 'jquery'],
                 ['javascript', 'core/country-stateprovince-link'],
+            ],
+        ],
+        'core/country-data-link' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'core/country-data-link'],
             ],
         ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */

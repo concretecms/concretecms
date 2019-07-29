@@ -89,7 +89,8 @@
     "symfony/psr-http-message-bridge": "^1.0",
     "guzzlehttp/guzzle": "^6.3",
     "league/fractal": "^0.17.0",
-    "theorchard/monolog-cascade": "0.5.*"
+    "theorchard/monolog-cascade": "0.5.*",
+    "commerceguys/addressing": "^1.0"
   },
   "extra": {
     "branch-alias": {
