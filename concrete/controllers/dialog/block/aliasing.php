@@ -81,7 +81,8 @@ class Aliasing extends BackendInterfaceBlockController
                         echo json_encode($obj);
                         $this->app->shutdown();
                     } else {
-                        $queue = $this->block->queueForDefaultsAliasing($_POST['addBlock'], $_POST['updateForkedBlocks'], $queue);
+                        $r = $this->request->request;
+                        $queue = $this->block->queueForDefaultsAliasing($r->get('addBlock'), $r->get('updateForkedBlocks'), $queue);
                     }
 
                     $totalItems = $queue->count();
@@ -144,7 +145,8 @@ class Aliasing extends BackendInterfaceBlockController
     protected function validateAction()
     {
         if (parent::validateAction()) {
-            if (!$_POST['addBlock'] && !$_POST['updateForkedBlocks']) {
+            $r = $this->request->request;
+            if (!$r->get('addBlock') && !$r->get('updateForkedBlocks')) {
                 $this->error->add(t('You need to select at least one action'));
             } else {
                 return true;
