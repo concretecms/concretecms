@@ -2,22 +2,21 @@
 namespace Concrete\Core\Search\Pagination;
 
 use Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Support\Facade\Facade;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
 /**
- * Processes a thousand requests and builds pagination out of them.
- * This is slow on larger sites, but will yield accurate pagination even with permissions
- * Caveat: The most you can process in one result set is 1000 results. Otherwise, use PagerPagination
- * or disable permissions.
+ * Processes requests and builds pagination out of them.
  */
 class PermissionablePagination extends Pagination
 {
-    protected $maxResultsToProcessAtOnce = 1000;
 
     public function __construct(ItemList $itemList)
     {
-        $itemList->getQueryObject()->setMaxResults($this->maxResultsToProcessAtOnce);
+        $app = Facade::getFacadeApplication();
+        $maxResultsToProcessAtOnce = $app['config']->get('concrete.limits.permissionable_pagination_max_results');
+        $itemList->getQueryObject()->setMaxResults($maxResultsToProcessAtOnce);
         $results = $itemList->getResults();
         $adapter = new ArrayAdapter($results);
         $this->list = $itemList;

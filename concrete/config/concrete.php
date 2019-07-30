@@ -1111,6 +1111,11 @@ return [
             'size_min' => -50,
             'size_max' => 200,
         ],
+        /*
+         * Process more than 1000 results in one result set will slow down your site,
+         * if you're not sure of what you are doing use PagerPagination or disable permission.
+         */
+        'permissionable_pagination_max_results' => 1000,
     ],
 
     'page' => [
