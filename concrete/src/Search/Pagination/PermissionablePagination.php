@@ -11,12 +11,13 @@ use Pagerfanta\Pagerfanta;
  */
 class PermissionablePagination extends Pagination
 {
+    protected $maxResultsToProcessAtOnce;
 
     public function __construct(ItemList $itemList)
     {
         $app = Facade::getFacadeApplication();
-        $maxResultsToProcessAtOnce = $app['config']->get('concrete.limits.permissionable_pagination_max_results');
-        $itemList->getQueryObject()->setMaxResults($maxResultsToProcessAtOnce);
+        $this->maxResultsToProcessAtOnce = $app['config']->get('concrete.limits.permissionable_pagination_max_results');
+        $itemList->getQueryObject()->setMaxResults($this->maxResultsToProcessAtOnce);
         $results = $itemList->getResults();
         $adapter = new ArrayAdapter($results);
         $this->list = $itemList;
