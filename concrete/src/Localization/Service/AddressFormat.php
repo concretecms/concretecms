@@ -154,6 +154,7 @@ class AddressFormat
         $options = [];
         if (!empty($locale)) {
             $options['locale'] = $this->convertLocale($locale);
+            $address = $address->withLocale($options['locale']);
         }
         if (isset($this->options['subdivision_names'])) {
             $options['subdivision_names'] = $this->options['subdivision_names'];

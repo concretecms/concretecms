@@ -228,6 +228,31 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests Japanese addresses as they are formatted differently.
+     */
+    public function testJapaneseFormatting()
+    {
+        $formatted = $this->addressFormat->format(
+            [
+                'address1' => '１丁目１３番地',
+                'city' => '千代田区',
+                'state_province' => '東京都',
+                'country' => 'JP',
+                'postal_code' => '101-0054',
+            ],
+            'text',
+            'ja_JP'
+        );
+        $expected = '日本' . "\n" .
+            '〒101-0054' . "\n" .
+            '東京都千代田区' . "\n" .
+            '１丁目１３番地'
+        ;
+
+        $this->assertEquals($expected, $formatted);
+    }
+
+    /**
      * Tests the text formatting of addresses in case the locale is not
      * specifically defined for the `AddressFormat::format()` method.
      */
