@@ -8,7 +8,6 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 class Version20190717090600 extends AbstractMigration implements RepeatableMigrationInterface
 {
-
     /**
      * {@inheritdoc}
      *

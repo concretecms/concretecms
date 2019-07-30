@@ -2,19 +2,84 @@
 
 namespace Concrete\Core\Captcha;
 
-use Concrete\Core\Captcha\CaptchaInterface;
-use Concrete\Core\Controller\AbstractController;
-use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\Permission\IPService;
-use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Asset\AssetList;
-use Concrete\Core\Support\Facade\Log;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Http\Request;
+use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Http\Client\Client as HttpClient;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Permission\IPService;
+use Exception;
+use Psr\Log\LogLevel;
 
-class RecaptchaV3Controller extends AbstractController implements CaptchaInterface
-
+class RecaptchaV3Controller extends AbstractController implements CaptchaInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
+    /**
+     * Response error code: The secret parameter is missing.
+     *
+     * @var string
+     *
+     * @see https://developers.google.com/recaptcha/docs/verify#error-code-reference
+     */
+    const ERRCODE_SECRET_MISSING = 'missing-input-secret';
+
+    /**
+     * Response error code: The secret parameter is invalid or malformed.
+     *
+     * @var string
+     *
+     * @see https://developers.google.com/recaptcha/docs/verify#error-code-reference
+     */
+    const ERRCODE_SECRET_INVALID = 'invalid-input-secret';
+
+    /**
+     * Response error code: The response parameter is missing.
+     *
+     * @var string
+     *
+     * @see https://developers.google.com/recaptcha/docs/verify#error-code-reference
+     */
+    const ERRCODE_RESPONSE_MISSING = 'missing-input-response';
+
+    /**
+     * Response error code: The response parameter is invalid or malformed.
+     *
+     * @var string
+     *
+     * @see https://developers.google.com/recaptcha/docs/verify#error-code-reference
+     */
+    const ERRCODE_RESPONSE_INVALID = 'invalid-input-response';
+
+    /**
+     * Response error code: The request is invalid or malformed.
+     *
+     * @var string
+     *
+     * @see https://developers.google.com/recaptcha/docs/verify#error-code-reference
+     */
+    const ERRCODE_REQUEST_INVALID = 'bad-request';
+
+    /**
+     * Response error code: The response is no longer valid: either is too old or has been used previously.
+     *
+     * @var string
+     *
+     * @see https://developers.google.com/recaptcha/docs/verify#error-code-reference
+     */
+    const ERRCODE_RESPONSE_TIMEOUT = 'timeout-or-duplicate';
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Logging\LoggerAwareInterface::getLoggerChannel()
+     */
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_SPAM;
+    }
 
     /**
      * {@inheritdoc}
@@ -33,28 +98,26 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
      */
     public function showInput()
     {
-
+        $config = $this->app->make('config');
         $assetList = AssetList::getInstance();
 
-        $assetUrl = 'https://www.google.com/recaptcha/api.js?onload=RecaptchaV3&render=explicit';
+        $assetUrl = $config->get('captcha.recaptcha_v3.url.javascript_asset');
 
-        $assetList->register('javascript', 'recaptcha_api', $assetUrl, array('local' => false));
-        $assetList->register('javascript', 'recaptcha_render', 'js/captcha/recaptchav3.js', array(), 'recaptcha_v3');
-
+        $assetList->register('javascript', 'recaptcha_api', $assetUrl, ['local' => false]);
+        $assetList->register('javascript', 'recaptcha_render', 'js/captcha/recaptchav3.js', [], 'recaptcha_v3');
 
         $assetList->registerGroup(
             'recaptcha_v3',
-            array(
-                array('javascript', 'recaptcha_render'),
-                array('javascript', 'recaptcha_api'),
-            )
+            [
+                ['javascript', 'recaptcha_render'],
+                ['javascript', 'recaptcha_api'],
+            ]
         );
 
         $responseAssets = ResponseAssetGroup::get();
         $responseAssets->requireAsset('recaptcha_v3');
 
-        echo '<div id="' . uniqid('hwh') . '" class="grecaptcha-box recaptcha-v3" data-sitekey="' . Config::get('recaptchaV3.site_key') . '" data-badge="' . Config::get('recaptchaV3.position') . '"></div>';
-
+        echo '<div id="' . uniqid('hwh') . '" class="grecaptcha-box recaptcha-v3" data-sitekey="' . h($config->get('captcha.recaptcha_v3.site_key')) . '" data-badge="' . h($config->get('captcha.recaptcha_v3.position')) . '"></div>';
     }
 
     /**
@@ -74,82 +137,88 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
      */
     public function check()
     {
-
-        $app = Application::getFacadeApplication();
-        $iph = '';
-
-        if (Config::get('recaptchaV3.sendIP') == "yes") {
-            $iph = (string) $app->make(IPService::class)->getRequestIPAddress();
-        }
-
-        $qsa = http_build_query(
-            array(
-                'secret' => Config::get('recaptchaV3.secret_key'),
-                'remoteip' => $iph,
-                'response' => $this->request->request->get('g-recaptcha-response')
-            )
+        $config = $this->app->make('config');
+        $queryString = http_build_query(
+            [
+                'secret' => $config->get('captcha.recaptcha_v3.secret_key'),
+                'remoteip' => $config->get('captcha.recaptcha_v3.send_ip') ? (string) $this->app->make(IPService::class)->getRequestIPAddress() : '',
+                'response' => $this->request->request->get('g-recaptcha-response'),
+            ]
         );
+        $verifyUrl = $config->get('captcha.recaptcha_v3.url.verify');
+        $verifyUrl .= (strpos($verifyUrl, '?') === false ? '?' : '&') . $queryString;
 
-        $ch = curl_init('https://www.google.com/recaptcha/api/siteverify?' . $qsa);
+        $httpClient = $this->app->make(HttpClient::class);
+        $httpClient->setUri($verifyUrl);
 
-        if (Config::get('concrete.proxy.host') != null) {
-            curl_setopt($ch, CURLOPT_PROXY, Config::get('concrete.proxy.host'));
-            curl_setopt($ch, CURLOPT_PROXYPORT, Config::get('concrete.proxy.port'));
+        try {
+            $response = $httpClient->send();
+        } catch (Exception $x) {
+            $this->logger->alert(t('Error loading reCAPTCHA: %s', $x->getMessage()));
 
-            // Check if there is a username/password to access the proxy
-            if (Config::get('concrete.proxy.user') != null) {
-                curl_setopt($ch, CURLOPT_PROXYUSERPWD, Config::get('concrete.proxy.user') . ':' . Config::get('concrete.proxy.password')
-                );
-            }
-        }
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
-
-        $response = curl_exec($ch);
-
-        if ($response !== false) {
-            $data = json_decode($response, true);
-
-
-            if (isset($data['error-codes']) && (in_array('missing-input-secret', $data['error-codes']) || in_array('invalid-input-secret', $data['error-codes']))) {
-                Log::addError(t('The reCAPTCHA secret parameter is invalid or malformed.'));
-            }
-
-            if ($data['success'] == true && $data['score'] > Config::get('recaptchaV3.score') && $data['action'] == 'submit') {
-                return true;
-            } else {
-                if (Config::get('hw_recaptcha.logscore') == 1 && Config::get('hw_recaptcha.score') >= $data['score']) {
-                    $formmessage = $r->request->all();
-                    if (isset($formmessage['recaptcha_key'])) {
-                        unset($formmessage['recaptcha_key']);
-                    }
-                    if (isset($formmessage['recaptcha_position'])) {
-                        unset($formmessage['recaptcha_position']);
-                    }
-                    if (isset($formmessage['g-recaptcha-response'])) {
-                        unset($formmessage['g-recaptcha-response']);
-                    }
-                    Log::addError(t('reCAPTCHAv3 captcha blocked as score returned (' . $data['score'] . ') is below the threshold set (' . Config::get('hw_recaptcha.score') . ') %s', var_export($formmessage, true)));
-                }
-                return false;
-
-            }
-        } else {
-            Log::addError(t('Error loading reCAPTCHA: %s', curl_error($ch)));
             return false;
         }
-    }
+        /** @var \Zend\Http\Response $response */
+        if (!$response->isOk()) {
+            $this->logger->alert(t('Error loading reCAPTCHA: %s', sprintf('%s (%s)', $response->getStatusCode(), $response->getReasonPhrase())));
 
+            return false;
+        }
+        $data = @json_decode($response->getBody(), true);
+        if (!is_array($data)) {
+            $this->logger->alert(t('Error loading reCAPTCHA: %s', t('invalid response')));
+
+            return false;
+        }
+
+        if (!empty($data['error-codes'])) {
+            switch (true) {
+                case in_array(static::ERRCODE_SECRET_MISSING, $data['error-codes']):
+                case in_array(static::ERRCODE_SECRET_INVALID, $data['error-codes']):
+                    $logLevel = LogLevel::ALERT;
+                    break;
+                default:
+                    // Don't ring the bells in case the client is sending mangled data: it's likely to happen in case of spammers
+                    $logLevel = LogLevel::NOTICE;
+                    break;
+            }
+            $this->logger->log($logLevel, t('Errors in reCAPTCHA validation: %s', implode(', ', $data['error-codes'])));
+        }
+
+        $score = array_get($data, 'score');
+        if (!is_numeric($score)) {
+            // This should happen only when 'error-codes' is not empty, so we already logged the error(s).
+            return false;
+        }
+        $score = (float) $score;
+        $minimumScore = $config->get('captcha.recaptcha_v3.score');
+        if (array_get($data, 'action') === 'submit' && array_get($data, 'success') === true && $score >= $minimumScore) {
+            return true;
+        }
+
+        if ($config->get('captcha.recaptcha_v3.log_score') && $score < $minimumScore) {
+            $this->logger->notice(t('reCAPTCHA V3 blocked as score returned (%1$s) is below the threshold (%2$s)', $score, $minimumScore));
+        }
+
+        return false;
+    }
 
     public function saveOptions($data)
     {
-
-        Config::save('recaptchaV3.site_key', $data['site']);
-        Config::save('recaptchaV3.secret_key', $data['secret']);
-        Config::save('recaptchaV3.score', $data['score']);
-        Config::save('recaptchaV3.position', $data['position']);
-        Config::save('recaptchaV3.logscore', $data['logscore']);
-        Config::save('recaptchaV3.sendIP', $data['sendip']);
+        $data = (is_array($data) ? $data : []) + [
+            'site_key' => '',
+            'secret_key' => '',
+            'score' => 0.5,
+            'position' => 'bottomright',
+            'log_score' => false,
+            'send_ip' => false,
+        ];
+        $config = $this->app->make('config');
+        $config->save('captcha.recaptcha_v3.site_key', (string) $data['site_key']);
+        $config->save('captcha.recaptcha_v3.secret_key', (string) $data['secret_key']);
+        $config->save('captcha.recaptcha_v3.score', (float) $data['score']);
+        $config->save('captcha.recaptcha_v3.position', (string) $data['position']);
+        $config->save('captcha.recaptcha_v3.log_score', (bool) $data['log_score']);
+        $config->save('captcha.recaptcha_v3.send_ip', (bool) $data['send_ip']);
     }
 }
