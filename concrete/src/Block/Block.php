@@ -169,12 +169,10 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
  CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?';
         }
 
-        $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $db->fetchAssoc($q, $v);
 
-        if (is_array($row)) {
+        if ($row !== false) {
             $b->setPropertiesFromArray($row);
-            $r->free();
 
             $bt = BlockType::getByID($b->getBlockTypeID());
             $class = $bt->getBlockTypeClass();
@@ -474,9 +472,8 @@ EOT
         if ($bID) {
             $db = Loader::db();
             $q = 'select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = ? and CollectionVersionBlocks.isOriginal = 1';
-            $r = $db->query($q, [$bID]);
-            if ($r) {
-                $row = $r->fetchRow();
+            $row = $db->fetchAssoc($q, [$bID]);
+            if ($row !== false) {
                 $cID = $row['cID'];
                 $nc = Page::getByID($cID, 'ACTIVE');
                 if (is_object($nc) && !$nc->isError()) {
