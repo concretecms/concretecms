@@ -4,7 +4,7 @@ namespace Concrete\Core\Form\Service\DestinationPicker;
 
 use ArrayAccess;
 use Concrete\Core\Form\Service\Form;
-use Egulias\EmailValidator\EmailValidator;
+use Concrete\Core\Validator\String\EmailValidator;
 
 /**
  * A picker for DestinationPicker that allows users specify an email address.
@@ -92,8 +92,8 @@ class EmailPicker implements PickerInterface
                     }
                 }
                 if ($postValue !== null) {
-                    $emailValidator = new EmailValidator();
-                    if (!$emailValidator->isValid($postValue, !empty($options['checkDNS']), !empty($options['strict']))) {
+                    $emailValidator = new EmailValidator(!empty($options['checkDNS']), !empty($options['strict']));
+                    if (!$emailValidator->isValid($postValue)) {
                         $postValue = null;
                         if ($errors !== null) {
                             if ((string) $fieldDisplayName === '') {
