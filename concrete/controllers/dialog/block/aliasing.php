@@ -17,9 +17,11 @@ class Aliasing extends BackendInterfaceBlockController
         $template = Template::getByID($this->page->getPageTemplateID());
 
         $pl = new PageList();
+        $pl->setSiteTreeToAll();
+        $pl->ignorePermissions();
         $pl->filterByPageTypeID($ct->getPageTypeID());
         $pl->filterByPageTemplate($template);
-        $pl->ignorePermissions();
+
         $this->set('total', $pl->getTotalResults());
     }
 
@@ -79,7 +81,8 @@ class Aliasing extends BackendInterfaceBlockController
                         echo json_encode($obj);
                         $this->app->shutdown();
                     } else {
-                        $queue = $this->block->queueForDefaultsAliasing($_POST['addBlock'], $queue);
+                        $r = $this->request->request;
+                        $queue = $this->block->queueForDefaultsAliasing($r->get('addBlock'), $r->get('updateForkedBlocks'), $queue);
                     }
 
                     $totalItems = $queue->count();
@@ -138,6 +141,20 @@ class Aliasing extends BackendInterfaceBlockController
         }
     }
     */
+
+    protected function validateAction()
+    {
+        if (parent::validateAction()) {
+            $r = $this->request->request;
+            if (!$r->get('addBlock') && !$r->get('updateForkedBlocks')) {
+                $this->error->add(t('You need to select at least one action'));
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     protected function canAccess()
     {

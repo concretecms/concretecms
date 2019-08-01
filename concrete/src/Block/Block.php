@@ -1859,11 +1859,12 @@ EOT
      * Populate the queue to be used to add/update blocks of the pages of a specific type.
      *
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
+     * @param bool $updateForkedBlocks
      * @param \ZendQueue\Queue $queue The queue to add the messages too (it will be emptied before adding the new messages)
      *
      * @return \ZendQueue\Queue
      */
-    public function queueForDefaultsAliasing($addBlock, $queue)
+    public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks, $queue)
     {
         $records = [];
         $db = \Database::connection();
@@ -1898,7 +1899,7 @@ EOT
                     $row['cID'], $row['cvID'], $cbRelationID,
                 ]);
 
-                if ($r2['bID'] || (!$r2['bID'] && $addBlock)) {
+                if (($r2['bID'] && $updateForkedBlocks) || (!$r2['bID'] && $addBlock)) {
                     // Ok, so either this block doesn't appear on the page at all, but addBlock set to true,
                     // or, the block appears on the page and it is forked. Either way we're going to add it to the page.
 
