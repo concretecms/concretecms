@@ -15,13 +15,13 @@ class Aliasing extends BackendInterfaceBlockController
     {
         $ct = Type::getByDefaultsPage($this->page);
         $template = Template::getByID($this->page->getPageTemplateID());
-        $site = $this->app->make('site')->getActiveSiteForEditing();
 
         $pl = new PageList();
+        $pl->setSiteTreeToAll();
+        $pl->ignorePermissions();
         $pl->filterByPageTypeID($ct->getPageTypeID());
         $pl->filterByPageTemplate($template);
-        $pl->filterBySite($site);
-        $pl->ignorePermissions();
+
         $this->set('total', $pl->getTotalResults());
     }
 
