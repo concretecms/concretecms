@@ -11,7 +11,7 @@ $form = Loader::helper('form');
     <% for (i = 0; i < page.columns.length; i++) {
         var column = page.columns[i];
         if (column.key == 'cv.cvName') { %>
-            <td class="ccm-search-results-name"><%-column.value%></td>
+            <td class="ccm-search-results-name"><%-column.value%><%=page.cPointerID ? ' <i class="fa fa-sign-in"></i>' : ''%></td>
         <% } else { %>
             <td><%-column.value%></td>
         <% } %>
