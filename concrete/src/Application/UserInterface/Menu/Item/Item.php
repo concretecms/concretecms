@@ -89,7 +89,7 @@ class Item implements ItemInterface
                 DIRNAME_MENU_ITEMS . '/' . $handle . '/' . FILENAME_CONTROLLER,
                 $this->pkgHandle
             );
-            $this->setController(\Core::make($class, [$this]));
+            $this->setController(\Core::make($class));
         }
 
         return $this->controller;
