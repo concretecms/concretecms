@@ -602,6 +602,15 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
     {
         $config = $this->app->make('config');
         $token = $this->app->make('token');
+
+        $maxExecutionTime = (int) ini_get('max_execution_time');
+        $maxInputType = (int) ini_get('max_input_time');
+        $timeout = $maxExecutionTime <= 0 ? 24 * 60 * 60 : $maxExecutionTime;
+        if ($maxInputType === 0) {
+            $timeout += 24 * 60 * 60;
+        } elseif ($maxInputType > 0) {
+            $timeout += $maxInputType;
+        }
         $options = [
             'dictDefaultMessage' => t('Drop files here or click to upload.'),
             'dictFallbackMessage' => t("Your browser does not support drag'n'drop file uploads."),
@@ -619,6 +628,7 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             'params' => [
                 $token::DEFAULT_TOKEN_NAME => $token->generate(),
             ],
+            'timeout' => 1000 * $timeout,
         ];
         $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
         if ($maxWidth > 0) {
@@ -737,7 +747,7 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
         if ($postMaxSize < 1) {
             return $uploadMaxFilesize;
         }
-        
+
         return min($uploadMaxFilesize, $postMaxSize);
     }
 }
