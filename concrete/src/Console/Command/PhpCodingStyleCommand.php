@@ -25,6 +25,7 @@ class PhpCodingStyleCommand extends Command
 c5:phpcs
 {--no-cache : Specify this flag to turn off the coding style cache}
 {--webroot={$defaultWebRoot} : Specify the webroot (use - to auto-detect it)}
+{--p|php= : The minimum PHP version }
 {action : Either "fix" or "check"}
 {path*  : The path to one or more files or directories }
 EOT
@@ -64,7 +65,10 @@ EOT
             }
             $fixer->getOptions()->setWebRoot($webroot);
         }
-        $fixer->getOptions()->setIsCacheDisabled($this->input->getOption('no-cache'));
+        $fixer->getOptions()
+            ->setIsCacheDisabled($this->input->getOption('no-cache'))
+            ->setMinimumPhpVersion($this->input->getOption('php'))
+        ;
         list($counters, $changes, $errors) = $fixer->fix($this->input, $this->output, $splFileInfos, $dryRun);
         /* @var array $counters */
         /* @var array $changes */

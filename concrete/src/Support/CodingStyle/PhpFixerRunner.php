@@ -142,7 +142,7 @@ class PhpFixerRunner
      */
     protected function applyStep(PhpFixerOptions $options, Traversable $finder, $flags, $dryRun)
     {
-        $rules = $this->ruleResolver->getRules($flags, true);
+        $rules = $this->ruleResolver->getRules($flags, true, $options->getMinimumPhpVersion());
         $fixers = $this->ruleResolver->getFixers($rules);
 
         $linter = new Linter();
