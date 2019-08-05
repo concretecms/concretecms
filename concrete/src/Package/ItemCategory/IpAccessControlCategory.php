@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Package;
 use Concrete\Core\Entity\Permission\IpAccessControlCategory as Entity;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Entity\Permission\IpAccessControlCategory as IpAccessControlCategoryEntity;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -42,7 +43,7 @@ class IpAccessControlCategory extends AbstractCategory
     {
         $app = Application::getFacadeApplication();
         $em = $app->make(EntityManagerInterface::class);
-        $repo = $em->getRepository(self::class);
+        $repo = $em->getRepository(IpAccessControlCategoryEntity::class);
 
         return $repo->findBy(['package' => $package]);
     }
