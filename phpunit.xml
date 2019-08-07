@@ -24,4 +24,9 @@
             <directory suffix="page_theme.php">concrete/themes/</directory>
         </whitelist>
     </filter>
+    <groups>
+        <exclude>
+            <group>online</group>
+        </exclude>
+    </groups>
 </phpunit>
