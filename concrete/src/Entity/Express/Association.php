@@ -23,7 +23,7 @@ abstract class Association implements ExportableInterface
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Entity")
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="associations")
      **/
     protected $source_entity;
 

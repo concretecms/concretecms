@@ -32,7 +32,7 @@ class FieldSet
     protected $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Form")
+     * @ORM\ManyToOne(targetEntity="Form", inversedBy="field_sets")
      **/
     protected $form;
 

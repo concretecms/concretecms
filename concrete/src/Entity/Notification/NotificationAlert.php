@@ -29,7 +29,7 @@ class NotificationAlert
     protected $naID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\User\User", inversedBy="alerts")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
      */
     protected $user;
