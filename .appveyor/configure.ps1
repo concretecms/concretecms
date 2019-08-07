@@ -80,3 +80,15 @@ if (-Not(Test-Path -PathType Leaf -Path C:\tools\bin\composer.bat)) {
     Write-Host 'Updating Composer'
     & composer self-update
 }
+
+# Install hirak/prestissimo composer global package
+try {
+    & composer global show hirak/prestissimo -q 2>&1
+} catch {
+    Write-Host 'Installing hirak/prestissimo composer global package'
+    try {
+        & composer global require --no-interaction --no-progress --optimize-autoloader hirak/prestissimo
+    } catch {
+        Write-Host 'Failed to install hirak/prestissimo'
+    }
+}
