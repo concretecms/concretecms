@@ -17,6 +17,7 @@ use Concrete\Core\Permission\Key\BlockKey as BlockPermissionKey;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Assignment\PageTimedAssignment as PageContentPermissionTimedAssignment;
+use Concrete\Core\Support\Facade\Application;
 
 class PageResponse extends Response
 {
@@ -143,15 +144,13 @@ class PageResponse extends Response
             return true;
         }
 
-        $types = Type::getList();
-        foreach($types as $pt) {
-            $ptp = new \Permissions($pt);
-            if ($ptp->canAddPageType()) {
-                return true;
-            }
+        $app = Application::getFacadeApplication();
+        $sh = $app->make('helper/concrete/dashboard/sitemap');
+        if ($sh->canViewSitemapPanel()) {
+            return true;
         }
 
-        $dh = Loader::helper('concrete/dashboard');
+        $dh = $app->make('helper/concrete/dashboard');
         if ($dh->canRead() ||
             $this->canViewPageVersions() ||
             $this->canPreviewPageAsUser() ||

@@ -83,6 +83,7 @@ function copyBoundarySpaces(from, to) {
 
 function buildTranslatedTextarea(translationView, value) {
   return $('<textarea rows="5" class="form-control" />')
+    .attr('dir', translationView.translation.translator.textDirection)
     .val((typeof value === 'string') ? value : '')
     .on('keydown', function(e) {
       switch (e.keyCode || e.which) {
@@ -125,6 +126,7 @@ Translation.prototype = {
     sub.textContent = sub.innerText = this.original;
     this.li.appendChild(sub);
     this.liTranslated = document.createElement('span');
+    this.liTranslated.dir = this.translator.textDirection;
     this.translationUpdated(true);
     this.li.appendChild(this.liTranslated);
     this.translator.UI.$list[0].appendChild(this.li);
@@ -432,7 +434,7 @@ var TranslationView = (function() {
         );
         my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '" data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
-          .append(my.UI.$translated[key] = buildTranslatedTextarea(this, my.translation.isTranslated ? my.translation.translations[index] : ''))
+          .append(my.UI.$translated[key] = buildTranslatedTextarea(my, my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
         index++;
       });
@@ -500,6 +502,7 @@ function Translator(data) {
   this.plurals = $.extend(true, {}, data.plurals);
   this.translations = [];
   this.approvalSupport = (data.approvalSupport === false) ? false : true;
+  this.textDirection = typeof data.textDirection === 'string' && data.textDirection.length ? data.textDirection : 'ltr';
   this.referencePatterns = $.extend(true, {file: null, file_line: null}, data.referencePatterns);
   this.on = {
     uiLaunched: ('onUILaunched' in data) ? data.onUILaunched : null,

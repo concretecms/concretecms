@@ -28,6 +28,7 @@
   },
   "bin": [ "bin/concrete5" ],
   "require": {
+    "ext-PDO": "*",
     "php": ">=5.5.9",
     "doctrine/dbal": "~2.5",
     "symfony/class-loader": "3.*",

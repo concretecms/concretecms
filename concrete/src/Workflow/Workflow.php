@@ -1,43 +1,62 @@
 <?php
+
 namespace Concrete\Core\Workflow;
 
-use \Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Package\Package;
-use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use Loader;
-use Core;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Package;
+use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
+use Punic\Comparer;
 
-/**
- * \@package Workflow
- *
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2012 concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
-abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
+abstract class Workflow extends ConcreteObject implements ObjectInterface
 {
+    /**
+     * The workflow ID.
+     *
+     * @var int
+     */
     protected $wfID = 0;
-    protected $allowedTasks = array('cancel', 'approve');
-    protected $restrictedToPermissionKeyHandles = array();
 
-    public function getAllowedTasks()
-    {
-        return $this->allowedTasks;
-    }
+    /**
+     * The list of allowed tasks.
+     *
+     * @var string[]
+     */
+    protected $allowedTasks = ['cancel', 'approve'];
 
+    /**
+     * The list of permission key handles that this workflow can be attached to.
+     *
+     * @var string[]
+     */
+    protected $restrictedToPermissionKeyHandles = [];
+
+    /**
+     * Get the workflow ID.
+     *
+     * @return int
+     */
     public function getWorkflowID()
     {
         return $this->wfID;
     }
 
+    /**
+     * Get the workflow (English) name.
+     *
+     * @return string
+     */
     public function getWorkflowName()
     {
         return $this->wfName;
     }
 
     /**
-     * Returns the display name for this workflow (localized and escaped accordingly to $format).
+     * Get the display name for this workflow (localized and escaped accordingly to $format).
      *
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
@@ -57,57 +76,101 @@ abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permiss
         }
     }
 
-    public function getWorkflowTypeObject()
+    /**
+     * Get the list of allowed tasks.
+     *
+     * @return string[]
+     */
+    public function getAllowedTasks()
     {
-        return Type::getByID($this->wftID);
+        return $this->allowedTasks;
     }
 
+    /**
+     * Get the workflow type associated to this workflow.
+     *
+     * @return \Concrete\Core\Workflow\Type|null
+     */
+    public function getWorkflowTypeObject()
+    {
+        return empty($this->wftID) ? null : Type::getByID($this->wftID);
+    }
+
+    /**
+     * Get the list of permission key handles that this workflow can be attached to.
+     *
+     * @var string[]
+     */
     public function getRestrictedToPermissionKeyHandles()
     {
         return $this->restrictedToPermissionKeyHandles;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionResponseClassName()
+     */
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\Workflow';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionAssignmentClassName()
+     */
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\WorkflowAssignment';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
+     */
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'basic_workflow';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectIdentifier()
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->getWorkflowID();
     }
 
+    /**
+     * Delete this workflow and all its associated progresses.
+     */
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute('delete from Workflows where wfID = ?', array($this->wfID));
-
-        foreach (
-            $db->GetArray(
-                'select wpID from WorkflowProgress where wfID = ?',
-                array($this->wfID)
-            )
-            as $row
-        ) {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rows = $db->fetchAll('select wpID from WorkflowProgress where wfID = ?', [$this->getWorkflowID()]);
+        foreach ($rows as $row) {
             $wfp = WorkflowProgress::getByID($row['wpID']);
             if ($wfp) {
                 $wfp->delete();
             }
         }
+        $db->delete('Workflows', ['wfID' => $this->getWorkflowID()]);
     }
 
-    // by default the basic workflow just passes the status num from the request
-    // we do this so that we can order things by most important, etc...
+    /**
+     * By default the basic workflow just passes the status num from the request
+     * we do this so that we can order things by most important, etc...
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $wp
+     *
+     * @return int|null
+     */
     public function getWorkflowProgressCurrentStatusNum(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
@@ -116,141 +179,303 @@ abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permiss
         }
     }
 
+    /**
+     * Get the list of installed workflows, sorted by the workflow display name.
+     *
+     * @return \Concrete\Core\Workflow\Workflow[]
+     */
     public static function getList()
     {
-        $workflows = array();
-        $db = Loader::db();
-        $r = $db->Execute("select wfID from Workflows order by wfName asc");
-        while ($row = $r->FetchRow()) {
+        $workflows = [];
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rows = $db->fetchAll('select wfID from Workflows');
+        foreach ($rows as $row) {
             $wf = static::getByID($row['wfID']);
-            if (is_object($wf)) {
+            if ($wf) {
                 $workflows[] = $wf;
             }
         }
+        $cmp = new Comparer();
+        usort($workflows, function (Workflow $a, Workflow $b) use ($cmp) {
+            return $cmp->compare($a->getWorkflowDisplayName('text'), $b->getWorkflowDisplayName('text'));
+        });
 
         return $workflows;
     }
 
-    public static function getListByPackage(\Concrete\Core\Entity\Package $pkg)
+    /**
+     * Get the list of workflows installed by a package, sorted by the workflow display name.
+     *
+     * @param \Concrete\Core\Entity\Package $pkg
+     *
+     * @return \Concrete\Core\Workflow\Workflow[]
+     */
+    public static function getListByPackage(Package $pkg)
     {
-        $workflows = array();
-        $db = Loader::db();
-        $r = $db->Execute("select wfID from Workflows where pkgID = ? order by wfName asc", [$pkg->getPackageID()]);
-        while ($row = $r->FetchRow()) {
+        $workflows = [];
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rows = $db->fetchAll('select wfID from Workflows where pkgID = ?', [$pkg->getPackageID()]);
+        foreach ($rows as $row) {
             $wf = static::getByID($row['wfID']);
-            if (is_object($wf)) {
+            if ($wf) {
                 $workflows[] = $wf;
             }
         }
+        $cmp = new Comparer();
+        usort($workflows, function (Workflow $a, Workflow $b) use ($cmp) {
+            return $cmp->compare($a->getWorkflowDisplayName('text'), $b->getWorkflowDisplayName('text'));
+        });
 
         return $workflows;
     }
 
-
-    public static function add(Type $wt, $name, \Concrete\Core\Entity\Package $pkg = null)
+    /**
+     * Create a new workflow.
+     *
+     * @param \Concrete\Core\Workflow\Type $wt The workflow type
+     * @param string $name the (English) name of the workflow
+     * @param \Concrete\Core\Entity\Package|null $pkg the package that's creating the new workflow
+     *
+     * @return \Concrete\Core\Workflow\Workflow
+     */
+    public static function add(Type $wt, $name, Package $pkg = null)
     {
-        $db = Loader::db();
-        $wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?', array($name));
-        if (!$wfID) {
-            $pkgID = 0;
-            if (is_object($pkg)) {
-                $pkgID = $pkg->getPackageID();
-            }
-
-            $db->Execute('insert into Workflows (wftID, wfName, pkgID) values (?, ?, ?)', array($wt->getWorkflowTypeID(), $name, $pkgID));
-            $wfID = $db->Insert_ID();
+        $wf = static::getByName($name);
+        if ($wf !== null) {
+            return $wf;
         }
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->insert(
+            'Workflows',
+            [
+                'wftID' => $wt->getWorkflowTypeID(),
+                'wfName' => (string) $name,
+                'pkgID' => $pkg === null ? $wt->getPackageID() : $pkg->getPackageID(),
+            ]
+        );
+        $wfID = $db->lastInsertId();
 
         return self::getByID($wfID);
     }
 
-    protected function load($wfID)
-    {
-        $db = Loader::db();
-        $r = $db->GetRow('select Workflows.* from Workflows where Workflows.wfID = ?', array($wfID));
-        $this->setPropertiesFromArray($r);
-    }
-
+    /**
+     * Get a workflow given its ID.
+     *
+     * @param int $wfID the ID of the workflow
+     *
+     * @return \Concrete\Core\Workflow\Workflow|null
+     */
     public static function getByID($wfID)
     {
-        $db = Loader::db();
-        $r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?',
-            array($wfID));
-        if ($r['wftHandle']) {
-            $prefix = null;
-            $class = '\\Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
-            if ($r['pkgID']) {
-                $pkg = Package::getByID($r['pkgID']);
-                $prefix = $pkg->getPackageHandle();
-            }
-            $class = core_class($class, $prefix);
-            $obj = Core::make($class);
-
-            $obj->load($wfID);
-            if ($obj->getWorkflowID() > 0) {
-                $obj->loadDetails();
-
-                return $obj;
-            }
+        $wfID = (int) $wfID;
+        if ($wfID === 0) {
+            return null;
         }
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $r = $db->fetchAssoc(<<<'EOT'
+select
+    WorkflowTypes.wftHandle,
+    WorkflowTypes.pkgID
+from
+    Workflows
+    inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID
+where
+    Workflows.wfID = ?
+EOT
+            ,
+            [$wfID]
+        );
+        if (!$r) {
+            return null;
+        }
+        $class = '\\Core\\Workflow\\' . camelcase($r['wftHandle']) . 'Workflow';
+        if ($r['pkgID']) {
+            $pkg = $app->make(PackageService::class)->getByID($r['pkgID']);
+            $prefix = $pkg->getPackageHandle();
+        } else {
+            $prefix = null;
+        }
+        $class = core_class($class, $prefix);
+        $obj = $app->make($class);
+        /** @var \Concrete\Core\Workflow\Workflow $obj */
+        $obj->load($wfID);
+        if (!$obj->getWorkflowID()) {
+            return null;
+        }
+        $obj->loadDetails();
+
+        return $obj;
     }
 
+    /**
+     * Get a workflow given its (English) name.
+     *
+     * @param string $wfName
+     *
+     * @return \Concrete\Core\Workflow\Workflow|null
+     */
     public static function getByName($wfName)
     {
-        $db = Loader::db();
-        $wfID = $db->GetOne('select wfID from Workflows where wfName = ?', array($wfName));
-        if ($wfID) {
-            return static::getByID($wfID);
-        }
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $wfID = $db->fetchColumn('SELECT wfID FROM Workflows WHERE wfName = ?', [(string) $wfName]);
+
+        return $wfID ? static::getByID($wfID) : null;
     }
 
+    /**
+     * Get the URL of a task for this workflow.
+     *
+     * @param string $task
+     *
+     * @return string
+     */
     public function getWorkflowToolsURL($task)
     {
         $type = $this->getWorkflowTypeObject();
-        $uh = Loader::helper('concrete/urls');
+        $app = Application::getFacadeApplication();
+        $uh = $app->make('helper/concrete/urls');
         $url = $uh->getToolsURL('workflow/types/' . $type->getWorkflowTypeHandle(), $type->getPackageHandle());
-        $url .= '?wfID=' . $this->getWorkflowID() . '&task=' . $task . '&' . Loader::helper('validation/token')->getParameter($task);
+        $url .= '?wfID=' . $this->getWorkflowID() . '&task=' . $task . '&' . $app->make('token')->getParameter($task);
 
         return $url;
     }
 
+    /**
+     * Change the (English) name of this workflow.
+     *
+     * @param string $wfName
+     */
     public function updateName($wfName)
     {
-        $db = Loader::db();
-        $db->Execute('update Workflows set wfName = ? where wfID = ?', array($wfName, $this->wfID));
+        $wfName = (string) $wfName;
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->update(
+            'Workflows',
+            [
+                'wfName' => $wfName,
+            ],
+            [
+                'wfID' => $this->getWorkflowID(),
+            ]
+        );
+        $this->wfName = $wfName;
     }
 
+    /**
+     * Start the workflow.
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $wp
+     *
+     * @return \Concrete\Core\Workflow\Progress\Response|\Concrete\Core\Workflow\Progress\SkippedResponse|null
+     */
     abstract public function start(WorkflowProgress $wp);
 
+    /**
+     * Check if the currently logged-in user can approve this workflow.
+     *
+     * @return bool
+     */
     abstract public function canApproveWorkflow();
 
+    /**
+     * Get the list of users that can approve an operation.
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $wp
+     *
+     * @return \Concrete\Core\User\UserInfo[]
+     */
     abstract public function getWorkflowProgressApprovalUsers(WorkflowProgress $wp);
 
+    /**
+     * Get the list of actions that can be performed against an operation.
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $wp
+     *
+     * @return \Concrete\Core\Workflow\Progress\Action\Action[]
+     */
     abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 
+    /**
+     * Get the comments about an operation.
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $wp
+     *
+     * @return string|false|null
+     */
     abstract public function getWorkflowProgressCurrentComment(WorkflowProgress $wp);
 
+    /**
+     * Get the description of the status of an operation.
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $wp
+     *
+     * @return string
+     */
     abstract public function getWorkflowProgressStatusDescription(WorkflowProgress $wp);
 
+    /**
+     * Check if the currently logged-in user can approve an operation.
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $wp
+     *
+     * @return bool
+     */
     abstract public function canApproveWorkflowProgressObject(WorkflowProgress $wp);
 
+    /**
+     * Update the workflow details with data (usually received via POST).
+     *
+     * @param array $vars
+     */
     abstract public function updateDetails($vars);
 
+    /**
+     * Load the details of this workflow (usually called right after this instance has been created).
+     */
     abstract public function loadDetails();
 
+    /**
+     * @return bool
+     */
     public function getPermissionAccessObject()
     {
         return false;
     }
 
+    /**
+     * Check if a workflow request is valid.
+     *
+     * @param \Concrete\Core\Workflow\Request\Request $req
+     *
+     * @return bool
+     */
     public function validateTrigger(WorkflowRequest $req)
     {
         // Check if the current workflow request is not already deleted
         $wr = $req::getByID($req->getWorkflowRequestID());
-        if (is_object($wr)) {
-            return true;
-        }
 
-        return false;
+        return is_object($wr);
+    }
+
+    /**
+     * Load the workflow data from the database row.
+     *
+     * @param int $wfID
+     */
+    protected function load($wfID)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $r = $db->fetchAssoc('select * from Workflows where wfID = ?', [(int) $wfID]);
+        $r['wfID'] = (int) $r['wfID'];
+        $r['wftID'] = (int) $r['wftID'];
+        $r['pkgID'] = (int) $r['pkgID'];
+        $this->setPropertiesFromArray($r);
     }
 }

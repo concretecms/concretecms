@@ -33,6 +33,10 @@ if (-Not(Test-Path -PathType Leaf -Path 'C:\tools\gettext\bin\msgen.exe')) {
     Expand-Archive -Path "C:\tools\downloads\gettext$GettextVersion-iconv$IconvVersion.zip" -DestinationPath 'C:\tools\gettext' -Force
 }
 
+# Update the module used to install PowerShell modules
+Write-Host 'Updating PowerShellGet PowerShell module'
+Update-Module -Name PowerShellGet -Force
+
 # Setup VcRedist PowerShell module
 if (-Not(Get-Module -ListAvailable -Name VcRedist)) {
     Write-Host 'Installing VcRedist PowerShell module'

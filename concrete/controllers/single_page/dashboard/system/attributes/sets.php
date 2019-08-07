@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 
+use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\SetManagerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Loader;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use AttributeSet;
@@ -19,31 +21,41 @@ class Sets extends DashboardPageController
 
     public function category($categoryID = false, $mode = false)
     {
-        //$this->addHeaderItem('<style type="text/css"> .ccm-attribute-sortable-set-list li a:hover { cursor:move;}</style>');
-        $this->addFooterItem('<script type="text/javascript">
-		$(function() {
-            $("ul.ccm-attribute-sortable-set-list").sortable({
-                opacity: 0.5,
-                stop: function() {
-                    var ualist = $(this).sortable(\'serialize\');
-                    ualist += \'&categoryID=' . $categoryID . '\';
-                    $.post(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/attribute_set_order_update\', ualist, function(r) {
-
-                    });
-                }
-            });
-		});
-	</script>');
-        if (!intval($categoryID)) {
-            $this->redirect('/dashboard/system/attributes/sets');
-        }
-        $this->category = AttributeKeyCategory::getByID($categoryID);
-        if (is_object($this->category)) {
-            $sets = $this->category->getController()->getSetManager()->getAttributeSets();
-            $this->set('sets', $sets);
+        $categoryID = (int) $categoryID;
+        if ($categoryID !== 0) {
+            $categoryService = $this->app->make(CategoryService::class);
+            $this->category = $categoryService->getByID($categoryID);
         } else {
+            $this->category = null;
+        }
+        if ($this->category === null) {
             $this->redirect('/dashboard/system/attributes/sets');
         }
+        $jsUpdateOrderSetURL = json_encode((string) $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/dashboard/attribute/set/update_order']));
+        //$this->addHeaderItem('<style type="text/css"> .ccm-attribute-sortable-set-list li a:hover { cursor:move;}</style>');
+        $this->addFooterItem(<<<EOT
+<script>
+$(function() {
+    $('ul.ccm-attribute-sortable-set-list').sortable({
+        opacity: 0.5,
+        stop: function() {
+            var me = $(this);
+            me.sortable('disable');
+            $.post(
+                {$jsUpdateOrderSetURL},
+                'categoryID={$categoryID}&' + me.sortable('serialize'),
+                function() {
+                    me.sortable('enable');
+                }
+            );
+        }
+    });
+});
+</script>
+EOT
+        );
+        $sets = $this->category->getController()->getSetManager()->getAttributeSets();
+        $this->set('sets', $sets);
         $this->set('categoryID', $categoryID);
         switch ($mode) {
             case 'set_added':

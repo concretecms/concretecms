@@ -55,5 +55,10 @@ $c = Page::getCurrentPage();
             <i class="fa fa-share pull-right" style="margin-top: 4px"></i>
             <?=tc(/*i18n: %s is an entity name*/'Express', 'View %s Entries', $entity->getEntityDisplayName())?>
         </a>
+
+        <a href="<?=URL::to('/dashboard/system/express/entities', 'clear_entries', $entity->getId())?>" class="list-group-item">
+            <i class="fa fa-trash pull-right text-danger" style="margin-top:4px"></i>
+            <span class="text-danger"><?= t('Clear Entries') ?></span>
+        </a>
     </div>
 </div>

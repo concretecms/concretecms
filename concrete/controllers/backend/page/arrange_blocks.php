@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Controller\Backend\Page;
 
-use Area;
-use Block;
 use Concrete\Controller\Backend\UserInterface\Page;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
-use Config;
-use Loader;
-use Permissions;
-use Stack;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Checker;
 
 class ArrangeBlocks extends Page
 {
@@ -21,109 +21,131 @@ class ArrangeBlocks extends Page
     {
         $pc = new PageEditResponse();
         $pc->setPage($this->page);
-        $e = Loader::helper('validation/error');
+        $this->performArrangement($pc);
 
+        return $this->app->make(ResponseFactoryInterface::class)->json($pc);
+    }
+
+    /**
+     * @param \Concrete\Core\Page\EditResponse $pc
+     */
+    protected function performArrangement(PageEditResponse $pc)
+    {
+        $e = $pc->getError();
+        $post = $this->request->request;
         $nvc = $this->page->getVersionToModify();
-        $sourceAreaID = intval($_POST['sourceArea']);
-        $destinationAreaID = intval($_POST['area']);
-        $affectedAreaIDs = array();
-        $affectedAreaIDs[] = $sourceAreaID;
-        if ($sourceAreaID != $destinationAreaID) {
-            $affectedAreaIDs[] = $destinationAreaID;
+
+        $sourceAreaID = (int) $post->get('sourceArea');
+        $sourceAreaHandle = $sourceAreaID === 0 ? null : Area::getAreaHandleFromID($sourceAreaID);
+        $sourceArea = (string) $sourceAreaHandle === '' ? null : Area::get($nvc, $sourceAreaHandle);
+        if ($sourceArea === null) {
+            $e->add(t('Unable to find the source area.'));
         }
 
-        if (Config::get('concrete.permissions.model') == 'advanced') {
-            // first, we check to see if we have permissions to edit the area contents for the source area.
-            $arHandle = Area::getAreaHandleFromID($sourceAreaID);
-            $ar = Area::getOrCreate($nvc, $arHandle);
-            $ap = new Permissions($ar);
-            if (!$ap->canEditAreaContents()) {
-                $e->add(t('You may not arrange the contents of area %s.', $arHandle));
-            } else {
-                // now we get further in. We check to see if we're dealing with both a source AND a destination area.
-                // if so, we check the area permissions for the destination area.
-                if ($sourceAreaID != $destinationAreaID) {
-                    $destAreaHandle = Area::getAreaHandleFromID($destinationAreaID);
-                    $destArea = Area::getOrCreate($nvc, $destAreaHandle);
-                    $destAP = new Permissions($destArea);
-                    if (!$destAP->canEditAreaContents()) {
-                        $e->add(t('You may not arrange the contents of area %s.', $destAreaHandle));
-                    } else {
-                        // we're not done yet. Now we have to check to see whether this user has permission to add
-                        // a block of this type to the destination area.
+        $destinationAreaID = (int) $post->get('area');
+        if ($destinationAreaID === $sourceAreaID) {
+            $destinationAreaHandle = $sourceAreaHandle;
+            $destinationArea = $sourceArea;
+        } else {
+            $destinationAreaHandle = $destinationAreaID === 0 ? null : Area::getAreaHandleFromID($destinationAreaID);
+            $destinationArea = (string) $destinationAreaHandle === '' ? null : Area::get($nvc, $destinationAreaHandle);
+            if ($destinationArea === null) {
+                $e->add(t('Unable to find the destination area.'));
+            }
+        }
 
-                        if ($ar->isGlobalArea()) {
-                            $stack = Stack::getByName($arHandle);
-                            $b = Block::getByID($_REQUEST['block'], $stack, STACKS_AREA_NAME);
-                        } else {
-                            $b = Block::getByID($_REQUEST['block'], $nvc, $arHandle);
-                        }
-                        $bt = $b->getBlockTypeObject();
-                        if (!$destAP->canAddBlock($bt)) {
-                            $e->add(t('You may not add %s to area %s.', t($bt->getBlockTypeName()), $destAreaHandle));
-                        }
-                    }
+        $movingBlockID = (int) $post->get('block');
+        if ($movingBlockID === 0) {
+            $e->add(t('Unable to find the block to be moved.'));
+        }
+
+        $sortedBlockIDs = $post->get('blocks', []);
+        if (is_array($sortedBlockIDs)) {
+            $sortedBlockIDs = array_values(array_filter(array_map('intval', $sortedBlockIDs)));
+        } else {
+            $sortedBlockIDs = [];
+        }
+        if (!in_array($movingBlockID, $sortedBlockIDs, true)) {
+            $e->add(t('Unable to find the block to be moved.'));
+        }
+
+        if ($e->has()) {
+            return;
+        }
+
+        if ($this->app->make('config')->get('concrete.permissions.model') == 'advanced') {
+            // first, we check to see if we have permissions to edit the area contents for the source area.
+            $ap = new Checker($sourceArea);
+            if (!$ap->canEditAreaContents()) {
+                $e->add(t('You may not arrange the contents of area %s.', $sourceAreaHandle));
+            }
+            // now we get further in. We check to see if we're dealing with both a source AND a destination area.
+            // if so, we check the area permissions for the destination area.
+            if ($sourceAreaID !== $destinationAreaID) {
+                $destAP = new Checker($destinationArea);
+                if (!$destAP->canEditAreaContents()) {
+                    $e->add(t('You may not arrange the contents of area %s.', $destinationAreaHandle));
+                }
+                // we're not done yet. Now we have to check to see whether this user has permission to add
+                // a block of this type to the destination area.
+                if ($sourceArea->isGlobalArea()) {
+                    $sourceStack = Stack::getByName($sourceAreaHandle);
+                    $block = Block::getByID($movingBlockID, $sourceStack, STACKS_AREA_NAME);
+                } else {
+                    $block = Block::getByID($movingBlockID, $nvc, $sourceAreaHandle);
+                }
+                if (!$block) {
+                    $e->add(t('Unable to find the block to be moved.'));
+                } elseif (!$destAP->canAddBlock($block)) {
+                    $e->add(t('You may not add %s to area %s.', t($block->getBlockTypeObject()->getBlockTypeName()), $destinationAreaHandle));
                 }
             }
-
+            if ($e->has()) {
+                return;
+            }
             // now, if we get down here we perform the arrangement
             // it will be set to true if we're in simple permissions mode, or if we've passed all the checks
         }
 
-        $source_area = Area::get($nvc, Area::getAreaHandleFromID($sourceAreaID));
-        $destination_area = Area::get($this->page, Area::getAreaHandleFromID($destinationAreaID));
+        if ($destinationArea->isGlobalArea()) {
+            $destinationStack = Stack::getByName($destinationAreaHandle);
+            $destinationStackToModify = $destinationStack->getVersionToModify();
+            $actualDestinationArea = Area::get($destinationStackToModify, STACKS_AREA_NAME);
+            $actualDestinationAreaID = $actualDestinationArea->getAreaID();
+            if ($sourceAreaID !== $destinationAreaID) {
+                $nvc->relateVersionEdits($destinationStackToModify);
+                // If the source area is global, we need to get the block from there rather than from the view controller
+                if ($sourceArea->isGlobalArea()) {
+                    $sourceStack = Stack::getByName($sourceAreaHandle);
+                    $sourceStackToModify = $sourceStack->getVersionToModify();
+                    $nvc->relateVersionEdits($sourceStackToModify);
+                    $block = Block::getByID($movingBlockID, $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
+                } else {
+                    $block = Block::getByID($movingBlockID, $nvc, $sourceArea);
+                }
+                if (!$block) {
+                    $e->add(t('Unable to find the block to be moved.'));
 
-        if ($sourceAreaID !== $destinationAreaID &&
-            ($source_area->isGlobalArea() || $destination_area->isGlobalArea())
-        ) {
+                    return;
+                }
+                $block->move($destinationStackToModify, $actualDestinationArea);
+            }
+            $nvc->relateVersionEdits($destinationStackToModify);
+            $destinationStackToModify->processArrangement($actualDestinationAreaID, $movingBlockID, $sortedBlockIDs);
+        } else {
+            if ($sourceAreaID !== $destinationAreaID && $sourceArea->isGlobalArea()) {
+                $sourceStack = Stack::getByName($sourceAreaHandle);
+                $sourceStackToModify = $sourceStack->getVersionToModify();
+                $block = Block::getByID($movingBlockID, $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
+                if (!$block) {
+                    $e->add(t('Unable to find the block to be moved.'));
 
-            // If the source_area is the only global area
-            if ($source_area->isGlobalArea() && !$destination_area->isGlobalArea()) {
-                $cp = new Permissions($nvc);
-                $stack = Stack::getByName($source_area->getAreaHandle());
-                $stackToModify = $stack->getVersionToModify();
-                $nvc->relateVersionEdits($stackToModify);
-                $block = Block::getByID($_POST['block'], $stackToModify, Area::get($stackToModify, STACKS_AREA_NAME));
+                    return;
+                }
+                $nvc->relateVersionEdits($sourceStackToModify);
                 $block->move($nvc, Area::get($nvc, STACKS_AREA_NAME));
             }
-
-            if ($destination_area->isGlobalArea()) {
-                $cp = new Permissions($nvc);
-                $stack = Stack::getByName($destination_area->getAreaHandle());
-                $stackToModify = $stack->getVersionToModify();
-                $nvc->relateVersionEdits($stackToModify);
-                // If the source area is global, we need to get the block from there rather than from the view controller
-                if ($source_area->isGlobalArea()) {
-                    $sourceStackToModify = Stack::getByName($source_area->getAreaHandle())->getVersionToModify();
-                    $nvc->relateVersionEdits($sourceStackToModify);
-                    $block = Block::getByID($_POST['block'], $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
-                } else {
-                    $block = Block::getByID($_POST['block'], $nvc, $source_area);
-                }
-                $block->move($stackToModify, Area::get($stackToModify, STACKS_AREA_NAME));
-            }
+            $nvc->processArrangement($destinationAreaID, $movingBlockID, $sortedBlockIDs);
         }
-
-        if (!$e->has()) {
-            $request = \Request::getInstance();
-            $area_id = $request->post('area', 0);
-            $block_id = $request->post('block', 0);
-            $block_ids = $request->post('blocks', array());
-
-            if ($destination_area->isGlobalArea()) {
-                $stack = Stack::getByName($destination_area->getAreaHandle());
-                $stackToModify = $stack->getVersionToModify();
-                $area = Area::get($stackToModify, STACKS_AREA_NAME);
-                $area_id = $area->getAreaID();
-                $nvc->relateVersionEdits($stackToModify);
-                $stackToModify->processArrangement($area_id, $block_id, $block_ids);
-            } else {
-                $nvc->processArrangement($area_id, $block_id, $block_ids);
-            }
-        }
-
-        $pc->setError($e);
-        $pc->outputJSON();
-        exit;
     }
 }

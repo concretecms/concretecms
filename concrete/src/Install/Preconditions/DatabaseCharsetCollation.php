@@ -103,7 +103,7 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
                 // Let's simplify a bit the error message for the default concrete5 values
                 // If users customize these values, let's keep the original (complex) message (assuming that they know what they are doing)
                 return new PreconditionResult(PreconditionResult::STATE_FAILED,
-                    t('The database does have a complete support for all the Unicode characters.')
+                    t('The database does not have a complete support for all the Unicode characters.')
                     . ' ' . t("This implies, for example, that you may not be able to save emoticons (it's the same behavior as concrete5 versions older than 8.5.0).")
                     . ' ' . t('You should upgrade your database to fix this issue.')
                 );
