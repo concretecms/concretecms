@@ -60,10 +60,8 @@ class NameAlreadyInUseTest extends PHPUnit_Framework_TestCase
             closedir($directoryHandle);
         }
         foreach ($subdirectoryRelativePaths as $subdirectoryRelativePath) {
-            $count += $this->loadFiles($subdirectoryRelativePath);
+            $this->loadFiles($subdirectoryRelativePath);
         }
-
-        return $count;
     }
 
     /**
