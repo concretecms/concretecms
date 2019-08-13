@@ -11,6 +11,9 @@ use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\Category as CategoryTreeNode;
 use Permissions;
 
+/**
+ * @since 8.0.0
+ */
 class Entries extends DashboardPageController
 {
     public function view($treeID = false)

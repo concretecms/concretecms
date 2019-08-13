@@ -12,6 +12,7 @@ use Concrete\Core\Express\Form\Control\View\AttributeKeyView;
 /**
  * A simple class for registering context to view bindings, in the event that certain contexts ought to
  * deliver different views. (Used by Express Attribute Key View vs Form).
+ * @since 8.2.0
  */
 class ControlRegistry
 {

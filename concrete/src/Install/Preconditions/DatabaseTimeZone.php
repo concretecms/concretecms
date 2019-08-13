@@ -11,6 +11,9 @@ use Concrete\Core\Install\PreconditionResult;
 use Exception;
 use Punic\Misc as PunicMisc;
 
+/**
+ * @since 8.4.0
+ */
 class DatabaseTimeZone implements ConnectionOptionsPreconditionInterface
 {
     /**

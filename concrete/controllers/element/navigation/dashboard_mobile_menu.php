@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 
+/**
+ * @since 8.0.0
+ */
 class DashboardMobileMenu extends Menu
 {
 

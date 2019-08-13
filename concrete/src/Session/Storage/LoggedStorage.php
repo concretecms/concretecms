@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Session\SessionBagProxy;
 use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
+/**
+ * @since 8.5.0
+ */
 class LoggedStorage implements SessionStorageInterface, LoggerAwareInterface
 {
 

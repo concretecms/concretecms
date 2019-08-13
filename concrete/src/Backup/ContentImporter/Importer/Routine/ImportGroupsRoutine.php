@@ -4,6 +4,9 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\User\Group\Group;
 use SimpleXMLElement;
 
+/**
+ * @since 8.0.0
+ */
 class ImportGroupsRoutine extends AbstractRoutine
 {
     public function getHandle()

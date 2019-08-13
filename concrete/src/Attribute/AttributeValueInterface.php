@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+/**
+ * @since 8.0.0
+ */
 interface AttributeValueInterface
 {
     public function getAttributeTypeObject();

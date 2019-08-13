@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="AttributeSetKeys"
  * )
+ * @since 8.0.0
  */
 class SetKey
 {

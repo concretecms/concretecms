@@ -31,6 +31,9 @@ use phpseclib\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use Zend\Http\Header\Authorization;
 
+/**
+ * @since 8.5.0
+ */
 class ApiServiceProvider extends ServiceProvider
 {
 

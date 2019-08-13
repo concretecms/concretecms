@@ -9,6 +9,9 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\User\UserInfoRepository;
 
 
+/**
+ * @since 8.5.0
+ */
 class Details extends BackendInterfaceController
 {
 

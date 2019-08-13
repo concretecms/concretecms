@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionRepetition;
 
+/**
+ * @since 8.3.0
+ */
 class EventOccurrenceFactory
 {
     /**

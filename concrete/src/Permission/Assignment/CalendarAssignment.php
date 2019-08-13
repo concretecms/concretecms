@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Entity\Calendar\Calendar;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarAssignment extends Assignment
 {
     protected $calendar;

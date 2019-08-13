@@ -10,6 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Package;
 use Exception;
 
+/**
+ * @since 5.7.5.4
+ */
 class UninstallPackageCommand extends Command
 {
     protected function configure()

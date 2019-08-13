@@ -4,6 +4,9 @@ namespace Concrete\Core\Search\Pagination\View;
 use Pagerfanta\View\Template\Template;
 use Pagerfanta\View\Template\TwitterBootstrap3Template;
 
+/**
+ * @since 8.2.0
+ */
 class ConcreteBootstrap3PagerTemplate extends Template
 {
 

@@ -3,6 +3,9 @@ namespace Concrete\Core\User\Avatar;
 
 use Concrete\Core\User\UserInfo;
 
+/**
+ * @since 5.7.5.4
+ */
 class Gravatar extends StandardAvatar
 {
     protected $size = 80;

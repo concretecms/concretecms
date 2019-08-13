@@ -12,6 +12,9 @@ use Concrete\Core\Page\Search\ColumnSet\ColumnSet;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Concrete\Core\Entity\Search\SavedPageSearch;
 
+/**
+ * @since 8.0.0
+ */
 class SearchProvider extends AbstractSearchProvider
 {
 

@@ -8,6 +8,9 @@ use Concrete\Core\Logging\Configuration\ConfigurationInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * @since 8.5.0
+ */
 class LoggerFactory
 {
     /**

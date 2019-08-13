@@ -10,6 +10,9 @@ use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.5.0
+ */
 class FractalNegotiatorMiddleware implements MiddlewareInterface
 {
 

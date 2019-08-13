@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Control\TextControl;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class TextControlSaveHandler extends ControlSaveHandler
 {
     public function saveFromRequest(Control $control, Request $request)

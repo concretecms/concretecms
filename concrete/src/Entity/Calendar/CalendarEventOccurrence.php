@@ -11,6 +11,7 @@ use Carbon\Carbon;
  *     @ORM\Index(name="eventdates", columns={"occurrenceID", "startTime", "endTime"})
  *     }
  * )
+ * @since 8.3.0
  */
 class CalendarEventOccurrence
 {

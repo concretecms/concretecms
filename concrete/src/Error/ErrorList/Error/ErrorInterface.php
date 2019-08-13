@@ -4,6 +4,9 @@ namespace Concrete\Core\Error\ErrorList\Error;
 
 use JsonSerializable;
 
+/**
+ * @since 8.0.0
+ */
 interface ErrorInterface extends JsonSerializable
 {
     /**

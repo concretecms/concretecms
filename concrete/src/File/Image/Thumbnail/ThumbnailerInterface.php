@@ -7,6 +7,7 @@ use Imagine\Image\ImagineInterface;
 /**
  * Interface ThumbnailerInterface
  * An interface for classes tasked with creating thumbnails. This interace requires imagine.
+ * @since 8.1.0
  */
 interface ThumbnailerInterface
 {

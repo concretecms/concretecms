@@ -10,6 +10,9 @@ use Concrete\Core\User\User;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Routing\RedirectResponse;
 
+/**
+ * @since 5.7.1
+ */
 class Controller extends GenericOauth1aTypeController
 {
     public $apiMethods = array('handle_error', 'handle_success', 'handle_register');

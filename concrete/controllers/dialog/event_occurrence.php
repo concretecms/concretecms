@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Calendar\Event\EventOccurrence as EventOccurrenceObject;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 
+/**
+ * @since 8.3.0
+ */
 class EventOccurrence extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/view';

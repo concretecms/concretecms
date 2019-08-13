@@ -6,6 +6,7 @@ use Concrete\Core\Logging\Entry\EntryInterface;
 
 /**
  * Log entry for user login attempts
+ * @since 8.5.0
  */
 class LoginAttempt implements EntryInterface
 {

@@ -8,6 +8,9 @@ use OAuth\OAuth2\Service\AbstractService;
 use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\OAuth2\Token\TokenInterface;
 
+/**
+ * @since 8.5.0
+ */
 class ExternalConcrete5Service extends AbstractService
 {
 

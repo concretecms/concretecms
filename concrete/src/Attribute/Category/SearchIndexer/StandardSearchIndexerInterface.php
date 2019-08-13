@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
 /**
  * Class to be implemented by attribute categories to define the attribute indexing table.
+ * @since 8.0.0
  */
 interface StandardSearchIndexerInterface
 {

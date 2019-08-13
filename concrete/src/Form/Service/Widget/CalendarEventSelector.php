@@ -3,6 +3,9 @@ namespace Concrete\Core\Form\Service\Widget;
 
 use Concrete\Core\Entity\Calendar;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarEventSelector
 {
     public function selectEvent(Calendar $calendar, $fieldName, $eventID = false)

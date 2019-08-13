@@ -8,6 +8,9 @@ use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @since 8.0.0
+ */
 class NewConversationMessageType extends Type
 {
 

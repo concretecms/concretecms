@@ -9,6 +9,9 @@ use Concrete\Core\Entity\OAuth\Scope;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.5.2
+ */
 class OpenApiController extends ApiController
 {
     /**

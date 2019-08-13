@@ -12,6 +12,9 @@ use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
+/**
+ * @since 8.0.0
+ */
 abstract class UserRequest extends Request
 {
 

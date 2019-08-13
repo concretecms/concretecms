@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Express\Association\Formatter;
 
+/**
+ * @since 8.0.0
+ */
 class OneToManyFormatter extends AbstractFormatter
 {
     public function getIcon()

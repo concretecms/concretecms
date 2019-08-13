@@ -5,6 +5,9 @@ use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Service\Provider;
 
+/**
+ * @since 5.7.5
+ */
 class EditorServiceProvider extends Provider
 {
     public function register()

@@ -9,6 +9,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 
+/**
+ * @since 8.5.0
+ */
 class DragRequestData
 {
     /**

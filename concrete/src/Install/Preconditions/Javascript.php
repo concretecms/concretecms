@@ -6,6 +6,9 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\WebPreconditionInterface;
 
+/**
+ * @since 8.3.0
+ */
 class Javascript implements WebPreconditionInterface
 {
     /**

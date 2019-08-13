@@ -10,6 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
+ * @since 8.5.0
  */
 class Version20181029223809 extends AbstractMigration implements RepeatableMigrationInterface
 {

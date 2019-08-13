@@ -4,6 +4,7 @@ namespace Concrete\Core\Install;
 
 /**
  * Interface for the checks to be performed before installing concrete5.
+ * @since 8.3.0
  */
 interface PreconditionInterface
 {

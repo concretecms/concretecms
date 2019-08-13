@@ -3,6 +3,9 @@ namespace Concrete\Core\Filesystem;
 
 use Concrete\Core\Foundation\Environment;
 
+/**
+ * @since 8.0.0
+ */
 class TemplateLocator
 {
 

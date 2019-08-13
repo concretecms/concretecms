@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Config;
 
+/**
+ * @since 5.7.0.3
+ */
 class DatabaseManager
 {
     /**

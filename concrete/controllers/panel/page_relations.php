@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Core;
 
+/**
+ * @since 8.0.0
+ */
 class PageRelations extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/page/relations';

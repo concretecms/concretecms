@@ -9,6 +9,7 @@ use ZipArchive;
 
 /**
  * Wrapper for ZIP functions.
+ * @since 5.7.5.7
  */
 class Zip
 {

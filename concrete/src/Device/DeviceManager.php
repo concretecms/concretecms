@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Device;
 
+/**
+ * @since 5.7.5
+ */
 class DeviceManager implements DeviceManagerInterface
 {
     protected $container = array();

@@ -10,6 +10,9 @@ use Concrete\Core\View\DialogView;
 use Page;
 use Permissions;
 
+/**
+ * @since 5.7.3
+ */
 class Compose extends Controller
 {
     protected $controllerActionPath = '/ccm/system/dialogs/page/add/compose';

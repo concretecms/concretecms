@@ -13,6 +13,9 @@ use Exception as BaseException;
 use Illuminate\Filesystem\Filesystem;
 use Throwable;
 
+/**
+ * @since 8.5.0
+ */
 class Manager
 {
     /**

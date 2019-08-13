@@ -7,6 +7,9 @@ use PermissionKey;
 use TaskPermission;
 use PermissionAccess;
 
+/**
+ * @since 8.3.0
+ */
 class Permissions extends DashboardPageController
 {
     public function save()

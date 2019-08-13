@@ -8,6 +8,9 @@ use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Page\Page;
 
+/**
+ * @since 8.0.0
+ */
 class Manager extends AbstractManager
 {
 

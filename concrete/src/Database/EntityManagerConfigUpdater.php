@@ -7,6 +7,9 @@ use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Package\Package;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.0.0
+ */
 class EntityManagerConfigUpdater
 {
 

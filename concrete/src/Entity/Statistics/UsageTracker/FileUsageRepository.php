@@ -8,6 +8,9 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Version\Version;
 
+/**
+ * @since 8.0.0
+ */
 class FileUsageRepository extends \Doctrine\ORM\EntityRepository
 {
 

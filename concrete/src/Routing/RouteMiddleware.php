@@ -3,6 +3,9 @@ namespace Concrete\Core\Routing;
 
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
 
+/**
+ * @since 8.5.0
+ */
 class RouteMiddleware
 {
 

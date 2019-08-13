@@ -5,7 +5,6 @@ namespace Concrete\Core\Database\Driver;
  * The PDO implementation of the Statement interface.
  * Used by all PDO-based drivers.
  *
- * @since 2.0
  */
 class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
 {

@@ -8,6 +8,9 @@ use IPLib\Factory;
 use IPLib\Range\Pattern;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+/**
+ * @since 8.5.0
+ */
 class TrustedProxies extends DashboardPageController
 {
     /**

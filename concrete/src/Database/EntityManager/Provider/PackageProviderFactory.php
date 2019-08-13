@@ -4,6 +4,9 @@ namespace Concrete\Core\Database\EntityManager\Provider;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Package\Package;
 
+/**
+ * @since 8.0.0
+ */
 class PackageProviderFactory implements ProviderAggregateInterface
 {
     

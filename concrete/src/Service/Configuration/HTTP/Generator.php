@@ -4,6 +4,9 @@ namespace Concrete\Core\Service\Configuration\HTTP;
 use Concrete\Core\Service\Configuration\GeneratorInterface;
 use Concrete\Core\Service\Rule\RuleInterface;
 
+/**
+ * @since 8.0.0
+ */
 abstract class Generator implements GeneratorInterface
 {
     /**

@@ -8,6 +8,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 5.7.3
+ */
 class PageList extends CorePageList
 {
     protected $includeAliases = false;

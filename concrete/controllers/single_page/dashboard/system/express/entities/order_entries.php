@@ -4,6 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
+/**
+ * @since 8.0.0
+ */
 class OrderEntries extends DashboardPageController
 {
 

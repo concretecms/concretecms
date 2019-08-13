@@ -21,6 +21,9 @@ use Concrete\Core\User\Exception\UserPasswordResetException;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
 {
 

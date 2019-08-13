@@ -9,6 +9,9 @@ use Concrete\Core\Page\Sitemap\Element\SitemapPage;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @since 8.4.1
+ */
 class SitemapWriter
 {
     /**

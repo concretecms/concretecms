@@ -3,6 +3,9 @@ namespace Concrete\Core\Form\Control;
 
 use Concrete\Core\Form\Context\ContextInterface;
 
+/**
+ * @since 8.2.0
+ */
 final class Renderer implements RendererInterface
 {
 

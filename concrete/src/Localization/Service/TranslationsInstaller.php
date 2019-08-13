@@ -12,6 +12,9 @@ use Concrete\Core\Site\Service as SiteService;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.2.0
+ */
 class TranslationsInstaller
 {
     /**

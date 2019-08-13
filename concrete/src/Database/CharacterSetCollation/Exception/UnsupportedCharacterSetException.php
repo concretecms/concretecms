@@ -4,6 +4,9 @@ namespace Concrete\Core\Database\CharacterSetCollation\Exception;
 
 use Concrete\Core\Database\CharacterSetCollation\Exception;
 
+/**
+ * @since 8.5.0
+ */
 class UnsupportedCharacterSetException extends Exception
 {
     /**

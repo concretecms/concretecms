@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="AttributeKeyCategories", indexes={@ORM\Index(name="pkgID", columns={"pkgID", "akCategoryID"}),
  * @ORM\Index(name="akCategoryHandle", columns={"akCategoryHandle"})})
+ * @since 8.0.0
  */
 class Category implements CategoryObjectInterface
 {

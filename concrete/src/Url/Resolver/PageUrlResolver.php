@@ -4,6 +4,9 @@ namespace Concrete\Core\Url\Resolver;
 
 use League\Url\UrlImmutable;
 
+/**
+ * @since 5.7.4
+ */
 class PageUrlResolver implements UrlResolverInterface
 {
     /**

@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Mail\Service as MailService;
 use Concrete\Core\Config\Repository\Repository;
 
+/**
+ * @since 8.2.0
+ */
 class StatusService implements StatusServiceInterface
 {
     protected $application;

@@ -5,6 +5,9 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 use Concrete\Core\Http\RequestEventInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 5.7.4
+ */
 class FeedEvent extends GenericEvent implements RequestEventInterface
 {
     protected $feed;

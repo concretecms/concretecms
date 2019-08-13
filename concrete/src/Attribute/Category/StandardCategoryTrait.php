@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Attribute\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 
+/**
+ * @since 8.0.0
+ */
 trait StandardCategoryTrait
 {
 

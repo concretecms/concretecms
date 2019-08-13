@@ -8,6 +8,7 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  * the translator adapters.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 interface TranslationLoaderInterface
 {

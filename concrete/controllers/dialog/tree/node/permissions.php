@@ -3,6 +3,9 @@ namespace Concrete\Controller\Dialog\Tree\Node;
 
 use Concrete\Controller\Dialog\Tree\Node;
 
+/**
+ * @since 8.0.0
+ */
 class Permissions extends Node
 {
     protected $viewPath = '/dialogs/tree/node/permissions';

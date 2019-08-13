@@ -5,6 +5,9 @@ namespace Concrete\Core\Foundation\Queue;
 use Concrete\Core\Database\Connection\Connection;
 use ZendQueue\Queue as ZendQueue;
 
+/**
+ * @since 8.3.0
+ */
 class QueueService
 {
     /**

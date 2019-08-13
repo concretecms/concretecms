@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="UsedStringLog"
  * )
+ * @since 8.5.0
  */
 class UsedString
 {

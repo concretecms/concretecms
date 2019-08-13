@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Type\Type;
 
+/**
+ * @since 8.0.0
+ */
 class FolderService
 {
 

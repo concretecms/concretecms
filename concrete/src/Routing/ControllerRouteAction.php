@@ -9,6 +9,9 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Concrete\Core\Controller\ApplicationAwareControllerResolver;
 use Concrete\Core\View\AbstractView;
 
+/**
+ * @since 8.5.0
+ */
 class ControllerRouteAction implements RouteActionInterface
 {
 

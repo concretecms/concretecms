@@ -4,6 +4,9 @@ namespace Concrete\Core\Search\Column;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\Result\Result;
 
+/**
+ * @since 8.2.0
+ */
 interface ColumnInterface
 {
 

@@ -11,6 +11,9 @@ use Concrete\Core\Page\Controller\DashboardSitePageController;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 5.7.5
+ */
 class Copy extends DashboardSitePageController
 {
     public function view()

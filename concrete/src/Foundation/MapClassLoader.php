@@ -4,6 +4,9 @@ namespace Concrete\Core\Foundation;
 
 use Symfony\Component\ClassLoader\MapClassLoader as SymfonyMapClassLoader;
 
+/**
+ * @since 8.0.0
+ */
 class MapClassLoader extends SymfonyMapClassLoader implements ClassLoaderInterface
 {
 

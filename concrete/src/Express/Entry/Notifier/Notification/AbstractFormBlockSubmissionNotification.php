@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 
+/**
+ * @since 8.2.0
+ */
 abstract class AbstractFormBlockSubmissionNotification implements NotificationInterface
 {
     protected $blockController;

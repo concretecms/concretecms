@@ -7,6 +7,7 @@ use Concrete\Core\Support\Facade\Application;
 /**
  * @ORM\Entity
  * @ORM\Table(name="atNumber")
+ * @since 8.0.0
  */
 class NumberValue extends AbstractValue
 {

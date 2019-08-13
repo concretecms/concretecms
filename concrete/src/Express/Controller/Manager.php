@@ -4,6 +4,9 @@ namespace Concrete\Core\Express\Controller;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Support\Manager as CoreManager;
 
+/**
+ * @since 8.2.0
+ */
 class Manager extends CoreManager
 {
 

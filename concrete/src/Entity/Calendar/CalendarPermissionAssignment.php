@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Index(name="paID", columns={"paID"}),
  * @ORM\Index(name="pkID", columns={"pkID"})
  * })
+ * @since 8.3.0
  */
 class CalendarPermissionAssignment
 {

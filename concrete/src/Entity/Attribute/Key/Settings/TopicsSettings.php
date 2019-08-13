@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="atTopicSettings")
+ * @since 8.0.0
  */
 class TopicsSettings extends Settings
 {

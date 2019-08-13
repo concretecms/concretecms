@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="SavedExpressSearchQueries")
+ * @since 8.4.1
  */
 class SavedExpressSearch extends SavedSearch
 {

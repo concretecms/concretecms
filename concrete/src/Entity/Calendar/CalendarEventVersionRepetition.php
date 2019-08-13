@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="CalendarEventVersionRepetitions")
+ * @since 8.3.0
  */
 class CalendarEventVersionRepetition
 {

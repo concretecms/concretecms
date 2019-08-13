@@ -10,6 +10,9 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Tree\Node\Node;
 
+/**
+ * @since 8.0.0
+ */
 class Entries extends DashboardExpressEntityPageController
 {
 

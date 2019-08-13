@@ -7,6 +7,9 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Collection\Version\GlobalVersionList;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * @since 8.5.0
+ */
 class PageChanges extends DashboardPageController
 {
     public function view()

@@ -8,6 +8,9 @@ use Permissions;
 use Loader;
 use File;
 
+/**
+ * @since 5.7.3
+ */
 class Delete extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/file/bulk/delete';

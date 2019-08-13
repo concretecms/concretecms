@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="CalendarEventVersionAttributeValues"
  * )
+ * @since 8.3.0
  */
 class EventValue extends AbstractValue
 {

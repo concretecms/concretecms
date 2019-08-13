@@ -14,6 +14,9 @@ use stdClass;
 use URL;
 use User;
 
+/**
+ * @since 8.0.0
+ */
 class CkeditorEditor implements EditorInterface
 {
     /**

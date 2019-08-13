@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Middleware for applying state changes to the application
  * @package Concrete\Core\Http\Middleware
+ * @since 8.0.0
  */
 class ApplicationMiddleware implements MiddlewareInterface, ApplicationAwareInterface
 {

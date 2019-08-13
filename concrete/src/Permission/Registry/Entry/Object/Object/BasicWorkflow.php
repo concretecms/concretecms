@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Registry\Entry\Object\Object\ObjectInterface;
 
+/**
+ * @since 8.0.0
+ */
 class BasicWorkflow implements ObjectInterface
 {
 

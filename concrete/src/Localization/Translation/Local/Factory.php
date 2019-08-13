@@ -9,6 +9,9 @@ use Gettext\Translations;
 use Illuminate\Filesystem\Filesystem;
 use Throwable;
 
+/**
+ * @since 8.2.0
+ */
 class Factory implements FactoryInterface
 {
     /**

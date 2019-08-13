@@ -8,6 +8,9 @@ use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
 use RuntimeException;
 
+/**
+ * @since 8.5.2
+ */
 class DestinationPicker
 {
     /**

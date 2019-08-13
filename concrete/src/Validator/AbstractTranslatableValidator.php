@@ -7,6 +7,7 @@ use InvalidArgumentException;
 
 /**
  * Abstract class for managing translatable requirements and errors.
+ * @since 5.7.5.3
  */
 abstract class AbstractTranslatableValidator implements TranslatableValidatorInterface
 {

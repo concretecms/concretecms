@@ -17,6 +17,9 @@ use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Utility\Preferences;
 use RedirectResponse;
 
+/**
+ * @since 8.3.0
+ */
 class Edit extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/form';

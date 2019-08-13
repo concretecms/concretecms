@@ -5,6 +5,9 @@ namespace Concrete\Core\Routing;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+/**
+ * @since 8.5.0
+ */
 class ApplicationRouteAction implements RouteActionInterface
 {
 

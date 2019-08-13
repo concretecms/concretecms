@@ -9,6 +9,7 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  * translation adapter.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 class SiteTranslationLoader extends AbstractTranslationLoader
 {

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="ExpressEntityAssociationEntries")
+ * @since 8.5.0
  */
 class AssociationEntry
 {

@@ -13,6 +13,9 @@ use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 
+/**
+ * @since 8.0.0
+ */
 abstract class DashboardExpressEntityPageController extends DashboardExpressEntriesPageController
 {
 

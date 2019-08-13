@@ -6,6 +6,9 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportThemesRoutine extends AbstractRoutine
 {
     public function getHandle()

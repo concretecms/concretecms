@@ -8,6 +8,9 @@ use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Punic\Calendar as PunicCalendar;
 
+/**
+ * @since 8.2.0
+ */
 class DurationSelector
 {
 

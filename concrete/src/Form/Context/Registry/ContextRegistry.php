@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Form\Context\Registry;
 
+/**
+ * @since 8.2.0
+ */
 class ContextRegistry
 {
 

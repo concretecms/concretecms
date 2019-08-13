@@ -4,6 +4,9 @@ namespace Concrete\Core\Express\Entry\Formatter;
 
 use Concrete\Core\Entity\Express\Entry;
 
+/**
+ * @since 8.2.1
+ */
 interface EntryFormatterInterface
 {
     /**

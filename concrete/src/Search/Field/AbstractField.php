@@ -3,6 +3,9 @@ namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Http\ResponseAssetGroup;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractField implements FieldInterface
 {
     /**

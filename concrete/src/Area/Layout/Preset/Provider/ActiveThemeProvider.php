@@ -3,6 +3,9 @@ namespace Concrete\Core\Area\Layout\Preset\Provider;
 
 use Page;
 
+/**
+ * @since 5.7.5
+ */
 class ActiveThemeProvider implements ProviderInterface
 {
     protected $presets = array();

@@ -9,6 +9,7 @@ use Concrete\Core\Activity\Newsflow;
  * Class Controller
  *
  * @package Concrete\Block\DashboardNewsflowLatest
+ * @since 8.0.0
  */
 class Controller extends BlockController
 {

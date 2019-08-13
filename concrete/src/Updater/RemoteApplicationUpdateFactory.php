@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Updater;
 
+/**
+ * @since 5.7.4
+ */
 class RemoteApplicationUpdateFactory
 {
     public static function getFromJSON($json)

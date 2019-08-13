@@ -8,6 +8,9 @@ use Zend\I18n\Translator\Loader\Gettext as ZendGettext;
 use Zend\I18n\Translator\Plural\Rule;
 use Zend\I18n\Translator\TextDomain;
 
+/**
+ * @since 8.5.0
+ */
 class Gettext extends ZendGettext
 {
     /**

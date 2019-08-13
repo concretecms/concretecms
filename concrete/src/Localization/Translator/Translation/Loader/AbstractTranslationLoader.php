@@ -10,6 +10,7 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  * translation loader implementations.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 abstract class AbstractTranslationLoader implements TranslationLoaderInterface
 {

@@ -7,6 +7,9 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Validation\CSRF\Token;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.0
+ */
 class CSRFTokenRoutine implements RoutineInterface
 {
 

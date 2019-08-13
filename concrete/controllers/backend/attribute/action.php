@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\Type;
 use Concrete\Core\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @since 8.0.0
+ */
 class Action extends AbstractController
 {
     public function dispatch($action)

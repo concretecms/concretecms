@@ -11,6 +11,9 @@ use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
+/**
+ * @since 8.0.0
+ */
 class EntryList extends DatabaseItemList implements PermissionableListItemInterface, PaginationProviderInterface
 {
 

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="atTextareaSettings")
+ * @since 8.0.0
  */
 class TextareaSettings extends Settings
 {

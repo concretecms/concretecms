@@ -3,6 +3,9 @@ namespace Concrete\Core\Html\Object;
 
 use HtmlObject\Element;
 
+/**
+ * @since 5.7.3
+ */
 class HeadLink extends Element
 {
     /**

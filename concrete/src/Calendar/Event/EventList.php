@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Search\Pagination\Pagination;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
+/**
+ * @since 8.3.0
+ */
 class EventList extends \Concrete\Core\Search\ItemList\Database\AttributedItemList
 {
     protected $autoSortColumns = array(

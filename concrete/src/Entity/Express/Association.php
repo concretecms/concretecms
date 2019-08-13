@@ -11,6 +11,7 @@ use Concrete\Core\Export\Item\Express\Association as AssociationExporter;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="ExpressEntityAssociations")
+ * @since 8.0.0
  */
 abstract class Association implements ExportableInterface
 {

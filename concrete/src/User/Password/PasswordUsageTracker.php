@@ -9,6 +9,9 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class PasswordUsageTracker
 {
 

@@ -15,6 +15,9 @@ use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class ActivateUserRequest extends UserRequest
 {
     protected $requestAction = 'activate';

@@ -7,6 +7,9 @@ use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\User\UserList;
 
+/**
+ * @since 8.0.0
+ */
 class DateAddedField extends AbstractField
 {
 

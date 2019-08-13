@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Support;
 
+/**
+ * @since 5.7.3.1
+ */
 class JSConstantGenerator
 {
     private $_constants = array();

@@ -4,6 +4,7 @@ namespace Concrete\Core\Logging\Entry\Group;
 
 /**
  * Log entry for users being removed from groups
+ * @since 8.5.0
  */
 class ExitGroup extends UserGroup
 {

@@ -6,6 +6,9 @@ namespace Concrete\Core\Conversation\Editor;
 use AssetList;
 use Concrete\Core\Editor\EditorInterface;
 
+/**
+ * @since 8.4.1
+ */
 class RichTextEditor extends Editor
 {
     public function getConversationEditorAssetPointers()

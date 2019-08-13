@@ -4,6 +4,9 @@ namespace Concrete\Controller\Element\Search;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Search\ProviderInterface;
 
+/**
+ * @since 8.0.0
+ */
 class CustomizeResults extends ElementController
 {
     protected $provider;

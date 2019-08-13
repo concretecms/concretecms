@@ -15,6 +15,9 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Menu as ContextMenu;
 
+/**
+ * @since 8.0.0
+ */
 class Menu extends ContextMenu
 {
 

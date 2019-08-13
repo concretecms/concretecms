@@ -3,6 +3,9 @@ namespace Concrete\Controller\Element\Package;
 
 use Concrete\Core\Attribute\Key\Category;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeTypeItemList extends ItemList
 {
 

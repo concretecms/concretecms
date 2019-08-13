@@ -6,6 +6,9 @@ use Concrete\Core\Export\Item\ItemInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.2.0
+ */
 class AttributeSet implements ItemInterface
 {
 

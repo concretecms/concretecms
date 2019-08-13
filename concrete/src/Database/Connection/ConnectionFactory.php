@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Driver\DriverManager;
 use Doctrine\DBAL\DBALException;
 
+/**
+ * @since 5.7.0.3
+ */
 class ConnectionFactory
 {
     /** @var Application */

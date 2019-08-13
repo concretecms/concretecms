@@ -6,6 +6,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Site\Service;
 use Concrete\Core\User\UserInfo;
 
+/**
+ * @since 5.7.5.4
+ */
 class AvatarService implements AvatarServiceInterface
 {
     protected $connection;

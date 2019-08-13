@@ -3,6 +3,9 @@ namespace Concrete\Core\Entity\Calendar;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarEventRepository extends EntityRepository
 {
 

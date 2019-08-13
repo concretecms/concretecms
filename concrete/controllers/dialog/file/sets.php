@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileContro
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\Set\Set;
 
+/**
+ * @since 5.7.4
+ */
 class Sets extends BackendInterfaceFileController
 {
     protected $viewPath = '/dialogs/file/sets';

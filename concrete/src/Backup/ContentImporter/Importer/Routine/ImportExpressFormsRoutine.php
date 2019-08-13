@@ -8,6 +8,9 @@ use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 use Doctrine\ORM\Id\UuidGenerator;
 
+/**
+ * @since 8.0.0
+ */
 class ImportExpressFormsRoutine extends AbstractRoutine
 {
     public function getHandle()

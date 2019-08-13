@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute;
 
 /**
  * Attribute controllers should implement this interface to customize the display value when there's no current value.
+ * @since 8.5.2
  */
 interface CustomNoValueTextAttributeInterface
 {

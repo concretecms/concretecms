@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Permission\Registry;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractAssignmentList implements AssignmentListInterface
 {
 

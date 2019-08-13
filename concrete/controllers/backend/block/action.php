@@ -7,6 +7,9 @@ use Concrete\Core\Http\Response;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 
+/**
+ * @since 5.7.5
+ */
 class Action extends AbstractController
 {
     public function add($cID, $arHandle, $btID, $action)

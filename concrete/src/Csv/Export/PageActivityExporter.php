@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Localization\Service\Date;
 use League\Csv\Writer;
 
+/**
+ * @since 8.5.0
+ */
 class PageActivityExporter extends AbstractExporter
 {
     /**

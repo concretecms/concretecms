@@ -3,6 +3,9 @@ namespace Concrete\Core\Device\Samsung\Galaxy;
 
 use Concrete\Core\Device\Device;
 
+/**
+ * @since 5.7.5
+ */
 class S5Device extends Device
 {
     public function getViewportHTML()

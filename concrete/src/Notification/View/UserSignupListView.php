@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Notification\UserSignupNotification;
 use Concrete\Core\Support\Facade\Facade;
 use HtmlObject\Element;
 
+/**
+ * @since 8.0.0
+ */
 class UserSignupListView extends StandardListView
 {
 

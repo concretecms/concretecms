@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Html\Service;
 
+/**
+ * @since 5.7.4
+ */
 class Seo
 {
     private $siteName = '';

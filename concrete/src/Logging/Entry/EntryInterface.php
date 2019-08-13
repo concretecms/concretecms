@@ -4,6 +4,7 @@ namespace Concrete\Core\Logging\Entry;
 
 /**
  * An interface for making complex log entries
+ * @since 8.5.0
  */
 interface EntryInterface
 {

@@ -6,6 +6,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 
+/**
+ * @since 8.4.1
+ */
 class Version20180615000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

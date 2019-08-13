@@ -8,6 +8,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
+/**
+ * @since 8.5.0
+ */
 class AuthCodeRepository extends EntityRepository implements AuthCodeRepositoryInterface
 {
 

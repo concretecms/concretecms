@@ -3,6 +3,9 @@ namespace Concrete\Core\Database\Query;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
+/**
+ * @since 8.2.0
+ */
 class LikeBuilder
 {
     /**

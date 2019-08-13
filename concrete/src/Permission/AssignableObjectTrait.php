@@ -9,6 +9,9 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Permission\Key\Key;
 
+/**
+ * @since 8.0.0
+ */
 trait AssignableObjectTrait
 {
     public function assignPermissions(

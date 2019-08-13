@@ -4,6 +4,9 @@ namespace Concrete\Core\Database\EntityManager\Driver;
 use Concrete\Core\Application\Application;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
+/**
+ * @since 8.0.0
+ */
 class CoreDriver implements DriverInterface
 {
     /**

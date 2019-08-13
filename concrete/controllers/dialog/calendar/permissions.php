@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Calendar;
 use Concrete\Core\View\DialogView;
 use Concrete\Core\Calendar\Calendar;
 
+/**
+ * @since 8.3.0
+ */
 class Permissions extends \Concrete\Core\Controller\Controller
 {
     public function view($pkCategoryHandle)

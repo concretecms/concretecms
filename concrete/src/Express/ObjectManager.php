@@ -10,6 +10,9 @@ use Concrete\Core\Express\Entry\Manager as EntryManager;
 use Concrete\Core\Express\Controller\Manager as ControllerManager;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class ObjectManager
 {
 

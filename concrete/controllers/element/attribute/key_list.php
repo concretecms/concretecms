@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 
+/**
+ * @since 8.0.0
+ */
 class KeyList extends ElementController
 {
     protected $dashboard_page_path;

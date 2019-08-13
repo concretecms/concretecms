@@ -10,6 +10,7 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
  * @ORM\Table(
  *     name="OAuth2Scope"
  * )
+ * @since 8.5.0
  */
 class Scope implements ScopeEntityInterface
 {

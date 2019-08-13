@@ -5,6 +5,9 @@ use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\SubscriptionInterface;
 use Concrete\Core\Workflow\Progress\Progress;
 
+/**
+ * @since 8.0.0
+ */
 class WorkflowProgressNotifier extends StandardNotifier
 {
 

@@ -10,6 +10,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
  * Class AtomicThumbnailStream
  * Outputs a stream of thumbnails in an atomic way. This ensures a thumbnail will only be built on a single thread at
  * a time
+ * @since 8.2.0
  */
 class AtomicThumbnailStream implements \IteratorAggregate
 {

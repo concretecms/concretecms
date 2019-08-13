@@ -8,6 +8,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class Version20180926070300 extends AbstractMigration implements RepeatableMigrationInterface
 {
     public function upgradeSchema(Schema $schema)

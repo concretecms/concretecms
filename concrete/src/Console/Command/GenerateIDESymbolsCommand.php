@@ -10,6 +10,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Exception;
 use Core;
 
+/**
+ * @since 5.7.5
+ */
 class GenerateIDESymbolsCommand extends Command
 {
     protected function configure()

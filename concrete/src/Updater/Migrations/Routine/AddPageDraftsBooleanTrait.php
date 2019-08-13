@@ -5,6 +5,9 @@ namespace Concrete\Core\Updater\Migrations\Routine;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @since 8.3.1
+ */
 trait AddPageDraftsBooleanTrait
 {
     public function addColumnIfMissing(Schema $schema)

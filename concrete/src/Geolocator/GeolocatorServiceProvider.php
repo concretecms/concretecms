@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use IPLib\Address\AddressInterface;
 
+/**
+ * @since 8.3.0
+ */
 class GeolocatorServiceProvider extends ServiceProvider
 {
     public function register()

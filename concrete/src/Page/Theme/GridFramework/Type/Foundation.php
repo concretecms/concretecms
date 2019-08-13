@@ -5,6 +5,9 @@ use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @since 5.7.2.1
+ */
 class Foundation extends GridFramework
 {
     public function supportsNesting()

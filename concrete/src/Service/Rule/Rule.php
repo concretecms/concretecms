@@ -3,6 +3,7 @@ namespace Concrete\Core\Service\Rule;
 
 /**
  * A single rule for the web server.
+ * @since 8.0.0
  */
 class Rule implements RuleInterface, ConfigurableRuleInterface
 {

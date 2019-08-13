@@ -6,6 +6,9 @@ use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\RemoteItem;
 
+/**
+ * @since 5.7.1
+ */
 abstract class MarketplaceItem extends UserInterface
 {
     protected $marketplace;

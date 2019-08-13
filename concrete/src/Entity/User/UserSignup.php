@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="UserSignups"
  * )
+ * @since 8.0.0
  */
 class UserSignup implements SubjectInterface
 {

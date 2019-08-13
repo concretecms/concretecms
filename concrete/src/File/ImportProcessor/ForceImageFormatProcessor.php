@@ -6,6 +6,9 @@ use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type;
 
+/**
+ * @since 5.7.5.2
+ */
 class ForceImageFormatProcessor implements ProcessorInterface
 {
     const FORMAT_JPEG = 1;

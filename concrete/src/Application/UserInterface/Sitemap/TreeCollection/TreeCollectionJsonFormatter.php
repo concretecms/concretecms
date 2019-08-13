@@ -6,6 +6,9 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryJs
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupJsonFormatter;
 use JsonSerializable;
 
+/**
+ * @since 8.2.0
+ */
 final class TreeCollectionJsonFormatter implements JsonSerializable
 {
     /**

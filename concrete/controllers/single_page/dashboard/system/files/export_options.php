@@ -5,6 +5,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
+/**
+ * @since 8.5.0
+ */
 class ExportOptions extends DashboardPageController
 {
     public function view()

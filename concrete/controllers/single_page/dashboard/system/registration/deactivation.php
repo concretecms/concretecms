@@ -3,6 +3,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 
+/**
+ * @since 8.4.1
+ */
 class Deactivation extends DashboardPageController
 {
 

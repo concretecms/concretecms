@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
+/**
+ * @since 8.3.0
+ */
 class EditResponse extends \Concrete\Core\Application\EditResponse
 {
     protected $occurrences = array();

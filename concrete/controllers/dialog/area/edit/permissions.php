@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Area\Edit;
 
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class Permissions extends \Concrete\Controller\Dialog\Area\Edit
 {
     protected $viewPath = '/dialogs/area/edit/permissions';

@@ -8,6 +8,9 @@ use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Tree\Node\Node;
 use URL;
 
+/**
+ * @since 8.2.0
+ */
 class Folder extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/file/bulk/folder';

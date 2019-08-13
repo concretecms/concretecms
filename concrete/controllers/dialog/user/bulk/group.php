@@ -11,6 +11,9 @@ use GroupList;
 use Concrete\Core\User\Group\Group as UserGroup;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 
+/**
+ * @since 8.4.0
+ */
 class Group extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/user/bulk/group';

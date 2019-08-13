@@ -6,6 +6,7 @@ namespace Concrete\Core\Localization\Translator;
  * into a format that can be used within the concrete5 context.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 interface TranslatorAdapterInterface
 {

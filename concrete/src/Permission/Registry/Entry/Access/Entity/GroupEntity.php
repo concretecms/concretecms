@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission\Registry\Entry\Access\Entity;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupAccessEntity;
 
+/**
+ * @since 8.0.0
+ */
 class GroupEntity implements EntityInterface
 {
 

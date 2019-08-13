@@ -10,6 +10,9 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
+/**
+ * @since 8.5.0
+ */
 class ServiceProvider extends Provider
 {
 

@@ -16,6 +16,9 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
+/**
+ * @since 5.7.5
+ */
 class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterface
 {
     use ApplicationAwareTrait;

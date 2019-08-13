@@ -6,6 +6,9 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Session\SessionValidator;
 
+/**
+ * @since 8.5.2
+ */
 class Heartbeat extends Controller
 {
     public function view()

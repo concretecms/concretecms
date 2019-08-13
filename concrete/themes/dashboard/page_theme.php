@@ -3,6 +3,9 @@ namespace Concrete\Theme\Dashboard;
 
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
 
+/**
+ * @since 8.0.0
+ */
 class PageTheme extends \Concrete\Core\Page\Theme\Theme
 {
 

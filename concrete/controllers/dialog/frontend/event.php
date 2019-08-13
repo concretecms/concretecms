@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Calendar\Event\EventOccurrence;
 
+/**
+ * @since 8.3.0
+ */
 class Event extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/frontend/view';

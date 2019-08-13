@@ -4,6 +4,9 @@ namespace Concrete\Core\Area\Layout\Preset;
 use Concrete\Core\Area\Layout\ColumnInterface;
 use Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface;
 
+/**
+ * @since 5.7.5
+ */
 class Preset implements PresetInterface
 {
     protected $name;

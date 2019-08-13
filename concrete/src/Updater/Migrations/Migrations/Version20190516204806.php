@@ -7,6 +7,9 @@ use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
+/**
+ * @since 8.5.2
+ */
 class Version20190516204806 extends AbstractMigration implements RepeatableMigrationInterface
 {
     

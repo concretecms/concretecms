@@ -11,6 +11,9 @@ use Concrete\Core\Notification\Subscription\StandardSubscription;
 use Concrete\Core\Notification\Subscription\SubscriptionInterface;
 use RuntimeException;
 
+/**
+ * @since 8.5.0
+ */
 class UserDeactivatedType implements TypeInterface
 {
 

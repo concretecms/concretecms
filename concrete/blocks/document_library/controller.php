@@ -25,6 +25,9 @@ use Concrete\Core\User\User;
 use Core;
 use FileAttributeKey;
 
+/**
+ * @since 8.3.0
+ */
 class Controller extends BlockController
 {
 

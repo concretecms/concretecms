@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 /**
  * The interface that any object thay may have attributes must implement.
+ * @since 8.2.0
  */
 interface ObjectInterface
 {

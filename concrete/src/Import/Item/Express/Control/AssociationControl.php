@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityManager;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class AssociationControl implements ItemInterface
 {
 

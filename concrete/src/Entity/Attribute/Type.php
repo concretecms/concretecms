@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="AttributeTypes", indexes={@ORM\Index(name="pkgID", columns={"pkgID", "atID"})})
+ * @since 8.0.0
  */
 class Type implements ExportableInterface
 {

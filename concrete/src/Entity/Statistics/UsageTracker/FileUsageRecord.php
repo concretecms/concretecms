@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="collection_version", columns={"collection_id","collection_version_id"})
  *   }
  * )
+ * @since 8.0.0
  */
 class FileUsageRecord
 {

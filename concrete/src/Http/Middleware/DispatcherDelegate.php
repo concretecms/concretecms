@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
  * A middleware delegate for dispatching a request and returning a response.
  * This is typically the last delegate in the stack in order to actually create the response.
  * @package Concrete\Core\Http
+ * @since 8.0.0
  */
 class DispatcherDelegate implements DelegateInterface
 {

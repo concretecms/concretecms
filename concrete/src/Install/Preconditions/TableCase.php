@@ -8,6 +8,9 @@ use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\PreconditionResult;
 use Exception;
 
+/**
+ * @since 8.4.0
+ */
 class TableCase implements ConnectionOptionsPreconditionInterface
 {
     /**

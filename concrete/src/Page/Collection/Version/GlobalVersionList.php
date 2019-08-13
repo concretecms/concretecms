@@ -9,6 +9,7 @@ use Concrete\Core\Search\StickyRequest;
  *
  * If you need a list of versions of multiple collections / pages,
  * use this class. Otherwise use the VersionList class.
+ * @since 8.5.0
  */
 class GlobalVersionList extends DatabaseItemList
 {

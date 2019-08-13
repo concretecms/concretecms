@@ -4,6 +4,9 @@ namespace Concrete\Core\Validator;
 
 use Concrete\Core\Foundation\Service\Provider;
 
+/**
+ * @since 5.7.5.3
+ */
 class ValidatorServiceProvider extends Provider
 {
     /**

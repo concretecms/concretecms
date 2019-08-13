@@ -8,6 +8,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\Value;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @since 8.0.0
+ */
 class LegacySearchIndexer extends \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer
 {
 

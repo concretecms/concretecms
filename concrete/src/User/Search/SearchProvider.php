@@ -14,6 +14,9 @@ use Concrete\Core\User\UserList;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Concrete\Core\Entity\Search\SavedUserSearch;
 
+/**
+ * @since 8.0.0
+ */
 class SearchProvider extends AbstractSearchProvider
 {
 

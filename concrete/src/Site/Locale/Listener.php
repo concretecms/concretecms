@@ -6,6 +6,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Locale as LocaleEntity;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
+/**
+ * @since 8.4.0
+ */
 class Listener
 {
     public function preUpdate(LocaleEntity $locale, PreUpdateEventArgs $args)

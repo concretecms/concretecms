@@ -3,6 +3,9 @@ namespace Concrete\Core\Permission\Response;
 
 use Permissions;
 
+/**
+ * @since 8.2.0
+ */
 class SiteResponse extends Response
 {
 

@@ -16,6 +16,9 @@ use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Error\UserMessageException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
     /**

@@ -3,6 +3,9 @@ namespace Concrete\Core\Application\UserInterface\Menu\Item;
 
 use Concrete\Core\Package\Package;
 
+/**
+ * @since 5.7.0.3
+ */
 class Item implements ItemInterface
 {
     protected $controller;

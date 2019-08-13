@@ -4,6 +4,9 @@ namespace Concrete\Attribute\Url;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends DefaultController
 {
 

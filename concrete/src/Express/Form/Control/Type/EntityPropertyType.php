@@ -12,6 +12,9 @@ use Concrete\Core\Express\Form\Control\Type\Item\AuthorEntityPropertyItem;
 use Concrete\Core\Express\Form\Control\Type\Item\TextEntityPropertyItem;
 use Concrete\Core\Import\Item\Express\Control\EntityPropertyControl;
 
+/**
+ * @since 8.0.0
+ */
 class EntityPropertyType implements TypeInterface
 {
     public function getPluralDisplayName()

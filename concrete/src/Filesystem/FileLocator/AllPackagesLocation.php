@@ -4,6 +4,9 @@ namespace Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Package\PackageList;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.2.0
+ */
 class AllPackagesLocation implements LocationInterface
 {
 

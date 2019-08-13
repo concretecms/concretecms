@@ -8,6 +8,9 @@ use Concrete\Core\Page\Page;
 use League\Url\UrlInterface;
 use SimpleXMLElement;
 
+/**
+ * @since 8.4.1
+ */
 class SitemapPageAlternativeLanguage extends SitemapElement
 {
     /**

@@ -7,6 +7,9 @@ use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Formatter\SavedSearchListFormatter;
 use Loader;
 
+/**
+ * @since 8.0.0
+ */
 class SearchPreset extends Node
 {
     protected $savedSearchID = null;

@@ -4,6 +4,7 @@ namespace Concrete\Core\Foundation;
 
 /**
  * A class loader that uses the class alias list.
+ * @since 8.0.0
  */
 class AliasClassLoader
 {

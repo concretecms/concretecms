@@ -8,6 +8,9 @@ use Concrete\Core\Workflow\Request\ApproveCalendarEventRequest;
 use Concrete\Core\Calendar\Event\EditResponse;
 use Concrete\Core\Calendar\Event\EventService;
 
+/**
+ * @since 8.3.0
+ */
 class EventVersion extends \Concrete\Core\Controller\Controller
 {
 

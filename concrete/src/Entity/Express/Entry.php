@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @ORM\Table(name="ExpressEntityEntries")
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
+ * @since 8.0.0
  */
 class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface, ExportableInterface
 {

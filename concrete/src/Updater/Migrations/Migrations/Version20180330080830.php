@@ -7,6 +7,9 @@ use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
+/**
+ * @since 8.4.0
+ */
 class Version20180330080830 extends AbstractMigration implements RepeatableMigrationInterface
 {
     public function upgradeDatabase()

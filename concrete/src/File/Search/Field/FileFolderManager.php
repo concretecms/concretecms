@@ -7,6 +7,9 @@ use Concrete\Core\File\Search\Field\Field\ExtensionField;
 use Concrete\Core\File\Search\Field\Field\TypeField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
 
+/**
+ * @since 8.0.0
+ */
 class FileFolderManager extends FieldManager
 {
     protected $fileCategory;

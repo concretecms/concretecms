@@ -10,6 +10,9 @@ use Concrete\Core\Page\Type\Event;
 use Concrete\Core\Page\Type\Type;
 use Core;
 
+/**
+ * @since 8.0.0
+ */
 class StandardSaver implements SaverInterface
 {
 

@@ -7,6 +7,7 @@ use DateTimeZone;
 
 /**
  * Helper class to work with database time zones.
+ * @since 8.2.0
  */
 class Timezone
 {

@@ -18,6 +18,7 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
  * through the {@link PlainTranslatorAdapterFactory}.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 {

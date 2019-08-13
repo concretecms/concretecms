@@ -7,6 +7,9 @@ use Concrete\Core\Service\Rule\Rule;
 use Concrete\Core\Service\Rule\RuleInterface;
 use Exception;
 
+/**
+ * @since 8.0.0
+ */
 class NginxGenerator extends Generator implements GeneratorInterface
 {
     /**

@@ -5,6 +5,9 @@ use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
 use Core;
 
+/**
+ * @since 8.0.0
+ */
 class Header extends ElementController
 {
     protected $query;

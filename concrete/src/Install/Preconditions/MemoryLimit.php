@@ -6,6 +6,9 @@ use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Utility\Service\Number;
 
+/**
+ * @since 8.3.0
+ */
 class MemoryLimit implements PreconditionInterface
 {
     /**

@@ -3,6 +3,9 @@ namespace Concrete\Core\Permission\Registry;
 
 use Concrete\Core\Permission\Registry\Entry\Object\EntryInterface;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractObjectRegistry implements ObjectRegistryInterface
 {
 

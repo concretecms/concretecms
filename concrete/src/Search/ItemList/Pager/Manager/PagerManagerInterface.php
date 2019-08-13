@@ -6,6 +6,9 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableInterface;
 use Concrete\Core\Search\Pagination\PagerPagination;
 
+/**
+ * @since 8.2.0
+ */
 interface PagerManagerInterface
 {
 

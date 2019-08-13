@@ -8,6 +8,9 @@ use Concrete\Core\Job\Job;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportJobsRoutine extends AbstractRoutine
 {
     public function getHandle()

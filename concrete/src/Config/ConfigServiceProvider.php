@@ -3,6 +3,9 @@ namespace Concrete\Core\Config;
 
 use Concrete\Core\Foundation\Service\Provider;
 
+/**
+ * @since 5.7.5.4
+ */
 class ConfigServiceProvider extends Provider
 {
     /**

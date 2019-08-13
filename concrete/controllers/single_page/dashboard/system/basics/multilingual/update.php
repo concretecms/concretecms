@@ -13,6 +13,9 @@ use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Exception;
 
+/**
+ * @since 8.2.0
+ */
 class Update extends DashboardPageController
 {
     public function view()

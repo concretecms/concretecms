@@ -7,6 +7,9 @@ use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Add extends Node
 {
     protected $viewPath = '/dialogs/tree/node/category/add';

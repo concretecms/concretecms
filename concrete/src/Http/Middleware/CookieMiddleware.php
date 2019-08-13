@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Middleware for adding and deleting cookies to an http response.
  *
  * @package Concrete\Core\Http
+ * @since 8.0.0
  */
 class CookieMiddleware implements MiddlewareInterface
 {

@@ -8,6 +8,9 @@ use Concrete\Core\Asset\AssetInterface;
 use Concrete\Core\Asset\AssetPointer;
 use Exception;
 
+/**
+ * @since 5.7.4
+ */
 class Plugin
 {
     /**

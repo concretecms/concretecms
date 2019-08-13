@@ -25,6 +25,7 @@ use Concrete\Core\Database\Connection\Connection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="BlockTypes")
+ * @since 8.0.0
  */
 class BlockType
 {

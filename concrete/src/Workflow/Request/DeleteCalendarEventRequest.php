@@ -8,6 +8,9 @@ use HtmlObject\Element;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventService;
 
+/**
+ * @since 8.3.0
+ */
 class DeleteCalendarEventRequest extends ApproveCalendarEventRequest
 {
 

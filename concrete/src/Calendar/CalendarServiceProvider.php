@@ -5,6 +5,9 @@ use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Calendar\Event\Formatter\DateFormatter;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarServiceProvider extends Provider
 {
     public function register()

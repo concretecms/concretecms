@@ -6,6 +6,9 @@ use Concrete\Core\Captcha\CaptchaInterface;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
 
+/**
+ * @since 8.2.0
+ */
 class CaptchaRoutine implements RoutineInterface
 {
     /**

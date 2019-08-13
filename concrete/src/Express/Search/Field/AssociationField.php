@@ -12,6 +12,9 @@ use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 
+/**
+ * @since 8.2.1
+ */
 class AssociationField extends AbstractField
 {
 

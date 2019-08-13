@@ -3,6 +3,9 @@ namespace Concrete\Core\Localization\Translation\Remote;
 
 use Gettext\Translations;
 
+/**
+ * @since 8.2.0
+ */
 interface ProviderInterface
 {
     /**

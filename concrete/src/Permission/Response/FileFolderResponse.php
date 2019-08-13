@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission\Response;
 use User;
 use FileSet;
 
+/**
+ * @since 8.0.0
+ */
 class FileFolderResponse extends TreeNodeResponse
 {
 

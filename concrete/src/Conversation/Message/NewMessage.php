@@ -3,6 +3,9 @@ namespace Concrete\Core\Conversation\Message;
 
 use Concrete\Core\Notification\Subject\SubjectInterface;
 
+/**
+ * @since 8.0.0
+ */
 class NewMessage implements SubjectInterface
 {
 

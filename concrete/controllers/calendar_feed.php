@@ -9,6 +9,9 @@ use Concrete\Core\Calendar\Event\EventOccurrence;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarFeed extends Controller
 {
     public function view($calendar_id)

@@ -10,6 +10,9 @@ use OAuth\OAuth2\Service\Google;
 use OAuth\ServiceFactory;
 use OAuth\UserData\ExtractorFactory;
 
+/**
+ * @since 5.7.3
+ */
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
     /**

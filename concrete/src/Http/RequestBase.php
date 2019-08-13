@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
  *
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
+ * @since 5.7.5
  */
 class RequestBase extends SymfonyRequest
 {

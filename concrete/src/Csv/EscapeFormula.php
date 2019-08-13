@@ -20,7 +20,7 @@ use \InvalidArgumentException;
  * @see http://georgemauer.net/2017/10/07/csv-injection.html
  *
  * @package League.csv
- * @since   9.1.0
+ * @since 8.5.0
  * @author  Ignace Nyamagana Butera <nyamsprod@gmail.com>
  */
 class EscapeFormula

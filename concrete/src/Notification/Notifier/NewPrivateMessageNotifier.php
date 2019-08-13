@@ -6,6 +6,9 @@ use Concrete\Core\Notification\Subscription\SubscriptionInterface;
 use Concrete\Core\User\PrivateMessage\PrivateMessage;
 use Concrete\Core\Workflow\Progress\Progress;
 
+/**
+ * @since 8.0.0
+ */
 class NewPrivateMessageNotifier extends StandardNotifier
 {
 

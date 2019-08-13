@@ -4,6 +4,9 @@ namespace Concrete\Core\Url;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 
+/**
+ * @since 5.7.4
+ */
 class UrlServiceProvider extends Provider
 {
     /**

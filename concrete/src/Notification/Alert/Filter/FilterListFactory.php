@@ -4,6 +4,9 @@ namespace Concrete\Core\Notification\Alert\Filter;
 use Concrete\Core\Notification\Type\Manager;
 use Concrete\Core\Notification\Type\TypeInterface;
 
+/**
+ * @since 8.4.2
+ */
 class FilterListFactory
 {
 

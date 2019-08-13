@@ -10,6 +10,9 @@ use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @since 8.0.0
+ */
 class FolderSet extends Set
 {
     public static function getType($node)

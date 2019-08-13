@@ -9,6 +9,9 @@ use Concrete\Core\Express\Form\Processor\StandardProcessor;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.0
+ */
 class StandardController implements ControllerInterface
 {
 

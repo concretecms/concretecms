@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Package;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class MailImporter extends AbstractCategory
 {
 

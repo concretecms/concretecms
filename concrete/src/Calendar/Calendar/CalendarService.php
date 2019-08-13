@@ -5,6 +5,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarRepository;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarService
 {
     protected $entityManager;

@@ -11,6 +11,9 @@ use Core;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Url;
 
+/**
+ * @since 8.4.0
+ */
 class Delete extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/user/bulk/delete';

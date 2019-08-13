@@ -7,6 +7,9 @@ use Concrete\Core\Filesystem\FileLocator;
 use Doctrine\ORM\EntityManagerInterface;
 use Punic\Comparer;
 
+/**
+ * @since 8.3.0
+ */
 class GeolocatorService
 {
     /**

@@ -8,6 +8,7 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Install OIDC scope
+ * @since 8.5.0
  */
 class Version20190110194848 extends AbstractMigration implements RepeatableMigrationInterface
 {

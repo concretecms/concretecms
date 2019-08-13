@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Search\ItemList\ItemList;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeKeyField extends AbstractField
 {
     /**

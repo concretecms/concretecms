@@ -7,6 +7,9 @@ use Concrete\Core\Page\Template;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class PageTemplate extends AbstractCategory
 {
 

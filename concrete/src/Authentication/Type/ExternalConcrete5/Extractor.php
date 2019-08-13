@@ -8,6 +8,9 @@ use OAuth\Common\Http\Uri\Uri;
 use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\UserData\Extractor\LazyExtractor;
 
+/**
+ * @since 8.5.0
+ */
 class Extractor extends LazyExtractor
 {
     const USER_PATH = '/ccm/api/v1/account/info';

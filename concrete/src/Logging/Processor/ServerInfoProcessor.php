@@ -4,6 +4,7 @@ namespace Concrete\Core\Logging\Processor;
 
 /**
  * A processor for packing $_SERVER info into the extra log info
+ * @since 8.5.0
  */
 class ServerInfoProcessor
 {

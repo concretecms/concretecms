@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Doctrine\ORM\Id\UuidGenerator;
 
+/**
+ * @since 8.0.0
+ */
 class Forms extends DashboardPageController
 {
     protected $repository;

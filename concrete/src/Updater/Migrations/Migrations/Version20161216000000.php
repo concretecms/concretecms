@@ -8,6 +8,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\User\Group\Group;
 
+/**
+ * @since 8.0.3
+ */
 class Version20161216000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

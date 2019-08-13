@@ -3,6 +3,9 @@ namespace Concrete\Core\Localization\Translation\Remote;
 
 use DateTime;
 
+/**
+ * @since 8.2.0
+ */
 class Stats
 {
     /**

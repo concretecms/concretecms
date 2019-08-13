@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Locale;
 
+/**
+ * @since 8.3.0
+ */
 class SiteLocaleField extends AbstractField
 {
     /**

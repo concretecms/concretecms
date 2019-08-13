@@ -8,6 +8,9 @@ use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\Event\UserInfo as UserInfoEvent;
 use DateTime;
 
+/**
+ * @since 8.5.0
+ */
 class DeactivateUser extends UserInfoEvent implements SubjectInterface
 {
 

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\User\Event;
 
+/**
+ * @since 5.7.3
+ */
 class UserInfoWithAttributes extends UserInfo
 {
     protected $keys = array();

@@ -7,6 +7,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Info;
 
+/**
+ * @since 8.0.0
+ */
 class InfoCommand extends Command
 {
     protected function configure()

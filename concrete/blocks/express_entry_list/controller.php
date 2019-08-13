@@ -20,6 +20,9 @@ use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends BlockController
 {
     protected $btInterfaceWidth = "640";

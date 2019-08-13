@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Support;
 
+/**
+ * @since 5.7.2.1
+ */
 class Manager extends \Illuminate\Support\Manager
 {
 

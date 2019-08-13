@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Notification\NewFormSubmissionNotification;
 use Concrete\Core\Entity\Notification\UserSignupNotification;
 use HtmlObject\Element;
 
+/**
+ * @since 8.2.0
+ */
 class NewFormSubmissionListView extends StandardListView
 {
 

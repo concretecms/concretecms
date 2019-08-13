@@ -7,6 +7,7 @@ use Concrete\Core\User\User;
 
 /**
  * Log entry for group actions for a user
+ * @since 8.5.0
  */
 abstract class UserGroup extends Group
 {

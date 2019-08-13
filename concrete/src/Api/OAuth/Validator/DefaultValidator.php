@@ -9,6 +9,9 @@ use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
 use League\OAuth2\Server\CryptKey;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @since 8.5.0
+ */
 class DefaultValidator implements AuthorizationValidatorInterface
 {
 

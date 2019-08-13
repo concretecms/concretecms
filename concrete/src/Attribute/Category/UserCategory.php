@@ -8,6 +8,9 @@ use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Package;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class UserCategory extends AbstractStandardCategory
 {
     /**

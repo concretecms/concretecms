@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Legacy\Loader;
 
+/**
+ * @since 8.0.0
+ */
 class Node extends UserInterface
 {
     protected $node;

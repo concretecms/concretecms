@@ -5,6 +5,9 @@ use Concrete\Core\Area\Layout\Layout;
 use HtmlObject\Element;
 use Sunra\PhpSimple\HtmlDomParser;
 
+/**
+ * @since 5.7.5
+ */
 class ThemeGridFormatter implements FormatterInterface
 {
     protected $layout;

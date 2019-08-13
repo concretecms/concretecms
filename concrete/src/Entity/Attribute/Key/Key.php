@@ -25,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="pkgID", columns={"pkgID"})
  *     }
  * )
+ * @since 8.0.0
  */
 class Key implements AttributeKeyInterface, ExportableInterface, ControlInterface
 {

@@ -11,6 +11,9 @@ use Concrete\Core\Tree\Tree;
 use Concrete\Core\User\Group\Group as ConcreteGroup;
 use Database;
 
+/**
+ * @since 8.0.0
+ */
 class ExpressEntryResults extends Tree
 {
     /** Returns the standard name for this tree

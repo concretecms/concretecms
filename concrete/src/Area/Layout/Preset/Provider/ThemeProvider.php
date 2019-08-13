@@ -5,6 +5,9 @@ use Concrete\Core\Area\Layout\Preset\Column;
 use Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter;
 use Concrete\Core\Area\Layout\Preset\Preset;
 
+/**
+ * @since 5.7.5
+ */
 class ThemeProvider implements ProviderInterface
 {
     protected $presets = array();

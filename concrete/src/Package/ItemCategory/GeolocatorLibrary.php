@@ -8,6 +8,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @since 8.3.0
+ */
 class GeolocatorLibrary extends AbstractCategory
 {
     public function getItemCategoryDisplayName()

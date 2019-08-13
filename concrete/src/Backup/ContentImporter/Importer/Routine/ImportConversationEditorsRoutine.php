@@ -4,6 +4,9 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Conversation\Editor\Editor;
 use Concrete\Core\Permission\Category;
 
+/**
+ * @since 8.0.0
+ */
 class ImportConversationEditorsRoutine extends AbstractRoutine
 {
     public function getHandle()

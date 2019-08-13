@@ -4,6 +4,9 @@ namespace Concrete\Core\Form\Control;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Context\ContextInterface;
 
+/**
+ * @since 8.2.0
+ */
 abstract class View implements ViewInterface
 {
 

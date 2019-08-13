@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Notification\Notification;
 use Concrete\Core\Notification\View\ListViewInterface;
 use Concrete\Core\Notification\View\StandardListViewInterface;
 
+/**
+ * @since 8.0.0
+ */
 class ListDetails extends ElementController
 {
 

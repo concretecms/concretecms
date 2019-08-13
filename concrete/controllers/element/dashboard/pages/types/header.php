@@ -4,6 +4,9 @@ namespace Concrete\Controller\Element\Dashboard\Pages\Types;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Site\Type;
 
+/**
+ * @since 8.0.0
+ */
 class Header extends ElementController
 {
 

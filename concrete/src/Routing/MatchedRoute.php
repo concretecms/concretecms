@@ -8,6 +8,9 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @since 8.5.0
+ */
 class MatchedRoute
 {
 

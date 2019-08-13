@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Entity\Attribute\Value\Value as AttributeValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 
+/**
+ * @since 8.0.0
+ */
 trait ObjectTrait
 {
     /**

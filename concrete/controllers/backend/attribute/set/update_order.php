@@ -9,6 +9,9 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 
+/**
+ * @since 8.5.2
+ */
 class UpdateOrder extends UserInterface
 {
     public function view()

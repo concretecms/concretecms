@@ -8,6 +8,9 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Checker;
 
+/**
+ * @since 8.5.0
+ */
 abstract class Edit extends BackendPageController
 {
     /**

@@ -5,6 +5,9 @@ use Concrete\Core\Site\Factory;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Http\Request;
 
+/**
+ * @since 8.0.0
+ */
 class StandardDriver implements DriverInterface
 {
 

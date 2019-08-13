@@ -3,6 +3,9 @@ namespace Concrete\Core\Calendar\Event\Formatter;
 
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 
+/**
+ * @since 8.3.0
+ */
 class DateFormatter
 {
 

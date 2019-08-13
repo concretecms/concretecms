@@ -15,6 +15,9 @@ use Concrete\Core\Entity\Attribute\Type as TypeEntity;
 use Concrete\Core\Validation\ResponseInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class StandardValidator implements ValidatorInterface
 {
 

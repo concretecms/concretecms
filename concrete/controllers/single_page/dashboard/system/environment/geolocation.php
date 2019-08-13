@@ -8,6 +8,9 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Exception;
 use IPLib\Factory as IPFactory;
 
+/**
+ * @since 8.3.0
+ */
 class Geolocation extends DashboardPageController
 {
     public function on_start()

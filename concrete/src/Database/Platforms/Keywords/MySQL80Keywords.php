@@ -6,6 +6,7 @@ use Doctrine\DBAL\Platforms\Keywords\MySQL57Keywords;
 
 /**
  * Backport of https://github.com/doctrine/dbal/pull/3128.
+ * @since 8.4.1
  */
 class MySQL80Keywords extends MySQL57Keywords
 {

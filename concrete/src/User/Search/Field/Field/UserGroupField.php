@@ -9,6 +9,9 @@ use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\UserList;
 
+/**
+ * @since 8.0.0
+ */
 class UserGroupField extends AbstractField
 {
 

@@ -3,6 +3,9 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem;
 
+/**
+ * @since 5.7.5.4
+ */
 class PageTypeRoutine extends AbstractRegularExpressionRoutine
 {
     public function getHandle()

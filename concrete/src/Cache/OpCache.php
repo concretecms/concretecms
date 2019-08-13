@@ -3,6 +3,7 @@ namespace Concrete\Core\Cache;
 
 /**
  * Manages opcaches.
+ * @since 5.7.5
  */
 class OpCache
 {

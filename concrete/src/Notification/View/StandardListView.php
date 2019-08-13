@@ -10,6 +10,9 @@ use Concrete\Core\User\UserInfo;
 use HtmlObject\Element;
 use HtmlObject\Link;
 
+/**
+ * @since 8.0.0
+ */
 abstract class StandardListView implements StandardListViewInterface
 {
 

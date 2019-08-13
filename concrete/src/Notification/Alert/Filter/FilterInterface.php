@@ -3,6 +3,9 @@ namespace Concrete\Core\Notification\Alert\Filter;
 
 use Concrete\Core\Notification\Alert\AlertList;
 
+/**
+ * @since 8.4.2
+ */
 interface FilterInterface
 {
 

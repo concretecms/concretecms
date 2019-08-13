@@ -5,6 +5,7 @@ namespace Concrete\Core\Api\OAuth\Client;
 /**
  * OAuth Client Credentials
  * A value object for communicating plain text keys and secrets
+ * @since 8.5.0
  */
 class Credentials
 {

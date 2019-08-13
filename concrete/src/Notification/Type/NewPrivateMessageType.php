@@ -7,6 +7,9 @@ use Concrete\Core\Notification\Notifier\NewPrivateMessageNotifier;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 
+/**
+ * @since 8.0.0
+ */
 class NewPrivateMessageType extends Type
 {
 

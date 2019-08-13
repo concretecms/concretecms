@@ -9,6 +9,9 @@ use Concrete\Core\Validator\String\MinimumLengthValidator;
 use Concrete\Core\Validator\String\RegexValidator;
 use Concrete\Core\Validator\String\UniqueUserNameValidator;
 
+/**
+ * @since 8.4.2
+ */
 class UserNameValidatorServiceProvider extends Provider
 {
     /**

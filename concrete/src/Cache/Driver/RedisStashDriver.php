@@ -16,6 +16,9 @@ use Stash\Driver\AbstractDriver;
 use Redis;
 use RedisArray;
 
+/**
+ * @since 8.5.0
+ */
 class RedisStashDriver extends AbstractDriver
 {
     /**

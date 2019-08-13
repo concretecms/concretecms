@@ -3,6 +3,9 @@ namespace Concrete\Core\Multilingual;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
+/**
+ * @since 5.7.3
+ */
 class MultilingualServiceProvider extends ServiceProvider
 {
     public function register()

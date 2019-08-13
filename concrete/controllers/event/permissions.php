@@ -6,6 +6,9 @@ use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Calendar\Calendar;
 
+/**
+ * @since 8.3.0
+ */
 class Permissions extends \Concrete\Core\Controller\Controller
 {
     public function process()

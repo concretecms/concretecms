@@ -6,6 +6,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use RuntimeException;
 
+/**
+ * @since 8.4.0
+ */
 class SemaphoreMutex implements MutexInterface
 {
     use MutexTrait;

@@ -4,6 +4,9 @@ namespace Concrete\Core\ImageEditor;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\View\View;
 
+/**
+ * @since 5.7.5
+ */
 class ImageEditor
 {
     const ImageEditorExtensionControl = 1;

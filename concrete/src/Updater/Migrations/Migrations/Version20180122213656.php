@@ -9,6 +9,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.3.2
+ */
 class Version20180122213656 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

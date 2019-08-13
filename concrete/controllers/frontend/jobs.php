@@ -8,6 +8,9 @@ use Job;
 use JobSet;
 use Response;
 
+/**
+ * @since 5.7.4
+ */
 class Jobs extends Controller
 {
     public function view()

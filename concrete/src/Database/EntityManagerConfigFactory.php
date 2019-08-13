@@ -13,6 +13,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
  * entity manager. Sets the stage for the package entity manager once its time for them to come online.
  * @author markus.liechti
  * @author Andrew Embler
+ * @since 8.0.0
  */
 class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityManagerConfigFactoryInterface
 {

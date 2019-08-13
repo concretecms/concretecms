@@ -5,6 +5,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportWorkflowProgressCategoriesRoutine extends AbstractRoutine
 {
     public function getHandle()

@@ -10,6 +10,7 @@ use Concrete\Core\User\User;
 
 /**
  * Log entry for permission assignments
+ * @since 8.5.0
  */
 class Assignment implements EntryInterface
 {

@@ -5,6 +5,9 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 
+/**
+ * @since 8.0.0
+ */
 class PageCategory extends AbstractStandardCategory
 {
     /**

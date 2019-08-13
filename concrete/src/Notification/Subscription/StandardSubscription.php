@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Notification\Subscription;
 
+/**
+ * @since 8.0.0
+ */
 class StandardSubscription implements SubscriptionInterface
 {
 

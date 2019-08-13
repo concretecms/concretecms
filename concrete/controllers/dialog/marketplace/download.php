@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface\MarketplaceItem;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Package as PackageService;
 
+/**
+ * @since 5.7.1
+ */
 class Download extends MarketplaceItem
 {
     protected $viewPath = '/dialogs/marketplace/download';

@@ -10,6 +10,9 @@ use Concrete\Core\Entity\Express\OneToOneAssociation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Applier
 {
     protected $entityManager;

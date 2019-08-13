@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Guzzle HTTP message factory. Credits to https://github.com/Majkl578/symfony-guzzle-psr7-bridge
+ * @since 8.5.0
  */
 class GuzzleFactory implements HttpMessageFactoryInterface
 {

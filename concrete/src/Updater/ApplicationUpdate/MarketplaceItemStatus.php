@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Updater\ApplicationUpdate;
 
+/**
+ * @since 5.7.4
+ */
 class MarketplaceItemStatus extends Status
 {
     protected $marketplaceItemID;

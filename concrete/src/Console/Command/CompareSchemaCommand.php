@@ -12,6 +12,9 @@ use Concrete\Core\Support\Facade\Package;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @since 8.0.0
+ */
 class CompareSchemaCommand extends Command
 {
     protected function configure()

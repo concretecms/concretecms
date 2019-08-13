@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Page;
 use Concrete\Controller\Backend\UserInterface as UserInterfaceController;
 use Concrete\Core\Validation\SanitizeService;
 
+/**
+ * @since 8.5.1
+ */
 class SitemapSelector extends UserInterfaceController
 {
     /**

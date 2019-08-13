@@ -9,6 +9,9 @@ use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Calendar\Event\Formatter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.3.0
+ */
 class ChooseEvent extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/choose';

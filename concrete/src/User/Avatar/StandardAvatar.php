@@ -6,6 +6,9 @@ use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\User\UserInfo;
 use HtmlObject\Image;
 
+/**
+ * @since 5.7.5.4
+ */
 class StandardAvatar implements AvatarInterface
 {
     protected $userInfo;

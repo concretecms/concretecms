@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
+/**
+ * @since 5.7.5.3
+ */
 class QueueAction extends Action
 {
     protected $queueItem;

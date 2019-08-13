@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Site\Config\Liaison;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Factory
 {
 

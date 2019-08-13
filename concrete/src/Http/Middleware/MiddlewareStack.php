@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * The default stack used to keep track of middleware and process requests
  * @package Concrete\Core\Http\Middleware
+ * @since 8.0.0
  */
 final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
 {

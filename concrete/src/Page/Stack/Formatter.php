@@ -3,6 +3,9 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Page\Page;
 
+/**
+ * @since 8.0.0
+ */
 class Formatter
 {
 

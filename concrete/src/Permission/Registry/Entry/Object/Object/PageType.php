@@ -6,6 +6,9 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Registry\Entry\Object\Object\ObjectInterface;
 use Concrete\Core\Page\Type\Type;
 
+/**
+ * @since 8.2.0
+ */
 class PageType implements ObjectInterface
 {
     protected $type;

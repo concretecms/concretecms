@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping\Builder\AssociationBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 
+/**
+ * @since 8.0.0
+ */
 abstract class OneAssociationSaveHandler implements SaveHandlerInterface
 {
     protected $entityManager;

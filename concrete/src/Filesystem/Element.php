@@ -10,6 +10,7 @@ use Concrete\Core\View\FileLocatorView;
 
 /**
  * An object-oriented wrapper for core element functionality, with support for events, locators, controllers and elements.
+ * @since 8.2.0
  */
 class Element implements LocatableFileInterface
 {

@@ -10,6 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Concrete\Core\Support\Facade\Package;
 use Exception;
 
+/**
+ * @since 5.7.5.4
+ */
 class UpdatePackageCommand extends Command
 {
     protected function configure()

@@ -5,6 +5,9 @@ namespace Concrete\Core\Console;
 use Concrete\Core\Application\Application as CMSApplication;
 use Symfony\Component\Console\Application as SymfonyApplication;
 
+/**
+ * @since 5.7.5
+ */
 class Application extends SymfonyApplication
 {
     /**

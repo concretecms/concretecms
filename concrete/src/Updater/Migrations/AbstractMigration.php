@@ -16,6 +16,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 /**
  * @property \Concrete\Core\Database\Connection\Connection $connection
+ * @since 8.1.0
  */
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {

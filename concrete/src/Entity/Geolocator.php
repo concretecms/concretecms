@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *         "comment": "List of all the installed Geolocator services"
  *     }
  * )
+ * @since 8.3.0
  */
 class Geolocator
 {

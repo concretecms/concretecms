@@ -8,6 +8,9 @@ use Concrete\Core\Application\UserInterface\Sitemap\JsonFormatter;
 use Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider;
 use Concrete\Core\Http\ResponseFactoryInterface;
 
+/**
+ * @since 8.4.0
+ */
 class SitemapData extends UserInterface
 {
     /**

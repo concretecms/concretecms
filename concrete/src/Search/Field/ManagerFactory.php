@@ -3,6 +3,9 @@ namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @since 8.0.0
+ */
 class ManagerFactory
 {
     /**

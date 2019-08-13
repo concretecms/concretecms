@@ -10,6 +10,9 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Notification\NotificationAlert;
 
+/**
+ * @since 8.4.2
+ */
 class AlertList extends ItemList implements PaginationProviderInterface
 {
     protected $autoSortColumns = array('nDate');

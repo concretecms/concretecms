@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Tree\Node\Node;
 use Permissions;
 
+/**
+ * @since 8.0.0
+ */
 class ExpressEntityResponse extends Response
 {
     protected function getExpressNodePermissions()

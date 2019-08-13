@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as SymfonyControllerResolver;
 use Concrete\Core\Application\ApplicationAwareTrait;
 
+/**
+ * @since 5.7.5.4
+ */
 class ApplicationAwareControllerResolver extends SymfonyControllerResolver implements ApplicationAwareInterface
 {
     use ApplicationAwareTrait;

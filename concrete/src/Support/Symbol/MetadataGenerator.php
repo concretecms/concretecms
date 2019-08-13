@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Throwable;
 
+/**
+ * @since 5.7.3.1
+ */
 class MetadataGenerator
 {
     public function getAllBindings()

@@ -11,6 +11,7 @@ use Symfony\Component\Routing\RouteCollection;
  * \@package Concrete\Core\Url\Resolver
  *
  * @deprecated use RouterUrlResolver instead
+ * @since 5.7.5
  */
 class RouteUrlResolver implements UrlResolverInterface
 {

@@ -17,6 +17,7 @@ use Concrete\Core\Export\Item\AttributeSet;
  *     @ORM\Index(name="pkgID", columns={"pkgID"})
  *     }
  * )
+ * @since 8.0.0
  */
 class Set implements ExportableInterface
 {

@@ -6,6 +6,9 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class Replace extends Import
 {
     /**

@@ -6,6 +6,9 @@ use TaskPermission;
 use Marketplace;
 use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
+/**
+ * @since 5.7.1
+ */
 abstract class MarketplaceDashboardPageController extends DashboardPageController
 {
     abstract public function getMarketplaceType();

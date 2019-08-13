@@ -11,6 +11,9 @@ use Core;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
+/**
+ * @since 8.4.0
+ */
 class Activate extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/user/bulk/activate';

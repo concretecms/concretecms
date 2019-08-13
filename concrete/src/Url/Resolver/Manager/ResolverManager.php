@@ -4,6 +4,9 @@ namespace Concrete\Core\Url\Resolver\Manager;
 
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
 
+/**
+ * @since 5.7.4
+ */
 class ResolverManager implements ResolverManagerInterface
 {
     /**

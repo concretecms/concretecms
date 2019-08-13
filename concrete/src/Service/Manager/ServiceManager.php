@@ -4,6 +4,9 @@ namespace Concrete\Core\Service\Manager;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Service\ServiceInterface;
 
+/**
+ * @since 8.0.0
+ */
 class ServiceManager implements ManagerInterface
 {
     /**

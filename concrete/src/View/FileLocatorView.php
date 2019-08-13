@@ -5,6 +5,9 @@ use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Filesystem\FileLocatorInterface;
 use Concrete\Core\Filesystem\LocatableFileInterface;
 
+/**
+ * @since 8.2.0
+ */
 class FileLocatorView extends AbstractView
 {
 

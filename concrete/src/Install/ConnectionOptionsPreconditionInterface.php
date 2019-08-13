@@ -6,6 +6,7 @@ use Concrete\Core\Database\Connection\Connection;
 
 /**
  * Interface for the checks to be performed against the connection before installing concrete5 but after the configuration has been specified.
+ * @since 8.4.0
  */
 interface ConnectionOptionsPreconditionInterface extends OptionsPreconditionInterface
 {

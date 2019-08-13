@@ -12,6 +12,9 @@ use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Http\ResponseFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.2.0
+ */
 class Thumbnailer extends \Concrete\Core\Controller\Controller
 {
     /** @var \Concrete\Core\Http\ResponseFactory */

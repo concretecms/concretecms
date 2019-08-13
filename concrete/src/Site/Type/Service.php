@@ -9,6 +9,9 @@ use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Service
 {
 

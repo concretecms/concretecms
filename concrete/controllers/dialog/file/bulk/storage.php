@@ -13,6 +13,9 @@ use Permissions;
 use Exception;
 use stdClass;
 
+/**
+ * @since 5.7.5.4
+ */
 class Storage extends BackendInterfaceController
 {
     public $helpers = array('form');

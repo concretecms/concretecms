@@ -6,6 +6,7 @@ namespace Concrete\Core\Device;
  * A representation of a device.
  *
  * \@package Concrete\Core\Device
+ * @since 5.7.5
  */
 class Device implements DeviceInterface
 {

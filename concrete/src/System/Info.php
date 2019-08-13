@@ -7,6 +7,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Package\PackageList;
 
+/**
+ * @since 5.7.5.10
+ */
 class Info
 {
     /**

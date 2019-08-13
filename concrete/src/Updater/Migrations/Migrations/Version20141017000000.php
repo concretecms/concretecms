@@ -11,6 +11,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Exception;
 
+/**
+ * @since 5.7.4
+ */
 class Version20141017000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

@@ -9,6 +9,7 @@ use Zend\I18n\Translator\Translator;
  * Stores the translator adapters in a local array.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterface
 {

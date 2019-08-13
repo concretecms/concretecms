@@ -6,6 +6,9 @@ use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
+/**
+ * @since 8.2.0
+ */
 class PagerAdapter implements AdapterInterface
 {
 

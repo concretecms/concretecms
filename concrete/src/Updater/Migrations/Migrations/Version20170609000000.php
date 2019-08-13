@@ -6,6 +6,9 @@ use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
+/**
+ * @since 8.2.0
+ */
 class Version20170609000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

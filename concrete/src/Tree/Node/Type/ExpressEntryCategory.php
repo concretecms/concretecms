@@ -9,6 +9,9 @@ use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryCategoryMenu;
 use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryLocationMenu;
 use Loader;
 
+/**
+ * @since 8.0.0
+ */
 class ExpressEntryCategory extends Category
 {
     public function getPermissionResponseClassName()

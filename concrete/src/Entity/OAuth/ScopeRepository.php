@@ -8,6 +8,9 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
+/**
+ * @since 8.5.0
+ */
 class ScopeRepository extends EntityRepository implements ScopeRepositoryInterface
 {
 

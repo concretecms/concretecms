@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.5.0
+ */
 interface ManySaveHandlerInterface extends SaveHandlerInterface
 {
     public function getAssociatedEntriesFromRequest(Control $control, Request $request);

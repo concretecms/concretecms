@@ -6,6 +6,7 @@ namespace Concrete\Core\Localization\Translator;
  * translator adapter.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 interface TranslatorAdapterFactoryInterface
 {

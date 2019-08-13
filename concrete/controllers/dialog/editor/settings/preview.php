@@ -9,6 +9,9 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 
+/**
+ * @since 8.4.1
+ */
 class Preview extends BackendUserInterface
 {
     protected $viewPath = '/dialogs/editor/settings/preview';

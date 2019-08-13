@@ -9,6 +9,9 @@ use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.1
+ */
 class PaginationFactory
 {
 

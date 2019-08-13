@@ -8,6 +8,9 @@ use Concrete\Core\Express\Form\Control\Type\Item\AttributeKeyItem;
 use Concrete\Core\Express\Form\Control\Validator\AttributeKeyControlValidator;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeKeyType implements TypeInterface
 {
     protected $entityManager;

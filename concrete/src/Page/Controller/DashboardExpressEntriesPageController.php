@@ -16,6 +16,9 @@ use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * @since 8.0.0
+ */
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
 {
     protected function getBackURL(Entity $entity)

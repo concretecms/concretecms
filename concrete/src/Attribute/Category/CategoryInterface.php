@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The interface that any attribute category must implement.
+ * @since 8.0.0
  */
 interface CategoryInterface
 {

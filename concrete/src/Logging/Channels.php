@@ -6,6 +6,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Utility\Service\Text;
 
+/**
+ * @since 8.5.0
+ */
 class Channels
 {
     /**

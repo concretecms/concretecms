@@ -9,6 +9,9 @@ use Concrete\Core\Tree\Node\Type\SearchPreset as TreeNodeSearchPreset;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.4.1
+ */
 class Delete extends PresetDelete
 {
     protected function canAccess()

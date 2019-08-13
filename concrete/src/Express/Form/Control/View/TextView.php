@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Context\ContextInterface;
 
+/**
+ * @since 8.2.0
+ */
 class TextView extends View
 {
 

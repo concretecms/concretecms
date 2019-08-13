@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group;
 
+/**
+ * @since 8.2.0
+ */
 final class GroupJsonFormatter implements \JsonSerializable
 {
 

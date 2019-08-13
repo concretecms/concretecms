@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
 use SimpleXMLElement;
 
+/**
+ * @since 8.0.0
+ */
 class ImportAttributeTypesRoutine extends AbstractRoutine
 {
     public function getHandle()

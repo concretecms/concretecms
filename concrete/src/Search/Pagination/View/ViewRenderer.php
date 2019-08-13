@@ -4,6 +4,9 @@ namespace Concrete\Core\Search\Pagination\View;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\View\ViewInterface;
 use \Core;
+/**
+ * @since 5.7.4
+ */
 class ViewRenderer
 {
 

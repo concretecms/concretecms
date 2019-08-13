@@ -3,6 +3,9 @@ namespace Concrete\Core\Permission\Registry\Entry\Access\Entity;
 
 use Concrete\Core\Permission\Access\Entity\Entity as AccessEntity;
 
+/**
+ * @since 8.0.0
+ */
 class Entity implements EntityInterface
 {
 

@@ -21,6 +21,9 @@ use Concrete\Core\Page\Search\Field\Field\PageOwnerField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
 use Concrete\Core\Support\Facade\Facade;
 
+/**
+ * @since 8.0.0
+ */
 class Manager extends FieldManager
 {
 

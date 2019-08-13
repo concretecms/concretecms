@@ -8,6 +8,9 @@ use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Support\Facade\Facade;
 
+/**
+ * @since 8.0.0
+ */
 class Entries extends AbstractController
 {
     protected $entryList;

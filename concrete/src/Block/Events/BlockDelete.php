@@ -5,6 +5,9 @@ namespace Concrete\Core\Block\Events;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Page\Page;
 
+/**
+ * @since 5.7.5.9
+ */
 class BlockDelete extends BlockEvent
 {
 

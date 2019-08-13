@@ -14,6 +14,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Concrete\Core\User\LogSubscriber as UserLogSubscriber;
 use Concrete\Core\User\Group\LogSubscriber as GroupLogSubscriber;
 
+/**
+ * @since 5.7.5.4
+ */
 class UserServiceProvider extends ServiceProvider
 {
     public function register()

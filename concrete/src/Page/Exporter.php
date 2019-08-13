@@ -6,6 +6,9 @@ use Concrete\Core\Export\Item\ItemInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\UserInfo;
 
+/**
+ * @since 8.4.0
+ */
 class Exporter implements ItemInterface
 {
 

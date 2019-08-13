@@ -11,6 +11,9 @@ use Concrete\Core\Page\Page;
 use HtmlObject\Element;
 use HtmlObject\Link;
 
+/**
+ * @since 8.0.0
+ */
 class RelationListController extends Controller
 {
 

@@ -11,6 +11,9 @@ use Core;
 use Concrete\Core\User\UserInfoRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @since 8.4.1
+ */
 class DeactivateUsers extends AbstractJob
 {
 

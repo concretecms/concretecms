@@ -16,6 +16,9 @@ use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\Url\Url;
 
+/**
+ * @since 8.5.0
+ */
 class Integrations extends DashboardPageController
 {
     public function view()

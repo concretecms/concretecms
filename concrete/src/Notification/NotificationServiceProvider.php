@@ -4,6 +4,9 @@ namespace Concrete\Core\Notification;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Notification\Type\UserDeactivatedType;
 
+/**
+ * @since 8.0.0
+ */
 class NotificationServiceProvider extends ServiceProvider
 {
     public function register()

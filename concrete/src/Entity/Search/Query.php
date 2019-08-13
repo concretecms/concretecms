@@ -5,6 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Embeddable
+ * @since 8.0.0
  */
 class Query implements \JsonSerializable
 {

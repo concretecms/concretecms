@@ -9,6 +9,9 @@ use Concrete\Core\Permission\Key\Key;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class PermissionKey extends AbstractCategory
 {
 

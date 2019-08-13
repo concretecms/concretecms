@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeKeyHandleGenerator implements AttributeKeyHandleGeneratorInterface
 {
 

@@ -18,6 +18,9 @@ use SimpleXMLElement;
 use Page;
 use Events;
 
+/**
+ * @since 8.0.0
+ */
 class UpdateStatistics extends AbstractJob
 {
 

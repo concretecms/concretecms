@@ -12,6 +12,9 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use Throwable;
 
+/**
+ * @since 8.2.0
+ */
 class AutorotateImageProcessor implements ProcessorInterface
 {
     /**

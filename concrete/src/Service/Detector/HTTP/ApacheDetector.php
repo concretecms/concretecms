@@ -4,6 +4,9 @@ namespace Concrete\Core\Service\Detector\HTTP;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Service\Detector\DetectorInterface;
 
+/**
+ * @since 8.0.0
+ */
 class ApacheDetector implements DetectorInterface
 {
     /**

@@ -5,6 +5,9 @@ use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Entity\Calendar;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarRenderer extends Renderer
 {
 

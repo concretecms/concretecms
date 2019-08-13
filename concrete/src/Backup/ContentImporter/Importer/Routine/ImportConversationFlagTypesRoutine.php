@@ -5,6 +5,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Permission\Category;
 
+/**
+ * @since 8.0.0
+ */
 class ImportConversationFlagTypesRoutine extends AbstractRoutine
 {
     public function getHandle()

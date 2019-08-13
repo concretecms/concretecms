@@ -8,6 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Exception;
 
+/**
+ * @since 5.7.4
+ */
 class Version20141024000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

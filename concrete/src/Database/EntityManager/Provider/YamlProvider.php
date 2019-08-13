@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\Driver\YamlDriver;
  * In this case, the mapping information (Namespace, DoctrineMappingDriver) has to be added
  * manually with the method $this->addDriver()
  *   
+ * @since 8.0.0
  */
 class YamlProvider implements ProviderInterface
 {

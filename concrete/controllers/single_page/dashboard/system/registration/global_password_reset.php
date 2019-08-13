@@ -6,6 +6,9 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserList;
 
+/**
+ * @since 8.0.0
+ */
 class GlobalPasswordReset extends DashboardPageController
 {
     const PASSWORD_RESET_MESSAGE_KEY = 'concrete.password.reset.message';

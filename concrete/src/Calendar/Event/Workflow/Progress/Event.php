@@ -3,6 +3,9 @@ namespace Concrete\Core\Calendar\Event\Workflow\Progress;
 
 use Concrete\Core\Workflow\Progress\CalendarEventProgress;
 
+/**
+ * @since 8.3.0
+ */
 class Event
 {
     protected $event;

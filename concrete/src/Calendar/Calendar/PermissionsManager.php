@@ -6,6 +6,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Entity\Calendar\Calendar as CalendarEntity;
 use Concrete\Core\Entity\Calendar\CalendarPermissionAssignment;
 
+/**
+ * @since 8.3.0
+ */
 class PermissionsManager
 {
     protected $entityManager;

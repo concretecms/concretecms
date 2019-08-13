@@ -3,6 +3,9 @@ namespace Concrete\Core\Attribute\Key;
 
 use Concrete\Core\Support\Facade\Facade;
 
+/**
+ * @since 8.3.0
+ */
 class EventKey extends Facade
 {
     public static function getFacadeAccessor()

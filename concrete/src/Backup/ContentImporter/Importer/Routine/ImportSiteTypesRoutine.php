@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Site\Type;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Site\Type\Service as TypeService;
 
+/**
+ * @since 8.0.0
+ */
 class ImportSiteTypesRoutine extends AbstractRoutine
 {
     protected $typeService;

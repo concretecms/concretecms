@@ -7,6 +7,9 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
+/**
+ * @since 8.5.0
+ */
 class ClientRepository extends EntityRepository implements ClientRepositoryInterface
 {
 

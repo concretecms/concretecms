@@ -4,6 +4,9 @@ namespace Concrete\Core\File\Service;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.2.0
+ */
 class VolatileDirectory
 {
     /**

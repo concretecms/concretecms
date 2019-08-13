@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="SiblingPageRelations"
  * )
+ * @since 8.0.0
  */
 class SiblingRelation extends Relation
 {

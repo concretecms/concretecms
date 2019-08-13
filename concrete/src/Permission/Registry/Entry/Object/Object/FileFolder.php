@@ -7,6 +7,9 @@ use Concrete\Core\Permission\Registry\Entry\Object\Object\ObjectInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\FileManager;
 
+/**
+ * @since 8.0.0
+ */
 class FileFolder implements ObjectInterface
 {
     protected $folder;

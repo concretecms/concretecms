@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="atSelectSettings")
+ * @since 8.0.0
  */
 class SelectSettings extends Settings
 {

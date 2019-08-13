@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="CalendarEventWorkflowProgress", indexes={
  * @ORM\Index(name="wpID", columns={"wpID"})
  * })
+ * @since 8.3.0
  */
 class CalendarEventWorkflowProgress
 {

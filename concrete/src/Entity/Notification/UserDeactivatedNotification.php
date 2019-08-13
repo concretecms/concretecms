@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="UserDeactivatedNotifications"
  * )
+ * @since 8.5.0
  */
 class UserDeactivatedNotification extends Notification
 {

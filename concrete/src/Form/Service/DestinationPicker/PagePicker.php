@@ -15,6 +15,7 @@ use Concrete\Core\Utility\Service\Validation\Numbers;
  *
  * Supported options for the decode method:
  * - none
+ * @since 8.5.2
  */
 class PagePicker implements PickerInterface
 {

@@ -4,6 +4,9 @@ namespace Concrete\Core\Page\Search\Field\Field;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 
+/**
+ * @since 8.5.2
+ */
 class IncludePageAliasesField extends AbstractField
 {
     protected $requestVariables = [

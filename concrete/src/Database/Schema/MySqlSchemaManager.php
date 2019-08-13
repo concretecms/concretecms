@@ -4,6 +4,9 @@ namespace Concrete\Core\Database\Schema;
 use Doctrine\DBAL\Schema\MySqlSchemaManager as DoctrineMySqlSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 
+/**
+ * @since 8.5.0
+ */
 class MySqlSchemaManager extends DoctrineMySqlSchemaManager
 {
     /**

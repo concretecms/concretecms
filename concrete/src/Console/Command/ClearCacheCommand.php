@@ -9,6 +9,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Core;
 use Exception;
 
+/**
+ * @since 5.7.5.2
+ */
 class ClearCacheCommand extends Command
 {
     protected function configure()

@@ -12,6 +12,9 @@ use Concrete\Core\Service\Rule\ConfigurableRuleInterface;
 use Core;
 use Exception;
 
+/**
+ * @since 8.0.0
+ */
 final class ServiceCommand extends Command
 {
     protected function configure()

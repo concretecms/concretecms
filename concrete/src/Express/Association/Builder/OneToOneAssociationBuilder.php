@@ -5,6 +5,9 @@ use Concrete\Core\Database\Schema\BuilderInterface;
 use Concrete\Core\Entity\Express\OneToOneAssociation;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
+/**
+ * @since 8.0.0
+ */
 class OneToOneAssociationBuilder implements BuilderInterface
 {
     protected $association;

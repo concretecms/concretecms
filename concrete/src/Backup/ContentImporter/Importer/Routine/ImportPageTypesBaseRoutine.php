@@ -8,6 +8,9 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportPageTypesBaseRoutine extends AbstractRoutine
 {
     public function getHandle()

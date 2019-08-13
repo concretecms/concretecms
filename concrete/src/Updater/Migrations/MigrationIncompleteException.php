@@ -6,6 +6,7 @@ use RuntimeException;
 
 /**
  * Exception thrown when the migration.
+ * @since 8.4.0
  */
 class MigrationIncompleteException extends RuntimeException
 {

@@ -8,6 +8,9 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Permissions;
 
+/**
+ * @since 8.4.1
+ */
 class Delete extends PresetDelete
 {
     protected function getEntity()

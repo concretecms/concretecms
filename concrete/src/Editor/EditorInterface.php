@@ -6,6 +6,7 @@ use Concrete\Core\Http\Request;
 
 /**
  * Interface that all rich-text editors must implement.
+ * @since 5.7.4
  */
 interface EditorInterface
 {

@@ -4,6 +4,9 @@ namespace Concrete\Core\Editor;
 
 use Exception;
 
+/**
+ * @since 5.7.4
+ */
 class PluginManager
 {
     /**

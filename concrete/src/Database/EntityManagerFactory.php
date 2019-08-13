@@ -11,6 +11,9 @@ use Config;
 use Database;
 use Events;
 
+/**
+ * @since 5.7.5.3
+ */
 class EntityManagerFactory implements EntityManagerFactoryInterface
 {
     /**

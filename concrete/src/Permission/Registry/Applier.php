@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Registry\Entry\EntryInterface;
 use Concrete\Core\Permission\Registry\Entry\EntrySubjectInterface;
 use Core;
 
+/**
+ * @since 8.0.0
+ */
 class Applier
 {
 

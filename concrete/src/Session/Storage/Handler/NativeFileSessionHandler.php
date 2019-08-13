@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandle
  * Default PHP config usually puts the session data in a global directory which the runtime should have no access
  * to. Those directories should be able to be warded off for security reasons using open_basedir restrictions. By
  * testing the existence of that directory such a restriction is useless as it will always generate a fatal error.
+ * @since 5.7.5
  */
 class NativeFileSessionHandler extends NativeSessionHandler
 {

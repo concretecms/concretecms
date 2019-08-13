@@ -4,6 +4,9 @@ namespace Concrete\Controller\Backend;
 use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Tree extends UserInterface
 {
     protected $tree;

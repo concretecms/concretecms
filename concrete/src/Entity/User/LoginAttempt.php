@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="UserLoginAttempts"
  * )
+ * @since 8.5.0
  */
 class LoginAttempt
 {

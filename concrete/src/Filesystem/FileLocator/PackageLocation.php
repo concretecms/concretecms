@@ -3,6 +3,9 @@ namespace Concrete\Core\Filesystem\FileLocator;
 
 use Concrete\Core\Entity\Package;
 
+/**
+ * @since 8.2.0
+ */
 class PackageLocation extends AbstractLocation
 {
     /**

@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Notification\UserDeactivatedNotification;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
+/**
+ * @since 8.5.0
+ */
 class Version20190112000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
 

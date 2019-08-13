@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entry;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class ManyToOneAssociationSaveHandler extends OneAssociationSaveHandler
 {
 

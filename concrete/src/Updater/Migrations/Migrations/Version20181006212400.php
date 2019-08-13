@@ -11,6 +11,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Exception;
 use Throwable;
 
+/**
+ * @since 8.5.0
+ */
 class Version20181006212400 extends AbstractMigration implements RepeatableMigrationInterface, LongRunningMigrationInterface
 {
     /**

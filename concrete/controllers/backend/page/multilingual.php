@@ -10,6 +10,9 @@ use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use Core;
 
+/**
+ * @since 5.7.3
+ */
 class Multilingual extends Page
 {
     protected $controllerActionPath = '/ccm/system/page/multilingual';

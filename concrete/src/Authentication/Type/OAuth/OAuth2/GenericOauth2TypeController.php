@@ -9,6 +9,9 @@ use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\OAuth2\Service\AbstractService;
 use Concrete\Core\User\User;
 
+/**
+ * @since 5.7.1
+ */
 abstract class GenericOauth2TypeController extends GenericOauthTypeController
 {
     /** @var AbstractService */

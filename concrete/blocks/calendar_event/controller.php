@@ -11,6 +11,9 @@ use Concrete\Core\Calendar\CalendarServiceProvider;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.3.0
+ */
 class Controller extends BlockController
 {
     public $helpers = array('form');

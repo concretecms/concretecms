@@ -7,6 +7,9 @@ use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Attribute\Key\Category;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.4.1
+ */
 class Version20180609000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

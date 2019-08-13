@@ -4,6 +4,7 @@ namespace Concrete\Core\System\Mutex;
 
 /**
  * Trait that contains stuff that can be useful for Mutexes.
+ * @since 8.4.0
  */
 trait MutexTrait
 {

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Filesystem\FileLocator;
 
+/**
+ * @since 8.2.0
+ */
 class ApplicationLocation extends AbstractLocation
 {
 

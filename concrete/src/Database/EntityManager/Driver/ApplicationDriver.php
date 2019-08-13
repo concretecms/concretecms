@@ -7,6 +7,9 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 
+/**
+ * @since 8.0.0
+ */
 class ApplicationDriver implements DriverInterface
 {
     

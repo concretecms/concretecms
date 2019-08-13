@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Search\SavedSearch;
 use Doctrine\ORM\EntityManager;
 use URL;
 
+/**
+ * @since 8.4.1
+ */
 class Edit extends PresetEdit
 {
     protected function canAccess()

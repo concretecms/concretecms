@@ -3,7 +3,7 @@
 namespace Concrete\Core\Error\ErrorList\Error;
 
 /**
- * @since concrete5 8.5.0a3
+ * @since 8.4.4
  */
 interface HtmlAwareErrorInterface extends ErrorInterface
 {

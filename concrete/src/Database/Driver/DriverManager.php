@@ -3,6 +3,9 @@ namespace Concrete\Core\Database\Driver;
 
 use Illuminate\Support\Manager;
 
+/**
+ * @since 5.7.0.3
+ */
 class DriverManager extends Manager
 {
     /**

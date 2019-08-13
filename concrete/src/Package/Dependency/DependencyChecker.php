@@ -6,6 +6,9 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageService;
 
+/**
+ * @since 8.3.0
+ */
 class DependencyChecker
 {
     /**

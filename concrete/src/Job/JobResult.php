@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Job;
 
+/**
+ * @since 5.7.5
+ */
 class JobResult
 {
     public $error;

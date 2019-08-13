@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @since 8.4.0
+ */
 class IsInstalledCommand extends Command
 {
     const RETURN_CODE_ON_FAILURE = 2;

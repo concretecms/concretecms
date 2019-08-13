@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 
+/**
+ * @since 8.2.0
+ */
 class FormBlockSubmissionNotification extends AbstractFormBlockSubmissionNotification
 {
     public function notify(Entry $entry, $updateType)

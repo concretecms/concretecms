@@ -5,6 +5,9 @@ namespace Concrete\Core\Notification\View;
 use Concrete\Core\Entity\Notification\UserSignupNotification;
 use HtmlObject\Element;
 
+/**
+ * @since 8.0.0
+ */
 class NewPrivateMessageListView extends StandardListView
 {
 

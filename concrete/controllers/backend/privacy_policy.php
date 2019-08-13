@@ -5,6 +5,9 @@ use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.4.0
+ */
 class PrivacyPolicy extends AbstractController
 {
 

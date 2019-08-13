@@ -3,6 +3,7 @@ namespace Concrete\Core\Service\Rule;
 
 /**
  * Represents an option for a configurable rule.
+ * @since 8.0.0
  */
 class Option
 {

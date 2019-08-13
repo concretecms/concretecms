@@ -7,6 +7,9 @@ use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\Workflow\Progress\User as ProgressUser;
 use \Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
+/**
+ * @since 8.0.0
+ */
 class ProgressList extends UserList
 {
 

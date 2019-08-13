@@ -9,6 +9,9 @@ use Concrete\Core\Express\Form\Validator\Routine\CSRFTokenRoutine;
 use Concrete\Core\Express\Form\Validator\Routine\ValidateAttributesRoutine;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.0
+ */
 class StandardValidator extends AbstractValidator
 {
 

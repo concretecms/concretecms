@@ -8,6 +8,9 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
+/**
+ * @since 8.0.0
+ */
 class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
 {
 

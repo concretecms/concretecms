@@ -8,6 +8,9 @@ use Concrete\Core\View\View;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use JsonSerializable;
 
+/**
+ * @since 8.0.0
+ */
 interface ResponseFactoryInterface
 {
 

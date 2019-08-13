@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\ObjectAssociationBuilder;
 use Concrete\Core\Express\ObjectBuilder;
 
+/**
+ * @since 8.1.0
+ */
 class AssociationBuilder
 {
 

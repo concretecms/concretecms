@@ -4,6 +4,9 @@ namespace Concrete\Core\Error\ErrorList\Error;
 
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Error extends AbstractError
 {
     /**

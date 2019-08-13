@@ -13,6 +13,9 @@ use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type;
 
+/**
+ * @since 8.0.0
+ */
 class StandardSearchIndexer implements SearchIndexerInterface
 {
     protected $connection;

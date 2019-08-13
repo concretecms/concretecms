@@ -11,6 +11,9 @@ use Concrete\Core\User\User;
 use InvalidArgumentException;
 use League\Url\Url;
 
+/**
+ * @since 8.5.0
+ */
 class Controller extends GenericOauth2TypeController
 {
 

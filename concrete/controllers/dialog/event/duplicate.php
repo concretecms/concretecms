@@ -8,6 +8,9 @@ use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Calendar\Calendar\CalendarService;
 use Concrete\Core\Calendar\Utility\Preferences;
 
+/**
+ * @since 8.3.0
+ */
 class Duplicate extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/duplicate';

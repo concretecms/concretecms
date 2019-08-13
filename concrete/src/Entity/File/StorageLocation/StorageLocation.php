@@ -16,6 +16,7 @@ use League\Flysystem\Filesystem;
 /**
  * @ORM\Entity
  * @ORM\Table(name="FileStorageLocations")
+ * @since 8.0.0
  */
 class StorageLocation implements StorageLocationInterface
 {

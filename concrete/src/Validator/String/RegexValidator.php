@@ -7,6 +7,9 @@ use Concrete\Core\Validator\AbstractTranslatableValidator;
 use InvalidArgumentException;
 use RuntimeException;
 
+/**
+ * @since 5.7.5.3
+ */
 class  RegexValidator extends AbstractTranslatableValidator
 {
     /**

@@ -7,6 +7,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 
+/**
+ * @since 8.5.0
+ */
 class Version20180912113737 extends AbstractMigration implements RepeatableMigrationInterface
 {
 

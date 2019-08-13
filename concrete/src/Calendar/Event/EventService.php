@@ -15,6 +15,9 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * @since 8.3.0
+ */
 class EventService
 {
     protected $entityManager;

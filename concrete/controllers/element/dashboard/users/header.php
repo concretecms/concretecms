@@ -4,6 +4,9 @@ namespace Concrete\Controller\Element\Dashboard\Users;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\User\UserInfo;
 
+/**
+ * @since 8.0.0
+ */
 class Header extends ElementController
 {
 

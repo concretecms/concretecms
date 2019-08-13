@@ -5,6 +5,9 @@ use Concrete\Core\File\FileList;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 
+/**
+ * @since 8.0.0
+ */
 class SizeField extends AbstractField
 {
 

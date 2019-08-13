@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Access\ListItem\ListItem;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Registry\Entry\Access\Entity\EntityInterface;
 
+/**
+ * @since 8.0.0
+ */
 class PermissionsEntry implements EntryInterface
 {
 

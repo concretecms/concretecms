@@ -3,6 +3,9 @@ namespace Concrete\Core\Localization\Translation;
 
 use Concrete\Core\Package\Package;
 
+/**
+ * @since 8.2.0
+ */
 class PackageLocaleStatus extends LocaleStatus
 {
     /**

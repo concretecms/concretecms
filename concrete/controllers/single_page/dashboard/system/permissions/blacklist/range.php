@@ -12,6 +12,9 @@ use IPLib\Factory as IPFactory;
 use League\Csv\Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * @since 8.2.0
+ */
 class Range extends DashboardPageController
 {
     public function view($type = null)

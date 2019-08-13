@@ -7,6 +7,7 @@ use Concrete\Core\User\User;
 
 /**
  * A processor for adding the concrete5 user into the extra log info
+ * @since 8.5.0
  */
 class Concrete5UserProcessor
 {

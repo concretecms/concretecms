@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Conversation;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Controller\Controller;
 
+/**
+ * @since 5.7.4
+ */
 class Subscribe extends Controller
 {
     protected $controllerActionPath = '/ccm/system/dialogs/conversation/subscribe';

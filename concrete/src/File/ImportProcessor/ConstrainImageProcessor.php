@@ -11,6 +11,9 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 use InvalidArgumentException;
 
+/**
+ * @since 5.7.5.2
+ */
 class ConstrainImageProcessor implements ProcessorInterface
 {
     /**

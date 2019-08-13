@@ -5,6 +5,9 @@ use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Doctrine\DBAL\Connection;
 
+/**
+ * @since 8.3.0
+ */
 class Import extends DashboardPageController
 {
 

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Notification\Alert\Filter;
 
+/**
+ * @since 8.4.2
+ */
 class FilterList
 {
 

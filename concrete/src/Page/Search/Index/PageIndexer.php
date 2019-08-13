@@ -11,6 +11,9 @@ use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Search\Index\Driver\IndexingDriverInterface;
 use Concrete\Core\Search\Index\Driver\Iterator;
 
+/**
+ * @since 8.1.0
+ */
 class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
 {
 

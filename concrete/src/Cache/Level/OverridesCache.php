@@ -12,6 +12,7 @@ use Stash\Pool;
  * This cache stores data about where files are located in concrete5.
  *
  * \@package Concrete\Core\Cache\Level
+ * @since 8.2.0
  */
 class OverridesCache extends Cache
 {

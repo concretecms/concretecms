@@ -7,6 +7,7 @@ use Concrete\Core\User\User;
 
 /**
  * Log entry for group actions
+ * @since 8.5.0
  */
 abstract class Group extends ApplierEntry
 {

@@ -18,6 +18,9 @@ use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Request as SymphonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @since 8.0.0
+ */
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
     use ApplicationAwareTrait;

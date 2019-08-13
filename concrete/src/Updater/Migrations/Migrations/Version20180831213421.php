@@ -6,6 +6,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 
+/**
+ * @since 8.5.0
+ */
 class Version20180831213421 extends AbstractMigration implements RepeatableMigrationInterface
 {
 

@@ -9,6 +9,9 @@ use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\File\File;
 
+/**
+ * @since 8.2.0
+ */
 class FileListPagerManager extends AbstractPagerManager
 {
 

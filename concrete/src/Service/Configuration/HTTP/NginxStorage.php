@@ -4,6 +4,9 @@ namespace Concrete\Core\Service\Configuration\HTTP;
 use Concrete\Core\Service\Configuration\StorageInterface;
 use Exception;
 
+/**
+ * @since 8.0.0
+ */
 class NginxStorage implements StorageInterface
 {
     /**

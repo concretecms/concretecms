@@ -12,6 +12,9 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
 
+/**
+ * @since 8.2.1
+ */
 class UserListPagerManager extends AbstractPagerManager
 {
 

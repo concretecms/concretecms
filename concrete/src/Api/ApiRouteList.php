@@ -8,6 +8,9 @@ use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Routing\RouteListInterface;
 use Concrete\Core\Routing\Router;
 
+/**
+ * @since 8.5.0
+ */
 class ApiRouteList implements RouteListInterface
 {
 

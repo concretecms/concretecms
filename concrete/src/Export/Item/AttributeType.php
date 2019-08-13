@@ -7,6 +7,9 @@ use Concrete\Core\Export\ExportableInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class AttributeType implements ItemInterface
 {
 

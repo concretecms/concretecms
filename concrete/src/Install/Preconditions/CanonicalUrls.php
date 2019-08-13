@@ -7,6 +7,9 @@ use Concrete\Core\Install\OptionsPreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Url\UrlImmutable;
 
+/**
+ * @since 8.4.0
+ */
 class CanonicalUrls implements OptionsPreconditionInterface
 {
     /**

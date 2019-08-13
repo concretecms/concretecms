@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Site\Site;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
+/**
+ * @since 8.5.0
+ */
 class SimpleFileConfiguration extends SimpleConfiguration
 {
 

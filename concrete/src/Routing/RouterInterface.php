@@ -5,6 +5,9 @@ namespace Concrete\Core\Routing;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 
+/**
+ * @since 5.7.5.4
+ */
 interface RouterInterface
 {
     /**

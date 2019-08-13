@@ -4,6 +4,9 @@ namespace Concrete\Core\Cookie;
 
 use Symfony\Component\HttpFoundation\Cookie;
 
+/**
+ * @since 8.5.0
+ */
 class ResponseCookieJar
 {
     /**

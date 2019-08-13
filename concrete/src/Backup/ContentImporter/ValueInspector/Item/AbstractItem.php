@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
+/**
+ * @since 5.7.5.3
+ */
 abstract class AbstractItem implements ItemInterface
 {
     protected $reference;

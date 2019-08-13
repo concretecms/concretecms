@@ -3,6 +3,9 @@ namespace Concrete\Core\Url;
 
 use RuntimeException;
 
+/**
+ * @since 5.7.4
+ */
 class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 {
 

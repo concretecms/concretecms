@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
+/**
+ * @since 8.0.0
+ */
 class Attributes extends DashboardAttributesPageController
 {
     /**

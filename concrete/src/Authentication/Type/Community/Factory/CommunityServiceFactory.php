@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * Class CommunityServiceFactory
  * A simple factory class for creating community authentication services
+ * @since 8.0.0
  */
 class CommunityServiceFactory
 {

@@ -7,6 +7,9 @@ use Concrete\Core\Search\Field\ManagerFactory;
 use Doctrine\ORM\EntityManager;
 use URL;
 
+/**
+ * @since 8.0.0
+ */
 class AdvancedSearch extends AdvancedSearchController
 {
     protected $supportsSavedSearch = true;

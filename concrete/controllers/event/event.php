@@ -8,6 +8,9 @@ use Concrete\Core\Calendar\Event\EventService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Calendar\Event\Event as CalendarEvent;
 
+/**
+ * @since 8.3.0
+ */
 class Event extends \Concrete\Core\Controller\Controller
 {
     public function getJSON()

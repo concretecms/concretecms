@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Search\Index\Driver;
 
+/**
+ * @since 8.1.0
+ */
 interface IndexingDriverInterface
 {
 

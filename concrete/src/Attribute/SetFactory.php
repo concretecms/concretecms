@@ -8,6 +8,7 @@ use Gettext\Translations;
 
 /**
  * Factory class for creating and retrieving instances of the Attribute type entity.
+ * @since 8.0.0
  */
 class SetFactory
 {

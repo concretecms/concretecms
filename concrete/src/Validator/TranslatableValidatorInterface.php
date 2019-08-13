@@ -4,6 +4,7 @@ namespace Concrete\Core\Validator;
 
 /**
  * A modifier to the standard validator interface that enables translatable requirements and errors.
+ * @since 5.7.5.3
  */
 interface TranslatableValidatorInterface extends ValidatorInterface
 {

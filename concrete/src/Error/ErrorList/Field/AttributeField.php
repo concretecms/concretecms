@@ -3,6 +3,9 @@ namespace Concrete\Core\Error\ErrorList\Field;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeField extends AbstractField
 {
 

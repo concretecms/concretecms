@@ -3,6 +3,9 @@ namespace Concrete\Core\Service\Configuration;
 
 use Exception;
 
+/**
+ * @since 8.0.0
+ */
 interface StorageInterface
 {
     /**

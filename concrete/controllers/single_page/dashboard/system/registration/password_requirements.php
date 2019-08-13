@@ -5,6 +5,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
+/**
+ * @since 8.5.0
+ */
 class PasswordRequirements extends DashboardPageController
 {
 

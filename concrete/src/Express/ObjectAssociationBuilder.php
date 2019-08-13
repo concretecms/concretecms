@@ -9,6 +9,9 @@ use Concrete\Core\Entity\Express\OneToManyAssociation;
 use Concrete\Core\Entity\Express\OneToOneAssociation;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class ObjectAssociationBuilder
 {
 

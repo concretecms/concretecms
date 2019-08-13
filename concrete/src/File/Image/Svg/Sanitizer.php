@@ -8,6 +8,9 @@ use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Throwable;
 
+/**
+ * @since 8.5.0
+ */
 class Sanitizer
 {
     /**

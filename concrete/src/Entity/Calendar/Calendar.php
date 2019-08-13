@@ -12,6 +12,7 @@ use Concrete\Core\Calendar\Calendar\PermissionsManager;
 /**
  * @ORM\Entity(repositoryClass="CalendarRepository")
  * @ORM\Table(name="Calendars")
+ * @since 8.3.0
  */
 class Calendar implements ObjectInterface, AssignableObjectInterface
 {

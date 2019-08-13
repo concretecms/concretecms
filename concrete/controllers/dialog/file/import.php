@@ -15,6 +15,9 @@ use Concrete\Core\Utility\Service\Identifier;
 use Exception;
 use Throwable;
 
+/**
+ * @since 8.5.0
+ */
 class Import extends UserInterface
 {
     /**

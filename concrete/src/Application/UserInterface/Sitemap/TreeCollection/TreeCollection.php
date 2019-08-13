@@ -5,6 +5,9 @@ namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface;
 
+/**
+ * @since 8.2.0
+ */
 abstract class TreeCollection implements TreeCollectionInterface
 {
     /**

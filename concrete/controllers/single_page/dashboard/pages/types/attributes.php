@@ -8,6 +8,9 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use PageType;
 use Loader;
 
+/**
+ * @since 5.7.3
+ */
 class Attributes extends DashboardPageController
 {
     protected $pagetype;

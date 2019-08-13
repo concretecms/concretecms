@@ -6,6 +6,7 @@ use ArrayAccess;
 
 /**
  * A generic validator cabable of describing itself and validating mixed values, with the possibility to specify the subject for whom a value is valid.
+ * @since 8.4.2
  */
 interface ValidatorForSubjectInterface extends ValidatorInterface
 {

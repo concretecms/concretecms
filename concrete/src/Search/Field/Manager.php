@@ -3,6 +3,9 @@ namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Attribute\SetManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Manager implements ManagerInterface
 {
     /**

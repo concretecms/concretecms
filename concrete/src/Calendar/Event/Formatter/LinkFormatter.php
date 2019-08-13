@@ -6,6 +6,9 @@ use HtmlObject\Link;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 
+/**
+ * @since 8.3.0
+ */
 class LinkFormatter implements LinkFormatterInterface
 {
     protected $config;

@@ -5,6 +5,9 @@ namespace Concrete\Core\Page\Sitemap\Event;
 use SimpleXMLElement;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
+/**
+ * @since 8.5.0
+ */
 class XmlReadyEvent extends GenericEvent
 {
     /**

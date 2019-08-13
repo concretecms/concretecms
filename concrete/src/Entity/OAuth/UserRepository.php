@@ -8,6 +8,9 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
+/**
+ * @since 8.5.0
+ */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
 

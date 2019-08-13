@@ -9,6 +9,9 @@ use Concrete\Core\Workflow\Type;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class WorkflowType extends AbstractCategory
 {
 

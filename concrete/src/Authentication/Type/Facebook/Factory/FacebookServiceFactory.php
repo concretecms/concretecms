@@ -13,6 +13,9 @@ use OAuth\OAuth2\Service\Facebook;
 use OAuth\ServiceFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @since 8.0.0
+ */
 class FacebookServiceFactory implements ApplicationAwareInterface
 {
 

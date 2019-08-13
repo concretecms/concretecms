@@ -16,6 +16,7 @@ use DateTime;
 
 /**
  * Class to be used to generate the elements to be included in a sitemap.xml file.
+ * @since 8.4.1
  */
 class SitemapGenerator
 {

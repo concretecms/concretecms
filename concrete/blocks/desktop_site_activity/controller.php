@@ -6,6 +6,9 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Workflow\Progress\Category;
 use Core;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends BlockController
 {
     public $helpers = array('form');

@@ -14,6 +14,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\User\Group\Group;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @since 5.7.4
+ */
 class Version20150504000000 extends AbstractMigration implements RepeatableMigrationInterface, LongRunningMigrationInterface
 {
     private $updateSectionPlurals = false;

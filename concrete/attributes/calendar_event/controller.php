@@ -9,6 +9,9 @@ use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Attribute\Context\BasicFormContext;
 
+/**
+ * @since 8.3.0
+ */
 class Controller extends \Concrete\Attribute\Number\Controller
 {
     protected $helpers = ['form'];

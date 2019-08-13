@@ -8,6 +8,9 @@ use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
+/**
+ * @since 8.2.0
+ */
 class SiteList extends DatabaseItemList
 {
 

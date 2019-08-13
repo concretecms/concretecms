@@ -7,6 +7,7 @@ use Concrete\Core\Utility\Service\Text;
  * Class RouteCollection. Holds specific special route/theme combinations. These are functions
  * that used to live in the Router class but it makes no sense for them to take up space there.
  * @package Concrete\Core\Page\Theme
+ * @since 8.5.0
  */
 class ThemeRouteCollection
 {

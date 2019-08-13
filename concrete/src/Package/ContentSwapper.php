@@ -9,6 +9,9 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Page\Type\Type;
 
+/**
+ * @since 8.0.0
+ */
 class ContentSwapper implements ContentSwapperInterface
 {
 

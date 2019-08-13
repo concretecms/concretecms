@@ -5,6 +5,9 @@ use Concrete\Core\Area\Layout\ColumnInterface;
 use HtmlObject\Element;
 use Sunra\PhpSimple\HtmlDomParser;
 
+/**
+ * @since 5.7.5
+ */
 class Column implements ColumnInterface
 {
     protected $column;

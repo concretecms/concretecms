@@ -4,6 +4,9 @@ namespace Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
+/**
+ * @since 8.3.0
+ */
 class DuplicateEventEvent extends GenericEvent
 {
     protected $newEvent;

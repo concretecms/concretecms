@@ -11,6 +11,9 @@ use Concrete\Core\Url\Components\Path;
 use Concrete\Core\Url\UrlInterface;
 use League\Url\Url;
 
+/**
+ * @since 5.7.4
+ */
 class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
 {
     use ApplicationAwareTrait;

@@ -8,6 +8,9 @@ use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Utility\Service\Identifier;
 use View;
 
+/**
+ * @since 8.3.0
+ */
 class SiteLocaleSelector
 {
     /**

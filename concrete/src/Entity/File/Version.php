@@ -60,6 +60,7 @@ use User;
  *         @ORM\Index(name="fvType", columns={"fvType"})
  *     }
  * )
+ * @since 8.0.0
  */
 class Version implements ObjectInterface
 {

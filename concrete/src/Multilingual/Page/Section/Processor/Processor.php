@@ -7,6 +7,9 @@ use Concrete\Core\Foundation\Queue\Queue;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 5.7.5
+ */
 class Processor extends ProcessorQueue
 {
     protected $section;

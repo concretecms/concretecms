@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
+/**
+ * @since 5.7.5.3
+ */
 interface ProcessorInterface
 {
     public function getTotalTasks();

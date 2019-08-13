@@ -8,6 +8,9 @@ use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
+/**
+ * @since 8.2.0
+ */
 class PageListPagerManager extends AbstractPagerManager
 {
 

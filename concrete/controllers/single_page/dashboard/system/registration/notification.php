@@ -8,6 +8,9 @@ use PermissionKey;
 use TaskPermission;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 
+/**
+ * @since 8.0.0
+ */
 class Notification extends DashboardPageController
 {
     public function save()

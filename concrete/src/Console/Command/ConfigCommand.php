@@ -10,6 +10,9 @@ use Concrete\Core\Console\Command;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 5.7.5
+ */
 class ConfigCommand extends Command
 {
 

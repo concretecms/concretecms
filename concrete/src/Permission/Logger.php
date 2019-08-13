@@ -6,6 +6,9 @@ use Concrete\Core\Logging\Configuration\SimpleConfiguration;
 use Concrete\Core\Logging\Entry\Permission\Assignment\Assignment;
 use Concrete\Core\Logging\LoggerFactory;
 use Monolog\Logger as Monolog;
+/**
+ * @since 8.5.0
+ */
 class Logger
 {
     /**

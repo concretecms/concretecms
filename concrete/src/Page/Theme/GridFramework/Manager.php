@@ -7,6 +7,9 @@ use Concrete\Core\Page\Theme\GridFramework\Type\NineSixty;
 use Concrete\Core\Page\Theme\GridFramework\Type\Foundation;
 use Concrete\Core\Support\Manager as CoreManager;
 
+/**
+ * @since 5.7.2.1
+ */
 class Manager extends CoreManager
 {
     protected function createNineSixtyDriver()

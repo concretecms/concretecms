@@ -9,6 +9,9 @@ use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Authentication\AuthenticationType;
 use Exception;
 
+/**
+ * @since 8.5.0
+ */
 class Version20181212221911 extends AbstractMigration implements RepeatableMigrationInterface
 {
 

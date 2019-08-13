@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.0
+ */
 class ValidateAttributesRoutine implements RoutineInterface
 {
 

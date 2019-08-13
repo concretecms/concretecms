@@ -15,6 +15,9 @@ use Illuminate\Filesystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * @since 8.2.0
+ */
 class CacheClearer
 {
 

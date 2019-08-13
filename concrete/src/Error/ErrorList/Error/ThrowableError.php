@@ -5,6 +5,9 @@ namespace Concrete\Core\Error\ErrorList\Error;
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 use Throwable;
 
+/**
+ * @since 8.4.4
+ */
 class ThrowableError extends AbstractError
 {
     /**

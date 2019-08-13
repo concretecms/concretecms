@@ -8,6 +8,9 @@ use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Tree\Node\Node;
 use URL;
 
+/**
+ * @since 8.2.0
+ */
 class JumpToFolder extends \Concrete\Controller\Backend\UserInterface
 {
     protected $viewPath = '/dialogs/file/jump_to_folder';

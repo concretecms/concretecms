@@ -9,6 +9,9 @@ use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
 use Concrete\Core\Express\ObjectBuilder\AssociationBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.1.0
+ */
 class EntryBuilder
 {
 

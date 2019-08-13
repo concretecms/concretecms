@@ -3,6 +3,9 @@ namespace Concrete\Controller\Element\Dashboard\Express\Entries;
 
 use Concrete\Core\Controller\ElementController;
 
+/**
+ * @since 8.0.0
+ */
 class Header extends ElementController
 {
     protected $entity;

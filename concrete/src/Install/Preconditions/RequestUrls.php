@@ -6,6 +6,9 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 
+/**
+ * @since 8.3.0
+ */
 class RequestUrls implements WebPreconditionInterface
 {
     /**

@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 /**
  * Interface that any attribute key must implement.
+ * @since 8.0.0
  */
 interface AttributeKeyInterface
 {

@@ -6,6 +6,7 @@ use RuntimeException;
 
 /**
  * Exception thrown when a mutex key is not valid.
+ * @since 8.4.0
  */
 class InvalidMutexKeyException extends RuntimeException
 {

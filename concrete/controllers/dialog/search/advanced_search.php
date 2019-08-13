@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 use Exception;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AdvancedSearch extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/search/advanced_search';

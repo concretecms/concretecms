@@ -12,6 +12,9 @@ use Concrete\Core\Calendar\Event\EditResponse;
 use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Utility\Preferences;
 
+/**
+ * @since 8.3.0
+ */
 class Delete extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/delete';

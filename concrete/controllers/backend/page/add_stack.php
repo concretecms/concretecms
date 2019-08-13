@@ -10,6 +10,9 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Checker;
 
+/**
+ * @since 8.5.2
+ */
 class AddStack extends Page
 {
     public function addStack()

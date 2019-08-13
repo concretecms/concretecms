@@ -4,6 +4,9 @@ namespace Concrete\Core\Calendar\Event\Workflow\Progress;
 use Concrete\Core\Calendar\Event\EventList;
 use Concrete\Core\Workflow\Progress\CalendarEventProgress;
 
+/**
+ * @since 8.3.0
+ */
 class ProgressList extends EventList
 {
     public function createQuery()

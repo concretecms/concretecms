@@ -8,6 +8,7 @@ use JsonSerializable;
 
 /**
  * Represents an error that can be safely shown to users.
+ * @since 8.2.0
  */
 class UserMessageException extends Exception implements JsonSerializable, HtmlAwareErrorInterface
 {

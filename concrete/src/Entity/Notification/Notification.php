@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="Notifications"
  * )
+ * @since 8.0.0
  */
 abstract class Notification
 {

@@ -6,6 +6,9 @@ use Concrete\Core\Search\ItemList\Pager\Manager\PagerManagerInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\PermissionableListItemInterface;
 
+/**
+ * @since 8.2.0
+ */
 interface PagerProviderInterface extends PermissionableListItemInterface
 {
 

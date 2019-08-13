@@ -9,6 +9,9 @@ use Concrete\Core\Site\Resolver\StandardDriver;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Site\Type\Service as SiteTypeService;
 
+/**
+ * @since 8.0.0
+ */
 class ServiceProvider extends BaseServiceProvider
 {
     public function register()

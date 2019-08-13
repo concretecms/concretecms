@@ -3,6 +3,9 @@ namespace Concrete\Core\Search\Pagination\View;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
+/**
+ * @since 5.7.4
+ */
 class ManagerServiceProvider extends ServiceProvider
 {
     public function register()

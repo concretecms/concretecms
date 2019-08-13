@@ -12,6 +12,9 @@ use IPLib\Range\Type as IPRangeType;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Throwable;
 
+/**
+ * @since 8.3.0
+ */
 abstract class GeolocatorController extends Controller implements GeolocatorControllerInterface
 {
     /**

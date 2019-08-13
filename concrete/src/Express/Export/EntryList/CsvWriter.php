@@ -10,6 +10,7 @@ use League\Csv\Writer;
 
 /**
  * A Writer class for Express Entry objects
+ * @since 8.2.0
  */
 class CsvWriter
 {

@@ -12,6 +12,9 @@ use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\FileManager;
 use Concrete\Core\User\Group\Group;
 
+/**
+ * @since 8.0.0
+ */
 class Filesystem
 {
     /**

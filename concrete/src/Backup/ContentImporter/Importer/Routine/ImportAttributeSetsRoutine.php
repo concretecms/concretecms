@@ -7,6 +7,9 @@ use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Support\Facade\Application;
 use SimpleXMLElement;
 
+/**
+ * @since 8.0.0
+ */
 class ImportAttributeSetsRoutine extends AbstractRoutine
 {
     /**

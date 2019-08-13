@@ -13,6 +13,7 @@ use Concrete\Core\Form\Context\Registry\ControlRegistry;
 /**
  * @ORM\Entity
  * @ORM\Table(name="ExpressFormFieldSetAttributeKeyControls")
+ * @since 8.0.0
  */
 class AttributeKeyControl extends Control
 {

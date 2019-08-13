@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\ObjectBuilder;
 
+/**
+ * @since 8.1.0
+ */
 class FormBuilder
 {
 

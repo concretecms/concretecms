@@ -8,6 +8,7 @@ namespace Concrete\Core\Package\Routine;
  * attach mode. Attach mode is used and a new concrete5 instance is attached to an already installed database.
  *
  * \@package Concrete\Core\Package
+ * @since 5.7.5.4
  */
 interface AttachModeCompatibleRoutineInterface
 {

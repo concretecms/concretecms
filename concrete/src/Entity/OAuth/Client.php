@@ -12,6 +12,7 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
  *     name="OAuth2Client",
  *     uniqueConstraints={@ORM\UniqueConstraint(name="client_idx", columns={"clientKey", "clientSecret"})}
  * )
+ * @since 8.5.0
  */
 class Client implements ClientEntityInterface
 {

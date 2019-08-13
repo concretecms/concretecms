@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="AttributeValues")
+ * @since 8.0.0
  */
 class Value
 {

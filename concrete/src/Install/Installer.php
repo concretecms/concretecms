@@ -13,6 +13,9 @@ use Concrete\Core\Package\StartingPointPackage;
 use Exception;
 use Throwable;
 
+/**
+ * @since 8.3.0
+ */
 class Installer
 {
     /**

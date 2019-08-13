@@ -4,6 +4,9 @@ namespace Concrete\Core\Cookie;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
+/**
+ * @since 5.7.3
+ */
 class CookieServiceProvider extends ServiceProvider
 {
     public function register()

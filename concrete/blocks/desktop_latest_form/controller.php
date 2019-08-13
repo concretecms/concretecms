@@ -4,6 +4,9 @@ namespace Concrete\Block\DesktopLatestForm;
 use Package;
 use Concrete\Core\Block\BlockController;
 
+    /**
+     * @since 8.0.0
+     */
     class Controller extends BlockController
     {
         protected $btCacheBlockRecord = true;

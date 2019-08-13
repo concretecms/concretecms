@@ -8,6 +8,9 @@ use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Utility\Preferences;
 
+/**
+ * @since 8.3.0
+ */
 class EventList extends DashboardCalendarPageController
 {
     public function view($caID = null, $year = null, $month = null)

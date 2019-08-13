@@ -5,6 +5,9 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
+/**
+ * @since 8.0.0
+ */
 class FileCategory extends AbstractStandardCategory
 {
     /**

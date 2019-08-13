@@ -12,6 +12,9 @@ use Core;
 use Page;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.3.0
+ */
 class Controller extends BlockController
 {
     public $helpers = ['form'];

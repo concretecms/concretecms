@@ -7,6 +7,9 @@ use Concrete\Core\Package\PackageService;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Updater\Update;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends BlockController
 {
     protected $btCacheBlockRecord = true;

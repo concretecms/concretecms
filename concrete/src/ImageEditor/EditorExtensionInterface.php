@@ -3,6 +3,9 @@ namespace Concrete\Core\ImageEditor;
 
 use Concrete\Core\View\AbstractView;
 
+/**
+ * @since 5.7.5
+ */
 interface EditorExtensionInterface
 {
     /**

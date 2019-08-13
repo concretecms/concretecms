@@ -6,6 +6,9 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\StickyRequest;
 
+/**
+ * @since 8.2.0
+ */
 class VariableFactory
 {
 

@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Core;
 use Doctrine\ORM\Tools\SchemaTool;
 
+/**
+ * @since 5.7.4
+ */
 class DatabaseStructureManager
 {
     /**

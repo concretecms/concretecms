@@ -4,6 +4,9 @@ namespace Concrete\Core\Localization\Translation;
 use Concrete\Core\Localization\Translation\Local\Stats as LocalStats;
 use Concrete\Core\Localization\Translation\Remote\Stats as RemoteStats;
 
+/**
+ * @since 8.2.0
+ */
 class LocalRemoteCouple
 {
     /**

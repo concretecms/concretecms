@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @property \Concrete\Core\Entity\Notification\UserDeactivatedNotification $notification
+ * @since 8.5.0
  */
 class UserDeactivatedListView extends StandardListView implements ApplicationAwareInterface
 {

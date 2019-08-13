@@ -8,6 +8,7 @@ use InvalidArgumentException;
 
 /**
  * Validate the length of a string.
+ * @since 5.7.5.3
  */
 class MinimumLengthValidator extends AbstractTranslatableValidator
 {

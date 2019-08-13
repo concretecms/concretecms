@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Cache;
 
+/**
+ * @since 5.7.4
+ */
 interface CacheInterface
 {
     /**

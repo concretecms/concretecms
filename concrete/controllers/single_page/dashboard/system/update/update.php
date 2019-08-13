@@ -9,6 +9,9 @@ use Config;
 use Exception;
 use Loader;
 
+/**
+ * @since 8.2.0
+ */
 class UpdateArchive extends Archive
 {
     public function __construct()
@@ -28,6 +31,9 @@ if (!ini_get('safe_mode')) {
     ini_set('max_execution_time', 0);
 }
 
+/**
+ * @since 8.2.0
+ */
 class Update extends DashboardPageController
 {
     public function check_for_updates()

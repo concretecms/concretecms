@@ -6,6 +6,9 @@ use Concrete\Core\Entity\OAuth\Client;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Id\UuidGenerator;
 
+/**
+ * @since 8.5.0
+ */
 class ClientFactory
 {
 

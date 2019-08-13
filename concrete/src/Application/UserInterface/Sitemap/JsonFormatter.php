@@ -5,6 +5,9 @@ namespace Concrete\Core\Application\UserInterface\Sitemap;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionJsonFormatter;
 use JsonSerializable;
 
+/**
+ * @since 8.2.0
+ */
 final class JsonFormatter implements JsonSerializable
 {
     /**

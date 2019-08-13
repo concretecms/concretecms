@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Application\UserInterface\Sitemap;
 
+/**
+ * @since 8.2.0
+ */
 class FlatSitemapProvider extends StandardSitemapProvider
 {
     /**

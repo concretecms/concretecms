@@ -3,6 +3,9 @@ namespace Concrete\Controller\Element\Attribute;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 
+/**
+ * @since 8.0.0
+ */
 class EditKey extends Form
 {
     protected $key;

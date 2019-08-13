@@ -3,6 +3,9 @@ namespace Concrete\Core\Service\Manager;
 
 use Concrete\Core\Application\Application;
 
+/**
+ * @since 8.0.0
+ */
 class ServiceManagerServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
     public function register()

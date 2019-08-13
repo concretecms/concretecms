@@ -5,6 +5,9 @@ namespace Concrete\Core\Express\Entry\Formatter;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Formatter\FormatterInterface;
 
+/**
+ * @since 8.2.1
+ */
 class LabelFormatter implements EntryFormatterInterface
 {
 

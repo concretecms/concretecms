@@ -4,6 +4,9 @@ namespace Concrete\Core\Attribute\Form;
 use Concrete\Core\Attribute\Form\Control\View\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
+/**
+ * @since 8.2.0
+ */
 class RendererBuilder
 {
 

@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
+/**
+ * @since 8.0.3
+ */
 class Listener
 {
     public function preRemove(Entry $entry, LifecycleEventArgs $event)

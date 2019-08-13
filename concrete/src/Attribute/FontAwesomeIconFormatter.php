@@ -3,6 +3,9 @@ namespace Concrete\Core\Attribute;
 
 use HtmlObject\Element;
 
+/**
+ * @since 8.0.0
+ */
 class FontAwesomeIconFormatter implements IconFormatterInterface
 {
     protected $icon;

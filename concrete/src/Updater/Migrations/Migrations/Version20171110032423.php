@@ -22,6 +22,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
+/**
+ * @since 8.3.0
+ */
 class Version20171110032423 extends AbstractMigration implements RepeatableMigrationInterface, LongRunningMigrationInterface
 {
     /**

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Support\Facade;
 
+/**
+ * @since 8.0.0
+ */
 class UserInfo extends Facade
 {
     public static function getFacadeAccessor()

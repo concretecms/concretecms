@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="FormSubmissionNotifications"
  * )
+ * @since 8.2.0
  */
 class NewFormSubmissionNotification extends Notification
 {

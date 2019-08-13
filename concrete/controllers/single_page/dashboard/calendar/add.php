@@ -10,6 +10,9 @@ use Concrete\Core\Calendar\Calendar;
 use Core;
 use Concrete\Core\Calendar\Utility\Preferences;
 
+/**
+ * @since 8.3.0
+ */
 class Add extends DashboardCalendarPageController
 {
     public function view($caID = null)

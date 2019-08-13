@@ -3,6 +3,9 @@ namespace Concrete\Core\Backup\ContentImporter\Importer;
 
 use Concrete\Core\Backup\ContentImporter\Importer\Routine\RoutineInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Manager
 {
     protected $routines = array();

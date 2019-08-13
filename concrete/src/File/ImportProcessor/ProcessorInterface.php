@@ -6,6 +6,7 @@ use Concrete\Core\Entity\File\Version;
 
 /**
  * The interface that file processors should implement.
+ * @since 5.7.5.2
  */
 interface ProcessorInterface
 {

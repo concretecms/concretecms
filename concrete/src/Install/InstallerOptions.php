@@ -9,6 +9,9 @@ use DateTimeZone;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.3.0
+ */
 class InstallerOptions
 {
     /**

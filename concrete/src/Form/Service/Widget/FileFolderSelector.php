@@ -6,6 +6,9 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Utility\Service\Identifier;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.2.0
+ */
 class FileFolderSelector
 {
 

@@ -12,6 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use ZendQueue\Message;
 use ZendQueue\Queue;
 
+/**
+ * @since 8.4.0
+ */
 class FillThumbnailsTable extends QueueableJob
 {
     /**

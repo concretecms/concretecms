@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Package;
 
+/**
+ * @since 8.0.1
+ */
 interface ContentSwapperInterface
 {
 

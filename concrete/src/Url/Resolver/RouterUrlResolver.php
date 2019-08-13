@@ -5,6 +5,9 @@ namespace Concrete\Core\Url\Resolver;
 use Concrete\Core\Routing\RouterInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * @since 5.7.5.4
+ */
 class RouterUrlResolver implements UrlResolverInterface
 {
     /**

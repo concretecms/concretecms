@@ -5,6 +5,9 @@ namespace Concrete\Core\Package;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @since 5.7.1
+ */
 class BrokenPackage extends Package
 {
     public function __construct($pkgHandle, Application $application)

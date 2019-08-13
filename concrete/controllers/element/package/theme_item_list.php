@@ -5,6 +5,9 @@ use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Package\ItemCategory\ItemInterface;
 
+/**
+ * @since 8.0.0
+ */
 class ThemeItemList extends ItemList
 {
 

@@ -6,6 +6,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractPageStructureRoutine extends AbstractRoutine
 {
 

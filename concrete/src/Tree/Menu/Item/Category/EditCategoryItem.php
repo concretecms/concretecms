@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Tree\Menu\Item\Category;
 
+/**
+ * @since 8.0.0
+ */
 class EditCategoryItem extends CategoryItem
 {
 

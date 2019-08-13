@@ -8,6 +8,9 @@ use Concrete\Core\Page\Sitemap\Element\SitemapHeader;
 use InvalidArgumentException;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
+/**
+ * @since 8.5.0
+ */
 class ElementReadyEvent extends GenericEvent
 {
     /**

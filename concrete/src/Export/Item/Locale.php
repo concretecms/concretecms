@@ -11,6 +11,9 @@ use Concrete\Core\Localization\Locale\LocaleInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.2.0
+ */
 class Locale implements ItemInterface
 {
 

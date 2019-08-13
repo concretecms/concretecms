@@ -5,6 +5,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 
+/**
+ * @since 8.0.0
+ */
 class ImportSocialLinksRoutine extends AbstractRoutine
 {
     public function getHandle()

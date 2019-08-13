@@ -12,6 +12,9 @@ use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerInterface;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.0.0
+ */
 class UsageTracker implements TrackerInterface
 {
 

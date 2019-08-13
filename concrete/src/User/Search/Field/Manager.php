@@ -12,6 +12,9 @@ use Concrete\Core\User\Search\Field\Field\IsActiveField;
 use Concrete\Core\User\Search\Field\Field\UserGroupField;
 use Concrete\Core\User\Search\Field\Field\IsValidatedField;
 
+/**
+ * @since 8.0.0
+ */
 class Manager extends FieldManager
 {
     protected $fileCategory;

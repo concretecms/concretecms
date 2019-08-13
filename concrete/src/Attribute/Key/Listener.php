@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Tree\Node\Node;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
+/**
+ * @since 8.0.0
+ */
 class Listener
 {
 

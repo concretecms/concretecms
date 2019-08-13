@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * A middleware delegate for running the next middleware
  * @package Concrete\Core\Http
+ * @since 8.0.0
  */
 final class MiddlewareDelegate implements DelegateInterface
 {

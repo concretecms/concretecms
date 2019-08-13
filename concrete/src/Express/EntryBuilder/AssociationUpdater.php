@@ -4,6 +4,9 @@ namespace Concrete\Core\Express\EntryBuilder;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Association\Applier;
 
+/**
+ * @since 8.1.0
+ */
 class AssociationUpdater
 {
 

@@ -3,6 +3,9 @@ namespace Concrete\Core\Service\Configuration;
 
 use Concrete\Core\Service\Rule\RuleInterface;
 
+/**
+ * @since 8.0.0
+ */
 interface ConfiguratorInterface
 {
     /**

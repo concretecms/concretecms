@@ -19,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * This service is NOT in charge of logging in users, it is meant to react to attempts
  *
  * @todo Replace this with a more general login service
+ * @since 8.5.0
  */
 class LoginAttemptService
 {

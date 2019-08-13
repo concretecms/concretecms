@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 
+/**
+ * @since 5.7.4
+ */
 class AuthorFormatter
 {
     protected $author;

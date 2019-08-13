@@ -12,6 +12,9 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportPermissionsRoutine extends AbstractRoutine
 {
     public function getHandle()

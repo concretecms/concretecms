@@ -6,6 +6,9 @@ use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
 use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Http\Middleware\ProjectorMiddleware;
 
+/**
+ * @since 8.5.0
+ */
 class SystemRouteList implements RouteListInterface
 {
 

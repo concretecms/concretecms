@@ -8,6 +8,9 @@ use Concrete\Core\Package\BrokenPackage;
 use Concrete\Core\Package\PackageService;
 use Exception;
 
+/**
+ * @since 8.2.0
+ */
 class Details extends BackendInterfacePageController
 {
     protected $viewPath = '/dialogs/language/update/details';

@@ -8,6 +8,9 @@ use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Attribute\Context\ContextInterface as AttributeContextInterface;
 use Concrete\Core\Form\Control\FormView as BaseFormView;
 
+/**
+ * @since 8.2.0
+ */
 class View extends BaseFormView
 {
 

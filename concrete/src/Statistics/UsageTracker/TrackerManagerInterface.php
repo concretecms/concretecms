@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Statistics\UsageTracker;
 
+/**
+ * @since 8.0.0
+ */
 interface TrackerManagerInterface extends TrackerInterface
 {
 

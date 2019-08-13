@@ -8,6 +8,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\Key\Key;
 
+/**
+ * @since 8.0.0
+ */
 class Folder implements ExportableInterface, AssignableObjectInterface
 {
 

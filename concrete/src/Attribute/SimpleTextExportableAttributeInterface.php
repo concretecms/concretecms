@@ -7,6 +7,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
  * Attribute controllers should implement this interface if they support importing/exporting to/from plain text.
  *
  * For complex data see MulticolumnTextExportableAttributeInterface
+ * @since 8.3.0
  */
 interface SimpleTextExportableAttributeInterface
 {

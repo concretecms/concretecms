@@ -6,6 +6,9 @@ use Concrete\Core\Workflow\Progress\Progress;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventService;
 
+/**
+ * @since 8.3.0
+ */
 abstract class CalendarEventRequest extends Request
 {
     protected $eventVersionID;

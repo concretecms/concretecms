@@ -6,6 +6,9 @@ use Closure;
 use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\SaverInterface;
 
+/**
+ * @since 5.7.0.3
+ */
 class Repository extends \Illuminate\Config\Repository
 {
     /**

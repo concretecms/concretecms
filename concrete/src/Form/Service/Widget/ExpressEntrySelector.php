@@ -7,6 +7,9 @@ use Core;
 use Page;
 use Permissions;
 
+/**
+ * @since 8.0.0
+ */
 class ExpressEntrySelector
 {
 

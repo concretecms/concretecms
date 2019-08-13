@@ -4,6 +4,9 @@ namespace Concrete\Attribute\Telephone;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends DefaultController
 {
     public $helpers = ['form'];

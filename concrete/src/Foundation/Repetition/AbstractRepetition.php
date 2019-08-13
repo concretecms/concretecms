@@ -8,6 +8,7 @@ use Concrete\Core\Localization\Service\Date;
  * This class is used to define and match against various time windows.
  *
  * \@package Concrete\Core\Foundation\Repetition
+ * @since 5.7.4
  */
 abstract class AbstractRepetition implements RepetitionInterface
 {

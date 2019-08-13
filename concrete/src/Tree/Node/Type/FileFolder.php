@@ -9,6 +9,9 @@ use Concrete\Core\User\User;
 use Gettext\Translations;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class FileFolder extends Category
 {
     public function getPermissionResponseClassName()

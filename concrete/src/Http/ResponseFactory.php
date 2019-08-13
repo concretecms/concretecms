@@ -25,6 +25,9 @@ use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @since 8.0.0
+ */
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
     use ApplicationAwareTrait;

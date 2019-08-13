@@ -16,6 +16,9 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\SeoCanonical;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends BlockController
 {
 

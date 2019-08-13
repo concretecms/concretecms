@@ -6,6 +6,7 @@ use ArrayAccess;
 
 /**
  * A generic validator cabable of describing itself and validating mixed values.
+ * @since 5.7.5.3
  */
 interface ValidatorInterface
 {

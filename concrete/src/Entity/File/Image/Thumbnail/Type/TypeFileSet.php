@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  * @ORM\Table(name="FileImageThumbnailTypeFileSets")
+ * @since 8.4.0
  */
 class TypeFileSet
 {

@@ -7,6 +7,9 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Service\File as FileService;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
+/**
+ * @since 8.4.0
+ */
 class SystemServiceProvider extends ServiceProvider
 {
     public function register()

@@ -4,6 +4,7 @@ namespace Concrete\Core\Asset;
 
 /**
  * Interface that all the assets must implement.
+ * @since 5.7.5
  */
 interface AssetInterface
 {

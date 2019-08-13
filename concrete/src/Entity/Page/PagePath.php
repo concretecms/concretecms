@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="cID", columns={"cID"})
  *     }
  * )
+ * @since 8.0.0
  */
 class PagePath
 {

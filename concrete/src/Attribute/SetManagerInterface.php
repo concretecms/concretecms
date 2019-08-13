@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 /**
  * Handles adding and removing keys from attribute sets.
+ * @since 8.0.0
  */
 interface SetManagerInterface
 {

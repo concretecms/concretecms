@@ -9,6 +9,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
  * Class PolyTracker
  * A tracker that employes `\Illuminate\Support\Manager` to keep track of a list of Trackers.
  * When `::track` is called, `PolyTracker` forwards the call to each of its drivers.
+ * @since 8.0.0
  */
 final class AggregateTracker implements TrackerManagerInterface, ApplicationAwareInterface
 {

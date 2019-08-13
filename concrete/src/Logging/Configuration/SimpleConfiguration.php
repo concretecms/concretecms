@@ -9,6 +9,9 @@ use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
 
+/**
+ * @since 8.5.0
+ */
 abstract class SimpleConfiguration implements ConfigurationInterface, ApplicationAwareInterface
 {
 

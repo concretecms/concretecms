@@ -13,6 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class Manager implements EntryManagerInterface
 {
     protected $entityManager;

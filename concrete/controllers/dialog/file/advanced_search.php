@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityManager;
 use FilePermissions;
 use URL;
 
+/**
+ * @since 8.0.0
+ */
 class AdvancedSearch extends AdvancedSearchController
 {
     protected function canAccess()

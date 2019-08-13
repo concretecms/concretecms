@@ -7,6 +7,9 @@ use Concrete\Core\Notification\Notifier\StandardNotifier;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 abstract class Type implements TypeInterface
 {
 

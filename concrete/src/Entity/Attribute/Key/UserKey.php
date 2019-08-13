@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\User\AttributeRepository")
  * @ORM\Table(name="UserAttributeKeys")
+ * @since 8.0.0
  */
 class UserKey extends Key
 {

@@ -3,6 +3,9 @@ namespace Concrete\Core\Express\Event;
 use Concrete\Core\Entity\Express\Entry;
 use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
+/**
+ * @since 8.0.0
+ */
 class Event extends AbstractEvent
 {
 

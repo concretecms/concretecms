@@ -7,6 +7,9 @@ use Concrete\Core\User\Group\GroupList;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class Group extends AbstractCategory
 {
 

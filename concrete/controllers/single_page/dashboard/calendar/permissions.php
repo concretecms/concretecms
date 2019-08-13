@@ -7,6 +7,9 @@ use Concrete\Core\Permission\Key\Key;
 use Loader;
 use Concrete\Core\Calendar\Calendar;
 
+/**
+ * @since 8.3.0
+ */
 class Permissions extends DashboardPageController
 {
     public function update_permissions_inheritance()

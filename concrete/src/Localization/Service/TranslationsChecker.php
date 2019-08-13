@@ -12,6 +12,9 @@ use Concrete\Core\Localization\Translation\Remote\Stats as RemoteStats;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageService;
 
+/**
+ * @since 8.2.0
+ */
 class TranslationsChecker
 {
     /**

@@ -9,6 +9,9 @@ use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 
+/**
+ * @since 8.0.0
+ */
 class SavedSearchMenu extends Menu
 {
 

@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 
 use HtmlObject\Image;
 
+/**
+ * @since 8.0.0
+ */
 class AnonymousAvatar implements AvatarInterface
 {
     protected $application;

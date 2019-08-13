@@ -5,6 +5,9 @@ namespace Concrete\Core\Statistics\UsageTracker;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider;
 
+/**
+ * @since 8.0.0
+ */
 class ServiceProvider extends Provider
 {
 

@@ -9,6 +9,9 @@ use Concrete\Core\Utility\Service\Identifier;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.3.1
+ */
 class Entry implements ItemInterface
 {
 

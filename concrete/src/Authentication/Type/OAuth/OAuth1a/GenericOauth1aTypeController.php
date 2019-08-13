@@ -6,6 +6,9 @@ use Concrete\Core\Routing\RedirectResponse;
 use OAuth\Common\Exception\Exception;
 use Concrete\Core\User\User;
 
+/**
+ * @since 5.7.1
+ */
 abstract class GenericOauth1aTypeController extends GenericOauthTypeController
 {
     public function handle_authentication_attempt()

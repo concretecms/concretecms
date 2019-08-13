@@ -8,6 +8,9 @@ use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Validation\CSRF\Token;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.0
+ */
 class CheckPermissionsRoutine implements RoutineInterface
 {
 

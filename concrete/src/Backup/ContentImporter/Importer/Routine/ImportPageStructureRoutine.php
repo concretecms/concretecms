@@ -8,6 +8,9 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\User\UserInfo;
 
+/**
+ * @since 8.0.0
+ */
 class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements SpecifiableHomePageRoutineInterface
 {
 

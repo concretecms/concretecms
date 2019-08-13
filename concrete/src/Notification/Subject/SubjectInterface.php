@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Notification\Subject;
 
+/**
+ * @since 8.0.0
+ */
 interface SubjectInterface
 {
 

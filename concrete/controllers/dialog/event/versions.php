@@ -8,6 +8,9 @@ use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventService;
 
+/**
+ * @since 8.3.0
+ */
 class Versions extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/versions';

@@ -6,6 +6,9 @@ use Concrete\Core\Gathering\DataSource\DataSource;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportGatheringDataSourcesRoutine extends AbstractRoutine
 {
     public function getHandle()

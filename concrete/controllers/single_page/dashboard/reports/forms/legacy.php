@@ -9,6 +9,9 @@ use Page;
 use Concrete\Block\Form\MiniSurvey;
 use Concrete\Block\Form\Statistics as FormBlockStatistics;
 
+/**
+ * @since 8.0.0
+ */
 class Legacy extends DashboardPageController
 {
     protected $pageSize = 10;

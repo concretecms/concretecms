@@ -2,6 +2,9 @@
 namespace Concrete\Core\Search\Pagination;
 
 
+/**
+ * @since 8.2.1
+ */
 interface PaginationProviderInterface
 {
 

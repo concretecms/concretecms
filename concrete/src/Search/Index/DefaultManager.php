@@ -11,6 +11,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
  * When searching, it returns the first result set found.
  *
  * @package Concrete\Core\Search\Index
+ * @since 8.1.0
  */
 class DefaultManager implements IndexManagerInterface, ApplicationAwareInterface
 {

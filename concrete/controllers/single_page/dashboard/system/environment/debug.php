@@ -77,6 +77,9 @@ class Debug extends DashboardPageController
     }
 }
 
+/**
+ * @since 5.7.0.3
+ */
 class ExampleException extends Exception
 {
 }

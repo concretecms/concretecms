@@ -9,6 +9,9 @@ use Concrete\Core\Filesystem\FileLocator\PackageLocation;
 use Concrete\Core\Filesystem\FileLocator\Record;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.2.0
+ */
 class FileLocator
 {
 

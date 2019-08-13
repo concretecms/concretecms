@@ -7,6 +7,9 @@ use Concrete\Core\Editor\Snippet;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportSystemContentEditorSnippetsRoutine extends AbstractRoutine
 {
     public function getHandle()

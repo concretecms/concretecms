@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeKeySaveHandler implements SaveHandlerInterface
 {
     public function saveFromRequest(Control $control, Entry $entry, Request $request)

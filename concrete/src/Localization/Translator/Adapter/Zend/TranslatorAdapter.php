@@ -9,6 +9,7 @@ use Zend\I18n\Translator\Translator;
  * translator methods needed in concrete5.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 class TranslatorAdapter implements TranslatorAdapterInterface
 {

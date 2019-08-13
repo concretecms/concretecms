@@ -4,6 +4,9 @@ namespace Concrete\Core\Area\Layout\Formatter;
 use Concrete\Core\Area\Layout\Layout;
 use HtmlObject\Element;
 
+/**
+ * @since 5.7.5
+ */
 class PresetFormatter implements FormatterInterface
 {
     protected $layout;

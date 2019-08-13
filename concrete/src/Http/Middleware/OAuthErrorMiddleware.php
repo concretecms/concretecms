@@ -8,6 +8,9 @@ use GuzzleHttp\Psr7\Response;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.5.0
+ */
 class OAuthErrorMiddleware implements MiddlewareInterface
 {
 

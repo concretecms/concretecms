@@ -13,6 +13,9 @@ use Concrete\Core\Validator\String\RegexValidator;
 use Concrete\Core\Validator\String\ReuseValidator;
 
 
+/**
+ * @since 5.7.5.3
+ */
 class PasswordValidatorServiceProvider extends Provider
 {
     /**

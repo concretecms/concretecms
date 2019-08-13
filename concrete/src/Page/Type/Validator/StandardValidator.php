@@ -9,6 +9,9 @@ use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty;
 use Concrete\Core\Page\Type\Type;
 use Core;
 
+/**
+ * @since 5.7.4
+ */
 class StandardValidator implements ValidatorInterface
 {
     public function setPageTypeObject(Type $type)

@@ -7,6 +7,9 @@ use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Utility\Service\Identifier;
 
+/**
+ * @since 8.3.1
+ */
 class EntryStore
 {
 

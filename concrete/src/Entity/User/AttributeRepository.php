@@ -3,6 +3,9 @@ namespace Concrete\Core\Entity\User;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeRepository extends EntityRepository
 {
     public function getRegistrationList()

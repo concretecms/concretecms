@@ -5,6 +5,7 @@ use ReflectionClass;
 
 /**
  * Helper class to generate PHPDoc.
+ * @since 8.2.0
  */
 class PhpDocGenerator
 {

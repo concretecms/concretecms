@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Foundation\Repetition;
 
+/**
+ * @since 8.3.0
+ */
 class Comparator
 {
 

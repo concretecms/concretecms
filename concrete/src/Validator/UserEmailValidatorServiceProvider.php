@@ -6,6 +6,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Validator\String\UniqueUserEmailValidator;
 
+/**
+ * @since 8.4.2
+ */
 class UserEmailValidatorServiceProvider extends Provider
 {
     /**

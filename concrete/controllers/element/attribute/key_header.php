@@ -4,6 +4,9 @@ namespace Concrete\Controller\Element\Attribute;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Controller\ElementController;
 
+/**
+ * @since 8.0.0
+ */
 class KeyHeader extends ElementController
 {
     protected $key;

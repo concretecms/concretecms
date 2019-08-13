@@ -5,6 +5,9 @@ namespace Concrete\Core\Api\OAuth\Server;
 use Concrete\Core\User\UserInfo;
 use League\OpenIdConnectClaims\ClaimsSet;
 
+/**
+ * @since 8.5.0
+ */
 class ClaimsSetFactory
 {
 

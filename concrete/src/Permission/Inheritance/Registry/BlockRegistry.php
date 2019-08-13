@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission\Inheritance\Registry;
 use Concrete\Core\Permission\Inheritance\Registry\Entry\Entry;
 use Concrete\Core\Permission\Registry\Entry\EntryInterface;
 
+/**
+ * @since 8.0.0
+ */
 class BlockRegistry extends AbstractRegistry
 {
 

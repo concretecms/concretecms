@@ -4,6 +4,9 @@ namespace Concrete\Core\Site\Resolver;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Site\Service;
 
+/**
+ * @since 8.0.0
+ */
 class ResolverFactory
 {
     protected $application;

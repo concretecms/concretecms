@@ -5,6 +5,9 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Attribute\Category;
 
+/**
+ * @since 8.0.0
+ */
 class SiteStandardListHeader extends StandardListHeader
 {
     public function getElement()

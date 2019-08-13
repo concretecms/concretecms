@@ -11,6 +11,9 @@ use Concrete\Core\Tree\Menu\Menu;
 use Concrete\Core\Tree\Node\Type\Group;
 use Concrete\Core\Tree\Node\Type\Topic;
 
+/**
+ * @since 8.0.0
+ */
 class GroupMenu extends Menu
 {
 

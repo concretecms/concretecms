@@ -5,6 +5,9 @@ namespace Concrete\Core\Url\Resolver;
 use Concrete\Core\Application\Application;
 use Concrete\Core\User\UserInfo;
 
+/**
+ * @since 8.3.0
+ */
 class UserInfoUrlResolver implements UrlResolverInterface
 {
     /**

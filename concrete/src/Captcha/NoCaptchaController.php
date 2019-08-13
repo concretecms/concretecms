@@ -7,6 +7,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 
 /**
  * Captcha controller used when there's no active captcha library.
+ * @since 8.3.0
  */
 class NoCaptchaController extends AbstractController implements CaptchaWithPictureInterface
 {

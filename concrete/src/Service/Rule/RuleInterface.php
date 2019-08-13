@@ -3,6 +3,7 @@ namespace Concrete\Core\Service\Rule;
 
 /**
  * Interface describing a single rule for the web server.
+ * @since 8.0.0
  */
 interface RuleInterface
 {

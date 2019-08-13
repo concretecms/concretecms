@@ -5,6 +5,9 @@ use Concrete\Core\Feature\Feature;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Permission\Category;
 
+/**
+ * @since 8.0.0
+ */
 class ImportPageFeedsRoutine extends AbstractRoutine
 {
     public function getHandle()

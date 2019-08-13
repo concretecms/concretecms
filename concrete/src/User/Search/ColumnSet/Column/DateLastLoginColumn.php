@@ -6,6 +6,9 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
+/**
+ * @since 8.3.0
+ */
 class DateLastLoginColumn extends Column implements PagerColumnInterface
 {
 

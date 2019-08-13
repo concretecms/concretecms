@@ -9,6 +9,9 @@ use Concrete\Controller\Element\Package\ThemeItemList;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class ContentEditorSnippet extends AbstractCategory
 {
 

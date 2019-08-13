@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Express\Formatter;
 
+/**
+ * @since 8.2.1
+ */
 interface FormatterInterface
 {
     /**

@@ -14,6 +14,9 @@ use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
 use League\OpenIdConnectClaims\ClaimsSet;
 
+/**
+ * @since 8.5.0
+ */
 class IdTokenResponse extends BearerTokenResponse
 {
 

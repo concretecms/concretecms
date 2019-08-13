@@ -15,6 +15,7 @@ use DateTime;
 
 /**
  * Class to be used to generate the list of the pages that should be included in a sitemap.xml file.
+ * @since 8.4.1
  */
 class PageListGenerator
 {

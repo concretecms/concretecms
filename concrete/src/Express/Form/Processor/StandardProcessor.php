@@ -8,6 +8,9 @@ use Concrete\Core\Application\Application;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.0
+ */
 class StandardProcessor implements ProcessorInterface
 {
 

@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Application\UserInterface\ContextMenu;
 
+/**
+ * @since 8.0.0
+ */
 class BulkMenu implements BulkMenuInterface
 {
 

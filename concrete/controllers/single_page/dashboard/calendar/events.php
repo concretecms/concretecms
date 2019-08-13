@@ -9,6 +9,9 @@ use Concrete\Core\Calendar\CalendarServiceProvider;
 use URL;
 use Concrete\Core\Calendar\Utility\Preferences;
 
+/**
+ * @since 8.3.0
+ */
 class Events extends DashboardCalendarPageController
 {
     public function view($caID = null, $year = null, $month = null)

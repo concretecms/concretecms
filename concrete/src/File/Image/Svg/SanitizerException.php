@@ -4,6 +4,9 @@ namespace Concrete\Core\File\Image\Svg;
 
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @since 8.5.0
+ */
 class SanitizerException extends UserMessageException
 {
     /**

@@ -6,6 +6,9 @@ use OAuth\Common\Http\Client\ClientInterface as OAuthClientInterface;
 use OAuth\Common\Http\Uri\UriInterface as OAuthUriInterface;
 use Zend\Http\Request;
 
+/**
+ * @since 8.2.0
+ */
 class HttpClient implements OAuthClientInterface
 {
     /**

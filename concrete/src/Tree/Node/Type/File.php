@@ -8,6 +8,9 @@ use Concrete\Core\Tree\Node\Type\Menu\FileMenu;
 use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
 use Loader;
 
+/**
+ * @since 8.0.0
+ */
 class File extends TreeNode
 {
     protected $fID = null;

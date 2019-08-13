@@ -12,6 +12,9 @@ use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\PreconditionResult;
 use Exception;
 
+/**
+ * @since 8.5.0
+ */
 class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
 {
     /**

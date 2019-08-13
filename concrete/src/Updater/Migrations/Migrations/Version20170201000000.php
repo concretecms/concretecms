@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
+/**
+ * @since 8.2.0
+ */
 class Version20170201000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

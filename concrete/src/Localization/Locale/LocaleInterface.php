@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Localization\Locale;
 
+/**
+ * @since 8.2.0
+ */
 interface LocaleInterface
 {
     /**

@@ -5,6 +5,9 @@ use Concrete\Core\Service\Configuration\ConfiguratorInterface;
 use Exception;
 use Concrete\Core\Service\Rule\RuleInterface;
 
+/**
+ * @since 8.0.0
+ */
 class NginxConfigurator implements ConfiguratorInterface
 {
     /**

@@ -7,6 +7,9 @@ use Concrete\Core\File\EditResponse;
 use Concrete\Core\Tree\Node\Node;
 use URL;
 
+/**
+ * @since 8.2.0
+ */
 class Folder extends BackendInterfaceFileController
 {
     protected $viewPath = '/dialogs/file/folder';

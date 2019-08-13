@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Package\Package;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractPackageProvider implements ProviderInterface
 {
 

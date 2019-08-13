@@ -12,6 +12,9 @@ use Concrete\Core\Http\Middleware\StackInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+/**
+ * @since 8.0.0
+ */
 class DefaultServer implements ServerInterface, ApplicationAwareInterface
 {
 

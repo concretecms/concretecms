@@ -12,6 +12,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
  *     @ORM\Index(name="uEmail", columns={"uEmail"})
  *     }
  * )
+ * @since 8.0.0
  */
 class User implements UserEntityInterface
 {

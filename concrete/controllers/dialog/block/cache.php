@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Page\EditResponse;
 
+/**
+ * @since 5.7.1
+ */
 class Cache extends BackendInterfaceBlockController
 {
     protected $viewPath = '/dialogs/block/cache';

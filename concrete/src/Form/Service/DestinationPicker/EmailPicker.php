@@ -17,6 +17,7 @@ use Concrete\Core\Validator\String\EmailValidator;
  * - checkDNS: should we check if the email address has a valid MX record associated to the domain?
  * - strict: should validation warnings be considered as errors?
  * - maxlength: the maximum length of the email address
+ * @since 8.5.2
  */
 class EmailPicker implements PickerInterface
 {

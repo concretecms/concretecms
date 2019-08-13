@@ -7,7 +7,7 @@ use PDO;
  * PDO implementation of the Connection interface.
  * Used by all PDO-based drivers.
  *
- * @since 2.0
+ * @since 5.7.0.3
  */
 class PDOConnection extends \Doctrine\DBAL\Driver\PDOConnection
 {

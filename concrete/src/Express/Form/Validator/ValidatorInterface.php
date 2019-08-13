@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Express\Form\Validator\Routine\RoutineInterface;
 
+/**
+ * @since 8.2.0
+ */
 interface ValidatorInterface
 {
 

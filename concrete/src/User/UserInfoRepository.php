@@ -4,6 +4,9 @@ namespace Concrete\Core\User;
 use Concrete\Core\Application\Application;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class UserInfoRepository
 {
     protected $entityManager;

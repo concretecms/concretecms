@@ -7,6 +7,9 @@ use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
+/**
+ * @since 8.3.0
+ */
 class Attributes extends DashboardAttributesPageController
 {
     public function view()

@@ -5,6 +5,9 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\SiteKey;
 
+/**
+ * @since 8.0.0
+ */
 class SiteCategory extends AbstractStandardCategory
 {
     /**

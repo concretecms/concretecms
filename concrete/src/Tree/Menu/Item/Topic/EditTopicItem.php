@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Tree\Menu\Item\Topic;
 
+/**
+ * @since 8.0.0
+ */
 class EditTopicItem extends TopicItem
 {
 

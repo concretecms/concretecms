@@ -8,6 +8,7 @@ use Concrete\Core\Database\EntityManager\Driver\DriverInterface;
  * the Concrete\Core\Package\Package class (extended by all package controllers) is the only object that implements
  * this interface.
  * Interface ProviderInterface
+ * @since 8.0.0
  */
 interface ProviderInterface
 {

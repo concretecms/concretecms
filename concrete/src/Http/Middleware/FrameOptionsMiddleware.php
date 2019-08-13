@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Middleware for applying frame options
  * @package Concrete\Core\Http\Middleware
+ * @since 8.0.0
  */
 class FrameOptionsMiddleware implements MiddlewareInterface
 {

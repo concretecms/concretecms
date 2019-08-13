@@ -7,6 +7,7 @@ use SplFileObject;
 
 /**
  * Get an instance of a CSV Writer.
+ * @since 8.5.0
  */
 class WriterFactory
 {

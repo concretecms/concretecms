@@ -10,6 +10,7 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Update scope descriptions and connect access tokens to refresh tokens
+ * @since 8.5.0
  */
 class Version20190111181236 extends AbstractMigration implements RepeatableMigrationInterface
 {

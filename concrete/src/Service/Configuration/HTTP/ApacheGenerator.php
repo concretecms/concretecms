@@ -7,6 +7,9 @@ use Concrete\Core\Service\Rule\RuleInterface;
 use Concrete\Core\Service\Rule\Option as RuleOption;
 use Exception;
 
+/**
+ * @since 8.0.0
+ */
 class ApacheGenerator extends Generator implements GeneratorInterface
 {
     /**

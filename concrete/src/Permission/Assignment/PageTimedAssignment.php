@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
+/**
+ * @since 5.7.5
+ */
 class PageTimedAssignment
 {
     protected $permissionKey;

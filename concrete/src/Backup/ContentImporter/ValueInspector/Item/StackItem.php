@@ -4,6 +4,9 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Stack\Stack;
 
+/**
+ * @since 8.2.0
+ */
 class StackItem extends AbstractItem
 {
     public function getDisplayName()

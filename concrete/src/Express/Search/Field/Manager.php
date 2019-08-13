@@ -10,6 +10,9 @@ use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
 
+/**
+ * @since 8.2.1
+ */
 class Manager extends FieldManager
 {
     /**

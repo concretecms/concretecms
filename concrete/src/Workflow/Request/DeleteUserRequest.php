@@ -9,6 +9,9 @@ use Concrete\Core\Workflow\Progress\UserProgress;
 use PermissionKey;
 use URL;
 
+/**
+ * @since 8.0.0
+ */
 class DeleteUserRequest extends UserRequest
 {
 

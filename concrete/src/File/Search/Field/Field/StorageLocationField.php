@@ -8,6 +8,9 @@ use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 
+/**
+ * @since 8.5.0
+ */
 class StorageLocationField extends AbstractField
 {
     /**

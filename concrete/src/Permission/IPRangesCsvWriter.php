@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission;
 use Concrete\Core\Localization\Service\Date;
 use League\Csv\Writer;
 
+/**
+ * @since 8.2.0
+ */
 class IPRangesCsvWriter
 {
     /**

@@ -6,6 +6,7 @@ use Concrete\Core\Package\Package;
 
 /**
  * Package dependency failure: a package doesn't want another package.
+ * @since 8.3.0
  */
 class IncompatiblePackagesException extends DependencyException
 {

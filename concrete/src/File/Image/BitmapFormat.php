@@ -7,6 +7,7 @@ use Concrete\Core\Utility\Service\Validation\Numbers;
 
 /**
  * Helper class for bitmap image formats.
+ * @since 8.4.0
  */
 class BitmapFormat
 {

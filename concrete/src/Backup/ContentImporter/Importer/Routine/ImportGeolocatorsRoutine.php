@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Geolocator\GeolocatorService;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @since 8.3.0
+ */
 class ImportGeolocatorsRoutine extends AbstractRoutine
 {
     public function getHandle()

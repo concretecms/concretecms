@@ -3,6 +3,9 @@ namespace Concrete\Core\System;
 
 use League\Fractal\TransformerAbstract;
 
+/**
+ * @since 8.5.0
+ */
 class InfoTransformer extends TransformerAbstract
 {
 

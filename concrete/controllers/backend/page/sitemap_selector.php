@@ -6,6 +6,9 @@ use Core;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Page;
 
+/**
+ * @since 5.7.5.2
+ */
 class SitemapSelector extends UserInterface
 {
     public function getViewObject()

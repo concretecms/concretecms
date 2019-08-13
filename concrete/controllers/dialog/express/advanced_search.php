@@ -15,6 +15,9 @@ use URL;
 use Permissions;
 use Exception;
 
+/**
+ * @since 8.2.1
+ */
 class AdvancedSearch extends AdvancedSearchController
 {
     /**

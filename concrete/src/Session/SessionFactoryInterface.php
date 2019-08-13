@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
  * An object that can create symfony sessions.
  *
  * \@package Concrete\Core\Session
+ * @since 5.7.5.4
  */
 interface SessionFactoryInterface
 {

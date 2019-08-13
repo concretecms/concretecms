@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.1.0
+ */
 class ExpressEntity extends AbstractCategory
 {
 

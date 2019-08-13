@@ -10,6 +10,9 @@ use Core;
 use Exception;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
+/**
+ * @since 5.7.5
+ */
 class ResetCommand extends Command
 {
     protected function configure()

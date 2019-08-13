@@ -7,6 +7,9 @@ use Loader;
 use Exception;
 use Concrete\Core\Workflow\Type as WorkflowType;
 
+/**
+ * @since 8.0.0
+ */
 class Workflows extends DashboardPageController
 {
     public $helpers = array('form');

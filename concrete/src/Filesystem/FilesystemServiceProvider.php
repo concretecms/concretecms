@@ -4,6 +4,9 @@ namespace Concrete\Core\Filesystem;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Filesystem\ElementManager;
 
+/**
+ * @since 8.2.0
+ */
 class FilesystemServiceProvider extends ServiceProvider
 {
 

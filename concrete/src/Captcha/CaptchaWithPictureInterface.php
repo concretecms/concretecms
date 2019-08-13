@@ -4,6 +4,7 @@ namespace Concrete\Core\Captcha;
 
 /**
  * Interface that captcha controllers .
+ * @since 8.3.0
  */
 interface CaptchaWithPictureInterface extends CaptchaInterface
 {

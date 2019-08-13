@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\FormInterface;
 use Concrete\Core\Form\Context\ContextInterface as BaseContextInterface;
 
+/**
+ * @since 8.0.0
+ */
 interface ContextInterface extends BaseContextInterface
 {
 

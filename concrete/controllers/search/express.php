@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 use Permissions;
 
+/**
+ * @since 8.2.1
+ */
 class Express extends Standard
 {
     protected function getAdvancedSearchDialogController()

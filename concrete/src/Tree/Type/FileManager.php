@@ -6,6 +6,9 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\Tree;
 use Database;
 
+/**
+ * @since 8.0.0
+ */
 class FileManager extends Tree
 {
     /**

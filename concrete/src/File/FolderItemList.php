@@ -17,6 +17,9 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
+/**
+ * @since 8.0.0
+ */
 class FolderItemList extends AttributedItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;

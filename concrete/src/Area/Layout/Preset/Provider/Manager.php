@@ -4,6 +4,9 @@ namespace Concrete\Core\Area\Layout\Preset\Provider;
 use Concrete\Core\Area\Layout\Preset\InvalidPresetException;
 use Concrete\Core\Area\Layout\Preset\PresetInterface;
 
+/**
+ * @since 5.7.5
+ */
 class Manager
 {
     protected $providers = array();

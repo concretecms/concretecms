@@ -4,6 +4,9 @@ namespace Concrete\Core\Express\Entry\Notifier\Notification;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 
+/**
+ * @since 8.2.0
+ */
 class EntrySubject implements SubjectInterface
 {
     public function __construct(Entry $entry)

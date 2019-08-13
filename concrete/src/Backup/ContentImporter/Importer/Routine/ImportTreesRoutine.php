@@ -4,6 +4,9 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Tree\Tree;
 
+/**
+ * @since 8.0.0
+ */
 class ImportTreesRoutine extends AbstractRoutine
 {
     public function getHandle()

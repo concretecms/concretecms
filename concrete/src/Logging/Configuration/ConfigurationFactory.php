@@ -4,6 +4,9 @@ namespace Concrete\Core\Logging\Configuration;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 
+/**
+ * @since 8.5.0
+ */
 class ConfigurationFactory
 {
 

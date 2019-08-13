@@ -4,6 +4,9 @@ namespace Concrete\Core\Notification\Notifier;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\SubscriptionInterface;
 
+/**
+ * @since 8.0.0
+ */
 interface NotifierInterface
 {
 

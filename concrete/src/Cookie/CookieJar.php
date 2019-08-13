@@ -9,6 +9,7 @@ use Concrete\Core\Http\Request;
  *
  * To work only on request cookies, use the Request class.
  * To work only on response cookies, use the ResponseCookieJar class.
+ * @since 5.7.3
  */
 class CookieJar
 {

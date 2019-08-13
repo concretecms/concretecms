@@ -6,6 +6,9 @@ use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 use ReflectionObject;
 
+/**
+ * @since 8.3.0
+ */
 class PhpCommentsPreserved implements PreconditionInterface
 {
     /**

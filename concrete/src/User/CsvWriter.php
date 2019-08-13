@@ -8,6 +8,7 @@ use League\Csv\Writer;
 
 /**
  * @deprecated Use \Concrete\Core\Csv\Export\UserExporter
+ * @since 8.2.0
  */
 class CsvWriter
 {

@@ -3,6 +3,9 @@ namespace Concrete\Core\Area\Layout;
 
 use HtmlObject\Element;
 
+/**
+ * @since 5.7.5
+ */
 class PresetColumn extends Column
 {
     /**

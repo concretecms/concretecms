@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="PrivateMessageNotifications"
  * )
+ * @since 8.0.0
  */
 class NewPrivateMessageNotification extends Notification
 {

@@ -11,6 +11,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @since 8.3.0
+ */
 class Version20170824000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     use AddPageDraftsBooleanTrait;

@@ -13,6 +13,7 @@ use Symfony\Component\Console\Terminal;
 /**
  * concrete5's output style.
  * Inspiration goes to illuminate/console
+ * @since 8.5.0
  */
 class OutputStyle extends SymfonyStyle
 {

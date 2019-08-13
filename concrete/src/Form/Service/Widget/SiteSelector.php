@@ -7,6 +7,9 @@ use Core;
 use Page;
 use Permissions;
 
+/**
+ * @since 8.2.0
+ */
 class SiteSelector
 {
     /**

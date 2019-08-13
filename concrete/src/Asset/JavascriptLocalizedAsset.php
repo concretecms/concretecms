@@ -6,6 +6,9 @@ use Concrete\Core\Support\Facade\Application;
 use Localization;
 use URL;
 
+/**
+ * @since 5.7.4
+ */
 class JavascriptLocalizedAsset extends JavascriptAsset
 {
     /**

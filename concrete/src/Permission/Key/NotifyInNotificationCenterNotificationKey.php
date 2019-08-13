@@ -6,6 +6,9 @@ use Loader;
 use User;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
+/**
+ * @since 8.0.0
+ */
 class NotifyInNotificationCenterNotificationKey extends NotificationKey
 {
     protected function getSelectedSubscriptions()

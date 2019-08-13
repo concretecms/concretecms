@@ -9,6 +9,9 @@ use Concrete\Core\Tree\Menu\Item\Topic\EditTopicItem;
 use Concrete\Core\Tree\Menu\Menu;
 use Concrete\Core\Tree\Node\Type\Topic;
 
+/**
+ * @since 8.0.0
+ */
 class TopicMenu extends Menu
 {
 

@@ -7,6 +7,9 @@ use Concrete\Core\File\Image\Svg\Sanitizer;
 use Concrete\Core\File\Image\Svg\SanitizerOptions;
 use Concrete\Core\File\Type\Type;
 
+/**
+ * @since 8.5.0
+ */
 class SvgSanitizerProcessor implements ProcessorInterface
 {
     /**

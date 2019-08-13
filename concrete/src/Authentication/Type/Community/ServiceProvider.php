@@ -5,6 +5,9 @@ use Concrete\Core\Authentication\Type\Community\Extractor\Community as Community
 use Concrete\Core\Authentication\Type\Community\Service\Community;
 use OAuth\UserData\ExtractorFactory;
 
+/**
+ * @since 5.7.1
+ */
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
     /**

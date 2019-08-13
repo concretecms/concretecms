@@ -10,6 +10,9 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 use Doctrine\ORM\Id\UuidGenerator;
 
+/**
+ * @since 8.0.0
+ */
 class ImportExpressEntitiesRoutine extends AbstractRoutine
 {
     public function getHandle()

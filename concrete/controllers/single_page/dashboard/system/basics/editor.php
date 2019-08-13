@@ -6,6 +6,9 @@ use Concrete\Core\Editor\Plugin;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Punic\Comparer;
 
+/**
+ * @since 5.7.2.1
+ */
 class Editor extends DashboardSitePageController
 {
     public function view()

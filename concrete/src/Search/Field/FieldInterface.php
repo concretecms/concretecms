@@ -3,6 +3,9 @@ namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Search\ItemList\ItemList;
 
+/**
+ * @since 8.0.0
+ */
 interface FieldInterface extends \JsonSerializable
 {
     /**

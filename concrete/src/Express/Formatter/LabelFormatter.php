@@ -4,6 +4,9 @@ namespace Concrete\Core\Express\Formatter;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * @since 8.2.1
+ */
 class LabelFormatter implements FormatterInterface
 {
 

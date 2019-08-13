@@ -9,6 +9,9 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.1.0
+ */
 class ObjectBuilder
 {
     protected $attributeTypeFactory;

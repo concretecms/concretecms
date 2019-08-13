@@ -4,6 +4,9 @@ namespace Concrete\Core\Page\Type\Saver;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 
+/**
+ * @since 8.0.0
+ */
 interface SaverInterface
 {
     public function saveForm(Page $page);

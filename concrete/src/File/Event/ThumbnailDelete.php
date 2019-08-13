@@ -4,6 +4,9 @@ namespace Concrete\Core\File\Event;
 
 use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
+/**
+ * @since 8.4.1
+ */
 class ThumbnailDelete extends AbstractEvent
 {
     /**

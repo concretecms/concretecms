@@ -4,6 +4,9 @@ namespace Concrete\Core\User\Workflow\Progress;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Workflow\Progress\UserProgress;
 
+/**
+ * @since 8.0.0
+ */
 class User
 {
 

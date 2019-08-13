@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Result\Result;
 
+/**
+ * @since 8.2.1
+ */
 class AssociationColumn extends Column
 {
     protected $association = false;

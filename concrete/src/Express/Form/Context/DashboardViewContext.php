@@ -3,6 +3,9 @@ namespace Concrete\Core\Express\Form\Context;
 
 use Concrete\Core\Filesystem\TemplateLocator;
 
+/**
+ * @since 8.2.0
+ */
 class DashboardViewContext extends ViewContext
 {
 

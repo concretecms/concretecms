@@ -14,6 +14,9 @@ use Concrete\Core\User\Event\UserInfoWithPassword;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\Phpass\PasswordHash;
 
+/**
+ * @since 5.7.5.4
+ */
 class RegistrationService implements RegistrationServiceInterface
 {
     /**

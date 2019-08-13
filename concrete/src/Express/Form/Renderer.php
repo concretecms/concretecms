@@ -5,6 +5,9 @@ namespace Concrete\Core\Express\Form;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 
+/**
+ * @since 8.2.0
+ */
 class Renderer
 {
     /**

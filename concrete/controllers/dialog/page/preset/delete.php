@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Page\Preset;
 use Concrete\Controller\Dialog\Search\Preset\Delete as PresetDelete;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.4.1
+ */
 class Delete extends PresetDelete
 {
     protected function canAccess()

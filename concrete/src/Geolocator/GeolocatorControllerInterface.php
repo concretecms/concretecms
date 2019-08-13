@@ -5,6 +5,9 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use IPLib\Address\AddressInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * @since 8.3.0
+ */
 interface GeolocatorControllerInterface
 {
     /**

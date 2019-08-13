@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
+/**
+ * @since 8.5.0
+ */
 class RefreshTokenRepository extends EntityRepository implements RefreshTokenRepositoryInterface
 {
 

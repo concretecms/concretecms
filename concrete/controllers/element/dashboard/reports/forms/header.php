@@ -4,6 +4,9 @@ namespace Concrete\Controller\Element\Dashboard\Reports\Forms;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Express\Entity;
 
+/**
+ * @since 8.0.0
+ */
 class Header extends ElementController
 {
     protected $nodeId;

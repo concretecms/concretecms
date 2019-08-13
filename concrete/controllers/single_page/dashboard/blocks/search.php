@@ -11,6 +11,9 @@ use Concrete\Controller\Search\Files as SearchFilesController;
 use View;
 use Loader;
 
+/**
+ * @since 8.0.0
+ */
 class Search extends DashboardPageController
 {
     public function view()

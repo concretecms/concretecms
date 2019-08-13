@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @since 8.0.0
  */
 class ManyToOneAssociation extends Association
 {

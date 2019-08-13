@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Block\Events;
 
+/**
+ * @since 8.4.0
+ */
 class BlockBeforeRender extends BlockEvent
 {
     /**

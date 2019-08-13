@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManager;
 use URL;
 use Permissions;
 
+/**
+ * @since 8.4.1
+ */
 class Edit extends PresetEdit
 {
     protected function getEntity()

@@ -23,6 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * @since 5.7.5
+ */
 class InstallCommand extends Command
 {
     /**

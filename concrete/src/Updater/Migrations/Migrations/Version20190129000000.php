@@ -7,6 +7,7 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Update scope descriptions and install missing scopes on upgrades.
+ * @since 8.5.0
  */
 class Version20190129000000 extends AbstractMigration implements RepeatableMigrationInterface
 {

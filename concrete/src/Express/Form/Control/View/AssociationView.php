@@ -8,6 +8,9 @@ use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\OwnedEntityForm;
 use Concrete\Core\Filesystem\TemplateLocator;
 
+/**
+ * @since 8.2.0
+ */
 class AssociationView extends View
 {
     protected $association;

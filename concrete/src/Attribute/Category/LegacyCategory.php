@@ -16,6 +16,9 @@ use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterface
 {
 

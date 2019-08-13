@@ -8,6 +8,9 @@ use Concrete\Core\Site\Type\Service;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class SiteType extends AbstractCategory
 {
 

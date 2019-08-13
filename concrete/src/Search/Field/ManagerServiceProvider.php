@@ -3,6 +3,9 @@ namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
+/**
+ * @since 8.0.0
+ */
 class ManagerServiceProvider extends ServiceProvider
 {
     public function register()

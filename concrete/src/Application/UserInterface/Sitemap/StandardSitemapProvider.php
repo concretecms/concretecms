@@ -13,6 +13,9 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Site\Tree\TreeInterface;
 
+/**
+ * @since 8.2.0
+ */
 class StandardSitemapProvider implements ProviderInterface
 {
     /**

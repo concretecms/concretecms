@@ -7,6 +7,7 @@ use Concrete\Core\Support\Facade\Application;
 /**
  * @ORM\Entity
  * @ORM\Table(name="atDateTime")
+ * @since 8.0.0
  */
 class DateTimeValue extends AbstractValue
 {

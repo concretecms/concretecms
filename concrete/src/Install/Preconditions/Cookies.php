@@ -5,6 +5,9 @@ namespace Concrete\Core\Install\Preconditions;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\WebPreconditionInterface;
 
+/**
+ * @since 8.3.0
+ */
 class Cookies implements WebPreconditionInterface
 {
     /**

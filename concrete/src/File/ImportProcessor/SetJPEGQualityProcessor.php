@@ -4,6 +4,9 @@ namespace Concrete\Core\File\ImportProcessor;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Image\BitmapFormat;
 
+/**
+ * @since 5.7.5.2
+ */
 class SetJPEGQualityProcessor implements ProcessorInterface
 {
     protected $quality;

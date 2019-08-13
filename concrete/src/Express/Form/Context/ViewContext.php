@@ -10,6 +10,9 @@ use Concrete\Core\Express\Form\Group\FormView;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Control\ControlInterface;
 
+/**
+ * @since 8.0.0
+ */
 class ViewContext implements ContextInterface
 {
 

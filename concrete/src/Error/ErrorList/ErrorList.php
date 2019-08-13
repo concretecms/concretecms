@@ -17,6 +17,9 @@ use JsonSerializable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Throwable;
 
+/**
+ * @since 8.0.0
+ */
 class ErrorList implements ArrayAccess, JsonSerializable
 {
     /**

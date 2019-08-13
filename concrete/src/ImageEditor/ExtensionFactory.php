@@ -10,6 +10,9 @@ namespace Concrete\Core\ImageEditor;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\View\View;
 
+/**
+ * @since 5.7.5
+ */
 class ExtensionFactory
 {
     /**

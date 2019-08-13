@@ -4,6 +4,9 @@ namespace Concrete\Core\System\Mutex;
 
 use RuntimeException;
 
+/**
+ * @since 8.4.0
+ */
 class MutexBusyException extends RuntimeException
 {
     /**

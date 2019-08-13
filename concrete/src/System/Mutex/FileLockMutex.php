@@ -5,6 +5,9 @@ namespace Concrete\Core\System\Mutex;
 use Concrete\Core\Application\Application;
 use Exception;
 
+/**
+ * @since 8.4.0
+ */
 class FileLockMutex implements MutexInterface
 {
     use MutexTrait;

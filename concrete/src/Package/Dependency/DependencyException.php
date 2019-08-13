@@ -7,6 +7,7 @@ use LogicException;
 
 /**
  * Package dependency failure.
+ * @since 8.3.0
  */
 abstract class DependencyException extends LogicException implements ErrorInterface
 {

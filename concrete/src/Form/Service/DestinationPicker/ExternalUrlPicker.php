@@ -14,6 +14,7 @@ use Concrete\Core\Form\Service\Form;
  *
  * Supported options for the decode method:
  * - maxlength: the maximum length of the email address
+ * @since 8.5.2
  */
 class ExternalUrlPicker implements PickerInterface
 {

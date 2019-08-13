@@ -3,6 +3,9 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector;
 
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\RoutineInterface;
 
+/**
+ * @since 5.7.5.3
+ */
 class ValueInspector implements ValueInspectorInterface
 {
     protected $routines = array();

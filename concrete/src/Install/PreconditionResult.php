@@ -4,6 +4,7 @@ namespace Concrete\Core\Install;
 
 /**
  * The result of a precondition check.
+ * @since 8.3.0
  */
 class PreconditionResult
 {

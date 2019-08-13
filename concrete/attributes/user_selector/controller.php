@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use UserInfo;
 use User;
 
+/**
+ * @since 8.5.0
+ */
 class Controller extends AttributeTypeController
 {
     public function getIconFormatter()

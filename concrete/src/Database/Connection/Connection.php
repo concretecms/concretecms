@@ -11,6 +11,9 @@ use Exception;
 use ORM;
 use PDO;
 
+/**
+ * @since 5.7.0.3
+ */
 class Connection extends \Doctrine\DBAL\Connection
 {
     /** @var EntityManager */

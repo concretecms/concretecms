@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Entity\Attribute\Value\Value;
 
+/**
+ * @since 8.0.0
+ */
 interface SearchIndexerInterface
 {
     /**

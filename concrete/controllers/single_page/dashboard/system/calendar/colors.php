@@ -7,6 +7,9 @@ use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\Topic;
 use Concrete\Core\Calendar\Utility\Preferences;
 
+/**
+ * @since 8.3.0
+ */
 class Colors extends DashboardPageController
 {
     public function save()

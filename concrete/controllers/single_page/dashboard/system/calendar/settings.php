@@ -4,6 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Calendar;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Attribute\Key\EventKey;
 
+/**
+ * @since 8.3.0
+ */
 class Settings extends DashboardPageController
 {
     public function save()

@@ -16,6 +16,9 @@ use Concrete\Core\User\Event\UserInfo as UserInfoEvent;
 use Concrete\Core\User\Event\UserInfoWithPassword;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @since 8.5.0
+ */
 class LogSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
 

@@ -7,6 +7,7 @@ use Concrete\Core\Page\Page;
 
 /**
  * @deprecated Don't use! Create your own PageListGenerator class instead
+ * @since 8.4.1
  */
 class DeprecatedPageListGenerator extends PageListGenerator
 {

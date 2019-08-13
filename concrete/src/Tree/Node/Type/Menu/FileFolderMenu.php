@@ -8,6 +8,9 @@ use Concrete\Core\Tree\Menu\Item\DeleteItem;
 use Concrete\Core\Tree\Menu\Item\EditPermissionsItem;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
+/**
+ * @since 8.0.0
+ */
 class FileFolderMenu extends Menu
 {
 

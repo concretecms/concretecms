@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\MappedSuperClass
+ * @since 8.0.0
  */
 abstract class Settings
 {

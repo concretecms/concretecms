@@ -13,6 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @since 8.4.0
+ */
 class FillThumbnailsTableCommand extends Command
 {
     protected function configure()

@@ -10,6 +10,7 @@ use Concrete\Core\Cache\Driver\RedisStashDriver as Redis;
 /**
  * Class RedisPageCache
  * @author Derek Cameron <info@derekcameron.com>
+ * @since 8.5.0
  */
 class RedisPageCache extends PageCache
 {

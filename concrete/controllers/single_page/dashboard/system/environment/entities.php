@@ -6,6 +6,9 @@ use Concrete\Core\Package\Event\PackageEntities;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 5.7.4
+ */
 class Entities extends DashboardPageController
 {
     public function view()

@@ -5,6 +5,9 @@ use DateTime;
 use IPLib\Factory as IPFactory;
 use IPLib\Range\RangeInterface;
 
+/**
+ * @since 8.2.0
+ */
 class IPRange
 {
     /**

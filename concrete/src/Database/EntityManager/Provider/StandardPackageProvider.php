@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
  * A simple, standard package provider; provide a Concrete\Core\Package\Package controller, and a path (or array of
  * paths) to PHP entity classes. This uses the annotation driver.
  * Class PackageProvider
+ * @since 8.0.0
  */
 class StandardPackageProvider extends AbstractPackageProvider
 {

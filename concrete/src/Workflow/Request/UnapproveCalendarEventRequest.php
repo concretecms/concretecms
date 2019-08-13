@@ -10,6 +10,9 @@ use Concrete\Core\Workflow\Progress\CalendarEventProgress;
 use HtmlObject\Element;
 use Concrete\Core\Calendar\Event\EventService;
 
+/**
+ * @since 8.3.0
+ */
 class UnapproveCalendarEventRequest extends CalendarEventRequest
 {
 

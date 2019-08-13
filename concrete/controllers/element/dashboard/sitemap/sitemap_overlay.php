@@ -6,6 +6,9 @@ use Concrete\Core\Error\UserMessageException;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @since 8.5.0
+ */
 class SitemapOverlay extends ElementController
 {
     /**

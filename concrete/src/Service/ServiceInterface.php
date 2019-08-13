@@ -5,6 +5,9 @@ use Concrete\Core\Service\Configuration\GeneratorInterface;
 use Concrete\Core\Service\Configuration\StorageInterface;
 use Concrete\Core\Service\Configuration\ConfiguratorInterface;
 
+/**
+ * @since 8.0.0
+ */
 interface ServiceInterface
 {
     /**

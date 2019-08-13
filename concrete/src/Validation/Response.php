@@ -4,6 +4,9 @@ namespace Concrete\Core\Validation;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 
+/**
+ * @since 8.0.0
+ */
 class Response implements ResponseInterface
 {
 

@@ -8,6 +8,7 @@ namespace Concrete\Core\Localization\Translator\Translation;
  * Stores the translation loaders in a local array.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 class TranslationLoaderRepository implements TranslationLoaderRepositoryInterface
 {

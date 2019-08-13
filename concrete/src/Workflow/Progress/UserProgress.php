@@ -5,6 +5,9 @@ use Concrete\Core\Workflow\Request\UserRequest;
 use Loader;
 use \Concrete\Core\Workflow\Workflow;
 
+/**
+ * @since 8.0.0
+ */
 class UserProgress extends Progress
 {
 

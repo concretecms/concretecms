@@ -4,6 +4,9 @@ namespace Concrete\Core\Authentication\Type\Google\Extractor;
 use OAuth\Common\Http\Uri\Uri;
 use OAuth\UserData\Extractor\LazyExtractor;
 
+/**
+ * @since 5.7.3
+ */
 class Google extends LazyExtractor
 {
     public function __construct()

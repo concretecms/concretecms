@@ -3,6 +3,9 @@ namespace Concrete\Core\Express\Form\Control\Type\Item;
 
 use Concrete\Core\Entity\Express\Association;
 
+/**
+ * @since 8.0.0
+ */
 class AssociationItem implements ItemInterface
 {
     protected $association;

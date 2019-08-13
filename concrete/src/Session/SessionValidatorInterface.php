@@ -3,6 +3,9 @@ namespace Concrete\Core\Session;
 
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
+/**
+ * @since 5.7.5.4
+ */
 interface SessionValidatorInterface
 {
     /**

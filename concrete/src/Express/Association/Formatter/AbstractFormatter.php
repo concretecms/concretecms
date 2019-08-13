@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractFormatter implements FormatterInterface
 {
     protected $association;

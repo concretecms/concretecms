@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
  *
  * Supported options for the decode method:
  * - none
+ * @since 8.5.2
  */
 class FilePicker implements PickerInterface
 {

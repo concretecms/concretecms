@@ -7,6 +7,9 @@ use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Express\Form\Control\SaveHandler\ManySaveHandlerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class Reorder extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/express/association/reorder';

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="atExpress")
+ * @since 8.0.0
  */
 class ExpressValue extends AbstractValue
 {

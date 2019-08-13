@@ -13,6 +13,7 @@ use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
  * @ORM\Table(
  *     name="OAuth2AuthCode"
  * )
+ * @since 8.5.0
  */
 class AuthCode implements AuthCodeEntityInterface
 {

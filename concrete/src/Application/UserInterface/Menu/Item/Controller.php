@@ -7,6 +7,9 @@ use Concrete\Core\Controller\AbstractController;
 use HtmlObject\Element;
 use HtmlObject\Link;
 
+/**
+ * @since 5.7.0.3
+ */
 class Controller extends AbstractController implements ControllerInterface
 {
     /** @var ItemInterface */

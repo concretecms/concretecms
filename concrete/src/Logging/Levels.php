@@ -3,6 +3,9 @@ namespace Concrete\Core\Logging;
 
 use Monolog\Logger as Monolog;
 
+/**
+ * @since 8.5.0
+ */
 class Levels
 {
 

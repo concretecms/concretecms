@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.2.0
+ */
 interface ProcessorInterface
 {
 

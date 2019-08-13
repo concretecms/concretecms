@@ -9,6 +9,9 @@ use Concrete\Core\File\StorageLocation\Type\Type;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.0.0
+ */
 class StorageLocationType extends AbstractCategory
 {
 

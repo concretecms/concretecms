@@ -8,6 +8,9 @@ use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\Redirect;
 use Page;
 
+/**
+ * @since 8.0.0
+ */
 class Desktop extends AccountPageController
 {
 

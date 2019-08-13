@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Page\Page;
 
+/**
+ * @since 8.4.1
+ */
 class Controller extends AttributeTypeController
 {
     public function getIconFormatter()

@@ -4,6 +4,9 @@ namespace Concrete\Core\Tree\Menu\Item\Category;
 
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
+/**
+ * @since 8.2.0
+ */
 class DeleteExpressEntryCategoryItem extends DeleteItem
 {
 

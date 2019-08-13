@@ -4,6 +4,9 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 
+/**
+ * @since 8.0.0
+ */
 class ImportPermissionAccessEntityTypesRoutine extends AbstractRoutine
 {
     public function getHandle()

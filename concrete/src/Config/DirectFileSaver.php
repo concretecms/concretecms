@@ -3,6 +3,9 @@ namespace Concrete\Core\Config;
 
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 5.7.5
+ */
 class DirectFileSaver extends FileSaver
 {
     /**

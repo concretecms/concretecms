@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Http;
 
+/**
+ * @since 8.5.0
+ */
 class RequestMediaTypeParser
 {
     /**

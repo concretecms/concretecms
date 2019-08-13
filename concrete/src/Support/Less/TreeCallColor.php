@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Support\Less;
 
+/**
+ * @since 8.0.0
+ */
 class TreeCallColor extends \Less_Tree_Call
 {
 

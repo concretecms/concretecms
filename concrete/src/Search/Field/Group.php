@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
+/**
+ * @since 8.0.0
+ */
 class Group implements GroupInterface
 {
     /**

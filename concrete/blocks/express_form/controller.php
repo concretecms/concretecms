@@ -40,6 +40,9 @@ use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends BlockController implements NotificationProviderInterface
 {
     protected $btInterfaceWidth = 640;

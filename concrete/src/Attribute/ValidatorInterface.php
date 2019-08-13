@@ -9,6 +9,9 @@ use Concrete\Core\Entity\Attribute\Value\Value;
 use Concrete\Core\Validation\ResponseInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 interface ValidatorInterface
 {
 

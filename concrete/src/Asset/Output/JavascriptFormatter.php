@@ -6,6 +6,9 @@ use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Asset\JavascriptAsset;
 use Concrete\Core\Asset\JavascriptInlineAsset;
 
+/**
+ * @since 8.0.0
+ */
 class JavascriptFormatter implements FormatterInterface
 {
 

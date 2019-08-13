@@ -10,6 +10,7 @@ use InvalidArgumentException;
 
 /**
  * Validate the length of a string.
+ * @since 8.4.2
  */
 class UniqueUserNameValidator extends AbstractTranslatableValidator implements ValidatorForSubjectInterface
 {

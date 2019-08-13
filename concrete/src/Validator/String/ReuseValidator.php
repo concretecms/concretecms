@@ -12,6 +12,9 @@ use Concrete\Core\Validator\ValidatorForSubjectInterface;
 use Concrete\Core\Validator\ValidatorForSubjectTrait;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class ReuseValidator extends AbstractTranslatableValidator implements ValidatorForSubjectInterface
 {
 

@@ -5,6 +5,9 @@ namespace Concrete\Core\Page\Sitemap\Element;
 use Concrete\Core\Error\UserMessageException;
 use SimpleXMLElement;
 
+/**
+ * @since 8.4.1
+ */
 class SitemapHeader extends SitemapElement
 {
     /**

@@ -13,6 +13,9 @@ use Concrete\Core\Permission\IPService;
 use Exception;
 use Psr\Log\LogLevel;
 
+/**
+ * @since 8.5.2
+ */
 class RecaptchaV3Controller extends AbstractController implements CaptchaInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;

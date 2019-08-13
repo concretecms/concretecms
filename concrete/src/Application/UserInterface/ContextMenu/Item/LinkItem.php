@@ -5,6 +5,9 @@ namespace Concrete\Core\Application\UserInterface\ContextMenu\Item;
 use HtmlObject\Element;
 use HtmlObject\Link;
 
+/**
+ * @since 8.0.0
+ */
 class LinkItem extends AbstractItem
 {
 

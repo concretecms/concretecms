@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\EntityManager;
 use Gettext\Translations;
 
+/**
+ * @since 8.0.0
+ */
 class Factory
 {
 

@@ -6,6 +6,9 @@ use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Control\View as AbstractView;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 
+/**
+ * @since 8.2.0
+ */
 class FormView extends AbstractView
 {
 

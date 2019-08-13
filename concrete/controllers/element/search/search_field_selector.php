@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\Field\ManagerInterface;
 use Concrete\Core\Search\ProviderInterface;
 
+/**
+ * @since 8.5.0
+ */
 class SearchFieldSelector extends ElementController
 {
 

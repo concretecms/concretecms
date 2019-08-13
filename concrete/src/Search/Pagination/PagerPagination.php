@@ -7,6 +7,9 @@ use Concrete\Core\Search\Pagination\View\ViewRenderer;
 use Concrete\Core\Support\Facade\Facade;
 use Pagerfanta\Pagerfanta;
 
+/**
+ * @since 8.2.0
+ */
 class PagerPagination extends Pagination
 {
     protected $list;

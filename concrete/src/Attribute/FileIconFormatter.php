@@ -8,6 +8,7 @@ use HtmlObject\Element;
  * in their folder.
  *
  * \@package Concrete\Core\Attribute
+ * @since 8.0.0
  */
 class FileIconFormatter implements IconFormatterInterface
 {

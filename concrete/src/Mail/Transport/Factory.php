@@ -7,6 +7,9 @@ use Zend\Mail\Transport\Sendmail as SendmailTransport;
 use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mail\Transport\SmtpOptions;
 
+/**
+ * @since 8.2.0
+ */
 class Factory
 {
     /**

@@ -6,6 +6,9 @@ use Concrete\Core\Page\Stack\Folder\FolderService;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Category;
 
+/**
+ * @since 8.0.0
+ */
 class ImportStacksStructureRoutine extends AbstractPageStructureRoutine implements SpecifiableHomePageRoutineInterface
 {
     public function getHandle()

@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Interface to flag an object as being aware of the symfony console components.
  *
  * Be aware that these objects are not guaranteed to be provided
+ * @since 8.3.0
  */
 interface ConsoleAwareInterface
 {

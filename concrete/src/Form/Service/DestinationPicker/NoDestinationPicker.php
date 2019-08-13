@@ -12,6 +12,7 @@ use ArrayAccess;
  *
  * Supported options for the decode method:
  * - none
+ * @since 8.5.2
  */
 class NoDestinationPicker implements PickerInterface
 {

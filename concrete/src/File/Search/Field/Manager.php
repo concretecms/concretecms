@@ -14,6 +14,9 @@ use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
 
+/**
+ * @since 8.0.0
+ */
 class Manager extends FieldManager
 {
 

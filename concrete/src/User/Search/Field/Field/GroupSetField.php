@@ -8,6 +8,9 @@ use Concrete\Core\User\Group\GroupSetList;
 use Concrete\Core\User\UserList;
 use Permissions;
 
+/**
+ * @since 8.0.0
+ */
 class GroupSetField extends AbstractField
 {
     protected $requestVariables = [

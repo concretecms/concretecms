@@ -5,6 +5,9 @@ namespace Concrete\Core\Database\CharacterSetCollation;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 
+/**
+ * @since 8.5.0
+ */
 class Resolver
 {
     /**

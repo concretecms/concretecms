@@ -4,6 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
 
+/**
+ * @since 8.4.0
+ */
 class ResetEditMode extends DashboardSitePageController
 {
 

@@ -3,6 +3,9 @@ namespace Concrete\Core\Asset;
 
 use HtmlObject\Element;
 
+/**
+ * @since 5.7.4
+ */
 class JavascriptConditionalAsset extends Asset
 {
     protected $conditional = null;

@@ -8,6 +8,7 @@ use Exception;
 
 /**
  * Service class for installation preconditions.
+ * @since 8.3.0
  */
 class PreconditionService
 {

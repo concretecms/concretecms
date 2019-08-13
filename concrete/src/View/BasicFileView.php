@@ -3,6 +3,7 @@ namespace Concrete\Core\View;
 
 /**
  * Includes a file with all of the functionality of views and controller. Simply takes a path to a file.
+ * @since 8.2.0
  */
 class BasicFileView extends AbstractView
 {

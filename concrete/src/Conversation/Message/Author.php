@@ -3,6 +3,9 @@ namespace Concrete\Core\Conversation\Message;
 
 use Concrete\Core\User\UserInfo;
 
+/**
+ * @since 5.7.4
+ */
 class Author
 {
     protected $user;

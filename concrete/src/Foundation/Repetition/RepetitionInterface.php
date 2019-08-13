@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Foundation\Repetition;
 
+/**
+ * @since 5.7.4
+ */
 interface RepetitionInterface extends \JsonSerializable
 {
     /**

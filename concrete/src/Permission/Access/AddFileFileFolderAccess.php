@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission\Access;
 use Concrete\Core\Permission\Key\FileFolderKey;
 use Database;
 
+/**
+ * @since 8.0.0
+ */
 class AddFileFileFolderAccess extends FileFolderAccess
 {
     public function getAccessListItems(

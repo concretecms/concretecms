@@ -4,6 +4,7 @@ namespace Concrete\Core\File\StorageLocation;
 /**
  * @Entity
  * @Table(name="FileStorageLocations")
+ * @since 8.0.0
  */
 interface StorageLocationInterface
 {

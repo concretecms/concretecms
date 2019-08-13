@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Logging\Entry\Group;
 
+/**
+ * @since 8.5.0
+ */
 class DeleteGroup extends Group
 {
 

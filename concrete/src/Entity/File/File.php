@@ -36,6 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
  *     }
  * )
+ * @since 8.0.0
  */
 class File implements \Concrete\Core\Permission\ObjectInterface
 {

@@ -4,6 +4,9 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\EventKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
+/**
+ * @since 8.3.0
+ */
 class EventCategory extends AbstractStandardCategory
 {
 

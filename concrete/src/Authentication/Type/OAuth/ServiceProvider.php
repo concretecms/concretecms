@@ -6,6 +6,9 @@ use Concrete\Core\Logging\Channels;
 use OAuth\ServiceFactory;
 use OAuth\UserData\ExtractorFactory;
 
+/**
+ * @since 5.7.1
+ */
 class ServiceProvider extends Provider
 {
     public function register()

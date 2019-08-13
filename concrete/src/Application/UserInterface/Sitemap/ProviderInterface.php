@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Site\Tree;
 
 /**
  * Interface that all the sitemap providers must implement.
+ * @since 8.2.0
  */
 interface ProviderInterface
 {

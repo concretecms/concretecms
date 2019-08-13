@@ -6,6 +6,9 @@ use Concrete\Core\Feature\Feature;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Category;
 
+/**
+ * @since 8.0.0
+ */
 class ImportSinglePageContentRoutine extends AbstractPageContentRoutine implements SpecifiableHomePageRoutineInterface
 {
     public function getHandle()

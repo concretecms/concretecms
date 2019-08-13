@@ -3,6 +3,9 @@ namespace Concrete\Core\Area\Layout\Preset\Provider;
 
 use Concrete\Core\Area\Layout\Preset\UserPreset;
 
+/**
+ * @since 5.7.5
+ */
 class UserProvider implements ProviderInterface
 {
     public function getPresets()

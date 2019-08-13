@@ -6,6 +6,9 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
+/**
+ * @since 8.1.0
+ */
 class Version20161216100000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

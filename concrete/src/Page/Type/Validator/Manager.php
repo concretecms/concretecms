@@ -3,6 +3,9 @@ namespace Concrete\Core\Page\Type\Validator;
 
 use Concrete\Core\Support\Manager as CoreManager;
 
+/**
+ * @since 5.7.4
+ */
 class Manager extends CoreManager
 {
 

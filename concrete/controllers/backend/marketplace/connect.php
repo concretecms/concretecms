@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface\MarketplaceItem;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Legacy\TaskPermission;
 
+/**
+ * @since 5.7.1
+ */
 class Connect extends MarketplaceItem
 {
     public function view()

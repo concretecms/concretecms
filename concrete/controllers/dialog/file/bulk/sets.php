@@ -7,6 +7,9 @@ use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Legacy\FilePermissions;
 
+/**
+ * @since 5.7.4
+ */
 class Sets extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/file/bulk/sets';

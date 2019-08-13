@@ -5,6 +5,9 @@ use Concrete\Core\Attribute\Category\EventCategory;
 use Concrete\Core\Config\Repository\Repository;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @since 8.3.0
+ */
 class Preferences
 {
 

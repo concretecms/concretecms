@@ -3,6 +3,9 @@ namespace Concrete\Controller\Dialog\Tree;
 
 use Concrete\Controller\Backend\UserInterface;
 
+/**
+ * @since 8.0.0
+ */
 abstract class Node extends UserInterface
 {
     protected function getNode()

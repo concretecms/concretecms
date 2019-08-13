@@ -5,6 +5,9 @@ use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 use Concrete\Core\Utility\IPAddress;
 use DateTime;
 
+/**
+ * @since 8.2.0
+ */
 class BanIPEvent extends AbstractEvent
 {
     /**

@@ -11,6 +11,7 @@ use Concrete\Core\Package\PackageService;
  * adapter.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 class PackagesTranslationLoader extends AbstractTranslationLoader
 {

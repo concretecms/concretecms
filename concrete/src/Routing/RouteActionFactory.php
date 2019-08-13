@@ -6,6 +6,9 @@ use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\Routing\RouteCollection;
 use Concrete\Core\Controller\Controller;
 
+/**
+ * @since 8.5.0
+ */
 class RouteActionFactory implements RouteActionFactoryInterface
 {
 

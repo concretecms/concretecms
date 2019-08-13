@@ -8,6 +8,9 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent as EventEntity;
 
+/**
+ * @since 8.3.0
+ */
 class EventOccurrenceList extends AttributedItemList
 {
     protected $ev;

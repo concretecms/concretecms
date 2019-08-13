@@ -14,6 +14,9 @@ use Concrete\Core\User\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Concrete\Core\User\Event\UserGroup as UserGroupEvent;
 
+/**
+ * @since 8.5.0
+ */
 class LogSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
 

@@ -8,6 +8,9 @@ use DateTime;
 use League\Url\UrlInterface;
 use SimpleXMLElement;
 
+/**
+ * @since 8.4.1
+ */
 class SitemapPage extends SitemapElement
 {
     /**

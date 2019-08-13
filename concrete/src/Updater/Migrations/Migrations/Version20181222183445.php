@@ -10,6 +10,9 @@ use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Entity\Validator\UsedString;
 
 
+/**
+ * @since 8.5.0
+ */
 class Version20181222183445 extends AbstractMigration implements RepeatableMigrationInterface
 {
 

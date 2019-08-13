@@ -9,6 +9,9 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryResults as ExpressEntryResultsNode;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Concrete\Core\Entity\Express\Entry;
 
+/**
+ * @since 8.0.0
+ */
 class Listener
 {
 

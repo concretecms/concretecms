@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 /**
  * Console command parser
  * This was taken directly from illuminate/console
+ * @since 8.5.0
  */
 class Parser
 {

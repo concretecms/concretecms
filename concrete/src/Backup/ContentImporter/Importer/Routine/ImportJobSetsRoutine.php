@@ -9,6 +9,9 @@ use Concrete\Core\Job\Set;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
+/**
+ * @since 8.0.0
+ */
 class ImportJobSetsRoutine extends AbstractRoutine
 {
     public function getHandle()

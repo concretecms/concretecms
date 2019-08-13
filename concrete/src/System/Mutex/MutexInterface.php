@@ -28,6 +28,7 @@ use Concrete\Core\Application\Application;
  *     // Another process is already using the 'my-mutex' key
  * }
  * </pre>
+ * @since 8.4.0
  */
 interface MutexInterface
 {

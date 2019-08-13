@@ -3,6 +3,9 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Page\Feed;
 
+/**
+ * @since 5.7.5.3
+ */
 class PageFeedItem extends AbstractItem
 {
     public function getDisplayName()

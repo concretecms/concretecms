@@ -9,6 +9,9 @@ use Concrete\Core\Tree\Menu\Item\EditPermissionsItem;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Menu\Menu;
 
+/**
+ * @since 8.2.0
+ */
 class ExpressEntryResultsFolderMenu extends Menu
 {
 

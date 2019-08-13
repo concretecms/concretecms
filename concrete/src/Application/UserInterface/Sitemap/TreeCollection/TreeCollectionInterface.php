@@ -4,6 +4,7 @@ namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 
 /**
  * Interface that all the sitemap tree collections (eg multilingual sections) must implement.
+ * @since 8.2.0
  */
 interface TreeCollectionInterface
 {

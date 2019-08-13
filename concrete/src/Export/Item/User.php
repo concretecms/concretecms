@@ -9,6 +9,9 @@ use Concrete\Core\User\UserInfo;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 8.2.0
+ */
 class User implements ItemInterface
 {
 

@@ -14,6 +14,9 @@ use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Punic\Comparer;
 
+/**
+ * @since 8.0.0
+ */
 class Service
 {
     /**

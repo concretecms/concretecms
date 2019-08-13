@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandle
  *
  * @author Dalibor Karlović <dalibor@flexolabs.io>
  * modified by Derek Cameron <derek@concrete5.co.jp> for concrete5 from symfony 4.1
+ * @since 8.5.0
  */
 class RedisSessionHandler extends NativeSessionHandler
 {

@@ -10,6 +10,9 @@ use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Tree\Node\Node;
 
+/**
+ * @since 8.2.0
+ */
 class FolderItemListPagerManager extends AbstractPagerManager
 {
 

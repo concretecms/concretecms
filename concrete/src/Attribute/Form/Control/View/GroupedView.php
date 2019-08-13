@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Attribute\Form\Control\View;
 
+/**
+ * @since 8.2.0
+ */
 class GroupedView extends View
 {
 

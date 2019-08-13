@@ -6,6 +6,9 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
+/**
+ * @since 8.2.1
+ */
 class SitemapDisplayOrderColumn extends Column implements PagerColumnInterface
 {
 

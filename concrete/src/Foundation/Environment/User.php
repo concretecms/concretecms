@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Foundation\Environment;
 
+/**
+ * @since 8.4.0
+ */
 class User
 {
     /**

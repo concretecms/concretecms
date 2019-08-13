@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\File\Image\Svg;
 
+/**
+ * @since 8.5.0
+ */
 class SanitizerOptions
 {
     /**

@@ -5,6 +5,9 @@ use Concrete\Core\Area\Layout\Preset\PresetInterface;
 use Loader;
 use Core;
 
+/**
+ * @since 5.7.5
+ */
 class PresetLayout extends Layout
 {
     /**

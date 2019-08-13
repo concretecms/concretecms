@@ -9,6 +9,7 @@ use InvalidArgumentException;
 
 /**
  * Validate the length of a string.
+ * @since 8.4.2
  */
 class EmailValidator extends AbstractTranslatableValidator
 {

@@ -6,6 +6,9 @@ use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Calendar\Calendar;
 
+/**
+ * @since 8.3.0
+ */
 class DashboardCalendarPageController extends DashboardSitePageController
 {
     public function getCalendars($caID)

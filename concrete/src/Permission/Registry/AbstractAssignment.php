@@ -3,6 +3,9 @@ namespace Concrete\Core\Permission\Registry;
 
 use Concrete\Core\Permission\Registry\Entry\Access\EntryInterface;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractAssignment implements AssignmentInterface
 {
 

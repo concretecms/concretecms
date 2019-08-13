@@ -18,6 +18,9 @@ use Throwable;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @since 8.3.0
+ */
 abstract class AbstractImporter
 {
     /**

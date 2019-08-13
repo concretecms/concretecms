@@ -28,6 +28,7 @@ use Throwable;
  * This middleware requires the following to be defined on the Application:
  * "database" DatabaseManager
  * "BasicThumbnailer::class" Basic thumbnailer
+ * @since 8.1.0
  */
 class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterface
 {

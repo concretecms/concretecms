@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Logging\Entry\User;
 
+/**
+ * @since 8.5.0
+ */
 class ChangeUserPassword extends User
 {
 

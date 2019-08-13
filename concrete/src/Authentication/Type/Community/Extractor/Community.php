@@ -4,6 +4,9 @@ namespace Concrete\Core\Authentication\Type\Community\Extractor;
 use OAuth\Common\Http\Uri\Uri;
 use OAuth\UserData\Extractor\LazyExtractor;
 
+/**
+ * @since 5.7.1
+ */
 class Community extends LazyExtractor
 {
     const USER_PATH = '/api/v1/-/user/';

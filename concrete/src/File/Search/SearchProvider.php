@@ -16,6 +16,9 @@ use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @since 8.0.0
+ */
 class SearchProvider extends AbstractSearchProvider implements QueryableInterface
 {
     /**

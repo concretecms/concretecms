@@ -7,6 +7,7 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Conversations Ratings Page Review Migration.
+ * @since 8.2.0
  */
 class Version20170227063249 extends AbstractMigration implements RepeatableMigrationInterface
 {

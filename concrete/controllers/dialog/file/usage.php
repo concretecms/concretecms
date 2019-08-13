@@ -6,6 +6,9 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Usage extends Controller
 {
 

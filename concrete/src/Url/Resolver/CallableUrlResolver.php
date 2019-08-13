@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Url\Resolver;
 
+/**
+ * @since 5.7.4
+ */
 class CallableUrlResolver implements UrlResolverInterface
 {
     protected $resolver;

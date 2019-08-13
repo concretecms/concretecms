@@ -9,6 +9,9 @@ use Concrete\Core\File\FileTransformer;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Checker;
 
+/**
+ * @since 8.5.2
+ */
 class FilesController extends ApiController
 {
 

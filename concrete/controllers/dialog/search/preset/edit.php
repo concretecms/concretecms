@@ -7,6 +7,9 @@ use Concrete\Core\Application\EditResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.4.1
+ */
 abstract class Edit extends UserInterface
 {
     protected $viewPath = '/dialogs/search/preset/edit';

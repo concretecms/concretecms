@@ -9,6 +9,9 @@ use Concrete\Core\User\Search\SearchProvider;
 use Concrete\Core\View\DialogView;
 use Concrete\Core\View\View;
 
+/**
+ * @since 8.0.0
+ */
 class CustomizeSearch extends DashboardPageController
 {
     protected $repository;

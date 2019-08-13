@@ -6,6 +6,9 @@ use Concrete\Core\Search\Result\ItemColumn as SearchResultItemColumn;
 use Concrete\Core\Search\Result\Result as SearchResult;
 use Concrete\Core\Search\Column\Set;
 
+/**
+ * @since 8.0.0
+ */
 class Item extends SearchResultItem
 {
     protected $entry;

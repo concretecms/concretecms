@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+/**
+ * @since 8.0.0
+ */
 class SelectValueUsedOption
 {
 

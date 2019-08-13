@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="UserAttributeValues"
  * )
+ * @since 8.0.0
  */
 class UserValue extends AbstractValue
 {

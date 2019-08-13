@@ -3,6 +3,9 @@ namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
 use Concrete\Core\Entity\Express\Entity;
 
+/**
+ * @since 8.0.0
+ */
 class ExpressSearchIndexer extends StandardSearchIndexer
 {
 

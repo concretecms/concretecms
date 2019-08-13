@@ -6,6 +6,9 @@ use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 
+/**
+ * @since 8.3.0
+ */
 class FileinfoExtension implements PreconditionInterface
 {
     /**

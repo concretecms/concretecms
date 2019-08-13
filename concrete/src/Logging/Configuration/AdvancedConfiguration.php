@@ -6,6 +6,9 @@ use Cascade\Cascade;
 use Concrete\Core\Logging\Channels;
 use Monolog\Processor\PsrLogMessageProcessor;
 
+/**
+ * @since 8.5.0
+ */
 class AdvancedConfiguration implements ConfigurationInterface
 {
     protected $config = [];

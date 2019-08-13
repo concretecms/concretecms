@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
+/**
+ * @since 5.7.5
+ */
 class Action implements ActionInterface
 {
     public function __construct(ProcessorInterface $processor, TargetInterface $target, TaskInterface $task, $subject = null)

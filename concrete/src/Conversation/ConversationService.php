@@ -12,6 +12,7 @@ use Concrete\Core\Database\DatabaseManager;
 /**
  * Class ConversationService
  * Currently manages tracking review aggregates
+ * @since 8.2.0
  */
 class ConversationService
 {

@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.0.0
+ */
 class AssociationControlSaveHandler extends ControlSaveHandler
 {
     public function saveFromRequest(Control $control, Request $request)

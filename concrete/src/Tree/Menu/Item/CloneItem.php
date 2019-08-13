@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Tree\Menu\Item;
 
+/**
+ * @since 8.0.0
+ */
 class CloneItem extends AbstractNodeItem
 {
 

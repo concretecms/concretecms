@@ -6,6 +6,7 @@ use Concrete\Core\Package\Package;
 
 /**
  * Package dependency failure: an installed package can't be uninstalled since it's required by another package.
+ * @since 8.3.0
  */
 class RequiredPackageException extends DependencyException
 {

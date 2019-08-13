@@ -3,6 +3,9 @@ namespace Concrete\Core\Express\Form\Control\Type\Item;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 
+/**
+ * @since 8.0.0
+ */
 class AttributeKeyItem implements ItemInterface
 {
     protected $key;

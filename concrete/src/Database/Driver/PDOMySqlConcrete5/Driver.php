@@ -8,7 +8,6 @@ use Concrete\Core\Database\Schema\MySqlSchemaManager;
 /**
  * PDO MySql driver.
  *
- * @since 2.0
  */
 class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 {

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Asset;
 
+/**
+ * @since 5.7.4
+ */
 class CssInlineAsset extends CssAsset
 {
     /**

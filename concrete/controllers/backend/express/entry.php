@@ -8,6 +8,9 @@ use Concrete\Core\Search\Pagination\PaginationFactory;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Entry extends AbstractController
 {
     protected $entityManager;

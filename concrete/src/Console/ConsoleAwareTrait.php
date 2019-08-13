@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * A trait that provides awareness of the console to objects
+ * @since 8.3.0
  */
 trait ConsoleAwareTrait
 {

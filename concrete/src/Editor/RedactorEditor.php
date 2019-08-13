@@ -8,6 +8,9 @@ use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Utility\Service\Identifier;
 use Core;
 
+/**
+ * @since 5.7.4
+ */
 class RedactorEditor implements EditorInterface
 {
     protected $assets;

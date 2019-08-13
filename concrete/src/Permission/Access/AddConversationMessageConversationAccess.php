@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission\Access;
 use Concrete\Core\Permission\Key\Key;
 use Database;
 
+/**
+ * @since 5.7.4
+ */
 class AddConversationMessageConversationAccess extends ConversationAccess
 {
     public function save($args = array())

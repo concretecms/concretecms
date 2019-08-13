@@ -7,6 +7,9 @@ use Concrete\Core\Legacy\FilePermissions;
 use Doctrine\ORM\EntityManager;
 use URL;
 
+/**
+ * @since 8.4.1
+ */
 class Edit extends PresetEdit
 {
     protected function canAccess()

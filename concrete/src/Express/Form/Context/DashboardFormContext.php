@@ -6,6 +6,9 @@ use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Form\Control\ControlInterface;
 use Concrete\Core\Attribute\Context\DashboardFormContext as AttributeDashboardFormContext;
 
+/**
+ * @since 8.2.0
+ */
 class DashboardFormContext extends FormContext
 {
 

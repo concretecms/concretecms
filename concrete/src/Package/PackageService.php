@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Service class for the package entities and controllers.
+ * @since 8.0.0
  */
 class PackageService
 {

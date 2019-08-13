@@ -10,6 +10,7 @@ use Concrete\Core\User\Event\DeactivateUser;
 /**
  * This method is less of a "service" and more of a controller
  * It deals with deactivated user events
+ * @since 8.5.0
  */
 class UserNotificationEventHandler
 {

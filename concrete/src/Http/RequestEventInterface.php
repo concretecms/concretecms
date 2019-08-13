@@ -3,6 +3,9 @@ namespace Concrete\Core\Http;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+/**
+ * @since 5.7.5
+ */
 interface RequestEventInterface
 {
     /**

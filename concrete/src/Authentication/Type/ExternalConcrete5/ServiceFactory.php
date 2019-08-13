@@ -13,6 +13,9 @@ use OAuth\Common\Storage\SymfonySession;
 use OAuth\ServiceFactory as OAuthServiceFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @since 8.5.0
+ */
 class ServiceFactory
 {
 

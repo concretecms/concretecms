@@ -6,6 +6,9 @@ use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 
+/**
+ * @since 5.7.5
+ */
 class UserPreset extends ConcreteObject
 {
     /**

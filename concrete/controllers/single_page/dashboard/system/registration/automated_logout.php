@@ -9,6 +9,9 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 
+/**
+ * @since 8.5.0
+ */
 class AutomatedLogout extends DashboardPageController
 {
 

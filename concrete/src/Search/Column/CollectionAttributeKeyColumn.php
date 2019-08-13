@@ -3,6 +3,9 @@ namespace Concrete\Core\Search\Column;
 
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
+/**
+ * @since 8.2.0
+ */
 class CollectionAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
 

@@ -12,6 +12,9 @@ use OAuth\Common\Storage\SymfonySession;
 use OAuth\ServiceFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @since 8.0.0
+ */
 class TwitterServiceFactory implements ApplicationAwareInterface
 {
 

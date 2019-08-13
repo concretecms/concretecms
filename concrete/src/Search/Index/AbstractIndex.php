@@ -7,6 +7,7 @@ use Concrete\Core\Search\Index\Driver\IndexingDriverInterface;
 /**
  * Pretty much all the Index anyone ever needs.
  * @package Concrete\Core\Search\Index
+ * @since 8.1.0
  */
 abstract class AbstractIndex implements IndexInterface
 {

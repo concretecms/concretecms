@@ -5,6 +5,9 @@ use Concrete\Core\Database\Schema\BuilderInterface;
 use Concrete\Core\Entity\Express\ManyToManyAssociation;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
+/**
+ * @since 8.0.0
+ */
 class ManyToManyAssociationBuilder implements BuilderInterface
 {
     protected $association;

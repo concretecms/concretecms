@@ -5,6 +5,9 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 
+/**
+ * @since 8.0.0
+ */
 interface SearchIndexerInterface
 {
 

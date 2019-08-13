@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Application\UserInterface\Menu\Item;
 
+/**
+ * @since 5.7.2.1
+ */
 interface ItemInterface
 {
     /**

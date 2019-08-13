@@ -7,6 +7,7 @@ use Psr\Log\LoggerAwareTrait as PsrLoggerAwareTrait;
 /**
  * Trait LoggerAwareTrait
  * A trait used with LoggerAwareInterface
+ * @since 8.5.0
  */
 trait LoggerAwareTrait
 {

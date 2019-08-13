@@ -13,6 +13,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\User\Group\Group;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @since 8.4.0
+ */
 class Version20180403143200 extends AbstractMigration implements RepeatableMigrationInterface
 {
 

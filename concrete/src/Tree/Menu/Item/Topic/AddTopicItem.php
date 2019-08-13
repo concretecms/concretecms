@@ -4,6 +4,9 @@ namespace Concrete\Core\Tree\Menu\Item\Topic;
 
 use Concrete\Core\Tree\Menu\Item\Category\CategoryItem;
 
+/**
+ * @since 8.0.0
+ */
 class AddTopicItem extends CategoryItem
 {
 

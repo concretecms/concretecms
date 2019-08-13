@@ -12,6 +12,9 @@ use Concrete\Core\Workflow\Progress\Progress;
 use Concrete\Core\Workflow\Progress\SiteProgressInterface;
 use HtmlObject\Element;
 
+/**
+ * @since 8.0.0
+ */
 class WorkflowProgressListView extends StandardListView
 {
 

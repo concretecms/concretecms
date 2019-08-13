@@ -3,6 +3,9 @@ namespace Concrete\Core\Html\Object;
 
 use HtmlObject\Element;
 
+/**
+ * @since 5.7.5
+ */
 class Collection implements \ArrayAccess, \Iterator
 {
     protected $elements = array();

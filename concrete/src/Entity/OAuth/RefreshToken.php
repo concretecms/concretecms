@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="OAuth2RefreshToken"
  * )
+ * @since 8.5.0
  */
 class RefreshToken implements RefreshTokenEntityInterface
 {

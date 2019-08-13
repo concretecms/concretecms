@@ -5,6 +5,9 @@ use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\File\Search\SearchProvider;
 
+/**
+ * @since 8.0.0
+ */
 class Header extends ElementController
 {
 

@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Logging\Configuration;
 
+/**
+ * @since 8.5.0
+ */
 interface ConfigurationInterface
 {
     /**

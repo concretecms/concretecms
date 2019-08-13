@@ -3,6 +3,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 
+/**
+ * @since 8.0.0
+ */
 class Associations extends DashboardPageController
 {
     protected $repository;

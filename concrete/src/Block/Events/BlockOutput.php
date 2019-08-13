@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Block\Events;
 
+/**
+ * @since 8.4.1
+ */
 class BlockOutput extends BlockEvent
 {
     /**

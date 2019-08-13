@@ -12,6 +12,9 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Zend\I18n\Translator\LoaderPluginManager;
 use Zend\ServiceManager\ServiceManager;
 
+/**
+ * @since 8.0.0
+ */
 class LocalizationEssentialServiceProvider extends ServiceProvider
 {
     /**

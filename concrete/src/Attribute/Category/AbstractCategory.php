@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Abstract class to be used by attribute category classes.
+ * @since 8.0.0
  */
 abstract class AbstractCategory implements CategoryInterface, StandardSearchIndexerInterface
 {

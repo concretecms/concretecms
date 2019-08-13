@@ -13,6 +13,9 @@ use PageType;
 use Permissions;
 use View;
 
+/**
+ * @since 8.3.0
+ */
 class UpdateFromType extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/type/update_from_type';

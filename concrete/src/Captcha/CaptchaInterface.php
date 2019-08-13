@@ -4,6 +4,7 @@ namespace Concrete\Core\Captcha;
 
 /**
  * Interface that all captcha controllers must implement.
+ * @since 8.3.0
  */
 interface CaptchaInterface
 {

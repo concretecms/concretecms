@@ -3,6 +3,9 @@ namespace Concrete\Core\Area\Layout\Preset\Provider;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
+/**
+ * @since 5.7.5
+ */
 class ManagerServiceProvider extends ServiceProvider
 {
     public function register()

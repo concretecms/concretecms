@@ -6,6 +6,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @since 5.7.4
+ */
 class Version20140930000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

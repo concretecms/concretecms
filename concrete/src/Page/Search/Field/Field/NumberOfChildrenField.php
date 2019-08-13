@@ -7,6 +7,9 @@ use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
 
+/**
+ * @since 8.0.0
+ */
 class NumberOfChildrenField extends AbstractField
 {
 

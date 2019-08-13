@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+/**
+ * @since 8.2.0
+ */
 interface AttributeInterface
 {
     /**

@@ -4,6 +4,9 @@ namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry;
 use Concrete\Core\Entity\Site\Locale;
 use HtmlObject\Element;
 
+/**
+ * @since 8.2.0
+ */
 abstract class Entry implements EntryInterface
 {
 

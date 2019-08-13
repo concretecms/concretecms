@@ -8,6 +8,9 @@ use OAuth\Common\Token\TokenInterface;
 use OAuth\OAuth2\Service\AbstractService;
 use OAuth\OAuth2\Token\StdOAuth2Token;
 
+/**
+ * @since 5.7.1
+ */
 class Community extends AbstractService
 {
     /**

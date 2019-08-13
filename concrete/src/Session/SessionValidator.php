@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
  * Base concrete5 session validator, validates the IP and the agent across requests.
  *
  * \@package Concrete\Core\Session
+ * @since 5.7.5.4
  */
 class SessionValidator implements SessionValidatorInterface, LoggerAwareInterface
 {

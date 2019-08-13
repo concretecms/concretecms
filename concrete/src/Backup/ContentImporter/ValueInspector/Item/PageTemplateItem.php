@@ -3,6 +3,9 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Page\Template;
 
+/**
+ * @since 5.7.5.3
+ */
 class PageTemplateItem extends AbstractItem
 {
     public function getDisplayName()

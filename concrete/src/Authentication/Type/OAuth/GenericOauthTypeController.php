@@ -12,6 +12,9 @@ use OAuth\UserData\Extractor\Extractor;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Concrete\Core\Validation\CSRF\Token;
 
+/**
+ * @since 5.7.1
+ */
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
     public $apiMethods = ['handle_error', 'handle_success', 'handle_register'];

@@ -11,6 +11,9 @@ use Psr\Log\LoggerInterface;
 use Exception;
 use Throwable;
 
+/**
+ * @since 8.2.0
+ */
 class Client extends ZendClient implements LoggerAwareInterface
 {
 

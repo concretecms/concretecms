@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Type\Item;
 
+/**
+ * @since 8.0.0
+ */
 class NameEntityPropertyItem implements ItemInterface
 {
     public function getDisplayName()

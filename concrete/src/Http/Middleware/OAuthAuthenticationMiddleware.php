@@ -11,6 +11,9 @@ use League\OAuth2\Server\ResourceServer;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.5.0
+ */
 class OAuthAuthenticationMiddleware implements MiddlewareInterface
 {
 

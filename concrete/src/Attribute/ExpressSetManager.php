@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 
 /**
  * Handles adding and removing keys from attribute sets.
+ * @since 8.0.0 (but not in 8.0.1)
  */
 class ExpressSetManager implements SetManagerInterface
 {

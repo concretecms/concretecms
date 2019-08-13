@@ -16,6 +16,7 @@ use RuntimeException;
 /**
  * @ORM\Entity(repositoryClass="CalendarEventRepository")
  * @ORM\Table(name="CalendarEvents")
+ * @since 8.3.0
  */
 class CalendarEvent implements ObjectInterface
 {

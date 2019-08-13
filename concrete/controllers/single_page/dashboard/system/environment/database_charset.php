@@ -9,6 +9,9 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
+/**
+ * @since 8.5.2
+ */
 class DatabaseCharset extends DashboardPageController
 {
     public function view()

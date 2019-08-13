@@ -5,6 +5,9 @@ namespace Concrete\Core\Error\ErrorList\Formatter;
 use Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface;
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @since 8.3.0
+ */
 class TextFormatter extends AbstractFormatter
 {
     /**

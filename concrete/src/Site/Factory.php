@@ -10,6 +10,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Config\Liaison;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Factory
 {
 

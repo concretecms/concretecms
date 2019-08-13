@@ -6,6 +6,9 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArgvInput;
 
+/**
+ * @since 8.0.0
+ */
 class CLIRunner implements RunInterface, ApplicationAwareInterface
 {
     use ApplicationAwareTrait;

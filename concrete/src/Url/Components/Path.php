@@ -3,6 +3,7 @@ namespace Concrete\Core\Url\Components;
 
 /**
  * c5 specific path component for league/url.
+ * @since 5.7.4
  */
 class Path extends \League\Url\Components\Path
 {

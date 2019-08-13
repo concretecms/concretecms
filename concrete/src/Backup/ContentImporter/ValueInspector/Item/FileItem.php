@@ -3,6 +3,9 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\File\File;
 
+/**
+ * @since 5.7.5.3
+ */
 class FileItem implements ItemInterface
 {
 

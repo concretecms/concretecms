@@ -3,6 +3,9 @@ namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 
 use League\Fractal\TransformerAbstract;
 
+/**
+ * @since 8.5.0
+ */
 class TreeCollectionTransformer extends TransformerAbstract
 {
 

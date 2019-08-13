@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Entity;
 
+/**
+ * @since 8.0.0
+ */
 trait PackageTrait
 {
     /**

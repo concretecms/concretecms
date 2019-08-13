@@ -7,6 +7,7 @@ use Concrete\Core\User\User as CoreUser;
 
 /**
  * Log entry for user actions
+ * @since 8.5.0
  */
 abstract class User extends ApplierEntry
 {

@@ -8,6 +8,7 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Update all oauth2 clients to have a consent type of CONSENT_SIMPLE
+ * @since 8.5.0
  */
 class Version20190110231015 extends AbstractMigration implements RepeatableMigrationInterface
 {

@@ -13,6 +13,9 @@ use Imagine\Image\Box;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
+/**
+ * @since 5.7.5.4
+ */
 class ImageUploading extends DashboardPageController
 {
     public function view()

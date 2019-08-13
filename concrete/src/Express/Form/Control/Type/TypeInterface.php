@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Import\ImportableInterface;
 
+/**
+ * @since 8.0.0
+ */
 interface TypeInterface extends ImportableInterface
 {
     public function getType();

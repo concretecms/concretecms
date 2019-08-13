@@ -17,6 +17,9 @@ use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 
+/**
+ * @since 8.5.0
+ */
 class DragRequest extends UserInterfaceController
 {
     /**

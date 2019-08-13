@@ -6,6 +6,9 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
+/**
+ * @since 8.5.0
+ */
 class AdvancedPermissions extends \Concrete\Controller\Dialog\Area\Edit
 {
     protected $viewPath = '/dialogs/area/edit/advanced_permissions';

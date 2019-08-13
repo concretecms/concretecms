@@ -7,6 +7,7 @@ use Doctrine\DBAL\Platforms\MySQL57Platform;
 
 /**
  * Backport of https://github.com/doctrine/dbal/pull/3128.
+ * @since 8.4.1
  */
 class MySQL80Platform extends MySQL57Platform
 {

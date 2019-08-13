@@ -8,6 +8,9 @@ use Concrete\Core\Page\Search\Index\PageIndex;
 use Concrete\Core\Search\Index\DefaultManager;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 
+/**
+ * @since 8.1.0
+ */
 class SearchServiceProvider extends Provider
 {
 

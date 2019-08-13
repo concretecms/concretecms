@@ -5,6 +5,9 @@ namespace Concrete\Core\Cache\Driver;
 use Stash\Driver\FileSystem;
 use Stash\Exception\WindowsPathMaxLengthException;
 
+/**
+ * @since 8.2.0
+ */
 class FileSystemStashDriver extends FileSystem
 {
 

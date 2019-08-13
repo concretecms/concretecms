@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 
+/**
+ * @since 8.3.0
+ */
 class EventOccurrenceService
 {
     protected $entityManager;

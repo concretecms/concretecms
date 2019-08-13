@@ -5,6 +5,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type;
 use Concrete\Core\Permission\Category;
 
+/**
+ * @since 8.0.0
+ */
 class ImportPageTypeComposerControlTypesRoutine extends AbstractRoutine
 {
     public function getHandle()

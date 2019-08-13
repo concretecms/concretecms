@@ -3,6 +3,9 @@ namespace Concrete\Core\Multilingual\Page\Section;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @since 5.7.3
+ */
 class Translation extends \Gettext\Translation
 {
     public function getRecordID()

@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * A class to copy pages and page versions.
  *
- * @since concrete5 8.5.0a2
+ * @since 8.5.0
  */
 class Cloner
 {

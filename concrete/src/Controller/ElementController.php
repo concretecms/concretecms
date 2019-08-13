@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\View\BasicFileView;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.0.0
+ */
 abstract class ElementController extends AbstractController
 {
     /**

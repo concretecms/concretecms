@@ -6,6 +6,7 @@ use ArrayAccess;
 
 /**
  * A trait that provides an implementation of ValidatorInterface::isValid
+ * @since 8.5.0
  */
 trait ValidatorForSubjectTrait
 {

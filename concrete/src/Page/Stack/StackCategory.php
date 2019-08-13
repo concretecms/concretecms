@@ -6,6 +6,9 @@ use Concrete\Core\Page\Type\Type;
 use Core;
 use Page;
 
+/**
+ * @since 5.7.5
+ */
 class StackCategory
 {
     protected $page;

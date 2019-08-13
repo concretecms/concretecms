@@ -4,6 +4,9 @@ namespace Concrete\Core\Page\Sitemap\Element;
 
 use SimpleXMLElement;
 
+/**
+ * @since 8.4.1
+ */
 abstract class SitemapElement
 {
     /**

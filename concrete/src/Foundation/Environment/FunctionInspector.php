@@ -3,6 +3,9 @@ namespace Concrete\Core\Foundation\Environment;
 
 use Traversable;
 
+/**
+ * @since 8.2.0
+ */
 class FunctionInspector
 {
     /**

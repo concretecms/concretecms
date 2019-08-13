@@ -4,6 +4,9 @@ namespace Concrete\Core\ImageEditor;
 use Concrete\Core\Asset\AssetInterface;
 use Concrete\Core\View\AbstractView;
 
+/**
+ * @since 5.7.5
+ */
 class Extension implements EditorExtensionInterface
 {
     /** @var array */

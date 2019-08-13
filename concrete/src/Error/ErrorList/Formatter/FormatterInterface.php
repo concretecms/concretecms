@@ -4,6 +4,9 @@ namespace Concrete\Core\Error\ErrorList\Formatter;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 
+/**
+ * @since 8.0.0
+ */
 interface FormatterInterface
 {
     /**

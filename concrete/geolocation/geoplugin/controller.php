@@ -9,6 +9,9 @@ use Exception;
 use IPLib\Address\AddressInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * @since 8.3.0
+ */
 class Controller extends GeolocatorController
 {
     /**

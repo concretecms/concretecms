@@ -9,6 +9,9 @@ use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Localization\Localization;
 
+/**
+ * @since 5.7.4
+ */
 class EditorServiceProvider extends ServiceProvider
 {
     public function register()

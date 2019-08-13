@@ -6,6 +6,7 @@ use Concrete\Core\Package\Package;
 
 /**
  * Package dependency failure: a package requires specific versions of another package.
+ * @since 8.3.0
  */
 class VersionMismatchException extends DependencyException
 {

@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 
+/**
+ * @since 8.0.0
+ */
 interface FormatterInterface
 {
     public function getIcon();

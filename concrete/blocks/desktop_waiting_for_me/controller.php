@@ -9,6 +9,9 @@ use Concrete\Core\Workflow\Progress\Category;
 use Core;
 use Concrete\Core\Notification\Alert\AlertList;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends BlockController
 {
     public $helpers = array('form');

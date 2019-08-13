@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Filesystem;
 
+/**
+ * @since 8.2.0
+ */
 class Template
 {
 

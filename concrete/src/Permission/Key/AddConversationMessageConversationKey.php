@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Access\ListItem\AddConversationMessageConversationL
 use User;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
+/**
+ * @since 5.7.4
+ */
 class AddConversationMessageConversationKey extends ConversationKey
 {
     public function getMyAssignment()

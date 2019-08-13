@@ -6,6 +6,7 @@ namespace Concrete\Core\Config\Repository;
  * Class Liaison.
  *
  * \@package Concrete\Core\Config\Repository
+ * @since 5.7.0.3
  */
 class Liaison
 {

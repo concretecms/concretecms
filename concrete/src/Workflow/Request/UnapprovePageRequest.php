@@ -14,6 +14,9 @@ use Events;
 use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
+/**
+ * @since 8.4.0
+ */
 class UnapprovePageRequest extends PageRequest
 {
     protected $wrStatusNum = 30;

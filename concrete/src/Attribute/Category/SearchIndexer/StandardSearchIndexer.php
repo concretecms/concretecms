@@ -7,6 +7,9 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @since 8.0.0
+ */
 class StandardSearchIndexer implements SearchIndexerInterface
 {
     protected $connection;

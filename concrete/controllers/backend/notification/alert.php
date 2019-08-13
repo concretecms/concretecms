@@ -6,6 +6,9 @@ use Concrete\Core\Validation\CSRF\Token;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Alert extends AbstractController
 {
 

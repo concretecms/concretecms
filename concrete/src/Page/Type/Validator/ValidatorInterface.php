@@ -4,6 +4,9 @@ namespace Concrete\Core\Page\Type\Validator;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 
+/**
+ * @since 5.7.4
+ */
 interface ValidatorInterface
 {
     public function getPageTypeObject();

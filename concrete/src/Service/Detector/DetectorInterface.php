@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Service\Detector;
 
+/**
+ * @since 8.0.0
+ */
 interface DetectorInterface
 {
     /**

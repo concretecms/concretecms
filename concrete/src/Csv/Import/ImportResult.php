@@ -5,6 +5,9 @@ namespace Concrete\Core\Csv\Import;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use JsonSerializable;
 
+/**
+ * @since 8.3.0
+ */
 class ImportResult implements JsonSerializable
 {
     /**

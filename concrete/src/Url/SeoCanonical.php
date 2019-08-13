@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Helper class to work with SEO canonical URLs.
+ * @since 8.3.0
  */
 class SeoCanonical
 {

@@ -11,6 +11,9 @@ use Concrete\Core\Tree\Menu\Item\Topic\AddTopicItem;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Menu\Menu;
 
+/**
+ * @since 8.0.0
+ */
 class CategoryMenu extends Menu
 {
 

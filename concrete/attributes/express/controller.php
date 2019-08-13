@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
 use Doctrine\ORM\Query\Expr;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends AttributeTypeController
 {
     public $helpers = ['form'];

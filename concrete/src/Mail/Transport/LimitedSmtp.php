@@ -5,6 +5,9 @@ use Zend\Mail\Message;
 use Zend\Mail\Transport\Smtp;
 use Zend\Mail\Transport\TransportInterface;
 
+/**
+ * @since 8.2.0
+ */
 class LimitedSmtp implements TransportInterface
 {
     /**

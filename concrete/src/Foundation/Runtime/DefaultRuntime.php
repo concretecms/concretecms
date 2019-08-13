@@ -7,6 +7,9 @@ use Concrete\Core\Foundation\Runtime\Run\RunInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Application\ApplicationAwareTrait;
 
+/**
+ * @since 8.0.0
+ */
 class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
 {
     const STATUS_INACTIVE = 0;

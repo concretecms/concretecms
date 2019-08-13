@@ -10,6 +10,9 @@ use Concrete\Core\Localization\Localization;
 use Controller;
 use Environment;
 
+/**
+ * @since 5.7.4
+ */
 class AssetsLocalization extends Controller
 {
     /**

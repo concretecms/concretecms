@@ -7,6 +7,9 @@ use Concrete\Core\Notification\Alert\Filter\FilterList;
 use Concrete\Core\Notification\Notifier\NotifierInterface;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 
+/**
+ * @since 8.0.0
+ */
 interface TypeInterface
 {
 

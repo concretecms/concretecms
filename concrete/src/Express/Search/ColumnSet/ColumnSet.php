@@ -7,6 +7,9 @@ use User;
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 
+/**
+ * @since 8.0.0
+ */
 class ColumnSet extends Set
 {
 

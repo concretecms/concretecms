@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Validation\CSRF\Token;
 use Loader;
 
+/**
+ * @since 8.0.0
+ */
 class DashboardSitePageController extends DashboardPageController
 {
 

@@ -6,6 +6,9 @@ use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Service\StatesProvincesList;
 
+/**
+ * @since 8.3.0
+ */
 class CountryStateprovinceLink extends AbstractController
 {
     /**

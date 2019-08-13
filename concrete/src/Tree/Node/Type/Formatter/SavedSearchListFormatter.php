@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Tree\Node\Type\Formatter;
 
+/**
+ * @since 8.0.0
+ */
 class SavedSearchListFormatter implements ListFormatterInterface
 {
     public function getIconElement()

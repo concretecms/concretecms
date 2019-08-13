@@ -28,6 +28,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 
+/**
+ * @since 8.0.0
+ */
 class Version20160725000000 extends AbstractMigration implements LongRunningMigrationInterface
 {
     use AddPageDraftsBooleanTrait;

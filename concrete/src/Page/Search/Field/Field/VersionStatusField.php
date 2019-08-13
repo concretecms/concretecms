@@ -6,6 +6,9 @@ use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @since 8.0.0
+ */
 class VersionStatusField extends AbstractField
 {
     protected $requestVariables = [

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\File\Exception;
 
+/**
+ * @since 5.7.3
+ */
 class FileException extends \Exception
 {
     protected $fileObject;

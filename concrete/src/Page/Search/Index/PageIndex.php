@@ -11,6 +11,9 @@ use Concrete\Core\Search\Index\AbstractIndex;
 use Concrete\Core\Search\Index\Driver\IndexingDriverInterface;
 use Concrete\Core\Search\Index\Driver\SearchingDriverInterface;
 
+/**
+ * @since 8.1.0
+ */
 class PageIndex extends AbstractIndex implements ApplicationAwareInterface
 {
 

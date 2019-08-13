@@ -3,6 +3,9 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Foundation\Repetition\AbstractRepetition;
 
+/**
+ * @since 8.3.0
+ */
 class EventRepetition extends AbstractRepetition
 {
 

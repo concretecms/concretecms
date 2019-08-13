@@ -9,6 +9,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 
+/**
+ * @since 5.7.4
+ */
 class CanonicalUrlResolver implements UrlResolverInterface
 {
     /**

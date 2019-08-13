@@ -7,6 +7,9 @@ use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Legacy\Loader;
 
+/**
+ * @since 8.0.0
+ */
 class DragRequest extends UserInterface
 {
     protected function getNodes()

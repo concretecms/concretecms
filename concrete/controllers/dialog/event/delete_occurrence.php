@@ -13,6 +13,9 @@ use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Utility\Preferences;
 
+/**
+ * @since 8.3.0
+ */
 class DeleteOccurrence extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/delete_occurrence';

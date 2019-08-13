@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\User\UserInfoRepository;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.2.0
+ */
 class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNotification
 {
     protected $from;

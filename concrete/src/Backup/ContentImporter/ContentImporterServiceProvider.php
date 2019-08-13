@@ -12,6 +12,9 @@ use Concrete\Core\Export\Item\Express\EntryStore;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Backup\ContentImporter\Importer\Manager as ImporterManager;
 
+/**
+ * @since 5.7.5.4
+ */
 class ContentImporterServiceProvider extends ServiceProvider
 {
     public function register()

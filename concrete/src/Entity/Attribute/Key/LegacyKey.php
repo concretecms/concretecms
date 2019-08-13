@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @deprecated
  * @ORM\Entity
  * @ORM\Table(name="LegacyAttributeKeys")
+ * @since 8.0.0
  */
 class LegacyKey extends Key
 {

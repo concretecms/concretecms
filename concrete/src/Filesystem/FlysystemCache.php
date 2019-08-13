@@ -3,6 +3,9 @@ namespace Concrete\Core\Filesystem;
 
 use League\Flysystem\Cached\CachedAdapter;
 
+/**
+ * @since 8.2.0
+ */
 class FlysystemCache extends CachedAdapter
 {
     /**

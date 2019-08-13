@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\EntityListeners({"\Concrete\Core\Calendar\Event\Version\Listener"})
  * @ORM\Table(name="CalendarEventVersions")
+ * @since 8.3.0
  */
 class CalendarEventVersion implements ObjectInterface, \JsonSerializable
 {

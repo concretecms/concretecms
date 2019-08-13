@@ -4,6 +4,9 @@ namespace Concrete\Controller\Panel\Page;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\View\View;
 
+/**
+ * @since 5.7.5
+ */
 class Devices extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/page/devices';

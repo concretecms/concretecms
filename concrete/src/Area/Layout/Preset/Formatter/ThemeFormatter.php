@@ -4,6 +4,9 @@ namespace Concrete\Core\Area\Layout\Preset\Formatter;
 use HtmlObject\Element;
 use Sunra\PhpSimple\HtmlDomParser;
 
+/**
+ * @since 5.7.5
+ */
 class ThemeFormatter implements FormatterInterface
 {
     protected $arrayPreset;

@@ -7,6 +7,9 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use PDO;
 
+/**
+ * @since 8.5.0
+ */
 class Version20181116072400 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**

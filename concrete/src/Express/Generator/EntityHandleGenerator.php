@@ -4,6 +4,9 @@ namespace Concrete\Core\Express\Generator;
 use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class EntityHandleGenerator
 {
     protected $entityManager;

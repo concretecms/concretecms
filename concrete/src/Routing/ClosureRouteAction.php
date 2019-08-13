@@ -5,6 +5,9 @@ use Concrete\Core\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 
+/**
+ * @since 8.5.0
+ */
 class ClosureRouteAction implements RouteActionInterface
 {
 

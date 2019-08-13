@@ -3,6 +3,9 @@ namespace Concrete\Core\Page\Type\Saver;
 
 use Concrete\Core\Support\Manager as CoreManager;
 
+/**
+ * @since 8.0.0
+ */
 class Manager extends CoreManager
 {
 

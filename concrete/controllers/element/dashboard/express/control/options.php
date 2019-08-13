@@ -3,6 +3,9 @@ namespace Concrete\Controller\Element\Dashboard\Express\Control;
 
 use Concrete\Core\Controller\ElementController;
 
+/**
+ * @since 8.0.0
+ */
 class Options extends ElementController
 {
     protected $control;

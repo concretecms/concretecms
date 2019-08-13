@@ -6,6 +6,9 @@ use Concrete\Core\Page\Page;
 use SimpleXMLElement;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
+/**
+ * @since 8.5.0
+ */
 class DeprecatedPageReadyEvent extends GenericEvent
 {
     /**

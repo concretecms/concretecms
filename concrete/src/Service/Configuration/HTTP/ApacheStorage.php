@@ -5,6 +5,9 @@ use Concrete\Core\Service\Configuration\StorageInterface;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.0.0
+ */
 class ApacheStorage implements StorageInterface
 {
     /**

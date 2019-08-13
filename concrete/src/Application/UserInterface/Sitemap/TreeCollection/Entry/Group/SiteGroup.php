@@ -3,6 +3,9 @@ namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\G
 
 use Concrete\Core\Entity\Site\Site;
 
+/**
+ * @since 8.2.0
+ */
 class SiteGroup implements GroupInterface
 {
 

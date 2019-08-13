@@ -4,6 +4,9 @@ namespace Concrete\Core\Error\ErrorList\Error;
 
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 
+/**
+ * @since 8.5.0
+ */
 class CustomFieldNotPresentError extends FieldNotPresentError
 {
 

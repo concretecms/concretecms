@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
  * Concrete\Core\Package\Package::getEntityManagerProvider with a custom method that delivers a tailored
  * class implementing the of the Concrete\Core\Database\EntityManager\Provider\ProviderInterface interface.
  * Class DefaultPackageProvider
+ * @since 8.0.0
  */
 class DefaultPackageProvider extends AbstractPackageProvider
 {

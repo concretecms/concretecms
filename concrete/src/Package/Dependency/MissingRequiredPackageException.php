@@ -6,6 +6,7 @@ use Concrete\Core\Package\Package;
 
 /**
  * Package dependency failure: a package can't be installed since it requires another package that's not installed.
+ * @since 8.3.0
  */
 class MissingRequiredPackageException extends DependencyException
 {

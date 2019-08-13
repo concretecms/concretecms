@@ -9,6 +9,9 @@ use Concrete\Core\Support\Facade\Application;
 use Core;
 use OAuth\ServiceFactory;
 
+/**
+ * @since 5.7.1
+ */
 class Controller extends GenericOauth2TypeController
 {
 

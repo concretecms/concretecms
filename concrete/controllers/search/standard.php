@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Result\Result;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 abstract class Standard extends AbstractController
 {
 

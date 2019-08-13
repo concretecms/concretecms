@@ -8,6 +8,7 @@ namespace Concrete\Core\Localization\Translator\Translation;
  * loaders.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
+ * @since 8.0.0
  */
 interface TranslationLoaderRepositoryInterface
 {

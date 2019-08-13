@@ -7,6 +7,9 @@ use Concrete\Core\Tree\Node\Node;
 use HtmlObject\Element;
 use HtmlObject\Link;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractNodeItem extends AbstractItem
 {
 

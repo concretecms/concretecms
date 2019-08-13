@@ -12,6 +12,9 @@ use Concrete\Core\Permission\Access\ListItem\NotifyInNotificationCenterNotificat
 use Concrete\Core\Permission\Key\Key;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @since 8.0.0
+ */
 class StandardNotifier implements NotifierInterface
 {
 

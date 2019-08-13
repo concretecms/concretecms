@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="PageTemplates")
+ * @since 8.0.0
  */
 class Template
 {

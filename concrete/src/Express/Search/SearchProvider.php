@@ -12,6 +12,9 @@ use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Entity\Search\SavedExpressSearch;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @since 8.0.0
+ */
 class SearchProvider extends AbstractSearchProvider
 {
     protected $category;

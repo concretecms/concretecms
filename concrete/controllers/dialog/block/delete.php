@@ -6,6 +6,9 @@ use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Page\EditResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Delete extends BackendInterfaceBlockController
 {
     protected $viewPath = '/dialogs/block/delete';

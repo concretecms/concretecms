@@ -7,6 +7,9 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
 use HtmlObject\Element;
 
+/**
+ * @since 8.0.0
+ */
 class WorkflowProgressListViewMenu extends Menu
 {
     public function getMenuElement()

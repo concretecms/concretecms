@@ -4,6 +4,9 @@ namespace Concrete\Core\Form\Service\DestinationPicker;
 
 use ArrayAccess;
 
+/**
+ * @since 8.5.2
+ */
 interface PickerInterface
 {
     /**

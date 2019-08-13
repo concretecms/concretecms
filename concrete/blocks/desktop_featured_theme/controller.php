@@ -13,6 +13,7 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
      * @author Andrew Embler <andrew@concrete5.org>
      * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
      * @license    http://www.concrete5.org/license/     MIT License
+     * @since 8.0.0
      */
     class Controller extends BlockController
     {

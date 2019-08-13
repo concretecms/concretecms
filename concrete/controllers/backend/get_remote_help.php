@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Controller\Backend;
 
+/**
+ * @since 5.7.4
+ */
 class GetRemoteHelp extends UserInterface
 {
     protected function canAccess()

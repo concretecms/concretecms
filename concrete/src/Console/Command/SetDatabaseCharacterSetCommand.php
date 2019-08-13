@@ -10,6 +10,9 @@ use Concrete\Core\Database\CharacterSetCollation\Manager;
 use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Concrete\Core\Database\DatabaseManager;
 
+/**
+ * @since 8.5.0
+ */
 class SetDatabaseCharacterSetCommand extends Command
 {
     protected $canRunAsRoot = false;

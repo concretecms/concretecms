@@ -22,6 +22,7 @@ use RedisArray;
  *
  * To add custom handlers, extend this class and for a handler named "custom_test"
  * create a protected method `getCustomTestHandler`
+ * @since 5.7.5.4
  */
 class SessionFactory implements SessionFactoryInterface
 {

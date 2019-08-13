@@ -3,6 +3,9 @@ namespace Concrete\Core\Page\Desktop;
 
 use Concrete\Core\Page\PageList;
 
+/**
+ * @since 8.0.0
+ */
 class DesktopList
 {
     public static function getMyDesktop()

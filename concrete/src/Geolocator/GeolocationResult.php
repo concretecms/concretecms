@@ -5,6 +5,9 @@ use Exception;
 use JsonSerializable;
 use Punic\Territory;
 
+/**
+ * @since 8.3.0
+ */
 class GeolocationResult implements JsonSerializable
 {
     /**

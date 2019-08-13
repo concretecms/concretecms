@@ -25,6 +25,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use League\OAuth2\Server\Exception\OAuthServerException;
 
+/**
+ * @since 8.5.0
+ */
 final class Controller implements LoggerAwareInterface
 {
 

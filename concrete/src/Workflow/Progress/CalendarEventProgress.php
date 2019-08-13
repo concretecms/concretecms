@@ -6,6 +6,9 @@ use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\CalendarEventRequest;
 use Concrete\Core\Calendar\Event\Event;
 
+/**
+ * @since 8.3.0
+ */
 class CalendarEventProgress extends Progress implements SiteProgressInterface
 {
     protected $eventID;

@@ -10,6 +10,9 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Validator\String\EmailValidator;
 
+/**
+ * @since 8.0.0
+ */
 class Controller extends DefaultController
 {
     public $helpers = ['form'];

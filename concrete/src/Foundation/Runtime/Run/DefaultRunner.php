@@ -25,6 +25,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * Default HTTP Runner.
  *
  * @todo Replace pipeline style functionality with middleware
+ * @since 8.0.0
  */
 class DefaultRunner implements RunInterface, ApplicationAwareInterface
 {

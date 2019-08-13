@@ -5,6 +5,9 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Page\Type\Validator\Manager as ValidatorManager;
 use Concrete\Core\Page\Type\Saver\Manager as SaverManager;
 
+/**
+ * @since 8.0.0
+ */
 class ManagerServiceProvider extends ServiceProvider
 {
     public function register()

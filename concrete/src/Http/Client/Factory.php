@@ -6,6 +6,9 @@ use Concrete\Core\Config\Repository\Repository;
 use Zend\Http\Client\Adapter\Curl;
 use Zend\Http\Client\Adapter\Proxy;
 
+/**
+ * @since 8.2.0
+ */
 class Factory
 {
     /**

@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Tree\Node\Topic;
 use Concrete\Controller\Dialog\Tree\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @since 8.0.0
+ */
 class Edit extends Node
 {
     protected $viewPath = '/dialogs/tree/node/topic/edit';

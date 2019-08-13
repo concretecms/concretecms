@@ -6,6 +6,9 @@ use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Form\Control\ViewInterface;
 
+/**
+ * @since 8.2.0
+ */
 class Renderer
 {
 

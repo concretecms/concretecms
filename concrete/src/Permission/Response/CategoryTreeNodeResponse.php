@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission\Response;
 use Page;
 use Permissions;
 
+/**
+ * @since 8.0.0
+ */
 class CategoryTreeNodeResponse extends Response
 {
     protected function canAccessTopics()

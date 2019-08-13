@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @ORM\Table(name="ExpressEntities")
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entity\Listener"})
+ * @since 8.0.0
  */
 class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {

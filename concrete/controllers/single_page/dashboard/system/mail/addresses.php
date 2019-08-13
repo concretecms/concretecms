@@ -3,6 +3,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 
+/**
+ * @since 8.4.0
+ */
 class Addresses extends DashboardPageController
 {
     public function view()

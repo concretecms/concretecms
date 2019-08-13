@@ -4,6 +4,9 @@ namespace Concrete\Core\Page\Relation\Formatter;
 
 use Concrete\Core\Entity\Page\Relation\Relation;
 
+/**
+ * @since 8.0.0
+ */
 class SiblingFormatter implements FormatterInterface
 {
 

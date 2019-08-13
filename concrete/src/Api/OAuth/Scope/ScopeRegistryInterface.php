@@ -4,6 +4,9 @@ namespace Concrete\Core\Api\OAuth\Scope;
 
 use Concrete\Core\Entity\OAuth\Scope;
 
+/**
+ * @since 8.5.2
+ */
 interface ScopeRegistryInterface
 {
     /**

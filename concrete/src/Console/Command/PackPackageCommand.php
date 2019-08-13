@@ -13,6 +13,9 @@ use stdClass;
 use ZipArchive;
 use Gettext\Translations;
 
+/**
+ * @since 5.7.5.4
+ */
 final class PackPackageCommand extends Command
 {
     const PACKAGEFORMAT_LEGACY = 'legacy';

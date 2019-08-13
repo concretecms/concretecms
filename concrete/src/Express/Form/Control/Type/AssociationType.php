@@ -8,6 +8,9 @@ use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\Type\Item\AssociationItem;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @since 8.0.0
+ */
 class AssociationType implements TypeInterface
 {
     protected $entityManager;

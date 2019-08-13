@@ -4,6 +4,9 @@ namespace Concrete\Core\Routing;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 
+/**
+ * @since 5.7.5.4
+ */
 class RoutingServiceProvider extends Provider
 {
     /**

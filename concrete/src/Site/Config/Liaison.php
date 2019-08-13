@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Site\Site;
 /**
  * A repository stand-in that allows for accessing a site's config
  * @package Concrete\Core\Site\Config
+ * @since 8.0.0
  */
 class Liaison extends \Concrete\Core\Config\Repository\Liaison
 {

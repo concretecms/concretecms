@@ -5,6 +5,7 @@ use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
 
 /**
  * Interface LoggerAwareInterface
+ * @since 8.5.0
  */
 interface LoggerAwareInterface extends PsrLoggerAwareInterface
 {

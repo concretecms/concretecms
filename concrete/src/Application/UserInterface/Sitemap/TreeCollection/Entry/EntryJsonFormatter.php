@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry;
 
+/**
+ * @since 8.2.0
+ */
 final class EntryJsonFormatter implements \JsonSerializable
 {
 

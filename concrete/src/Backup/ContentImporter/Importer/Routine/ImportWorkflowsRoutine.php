@@ -4,6 +4,9 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Workflow\Type;
 use Concrete\Core\Workflow\Workflow;
 
+/**
+ * @since 8.0.0
+ */
 class ImportWorkflowsRoutine extends AbstractRoutine
 {
     public function getHandle()

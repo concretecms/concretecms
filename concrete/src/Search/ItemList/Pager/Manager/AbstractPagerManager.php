@@ -12,6 +12,9 @@ use Concrete\Core\Search\Pagination\Adapter\PagerAdapter;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\StickyRequest;
 
+/**
+ * @since 8.2.0
+ */
 abstract class AbstractPagerManager implements PagerManagerInterface
 {
 

@@ -5,6 +5,9 @@ namespace Concrete\Core\Application\UserInterface\ContextMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\ItemGroupInterface;
 use Concrete\Core\Application\UserInterface\ContextMenu\Modifier\ModifierInterface;
 
+/**
+ * @since 8.0.0
+ */
 abstract class AbstractManager implements ManagerInterface
 {
 

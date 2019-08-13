@@ -13,6 +13,7 @@ use Concrete\Core\Export\Item\Express\Form as FormExporter;
 /**
  * @ORM\Entity
  * @ORM\Table(name="ExpressForms")
+ * @since 8.0.0
  */
 class Form implements \JsonSerializable, ExportableInterface, FormInterface
 {

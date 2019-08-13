@@ -4,6 +4,9 @@ namespace Concrete\Core\Site\Resolver;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Http\Request;
 
+/**
+ * @since 8.0.0
+ */
 class Resolver
 {
 

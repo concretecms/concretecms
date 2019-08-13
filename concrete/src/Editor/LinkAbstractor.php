@@ -21,6 +21,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Backup\ContentExporter;
 
+/**
+ * @since 5.7.2.1
+ */
 class LinkAbstractor extends ConcreteObject
 {
     /**

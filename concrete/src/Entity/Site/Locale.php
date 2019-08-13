@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="SiteLocales")
  * @ORM\EntityListeners({"\Concrete\Core\Site\Locale\Listener"})
+ * @since 8.0.0
  */
 class Locale implements LocaleInterface, TreeInterface
 {

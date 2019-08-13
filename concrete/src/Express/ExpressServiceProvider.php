@@ -7,6 +7,9 @@ use Concrete\Core\Express\Formatter\FormatterInterface;
 use Concrete\Core\Express\Formatter\LabelFormatter;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
+/**
+ * @since 8.0.0
+ */
 class ExpressServiceProvider extends ServiceProvider
 {
     public function register()

@@ -19,6 +19,7 @@ use Throwable;
  * Concrete5 base command class
  * Large swaths of this class have been copied from illuminate/config 5.2 and 5.5
  * so you may refer to their documentation for some things.
+ * @since 8.2.0
  */
 abstract class Command extends SymfonyCommand
 {

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class to handle the URL to redirect users to upon login.
+ * @since 8.3.2
  */
 class PostLoginLocation
 {

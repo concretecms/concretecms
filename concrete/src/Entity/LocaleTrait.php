@@ -8,6 +8,9 @@ use Exception;
 use Punic\Language as PunicLanguage;
 use Throwable;
 
+/**
+ * @since 8.2.0
+ */
 trait LocaleTrait
 {
     /**

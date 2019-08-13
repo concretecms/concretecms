@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Database;
 
+/**
+ * @since 8.0.0
+ */
 class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
 {
     public function duplicate($newPA = false)

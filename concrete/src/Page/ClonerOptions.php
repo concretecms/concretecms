@@ -7,7 +7,7 @@ use Concrete\Core\User\User;
 /**
  * A class representing the options for the page/collection/version Cloner.
  *
- * @since concrete5 8.5.0a2
+ * @since 8.5.0
  */
 class ClonerOptions
 {

@@ -9,6 +9,9 @@ use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\User\UserInfo;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @since 8.5.0
+ */
 class AuthorSaveHandler implements SaveHandlerInterface
 {
     /**

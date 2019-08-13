@@ -4,6 +4,9 @@ namespace Concrete\Core\Authentication\Type\ExternalConcrete5;
 use OAuth\ServiceFactory;
 use OAuth\UserData\ExtractorFactory;
 
+/**
+ * @since 8.5.0
+ */
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
     /**

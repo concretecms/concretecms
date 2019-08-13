@@ -6,6 +6,9 @@ use Concrete\Core\User\Event\UserInfoWithPassword;
 use InvalidArgumentException;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * @since 8.5.0
+ */
 class PasswordChangeEventHandler
 {
 

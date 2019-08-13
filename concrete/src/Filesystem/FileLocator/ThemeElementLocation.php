@@ -5,6 +5,9 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Theme\Theme;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @since 8.2.0
+ */
 class ThemeElementLocation extends ThemeLocation
 {
 

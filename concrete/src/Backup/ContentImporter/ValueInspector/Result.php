@@ -4,6 +4,9 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\RoutineInterface;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface;
 
+/**
+ * @since 5.7.5.4
+ */
 class Result implements ResultInterface
 {
     protected $originalContent;

@@ -4,6 +4,7 @@ namespace Concrete\Core\Captcha;
 
 /**
  * Interface that configurable captcha controllers can implement to let users customize the captcha.
+ * @since 8.3.0
  */
 interface ConfigurableCaptchaInterface
 {

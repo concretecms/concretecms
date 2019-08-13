@@ -4,6 +4,9 @@ namespace Concrete\Core\Block;
 
 use Database;
 
+/**
+ * @since 5.7.1
+ */
 class CacheSettings
 {
     protected $btCacheBlockOutputOnPost = false;

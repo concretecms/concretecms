@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface;
 use Concrete\Core\Application\Service\Dashboard;
 use Concrete\Core\Marketplace\RemoteItemList;
 
+/**
+ * @since 5.7.1
+ */
 class Search extends UserInterface
 {
     public function view()

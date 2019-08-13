@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 /**
  * @ORM\Entity
  * @ORM\Table(name="CalendarEventAttributeKeys")
+ * @since 8.3.0
  */
 class EventKey extends Key
 {

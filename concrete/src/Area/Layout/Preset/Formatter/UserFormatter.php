@@ -3,6 +3,9 @@ namespace Concrete\Core\Area\Layout\Preset\Formatter;
 
 use Concrete\Core\Area\Layout\Layout;
 
+/**
+ * @since 5.7.5
+ */
 class UserFormatter implements FormatterInterface
 {
     protected $layout;

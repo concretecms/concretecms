@@ -9,6 +9,9 @@ use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Express\ObjectBuilder;
 use Doctrine\ORM\Id\UuidGenerator;
 
+/**
+ * @since 8.2.1
+ */
 class FieldsetBuilderAssociationControl
 {
 

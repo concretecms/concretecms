@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="NotificationAlerts"
  * )
+ * @since 8.0.0
  */
 class NotificationAlert
 {

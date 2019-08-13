@@ -9,6 +9,9 @@ use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
+/**
+ * @since 8.0.0
+ */
 class Attributes extends DashboardAttributesPageController
 {
     public function view()

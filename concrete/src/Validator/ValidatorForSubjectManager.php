@@ -4,6 +4,9 @@ namespace Concrete\Core\Validator;
 
 use ArrayAccess;
 
+/**
+ * @since 8.4.2
+ */
 class ValidatorForSubjectManager extends ValidatorManager implements ValidatorManagerForSubjectInterface
 {
     /**

@@ -10,6 +10,9 @@ use Gettext\Translations;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
+/**
+ * @since 8.2.0
+ */
 class CommunityStoreTranslationProvider implements ProviderInterface
 {
     /**

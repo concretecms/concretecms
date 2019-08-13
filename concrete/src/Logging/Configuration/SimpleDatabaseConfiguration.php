@@ -5,6 +5,9 @@ namespace Concrete\Core\Logging\Configuration;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Monolog\Formatter\LineFormatter;
 
+/**
+ * @since 8.5.0
+ */
 class SimpleDatabaseConfiguration extends SimpleConfiguration
 {
     /**

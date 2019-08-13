@@ -7,6 +7,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Exception;
 
+/**
+ * @since 5.7.5.7
+ */
 class ExecCommand extends Command
 {
     protected function configure()

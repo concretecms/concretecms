@@ -7,6 +7,7 @@ use \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
  * Each Doctrine MappingDriver must be wrapped by this class, so all Drivers can be 
  * loaded correctly during the bootstrap of the application
  * Each new Doctrine MappingDriver must also be wrapped in a new instance of this class
+ * @since 8.0.0
  */
 class Driver implements DriverInterface
 {

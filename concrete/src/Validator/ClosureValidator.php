@@ -7,6 +7,7 @@ use Closure;
 
 /**
  * A generic validator cabable of describing itself and validating mixed values using closures.
+ * @since 5.7.5.3
  */
 class ClosureValidator implements ValidatorInterface
 {

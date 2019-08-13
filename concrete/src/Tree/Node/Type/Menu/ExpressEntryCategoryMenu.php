@@ -13,6 +13,9 @@ use Concrete\Core\Tree\Menu\Item\Topic\AddTopicItem;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Menu\Menu;
 
+/**
+ * @since 8.2.0
+ */
 class ExpressEntryCategoryMenu extends Menu
 {
 

@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 
+/**
+ * @since 8.2.0
+ */
 class StandardTreeCollection extends TreeCollection
 {
     /**

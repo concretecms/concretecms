@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
+/**
+ * @since 5.7.5.4
+ */
 abstract class AbstractRegularExpressionRoutine implements RoutineInterface
 {
     abstract public function getRegularExpression();

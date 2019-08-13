@@ -8,6 +8,9 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 
+/**
+ * @since 8.3.0
+ */
 class EventOccurrenceMenu extends Menu
 {
 

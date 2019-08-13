@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="ExpressEntityEntryAttributeValues"
  * )
  * @ORM\HasLifecycleCallbacks
+ * @since 8.0.0
  */
 class ExpressValue extends AbstractValue
 {

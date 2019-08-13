@@ -12,6 +12,9 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\Routing\Redirect;
 
+/**
+ * @since 8.0.0
+ */
 class Entities extends DashboardPageController
 {
     public function add()

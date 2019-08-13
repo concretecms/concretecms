@@ -9,6 +9,9 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 use Concrete\Core\Package\PackageService;
 
+/**
+ * @since 8.0.0
+ */
 class ImportPackagesRoutine extends AbstractRoutine
 {
     public function getHandle()

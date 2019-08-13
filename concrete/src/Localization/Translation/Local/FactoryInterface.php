@@ -3,6 +3,9 @@ namespace Concrete\Core\Localization\Translation\Local;
 
 use Concrete\Core\Package\Package;
 
+/**
+ * @since 8.2.0
+ */
 interface FactoryInterface
 {
     /**

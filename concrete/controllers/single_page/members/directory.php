@@ -6,6 +6,9 @@ use UserAttributeKey;
 use Loader;
 use Concrete\Core\User\UserList;
 
+/**
+ * @since 5.7.2.1
+ */
 class Directory extends PublicProfilePageController
 {
     /**

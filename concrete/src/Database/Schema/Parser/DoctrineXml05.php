@@ -4,6 +4,9 @@ namespace Concrete\Core\Database\Schema\Parser;
 
 use Concrete\Core\Database\Connection\Connection;
 
+/**
+ * @since 5.7.5
+ */
 class DoctrineXml05 extends XmlParser
 {
     /**

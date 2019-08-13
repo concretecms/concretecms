@@ -7,6 +7,9 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
+/**
+ * @since 8.5.2
+ */
 class ApiController
 {
 

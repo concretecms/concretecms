@@ -13,6 +13,9 @@ use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
+/**
+ * @since 5.7.5.7
+ */
 class Resolver
 {
 

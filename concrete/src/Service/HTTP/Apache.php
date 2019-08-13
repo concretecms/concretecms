@@ -5,6 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Service\Detector\DetectorInterface;
 use Concrete\Core\Service\ServiceInterface;
 
+/**
+ * @since 8.0.0
+ */
 class Apache implements ServiceInterface
 {
     /**

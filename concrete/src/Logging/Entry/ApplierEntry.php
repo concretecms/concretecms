@@ -4,6 +4,9 @@ namespace Concrete\Core\Logging\Entry;
 
 use Concrete\Core\User\User;
 
+/**
+ * @since 8.5.0
+ */
 abstract class ApplierEntry implements EntryInterface
 {
 

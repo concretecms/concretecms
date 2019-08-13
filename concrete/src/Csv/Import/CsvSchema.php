@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Csv\Import;
 
+/**
+ * @since 8.3.0
+ */
 class CsvSchema
 {
     /**
