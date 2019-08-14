@@ -172,6 +172,9 @@ function core_class($class, $prefix = false)
     return $class;
 }
 
+/**
+ * @since 5.7.0.3
+ */
 function overrideable_core_class($class, $path, $pkgHandle = null)
 {
     $env = \Environment::get();
@@ -278,6 +281,7 @@ function array_to_object($o, $array)
  *
  * @param $o
  * @param bool $maxDepth
+ * @since 5.7.4
  */
 function var_dump_safe($o, $echo = true, $maxDepth = true)
 {
@@ -292,6 +296,7 @@ function var_dump_safe($o, $echo = true, $maxDepth = true)
  * @param bool $return Set to true to return the generated PHPDoc, false to return it
  *
  * @example output_vars(get_defined_vars(), isset($this) ? $this : null);
+ * @since 8.3.0
  */
 function output_vars(array $get_defined_vars, $valueOfThis = null, $return = false)
 {
@@ -313,6 +318,7 @@ function output_vars(array $get_defined_vars, $valueOfThis = null, $return = fal
  * @param mixed $channel
  * @param $message
  * @param array $context
+ * @since 8.5.0
  */
 function core_log($message,
   $level = \Monolog\Logger::DEBUG,
@@ -333,6 +339,7 @@ function core_log($message,
  * @param  string  $abstract
  * @param  array   $parameters
  * @return mixed
+ * @since 5.7.0 (but not in 8.3.0 8.3.1 8.3.2 8.4.0 8.4.1 8.4.2 8.4.3 8.4.4 8.4.5 8.5.0 8.5.1)
  */
 function app($abstract = null, array $parameters = [])
 {

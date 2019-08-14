@@ -49,6 +49,9 @@ if (!defined('APP_UPDATED_PASSTHRU')) {
     if (file_exists($update_file)) {
         $updates = (array) include $update_file;
         if (isset($updates['core'])) {
+            /**
+             * @since 5.7.5.7
+             */
             define('APP_UPDATED_PASSTHRU', true);
             define('DIRNAME_APP_UPDATED', $updates['core']);
             if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED)) {
@@ -90,8 +93,14 @@ const DIRNAME_PAGES = 'single_pages';
 const DIRNAME_VIEWS = 'views';
 const DIRNAME_PACKAGES = 'packages';
 const DIRNAME_MODELS = 'models';
+/**
+ * @since 8.2.0
+ */
 const DIRNAME_ATTRIBUTE = 'attribute';
 const DIRNAME_ATTRIBUTES = 'attributes';
+/**
+ * @since 5.7.0.3
+ */
 const DIRNAME_MENU_ITEMS = 'menu_items';
 const DIRNAME_AUTHENTICATION = 'authentication';
 const DIRNAME_LIBRARIES = 'libraries';
@@ -102,6 +111,9 @@ const DIRNAME_WORKFLOW_ASSIGNMENTS = 'assignments';
 const DIRNAME_REQUESTS = 'requests';
 const DIRNAME_KEYS = 'keys';
 const DIRNAME_PAGE_TYPES = 'page_types';
+/**
+ * @since 5.7.4
+ */
 const DIRNAME_PAGE_TEMPLATES = 'page_templates';
 const DIRNAME_PAGE_THEME = 'page_theme';
 const DIRNAME_PAGE_THEME_CUSTOM = 'custom';
@@ -114,6 +126,9 @@ const DIRNAME_DASHBOARD_MODULES = 'modules';
 const DIRNAME_MAIL_TEMPLATES = 'mail';
 const DIRNAME_THEMES = 'themes';
 const DIRNAME_THEMES_CORE = 'core';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_CONFIG = 'config';
 const DIRNAME_TOOLS = 'tools';
 const DIRNAME_BLOCK_TOOLS = 'tools';
@@ -121,12 +136,18 @@ const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
 const DIRNAME_CSS = 'css';
 const DIRNAME_CLASSES = 'src';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_ENTITIES = 'Entity';
 const DIRNAME_PREVIEW = 'preview';
 const DIRNAME_GROUP = 'group';
 const DIRNAME_GROUP_AUTOMATION = 'automation';
 const DIRNAME_JAVASCRIPT = 'js';
 const DIRNAME_IMAGES = 'images';
+/**
+ * @since 5.7.3
+ */
 const DIRNAME_IMAGES_LANGUAGES = 'countries';
 const DIRNAME_HELPERS = 'helpers';
 const DIRNAME_USER_POINTS = 'user_point';
@@ -153,19 +174,55 @@ const DIRNAME_STYLE_CUSTOMIZER = 'style_customizer';
 const DIRNAME_STYLE_CUSTOMIZER_TYPES = 'types';
 const DIRNAME_STYLE_CUSTOMIZER_PRESETS = 'presets';
 const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_EXPRESS = 'express';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_EXPRESS_VIEW_CONTROLS = 'view';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_EXPRESS_CONTROL_OPTIONS = 'control';
+/**
+ * @since 8.2.0
+ */
 const DIRNAME_FORM_CONTROL_WRAPPER_TEMPLATES = 'form';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_EXPRESS_FORM_CONTROLS = 'form';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION = 'association';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_METADATA_XML = 'xml';
+/**
+ * @since 8.0.0
+ */
 const DIRNAME_METADATA_YAML = 'yaml';
+/**
+ * @since 8.3.0
+ */
 const DIRNAME_GEOLOCATION = 'geolocation';
+/**
+ * @since 8.5.0
+ */
 const DIRNAME_ROUTES = 'routes';
 const REL_DIR_FILES_INCOMING = '/incoming';
 const REL_DIR_FILES_THUMBNAILS = '/thumbnails';
+/**
+ * @since 8.0.0
+ */
 define('REL_DIR_METADATA_XML', DIRNAME_CONFIG . '/' . DIRNAME_METADATA_XML);
+/**
+ * @since 8.0.0
+ */
 define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . '/' . DIRNAME_METADATA_YAML);
 
 /*
@@ -173,12 +230,33 @@ define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . '/' . DIRNAME_METADATA_YAML);
  * Config location/path
  * ----------------------------------------------------------------------------
  */
+/**
+ * @since 8.0.0
+ */
 const CONFIG_ORM_METADATA_BASE = 'database.metadatadriver';
+/**
+ * @since 8.0.0
+ */
 define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE . '.packages');
+/**
+ * @since 8.0.0
+ */
 define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.legacy');
+/**
+ * @since 8.0.0
+ */
 define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.default');
+/**
+ * @since 8.0.0
+ */
 define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.xml');
+/**
+ * @since 8.0.0
+ */
 define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.yaml');
+/**
+ * @since 8.0.0
+ */
 define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE . '.application');
 
 /*
@@ -218,6 +296,9 @@ const FILENAME_THEMES_VIEW = 'view.php';
 const FILENAME_THEMES_CLASS = 'page_theme.php';
 const FILENAME_THEMES_THUMBNAIL = 'thumbnail.png';
 const FILENAME_THEMES_ERROR = 'error';
+/**
+ * @since 8.0.0
+ */
 const FILENAME_EXPRESS_CONTROL_OPTIONS = 'options.php';
 const FILENAME_GATHERING_DATA_SOURCE_OPTIONS = 'options.php';
 const FILENAME_GATHERING_ITEM_TEMPLATE_ICON = 'icon.png';
@@ -284,10 +365,16 @@ const BLOCK_HANDLE_CONVERSATION_MESSAGE = 'core_conversation_message';
  * Stack Defaults
  * ----------------------------------------------------------------------------
  */
+/**
+ * @since 5.7.0.3
+ */
 const STACKS_LISTING_PAGE_PATH = '/dashboard/blocks/stacks';
 const STACKS_PAGE_PATH = '/!stacks';
 const STACKS_AREA_NAME = 'Main';
 const STACKS_PAGE_TYPE = 'core_stack';
+/**
+ * @since 5.7.5
+ */
 const STACK_CATEGORY_PAGE_TYPE = 'core_stack_category';
 
 /*
@@ -297,6 +384,9 @@ const STACK_CATEGORY_PAGE_TYPE = 'core_stack_category';
  */
 /* -- Appearance -- */
 const VIEW_CORE_THEME = 'concrete';
+/**
+ * @since 5.7.5
+ */
 const VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE = 'background_image.php';
 
 /* -- Users -- */
@@ -335,12 +425,18 @@ const USER_INVALID = 20;
 const USER_INACTIVE = 21;
 const USER_NON_VALIDATED = 22;
 const USER_SESSION_EXPIRED = 23;
+/**
+ * @since 8.5.0
+ */
 const USER_PASSWORD_RESET = 24;
 const COLLECTION_MASTER_UNAUTH = 30;
 const COLLECTION_PRIVATE = 40;
 const BLOCK_NOT_AVAILABLE = 50;
 
 /* -- Debugging and Logging -- */
+/**
+ * @since 8.4.1
+ */
 defined('DEFAULT_ERROR_REPORTING') or define('DEFAULT_ERROR_REPORTING', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 const DEBUG_DISPLAY_PRODUCTION = 0;
 const DEBUG_DISPLAY_ERRORS = 1;
@@ -375,8 +471,14 @@ foreach (str_split(decoct($DIRECTORY_PERMISSIONS_MODE), 1) as $p) {
 }
 unset($p);
 $FILE_PERMISSIONS_MODE = octdec($FILE_PERMISSIONS_MODE);
+/**
+ * @since 5.7.2.1
+ */
 define('DIRECTORY_PERMISSIONS_MODE_COMPUTED', $DIRECTORY_PERMISSIONS_MODE);
 unset($DIRECTORY_PERMISSIONS_MODE);
+/**
+ * @since 5.7.2.1
+ */
 define('FILE_PERMISSIONS_MODE_COMPUTED', $FILE_PERMISSIONS_MODE);
 unset($FILE_PERMISSIONS_MODE);
 /*
