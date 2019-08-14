@@ -68,6 +68,7 @@ class UserSignup implements SubjectInterface
 
     /**
      * @param User $user
+     * @since 8.5.0
      */
     public function setCreatedBy(User $user) {
         $this->createdBy = $user;

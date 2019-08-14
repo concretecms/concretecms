@@ -45,6 +45,9 @@ class Seo
         return $this;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function clearTitleSegments()
     {
         $this->titleSegments = array();

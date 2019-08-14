@@ -17,11 +17,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         'options' => ['precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false],
     ];
 
+    /**
+     * @since 8.0.0
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('star');
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return NumberValue::class;
@@ -52,6 +58,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $list;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValue($rating)
     {
         $value = new NumberValue();
@@ -63,6 +72,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $value;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -80,6 +92,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     * @since 8.3.0
      */
     public function getAttributeValueTextRepresentation()
     {
@@ -99,6 +112,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     * @since 8.3.0
      */
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {

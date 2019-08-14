@@ -41,6 +41,9 @@ class WorkflowProgressNotification extends Notification
         return new WorkflowProgressListView($this);
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function getNotificationDateTimeZone()
     {
         $progress = $this->getWorkflowProgressObject();

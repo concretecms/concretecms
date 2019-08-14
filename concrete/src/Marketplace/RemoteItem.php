@@ -53,14 +53,23 @@ class RemoteItem extends ConcreteObject
     {
         return $this->price;
     }
+    /**
+     * @since 5.7.1
+     */
     public function getSkillLevel()
     {
         return $this->skillLevel;
     }
+    /**
+     * @since 5.7.1
+     */
     public function getExampleURL()
     {
         return $this->exampleURL;
     }
+    /**
+     * @since 5.7.1
+     */
     public function getSkillLevelClassName()
     {
         switch ($this->getSkillLevel()) {
@@ -74,6 +83,9 @@ class RemoteItem extends ConcreteObject
                 return 'fa fa-cogs ccm-marketplace-skill-level-bleeding-edge';
         }
     }
+    /**
+     * @since 5.7.1
+     */
     public function getSkillLevelDisplayName()
     {
         switch ($this->getSkillLevel()) {
@@ -88,6 +100,9 @@ class RemoteItem extends ConcreteObject
         }
     }
 
+    /**
+     * @since 5.7.1
+     */
     public function getLocalURL()
     {
         if ($this->getMarketplaceItemType() == 'theme') {
@@ -97,6 +112,9 @@ class RemoteItem extends ConcreteObject
         }
     }
 
+    /**
+     * @since 5.7.1
+     */
     public function getDisplayPrice()
     {
         if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
@@ -113,6 +131,9 @@ class RemoteItem extends ConcreteObject
             return array();
         }
     }
+    /**
+     * @since 5.7.1
+     */
     public function getSlideshow()
     {
         if (is_array($this->slideshowImages)) {
@@ -168,6 +189,9 @@ class RemoteItem extends ConcreteObject
     {
         return $this->url;
     }
+    /**
+     * @since 5.7.1
+     */
     public function getRemoteHelpURL()
     {
         return $this->helpURL;

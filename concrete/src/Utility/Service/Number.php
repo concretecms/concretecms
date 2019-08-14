@@ -21,6 +21,7 @@ class Number
      * @param string $value (decimal separator is dot)
      *
      * @return string
+     * @since 8.0.0
      */
     public function trim($value)
     {
@@ -170,6 +171,7 @@ class Number
      * @param string $val
      *
      * @return int|string
+     * @since 5.7.4
      */
     public function getBytes($val)
     {

@@ -157,6 +157,7 @@ class Detector
      * @return bool
      *
      * @throws \Exception
+     * @since 5.7.5
      */
     public function isEnabled()
     {
@@ -183,6 +184,7 @@ class Detector
 
     /**
      * @return bool
+     * @since 8.5.0
      */
     protected function canSetSessionValue()
     {

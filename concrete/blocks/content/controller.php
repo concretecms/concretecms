@@ -74,6 +74,9 @@ class Controller extends BlockController implements FileTrackableInterface
         return $str;
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function registerViewAssets($outputContent = '')
     {
         if (preg_match('/data-concrete5-link-lightbox/i', $outputContent)) {
@@ -131,6 +134,9 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->getTracker()->forget($this);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getUsedFiles()
     {
         return array_merge(
@@ -139,6 +145,9 @@ class Controller extends BlockController implements FileTrackableInterface
         );
     }
 
+    /**
+     * @since 8.5.2
+     */
     protected function getUsedFilesImages()
 	{
         $files = [];
@@ -152,6 +161,9 @@ class Controller extends BlockController implements FileTrackableInterface
 		return $files;
     }
 
+    /**
+     * @since 8.5.2
+     */
     protected function getUsedFilesDownload()
 	{
         preg_match_all('(FID_DL_\d+)', $this->content, $matches);
@@ -163,6 +175,9 @@ class Controller extends BlockController implements FileTrackableInterface
         );
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getUsedCollection()
     {
         return $this->getCollectionObject();
@@ -170,6 +185,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
     /**
      * @return \Concrete\Core\Statistics\UsageTracker\AggregateTracker
+     * @since 8.4.0
      */
     protected function getTracker()
     {

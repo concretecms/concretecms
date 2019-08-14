@@ -15,11 +15,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class Files extends Standard
 {
 
+    /**
+     * @since 8.0.0
+     */
     protected function getAdvancedSearchDialogController()
     {
         return $this->app->make('\Concrete\Controller\Dialog\File\AdvancedSearch');
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getSavedSearchPreset($presetID)
     {
         $em = \Database::connection()->getEntityManager();
@@ -27,6 +33,9 @@ class Files extends Standard
         return $preset;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getDefaultResetSearchResultObject()
     {
         $search = $this->app->build(FileFolder::class);
@@ -35,6 +44,9 @@ class Files extends Standard
         return $result;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function onAfterSearchPreset(Result $result, SavedSearch $preset)
     {
         $filesystem = new Filesystem();
@@ -62,6 +74,9 @@ class Files extends Standard
         return $result;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getBasicSearchFieldsFromRequest()
     {
         $fields = parent::getBasicSearchFieldsFromRequest();
@@ -72,6 +87,9 @@ class Files extends Standard
         return $fields;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function canAccess()
     {
         $cp = \FilePermissions::getGlobal();

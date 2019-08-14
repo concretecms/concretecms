@@ -42,6 +42,7 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
      * @param \Concrete\Core\Config\Repository\Repository $repository
      * @param \Concrete\Core\Url\Resolver\CanonicalUrlResolver $canonical_resolver
      * @param \Concrete\Core\Application\Service\Dashboard $dashboard
+     * @since 5.7.5.4
      */
     public function __construct(Repository $repository, CanonicalUrlResolver $canonical_resolver, Dashboard $dashboard)
     {

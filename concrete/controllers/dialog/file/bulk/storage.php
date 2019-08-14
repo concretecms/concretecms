@@ -82,6 +82,9 @@ class Storage extends BackendInterfaceController
         return $json->outputJSON();
     }
 
+    /**
+     * @since 8.5.0
+     */
     public function doChangeStorageLocation()
     {
         if ($this->validateAction()) {

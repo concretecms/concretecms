@@ -151,6 +151,9 @@ abstract class Association
         $this->selectedEntries = new ArrayCollection();
     }
 
+    /**
+     * @since 8.5.0
+     */
     public function getAssociationEntry(Entry $entry)
     {
         foreach($this->getSelectedEntriesCollection() as $associatedEntry) {

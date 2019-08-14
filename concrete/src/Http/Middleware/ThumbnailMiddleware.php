@@ -60,6 +60,9 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      */
     private $config;
 
+    /**
+     * @since 8.3.0
+     */
     public function __construct(Repository $config)
     {
         $this->config = $config;
@@ -143,6 +146,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @since 8.5.0
      */
     private function buildRedirectToThumbnailResponse(Request $request)
     {
@@ -159,6 +163,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @param string|null $searchThumbnailPath
      *
      * @return array|null
+     * @since 8.5.0
      */
     private function getThumbnailToGenerate(Connection $database, $searchThumbnailPath = null)
     {
@@ -182,6 +187,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @param array $thumbnail
      *
      * @return bool Returns true if success, false on failure
+     * @since 8.5.0
      */
     private function generateThumbnail(array $thumbnail)
     {
@@ -295,6 +301,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
     /**
      * @return Connection|null
+     * @since 8.5.0
      */
     private function tryGetConnection()
     {
@@ -316,6 +323,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @param Connection $connection
      * @param array $thumbnail
      * @param bool $built
+     * @since 8.5.0
      */
     private function markThumbnailAsBuilt(Connection $connection, array $thumbnail, $built = true)
     {
@@ -334,6 +342,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @param string|null $searchThumbnailPath
      *
      * @return bool
+     * @since 8.5.0
      */
     private function couldBeTheRequestedThumbnail(array $thumbnail, $searchThumbnailPath)
     {

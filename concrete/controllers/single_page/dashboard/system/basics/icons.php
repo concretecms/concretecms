@@ -16,6 +16,9 @@ class Icons extends DashboardSitePageController
      */
     public $helpers = ['form', 'concrete/asset_library', 'validation/token', 'form/color'];
 
+    /**
+     * @since 8.4.1
+     */
     public function view()
     {
         $this->requireAsset('core/colorpicker');
@@ -35,6 +38,9 @@ class Icons extends DashboardSitePageController
         $this->set('browserToolbarColor', (string) $config->get('misc.browser_toolbar_color'));
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function update_icons()
     {
         $config = $this->getSite()->getConfigRepository();

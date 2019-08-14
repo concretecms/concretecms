@@ -24,6 +24,7 @@ class Applier
 
     /**
      * @return EntityManagerInterface
+     * @since 8.1.0
      */
     public function getEntityManager()
     {
@@ -36,6 +37,7 @@ class Applier
      * @param Association $association
      * @param Entry $entry
      * @param $input
+     * @since 8.1.0
      */
     public function associate(Association $association, Entry $entry, $input)
     {
@@ -422,6 +424,9 @@ class Applier
         }
     }
 
+    /**
+     * @since 8.5.0
+     */
     private function rescanAssociationDisplayOrder(Entry\Association $association)
     {
         $displayOrder = 0;
@@ -433,6 +438,9 @@ class Applier
         $this->entityManager->flush();
     }
 
+    /**
+     * @since 8.2.0
+     */
     protected function getInverseAssociation(Association $association)
     {
         return $this->entityManager->getRepository(Association::class)

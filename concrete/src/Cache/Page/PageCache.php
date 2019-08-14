@@ -259,6 +259,7 @@ abstract class PageCache implements FlushableInterface
      * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|mixed $mixed
      *
      * @return string|null Returns NULL if $mixed is not a recognized type, a string otherwise
+     * @since 8.5.2
      */
     public function getCacheHost($mixed)
     {

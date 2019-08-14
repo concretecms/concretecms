@@ -79,6 +79,9 @@ class TextControl extends Control
         return $label;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getControlView(ContextInterface $context)
     {
         return new TextView($context, $this);

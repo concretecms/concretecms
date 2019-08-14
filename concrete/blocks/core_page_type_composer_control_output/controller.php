@@ -24,6 +24,9 @@ class Controller extends BlockController
         return t("Composer Control");
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getComposerOutputControlObject()
     {
         $outputControl = PageTypeComposerOutputControl::getByID($this->ptComposerOutputControlID);

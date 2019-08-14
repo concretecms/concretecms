@@ -41,6 +41,7 @@ class FileItem implements ItemInterface
 
     /**
      * @return mixed
+     * @since 8.3.1
      */
     public function getFilename()
     {
@@ -49,6 +50,7 @@ class FileItem implements ItemInterface
 
     /**
      * @return null
+     * @since 8.3.1
      */
     public function getPrefix()
     {

@@ -10,6 +10,9 @@ class UploadComplete extends BulkPropertiesController
 {
     protected $viewPath = '/dialogs/file/upload_complete';
 
+    /**
+     * @since 8.1.0
+     */
     protected function checkPermissions($file)
     {
         $fp = new \Permissions($file);

@@ -63,6 +63,9 @@ class Setup extends DashboardSitePageController
         $this->set('mlLink', $mlLink);
     }
 
+    /**
+     * @since 5.7.3.1
+     */
     public function get_countries_for_language()
     {
         $cl = $this->app->make('helper/lists/countries');
@@ -198,6 +201,9 @@ class Setup extends DashboardSitePageController
         $this->view();
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function change_locale_section()
     {
         if (!$this->token->validate('change_locale_section')) {

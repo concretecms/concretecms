@@ -155,6 +155,9 @@ class Controller extends BlockController
         return $stack->getCollectionParentID() == Page::getByPath(STACKS_PAGE_PATH)->getCollectionID();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function action_tag($tag = false)
     {
         if ($tag) {

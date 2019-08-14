@@ -79,6 +79,9 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     }
 
 
+    /**
+     * @since 8.5.0
+     */
     public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
@@ -118,11 +121,17 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         $this->permissionsChecker = $checker;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getPermissionsChecker()
     {
         return $this->permissionsChecker;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function enablePermissions()
     {
         unset($this->permissionsChecker);
@@ -135,6 +144,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
 
     /**
      * Sorts this list by date added ascending.
+     * @since 8.5.0
      */
     public function sortByDateAdded()
     {
@@ -143,6 +153,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
 
     /**
      * Sorts this list by date added descending.
+     * @since 8.5.0
      */
     public function sortByDateAddedDescending()
     {
@@ -165,6 +176,9 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         return $query;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function filterByAssociatedEntry(Association $association, Entry $entry)
     {
         // Find the inverse association to this one.
@@ -196,6 +210,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
      * Filters by a user ID.
      *
      * @param integer $userID
+     * @since 8.5.0
      */
     public function filterByAuthorUserID($userID)
     {

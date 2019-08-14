@@ -80,6 +80,7 @@ class EnvironmentDetector
      * @param mixed $environments
      *
      * @return string|null
+     * @since 5.7.5
      */
     protected function detectVariableEnvironment($environments)
     {
@@ -95,6 +96,7 @@ class EnvironmentDetector
      * @param mixed $environments
      *
      * @return string|null
+     * @since 5.7.5.10
      */
     protected function detectClosureEnvironment($environments)
     {
@@ -124,6 +126,7 @@ class EnvironmentDetector
      * Gets the environment from the CONCRETE5_ENV environment variable.
      *
      * @return string|bool
+     * @since 5.7.5
      */
     protected function getEnvironmentFromVariable()
     {

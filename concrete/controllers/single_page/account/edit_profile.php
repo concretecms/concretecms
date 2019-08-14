@@ -57,6 +57,9 @@ class EditProfile extends AccountPageController
         $this->set('unassignedAttributes', $unassignedAttributes);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function save_complete()
     {
         $this->set('success', t('Profile updated successfully.'));

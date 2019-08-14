@@ -63,6 +63,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
      *    If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
+     * @since 5.7.1
      */
     public function getWorkflowDisplayName($format = 'html')
     {
@@ -210,6 +211,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
      * @param \Concrete\Core\Entity\Package $pkg
      *
      * @return \Concrete\Core\Workflow\Workflow[]
+     * @since 8.0.0
      */
     public static function getListByPackage(Package $pkg)
     {
@@ -317,6 +319,7 @@ EOT
      * @param string $wfName
      *
      * @return \Concrete\Core\Workflow\Workflow|null
+     * @since 8.0.0
      */
     public static function getByName($wfName)
     {
@@ -380,6 +383,7 @@ EOT
      * Check if the currently logged-in user can approve this workflow.
      *
      * @return bool
+     * @since 5.7.5.4
      */
     abstract public function canApproveWorkflow();
 
@@ -389,6 +393,7 @@ EOT
      * @param \Concrete\Core\Workflow\Progress\Progress $wp
      *
      * @return \Concrete\Core\User\UserInfo[]
+     * @since 8.0.0
      */
     abstract public function getWorkflowProgressApprovalUsers(WorkflowProgress $wp);
 
@@ -407,6 +412,7 @@ EOT
      * @param \Concrete\Core\Workflow\Progress\Progress $wp
      *
      * @return string|false|null
+     * @since 8.2.0
      */
     abstract public function getWorkflowProgressCurrentComment(WorkflowProgress $wp);
 

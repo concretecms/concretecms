@@ -70,6 +70,9 @@ class SearchProvider extends AbstractSearchProvider
         return new DefaultSet();
     }
     
+    /**
+     * @since 8.2.0
+     */
     public function getSavedSearch()
     {
         return new SavedPageSearch();

@@ -63,6 +63,9 @@ class Controller extends AbstractController implements ControllerInterface
         return $a;
     }
 
+    /**
+     * @since 5.7.2
+     */
     public function registerViewAssets()
     {
         $al = \AssetList::getInstance();
@@ -96,6 +99,7 @@ class Controller extends AbstractController implements ControllerInterface
 
     /**
      * @return ItemInterface
+     * @since 5.7.2.1
      */
     public function getMenuItem()
     {

@@ -34,6 +34,7 @@ class ClassLoader
     /**
      * Returns the status of the legacy namespace
      * @return boolean
+     * @since 8.0.0
      */
     public function legacyNamespaceEnabled()
     {
@@ -42,6 +43,7 @@ class ClassLoader
 
     /**
      * Set legacy namespaces to enabled. This method unsets and resets this loader.
+     * @since 8.0.0
      */
     public function enableLegacyNamespace()
     {
@@ -53,6 +55,7 @@ class ClassLoader
 
     /**
      * Set legacy namespaces to disabled. This method unsets and resets this loader.
+     * @since 8.0.0
      */
     public function disableLegacyNamespace()
     {
@@ -62,6 +65,9 @@ class ClassLoader
         $this->enable();
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function activateAutoloaders()
     {
         $this->loaders = array();
@@ -70,6 +76,9 @@ class ClassLoader
         $this->setupCoreSourceAutoloading(); // Strict PSR4
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function reset()
     {
         $this->disable();
@@ -85,6 +94,7 @@ class ClassLoader
 
     /**
      * @return string
+     * @since 8.0.0
      */
     public function getApplicationNamespace()
     {
@@ -93,6 +103,7 @@ class ClassLoader
 
     /**
      * @param string $applicationNamespace
+     * @since 8.0.0
      */
     public function setApplicationNamespace($applicationNamespace)
     {
@@ -117,6 +128,7 @@ class ClassLoader
      * IDEs will not recognize these classes by default. A symbols file can be generated to
      * assist IDEs by running SymbolGenerator::render() via PHP or executing the command-line
      * 'concrete/bin/concrete5 c5:ide-symbols
+     * @since 8.0.0
      */
     protected function enableAliasClassAutoloading()
     {
@@ -125,6 +137,9 @@ class ClassLoader
         $loader->register(); // We can't add this to the loaders array because there's no way to unregister these once they're registered
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function setupLegacyAutoloading()
     {
         $mapping = array(
@@ -137,6 +152,9 @@ class ClassLoader
         $this->loaders[] = $loader;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function setupCoreAutoloading()
     {
         $loader = new ModifiedPSR4ClassLoader();
@@ -172,6 +190,9 @@ class ClassLoader
         $this->loaders[] = $loader;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function setupCoreSourceAutoloading()
     {
         $loader = new Psr4ClassLoader();
@@ -245,6 +266,9 @@ class ClassLoader
         $this->registerPackageCustomAutoloaders($pkg);
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function registerPackageController($pkgHandle)
     {
         if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
@@ -256,6 +280,9 @@ class ClassLoader
         }
     }
 
+    /**
+     * @since 8.0.1
+     */
     public function registerPackageCustomAutoloaders($pkg)
     {
         if (is_string($pkg)) {
@@ -291,6 +318,9 @@ class ClassLoader
         return static::$instance;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function enable()
     {
         foreach ($this->loaders as $loader) {
@@ -298,6 +328,9 @@ class ClassLoader
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function disable()
     {
         foreach ($this->loaders as $loader) {

@@ -76,6 +76,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
 
     /**
      * @param ExpressValue[] $attributeValues
+     * @since 8.4.4
      */
     public function setAttributeValues($attributeValues)
     {

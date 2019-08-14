@@ -35,6 +35,7 @@ class DateTimeSettings extends Settings
 
     /**
      * @return bool
+     * @since 8.2.0
      */
     public function getUseNowIfEmpty()
     {
@@ -43,6 +44,7 @@ class DateTimeSettings extends Settings
 
     /**
      * @param bool $value
+     * @since 8.2.0
      */
     public function setUseNowIfEmpty($value)
     {
@@ -67,6 +69,7 @@ class DateTimeSettings extends Settings
 
     /**
      * @return string
+     * @since 8.3.0
      */
     public function getTextCustomFormat()
     {
@@ -75,6 +78,7 @@ class DateTimeSettings extends Settings
 
     /**
      * @param string $textCustomFormat
+     * @since 8.3.0
      */
     public function setTextCustomFormat($textCustomFormat)
     {
@@ -85,6 +89,7 @@ class DateTimeSettings extends Settings
      * Get the time resolution (in seconds).
      *
      * @return int
+     * @since 8.2.0
      */
     public function getTimeResolution()
     {
@@ -95,6 +100,7 @@ class DateTimeSettings extends Settings
      * Set the time resolution (in seconds).
      *
      * @param int $value
+     * @since 8.2.0
      */
     public function setTimeResolution($value)
     {

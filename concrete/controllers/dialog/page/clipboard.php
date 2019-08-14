@@ -12,6 +12,7 @@ class Clipboard extends AddPanelController
      * {@inheritdoc}
      *
      * @see \Concrete\Controller\Panel\Add::getSelectedTab()
+     * @since 8.4.1
      */
     protected function getSelectedTab()
     {

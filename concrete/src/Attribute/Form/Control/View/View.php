@@ -40,6 +40,9 @@ class View extends BaseFormView
         $this->addScopeItem('key', $key);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getControlID()
     {
         return $this->key->getController()->getControlID();

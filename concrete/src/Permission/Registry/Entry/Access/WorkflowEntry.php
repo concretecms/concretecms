@@ -32,6 +32,9 @@ class WorkflowEntry implements EntryInterface
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function remove($mixed)
     {
         $workflow = Workflow::getByName($this->workflowName);

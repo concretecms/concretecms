@@ -36,6 +36,7 @@ class Manager extends \Illuminate\Support\Manager
      * Get the default driver name.
      *
      * @return string
+     * @since 8.0.0
      */
     public function getDefaultDriver()
     {

@@ -17,6 +17,9 @@ class ExpressEntryResults extends ExpressEntryCategory
         return new ExpressEntryResultsFolderMenu($this);
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getTotalResultsInFolder()
     {
         $em = \Database::connection()->getEntityManager();

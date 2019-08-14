@@ -116,6 +116,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getConversationNotificationOverridesEnabled()
     {
         return (bool) $this->cnvNotificationOverridesEnabled;
@@ -242,6 +245,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
             array(intval($cnvAttachmentOverridesEnabled), $this->getConversationID()));
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function setConversationNotificationOverridesEnabled($cnvNotificationOverridesEnabled)
     {
         $db = Loader::db();
@@ -291,6 +297,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
             array($cnvFileExtensions, $this->getConversationID()));
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getConversationSubscriptionEnabled()
     {
         if ($this->getConversationNotificationOverridesEnabled() > 0) {
@@ -300,6 +309,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function setConversationSubscriptionEnabled($cnvEnableSubscription)
     {
         $db = Loader::db();
@@ -310,6 +322,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
     /**
      * Similar to the method below, but excludes global subscribers who have opted out of conversations, etc...
      * This method should be used any time we actually act on subscriptions, send emails, etc...
+     * @since 5.7.4
      */
     public function getConversationUsersToEmail()
     {
@@ -343,6 +356,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         return $users;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getConversationSubscribedUsers()
     {
         if ($this->getConversationNotificationOverridesEnabled() > 0) {
@@ -363,6 +379,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         return $users;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public static function getDefaultSubscribedUsers()
     {
         $db = Loader::db();
@@ -378,6 +397,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         return $users;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function setConversationSubscribedUsers($users)
     {
         $db = Loader::db();
@@ -389,6 +411,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         $db->commit();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function isUserSubscribed($user)
     {
         $db = Loader::db();
@@ -412,6 +437,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function subscribeUser($user)
     {
         $db = Loader::db();
@@ -423,6 +451,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function unsubscribeUser($user)
     {
         $db = Loader::db();
@@ -434,6 +465,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public static function setDefaultSubscribedUsers($users)
     {
         $db = Loader::db();

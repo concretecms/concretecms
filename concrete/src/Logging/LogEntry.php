@@ -173,6 +173,7 @@ class LogEntry
 
     /**
      * Deletes the log entry.
+     * @since 8.4.0
      */
     public function delete()
     {

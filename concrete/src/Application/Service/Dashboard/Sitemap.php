@@ -45,6 +45,7 @@ class Sitemap
      * Sitemap constructor.
      *
      * @param \Concrete\Core\Application\Application $app
+     * @since 8.5.0
      */
     public function __construct(Application $app)
     {
@@ -53,6 +54,7 @@ class Sitemap
 
     /**
      * @param bool $autoOpen
+     * @since 5.7.5.2
      */
     public function setExpandedNodes($nodes)
     {
@@ -92,6 +94,7 @@ class Sitemap
 
     /**
      * @param bool $isSitemapOverlay
+     * @since 8.5.0
      */
     public function setIsSitemapOverlay($isSitemapOverlay)
     {
@@ -316,6 +319,9 @@ class Sitemap
         return $node;
     }
 
+    /**
+     * @since 8.5.2
+     */
     public function canViewSitemapPanel()
     {
         $types = Type::getList();

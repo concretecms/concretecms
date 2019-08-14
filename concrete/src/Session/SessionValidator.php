@@ -144,6 +144,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      * @param \Symfony\Component\HttpFoundation\Session\Session $session
      *
      * @return bool
+     * @since 8.5.0
      */
     public function shouldValidateUserActivity(SymfonySession $session)
     {
@@ -154,6 +155,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
 
     /**
      * @return int
+     * @since 8.5.0
      */
     public function getUserActivityThreshold()
     {
@@ -164,6 +166,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      * Check if there is an active session.
      *
      * @return bool
+     * @since 8.4.0
      */
     public function hasActiveSession()
     {
@@ -178,6 +181,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      * @param bool $start set to true to initialize the current session if it's not already started
      *
      * @return \Symfony\Component\HttpFoundation\Session\Session|null Returns NULL if $start is falsy and the session is not already started
+     * @since 8.5.1
      */
     public function getActiveSession($start = false)
     {

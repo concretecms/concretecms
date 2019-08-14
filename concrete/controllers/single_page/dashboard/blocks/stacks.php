@@ -26,6 +26,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Stacks extends DashboardPageController
 {
+    /**
+     * @since 5.7.0.3
+     */
     public function view_global_areas()
     {
         $stm = new StackList();
@@ -36,6 +39,7 @@ class Stacks extends DashboardPageController
 
     /**
      * @return Section[]
+     * @since 8.0.0
      */
     protected function getMultilingualSections()
     {
@@ -226,6 +230,7 @@ class Stacks extends DashboardPageController
      * @param Page|StackFolder $parent
      *
      * @return bool
+     * @since 8.0.0
      */
     protected function canMoveStacks($parent)
     {
@@ -235,6 +240,9 @@ class Stacks extends DashboardPageController
         return (bool) $cpc->canMoveOrCopyPage();
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getBreadcrumb(\Concrete\Core\Page\Page $page = null)
     {
         $breadcrumb = [[
@@ -267,6 +275,9 @@ class Stacks extends DashboardPageController
         return $breadcrumb;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function deliverStackList(StackList $list)
     {
         $list->setFoldersFirst(true);
@@ -312,6 +323,9 @@ class Stacks extends DashboardPageController
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function add_localized_stack()
     {
         $token = $this->app->make('helper/validation/token');
@@ -354,6 +368,9 @@ class Stacks extends DashboardPageController
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function add_folder()
     {
         if (!$this->token->validate('add_folder')) {
@@ -549,6 +566,9 @@ class Stacks extends DashboardPageController
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function move_to_folder()
     {
         $valt = $this->app->make('helper/validation/token');
@@ -671,6 +691,9 @@ class Stacks extends DashboardPageController
         return Redirect::to('/');
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function delete_stackfolder()
     {
         $parentID = null;
@@ -708,6 +731,9 @@ class Stacks extends DashboardPageController
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function usage($stackId)
     {
         $this->set('stackId', $stackId);
@@ -737,6 +763,7 @@ class Stacks extends DashboardPageController
      *
      * @param StackUsageRecord[] $records
      * @return \Generator
+     * @since 8.0.0
      */
     protected function getUsageGenerator(array $records)
     {

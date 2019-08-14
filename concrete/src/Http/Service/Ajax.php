@@ -12,6 +12,7 @@ class Ajax
      * @param Request $request
      *
      * @return bool
+     * @since 8.2.0
      */
     public function isAjaxRequest(Request $request)
     {

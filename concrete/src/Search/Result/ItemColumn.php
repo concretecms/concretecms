@@ -19,6 +19,9 @@ class ItemColumn
         return $this->value;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getColumn()
     {
         return $this->column;

@@ -121,6 +121,7 @@ class ClassSymbol
 
     /**
      * @return bool
+     * @since 5.7.3
      */
     public function isFacade()
     {
@@ -129,6 +130,7 @@ class ClassSymbol
 
     /**
      * @return ReflectionClass|null
+     * @since 5.7.4
      */
     public function getFacadeReflectionClass()
     {
@@ -184,6 +186,7 @@ class ClassSymbol
      * Get the namespace of the alias.
      *
      * @return string
+     * @since 8.3.0
      */
     public function getAliasNamespace()
     {

@@ -35,6 +35,7 @@ abstract class AbstractTranslationLoader implements TranslationLoaderInterface
      * @param string $localeID
      *
      * @return string[]
+     * @since 8.2.0
      */
     protected function getLocaleIDAlternatives($localeID)
     {

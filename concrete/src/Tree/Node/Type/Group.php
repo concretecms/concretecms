@@ -27,6 +27,9 @@ class Group extends TreeNode
         return 'group_tree_node';
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getTreeNodeTypeName()
     {
         return 'Group';
@@ -37,6 +40,9 @@ class Group extends TreeNode
         return $this->gID;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getTreeNodeMenu()
     {
         return new GroupMenu($this);
@@ -46,6 +52,9 @@ class Group extends TreeNode
     {
         return UserGroup::getByID($this->gID);
     }
+    /**
+     * @since 5.7.3
+     */
     public function getTreeNodeName()
     {
         $g = UserGroup::getByID($this->gID);

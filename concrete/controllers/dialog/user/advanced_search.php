@@ -26,6 +26,9 @@ class AdvancedSearch extends AdvancedSearchController
         return $this->app->make('Concrete\Core\User\Search\SearchProvider');
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function getSavedSearchEntity()
     {
         $em = $this->app->make(EntityManager::class);
@@ -56,11 +59,17 @@ class AdvancedSearch extends AdvancedSearchController
         return (string) URL::to('/ccm/system/search/users/basic');
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function getSavedSearchDeleteURL(SavedSearch $search, $confirm = false)
     {
         return (string) URL::to('/ccm/system/dialogs/user/advanced_search/preset/delete?presetID=' . $search->getID());
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function getSavedSearchEditURL(SavedSearch $search)
     {
         return (string) URL::to('/ccm/system/dialogs/user/advanced_search/preset/edit?presetID=' . $search->getID());

@@ -20,6 +20,7 @@ class Manager extends CoreManager
      * Create a user deactivated type
      *
      * @return \Concrete\Core\Notification\Type\UserDeactivatedType
+     * @since 8.5.0
      */
     public function createUserDeactivatedDriver()
     {

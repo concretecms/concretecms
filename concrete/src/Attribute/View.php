@@ -58,6 +58,7 @@ class View extends AbstractView
 
     /**
      * @deprecated
+     * @since 8.0.0
      */
     protected function getContextFromString($string)
     {

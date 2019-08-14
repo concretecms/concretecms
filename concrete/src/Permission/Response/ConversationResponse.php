@@ -5,6 +5,7 @@ class ConversationResponse extends Response
 {
     /**
      * @todo Make this dependent on conversation-specific permissions.
+     * @since 5.7.5.2
      */
     public function canViewConversation()
     {

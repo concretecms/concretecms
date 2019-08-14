@@ -73,6 +73,9 @@ class Category extends ConcreteObject
         return $list;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function getPermissionKeyClass()
     {
         $className = core_class('\\Core\\Permission\\Key\\'
@@ -147,6 +150,9 @@ class Category extends ConcreteObject
         }
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function deassociateAccessEntityType(\Concrete\Core\Permission\Access\Entity\Type $pt)
     {
         $db = Database::get();

@@ -90,6 +90,7 @@ class TranslationsInstaller
      * @param Package $package
      *
      * @return array array keys are the missing locale IDs, array values are: false (package not translated), true (language file downloaded), \Exception (in case of errors)
+     * @since 8.4.0
      */
     public function installMissingPackageTranslations(Package $package)
     {

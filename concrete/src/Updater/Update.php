@@ -138,6 +138,7 @@ class Update
 
     /**
      * Checks migrations to see if the current code DB version is greater than that registered in the database.
+     * @since 8.0.0
      */
     public static function isCurrentVersionNewerThanDatabaseVersion()
     {
@@ -156,6 +157,7 @@ class Update
      * @param null|Configuration $configuration
      *
      * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
+     * @since 5.7.2
      */
     public static function updateToCurrentVersion(Configuration $configuration = null)
     {

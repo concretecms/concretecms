@@ -255,6 +255,9 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
         return new AttributeKey();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getControlView(ContextInterface $context)
     {
         return $this->getController()->getControlView($context);

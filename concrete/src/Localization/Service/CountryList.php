@@ -13,6 +13,9 @@ class CountryList
         $this->loadCountries();
     }
 
+    /**
+     * @since 5.7.3.1
+     */
     protected function loadCountries()
     {
         $countries = \Punic\Territory::getCountries();
@@ -63,6 +66,7 @@ class CountryList
      * @param string $languageStatuses The allowed statuses of the languages, whose codes are 'o' (official), 'r' (official regional), 'f' (de facto official), 'm' (official minority), 'u' (unofficial or unknown)
      *
      * @return array Returns a list of country codes
+     * @since 5.7.3.1
      */
     public function getCountriesForLanguage($languageCode, $languageStatuses = 'orfm')
     {

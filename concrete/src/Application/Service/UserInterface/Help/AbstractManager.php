@@ -28,6 +28,9 @@ class AbstractManager implements ManagerInterface, RegistryInterface
         $this->setMessage($identifier, $m);
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function setMessage($identifier, MessageInterface $message)
     {
         $this->messages[$identifier] = $message;

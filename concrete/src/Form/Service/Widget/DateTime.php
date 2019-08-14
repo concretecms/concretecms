@@ -433,6 +433,7 @@ EOT;
      * @return int
      *
      * @example If the current time is 10 and the time resolution is 15, we have an array of values of [0, 15, 30, 45]: the closest value is 15.
+     * @since 8.2.0
      */
     protected function selectNearestValue(array $values, $wantedValue)
     {

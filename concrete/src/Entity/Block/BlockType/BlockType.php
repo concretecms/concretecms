@@ -528,6 +528,7 @@ EOT
      * Get the display order of this block type when it's not assigned to any block type set.
      *
      * @return int
+     * @since 8.4.1
      */
     public function getBlockTypeDisplayOrder()
     {

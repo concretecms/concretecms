@@ -8,31 +8,49 @@ use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
 
 class Category extends TreeNode
 {
+    /**
+     * @since 5.7.4
+     */
     public function getTreeNodeTranslationContext()
     {
         return 'TreeNodeCategoryName';
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\CategoryTreeNodeResponse';
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\CategoryTreeNodeAssignment';
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'category_tree_node';
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getTreeNodeMenu()
     {
         return new CategoryMenu($this);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getTreeNodeTypeName()
     {
         return 'Category';
@@ -92,6 +110,9 @@ class Category extends TreeNode
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getListFormatter()
     {
         return new CategoryListFormatter();

@@ -49,6 +49,9 @@ class Groups extends Controller
         return $this->result;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getListObject()
     {
         return $this->groupList;

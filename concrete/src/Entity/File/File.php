@@ -325,7 +325,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      *
      * @return \Concrete\Core\Entity\User\User|null
      *
-     * @since concrete5 8.5.2
+     * @since 8.5.2
      */
     public function getUser()
     {
@@ -356,6 +356,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      * Get the IDs of the file sets that this file belongs to.
      *
      * @return int[]
+     * @since 8.4.0
      */
     public function getFileSetIDs()
     {

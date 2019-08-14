@@ -16,21 +16,33 @@ use Loader;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
+    /**
+     * @since 8.0.0
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('share');
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getSearchIndexValue()
     {
         return false;
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return SocialLinksValue::class;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -48,6 +60,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $this->createAttributeValue($values);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValue($values)
     {
         $av = new SocialLinksValue();
@@ -105,6 +120,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $html;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getControlView(\Concrete\Core\Form\Context\ContextInterface $context)
     {
         return new GroupedView($context, $this->getAttributeKey(), $this->getAttributeValue());
@@ -137,6 +155,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     * @since 8.3.0
      */
     public function getAttributeValueTextRepresentation()
     {
@@ -155,6 +174,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     * @since 8.3.0
      */
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {

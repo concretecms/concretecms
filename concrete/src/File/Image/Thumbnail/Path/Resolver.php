@@ -109,6 +109,7 @@ class Resolver
      * @param string $format
      *
      * @return null|string
+     * @since 8.3.0
      */
     protected function getStoredThumnbailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format)
     {
@@ -125,6 +126,7 @@ class Resolver
      * @param string $format
      *
      * @return null|string
+     * @since 8.5.0
      */
     protected function getStoredThumbnailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format)
     {
@@ -160,6 +162,7 @@ class Resolver
      * @param string $thumbnail_handle
      * @param string $format
      * @param bool $isBuilt Have we had the configuration generate the path yet
+     * @since 8.3.0
      */
     protected function storeThumbnailPath($path, $file_id, $version_id, $storage_location_id, $thumbnail_handle, $format, $isBuilt = true)
     {
@@ -192,6 +195,7 @@ class Resolver
      * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
      * @param string $format
      * @return string|null
+     * @since 8.3.0
      */
     protected function determineThumbnailPath(Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration, $format)
     {
@@ -216,6 +220,7 @@ class Resolver
      * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
      * @param string $format
      * @return mixed
+     * @since 8.3.0
      */
     protected function getBuiltThumbnailPath($path, Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration, $format)
     {
@@ -227,6 +232,7 @@ class Resolver
      * @param string $path
      * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
      * @return string
+     * @since 8.1.0
      */
     protected function getPathFromConfiguration($path, ConfigurationInterface $configuration)
     {
@@ -271,6 +277,7 @@ class Resolver
 
     /**
      * @deprecated Use getBuiltThumbnailPath
+     * @since 8.1.0
      */
     protected function getBuiltPath($path, Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration)
     {

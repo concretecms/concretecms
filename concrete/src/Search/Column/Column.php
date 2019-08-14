@@ -83,11 +83,17 @@ class Column implements ColumnInterface
         return $il->getSortClassName($this->getColumnKey());
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getColumnSortDirection()
     {
         return $this->sortDirection;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setColumnSortDirection($sortDirection)
     {
         return $this->sortDirection = $sortDirection;

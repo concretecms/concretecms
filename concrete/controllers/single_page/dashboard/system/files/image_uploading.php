@@ -46,6 +46,9 @@ class ImageUploading extends DashboardPageController
         $this->set('thumbnailOptionsURL', $thumbnailOptionsURL);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function test_manipulation_library($handle, $token)
     {
         $rf = $this->app->make(ResponseFactoryInterface::class);
@@ -132,6 +135,9 @@ class ImageUploading extends DashboardPageController
         $this->view();
     }
 
+    /**
+     * @since 8.4.0
+     */
     protected function getManipulationLibraries()
     {
         return [

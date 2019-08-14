@@ -50,6 +50,9 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
         return $this->cnvMessageBody;
     }
 
+    /**
+     * @since 5.7.5.9
+     */
     public function getConversationMessageDateCreated()
     {
         return $this->cnvMessageDateCreated;
@@ -82,6 +85,7 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
 
     /**
      * @return int Number between 0 and 5
+     * @since 8.2.0
      */
     public function getConversationMessageReview()
     {
@@ -150,6 +154,9 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
         return $this->getConversationMessageID();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getConversationMessageAuthorObject()
     {
         return $this->cnvMessageAuthor;
@@ -172,6 +179,7 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
 
     /**
      * @param int $review A number between 1 and 5
+     * @since 8.2.0
      */
     public function setReview($review)
     {
@@ -187,6 +195,9 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
         ));
     }
 
+    /**
+     * @since 5.7.5.9
+     */
     public function setMessageDateCreated($cnvMessageDateCreated)
     {
         $this->cnvMessageDateCreated = $cnvMessageDateCreated;

@@ -134,6 +134,7 @@ class Set
      * @param bool|User|\Concrete\Core\User\UserInfo $user User or UserInfo Object
      *
      * @return array
+     * @since 8.4.3
      */
     public static function getOwnedSets($user = false)
     {
@@ -223,6 +224,9 @@ class Set
         }
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public static function __callStatic($name, $arguments)
     {
         if (strcasecmp($name, 'add') === 0) {
@@ -240,6 +244,7 @@ class Set
      * @param int $type
      *
      * @return Set
+     * @since 5.7.5.4
      */
     public static function create($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = self::TYPE_PUBLIC)
     {
@@ -445,6 +450,7 @@ class Set
      * @param string $format
      *
      * @return string
+     * @since 5.7.4
      */
     public function getFileSetDisplayName($format = 'html')
     {
@@ -660,6 +666,9 @@ class Set
 
     */
 
+    /**
+     * @since 5.7.4
+     */
     public function getJSONObject()
     {
         $r = new \stdClass();
@@ -700,6 +709,7 @@ class Set
      * @param string $fileOperation 'add' or 'remove'
      *
      * @return bool
+     * @since 8.5.0
      */
     protected function shouldRefreshFileThumbnails($fileOperation)
     {

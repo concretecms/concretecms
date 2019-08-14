@@ -126,6 +126,7 @@ class ApacheDetector implements DetectorInterface
      * @param string $value
      *
      * @return null|string
+     * @since 8.2.0
      */
     private function detectFromSapiName($sapiName)
     {

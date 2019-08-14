@@ -27,6 +27,7 @@ class ViewContext implements ContextInterface
 
     /**
      * @return mixed
+     * @since 8.2.0
      */
     public function getEntry()
     {
@@ -35,12 +36,16 @@ class ViewContext implements ContextInterface
 
     /**
      * @param mixed $entry
+     * @since 8.2.0
      */
     public function setEntry(Entry $entry)
     {
         $this->entry = $entry;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getAttributeContext()
     {
         return new BasicFormViewContext();
@@ -48,6 +53,7 @@ class ViewContext implements ContextInterface
 
     /**
      * @return mixed
+     * @since 8.2.0
      */
     public function getForm()
     {
@@ -56,12 +62,16 @@ class ViewContext implements ContextInterface
 
     /**
      * @param mixed $form
+     * @since 8.2.0
      */
     public function setForm(FormInterface $form)
     {
         $this->form = $form;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setLocation(TemplateLocator $locator)
     {
         $locator->addLocation(DIRNAME_ELEMENTS .

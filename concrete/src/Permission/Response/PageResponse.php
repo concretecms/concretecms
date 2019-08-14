@@ -69,6 +69,9 @@ class PageResponse extends Response
         return $this->canDeletePage();
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function canEditPageType()
     {
         return $this->validate('edit_page_page_type');
@@ -194,6 +197,9 @@ class PageResponse extends Response
         return $this->getAllAssignmentsForPage();
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getAllAssignmentsForPage()
     {
         $db = Loader::db();

@@ -137,6 +137,7 @@ class TrustedProxies extends DashboardPageController
      * Get the list of headers that can be marked as trusted.
      *
      * @return string[]
+     * @since 8.5.2
      */
     protected function getTrustableHeaderNames()
     {
@@ -153,6 +154,7 @@ class TrustedProxies extends DashboardPageController
      * Get the map from the Symfony header bits to the header names.
      *
      * @return array
+     * @since 8.5.2
      */
     protected function getSymfonyHeadersMap()
     {
@@ -169,6 +171,7 @@ class TrustedProxies extends DashboardPageController
      * Get the map from the Symfony header bits to the header names.
      *
      * @return array
+     * @since 8.5.2
      */
     protected function getLegacySymfonyHeadersMap()
     {
@@ -185,6 +188,7 @@ class TrustedProxies extends DashboardPageController
      * Get the currently configured trusted header names.
      *
      * @return string[]
+     * @since 8.5.2
      */
     protected function getTrustedHeaderNames()
     {
@@ -214,6 +218,7 @@ class TrustedProxies extends DashboardPageController
      * Extract the prospective forwarded header names and their values.
      *
      * @return array
+     * @since 8.5.2
      */
     protected function getRequestForwardedHeaders()
     {

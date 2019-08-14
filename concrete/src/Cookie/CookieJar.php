@@ -33,6 +33,7 @@ class CookieJar
      *
      * @param Request $request the object containing the request cookies
      * @param ResponseCookieJar $responseCookies the object containing the response cookies
+     * @since 8.5.0
      */
     public function __construct(Request $request, ResponseCookieJar $responseCookies)
     {
@@ -44,6 +45,7 @@ class CookieJar
      * Get the object containing the response cookies.
      *
      * @return \Concrete\Core\Cookie\ResponseCookieJar
+     * @since 8.5.0
      */
     public function getResponseCookies()
     {
@@ -91,6 +93,7 @@ class CookieJar
      * Get a list of cookie names and values (both from response and from request).
      *
      * @return array array keys are the cookie names, array values are the cookie values
+     * @since 8.5.0
      */
     public function getAll()
     {
@@ -116,6 +119,7 @@ class CookieJar
      * Set the request for this cookie jar.
      *
      * @param \Concrete\Core\Http\Request $request
+     * @since 8.0.0
      */
     public function setRequest(Request $request)
     {

@@ -377,6 +377,7 @@ class Theme extends ConcreteObject
      * Returns the value list of the custom style object if one exists.
      *
      * @return ValueList
+     * @since 5.7.5.4
      */
     public function getThemeCustomStyleObjectValues()
     {
@@ -633,6 +634,9 @@ class Theme extends ConcreteObject
         return $res;
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function export($node)
     {
         $pst = static::getSiteTheme();

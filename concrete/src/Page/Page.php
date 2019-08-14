@@ -192,6 +192,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @see \Concrete\Core\Attribute\ObjectInterface::getObjectAttributeCategory()
      *
      * @return \Concrete\Core\Attribute\Category\PageCategory
+     * @since 8.4.0
      */
     public function getObjectAttributeCategory()
     {
@@ -243,6 +244,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @see \Concrete\Core\Export\ExportableInterface::getExporter()
      *
      * @return \Concrete\Core\Page\Exporter
+     * @since 8.4.0
      */
     public function getExporter()
     {
@@ -329,6 +331,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Return a representation of the Page object as something easily serializable.
      *
      * @return \stdClass
+     * @since 5.7.3
      */
     public function getJSONObject()
     {
@@ -472,6 +475,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @private
      * Forces all pages to be checked in and edit mode to be reset.
      * @TODO – move this into a command in version 9.
+     * @since 8.4.0
      */
     public static function forceCheckInForAllPages()
     {
@@ -691,6 +695,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Permission\AssignableObjectInterface::setPermissionsToOverride()
+     * @since 8.0.0
      */
     public function setPermissionsToOverride()
     {
@@ -703,6 +708,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Permission\AssignableObjectInterface::setChildPermissionsToOverride()
+     * @since 8.0.0
      */
     public function setChildPermissionsToOverride()
     {
@@ -716,6 +722,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @param \Concrete\Core\User\Group\Group|\Concrete\Core\User\Group\Group[]|\Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User $userOrGroup A list of groups for a group combination, or a group or a user
      * @param string[] $permissions the handles of page permission keys to be removed
+     * @since 5.7.3
      */
     public function removePermissions($userOrGroup, $permissions = [])
     {
@@ -754,6 +761,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @param \Concrete\Core\Entity\Site\Site|null $site If not specified, we'll use the default site
      *
      * @return \Concrete\Core\Page\Page
+     * @since 8.3.0
      */
     public static function getDraftsParentPage(Site $site = null)
     {
@@ -1369,6 +1377,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Get all the page paths of this page.
      *
      * @return \Concrete\Core\Entity\Page\PagePath[]
+     * @since 5.7.4
      */
     public function getPagePaths()
     {
@@ -1395,6 +1404,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Clears all page paths for a page.
+     * @since 5.7.4
      */
     public function clearPagePaths()
     {
@@ -1422,6 +1432,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Site\Tree\TreeInterface::getSiteTreeID()
+     * @since 8.0.0
      */
     public function getSiteTreeID()
     {
@@ -1432,6 +1443,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Site\SiteAggregateInterface::getSite()
+     * @since 8.2.0
      */
     public function getSite()
     {
@@ -1445,6 +1457,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * {@inheritDoc}
      *
      * @see \Concrete\Core\Site\Tree\TreeInterface::getSiteTreeObject()
+     * @since 8.0.0
      */
     public function getSiteTreeObject()
     {
@@ -1557,6 +1570,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Get the Page Template Object (if available).
      *
      * @return \Concrete\Core\Entity\Page\Template|null
+     * @since 5.7.3
      */
     public function getPageTemplateObject()
     {
@@ -1567,6 +1581,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Get the handle of the Page Template (if available).
      *
      * @return string|false
+     * @since 5.7.3
      */
     public function getPageTemplateHandle()
     {
@@ -1739,7 +1754,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return bool
      *
-     * @since concrete5 8.5.0a2
+     * @since 8.5.0
      */
     public function isAliasPage()
     {
@@ -1751,7 +1766,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return bool
      *
-     * @since concrete5 8.5.0a2
+     * @since 8.5.0
      */
     public function isAliasPageOrExternalLink()
     {
@@ -1814,6 +1829,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Get the date/time when the current version was made public (or NULL value if the current version doesn't have public date).
      *
      * @return \DateTime|null
+     * @since 5.7.4
      */
     public function getCollectionDatePublicObject()
     {
@@ -1919,6 +1935,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Set the theme for a page using the page object.
      *
      * @param \Concrete\Core\Page\Type\Type|null $type
+     * @since 5.7.3
      */
     public function setPageType(\Concrete\Core\Page\Type\Type $type = null)
     {
@@ -2325,6 +2342,7 @@ EOT
 
     /**
      * Clears the custom theme styles for every page.
+     * @since 5.7.3
      */
     public static function resetAllCustomStyles()
     {
@@ -2769,6 +2787,7 @@ EOT
      * Get the relations of this page.
      *
      * @return \Concrete\Core\Entity\Page\Relation\SiblingRelation[]
+     * @since 8.0.0
      */
     public function getPageRelations()
     {
@@ -3084,6 +3103,7 @@ EOT
     * Is this the homepage for the site tree this page belongs to?
     *
     * @return bool
+    * @since 8.0.0
     */
     public function isHomePage()
     {
@@ -3094,6 +3114,7 @@ EOT
      * Get the ID of the homepage for the site tree this page belongs to.
      *
      * @return int|null Returns NULL if there's no default locale
+     * @since 8.0.0
      */
     public function getSiteHomePageID()
     {
@@ -3104,6 +3125,7 @@ EOT
      * @deprecated use the isHomePage() method
      *
      * @return bool
+     * @since 8.3.0
      */
     public function isLocaleHomePage()
     {
@@ -3116,6 +3138,7 @@ EOT
      * @param Page|int $page the page (or its ID) for which you want the home (if not specified, we'll use the default locale site tree)
      *
      * @return int|null returns NULL if $page is null (or it doesn't have a SiteTree associated) and if there's no default locale
+     * @since 8.3.0
      */
     public static function getHomePageID($page = null)
     {
@@ -3158,6 +3181,7 @@ EOT
      * Get a new PagePath object with the computed canonical page path.
      *
      * @return \Concrete\Core\Entity\Page\PagePath
+     * @since 5.7.4
      */
     public function getAutoGeneratedPagePathObject()
     {
@@ -3187,6 +3211,7 @@ EOT
      * Get the URL-slug-based path to the current page (including any suffixes) in a string format. Does so in real time.
      *
      * @return string
+     * @since 5.7.4
      */
     public function generatePagePath()
     {
@@ -3474,6 +3499,7 @@ EOT
 
     /**
      * Mark this page as non draft.
+     * @since 8.3.2
      */
     public function setPageToDraft()
     {
@@ -3814,6 +3840,7 @@ EOT
      * Copy the area styles from a page template.
      *
      * @param \Concrete\Core\Entity\Page\Template $pageTemplate
+     * @since 5.7.3
      */
     protected function acquireAreaStylesFromDefaults(\Concrete\Core\Entity\Page\Template $template)
     {

@@ -29,6 +29,9 @@ class Controller extends DefaultController
         return $type;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getDisplayValue()
     {
         return h($this->getAttributeValue()->getValue());
@@ -62,11 +65,17 @@ class Controller extends DefaultController
         echo $f->text($this->field('value'), $this->request('value'));
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function type_form()
     {
         $this->load();
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function load()
     {
         $ak = $this->getAttributeKey();
@@ -90,6 +99,9 @@ class Controller extends DefaultController
         return $akey;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValue($value)
     {
         $av = new TextValue();
@@ -109,6 +121,9 @@ class Controller extends DefaultController
         return $type;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('file-text');

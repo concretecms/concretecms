@@ -28,6 +28,9 @@ class ObjectManager
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function getEntities($asObject = false)
     {
         $r = $this->entityManager
@@ -52,12 +55,18 @@ class ObjectManager
         }
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function refresh($object)
     {
         $this->entityManager->refresh($object);
         return $object;
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function buildObject($handle, $plural_handle, $name, Package $pkg = null)
     {
         $builder = $this->app->make(ObjectBuilder::class);
@@ -70,6 +79,9 @@ class ObjectManager
         return $builder;
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function buildEntry($entity)
     {
         $entity = is_string($entity) ? $this->getObjectByHandle($entity) : $entity;
@@ -88,6 +100,9 @@ class ObjectManager
             ->findOneBy(['exEntryID' => $entryID]);
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function deleteEntry($entryID)
     {
         $entry = $this->getEntry($entryID);
@@ -105,6 +120,9 @@ class ObjectManager
         }
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getObjectByID($entityID)
     {
         return $this->entityManager
@@ -112,6 +130,9 @@ class ObjectManager
             ->findOneById($entityID);
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getObjectByHandle($entityHandle)
     {
         return $this->entityManager
@@ -119,6 +140,9 @@ class ObjectManager
             ->findOneByHandle($entityHandle);
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getEntityController(Entity $entity)
     {
         return $this->app->make(ControllerManager::class)->driver(

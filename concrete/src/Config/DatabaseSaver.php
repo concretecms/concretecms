@@ -14,6 +14,7 @@ class DatabaseSaver implements SaverInterface
 
     /**
      * @return Connection
+     * @since 5.7.5.4
      */
     public function getConnection()
     {
@@ -26,6 +27,7 @@ class DatabaseSaver implements SaverInterface
 
     /**
      * @param Connection $connection
+     * @since 5.7.5.4
      */
     public function setConnection($connection)
     {
@@ -61,6 +63,9 @@ class DatabaseSaver implements SaverInterface
         $this->doSave($item, $value, $environment, $group, $namespace);
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     private function doSave($item, $value, $environment, $group, $namespace = null)
     {
         $connection = $this->getConnection();

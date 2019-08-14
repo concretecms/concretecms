@@ -18,6 +18,9 @@ class Authentication extends DashboardPageController
      */
     const ERROR_INVALID_TOKEN = 2;
 
+    /**
+     * @since 5.7.5.4
+     */
     public function getErrorStrings()
     {
         return array(
@@ -26,6 +29,9 @@ class Authentication extends DashboardPageController
         );
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function getErrorString($error)
     {
         return array_get($this->getErrorStrings(), $error, t('Invalid Error Code'));

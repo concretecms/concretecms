@@ -26,17 +26,24 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @return \Closure|int|null
+     * @since 8.2.1
      */
     public function getPermissionsChecker()
     {
         return $this->permissionsChecker;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getPagerVariableFactory()
     {
         return new VariableFactory($this, $this->getSearchRequest());
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getPagerManager()
     {
         return new UserListPagerManager($this);
@@ -47,16 +54,25 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     protected $permissionsChecker;
 
+    /**
+     * @since 8.2.1
+     */
     public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function ignorePermissions()
     {
         $this->permissionsChecker = -1;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function enablePermissions()
     {
         unset($this->permissionsChecker);
@@ -96,6 +112,9 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     protected $includeUnvalidatedUsers = false;
 
+    /**
+     * @since 8.0.0
+     */
     protected function setBaseQuery()
     {
         $sql = '';
@@ -127,6 +146,9 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
@@ -138,6 +160,9 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         return $adapter;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function checkPermissions($mixed)
     {
         if (isset($this->permissionsChecker)) {
@@ -162,6 +187,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * @param UserInfoRepository $value
      *
      * @return $this;
+     * @since 8.2.0
      */
     public function setUserInfoRepository(UserInfoRepository $value)
     {
@@ -172,6 +198,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @return UserInfoRepository
+     * @since 8.2.0
      */
     public function getUserInfoRepository()
     {
@@ -258,6 +285,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filter list by whether a user is validated or not.
      *
      * @param bool $isValidated
+     * @since 8.2.0
      */
     public function filterByIsValidated($isValidated)
     {
@@ -269,6 +297,9 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function sortByStatus($dir = 'asc')
     {
         $this->sortUserStatus = 1;
@@ -355,6 +386,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Function used to check if a group join has already been set
+     * @since 8.4.0
      */
     private function checkGroupJoin() {
         $query = $this->getQueryObject();
@@ -384,6 +416,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      *
      * @param \Concrete\Core\User\Group\Group[]|\Generator $groups
      * @param bool $inGroups Set to true to search users that are in at least in one of the specified groups, false to search users that aren't in any of the specified groups
+     * @since 8.2.0
      */
     public function filterByInAnyGroup($groups, $inGroups = true)
     {
@@ -458,6 +491,9 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->orderBy('u.uName', 'asc');
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function sortByDateAdded()
     {
         $this->query->addGroupBy('u.uDateAdded');

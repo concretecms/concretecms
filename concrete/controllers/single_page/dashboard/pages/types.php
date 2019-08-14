@@ -23,6 +23,9 @@ class Types extends DashboardPageController
         $this->view($siteTypeID);
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function page_type_duplicated($siteTypeID = null)
     {
         $this->set('success',
@@ -97,6 +100,9 @@ class Types extends DashboardPageController
         $this->view();
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function duplicate($ptID = false)
     {
         $pagetype = PageType::getByID($ptID);

@@ -10,6 +10,9 @@ use Response;
 
 class Stylesheet extends Controller
 {
+    /**
+     * @since 5.7.2.1
+     */
     public function page_version($cID, $stylesheet, $cvID)
     {
         $c = Page::getByID($cID);

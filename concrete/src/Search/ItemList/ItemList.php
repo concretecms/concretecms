@@ -32,6 +32,9 @@ abstract class ItemList
     protected $debug = false;
 
     abstract protected function executeSortBy($field, $direction = 'asc');
+    /**
+     * @since 5.7.4
+     */
     protected function executeSanitizedSortBy($field, $direction)
     {
         $this->executeSortBy($field, $direction);
@@ -58,6 +61,9 @@ abstract class ItemList
         $this->executeSortBy($field, $direction);
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function sortBySearchColumn(Column $column, $direction = null)
     {
         if ($direction != 'asc' && $direction != 'desc') {
@@ -68,11 +74,17 @@ abstract class ItemList
         $this->sanitizedSortBy($column->getColumnKey(), $direction);
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getSearchByColumn()
     {
         return $this->sortBySearchColumn;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function sanitizedSortBy($field, $direction = 'asc')
     {
         $this->sortBy = $field;
@@ -111,11 +123,17 @@ abstract class ItemList
         return $this->sortBy == $field;
     }
 
+    /**
+     * @since 5.7.2
+     */
     public function disableAutomaticSorting()
     {
         $this->enableAutomaticSorting = false;
     }
 
+    /**
+     * @since 5.7.2
+     */
     public function getSortClassName($column)
     {
         $class = false;
@@ -131,6 +149,9 @@ abstract class ItemList
         return $class;
     }
 
+    /**
+     * @since 5.7.2
+     */
     public function getSortURL($column, $dir = 'asc', $url = false)
     {
         $uh = \Core::make("helper/url");
@@ -179,6 +200,7 @@ abstract class ItemList
 
     /**
      * @return int
+     * @since 8.2.1
      */
     public function getItemsPerPage()
     {
@@ -245,6 +267,7 @@ abstract class ItemList
      * Allow to modify the auto-pagination parameters and the auto-sorting parameters
      * 
      * @param mixed $nameSpace Content that will be added to the parameters
+     * @since 8.4.1
      */
     public function setNameSpace($nameSpace)
     {

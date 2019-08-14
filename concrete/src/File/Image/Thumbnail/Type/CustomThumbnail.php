@@ -41,6 +41,9 @@ class CustomThumbnail extends ThumbnailVersion
         return $this->path;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function isCropped()
     {
         return $this->cropped;

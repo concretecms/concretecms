@@ -221,6 +221,9 @@ class FlysystemFileResponse extends Response
         return $this;
     }
 
+    /**
+     * @since 8.4.0
+     */
     private function hasValidIfRangeHeader($header)
     {
         if ($this->getEtag() === $header) {

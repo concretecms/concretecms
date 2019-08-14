@@ -77,6 +77,9 @@ class Controller extends BlockController
         parent::save($data);
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function action_topic($treeNodeID = false, $topic = false)
     {
         if ($treeNodeID) {
@@ -88,6 +91,9 @@ class Controller extends BlockController
         $this->view();
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function action_tag($tag = false)
     {
         if ($tag) {
@@ -97,6 +103,9 @@ class Controller extends BlockController
         $this->view();
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function action_date($year = false, $month = false)
     {
         if ($year) {
@@ -129,6 +138,9 @@ class Controller extends BlockController
         return array($method, $parameters);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function formatPageTitle($title, $case = false)
     {
         switch ($case) {

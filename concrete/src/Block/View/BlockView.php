@@ -397,6 +397,9 @@ class BlockView extends AbstractView
         return $field;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function usedBlockCacheDuringRender()
     {
         return $this->didPullFromOutputCache;

@@ -48,6 +48,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         parent::__construct($req);
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function enableSubFolderSearch()
     {
         $this->searchSubFolders = true;
@@ -55,17 +58,24 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     /**
      * @return mixed
+     * @since 8.2.0
      */
     public function getPermissionsChecker()
     {
         return $this->permissionsChecker;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getPagerVariableFactory()
     {
         return new VariableFactory($this, $this->getSearchRequest());
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getPagerManager()
     {
         return new FolderItemListPagerManager($this);
@@ -76,6 +86,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $this->permissionsChecker = $checker;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function enablePermissions()
     {
         unset($this->permissionsChecker);
@@ -110,6 +123,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         }
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
@@ -157,6 +173,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
      * Filter the files by their extension.
      *
      * @param string|string[] $extension one or more file extensions (with or without leading dot)
+     * @since 8.4.0
      */
     public function filterByExtension($extension)
     {

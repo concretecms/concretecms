@@ -486,6 +486,7 @@ class Search extends DashboardPageController
 
     /**
      * Export Users using the current search filters into a CSV.
+     * @since 8.2.0
      */
     public function csv_export()
     {

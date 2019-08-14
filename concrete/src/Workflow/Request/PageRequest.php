@@ -64,6 +64,9 @@ abstract class PageRequest extends Request
         return $wpr;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getRequestIconElement()
     {
         $span = new Element('i');

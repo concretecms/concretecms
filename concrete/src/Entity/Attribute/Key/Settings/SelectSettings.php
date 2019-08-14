@@ -94,6 +94,7 @@ class SelectSettings extends Settings
 
     /**
      * @param bool $akHideNoneOption
+     * @since 8.3.0
      */
     public function setHideNoneOption($akHideNoneOption)
     {
@@ -102,6 +103,7 @@ class SelectSettings extends Settings
 
     /**
      * @return bool
+     * @since 8.3.0
      */
     public function getHideNoneOption()
     {
@@ -134,6 +136,7 @@ class SelectSettings extends Settings
 
     /**
      * @return mixed
+     * @since 8.3.0
      */
     public function getDisplayMultipleValuesOnSelect()
     {
@@ -142,6 +145,7 @@ class SelectSettings extends Settings
 
     /**
      * @param mixed $displayMultipleValuesOnSelect
+     * @since 8.3.0
      */
     public function setDisplayMultipleValuesOnSelect($displayMultipleValuesOnSelect)
     {

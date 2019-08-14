@@ -41,6 +41,7 @@ abstract class XmlParser
      * @param \Concrete\Core\Database\Connection\Connection $db
      *
      * @return string|null
+     * @since 8.5.0
      */
     protected function getDatabaseVersion(Connection $db)
     {

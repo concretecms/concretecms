@@ -9,9 +9,15 @@ use Concrete\Core\Page\Type\Type;
  */
 interface ValidatorInterface
 {
+    /**
+     * @since 5.7.5.2
+     */
     public function getPageTypeObject();
     public function setPageTypeObject(Type $type);
     public function validateCreateDraftRequest($template);
     public function validatePublishDraftRequest(Page $page = null);
+    /**
+     * @since 5.7.5.2
+     */
     public function validatePublishLocationRequest(Page $target = null, Page $page = null);
 }

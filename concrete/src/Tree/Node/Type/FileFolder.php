@@ -95,6 +95,7 @@ class FileFolder extends Category
      * @param bool $create Should the child folder be created if it does not exist?
      *
      * @return static|null return NULL if no child folder has the specified name and $create is false
+     * @since 8.4.1
      */
     public function getChildFolderByName($name, $create = false)
     {
@@ -126,6 +127,7 @@ class FileFolder extends Category
      * @param bool $create Should the descendent folders be created if they don't exist?
      *
      * @return static|null return NULL if the descendent folder has not been found and $create is false
+     * @since 8.4.1
      */
     public function getChildFolderByPath(array $names, $create = false)
     {

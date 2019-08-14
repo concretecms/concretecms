@@ -26,6 +26,9 @@ class Controller extends AuthenticationTypeController
 {
     public $apiMethods = ['forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token', 'required_password_upgrade'];
 
+    /**
+     * @since 5.7.1
+     */
     public function getHandle()
     {
         return 'concrete';
@@ -148,6 +151,7 @@ class Controller extends AuthenticationTypeController
 
     /**
      * Called when a user tries to log in after his password has been reset by "Global Password Reset".
+     * @since 8.0.0
      */
     public function required_password_upgrade()
     {
@@ -291,11 +295,17 @@ class Controller extends AuthenticationTypeController
         $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'invalid_token');
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function password_changed()
     {
         $this->view();
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function email_validated($mode = false)
     {
         if ($mode) {
@@ -307,6 +317,9 @@ class Controller extends AuthenticationTypeController
         $this->view();
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function invalid_token()
     {
         $this->view();
@@ -354,6 +367,9 @@ class Controller extends AuthenticationTypeController
         return $user;
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function handleFailedLogin(LoginService $loginService, $uName, $uPassword, UserException $e)
     {
         if ($e instanceof InvalidCredentialsException) {
@@ -379,6 +395,9 @@ class Controller extends AuthenticationTypeController
         throw $e;
     }
 
+    /**
+     * @since 8.0.0
+     */
     private function isPasswordReset()
     {
         $app = Application::getFacadeApplication();
@@ -391,6 +410,9 @@ class Controller extends AuthenticationTypeController
         }
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function v($hash = '')
     {
         $ui = UserInfo::getByValidationHash($hash);

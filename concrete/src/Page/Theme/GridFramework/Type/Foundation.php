@@ -10,6 +10,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 class Foundation extends GridFramework
 {
+    /**
+     * @since 5.7.5
+     */
     public function supportsNesting()
     {
         return true;

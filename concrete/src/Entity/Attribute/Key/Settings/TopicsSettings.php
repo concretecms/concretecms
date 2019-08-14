@@ -67,6 +67,7 @@ class TopicsSettings extends Settings
 
     /**
      * @return bool
+     * @since 8.2.0
      */
     public function allowMultipleValues()
     {
@@ -75,6 +76,7 @@ class TopicsSettings extends Settings
 
     /**
      * @param bool $allowMultipleValues
+     * @since 8.2.0
      */
     public function setAllowMultipleValues($allowMultipleValues)
     {

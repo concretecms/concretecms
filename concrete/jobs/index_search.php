@@ -27,6 +27,9 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
         );
     }
 
+    /**
+     * @since 8.1.0
+     */
     protected function queueMessages()
     {
         $generator = parent::queueMessages();
@@ -50,6 +53,9 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
     }
 
 
+    /**
+     * @since 8.1.0
+     */
     public function processQueueItem(Message $msg)
     {
         $index = $this->indexManager;
@@ -85,6 +91,7 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
     /**
      * Get Pages to add to the queue
      * @return \Iterator
+     * @since 8.1.0
      */
     protected function pagesToQueue()
     {
@@ -119,6 +126,7 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
      * Get a list of sites to remove from the search index
      *
      * @return int[]
+     * @since 8.2.0
      */
     protected function sitesToRemove()
     {
@@ -128,6 +136,7 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
     /**
      * Get a list of files to remove from the search index
      * @return int[]
+     * @since 8.2.0
      */
     protected function filesToRemove()
     {
@@ -138,6 +147,7 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
      * Get a list of users to remove from the search index
      *
      * @return int[]
+     * @since 8.2.0
      */
     protected function usersToRemove()
     {
@@ -148,6 +158,7 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
      * Get a list of pages to be removed from the search index
      *
      * @return int[];
+     * @since 8.2.0
      */
     protected function pagesToRemove()
     {

@@ -33,6 +33,9 @@ class FeedEvent extends GenericEvent implements RequestEventInterface
         return $this->page;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function setPageObject(Page $c)
     {
         $this->page = $c;

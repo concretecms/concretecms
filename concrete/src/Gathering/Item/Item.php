@@ -245,6 +245,9 @@ abstract class Item extends ConcreteObject
         return $items;
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public static function __callStatic($name, $arguments)
     {
         if (strcasecmp($name, 'add') === 0) {
@@ -253,6 +256,9 @@ abstract class Item extends ConcreteObject
         trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public static function create(
         Gathering $ag,
         GatheringDataSource $ags,

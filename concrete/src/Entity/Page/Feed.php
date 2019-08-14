@@ -160,6 +160,7 @@ class Feed
     /**
      * @param string $format
      * @return string
+     * @since 8.2.0
      */
     public function getFeedDisplayTitle($format = 'html')
     {

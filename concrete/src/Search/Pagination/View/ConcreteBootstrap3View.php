@@ -10,6 +10,9 @@ class ConcreteBootstrap3View extends TwitterBootstrap3View implements ViewInterf
         return new ConcreteBootstrap3Template();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getArguments()
     {
         $arguments = array(

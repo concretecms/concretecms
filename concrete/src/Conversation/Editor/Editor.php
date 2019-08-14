@@ -270,6 +270,7 @@ abstract class Editor extends ConcreteObject
      *
      * @param string $html
      * @return string 
+     * @since 8.3.0
      */
     protected function removeJavascriptLinks($html)
     {
@@ -375,6 +376,9 @@ abstract class Editor extends ConcreteObject
         return static::getList($pkg->getPackageID());
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function export($xml)
     {
         $type = $xml->addChild('editor');

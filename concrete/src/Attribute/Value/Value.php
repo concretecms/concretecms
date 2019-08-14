@@ -20,6 +20,9 @@ class Value extends ConcreteObject implements AttributeValueInterface
      */
     protected $attributeKey;
 
+    /**
+     * @since 8.0.0
+     */
     public function getController()
     {
         $controller = $this->attributeKey->getController();
@@ -27,6 +30,9 @@ class Value extends ConcreteObject implements AttributeValueInterface
         return $controller;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getAttributeValue()
     {
         $lv = new LegacyValue();
@@ -37,6 +43,9 @@ class Value extends ConcreteObject implements AttributeValueInterface
         return $lv;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getValueObject()
     {
         return $this->getAttributeValue()->getValueObject();
@@ -71,6 +80,7 @@ class Value extends ConcreteObject implements AttributeValueInterface
     /**
      * Validates the current attribute value to see if it fulfills the "requirement" portion of an attribute.
      * @return bool|\Concrete\Core\Error\Error
+     * @since 5.7.4.2
      */
     public function validateAttributeValue()
     {

@@ -34,6 +34,9 @@ class LocaleEntry extends Entry
         return Flag::getLocaleFlagIcon($this->locale);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getIcon()
     {
         return Flag::getLocaleFlagIcon($this->locale, true);

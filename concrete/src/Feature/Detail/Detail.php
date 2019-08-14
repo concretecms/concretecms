@@ -43,6 +43,9 @@ class Detail extends ConcreteObject
         return false;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function deleteFeatureAssignment(FeatureAssignment $fa)
     {
         return false;

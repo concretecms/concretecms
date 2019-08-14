@@ -205,6 +205,7 @@ class InstallerOptions
      * Returns whether privacy policy is accepted
      *
      * @return boolean
+     * @since 8.4.0
      */
     public function isPrivacyPolicyAccepted()
     {
@@ -215,6 +216,7 @@ class InstallerOptions
      * Set the privacy policy status
      *
      * @param boolean $privacyPolicyAccepted
+     * @since 8.4.0
      */
     public function setPrivacyPolicyAccepted($privacyPolicyAccepted)
     {

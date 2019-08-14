@@ -32,6 +32,7 @@ class ProviderList
      * @param string $class The class name
      *
      * @return \Concrete\Core\Foundation\Service\Provider
+     * @since 5.7.5.2
      */
     protected function createInstance($class)
     {

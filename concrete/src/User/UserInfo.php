@@ -96,6 +96,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      * @param UserCategory $attributeCategory
      * @param Application $application
      * @param AvatarServiceInterface $avatarService
+     * @since 5.7.5.4
      */
     public function __construct(EntityManagerInterface $entityManager, UserCategory $attributeCategory, Application $application, AvatarServiceInterface $avatarService)
     {
@@ -156,6 +157,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @param UserEntity $entity
+     * @since 8.0.0
      */
     public function setEntityObject(UserEntity $entity)
     {
@@ -164,12 +166,16 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @return UserEntity
+     * @since 8.0.0
      */
     public function getEntityObject()
     {
         return $this->entity;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getExporter()
     {
         return new UserExporter();
@@ -194,6 +200,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      * @param User $requester
      *
      * @return bool
+     * @since 8.0.0
      */
     public function triggerDelete($requester)
     {
@@ -332,6 +339,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * Marks the current user as having had a password reset from the system.
+     * @since 8.0.0
      */
     public function markAsPasswordReset()
     {
@@ -655,6 +663,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      * @param null|int $requesterUID Use null for the current user
      *
      * @return bool
+     * @since 8.0.0
      */
     public function triggerActivate($action = null, $requesterUID = null)
     {
@@ -698,6 +707,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      * @param null|int $requesterUID Use null for the current user
      *
      * @return bool
+     * @since 8.0.0
      */
     public function triggerDeactivate($requesterUID = null)
     {
@@ -754,6 +764,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @return \Concrete\Core\User\Avatar\AvatarInterface
+     * @since 5.7.5.4
      */
     public function getUserAvatar()
     {
@@ -762,6 +773,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @return null|\League\URL\URLInterface
+     * @since 5.7.5.4
      */
     public function getUserPublicProfileUrl()
     {
@@ -920,6 +932,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @param UserAttributeKey[] $attributes
+     * @since 5.7.3
      */
     public function saveUserAttributesForm($attributes)
     {
@@ -936,6 +949,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @param \Concrete\Core\Entity\Attribute\Key\UserKey[] $attributes
+     * @since 8.2.0
      */
     public function saveUserAttributesDefault(array $attributes)
     {
@@ -1010,6 +1024,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @return \Symfony\Component\EventDispatcher\EventDispatcher
+     * @since 8.2.0
      */
     protected function getDirector()
     {

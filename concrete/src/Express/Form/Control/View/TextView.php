@@ -12,6 +12,9 @@ use Concrete\Core\Form\Context\ContextInterface;
 class TextView extends View
 {
 
+    /**
+     * @since 8.4.0
+     */
     public function getControlID()
     {
         return null;

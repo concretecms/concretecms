@@ -64,6 +64,7 @@ class BlockViewTemplate
 
     /**
      * @return PackageList
+     * @since 8.2.0
      */
     public function getPackageList()
     {
@@ -72,6 +73,7 @@ class BlockViewTemplate
 
     /**
      * @param static $packageList
+     * @since 8.2.0
      */
     public function setPackageList($packageList)
     {

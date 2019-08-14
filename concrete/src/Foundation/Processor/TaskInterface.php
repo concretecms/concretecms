@@ -7,5 +7,8 @@ namespace Concrete\Core\Foundation\Processor;
 interface TaskInterface
 {
     public function execute(ActionInterface $action);
+    /**
+     * @since 5.7.5.3
+     */
     public function finish(ActionInterface $action);
 }

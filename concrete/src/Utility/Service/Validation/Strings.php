@@ -16,6 +16,9 @@ class Strings
      */
     protected $app;
 
+    /**
+     * @since 8.4.2
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;

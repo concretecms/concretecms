@@ -10,6 +10,9 @@ use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType
 class Add extends DashboardPageController
 {
 
+    /**
+     * @since 8.0.0
+     */
     public function view($typeID = 0)
     {
         $siteType = false;

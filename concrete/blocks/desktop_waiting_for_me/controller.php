@@ -66,6 +66,9 @@ class Controller extends BlockController
         $this->set('filter', $filter);
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function action_reload_results()
     {
         $b = $this->getBlockObject();

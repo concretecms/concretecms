@@ -181,6 +181,7 @@ class RegistrationService implements RegistrationServiceInterface
      * @param string $lastName The user's last name
      *
      * @return string
+     * @since 8.3.2
      */
     public function getNewUsernameFromUserDetails($email, $suggestedUsername = '', $firstName = '', $lastName = '')
     {
@@ -212,6 +213,7 @@ class RegistrationService implements RegistrationServiceInterface
      * @param string $string
      *
      * @return string
+     * @since 8.3.2
      */
     private function stringToUsernameChunk($string)
     {

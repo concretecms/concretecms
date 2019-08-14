@@ -212,6 +212,9 @@ class Login extends PageController implements LoggerAwareInterface
         );
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function login_complete()
     {
         // Move this functionality to a redirected endpoint rather than from within the previous method because
@@ -282,6 +285,7 @@ class Login extends PageController implements LoggerAwareInterface
      * @see \Concrete\Core\User\PostLoginLocation::getPostLoginUrl()
      *
      * @return string
+     * @since 8.2.0
      */
     public function getRedirectUrl()
     {
@@ -297,6 +301,7 @@ class Login extends PageController implements LoggerAwareInterface
      * @see \Concrete\Core\User\PostLoginLocation::getSessionPostLoginUrl()
      *
      * @return string|false
+     * @since 8.2.0
      */
     public function getRedirectUrlFromSession()
     {
@@ -395,6 +400,7 @@ class Login extends PageController implements LoggerAwareInterface
      * @param $token
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @since 8.2.0
      */
     public function do_logout($token = false)
     {

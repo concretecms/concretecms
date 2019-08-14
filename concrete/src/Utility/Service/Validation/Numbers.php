@@ -44,6 +44,7 @@ class Numbers
      * @param int|float|null $max the maximum acceptable value of the number (pass NULL to not check the maximum value)
      *
      * @return bool
+     * @since 8.2.0
      */
     public function number($data, $min = null, $max = null)
     {

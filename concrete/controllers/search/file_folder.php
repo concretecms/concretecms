@@ -177,6 +177,9 @@ class FileFolder extends AbstractController
         return $this->result;
     }
 
+    /**
+     * @since 8.2.1
+     */
     protected function canAccess()
     {
         $fp = FilePermissions::getGlobal();

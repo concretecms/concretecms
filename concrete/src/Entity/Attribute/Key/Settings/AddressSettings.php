@@ -83,6 +83,7 @@ class AddressSettings extends Settings
      * Should we try to determine the Country starting from the visitor's IP address?
      *
      * @return bool
+     * @since 8.3.0
      */
     public function geolocateCountry()
     {
@@ -93,6 +94,7 @@ class AddressSettings extends Settings
      * Should we try to determine the Country starting from the visitor's IP address?
      *
      * @param bool $value
+     * @since 8.3.0
      */
     public function setGeolocateCountry($value)
     {

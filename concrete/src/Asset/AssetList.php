@@ -27,6 +27,7 @@ class AssetList
 
     /**
      * @return \Concrete\Core\Asset\AssetGroup[]
+     * @since 5.7.5.2
      */
     public function getRegisteredAssetGroups()
     {

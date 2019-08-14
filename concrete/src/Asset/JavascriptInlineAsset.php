@@ -29,6 +29,9 @@ class JavascriptInlineAsset extends JavascriptAsset
         return 'javascript-inline';
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getOutputAssetType()
     {
         return 'javascript';
@@ -36,6 +39,7 @@ class JavascriptInlineAsset extends JavascriptAsset
 
     /**
      * @return string
+     * @since 5.7.4
      */
     public function getAssetHashKey()
     {
@@ -52,6 +56,7 @@ class JavascriptInlineAsset extends JavascriptAsset
 
     /**
      * @return string|null
+     * @since 5.7.4
      */
     public function getAssetContents()
     {

@@ -19,6 +19,7 @@ class AssetsLocalization extends Controller
      * @param string $content
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @since 8.2.0
      */
     private function createJavascriptResponse($content)
     {
@@ -488,6 +489,7 @@ jQuery.each(jQuery.Redactor.opts.langs.en, function(key, value) {
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
+     * @since 8.0.0
      */
     public function getFancytreeJavascript()
     {
@@ -692,6 +694,7 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
+     * @since 8.5.2
      */
     public function getMomentJavascript()
     {
@@ -722,6 +725,7 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
 
     /**
      * @return int
+     * @since 8.5.2
      */
     private function getDropzoneChunkSize()
     {
@@ -733,6 +737,7 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
 
     /**
      * @return int
+     * @since 8.5.2
      */
     private function getDropzoneAutomaticChunkSize()
     {

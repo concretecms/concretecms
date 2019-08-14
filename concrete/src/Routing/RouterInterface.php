@@ -14,16 +14,19 @@ interface RouterInterface
      * @param \Concrete\Core\Routing\Route $route
      *
      * @return \Concrete\Core\Routing\RouteActionInterface
+     * @since 8.5.0
      */
     public function resolveAction(Route $route);
 
     /**
      * @return \Symfony\Component\Routing\RouteCollection[]
+     * @since 8.5.0
      */
     public function getRoutes();
 
     /**
      * @param \Concrete\Core\Routing\Route $route
+     * @since 8.5.0
      */
     public function addRoute(Route $route);
 
@@ -39,6 +42,7 @@ interface RouterInterface
      * @throws \Symfony\Component\Routing\Exception\MethodNotAllowedException If the resource was found but the request method is not allowed
      *
      * @return \Concrete\Core\Routing\Route
+     * @since 8.5.0
      */
     public function getRouteByPath($path, RequestContext $context, array &$routeAttributes = []);
 
@@ -50,8 +54,12 @@ interface RouterInterface
      * @throws \Symfony\Component\Routing\Exception\MethodNotAllowedException If the resource was found but the request method is not allowed
      *
      * @return \Concrete\Core\Routing\MatchedRoute
+     * @since 8.5.0
      */
     public function matchRoute(Request $request);
 
+    /**
+     * @since 8.5.0
+     */
     public function loadRouteList(RouteListInterface $list);
 }

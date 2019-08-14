@@ -18,11 +18,17 @@ class FileSaver implements SaverInterface
         $this->files = $files;
     }
 
+    /**
+     * @since 5.7.5
+     */
     protected function getStorageDirectory()
     {
         return DIR_CONFIG_SITE . '/generated_overrides';
     }
 
+    /**
+     * @since 5.7.5
+     */
     protected function getFilename($group, $path = null)
     {
         if (!$path) {

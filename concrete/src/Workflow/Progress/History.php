@@ -49,6 +49,9 @@ class History extends ConcreteObject
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     public static function getLatest(Progress $wp)
     {
         $db = Loader::db();

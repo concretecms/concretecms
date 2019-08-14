@@ -34,11 +34,17 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         return $list;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getDisplayValue()
     {
         return Core::make('helper/text')->entities($this->attributeValue->getValue());
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return TextValue::class;
@@ -51,6 +57,9 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
     }
 
     // run when we call setAttribute(), instead of saving through the UI
+/**
+ * @since 8.0.0
+ */
     public function createAttributeValue($value)
     {
         $av = new TextValue();
@@ -59,11 +68,17 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         return $av;
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeKeySettingsClass()
     {
         return TextSettings::class;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -71,6 +86,9 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         return $this->createAttributeValue(isset($data['value']) ? $data['value'] : null);
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function validateValue()
     {
         return $this->attributeValue->getValue() != '';
@@ -85,6 +103,7 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     * @since 8.3.0
      */
     public function getAttributeValueTextRepresentation()
     {
@@ -102,6 +121,7 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     * @since 8.3.0
      */
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {

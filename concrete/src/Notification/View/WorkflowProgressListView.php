@@ -90,6 +90,9 @@ class WorkflowProgressListView extends StandardListView
         return $this->progress->getWorkflowProgressFormAction();
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function getNotificationDateTimeZone()
     {
         if ($this->progress instanceof SiteProgressInterface) {

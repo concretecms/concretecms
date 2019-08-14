@@ -17,6 +17,7 @@ class Messages extends DashboardPageController
     /**
      * Returns default message filter for search interface. We default to all, UNLESS we have at least one access
      * entity that publishes its messages and has them be unapproved. If that's the case, then we default to unapproved.
+     * @since 5.7.4
      */
     protected function getDefaultMessageFilter()
     {
@@ -94,6 +95,9 @@ class Messages extends DashboardPageController
         $this->set('cmpMessageFilter', $cmpMessageFilter);
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function approve_message()
     {
         $e = Core::make('error');
@@ -114,6 +118,9 @@ class Messages extends DashboardPageController
         $er->outputJSON();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function unflag_message()
     {
         $e = Core::make('error');
@@ -135,6 +142,9 @@ class Messages extends DashboardPageController
         $er->outputJSON();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function undelete_message()
     {
         $e = Core::make('error');

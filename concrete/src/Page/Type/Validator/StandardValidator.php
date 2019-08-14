@@ -43,6 +43,9 @@ class StandardValidator implements ValidatorInterface
         return $e;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function validatePublishLocationRequest(Page $target = null, Page $page = null)
     {
         $e = Core::make('error');

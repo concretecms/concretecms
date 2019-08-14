@@ -13,11 +13,17 @@ use Concrete\Core\Form\Control\ControlInterface;
 class FormContext extends ViewContext
 {
 
+    /**
+     * @since 8.2.0
+     */
     public function getAttributeContext()
     {
         return new BasicFormContext();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setLocation(TemplateLocator $locator)
     {
         $locator = parent::setLocation($locator);

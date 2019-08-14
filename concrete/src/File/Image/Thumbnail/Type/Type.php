@@ -158,6 +158,7 @@ class Type
      * Get all the available thumbnail sizing options.
      *
      * @return string[] The list of all the Type::RESIZE_... constants.
+     * @since 8.2.0
      */
     public static function getSizingOptions()
     {

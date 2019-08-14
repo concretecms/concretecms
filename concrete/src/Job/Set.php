@@ -253,6 +253,9 @@ class Set extends ConcreteObject
         }
     }
 
+    /**
+     * @since 5.7.3
+     */
     public static function exportTranslations()
     {
         $translations = new Translations();

@@ -13,6 +13,9 @@ use Concrete\Core\Workflow\Workflow as ConcreteWorkflow;
  */
 class EmptyWorkflow extends ConcreteWorkflow
 {
+    /**
+     * @since 5.7.5.4
+     */
     public function canApproveWorkflow()
     {
         return true;
@@ -27,11 +30,17 @@ class EmptyWorkflow extends ConcreteWorkflow
         return $wpr;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getWorkflowProgressApprovalUsers(WorkflowProgress $wp)
     {
         return array();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
     {
         return false;

@@ -80,6 +80,9 @@ abstract class Type extends ConcreteObject
         }
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function export($xml)
     {
         $type = $xml->addChild('conversationratingtype');

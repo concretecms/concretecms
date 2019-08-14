@@ -29,6 +29,9 @@ class AssetPointer
         return $this->assetHandle;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function getIdentifier()
     {
         return $this->assetType . $this->assetHandle;

@@ -131,6 +131,9 @@ class Controller extends BlockController
         return t('Thanks!');
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getDefaultSubmitText()
     {
         return 'Submit';

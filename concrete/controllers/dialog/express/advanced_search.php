@@ -39,6 +39,9 @@ class AdvancedSearch extends AdvancedSearchController
         parent::view();
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function setEntityID($entityID)
     {
         $this->entityID = (string) $entityID;
@@ -131,11 +134,17 @@ class AdvancedSearch extends AdvancedSearchController
         return (string) $url;
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function getSavedSearchDeleteURL(SavedSearch $search)
     {
         return (string) URL::to('/ccm/system/dialogs/express/advanced_search/preset/delete?presetID=' . $search->getID() . '&objectID=' . $this->objectID);
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function getSavedSearchEditURL(SavedSearch $search)
     {
         return (string) URL::to('/ccm/system/dialogs/express/advanced_search/preset/edit?presetID=' . $search->getID() . '&objectID=' . $this->objectID);
@@ -159,6 +168,9 @@ class AdvancedSearch extends AdvancedSearchController
         return (string) $url;
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function getSavedSearchEntity()
     {
         $em = $this->app->make(EntityManager::class);

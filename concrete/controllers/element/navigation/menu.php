@@ -87,6 +87,9 @@ class Menu extends ElementController
         return false;
     }
 
+    /**
+     * @since 8.2.0
+     */
     protected function getPageList($parent)
     {
         $list = new PageList();

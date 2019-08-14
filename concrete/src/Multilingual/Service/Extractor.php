@@ -157,6 +157,9 @@ class Extractor
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function mergeTranslationsWithPackages(Section $section, Translations $translations)
     {
         foreach (PackageList::get()->getPackages() as $package) {

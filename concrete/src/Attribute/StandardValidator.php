@@ -51,6 +51,7 @@ class StandardValidator implements ValidatorInterface
      * @param mixed $validateResponse
      * @param bool $includeFieldNotPresentErrors
      * @return Response $response
+     * @since 8.5.0
      */
     protected function parseResponse(
         Key $key,

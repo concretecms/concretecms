@@ -384,6 +384,9 @@ class DatabaseStructureManager
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function clearCacheAndProxies()
     {
         $config = $this->entityManager->getConfiguration();
@@ -401,6 +404,7 @@ class DatabaseStructureManager
 
     /**
      * Clears cache, regenerates all proxy classes, and updates metadatas in all entity managers
+     * @since 8.0.3
      */
     public function refreshEntities()
     {

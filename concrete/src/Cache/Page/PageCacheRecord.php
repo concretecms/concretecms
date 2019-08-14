@@ -22,11 +22,17 @@ class PageCacheRecord
         $this->expires = time() + $lifetime;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getCanonicalURL()
     {
         return $this->url;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setCanonicalURL($url)
     {
         $this->url = $url;

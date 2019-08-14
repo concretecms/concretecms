@@ -13,11 +13,17 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
     protected $authorName = false;
     protected $mailbox;
 
+    /**
+     * @since 8.0.0
+     */
     public function getNotificationDate()
     {
         return \Core::make('date')->toDateTime($this->getMessageDateAdded());
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getUsersToExcludeFromNotification()
     {
         return array();
@@ -110,6 +116,9 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
     {
         return $this->uToID;
     }
+    /**
+     * @since 8.0.0
+     */
     public function getMessageUserToObject()
     {
         return UserInfo::getByID($this->uToID);
@@ -147,16 +156,25 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
         return $msgBody;
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function isMessageUnread()
     {
         return $this->msgIsUnread;
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function isMessageReplied()
     {
         return $this->msgIsReplied;
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function isMessageNew()
     {
         return $this->msgIsNew;

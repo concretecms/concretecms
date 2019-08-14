@@ -59,6 +59,7 @@ class User
 
     /**
      * @param $email
+     * @since 8.2.0
      */
     public function generateUsernameFromEmail($email)
     {

@@ -34,6 +34,9 @@ class CorePagePropertyType extends Type
         return $object;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function configureFromImportHandle($handle)
     {
         return static::getPageTypeComposerControlByIdentifier($handle);

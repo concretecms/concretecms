@@ -42,6 +42,9 @@ class Composer
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getPublishButtonTitle(Page $c)
     {
         if ($c->isPageDraft()) {
@@ -70,6 +73,9 @@ class Composer
         return $publishTitle;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function displayPublishScheduleSettings(Page $c = null)
     {
         View::element('pages/schedule', array(

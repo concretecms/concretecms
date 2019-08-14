@@ -23,21 +23,33 @@ abstract class GridFramework
      */
     const DEVICE_CLASSES_HIDE_ON_LARGE = 40;
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()
     {
         return null;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnSmallDeviceClass()
     {
         return null;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnMediumDeviceClass()
     {
         return null;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnLargeDeviceClass()
     {
         return null;
@@ -71,8 +83,14 @@ abstract class GridFramework
 
     abstract public function getPageThemeGridFrameworkColumnOffsetClasses();
 
+    /**
+     * @since 5.7.2.1
+     */
     abstract public function getPageThemeGridFrameworkColumnAdditionalClasses();
 
+    /**
+     * @since 5.7.2.1
+     */
     abstract public function getPageThemeGridFrameworkColumnOffsetAdditionalClasses();
 
     public function getPageThemeGridFrameworkColumnClassForSpan($span)
@@ -91,6 +109,9 @@ abstract class GridFramework
         return $classes[$offset];
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getPageThemeGridFrameworkColumnClassesForSpan($span)
     {
         $classes = $this->getPageThemeGridFrameworkColumnClassForSpan($span);
@@ -102,6 +123,9 @@ abstract class GridFramework
         return $classes;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getPageThemeGridFrameworkColumnClassesForOffset($offset)
     {
         $classes = $this->getPageThemeGridFrameworkColumnClassForOffset($offset);
@@ -113,6 +137,9 @@ abstract class GridFramework
         return $classes;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function getPageThemeGridFrameworkSelectedDeviceHideClassesForDisplay(StyleSet $set, Page $page)
     {
         $classes = array();
@@ -134,6 +161,9 @@ abstract class GridFramework
         return $classes;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkDeviceHideClasses()
     {
         $classes = array();
@@ -153,6 +183,9 @@ abstract class GridFramework
         return $classes;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getDeviceHideClassIconClass($class)
     {
         switch ($class) {
@@ -167,6 +200,9 @@ abstract class GridFramework
         }
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function supportsNesting()
     {
         return false;

@@ -44,6 +44,9 @@ class Controller extends BlockController
         return t("Page Attribute Display");
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function add()
     {
         $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();

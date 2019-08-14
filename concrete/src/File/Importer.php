@@ -141,6 +141,9 @@ class Importer
      */
     protected $app;
 
+    /**
+     * @since 5.7.5.4
+     */
     public function __construct()
     {
         $this->app = Application::getFacadeApplication();
@@ -228,6 +231,7 @@ class Importer
      * Add an import processor.
      *
      * @param \Concrete\Core\File\ImportProcessor\ProcessorInterface $processor
+     * @since 5.7.5.2
      */
     public function addImportProcessor(ProcessorInterface $processor)
     {
@@ -432,6 +436,7 @@ class Importer
      *     $errorToShow = $importer->getErrorMessage($fv);
      * }
      * </code></pre>
+     * @since 8.4.0
      */
     public function importUploadedFile(UploadedFile $uploadedFile = null, $fr = false)
     {
@@ -450,6 +455,7 @@ class Importer
      * Enable scanning of thumbnails when importing an image?
      *
      * @param bool $refresh
+     * @since 5.7.4
      */
     public function setRescanThumbnailsOnImport($refresh)
     {

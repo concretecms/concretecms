@@ -16,6 +16,9 @@ class CollectionAttributeControl extends Control
     protected $ak = false;
     protected $ptComposerControlTypeHandle = 'collection_attribute';
 
+    /**
+     * @since 8.1.0
+     */
     public function __sleep()
     {
         return array('akID');
@@ -167,6 +170,9 @@ class CollectionAttributeControl extends Control
         }
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     protected function isFormSubmission()
     {
         $ak = $this->getAttributeKeyObject();
@@ -226,6 +232,9 @@ class CollectionAttributeControl extends Control
         $akc->setupAndRun('composer');
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function objectExists()
     {
         return $this->getAttributeKeyObject() !== null;

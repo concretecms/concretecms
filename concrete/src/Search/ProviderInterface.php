@@ -21,5 +21,8 @@ interface ProviderInterface
     function getSearchResultFromQuery(Query $query);
     function getItemList();
 
+    /**
+     * @since 8.2.0
+     */
     function getSavedSearch();
 }

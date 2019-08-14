@@ -8,6 +8,9 @@ class Application extends Facade
         return 'app';
     }
 
+    /**
+     * @since 5.7.4
+     */
     public static function getApplicationRelativePath()
     {
         $cms = static::getFacadeApplication();
@@ -15,6 +18,9 @@ class Application extends Facade
         return $cms['app_relative_path'];
     }
 
+    /**
+     * @since 5.7.4
+     */
     public static function getApplicationURL($asObject = false)
     {
         $cms = static::getFacadeApplication();

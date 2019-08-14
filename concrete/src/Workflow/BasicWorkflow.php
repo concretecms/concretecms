@@ -22,21 +22,33 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 {
     use AssignableObjectTrait;
 
+    /**
+     * @since 8.0.0
+     */
     public function executeBeforePermissionAssignment($cascadeToChildren = true)
     {
         return;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function setChildPermissionsToOverride()
     {
         return false;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function setPermissionsToOverride()
     {
         return false;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
@@ -67,6 +79,9 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getWorkflowProgressApprovalUsers(WorkflowProgress $wp)
     {
         $pk = Key::getByHandle('approve_basic_workflow_action');
@@ -109,6 +124,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
     /**
      * Returns true if the logged-in user can approve the current workflow.
+     * @since 5.7.5.4
      */
     public function canApproveWorkflow()
     {
@@ -315,6 +331,9 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return $buttons;
     }
 
+    /**
+     * @since 8.2.0
+     */
     private function getTranslatedMessage($message = null, $date)
     {
 

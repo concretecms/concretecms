@@ -30,6 +30,7 @@ class EnvironmentRecord
 
     /**
      * @return mixed
+     * @since 8.0.0
      */
     public function getFile()
     {
@@ -38,6 +39,7 @@ class EnvironmentRecord
 
     /**
      * @return mixed
+     * @since 8.0.0
      */
     public function getUrl()
     {

@@ -49,6 +49,7 @@ interface TypeInterface
      * Get available notification filters
      *
      * @return \Concrete\Core\Notification\Alert\Filter\FilterInterface[]
+     * @since 8.4.2
      */
     public function getAvailableFilters();
 }

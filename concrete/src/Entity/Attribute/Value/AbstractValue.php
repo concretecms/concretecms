@@ -65,6 +65,9 @@ abstract class AbstractValue implements AttributeValueInterface
     }
 
 
+    /**
+     * @since 8.4.1
+     */
     public function setAttributeValueObject($attributeValueObject)
     {
         $this->attribute_value = $attributeValueObject;
@@ -83,6 +86,9 @@ abstract class AbstractValue implements AttributeValueInterface
         return $controller;
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function __destruct()
     {
         unset($this->attribute_key);

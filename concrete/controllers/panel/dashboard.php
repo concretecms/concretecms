@@ -24,6 +24,9 @@ class Dashboard extends BackendInterfacePageController
         return $dh->canRead();
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function toggleFavorite($action)
     {
         $h = \Core::make('helper/concrete/dashboard');
@@ -43,11 +46,17 @@ class Dashboard extends BackendInterfacePageController
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function addFavorite()
     {
         return $this->toggleFavorite('add');
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function removeFavorite()
     {
         return $this->toggleFavorite('remove');

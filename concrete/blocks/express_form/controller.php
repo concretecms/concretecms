@@ -136,6 +136,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('displayCaptcha', 1);
     }
 
+    /**
+     * @since 8.4.4
+     */
     protected function areFormSubmissionsStored()
     {
         $config = $this->getFormSubmissionConfigValue();
@@ -150,12 +153,18 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return false;
     }
 
+    /**
+     * @since 8.4.4
+     */
     protected function getFormSubmissionConfigValue()
     {
         $config = $this->app->make('config');
         return $config->get('concrete.form.store_form_submissions');
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getNotifications()
     {
         $notifications = [new FormBlockSubmissionEmailNotification($this->app, $this)];

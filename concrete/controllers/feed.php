@@ -8,6 +8,9 @@ use Concrete\Core\Page\Feed as PageFeed;
 
 class Feed extends Controller
 {
+    /**
+     * @since 5.7.5.7
+     */
     public function output($identifier)
     {
         $responseFactory = $this->app->make(ResponseFactoryInterface::class);

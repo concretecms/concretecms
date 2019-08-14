@@ -28,6 +28,7 @@ class ArrangeBlocks extends Page
 
     /**
      * @param \Concrete\Core\Page\EditResponse $pc
+     * @since 8.5.2
      */
     protected function performArrangement(PageEditResponse $pc)
     {

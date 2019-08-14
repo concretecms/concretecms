@@ -120,6 +120,7 @@ class AddBlockToAreaAreaKey extends AreaKey
      * @param string $operation One of the OPERATION_... constants.
      *
      * @return int[]
+     * @since 8.5.2
      */
     protected function getAllowedBlockTypeIDsFor($operation)
     {

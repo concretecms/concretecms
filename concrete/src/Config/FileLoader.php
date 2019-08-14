@@ -239,6 +239,7 @@ class FileLoader implements LoaderInterface
      * @param  string  $namespace
      *
      * @return array
+     * @since 8.3.0
      */
     protected function defaultLoad($environment, $group, $namespace = null)
     {
@@ -339,6 +340,7 @@ class FileLoader implements LoaderInterface
      * @param string $namespace
      *
      * @return string[]
+     * @since 8.5.0
      */
     private function getNamespaceDefaultPaths($namespace)
     {

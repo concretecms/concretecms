@@ -130,6 +130,7 @@ class Plugin
      * Get the plugin description.
      *
      * @return string
+     * @since 8.4.1
      */
     public function getDescription()
     {
@@ -140,6 +141,7 @@ class Plugin
      * Set the plugin description.
      *
      * @param string $description
+     * @since 8.4.1
      */
     public function setDescription($description)
     {

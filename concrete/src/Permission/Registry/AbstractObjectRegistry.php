@@ -20,6 +20,9 @@ abstract class AbstractObjectRegistry implements ObjectRegistryInterface
         $this->entries[] = $entry;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function removeEntry(EntryInterface $entry)
     {
         $this->entriesToRemove[] = $entry;
@@ -33,6 +36,7 @@ abstract class AbstractObjectRegistry implements ObjectRegistryInterface
 
     /**
      * @return array
+     * @since 8.2.0
      */
     public function getEntriesToRemove()
     {

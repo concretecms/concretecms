@@ -27,6 +27,9 @@ class Manager implements EntryManagerInterface
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function getEntityManager()
     {
         return $this->entityManager;
@@ -53,6 +56,9 @@ class Manager implements EntryManagerInterface
         return $displayOrder;
     }
 
+    /**
+     * @since 8.4.4
+     */
     public function createEntry(Entity $entity, User $author = null)
     {
         $entry = new Entry();
@@ -105,6 +111,9 @@ class Manager implements EntryManagerInterface
         return $ev->getEntry();
     }
 
+    /**
+     * @since 8.4.4
+     */
     public function getEntryAttributeValuesForm(Form $form, Entry $entry)
     {
         $submittedAttributeValues = [];

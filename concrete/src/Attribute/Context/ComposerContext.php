@@ -20,6 +20,7 @@ class ComposerContext extends BasicFormContext
 
     /**
      * @return mixed
+     * @since 8.2.0
      */
     public function getTooltip()
     {
@@ -28,6 +29,7 @@ class ComposerContext extends BasicFormContext
 
     /**
      * @param mixed $tooltip
+     * @since 8.2.0
      */
     public function setTooltip($tooltip)
     {
@@ -36,6 +38,7 @@ class ComposerContext extends BasicFormContext
 
     /**
      * @return bool
+     * @since 8.2.0
      */
     public function isRequired()
     {
@@ -44,12 +47,16 @@ class ComposerContext extends BasicFormContext
 
     /**
      * @param bool $required
+     * @since 8.2.0
      */
     public function setRequired($required)
     {
         $this->required = $required;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setLocation(TemplateLocator $locator)
     {
         $locator->setTemplate('composer');

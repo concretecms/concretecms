@@ -31,6 +31,7 @@ class Service
      * Get the default site locale (if set).
      *
      * @return Locale|null
+     * @since 8.3.0
      */
     public function getDefaultLocale()
     {

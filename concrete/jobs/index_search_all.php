@@ -81,6 +81,7 @@ class IndexSearchAll extends QueueableJob
      * Messages to add to the queue.
      *
      * @return \Iterator
+     * @since 8.1.0
      */
     protected function queueMessages()
     {
@@ -158,6 +159,7 @@ class IndexSearchAll extends QueueableJob
      * Clear out all indexes.
      *
      * @param $index
+     * @since 8.1.0
      */
     protected function clearIndex($index)
     {
@@ -171,6 +173,7 @@ class IndexSearchAll extends QueueableJob
      * Get Pages to add to the queue.
      *
      * @return \Iterator
+     * @since 8.1.0
      */
     protected function pagesToQueue()
     {
@@ -196,6 +199,7 @@ class IndexSearchAll extends QueueableJob
      * Get Users to add to the queue.
      *
      * @return \Iterator
+     * @since 8.1.0
      */
     protected function usersToQueue()
     {
@@ -212,6 +216,7 @@ class IndexSearchAll extends QueueableJob
      * Get Files to add to the queue.
      *
      * @return \Iterator
+     * @since 8.1.0
      */
     protected function filesToQueue()
     {
@@ -228,6 +233,7 @@ class IndexSearchAll extends QueueableJob
      * Get Sites to add to the queue.
      *
      * @return \Iterator
+     * @since 8.1.0
      */
     protected function sitesToQueue()
     {

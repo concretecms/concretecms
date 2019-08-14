@@ -18,6 +18,7 @@ class CustomizeResults extends ElementController
 
     /**
      * @return boolean
+     * @since 8.2.0
      */
     public function includeNumberOfResults()
     {
@@ -26,6 +27,7 @@ class CustomizeResults extends ElementController
 
     /**
      * @param boolean $includeNumberOfResults
+     * @since 8.2.0
      */
     public function setIncludeNumberOfResults($includeNumberOfResults)
     {

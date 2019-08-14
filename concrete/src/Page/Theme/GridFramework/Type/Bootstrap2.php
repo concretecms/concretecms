@@ -30,11 +30,17 @@ class Bootstrap2 extends GridFramework
         return '</div>';
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function getPageThemeGridFrameworkColumnAdditionalClasses()
     {
         return '';
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function getPageThemeGridFrameworkColumnOffsetAdditionalClasses()
     {
         return '';

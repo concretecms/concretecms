@@ -27,11 +27,17 @@ class PageTypeConfiguration extends Configuration
         return $this->ptID;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function getSelectorFormFactor()
     {
         return $this->selectorFormFactor;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function setSelectorFormFactor($selectorFormFactor)
     {
         $this->selectorFormFactor = $selectorFormFactor;
@@ -48,6 +54,7 @@ class PageTypeConfiguration extends Configuration
 
     /**
      * @return mixed
+     * @since 5.7.5.4
      */
     public function getStartingPointPageID()
     {
@@ -56,6 +63,7 @@ class PageTypeConfiguration extends Configuration
 
     /**
      * @param mixed $startingPointPage
+     * @since 5.7.5.4
      */
     public function setStartingPointPageID($startingPointPage)
     {

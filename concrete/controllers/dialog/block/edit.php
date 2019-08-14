@@ -28,6 +28,9 @@ class Edit extends BackendInterfaceBlockController
         $this->set('bv', $bv);
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function validateBlock($b)
     {
         $bi = $b->getInstance();

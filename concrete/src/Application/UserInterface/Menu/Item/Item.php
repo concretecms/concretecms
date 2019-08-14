@@ -76,6 +76,9 @@ class Item implements ItemInterface
         $this->position = $position;
     }
 
+    /**
+     * @since 5.7.2
+     */
     public function getPackageHandle()
     {
         return isset($this->pkgHandle) ? $this->pkgHandle : null;
@@ -101,6 +104,9 @@ class Item implements ItemInterface
         return $this->controller;
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function setController(ControllerInterface $controller)
     {
         $this->controller = $controller;

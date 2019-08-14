@@ -67,6 +67,7 @@ class Type extends ConcreteObject
      * Gets all workflows belonging to this type, sorted by their display name.
      *
      * @return \Concrete\Core\Workflow\Workflow[]
+     * @since 8.5.2
      */
     public function getWorkflows()
     {

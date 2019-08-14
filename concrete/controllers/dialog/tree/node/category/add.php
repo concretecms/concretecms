@@ -30,6 +30,9 @@ class Add extends Node
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     protected function getCategoryClass(Category $category)
     {
         if ($category instanceof ExpressEntryCategory) {

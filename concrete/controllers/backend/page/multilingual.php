@@ -32,6 +32,9 @@ class Multilingual extends Page
         $r->outputJSON();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function unmap()
     {
         $section = Section::getByID((int) $this->request->request('section'));

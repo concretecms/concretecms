@@ -359,6 +359,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      *
      * @var string|int|\DateTime|null $when a date/time representation (empty: now)
      * @return bool
+     * @since 8.5.0
      */
     public function isApprovedNow($when = null)
     {
@@ -393,6 +394,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @return string|null
      *
      * @example '2018-21-31 23:59:59'
+     * @since 8.0.0
      */
     public function getPublishDate()
     {
@@ -405,6 +407,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @return string|null
      *
      * @example '2018-21-31 23:59:59'
+     * @since 8.4.0
      */
     public function getPublishEndDate()
     {
@@ -573,6 +576,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @return string|null
      *
      * @example '2018-21-31 23:59:59'
+     * @since 8.4.1
      */
     public function getVersionDateApproved()
     {
@@ -606,6 +610,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @param string|\DateTime|int|null $publishDate the scheduled date/time when the collection is published (start)
      *
      * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
+     * @since 8.0.0
      */
     public function setPublishDate($publishDate)
     {
@@ -618,6 +623,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @param string|\DateTime|int|null $publishEndDate the scheduled date/time when the collection is published (end)
      *
      * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
+     * @since 8.4.0
      */
     public function setPublishEndDate($publishEndDate)
     {
@@ -631,6 +637,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @param string|\DateTime|int|null $endDateTime the scheduled date/time when the collection is published (end)
      *
      * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
+     * @since 8.5.0
      */
     public function setPublishInterval($startDateTime, $endDateTime)
     {
@@ -959,6 +966,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
     /**
      * Make sure that other collection versions aren't approved and valid at the same time as this version.
+     * @since 8.5.0
      */
     private function avoidApprovalOverlapping()
     {

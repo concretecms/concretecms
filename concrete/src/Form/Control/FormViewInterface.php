@@ -34,6 +34,7 @@ interface FormViewInterface extends ViewInterface
      * Returns the ID of the current form control – may return null if the form
      * control doesn't need it.
      * @return string|null
+     * @since 8.4.0
      */
     public function getControlID();
 }

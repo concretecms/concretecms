@@ -33,6 +33,7 @@ class Zip
      *
      * @param Filesystem $filesystem
      * @param FunctionInspector $functionInspector
+     * @since 8.2.0
      */
     public function __construct(Filesystem $filesystem, FunctionInspector $functionInspector)
     {

@@ -30,6 +30,7 @@ class GlobalArea extends Area
     /**
      * If called on a multilingual website, this global area will not load its content from the language-specific global area stack. Instead, it'll use
      * the stack in the default language, throughout the website.
+     * @since 5.7.5
      */
     public function ignoreCurrentLanguageSection()
     {
@@ -147,6 +148,7 @@ class GlobalArea extends Area
     /**
      * Searches for global areas without any blocks in it and deletes them.
      * This will have a positive impact on the performance as every global area is rendered for every page.
+     * @since 8.3.1
      */
     public static function deleteEmptyAreas()
     {

@@ -38,6 +38,7 @@ class ImageInspector extends Inspector
      * @param ImageInterface $image
      *
      * @return bool true if success, false otherwise
+     * @since 8.3.1
      */
     private function updateSize(Version $fv, ImageInterface $image)
     {

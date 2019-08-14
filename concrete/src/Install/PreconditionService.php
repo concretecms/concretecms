@@ -63,6 +63,7 @@ class PreconditionService
      * Get the post-configuration preconditions.
      *
      * @return OptionsPreconditionInterface[]
+     * @since 8.4.0
      */
     public function getOptionsPreconditions()
     {
@@ -126,6 +127,7 @@ class PreconditionService
      * Get all the defined preconditions, of any kind.
      *
      * @return PreconditionInterface[]
+     * @since 8.4.0
      */
     private function getAllPreconditions()
     {

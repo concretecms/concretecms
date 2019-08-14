@@ -78,6 +78,7 @@ class Type
      * @param \Package $pkg
      *
      * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type[]
+     * @since 5.7.3
      */
     public static function getListByPackage($pkg)
     {

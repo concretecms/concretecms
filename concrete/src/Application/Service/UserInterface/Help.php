@@ -9,6 +9,9 @@ use Config;
 
 class Help
 {
+    /**
+     * @since 5.7.4
+     */
     public function display()
     {
         if (!Config::get('concrete.accessibility.display_help_system')) {
@@ -39,6 +42,9 @@ class Help
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function displayHelpDialogLauncher()
     {
         if (!Config::get('concrete.accessibility.display_help_system')) {

@@ -85,6 +85,7 @@ class Form
      * Set the request instance.
      *
      * @param Request $request
+     * @since 8.4.1
      */
     public function setRequest(Request $request)
     {
@@ -93,6 +94,7 @@ class Form
 
     /**
      * @return \Concrete\Core\Http\Request
+     * @since 8.4.1
      */
     protected function getRequest()
     {
@@ -484,6 +486,7 @@ class Form
      * - 'allowedCountries': an array containing a list of acceptable Country codes. If not set, all the countries will be selectable.
      * - 'linkStateProvinceField': set to true to look for text fields that have a "data-countryfield" attribute with the same value as this Country field name (updating the Country select will automatically update the State/Province list).
      * @param array $miscFields Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @since 8.3.0
      */
     public function selectCountry($key, $selectedCountryCode = '', array $configuration = [], array $miscFields = [])
     {
@@ -631,6 +634,7 @@ class Form
      * Generates HTML code that can be added at the beginning of a form to disable username/password autocompletion.
      *
      * @return string
+     * @since 8.2.0
      */
     public function getAutocompletionDisabler()
     {

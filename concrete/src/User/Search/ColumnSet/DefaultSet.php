@@ -29,6 +29,9 @@ class DefaultSet extends ColumnSet
         return Core::make('helper/date')->formatDateTime($ui->getUserDateAdded());
     }
 
+    /**
+     * @since 8.3.0
+     */
     public static function getUserDateLastLogin($ui)
     {
         $login = $ui->getLastLogin();
@@ -50,6 +53,9 @@ class DefaultSet extends ColumnSet
         $this->setDefaultSortColumn($date, 'desc');
     }
 
+    /**
+     * @since 8.0.0
+     */
     public static function getUserStatus($ui)
     {
         if ($ui->isActive()) {

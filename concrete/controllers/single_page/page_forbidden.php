@@ -24,6 +24,7 @@ class PageForbidden extends PageController
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response|null
+     * @since 5.7.0 (but not in 8.2.0 8.2.1 8.3.0 8.3.1 8.3.2)
      */
     public function view()
     {
@@ -32,6 +33,7 @@ class PageForbidden extends PageController
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response|null
+     * @since 8.4.0
      */
     protected function checkRedirectToLogin()
     {

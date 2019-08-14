@@ -5,6 +5,9 @@ use Concrete\Core\Support\Facade\Facade;
 
 class UserKey extends Facade
 {
+    /**
+     * @since 8.0.0
+     */
     public static function getFacadeAccessor()
     {
         return 'Concrete\Core\Attribute\Category\UserCategory';

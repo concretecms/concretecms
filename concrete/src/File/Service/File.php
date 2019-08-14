@@ -393,6 +393,7 @@ class File
      * @param string $filename
      *
      * @return array
+     * @since 5.7.4
      */
     public function splitFilename($filename)
     {
@@ -454,6 +455,7 @@ class File
      * @param string $path2
      *
      * @return bool
+     * @since 5.7.4.1
      */
     public function isSamePath($path1, $path2)
     {
@@ -480,6 +482,7 @@ class File
      * @param string $who One of 'user', 'group', 'all'
      *
      * @throws Exception Throws an exception in case of errors
+     * @since 8.0.0
      */
     public function makeExecutable($file, $who = 'all')
     {

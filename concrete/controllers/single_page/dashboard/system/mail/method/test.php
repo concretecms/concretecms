@@ -7,6 +7,9 @@ use Concrete\Core\Validator\String\EmailValidator;
 
 class Test extends DashboardPageController
 {
+    /**
+     * @since 8.2.0
+     */
     public function view()
     {
         $config = $this->app->make('config');

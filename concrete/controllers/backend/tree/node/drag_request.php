@@ -89,6 +89,9 @@ class DragRequest extends UserInterface
         return new JsonResponse($message);
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function updateChildren() {
 
         $message = new EditResponse();

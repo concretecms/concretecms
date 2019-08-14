@@ -44,6 +44,9 @@ class TopicTreeNodeResponse extends Response
         return $this->canAccessTopics();
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function canAddTopicTreeNode()
     {
         return $this->canAccessTopics();

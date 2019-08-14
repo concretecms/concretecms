@@ -29,6 +29,9 @@ class Service
         return $this->ssName;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function getDisplayName()
     {
         return h($this->getName());

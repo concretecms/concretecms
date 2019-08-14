@@ -25,6 +25,7 @@ class Application extends SymfonyApplication
     /**
      * Get the concrete5 application instance
      * @return \Concrete\Core\Application\Application
+     * @since 8.5.0
      */
     public function getConcrete5()
     {

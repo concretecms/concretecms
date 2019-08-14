@@ -143,6 +143,7 @@ class BlockType
 
     /**
      * Clears output and record caches.
+     * @since 5.7.0.3
      */
     public static function clearCache()
     {

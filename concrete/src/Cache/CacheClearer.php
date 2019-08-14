@@ -111,6 +111,7 @@ class CacheClearer
 
     /**
      * @param boolean $clearGlobalAreas
+     * @since 8.3.1
      */
     public function setClearGlobalAreas($clearGlobalAreas)
     {
@@ -246,6 +247,9 @@ class CacheClearer
         OpCache::clear();
     }
 
+    /**
+     * @since 8.3.1
+     */
     protected function deleteEmptyGlobalAreas()
     {
         if ($this->clearGlobalAreas) {

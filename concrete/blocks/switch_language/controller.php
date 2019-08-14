@@ -45,6 +45,7 @@ class Controller extends BlockController
      * @param int $sectionID
      *
      * @return \League\URL\URLInterface
+     * @since 8.2.0
      */
     public function resolve_language_url($currentPageID, $sectionID)
     {

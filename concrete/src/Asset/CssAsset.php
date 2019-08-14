@@ -44,6 +44,7 @@ class CssAsset extends Asset
      * Set the media of this asset.
      *
      * @param string $assetMedia
+     * @since 8.4.0
      */
     public function setAssetMedia($assetMedia)
     {
@@ -54,6 +55,7 @@ class CssAsset extends Asset
      * Get the media of this asset.
      *
      * @return string
+     * @since 8.4.0
      */
     public function getAssetMedia()
     {
@@ -207,6 +209,7 @@ class CssAsset extends Asset
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Asset\AssetInterface::register()
+     * @since 5.7.4
      */
     public function register($filename, $args, $pkg = false)
     {

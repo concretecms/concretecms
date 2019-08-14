@@ -198,6 +198,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      * Setup the configured error reporting.
      *
      * @param Repository $config
+     * @since 8.4.1
      */
     private function setupErrorReporting(Repository $config)
     {
@@ -258,6 +259,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      *
      * @param $environment
      * @return mixed
+     * @since 8.5.0
      */
     private function validateDatabaseDetails($environment)
     {

@@ -52,6 +52,9 @@ class Express extends Standard
         return $ep->canViewExpressEntries();
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function expressSearchPreset($entityID, $presetID)
     {
         if ($this->canAccess()) {

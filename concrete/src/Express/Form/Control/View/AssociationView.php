@@ -24,6 +24,9 @@ class AssociationView extends View
      */
     protected $selectedEntries = [];
 
+    /**
+     * @since 8.4.0
+     */
     public function getControlID()
     {
         return 'express_association_' . $this->control->getID();

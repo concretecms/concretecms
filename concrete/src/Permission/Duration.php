@@ -37,6 +37,7 @@ class Duration extends AbstractRepetition
 
     /**
      * @return Duration|null
+     * @since 5.7.4
      */
     public static function createFromRequest()
     {
@@ -153,6 +154,9 @@ class Duration extends AbstractRepetition
         );
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getID()
     {
         return $this->getPermissionDurationID();

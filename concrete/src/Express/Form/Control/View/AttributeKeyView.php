@@ -25,6 +25,9 @@ class AttributeKeyView extends View
         }
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getControlID()
     {
         return null;

@@ -62,6 +62,9 @@ class Manager extends CoreManager
         return new CaptchaLibrary();
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function createGeolocatorLibraryDriver()
     {
         return new GeolocatorLibrary();
@@ -162,6 +165,9 @@ class Manager extends CoreManager
         return new Workflow();
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function createExpressEntityDriver()
     {
         return $this->app->make(ExpressEntity::class);

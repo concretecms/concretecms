@@ -168,6 +168,7 @@ class TypeFactory
 
     /**
      * @param \Concrete\Core\Entity\Attribute\Type $type
+     * @since 8.0.3
      */
     protected function installDatabase(AttributeType $type)
     {

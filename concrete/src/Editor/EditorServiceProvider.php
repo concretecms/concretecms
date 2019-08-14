@@ -58,6 +58,9 @@ class EditorServiceProvider extends ServiceProvider
         $this->app->alias(EditorInterface::class, 'editor');
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function registerCkeditorPlugins(PluginManager $pluginManager)
     {
         $loc = Localization::getInstance();
@@ -199,6 +202,9 @@ class EditorServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     private function registerCorePlugins(PluginManager $pluginManager)
     {
         $coreAssetDir = 'js/ckeditor4/core/';

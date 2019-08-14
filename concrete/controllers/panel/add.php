@@ -40,6 +40,9 @@ class Add extends BackendInterfacePageController
         $this->set('ci', $this->app->make('helper/concrete/urls'));
     }
 
+    /**
+     * @since 8.4.4
+     */
     public function getStackContents()
     {
         $this->set('ci', $this->app->make('helper/concrete/urls'));
@@ -57,6 +60,9 @@ class Add extends BackendInterfacePageController
         throw new \Exception(t('Access Denied.'));
     }
 
+    /**
+     * @since 8.4.1
+     */
     protected function getSelectedTab()
     {
         $requestTab = $this->request('tab');
@@ -78,6 +84,7 @@ class Add extends BackendInterfacePageController
 
     /**
      * @return \Concrete\Core\Entity\Block\BlockType\BlockType[] array keys are the set names, array values are the block types associated to those sets
+     * @since 8.4.1
      */
     protected function buildSetsAndBlockTypes()
     {

@@ -52,6 +52,7 @@ interface AssetInterface
      * Render the HTML tag that will load this asset.
      *
      * @return string
+     * @since 5.7.5.2
      */
     public function __toString();
 

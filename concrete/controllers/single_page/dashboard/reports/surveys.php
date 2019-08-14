@@ -30,6 +30,9 @@ class Surveys extends DashboardPageController
         }
     }
 
+    /**
+     * @since 8.3.0
+     */
     protected function displayChart($bID, $cID)
     {
         // Prepare the database query

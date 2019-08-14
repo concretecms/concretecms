@@ -11,6 +11,7 @@ class Users extends Standard
 {
     /**
      * @return \Concrete\Controller\Dialog\Search\AdvancedSearch
+     * @since 8.0.0
      */
     protected function getAdvancedSearchDialogController()
     {
@@ -21,6 +22,7 @@ class Users extends Standard
      * @param int $presetID
      *
      * @return \Concrete\Core\Entity\Search\SavedUserSearch|null
+     * @since 8.0.0
      */
     protected function getSavedSearchPreset($presetID)
     {
@@ -31,6 +33,7 @@ class Users extends Standard
 
     /**
      * @return KeywordsField[]
+     * @since 8.0.0
      */
     protected function getBasicSearchFieldsFromRequest()
     {
@@ -45,6 +48,7 @@ class Users extends Standard
 
     /**
      * @return bool
+     * @since 8.0.0
      */
     protected function canAccess()
     {

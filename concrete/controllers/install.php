@@ -159,6 +159,7 @@ class Install extends Controller
 
     /**
      * @return \Concrete\Core\Install\PreconditionInterface[][]
+     * @since 8.3.0
      */
     public function getPreconditions()
     {
@@ -246,6 +247,9 @@ class Install extends Controller
         $this->setInstallStep();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
     {
         Localization::changeLocale($viewLocaleID);
@@ -256,6 +260,9 @@ class Install extends Controller
         return $rf->json($form->select('siteLocaleCountry', $countries, $preselectedCountryID));
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function web_precondition($handle, $argument = '')
     {
         $service = $this->app->make(PreconditionService::class);
@@ -415,6 +422,7 @@ class Install extends Controller
      * Get the installer instance.
      *
      * @return Installer
+     * @since 8.3.0
      */
     protected function getInstaller()
     {
@@ -429,6 +437,7 @@ class Install extends Controller
      * Get the options used by the installer.
      *
      * @return \Concrete\Core\Install\InstallerOptions
+     * @since 8.3.0
      */
     protected function getInstallerOptions()
     {
@@ -519,6 +528,9 @@ class Install extends Controller
         }
     }
 
+    /**
+     * @since 8.4.0
+     */
     private function setInstallStep()
     {
         $sets = $this->getSets();
@@ -538,6 +550,7 @@ class Install extends Controller
      * @param string $languageID
      *
      * @return array
+     * @since 8.2.0
      */
     private function getCountriesForLanguage($languageID)
     {

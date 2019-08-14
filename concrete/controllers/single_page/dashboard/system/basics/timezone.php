@@ -17,6 +17,7 @@ class Timezone extends DashboardSitePageController
 
     /**
      * @return ConnectionTimezone
+     * @since 8.2.0
      */
     protected function getConnectionTimezone()
     {
@@ -84,6 +85,9 @@ class Timezone extends DashboardSitePageController
         }
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function setSystemTimezone()
     {
         if ($this->token->validate('set_system_timezone')) {

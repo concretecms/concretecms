@@ -12,31 +12,49 @@ use Doctrine\ORM\Mapping as ORM;
 class CalendarEventVersionOccurrence implements ObjectInterface
 {
 
+    /**
+     * @since 8.4.0
+     */
     public function getAttribute($ak, $mode = false)
     {
         return $this->version->getAttribute($ak, $mode);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getAttributeValue($ak)
     {
         return $this->version->getAttributeValue($ak);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         return $this->version->getAttributeValueObject($ak, $createIfNotExists);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getObjectAttributeCategory()
     {
         return $this->version->getObjectAttributeCategory();
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function clearAttribute($ak)
     {
         $this->version->clearAttribute($ak);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function setAttribute($ak, $value)
     {
         $this->version->setAttribute($ak, $value);

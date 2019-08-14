@@ -22,6 +22,9 @@ class Search extends BackendInterfaceController
         return false;
     }
 
+    /**
+     * @since 8.1.0
+     */
     protected function getEntity()
     {
         $em = \Database::connection()->getEntityManager();

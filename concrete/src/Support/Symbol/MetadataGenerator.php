@@ -14,6 +14,9 @@ use Throwable;
  */
 class MetadataGenerator
 {
+    /**
+     * @since 8.0.0
+     */
     public function getAllBindings()
     {
         $bindings = [];
@@ -49,6 +52,7 @@ class MetadataGenerator
      * Return the list of custom entity manager repositories.
      *
      * @return array array keys are the entity fully-qualified class names, values are the custom repository fully-qualified class names
+     * @since 8.3.0
      */
     public function getCustomEntityRepositories()
     {
@@ -133,6 +137,7 @@ class MetadataGenerator
      * @param string $abstract
      *
      * @return string|null
+     * @since 8.3.0
      */
     private function resolveAbstractToClassName(Application $app, $abstract)
     {
@@ -152,6 +157,9 @@ class MetadataGenerator
         return $result;
     }
 
+    /**
+     * @since 8.0.0
+     */
     private function getOverride($string, $makeMethod, $comment)
     {
         $output = [

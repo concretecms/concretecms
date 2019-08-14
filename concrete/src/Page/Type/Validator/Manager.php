@@ -9,6 +9,9 @@ use Concrete\Core\Support\Manager as CoreManager;
 class Manager extends CoreManager
 {
 
+    /**
+     * @since 8.0.0
+     */
     protected function getStandardValidator()
     {
         return new StandardValidator();

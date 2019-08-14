@@ -33,6 +33,9 @@ class GroupEntity extends Entity
         return $html;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public static function configureFromImport(\SimpleXMLElement $element)
     {
         $g = Group::getByName((string) $element['name']);

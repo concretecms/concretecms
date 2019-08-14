@@ -33,6 +33,7 @@ class GenerateSitemap extends AbstractJob implements ApplicationAwareInterface
      *
      * @param mixed $name
      * @param mixed $arguments
+     * @since 8.4.1
      */
     public static function __callStatic($name, $arguments)
     {
@@ -47,6 +48,7 @@ class GenerateSitemap extends AbstractJob implements ApplicationAwareInterface
      *
      * @param mixed $name
      * @param mixed $arguments
+     * @since 8.4.1
      */
     public function __call($name, $arguments)
     {
@@ -130,6 +132,7 @@ class GenerateSitemap extends AbstractJob implements ApplicationAwareInterface
      *
      * @param \Concrete\Core\Page\Page $page
      * @param array $instances
+     * @since 8.4.1
      */
     private static function _canIncludePageInSitemap($page, $instances)
     {

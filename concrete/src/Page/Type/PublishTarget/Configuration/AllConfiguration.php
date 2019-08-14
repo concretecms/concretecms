@@ -20,11 +20,17 @@ class AllConfiguration extends Configuration
         return true;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function getSelectorFormFactor()
     {
         return $this->selectorFormFactor;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function setSelectorFormFactor($selectorFormFactor)
     {
         $this->selectorFormFactor = $selectorFormFactor;
@@ -32,6 +38,7 @@ class AllConfiguration extends Configuration
 
     /**
      * @return mixed
+     * @since 5.7.5.4
      */
     public function getStartingPointPageID()
     {
@@ -52,6 +59,7 @@ class AllConfiguration extends Configuration
 
     /**
      * @param mixed $startingPointPage
+     * @since 5.7.5.4
      */
     public function setStartingPointPageID($startingPointPage)
     {

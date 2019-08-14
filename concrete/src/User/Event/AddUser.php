@@ -13,6 +13,7 @@ class AddUser extends AbstractEvent
 
     /**
      * @return array
+     * @since 5.7.5.7
      */
     public function getData()
     {

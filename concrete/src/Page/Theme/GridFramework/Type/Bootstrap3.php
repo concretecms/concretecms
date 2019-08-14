@@ -5,6 +5,9 @@ use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 
 class Bootstrap3 extends GridFramework
 {
+    /**
+     * @since 5.7.5
+     */
     public function supportsNesting()
     {
         return true;
@@ -75,31 +78,49 @@ class Bootstrap3 extends GridFramework
         return $offsets;
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function getPageThemeGridFrameworkColumnAdditionalClasses()
     {
         return '';
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function getPageThemeGridFrameworkColumnOffsetAdditionalClasses()
     {
         return '';
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()
     {
         return 'hidden-xs';
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnSmallDeviceClass()
     {
         return 'hidden-sm';
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnMediumDeviceClass()
     {
         return 'hidden-md';
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getPageThemeGridFrameworkHideOnLargeDeviceClass()
     {
         return 'hidden-lg';

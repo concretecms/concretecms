@@ -83,6 +83,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $config The `concrete.session` config item
      *
      * @return \Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler
+     * @since 8.5.0
      */
     protected function getFileHandler(array $config)
     {
@@ -97,6 +98,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $config The `concrete.session` config item
      *
      * @return \Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+     * @since 8.5.0
      */
     protected function getDatabaseHandler(array $config)
     {
@@ -119,6 +121,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $config The `concrete.session` config item
      *
      * @return \Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler
+     * @since 8.5.0
      */
     protected function getMemcachedHandler(array $config)
     {
@@ -152,6 +155,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $config The `concrete.session` config item
      *
      * @return \Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler
+     * @since 8.5.0
      */
     protected function getDefaultHandler(array $config)
     {
@@ -227,6 +231,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $servers The servers as described in config
      *
      * @return \Generator|string[] [ $host, $port, $weight ]
+     * @since 8.5.0
      */
     private function newMemcachedServers(Memcached $memcached, array $servers)
     {
@@ -256,6 +261,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $config The `concrete.session` config item
      *
      * @return \Concrete\Core\Session\Storage\Handler\RedisSessionHandler
+     * @since 8.5.0
      */
     protected function getRedisHandler(array $config)
     {
@@ -285,6 +291,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
      *
      * @return \Redis | \RedisArray
+     * @since 8.5.0
      */
     private function getRedisInstance(array $servers)
     {
@@ -337,6 +344,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
      *
      * @return \Generator| string[] [ $server, $port, $ttl ]
+     * @since 8.5.0
      */
     private function getRedisServers(array $servers)
     {

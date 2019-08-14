@@ -35,6 +35,9 @@ class CollectionAttributeType extends Type
         return $ax;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function configureFromImportHandle($handle)
     {
         $ak = CollectionAttributeKey::getByHandle($handle);

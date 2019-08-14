@@ -44,16 +44,25 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         parent::__construct($req);
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getPermissionsChecker()
     {
         return $this->permissionsChecker;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getPagerManager()
     {
         return new FileListPagerManager($this);
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getPagerVariableFactory()
     {
         return new VariableFactory($this, $this->getSearchRequest());
@@ -69,6 +78,9 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->permissionsChecker = -1;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function enablePermissions()
     {
         unset($this->permissionsChecker);
@@ -97,6 +109,9 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
@@ -165,6 +180,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filter the files by their storage location using a storage location object.
      *
      * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
+     * @since 8.5.0
      */
     public function filterByStorageLocation($storageLocation) {
         if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
@@ -180,6 +196,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filter the files by their storage location using a storage location id.
      *
      * @param int $fslID storage location id
+     * @since 8.5.0
      */
     public function filterByStorageLocationID($fslID)
     {
@@ -276,7 +293,6 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      *
      * @param int $uID
      *
-     * @since 5.4.1.1+
      */
     public function filterByAuthorUserID($uID)
     {

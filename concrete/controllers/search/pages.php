@@ -11,11 +11,17 @@ use Concrete\Core\Tree\Node\Type\SearchPreset;
 class Pages extends Standard
 {
 
+    /**
+     * @since 8.0.0
+     */
     protected function getAdvancedSearchDialogController()
     {
         return $this->app->make('\Concrete\Controller\Dialog\Page\AdvancedSearch');
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getSavedSearchPreset($presetID)
     {
         $em = \Database::connection()->getEntityManager();
@@ -23,6 +29,9 @@ class Pages extends Standard
         return $preset;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getBasicSearchFieldsFromRequest()
     {
         $fields = parent::getBasicSearchFieldsFromRequest();
@@ -37,6 +46,9 @@ class Pages extends Standard
         return $fields;
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function canAccess()
     {
         $permissions = new \Permissions();

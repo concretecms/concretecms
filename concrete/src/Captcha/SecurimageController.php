@@ -96,6 +96,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::getLabelAttributes()
+     * @since 8.3.0
      */
     public function getLabelAttributes()
     {
@@ -106,6 +107,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::setLabelAttributes()
+     * @since 8.3.0
      */
     public function setLabelAttributes(array $attributes)
     {
@@ -135,6 +137,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::setPictureAttributes()
+     * @since 8.3.0
      */
     public function setPictureAttributes(array $attributes)
     {
@@ -147,6 +150,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::getPictureAttributes()
+     * @since 8.3.0
      */
     public function getPictureAttributes()
     {
@@ -191,6 +195,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::setInputAttributes()
+     * @since 8.3.0
      */
     public function setInputAttributes(array $attributes)
     {
@@ -203,6 +208,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::getInputAttributes()
+     * @since 8.3.0
      */
     public function getInputAttributes()
     {

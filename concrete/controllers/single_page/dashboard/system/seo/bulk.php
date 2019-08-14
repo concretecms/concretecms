@@ -18,6 +18,7 @@ class Bulk extends DashboardPageController
      * @param string $locale
      *
      * @return string
+     * @since 5.7.5.7
      */
     protected function getSiteNameForLocale($locale)
     {
@@ -42,6 +43,7 @@ class Bulk extends DashboardPageController
      * @param \Concrete\Core\Page\Page $page
      *
      * @return string
+     * @since 5.7.5.7
      */
     public function getSiteNameForPage(\Concrete\Core\Page\Page $page)
     {

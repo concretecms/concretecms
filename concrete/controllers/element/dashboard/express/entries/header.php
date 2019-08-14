@@ -26,6 +26,7 @@ class Header extends ElementController
 
     /**
      * @return string
+     * @since 8.2.0
      */
     public function getExportURL()
     {
@@ -42,6 +43,7 @@ class Header extends ElementController
 
     /**
      * @param string $exportURL
+     * @since 8.2.0
      */
     public function setExportURL($exportURL)
     {

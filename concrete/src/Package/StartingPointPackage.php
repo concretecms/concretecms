@@ -96,6 +96,9 @@ class StartingPointPackage extends BasePackage
         ];
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function setInstallerOptions(InstallerOptions $installerOptions = null)
     {
         $this->installerOptions = $installerOptions;
@@ -172,6 +175,7 @@ class StartingPointPackage extends BasePackage
      *
      * @throws Exception
      * @throws Throwable
+     * @since 8.1.0
      */
     public function executeInstallRoutine($routineName)
     {
@@ -202,6 +206,9 @@ class StartingPointPackage extends BasePackage
         Page::addHomePage();
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function install_data_objects()
     {
         \Concrete\Core\Tree\Node\NodeType::add('category');
@@ -286,54 +293,81 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_other.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_basic()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_basic.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_navigation()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_navigation.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_form()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_form.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_express()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_express.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_social()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_social.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_calendar()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_calendar.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_multimedia()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_multimedia.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_core_desktop()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_core_desktop.xml');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_blocktypes_other()
     {
         $ci = new ContentImporter();
@@ -408,12 +442,18 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function install_desktops()
     {
         $desktop = \Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function install_api()
     {
         $scopes = $this->app->make(ScopeRegistryInterface::class)->getScopes();
@@ -599,6 +639,9 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/permissions.xml');
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function install_site()
     {
         \Core::make('site/type')->installDefault();
@@ -617,6 +660,9 @@ class StartingPointPackage extends BasePackage
         $dbConfig->save('app.privacy_policy_accepted', $this->installerOptions->isPrivacyPolicyAccepted());
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function install_site_permissions()
     {
         $g1 = Group::getByID(GUEST_GROUP_ID);

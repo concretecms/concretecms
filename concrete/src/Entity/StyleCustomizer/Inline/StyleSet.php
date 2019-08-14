@@ -70,6 +70,7 @@ class StyleSet
 
     /**
      * @param mixed $customElementAttribute
+     * @since 8.2.0
      */
     public function setCustomElementAttribute($customElementAttribute)
     {
@@ -78,6 +79,7 @@ class StyleSet
 
     /**
      * @return mixed
+     * @since 8.2.0
      */
     public function getCustomElementAttribute()
     {

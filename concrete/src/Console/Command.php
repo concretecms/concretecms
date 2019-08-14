@@ -97,6 +97,7 @@ abstract class Command extends SymfonyCommand
      * Configure the console command using a fluent definition.
      *
      * @return void
+     * @since 8.5.0
      */
     protected function configureUsingFluentDefinition()
     {
@@ -117,6 +118,7 @@ abstract class Command extends SymfonyCommand
      * Specify the arguments and options on the command.
      *
      * @return void
+     * @since 8.5.0
      */
     protected function specifyParameters()
     {
@@ -136,6 +138,7 @@ abstract class Command extends SymfonyCommand
      *
      * If $this->signature is specified, this method has no effect.
      * @return array [[$name, $mode = null, $description = '', $default = null], ...]
+     * @since 8.5.0
      */
     protected function getArguments()
     {
@@ -147,6 +150,7 @@ abstract class Command extends SymfonyCommand
      *
      * If $this->signature is specified, this method has no effect.
      * @return array [[$name, $shortcut = null, $mode = null, $description = '', $default = null], ...]
+     * @since 8.5.0
      */
     protected function getOptions()
     {
@@ -263,6 +267,7 @@ abstract class Command extends SymfonyCommand
      * - the console is interactive and the user explicitly confirm the operation
      *
      * @return $this
+     * @since 8.4.0
      */
     protected function setCanRunAsRoot($canRunAsRoot)
     {
@@ -290,6 +295,7 @@ abstract class Command extends SymfonyCommand
      * Is the current user root?
      *
      * @return bool|null NULL if unknown, or boolean if determined
+     * @since 8.4.0
      */
     protected function isRunningAsRoot()
     {
@@ -303,6 +309,7 @@ abstract class Command extends SymfonyCommand
      * @param OutputInterface $output
      *
      * @throws UserMessageException
+     * @since 8.4.0
      */
     protected function confirmRunningAsRoot(InputInterface $input, OutputInterface $output)
     {
@@ -343,6 +350,7 @@ abstract class Command extends SymfonyCommand
      * @param  string  $command
      * @param  array   $arguments
      * @return int
+     * @since 8.5.0
      */
     public function call($command, array $arguments = [])
     {
@@ -358,6 +366,7 @@ abstract class Command extends SymfonyCommand
      * @param  string  $command
      * @param  array   $arguments
      * @return int
+     * @since 8.5.0
      */
     public function callSilent($command, array $arguments = [])
     {
@@ -372,6 +381,7 @@ abstract class Command extends SymfonyCommand
      *
      * @param  string|int  $name
      * @return bool
+     * @since 8.5.0
      */
     public function hasArgument($name)
     {
@@ -383,6 +393,7 @@ abstract class Command extends SymfonyCommand
      *
      * @param  string|null  $key
      * @return string|array
+     * @since 8.5.0
      */
     public function argument($key = null)
     {
@@ -396,6 +407,7 @@ abstract class Command extends SymfonyCommand
      * Get all of the arguments passed to the command.
      *
      * @return array
+     * @since 8.5.0
      */
     public function arguments()
     {
@@ -407,6 +419,7 @@ abstract class Command extends SymfonyCommand
      *
      * @param  string  $name
      * @return bool
+     * @since 8.5.0
      */
     public function hasOption($name)
     {
@@ -418,6 +431,7 @@ abstract class Command extends SymfonyCommand
      *
      * @param  string  $key
      * @return string|array
+     * @since 8.5.0
      */
     public function option($key = null)
     {
@@ -431,6 +445,7 @@ abstract class Command extends SymfonyCommand
      * Get all of the options passed to the command.
      *
      * @return array
+     * @since 8.5.0
      */
     public function options()
     {
@@ -443,6 +458,7 @@ abstract class Command extends SymfonyCommand
      * @param  string $question
      * @param  bool $default
      * @return bool
+     * @since 8.5.0
      */
     public function confirm($question, $default = false)
     {
@@ -455,6 +471,7 @@ abstract class Command extends SymfonyCommand
      * @param  string $question
      * @param  string $default
      * @return string
+     * @since 8.5.0
      */
     public function ask($question, $default = null)
     {
@@ -470,6 +487,7 @@ abstract class Command extends SymfonyCommand
      * @param null $attempts
      * @param null $strict
      * @return string
+     * @since 8.5.0
      */
     public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
     {
@@ -482,6 +500,7 @@ abstract class Command extends SymfonyCommand
      * @param  string $question
      * @param  bool $fallback
      * @return string
+     * @since 8.5.0
      */
     public function secret($question, $fallback = true)
     {
@@ -497,6 +516,7 @@ abstract class Command extends SymfonyCommand
      * @param  mixed $attempts
      * @param  bool $multiple
      * @return string
+     * @since 8.5.0
      */
     public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
     {
@@ -511,6 +531,7 @@ abstract class Command extends SymfonyCommand
      * @param  string $tableStyle
      * @param  array $columnStyles
      * @return void
+     * @since 8.5.0
      */
     public function table(array $headers, array $rows, $tableStyle = 'default', array $columnStyles = [])
     {

@@ -158,7 +158,7 @@ class Urls
      *
      * @return string $url Empty string if the auto.css file doesn't exist
      *
-     * @since concrete5 8.5.0a3
+     * @since 8.5.0
      */
     public function getBlockTypeCssURL($bt)
     {

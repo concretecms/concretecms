@@ -11,6 +11,9 @@ interface EntryInterface
     function getOptionElement();
     function getLabel();
     function getID();
+    /**
+     * @since 8.4.0
+     */
     function getIcon();
     function getGroupClass();
     function isSelected();

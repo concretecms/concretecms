@@ -464,6 +464,7 @@ class User implements UserEntityInterface
      * Return the user's identifier.
      *
      * @return mixed
+     * @since 8.5.0
      */
     public function getIdentifier()
     {

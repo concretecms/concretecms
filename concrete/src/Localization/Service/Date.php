@@ -119,6 +119,7 @@ class Date
      * @param string $timezoneID
      *
      * @return string
+     * @since 8.1.0
      */
     public function getTimezoneName($timezoneID)
     {
@@ -275,6 +276,7 @@ class Date
      *  ]</pre>
      *
      * @see http://www.php.net/datetimezone.listidentifiers.php
+     * @since 8.1.0
      */
     public function getGroupedTimezones()
     {
@@ -452,6 +454,7 @@ class Date
 
     /**
      * @return string
+     * @since 8.1.0
      */
     public function getUserTimeZoneID()
     {
@@ -823,6 +826,7 @@ class Date
      * @return string
      *
      * @throws \Punic\Exception
+     * @since 8.2.0
      */
     public function getPHPDatePattern()
     {
@@ -841,6 +845,7 @@ class Date
      * @return string
      *
      * @throws \Punic\Exception
+     * @since 8.2.0
      */
     public function getPHPTimePattern()
     {
@@ -859,6 +864,7 @@ class Date
      * @return string
      *
      * @throws \Punic\Exception
+     * @since 8.2.0
      */
     public function getPHPDateTimePattern()
     {

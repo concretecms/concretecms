@@ -93,6 +93,7 @@ class UserInterface
      * @param array $args Extra args passed to the link
      *
      * @return string
+     * @since 5.7.4
      */
     public function buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
@@ -208,6 +209,7 @@ class UserInterface
      * Shall we show the introductive help overlay?
      *
      * @return bool
+     * @since 5.7.4
      */
     public function showHelpOverlay()
     {
@@ -223,6 +225,9 @@ class UserInterface
         return $result;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function trackHelpOverlayDisplayed()
     {
         $u = new ConcreteUser();
@@ -329,6 +334,7 @@ class UserInterface
      * @param bool|\Exception $exception
      *
      * @return Response;
+     * @since 8.2.0
      */
     public function buildErrorResponse($title, $error, $exception = false)
     {

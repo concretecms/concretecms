@@ -402,6 +402,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
     /**
      * @param Page $c
+     * @since 5.7.2
      */
     public function refreshCache($c)
     {
@@ -964,6 +965,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      * returns an array of custom templates defined for this Area object.
      *
      * @return array
+     * @since 5.7.4
      */
     public function getAreaCustomTemplates()
     {

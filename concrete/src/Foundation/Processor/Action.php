@@ -14,11 +14,17 @@ class Action implements ActionInterface
         $this->task = $task;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function getProcessor()
     {
         return $this->processor;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function setProcessor($processor)
     {
         $this->processor = $processor;
@@ -77,6 +83,9 @@ class Action implements ActionInterface
         $this->task->execute($this);
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function finish()
     {
         $this->task->finish($this);

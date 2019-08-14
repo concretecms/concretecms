@@ -217,6 +217,7 @@ EOL;
      * @return string
      *
      * @see \Concrete\Core\Application\Service\FileManager::file()
+     * @since 8.4.0
      */
     private function fileOfType($type, $inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {

@@ -323,6 +323,9 @@ class Forms extends DashboardPageController
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     protected function canDeleteForm(Entity $entity, Form $form)
     {
         $canDeleteForm = true;

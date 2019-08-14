@@ -26,6 +26,9 @@ class Controller extends BlockController
         return t("YouTube Video");
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function edit()
     {
         if ($this->vWidth || $this->vWidth) {
@@ -74,6 +77,9 @@ class Controller extends BlockController
         $this->set('playListID', $playListID);
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function convertStringToSeconds($string)
     {
         if (preg_match_all('/(\d+)(h|m|s)/i', $string, $matches)) {

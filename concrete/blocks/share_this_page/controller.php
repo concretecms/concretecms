@@ -52,6 +52,9 @@ class Controller extends BlockController
         $this->edit();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function addService($service)
     {
         $ss = Service::getByHandle($service);
@@ -134,6 +137,9 @@ class Controller extends BlockController
         $db->delete('btShareThisPage', array('bID' => $this->bID));
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('css', 'font-awesome');

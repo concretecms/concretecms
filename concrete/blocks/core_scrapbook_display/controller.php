@@ -56,6 +56,9 @@ class Controller extends BlockController
         return $this->bOriginalID;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getScrapbookBlockController()
     {
         if (!isset($this->passthruController)) {
@@ -145,6 +148,9 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function registerViewAssets($outputContent = '')
     {
         $bc = $this->getScrapbookBlockController();

@@ -117,6 +117,9 @@ class Controller extends BlockController
         $this->set('parentLabel', $this->parentLabel);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function add()
     {
         $this->set('nextLabel', t('Next'));
@@ -157,6 +160,7 @@ class Controller extends BlockController
      * @param bool $previous
      *
      * @return Page|false
+     * @since 8.4.1
      */
     private function getNextPreviousCollection($previous)
     {

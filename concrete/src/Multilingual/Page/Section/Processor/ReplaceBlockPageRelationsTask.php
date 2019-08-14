@@ -68,6 +68,9 @@ class ReplaceBlockPageRelationsTask implements TaskInterface
         }
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function finish(ActionInterface $action)
     {
         return;

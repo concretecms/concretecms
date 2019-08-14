@@ -83,6 +83,9 @@ class Model
         return $primaryKeys;
     }
 
+    /**
+     * @since 5.7.2
+     */
     protected function getAutoIncrementColumnName()
     {
         $db = Loader::db();
@@ -97,6 +100,9 @@ class Model
         return null;
     }
 
+    /**
+     * @since 5.7.1
+     */
     protected function setAutoIncrementColumn($name)
     {
         if (empty($name)) {

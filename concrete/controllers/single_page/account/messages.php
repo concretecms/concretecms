@@ -24,6 +24,9 @@ class Messages extends AccountPageController
         $this->set('sent', $sent);
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function validateUser($uID)
     {
         if ($uID > 0) {
@@ -38,6 +41,9 @@ class Messages extends AccountPageController
         $this->redirect('/account');
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected function getMessageMailboxID($box)
     {
         $msgMailboxID = 0;
@@ -56,6 +62,9 @@ class Messages extends AccountPageController
         return $msgMailboxID;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function view_mailbox($box)
     {
         $msgMailboxID = $this->getMessageMailboxID($box);
@@ -77,6 +86,9 @@ class Messages extends AccountPageController
         $this->set('mailbox', $box);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function view_message($box, $msgID)
     {
         $msgMailboxID = $this->getMessageMailboxID($box);
@@ -102,6 +114,9 @@ class Messages extends AccountPageController
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function delete_message($box, $msgID, $token)
     {
         $valt = Loader::helper('validation/token');
@@ -122,6 +137,9 @@ class Messages extends AccountPageController
         echo $this->view();
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function write($uID)
     {
         $this->validateUser($uID);
@@ -130,6 +148,9 @@ class Messages extends AccountPageController
         $this->set('backURL', $backURL);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function reply($boxID, $msgID)
     {
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
@@ -161,6 +182,9 @@ class Messages extends AccountPageController
         $this->set('msgBody', $body);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function send()
     {
         $uID = $this->post('uID');
@@ -195,11 +219,17 @@ class Messages extends AccountPageController
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function send_complete($uID)
     {
         $this->validateUser($uID);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function reply_complete($box, $msgID)
     {
         return $this->reply($box, $msgID);

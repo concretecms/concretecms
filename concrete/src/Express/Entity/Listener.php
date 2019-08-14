@@ -64,6 +64,9 @@ class Listener
 
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function prePersist(Entity $entity, LifecycleEventArgs $event)
     {
         if (!$entity->getEntityResultsNodeId()) {

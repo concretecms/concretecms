@@ -365,7 +365,7 @@ class LinkAbstractor extends ConcreteObject
      *
      * @return string
      *
-     * @since concrete5 8.5.0a3
+     * @since 8.5.0
      */
     protected static function replacePlaceholder($text, $pattern, callable $resolver, $caseSensitive = false)
     {

@@ -74,11 +74,17 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     protected $supportSavingNullValues = false;
 
+    /**
+     * @since 8.0.0
+     */
     public function getBlockTypeInSetName()
     {
         return $this->getBlockTypeName();
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getBlockTypeExportPageColumns()
     {
         return $this->btExportPageColumns;
@@ -174,6 +180,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *
      * @param array $args An array that contains the block options
      * @param bool $loadExisting Shall we initialize the record to be saved with the current data?
+     * @since 8.2.0
      */
     protected function performSave($args, $loadExisting = false)
     {
@@ -500,16 +507,25 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function setPassThruBlockController(PageController $controller)
     {
         $controller->setPassThruBlockController($this->block, $this);
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function validateAddBlockPassThruAction(Checker $ap, BlockType $bt)
     {
         return $ap->canAddBlock($bt);
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function validateEditBlockPassThruAction(Block $b)
     {
         $bp = new \Permissions($b);
@@ -517,6 +533,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $bp->canEditBlock();
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function validateComposerAddBlockPassThruAction(Type $type)
     {
         $pp = new \Permissions($type);
@@ -526,6 +545,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     /**
      * @return int|null
+     * @since 8.5.0
      */
     public function getBlockTypeID()
     {
@@ -533,6 +553,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
 
+    /**
+     * @since 5.7.5.3
+     */
     public function validateComposerEditBlockPassThruAction(Block $b)
     {
         return $this->validateEditBlockPassThruAction($b);
@@ -552,6 +575,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * @param mixed $task,... The arguments to build the URL (variable number of arguments).
      *
      * @return \Concrete\Core\Url\UrlImmutable|null Return NULL in case of problems
+     * @since 8.5.0
      */
     public function getActionURL($task)
     {
@@ -736,6 +760,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function registerViewAssets($outputContent = '')
     {
     }

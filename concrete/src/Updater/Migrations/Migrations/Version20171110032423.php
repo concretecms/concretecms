@@ -31,6 +31,7 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     * @since 8.3.2
      */
     public function upgradeDatabase()
     {
@@ -44,6 +45,9 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
         }
     }
 
+    /**
+     * @since 8.3.2
+     */
     protected function migrateCalendar()
     {
         $this->addEarlyCalendarFunctionality();

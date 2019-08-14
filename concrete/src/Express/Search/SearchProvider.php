@@ -43,6 +43,7 @@ class SearchProvider extends AbstractSearchProvider
 
     /**
      * @return Entity
+     * @since 8.2.1
      */
     public function getEntity()
     {
@@ -100,6 +101,7 @@ class SearchProvider extends AbstractSearchProvider
     /**
      * Returns the number of items per page.
      * @return int
+     * @since 8.2.0
      */
     public function getItemsPerPage()
     {
@@ -111,6 +113,9 @@ class SearchProvider extends AbstractSearchProvider
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getSavedSearch()
     {
         return new SavedExpressSearch();

@@ -96,6 +96,7 @@ class Localization
      *
      * @throws Exception in case the translator adapter repository has not been
      *                   set, an exception is thrown
+     * @since 8.0.0
      */
     public function getTranslatorAdapterRepository()
     {
@@ -113,6 +114,7 @@ class Localization
      * Sets the translator adapter repository.
      *
      * @param TranslatorAdapterRepositoryInterface $repository
+     * @since 8.0.0
      */
     public function setTranslatorAdapterRepository(TranslatorAdapterRepositoryInterface $repository)
     {
@@ -123,6 +125,7 @@ class Localization
      * Returns the currently active translation context.
      *
      * @return string
+     * @since 8.0.0
      */
     public function getActiveContext()
     {
@@ -133,6 +136,7 @@ class Localization
      * Sets the active translation context.
      *
      * @param string $context
+     * @since 8.0.0
      */
     public function setActiveContext($context)
     {
@@ -167,6 +171,7 @@ class Localization
      * $loc->popActiveContext();
      * // Now the context is 'original_context'
      * ```
+     * @since 8.0.0
      */
     public function pushActiveContext($newContext)
     {
@@ -180,6 +185,7 @@ class Localization
      * Restore the context that was active before calling pushActiveContext.
      *
      * @see Localization::pushActiveContext()
+     * @since 8.0.0
      */
     public function popActiveContext()
     {
@@ -197,7 +203,7 @@ class Localization
      *
      * @return mixed return the result of $callback
      *
-     * @since concrete5 8.5.0a2
+     * @since 8.5.0
      */
     public function withContext($context, callable $callback)
     {
@@ -221,6 +227,7 @@ class Localization
      *
      * @throws Exception in case trying to fetch an adapter for an unknown
      *                   context, an exception is thrown
+     * @since 8.0.0
      */
     public function getTranslatorAdapter($context)
     {
@@ -239,6 +246,7 @@ class Localization
      * Gets the translator adapter for the active context.
      *
      * @return \Concrete\Core\Localization\Translator\TranslatorAdapterInterface
+     * @since 8.0.0
      */
     public function getActiveTranslatorAdapter()
     {
@@ -250,6 +258,7 @@ class Localization
      *
      * @param string $context
      * @param string $locale
+     * @since 8.0.0
      */
     public function setContextLocale($context, $locale)
     {
@@ -266,6 +275,7 @@ class Localization
      * Gets the context locale for the given context.
      *
      * @return string|null
+     * @since 8.0.0
      */
     public function getContextLocale($context)
     {
@@ -297,6 +307,7 @@ class Localization
     /**
      * Removes all the loaded translator adapters from the translator adapter
      * repository.
+     * @since 8.0.0
      */
     public function removeLoadedTranslatorAdapters()
     {
@@ -469,6 +480,7 @@ class Localization
 
     /**
      * Clear the translations cache.
+     * @since 5.7.1
      */
     public static function clearCache()
     {
@@ -488,6 +500,7 @@ class Localization
      * @deprecated use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead
      *
      * @param ZendTranslator $translate
+     * @since 5.7.5.7
      */
     public static function setupSiteLocalization(ZendTranslator $translate = null)
     {
@@ -509,6 +522,7 @@ class Localization
      * To be called every time the current locale changes.
      *
      * @param string $locale
+     * @since 8.0.0
      */
     protected function currentLocaleChanged($locale)
     {

@@ -53,6 +53,9 @@ class ThemeGridColumn extends Column
         return $newAreaLayoutColumn;
     }
 
+    /**
+     * @since 5.7.5
+     */
     protected function getSubAreaMaximumColumns()
     {
         $framework = $this->getAreaLayoutObject()->getThemeGridFrameworkObject();
@@ -131,6 +134,9 @@ class ThemeGridColumn extends Column
         }
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getColumnHtmlObject()
     {
         $contents = $this->getContents();
@@ -138,6 +144,9 @@ class ThemeGridColumn extends Column
         return $this->getColumnElement($contents);
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getColumnHtmlObjectEditMode()
     {
         $contents = $this->getContents(true);
@@ -145,6 +154,9 @@ class ThemeGridColumn extends Column
         return $this->getColumnElement($contents);
     }
 
+    /**
+     * @since 5.7.5
+     */
     protected function getColumnElement($contents)
     {
         $element = new Element('div');

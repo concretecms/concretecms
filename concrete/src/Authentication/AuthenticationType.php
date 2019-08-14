@@ -222,6 +222,7 @@ class AuthenticationType extends ConcreteObject
      * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
+     * @since 8.2.0
      */
     public function getAuthenticationTypeDisplayName($format = 'html')
     {
@@ -259,6 +260,7 @@ class AuthenticationType extends ConcreteObject
      * Update the name.
      *
      * @param string $authTypeName
+     * @since 5.7.3
      */
     public function setAuthenticationTypeName($authTypeName)
     {
@@ -465,6 +467,9 @@ class AuthenticationType extends ConcreteObject
         }
     }
 
+    /**
+     * @since 5.7.1
+     */
     public function hasHook()
     {
         $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
@@ -475,6 +480,7 @@ class AuthenticationType extends ConcreteObject
     /**
      * Render the a form to be displayed when the authentication type is already hooked.
      * All settings are expected to be saved by each individual authentication type.
+     * @since 8.2.0
      */
     public function renderHooked()
     {
@@ -499,6 +505,7 @@ class AuthenticationType extends ConcreteObject
      * Does this authentication type support rendering a form when it has already been hooked?
      *
      * @return bool
+     * @since 8.2.0
      */
     public function hasHooked()
     {
@@ -513,6 +520,7 @@ class AuthenticationType extends ConcreteObject
      * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
      *
      * @return bool|null returns null if the controller does not implement a way to determine if a user is already hooked or not
+     * @since 8.2.0
      */
     public function isHooked($user)
     {

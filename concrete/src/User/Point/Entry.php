@@ -92,6 +92,9 @@ class Entry
         return $this->upuID;
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function getUserPointEntryDescriptionObject()
     {
         return unserialize($this->object);

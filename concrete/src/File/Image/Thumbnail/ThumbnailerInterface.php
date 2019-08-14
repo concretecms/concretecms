@@ -15,6 +15,7 @@ interface ThumbnailerInterface
      * Get the storage location to use.
      *
      * @return StorageLocationInterface
+     * @since 8.2.0
      */
     public function getStorageLocation();
 
@@ -34,6 +35,7 @@ interface ThumbnailerInterface
      * @param int $level the level of compression (in the range 0...100)
      *
      * @return static
+     * @since 8.2.0
      */
     public function setJpegCompression($level);
 
@@ -41,6 +43,7 @@ interface ThumbnailerInterface
      * Get the currently set JPEG compression level.
      *
      * @return int
+     * @since 8.2.0
      */
     public function getJpegCompression();
 
@@ -51,6 +54,7 @@ interface ThumbnailerInterface
      * @param int $level the level of compression (in the range 0...9)
      *
      * @return static
+     * @since 8.2.0
      */
     public function setPngCompression($level);
 
@@ -58,6 +62,7 @@ interface ThumbnailerInterface
      * Get the currently set PNG compression level.
      *
      * @return int
+     * @since 8.2.0
      */
     public function getPngCompression();
 
@@ -67,6 +72,7 @@ interface ThumbnailerInterface
      * @param string $thumbnailsFormat one of the \Concrete\Core\File\Image\BitmapFormat::FORMAT_ constants, or \Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::FORMAT_AUTO
      *
      * @return static
+     * @since 8.2.0
      */
     public function setThumbnailsFormat($thumbnailsFormat);
 
@@ -74,6 +80,7 @@ interface ThumbnailerInterface
      * Get the format of the generated thumbnails.
      *
      * @return string one of the \Concrete\Core\File\Image\BitmapFormat::FORMAT_ constants, or \Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::FORMAT_AUTO
+     * @since 8.2.0
      */
     public function getThumbnailsFormat();
 
@@ -98,6 +105,7 @@ interface ThumbnailerInterface
      * @param bool $crop Fit to bounds?
      *
      * @return \stdClass Object that has the following properties: src (the public URL to the file), width (null if unable to determine it), height (null if unable to determine it)
+     * @since 8.2.0
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false);
 }

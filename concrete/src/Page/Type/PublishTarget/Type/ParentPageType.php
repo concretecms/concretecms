@@ -30,6 +30,9 @@ class ParentPageType extends Type
         return $configuration;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function validatePageTypeRequest(Request $request)
     {
         $e = parent::validatePageTypeRequest($request);

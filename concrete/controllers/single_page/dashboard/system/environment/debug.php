@@ -32,6 +32,9 @@ class Debug extends DashboardPageController
         }
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function debug_example()
     {
         $config = $this->app->make('config');
@@ -47,6 +50,9 @@ class Debug extends DashboardPageController
         throw new ExampleException('Sample Debug Output!');
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function message_example()
     {
         $config = $this->app->make('config');
@@ -62,6 +68,9 @@ class Debug extends DashboardPageController
         throw new ExampleException('Sample Message Output!');
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function disabled_example()
     {
         $config = $this->app->make('config');

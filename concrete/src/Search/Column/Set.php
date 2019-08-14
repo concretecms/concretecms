@@ -11,6 +11,9 @@ class Set
         $this->columns[] = $col;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function removeColumnByKey($key)
     {
         foreach($this->columns as $i => $column) {
@@ -20,6 +23,9 @@ class Set
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function __sleep()
     {
         return array('columns', 'defaultSortColumn');
@@ -74,6 +80,7 @@ class Set
      * @param string $akHandle
      *
      * @return AttributeKeyColumn|null
+     * @since 8.0.0
      */
     public function getAttributeKeyColumn($akHandle)
     {

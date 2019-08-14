@@ -18,6 +18,9 @@ abstract class AbstractView
     protected $template;
     protected $outputAssets = array();
 
+    /**
+     * @since 8.0.0
+     */
     public function getViewTemplate()
     {
         return $this->template;

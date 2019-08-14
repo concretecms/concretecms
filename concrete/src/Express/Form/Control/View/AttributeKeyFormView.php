@@ -36,6 +36,9 @@ class AttributeKeyFormView extends BaseFormView
         }
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getControlID()
     {
         return $this->key->getController()->getControlID();

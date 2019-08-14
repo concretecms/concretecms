@@ -15,6 +15,9 @@ class PageUrlResolver implements UrlResolverInterface
      */
     protected $pathUrlResolver;
 
+    /**
+     * @since 5.7.5
+     */
     public function __construct(PathUrlResolver $path_url_resolver)
     {
         $this->pathUrlResolver = $path_url_resolver;
@@ -60,6 +63,7 @@ class PageUrlResolver implements UrlResolverInterface
      * @param array $arguments
      *
      * @return \League\URL\URLInterface
+     * @since 5.7.5
      */
     protected function resolveWithResolver($path, $arguments)
     {

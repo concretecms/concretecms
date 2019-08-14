@@ -38,6 +38,9 @@ class Controller extends BlockController
         return $this->options;
     }
 
+    /**
+     * @since 8.3.1
+     */
     public function setPollOptions()
     {
         $this->cID = null;
@@ -66,11 +69,17 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @since 8.3.1
+     */
     public function edit()
     {
         $this->setPollOptions();
     }
 
+    /**
+     * @since 8.3.1
+     */
     public function view()
     {
         $this->setPollOptions();

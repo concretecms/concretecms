@@ -20,6 +20,9 @@ class Full extends DashboardPageController
         $this->set('flag', $this->app->make(Flag::class));
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function include_system_pages($include = 0)
     {
         $dh = Loader::helper('concrete/dashboard/sitemap');
@@ -32,6 +35,9 @@ class Full extends DashboardPageController
         return $response;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function display_double_sitemap($display = 0)
     {
         $cookie = $this->app->make('cookie');

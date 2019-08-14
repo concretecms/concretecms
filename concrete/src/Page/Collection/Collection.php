@@ -194,6 +194,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * }
      *
      * @return \Concrete\Core\Page\Collection\Collection
+     * @since 5.7.5
      */
     public static function createCollection($data)
     {
@@ -1218,6 +1219,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak
      *
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
+     * @since 8.0.0
      */
     public function getAttributeValue($ak)
     {

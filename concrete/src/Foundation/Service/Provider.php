@@ -24,6 +24,9 @@ abstract class Provider
      */
     abstract public function register();
 
+    /**
+     * @since 8.2.0
+     */
     public function provides()
     {
         return [];

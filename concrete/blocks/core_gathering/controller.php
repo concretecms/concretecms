@@ -171,6 +171,9 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/gathering');

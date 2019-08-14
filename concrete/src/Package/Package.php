@@ -242,6 +242,7 @@ abstract class Package implements LocalizablePackageInterface
      * Initialize the instance.
      *
      * @param Application $app the application instance
+     * @since 5.7.0 (but not in 5.7.0.3 5.7.0.4 5.7.1 5.7.2 5.7.2.1 5.7.3 5.7.3.1 5.7.4 5.7.4.1 5.7.4.2 5.7.5 5.7.5.1 5.7.5.2 5.7.5.3 5.7.5.4 5.7.5.5 5.7.5.6 5.7.5.7 5.7.5.8 5.7.5.9 5.7.5.10 5.7.5.11 5.7.5.12 5.7.5.13)
      */
     public function __construct(Application $app)
     {
@@ -252,6 +253,7 @@ abstract class Package implements LocalizablePackageInterface
      * Get the associated package entity (if available).
      *
      * @return PackageEntity|null May return NULL if the package is invalid and/or if it's not installed
+     * @since 8.0.0
      */
     public function getPackageEntity()
     {
@@ -266,6 +268,7 @@ abstract class Package implements LocalizablePackageInterface
      * Set the associated package entity.
      *
      * @param PackageEntity $entity
+     * @since 8.0.0
      */
     public function setPackageEntity(PackageEntity $entity)
     {
@@ -276,6 +279,7 @@ abstract class Package implements LocalizablePackageInterface
      * Get the Application instance.
      *
      * @return Application
+     * @since 8.0.0
      */
     public function getApplication()
     {
@@ -286,6 +290,7 @@ abstract class Package implements LocalizablePackageInterface
      * Get the content swapper.
      *
      * @return \Concrete\Core\Package\ContentSwapperInterface
+     * @since 8.0.1
      */
     public function getContentSwapper()
     {
@@ -296,6 +301,7 @@ abstract class Package implements LocalizablePackageInterface
      * Import a concrete5-cif XML file.
      *
      * @param string $file the path to the file, relative to the package directory
+     * @since 8.0.0
      */
     public function installContentFile($file)
     {
@@ -323,6 +329,7 @@ abstract class Package implements LocalizablePackageInterface
      * 3. $this->pkgEnableLegacyNamespace is true
      *
      * @return bool
+     * @since 8.0.0
      */
     public function shouldEnableLegacyNamespace()
     {
@@ -345,6 +352,7 @@ abstract class Package implements LocalizablePackageInterface
      * Get the default configuration liaison.
      *
      * @return Liaison
+     * @since 5.7.0.3
      */
     public function getConfig()
     {
@@ -355,6 +363,7 @@ abstract class Package implements LocalizablePackageInterface
      * Get the database configuration liaison.
      *
      * @return Liaison
+     * @since 5.7.0.3
      */
     public function getDatabaseConfig()
     {
@@ -369,6 +378,7 @@ abstract class Package implements LocalizablePackageInterface
      * Get the filesystem configuration liaison.
      *
      * @return Liaison
+     * @since 5.7.0.3
      */
     public function getFileConfig()
     {
@@ -387,6 +397,7 @@ abstract class Package implements LocalizablePackageInterface
      * @return array
      *
      * @example ['src/PortlandLabs' => \PortlandLabs']
+     * @since 5.7.4
      */
     public function getPackageAutoloaderRegistries()
     {
@@ -468,6 +479,7 @@ abstract class Package implements LocalizablePackageInterface
      * Does this package have uninstall notes?
      *
      * @return bool
+     * @since 5.7.5.5
      */
     public function hasUninstallNotes()
     {
@@ -531,6 +543,7 @@ abstract class Package implements LocalizablePackageInterface
      * Get the path to the package relative to the concrete5 installation folder.
      *
      * @return string
+     * @since 8.0.0
      */
     public function getRelativePathFromInstallFolder()
     {
@@ -541,6 +554,7 @@ abstract class Package implements LocalizablePackageInterface
      * {@inheritdoc}
      *
      * @see LocalizablePackageInterface::getTranslationFile()
+     * @since 8.0.0
      */
     public function getTranslationFile($locale)
     {
@@ -552,6 +566,7 @@ abstract class Package implements LocalizablePackageInterface
      * If false, the file thumbnails are generated during the install process.
      *
      * @return bool
+     * @since 5.7.4
      */
     public function contentProvidesFileThumbnails()
     {
@@ -793,6 +808,7 @@ abstract class Package implements LocalizablePackageInterface
      * Perform tests before this package is upgraded.
      *
      * @return \Concrete\Core\Error\ErrorList\ErrorList|true return null if the package can be upgraded, an ErrorList instance otherwise
+     * @since 8.3.0
      */
     public function testForUpgrade()
     {
@@ -805,6 +821,7 @@ abstract class Package implements LocalizablePackageInterface
      * Perform tests before this package is uninstalled.
      *
      * @return \Concrete\Core\Error\ErrorList\ErrorList|true return true if the package can be uninstalled, an ErrorList instance otherwise
+     * @since 5.7.5
      */
     public function testForUninstall()
     {
@@ -896,6 +913,7 @@ abstract class Package implements LocalizablePackageInterface
      * public function getEntityManagerProvider() {
      *     return new StandardPackageProvider($this->app, $this, ['src/MSM/Entity' => 'PortlandLabs\MSM\Entity']);
      * }
+     * @since 8.0.0
      */
     public function getPackageEntityPaths()
     {
@@ -909,6 +927,7 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Installs the packages database through doctrine entities and db.xml database definitions.
+     * @since 5.7.4
      */
     public function installDatabase()
     {
@@ -916,6 +935,9 @@ abstract class Package implements LocalizablePackageInterface
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function installEntitiesDatabase()
     {
         $em = $this->getPackageEntityManager();
@@ -1008,6 +1030,7 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
+     * @since 5.7.4
      */
     public function upgradeDatabase()
     {
@@ -1025,6 +1048,7 @@ abstract class Package implements LocalizablePackageInterface
      * @param bool $withLeadingBackslash
      *
      * @return string
+     * @since 8.0.0
      */
     public function getNamespace($withLeadingBackslash = false)
     {
@@ -1037,6 +1061,7 @@ abstract class Package implements LocalizablePackageInterface
      * Create an entity manager used for the package install, upgrade and unistall process.
      *
      * @return EntityManager|null
+     * @since 8.0.0
      */
     public function getPackageEntityManager()
     {
@@ -1082,6 +1107,7 @@ abstract class Package implements LocalizablePackageInterface
      * Use $app->make('Doctrine\ORM\EntityManagerInterface')
      *
      * @return EntityManagerInterface
+     * @since 5.7.4
      */
     public function getEntityManager()
     {
@@ -1120,6 +1146,7 @@ abstract class Package implements LocalizablePackageInterface
      * echo t('String without context');
      * echo tc('MyContext', 'String with context');
      * </code>
+     * @since 8.1.0
      */
     public function getTranslatableStrings(Translations $translations)
     {
@@ -1131,6 +1158,7 @@ abstract class Package implements LocalizablePackageInterface
      * @return array
      *
      * @see Package::$packageDependencies
+     * @since 8.3.0
      */
     public function getPackageDependencies()
     {
@@ -1143,6 +1171,7 @@ abstract class Package implements LocalizablePackageInterface
      * @param array|int $errorCode one of the Package::E_PACKAGE_ constants, or an array with the first value is one of the Package::E_PACKAGE_ constants and the other values are used to fill in fields
      *
      * @return string
+     * @since 8.0.0
      */
     protected function getErrorText($errorCode)
     {
@@ -1177,6 +1206,7 @@ abstract class Package implements LocalizablePackageInterface
      * Destroys all proxies related to a package.
      *
      * @param EntityManagerInterface $em
+     * @since 5.7.4
      */
     protected function destroyProxyClasses(EntityManagerInterface $em)
     {

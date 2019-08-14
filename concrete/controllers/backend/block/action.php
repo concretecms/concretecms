@@ -37,6 +37,9 @@ class Action extends AbstractController
         return $response;
     }
 
+    /**
+     * @since 8.5.0
+     */
     public function getMethodAndParameters(BlockController $controller, $action)
     {
         $action = trim($action, '/');
@@ -89,6 +92,9 @@ class Action extends AbstractController
         return $response;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function add_composer($ptComposerFormLayoutSetControlID, $action)
     {
         $setControl = FormLayoutSetControl::getByID($ptComposerFormLayoutSetControlID);
@@ -108,6 +114,9 @@ class Action extends AbstractController
         return $response;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function edit_composer($cID, $arHandle, $ptComposerFormLayoutSetControlID, $action)
     {
         $c = \Page::getByID($cID);

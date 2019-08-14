@@ -37,6 +37,9 @@ class GroupList extends DatabaseItemList
         $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function filterByPackage(Package $package)
     {
         $this->query->andWhere('pkgID = :pkgID');

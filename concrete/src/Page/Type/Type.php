@@ -53,17 +53,26 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         return $this->ptName;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getSiteTypeID()
     {
         return $this->siteTypeID;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getSiteTypeObject()
     {
         $em = \Database::connection()->getEntityManager();
         return $em->find('Concrete\Core\Entity\Site\Type', $this->getSiteTypeID());
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function getPageTypeDisplayName($format = 'html')
     {
         $value = t($this->getPageTypeName());
@@ -136,11 +145,17 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         return 'page_type';
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setChildPermissionsToOverride()
     {
         return false;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setPermissionsToOverride()
     {
         return false;
@@ -501,6 +516,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function export($nxml)
     {
         $templates = $this->getPageTypePageTemplateObjects();
@@ -583,6 +601,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function getPageTypeUsageCount()
     {
         $db = Loader::db();
@@ -591,6 +612,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         return $count;
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function duplicate($ptHandle, $ptName, $siteType = null)
     {
         if (!is_object($siteType)) {
@@ -901,6 +925,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $this->rescanPageTypePageTemplateDefaultPages();
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     protected function rescanPageTypePageTemplateDefaultPages()
     {
         $db = Loader::db();
@@ -1001,6 +1028,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         return $list;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public static function getListByDefaultPageTemplate($templateOrTemplateID)
     {
         $pTemplateID = is_object($templateOrTemplateID) ?
@@ -1132,6 +1162,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
     /**
      * @return \Concrete\Core\Page\Type\Validator\ValidatorInterface|null
+     * @since 5.7.4
      */
     public function getPageTypeValidatorObject()
     {
@@ -1145,6 +1176,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
     /**
      * @return \Concrete\Core\Page\Type\Saver\SaverInterface|null
+     * @since 8.0.0
      */
     public function getPageTypeSaverObject()
     {

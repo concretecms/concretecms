@@ -10,6 +10,7 @@ interface GroupInterface
      * Get the group name.
      *
      * @return string
+     * @since 8.2.0
      */
     public function getName();
 
@@ -17,6 +18,7 @@ interface GroupInterface
      * Get the fields belonging to this group.
      *
      * @return FieldInterface[]
+     * @since 8.2.0
      */
     public function getFields();
 }

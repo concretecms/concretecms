@@ -103,6 +103,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function export($node)
     {
         $group = $node->addChild('group');
@@ -710,6 +713,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * @since 5.7.3
+     */
     public static function exportTranslations()
     {
         $translations = new Translations();

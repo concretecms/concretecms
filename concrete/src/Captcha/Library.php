@@ -242,6 +242,7 @@ class Library extends ConcreteObject
      * Export the data of this library.
      *
      * @param \SimpleXMLElement $xml the parent XML element
+     * @since 5.7.5.5
      */
     public function export(\SimpleXMLElement $xml)
     {

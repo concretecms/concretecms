@@ -101,6 +101,7 @@ class IPService implements LoggerAwareInterface
      * @param Repository $config
      * @param Connection $connection
      * @param Request $request
+     * @since 8.2.0
      */
     public function __construct(Repository $config, Connection $connection, Request $request)
     {
@@ -113,6 +114,7 @@ class IPService implements LoggerAwareInterface
      * Get the IP address of the current request.
      *
      * @return \IPLib\Address\AddressInterface
+     * @since 8.2.0
      */
     public function getRequestIPAddress()
     {
@@ -123,6 +125,7 @@ class IPService implements LoggerAwareInterface
      * Check if an IP adress is blacklisted.
      *
      * @return bool
+     * @since 8.2.0
      */
     public function isBlacklisted(AddressInterface $ip = null)
     {
@@ -138,6 +141,7 @@ class IPService implements LoggerAwareInterface
      * Check if an IP adress is blacklisted.
      *
      * @return bool
+     * @since 8.2.0
      */
     public function isWhitelisted(AddressInterface $ip = null)
     {
@@ -164,6 +168,7 @@ class IPService implements LoggerAwareInterface
      *
      * @param AddressInterface $ip the IP address to log (if null, we'll use the current IP address)
      * @param bool $ignoreConfig if set to true, we'll add the record even if the IP ban system is disabled in the configuration
+     * @since 8.2.0
      */
     public function logFailedLogin(AddressInterface $ip = null, $ignoreConfig = false)
     {
@@ -192,6 +197,7 @@ class IPService implements LoggerAwareInterface
      * @param bool $ignoreConfig if set to true, we'll check the IP even if the IP ban system is disabled in the configuration
      *
      * @return bool
+     * @since 8.2.0
      */
     public function failedLoginsThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
     {
@@ -232,6 +238,7 @@ class IPService implements LoggerAwareInterface
      *
      * @param AddressInterface $ip the IP to add to the blacklist (if null, we'll use the current IP address)
      * @param bool $ignoreConfig if set to true, we'll add the IP address even if the IP ban system is disabled in the configuration
+     * @since 8.2.0
      */
     public function addToBlacklistForThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
     {
@@ -260,6 +267,7 @@ class IPService implements LoggerAwareInterface
      * @param DateTime $expiration The optional expiration of the range type
      *
      * @return IPRange
+     * @since 8.2.0
      */
     public function createRange(RangeInterface $range, $type, DateTime $expiration = null)
     {
@@ -293,6 +301,7 @@ class IPService implements LoggerAwareInterface
      * @param bool $includeExpired Include expired records?
      *
      * @return IPRange[]|\Generator
+     * @since 8.2.0
      */
     public function getRanges($type, $includeExpired = false)
     {
@@ -316,6 +325,7 @@ class IPService implements LoggerAwareInterface
      * @param int $id
      *
      * @return IPRange|null
+     * @since 8.2.0
      */
     public function getRangeByID($id)
     {
@@ -339,6 +349,7 @@ class IPService implements LoggerAwareInterface
      * Delete a range record.
      *
      * @param IPRange|int $range
+     * @since 8.2.0
      */
     public function deleteRange($range)
     {
@@ -356,6 +367,7 @@ class IPService implements LoggerAwareInterface
      * Get the range type (if defined) of an IP adress.
      *
      * @return int|null One of the IPRANGETYPE_... constants (or null if range is not defined).
+     * @since 8.2.0
      */
     protected function getRangeType(AddressInterface $ip)
     {
@@ -390,6 +402,7 @@ class IPService implements LoggerAwareInterface
      * @param int|null $maxAge the maximum age (in seconds) of the records (specify an empty value do delete all records)
      *
      * @return int return the number of records deleted
+     * @since 8.3.0
      */
     public function deleteFailedLoginAttempts($maxAge = null)
     {
@@ -406,6 +419,7 @@ class IPService implements LoggerAwareInterface
      * Clear the IP addresses automatically blacklisted.
      *
      * @param bool $onlyExpired Clear only the expired bans?
+     * @since 8.3.0
      */
     public function deleteAutomaticBlacklist($onlyExpired = true)
     {
@@ -470,6 +484,7 @@ class IPService implements LoggerAwareInterface
 
     /**
      * @deprecated Use \Core::make('ip')->failedLoginsThresholdReached()
+     * @since 8.2.0
      */
     public function signupRequestThresholdReached($ignoreConfig = false)
     {

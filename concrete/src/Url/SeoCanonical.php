@@ -141,6 +141,7 @@ class SeoCanonical
      * Get path arguments to append canonical URLs
      *
      * @return string[]|null
+     * @since 8.5.2
      */
     public function getPathArguments()
     {
@@ -151,6 +152,7 @@ class SeoCanonical
      * Set path arguments to append canonical URLs
      *
      * @param string[] $pathArguments
+     * @since 8.5.2
      */
     public function setPathArguments($pathArguments)
     {

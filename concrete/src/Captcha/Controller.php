@@ -14,6 +14,7 @@ abstract class Controller implements CaptchaWithPictureInterface
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture()
+     * @since 8.3.0
      */
     public function displayCaptchaPicture()
     {

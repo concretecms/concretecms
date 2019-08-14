@@ -27,12 +27,18 @@ class StackList extends PageList
         $this->sortByName();
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function setSiteTreeObject(TreeInterface $tree)
     {
         parent::setSiteTreeObject($tree);
         $this->query->andWhere('s.siteTreeID = :siteTreeID or s.siteTreeID is null');
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function setupAutomaticSorting(StickyRequest $request = null)
     {
         parent::setupAutomaticSorting($request);
@@ -43,6 +49,9 @@ class StackList extends PageList
         }
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function filterByLanguageSection(Section $ms)
     {
         $this->filter('stMultilingualSection', $ms->getCollectionID());
@@ -52,6 +61,7 @@ class StackList extends PageList
      * Should we list stack folders first?
      *
      * @param bool $value
+     * @since 8.0.0
      */
     public function setFoldersFirst($value)
     {
@@ -62,12 +72,16 @@ class StackList extends PageList
      * Should we list stack folders first?
      *
      * @return bool
+     * @since 8.0.0
      */
     public function getFoldersFirst()
     {
         return $this->foldersFirst;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function filterByFolder(Folder $folder)
     {
         $this->filterByParentID($folder->getPage()->getCollectionID());
@@ -78,6 +92,9 @@ class StackList extends PageList
         $this->filter('stType', Stack::ST_TYPE_GLOBAL_AREA);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function excludeGlobalAreas()
     {
         $this->filter(false, 'stType != '.Stack::ST_TYPE_GLOBAL_AREA.' or stType is null');
@@ -88,6 +105,9 @@ class StackList extends PageList
         $this->filter('stType', Stack::ST_TYPE_USER_ADDED);
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function filterByStackCategory(StackCategory $category)
     {
         $this->filterByParentID($category->getPage()->getCollectionID());
@@ -97,6 +117,7 @@ class StackList extends PageList
      * @param $queryRow
      *
      * @return \Stack
+     * @since 8.0.0
      */
     public function getResult($queryRow)
     {

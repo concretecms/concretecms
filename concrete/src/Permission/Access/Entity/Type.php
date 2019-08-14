@@ -187,6 +187,9 @@ class Type extends ConcreteObject
         return $est;
     }
 
+    /**
+     * @since 5.7.3
+     */
     public static function exportTranslations()
     {
         $translations = new Translations();

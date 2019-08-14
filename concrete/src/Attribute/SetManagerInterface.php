@@ -32,6 +32,7 @@ interface SetManagerInterface
      * Update the order of the attribute sets.
      *
      * @param int[] $attributeSetIdentifiers the sorted list of the attribute set identifiers
+     * @since 8.0.1
      */
     public function updateAttributeSetDisplayOrder($attributeSetIdentifiers);
 }

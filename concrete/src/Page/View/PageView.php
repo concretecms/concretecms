@@ -39,6 +39,9 @@ class PageView extends View
         $this->pTemplateID = $pt->getPageTemplateID();
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function getPageTemplate()
     {
         return PageTemplate::getByID($this->pTemplateID);
@@ -53,6 +56,9 @@ class PageView extends View
         $this->themePkgHandle = $pt->getPackageHandle();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function renderSinglePageByFilename($cFilename, $pkgHandle = null)
     {
         $this->loadViewThemeObject();

@@ -106,6 +106,7 @@ class ListItem extends ConcreteObject
 
     /**
      * @param \Concrete\Core\Permission\Access\Entity\Entity $accessEntity
+     * @since 5.7.5.9
      */
     public function setAccessEntityObject($accessEntity)
     {
@@ -114,6 +115,7 @@ class ListItem extends ConcreteObject
 
     /**
      * @param \Concrete\Core\Permission\Duration $duration
+     * @since 5.7.5.9
      */
     public function setPermissionDurationObject($duration)
     {

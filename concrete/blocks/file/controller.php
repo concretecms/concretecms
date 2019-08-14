@@ -40,6 +40,9 @@ class Controller extends BlockController
         return $this->fileLinkText;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function validate_composer()
     {
         $f = $this->getFileObject();
@@ -51,6 +54,9 @@ class Controller extends BlockController
         return $e;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function isComposerControlDraftValueEmpty()
     {
         $f = $this->getFileObject();

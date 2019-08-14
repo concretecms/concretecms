@@ -35,6 +35,7 @@ class Version20140930000000 extends AbstractMigration implements RepeatableMigra
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeSchema()
+     * @since 8.4.0
      */
     public function upgradeSchema(Schema $schema)
     {

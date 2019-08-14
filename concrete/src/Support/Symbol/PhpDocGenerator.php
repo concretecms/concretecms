@@ -59,6 +59,7 @@ class PhpDocGenerator
      * Get the indentation.
      *
      * @return string
+     * @since 8.5.2
      */
     public function getIndentation()
     {
@@ -71,6 +72,7 @@ class PhpDocGenerator
      * @param string $value
      *
      * @return $this
+     * @since 8.5.2
      */
     public function setIndentation($value)
     {
@@ -83,6 +85,7 @@ class PhpDocGenerator
      * Insert the variable definitions in the same PHPDoc block?
      *
      * @return bool
+     * @since 8.5.2
      */
     public function isSingleDocBlock()
     {
@@ -95,6 +98,7 @@ class PhpDocGenerator
      * @param bool $value
      *
      * @return $this
+     * @since 8.5.2
      */
     public function setIsSingleDocBlock($value)
     {
@@ -156,6 +160,7 @@ class PhpDocGenerator
      * @param mixed $value The variable value
      *
      * @return string
+     * @since 8.5.2
      */
     protected function describeVarUncommented($name, $value)
     {

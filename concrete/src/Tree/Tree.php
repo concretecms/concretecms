@@ -158,6 +158,9 @@ abstract class Tree extends ConcreteObject
         return $node;
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function getRequestData()
     {
         return isset($this->requestData) ? $this->requestData : null;
@@ -214,6 +217,9 @@ abstract class Tree extends ConcreteObject
         return [$root->getTreeNodeJSON()];
     }
 
+    /**
+     * @since 5.7.5
+     */
     protected static function create(TreeNode $rootNode)
     {
         $app = Application::getFacadeApplication();
@@ -251,6 +257,7 @@ abstract class Tree extends ConcreteObject
      * Export all the translations associates to every trees.
      *
      * @return Translations
+     * @since 5.7.4
      */
     public static function exportTranslations()
     {

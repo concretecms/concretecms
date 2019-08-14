@@ -131,6 +131,9 @@ class Controller extends GenericOauth2TypeController
         return true;
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function handle_detach_attempt()
     {
 

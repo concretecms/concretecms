@@ -150,6 +150,9 @@ class FormLayoutSet extends ConcreteObject
         }
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function duplicate(\Concrete\Core\Page\Type\Type $type)
     {
         // first, create a new set based on the current one.

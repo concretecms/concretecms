@@ -53,6 +53,9 @@ class AssociationControl extends Control
     protected $enable_entry_reordering = false;
 
 
+    /**
+     * @since 8.5.0
+     */
     public function __construct()
     {
         $this->entry_selector_mode = self::TYPE_HTML_INPUT;
@@ -66,6 +69,9 @@ class AssociationControl extends Control
         return $this->association_entity_label_mask;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getControlView(ContextInterface $context)
     {
         $registry = \Core::make(ControlRegistry::class);
@@ -85,6 +91,7 @@ class AssociationControl extends Control
 
     /**
      * @return int
+     * @since 8.5.0
      */
     public function getEntrySelectorMode()
     {
@@ -93,6 +100,7 @@ class AssociationControl extends Control
 
     /**
      * @param int $entry_selector_mode
+     * @since 8.5.0
      */
     public function setEntrySelectorMode($entry_selector_mode)
     {
@@ -137,6 +145,7 @@ class AssociationControl extends Control
 
     /**
      * @return mixed
+     * @since 8.5.0
      */
     public function enableEntryReordering()
     {
@@ -145,6 +154,7 @@ class AssociationControl extends Control
 
     /**
      * @param mixed $enable_entry_reordering
+     * @since 8.5.0
      */
     public function setEnableEntryReordering($enable_entry_reordering)
     {

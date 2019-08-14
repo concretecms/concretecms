@@ -53,6 +53,9 @@ class WorkflowProgressType extends Type
         }
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function getAvailableFilters()
     {
         $workflows = Workflow::getList();

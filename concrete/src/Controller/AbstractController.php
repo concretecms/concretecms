@@ -63,6 +63,7 @@ abstract class AbstractController implements ApplicationAwareInterface
      * Get the current request instance.
      *
      * @return Request
+     * @since 8.0.0
      */
     public function getRequest()
     {
@@ -77,6 +78,7 @@ abstract class AbstractController implements ApplicationAwareInterface
      * Set the current request instance.
      *
      * @param Request $request
+     * @since 8.0.0
      */
     public function setRequest($request)
     {
@@ -143,6 +145,7 @@ abstract class AbstractController implements ApplicationAwareInterface
      * Should the action be executed? Override this method to answer something different than true.
      *
      * @return bool
+     * @since 5.7.2
      */
     public function shouldRunControllerTask()
     {

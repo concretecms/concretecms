@@ -16,6 +16,7 @@ class Result extends SearchResult
 
     /**
      * @return mixed
+     * @since 8.0.0
      */
     public function getFolder()
     {
@@ -24,6 +25,7 @@ class Result extends SearchResult
 
     /**
      * @param mixed $folder
+     * @since 8.0.0
      */
     public function setFolder($folder)
     {
@@ -37,6 +39,9 @@ class Result extends SearchResult
         return $r;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getSearchResultBulkMenus()
     {
         $group = new BulkMenu();

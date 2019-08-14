@@ -38,6 +38,7 @@ abstract class ItemList extends AbstractItemList
 
     /**
      * @return StickyRequest|null
+     * @since 8.2.0
      */
     public function getSearchRequest()
     {
@@ -85,6 +86,9 @@ abstract class ItemList extends AbstractItemList
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     protected function executeSanitizedSortBy($column, $direction = 'asc')
     {
         if (preg_match('/[^0-9a-zA-Z\$\.\_\x{0080}-\x{ffff}]+/u', $column) === 0) {
@@ -106,6 +110,9 @@ abstract class ItemList extends AbstractItemList
         }
     }
 
+    /**
+     * @since 8.4.0
+     */
     protected function ensureSelected($field)
     {
         $rx = '/\b' . preg_quote($field, '/') . '\b/i';
@@ -122,6 +129,9 @@ abstract class ItemList extends AbstractItemList
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function __clone()
     {
         $this->query = clone $this->query;

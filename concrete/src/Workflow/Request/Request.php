@@ -67,6 +67,9 @@ abstract class Request extends ConcreteObject
         return $this->uID;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getRequesterUserObject()
     {
         return UserInfo::getByID($this->uID);
@@ -108,6 +111,7 @@ abstract class Request extends ConcreteObject
      * @param \PermissionKey $pk
      *
      * @return optional WorkflowProgress
+     * @since 5.7.5
      */
     protected function triggerRequest(\PermissionKey $pk)
     {
@@ -191,11 +195,17 @@ abstract class Request extends ConcreteObject
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getRequesterComment()
     {
         return false;
     }
 
+    /**
+     * @since 8.0.0
+     */
     abstract public function getRequestIconElement();
 
 }

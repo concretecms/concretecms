@@ -70,6 +70,7 @@ class Service
 
     /**
      * @param mixed $cache
+     * @since 8.2.0
      */
     public function setCache($cache)
     {
@@ -98,6 +99,7 @@ class Service
      * @param string $handle
      *
      * @return Site|null
+     * @since 8.2.0
      */
     public function getByHandle($handle)
     {

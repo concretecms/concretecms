@@ -36,6 +36,9 @@ class Controller extends AbstractController
         return $this->theme;
     }
 
+    /**
+     * @since 5.7.1
+     */
     public function setThemeViewTemplate($template)
     {
         $this->themeViewTemplate = $template;
@@ -44,6 +47,7 @@ class Controller extends AbstractController
     /**
      * Returns the wrapper file that holds the content of the view. Usually view.php
      * @return string
+     * @since 5.7.1
      */
     public function getThemeViewTemplate()
     {
@@ -86,6 +90,9 @@ class Controller extends AbstractController
         }
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function flash($key, $value, $isHTML = false)
     {
         $session = Facade::getFacadeApplication()->make('session');

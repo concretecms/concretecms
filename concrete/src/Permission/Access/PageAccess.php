@@ -6,6 +6,9 @@ use Concrete\Core\Permission\Access\SiteAccessInterface;
 class PageAccess extends Access implements SiteAccessInterface
 {
 
+    /**
+     * @since 8.2.0
+     */
     public function getSite()
     {
         $cID = $this->getPermissionObject()->getCollectionID();

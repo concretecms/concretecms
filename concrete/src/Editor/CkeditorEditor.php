@@ -243,6 +243,7 @@ EOL;
      * @param string|null $content The initial value of the editor content
      *
      * @return string
+     * @since 8.5.2
      */
     public function outputEditorWithOptions($key, array $options = [], $content = null)
     {
@@ -500,6 +501,7 @@ EOL;
      * Build an object containing the CKEditor preconfigured snippets and classes.
      *
      * @return \stdClass
+     * @since 8.3.0
      */
     private function getEditorSnippetsAndClasses()
     {

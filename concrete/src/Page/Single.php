@@ -130,6 +130,7 @@ class Single
      * @param $cPath
      * @param null $pkg
      * @return mixed
+     * @since 8.0.0
      */
     public static function addGlobal($cPath, $pkg = null)
     {
@@ -154,6 +155,9 @@ class Single
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public static function createPageInTree($cPath, TreeInterface $tree, $moveToRoot = false, $pkg = null)
     {
         $txt = Loader::helper('text');

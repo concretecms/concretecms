@@ -12,6 +12,9 @@ use Concrete\Core\Search\Column\Column;
 class Available extends DefaultSet
 {
 
+    /**
+     * @since 8.5.0
+     */
     public function getAuthor(Entry $entry)
     {
         $author = $entry->getAuthor();

@@ -23,16 +23,25 @@ class Folder implements ExportableInterface, AssignableObjectInterface
         $this->page = $page;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setChildPermissionsToOverride()
     {
         $this->page->setChildPermissionsToOverride();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setPermissionsToOverride()
     {
         $this->page->setPermissionsToOverride();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function assignPermissions(
         $userOrGroup,
         $permissions,

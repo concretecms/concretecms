@@ -10,6 +10,9 @@ abstract class Type extends ConcreteObject
 {
     abstract public function getPageTypeComposerControlObjects();
     abstract public function getPageTypeComposerControlByIdentifier($identifier);
+    /**
+     * @since 5.7.5.3
+     */
     abstract public function configureFromImportHandle($handle);
 
     public function controlTypeSupportsOutputControl()
@@ -20,6 +23,9 @@ abstract class Type extends ConcreteObject
     {
         return $this->ptComposerControlTypeName;
     }
+    /**
+     * @since 5.7.0.1
+     */
     public function getPageTypeComposerControlTypeDisplayName($format = 'html')
     {
         $value = tc('PageTypeComposerControlTypeName', $this->getPageTypeComposerControlTypeName());
@@ -127,6 +133,9 @@ abstract class Type extends ConcreteObject
         return $types;
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function export($xml)
     {
         $type = $xml->addChild('type');

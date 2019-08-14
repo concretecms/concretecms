@@ -21,6 +21,9 @@ class Controller extends AttributeTypeController
         return new FontAwesomeIconFormatter('database');
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return ExpressValue::class;
@@ -61,6 +64,9 @@ class Controller extends AttributeTypeController
         $this->set('entity', $this->getEntity());
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
@@ -147,6 +153,9 @@ class Controller extends AttributeTypeController
         $this->set('entities', $entities);
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeKeySettingsClass()
     {
         return ExpressSettings::class;

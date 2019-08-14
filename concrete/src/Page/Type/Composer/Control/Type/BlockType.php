@@ -50,6 +50,9 @@ class BlockType extends Type
         return true;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function configureFromImportHandle($handle)
     {
         $bt = ConcreteBlockType::getByHandle($handle);

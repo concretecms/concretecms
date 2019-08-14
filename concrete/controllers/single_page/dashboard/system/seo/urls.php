@@ -114,6 +114,7 @@ class Urls extends DashboardSitePageController
 
     /**
      * Updates the .htaccess file (if writable).
+     * @since 5.7.4
      */
     public function save_urls()
     {

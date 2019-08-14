@@ -44,6 +44,9 @@ class Schema
         return $parser;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public static function getCoreXMLSchema($tables = array())
     {
         $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
@@ -64,6 +67,9 @@ class Schema
         return $toSchema;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public static function refreshCoreXMLSchema($tables = array())
     {
         $db = \Database::get();

@@ -28,6 +28,7 @@ class DefaultSet extends ColumnSet
      *
      * @param Entry $entry
      * @return string
+     * @since 8.5.0
      */
     public static function getDateModified(Entry $entry)
     {

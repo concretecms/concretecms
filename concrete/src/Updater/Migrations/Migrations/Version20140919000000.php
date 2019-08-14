@@ -26,6 +26,7 @@ class Version20140919000000 extends AbstractMigration implements RepeatableMigra
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     * @since 8.3.2
      */
     public function upgradeDatabase()
     {
@@ -41,6 +42,7 @@ class Version20140919000000 extends AbstractMigration implements RepeatableMigra
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Updater\Migrations\AbstractMigration::downgradeDatabase()
+     * @since 8.3.2
      */
     public function downgradeDatabase()
     {

@@ -153,6 +153,7 @@ class StorageLocation implements StorageLocationInterface
 
     /**
      * Clear the Flysystem cache.
+     * @since 8.3.0
      */
     public function clearCache()
     {
@@ -197,6 +198,7 @@ class StorageLocation implements StorageLocationInterface
      * Check if the storage location contains files
      *
      * @return boolean
+     * @since 8.5.0
      */
     public function hasFiles()
     {

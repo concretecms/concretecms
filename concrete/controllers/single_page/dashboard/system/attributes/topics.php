@@ -103,6 +103,9 @@ class Topics extends DashboardPageController
         }
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function tree_edit()
     {
         $vs = $this->app->make('helper/validation/strings');

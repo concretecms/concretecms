@@ -108,6 +108,9 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
         $this->entity = $entity;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getControlView(ContextInterface $context)
     {
         return new FormView($context, $this);

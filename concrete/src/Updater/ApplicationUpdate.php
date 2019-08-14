@@ -117,11 +117,17 @@ class ApplicationUpdate
         }
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getIdentifier()
     {
         return $this->identifier;
@@ -131,6 +137,7 @@ class ApplicationUpdate
      * Given the current update object, sends information to concrete5.org to determine updatability.
      *
      * @return \Concrete\Core\Updater\ApplicationUpdate\Diagnostic
+     * @since 5.7.4
      */
     public function getDiagnosticObject()
     {

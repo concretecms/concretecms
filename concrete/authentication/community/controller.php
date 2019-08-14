@@ -15,6 +15,9 @@ use OAuth\ServiceFactory;
 class Controller extends GenericOauth2TypeController
 {
 
+    /**
+     * @since 5.7.3
+     */
     public function registrationGroupID()
     {
         return \Config::get('auth.community.registration.group');
@@ -97,6 +100,7 @@ class Controller extends GenericOauth2TypeController
     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
     *
     * @return string|null Returns null if the user is not bound to a concrete5 account.
+     * @since 8.2.0
     */
     public function getConcrete5ProfileURL($user)
     {

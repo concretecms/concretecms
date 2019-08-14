@@ -28,6 +28,9 @@ class Controller extends GenericOauth1aTypeController
 
     protected $lastName;
 
+    /**
+     * @since 5.7.3
+     */
     public function registrationGroupID()
     {
         return $this->app->make('config')->get('auth.twitter.registration.group');
@@ -98,6 +101,9 @@ class Controller extends GenericOauth1aTypeController
         $this->set('groups', $list->getResults());
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function handle_detach_attempt()
     {
 

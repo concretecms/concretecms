@@ -105,6 +105,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectIdentifier()
      *
      * @return int
+     * @since 8.2.0
      */
     public function getPermissionObjectIdentifier()
     {
@@ -117,6 +118,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * @see \Concrete\Core\Permission\ObjectInterface::getPermissionResponseClassName()
      *
      * @return string
+     * @since 8.2.0
      */
     public function getPermissionResponseClassName()
     {
@@ -129,6 +131,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * @see \Concrete\Core\Permission\ObjectInterface::getPermissionAssignmentClassName()
      *
      * @return false
+     * @since 8.2.0
      */
     public function getPermissionAssignmentClassName()
     {
@@ -141,6 +144,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
      *
      * @return false
+     * @since 8.2.0
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
@@ -405,6 +409,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * Get the alternative site canonical URL.
      *
      * @return string empty string if it's not set
+     * @since 8.2.0
      */
     public function getSiteAlternativeCanonicalURL()
     {
@@ -415,6 +420,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * Get the HTTPS site canonical URL (it may be the main or the alternative canonical URL).
      *
      * @return string empty string if it's not set
+     * @since 8.2.0
      */
     public function getSiteSSLCanonicalURL()
     {
@@ -436,6 +442,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * Get the site time zone identifier.
      *
      * @return string
+     * @since 8.3.0
      */
     public function getTimezone()
     {

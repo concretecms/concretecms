@@ -104,6 +104,9 @@ class StandardSetManager implements SetManagerInterface
         }
     }
 
+    /**
+     * @since 8.0.1
+     */
     public function updateAttributeSetDisplayOrder($asIDs)
     {
         $db = \Database::connection();

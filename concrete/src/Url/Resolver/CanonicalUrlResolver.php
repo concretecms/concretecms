@@ -37,6 +37,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
      *
      * @param \Concrete\Core\Application\Application $app
      * @param \Concrete\Core\Http\Request $request
+     * @since 5.7.5.4
      */
     public function __construct(Application $app, Request $request)
     {
@@ -126,6 +127,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
     /**
      * Clear the cached canonical URL.
+     * @since 5.7.5.4
      */
     public function clearCached()
     {

@@ -73,6 +73,7 @@ class View extends AbstractView
 
     /**
      * @return mixed
+     * @since 8.5.0
      */
     public function getInnerContentFile()
     {
@@ -147,6 +148,9 @@ class View extends AbstractView
         }
     }
 
+    /**
+     * @since 8.5.0
+     */
     public function getViewTemplateFile()
     {
         $app = Facade::getFacadeApplication();
@@ -263,6 +267,7 @@ class View extends AbstractView
      * Render the file set to $this->innerContentFile
      * @param $scopeItems
      * @return string
+     * @since 8.2.0
      */
     protected function renderInnerContents($scopeItems)
     {
@@ -281,6 +286,7 @@ class View extends AbstractView
      * Render the file set to $this->template
      * @param $scopeItems
      * @return string
+     * @since 8.2.0
      */
     protected function renderTemplate($scopeItems, $innerContent)
     {

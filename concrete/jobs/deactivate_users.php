@@ -25,6 +25,9 @@ class DeactivateUsers extends AbstractJob
      */
     protected $dispatcher;
 
+    /**
+     * @since 8.5.0
+     */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->dispatcher = $eventDispatcher;
@@ -88,6 +91,9 @@ class DeactivateUsers extends AbstractJob
         }
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function deactivateUser(User $user, UserInfo $userInfo)
     {
         $event = DeactivateUser::create($user);

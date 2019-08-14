@@ -28,6 +28,7 @@ interface CategoryInterface
      * @param string $akHandle
      *
      * @return \Concrete\Core\Attribute\AttributeKeyInterface|null
+     * @since 8.2.0
      */
     public function getAttributeKeyByHandle($akHandle);
 

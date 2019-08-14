@@ -34,6 +34,9 @@ class TaskPermissionsEntry implements EntryInterface
         $pt->assignPermissionAccess($pa);
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function remove($mixed)
     {
         $key = Key::getByHandle($this->pkHandle);

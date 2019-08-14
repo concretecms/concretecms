@@ -99,6 +99,7 @@ class JsonErrorHandler extends Handler
      * @param float $minWeight
      *
      * @return bool|null true: yes; false: no; NULL: we weren't able to detect it
+     * @since 8.5.0
      */
     private function clientSupportsJson($minWeight = null)
     {

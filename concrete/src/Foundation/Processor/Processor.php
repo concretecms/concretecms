@@ -24,6 +24,9 @@ class Processor implements ProcessorInterface
         $action->execute();
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function finish()
     {
         $tasks = $this->getTasks();
@@ -33,6 +36,9 @@ class Processor implements ProcessorInterface
         }
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function getTasks()
     {
         $tasks = $this->tasks;
@@ -47,11 +53,17 @@ class Processor implements ProcessorInterface
         return $tasks;
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function getTotalTasks()
     {
         return count($this->getTasks());
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function process()
     {
         $tasks = $this->getTasks();

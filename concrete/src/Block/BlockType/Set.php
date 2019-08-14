@@ -175,6 +175,7 @@ class Set extends ConcreteObject
      * @param bool $includeInternalBlockTypes
      *
      * @return \Concrete\Core\Entity\Block\BlockType\BlockType[]
+     * @since 8.4.1
      */
     public static function getUnassignedBlockTypes($includeInternalBlockTypes = false)
     {
@@ -305,6 +306,7 @@ EOT
      * Update the display order of this set.
      *
      * @param int $displayOrder
+     * @since 8.4.1
      */
     public function updateBlockTypeSetDisplayOrder($displayOrder)
     {
@@ -346,6 +348,7 @@ EOT
      *
      * @param \Concrete\Core\Entity\Block\BlockType\BlockType $bt The block type to be updated
      * @param int $displayOrder the new display order of the blocktype inside this set
+     * @since 8.4.1
      */
     public function setBlockTypeDisplayOrder(BlockTypeEntity $bt, $displayOrder)
     {
@@ -453,6 +456,7 @@ EOT
      * @param \Concrete\Core\Entity\Block\BlockType\BlockType|int $bt A block type (or its ID)
      *
      * @return int|false Returns false if the block type is not associated to this set
+     * @since 5.7.4
      */
     public function displayOrder($bt)
     {

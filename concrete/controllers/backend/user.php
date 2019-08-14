@@ -13,6 +13,9 @@ use Exception;
 
 class User extends Controller
 {
+    /**
+     * @since 5.7.5
+     */
     public function validate($action)
     {
         $token_validator = \Core::make('helper/validation/token');

@@ -46,6 +46,7 @@ class Locale implements LocaleInterface, TreeInterface
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Localization\Locale\LocaleInterface::getLocaleID()
+     * @since 8.2.0
      */
     public function getLocaleID()
     {
@@ -116,6 +117,7 @@ class Locale implements LocaleInterface, TreeInterface
      * {@inheritdoc}
      *
      * @see TreeInterface::getSiteTreeID()
+     * @since 8.2.0
      */
     public function getSiteTreeID()
     {
@@ -128,6 +130,7 @@ class Locale implements LocaleInterface, TreeInterface
      * {@inheritdoc}
      *
      * @see TreeInterface::getSiteTreeObject()
+     * @since 8.2.0
      */
     public function getSiteTreeObject()
     {

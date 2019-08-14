@@ -252,11 +252,17 @@ class Calendar implements ObjectInterface, AssignableObjectInterface
         return '\\Concrete\\Core\\Permission\\Response\\CalendarResponse';
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function setChildPermissionsToOverride()
     {
         return false;
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function setPermissionsToOverride()
     {
         /**

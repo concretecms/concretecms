@@ -187,6 +187,9 @@ class Range extends DashboardPageController
         );
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function clear_data()
     {
         if (!$this->token->validate('blacklist-clear-data')) {

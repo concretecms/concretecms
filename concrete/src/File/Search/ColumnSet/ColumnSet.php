@@ -11,6 +11,9 @@ class ColumnSet extends DatabaseItemListColumnSet
 {
     protected $attributeClass = 'FileAttributeKey';
 
+    /**
+     * @since 8.0.0
+     */
     public function getAttributeKeyColumn($akHandle)
     {
         $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);

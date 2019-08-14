@@ -65,6 +65,9 @@ class Options extends DashboardPageController
         $this->view();
     }
 
+    /**
+     * @since 8.3.0
+     */
     protected function getThumbnailGenerationStrategies()
     {
         return [

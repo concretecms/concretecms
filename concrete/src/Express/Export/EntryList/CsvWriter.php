@@ -68,6 +68,7 @@ class CsvWriter
      * @param array $headerKeys
      *
      * @return array
+     * @since 8.5.0
      */
     private function orderedEntry(array $entry, array $headerKeys)
     {

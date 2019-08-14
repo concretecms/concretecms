@@ -5,6 +5,9 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Method extends DashboardPageController
 {
+    /**
+     * @since 8.2.0
+     */
     public function view()
     {
         $this->set('config', $this->app->make('config'));

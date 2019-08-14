@@ -31,6 +31,9 @@ class ConversationDetail extends Detail
         ));
     }
 
+    /**
+     * @since 5.7.5.3
+     */
     public function deleteFeatureAssignment(Assignment $fa)
     {
         $db = Database::get();

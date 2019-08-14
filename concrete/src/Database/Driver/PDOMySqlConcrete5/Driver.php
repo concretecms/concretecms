@@ -27,6 +27,7 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
      * {@inheritdoc}
      *
      * @see \Doctrine\DBAL\Driver\AbstractMySQLDriver::createDatabasePlatformForVersion()
+     * @since 5.7.4
      */
     public function createDatabasePlatformForVersion($version)
     {

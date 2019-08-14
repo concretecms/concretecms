@@ -161,6 +161,9 @@ class TranslateInterface extends DashboardSitePageController
         $result->outputJSON();
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function export_translations($localeCode)
     {
         $result = new EditResponse();

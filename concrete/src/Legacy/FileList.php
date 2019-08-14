@@ -197,7 +197,6 @@ class FileList extends DatabaseItemList
      *
      * @param int $uID
      *
-     * @since 5.4.1.1+
      */
     public function filterByApproverUID($uID)
     {
@@ -209,7 +208,6 @@ class FileList extends DatabaseItemList
      *
      * @param int $uID
      *
-     * @since 5.4.1.1+
      */
     public function filterByAuthorUID($uID)
     {

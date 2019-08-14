@@ -88,6 +88,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
      * @param int|null $treeNodeParentID
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @since 8.2.0
      */
     public function csv_export($treeNodeParentID = null)
     {
@@ -120,6 +121,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
      * @param \Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent
      *
      * @return \Concrete\Core\Entity\Express\Entity
+     * @since 8.2.0
      */
     protected function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent)
     {
@@ -340,6 +342,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
     /**
      * @param $treeNodeParentID
+     * @since 8.2.0
      */
     protected function getParentNode($treeNodeParentID)
     {

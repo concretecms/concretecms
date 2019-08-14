@@ -225,6 +225,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     /**
      * @return string
+     * @since 8.2.1
      */
     public function getLabelMask()
     {
@@ -233,6 +234,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     /**
      * @param string $label_mask
+     * @since 8.2.1
      */
     public function setLabelMask($label_mask)
     {
@@ -258,6 +260,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     /**
      * @param string $format
      * @return string
+     * @since 8.2.0
      */
     public function getEntityDisplayDescription($format = 'html')
     {
@@ -375,6 +378,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     /**
      * @return int
+     * @since 8.4.1
      */
     public function getItemsPerPage()
     {
@@ -387,6 +391,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     /**
      * @param mixed $items_per_page
+     * @since 8.4.1
      */
     public function setItemsPerPage($items_per_page)
     {
@@ -396,6 +401,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     /**
      * @param string $format
      * @return string
+     * @since 8.2.0
      */
     public function getEntityDisplayName($format = 'html')
     {
@@ -454,6 +460,9 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         $this->forms = $forms;
     }
 
+    /**
+     * @since 8.5.0
+     */
     public function getForm($name)
     {
         foreach($this->getForms() as $form) {
@@ -494,6 +503,9 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return '\\Concrete\\Core\\Permission\\Response\\ExpressEntityResponse';
     }
 
+    /**
+     * @since 8.1.0
+     */
     public function getAssociation($handle)
     {
         foreach($this->associations as $association) {
@@ -518,6 +530,9 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return new EntityExporter();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getController()
     {
 

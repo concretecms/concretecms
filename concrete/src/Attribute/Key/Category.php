@@ -26,6 +26,9 @@ class Category extends Facade
      */
     const ASET_ALLOW_MULTIPLE = 2;
 
+    /**
+     * @since 8.0.0
+     */
     public static function getFacadeAccessor()
     {
         return 'Concrete\Core\Attribute\Category\CategoryService';
@@ -33,6 +36,7 @@ class Category extends Facade
 
     /**
      * @deprecated
+     * @since 8.0.0
      */
     public static function exportTranslations()
     {

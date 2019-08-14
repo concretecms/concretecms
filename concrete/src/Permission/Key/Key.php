@@ -524,6 +524,7 @@ EOT
      * Mark this permission key as having (or not) a custom class.
      *
      * @param bool $pkHasCustomClass
+     * @since 5.7.4
      */
     public function setPermissionKeyHasCustomClass($pkHasCustomClass)
     {
@@ -664,6 +665,7 @@ EOT
      * Export the strings that should be translated.
      *
      * @return \Gettext\Translations
+     * @since 5.7.3
      */
     public static function exportTranslations()
     {

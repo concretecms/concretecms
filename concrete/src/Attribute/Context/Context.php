@@ -47,17 +47,24 @@ abstract class Context implements ContextInterface
 
     /**
      * @return array
+     * @since 8.2.0
      */
     public function getControlTemplates()
     {
         return $this->controlTemplates;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setLocation(TemplateLocator $locator)
     {
         return $locator;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function render(Key $key, $value = null)
     {
         return;

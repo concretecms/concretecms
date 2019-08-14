@@ -14,11 +14,17 @@ class Controller extends GenericOauth2TypeController
 {
     public $apiMethods = ['handle_error', 'handle_success', 'revoke', 'handle_register'];
 
+    /**
+     * @since 5.7.3
+     */
     public function registrationGroupID()
     {
         return $this->app->make('config')->get('auth.facebook.registration.group');
     }
 
+    /**
+     * @since 5.7.1
+     */
     public function supportsRegistration()
     {
         return $this->app->make('config')->get('auth.facebook.registration.enabled', false);
@@ -29,6 +35,9 @@ class Controller extends GenericOauth2TypeController
         return '<i class="fa fa-facebook"></i>';
     }
 
+    /**
+     * @since 5.7.1
+     */
     public function getHandle()
     {
         return 'facebook';
@@ -36,6 +45,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * @return Facebook
+     * @since 5.7.1
      */
     public function getService()
     {
@@ -69,6 +79,9 @@ class Controller extends GenericOauth2TypeController
         $this->set('groups', $list->getResults());
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function revoke()
     {
         $data = $this->parseSignedRequest($this->get('signed_request'));
@@ -91,6 +104,9 @@ class Controller extends GenericOauth2TypeController
         }
     }
 
+    /**
+     * @since 8.4.0
+     */
     protected function parseSignedRequest($signedRequest)
     {
         list($encodedSignature, $payload) = explode('.', $signedRequest, 2);
@@ -111,12 +127,18 @@ class Controller extends GenericOauth2TypeController
         return $data;
     }
 
+    /**
+     * @since 8.4.0
+     */
     protected function base64_url_decode($input)
     {
         return base64_decode(strtr($input, '-_', '+/'));
     }
 
 
+    /**
+     * @since 8.4.0
+     */
     public function handle_detach_attempt()
     {
 

@@ -21,6 +21,9 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $this->console = $console;
     }
 
+    /**
+     * @since 8.2.0
+     */
     private function loadBootstrap()
     {
         $app = $this->app;
@@ -28,6 +31,9 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         include DIR_APPLICATION . '/bootstrap/app.php';
     }
 
+    /**
+     * @since 8.2.0
+     */
     private function initializeSystemTimezone()
     {
         $config = $this->app->make('config');

@@ -63,6 +63,9 @@ class AuthorFormatter
         return $this->getAvatarObject()->output();
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function getAvatarObject()
     {
         $ui = $this->author->getUser();

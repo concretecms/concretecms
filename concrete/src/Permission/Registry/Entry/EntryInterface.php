@@ -8,6 +8,9 @@ interface EntryInterface
 {
 
     function apply($mixed);
+    /**
+     * @since 8.2.0
+     */
     function remove($mixed);
 
 }

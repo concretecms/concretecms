@@ -50,6 +50,7 @@ class PasswordValidatorServiceProvider extends Provider
      *
      *
      * @param ValidatorManagerInterface $manager
+     * @since 8.5.0
      */
     protected function applyPasswordReuseValidator(ValidatorManagerInterface $manager)
     {
@@ -66,6 +67,7 @@ class PasswordValidatorServiceProvider extends Provider
      * Apply configured password length validators
      *
      * @param $manager
+     * @since 8.5.0
      */
     protected function applyLengthValidators(ValidatorManagerInterface $manager)
     {
@@ -86,6 +88,7 @@ class PasswordValidatorServiceProvider extends Provider
      * Get maximum length validator
      *
      * @return \Concrete\Core\Validator\String\MaximumLengthValidator|null
+     * @since 8.5.0
      */
     protected function getMaximumRequirement()
     {
@@ -98,6 +101,7 @@ class PasswordValidatorServiceProvider extends Provider
      * Get minimum length validator
      *
      * @return \Concrete\Core\Validator\String\MinimumLengthValidator|null
+     * @since 8.5.0
      */
     protected function getMinimumRequirement()
     {
@@ -110,6 +114,7 @@ class PasswordValidatorServiceProvider extends Provider
      *
      * @param $minimum
      * @param $maximum
+     * @since 8.5.0
      */
     protected function applyMinMaxStrings($minimum, $maximum)
     {
@@ -140,6 +145,7 @@ class PasswordValidatorServiceProvider extends Provider
      * Apply validators that require specific substrings
      *
      * @param \Concrete\Core\Validator\ValidatorManagerInterface $manager
+     * @since 8.5.0
      */
     protected function applyStringRequirementValidators(ValidatorManagerInterface $manager)
     {
@@ -176,6 +182,7 @@ class PasswordValidatorServiceProvider extends Provider
      * @param string $requirement
      *
      * @return RegexValidator
+     * @since 8.5.0
      */
     protected function regexValidator($regex, $requirement)
     {
@@ -186,6 +193,9 @@ class PasswordValidatorServiceProvider extends Provider
         return $validator;
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function applyRegexRequirements(ValidatorManagerInterface $manager)
     {
         $specialCharacters = (array) $this->config->get('concrete.user.password.custom_regex', []);
@@ -207,6 +217,7 @@ class PasswordValidatorServiceProvider extends Provider
      * @param $requirementString
      *
      * @return \Concrete\Core\Validator\ClosureValidator|mixed
+     * @since 8.5.0
      */
     protected function wrappedRegexValidator($regex, $requirementString)
     {

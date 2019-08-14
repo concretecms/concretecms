@@ -221,6 +221,7 @@ class Controller extends BlockController
      * @param array $viewTypesOrder
      *
      * @return string
+     * @since 8.4.0
      */
     public function getViewTypeString($viewTypesOrder)
     {

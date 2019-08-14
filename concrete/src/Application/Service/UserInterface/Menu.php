@@ -48,6 +48,7 @@ class Menu
 
     /**
      * @param ItemInterface $item
+     * @since 5.7.2.1
      */
     public function addMenuItem(ItemInterface $item)
     {

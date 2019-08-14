@@ -16,6 +16,9 @@ class Avatar extends AccountProfileEditPageController
         $this->requireAsset('core/avatar');
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function save_avatar()
     {
         $result = [

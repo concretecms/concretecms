@@ -134,6 +134,7 @@ class ConstrainImageProcessor implements ProcessorInterface
      * Should thumbnails be rescanned when the image is resized?
      *
      * @return bool
+     * @since 8.4.0
      */
     public function isRescanThumbnails()
     {
@@ -146,6 +147,7 @@ class ConstrainImageProcessor implements ProcessorInterface
      * @param bool $rescanThumbnails
      *
      * @return $this
+     * @since 8.4.0
      */
     public function setRescanThumbnails($rescanThumbnails)
     {
@@ -193,6 +195,7 @@ class ConstrainImageProcessor implements ProcessorInterface
      * @throws InvalidArgumentException
      *
      * @return ImageInterface
+     * @since 8.3.0
      */
     public function resizeInPlace(ImageInterface $image, Box $size, $mode = ImageInterface::THUMBNAIL_INSET, $filter = ImageInterface::FILTER_UNDEFINED)
     {
@@ -285,6 +288,7 @@ class ConstrainImageProcessor implements ProcessorInterface
      * @return bool
      *
      * @deprecated It's always true
+     * @since 8.3.0
      */
     public function getResizeInPlace()
     {
@@ -295,6 +299,7 @@ class ConstrainImageProcessor implements ProcessorInterface
      * @param bool $resizeInPlace
      *
      * @deprecated It's always true
+     * @since 8.3.0
      */
     public function setResizeInPlace($resizeInPlace)
     {

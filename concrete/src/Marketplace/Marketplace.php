@@ -121,6 +121,7 @@ class Marketplace implements ApplicationAwareInterface
      * Get the contents of a URL
      * @param $url
      * @return string|null
+     * @since 8.4.1
      */
     private function get($url)
     {
@@ -404,6 +405,9 @@ class Marketplace implements ApplicationAwareInterface
         return $token;
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function getSiteURL()
     {
         $url = $this->app->make('url/canonical');

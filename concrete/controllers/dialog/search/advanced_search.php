@@ -25,6 +25,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
      */
     public $objectID = null;
 
+    /**
+     * @since 8.4.1
+     */
     public function getObjectID()
     {
         return (string) $this->objectID;
@@ -38,13 +41,22 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     abstract public function getCurrentSearchBaseURL();
 
+    /**
+     * @since 8.4.1
+     */
     abstract public function getSavedSearchEntity();
 
+    /**
+     * @since 8.2.1
+     */
     public function getAddFieldAction()
     {
         return $this->action('add_field');
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getSubmitAction()
     {
         return $this->action('submit');
@@ -78,12 +90,18 @@ abstract class AdvancedSearch extends BackendInterfaceController
         return $this->request->request->get('fSearchDefaultSortDirection');
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function getSearchFieldSelectorElement()
     {
         $element = new SearchFieldSelector($this->getFieldManager(), $this->getAddFieldAction(), $this->getSearchQuery());
         return $element;
     }
 
+    /**
+     * @since 8.2.1
+     */
     protected function getCustomizeResultsElement()
     {
         $provider = $this->getSearchProvider();
@@ -92,6 +110,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
         return $element;
     }
 
+    /**
+     * @since 8.4.1
+     */
     protected function getSearchPresets()
     {
         $searchPresets = [];
@@ -198,6 +219,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     /**
      * @return int
+     * @since 8.2.0
      */
     private function getItemsPerPage()
     {

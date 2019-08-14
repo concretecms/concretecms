@@ -56,7 +56,7 @@ class UserMessageException extends Exception implements JsonSerializable, HtmlAw
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface::messageContainsHtml()
-     * @since concrete5 8.5.0a3
+     * @since 8.4.4
      */
     public function messageContainsHtml()
     {
@@ -70,7 +70,7 @@ class UserMessageException extends Exception implements JsonSerializable, HtmlAw
      *
      * @return $this
      *
-     * @since concrete5 8.5.0a3
+     * @since 8.4.4
      */
     public function setMessageContainsHtml($value)
     {

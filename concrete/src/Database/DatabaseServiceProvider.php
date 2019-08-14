@@ -162,6 +162,7 @@ class DatabaseServiceProvider extends ServiceProvider
      * A list of things that this service provider provides.
      *
      * @return array
+     * @since 5.7.5.4
      */
     public function provides()
     {

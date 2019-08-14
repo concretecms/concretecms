@@ -159,6 +159,9 @@ EOT
         return $this->app->make(ResponseFactoryInterface::class)->redirect($this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/blocks/types']), 302);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function search($btID = 0)
     {
         $bt = $btID > 0 ? $this->entityManager->find(BlockTypeEntity::class, $btID) : null;
@@ -183,6 +186,9 @@ EOT
         );
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function sort_blocktypesets()
     {
         if (!$this->token->validate('ccm-sort_blocktypesets')) {
@@ -230,6 +236,9 @@ EOT
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
+    /**
+     * @since 8.4.1
+     */
     public function sort_blocktypes()
     {
         if (!$this->token->validate('ccm-sort_blocktypes')) {
@@ -347,6 +356,7 @@ EOT
 
     /**
      * @param \Concrete\Core\Entity\Block\BlockType\BlockType[] $normalBlockTypes
+     * @since 8.4.1
      */
     private function getSetsData(array $normalBlockTypes)
     {

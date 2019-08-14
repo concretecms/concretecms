@@ -89,12 +89,18 @@ abstract class StandardListView implements StandardListViewInterface
         }
     }
 
+    /**
+     * @since 8.3.0
+     */
     protected function getLinkToUser(UserInfo $user)
     {
         $app = Facade::getFacadeApplication();
         return $app->make('url/manager')->resolve([$user]);
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function getDateString()
     {
         $app = Facade::getFacadeApplication();

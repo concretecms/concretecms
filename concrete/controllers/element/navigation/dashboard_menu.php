@@ -36,6 +36,9 @@ class DashboardMenu extends Menu
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     protected function getPageList($parent)
     {
         $list = parent::getPageList($parent);

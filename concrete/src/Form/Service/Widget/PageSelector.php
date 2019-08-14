@@ -115,6 +115,9 @@ EOL;
         return $html;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = 'HOME_CID', $filters = array())
     {
         $v = \View::getInstance();
@@ -160,6 +163,9 @@ EOL;
         return $html;
     }
 
+    /**
+     * @since 5.7.5.2
+     */
     public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', SiteTree $siteTree = null, $filters = array())
     {
         $v = \View::getInstance();

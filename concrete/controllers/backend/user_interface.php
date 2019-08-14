@@ -42,6 +42,7 @@ abstract class UserInterface extends Controller
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Controller\AbstractController::shouldRunControllerTask()
+     * @since 5.7.2
      */
     public function shouldRunControllerTask()
     {

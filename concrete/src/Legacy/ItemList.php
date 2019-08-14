@@ -95,6 +95,9 @@ class ItemList
         $this->items = $items;
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     protected function loadQueryStringPagingVariable()
     {
         $this->queryStringPagingVariable = \Config::get('concrete.seo.paging_string');

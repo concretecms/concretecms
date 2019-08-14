@@ -246,6 +246,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return null;
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function handle_register($token = null)
     {
 
@@ -297,6 +300,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return $this->extractor;
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function form()
     {
         $this->set('user', new User());
@@ -308,6 +314,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     abstract public function getService();
 
+    /**
+     * @since 5.7.3
+     */
     protected function isValid()
     {
         return $this->extractor->supportsUniqueId();
@@ -343,6 +352,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      * Whether or not we will attempt to register the user.
      *
      * @return bool
+     * @since 5.7.3
      */
     abstract public function registrationGroupID();
 
@@ -553,6 +563,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
      *
      * @return string|null
+     * @since 8.2.0
      */
     public function getBindingForUser($user)
     {
@@ -587,14 +598,29 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return $this->getExtractor()->getUniqueId();
     }
 
+    /**
+     * @since 5.7.4
+     */
     abstract public function handle_authentication_attempt();
 
+    /**
+     * @since 5.7.4
+     */
     abstract public function handle_authentication_callback();
 
+    /**
+     * @since 5.7.4
+     */
     abstract public function handle_attach_attempt();
 
+    /**
+     * @since 5.7.4
+     */
     abstract public function handle_attach_callback();
 
+    /**
+     * @since 8.4.0
+     */
     public function handle_detach_attempt()
     {
         if (!User::isLoggedIn()) {

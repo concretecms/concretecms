@@ -323,6 +323,7 @@ EOT
      * @param \Symfony\Component\Console\Input\InputInterface $input
      *
      * @return \Symfony\Component\Console\Question\Question
+     * @since 8.0.0
      */
     private function getQuestion($row, InputInterface $input)
     {
@@ -382,6 +383,7 @@ EOT
      * @param null $firstKey
      *
      * @return \Generator|\Symfony\Component\Console\Question\Question[]
+     * @since 8.0.0
      */
     private function getWizard(InputInterface $input, OutputInterface $output, $firstKey = null)
     {
@@ -434,6 +436,7 @@ EOT
      * @param $default
      *
      * @return string
+     * @since 8.0.0
      */
     private function getQuestionString(InputOption $option, $default)
     {
@@ -453,6 +456,7 @@ EOT
      * Items: [ "option-name", "default-value", function($question, $input, $option) : $question ].
      *
      * @return array
+     * @since 8.0.0
      */
     private function wizardSteps()
     {
@@ -595,6 +599,9 @@ EOT
         ];
     }
 
+    /**
+     * @since 8.3.0
+     */
     private function getPreconditionsPassed(\Concrete\Core\Application\Application $app, OutputInterface $output)
     {
         if ($this->preconditionsPassed === null) {
@@ -609,6 +616,7 @@ EOT
      * @param OutputInterface $output
      *
      * @return bool
+     * @since 8.3.0
      */
     private function checkPreconditions(\Concrete\Core\Application\Application $app, OutputInterface $output)
     {
@@ -679,6 +687,7 @@ EOT
      * @param InputInterface $input
      *
      * @return array
+     * @since 8.4.0
      */
     private function getFinalOptions(InputInterface $input)
     {
@@ -711,6 +720,7 @@ EOT
      * @param array $options
      *
      * @return Installer
+     * @since 8.4.0
      */
     private function buildInstaller(array $options)
     {
@@ -757,6 +767,7 @@ EOT
      * @param OutputInterface $output
      *
      * @return int One of the InstallCommand::OPTIONPRECONDITIONS_... constants
+     * @since 8.4.0
      */
     private function checkOptionPreconditions(\Concrete\Core\Application\Application $app, Installer $installer, InputInterface $input, OutputInterface $output)
     {

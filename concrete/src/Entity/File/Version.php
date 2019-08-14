@@ -511,6 +511,7 @@ class Version implements ObjectInterface
      * Get the date/time when the file version has been activated (or NULL if the file version is not approved).
      *
      * @return \DateTime|null
+     * @since 8.4.0
      */
     public function getActivateDateTime()
     {
@@ -601,6 +602,7 @@ class Version implements ObjectInterface
      * Get the ID of the user that approved the file version.
      *
      * @return int
+     * @since 8.4.0
      */
     public function getApproverUserID()
     {
@@ -611,6 +613,7 @@ class Version implements ObjectInterface
      * Get the username of the user that approved the file version (or "Unknown").
      *
      * @return string
+     * @since 8.4.0
      */
     public function getApproverName()
     {
@@ -983,6 +986,7 @@ class Version implements ObjectInterface
      * Get a Response instance that will force the browser to download the file, even if the browser can display it.
      *
      * @return \Concrete\Core\Http\Response
+     * @since 8.4.0
      */
     public function buildForceDownloadResponse()
     {
@@ -1316,6 +1320,7 @@ class Version implements ObjectInterface
      * Get an \Imagine\Image\ImageInterface representing the image.
      *
      * @return \Imagine\Image\ImageInterface|null return NULL if the image coulnd't be read, an ImageInterface otherwise
+     * @since 8.1.0
      */
     public function getImagineImage()
     {
@@ -1366,6 +1371,7 @@ class Version implements ObjectInterface
      * Does the \Imagine\Image\ImageInterface instance have already been loaded?
      *
      * @return bool
+     * @since 8.4.0
      */
     public function hasImagineImage()
     {
@@ -1374,6 +1380,7 @@ class Version implements ObjectInterface
 
     /**
      * Unload the loaded Image instance.
+     * @since 8.2.1
      */
     public function releaseImagineImage()
     {
@@ -1390,6 +1397,7 @@ class Version implements ObjectInterface
      * @param bool $deleteExistingThumbnails Set to true to delete existing thumbnails (they will be re-created from scratch)
      *
      * @return bool return true on success, false on failure (file is not an image, problems during image processing, ...)
+     * @since 8.4.0
      */
     public function refreshThumbnails($deleteExistingThumbnails)
     {
@@ -1441,6 +1449,7 @@ class Version implements ObjectInterface
      * Generate a thumbnail for a specific thumbnail type version.
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $type
+     * @since 8.1.0
      */
     public function generateThumbnail(ThumbnailTypeVersion $type)
     {
@@ -1747,6 +1756,7 @@ class Version implements ObjectInterface
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      * @param StorageLocation $location The destination storage location
+     * @since 8.1.0
      */
     public function updateThumbnailStorageLocation($type, StorageLocation $location)
     {
@@ -1770,6 +1780,7 @@ class Version implements ObjectInterface
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      * @param Version $source The File Version instance to copy the thumbnail from
+     * @since 8.3.0
      */
     public function duplicateUnderlyingThumbnailFiles($type, Version $source)
     {

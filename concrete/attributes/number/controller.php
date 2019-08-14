@@ -15,6 +15,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         'options' => ['precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false],
     ];
 
+    /**
+     * @since 8.0.0
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('hashtag');
@@ -24,6 +27,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritDoc}
      *
      * @see \Concrete\Core\Attribute\AttributeInterface::getDisplayValue()
+     * @since 8.0.0
      */
     public function getDisplayValue()
     {
@@ -32,6 +36,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $value === null ? '' : (float) $value;
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return NumberValue::class;
@@ -76,6 +83,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $p['value'] != false;
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function validateValue()
     {
         $val = $this->getAttributeValue()->getValue();
@@ -84,6 +94,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     }
 
     // run when we call setAttribute(), instead of saving through the UI
+/**
+ * @since 8.0.0
+ */
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
@@ -92,6 +105,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $av;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -104,6 +120,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     * @since 8.3.0
      */
     public function getAttributeValueTextRepresentation()
     {
@@ -121,6 +138,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     * @since 8.3.0
      */
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {

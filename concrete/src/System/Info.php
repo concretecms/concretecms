@@ -264,6 +264,9 @@ class Info
         }
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getOverrideList()
     {
         $overrides = [];
@@ -423,6 +426,7 @@ class Info
 
     /**
      * @return string
+     * @since 8.4.0
      */
     public function getVersionInstalled()
     {
@@ -431,6 +435,7 @@ class Info
 
     /**
      * @return string
+     * @since 8.4.0
      */
     public function getCodeVersion()
     {
@@ -439,6 +444,7 @@ class Info
 
     /**
      * @return string
+     * @since 8.4.0
      */
     public function getDbVersion()
     {
@@ -447,6 +453,7 @@ class Info
 
     /**
      * @return string
+     * @since 8.5.2
      */
     public function getDBMSVersion()
     {
@@ -466,6 +473,7 @@ class Info
 
     /**
      * @return string
+     * @since 8.5.2
      */
     public function getDBMSSqlMode()
     {

@@ -41,6 +41,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     const SITE_TREE_ALL = 0;
 
+    /**
+     * @since 8.2.0
+     */
     public function getPagerManager()
     {
         return new PageListPagerManager($this);
@@ -57,12 +60,16 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @return \Closure|int|null
+     * @since 8.2.0
      */
     public function getPermissionsChecker()
     {
         return $this->permissionsChecker;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getPagerVariableFactory()
     {
         return new VariableFactory($this, $this->getSearchRequest());
@@ -121,16 +128,25 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     protected $includeInactivePages = false;
 
+    /**
+     * @since 8.0.0
+     */
     public function setSiteTreeObject(TreeInterface $tree)
     {
         $this->siteTree = $tree;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setSiteTreeToAll()
     {
         $this->siteTree = self::SITE_TREE_ALL;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function setSiteTreeToCurrent()
     {
         $this->siteTree = self::SITE_TREE_CURRENT;
@@ -154,6 +170,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->permissionsChecker = -1;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function enablePermissions()
     {
         unset($this->permissionsChecker);
@@ -184,6 +203,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->select('p.cID');
     }
 
+    /**
+     * @since 8.3.0
+     */
     public function filterBySite(Site $site)
     {
         $this->siteTree = [];
@@ -331,6 +353,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
@@ -475,6 +500,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by package.
+     * @since 8.0.0
      */
     public function filterByPackage(Package $package)
     {
@@ -484,6 +510,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Displays only those pages that have style customizations.
+     * @since 5.7.3
      */
     public function filterByPagesWithCustomStyles()
     {
@@ -640,6 +667,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         ;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function filterByBlockType(BlockType $bt)
     {
         $btID = $bt->getBlockTypeID();
@@ -681,6 +711,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Sorts this list by date modified ascending.
+     * @since 8.3.0
      */
     public function sortByDateModified()
     {
@@ -689,6 +720,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Sorts this list by date modified descending.
+     * @since 8.3.0
      */
     public function sortByDateModifiedDescending()
     {
@@ -745,6 +777,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
+    /**
+     * @since 8.4.0
+     */
     protected function selectDistinct()
     {
         $selects = $this->query->getQueryPart('select');

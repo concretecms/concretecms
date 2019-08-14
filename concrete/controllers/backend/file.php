@@ -96,6 +96,9 @@ class File extends Controller
         $r->outputJSON();
     }
 
+    /**
+     * @since 5.7.5.9
+     */
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('canEditFileContents');
@@ -228,6 +231,7 @@ class File extends Controller
 
     /**
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @since 8.5.0
      */
     public function importIncoming()
     {
@@ -285,6 +289,7 @@ class File extends Controller
 
     /**
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @since 8.5.0
      */
     public function importRemote()
     {
@@ -362,6 +367,9 @@ class File extends Controller
         $r->outputJSON();
     }
 
+    /**
+     * @since 8.5.0
+     */
     public function download()
     {
         $files = $this->getRequestFiles('canViewFileInFileManager');
@@ -407,6 +415,7 @@ class File extends Controller
 
     /**
      * @param \Concrete\Core\Entity\File\File $f
+     * @since 5.7.5.9
      */
     protected function doRescan($f)
     {
@@ -479,6 +488,7 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException
      *
      * @return \Concrete\Core\Entity\File\Version|null returns NULL if the upload is chunked and we still haven't received the full file
+     * @since 8.0.0
      */
     protected function handleUpload($property, $index = null)
     {
@@ -534,7 +544,7 @@ class File extends Controller
      *
      * @return \Concrete\Core\Entity\File\File|null
      *
-     * @since 8.5.0a3
+     * @since 8.5.0
      */
     protected function getFileToBeReplaced()
     {
@@ -566,7 +576,7 @@ class File extends Controller
      *
      * @return \Concrete\Core\Tree\Node\Type\FileFolder
      *
-     * @since 8.5.0a3
+     * @since 8.5.0
      */
     protected function getDestinationFolder()
     {
@@ -606,7 +616,7 @@ class File extends Controller
      *
      * @return \Concrete\Core\Page\Page|null
      *
-     * @since 8.5.0a3
+     * @since 8.5.0
      */
     protected function getImportOriginalPage()
     {
@@ -636,7 +646,7 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified files couldn't be found
      * @throws \Exception in case of generic errors
      *
-     * @since 8.5.0a3
+     * @since 8.5.0
      */
     protected function checkExistingIncomingFiles(array $incomingFiles, Incoming $incoming)
     {
@@ -662,7 +672,7 @@ class File extends Controller
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
      *
-     * @since 8.5.0a3
+     * @since 8.5.0
      */
     protected function checkRemoteURlsToImport(array $urls)
     {
@@ -703,6 +713,7 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
      * @return string the local filename
+     * @since 8.5.0
      */
     protected function downloadRemoteURL($url, $temporaryDirectory)
     {
@@ -746,6 +757,7 @@ class File extends Controller
      * @param \Concrete\Core\Entity\File\Version[] $importedFileVersions
      * @param \Concrete\Core\Error\ErrorList\ErrorList $errors
      * @param bool $isReplacingFile
+     * @since 8.5.0
      */
     protected function buildImportResponse(array $importedFileVersions, ErrorList $errors, $isReplacingFile)
     {
@@ -778,6 +790,7 @@ class File extends Controller
      * @param bool $deleteFile output parameter that's set to true if the uploaded file should be deleted manually
      *
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile|null
+     * @since 8.5.0
      */
     private function getFileToImport(UploadedFile $file, &$deleteFile)
     {
@@ -806,6 +819,7 @@ class File extends Controller
      * @param int $totalChunks
      *
      * @return bool
+     * @since 8.5.0
      */
     private function isFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
     {
@@ -825,6 +839,7 @@ class File extends Controller
      * @param \Symfony\Component\HttpFoundation\File\UploadedFile $originalFile
      *
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @since 8.5.0
      */
     private function combineFileChunks($fileUuid, $tempPath, $totalChunks, UploadedFile $originalFile)
     {

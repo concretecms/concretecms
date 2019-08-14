@@ -16,6 +16,7 @@ interface RegistryInterface
 
     /**
      * @return EntryInterface[]
+     * @since 8.2.0
      */
     function getEntriesToRemove();
 

@@ -39,6 +39,9 @@ class Page extends Controller
         }
     }
 
+    /**
+     * @since 5.7.2
+     */
     public function exitEditMode($cID, $token)
     {
         if (Loader::helper('validation/token')->validate('', $token)) {
@@ -55,6 +58,9 @@ class Page extends Controller
         return new \Response(t('Access Denied'));
     }
 
+    /**
+     * @since 5.7.3
+     */
     public function getJSON()
     {
         $h = $this->app->make('helper/concrete/dashboard/sitemap');

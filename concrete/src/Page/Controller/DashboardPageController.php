@@ -105,6 +105,7 @@ class DashboardPageController extends PageController
      * Get the EntityManager instance (available after the on_start method has been called).
      *
      * @return \Doctrine\ORM\EntityManagerInterface|null
+     * @since 8.0.0
      */
     public function getEntityManager()
     {
@@ -115,6 +116,7 @@ class DashboardPageController extends PageController
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Page\Controller\PageController::useUserLocale()
+     * @since 8.2.0
      */
     public function useUserLocale()
     {

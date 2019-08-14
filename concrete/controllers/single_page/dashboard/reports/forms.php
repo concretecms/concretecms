@@ -8,6 +8,9 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 
 class Forms extends DashboardExpressEntriesPageController
 {
+    /**
+     * @since 8.0.0
+     */
     protected function getResultsTreeNodeObject()
     {
         $node = ExpressEntryCategory::getNodeByName(Controller::FORM_RESULTS_CATEGORY_NAME);

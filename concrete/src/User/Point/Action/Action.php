@@ -51,6 +51,9 @@ class Action
         }
     }
 
+    /**
+     * @since 5.7.5
+     */
     protected static function getClass($row)
     {
         $standardClass = '\\Concrete\Core\\User\\Point\\Action\\Action';

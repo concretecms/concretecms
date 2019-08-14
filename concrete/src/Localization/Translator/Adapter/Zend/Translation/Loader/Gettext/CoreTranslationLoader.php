@@ -32,6 +32,7 @@ class CoreTranslationLoader extends AbstractTranslationLoader
      * @param string $localeID The ID of the locale
      *
      * @return string|null Returns the full path of the file if it exists, null otherwise
+     * @since 8.2.0
      */
     private function locateLanguageFile($localeID)
     {
@@ -60,6 +61,7 @@ class CoreTranslationLoader extends AbstractTranslationLoader
      * @param string $localeID The ID of the locale
      *
      * @return string
+     * @since 8.2.0
      */
     private function getAppLanguageFilePath($localeID)
     {
@@ -72,6 +74,7 @@ class CoreTranslationLoader extends AbstractTranslationLoader
      * @param string $localeID The ID of the locale
      *
      * @return string
+     * @since 8.2.0
      */
     private function getCoreLanguageFilePath($localeID)
     {

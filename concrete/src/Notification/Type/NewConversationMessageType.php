@@ -39,6 +39,9 @@ class NewConversationMessageType extends Type
     }
 
 
+    /**
+     * @since 8.4.2
+     */
     public function getAvailableFilters()
     {
         return [

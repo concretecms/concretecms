@@ -24,6 +24,7 @@ class BooleanSettings extends Settings
 
     /**
      * @return mixed
+     * @since 8.2.0
      */
     public function getCheckboxLabel()
     {
@@ -32,6 +33,7 @@ class BooleanSettings extends Settings
 
     /**
      * @param mixed $checkboxLabel
+     * @since 8.2.0
      */
     public function setCheckboxLabel($checkboxLabel)
     {

@@ -39,6 +39,7 @@ class AutorotateImageProcessor implements ProcessorInterface
      * Should thumbnails be rescanned when the image is rotated?
      *
      * @return bool
+     * @since 8.4.0
      */
     public function isRescanThumbnails()
     {
@@ -51,6 +52,7 @@ class AutorotateImageProcessor implements ProcessorInterface
      * @param bool $rescanThumbnails
      *
      * @return $this
+     * @since 8.4.0
      */
     public function setRescanThumbnails($rescanThumbnails)
     {

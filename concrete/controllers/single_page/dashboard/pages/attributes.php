@@ -9,6 +9,9 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
+    /**
+     * @since 8.0.0
+     */
     public function view()
     {
         $this->renderList();
@@ -22,6 +25,9 @@ class Attributes extends DashboardAttributesPageController
         );
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function update($akID = null)
     {
         $this->edit($akID);
@@ -62,6 +68,7 @@ class Attributes extends DashboardAttributesPageController
      * @see \Concrete\Core\Page\Controller\DashboardAttributesPageController::getCategoryObject()
      *
      * @return \Concrete\Core\Entity\Attribute\Category
+     * @since 8.0.0
      */
     protected function getCategoryObject()
     {

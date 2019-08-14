@@ -37,6 +37,9 @@ class PermissionsEntry implements EntryInterface
         );
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function remove($mixed)
     {
         $object = $this->object->getPermissionObject();

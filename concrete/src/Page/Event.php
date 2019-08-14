@@ -27,13 +27,16 @@ class Event extends GenericEvent implements RequestEventInterface
 
     /**
      * @param Request $request
+     * @since 5.7.4
      */
     public function setRequest(Request $request)
     {
         $this->request = $request;
     }
 
-    /** @return \Symfony\Component\HttpFoundation\Request */
+    /** @return \Symfony\Component\HttpFoundation\Request
+     * @since 5.7.4
+     */
     public function getRequest()
     {
         return $this->request;

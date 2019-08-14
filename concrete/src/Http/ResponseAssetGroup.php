@@ -42,6 +42,9 @@ class ResponseAssetGroup
         $this->init();
     }
 
+    /**
+     * @since 5.7.5
+     */
     public function init()
     {
         $this->requiredAssetGroup = new AssetGroup();
@@ -88,6 +91,7 @@ class ResponseAssetGroup
      *
      * @see \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_HEADER
      * @see \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_FOOTER
+     * @since 8.0.0
      */
     protected function addOutputAssetAt($item, $position)
     {

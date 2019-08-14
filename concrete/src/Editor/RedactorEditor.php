@@ -104,6 +104,9 @@ EOL;
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function outputBlockEditModeEditor($key, $content)
     {
         $plugins = $this->pluginManager->getSelectedPlugins();
@@ -129,6 +132,9 @@ EOL;
         return $this->pluginManager;
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function setPluginManager(PluginManager $pluginManager)
     {
         $this->pluginManager = $pluginManager;

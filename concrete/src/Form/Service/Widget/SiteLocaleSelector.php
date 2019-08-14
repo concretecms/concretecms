@@ -115,6 +115,7 @@ EOL;
      *     bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
      *
      * @return string
+     * @since 8.5.0
      */
     public function selectLocaleMultiple($fieldName, Site $site, array $selectedLocales = [], array $options = [])
     {
@@ -208,6 +209,7 @@ EOL;
      * @param \Concrete\Core\Entity\Site\Locale[] $locales
      *
      * @return bool
+     * @since 8.5.0
      */
     private function shouldDisplayLocaleCode(array $options, array $locales)
     {

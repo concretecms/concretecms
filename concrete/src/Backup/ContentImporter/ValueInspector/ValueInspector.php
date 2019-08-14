@@ -13,16 +13,25 @@ class ValueInspector implements ValueInspectorInterface
      */
     protected $routines = array();
 
+    /**
+     * @since 5.7.5.4
+     */
     public function registerInspectionRoutine(RoutineInterface $routine)
     {
         $this->routines[$routine->getHandle()] = $routine;
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function getInspectionRoutines()
     {
         return $this->routines;
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function inspect($content)
     {
         $result = new Result($content);

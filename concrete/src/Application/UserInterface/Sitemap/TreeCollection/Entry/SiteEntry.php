@@ -35,6 +35,9 @@ class SiteEntry extends Entry
         return null;
     }
 
+    /**
+     * @since 8.4.0
+     */
     public function getIcon()
     {
         return null;

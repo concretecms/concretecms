@@ -33,6 +33,9 @@ class NewFormSubmissionType extends Type
         return array($this->createSubscription());
     }
 
+    /**
+     * @since 8.4.2
+     */
     public function getAvailableFilters()
     {
         return [

@@ -273,6 +273,7 @@ class Text
      *
      * @param $input
      * @param $allowedTags
+     * @since 5.7.4
      */
     public function prettyStripTags($input, $allowedTags = null)
     {

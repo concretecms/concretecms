@@ -89,6 +89,7 @@ class ValidationHash
      * @param string $hash
      *
      * @return int | false
+     * @since 8.3.0
      */
     public static function getType($hash)
     {
@@ -107,6 +108,7 @@ class ValidationHash
      * @param $hash
      *
      * @return bool
+     * @since 8.3.0
      */
     public static function isValid($hash)
     {

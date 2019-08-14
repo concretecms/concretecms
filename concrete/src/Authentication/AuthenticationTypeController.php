@@ -57,6 +57,7 @@ abstract class AuthenticationTypeController extends Controller implements Logger
 
     /**
      * @return string
+     * @since 5.7.1
      */
     abstract public function getHandle();
 }

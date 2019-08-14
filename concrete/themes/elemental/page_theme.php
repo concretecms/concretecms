@@ -122,6 +122,7 @@ class PageTheme extends Theme implements ThemeProviderInterface
 
     /**
      * @return array
+     * @since 5.7.5
      */
     public function getThemeAreaLayoutPresets()
     {

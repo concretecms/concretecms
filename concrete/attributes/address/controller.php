@@ -46,6 +46,9 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         ],
     ];
 
+    /**
+     * @since 8.0.0
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('map-marker');
@@ -65,16 +68,25 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         );
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getControlView(ContextInterface $context)
     {
         return new GroupedView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return AddressValue::class;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getAttributeValueObject()
     {
         return $this->attributeValue ? $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue()) : null;
@@ -121,6 +133,9 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         $v->render(new BasicFormContext());
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValueFromRequest()
     {
         return $this->createAttributeValue($this->post());
@@ -135,6 +150,9 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         && !empty($data['postal_code']);
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function validateValue()
     {
         $v = $this->getAttributeValue()->getValue();
@@ -257,6 +275,9 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         }
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValue($data)
     {
         if ($data instanceof AddressValue) {
@@ -368,6 +389,9 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         $this->set('key', $this->attributeKey);
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeKeySettingsClass()
     {
         return AddressSettings::class;
@@ -377,6 +401,7 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeTextRepresentationHeaders()
+     * @since 8.3.0
      */
     public function getAttributeTextRepresentationHeaders()
     {
@@ -395,6 +420,7 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     * @since 8.3.0
      */
     public function getAttributeValueTextRepresentation()
     {
@@ -415,6 +441,7 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     * @since 8.3.0
      */
     public function updateAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings)
     {

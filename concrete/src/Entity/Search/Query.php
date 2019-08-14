@@ -71,6 +71,7 @@ class Query implements \JsonSerializable
 
     /**
      * @param int
+     * @since 8.2.0
      */
     public function setItemsPerPage($itemsPerPage)
     {
@@ -79,6 +80,7 @@ class Query implements \JsonSerializable
 
     /**
      * @return int
+     * @since 8.2.0
      */
     public function getItemsPerPage()
     {

@@ -67,6 +67,7 @@ class Filesystem
      * @param mixed $folderID
      *
      * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
+     * @since 8.2.0
      */
     public function getFolder($folderID)
     {

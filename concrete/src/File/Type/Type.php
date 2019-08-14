@@ -146,6 +146,7 @@ class Type
      * @param string $value
      *
      * @return static Returns the class instance itself for method chaining
+     * @since 8.0.0
      */
     public function setPackageHandle($value)
     {
@@ -170,6 +171,7 @@ class Type
      * @param int $value
      *
      * @return static Returns the class instance itself for method chaining
+     * @since 8.0.0
      */
     public function setGenericType($value)
     {
@@ -182,6 +184,7 @@ class Type
      * Get the name of the generic category type.
      *
      * @return string
+     * @since 8.0.0
      */
     public function getGenericDisplayType()
     {
@@ -204,6 +207,7 @@ class Type
      * @param string
      *
      * @return static Returns the class instance itself for method chaining
+     * @since 8.0.0
      */
     public function setName($value)
     {
@@ -216,6 +220,7 @@ class Type
      * Get the display name (localized).
      *
      * @return string
+     * @since 8.0.0
      */
     public function getDisplayName()
     {
@@ -240,6 +245,7 @@ class Type
      * @param string $value
      *
      * @return static Returns the class instance itself for method chaining
+     * @since 8.0.0
      */
     public function setExtension($value)
     {
@@ -264,6 +270,7 @@ class Type
      * @param string $value
      *
      * @return static Returns the class instance itself for method chaining
+     * @since 8.0.0
      */
     public function setCustomImporter($value)
     {
@@ -288,6 +295,7 @@ class Type
      * @param string $value
      *
      * @return static Returns the class instance itself for method chaining
+     * @since 8.0.0
      */
     public function setEditor($value)
     {
@@ -312,6 +320,7 @@ class Type
      * @param string $value
      *
      * @return static Returns the class instance itself for method chaining
+     * @since 8.0.0
      */
     public function setView($value)
     {
@@ -382,6 +391,7 @@ class Type
      * Get the list of all the available type IDs.
      *
      * @return int[]
+     * @since 5.7.4
      */
     public static function getTypeList()
     {
@@ -430,6 +440,7 @@ class Type
      * Does the file type support thumbnails.
      *
      * @return bool|null Return true if the type supports thumbnails, null otherwise
+     * @since 8.2.0
      */
     public function supportsThumbnails()
     {
@@ -443,6 +454,7 @@ class Type
      * Is the file type an SVG.
      *
      * @return bool|null Return true if the type is an SVG, null otherwise
+     * @since 8.2.0
      */
     public function isSVG()
     {

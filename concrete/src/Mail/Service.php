@@ -140,6 +140,7 @@ class Service
      *
      * @param Application $app the application instance
      * @param TransportInterface $transport the transport to be used to delivery the messages
+     * @since 5.7.4
      */
     public function __construct(Application $app, TransportInterface $transport)
     {
@@ -205,6 +206,7 @@ class Service
      * - description: the value of the Content-Description header
      * - location: the value of the Content-Location header
      * - language: the value of the Content-Language header
+     * @since 8.3.0
      */
     public function addAttachmentWithHeaders(File $file, array $headers)
     {
@@ -232,6 +234,7 @@ class Service
      * @param string $content The binary data of the attachemt
      * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
      * @param string $mimetype The MIME type of the attachment (it will be the main value of the Content-Type header)
+     * @since 8.2.0
      */
     public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream')
     {
@@ -259,6 +262,7 @@ class Service
      * - description: the value of the Content-Description header
      * - location: the value of the Content-Location header
      * - language: the value of the Content-Language header
+     * @since 8.3.0
      */
     public function addRawAttachmentWithHeaders($content, $filename, array $headers = [])
     {
@@ -504,6 +508,7 @@ class Service
      * @param bool $throwOnFailure
      *
      * @return $this
+     * @since 8.4.1
      */
     public function setIsThrowOnFailure($throwOnFailure)
     {
@@ -516,6 +521,7 @@ class Service
      * Should an exception be thrown if the delivery fails (if false, the sendMail() method will simply return false on failure).
      *
      * @return bool
+     * @since 8.4.1
      */
     public function isThrowOnFailure()
     {
@@ -526,6 +532,7 @@ class Service
      * Set additional message headers.
      *
      * @param array $headers
+     * @since 5.7.5
      */
     public function setAdditionalHeaders($headers)
     {
@@ -735,6 +742,7 @@ class Service
      * Get the MIME part for the plain text body (if available).
      *
      * @return MimePart|null
+     * @since 8.3.0
      */
     protected function buildTextPart()
     {
@@ -756,6 +764,7 @@ class Service
      * @param MimePart $attachment
      *
      * @return bool
+     * @since 8.3.0
      */
     protected function isInlineAttachment(MimePart $attachment)
     {
@@ -769,6 +778,7 @@ class Service
      * Get the MIME part for the plain text body (if available).
      *
      * @return MimePart|null
+     * @since 8.3.0
      */
     protected function buildHtmlPart()
     {

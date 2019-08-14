@@ -39,6 +39,9 @@ class OwnedEntityForm implements FormInterface
         return $this->form->getId();
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getControlView(ContextInterface $context)
     {
         return $this->form->getControlView($context);

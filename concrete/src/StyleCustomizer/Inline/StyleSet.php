@@ -76,6 +76,7 @@ class StyleSet
      * return \Concrete\Core\StyleCustomizer\Inline\StyleSet|null.
      *
      * @param Request $request
+     * @since 5.7.4.2
      */
     public static function populateFromRequest(Request $request)
     {

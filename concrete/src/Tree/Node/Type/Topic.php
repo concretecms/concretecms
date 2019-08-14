@@ -22,16 +22,25 @@ class Topic extends TreeNode
         return 'topic_tree_node';
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getTreeNodeTranslationContext()
     {
         return 'TopicName';
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getTreeNodeTypeName()
     {
         return 'Topic';
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getTreeNodeMenu()
     {
         return new TopicMenu($this);

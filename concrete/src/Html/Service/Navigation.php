@@ -64,6 +64,9 @@ class Navigation
         return $this->getLinkToCollection($cObj);
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getLogInOutLink()
     {
         if (!id(new User())->isLoggedIn()) {

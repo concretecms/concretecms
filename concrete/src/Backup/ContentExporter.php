@@ -53,6 +53,7 @@ class ContentExporter
 
     /**
      * @deprecated
+     * @since 5.7.4
      */
     public function exportAll()
     {

@@ -56,6 +56,9 @@ class LogList extends DatabaseItemList
         }
     }
 
+    /**
+     * @since 8.5.1
+     */
     public function filterByTime($time, $comparison = '=')
     {
         $db = Database::get();

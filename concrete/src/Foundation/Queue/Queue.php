@@ -11,6 +11,7 @@ class Queue extends Facade
 {
     /**
      * @return string
+     * @since 8.3.0
      */
     public static function getFacadeAccessor()
     {

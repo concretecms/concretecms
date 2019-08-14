@@ -45,6 +45,9 @@ EOT
         );
     }
 
+    /**
+     * @since 8.5.0
+     */
     public function handle(Repository $config, Filesystem $filesystem)
     {
         $repository = $this->getRepository($config, $filesystem);
@@ -145,6 +148,7 @@ EOT
      *
      * @param $repository
      * @param $item
+     * @since 8.5.0
      */
     private function doGetAction($repository, $item)
     {
@@ -156,6 +160,7 @@ EOT
      *
      * @param Repository $repository
      * @param string $item
+     * @since 8.5.0
      */
     private function doSetAction(Repository $repository, $item)
     {
@@ -171,6 +176,7 @@ EOT
      * @param \Concrete\Core\Config\Repository\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      * @return \Concrete\Core\Config\Repository\Repository
+     * @since 8.5.0
      */
     private function getRepository(Repository $config, Filesystem $filesystem)
     {

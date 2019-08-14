@@ -11,6 +11,9 @@ abstract class Block extends Page
     protected $area;
     protected $block;
 
+    /**
+     * @since 8.0.0
+     */
     protected function getEditResponse($b, $e = null)
     {
         $pr = new \Concrete\Core\Page\EditResponse();
@@ -70,6 +73,9 @@ abstract class Block extends Page
         throw new UserMessageException(t('Access Denied'));
     }
 
+    /**
+     * @since 5.7.1
+     */
     protected function getBlockToEdit()
     {
         $ax = $this->area;

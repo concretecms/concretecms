@@ -75,6 +75,9 @@ class Category extends ConcreteObject
         return PackageList::getHandle($this->pkgID);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getWorkflowProgressCategoryClass()
     {
         $className = '\\Core\\Workflow\\Progress\\' . Loader::helper('text')->camelcase($this->wpCategoryHandle) . 'Progress';

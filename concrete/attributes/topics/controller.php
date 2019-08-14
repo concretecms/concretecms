@@ -39,11 +39,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      */
     private $akTopicAllowMultipleValues = true;
 
+    /**
+     * @since 8.0.0
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('tag');
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return TopicsValue::class;
@@ -152,6 +158,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->entityManager->flush();
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValue($nodes)
     {
         $selected = [];
@@ -286,6 +295,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->set('attributeKey', $this->attributeKey);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValueFromRequest()
     {
         $sh = Core::make('helper/security');
@@ -349,6 +361,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $e;
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function validateValue()
     {
         $val = $this->getAttributeValue()->getValue();
@@ -370,6 +385,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $this->akTopicParentNodeID;
     }
 
+    /**
+     * @since 5.7.4
+     */
     public function getTopicTreeID()
     {
         $this->load();
@@ -377,6 +395,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $this->akTopicTreeID;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function allowMultipleValues()
     {
         $this->load();
@@ -401,6 +422,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         );
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeKeySettingsClass()
     {
         return TopicsSettings::class;
@@ -410,6 +434,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     * @since 8.3.0
      */
     public function getAttributeValueTextRepresentation()
     {
@@ -434,6 +459,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     * @since 8.3.0
      */
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {

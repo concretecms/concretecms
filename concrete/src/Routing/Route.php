@@ -32,6 +32,7 @@ class Route extends SymfonyRoute
 
     /**
      * @return bool
+     * @since 8.5.0
      */
     public function hasCustomName()
     {
@@ -40,6 +41,7 @@ class Route extends SymfonyRoute
 
     /**
      * @return mixed
+     * @since 8.5.0
      */
     public function getAction()
     {
@@ -48,6 +50,7 @@ class Route extends SymfonyRoute
 
     /**
      * @param mixed $action
+     * @since 8.5.0
      */
     public function setAction($action)
     {
@@ -56,6 +59,7 @@ class Route extends SymfonyRoute
 
     /**
      * @return mixed
+     * @since 8.5.0
      */
     public function getName()
     {
@@ -71,6 +75,7 @@ class Route extends SymfonyRoute
      * collection you will want to use $route->updateName($name, $router)
      * instead
      * @param $name
+     * @since 8.5.0
      */
     public function setCustomName($name)
     {
@@ -79,6 +84,7 @@ class Route extends SymfonyRoute
 
     /**
      * @param mixed $name
+     * @since 8.5.0
      */
     public function updateName($name, Router $router)
     {
@@ -87,6 +93,9 @@ class Route extends SymfonyRoute
         $router->getRoutes()->add($name, $this);
     }
 
+    /**
+     * @since 8.5.0
+     */
     private function getGeneratedName()
     {
         $methods = $this->getMethods();
@@ -108,6 +117,7 @@ class Route extends SymfonyRoute
      * Adds middleware to the route.
      * 
      * @param RouteMiddleware $middleware
+     * @since 8.5.0
      */
     public function addMiddleware(RouteMiddleware $middleware)
     {
@@ -116,6 +126,7 @@ class Route extends SymfonyRoute
 
     /**
      * @return RouteMiddleware[]
+     * @since 8.5.0
      */
     public function getMiddlewares()
     {
@@ -127,6 +138,7 @@ class Route extends SymfonyRoute
      * OAuth2 request.
      * 
      * @param string $scope
+     * @since 8.5.2
      */
     public function setScopes($scope)
     {

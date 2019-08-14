@@ -15,6 +15,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 {
     protected $searchIndexFieldDefinition = ['type' => 'boolean', 'options' => ['default' => 0, 'notnull' => false]];
 
+    /**
+     * @since 8.0.0
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('check-square');
@@ -27,6 +30,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $list;
     }
 
+    /**
+     * @since 5.7.0 (but not in 8.0.0 8.0.1 8.0.2 8.0.3 8.1.0 8.2.0)
+     */
     public function search()
     {
         $f = $this->app->make('helper/form');
@@ -59,6 +65,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $cnode;
     }
 
+    /**
+     * @since 8.2.0
+     */
     public function getCheckboxLabel()
     {
         if ($this->akCheckboxLabel) {
@@ -117,6 +126,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     }
 
     // run when we call setAttribute(), instead of saving through the UI
+/**
+ * @since 8.0.0
+ */
     public function createAttributeValue($value)
     {
         $v = new BooleanValue();
@@ -130,6 +142,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see AttributeTypeController::createDefaultAttributeValue()
+     * @since 8.2.0
      */
     public function createDefaultAttributeValue()
     {
@@ -138,6 +151,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $this->createAttributeValue($this->akCheckedByDefault ? true : false);
     }
 
+    /**
+     * @since 5.7.4.2
+     */
     public function validateValue()
     {
         $v = $this->getAttributeValue()->getValue();
@@ -145,6 +161,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $v == 1;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function getSearchIndexValue()
     {
         return $this->attributeValue->getValue() ? 1 : 0;
@@ -165,11 +184,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $type;
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeValueClass()
     {
         return BooleanValue::class;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -183,6 +208,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return isset($data['value']) && $data['value'] == 1;
     }
 
+    /**
+     * @since 8.0.3
+     */
     public function getAttributeKeySettingsClass()
     {
         return BooleanSettings::class;
@@ -192,6 +220,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     * @since 8.3.0
      */
     public function getAttributeValueTextRepresentation()
     {
@@ -209,6 +238,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     * @since 8.3.0
      */
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {

@@ -160,6 +160,9 @@ class GroupSet extends ConcreteObject
         $db->Execute('delete from GroupSetGroups where gsID = ? and gID = ?', array($this->getGroupSetID(), $g->getGroupID()));
     }
 
+    /**
+     * @since 5.7.3
+     */
     public static function exportTranslations()
     {
         $translations = new Translations();

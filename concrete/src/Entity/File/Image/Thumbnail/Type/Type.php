@@ -167,6 +167,7 @@ class Type
 
     /**
      * Initialize the instance.
+     * @since 8.4.0
      */
     public function __construct()
     {
@@ -318,6 +319,7 @@ class Type
      * Set the thumbnail sizing mode.
      *
      * @param string $ftTypeSizingMode one of the Type::RESIZE_... constants
+     * @since 8.2.0
      */
     public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
     {
@@ -328,6 +330,7 @@ class Type
      * Get the thumbnail sizing mode.
      *
      * @return string One of the Type::RESIZE_... constants.
+     * @since 8.2.0
      */
     public function getSizingMode()
     {
@@ -338,6 +341,7 @@ class Type
      * Upscaling is enabled?
      *
      * @return bool
+     * @since 8.4.1
      */
     public function isUpscalingEnabled()
     {
@@ -348,6 +352,7 @@ class Type
      * Upscaling is enabled?
      *
      * @param bool $value
+     * @since 8.4.1
      */
     public function setIsUpscalingEnabled($value)
     {
@@ -358,6 +363,7 @@ class Type
      * Get the display name of the thumbnail sizing mode.
      *
      * @return string
+     * @since 8.2.0
      */
     public function getSizingModeDisplayName()
     {
@@ -375,6 +381,7 @@ class Type
      * @param bool $value
      *
      * @return $this
+     * @since 8.4.0
      */
     public function setLimitedToFileSets($value)
     {
@@ -387,6 +394,7 @@ class Type
      * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
      *
      * @return bool
+     * @since 8.4.0
      */
     public function isLimitedToFileSets()
     {
@@ -397,6 +405,7 @@ class Type
      * Get the associated file sets (whose meaning depends on the value of ftLimitedToFileSets).
      *
      * @return ArrayCollection|TypeFileSet[]
+     * @since 8.4.0
      */
     public function getAssociatedFileSets()
     {
@@ -409,6 +418,7 @@ class Type
      * @param bool $value
      *
      * @return $this
+     * @since 8.5.0
      */
     public function setKeepAnimations($value)
     {
@@ -421,6 +431,7 @@ class Type
      * Should we create animated thumbnails for animated images?
      *
      * @return bool
+     * @since 8.5.0
      */
     public function isKeepAnimations()
     {
@@ -433,6 +444,7 @@ class Type
      * @param string $color
      *
      * @return $this
+     * @since 8.5.2
      */
     public function setSaveAreaBackgroundColor($color)
     {
@@ -445,6 +457,7 @@ class Type
      * Background color of the Image Editor save area
      *
      * @return string
+     * @since 8.5.2
      */
     public function getSaveAreaBackgroundColor()
     {
@@ -495,6 +508,7 @@ class Type
      * @param bool $doubled
      *
      * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
+     * @since 8.4.0
      */
     private function getVersion($doubled)
     {

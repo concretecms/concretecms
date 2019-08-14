@@ -44,6 +44,7 @@ class UserServiceProvider extends ServiceProvider
      * Bind things to the container
      *
      * @param \Concrete\Core\Application\Application $app
+     * @since 8.5.0
      */
     protected function bindContainer(Application $app)
     {
@@ -71,6 +72,9 @@ class UserServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * @since 8.5.0
+     */
     protected function bindEvents(EventDispatcherInterface $dispatcher, $subscribers)
     {
 
@@ -95,6 +99,7 @@ class UserServiceProvider extends ServiceProvider
      * @param \Concrete\Core\User\Notification\UserNotificationEventHandler $service
      *
      * @internal
+     * @since 8.5.0
      */
     public function handleEvent(Event $event, UserNotificationEventHandler $service)
     {

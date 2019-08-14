@@ -140,6 +140,7 @@ class DefaultDispatcher implements DispatcherInterface
      * @param string $path
      *
      * @return \Symfony\Component\Routing\RouteCollection
+     * @since 8.4.1
      */
     private function filterRouteCollectionForPath(RouteCollection $routes, $path)
     {

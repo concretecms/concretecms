@@ -32,6 +32,9 @@ class Controller extends BlockController
         return t("Feature");
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function getLinkURL()
     {
         if (!empty($this->externalLink)) {
@@ -49,16 +52,25 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @since 5.7.5.4
+     */
     public function getParagraph()
     {
         return LinkAbstractor::translateFrom($this->paragraph);
     }
 
+    /**
+     * @since 5.7.5.7
+     */
     public function getParagraphEditMode()
     {
         return LinkAbstractor::translateFromEditMode($this->paragraph);
     }
 
+    /**
+     * @since 5.7.0.3
+     */
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('css', 'font-awesome');
@@ -75,6 +87,9 @@ class Controller extends BlockController
         $this->edit();
     }
 
+    /**
+     * @since 5.7.2.1
+     */
     public function view()
     {
         $this->set('paragraph', LinkAbstractor::translateFrom($this->paragraph));

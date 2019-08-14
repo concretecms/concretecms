@@ -48,6 +48,9 @@ class FieldsetBuilder
         return $this;
     }
 
+    /**
+     * @since 8.2.1
+     */
     public function addAssociationControl($target_property_name)
     {
         $control = new FieldsetBuilderAssociationControl($target_property_name);

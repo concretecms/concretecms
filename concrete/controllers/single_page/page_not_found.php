@@ -13,6 +13,9 @@ class PageNotFound extends PageController
         return true;
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function view()
     {
         $view = $this->getViewObject();
@@ -23,6 +26,9 @@ class PageNotFound extends PageController
         return new Response($contents, 404);
     }
 
+    /**
+     * @since 8.0.0
+     */
     public function __call($method, $arguments)
     {
         if (method_exists($this, $method)) {
