@@ -13,6 +13,7 @@ class Type
      * Thumbnail sizing mode: proportional.
      *
      * @var string
+     * @since 8.2.0
      */
     const RESIZE_PROPORTIONAL = ThumbnailTypeEntity::RESIZE_PROPORTIONAL;
 
@@ -20,6 +21,7 @@ class Type
      * Thumbnail sizing mode: exact dimensions.
      *
      * @var string
+     * @since 8.2.0
      */
     const RESIZE_EXACT = ThumbnailTypeEntity::RESIZE_EXACT;
 
@@ -27,6 +29,7 @@ class Type
      * Default thumbnail sizing mode.
      *
      * @var string
+     * @since 8.2.0
      */
     const RESIZE_DEFAULT = ThumbnailTypeEntity::RESIZE_DEFAULT;
 

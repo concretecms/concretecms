@@ -23,7 +23,13 @@ class Stack extends Page
     const ST_TYPE_USER_ADDED = 0;
     const ST_TYPE_GLOBAL_AREA = 20;
 
+    /**
+     * @since 5.7.5
+     */
     const MULTILINGUAL_CONTENT_SOURCE_CURRENT = 100; // in multilingual sites, loads based on current page's locale
+/**
+ * @since 5.7.5
+ */
     const MULTILINGUAL_CONTENT_SOURCE_DEFAULT = 200; // in multilingual sites, loads based on default locale (ignores current)
 
     /**

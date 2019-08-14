@@ -3,16 +3,46 @@ namespace Concrete\Core\Validation\BannedWord;
 
 class Service
 {
+    /**
+     * @since 5.7.5
+     */
     const CASE_FIRST_LOWER = 0;
+    /**
+     * @since 5.7.5
+     */
     const CASE_FIRST_UPPER = 1;
+    /**
+     * @since 5.7.5
+     */
     const CASE_HAS_LOWER = 2;
+    /**
+     * @since 5.7.5
+     */
     const CASE_HAS_UPPER = 4;
+    /**
+     * @since 5.7.5
+     */
     const CASE_HAS_NONALPH = 8;
+    /**
+     * @since 5.7.5
+     */
     const CASE_MIXED = 6;
 
+    /**
+     * @since 5.7.5
+     */
     const TRUNCATE_CHARS = '';
+    /**
+     * @since 5.7.5
+     */
     const TRUNCATE_WORDS = '\s+';
+    /**
+     * @since 5.7.5
+     */
     const TRUNCATE_SENTS = '[!.?]\s+';
+    /**
+     * @since 5.7.5
+     */
     const TRUNCATE_PARS = '\n{2,}';
 
     public $bannedWords;

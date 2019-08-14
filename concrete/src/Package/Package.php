@@ -93,6 +93,7 @@ abstract class Package implements LocalizablePackageInterface
      * Error code: This package contains the active site theme, please change the theme before uninstalling.
      *
      * @var int
+     * @since 5.7.5
      */
     const E_PACKAGE_THEME_ACTIVE = 21;
 

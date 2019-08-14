@@ -6,9 +6,21 @@ use Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet;
 
 abstract class GridFramework
 {
+    /**
+     * @since 5.7.5
+     */
     const DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL = 10;
+    /**
+     * @since 5.7.5
+     */
     const DEVICE_CLASSES_HIDE_ON_SMALL = 20;
+    /**
+     * @since 5.7.5
+     */
     const DEVICE_CLASSES_HIDE_ON_MEDIUM = 30;
+    /**
+     * @since 5.7.5
+     */
     const DEVICE_CLASSES_HIDE_ON_LARGE = 40;
 
     public function getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()

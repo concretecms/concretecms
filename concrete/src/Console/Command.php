@@ -152,6 +152,7 @@ abstract class Command extends SymfonyCommand
      * The name of the CLI option that allows running CLI commands as root without confirmation.
      *
      * @var string
+     * @since 8.4.0
      */
     const ALLOWASROOT_OPTION = 'allow-as-root';
 
@@ -159,6 +160,7 @@ abstract class Command extends SymfonyCommand
      * The name of the environment variable that allows running CLI commands as root without confirmation.
      *
      * @var string
+     * @since 8.4.0
      */
     const ALLOWASROOT_ENV = 'C5_CLI_ALLOW_AS_ROOT';
 

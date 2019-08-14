@@ -15,6 +15,7 @@ class AddBlockToAreaAreaKey extends AreaKey
      * Operation identifier: adding a new block to the area.
      *
      * @var string
+     * @since 8.5.2
      */
     const OPERATION_NEWBLOCK = 'new-block';
     
@@ -22,6 +23,7 @@ class AddBlockToAreaAreaKey extends AreaKey
      * Operation identifier: moving an existing block from another area.
      *
      * @var string
+     * @since 8.5.2
      */
     const OPERATION_EXISTINGBLOCK = 'existing-block';
 

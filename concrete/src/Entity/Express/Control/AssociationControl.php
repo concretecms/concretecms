@@ -14,7 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AssociationControl extends Control
 {
+    /**
+     * @since 8.5.0
+     */
     const TYPE_HTML_INPUT = 0;
+    /**
+     * @since 8.5.0
+     */
     const TYPE_ENTRY_SELECTOR = 5;
 
     /**

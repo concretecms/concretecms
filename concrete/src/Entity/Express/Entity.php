@@ -21,6 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
 
+    /**
+     * @since 8.4.1
+     */
     const DEFAULT_ITEMS_PER_PAGE = 10;
 
     use PackageTrait;

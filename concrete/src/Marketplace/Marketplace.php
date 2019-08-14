@@ -23,6 +23,9 @@ class Marketplace implements ApplicationAwareInterface
     const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
     const E_UNRECOGNIZED_SITE_TOKEN = 22;
     const E_DELETED_SITE_TOKEN = 31;
+    /**
+     * @since 8.4.1
+     */
     const E_CONNECTION_TIMEOUT = 41;
     const E_GENERAL_CONNECTION_ERROR = 99;
 

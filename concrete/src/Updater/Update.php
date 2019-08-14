@@ -22,6 +22,7 @@ class Update
      * Key of the mutex to be used when performing core upgrades.
      *
      * @var string
+     * @since 8.4.0
      */
     const MUTEX_KEY = 'core_system_upgrade';
 

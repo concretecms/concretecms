@@ -55,6 +55,7 @@ class Importer
      * Standard PHP error: missing a temporary folder.
      *
      * @var int
+     * @since 8.4.0
      */
     const E_PHP_NO_TMP_DIR = UPLOAD_ERR_NO_TMP_DIR;
 
@@ -62,6 +63,7 @@ class Importer
      * Standard PHP error: failed to write file to disk.
      *
      * @var int
+     * @since 8.4.0
      */
     const E_PHP_CANT_WRITE = UPLOAD_ERR_CANT_WRITE;
 
@@ -69,6 +71,7 @@ class Importer
      * Standard PHP error: a PHP extension stopped the file upload.
      *
      * @var int
+     * @since 8.4.0
      */
     const E_PHP_EXTENSION = UPLOAD_ERR_EXTENSION;
 
@@ -104,6 +107,7 @@ class Importer
      * concrete5 internal error: unable to copy file to storage location (with provided prefix).
      *
      * @var int
+     * @since 8.3.1
      */
     const E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED = 14;
 
@@ -111,6 +115,7 @@ class Importer
      * concrete5 internal error: Uploaded file is too large.
      *
      * @var int
+     * @since 5.7.4
      */
     const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = 20;
 

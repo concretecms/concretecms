@@ -14,6 +14,7 @@ class Configuration extends DoctrineMigrationConfiguration
      * Forced initial migration: inclusive.
      *
      * @var string
+     * @since 8.4.0
      */
     const FORCEDMIGRATION_INCLUSIVE = '>=';
 
@@ -21,6 +22,7 @@ class Configuration extends DoctrineMigrationConfiguration
      * Forced initial migration: exclusive.
      *
      * @var string
+     * @since 8.4.0
      */
     const FORCEDMIGRATION_EXCLUSIVE = '>';
 

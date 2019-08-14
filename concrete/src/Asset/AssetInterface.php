@@ -12,6 +12,7 @@ interface AssetInterface
      * Asset position: in the <head> tag.
      *
      * @var string
+     * @since 8.3.2
      */
     const ASSET_POSITION_HEADER = 'H';
 
@@ -19,6 +20,7 @@ interface AssetInterface
      * Asset position: at the end of the <body> tag.
      *
      * @var string
+     * @since 8.3.2
      */
     const ASSET_POSITION_FOOTER = 'F';
 
@@ -26,6 +28,7 @@ interface AssetInterface
      * Output asset type: CSS.
      *
      * @var string
+     * @since 8.3.2
      */
     const OUTPUTASSETTYPE_CSS = 'javascript';
 
@@ -33,6 +36,7 @@ interface AssetInterface
      * Output asset type: JavaScript.
      *
      * @var string
+     * @since 8.3.2
      */
     const OUTPUTASSETTYPE_JAVASCRIPT = 'javascript';
 
@@ -40,6 +44,7 @@ interface AssetInterface
      * QueryString parameter to avoid browser cache problems.
      *
      * @var string
+     * @since 8.5.0
      */
     const OUTPUT_NOCACHE_PARAM = 'ccm_nocache';
 

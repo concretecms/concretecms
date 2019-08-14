@@ -9,8 +9,17 @@ use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
 class Conversation extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
+    /**
+     * @since 5.7.3
+     */
     const POSTING_ENABLED = 10;
+    /**
+     * @since 5.7.3
+     */
     const POSTING_DISABLED_MANUALLY = 5;
+    /**
+     * @since 5.7.3
+     */
     const POSTING_DISABLED_PERMISSIONS = 3;
 
     protected $page;

@@ -31,18 +31,21 @@ class InstallCommand extends Command
     /**
      * @var int
      * @access private
+     * @since 8.4.0
      */
     const OPTIONPRECONDITIONS_ERROR = 1;
 
     /**
      * @var int
      * @access private
+     * @since 8.4.0
      */
     const OPTIONPRECONDITIONS_WARNINGS = 2;
 
     /**
      * @var int
      * @access private
+     * @since 8.4.0
      */
     const OPTIONPRECONDITIONS_SUCCESS = 3;
 

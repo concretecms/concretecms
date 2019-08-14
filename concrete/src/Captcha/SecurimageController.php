@@ -17,6 +17,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * The default ID of the input field.
      *
      * @var string
+     * @since 8.3.0
      */
     const DEFAULT_INPUT_ID = 'ccm-captcha-code';
 
@@ -24,6 +25,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * The default name of the input field.
      *
      * @var string
+     * @since 8.3.0
      */
     const DEFAULT_INPUT_NAME = 'ccmCaptchaCode';
 

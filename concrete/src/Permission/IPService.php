@@ -27,6 +27,7 @@ class IPService implements LoggerAwareInterface
      * Bit mask for blacklist ranges.
      *
      * @var int
+     * @since 8.2.0
      */
     const IPRANGEFLAG_BLACKLIST = 0x0001;
 
@@ -34,6 +35,7 @@ class IPService implements LoggerAwareInterface
      * Bit mask for whitelist ranges.
      *
      * @var int
+     * @since 8.2.0
      */
     const IPRANGEFLAG_WHITELIST = 0x0002;
 
@@ -41,6 +43,7 @@ class IPService implements LoggerAwareInterface
      * Bit mask for manually generated ranges.
      *
      * @var int
+     * @since 8.2.0
      */
     const IPRANGEFLAG_MANUAL = 0x0010;
 
@@ -48,6 +51,7 @@ class IPService implements LoggerAwareInterface
      * Bit mask for automatically generated ranges.
      *
      * @var int
+     * @since 8.2.0
      */
     const IPRANGEFLAG_AUTOMATIC = 0x0020;
 
@@ -55,6 +59,7 @@ class IPService implements LoggerAwareInterface
      * IP range type: manually added to the blacklist.
      *
      * @var int
+     * @since 8.2.0
      */
     const IPRANGETYPE_BLACKLIST_MANUAL = 0x0011; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_MANUAL
 
@@ -62,6 +67,7 @@ class IPService implements LoggerAwareInterface
      * IP range type: automatically added to the blacklist.
      *
      * @var int
+     * @since 8.2.0
      */
     const IPRANGETYPE_BLACKLIST_AUTOMATIC = 0x0021; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_AUTOMATIC
 
@@ -69,6 +75,7 @@ class IPService implements LoggerAwareInterface
      * IP range type: manually added to the whitelist.
      *
      * @var int
+     * @since 8.2.0
      */
     const IPRANGETYPE_WHITELIST_MANUAL = 0x0012; // IPRANGEFLAG_WHITELIST | IPRANGEFLAG_MANUAL
 

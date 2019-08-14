@@ -21,6 +21,7 @@ class Type
      * Thumbnail sizing mode: proportional.
      *
      * @var string
+     * @since 8.2.0
      */
     const RESIZE_PROPORTIONAL = 'proportional';
 
@@ -28,6 +29,7 @@ class Type
      * Thumbnail sizing mode: exact dimensions.
      *
      * @var string
+     * @since 8.2.0
      */
     const RESIZE_EXACT = 'exact';
 
@@ -35,6 +37,7 @@ class Type
      * Default thumbnail sizing mode.
      *
      * @var string
+     * @since 8.2.0
      */
     const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
 
@@ -42,6 +45,7 @@ class Type
      * Suffix for high DPI thumbnails (eg. Retina).
      *
      * @var string
+     * @since 8.4.0
      */
     const HIGHDPI_SUFFIX = '_2x';
 

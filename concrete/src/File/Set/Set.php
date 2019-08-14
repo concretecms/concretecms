@@ -32,6 +32,9 @@ class Set
     const TYPE_PUBLIC = 1;
     const TYPE_STARRED = 2;
     const TYPE_SAVED_SEARCH = 3;
+    /**
+     * @since 5.7.1
+     */
     const GLOBAL_FILESET_USER_ID = 0;
 
     protected $fileSetFiles;

@@ -23,10 +23,22 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
+    /**
+     * @since 8.0.0
+     */
     const PAGE_VERSION_RECENT_UNAPPROVED = 3;
+    /**
+     * @since 8.5.0
+     */
     const PAGE_VERSION_SCHEDULED = 4;
 
+    /**
+     * @since 8.2.0
+     */
     const SITE_TREE_CURRENT = -1;
+    /**
+     * @since 8.2.0
+     */
     const SITE_TREE_ALL = 0;
 
     public function getPagerManager()

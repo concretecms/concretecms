@@ -17,6 +17,7 @@ class Localization
      * The "base" locale identifier.
      *
      * @var string
+     * @since 8.0.0
      */
     const BASE_LOCALE = 'en_US';
 
@@ -27,6 +28,7 @@ class Localization
      * Generally, these are the strings that concrete5 saves in the database, such as package, theme and block type names/descriptions.
      *
      * @var string
+     * @since 8.2.0
      */
     const CONTEXT_SYSTEM = 'system';
 
@@ -39,6 +41,7 @@ class Localization
      * The editor also sees these strings in the same language as the visitor.
      *
      * @var string
+     * @since 8.2.0
      */
     const CONTEXT_SITE = 'site';
 
@@ -47,6 +50,7 @@ class Localization
      * This should be the context used when showing the edit dialogs, the concrete5 menus...
      *
      * @var string
+     * @since 8.2.0
      */
     const CONTEXT_UI = 'ui';
 

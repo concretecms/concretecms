@@ -15,6 +15,9 @@ use ZendQueue\Queue as ZendQueue;
 class IndexSearchAll extends QueueableJob
 {
     // A flag for clearing the index
+/**
+ * @since 8.1.0
+ */
     const CLEAR = '-1';
 
     public $jQueueBatchSize = 50;

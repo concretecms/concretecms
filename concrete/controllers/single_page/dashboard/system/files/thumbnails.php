@@ -12,10 +12,19 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Thumbnails extends DashboardPageController
 {
+    /**
+     * @since 8.4.0
+     */
     const FILESETOPTION_ALL = 'all';
 
+    /**
+     * @since 8.4.0
+     */
     const FILESETOPTION_ALL_EXCEPT = 'except';
 
+    /**
+     * @since 8.4.0
+     */
     const FILESETOPTION_ONLY = 'only';
 
     /**

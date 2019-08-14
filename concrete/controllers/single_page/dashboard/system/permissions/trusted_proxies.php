@@ -15,26 +15,31 @@ class TrustedProxies extends DashboardPageController
 {
     /**
      * @var string
+     * @since 8.5.2
      */
     const HEADERNAME_FORWARDED = 'FORWARDED';
 
     /**
      * @var string
+     * @since 8.5.2
      */
     const HEADERNAME_X_FORWARDED_FOR = 'X_FORWARDED_FOR';
 
     /**
      * @var string
+     * @since 8.5.2
      */
     const HEADERNAME_X_FORWARDED_HOST = 'X_FORWARDED_HOST';
 
     /**
      * @var string
+     * @since 8.5.2
      */
     const HEADERNAME_X_FORWARDED_PROTO = 'X_FORWARDED_PROTO';
 
     /**
      * @var string
+     * @since 8.5.2
      */
     const HEADERNAME_X_FORWARDED_PORT = 'X_FORWARDED_PORT';
 

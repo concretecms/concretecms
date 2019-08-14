@@ -20,6 +20,7 @@ class Token
      * The default name of the token parameters.
      *
      * @var string
+     * @since 8.2.0
      */
     const DEFAULT_TOKEN_NAME = 'ccm_token';
 

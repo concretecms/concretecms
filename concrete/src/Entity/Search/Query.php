@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Query implements \JsonSerializable
 {
+    /**
+     * @since 8.2.0
+     */
     const MAX_ITEMS_PER_PAGE = 10;
 
     /**

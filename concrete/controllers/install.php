@@ -30,6 +30,7 @@ class Install extends Controller
      * Install step: choose locale.
      *
      * @var int
+     * @since 8.4.0
      */
     const STEP_CHOOSELOCALE = 1;
 
@@ -37,6 +38,7 @@ class Install extends Controller
      * Install step: precondition checks.
      *
      * @var int
+     * @since 8.4.0
      */
     const STEP_PRECONDITIONS = 2;
 
@@ -44,6 +46,7 @@ class Install extends Controller
      * Install step: precondition checks.
      *
      * @var int
+     * @since 8.4.0
      */
     const STEP_CONFIGURATION = 3;
 
@@ -51,6 +54,7 @@ class Install extends Controller
      * Install step: installing/installed.
      *
      * @var int
+     * @since 8.4.0
      */
     const STEP_INSTALL = 4;
 
