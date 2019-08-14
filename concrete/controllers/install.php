@@ -69,6 +69,7 @@ class Install extends Controller
      * The installer instance.
      *
      * @var Installer|null
+     * @since 8.3.0
      */
     private $installer = null;
 

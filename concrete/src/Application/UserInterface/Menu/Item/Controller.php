@@ -12,7 +12,9 @@ use HtmlObject\Link;
  */
 class Controller extends AbstractController implements ControllerInterface
 {
-    /** @var ItemInterface */
+    /** @var ItemInterface
+     * @since 5.7.2.1
+     */
     protected $menuItem;
 
     /**

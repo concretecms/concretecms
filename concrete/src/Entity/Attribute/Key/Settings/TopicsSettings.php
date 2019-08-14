@@ -24,6 +24,7 @@ class TopicsSettings extends Settings
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
+     * @since 8.2.0
      */
     protected $akTopicAllowMultipleValues = true;
 

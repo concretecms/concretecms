@@ -15,11 +15,13 @@ class Sitemap
 {
     /**
      * @var \Concrete\Core\Application\Application
+     * @since 8.5.0
      */
     protected $app;
 
     /**
      * @var bool
+     * @since 5.7.5.2
      */
     protected $expandedNodes = [];
 
@@ -30,6 +32,7 @@ class Sitemap
 
     /**
      * @var bool
+     * @since 8.5.0
      */
     protected $isSitemapOverlay = false;
 

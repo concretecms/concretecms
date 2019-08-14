@@ -43,6 +43,7 @@ class Controller extends BlockController
      * block will be re-rendered using the same stale RSS data.
      * 
      * @var int
+     * @since 5.7.5.7
      */
     protected $rssFeedCacheLifetime = 1800;
 

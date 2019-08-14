@@ -39,6 +39,7 @@ class File extends Controller
      * The file to be replaced (if any).
      *
      * @var \Concrete\Core\Entity\File\File|null|false FALSE when uninitialized, NULL when none
+     * @since 8.5.0
      */
     private $fileToBeReplaced = false;
 
@@ -46,6 +47,7 @@ class File extends Controller
      * The destination folder where the uploaded files should be placed.
      *
      * @var \Concrete\Core\Tree\Node\Type\FileFolder|false FALSE when uninitialized
+     * @since 8.5.0
      */
     private $destinationFolder = false;
 
@@ -53,6 +55,7 @@ class File extends Controller
      * The original page to be used when importing files (if any).
      *
      * @var \Concrete\Core\Page\Page|null|false FALSE when uninitialized, NULL when none
+     * @since 8.5.0
      */
     private $importOriginalPage = false;
 

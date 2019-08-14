@@ -12,6 +12,9 @@ class Sitemap extends BackendInterfaceController
     protected $viewPath = '/panels/sitemap';
     protected $frequentPageTypes = array();
     protected $otherPageTypes = array();
+    /**
+     * @since 8.0.0
+     */
     protected $site;
 
     public function on_start()

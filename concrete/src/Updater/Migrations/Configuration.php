@@ -30,6 +30,7 @@ class Configuration extends DoctrineMigrationConfiguration
      * Forced initial migration.
      *
      * @var null|\Doctrine\DBAL\Migrations\Version
+     * @since 8.4.0
      */
     protected $forcedInitialMigration = null;
 

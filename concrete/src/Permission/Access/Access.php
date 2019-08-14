@@ -32,6 +32,7 @@ class Access extends ConcreteObject
 
     /**
      * @var \Concrete\Core\Permission\Access\ListItem\ListItem[]|null
+     * @since 5.7.5.9
      */
     protected $listItems;
 

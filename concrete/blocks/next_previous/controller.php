@@ -23,6 +23,7 @@ class Controller extends BlockController
      * The label to go to the previous page.
      *
      * @var string
+     * @since 8.4.2
      */
     public $previousLabel;
 
@@ -30,6 +31,7 @@ class Controller extends BlockController
      * The label to go to the next page.
      *
      * @var string
+     * @since 8.4.2
      */
     public $nextLabel;
 
@@ -37,6 +39,7 @@ class Controller extends BlockController
      * The label of the parent page.
      *
      * @var string
+     * @since 8.4.2
      */
     public $parentLabel;
 
@@ -47,6 +50,7 @@ class Controller extends BlockController
      * 1 = loop (default)
      *
      * @var int
+     * @since 8.4.2
      */
     public $loopSequence;
 
@@ -56,6 +60,7 @@ class Controller extends BlockController
      * @example E.g. <code>display_asc</code>
      *
      * @var string
+     * @since 8.4.2
      */
     public $orderBy;
 

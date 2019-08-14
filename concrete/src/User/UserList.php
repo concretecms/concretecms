@@ -42,7 +42,9 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         return new UserListPagerManager($this);
     }
 
-    /** @var  \Closure | integer | null */
+    /** @var  \Closure | integer | null
+     * @since 8.2.1
+     */
     protected $permissionsChecker;
 
     public function setPermissionsChecker(\Closure $checker = null)
@@ -152,6 +154,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @var UserInfoRepository|null
+     * @since 8.2.0
      */
     private $userInfoRepository = null;
 

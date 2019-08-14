@@ -46,6 +46,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * The collection version object.
      *
      * @var \Concrete\Core\Page\Collection\Version\Version|null
+     * @since 5.7.5.2
      */
     protected $vObj;
 
@@ -53,6 +54,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * The collection handle.
      *
      * @var string|null
+     * @since 5.7.5.2
      */
     protected $cHandle;
 
@@ -62,6 +64,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @var string|null
      *
      * @example 2017-12-31 23:59:59
+     * @since 5.7.5.2
      */
     protected $cDateAdded;
 
@@ -71,6 +74,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @var string|null
      *
      * @example 2017-12-31 23:59:59
+     * @since 5.7.5.2
      */
     protected $cDateModified;
 

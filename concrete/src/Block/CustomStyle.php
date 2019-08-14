@@ -8,6 +8,9 @@ use Core;
 class CustomStyle extends AbstractCustomStyle
 {
     protected $set;
+    /**
+     * @since 5.7.5
+     */
     protected $theme;
 
     public function __construct(StyleSet $set = null, Block $b, $theme = null)

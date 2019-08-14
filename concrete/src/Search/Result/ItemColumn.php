@@ -5,6 +5,9 @@ class ItemColumn
 {
     public $key;
     public $value;
+    /**
+     * @since 8.0.0
+     */
     public $column;
 
     public function getColumnKey()

@@ -13,6 +13,9 @@ class AvatarService implements AvatarServiceInterface
 {
     protected $connection;
     protected $application;
+    /**
+     * @since 8.0.0
+     */
     protected $siteService;
 
     public function __construct(Service $siteService, Application $application, Connection $connection)

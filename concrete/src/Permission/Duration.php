@@ -8,6 +8,9 @@ use Concrete\Core\Http\Request;
 
 class Duration extends AbstractRepetition
 {
+    /**
+     * @since 5.7.5.2
+     */
     protected $pdID;
 
     /**

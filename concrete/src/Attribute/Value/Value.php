@@ -15,6 +15,9 @@ use Loader;
 class Value extends ConcreteObject implements AttributeValueInterface
 {
     protected $attributeType;
+    /**
+     * @since 5.7.4
+     */
     protected $attributeKey;
 
     public function getController()

@@ -17,7 +17,13 @@ class Controller extends DefaultController
         return new FontAwesomeIconFormatter('font');
     }
 
+    /**
+     * @since 8.0.0
+     */
     protected $akTextareaDisplayMode;
+    /**
+     * @since 8.0.0
+     */
     protected $akTextareaDisplayModeCustomOptions;
     public $helpers = array('form');
 

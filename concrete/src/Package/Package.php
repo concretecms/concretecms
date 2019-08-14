@@ -129,6 +129,7 @@ abstract class Package implements LocalizablePackageInterface
      * Associated package entity.
      *
      * @var PackageEntity|null
+     * @since 8.0.0
      */
     protected $entity;
 
@@ -136,6 +137,7 @@ abstract class Package implements LocalizablePackageInterface
      * The Application instance.
      *
      * @var Application
+     * @since 8.0.0
      */
     protected $app;
 
@@ -143,6 +145,7 @@ abstract class Package implements LocalizablePackageInterface
      * The database configuration liaison.
      *
      * @var Liaison|null
+     * @since 5.7.0.3
      */
     protected $config;
 
@@ -150,6 +153,7 @@ abstract class Package implements LocalizablePackageInterface
      * The file configuration liaison.
      *
      * @var Liaison|null
+     * @since 5.7.0.3
      */
     protected $fileConfig;
 
@@ -161,6 +165,7 @@ abstract class Package implements LocalizablePackageInterface
      * This will be ALWAYS considered as FALSE if your package requires 8.0 or greater or if your package defines the pkgAutoloaderMapCoreExtensions property.
      *
      * @var bool
+     * @since 8.0.0
      */
     protected $pkgEnableLegacyNamespace = true;
 
@@ -172,6 +177,7 @@ abstract class Package implements LocalizablePackageInterface
      * @var array
      *
      * @example ['src/PortlandLabs' => \PortlandLabs']
+     * @since 5.7.4
      */
     protected $pkgAutoloaderRegistries = [];
 
@@ -195,6 +201,7 @@ abstract class Package implements LocalizablePackageInterface
      * If it's false, the file thumbnails are generated during the install process.
      *
      * @var bool
+     * @since 5.7.4
      */
     protected $pkgContentProvidesFileThumbnails = false;
 
@@ -202,6 +209,7 @@ abstract class Package implements LocalizablePackageInterface
      * The full path of the package directory moved to the trash folder.
      *
      * @var string|null
+     * @since 5.7.0 (but not in 8.0.0 8.0.1 8.0.2 8.0.3 8.1.0 8.2.0 8.2.1)
      */
     protected $backedUpFname;
 
@@ -226,6 +234,7 @@ abstract class Package implements LocalizablePackageInterface
      *     // This package can't be installed if a package with handle other_package_4 is not installed, or it has a version prior to 2.0, or it has a version after 2.9
      *     'other_package_4' => ['2.0', '2.9'],
      * ]
+     * @since 8.3.0
      */
     protected $packageDependencies = [];
 

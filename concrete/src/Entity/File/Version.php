@@ -275,6 +275,7 @@ class Version implements ObjectInterface
      * The currently loaded Image instance.
      *
      * @var \Imagine\Image\ImageInterface|false|null null: still not loaded; false: load failed; ImageInterface otherwise
+     * @since 8.2.0
      */
     private $imagineImage = null;
 

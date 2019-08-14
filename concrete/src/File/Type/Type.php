@@ -74,6 +74,7 @@ class Type
      * @deprecated Use the getGenericType()/setGenericType()/getGenericDisplayType() methods
      *
      * @var int
+     * @since 8.0.0
      */
     public $type = null;
 
@@ -83,6 +84,7 @@ class Type
      * @deprecated Use the getName()/setName()/getDisplayName() methods
      *
      * @var string
+     * @since 8.0.0
      */
     public $name = '';
 
@@ -92,6 +94,7 @@ class Type
      * @deprecated Use the getExtension()/setExtension() methods
      *
      * @var string
+     * @since 8.0.0
      */
     public $extension = '';
 
@@ -101,6 +104,7 @@ class Type
      * @deprecated Use the getCustomImporter()/setCustomImporter() methods
      *
      * @var string
+     * @since 8.0.0
      */
     public $customImporter = '';
 
@@ -110,6 +114,7 @@ class Type
      * @deprecated Use the getEditor()/setEditor() methods
      *
      * @var string
+     * @since 8.0.0
      */
     public $editor = '';
 
@@ -119,6 +124,7 @@ class Type
      * @deprecated Use the getView()/setView() methods
      *
      * @var string
+     * @since 8.0.0
      */
     public $view = '';
 

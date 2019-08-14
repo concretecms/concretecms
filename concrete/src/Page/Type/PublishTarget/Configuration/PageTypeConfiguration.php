@@ -8,7 +8,13 @@ use PageType;
 class PageTypeConfiguration extends Configuration
 {
     protected $ptID;
+    /**
+     * @since 5.7.5.2
+     */
     protected $selectorFormFactor;
+    /**
+     * @since 5.7.5.4
+     */
     protected $startingPointPage;
 
     public function setPageTypeID($ptID)

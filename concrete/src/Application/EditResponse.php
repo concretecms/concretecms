@@ -38,6 +38,7 @@ class EditResponse implements JsonSerializable
      * @var string|null
      *
      * @deprecated since concrete5 8.5.0a3 (what's deprecated is the "public part") - use setTitle/getTitle
+     * @since 5.7.4
      */
     public $title;
 

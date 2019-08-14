@@ -6,7 +6,13 @@ use Concrete\Core\Page\Type\Type;
 
 class AllConfiguration extends Configuration
 {
+    /**
+     * @since 5.7.5.2
+     */
     protected $selectorFormFactor;
+    /**
+     * @since 5.7.5.4
+     */
     protected $startingPointPageID;
 
     public function canPublishPageTypeBeneathTarget(Type $pagetype, Page $page)

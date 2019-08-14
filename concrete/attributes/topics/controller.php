@@ -22,12 +22,21 @@ use Database;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
+    /**
+     * @since 8.2.0
+     */
     public $akTopicParentNodeID;
+    /**
+     * @since 8.2.0
+     */
     public $akTopicTreeID;
 
     public $helpers = ['form'];
 
     protected $searchIndexFieldDefinition = ['type' => 'text', 'options' => ['default' => null, 'notnull' => false]];
+    /**
+     * @since 8.2.0
+     */
     private $akTopicAllowMultipleValues = true;
 
     public function getIconFormatter()

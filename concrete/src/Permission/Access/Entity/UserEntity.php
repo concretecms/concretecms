@@ -10,6 +10,9 @@ use Concrete\Core\User\UserInfo;
 class UserEntity extends Entity
 {
 
+    /**
+     * @since 5.7.5.7
+     */
     protected $uID;
 
     public static function getAccessEntitiesForUser($user)

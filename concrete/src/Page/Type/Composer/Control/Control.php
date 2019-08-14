@@ -17,11 +17,20 @@ abstract class Control extends ConcreteObject
     protected $ptComposerControlIdentifier;
     protected $ptComposerControlName;
     protected $ptComposerControlIconSRC;
+    /**
+     * @since 8.0.0
+     */
     protected $ptComposerControlIconFormatter;
     protected $ptComposerControl;
     protected $ptComposerControlRequiredByDefault = false;
     protected $ptComposerControlRequiredOnThisRequest = false;
+    /**
+     * @since 5.7.5.7
+     */
     protected $ptComposerControlCustomLabel;
+    /**
+     * @since 5.7.5.7
+     */
     protected $ptComposerControlDescription;
 
     abstract public function getPageTypeComposerControlCustomTemplates();

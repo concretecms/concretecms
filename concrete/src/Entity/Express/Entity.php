@@ -51,6 +51,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @since 8.2.1
      */
     protected $label_mask;
 
@@ -81,6 +82,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     /**
      * @ORM\Column(type="integer")
+     * @since 8.4.1
      */
     protected $items_per_page = 10;
 

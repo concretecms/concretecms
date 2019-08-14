@@ -19,6 +19,9 @@ use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
  */
 class Controller extends BlockController implements FileTrackableInterface
 {
+    /**
+     * @since 8.0.0
+     */
     public $content;
     protected $btTable = 'btContentLocal';
     protected $btInterfaceWidth = 600;
@@ -33,6 +36,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
     /**
      * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
+     * @since 8.0.0
      */
     protected $tracker;
 

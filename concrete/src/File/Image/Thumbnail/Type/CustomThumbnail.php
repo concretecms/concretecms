@@ -13,6 +13,9 @@ class CustomThumbnail extends ThumbnailVersion
 {
 
     protected $path;
+    /**
+     * @since 8.2.0
+     */
     protected $cropped;
 
     /**

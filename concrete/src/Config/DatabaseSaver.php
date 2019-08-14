@@ -8,6 +8,7 @@ class DatabaseSaver implements SaverInterface
 {
     /**
      * @var \Concrete\Core\Database\Connection\Connection
+     * @since 5.7.5.4
      */
     protected $connection;
 

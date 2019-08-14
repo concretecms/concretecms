@@ -51,36 +51,43 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @var AvatarServiceInterface
+     * @since 5.7.5.4
      */
     protected $avatarService;
 
     /**
      * @var Application
+     * @since 5.7.5.4
      */
     protected $application;
 
     /**
      * @var UserCategory
+     * @since 8.0.0
      */
     protected $attributeCategory;
 
     /**
      * @var EntityManagerInterface
+     * @since 8.0.0
      */
     protected $entityManager;
 
     /**
      * @var \Concrete\Core\Database\Connection\Connection
+     * @since 5.7.5.4
      */
     protected $connection;
 
     /**
      * @var UserEntity
+     * @since 8.0.0
      */
     protected $entity;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher|null
+     * @since 8.2.0
      */
     protected $director = null;
 

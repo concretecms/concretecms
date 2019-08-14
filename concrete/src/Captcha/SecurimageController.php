@@ -31,11 +31,13 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
 
     /**
      * @var ResolverManagerInterface
+     * @since 8.3.0
      */
     protected $urlResolver;
 
     /**
      * @var FormService
+     * @since 8.3.0
      */
     protected $formService;
 
@@ -46,16 +48,19 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
 
     /**
      * @var array
+     * @since 8.3.0
      */
     protected $labelAttributes = [];
 
     /**
      * @var array
+     * @since 8.3.0
      */
     protected $pictureAttributes = [];
 
     /**
      * @var array
+     * @since 8.3.0
      */
     protected $inputAttributes = [];
 

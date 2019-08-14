@@ -34,16 +34,24 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     /** @var Repository */
     protected $config;
 
-    /** @var UrlResolverInterface */
+    /** @var UrlResolverInterface
+     * @since 8.2.0
+     */
     protected $urlResolver;
 
-    /** @var RouterInterface */
+    /** @var RouterInterface
+     * @since 8.2.0
+     */
     protected $router;
 
-    /** @var SiteService */
+    /** @var SiteService
+     * @since 8.2.0
+     */
     protected $siteService;
 
-    /** @var EventDispatcherInterface */
+    /** @var EventDispatcherInterface
+     * @since 8.2.0
+     */
     protected $eventDispatcher;
 
     /** @var ServerInterface */

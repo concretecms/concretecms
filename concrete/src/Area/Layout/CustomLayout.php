@@ -12,16 +12,19 @@ class CustomLayout extends Layout
 
     /**
      * @var int
+     * @since 5.7.4
      */
     public $arLayoutSpacing;
 
     /**
      * @var int
+     * @since 5.7.4
      */
     public $arLayoutID;
 
     /**
      * @var bool
+     * @since 5.7.4
      */
     public $arLayoutIsCustom;
 

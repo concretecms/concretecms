@@ -24,6 +24,7 @@ class Zip
      * The FunctionInspector instance to use.
      *
      * @var FunctionInspector
+     * @since 8.2.0
      */
     protected $functionInspector;
 

@@ -16,16 +16,19 @@ class CanonicalUrlResolver implements UrlResolverInterface
 {
     /**
      * @var \Concrete\Core\Http\Request
+     * @since 5.7.5.4
      */
     protected $request;
 
     /**
      * @var \Concrete\Core\Application\Application
+     * @since 5.7.5.4
      */
     protected $app;
 
     /**
      * @var \Concrete\Core\Url\Url
+     * @since 5.7.5.4
      */
     protected $cached;
 

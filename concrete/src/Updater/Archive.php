@@ -17,6 +17,7 @@ class Archive
      * File helper instance.
      *
      * @var \Concrete\Core\File\Service\File
+     * @since 5.7.4
      */
     protected $f;
 

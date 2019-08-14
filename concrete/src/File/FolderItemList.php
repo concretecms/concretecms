@@ -23,7 +23,13 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 class FolderItemList extends AttributedItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;
+    /**
+     * @since 8.3.0
+     */
     protected $searchSubFolders = false;
+    /**
+     * @since 8.2.0
+     */
     protected $permissionsChecker;
 
     protected $autoSortColumns = [

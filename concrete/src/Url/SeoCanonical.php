@@ -39,6 +39,7 @@ class SeoCanonical
      * The list of path arguments to be included in canonical URLs.
      *
      * @var string[]
+     * @since 8.5.2
      */
     protected $pathArguments = [];
 

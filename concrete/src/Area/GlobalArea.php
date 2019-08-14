@@ -14,6 +14,9 @@ use Stack;
 
 class GlobalArea extends Area
 {
+    /**
+     * @since 5.7.5
+     */
     protected $ignoreCurrentMultilingualLanguageSection = false;
 
     /**

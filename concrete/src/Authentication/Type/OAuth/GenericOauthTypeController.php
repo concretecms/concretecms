@@ -36,14 +36,29 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
 
     /* @var string $username */
+    /**
+     * @since 8.4.0
+     */
     protected $username;
     /* @var string $email */
+    /**
+     * @since 8.4.0
+     */
     protected $email;
     /* @var string $firstName */
+    /**
+     * @since 8.4.0
+     */
     protected $firstName;
     /* @var string $lastName */
+    /**
+     * @since 8.4.0
+     */
     protected $lastName;
     /* @var string $fullName */
+    /**
+     * @since 8.4.0
+     */
     protected $fullName;
 
     public function __construct(AuthenticationType $type = null)

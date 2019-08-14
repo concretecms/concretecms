@@ -17,6 +17,9 @@ abstract class Request extends ConcreteObject
     protected $currentWP;
     protected $uID;
     protected $wrStatusNum = 0;
+    /**
+     * @since 8.0.0
+     */
     protected $wrID = null;
 
     public function __construct($pk)

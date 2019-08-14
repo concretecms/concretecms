@@ -36,7 +36,9 @@ class CacheClearer
     /** @var \Illuminate\Filesystem\Filesystem */
     private $filesystem;
 
-    /** @var LoggerInterface */
+    /** @var LoggerInterface
+     * @since 8.3.0
+     */
     private $logger;
 
     /** @var \Concrete\Core\Cache\Level\ObjectCache */
@@ -50,6 +52,7 @@ class CacheClearer
 
     /**
      * @var bool
+     * @since 8.3.1
      */
     private $clearGlobalAreas = true;
 

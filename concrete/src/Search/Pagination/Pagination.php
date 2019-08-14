@@ -12,6 +12,9 @@ class Pagination extends Pagerfanta
     /** @var \Concrete\Core\Search\ItemList\ItemList  */
     protected $list;
 
+    /**
+     * @since 8.2.0
+     */
     protected $baseURL;
 
     /**

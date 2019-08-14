@@ -21,6 +21,7 @@ class DeactivateUsers extends AbstractJob
      * The event dispatcher we use to report that a user is being deactivated
      *
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @since 8.5.0
      */
     protected $dispatcher;
 

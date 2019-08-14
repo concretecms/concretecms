@@ -11,6 +11,9 @@ class Header extends ElementController
     protected $entity;
     protected $page;
     protected $createURL;
+    /**
+     * @since 8.2.0
+     */
     protected $exportURL;
 
     /**

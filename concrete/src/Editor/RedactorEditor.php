@@ -18,6 +18,9 @@ class RedactorEditor implements EditorInterface
     protected $token;
     protected $allowFileManager;
     protected $allowSitemap;
+    /**
+     * @since 5.7.4.2
+     */
     protected $pluginManager;
 
     public function __construct()

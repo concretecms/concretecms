@@ -44,6 +44,7 @@ abstract class AbstractExporter
      * Unload doctrine entities every X ticks (0 for never).
      *
      * @var int
+     * @since 8.5.0
      */
     private $unloadDoctrineEveryTick = 0;
 
@@ -51,6 +52,7 @@ abstract class AbstractExporter
      * Remaining ticks before unloading Doctrine entities.
      *
      * @var int|null
+     * @since 8.5.0
      */
     private $ticksUntilUnload = null;
 

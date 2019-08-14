@@ -42,6 +42,7 @@ class ThumbnailFormatService
 
     /**
      * @var BitmapFormat
+     * @since 8.4.0
      */
     protected $bitmapFormat;
 

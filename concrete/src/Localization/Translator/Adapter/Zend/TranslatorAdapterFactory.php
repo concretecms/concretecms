@@ -21,6 +21,7 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 
     /**
      * @var \Zend\I18n\Translator\LoaderPluginManager|null
+     * @since 8.5.0
      */
     protected $loaderPluginManager;
 

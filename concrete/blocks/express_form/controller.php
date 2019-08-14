@@ -51,9 +51,21 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected $btTable = 'btExpressForm';
     protected $btExportPageColumns = ['redirectCID'];
 
+    /**
+     * @since 8.2.0
+     */
     public $notifyMeOnSubmission;
+    /**
+     * @since 8.2.0
+     */
     public $recipientEmail;
+    /**
+     * @since 8.2.0
+     */
     public $replyToEmailControlID;
+    /**
+     * @since 8.4.4
+     */
     public $storeFormSubmission = 1;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';

@@ -27,6 +27,7 @@ class PhpDocGenerator
      * Insert the variable definitions in the same PHPDoc block?
      *
      * @var string
+     * @since 8.5.2
      */
     protected $singleDocBlock = false;
 

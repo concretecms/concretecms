@@ -14,7 +14,9 @@ use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 class Session
 {
 
-    /** @var Application */
+    /** @var Application
+     * @since 5.7.5.5
+     */
     protected static $app;
 
     /**

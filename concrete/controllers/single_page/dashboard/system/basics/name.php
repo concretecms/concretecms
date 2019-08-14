@@ -11,6 +11,9 @@ use Config;
 class Name extends DashboardSitePageController
 {
 
+    /**
+     * @since 8.0.0
+     */
     protected $service;
 
     public function __construct(\Concrete\Core\Page\Page $c, Service $service)

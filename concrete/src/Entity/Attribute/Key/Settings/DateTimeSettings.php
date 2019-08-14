@@ -12,6 +12,7 @@ class DateTimeSettings extends Settings
 {
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+     * @since 8.2.0
      */
     protected $akUseNowIfEmpty = false;
 
@@ -22,11 +23,13 @@ class DateTimeSettings extends Settings
 
     /**
      * @ORM\Column(type="text", nullable=false, options={"default": "", "comment": "Custom format for text inputs"})
+     * @since 8.3.0
      */
     protected $akTextCustomFormat = '';
 
     /**
      * @ORM\Column(type="integer", nullable=false, options={"default": 60, "unsigned": true, "comment": "Time resolution (in seconds)"})
+     * @since 8.2.0
      */
     protected $akTimeResolution = 60;
 

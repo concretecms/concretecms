@@ -36,6 +36,9 @@ use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty a
 
 class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
+    /**
+     * @since 5.7.1
+     */
     protected $ptDefaultPageTemplateID = 0;
 
     use AssignableObjectTrait;

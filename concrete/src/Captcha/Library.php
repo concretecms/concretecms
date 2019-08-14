@@ -13,6 +13,7 @@ class Library extends ConcreteObject
      * The library handle.
      *
      * @var string
+     * @since 8.0.0
      */
     public $sclHandle;
 
@@ -20,6 +21,7 @@ class Library extends ConcreteObject
      * The library name.
      *
      * @var string
+     * @since 8.0.0
      */
     public $sclName;
 
@@ -27,15 +29,20 @@ class Library extends ConcreteObject
      * Is this the active library?
      *
      * @var bool
+     * @since 8.0.0
      */
     public $sclIsActive;
 
+    /**
+     * @since 8.0.0
+     */
     public $pkgHandle;
 
     /**
      * The package ID (or 0 if it's a core library).
      *
      * @var int
+     * @since 8.0.0
      */
     protected $pkgID;
 

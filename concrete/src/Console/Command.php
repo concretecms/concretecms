@@ -24,10 +24,14 @@ use Throwable;
 abstract class Command extends SymfonyCommand
 {
 
-    /** @var InputInterface */
+    /** @var InputInterface
+     * @since 8.5.0
+     */
     protected $input;
 
-    /** @var \Concrete\Core\Console\OutputStyle */
+    /** @var \Concrete\Core\Console\OutputStyle
+     * @since 8.5.0
+     */
     protected $output;
 
     /** @var string */
@@ -58,6 +62,7 @@ abstract class Command extends SymfonyCommand
      * Option with description: `{--ignore=default : The item to ignore}`
      *
      * @var string
+     * @since 8.5.0
      */
     protected $signature;
 
@@ -173,6 +178,7 @@ abstract class Command extends SymfonyCommand
      * - the console is interactive and the user explicitly confirm the operation.
      *
      * @var bool
+     * @since 8.4.0
      */
     protected $canRunAsRoot = true;
 

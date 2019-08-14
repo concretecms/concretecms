@@ -18,6 +18,7 @@ class BooleanSettings extends Settings
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @since 8.2.0
      */
     protected $checkboxLabel;
 

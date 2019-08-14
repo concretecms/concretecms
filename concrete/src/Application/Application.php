@@ -43,6 +43,9 @@ class Application extends Container
 {
     protected $installed = null;
     protected $environment = null;
+    /**
+     * @since 5.7.5.2
+     */
     protected $packages = [];
 
     /**

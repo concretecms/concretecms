@@ -23,6 +23,7 @@ class SymbolGenerator
      * All the alias namespaces.
      *
      * @var array
+     * @since 8.3.0
      */
     protected $aliasNamespaces = [''];
 

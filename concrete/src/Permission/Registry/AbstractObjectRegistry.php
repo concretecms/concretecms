@@ -10,6 +10,9 @@ abstract class AbstractObjectRegistry implements ObjectRegistryInterface
 {
 
     protected $entries = [];
+    /**
+     * @since 8.2.0
+     */
     protected $entriesToRemove = [];
 
     public function addEntry(EntryInterface $entry)

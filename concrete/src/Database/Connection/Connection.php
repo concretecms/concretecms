@@ -23,6 +23,7 @@ class Connection extends \Doctrine\DBAL\Connection
      * The supported character sets and associated default collation.
      *
      * @var null|array NULL if not yet initialized; an array with keys (character set - always lower case) and values (default collation for the character set - always lower case) otherwise
+     * @since 8.5.0
      */
     protected $supportedCharsets;
 
@@ -30,6 +31,7 @@ class Connection extends \Doctrine\DBAL\Connection
      * The supported collations and the associated character sets.
      *
      * @var null|array NULL if not yet initialized; an array with keys (collation) and values (associated character set) otherwise
+     * @since 8.5.0
      */
     protected $supportedCollations;
 
@@ -37,6 +39,7 @@ class Connection extends \Doctrine\DBAL\Connection
      * Overridden params.
      *
      * @var array
+     * @since 8.5.0
      */
     private $overriddenParams = [];
 

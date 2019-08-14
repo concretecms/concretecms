@@ -24,18 +24,27 @@ class IndexSearchAll extends QueueableJob
     public $jNotUninstallable = 1;
     public $jSupportsQueue = true;
 
-    /** @var array The result from the last queue item */
+    /** @var array The result from the last queue item
+     * @since 8.2.0
+     */
     protected $result;
 
+    /**
+     * @since 8.2.0
+     */
     protected $clearTable = true;
 
     /*
      * @var \Concrete\Core\Search\Index\IndexManagerInterface
      */
+    /**
+     * @since 8.1.0
+     */
     protected $indexManager;
 
     /**
      * @var \Concrete\Core\Database\Connection\Connection
+     * @since 8.1.0
      */
     protected $connection;
 

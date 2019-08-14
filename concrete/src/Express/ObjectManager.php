@@ -17,6 +17,9 @@ class ObjectManager
 {
 
     protected $entityManager;
+    /**
+     * @since 8.1.0
+     */
     protected $app;
 
     public function __construct(Application $app, EntityManagerInterface $entityManager)

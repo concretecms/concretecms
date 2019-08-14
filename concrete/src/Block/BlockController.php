@@ -26,6 +26,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $record;
     protected $helpers = ['form'];
     protected $block;
+    /**
+     * @since 5.7.5.2
+     */
     protected $bID;
     protected $btDescription = "";
     protected $btName = "";
@@ -54,13 +57,20 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btFeatures = [];
     protected $btFeatureObjects;
     protected $identifier;
+    /**
+     * @since 5.7.4
+     */
     protected $btTable = null;
+    /**
+     * @since 8.5.0
+     */
     protected $btID;
 
     /**
      * Set this to true if the data sent to the save/performSave methods can contain NULL values that should be persisted.
      *
      * @var bool
+     * @since 8.2.0
      */
     protected $supportSavingNullValues = false;
 

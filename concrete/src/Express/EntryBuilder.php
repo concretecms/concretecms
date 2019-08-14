@@ -18,6 +18,9 @@ class EntryBuilder
     protected $entryManager;
     protected $entity;
     protected $attributes = [];
+    /**
+     * @since 8.3.0
+     */
     protected $associations = [];
 
     public function __construct(

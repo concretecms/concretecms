@@ -61,6 +61,7 @@ EOT
     
     /**
      * @var \Concrete\Core\Application\Application
+     * @since 8.2.0
      */
     protected $app;
     

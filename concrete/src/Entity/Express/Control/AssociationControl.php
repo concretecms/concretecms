@@ -40,6 +40,7 @@ class AssociationControl extends Control
      * @ORM\Column(type="integer", options={"unsigned": true, "default": 0})
      *
      * @var int
+     * @since 8.5.0
      */
     protected $entry_selector_mode;
 
@@ -47,6 +48,7 @@ class AssociationControl extends Control
      * Does the control give us the ability to reorder entries in the association?
      *
      * @ORM\Column(type="boolean")
+     * @since 8.5.0
      */
     protected $enable_entry_reordering = false;
 

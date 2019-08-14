@@ -37,6 +37,9 @@ class Theme extends ConcreteObject
     protected $pThemeHandle;
     protected $pThemeURL;
     protected $pThemeIsPreview = false;
+    /**
+     * @since 5.7.5.2
+     */
     protected $pkgID;
     protected $stylesheetCachePath;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;

@@ -23,6 +23,7 @@ class Service
      * The application instance.
      *
      * @var Application
+     * @since 8.2.0
      */
     protected $app;
 
@@ -30,6 +31,7 @@ class Service
      * The transport to be used to delivery the messages.
      *
      * @var TransportInterface
+     * @since 8.2.0
      */
     protected $transport;
 
@@ -51,6 +53,7 @@ class Service
      * List of "Reply-To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
      *
      * @var array[array]
+     * @since 5.7.3.1
      */
     protected $replyto;
 
@@ -128,6 +131,7 @@ class Service
      * Should we throw an exception if the delivery fails?
      *
      * @var false
+     * @since 8.4.1
      */
     protected $throwOnFailure;
 

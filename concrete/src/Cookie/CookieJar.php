@@ -24,6 +24,7 @@ class CookieJar
      * The object containing the response cookies.
      *
      * @var \Concrete\Core\Cookie\ResponseCookieJar
+     * @since 8.5.0
      */
     protected $responseCookies;
 

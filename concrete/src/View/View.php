@@ -22,7 +22,13 @@ class View extends AbstractView
     protected $themeObject;
     protected $themeRelativePath;
     protected $themeAbsolutePath;
+    /**
+     * @since 5.7.5.9
+     */
     protected $viewPkgHandle;
+    /**
+     * @since 5.7.5.9
+     */
     protected $themePkgHandle;
     protected $viewRootDirectoryName = DIRNAME_VIEWS;
 

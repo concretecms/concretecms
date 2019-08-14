@@ -19,6 +19,9 @@ class Location extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/details/page/location';
     protected $controllerActionPath = '/ccm/system/panels/details/page/location';
+    /**
+     * @since 5.7.2.1
+     */
     protected $validationToken = '/panels/details/page/location';
 
     protected function canAccess()

@@ -22,6 +22,9 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
      */
     const POSTING_DISABLED_PERMISSIONS = 3;
 
+    /**
+     * @since 5.7.4
+     */
     protected $page;
 
     public function getConversationID()

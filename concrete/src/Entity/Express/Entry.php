@@ -26,6 +26,9 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 {
     use ObjectTrait;
 
+    /**
+     * @since 8.2.1
+     */
     protected $entryFormatter;
 
     /**
@@ -167,6 +170,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     /**
      * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     * @since 8.5.0
      */
     protected $author;
 
@@ -188,6 +192,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @since 8.5.0
      */
     protected $exEntryDateModified;
 

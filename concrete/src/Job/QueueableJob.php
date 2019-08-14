@@ -13,7 +13,9 @@ abstract class QueueableJob extends AbstractJob
     /** @var int The size of the batch */
     protected $jQueueBatchSize;
 
-    /** @var ZendQueue */
+    /** @var ZendQueue
+     * @since 8.2.0
+     */
     protected $jQueueObject;
 
     /**

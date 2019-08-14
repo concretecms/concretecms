@@ -10,6 +10,7 @@ class Route extends SymfonyRoute
      * If this route has a custom name, it appears here. Otherwise it is automatically generated
      * from the path.
      * @var string
+     * @since 8.5.0
      */
     protected $customName;
 
@@ -19,11 +20,13 @@ class Route extends SymfonyRoute
      * It is the job of the RouteActionFactory to turn it from whatever
      * it currently is into RouteAction object.
      * @var mixed
+     * @since 8.5.0
      */
     protected $action;
 
     /**
      * @var RouteMiddleware[]
+     * @since 8.5.0
      */
     protected $middlewares = [];
 

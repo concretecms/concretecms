@@ -10,6 +10,9 @@ class Item implements ItemInterface
 {
     protected $controller;
 
+    /**
+     * @since 8.0.0
+     */
     protected $linkAttributes = [];
 
     public function __construct($handle, $pkgHandle = false)

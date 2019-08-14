@@ -54,6 +54,7 @@ abstract class Key extends ConcreteObject
      * The object for which this permission is for (for example, a Page instance).
      *
      * @var \Concrete\Core\Permission\ObjectInterface|null
+     * @since 5.7.4
      */
     protected $permissionObject = null;
 

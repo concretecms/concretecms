@@ -20,6 +20,9 @@ class StandardSearchIndexer implements SearchIndexerInterface
 {
     protected $connection;
 
+    /**
+     * @since 8.2.0
+     */
     protected $comparator;
 
     public function __construct(Connection $connection, Comparator $comparator)

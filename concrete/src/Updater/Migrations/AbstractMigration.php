@@ -20,8 +20,14 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
+    /**
+     * @since 8.3.0
+     */
     protected $app;
 
+    /**
+     * @since 8.4.0
+     */
     protected $validAttributes = [];
 
     public function __construct(Version $version)

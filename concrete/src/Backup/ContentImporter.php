@@ -11,6 +11,9 @@ class ContentImporter
 
     protected static $mcBlockIDs = array();
     protected static $ptComposerOutputControlIDs = array();
+    /**
+     * @since 8.0.0
+     */
     protected $home;
 
     public function importContentFile($file)

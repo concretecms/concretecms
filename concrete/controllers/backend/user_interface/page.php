@@ -10,7 +10,9 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
     /** @var ConcretePage A page object */
     protected $page;
 
-    /** @var Permissions This page's permissions */
+    /** @var Permissions This page's permissions
+     * @since 5.7.5
+     */
     protected $permissions;
 
     public function on_start()

@@ -10,6 +10,9 @@ abstract class AbstractAccessRegistry implements AccessRegistryInterface
 {
 
     protected $entries = [];
+    /**
+     * @since 8.2.0
+     */
     protected $entriesToRemove = [];
 
     public function addEntry(EntryInterface $entry)

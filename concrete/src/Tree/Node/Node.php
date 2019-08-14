@@ -26,6 +26,9 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
 
     protected $treeNodeIsSelected = false;
 
+    /**
+     * @since 5.7.4.2
+     */
     protected $tree;
 
     abstract public function loadDetails();

@@ -32,19 +32,29 @@ class Marketplace implements ApplicationAwareInterface
     protected $isConnected = false;
     protected $connectionError = false;
 
-    /** @var Repository */
+    /** @var Repository
+     * @since 8.4.1
+     */
     protected $config;
 
-    /** @var Repository */
+    /** @var Repository
+     * @since 8.4.1
+     */
     protected $databaseConfig;
 
-    /** @var File */
+    /** @var File
+     * @since 8.4.1
+     */
     protected $fileHelper;
 
-    /** @var PathUrlResolver */
+    /** @var PathUrlResolver
+     * @since 8.4.1
+     */
     protected $urlResolver;
 
-    /** @var \Concrete\Core\Http\Request */
+    /** @var \Concrete\Core\Http\Request
+     * @since 8.5.2
+     */
     protected $request;
 
     public function setApplication(\Concrete\Core\Application\Application $application)

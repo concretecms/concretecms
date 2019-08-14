@@ -12,6 +12,9 @@ abstract class Context implements ContextInterface
 {
 
     protected $actions = [];
+    /**
+     * @since 8.2.0
+     */
     protected $controlTemplates = [];
 
     public function preferTemplateIfAvailable($template, $pkgHandle = null)

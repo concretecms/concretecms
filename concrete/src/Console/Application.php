@@ -12,6 +12,7 @@ class Application extends SymfonyApplication
 {
     /**
      * @var CMSApplication
+     * @since 8.2.0
      */
     protected $app;
 

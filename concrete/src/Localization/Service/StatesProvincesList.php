@@ -5,6 +5,9 @@ use Events;
 
 class StatesProvincesList
 {
+    /**
+     * @since 5.7.5.7
+     */
     protected $localizedStatesProvinces = [];
 
     /**

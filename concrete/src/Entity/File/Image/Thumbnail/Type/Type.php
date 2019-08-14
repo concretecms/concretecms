@@ -111,6 +111,7 @@ class Type
      * @ORM\Column(type="string")
      *
      * @var string
+     * @since 8.2.0
      */
     protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
 
@@ -120,6 +121,7 @@ class Type
      * @ORM\Column(type="boolean")
      *
      * @var bool
+     * @since 8.4.1
      */
     protected $ftUpscalingEnabled = false;
 
@@ -129,6 +131,7 @@ class Type
      * @ORM\Column(type="boolean", nullable=false)
      *
      * @var bool
+     * @since 8.4.0
      */
     protected $ftLimitedToFileSets = false;
 
@@ -138,6 +141,7 @@ class Type
      * @ORM\OneToMany(targetEntity="TypeFileSet", mappedBy="ftfsThumbnailType", cascade={"all"}, orphanRemoval=true)
      *
      * @var ArrayCollection|TypeFileSet[]
+     * @since 8.4.0
      */
     protected $ftAssociatedFileSets;
 
@@ -147,6 +151,7 @@ class Type
      * @ORM\Column(type="boolean")
      *
      * @var bool
+     * @since 8.5.0
      */
     protected $ftKeepAnimations = false;
 
@@ -156,6 +161,7 @@ class Type
      * @ORM\Column(type="string", nullable=false)
      *
      * @var string
+     * @since 8.5.2
      */
     protected $ftSaveAreaBackgroundColor = '';
 

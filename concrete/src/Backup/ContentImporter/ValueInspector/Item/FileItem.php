@@ -9,7 +9,13 @@ use Concrete\Core\File\File;
 class FileItem implements ItemInterface
 {
 
+    /**
+     * @since 8.3.1
+     */
     protected $filename;
+    /**
+     * @since 8.3.1
+     */
     protected $prefix;
 
     /**

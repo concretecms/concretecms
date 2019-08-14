@@ -11,6 +11,7 @@ class PageUrlResolver implements UrlResolverInterface
 {
     /**
      * @var \Concrete\Core\Url\Resolver\PathUrlResolver
+     * @since 5.7.5
      */
     protected $pathUrlResolver;
 

@@ -5,7 +5,9 @@ use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 abstract class EntityItemList extends ItemList
 {
-    /** @var \Doctrine\ORM\QueryBuilder */
+    /** @var \Doctrine\ORM\QueryBuilder
+     * @since 5.7.5
+     */
     protected $query;
 
     /**

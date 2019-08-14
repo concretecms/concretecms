@@ -10,6 +10,9 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 
     use ApplicationAwareTrait;
 
+    /**
+     * @since 8.2.0
+     */
     protected $clearTable = false;
 
     public function getJobName()

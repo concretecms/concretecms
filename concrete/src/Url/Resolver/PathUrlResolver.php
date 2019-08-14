@@ -20,16 +20,19 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
 
     /**
      * @var \Concrete\Core\Config\Repository\Repository
+     * @since 5.7.5.4
      */
     protected $config;
 
     /**
      * @var \Concrete\Core\Url\Resolver\CanonicalUrlResolver
+     * @since 5.7.5.4
      */
     protected $canonical;
 
     /**
      * @var \Concrete\Core\Application\Service\Dashboard
+     * @since 5.7.5.4
      */
     protected $dashboard;
 

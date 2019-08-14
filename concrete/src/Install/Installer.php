@@ -41,6 +41,7 @@ class Installer
 
     /**
      * @var \Concrete\Core\Database\CharacterSetCollation\Resolver
+     * @since 8.5.0
      */
     protected $characterSetCollationResolver;
 

@@ -16,7 +16,13 @@ use Concrete\Core\Form\Control\ControlInterface;
 class ViewContext implements ContextInterface
 {
 
+    /**
+     * @since 8.2.0
+     */
     protected $entry;
+    /**
+     * @since 8.2.0
+     */
     protected $form;
 
     /**

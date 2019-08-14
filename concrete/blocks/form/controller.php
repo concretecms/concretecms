@@ -25,6 +25,9 @@ class Controller extends BlockController
     public $btInterfaceWidth = '420';
     public $btInterfaceHeight = '430';
     public $thankyouMsg = '';
+    /**
+     * @since 5.7.4
+     */
     public $submitText = '';
     public $noSubmitFormRedirect = 0;
     protected $btCacheBlockRecord = false;

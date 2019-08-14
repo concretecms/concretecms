@@ -9,6 +9,9 @@ use Concrete\Core\Foundation\Environment;
 class TemplateLocator
 {
 
+    /**
+     * @since 8.2.0
+     */
     protected $template;
 
     protected function createTemplateFromInput($input)

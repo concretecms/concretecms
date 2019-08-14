@@ -14,6 +14,9 @@ abstract class AuthenticationTypeController extends Controller implements Logger
     AuthenticationTypeControllerInterface
 {
     protected $authenticationType;
+    /**
+     * @since 5.7.5.4
+     */
     protected $app;
 
     use LoggerAwareTrait;

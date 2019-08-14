@@ -20,6 +20,9 @@ class BlockControl extends Control
     protected $ptComposerControlTypeHandle = 'block';
     protected $bt = false;
     protected $b = false;
+    /**
+     * @since 5.7.4
+     */
     protected $controller;
 
     public function setBlockTypeID($btID)

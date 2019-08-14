@@ -33,6 +33,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
 
     /**
      * @var int Number of seconds to consider the cache fresh before it expires
+     * @since 5.7.5.7
      */
     protected $cacheLifetime;
 

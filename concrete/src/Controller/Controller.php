@@ -12,6 +12,9 @@ class Controller extends AbstractController
     protected $viewPath;
     protected $theme;
     protected $controllerActionPath;
+    /**
+     * @since 5.7.1
+     */
     protected $themeViewTemplate;
 
     public function setViewObject(View $view)

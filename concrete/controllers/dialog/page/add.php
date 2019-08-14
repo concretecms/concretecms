@@ -7,7 +7,13 @@ use PageType;
 class Add extends BackendInterfacePageController
 {
     protected $viewPath = '/dialogs/page/add';
+    /**
+     * @since 5.7.0.1
+     */
     protected $frequentPageTypes = array();
+    /**
+     * @since 5.7.0.1
+     */
     protected $otherPageTypes = array();
 
     protected function canAccess()

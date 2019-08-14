@@ -20,6 +20,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/search/advanced_search';
     protected $supportsSavedSearch = true;
+    /**
+     * @since 8.4.1
+     */
     public $objectID = null;
 
     public function getObjectID()

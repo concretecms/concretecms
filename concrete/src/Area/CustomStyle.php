@@ -7,6 +7,9 @@ use Core;
 
 class CustomStyle extends AbstractCustomStyle
 {
+    /**
+     * @since 5.7.5.3
+     */
     protected $area;
 
     /**
@@ -14,6 +17,9 @@ class CustomStyle extends AbstractCustomStyle
      */
     protected $set;
 
+    /**
+     * @since 5.7.5
+     */
     protected $theme;
 
     public function __construct(StyleSet $set = null, Area $area, $theme)

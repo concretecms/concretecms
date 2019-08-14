@@ -17,9 +17,21 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     protected $searchIndexFieldDefinition = ['type' => 'datetime', 'options' => ['notnull' => false]];
 
+    /**
+     * @since 8.2.0
+     */
     protected $akUseNowIfEmpty = null;
+    /**
+     * @since 8.1.0
+     */
     protected $akDateDisplayMode = null;
+    /**
+     * @since 8.3.0
+     */
     protected $akTextCustomFormat = null;
+    /**
+     * @since 8.2.0
+     */
     protected $akTimeResolution = null;
 
     public function getIconFormatter()

@@ -27,6 +27,7 @@ class AddressSettings extends Settings
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
+     * @since 8.3.0
      */
     protected $akGeolocateCountry = false;
 

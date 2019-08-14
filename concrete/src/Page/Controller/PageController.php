@@ -20,22 +20,32 @@ class PageController extends Controller
     protected $action;
     protected $passThruBlocks = array();
     protected $parameters = array();
+    /**
+     * @since 8.0.0
+     */
     protected $replacement = null;
+    /**
+     * @since 8.1.0
+     */
     protected $requestValidated;
 
     /**
      * array of method names that can't be called through the url
      * @var array
+     * @since 5.7.5.11 (but not in 8.0.0)
      */
     protected $restrictedMethods = array();
 
     /**
      * Custom request path - overrides Request::getPath() (useful when replacing controllers).
      * @var string|null
+     * @since 8.0.0
      */
     protected $customRequestPath = null;
 
-    /** @var \Concrete\Core\Page\Page The current page */
+    /** @var \Concrete\Core\Page\Page The current page
+     * @since 8.0.0
+     */
     public $c;
 
     public function supportsPageCache()

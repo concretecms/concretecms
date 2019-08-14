@@ -76,7 +76,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /** @var \Closure | integer | null */
     protected $permissionsChecker;
 
-    /** @var Tree */
+    /** @var Tree
+     * @since 8.0.0
+     */
     protected $siteTree = self::SITE_TREE_CURRENT;
 
     /**

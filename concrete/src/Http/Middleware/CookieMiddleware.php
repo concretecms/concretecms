@@ -15,6 +15,7 @@ class CookieMiddleware implements MiddlewareInterface
 {
     /**
      * @var \Concrete\Core\Cookie\ResponseCookieJar
+     * @since 8.5.0
      */
     private $responseCookieJar;
 

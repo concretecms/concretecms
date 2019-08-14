@@ -12,18 +12,22 @@ class Library extends ConcreteObject
 {
     /**
      * @var string
+     * @since 5.7.4
      */
     public $saslHandle;
     /**
      * @var string
+     * @since 5.7.4
      */
     public $saslName;
     /**
      * @var bool
+     * @since 5.7.4
      */
     public $saslIsActive;
     /**
      * @var int
+     * @since 5.7.4
      */
     public $pkgID;
 

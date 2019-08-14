@@ -6,19 +6,29 @@ use Concrete\Core\Search\Result\Result;
 class Column implements ColumnInterface
 {
     /** These properties are to be treated as protected. Use the set and get methods instead */
-    /** @deprecated */
+    /** @deprecated
+     * @since 8.2.0
+     */
     public $columnKey;
     
-    /** @deprecated */
+    /** @deprecated
+     * @since 8.2.0
+     */
     public $columnName;
     
-    /** @deprecated */
+    /** @deprecated
+     * @since 8.2.0
+     */
     public $sortDirection = 'asc';
     
-    /** @deprecated */
+    /** @deprecated
+     * @since 8.2.0
+     */
     public $isSortable;
     
-    /** @deprecated */
+    /** @deprecated
+     * @since 8.2.0
+     */
     public $callback;
 
     public function getColumnValue($obj)

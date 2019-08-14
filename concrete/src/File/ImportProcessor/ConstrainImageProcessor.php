@@ -18,6 +18,7 @@ class ConstrainImageProcessor implements ProcessorInterface
 {
     /**
      * @var \Concrete\Core\Application\Application
+     * @since 8.4.0
      */
     protected $app;
 
@@ -46,6 +47,7 @@ class ConstrainImageProcessor implements ProcessorInterface
      * Should thumbnails be rescanned when the image is resized?
      *
      * @var bool
+     * @since 8.4.0
      */
     protected $rescanThumbnails = true;
 

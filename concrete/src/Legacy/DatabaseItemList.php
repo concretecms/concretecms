@@ -12,6 +12,9 @@ class DatabaseItemList extends ItemList
     protected $havingString = '';
     protected $autoSortColumns = array();
     protected $userPostQuery = '';
+    /**
+     * @since 5.7.4.1
+     */
     protected $attributeClass = '';
 
     public function getTotal()

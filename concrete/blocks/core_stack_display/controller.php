@@ -24,9 +24,18 @@ class Controller extends BlockController implements TrackableInterface
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreStackDisplay';
     protected $btIsInternal = true;
+    /**
+     * @since 5.7.5.2
+     */
     protected $btCacheSettingsInitialized = false;
 
+    /**
+     * @since 8.0.0
+     */
     public $stID = null;
+    /**
+     * @since 8.0.0
+     */
     protected $stIDNeutral = null;
 
     protected function load()

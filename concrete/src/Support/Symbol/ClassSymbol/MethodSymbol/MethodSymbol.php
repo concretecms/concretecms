@@ -12,6 +12,7 @@ class MethodSymbol
 
     /**
      * @var ClassSymbol
+     * @since 5.7.3
      */
     protected $classSymbol;
 

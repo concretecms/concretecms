@@ -9,6 +9,7 @@ class SubArea extends Area
 
     /**
      * @var \Block
+     * @since 5.7.3
      */
     protected $parentBlock;
 

@@ -26,6 +26,7 @@ class AutorotateImageProcessor implements ProcessorInterface
      * Should thumbnails be rescanned when the image is rotated?
      *
      * @var bool
+     * @since 8.4.0
      */
     protected $rescanThumbnails = true;
 

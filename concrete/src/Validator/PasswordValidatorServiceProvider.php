@@ -22,6 +22,7 @@ class PasswordValidatorServiceProvider extends Provider
      * The config repository we're using to register
      *
      * @var \Concrete\Core\Config\Repository\Repository
+     * @since 8.5.0
      */
     protected $config;
 

@@ -13,6 +13,9 @@ class Properties extends BackendInterfaceController
     protected $viewPath = '/dialogs/file/bulk/properties';
     protected $controllerActionPath = '/ccm/system/dialogs/file/bulk/properties';
     protected $files;
+    /**
+     * @since 8.1.0
+     */
     protected $canAccess = false;
 
     protected function canAccess()

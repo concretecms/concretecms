@@ -18,11 +18,13 @@ class ThemeGridLayout extends Layout
 
     /**
      * @var int
+     * @since 5.7.4
      */
     protected $arLayoutSpacing;
 
     /**
      * @var bool
+     * @since 5.7.4
      */
     protected $arLayoutIsCustom;
 

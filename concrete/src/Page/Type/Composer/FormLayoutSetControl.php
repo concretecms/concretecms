@@ -11,6 +11,9 @@ use Concrete\Core\Support\Facade\Application;
 
 class FormLayoutSetControl extends ConcreteObject
 {
+    /**
+     * @since 5.7.3
+     */
     protected $ptTargetParentPageID = 0;
 
     public function getPageTypeComposerFormLayoutSetControlID()

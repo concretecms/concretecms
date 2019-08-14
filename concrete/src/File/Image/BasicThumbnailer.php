@@ -34,6 +34,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      * The currently configured PNG compression level.
      *
      * @var int|null
+     * @since 8.2.0
      */
     protected $pngCompression = null;
 
@@ -41,11 +42,13 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      * The currently configured format of the generated thumbnails.
      *
      * @var string|null
+     * @since 8.2.0
      */
     protected $thumbnailsFormat = null;
 
     /**
      * @var StorageLocationInterface
+     * @since 8.0.0
      */
     private $storageLocation;
 

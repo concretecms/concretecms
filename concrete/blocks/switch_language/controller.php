@@ -26,6 +26,7 @@ class Controller extends BlockController
 
     /**
      * @var string
+     * @since 8.2.0
      */
     public $label;
 

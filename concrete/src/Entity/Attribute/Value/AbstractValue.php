@@ -39,6 +39,7 @@ abstract class AbstractValue implements AttributeValueInterface
      * to set this via runtime. Do NOT set this if you are trying to actually
      * persist the attribute value object.
      * @var \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue
+     * @since 8.4.1
      */
     protected $attribute_value;
 

@@ -21,6 +21,7 @@ class RegistrationService implements RegistrationServiceInterface
 {
     /**
      * @var EntityManagerInterface
+     * @since 8.0.0
      */
     protected $entityManager;
 
@@ -31,6 +32,7 @@ class RegistrationService implements RegistrationServiceInterface
 
     /**
      * @var UserInfoRepository
+     * @since 8.0.0
      */
     protected $userInfoRepository;
 

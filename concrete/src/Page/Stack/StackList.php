@@ -10,6 +10,9 @@ use Concrete\Core\Search\StickyRequest;
 
 class StackList extends PageList
 {
+    /**
+     * @since 8.0.0
+     */
     protected $foldersFirst;
 
     public function __construct()

@@ -7,6 +7,7 @@ class ProviderList
 {
     /**
      * @var Application
+     * @since 8.3.0
      */
     protected $app;
 

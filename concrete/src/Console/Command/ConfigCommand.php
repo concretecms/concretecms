@@ -18,6 +18,9 @@ class ConfigCommand extends Command
 
     protected $description = 'Set or get configuration parameters.';
 
+    /**
+     * @since 8.5.0
+     */
     protected $signature = 'c5:config 
         {action : Either "get" or "set"} 
         {item : The config item EG: "concrete.debug.detail"} 

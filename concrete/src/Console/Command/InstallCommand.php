@@ -51,11 +51,13 @@ class InstallCommand extends Command
 
     /**
      * @var bool|null
+     * @since 8.3.0
      */
     private $preconditionsPassed = null;
 
     /**
      * @var Installer|null
+     * @since 8.4.0
      */
     private $configuredInstaller = null;
 

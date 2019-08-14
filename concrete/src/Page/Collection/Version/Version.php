@@ -30,6 +30,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getVersionID() method instead
      *
      * @var int|string
+     * @since 8.0.0
      */
     public $cvID;
 
@@ -44,6 +45,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the isNew() / removeNewStatus() method instead
      *
      * @var bool|int|string
+     * @since 8.0.0
      */
     public $cvIsNew;
 
@@ -51,6 +53,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * The collection version handle.
      *
      * @var string|null
+     * @since 8.0.0
      */
     public $cvHandle;
 
@@ -58,6 +61,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getVersionName() method instead
      *
      * @var string|null
+     * @since 8.0.0
      */
     public $cvName;
 
@@ -65,6 +69,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * The collection version description.
      *
      * @var string|null
+     * @since 8.0.0
      */
     public $cvDescription;
 
@@ -72,6 +77,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getVersionDateCreated() method instead
      *
      * @var string|null
+     * @since 8.0.0
      */
     public $cvDateCreated;
 
@@ -81,6 +87,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @var string|null
      *
      * @example '2018-21-31 23:59:59'
+     * @since 8.0.0
      */
     public $cvDatePublic;
 
@@ -88,6 +95,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * The ID of the page template.
      *
      * @var int|string
+     * @since 8.0.0
      */
     public $pTemplateID;
 
@@ -95,6 +103,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getVersionAuthorUserID() method instead
      *
      * @var int|string|null
+     * @since 8.0.0
      */
     public $cvAuthorUID;
 
@@ -102,6 +111,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getVersionApproverUserID() method instead
      *
      * @var int|string|null
+     * @since 8.0.0
      */
     public $cvApproverUID;
 
@@ -109,6 +119,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getVersionComments() / setComment() methods instead
      *
      * @var string|null
+     * @since 8.0.0
      */
     public $cvComments;
 
@@ -116,6 +127,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * The ID of the page theme.
      *
      * @var int|string
+     * @since 8.0.0
      */
     public $pThemeID;
 
@@ -123,6 +135,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() / setPublishInterval() methods instead
      *
      * @var string|null
+     * @since 8.0.0
      */
     public $cvPublishDate;
 
@@ -130,6 +143,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getPublishEndDate() / setPublishEndDate() / setPublishInterval() methods instead
      *
      * @var string|null
+     * @since 8.4.0
      */
     public $cvPublishEndDate;
 
@@ -137,6 +151,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @deprecated what's deprecated is the public part of this property: use the getVersionDateApproved() method instead
      *
      * @var string|null
+     * @since 8.4.1
      */
     public $cvDateApproved;
 
@@ -159,6 +174,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @var bool|null
      *
      * @see \Concrete\Core\Page\Collection\Version\Version::isMostRecent()
+     * @since 8.0.0
      */
     protected $isMostRecent;
 
@@ -168,6 +184,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @var array|null
      *
      * @see \Concrete\Core\Page\Collection\Version\Version::getCustomAreaStyles()
+     * @since 8.0.0
      */
     protected $customAreaStyles;
 

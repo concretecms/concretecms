@@ -21,6 +21,7 @@ abstract class UserInterface extends Controller
      * An identifier to be used when checking tokens.
      *
      * @var string|null
+     * @since 5.7.2.1
      */
     protected $validationToken;
 

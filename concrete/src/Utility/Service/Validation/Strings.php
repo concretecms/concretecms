@@ -12,6 +12,7 @@ class Strings
 {
     /**
      * @var \Concrete\Core\Application\Application
+     * @since 8.4.2
      */
     protected $app;
 

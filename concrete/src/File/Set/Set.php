@@ -41,16 +41,19 @@ class Set
 
     /**
      * @var int File Set ID
+     * @since 5.7.4
      */
     public $fsID;
 
     /**
      * @var int User ID
+     * @since 5.7.4
      */
     public $uID;
 
     /**
      * @var string File Set Name
+     * @since 5.7.4
      */
     public $fsName;
 
@@ -61,10 +64,17 @@ class Set
 
     /**
      * @var int
+     * @since 5.7.4
      */
     public $fsType;
 
+    /**
+     * @since 5.7.4
+     */
     public $fsSearchRequest;
+    /**
+     * @since 5.7.4
+     */
     public $fsResultColumns;
 
     /**

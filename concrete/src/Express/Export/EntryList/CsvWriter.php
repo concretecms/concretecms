@@ -20,6 +20,7 @@ class CsvWriter
 
     /**
      * @var Date
+     * @since 8.3.0
      */
     protected $dateFormatter;
 

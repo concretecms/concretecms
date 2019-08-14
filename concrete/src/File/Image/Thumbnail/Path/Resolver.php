@@ -31,6 +31,7 @@ class Resolver
 
     /**
      * @var \Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService
+     * @since 8.3.0
      */
     protected $formatService;
 

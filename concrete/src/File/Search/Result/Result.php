@@ -9,6 +9,9 @@ use Concrete\Core\Search\Result\Result as SearchResult;
 class Result extends SearchResult
 {
 
+    /**
+     * @since 8.0.0
+     */
     protected $folder;
 
     /**

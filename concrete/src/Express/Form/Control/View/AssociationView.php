@@ -15,7 +15,13 @@ class AssociationView extends View
 {
     protected $association;
     protected $entry;
+    /**
+     * @since 8.4.3
+     */
     protected $allEntries = [];
+    /**
+     * @since 8.4.3
+     */
     protected $selectedEntries = [];
 
     public function getControlID()

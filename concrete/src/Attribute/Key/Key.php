@@ -34,6 +34,7 @@ class Key extends Facade implements AttributeKeyInterface
 
     /**
      * @var LegacyKey
+     * @since 8.0.0
      */
     protected $legacyAttributeKey;
 

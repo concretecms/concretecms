@@ -8,6 +8,9 @@ use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\Routin
  */
 class ValueInspector implements ValueInspectorInterface
 {
+    /**
+     * @since 5.7.5.4
+     */
     protected $routines = array();
 
     public function registerInspectionRoutine(RoutineInterface $routine)

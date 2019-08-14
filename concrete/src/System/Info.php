@@ -14,6 +14,7 @@ class Info
 {
     /**
      * @var \Concrete\Core\Application\Application
+     * @since 8.5.2
      */
     private $app;
 
@@ -69,26 +70,31 @@ class Info
 
     /**
      * @var string
+     * @since 8.4.0
      */
     protected $versionInstalled;
 
     /**
      * @var string
+     * @since 8.4.0
      */
     protected $codeVersion;
 
     /**
      * @var string
+     * @since 8.4.0
      */
     protected $dbVersion;
 
     /**
      * @var string|null
+     * @since 8.5.2
      */
     private $dbmsVersion;
 
     /**
      * @var string|null
+     * @since 8.5.2
      */
     private $dbmsSqlMode;
 

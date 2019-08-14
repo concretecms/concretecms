@@ -123,6 +123,7 @@ class Importer
      * Should thumbnails be scanned when importing an image?
      *
      * @var bool
+     * @since 5.7.4
      */
     protected $rescanThumbnailsOnImport = true;
 
@@ -130,11 +131,13 @@ class Importer
      * The list of configured import processors.
      *
      * @var \Concrete\Core\File\ImportProcessor\ProcessorInterface
+     * @since 5.7.5.2
      */
     protected $importProcessors = [];
 
     /**
      * @var \Concrete\Core\Application\Application
+     * @since 8.4.0
      */
     protected $app;
 

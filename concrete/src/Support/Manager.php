@@ -7,6 +7,9 @@ namespace Concrete\Core\Support;
 class Manager extends \Illuminate\Support\Manager
 {
 
+    /**
+     * @since 8.0.0
+     */
     protected $defaultDriver;
 
     protected function createDriver($driver)

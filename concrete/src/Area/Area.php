@@ -90,16 +90,19 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
     /**
      * @var bool
+     * @since 5.7.4
      */
     protected $arOverrideCollectionPermissions;
 
     /**
      * @var int
+     * @since 5.7.4
      */
     protected $arInheritPermissionsFromAreaOnCID;
 
     /**
      * @var array
+     * @since 5.7.4
      */
     protected $arCustomTemplates = array();
 

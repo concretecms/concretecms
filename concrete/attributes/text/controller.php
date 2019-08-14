@@ -10,6 +10,9 @@ use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 class Controller extends DefaultController
 {
 
+    /**
+     * @since 8.0.0
+     */
     protected $akTextPlaceholder;
     public $helpers = array('form');
 

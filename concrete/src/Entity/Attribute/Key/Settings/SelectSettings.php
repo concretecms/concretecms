@@ -53,6 +53,7 @@ class SelectSettings extends Settings
 
     /**
      * @ORM\Column(type="boolean")
+     * @since 8.3.0
      */
     protected $akHideNoneOption = false;
 
@@ -63,6 +64,7 @@ class SelectSettings extends Settings
 
     /**
      * @ORM\Column(type="boolean")
+     * @since 8.3.0
      */
     protected $akDisplayMultipleValuesOnSelect = false;
 

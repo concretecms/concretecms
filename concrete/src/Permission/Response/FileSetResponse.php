@@ -9,6 +9,9 @@ use FileSet;
  */
 class FileSetResponse extends Response {
 
+    /**
+     * @since 8.0.0
+     */
     protected $permissions;
 
     public function __call($nm, $args)

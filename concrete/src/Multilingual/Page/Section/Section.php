@@ -51,6 +51,7 @@ class Section extends Page
 
     /**
      * @var Locale
+     * @since 8.0.0
      */
     protected $locale;
 

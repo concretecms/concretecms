@@ -10,6 +10,9 @@ class Event extends GenericEvent implements RequestEventInterface
 {
     protected $page;
     protected $user;
+    /**
+     * @since 5.7.4
+     */
     protected $request;
 
     public function __construct(Page $c)

@@ -81,16 +81,19 @@ class IPService implements LoggerAwareInterface
 
     /**
      * @var Repository
+     * @since 8.2.0
      */
     protected $config;
 
     /**
      * @var Connection
+     * @since 8.2.0
      */
     protected $connection;
 
     /**
      * @var Request
+     * @since 8.2.0
      */
     protected $request;
 

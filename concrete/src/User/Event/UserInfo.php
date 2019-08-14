@@ -10,6 +10,7 @@ class UserInfo extends AbstractEvent
 
     /**
      * @var \Concrete\Core\User\User
+     * @since 8.5.0
      */
     protected $applier;
 

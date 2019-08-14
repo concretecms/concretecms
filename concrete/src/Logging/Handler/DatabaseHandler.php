@@ -7,6 +7,9 @@ use User;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
+    /**
+     * @since 5.7.5.2
+     */
     protected $initialized;
     private $statement;
 

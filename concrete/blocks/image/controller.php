@@ -28,6 +28,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
     /**
      * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
+     * @since 8.0.0
      */
     protected $tracker;
 

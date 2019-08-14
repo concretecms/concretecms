@@ -58,6 +58,7 @@ class Localization
      * The translator adapter repository to be used.
      *
      * @var TranslatorAdapterRepositoryInterface
+     * @since 8.0.0
      */
     protected $translatorAdapterRepository;
 
@@ -65,6 +66,7 @@ class Localization
      * The locale identifier to be used for every translation context.
      *
      * @var array
+     * @since 8.0.0
      */
     protected $contextLocales = [];
 
@@ -72,6 +74,7 @@ class Localization
      * The currently active translation context.
      *
      * @var string|null
+     * @since 8.0.0
      */
     protected $activeContext = null;
 
@@ -82,6 +85,7 @@ class Localization
      *
      * @see Localization::pushActiveContext()
      * @see Localization::popActiveContext()
+     * @since 8.0.0
      */
     protected $activeContextQueue = [];
 

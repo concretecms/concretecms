@@ -11,26 +11,31 @@ abstract class Layout extends ConcreteObject
 {
     /**
      * @var Area
+     * @since 5.7.4
      */
     public $area;
 
     /**
      * @var Block
+     * @since 5.7.4
      */
     public $block;
 
     /**
      * @var int
+     * @since 5.7.4
      */
     public $arLayoutID;
 
     /**
      * @var bool
+     * @since 5.7.4
      */
     public $arLayoutUsesThemeGridFramework;
 
     /**
      * @var int
+     * @since 5.7.4
      */
     public $arLayoutNumColumns;
 

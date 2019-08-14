@@ -17,11 +17,18 @@ class ClassLoader
 
     /**
      * @var ClassLoaderInterface[]
+     * @since 8.0.0
      */
     protected $loaders;
 
+    /**
+     * @since 8.0.0
+     */
     protected $enableLegacyNamespace = false;
 
+    /**
+     * @since 8.0.0
+     */
     protected $applicationNamespace = 'Application';
 
     /**

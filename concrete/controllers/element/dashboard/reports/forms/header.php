@@ -9,7 +9,13 @@ use Concrete\Core\Entity\Express\Entity;
  */
 class Header extends ElementController
 {
+    /**
+     * @since 8.2.0
+     */
     protected $nodeId;
+    /**
+     * @since 8.3.1
+     */
     protected $entity;
 
     /**

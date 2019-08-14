@@ -9,6 +9,9 @@ use Exception;
 
 class Group extends TreeNode
 {
+    /**
+     * @since 5.7.4.1
+     */
     protected $gID = null;
     public function getPermissionResponseClassName()
     {

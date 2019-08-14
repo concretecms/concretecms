@@ -15,6 +15,7 @@ class Controller extends AbstractController implements AttributeInterface
 {
     /**
      * @var EntityManager
+     * @since 8.0.0
      */
     protected $entityManager;
 

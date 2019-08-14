@@ -18,9 +18,21 @@ use Events;
 
 class Message extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
+    /**
+     * @since 8.0.0
+     */
     public $cnvMessageID;
+    /**
+     * @since 5.7.5.9
+     */
     protected $cnvMessageDateCreated;
+    /**
+     * @since 8.0.0
+     */
     public $cnvMessageFlagTypes;
+    /**
+     * @since 8.2.0
+     */
     public $cnvMessageReview;
 
     public function getConversationMessageID()

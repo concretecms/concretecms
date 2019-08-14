@@ -23,6 +23,9 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
+    /**
+     * @since 5.7.5.2 (but not in 5.7.5.3 5.7.5.4 5.7.5.5 5.7.5.6 5.7.5.7 5.7.5.8 5.7.5.9 5.7.5.10 5.7.5.11 5.7.5.12 5.7.5.13 8.0.0 8.0.1 8.0.2 8.0.3 8.1.0 8.2.0 8.2.1 8.3.0 8.3.1 8.3.2)
+     */
     protected $btCacheSettingsInitialized = false;
 
     public function cacheBlockOutput()

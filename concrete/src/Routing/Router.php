@@ -15,6 +15,7 @@ class Router implements RouterInterface
 {
     /**
      * @var RouteActionFactoryInterface
+     * @since 8.5.0
      */
     protected $actionFactory;
 

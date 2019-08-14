@@ -65,6 +65,7 @@ class Controller extends BlockController
      * Set this to true if the data sent to the save/performSave methods can contain NULL values that should be persisted.
      *
      * @var bool
+     * @since 8.2.0
      */
     protected $supportSavingNullValues = true;
 

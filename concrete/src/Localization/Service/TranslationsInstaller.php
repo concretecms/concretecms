@@ -39,6 +39,7 @@ class TranslationsInstaller
 
     /**
      * @var Application
+     * @since 8.4.0
      */
     protected $app;
 

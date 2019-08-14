@@ -13,6 +13,9 @@ class Seo extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/details/page/seo';
     protected $controllerActionPath = '/ccm/system/panels/details/page/seo';
+    /**
+     * @since 5.7.2.1
+     */
     protected $validationToken = '/panels/details/page/seo';
 
     protected function canAccess()

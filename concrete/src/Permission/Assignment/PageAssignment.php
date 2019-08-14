@@ -18,6 +18,7 @@ class PageAssignment extends Assignment
      * Permissions that come from "Edit Page Type Draft" permissions.
      *
      * @var array
+     * @since 5.7.5.9
      */
     protected $inheritedPageTypeDraftPermissions = [
         'view_page' => 'edit_page_type_drafts',

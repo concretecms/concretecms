@@ -41,6 +41,7 @@ class Service
 
     /**
      * @var \Concrete\Core\Cache\Cache
+     * @since 8.2.0
      */
     protected $cache;
 

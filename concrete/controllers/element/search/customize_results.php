@@ -11,6 +11,9 @@ class CustomizeResults extends ElementController
 {
     protected $provider;
 
+    /**
+     * @since 8.2.0
+     */
     protected $includeNumberOfResults = true;
 
     /**

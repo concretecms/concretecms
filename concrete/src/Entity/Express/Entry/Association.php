@@ -40,6 +40,7 @@ abstract class Association
 
     /**
      * @var bool A boolean to track whether the selected entries are sorted
+     * @since 8.2.0
      */
     protected $sorted;
 

@@ -9,7 +9,13 @@ use Concrete\Core\Filesystem\TemplateLocator;
 class ComposerContext extends BasicFormContext
 {
 
+    /**
+     * @since 8.2.0
+     */
     protected $tooltip;
+    /**
+     * @since 8.2.0
+     */
     protected $required = false;
 
     /**

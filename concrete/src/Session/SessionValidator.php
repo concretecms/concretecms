@@ -34,7 +34,9 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     /** @var \Concrete\Core\Http\Request */
     private $request;
 
-    /** @var \Concrete\Core\Permission\IPService */
+    /** @var \Concrete\Core\Permission\IPService
+     * @since 8.4.0
+     */
     private $ipService;
 
     public function __construct(Application $app, Repository $config, Request $request, IPService $ipService, LoggerInterface $logger = null)

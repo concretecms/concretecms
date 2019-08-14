@@ -8,6 +8,7 @@ class CustomColumn extends Column
 {
     /**
      * @var int;
+     * @since 5.7.4
      */
     public $arLayoutColumnWidth;
 

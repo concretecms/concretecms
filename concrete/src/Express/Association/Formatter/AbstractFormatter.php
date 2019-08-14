@@ -13,6 +13,9 @@ use Concrete\Core\Support\Facade\Application;
 abstract class AbstractFormatter implements FormatterInterface
 {
     protected $association;
+    /**
+     * @since 8.2.1
+     */
     protected $entryFormatter;
 
     public function __construct(Association $association)

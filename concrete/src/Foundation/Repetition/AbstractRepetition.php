@@ -64,6 +64,7 @@ abstract class AbstractRepetition implements RepetitionInterface
 
     /**
      * @var \DateTimeZone
+     * @since 8.2.0
      */
     protected $timezone;
 

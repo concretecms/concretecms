@@ -56,6 +56,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
     /**
      * @var \Concrete\Core\Config\Repository\Repository
+     * @since 8.3.0
      */
     private $config;
 

@@ -20,6 +20,9 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btShareThisPage';
 
+    /**
+     * @since 5.7.4
+     */
     protected $services = array();
 
     public function getBlockTypeDescription()

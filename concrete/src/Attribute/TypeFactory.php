@@ -28,6 +28,7 @@ class TypeFactory
 
     /**
      * @var \Concrete\Core\Attribute\Category\CategoryService
+     * @since 8.5.2
      */
     protected $categoryService;
 

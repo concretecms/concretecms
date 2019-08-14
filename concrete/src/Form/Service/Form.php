@@ -41,6 +41,7 @@ class Form
      * The Application instance.
      *
      * @var Application
+     * @since 8.3.0
      */
     protected $app;
 
@@ -48,6 +49,7 @@ class Form
      * The text service instance.
      *
      * @var TextService
+     * @since 5.7.4.1
      */
     protected $th;
 
@@ -55,6 +57,7 @@ class Form
      * Arrays helper instance.
      *
      * @var ArraysService
+     * @since 5.7.4.1
      */
     protected $ah;
 
@@ -62,6 +65,7 @@ class Form
      * The Request instance.
      *
      * @var \Concrete\Core\Http\Request|null
+     * @since 8.4.1
      */
     private $request;
 

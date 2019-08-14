@@ -34,6 +34,9 @@ class BlockView extends AbstractView
     protected $viewToRender = false;
     protected $viewPerformed = false;
     protected $showControls = true;
+    /**
+     * @since 5.7.1
+     */
     protected $didPullFromOutputCache = false;
 
     /**

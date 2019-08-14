@@ -25,6 +25,7 @@ abstract class Asset implements AssetInterface
      * The position of this asset (\Concrete\Core\Asset\AssetInterface::ASSET_POSITION_HEADER or \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_FOOTER).
      *
      * @var string
+     * @since 8.3.2
      */
     protected $position;
 
@@ -53,6 +54,7 @@ abstract class Asset implements AssetInterface
      * The location of the asset (used to build the path & URL).
      *
      * @var string
+     * @since 8.2.0
      */
     protected $location;
 
@@ -74,6 +76,7 @@ abstract class Asset implements AssetInterface
      * Does the URL/path have already been resolved (starting from the location) for this (local) assets?
      *
      * @var bool
+     * @since 8.2.0
      */
     protected $assetHasBeenMapped = false;
 
@@ -81,6 +84,7 @@ abstract class Asset implements AssetInterface
      * The name of the file of this asset.
      *
      * @var string
+     * @since 5.7.4
      */
     protected $filename;
 

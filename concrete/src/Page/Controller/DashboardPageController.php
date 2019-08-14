@@ -27,6 +27,7 @@ class DashboardPageController extends PageController
      * The EntityManager instance (available after the on_start method has been called).
      *
      * @var \Doctrine\ORM\EntityManagerInterface|null
+     * @since 8.0.0
      */
     protected $entityManager;
 
@@ -34,6 +35,7 @@ class DashboardPageController extends PageController
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Page\Controller\PageController::$restrictedMethods
+     * @since 5.7.5.11 (but not in 8.0.0)
      */
     protected $restrictedMethods = [
         'enableNativeMobile',

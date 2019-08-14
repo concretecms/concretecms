@@ -20,6 +20,7 @@ class CssAsset extends Asset
      * The default media of this asset.
      *
      * @var string
+     * @since 8.4.0
      */
     protected $assetMedia = 'all';
 

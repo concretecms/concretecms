@@ -82,6 +82,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * The original cID of a page (if it's a page alias).
      *
      * @var int|null
+     * @since 5.7.4
      */
     protected $cPointerOriginalID = null;
 
@@ -89,6 +90,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * The original siteTreeID of a page (if it's a page alias).
      *
      * @var int|null
+     * @since 8.5.0
      */
     protected $cPointerOriginalSiteTreeID = null;
 
@@ -96,6 +98,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * The link for the aliased page.
      *
      * @var string|null
+     * @since 8.0.0
      */
     protected $cPointerExternalLink = null;
 
@@ -103,6 +106,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Should the alias link to be opened in a new window?
      *
      * @var bool|int|null
+     * @since 8.0.0
      */
     protected $cPointerExternalLinkNewWindow = null;
 
@@ -110,6 +114,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Is this page a page default?
      *
      * @var bool|int|null
+     * @since 8.0.0
      */
     protected $isMasterCollection = null;
 
@@ -117,6 +122,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * The ID of the page from which this page inherits permissions from.
      *
      * @var int|null
+     * @since 8.0.0
      */
     protected $cInheritPermissionsFromCID = null;
 
@@ -131,6 +137,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * The site tree ID.
      *
      * @var int|null
+     * @since 8.0.0
      */
     protected $siteTreeID;
 
@@ -138,6 +145,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @deprecated What's deprecated is the public part: use the getSiteTreeObject() method to access this property.
      *
      * @var \Concrete\Core\Entity\Site\Tree|null
+     * @since 8.0.0
      */
     public $siteTree;
 

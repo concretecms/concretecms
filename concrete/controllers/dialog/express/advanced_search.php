@@ -27,6 +27,7 @@ class AdvancedSearch extends AdvancedSearchController
 
     /**
      * @var string
+     * @since 8.4.1
      */
     protected $entityID;
 

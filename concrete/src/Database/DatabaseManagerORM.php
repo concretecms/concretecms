@@ -17,6 +17,9 @@ class DatabaseManagerORM
      */
     protected $app;
 
+    /**
+     * @since 8.0.0
+     */
     protected $entityManager;
 
     /**

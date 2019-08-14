@@ -30,6 +30,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * @deprecated use the getBlockAreaObject() method (what's deprecated is the "public" part, it should be protected)
      *
      * @var \Concrete\Core\Area\Area|null
+     * @since 5.7.5.2
      */
     public $a;
 
@@ -72,6 +73,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * The ID of the associated block.
      *
      * @var int|null
+     * @since 8.0.0
      */
     protected $cbRelationID;
 
@@ -86,6 +88,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * The block cache settings.
      *
      * @var \Concrete\Core\Block\CacheSettings|null
+     * @since 5.7.1
      */
     protected $cacheSettings;
 
@@ -93,6 +96,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * Override cache settings?
      *
      * @var int|null 1 for true; 0/null for false
+     * @since 8.0.0
      */
     protected $cbOverrideBlockTypeCacheSettings;
 
@@ -100,6 +104,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * The custom template name.
      *
      * @var string|null
+     * @since 5.7.5.2
      */
     protected $bFilename;
 

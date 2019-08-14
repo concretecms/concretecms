@@ -33,6 +33,7 @@ class InstallerOptions
      * Whether the user has accepted the privacy policy from the front-end installation
      *
      * @var bool
+     * @since 8.4.0
      */
     protected $privacyPolicyAccepted = false;
 
