@@ -1,9 +1,9 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
-use \Concrete\Core\Workflow\Workflow as Workflow;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Workflow\Workflow as Workflow;
 
 if ($_REQUEST['fsID'] > 0) {
     $fs = FileSet::getByID($_REQUEST['fsID']);

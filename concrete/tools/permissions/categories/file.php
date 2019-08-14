@@ -1,8 +1,8 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 
 $f = File::getByID($_REQUEST['fID']);
 if (is_object($f)) {

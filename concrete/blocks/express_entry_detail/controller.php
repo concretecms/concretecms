@@ -3,7 +3,7 @@ namespace Concrete\Block\ExpressEntryDetail;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Core\Attribute\Key\CollectionKey;
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\FrontendViewContext;

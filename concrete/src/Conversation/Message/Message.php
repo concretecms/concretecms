@@ -10,7 +10,7 @@ use Core;
 use Loader;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
-use \Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;

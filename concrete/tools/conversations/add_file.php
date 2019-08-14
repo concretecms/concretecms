@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Conversation\Conversation as Conversation;
+use Concrete\Core\Conversation\Conversation as Conversation;
 
 $val = Loader::helper('validation/token');
 $helperFile = Loader::helper('concrete/file');

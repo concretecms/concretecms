@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Database\EntityManager\Driver;
 
-use \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 
 /**
  * Each Doctrine MappingDriver must be wrapped by this class, so all Drivers can be 

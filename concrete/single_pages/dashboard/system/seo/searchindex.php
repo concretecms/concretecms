@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die('Access Denied');
-use \Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Page\Search\IndexedSearch;
 
 ?>
 	<form method="post" id="ccm-search-index-manage" action="<?=$view->action('')?>">

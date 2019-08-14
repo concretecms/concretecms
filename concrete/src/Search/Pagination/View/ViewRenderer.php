@@ -3,7 +3,7 @@
 namespace Concrete\Core\Search\Pagination\View;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\View\ViewInterface;
-use \Core;
+use Core;
 class ViewRenderer
 {
 

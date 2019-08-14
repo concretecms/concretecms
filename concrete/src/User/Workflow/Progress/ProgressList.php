@@ -5,7 +5,7 @@ use Concrete\Core\Legacy\DatabaseItemList;
 use Concrete\Core\Legacy\UserList;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\Workflow\Progress\User as ProgressUser;
-use \Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
+use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
 class ProgressList extends UserList
 {

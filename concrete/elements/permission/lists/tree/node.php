@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-use \Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Node as TreeNode;
 
 ?>
 <div id="topics-tree-node-permissions">

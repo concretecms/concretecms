@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Value;
 
-use \Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Foundation\ConcreteObject;
 
 /**
  * @deprecated

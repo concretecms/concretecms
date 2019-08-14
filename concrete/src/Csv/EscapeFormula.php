@@ -12,7 +12,7 @@ namespace Concrete\Core\Csv;
  * @version 9.1.5
  * @link    https://github.com/thephpleague/csv
  */
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * A League CSV formatter to tackle CSV Formula Injection.

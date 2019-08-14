@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Area\SubArea;
+use Concrete\Core\Area\SubArea;
 
 /* @var Area $a */
 

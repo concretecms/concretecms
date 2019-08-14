@@ -3,7 +3,7 @@
  * DESIGNERS: SCROLL DOWN! (IGNORE ALL THIS STUFF AT THE TOP)
  ************************************************************/
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Block\Form\MiniSurvey;
+use Concrete\Block\Form\MiniSurvey;
 
 $survey = $controller;
 $miniSurvey = new MiniSurvey($b);

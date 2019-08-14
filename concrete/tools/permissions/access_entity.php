@@ -1,9 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper("form");
-use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 
 $tp = new TaskPermission();
 $tu = Loader::helper('concrete/user');

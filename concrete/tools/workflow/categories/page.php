@@ -3,9 +3,9 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
-use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
-use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
+use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 
 $obj = new stdClass();
 if ($_REQUEST['task'] == 'save_workflow_progress' && Loader::helper("validation/token")->validate('save_workflow_progress')) {

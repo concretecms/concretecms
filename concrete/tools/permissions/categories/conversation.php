@@ -1,8 +1,8 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 
 if ($_REQUEST['cnvID'] > 0) {
     $conversation = Conversation::getByID($_REQUEST['cnvID']);

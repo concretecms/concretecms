@@ -10,7 +10,7 @@ use Group;
 use Core;
 use User;
 use UserInfo;
-use \Exception;
+use Exception;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
 
 class Action

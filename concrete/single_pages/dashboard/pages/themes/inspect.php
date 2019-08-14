@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Page\Theme\File as PageThemeFile;
+use Concrete\Core\Page\Theme\File as PageThemeFile;
 
 // HELPERS
 $ci = Loader::helper('concrete/ui');

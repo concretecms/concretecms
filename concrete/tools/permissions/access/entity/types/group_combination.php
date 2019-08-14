@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 
 if (Loader::helper('validation/token')->validate('process')) {
     $js = Loader::helper('json');

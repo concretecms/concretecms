@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Sharing\SocialNetwork\Service as Service;
+use Concrete\Core\Sharing\SocialNetwork\Service as Service;
 
 ?>
 

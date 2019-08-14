@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\File\EditResponse as FileEditResponse;
-use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
+use Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 

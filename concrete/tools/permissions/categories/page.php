@@ -1,14 +1,14 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
-use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
-use \Concrete\Core\Workflow\Workflow as Workflow;
-use \Concrete\Core\Workflow\Request\ChangePagePermissionsRequest as ChangePagePermissionsPageWorkflowRequest;
-use \Concrete\Core\Workflow\Request\ChangePagePermissionsInheritanceRequest as ChangePagePermissionsInheritancePageWorkflowRequest;
-use \Concrete\Core\Workflow\Request\ChangeSubpageDefaultsInheritanceRequest as ChangeSubpageDefaultsInheritancePageWorkflowRequest;
-use \Concrete\Core\Permission\Set as PermissionSet;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Concrete\Core\Workflow\Workflow as Workflow;
+use Concrete\Core\Workflow\Request\ChangePagePermissionsRequest as ChangePagePermissionsPageWorkflowRequest;
+use Concrete\Core\Workflow\Request\ChangePagePermissionsInheritanceRequest as ChangePagePermissionsInheritancePageWorkflowRequest;
+use Concrete\Core\Workflow\Request\ChangeSubpageDefaultsInheritanceRequest as ChangeSubpageDefaultsInheritancePageWorkflowRequest;
+use Concrete\Core\Permission\Set as PermissionSet;
 
 $pages = array();
 if (is_array($_REQUEST['cID'])) {

@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 
 if (Loader::helper('validation/token')->validate('process')) {
     $js = Loader::helper('json');

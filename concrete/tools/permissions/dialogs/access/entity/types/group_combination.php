@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $tp = new TaskPermission();
-use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $dt = $app->make('helper/form/date_time');

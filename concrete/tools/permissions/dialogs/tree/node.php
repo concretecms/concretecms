@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Node as TreeNode;
 
 if ($_REQUEST['treeNodeID'] > 0) {
     $node = TreeNode::getByID($_REQUEST['treeNodeID']);

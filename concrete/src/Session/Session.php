@@ -2,7 +2,7 @@
 namespace Concrete\Core\Session;
 
 use Concrete\Core\Application\Application;
-use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
+use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
  * Class Session.

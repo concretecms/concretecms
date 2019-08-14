@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
+use Concrete\Core\Conversation\Message\Message as ConversationMessage;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $ax = $app->make('helper/ajax');
