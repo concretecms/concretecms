@@ -33,7 +33,7 @@ class ParentPageField extends AbstractField
     public function filterList(ItemList $list)
     {
         if ($this->data['cParentIDSearchField'] > 0) {
-            $pc = \Page::getByID($this->data['cParentIDSearchField']);
+            $pc = \Concrete\Core\Page\Page::getByID($this->data['cParentIDSearchField']);
             if ($pc && !$pc->isError()) {
                 if ($pc->isSystemPage()) {
                     $list->includeSystemPages();

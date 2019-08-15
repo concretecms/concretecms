@@ -6,11 +6,11 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Config;
-use Group;
-use GroupList;
-use PageEditResponse;
-use PermissionKey;
-use View;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\View\View;
 
 class Permissions extends BackendInterfacePageController
 {

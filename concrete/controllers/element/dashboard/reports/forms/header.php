@@ -32,8 +32,8 @@ class Header extends ElementController
         if ($this->entity) {
             $this->set('entity', $this->entity);
             $this->set('exportURL', \URL::to('/dashboard/reports/forms', 'csv_export', $this->nodeId));
-            $managePage = \Page::getByPath('/dashboard/system/express/entities');
-            $permissions = new \Permissions($managePage);
+            $managePage = \Concrete\Core\Page\Page::getByPath('/dashboard/system/express/entities');
+            $permissions = new \Concrete\Core\Permission\Checker($managePage);
             if ($permissions->canViewPage()) {
                 $this->set('manageURL', \URL::to('/dashboard/system/express/entities', 'view_entity', $this->entity->getID()));
             }

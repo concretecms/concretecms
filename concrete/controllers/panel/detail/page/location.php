@@ -3,15 +3,15 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Entity\Page\PagePath;
-use PageEditResponse;
-use PermissionKey;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Exception;
-use Loader;
-use PageType;
-use Permissions;
-use User;
-use Page;
-use Request;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\User\User;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 

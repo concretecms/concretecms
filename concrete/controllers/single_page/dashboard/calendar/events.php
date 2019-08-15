@@ -25,7 +25,7 @@ class Events extends DashboardCalendarPageController
         list($calendar, $calendars) = $this->getCalendars($caID);
 
         $this->set('calendars', $calendars);
-        $this->set('calendarPermissions', new \Permissions($calendar));
+        $this->set('calendarPermissions', new \Concrete\Core\Permission\Checker($calendar));
         $this->set('calendar', $calendar);
 
         $dh = $this->app->make('date');
@@ -102,7 +102,7 @@ class Events extends DashboardCalendarPageController
         if (\Core::make("helper/validation/numbers")->integer($caID)) {
             if ($caID > 0) {
                 $calendar = Calendar::getByID($caID);
-                $cp = new \Permissions($calendar);
+                $cp = new \Concrete\Core\Permission\Checker($calendar);
                 if (!$cp->canDeleteCalendar()) {
                     unset($calendar);
                 }

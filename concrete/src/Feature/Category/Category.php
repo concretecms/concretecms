@@ -2,7 +2,7 @@
 namespace Concrete\Core\Feature\Category;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Package\PackageList;
 use Core;
 

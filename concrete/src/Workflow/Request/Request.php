@@ -5,11 +5,11 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Workflow;
+use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\EmptyWorkflow;
 use Database;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Events;
 
 abstract class Request extends ConcreteObject
@@ -102,11 +102,11 @@ abstract class Request extends ConcreteObject
      * Triggers a workflow request, queries a permission key to see what workflows are attached to it
      * and initiates them.
      *
-     * @param \PermissionKey $pk
+     * @param \Concrete\Core\Permission\Key\Key $pk
      *
      * @return optional WorkflowProgress
      */
-    protected function triggerRequest(\PermissionKey $pk)
+    protected function triggerRequest(\Concrete\Core\Permission\Key\Key $pk)
     {
         if (!$this->wrID) {
             $this->save();

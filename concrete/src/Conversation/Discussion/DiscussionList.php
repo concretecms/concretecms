@@ -2,7 +2,7 @@
 namespace Concrete\Core\Conversation\Discussion;
 
 use Concrete\Core\Page\PageList;
-use Page;
+use Concrete\Core\Page\Page;
 
 class DiscussionList extends PageList
 {

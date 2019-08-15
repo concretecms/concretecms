@@ -74,7 +74,7 @@ class EventVersion extends \Concrete\Core\Controller\Controller
             $e->add($token->getErrorMessage());
         }
         if (!$e->has()) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             $pkr = new ApproveCalendarEventRequest();
             $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
             $pkr->setRequesterUserID($u->getUserID());

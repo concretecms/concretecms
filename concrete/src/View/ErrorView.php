@@ -3,7 +3,7 @@ namespace Concrete\Core\View;
 
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Support\Facade\Facade;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Illuminate\Filesystem\Filesystem;
 
 class ErrorView extends View

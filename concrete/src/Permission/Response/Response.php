@@ -2,8 +2,8 @@
 namespace Concrete\Core\Permission\Response;
 
 use Exception;
-use User;
-use PermissionKeyCategory;
+use Concrete\Core\User\User;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
 use Core;
 
 class Response

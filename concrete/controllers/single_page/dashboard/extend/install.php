@@ -16,8 +16,8 @@ use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Support\Facade\Package;
 use Exception;
-use Loader;
-use TaskPermission;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Legacy\TaskPermission;
 
 class Install extends DashboardPageController
 {

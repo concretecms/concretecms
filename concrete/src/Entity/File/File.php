@@ -15,14 +15,14 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
-use FileSet;
+use Concrete\Core\File\Set\Set as FileSet;
 use League\Flysystem\AdapterInterface;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use Events;
-use Page;
-use PermissionKey;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

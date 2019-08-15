@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Controller\Search;
 
-use Controller;
-use GroupList;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\Group\GroupSearchColumnSet;
 use Concrete\Core\Search\Result\Result as SearchResult;
-use Loader;
-use TaskPermission;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Legacy\TaskPermission;
 use URL;
 
 class Groups extends Controller

@@ -34,7 +34,7 @@ class UserPointTest extends ConcreteDatabaseTestCase
 
     public function testUserPointActionWithGroup()
     {
-        $g = \Group::add('Test Group', 'Test Group Description');
+        $g = \Concrete\Core\User\Group\Group::add('Test Group', 'Test Group Description');
 
         Action::add('test_action_with_group', t('Test Action'), 4, $g);
         $action = Action::getByHandle('test_action_with_group');
@@ -48,7 +48,7 @@ class UserPointTest extends ConcreteDatabaseTestCase
 
     public function testAddingBadgeToUser()
     {
-        \Cache::disableAll();
+        \Concrete\Core\Cache\Cache::disableAll();
         \Site::installDefault();
         \Config::set('concrete.email.enabled', false);
         \Config::set('concrete.log.emails', false);

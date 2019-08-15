@@ -2,8 +2,8 @@
 namespace Concrete\Core\Express\Search\ColumnSet;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
-use PermissionKey;
-use User;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\User\User;
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 

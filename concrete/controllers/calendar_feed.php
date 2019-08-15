@@ -15,7 +15,7 @@ class CalendarFeed extends Controller
     {
         $calendar = Calendar::getByID($calendar_id);
         if (is_object($calendar)) {
-            $cp = new \Permissions($calendar);
+            $cp = new \Concrete\Core\Permission\Checker($calendar);
             if ($cp->canAccessCalendarRssFeed()) {
                 if ($calendar->getEventPageParentID()) {
                     $calendarPage = Page::getByID($calendar->getEventPageParentID());

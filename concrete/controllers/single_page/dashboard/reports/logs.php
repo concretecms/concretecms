@@ -12,7 +12,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Log;
-use Request;
+use Concrete\Core\Http\Request;
 
 class Logs extends DashboardPageController
 {

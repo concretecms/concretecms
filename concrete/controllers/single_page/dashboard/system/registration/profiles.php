@@ -5,7 +5,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Single;
 use Config;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Profiles extends DashboardSitePageController
 {
@@ -47,7 +47,7 @@ class Profiles extends DashboardSitePageController
 
                 foreach($this->app->make('site')->getList() as $site) {
                     foreach(['/members/directory', '/members/profile', '/members'] as $path) {
-                        $c = \Page::getByPath($path, 'RECENT', $site);
+                        $c = \Concrete\Core\Page\Page::getByPath($path, 'RECENT', $site);
                         $c->delete();
                     }
                 }

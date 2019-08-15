@@ -23,7 +23,7 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\User\User;
 use Core;
-use FileAttributeKey;
+use Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
 
 class Controller extends BlockController
 {
@@ -108,7 +108,7 @@ class Controller extends BlockController
         $r = $fsl->get();
         $sets = array();
         foreach ($r as $fs) {
-            $fsp = new \Permissions($fs);
+            $fsp = new \Concrete\Core\Permission\Checker($fs);
             if ($fsp->canSearchFiles()) {
                 $sets[] = $fs;
             }
@@ -332,7 +332,7 @@ class Controller extends BlockController
                     $fileObject = $file->getTreeNodeFileObject();
                 }
 
-                $fp = new \Permissions($fileObject);
+                $fp = new \Concrete\Core\Permission\Checker($fileObject);
                 if ($fp->canEditFileProperties()) {
                     $return[] = 'edit_properties';
                     break;
@@ -575,7 +575,7 @@ class Controller extends BlockController
                 }
                 break;
             case 'edit_properties':
-                $fp = new \Permissions($file);
+                $fp = new \Concrete\Core\Permission\Checker($file);
                 if ($fp->canEditFileProperties()) {
                     return sprintf('<a href="#" data-document-library-edit-properties="%s" class="ccm-block-document-library-icon"><i class="fa fa-pencil"></i></a>',
                         $file->getFileID());
@@ -626,8 +626,8 @@ class Controller extends BlockController
     {
         $files = array();
         if ($this->bID == $bID) {
-            $fp = \FilePermissions::getGlobal();
-            $cf = \Loader::helper('file');
+            $fp = \Concrete\Core\Legacy\FilePermissions::getGlobal();
+            $cf = \Concrete\Core\Legacy\Loader::helper('file');
             if (\Core::make('token')->validate()) {
                 if (isset($_FILES['file']) && (is_uploaded_file($_FILES['file']['tmp_name']))) {
                     if (!$fp->canAddFileType($cf->getExtension($_FILES['file']['name']))) {
@@ -640,7 +640,7 @@ class Controller extends BlockController
                         } else {
                             $file = $response->getFile();
                             if ($this->addFilesToSetID) {
-                                $fs = \FileSet::getByID($this->addFilesToSetID);
+                                $fs = \Concrete\Core\File\Set\Set::getByID($this->addFilesToSetID);
                                 if (is_object($fs)) {
                                     $fs->addFileToSet($file);
                                 }
@@ -719,7 +719,7 @@ class Controller extends BlockController
         }
 
         if ($this->onlyCurrentUser) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             if ($u->isRegistered()) {
                 $uID = $u->getUserID();
                 $query = $list->getQueryObject();
@@ -754,7 +754,7 @@ class Controller extends BlockController
             $this->requireAsset('jquery/ui');
         }
         $this->set('canAddFiles', false);
-        $fp = \FilePermissions::getGlobal();
+        $fp = \Concrete\Core\Legacy\FilePermissions::getGlobal();
         if ($this->allowInPageFileManagement) {
             $this->requireAsset('core/file-manager');
         }
@@ -828,9 +828,9 @@ class Controller extends BlockController
             'rowBackgroundColorAlternate' => empty($args['tableStriped']) ? '' : $args['rowBackgroundColorAlternate'],
         ];
         if ((int) $args['addFilesToSetID'] > 0) {
-            $fs = \FileSet::getByID($args['addFilesToSetID']);
+            $fs = \Concrete\Core\File\Set\Set::getByID($args['addFilesToSetID']);
             if (is_object($fs)) {
-                $fsp = new \Permissions($fs);
+                $fsp = new \Concrete\Core\Permission\Checker($fs);
                 if ($fsp->canAddFiles() && $fsp->canSearchFiles()) {
                     $data['addFilesToSetID'] = $fs->getFileSetID();
                 }

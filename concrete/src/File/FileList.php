@@ -9,7 +9,7 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
-use FileAttributeKey;
+use Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Exception;
 
@@ -37,7 +37,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function __construct(StickyRequest $req = null)
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }
@@ -129,7 +129,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
             }
         }
 
-        $fp = new \Permissions($mixed);
+        $fp = new \Concrete\Core\Permission\Checker($mixed);
 
         return $fp->canViewFile();
     }

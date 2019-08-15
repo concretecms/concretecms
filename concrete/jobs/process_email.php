@@ -3,7 +3,7 @@ namespace Concrete\Job;
 
 use Job as AbstractJob;
 use Concrete\Core\Mail\Importer\MailImporter;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class ProcessEmail extends AbstractJob
 {

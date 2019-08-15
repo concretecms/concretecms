@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Type;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Controller extends BlockController
 {
@@ -43,9 +43,9 @@ class Controller extends BlockController
     public function getDateLink($dateArray = null)
     {
         if ($this->cTargetID) {
-            $c = \Page::getByID($this->cTargetID);
+            $c = \Concrete\Core\Page\Page::getByID($this->cTargetID);
         } else {
-            $c = \Page::getCurrentPage();
+            $c = \Concrete\Core\Page\Page::getCurrentPage();
         }
         if ($dateArray) {
             return \URL::page($c, $dateArray['year'], $dateArray['month']);

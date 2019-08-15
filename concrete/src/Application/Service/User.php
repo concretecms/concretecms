@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
-use Loader;
-use TaskPermission;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Legacy\TaskPermission;
 
 class User
 {
     /**
-     * @param $uo \User
+     * @param $uo \Concrete\Core\User\User
      * @param bool $showSpacer
      *
      * @return mixed

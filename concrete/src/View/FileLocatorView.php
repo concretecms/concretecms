@@ -32,7 +32,7 @@ class FileLocatorView extends AbstractView
     public function action($action)
     {
         $a = func_get_args();
-        $c = \Page::getCurrentPage();
+        $c = \Concrete\Core\Page\Page::getCurrentPage();
         array_unshift($a, $c);
 
         return call_user_func_array(array('\URL', 'to'), $a);

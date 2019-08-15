@@ -2,11 +2,11 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Config;
-use Loader;
-use Page;
-use Stack;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use URL;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;

@@ -39,7 +39,7 @@ class Controller extends BlockController
             $filterValues[$filter->getKey()] = $filter->getName();
         }
 
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         $list = $this->app->make(AlertList::class, ['user' => $u]);
         $filter = (string) $this->request->query->get('filter');
         if ($filter !== '') {

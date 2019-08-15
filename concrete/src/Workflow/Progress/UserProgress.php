@@ -2,7 +2,7 @@
 namespace Concrete\Core\Workflow\Progress;
 
 use Concrete\Core\Workflow\Request\UserRequest;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Workflow\Workflow;
 
 class UserProgress extends Progress

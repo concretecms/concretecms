@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Permission\Duration as PermissionDuration;
-use User;
+use Concrete\Core\User\User;
 
 class EditPagePropertiesPageKey extends PageKey
 {

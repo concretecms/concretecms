@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use UserInfo;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Permission\Access\ConversationAccess;
 

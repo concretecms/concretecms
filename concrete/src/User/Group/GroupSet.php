@@ -3,7 +3,7 @@ namespace Concrete\Core\User\Group;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Gettext\Translations;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class GroupSet extends ConcreteObject
 {

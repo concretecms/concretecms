@@ -2,7 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,13 +23,13 @@ class Bulk extends DashboardPageController
     {
         static $names = array();
         if (!isset($names[$locale])) {
-            $prevLocale = \Localization::activeLocale();
+            $prevLocale = \Concrete\Core\Localization\Localization::activeLocale();
             if ($prevLocale !== $locale) {
-                \Localization::changeLocale($locale);
+                \Concrete\Core\Localization\Localization::changeLocale($locale);
             }
             $names[$locale] = tc('SiteName', $this->app->make('site')->getSite()->getSiteName());
             if ($prevLocale !== $locale) {
-                \Localization::changeLocale($prevLocale);
+                \Concrete\Core\Localization\Localization::changeLocale($prevLocale);
             }
         }
 

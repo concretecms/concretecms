@@ -88,7 +88,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($error) {
             $this->markError($error);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
+        id(new \Concrete\Core\Routing\RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
     }
 
     public function markError($error)
@@ -112,7 +112,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($message) {
             $this->markSuccess($message);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
+        id(new \Concrete\Core\Routing\RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
     }
 
     public function markSuccess($message)
@@ -130,7 +130,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * Create a cookie hash to identify the user indefinitely.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      *
      * @return string Unique hash to be used to verify the users identity
      */
@@ -171,7 +171,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * We now check if the user allows access to email address as twitter does not provide this and users can deny access to  on facebook).
      *
-     * @return null|\User
+     * @return null|\Concrete\Core\User\User
      *
      * @throws Exception
      */
@@ -214,7 +214,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
                 $flashbag->set('token', $this->getToken());
 
 
-                $response = \Redirect::to('/login/callback/' . $this->getHandle() . '/handle_register/', id(new Token())->generate($this->getHandle() . '_register'));
+                $response = \Concrete\Core\Routing\Redirect::to('/login/callback/' . $this->getHandle() . '/handle_register/', id(new Token())->generate($this->getHandle() . '_register'));
                 $response->send();
                 exit;
 
@@ -249,8 +249,8 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $this->redirect('/login/');
             exit;
         }
-        if (\Request::request('uEmail', false)) {
-            $this->email = \Request::request('uEmail');
+        if (\Concrete\Core\Http\Request::request('uEmail', false)) {
+            $this->email = \Concrete\Core\Http\Request::request('uEmail');
 
             $user = $this->createUser();
             if ($user && !$user->isError()) {
@@ -386,24 +386,24 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         }
 
         if ($group_id = intval($this->registrationGroupID(), 10)) {
-            $group = \Group::getByID($group_id);
+            $group = \Concrete\Core\User\Group\Group::getByID($group_id);
             if ($group && is_object($group) && !$group->isError()) {
                 $user = User::getByUserID($user_info->getUserID());
                 $user->enterGroup($group);
             }
         }
 
-        $attribs = \UserAttributeKey::getRegistrationList();
+        $attribs = \Concrete\Core\Attribute\Key\UserKey::getRegistrationList();
         if (!empty($attribs)) {
             $user_info->saveUserAttributesDefault($attribs);
         }
 
-        $key = \UserAttributeKey::getByHandle('first_name');
+        $key = \Concrete\Core\Attribute\Key\UserKey::getByHandle('first_name');
         if ($key) {
             $user_info->setAttribute($key, $first_name);
         }
 
-        $key = \UserAttributeKey::getByHandle('last_name');
+        $key = \Concrete\Core\Attribute\Key\UserKey::getByHandle('last_name');
         if ($key) {
             $user_info->setAttribute($key, $last_name);
         }

@@ -15,7 +15,7 @@ class TopicMenu extends Menu
     public function __construct(Topic $topic)
     {
         parent::__construct($topic);
-        $p = new \Permissions($topic);
+        $p = new \Concrete\Core\Permission\Checker($topic);
         if ($p->canEditTreeNode()) {
             $this->addItem(new EditTopicItem($topic));
         }

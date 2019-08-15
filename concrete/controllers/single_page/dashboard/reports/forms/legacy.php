@@ -3,9 +3,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports\Forms;
 
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use UserInfo;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Block\Form\MiniSurvey;
 use Concrete\Block\Form\Statistics as FormBlockStatistics;
 

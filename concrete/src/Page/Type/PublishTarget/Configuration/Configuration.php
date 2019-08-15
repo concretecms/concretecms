@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 

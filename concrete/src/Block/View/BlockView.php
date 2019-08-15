@@ -7,12 +7,12 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
 use Config;
-use Area;
-use Environment;
-use User;
-use Page;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\User\User;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\Block;
-use View;
+use Concrete\Core\View\View;
 
 /**
  * Work with the rendered view of a block.

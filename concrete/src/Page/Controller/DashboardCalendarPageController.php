@@ -11,7 +11,7 @@ class DashboardCalendarPageController extends DashboardSitePageController
     public function getCalendars($caID)
     {
         $calendars = array_filter(Calendar::getList($this->site), function ($calendar) {
-            $p = new \Permissions($calendar);
+            $p = new \Concrete\Core\Permission\Checker($calendar);
 
             return $p->canViewCalendarInEditInterface();
         });
@@ -22,7 +22,7 @@ class DashboardCalendarPageController extends DashboardSitePageController
         $defaultCalendar = reset($calendars);
         if ($caID) {
             $calendar = Calendar::getByID(intval($caID));
-            $cp = new \Permissions($calendar);
+            $cp = new \Concrete\Core\Permission\Checker($calendar);
             if (!$cp->canViewCalendarInEditInterface()) {
                 unset($calendar);
             }

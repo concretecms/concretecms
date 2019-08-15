@@ -3,11 +3,11 @@ namespace Concrete\Controller\Dialog\User\Bulk;
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use PermissionKey;
-use Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
 use UserInfo;
 use Core;
-use GroupList;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\Group\Group as UserGroup;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 

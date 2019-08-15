@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Package;
 
 use Database;
-use Package;
+use Concrete\Core\Package\Package;
 use PHPUnit_Framework_TestCase;
 
 class DbXmlTest extends PHPUnit_Framework_TestCase

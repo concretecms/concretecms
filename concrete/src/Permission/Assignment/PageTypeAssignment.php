@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Permission\Access\Access;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class PageTypeAssignment extends Assignment
 {

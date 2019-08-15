@@ -4,8 +4,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Application\EditResponse as UserEditResponse;
-use PermissionKey;
-use Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
 use UserInfo;
 use Core;
 use Concrete\Core\User\User;

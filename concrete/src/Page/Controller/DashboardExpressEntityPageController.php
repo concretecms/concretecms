@@ -33,7 +33,7 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
 
     public function view($folder = null)
     {
-        $permissions = new \Permissions($this->getEntity());
+        $permissions = new \Concrete\Core\Permission\Checker($this->getEntity());
         if ($permissions->canAddExpressEntries()) {
             $header = new Header($this->getEntity(), $this->getPageObject());
             $this->set('headerMenu', $header);
@@ -52,7 +52,7 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
             $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entry');
             $entry = $r->findOneById($owner_entry_id);
         }
-        $permissions = new \Permissions($entity);
+        $permissions = new \Concrete\Core\Permission\Checker($entity);
         if (!$permissions->canAddExpressEntries()) {
             throw new \Exception(t('You do not have access to add entries of this entity type.'));
         }

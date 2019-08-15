@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Captcha extends DashboardPageController
 {

@@ -72,7 +72,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
         if ($request) {
             $data = $request->getSearchRequest();
         } else {
-            $data = \Request::getInstance()->query->all();
+            $data = \Concrete\Core\Http\Request::getInstance()->query->all();
         }
 
         if (isset($data[$list->getQuerySortColumnParameter()])) {

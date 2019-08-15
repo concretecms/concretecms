@@ -3,7 +3,7 @@ namespace Concrete\Core\File\StorageLocation\Type;
 
 use Database;
 use Core;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\Mapping as ORM;
 
 class Type
@@ -12,7 +12,7 @@ class Type
     /**
      * @param string $fslTypeHandle
      * @param string $fslTypeName
-     * @param int|\Package $pkg
+     * @param int|\Concrete\Core\Package\Package $pkg
      *
      * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type
      */
@@ -75,7 +75,7 @@ class Type
     /**
      * Return an array of AuthenticationTypes that are associated with a specific package.
      *
-     * @param \Package $pkg
+     * @param \Concrete\Core\Package\Package $pkg
      *
      * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type[]
      */

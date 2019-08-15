@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Legacy;
 
-use Page as ConcretePage;
-use User;
+use Concrete\Core\Page\Page as ConcretePage;
+use Concrete\Core\User\User;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
-use PermissionKey;
-use Permissions;
-use CollectionAttributeKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\Connection\Connection;

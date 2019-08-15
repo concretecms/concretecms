@@ -3,7 +3,7 @@ namespace Concrete\Core\Area\Layout\Preset;
 
 use Concrete\Core\Area\Layout\Layout;
 use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 
 class UserPreset extends ConcreteObject

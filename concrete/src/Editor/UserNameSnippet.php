@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Editor;
 
-use User;
+use Concrete\Core\User\User;
 
 class UserNameSnippet extends Snippet
 {

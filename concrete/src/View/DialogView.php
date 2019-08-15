@@ -3,11 +3,11 @@ namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\Output\JavascriptFormatter;
-use View as ConcreteView;
+use Concrete\Core\View\View as ConcreteView;
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Asset\JavascriptAsset;
 use Concrete\Core\Asset\JavascriptInlineAsset;
-use User;
+use Concrete\Core\User\User;
 
 class DialogView extends ConcreteView
 {

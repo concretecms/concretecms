@@ -11,13 +11,13 @@ class Action extends AbstractController
 {
     public function add($cID, $arHandle, $btID, $action)
     {
-        $c = \Page::getByID($cID);
+        $c = \Concrete\Core\Page\Page::getByID($cID);
 
         if (is_object($c) && !$c->isError()) {
-            $a = \Area::getOrCreate($c, $arHandle);
+            $a = \Concrete\Core\Area\Area::getOrCreate($c, $arHandle);
             if (is_object($a)) {
-                $ap = new \Permissions($a);
-                $bt = \BlockType::getByID($btID);
+                $ap = new \Concrete\Core\Permission\Checker($a);
+                $bt = \Concrete\Core\Block\BlockType\BlockType::getByID($btID);
                 if (is_object($bt)) {
                     $controller = $bt->getController();
                     $controller->setAreaObject($a);
@@ -62,17 +62,17 @@ class Action extends AbstractController
 
     public function edit($cID, $arHandle, $bID, $action)
     {
-        $c = \Page::getByID($cID);
+        $c = \Concrete\Core\Page\Page::getByID($cID);
         if (is_object($c) && !$c->isError()) {
             $this->request->setCurrentPage($c);
-            $a = \Area::getOrCreate($c, $arHandle);
+            $a = \Concrete\Core\Area\Area::getOrCreate($c, $arHandle);
             $ax = $a;
             $cx = $c;
             if ($a->isGlobalArea()) {
-                $cx = \Stack::getByName($arHandle);
-                $ax = \Area::get($cx, STACKS_AREA_NAME);
+                $cx = \Concrete\Core\Page\Stack\Stack::getByName($arHandle);
+                $ax = \Concrete\Core\Area\Area::get($cx, STACKS_AREA_NAME);
             }
-            $b = \Block::getByID($bID, $cx, $ax);
+            $b = \Concrete\Core\Block\Block::getByID($bID, $cx, $ax);
             if (is_object($b)) {
                 $controller = $b->getController();
                 if ($controller->validateEditBlockPassThruAction($b)) {
@@ -107,7 +107,7 @@ class Action extends AbstractController
 
     public function edit_composer($cID, $arHandle, $ptComposerFormLayoutSetControlID, $action)
     {
-        $c = \Page::getByID($cID);
+        $c = \Concrete\Core\Page\Page::getByID($cID);
         $setControl = FormLayoutSetControl::getByID($ptComposerFormLayoutSetControlID);
         if (is_object($setControl)) {
             if (is_object($c) && !$c->isError()) {

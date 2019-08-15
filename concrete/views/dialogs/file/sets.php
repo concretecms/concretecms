@@ -5,7 +5,7 @@
     <div class="ccm-ui">
         <?php Loader::element('files/add_to_sets', array(
             'displayFileSet' => function ($fileset) use ($f) {
-                $fp = \FilePermissions::getGlobal();
+                $fp = \Concrete\Core\Legacy\FilePermissions::getGlobal();
                 if (!$fp->canAddFiles() || !$fp->canAddFileType(strtolower($f->getExtension()))) {
                     return false;
                 } else {

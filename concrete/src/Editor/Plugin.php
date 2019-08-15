@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Editor;
 
-use AssetList;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Asset\AssetGroup;
 use Concrete\Core\Asset\AssetInterface;
 use Concrete\Core\Asset\AssetPointer;

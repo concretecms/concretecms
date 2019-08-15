@@ -4,7 +4,7 @@ namespace Concrete\Core\User\Point;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Legacy\DatabaseItemList;
 use Concrete\Core\Support\Facade\Application;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
 
 class EntryList extends DatabaseItemList

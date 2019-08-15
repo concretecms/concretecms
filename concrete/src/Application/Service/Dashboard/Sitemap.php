@@ -317,7 +317,7 @@ class Sitemap
     {
         $types = Type::getList();
         foreach($types as $pt) {
-            $ptp = new \Permissions($pt);
+            $ptp = new \Concrete\Core\Permission\Checker($pt);
             if ($ptp->canAddPageType()) {
                 return true;
             }

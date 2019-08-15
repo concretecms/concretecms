@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Dashboard extends DashboardPageController
 {

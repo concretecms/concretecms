@@ -9,7 +9,7 @@ class PageAccess extends Access implements SiteAccessInterface
     public function getSite()
     {
         $cID = $this->getPermissionObject()->getCollectionID();
-        $page = \Page::getByID($cID);
+        $page = \Concrete\Core\Page\Page::getByID($cID);
         return $page->getSite();
     }
 

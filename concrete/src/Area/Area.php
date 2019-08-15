@@ -4,12 +4,12 @@ namespace Concrete\Core\Area;
 use Core;
 use Database;
 use Concrete\Core\Foundation\ConcreteObject;
-use Block;
-use PermissionKey;
-use View;
-use Permissions;
-use Page;
-use User;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\View\View;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Localization\Localization;
 

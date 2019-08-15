@@ -8,8 +8,8 @@ use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Controller\Search\Files as SearchFilesController;
-use View;
-use Loader;
+use Concrete\Core\View\View;
+use Concrete\Core\Legacy\Loader;
 
 class Search extends DashboardPageController
 {

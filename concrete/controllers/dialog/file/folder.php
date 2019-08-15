@@ -25,7 +25,7 @@ class Folder extends BackendInterfaceFileController
     {
         $destNode = Node::getByID($this->request->request->get('folderID'));
         if (is_object($destNode)) {
-            $dp = new \Permissions($destNode);
+            $dp = new \Concrete\Core\Permission\Checker($destNode);
             if (!$dp->canAddTreeSubNode()) {
                 throw new UserMessageException(t('You are not allowed to move files to this location.'));
             }
@@ -36,7 +36,7 @@ class Folder extends BackendInterfaceFileController
         $sourceNode = $this->file->getFileNodeObject();
 
         if (is_object($sourceNode)) {
-            $dp = new \Permissions($sourceNode);
+            $dp = new \Concrete\Core\Permission\Checker($sourceNode);
             if (!$dp->canEditTreeNode()) {
                 throw new UserMessageException(t('You are not allowed to move this file.'));
             }

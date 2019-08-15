@@ -2,12 +2,12 @@
 namespace Concrete\Core\User\PrivateMessage;
 
 use Concrete\Core\Logging\Channels;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use DateTime;
 use Config;
 use UserInfo;
 use Events;
-use View;
+use Concrete\Core\View\View;
 
 class Limit
 {

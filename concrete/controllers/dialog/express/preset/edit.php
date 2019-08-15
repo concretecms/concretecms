@@ -5,7 +5,7 @@ use Concrete\Controller\Dialog\Search\Preset\Edit as PresetEdit;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Doctrine\ORM\EntityManager;
 use URL;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Edit extends PresetEdit
 {

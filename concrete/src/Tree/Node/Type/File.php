@@ -6,7 +6,7 @@ use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Menu\FileMenu;
 use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class File extends TreeNode
 {

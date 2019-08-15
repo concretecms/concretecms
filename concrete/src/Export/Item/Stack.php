@@ -26,7 +26,7 @@ class Stack implements ItemInterface
         // you shouldn't ever have a sub area in a stack but just in case.
         $r = $db->Execute('select arHandle from Areas where cID = ? and arParentID = 0', array($stack->getCollectionID()));
         while ($row = $r->FetchRow()) {
-            $ax = \Area::get($stack, $row['arHandle']);
+            $ax = \Concrete\Core\Area\Area::get($stack, $row['arHandle']);
             $ax->export($node, $stack);
         }
 

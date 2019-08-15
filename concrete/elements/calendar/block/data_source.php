@@ -7,7 +7,7 @@ $form = Core::make('helper/form');
 $calendars = array_filter(
     Concrete\Core\Calendar\Calendar::getList(),
     function ($calendar) {
-        $p = new \Permissions($calendar);
+        $p = new \Concrete\Core\Permission\Checker($calendar);
 
         return $p->canViewCalendarInEditInterface();
     }

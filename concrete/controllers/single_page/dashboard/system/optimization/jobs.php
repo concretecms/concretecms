@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Job;
-use JobSet;
+use Concrete\Core\Job\Job;
+use Concrete\Core\Job\Set as JobSet;
 
 class Jobs extends DashboardPageController
 {
@@ -11,7 +11,7 @@ class Jobs extends DashboardPageController
     {
         parent::on_start();
         // clear the environment overrides cache first
-        $env = \Environment::get();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $env->clearOverrideCache();
 
         $installed = Job::getList();

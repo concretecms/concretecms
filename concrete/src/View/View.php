@@ -6,11 +6,11 @@ use Concrete\Core\Asset\Output\StandardFormatter;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Events;
 use Concrete\Core\Support\Facade\Facade;
-use PageTheme;
-use Page;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
+use Concrete\Core\Page\Page;
 use Config;
 use Illuminate\Filesystem\Filesystem;
 

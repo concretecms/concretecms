@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Access;
 
 use Database;
 use Concrete\Core\Page\Page;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class AddBlockBlockTypeAccess extends BlockTypeAccess
 {

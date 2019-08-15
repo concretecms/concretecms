@@ -14,7 +14,7 @@ class StatesProvincesList
      */
     public function getAll()
     {
-        $locale = \Localization::activeLocale();
+        $locale = \Concrete\Core\Localization\Localization::activeLocale();
         if (!isset($this->localizedStatesProvinces[$locale])) {
             $provinces = [
                 'US' => [

@@ -37,7 +37,7 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine implements Specif
                     if (isset($this->home)) {
                         $siteTree = $this->home->getSiteTreeObject();
                     } else {
-                        $home = \Page::getByID(\Page::getHomePageID());
+                        $home = \Concrete\Core\Page\Page::getByID(\Concrete\Core\Page\Page::getHomePageID());
                         $siteTree = $home->getSiteTreeObject();
                     }
 

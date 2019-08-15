@@ -62,7 +62,7 @@ class DeleteOccurrence extends BackendInterfaceController
         );
 
         if (!$e->has()) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             $eventVersion = $this->eventService->getVersionToModify($occurrence->getEvent(), $u);
             $this->eventService->addEventVersion($eventVersion->getEvent(), $eventVersion->getEvent()->getCalendar(), $eventVersion);
             $this->eventOccurrenceService->delete($eventVersion, $occurrence->getOccurrence());
@@ -106,7 +106,7 @@ class DeleteOccurrence extends BackendInterfaceController
         if (is_object($occurrence)) {
             $calendar = $occurrence->getEvent()->getCalendar();
             if (is_object($calendar)) {
-                $cp = new \Permissions($calendar);
+                $cp = new \Concrete\Core\Permission\Checker($calendar);
                 return $cp->canEditCalendarEvents();
             }
         }

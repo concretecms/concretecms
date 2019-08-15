@@ -4,8 +4,8 @@ namespace Concrete\Core\Form\Service\Widget;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Core;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class SiteSelector
 {
@@ -22,7 +22,7 @@ class SiteSelector
      */
     public function selectSite($fieldName, $siteID = false, $includeCurrent = false, $includeAll = false)
     {
-        $v = \View::getInstance();
+        $v = \Concrete\Core\View\View::getInstance();
         $v->requireAsset('selectize');
         $currentSelected = $siteID !== 'current' ? 'selected' : '';
         $allSelected = $siteID === 'all' ? 'selected' : '';
@@ -33,7 +33,7 @@ class SiteSelector
 
         $sites = '';
         foreach(\Core::make('site')->getList() as $site) {
-            $sp = new \Permissions($site);
+            $sp = new \Concrete\Core\Permission\Checker($site);
             if ($sp->canViewSiteInSelector()) {
                 $sites .= '<option ' . ($site->getSiteID() == $siteID ? 'selected' : '') . ' value="' . $site->getSiteID() . '">' . $site->getSiteName() . '</option>';
             }

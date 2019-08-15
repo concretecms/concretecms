@@ -129,7 +129,7 @@ class Type implements ExportableInterface
         // bound to the controller and then if it caches against type the wrong controller
         // key combination gets returned with this call.
         //if (!isset($this->controller)) {
-        $env = \Environment::get();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $this->atHandle . '/' . FILENAME_CONTROLLER);
         $prefix = $r->override ? true : $this->getPackageHandle();
         $atHandle = \Core::make('helper/text')->camelcase($this->atHandle);

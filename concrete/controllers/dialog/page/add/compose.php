@@ -7,8 +7,8 @@ use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\View\DialogView;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Compose extends Controller
 {

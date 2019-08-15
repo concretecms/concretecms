@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use Concrete\Core\User\Group\GroupSet;

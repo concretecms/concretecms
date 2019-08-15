@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Editor;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Core;
-use Package;
+use Concrete\Core\Package\Package;
 
 abstract class Snippet extends ConcreteObject
 {

@@ -3,7 +3,7 @@ namespace Concrete\Core\Tree\Type;
 
 use Concrete\Core\Tree\Tree;
 use Database;
-use GroupTreeNode;
+use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 
 class Group extends Tree
 {

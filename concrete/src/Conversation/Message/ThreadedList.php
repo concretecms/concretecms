@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Legacy\ItemList;
-use Conversation;
-use ConversationMessage;
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\Message\Message as ConversationMessage;
 
 class ThreadedList extends ItemList
 {

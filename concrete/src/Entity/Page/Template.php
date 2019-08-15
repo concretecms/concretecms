@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Page;
 
-use PageType;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Package\PackageList;
 use Core;

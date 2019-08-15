@@ -126,7 +126,7 @@ class DefaultDispatcher implements DispatcherInterface
         } catch (ResourceNotFoundException $e) {
         } catch (MethodNotAllowedException $e) {
         }
-        $c = \Page::getFromRequest($request);
+        $c = \Concrete\Core\Page\Page::getFromRequest($request);
         $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
 
         return $response;

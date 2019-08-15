@@ -2,8 +2,8 @@
 namespace Concrete\Controller\Backend\UserInterface;
 
 use Concrete\Core\Error\UserMessageException;
-use Page as ConcretePage;
-use Permissions;
+use Concrete\Core\Page\Page as ConcretePage;
+use Concrete\Core\Permission\Checker as Permissions;
 
 abstract class Block extends Page
 {
@@ -36,19 +36,19 @@ abstract class Block extends Page
         if (!$bID) {
             $bID = $request->request->get('bID');
         }
-        $a = \Area::get($this->page, $arHandle);
+        $a = \Concrete\Core\Area\Area::get($this->page, $arHandle);
         if (!is_object($a)) {
             throw new UserMessageException('Invalid Area');
         }
         $this->area = $a;
         if (!$a->isGlobalArea()) {
             $this->set('isGlobalArea', false);
-            $b = \Block::getByID($bID, $this->page, $a);
+            $b = \Concrete\Core\Block\Block::getByID($bID, $this->page, $a);
         } else {
             $this->set('isGlobalArea', true);
-            $stack = \Stack::getByName($arHandle);
+            $stack = \Concrete\Core\Page\Stack\Stack::getByName($arHandle);
             $sc = ConcretePage::getByID($stack->getCollectionID(), 'RECENT');
-            $b = \Block::getByID($bID, $sc, STACKS_AREA_NAME);
+            $b = \Concrete\Core\Block\Block::getByID($bID, $sc, STACKS_AREA_NAME);
             if ($b) {
                 $b->setBlockAreaObject($a); // set the original area object
             }
@@ -57,7 +57,7 @@ abstract class Block extends Page
             throw new UserMessageException(t('Access Denied'));
         }
         $this->block = $b;
-        $this->permissions = new \Permissions($b);
+        $this->permissions = new \Concrete\Core\Permission\Checker($b);
         $this->set('bp', $this->permissions);
         $this->set('b', $b);
     }
@@ -76,7 +76,7 @@ abstract class Block extends Page
         $cx = $this->page;
         if ($this->area->isGlobalArea()) {
             $ax = STACKS_AREA_NAME;
-            $cx = \Stack::getByName($_REQUEST['arHandle']);
+            $cx = \Concrete\Core\Page\Stack\Stack::getByName($_REQUEST['arHandle']);
         }
 
         $nvc = $cx->getVersionToModify();
@@ -85,7 +85,7 @@ abstract class Block extends Page
             $xvc->relateVersionEdits($nvc);
         }
 
-        $b = \Block::getByID($_REQUEST['bID'], $nvc, $ax);
+        $b = \Concrete\Core\Block\Block::getByID($_REQUEST['bID'], $nvc, $ax);
 
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
             // if we're editing a scrapbook display block, we add a new block in this position for the real block type
@@ -102,10 +102,10 @@ abstract class Block extends Page
 
             $originalDisplayOrder = $b->getBlockDisplayOrder();
             $cnt = $b->getController();
-            $ob = \Block::getByID($cnt->getOriginalBlockID());
+            $ob = \Concrete\Core\Block\Block::getByID($cnt->getOriginalBlockID());
             $ob->loadNewCollection($nvc);
             if (!is_object($ax)) {
-                $ax = \Area::getOrCreate($cx, $ax);
+                $ax = \Concrete\Core\Area\Area::getOrCreate($cx, $ax);
             }
             $ob->setBlockAreaObject($ax);
             $nb = $ob->duplicate($nvc);

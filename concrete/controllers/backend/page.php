@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Controller\Backend;
 
-use Controller;
-use PageType;
-use Permissions;
-use Loader;
-use Redirect;
-use Page as ConcretePage;
-use User as ConcreteUser;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Page\Page as ConcretePage;
+use Concrete\Core\User\User as ConcreteUser;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Core;
 
@@ -52,7 +52,7 @@ class Page extends Controller
             return Redirect::page($c);
         }
 
-        return new \Response(t('Access Denied'));
+        return new \Concrete\Core\Http\Response(t('Access Denied'));
     }
 
     public function getJSON()

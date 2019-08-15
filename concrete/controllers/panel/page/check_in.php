@@ -5,12 +5,12 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Form\Service\Widget\DateTime;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\User\User;
-use Permissions;
-use CollectionVersion;
-use Loader;
-use Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
-use PageEditResponse;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Http\ResponseFactoryInterface;
 
 class CheckIn extends BackendInterfacePageController

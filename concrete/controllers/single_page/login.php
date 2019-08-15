@@ -12,9 +12,9 @@ use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
 use Exception;
-use PageController;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\User\User;
-use UserAttributeKey;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use UserInfo;
 
 class Login extends PageController implements LoggerAwareInterface

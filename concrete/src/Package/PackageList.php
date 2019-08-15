@@ -2,8 +2,8 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
-use CacheLocal;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Cache\CacheLocal;
 
 class PackageList extends ConcreteObject
 {

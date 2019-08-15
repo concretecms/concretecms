@@ -20,7 +20,7 @@ $valt = Loader::helper('validation/token');
 <?php
 $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
-        $request = \Request::getInstance();
+        $request = \Concrete\Core\Http\Request::getInstance();
 
         $v->requireAsset('core/app');
 

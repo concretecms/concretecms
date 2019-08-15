@@ -2,7 +2,7 @@
 namespace Concrete\Core\Workflow\Progress;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Package\PackageList;
 
 class Category extends ConcreteObject

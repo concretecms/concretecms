@@ -14,7 +14,7 @@ class CheckPermissionsRoutine implements RoutineInterface
     public function validate(ErrorList $error, Form $form, $requestType)
     {
         $entity = $form->getEntity();
-        $permissions = new \Permissions($entity);
+        $permissions = new \Concrete\Core\Permission\Checker($entity);
         if ($requestType = ProcessorInterface::REQUEST_TYPE_ADD) {
             $valid = $permissions->canAddExpressEntries();
         } else {

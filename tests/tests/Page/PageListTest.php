@@ -5,9 +5,9 @@ namespace Concrete\Tests\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Config;
-use Page;
-use PageTemplate;
-use PageType;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
 
 class PageListTest extends PageTestCase
 {

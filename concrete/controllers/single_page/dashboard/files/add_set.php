@@ -2,7 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use FileSet;
+use Concrete\Core\File\Set\Set as FileSet;
 
 class AddSet extends DashboardPageController
 {

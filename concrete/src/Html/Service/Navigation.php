@@ -2,9 +2,9 @@
 namespace Concrete\Core\Html\Service;
 
 use Database;
-use Page;
+use Concrete\Core\Page\Page;
 use URL;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Validation\CSRF\Token;
 
 class Navigation

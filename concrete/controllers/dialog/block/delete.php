@@ -64,7 +64,7 @@ class Delete extends BackendInterfaceBlockController
         if ($this->validateAction()) {
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {
                 $name = sprintf('delete_block_%s', $this->block->getBlockID());
-                $queue = \Queue::get($name);
+                $queue = \Concrete\Core\Foundation\Queue\Queue::get($name);
 
                 if ($_POST['process']) {
                     $obj = new \stdClass();
@@ -72,8 +72,8 @@ class Delete extends BackendInterfaceBlockController
                     foreach ($messages as $key => $p) {
                         $block = unserialize($p->body);
 
-                        $page = \Page::getByID($block['cID'], $block['cvID']);
-                        $b = \Block::getByID($block['bID'], $page, $block['arHandle']);
+                        $page = \Concrete\Core\Page\Page::getByID($block['cID'], $block['cvID']);
+                        $b = \Concrete\Core\Block\Block::getByID($block['bID'], $page, $block['arHandle']);
                         if (is_object($b) && !$b->isError()) {
                             $b->deleteBlock();
                         }
@@ -94,7 +94,7 @@ class Delete extends BackendInterfaceBlockController
                 }
 
                 $totalItems = $queue->count();
-                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d block", "%d blocks", $totalItems)));
+                \Concrete\Core\View\View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d block", "%d blocks", $totalItems)));
                 $this->app->shutdown();
             }
         }

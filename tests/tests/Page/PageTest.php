@@ -7,10 +7,10 @@ use Config;
 use Core;
 use Database;
 use Exception;
-use Loader;
-use Page;
-use PageTemplate;
-use PageType;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
 use SinglePage;
 
 class PageTest extends PageTestCase

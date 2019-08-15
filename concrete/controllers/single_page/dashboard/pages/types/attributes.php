@@ -5,8 +5,8 @@ use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use PageType;
-use Loader;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Legacy\Loader;
 
 class Attributes extends DashboardPageController
 {
@@ -19,7 +19,7 @@ class Attributes extends DashboardPageController
         if (!$this->pagetype) {
             $this->redirect('/dashboard/pages/types');
         }
-        $cmp = new \Permissions($this->pagetype);
+        $cmp = new \Concrete\Core\Permission\Checker($this->pagetype);
         if (!$cmp->canEditPageType()) {
             throw new \Exception(t('You do not have access to edit this page type.'));
         }

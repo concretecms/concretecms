@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use TaskPermission;
+use Concrete\Core\Legacy\TaskPermission;
 
 class FileTreeNodeResponse extends TreeNodeResponse
 {
@@ -10,7 +10,7 @@ class FileTreeNodeResponse extends TreeNodeResponse
     {
         $f = $this->getPermissionObject()->getTreeNodeFileObject();
         if (is_object($f)) {
-            $fp = new \Permissions($f);
+            $fp = new \Concrete\Core\Permission\Checker($f);
             return $fp;
         }
     }

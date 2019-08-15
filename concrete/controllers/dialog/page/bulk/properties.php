@@ -2,12 +2,12 @@
 namespace Concrete\Controller\Dialog\Page\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Permissions;
-use Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Http\ResponseAssetGroup;
-use CollectionAttributeKey;
-use PageEditResponse;
-use Loader;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Legacy\Loader;
 
 class Properties extends BackendInterfaceController
 {

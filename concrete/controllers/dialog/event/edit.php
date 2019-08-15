@@ -15,7 +15,7 @@ use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\Calendar\Event\EventRepetitionService;
 use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Utility\Preferences;
-use RedirectResponse;
+use Concrete\Core\Routing\RedirectResponse;
 
 class Edit extends BackendInterfaceController
 {
@@ -73,7 +73,7 @@ class Edit extends BackendInterfaceController
         }
         $calendar = $caID ? Calendar::getByID($caID) : null;
         if (is_object($calendar)) {
-            $cp = new \Permissions($calendar);
+            $cp = new \Concrete\Core\Permission\Checker($calendar);
 
             return $cp->canAddCalendarEvent();
         } else {
@@ -85,7 +85,7 @@ class Edit extends BackendInterfaceController
             if (is_object($occurrence)) {
                 $calendar = $occurrence->getEvent()->getCalendar();
                 if (is_object($calendar)) {
-                    $cp = new \Permissions($calendar);
+                    $cp = new \Concrete\Core\Permission\Checker($calendar);
 
                     return $cp->canEditCalendarEvents();
                 }
@@ -125,7 +125,7 @@ class Edit extends BackendInterfaceController
         $e = $this->validateRequest($calendar, $repetitions);
         $r = new EditResponse($e);
         if (!$e->has()) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             $eventVersionRepetitions = array();
             if ($edit_type == 'local') {
                 $event = new CalendarEvent($calendar);
@@ -137,14 +137,14 @@ class Edit extends BackendInterfaceController
                 $eventVersionRepetitions[] = new CalendarEventVersionRepetition($eventVersion, $repetition);
             }
 
-            $permissions = new \Permissions($calendar);
+            $permissions = new \Concrete\Core\Permission\Checker($calendar);
             if ($permissions->canEditCalendarEventMoreDetailsLocation()) {
                 if ($this->request->request->get('cID') !== null) {
                     $cID = intval($this->request->request->get('cID'));
                     if ($cID) {
-                        $eventPage = \Page::getByID($cID);
+                        $eventPage = \Concrete\Core\Page\Page::getByID($cID);
                         if (is_object($eventPage) && !$eventPage->isError()) {
-                            $cp = new \Permissions($eventPage);
+                            $cp = new \Concrete\Core\Permission\Checker($eventPage);
                             if ($cp->canViewPage()) {
                                 $eventVersion->setRelatedPageRelationType(null);
                                 $eventVersion->setPageObject($eventPage);
@@ -209,7 +209,7 @@ class Edit extends BackendInterfaceController
             $version = $r->getEventVersion();
             $this->eventService->generateDefaultOccurrences($version);
             if ($this->request->request->get('publishAction') == 'approve') {
-                $u = new \User();
+                $u = new \Concrete\Core\User\User();
                 $pkr = new ApproveCalendarEventRequest();
                 $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
                 $pkr->setRequesterUserID($u->getUserID());
@@ -248,7 +248,7 @@ class Edit extends BackendInterfaceController
                 $this->eventService->generateDefaultOccurrences($r->getEventVersion());
             }
             if ($this->request->request->get('publishAction') == 'approve') {
-                $u = new \User();
+                $u = new \Concrete\Core\User\User();
                 $pkr = new ApproveCalendarEventRequest();
                 $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
                 $pkr->setRequesterUserID($u->getUserID());

@@ -33,7 +33,7 @@ class Copy extends DashboardSitePageController
     public function rescan_locale()
     {
         if ($this->token->validate('rescan_locale')) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             if ($u->isSuperUser()) {
                 \Core::make('cache/request')->disable();
                 $section = Section::getByID($_REQUEST['locale']);
@@ -51,7 +51,7 @@ class Copy extends DashboardSitePageController
                     $processor->process();
                 }
                 $totalItems = $processor->getTotalTasks();
-                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d task", "%d tasks", $totalItems)));
+                \Concrete\Core\View\View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d task", "%d tasks", $totalItems)));
                 exit;
             }
         }

@@ -3,7 +3,7 @@ namespace Concrete\Core\Workflow\Progress;
 
 use Core;
 use Database;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
 
@@ -13,7 +13,7 @@ class PageProgress extends Progress implements SiteProgressInterface
 
     public function getSite()
     {
-        $page = \Page::getByID($this->cID);
+        $page = \Concrete\Core\Page\Page::getByID($this->cID);
         return $page->getSite();
     }
 

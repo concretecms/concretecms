@@ -25,7 +25,7 @@ class Duplicate extends BackendInterfaceController
             $e = $this->app->make('error');
             $calendar = $this->app->make(CalendarService::class)->getByID($_REQUEST['caID']);
             if ($calendar) {
-                $cp = new \Permissions($calendar);
+                $cp = new \Concrete\Core\Permission\Checker($calendar);
                 if (!$cp->canAddCalendarEvent()) {
                     $e->add(t('You do not have access to add an event to this calendar.'));
                 }
@@ -38,7 +38,7 @@ class Duplicate extends BackendInterfaceController
 
                 $service = $this->app->make(EventService::class);
                 $event = $service->getByID($_REQUEST['eventID']);
-                $u = new \User();
+                $u = new \Concrete\Core\User\User();
 
                 $event = $service->duplicate($event, $u, $calendar);
 
@@ -78,7 +78,7 @@ class Duplicate extends BackendInterfaceController
              */
             $service = $this->app->make(CalendarService::class);
             foreach($service->getList() as $calendar) {
-                $cp = new \Permissions($calendar);
+                $cp = new \Concrete\Core\Permission\Checker($calendar);
                 if ($cp->canAddCalendarEvent()) {
                     $calendars[$calendar->getID()] = $calendar->getName();
                 }
@@ -107,7 +107,7 @@ class Duplicate extends BackendInterfaceController
         if ($event) {
             $calendar = $event->getCalendar();
             if (is_object($calendar)) {
-                $p = new \Permissions($calendar);
+                $p = new \Concrete\Core\Permission\Checker($calendar);
                 if ($p->canCopyCalendarEvents()) {
                     return true;
                 }

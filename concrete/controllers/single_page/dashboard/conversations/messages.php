@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Conversations;
 
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use stdClass;
 use UserInfo;
 use Core;
@@ -101,7 +101,7 @@ class Messages extends DashboardPageController
         if (!is_object($message)) {
             $e->add(t('Invalid message'));
         } else {
-            $mp = new \Permissions($message);
+            $mp = new \Concrete\Core\Permission\Checker($message);
             if (!$mp->canApproveConversationMessage()) {
                 $e->add(t('You do not have permission to approve this message.'));
             }
@@ -121,7 +121,7 @@ class Messages extends DashboardPageController
         if (!is_object($message)) {
             $e->add(t('Invalid message'));
         } else {
-            $mp = new \Permissions($message);
+            $mp = new \Concrete\Core\Permission\Checker($message);
             if (!$mp->canFlagConversationMessage()) {
                 $e->add(t('You do not have permission to flag this message.'));
             }
@@ -142,7 +142,7 @@ class Messages extends DashboardPageController
         if (!is_object($message)) {
             $e->add(t('Invalid message'));
         } else {
-            $mp = new \Permissions($message);
+            $mp = new \Concrete\Core\Permission\Checker($message);
             if (!$mp->canDeleteConversationMessage()) {
                 $e->add(t('You do not have permission to restore this message.'));
             }

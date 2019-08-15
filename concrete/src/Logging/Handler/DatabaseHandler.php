@@ -3,7 +3,7 @@ namespace Concrete\Core\Logging\Handler;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Database;
-use User;
+use Concrete\Core\User\User;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {

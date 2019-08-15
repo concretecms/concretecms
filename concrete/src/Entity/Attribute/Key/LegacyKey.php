@@ -22,7 +22,7 @@ class LegacyKey extends Key
     public function getAttributeKeyIconSRC()
     {
         $type = $this->getAttributeType();
-        $env = \Environment::get();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $url = $env->getURL(
             implode('/', array(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_BLOCK_ICON)),
             $type->getPackageHandle()
@@ -33,7 +33,7 @@ class LegacyKey extends Key
     public function update($args)
     {
         $controller = $this->getAttributeCategory();
-        return $controller->updateFromRequest($this, \Request::getInstance());
+        return $controller->updateFromRequest($this, \Concrete\Core\Http\Request::getInstance());
     }
 
     public function delete()

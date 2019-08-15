@@ -16,7 +16,7 @@ class Event extends \Concrete\Core\Controller\Controller
         if (is_object($event)) {
             $calendar = $event->getCalendar();
             if (is_object($calendar)) {
-                $p = new \Permissions($calendar);
+                $p = new \Concrete\Core\Permission\Checker($calendar);
                 if ($p->canViewCalendarInEditInterface()) {
                     $obj = new \stdClass();
                     $obj->id = $event->getID();
@@ -35,12 +35,12 @@ class Event extends \Concrete\Core\Controller\Controller
         if ($event) {
             $calendar = $event->getCalendar();
             if (is_object($calendar)) {
-                $p = new \Permissions($calendar);
+                $p = new \Concrete\Core\Permission\Checker($calendar);
                 if ($p->canApproveCalendarEvent() && $this->app->make('token')->validate("unapprove_event")) {
 
                     $r = new EditResponse();
                     $r->setEventVersion($event->getRecentVersion());
-                    $u = new \User();
+                    $u = new \Concrete\Core\User\User();
                     $pkr = new UnapproveCalendarEventRequest();
                     $version = $event->getApprovedVersion();
                     if (!$version) {

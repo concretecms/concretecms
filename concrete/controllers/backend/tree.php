@@ -22,7 +22,7 @@ class Tree extends UserInterface
     {
         $tree = $this->getTree();
         $node = $tree->getRootTreeNodeObject();
-        $np = new \Permissions($node);
+        $np = new \Concrete\Core\Permission\Checker($node);
 
         return $np->canViewTreeNode();
     }

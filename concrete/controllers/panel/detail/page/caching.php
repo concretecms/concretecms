@@ -2,8 +2,8 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use PageEditResponse;
-use PageCache;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Cache\Page\PageCache;
 
 class Caching extends BackendInterfacePageController
 {

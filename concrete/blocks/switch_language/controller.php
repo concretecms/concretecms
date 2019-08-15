@@ -48,11 +48,11 @@ class Controller extends BlockController
         $lang = Section::getByID((int) $sectionID);
         if (is_object($lang)) {
             $resolve = [$lang];
-            $page = \Page::getByID((int) $currentPageID);
+            $page = \Concrete\Core\Page\Page::getByID((int) $currentPageID);
             if (!$page->isError()) {
                 $relatedID = $lang->getTranslatedPageID($page);
                 if ($relatedID) {
-                    $pc = \Page::getByID($relatedID);
+                    $pc = \Concrete\Core\Page\Page::getByID($relatedID);
                     $resolve = [$pc];
                 } elseif ($page->isGeneratedCollection()) {
                     $this->app->make('session')->set('multilingual_default_locale', $lang->getLocale());
@@ -98,7 +98,7 @@ class Controller extends BlockController
     {
         $this->requireAsset('javascript', 'jquery');
         $ml = Section::getList();
-        $c = \Page::getCurrentPage();
+        $c = \Concrete\Core\Page\Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);
         $languages = [];
         $locale = null;
@@ -106,12 +106,12 @@ class Controller extends BlockController
             $locale = $al->getLanguage();
         }
         if (!$locale) {
-            $locale = \Localization::activeLocale();
+            $locale = \Concrete\Core\Localization\Localization::activeLocale();
             $al = Section::getByLocale($locale);
         }
         $mlAccessible = [];
         foreach ($ml as $m) {
-            $pc = new Checker(\Page::getByID($m->getCollectionID()));
+            $pc = new Checker(\Concrete\Core\Page\Page::getByID($m->getCollectionID()));
             if ($pc->canRead()) {
                 $mlAccessible[] = $m;
                 $languages[$m->getCollectionID()] = $m->getLanguageText($m->getLocale());

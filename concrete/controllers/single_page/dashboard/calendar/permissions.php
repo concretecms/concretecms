@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Calendar;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Calendar\Calendar;
 
 class Permissions extends DashboardPageController
@@ -19,7 +19,7 @@ class Permissions extends DashboardPageController
             $this->error->add(t('Invalid calendar.'));
         }
 
-        $cp = new \Permissions($calendar);
+        $cp = new \Concrete\Core\Permission\Checker($calendar);
         if (!$cp->canEditCalendarPermissions()) {
             $this->error->add(t('Access Denied.'));
         }
@@ -45,7 +45,7 @@ class Permissions extends DashboardPageController
     {
         if ($caID) {
             $calendar = Calendar::getByID(intval($caID));
-            $cp = new \Permissions($calendar);
+            $cp = new \Concrete\Core\Permission\Checker($calendar);
             if (!$cp->canEditCalendarPermissions()) {
                 unset($calendar);
             }
@@ -72,7 +72,7 @@ class Permissions extends DashboardPageController
             $this->error->add(t('Invalid calendar.'));
         }
 
-        $cp = new \Permissions($calendar);
+        $cp = new \Concrete\Core\Permission\Checker($calendar);
         if (!$cp->canEditCalendarPermissions()) {
             $this->error->add(t('Access Denied.'));
         }

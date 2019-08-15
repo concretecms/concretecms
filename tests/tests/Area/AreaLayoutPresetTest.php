@@ -8,7 +8,7 @@ use Concrete\TestHelpers\Area\TestAreaLayoutPresetProvider;
 use Concrete\TestHelpers\Area\TestThemeClass;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 use Request;
 
 class AreaLayoutPresetTest extends PageTestCase

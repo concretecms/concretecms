@@ -241,7 +241,7 @@ class PackageService
         $this->bootPackageEntityManager($p, true);
         $p->install($data);
 
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         $swapper = $p->getContentSwapper();
         if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
             $swapper->swapContent($p, $data);

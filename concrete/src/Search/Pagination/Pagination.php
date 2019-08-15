@@ -5,7 +5,7 @@ use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Pagerfanta;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 
 class Pagination extends Pagerfanta
 {

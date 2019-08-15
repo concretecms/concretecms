@@ -2,7 +2,7 @@
 namespace Concrete\Block\Video;
 
 use Concrete\Core\Block\BlockController;
-use File;
+use Concrete\Core\File\File;
 
 class Controller extends BlockController
 {

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\Page;
 use Core;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;

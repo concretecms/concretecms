@@ -144,8 +144,8 @@ class FileListTest extends FileStorageTestCase
     public function testFilterBySet()
     {
         $fs = \FileSet::add('test');
-        $f = \File::getByID(1);
-        $f2 = \File::getByID(4);
+        $f = \Concrete\Core\File\File::getByID(1);
+        $f2 = \Concrete\Core\File\File::getByID(4);
         $fs->addFileToSet($f);
         $fs->addFileToSet($f2);
 
@@ -184,7 +184,7 @@ class FileListTest extends FileStorageTestCase
 
     public function testAutoSort()
     {
-        $req = \Request::getInstance();
+        $req = \Concrete\Core\Http\Request::getInstance();
         $req->query->set($this->list->getQuerySortColumnParameter(), 'fv.fvFilename');
         $req->query->set($this->list->getQuerySortDirectionParameter(), 'desc');
         $nl = new \Concrete\Core\File\FileList();
@@ -256,7 +256,7 @@ class FileListTest extends FileStorageTestCase
         });
         $nl->sortBySearchColumn(new FileVersionFilenameColumn());
         $results = $nl->getResults();
-        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $factory = new PaginationFactory(\Concrete\Core\Http\Request::createFromGlobals());
         $pagination = $factory->createPaginationObject($nl, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
         $this->assertEquals(-1, $nl->getTotalResults());
         $this->assertEquals(-1, $pagination->getTotalResults());
@@ -331,7 +331,7 @@ class FileListTest extends FileStorageTestCase
         });
         $nl->sortBySearchColumn(new FileVersionFilenameColumn());
         $results = $nl->getResults();
-        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $factory = new PaginationFactory(\Concrete\Core\Http\Request::createFromGlobals());
         $pagination = $factory->createPaginationObject($nl, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
         $this->assertEquals(-1, $nl->getTotalResults());
         $this->assertEquals(-1, $pagination->getTotalResults());

@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
-use Loader;
-use User;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddSubpagePageKey extends PageKey

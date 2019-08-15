@@ -60,7 +60,7 @@ class Delete extends BackendInterfaceController
         );
 
         if (!$e->has()) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             $pkr = new DeleteCalendarEventRequest();
             $pkr->setCalendarEventVersionID($event->getRecentVersion()->getID());
             $pkr->setRequesterUserID($u->getUserID());
@@ -96,7 +96,7 @@ class Delete extends BackendInterfaceController
         if (is_object($event)) {
             $calendar = $event->getCalendar();
             if (is_object($calendar)) {
-                $cp = new \Permissions($calendar);
+                $cp = new \Concrete\Core\Permission\Checker($calendar);
                 return $cp->canEditCalendarEvents();
             }
         }

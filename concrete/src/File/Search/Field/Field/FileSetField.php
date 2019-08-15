@@ -46,7 +46,7 @@ class FileSetField extends AbstractField
     {
         $form = \Core::make('helper/form');
         $sets = array();
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         $fileSets = Set::getMySets($u);
         foreach($fileSets as $set) {
             $sets[$set->getFileSetID()] = $set->getFileSetName();

@@ -6,7 +6,7 @@ use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\User\Group\GroupSet;
 use Concrete\Core\User\Group\GroupSetList;
 use Concrete\Core\User\UserList;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class GroupSetField extends AbstractField
 {

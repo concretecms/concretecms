@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use URLify;
 
 class Excluded extends DashboardPageController

@@ -8,7 +8,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
 use Concrete\Core\Feature\ConversationFeatureInterface;
-use Page;
+use Concrete\Core\Page\Page;
 
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
@@ -116,7 +116,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
     {
         $this->requireAsset('core/conversation');
         $this->requireAsset('core/lightbox');
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if (!$u->isRegistered()) {
             $this->requireAsset('css', 'core/frontend/captcha');
         }

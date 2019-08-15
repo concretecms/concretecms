@@ -2,8 +2,8 @@
 namespace Concrete\Core\File\Set;
 
 use Concrete\Core\Entity\File\File as FileEntity;
-use FileSet;
-use Loader;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Legacy\Loader;
 
 class File
 {

@@ -4,7 +4,7 @@ namespace Concrete\Core\User\PrivateMessage;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use UserInfo;
 use Events;
 

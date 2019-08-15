@@ -2,7 +2,7 @@
 namespace Concrete\Core\Legacy;
 
 use Concrete\Core\Support\Facade\Facade;
-use View;
+use Concrete\Core\View\View;
 
 /**
  * @deprecated
@@ -51,7 +51,7 @@ class Loader
 
     public static function controller($item)
     {
-        if ($item instanceof \Page) {
+        if ($item instanceof \Concrete\Core\Page\Page) {
             return $item->getController();
         }
 

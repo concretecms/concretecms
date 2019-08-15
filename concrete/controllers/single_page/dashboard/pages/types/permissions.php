@@ -2,11 +2,11 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Config;
-use PageType;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Permission\Access\Access;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class Permissions extends DashboardPageController
 {
@@ -16,7 +16,7 @@ class Permissions extends DashboardPageController
         if (!$this->pagetype) {
             $this->redirect('/dashboard/pages/types');
         }
-        $cmp = new \Permissions($this->pagetype);
+        $cmp = new \Concrete\Core\Permission\Checker($this->pagetype);
         if (!$cmp->canEditPageTypePermissions()) {
             throw new \Exception(t('You do not have access to edit this page type permissions.'));
         }

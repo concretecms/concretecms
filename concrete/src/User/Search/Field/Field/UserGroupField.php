@@ -35,9 +35,9 @@ class UserGroupField extends AbstractField
         $filterGroups = array();
         if (isset($this->data['gID']) && is_array($this->data['gID'])) {
             foreach ($this->data['gID'] as $gID) {
-                $g = \Group::getByID($gID);
+                $g = \Concrete\Core\User\Group\Group::getByID($gID);
                 if (is_object($g)) {
-                    $gp = new \Permissions($g);
+                    $gp = new \Concrete\Core\Permission\Checker($g);
                     if ($gp->canSearchUsersInGroup()) {
                         $filterGroups[] = $g;
                     }
@@ -57,7 +57,7 @@ class UserGroupField extends AbstractField
         $g1 = $gl->getResults();
         $html = '<div class="form-group"><select multiple name="gID[]" class="selectize-select">';
         foreach ($g1 as $g) {
-            $gp = new \Permissions($g);
+            $gp = new \Concrete\Core\Permission\Checker($g);
             if ($gp->canSearchUsersInGroup($g)) {
                 $html .= '<option value="' . $g->getGroupID() . '" ';
                 if (is_array($this->data['gID']) && in_array($g->getGroupID(), $this->data['gID'])) {

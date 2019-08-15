@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
-use PageType;
+use Concrete\Core\Page\Type\Type as PageType;
 
 class OutputControl extends ConcreteObject
 {

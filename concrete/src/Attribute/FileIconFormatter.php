@@ -20,7 +20,7 @@ class FileIconFormatter implements IconFormatterInterface
 
     public function getListIconElement()
     {
-        $env = \Environment::get();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $type = $this->controller->getAttributeType();
         $url = $env->getURL(
             implode('/', array(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_BLOCK_ICON)),

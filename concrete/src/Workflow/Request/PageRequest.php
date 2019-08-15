@@ -3,8 +3,8 @@ namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Workflow\Workflow;
 use HtmlObject\Element;
-use Page;
-use PermissionKey;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;

@@ -7,7 +7,7 @@ use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTra
 use Concrete\Core\Support\Facade\Application;
 use Exception;
 use Gettext\Translations;
-use Package;
+use Concrete\Core\Package\Package;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

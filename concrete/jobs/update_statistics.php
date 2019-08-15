@@ -8,14 +8,14 @@ use Config;
 use Job as AbstractJob;
 use Core;
 use Database;
-use PermissionKey;
-use Group;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\User\Group\Group;
 use DateTime;
-use CollectionAttributeKey;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 use SimpleXMLElement;
-use Page;
+use Concrete\Core\Page\Page;
 use Events;
 
 class UpdateStatistics extends AbstractJob

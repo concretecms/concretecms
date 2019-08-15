@@ -431,7 +431,7 @@ class Text
     public function asciify($text, $locale = '')
     {
         if (!strlen($locale)) {
-            $locale = \Localization::activeLocale();
+            $locale = \Concrete\Core\Localization\Localization::activeLocale();
         }
         $language = substr($locale, 0, strcspn($locale, '_'));
         $text = \URLify::downcode($text, $language);

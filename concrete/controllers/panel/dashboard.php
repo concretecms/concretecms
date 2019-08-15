@@ -6,11 +6,11 @@ use Concrete\Controller\Element\Dashboard\Navigation;
 use Concrete\Controller\Element\Navigation\Menu;
 use Concrete\Core\Application\Service\DashboardMenu;
 use Cookie;
-use Loader;
-use Page;
-use BlockType;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Block\BlockType\BlockType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 
 class Dashboard extends BackendInterfacePageController

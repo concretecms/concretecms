@@ -77,7 +77,7 @@ class Category extends TreeNode
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $obj->folder = true;
-            $p = new \Permissions($this);
+            $p = new \Concrete\Core\Permission\Checker($this);
             $data = $this->getTreeObject()->getRequestData();
             if (is_array($data) && !empty($data['allowFolderSelection'])) {
                 $obj->hideCheckbox = false;

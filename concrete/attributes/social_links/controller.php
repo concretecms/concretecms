@@ -11,8 +11,8 @@ use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Sharing\SocialNetwork\Service as Service;
 use Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
-use Environment;
-use Loader;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Legacy\Loader;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {

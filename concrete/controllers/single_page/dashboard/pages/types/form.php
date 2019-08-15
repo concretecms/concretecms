@@ -2,11 +2,11 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
-use View;
-use PageType;
+use Concrete\Core\View\View;
+use Concrete\Core\Page\Type\Type as PageType;
 
 class Form extends DashboardPageController
 {
@@ -17,7 +17,7 @@ class Form extends DashboardPageController
             $this->redirect('/dashboard/pages/types');
         }
 
-        $cmp = new \Permissions($this->pagetype);
+        $cmp = new \Concrete\Core\Permission\Checker($this->pagetype);
         if (!$cmp->canEditPageType()) {
             throw new \Exception(t('You do not have access to edit this page type.'));
         }

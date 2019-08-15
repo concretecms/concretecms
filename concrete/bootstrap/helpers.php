@@ -174,7 +174,7 @@ function core_class($class, $prefix = false)
 
 function overrideable_core_class($class, $path, $pkgHandle = null)
 {
-    $env = \Environment::get();
+    $env = \Concrete\Core\Foundation\Environment::get();
 
     // First, check to see if the class we're trying to override is in the Core namespace
     if (substr($class, 0, 5) == "Core\\") {

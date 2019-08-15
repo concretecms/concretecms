@@ -9,7 +9,7 @@ use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Html\Object\HeadLink;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController
@@ -290,7 +290,7 @@ class Controller extends BlockController
         $this->set('lightboxPropertiesSelected', $this->getSelectedLightboxProperties());
         $this->requireAsset('core/topics');
         $calendars = array_filter(Calendar::getList(), function ($calendar) {
-            $p = new \Permissions($calendar);
+            $p = new \Concrete\Core\Permission\Checker($calendar);
 
             return $p->canViewCalendarInEditInterface();
         });
@@ -316,7 +316,7 @@ class Controller extends BlockController
         if (!is_object($calendar)) {
             $e->add(t('You must choose a valid calendar.'));
         }
-        $p = new \Permissions($calendar);
+        $p = new \Concrete\Core\Permission\Checker($calendar);
         if (!$p->canViewCalendarInEditInterface()) {
             $e->add(t('You do not have access to select this calendar.'));
         }
@@ -369,7 +369,7 @@ class Controller extends BlockController
         $this->loadData();
         $calendar = $this->getCalendar();
         if (is_object($calendar)) {
-            $permissions = new \Permissions($calendar);
+            $permissions = new \Concrete\Core\Permission\Checker($calendar);
             $this->requireAsset('fullcalendar');
             if ($this->supportsLightbox()) {
                 $this->requireAsset('core/lightbox');

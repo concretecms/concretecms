@@ -75,7 +75,7 @@ class Controller extends GenericOauth2TypeController
         $this->set('apikey', $config->get('auth.google.appid', ''));
         $this->set('apisecret', $config->get('auth.google.secret', ''));
 
-        $list = new \GroupList();
+        $list = new \Concrete\Core\User\Group\GroupList();
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
 

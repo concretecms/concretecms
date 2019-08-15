@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Utility\Service;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Url
 {

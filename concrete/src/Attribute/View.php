@@ -8,10 +8,10 @@ use Concrete\Core\Attribute\Context\ComposerContext;
 use Concrete\Core\Filesystem\TemplateLocation;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Filesystem\TemplateLocator;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Attribute\Value\Value as AttributeValue;
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\View\AbstractView;
 
 class View extends AbstractView

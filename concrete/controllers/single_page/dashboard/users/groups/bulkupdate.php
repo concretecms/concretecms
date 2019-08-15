@@ -4,8 +4,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users\Groups;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
-use Group;
-use GroupList;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 
 class Bulkupdate extends DashboardPageController

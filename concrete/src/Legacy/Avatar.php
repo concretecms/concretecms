@@ -68,7 +68,7 @@ class Avatar
     /**
      * Removes the avatar for the given user.
      *
-     * @param \User $ui
+     * @param \Concrete\Core\User\User $ui
      */
     public function removeAvatar($ui)
     {

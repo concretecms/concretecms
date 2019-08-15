@@ -80,12 +80,12 @@ class Controller extends BlockController
         $list = new EventOccurrenceList();
         $calendar = $this->getCalendarOrCalendars();
         if (is_object($calendar)) {
-            $permissions = new \Permissions($calendar);
+            $permissions = new \Concrete\Core\Permission\Checker($calendar);
             $this->set('canViewCalendar', $permissions->canViewCalendar());
         } else if (is_array($calendar)) {
             $canViewCalendar = true;
             foreach($calendar as $c) {
-                $permissions = new \Permissions($c);
+                $permissions = new \Concrete\Core\Permission\Checker($c);
                 if (!$permissions->canViewCalendar()) {
                     $canViewCalendar = false;
                 }
@@ -106,7 +106,7 @@ class Controller extends BlockController
                     $list->filterByAttribute($ak->getAttributeKeyHandle(), $this->filterByTopicID);
                 }
             } elseif ($this->filterByPageTopicAttributeKeyHandle) {
-                $c = \Page::getCurrentPage();
+                $c = \Concrete\Core\Page\Page::getCurrentPage();
                 $topic = $c->getAttribute($this->filterByPageTopicAttributeKeyHandle);
                 if (!empty($topic[0]) && is_object($topic[0])) {
                     $list->filterByTopic($topic[0]->getTreeNodeID());
@@ -116,13 +116,13 @@ class Controller extends BlockController
             $this->set('list', $list);
             $this->set('calendar', $calendar);
             if ($this->internalLinkCID) {
-                $calendarPage = \Page::getByID($this->internalLinkCID);
+                $calendarPage = \Concrete\Core\Page\Page::getByID($this->internalLinkCID);
                 if (is_object($calendarPage) && !$calendarPage->isError()) {
                     $this->set('calendarPage', $calendarPage);
                 }
             }
             if ($this->linkToPage) {
-                $this->set('linkToPage', \Page::getByID($this->linkToPage));
+                $this->set('linkToPage', \Concrete\Core\Page\Page::getByID($this->linkToPage));
             }
             $this->loadKeys();
         }
@@ -157,7 +157,7 @@ class Controller extends BlockController
     {
         $this->requireAsset('core/topics');
         $calendars = array_filter(Calendar::getList(), function ($calendar) {
-            $p = new \Permissions($calendar);
+            $p = new \Concrete\Core\Permission\Checker($calendar);
 
             return $p->canViewCalendarInEditInterface();
         });
@@ -209,7 +209,7 @@ class Controller extends BlockController
         if (!is_object($calendar)) {
             $e->add(t('You must choose a valid calendar.'));
         }
-        $p = new \Permissions($calendar);
+        $p = new \Concrete\Core\Permission\Checker($calendar);
         if (!$p->canViewCalendarInEditInterface()) {
             $e->add(t('You do not have access to select this calendar.'));
         }

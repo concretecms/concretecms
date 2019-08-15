@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Page\Stack\Pile;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
-use Block;
+use Concrete\Core\Block\Block;
 
 class PileContent extends ConcreteObject
 {

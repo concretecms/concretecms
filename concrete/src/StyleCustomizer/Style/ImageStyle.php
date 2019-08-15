@@ -3,9 +3,9 @@ namespace Concrete\Core\StyleCustomizer\Style;
 
 use Concrete\Core\StyleCustomizer\Style\Value\ImageValue;
 use Less_Environment;
-use File;
-use Loader;
-use Permissions;
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class ImageStyle extends Style
 {

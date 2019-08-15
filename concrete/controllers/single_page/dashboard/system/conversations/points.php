@@ -2,7 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
 
 class Points extends DashboardPageController

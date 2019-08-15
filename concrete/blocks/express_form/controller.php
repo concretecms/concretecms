@@ -465,7 +465,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         if (!$this->exFormID) {
             // This is a new submission.
-            $c = \Page::getCurrentPage();
+            $c = \Concrete\Core\Page\Page::getCurrentPage();
 
             // Create a results node
             $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);

@@ -5,8 +5,8 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
-use Request;
-use View;
+use Concrete\Core\Http\Request;
+use Concrete\Core\View\View;
 
 /**
  * Base class for all the controllers.

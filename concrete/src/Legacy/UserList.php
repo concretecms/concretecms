@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Legacy;
 
-use UserAttributeKey;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use UserInfo;
 use Core;
 use Database;
-use Group;
+use Concrete\Core\User\Group\Group;
 
 /**
  * An object that allows a filtered list of users to be returned.

@@ -4,11 +4,11 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Core;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
-use GroupList;
-use Page;
-use Group;
+use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\Group\Group;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 
 class Site extends DashboardPageController

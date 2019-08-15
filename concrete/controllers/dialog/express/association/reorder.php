@@ -15,7 +15,7 @@ class Reorder extends BackendInterfaceController
     {
         $entry = $this->getEntry();
         if ($entry) {
-            $ep = new \Permissions($entry);
+            $ep = new \Concrete\Core\Permission\Checker($entry);
             return $ep->canViewExpressEntries();
         }
         return false;

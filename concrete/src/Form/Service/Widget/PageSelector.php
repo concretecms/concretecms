@@ -4,8 +4,8 @@ namespace Concrete\Core\Form\Service\Widget;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Core;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class PageSelector
 {
@@ -22,7 +22,7 @@ class PageSelector
      */
     public function selectPage($fieldName, $cID = false)
     {
-        $v = \View::getInstance();
+        $v = \Concrete\Core\View\View::getInstance();
         $v->requireAsset('core/sitemap');
 
         $selectedCID = 0;
@@ -56,7 +56,7 @@ EOL;
 
     public function quickSelect($key, $cID = false, $args = array())
     {
-        $v = \View::getInstance();
+        $v = \Concrete\Core\View\View::getInstance();
         $v->requireAsset('selectize');
         $selectedCID = 0;
         if (isset($_REQUEST[$key])) {
@@ -117,7 +117,7 @@ EOL;
 
     public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = 'HOME_CID', $filters = array())
     {
-        $v = \View::getInstance();
+        $v = \Concrete\Core\View\View::getInstance();
         $v->requireAsset('core/sitemap');
 
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
@@ -162,7 +162,7 @@ EOL;
 
     public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', SiteTree $siteTree = null, $filters = array())
     {
-        $v = \View::getInstance();
+        $v = \Concrete\Core\View\View::getInstance();
         $v->requireAsset('core/sitemap');
 
         $identifier = new \Concrete\Core\Utility\Service\Identifier();

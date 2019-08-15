@@ -2,7 +2,7 @@
 namespace Concrete\Core\User\PrivateMessage;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use UserInfo;
 use Events;
 

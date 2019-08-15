@@ -2,10 +2,10 @@
 namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Permission\Access\Access;
-use Loader;
-use User;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
 use Concrete\Core\Permission\Duration as PermissionDuration;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class FileKey extends Key
 {

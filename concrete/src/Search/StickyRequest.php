@@ -2,7 +2,7 @@
 namespace Concrete\Core\Search;
 
 use Session;
-use Request;
+use Concrete\Core\Http\Request;
 
 class StickyRequest
 {

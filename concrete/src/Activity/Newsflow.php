@@ -2,7 +2,7 @@
 namespace Concrete\Core\Activity;
 
 use Config;
-use Marketplace;
+use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\File\Service\File;
 
 /**

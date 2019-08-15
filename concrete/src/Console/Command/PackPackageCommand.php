@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Core;
 use Exception;
-use Package;
+use Concrete\Core\Package\Package;
 use stdClass;
 use ZipArchive;
 use Gettext\Translations;

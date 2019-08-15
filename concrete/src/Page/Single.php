@@ -3,10 +3,10 @@ namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Site\Tree\TreeInterface;
-use Page as CorePage;
-use Loader;
-use Environment;
-use Package;
+use Concrete\Core\Page\Page as CorePage;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Package\Package;
 
 /**
  * SinglePage extends the page class for those instances of pages that have no type, and are special "single pages"

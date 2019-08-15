@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Workflow;
-use Loader;
+use Concrete\Core\Workflow\Workflow;
+use Concrete\Core\Legacy\Loader;
 use Exception;
 use Concrete\Core\Workflow\Type as WorkflowType;
 

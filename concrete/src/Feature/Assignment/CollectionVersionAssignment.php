@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Feature\Assignment;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Feature\Category\Category as FeatureCategory;
 use Concrete\Core\Feature\Detail\Detail as FeatureDetail;

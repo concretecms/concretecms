@@ -2,8 +2,8 @@
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Permission\Access\Access;
-use PermissionKeyCategory;
-use Loader;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
+use Concrete\Core\Legacy\Loader;
 
 class TreeNodeAssignment extends Assignment
 {

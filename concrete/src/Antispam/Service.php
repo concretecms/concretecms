@@ -4,11 +4,11 @@ namespace Concrete\Core\Antispam;
 use Concrete\Core\Logging\Channels;
 use Config;
 use Core;
-use Group;
-use Loader;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Legacy\Loader;
 use Log;
-use Page;
-use User;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 use UserInfo;
 
 class Service

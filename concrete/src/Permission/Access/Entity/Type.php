@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\Category;
 use Gettext\Translations;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 use Concrete\Core\Package\PackageList;
 

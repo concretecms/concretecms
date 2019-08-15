@@ -3,10 +3,10 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Theme\Theme;
-use Loader;
-use PageTheme;
-use Package;
-use PageTemplate;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Page\Template as PageTemplate;
 use Exception;
 
 class Inspect extends DashboardPageController

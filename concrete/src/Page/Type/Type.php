@@ -9,10 +9,10 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSet;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
-use PageTemplate;
-use PermissionKey;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
@@ -20,14 +20,14 @@ use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerContro
 use Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Package\PackageList;
-use CollectionVersion;
-use Collection;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Page;
 use Config;
-use User;
-use Package;
+use Concrete\Core\User\User;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
-use CacheLocal;
+use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration as PageTypePublishTargetConfiguration;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
@@ -637,7 +637,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                 $composerBlocksIDs = $db->GetAll('select cvb.bID, cvb.arHandle from btCorePageTypeComposerControlOutput o inner join CollectionVersionBlocks cvb on cvb.bID = o.bID inner join Pages p on cvb.cID = p.cID where p.cID = ?',
                     array($nc->getCollectionID()));
                 foreach ($composerBlocksIDs as $row) {
-                    $b = \Block::getByID($row['bID'], $nc, $row['arHandle']);
+                    $b = \Concrete\Core\Block\Block::getByID($row['bID'], $nc, $row['arHandle']);
                     $b->deleteBlock();
                 }
             }
@@ -684,9 +684,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      *
      *     @var string          $handle              A string which can be used to identify the page type
      *     @var string          $name                A user friendly display name
-     *     @var \PageTemplate   $defaultTemplate     The default template object or handle
+     *     @var \Concrete\Core\Page\Template   $defaultTemplate     The default template object or handle
      *     @var string          $allowedTemplates    (A|C|X) A for all, C for selected only, X for non-selected only
-     *     @var \PageTemplate[] $templates           Array or Iterator of selected templates, see `$allowedTemplates`, or Page Template Handles
+     *     @var \Concrete\Core\Page\Template[] $templates           Array or Iterator of selected templates, see `$allowedTemplates`, or Page Template Handles
      *     @var bool            $internal            Is this an internal only page type? Default: `false`
      *     @var bool            $ptLaunchInComposer  Does this launch in composer? Default: `false`
      *     @var bool            $ptIsFrequentlyAdded Should this always be displayed in the pages panel? Default: `false`
@@ -1181,7 +1181,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
     public function renderComposerOutputForm($page = null, $targetPage = null)
     {
-        $env = \Environment::get();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $elementController = $env->getRecord(
             DIRNAME_CONTROLLERS . '/element/page_type/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
             $this->getPackageHandle()

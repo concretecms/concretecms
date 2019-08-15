@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Foundation;
 
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Queue;
+use Concrete\Core\Foundation\Queue\Queue;
 
 class DatabaseQueueAdapterTest extends ConcreteDatabaseTestCase
 {

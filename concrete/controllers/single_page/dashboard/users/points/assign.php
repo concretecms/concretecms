@@ -2,7 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Concrete\Core\User\Point\Action\ActionList as UserPointActionList;

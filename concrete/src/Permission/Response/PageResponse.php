@@ -2,14 +2,14 @@
 namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Page\Type\Type;
-use Loader;
-use User;
-use Permissions;
-use Area;
-use Block;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Config;
 use Session;
-use TaskPermission;
+use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Permission\Key\AreaKey as AreaPermissionKey;

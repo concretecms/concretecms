@@ -22,8 +22,8 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
         if ($user && !$user->isError() && $user->isLoggedIn()) {
             $this->handle_attach_callback();
         }
-        $token = \Request::getInstance()->get('oauth_token');
-        $verifier = \Request::getInstance()->get('oauth_verifier');
+        $token = \Concrete\Core\Http\Request::getInstance()->get('oauth_token');
+        $verifier = \Concrete\Core\Http\Request::getInstance()->get('oauth_verifier');
 
         $token = $this->getService()->requestAccessToken($token, $verifier);
         $this->setToken($token);
@@ -64,8 +64,8 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
             exit;
         }
 
-        $token = \Request::getInstance()->get('oauth_token');
-        $verifier = \Request::getInstance()->get('oauth_verifier');
+        $token = \Concrete\Core\Http\Request::getInstance()->get('oauth_token');
+        $verifier = \Concrete\Core\Http\Request::getInstance()->get('oauth_verifier');
 
         $token = $this->getService()->requestAccessToken($token, $verifier);
 
@@ -88,7 +88,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
      * Method used to clean up.
      * This method must be defined, if it isn't needed, leave it blank.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      */
     public function deauthenticate(User $u)
     {
@@ -98,7 +98,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
     /**
      * Test user authentication status.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      *
      * @return bool Returns true if user is authenticated, false if not
      */

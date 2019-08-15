@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Illuminate\Filesystem\Filesystem;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Logging extends DashboardPageController
 {

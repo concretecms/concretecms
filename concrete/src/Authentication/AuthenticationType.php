@@ -5,10 +5,10 @@ use Concrete\Authentication\Concrete\Controller;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Core;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Exception;
-use Loader;
-use Package;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Package\Package;
 
 class AuthenticationType extends ConcreteObject
 {
@@ -133,7 +133,7 @@ class AuthenticationType extends ConcreteObject
      * @param string $atHandle New AuthenticationType handle
      * @param string $atName New AuthenticationType name, expect this to be presented with "%s Authentication Type"
      * @param int $order Order int, used to order the display of AuthenticationTypes
-     * @param bool|\Package $pkg package object to which this AuthenticationType is associated
+     * @param bool|\Concrete\Core\Package\Package $pkg package object to which this AuthenticationType is associated
      *
      * @throws \Exception
      *

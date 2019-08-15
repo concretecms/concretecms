@@ -3,9 +3,9 @@ namespace Concrete\Controller\Dialog\Area\Layout;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Page\EditResponse;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Exception;
-use Request;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Area\Layout\Preset\Preset;
 use Concrete\Core\Area\Layout\Preset\UserPreset;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
@@ -41,7 +41,7 @@ class Presets extends BackendInterfaceController
 
     public function getPresetData($cID, $arLayoutPresetID)
     {
-        $c = \Page::getByID($cID, 'ACTIVE');
+        $c = \Concrete\Core\Page\Page::getByID($cID, 'ACTIVE');
         $r = Request::getInstance();
         $r->setCurrentPage($c);
 

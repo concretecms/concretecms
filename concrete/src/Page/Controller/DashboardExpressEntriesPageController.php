@@ -62,7 +62,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         if (isset($parent) && $parent instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
             $entity = $this->getEntity($parent);
-            $permissions = new \Permissions($entity);
+            $permissions = new \Concrete\Core\Permission\Checker($entity);
             if (!$permissions->canViewExpressEntries()) {
                 throw new \Exception(t('Access Denied'));
             }
@@ -91,7 +91,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $me = $this;
         $parent = $me->getParentNode($treeNodeParentID);
         $entity = $me->getEntity($parent);
-        $permissions = new \Permissions($entity);
+        $permissions = new \Concrete\Core\Permission\Checker($entity);
         if (!$permissions->canViewExpressEntries()) {
             throw new \Exception(t('Access Denied'));
         }
@@ -161,7 +161,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneById($this->request->request->get('entry_id'));
 
-        $permissions = new \Permissions($entry);
+        $permissions = new \Concrete\Core\Permission\Checker($entry);
         if (!$permissions->canDeleteExpressEntry()) {
             $this->error->add(t('You do not have access to delete entries of this entity type.'));
         }
@@ -185,7 +185,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneById($id);
 
-        $permissions = new \Permissions($entry);
+        $permissions = new \Concrete\Core\Permission\Checker($entry);
         if (!$permissions->canViewExpressEntry()) {
             throw new \Exception(t('Access Denied'));
         }
@@ -239,7 +239,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
             ->findOneById($id);
 
-        $permissions = new \Permissions($entry);
+        $permissions = new \Concrete\Core\Permission\Checker($entry);
         if (!$permissions->canEditExpressEntry()) {
             throw new \Exception(t('Access Denied'));
         }
@@ -314,13 +314,13 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                         'success',
                         tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getEntityDisplayName())
                         . '<br />'
-                        . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
+                        . '<a class="btn btn-default" href="' . \URL::to(\Concrete\Core\Page\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
                     );
                     if (is_object($entry->getOwnedByEntry())) {
-                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID(), $entry->getOwnedByEntry()->getID()));
+                        $this->redirect(\URL::to(\Concrete\Core\Page\Page::getCurrentPage(), 'create_entry', $entity->getID(), $entry->getOwnedByEntry()->getID()));
                     } else {
-                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
+                        $this->redirect(\URL::to(\Concrete\Core\Page\Page::getCurrentPage(), 'create_entry', $entity->getID()));
                     }
                 } else {
                     // update

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\User\Point;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 

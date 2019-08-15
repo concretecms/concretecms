@@ -3,7 +3,7 @@
 
 namespace Concrete\Core\Conversation\Editor;
 
-use AssetList;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Editor\EditorInterface;
 
 class RichTextEditor extends Editor

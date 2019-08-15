@@ -5,13 +5,13 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Attribute\Context\AttributePanelContext;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
-use PageEditResponse;
-use PermissionKey;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use stdClass;
-use Loader;
-use User;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
 use Concrete\Core\Page\Collection\Version\Version;
-use CollectionAttributeKey;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Attribute\View as AttributeTypeView;
 

@@ -36,12 +36,12 @@ use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRe
 use Concrete\Core\Workflow\Request\DeleteUserRequest as DeleteUserWorkflowRequest;
 use Core;
 use Doctrine\ORM\EntityManagerInterface;
-use Group;
+use Concrete\Core\User\Group\Group;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
 use stdClass;
 use Concrete\Core\User\User as ConcreteUser;
-use View;
+use Concrete\Core\View\View;
 use Concrete\Core\Export\Item\User as UserExporter;
 use Concrete\Core\File\Image\BitmapFormat;
 

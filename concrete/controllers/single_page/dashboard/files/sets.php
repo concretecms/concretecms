@@ -3,10 +3,10 @@ namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\File\Set\SetList as FileSetList;
-use FileSet;
-use Permissions;
-use PermissionKey;
-use Loader;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Legacy\Loader;
 use Exception;
 
 class Sets extends DashboardPageController

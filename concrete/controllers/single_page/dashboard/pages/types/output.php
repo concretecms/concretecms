@@ -2,9 +2,9 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use PageTemplate;
-use PageType;
-use Redirect;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Routing\Redirect;
 use Session;
 
 class Output extends DashboardPageController
@@ -15,7 +15,7 @@ class Output extends DashboardPageController
         if (!$this->pagetype) {
             $this->redirect('/dashboard/pages/types');
         }
-        $cmp = new \Permissions($this->pagetype);
+        $cmp = new \Concrete\Core\Permission\Checker($this->pagetype);
         if (!$cmp->canEditPageType()) {
             throw new \Exception(t('You do not have access to edit this page type.'));
         }

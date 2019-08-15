@@ -66,7 +66,7 @@ class PageReport extends DashboardSitePageController
 
         if (isset($sectionID) && $sectionID > 0) {
             $pl = new MultilingualPageList();
-            $pc = \Page::getByID($sectionID);
+            $pc = \Concrete\Core\Page\Page::getByID($sectionID);
             $pl->setSiteTreeObject($pc->getSiteTreeObject());
             $path = $pc->getCollectionPath();
             if (strlen($path) > 1) {

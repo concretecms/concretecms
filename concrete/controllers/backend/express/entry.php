@@ -61,7 +61,7 @@ class Entry extends AbstractController
     {
         $entries = $this->getRequestEntries();
         foreach ($entries as $entry) {
-            $ep = new \Permissions($entry->getEntity());
+            $ep = new \Concrete\Core\Permission\Checker($entry->getEntity());
             if (!$ep->canViewExpressEntries()) {
                 throw new \Exception(t('Access Denied.'));
             }

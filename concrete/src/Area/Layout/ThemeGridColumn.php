@@ -3,7 +3,7 @@ namespace Concrete\Core\Area\Layout;
 
 use Concrete\Core\Html\Object\Collection;
 use HtmlObject\Element;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class ThemeGridColumn extends Column
 {

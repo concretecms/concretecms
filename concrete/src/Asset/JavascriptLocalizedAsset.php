@@ -3,7 +3,7 @@
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Support\Facade\Application;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use URL;
 
 class JavascriptLocalizedAsset extends JavascriptAsset

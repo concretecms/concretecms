@@ -32,7 +32,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function __construct(StickyRequest $req = null)
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }

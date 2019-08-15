@@ -2,12 +2,12 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use TaskPermission;
-use Package;
-use Marketplace;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
-use Localization;
-use Loader;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Legacy\Loader;
 use Exception;
 
 class Update extends DashboardPageController

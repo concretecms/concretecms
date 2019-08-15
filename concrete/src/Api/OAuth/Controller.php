@@ -157,7 +157,7 @@ final class Controller implements LoggerAwareInterface
      * This method renders a view for login that handles either email or username based login
      *
      * @param \League\OAuth2\Server\RequestTypes\AuthorizationRequest $request
-     * @return \Concrete\Core\Http\Response|\RedirectResponse
+     * @return \Concrete\Core\Http\Response|\Concrete\Core\Routing\RedirectResponse
      */
     public function handleLogin(AuthorizationRequest $request)
     {
@@ -187,7 +187,7 @@ final class Controller implements LoggerAwareInterface
                 $request->setUser($userInfo);
                 $this->storeRequest($request);
 
-                return new \RedirectResponse($this->request->getUri());
+                return new \Concrete\Core\Routing\RedirectResponse($this->request->getUri());
             } else {
                 $error->add(t('Invalid username or password.'));
             }
@@ -213,7 +213,7 @@ final class Controller implements LoggerAwareInterface
      *
      * @param \League\OAuth2\Server\RequestTypes\AuthorizationRequest $request
      *
-     * @return \Concrete\Core\Http\Response|\RedirectResponse
+     * @return \Concrete\Core\Http\Response|\Concrete\Core\Routing\RedirectResponse
      * @throws \League\OAuth2\Server\Exception\OAuthServerException
      */
     public function handleAuthorizeClient(AuthorizationRequest $request)
@@ -237,7 +237,7 @@ final class Controller implements LoggerAwareInterface
                 $request->setAuthorizationApproved(true);
                 $this->storeRequest($request);
 
-                return new \RedirectResponse($this->request->getUri());
+                return new \Concrete\Core\Routing\RedirectResponse($this->request->getUri());
             }
 
             break;

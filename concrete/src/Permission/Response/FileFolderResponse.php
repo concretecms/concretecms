@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use User;
-use FileSet;
+use Concrete\Core\User\User;
+use Concrete\Core\File\Set\Set as FileSet;
 
 class FileFolderResponse extends TreeNodeResponse
 {

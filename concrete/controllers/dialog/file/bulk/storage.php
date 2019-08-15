@@ -9,7 +9,7 @@ use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\View\View;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 use Exception;
 use stdClass;
 

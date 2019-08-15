@@ -86,7 +86,7 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
     {
         $list = new FileList();
         $list->setPermissionsChecker(function ($file) {
-            $fp = new \Permissions($file);
+            $fp = new \Concrete\Core\Permission\Checker($file);
 
             return $fp->canViewFileInFileManager();
         });

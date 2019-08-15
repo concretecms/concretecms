@@ -6,9 +6,9 @@ use Concrete\Core\Attribute\SetManagerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use AttributeSet;
+use Concrete\Core\Attribute\Set as AttributeSet;
 
 class Sets extends DashboardPageController
 {

@@ -38,7 +38,7 @@ class Details extends BackendInterfaceController
             return false;
         }
         $user = $this->getUserFromRequest();
-        $permissions = new \Permissions($user);
+        $permissions = new \Concrete\Core\Permission\Checker($user);
         return $permissions->canViewUser();
     }
 

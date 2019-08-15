@@ -4,7 +4,7 @@ namespace Concrete\Core\Workflow\Progress;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Workflow\HistoryEntry\HistoryEntry;
 use Concrete\Core\Workflow\Request\Request;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use UserInfo;
 
 class History extends ConcreteObject

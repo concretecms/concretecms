@@ -30,7 +30,7 @@ class PageTemplateField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $template = \PageTemplate::getByID($this->data['pTemplateID']);
+        $template = \Concrete\Core\Page\Template::getByID($this->data['pTemplateID']);
         if (is_object($template)) {
             $list->filterByPageTemplate($template);
         }
@@ -40,7 +40,7 @@ class PageTemplateField extends AbstractField
     {
         $form = \Core::make("helper/form");
         $html = $form->select('pTemplateID', array_reduce(
-            \PageTemplate::getList(), function ($templates, $template) {
+            \Concrete\Core\Page\Template::getList(), function ($templates, $template) {
             $templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
             return $templates;
         }

@@ -14,14 +14,14 @@ use Config;
 use Concrete\Core\Page\Stack\StackList;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Page\Stack\Stack;
-use Page;
-use User;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\DeletePageRequest;
 use Concrete\Core\Workflow\Request\ApproveStackRequest;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
-use View;
+use Concrete\Core\View\View;
 use Exception;
-use Redirect;
+use Concrete\Core\Routing\Redirect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Stacks extends DashboardPageController
@@ -406,7 +406,7 @@ class Stacks extends DashboardPageController
                 if (!$this->error->has()) {
                     $sps = new Checker($s);
                     if ($sps->canDeletePage()) {
-                        $u = new \User();
+                        $u = new \Concrete\Core\User\User();
                         $pkr = new DeletePageRequest();
                         $pkr->setRequestedPage($s);
                         $pkr->setRequesterUserID($u->getUserID());

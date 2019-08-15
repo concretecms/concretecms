@@ -665,7 +665,7 @@ class StyleSet
     public function getBackgroundImageFileObject()
     {
         if ($this->backgroundImageFileID) {
-            $f = \File::getByID($this->backgroundImageFileID);
+            $f = \Concrete\Core\File\File::getByID($this->backgroundImageFileID);
 
             return $f;
         }

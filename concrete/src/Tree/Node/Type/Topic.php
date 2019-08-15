@@ -3,7 +3,7 @@ namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Menu\TopicMenu;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Topic extends TreeNode
 {
@@ -64,7 +64,7 @@ class Topic extends TreeNode
     {
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
-            $p = new \Permissions($this);
+            $p = new \Concrete\Core\Permission\Checker($this);
             $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
             $obj->icon = 'fa fa-file-o';
             return $obj;

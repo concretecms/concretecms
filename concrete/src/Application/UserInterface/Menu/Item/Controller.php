@@ -47,9 +47,9 @@ class Controller extends AbstractController implements ControllerInterface
 
     public function registerViewAssets()
     {
-        $al = \AssetList::getInstance();
-        $v = \View::getInstance();
-        $env = \Environment::get();
+        $al = \Concrete\Core\Asset\AssetList::getInstance();
+        $v = \Concrete\Core\View\View::getInstance();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $identifier = 'menuitem/' . $this->menuItem->getHandle() . '/view';
         foreach (array('CSS' => 'view.css', 'JAVASCRIPT' => 'view.js') as $t => $i) {
             $r = $env->getRecord(

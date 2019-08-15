@@ -21,7 +21,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use Gettext\Translations;
-use Localization;
+use Concrete\Core\Localization\Localization;
 use stdClass;
 
 abstract class Package implements LocalizablePackageInterface

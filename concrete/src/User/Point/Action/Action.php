@@ -4,11 +4,11 @@ namespace Concrete\Core\User\Point\Action;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Support\Facade\Facade;
 use Database;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Package\PackageList;
-use Group;
+use Concrete\Core\User\Group\Group;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use Exception;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
@@ -75,7 +75,7 @@ class Action
     }
 
     /**
-     * @param \Package $pkg
+     * @param \Concrete\Core\Package\Package $pkg
      *
      * @return array
      */

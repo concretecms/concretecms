@@ -6,7 +6,7 @@ use Concrete\Controller\Element\Search\Files\Header;
 use Concrete\Controller\Search\FileFolder;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\Field\ManagerFactory;
-use FilePermissions;
+use Concrete\Core\Legacy\FilePermissions;
 
 class Search extends BackendInterfaceController
 {

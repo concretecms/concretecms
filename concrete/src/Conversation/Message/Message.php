@@ -7,7 +7,7 @@ use Config;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set as FileSet;
 use Core;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
 use Concrete\Core\Foundation\ConcreteObject;

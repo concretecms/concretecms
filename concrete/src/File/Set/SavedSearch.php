@@ -2,7 +2,7 @@
 namespace Concrete\Core\File\Set;
 
 use Database;
-use FileSet;
+use Concrete\Core\File\Set\Set as FileSet;
 
 class SavedSearch extends Set
 {

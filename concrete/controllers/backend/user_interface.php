@@ -6,7 +6,7 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\DialogView;
-use Request;
+use Concrete\Core\Http\Request;
 
 abstract class UserInterface extends Controller
 {

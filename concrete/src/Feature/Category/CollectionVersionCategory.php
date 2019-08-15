@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Feature\Category;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class CollectionVersionCategory extends Category
 {

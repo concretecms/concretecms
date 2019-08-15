@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use PermissionKey;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Legacy\TaskPermission;
 

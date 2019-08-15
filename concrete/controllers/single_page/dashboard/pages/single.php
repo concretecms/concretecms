@@ -3,8 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Single as SinglePage;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Single extends DashboardPageController
 {

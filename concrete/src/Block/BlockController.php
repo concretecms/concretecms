@@ -15,8 +15,8 @@ use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
 use Database;
 use Events;
-use Package;
-use Page;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Error\ErrorList\ErrorList;
 
 class BlockController extends \Concrete\Core\Controller\AbstractController
@@ -502,14 +502,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     public function validateEditBlockPassThruAction(Block $b)
     {
-        $bp = new \Permissions($b);
+        $bp = new \Concrete\Core\Permission\Checker($b);
 
         return $bp->canEditBlock();
     }
 
     public function validateComposerAddBlockPassThruAction(Type $type)
     {
-        $pp = new \Permissions($type);
+        $pp = new \Concrete\Core\Permission\Checker($type);
 
         return $pp->canAddPageType();
     }
@@ -576,7 +576,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
                 }
             } else {
-                $c = \Page::getCurrentPage();
+                $c = \Concrete\Core\Page\Page::getCurrentPage();
                 $arguments = array_merge(array('/ccm/system/block/action/add',
                     $c->getCollectionID(),
                     urlencode($this->getAreaObject()->getAreaHandle()),

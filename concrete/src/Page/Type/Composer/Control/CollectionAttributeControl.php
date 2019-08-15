@@ -5,10 +5,10 @@ use Concrete\Core\Attribute\Context\ComposerContext;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\Field\Field;
 use Concrete\Core\Validation\ResponseInterface;
-use Controller;
-use CollectionAttributeKey;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Page\Page;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 
 class CollectionAttributeControl extends Control
 {
@@ -186,7 +186,7 @@ class CollectionAttributeControl extends Control
                 $validator = $controller->getValidator();
                 $response = $validator->validateSaveValueRequest(
                     $controller,
-                    \Request::createFromGlobals(),
+                    \Concrete\Core\Http\Request::createFromGlobals(),
                     $this->isPageTypeComposerFormControlRequiredOnThisRequest()
                 );
                 /**

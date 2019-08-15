@@ -2,12 +2,12 @@
 namespace Concrete\Controller\Dialog\User\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\User\EditResponse as UserEditResponse;
-use UserAttributeKey;
-use Loader;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Core\Legacy\Loader;
 use UserInfo;
 use Exception;
 

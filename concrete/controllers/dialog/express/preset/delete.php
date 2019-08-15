@@ -6,7 +6,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Application\EditResponse;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Delete extends PresetDelete
 {

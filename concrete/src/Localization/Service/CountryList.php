@@ -2,7 +2,7 @@
 namespace Concrete\Core\Localization\Service;
 
 use Events;
-use Localization;
+use Concrete\Core\Localization\Localization;
 
 class CountryList
 {

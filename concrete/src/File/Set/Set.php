@@ -14,17 +14,17 @@ use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Events;
-use File as ConcreteFile;
+use Concrete\Core\File\File as ConcreteFile;
 use Database;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
-use PermissionKey;
-use Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\User\User;
 
 /**
  * Represents a file set.
  *
- * @method static Set add(string $setName, int $fsOverrideGlobalPermissions = 0, bool|\User $u = false, int $type = self::TYPE_PUBLIC) Deprecated method. Use Set::create instead.
+ * @method static Set add(string $setName, int $fsOverrideGlobalPermissions = 0, bool|\Concrete\Core\User\User $u = false, int $type = self::TYPE_PUBLIC) Deprecated method. Use Set::create instead.
  */
 class Set
 {
@@ -223,7 +223,7 @@ class Set
      *
      * @param string $setName
      * @param int $fsOverrideGlobalPermissions
-     * @param bool|\User $u
+     * @param bool|\Concrete\Core\User\User $u
      * @param int $type
      *
      * @return Set

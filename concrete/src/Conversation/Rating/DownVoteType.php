@@ -2,7 +2,7 @@
 namespace Concrete\Core\Conversation\Rating;
 
 use Concrete\Core\Conversation\Message\Message;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class DownVoteType extends Type
 {

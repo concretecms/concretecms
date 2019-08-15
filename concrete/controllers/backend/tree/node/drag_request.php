@@ -44,7 +44,7 @@ class DragRequest extends UserInterface
         }
 
         if (is_object($destNode)) {
-            $dp = new \Permissions($destNode);
+            $dp = new \Concrete\Core\Permission\Checker($destNode);
             if (!$dp->canAddTreeSubNode()) {
                 return false;
             }
@@ -53,7 +53,7 @@ class DragRequest extends UserInterface
         }
 
         foreach($sourceNodes as $sourceNode) {
-            $dp = new \Permissions($sourceNode);
+            $dp = new \Concrete\Core\Permission\Checker($sourceNode);
             if (!$dp->canEditTreeNode()) {
                 return false;
             }

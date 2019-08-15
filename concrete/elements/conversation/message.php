@@ -26,7 +26,7 @@ if (!$message->isConversationMessageApproved()) {
 
 $cnvMessageID = $message->getConversationMessageID();
 $cnvID = $message->getConversationID();
-$c = Page::getByID(\Request::request('cID'));
+$c = Page::getByID(\Concrete\Core\Http\Request::request('cID'));
 $cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {

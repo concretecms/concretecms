@@ -12,8 +12,8 @@ use Concrete\Core\Tree\Tree;
 use Core;
 use Database;
 use Gettext\Translations;
-use PermissionKey;
-use Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
 use stdClass;
 
 abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface

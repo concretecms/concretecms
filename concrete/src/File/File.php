@@ -13,7 +13,7 @@ use Concrete\Core\Tree\Node\Type\File as FileNode;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\UserInfoRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use User;
+use Concrete\Core\User\User;
 
 /**
  * Service class for the File entity

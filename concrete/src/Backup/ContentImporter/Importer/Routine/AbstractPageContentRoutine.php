@@ -52,7 +52,7 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
             }
 
             if (isset($ax->style)) {
-                $area = \Area::get($page, (string) $ax['name']);
+                $area = \Concrete\Core\Area\Area::get($page, (string) $ax['name']);
                 $set = StyleSet::import($ax->style);
                 $page->setCustomStyleSet($area, $set);
             }

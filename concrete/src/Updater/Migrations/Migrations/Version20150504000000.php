@@ -109,12 +109,12 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
         ]);
 
         // Subscribe admin to conversations by default, if we have no subscriptions
-        $users = \Conversation::getDefaultSubscribedUsers();
+        $users = \Concrete\Core\Conversation\Conversation::getDefaultSubscribedUsers();
         if (count($users) == 0) {
             $admin = \UserInfo::getByID(USER_SUPER_ID);
             if (is_object($admin)) {
                 $users = [$admin];
-                \Conversation::setDefaultSubscribedUsers($users);
+                \Concrete\Core\Conversation\Conversation::setDefaultSubscribedUsers($users);
             }
         }
 
@@ -127,7 +127,7 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
 
         $this->refreshBlockType('form');
 
-        $c = \Page::getByPath('/dashboard/system/seo/urls');
+        $c = \Concrete\Core\Page\Page::getByPath('/dashboard/system/seo/urls');
         if (is_object($c) && !$c->isError()) {
             $c->update(['cName' => 'URLs and Redirection']);
         }

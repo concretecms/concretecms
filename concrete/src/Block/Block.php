@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Block;
 
-use Area;
-use BlockType;
-use CacheLocal;
-use Collection;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
@@ -21,8 +21,8 @@ use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
-use Loader;
-use Page;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
 
 class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {

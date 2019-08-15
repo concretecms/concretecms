@@ -17,7 +17,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function __construct(StickyRequest $req = null)
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }
@@ -110,7 +110,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function getTotalResults()
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We need to reset the potential custom order by here because otherwise, if we've added
@@ -146,7 +146,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
             }
         }
 
-        $cp = new \Permissions($mixed);
+        $cp = new \Concrete\Core\Permission\Checker($mixed);
         return $cp->canViewUser();
     }
 
@@ -321,7 +321,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name.
      *
-     * @param \Group | string $group
+     * @param \Concrete\Core\User\Group\Group | string $group
      * @param bool $inGroup
      */
     public function filterByGroup($group = '', $inGroup = true)

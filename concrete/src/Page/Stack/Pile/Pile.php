@@ -6,7 +6,7 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 /**
  * Class Pile.

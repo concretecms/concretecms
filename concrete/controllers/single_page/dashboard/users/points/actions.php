@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Concrete\Core\User\Point\Action\ActionList as UserPointActionList;
-use Group;
+use Concrete\Core\User\Group\Group;
 
 class Actions extends DashboardPageController
 {

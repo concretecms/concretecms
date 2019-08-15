@@ -4,7 +4,7 @@ namespace Concrete\Core\Tree\Type;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Node\Type\Category as CategoryTreeNode;
 use Database;
-use Group as UserGroup;
+use Concrete\Core\User\Group\Group as UserGroup;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Key\CategoryTreeNodeKey as CategoryTreeNodePermissionKey;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;

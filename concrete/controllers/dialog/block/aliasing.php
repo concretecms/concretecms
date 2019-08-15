@@ -28,14 +28,14 @@ class Aliasing extends BackendInterfaceBlockController
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-            $a = \Area::get($this->page, $_GET['arHandle']);
+            $a = \Concrete\Core\Area\Area::get($this->page, $_GET['arHandle']);
             $c = $this->page;
             if (is_object($a)) {
-                $b = \Block::getByID($_GET['bID'], $c, $a);
-                $p = new \Permissions($b);
+                $b = \Concrete\Core\Block\Block::getByID($_GET['bID'], $c, $a);
+                $p = new \Concrete\Core\Permission\Checker($b);
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
                     $name = sprintf('update_defaults_%s', $b->getBlockID());
-                    $queue = \Queue::get($name);
+                    $queue = \Concrete\Core\Foundation\Queue\Queue::get($name);
 
                     if ($_POST['process']) {
                         $obj = new \stdClass();
@@ -43,11 +43,11 @@ class Aliasing extends BackendInterfaceBlockController
                         foreach ($messages as $key => $p) {
                             $record = unserialize($p->body);
 
-                            $page = \Page::getByID($record['cID'], $record['cvID']);
+                            $page = \Concrete\Core\Page\Page::getByID($record['cID'], $record['cvID']);
                             if ($record['action'] == 'add_alias') {
                                 $this->block->alias($page);
                             } else if ($record['action'] == 'update_forked_alias') {
-                                $forked = \Block::getByID($record['bID'], $page, $record['arHandle']);
+                                $forked = \Concrete\Core\Block\Block::getByID($record['bID'], $page, $record['arHandle']);
                                 if (is_object($forked) && !$forked->isError()) {
                                     // take the current block that is in defaults, and replace the block on the page
                                     // with that block.
@@ -61,7 +61,7 @@ class Aliasing extends BackendInterfaceBlockController
                                         $b = $this->block->duplicate($page, true);
                                     } else {
                                         $this->block->alias($page);
-                                        $b = \Block::getByID($this->block->getBlockID(), $page, $record['arHandle']);
+                                        $b = \Concrete\Core\Block\Block::getByID($this->block->getBlockID(), $page, $record['arHandle']);
                                     }
 
                                     $b->setAbsoluteBlockDisplayOrder($existingDisplayOrder);
@@ -86,7 +86,7 @@ class Aliasing extends BackendInterfaceBlockController
                     }
 
                     $totalItems = $queue->count();
-                    \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d pages", "%d pages", $totalItems)));
+                    \Concrete\Core\View\View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d pages", "%d pages", $totalItems)));
                 }
             }
         }
@@ -97,15 +97,15 @@ class Aliasing extends BackendInterfaceBlockController
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-            $a = \Area::get($this->page, $_GET['arHandle']);
+            $a = \Concrete\Core\Area\Area::get($this->page, $_GET['arHandle']);
             $c = $this->page;
             if (is_object($a)) {
-                $b = \Block::getByID($_GET['bID'], $c, $a);
-                $p = new \Permissions($b);
+                $b = \Concrete\Core\Block\Block::getByID($_GET['bID'], $c, $a);
+                $p = new \Concrete\Core\Permission\Checker($b);
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
                     if (is_array($_POST['cIDs'])) {
                         foreach ($_POST['cIDs'] as $cID) {
-                            $nc = \Page::getByID($cID);
+                            $nc = \Concrete\Core\Page\Page::getByID($cID);
                             if (!$b->isAlias($nc)) {
                                 $bt = $b->getBlockTypeObject();
                                 if ($bt->isCopiedWhenPropagated()) {
@@ -120,8 +120,8 @@ class Aliasing extends BackendInterfaceBlockController
                     if (is_array($_POST['checkedCIDs'])) {
                         foreach ($_POST['checkedCIDs'] as $cID) {
                             if (!(is_array($_POST['cIDs'])) || (!in_array($cID, $_POST['cIDs']))) {
-                                $nc = \Page::getByID($cID, 'RECENT');
-                                $nb = \Block::getByID($_GET['bID'], $nc, $a);
+                                $nc = \Concrete\Core\Page\Page::getByID($cID, 'RECENT');
+                                $nb = \Concrete\Core\Block\Block::getByID($_GET['bID'], $nc, $a);
                                 if (is_object($nb) && (!$nb->isError())) {
                                     $nb->deleteBlock();
                                 }

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Statistics
 {

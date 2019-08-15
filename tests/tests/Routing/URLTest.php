@@ -5,7 +5,7 @@ namespace Concrete\Tests\Routing;
 use Config;
 use Core;
 use Monolog\Logger;
-use Page;
+use Concrete\Core\Page\Page;
 use PHPUnit_Framework_TestCase;
 use URL;
 

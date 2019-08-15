@@ -2,8 +2,8 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\ConsoleAwareInterface;
-use Job;
-use JobSet;
+use Concrete\Core\Job\Job;
+use Concrete\Core\Job\Set as JobSet;
 use RuntimeException;
 use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Helper\Table;

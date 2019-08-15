@@ -4,9 +4,9 @@ namespace Concrete\Controller\Dialog\File\Bulk;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\File\EditResponse as FileEditResponse;
-use FileAttributeKey;
-use Permissions;
-use File;
+use Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\File\File;
 
 class Properties extends BackendInterfaceController
 {

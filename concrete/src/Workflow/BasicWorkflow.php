@@ -13,8 +13,8 @@ use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Core;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
-use PermissionKey;
-use User;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\User\User;
 use UserInfo;
 use Concrete\Core\Localization\Localization;
 

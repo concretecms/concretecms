@@ -38,7 +38,7 @@ class ServiceProvider extends Provider
             '/ccm/system/authentication/oauth2/{type}/{action}',
             function ($type, $action) {
                 try {
-                    $type = \AuthenticationType::getByHandle($type);
+                    $type = \Concrete\Core\Authentication\AuthenticationType::getByHandle($type);
                     if ($type && is_object($type) && !$type->isError()) {
                         /** @var GenericOauthTypeController $controller */
                         $controller = $type->getController();

@@ -23,7 +23,7 @@ class ContentSwapper implements ContentSwapperInterface
             $result = true;
         } else {
             $result = false;
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             if ($u->isSuperUser()) {
                 // this can ONLY be used through the post. We will use the token to ensure that
                 $valt = \Core::make('helper/validation/token');
@@ -64,7 +64,7 @@ class ContentSwapper implements ContentSwapperInterface
                 $c->delete();
             }
 
-            $home = \Page::getByID(\Page::getHomePageID());
+            $home = \Concrete\Core\Page\Page::getByID(\Concrete\Core\Page\Page::getHomePageID());
             $blocks = $home->getBlocks();
             foreach ($blocks as $b) {
                 $b->deleteBlock();
@@ -78,7 +78,7 @@ class ContentSwapper implements ContentSwapperInterface
             // Set the page type of the home page to 0, because
             // if it has a type the type will be gone since we just
             // deleted it
-            $home = Page::getByID(\Page::getHomePageID());
+            $home = Page::getByID(\Concrete\Core\Page\Page::getHomePageID());
             $home->setPageType(null);
 
             // now we add in any files that this package has

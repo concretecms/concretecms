@@ -54,7 +54,7 @@ class Controller extends BlockController
      */
     public function getContent()
     {
-        $c = \Page::getCurrentPage();
+        $c = \Concrete\Core\Page\Page::getCurrentPage();
         $content = "";
         switch ($this->attributeHandle) {
             case "rpv_pageName":

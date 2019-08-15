@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
-use Loader;
-use Environment;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Page\Page;
-use Controller;
+use Concrete\Core\Controller\Controller;
 
 abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Control\Control
 {

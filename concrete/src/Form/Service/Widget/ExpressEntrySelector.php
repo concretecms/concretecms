@@ -4,16 +4,16 @@ namespace Concrete\Core\Form\Service\Widget;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Core;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class ExpressEntrySelector
 {
 
     public function selectEntry(Entity $entity, $fieldName, Entry $entry = null)
     {
-        $v = \View::getInstance();
-        $p = new \Permissions($entity);
+        $v = \Concrete\Core\View\View::getInstance();
+        $p = new \Concrete\Core\Permission\Checker($entity);
         if ($p->canViewExpressEntries()) {
             $v->requireAsset('core/express');
 

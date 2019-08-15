@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Html\Service;
 
-use View;
+use Concrete\Core\View\View;
 
 class Lightbox
 {

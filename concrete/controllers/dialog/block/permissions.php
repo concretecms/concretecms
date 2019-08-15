@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
-use View;
+use Concrete\Core\View\View;
 
 class Permissions extends BackendInterfaceBlockController
 {

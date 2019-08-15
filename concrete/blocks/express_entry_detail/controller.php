@@ -67,7 +67,7 @@ class Controller extends BlockController
 
     public function view()
     {
-        $c = \Page::getCurrentPage();
+        $c = \Concrete\Core\Page\Page::getCurrentPage();
         $entity = null;
         if ($this->entryMode == 'A') {
             $ak = CollectionKey::getByHandle($this->exEntryAttributeKeyHandle);

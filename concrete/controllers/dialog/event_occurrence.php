@@ -15,7 +15,7 @@ class EventOccurrence extends BackendInterfaceController
         if (is_object($occurrence)) {
             $calendar = $occurrence->getEvent()->getCalendar();
             if (is_object($calendar)) {
-                $cp = new \Permissions($calendar);
+                $cp = new \Concrete\Core\Permission\Checker($calendar);
 
                 return $cp->canViewCalendarInEditInterface();
             }

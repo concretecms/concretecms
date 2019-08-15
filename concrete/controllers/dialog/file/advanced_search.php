@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Doctrine\ORM\EntityManager;
-use FilePermissions;
+use Concrete\Core\Legacy\FilePermissions;
 use URL;
 
 class AdvancedSearch extends AdvancedSearchController

@@ -5,7 +5,7 @@ namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Support\Facade\Application;
-use PermissionKeyCategory;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
 
 class Assignment
 {

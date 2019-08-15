@@ -3,11 +3,11 @@ namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Block\Block;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Permission\Inheritance\Registry\RegistryInterface;
-use PermissionKey;
-use Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Page\Page;
 use Database;
 
 class BlockAssignment extends Assignment

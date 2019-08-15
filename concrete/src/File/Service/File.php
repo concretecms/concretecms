@@ -3,7 +3,7 @@ namespace Concrete\Core\File\Service;
 
 use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Config;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Exception;
 use Core;
 use Concrete\Core\Support\Facade\Application as CoreApplication;

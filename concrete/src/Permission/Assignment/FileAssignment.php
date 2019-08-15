@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Access\Access;
-use FileSet;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Entity\File\File;
 use Database;
 

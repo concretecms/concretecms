@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Concrete\Core\Foundation\ConcreteObject;
 use Database;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
-use CacheLocal;
+use Concrete\Core\Cache\CacheLocal;
 use Core;
 use RuntimeException;
 

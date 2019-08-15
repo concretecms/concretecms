@@ -19,7 +19,7 @@ class FolderService
 
     public function getByPath($path)
     {
-        $c = \Page::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'));
+        $c = \Concrete\Core\Page\Page::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'));
         if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
             return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array($c));
         }
@@ -27,7 +27,7 @@ class FolderService
 
     public function getByID($cID)
     {
-        $c = \Page::getByID($cID);
+        $c = \Concrete\Core\Page\Page::getByID($cID);
         if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
             return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array($c));
         }
@@ -37,7 +37,7 @@ class FolderService
     {
 //        $site = \Core::make('site')->getActiveSiteForEditing();
         $type = Type::getByHandle(STACK_CATEGORY_PAGE_TYPE);
-        $parent = $folder ? $folder->getPage() : \Page::getByPath(STACKS_PAGE_PATH);
+        $parent = $folder ? $folder->getPage() : \Concrete\Core\Page\Page::getByPath(STACKS_PAGE_PATH);
         $data = array();
         $data['name'] = $name;
         $page = $parent->add($type, $data);

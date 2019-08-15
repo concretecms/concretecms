@@ -49,11 +49,11 @@ class Version20150515000000 extends AbstractMigration implements RepeatableMigra
             []
         );
         foreach ($orphanedCollectionVersionBlocks as $row) {
-            $nc = \Page::getByID($row['cID'], $row['cvID']);
+            $nc = \Concrete\Core\Page\Page::getByID($row['cID'], $row['cvID']);
             if (!is_object($nc) || $nc->isError()) {
                 continue;
             }
-            $b = \Block::getByID($row['bID'], $nc, $row['arHandle']);
+            $b = \Concrete\Core\Block\Block::getByID($row['bID'], $nc, $row['arHandle']);
             if (is_object($b)) {
                 $b->deleteBlock();
             }

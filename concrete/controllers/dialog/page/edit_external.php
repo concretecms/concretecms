@@ -22,7 +22,7 @@ class EditExternal extends BackendInterfacePageController
     {
         if ($this->validateAction()) {
             $c = $this->page;
-            $request = \Request::getInstance();
+            $request = \Concrete\Core\Http\Request::getInstance();
             $this->page->updateCollectionAliasExternal(
                 $request->request->get('name'),
                 $request->request->get('link'),

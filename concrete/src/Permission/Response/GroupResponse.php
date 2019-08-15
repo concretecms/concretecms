@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class GroupResponse extends Response
 {

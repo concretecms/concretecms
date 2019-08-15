@@ -13,7 +13,7 @@ class Introduction extends UserInterface
 
     public function canAccess()
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
 
         return $u->isRegistered();
     }

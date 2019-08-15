@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Stack;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
 use Concrete\Core\Site\Tree\TreeInterface;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\StickyRequest;
 
@@ -93,7 +93,7 @@ class StackList extends PageList
     /**
      * @param $queryRow
      *
-     * @return \Stack
+     * @return \Concrete\Core\Page\Stack\Stack
      */
     public function getResult($queryRow)
     {

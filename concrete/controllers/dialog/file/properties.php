@@ -3,11 +3,11 @@ namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Permissions;
-use File;
-use FileAttributeKey;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\File\File;
+use Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
 use Concrete\Core\File\EditResponse as FileEditResponse;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Exception;
 
 class Properties extends BackendInterfaceFileController

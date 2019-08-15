@@ -13,7 +13,7 @@ $tree = null;
 if (is_object($control->getPageObject())) {
     $relevantPage = $control->getPageObject();
 } else if ($control->getTargetParentPageID()) {
-    $relevantPage = \Page::getByID($control->getTargetParentPageID());
+    $relevantPage = \Concrete\Core\Page\Page::getByID($control->getTargetParentPageID());
     $tree = $relevantPage->getSiteTreeObject();
 }
 

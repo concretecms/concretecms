@@ -8,7 +8,7 @@ use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Core;
 use Database;
-use Page;
+use Concrete\Core\Page\Page;
 
 class Controller extends BlockController implements FileTrackableInterface
 {

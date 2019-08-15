@@ -17,7 +17,7 @@ class ChooseEvent extends BackendInterfaceController
     {
         $calendar = Calendar::getByID($_REQUEST['caID']);
         if (is_object($calendar)) {
-            $cp = new \Permissions($calendar);
+            $cp = new \Concrete\Core\Permission\Checker($calendar);
 
             return $cp->canViewCalendarInEditInterface();
         }

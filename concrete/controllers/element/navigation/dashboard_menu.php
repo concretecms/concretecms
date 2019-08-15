@@ -11,7 +11,7 @@ class DashboardMenu extends Menu
 
     public function __construct(Page $currentPage)
     {
-        $dashboard = \Page::getByPath('/dashboard');
+        $dashboard = \Concrete\Core\Page\Page::getByPath('/dashboard');
         parent::__construct($dashboard, $currentPage);
     }
 

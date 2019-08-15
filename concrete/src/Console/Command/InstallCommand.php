@@ -176,7 +176,7 @@ EOT
                 'uEmail' => $options['demo-email'],
                 'uPassword' => $options['demo-password'],
             ])->getUserObject()->enterGroup(
-                \Group::getByID(ADMIN_GROUP_ID)
+                \Concrete\Core\User\Group\Group::getByID(ADMIN_GROUP_ID)
             );
             $output->writeln('done.');
         }

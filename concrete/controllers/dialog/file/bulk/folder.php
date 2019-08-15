@@ -39,7 +39,7 @@ class Folder extends BackendInterfaceController
         if (count($this->files) > 0) {
             $this->canEdit = true;
             foreach ($this->files as $f) {
-                $fp = new \Permissions($f);
+                $fp = new \Concrete\Core\Permission\Checker($f);
                 if (!$fp->canViewFileInFileManager()) {
                     $this->canEdit = false;
                 }
@@ -62,7 +62,7 @@ class Folder extends BackendInterfaceController
         $destNode = Node::getByID($destNodeID);
         $validate = true;
         if (is_object($destNode)) {
-            $dp = new \Permissions($destNode);
+            $dp = new \Concrete\Core\Permission\Checker($destNode);
             if (!$dp->canAddTreeSubNode()) {
                 $validate = false;
             }
@@ -74,7 +74,7 @@ class Folder extends BackendInterfaceController
         foreach ($this->files as $file) {
             $sourceNode = $file->getFileNodeObject();
             if (is_object($sourceNode) && $sourceNode->getTreeNodeID() !== $destNodeID) {
-                $dp = new \Permissions($sourceNode);
+                $dp = new \Concrete\Core\Permission\Checker($sourceNode);
                 if ($dp->canEditTreeNode()) {
                    $sourceNodes[] = $sourceNode;
                 }

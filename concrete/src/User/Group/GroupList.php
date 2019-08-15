@@ -4,10 +4,10 @@ namespace Concrete\Core\User\Group;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Config;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class GroupList extends DatabaseItemList
 {

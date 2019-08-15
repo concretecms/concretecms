@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Validation\CSRF\Token;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class DashboardSitePageController extends DashboardPageController
 {

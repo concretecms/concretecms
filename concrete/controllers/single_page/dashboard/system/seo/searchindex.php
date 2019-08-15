@@ -3,8 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use Loader;
-use Area;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Page\Search\IndexedSearch;
 
 class Searchindex extends DashboardPageController

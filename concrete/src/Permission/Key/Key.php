@@ -13,7 +13,7 @@ use Concrete\Core\Support\Facade\Application;
 use Gettext\Translations;
 use PDO;
 use SimpleXMLElement;
-use User;
+use Concrete\Core\User\User;
 
 /**
  * @property bool|int|string $pkID

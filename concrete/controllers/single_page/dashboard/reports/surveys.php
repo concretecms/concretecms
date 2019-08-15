@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 use Concrete\Block\Survey\Controller as SurveyBlockController;
 use Concrete\Block\Survey\SurveyList;

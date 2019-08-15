@@ -7,7 +7,7 @@ use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\LegacyValue;
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 /*
  * @deprecated

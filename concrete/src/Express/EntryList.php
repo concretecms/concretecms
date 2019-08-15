@@ -106,7 +106,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
             }
         }
 
-        $fp = new \Permissions($mixed);
+        $fp = new \Concrete\Core\Permission\Checker($mixed);
         return $fp->canViewExpressEntry();
     }
 

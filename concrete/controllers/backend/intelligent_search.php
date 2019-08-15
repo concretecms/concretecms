@@ -18,12 +18,12 @@ class IntelligentSearch extends UserInterface
         session_write_close();
 
         $keywords = $_REQUEST['q'];
-        $pl = new \PageList();
+        $pl = new \Concrete\Core\Page\PageList();
         $pl->filterByName($keywords);
         $pl->sortBy('cID', 'asc');
         $pl->setItemsPerPage(5);
         $pl->setPermissionsChecker(function ($page) {
-            $pp = new \Permissions($page);
+            $pp = new \Concrete\Core\Permission\Checker($page);
 
             return $pp->canViewPageInSitemap();
         });

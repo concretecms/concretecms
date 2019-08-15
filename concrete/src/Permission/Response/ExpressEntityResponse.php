@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Tree\Node\Node;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class ExpressEntityResponse extends Response
 {

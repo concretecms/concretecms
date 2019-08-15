@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\PageTitle;
 
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Tree\Node\Type\Topic;
 use Core;

@@ -42,7 +42,7 @@ class GroupTest extends UserTestCase
         $g = Group::add('Test Group', ''); // gonna pull all users with vowels in their names in this group.
         $g->setAutomationOptions(true, false, false);
 
-        $groupControllers = \Group::getAutomatedOnRegisterGroupControllers();
+        $groupControllers = \Concrete\Core\User\Group\Group::getAutomatedOnRegisterGroupControllers();
         $this->assertEquals(1, count($groupControllers));
 
         $users = [

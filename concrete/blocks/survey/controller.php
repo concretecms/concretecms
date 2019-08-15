@@ -2,8 +2,8 @@
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
-use Page;
-use User;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 use Core;
 use Database;
 

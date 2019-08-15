@@ -5,8 +5,8 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
-use User;
-use Page;
+use Concrete\Core\User\User;
+use Concrete\Core\Page\Page;
 
 class Delete extends BackendInterfacePageController
 {

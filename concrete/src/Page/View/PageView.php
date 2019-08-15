@@ -2,17 +2,17 @@
 namespace Concrete\Core\Page\View;
 
 use Concrete\Core\Page\Theme\Theme;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Events;
-use Loader;
-use PageCache;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Page\Template as PageTemplate;
-use PageTheme;
-use Permissions;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
+use Concrete\Core\Permission\Checker as Permissions;
 use URL;
-use User;
-use View;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
 use Config;
 
 class PageView extends View

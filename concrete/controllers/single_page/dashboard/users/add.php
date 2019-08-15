@@ -4,13 +4,13 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use Group;
-use GroupList;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupList;
 use Imagine\Image\Box;
-use Localization;
-use PermissionKey;
-use Permissions;
-use UserAttributeKey;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use UserInfo;
 
 class Add extends DashboardPageController

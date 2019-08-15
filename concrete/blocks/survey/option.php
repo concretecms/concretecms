@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\Survey;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 /**
  * An object that represents an option in a survey. 

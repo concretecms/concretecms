@@ -4,7 +4,7 @@ namespace Concrete\Tests\Attribute;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\TestHelpers\Attribute\AttributeTestCase;
-use Page;
+use Concrete\Core\Page\Page;
 
 class CollectionAttributeTest extends AttributeTestCase
 {

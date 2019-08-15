@@ -4,9 +4,9 @@ namespace Concrete\Controller\Dialog\File\Bulk;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\File\EditResponse as FileEditResponse;
-use Permissions;
-use Loader;
-use File;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\File\File;
 
 class Delete extends BackendInterfaceController
 {

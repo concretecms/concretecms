@@ -68,7 +68,7 @@ class SearchProvider extends AbstractSearchProvider
     public function getSearchResultFromQuery(Query $query)
     {
         $result = parent::getSearchResultFromQuery($query);
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if (!$u->isSuperUser()) {
             $qb = $result->getItemListObject()->getQueryObject();
             /* @var \Doctrine\DBAL\Query\QueryBuilder $qb */
@@ -76,14 +76,14 @@ class SearchProvider extends AbstractSearchProvider
             $gs = new GroupList();
             $groups = $gs->getResults();
             foreach ($groups as $g) {
-                $gp = new \Permissions($g);
+                $gp = new \Concrete\Core\Permission\Checker($g);
                 if ($gp->canSearchUsersInGroup()) {
                     $gIDs[] = $g->getGroupID();
                 }
             }
             $whereGroups = $qb->expr()->in('ugRequired.gID', $gIDs);
-            $gg = \Group::getByID(REGISTERED_GROUP_ID);
-            $ggp = new \Permissions($gg);
+            $gg = \Concrete\Core\User\Group\Group::getByID(REGISTERED_GROUP_ID);
+            $ggp = new \Concrete\Core\Permission\Checker($gg);
             if ($ggp->canSearchUsersInGroup()) {
                 $whereGroups = $qb->expr()->orX(
                     $whereGroups,

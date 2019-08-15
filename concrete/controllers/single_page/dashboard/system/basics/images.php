@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use File;
+use Concrete\Core\File\File;
 
 class Images extends DashboardPageController
 {

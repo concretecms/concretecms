@@ -39,7 +39,7 @@ class Pages extends Standard
 
     protected function canAccess()
     {
-        $permissions = new \Permissions();
+        $permissions = new \Concrete\Core\Permission\Checker();
         return $permissions->canAccessSitemap();
     }
 

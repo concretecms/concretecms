@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\GoogleMap;
 
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Config;
 use Core;

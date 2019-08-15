@@ -4,7 +4,7 @@ namespace Concrete\Core\Marketplace;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageArchive;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Config;
 use Concrete\Core\Foundation\ConcreteObject;
 use Exception;

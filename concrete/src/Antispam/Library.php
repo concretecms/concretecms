@@ -3,8 +3,8 @@ namespace Concrete\Core\Antispam;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Support\Facade\Facade;
-use Loader;
-use Package;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
 use Core;
 
@@ -107,7 +107,7 @@ class Library extends ConcreteObject
     /**
      * @param string $saslHandle
      * @param string $saslName
-     * @param bool|\Package $pkg
+     * @param bool|\Concrete\Core\Package\Package $pkg
      *
      * @return Library
      */
@@ -168,7 +168,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @param \Package $pkg
+     * @param \Concrete\Core\Package\Package $pkg
      *
      * @return Library[]
      */

@@ -3,7 +3,7 @@ namespace Concrete\Block\Form;
 
 use Core;
 use Database;
-use Request;
+use Concrete\Core\Http\Request;
 
 class MiniSurvey
 {

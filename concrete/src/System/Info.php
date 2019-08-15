@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\System;
 
-use Localization;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Environment;
@@ -165,7 +165,7 @@ class Info
             }
             $this->cache = implode("\n", $cache);
 
-            $this->serverSoftware = \Request::getInstance()->server->get('SERVER_SOFTWARE', '');
+            $this->serverSoftware = \Concrete\Core\Http\Request::getInstance()->server->get('SERVER_SOFTWARE', '');
 
             $this->serverAPI = PHP_SAPI;
 

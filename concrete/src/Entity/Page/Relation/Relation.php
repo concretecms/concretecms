@@ -52,7 +52,7 @@ abstract class Relation
 
     public function getPageObject()
     {
-        return \Page::getByID($this->cID, 'ACTIVE');
+        return \Concrete\Core\Page\Page::getByID($this->cID, 'ACTIVE');
     }
 
 }

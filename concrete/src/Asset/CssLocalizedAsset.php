@@ -2,7 +2,7 @@
 namespace Concrete\Core\Asset;
 
 use URL;
-use Localization;
+use Concrete\Core\Localization\Localization;
 
 class CssLocalizedAsset extends CssAsset
 {

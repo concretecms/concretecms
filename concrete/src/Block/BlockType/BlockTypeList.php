@@ -4,8 +4,8 @@ namespace Concrete\Core\Block\BlockType;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Support\Facade\Application;
 use Core;
-use Loader;
-use Package;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Package\Package;
 
 use Concrete\Core\Legacy\DatabaseItemList;
 

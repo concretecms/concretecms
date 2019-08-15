@@ -84,7 +84,7 @@ class Controller extends BlockController
     {
         $event = null;
         if ($this->mode == 'P') {
-            $page = \Page::getCurrentPage();
+            $page = \Concrete\Core\Page\Page::getCurrentPage();
             $event = $page->getAttribute($this->calendarEventAttributeKeyHandle);
         } else {
             if ($this->eventID) {

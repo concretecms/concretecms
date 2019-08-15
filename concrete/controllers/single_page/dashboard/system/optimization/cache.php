@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Core;
-use User;
+use Concrete\Core\User\User;
 
 class Cache extends DashboardPageController
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\FlagType;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 
 class FlagType extends ConcreteObject

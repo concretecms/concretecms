@@ -22,7 +22,7 @@ if (!isset($month)) {
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="calendar_button">
                 <?php foreach ($calendars as $cal) {
-    $p = new \Permissions($cal);
+    $p = new \Concrete\Core\Permission\Checker($cal);
     if ($p->canViewCalendarInEditInterface()) {
         ?>
                         <li><a href="<?= URL::to($preferences->getPreferredViewPath(), 'view',

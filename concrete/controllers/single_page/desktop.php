@@ -6,7 +6,7 @@ use Concrete\Core\Page\Controller\AccountPageController;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\Redirect;
-use Page;
+use Concrete\Core\Page\Page;
 
 class Desktop extends AccountPageController
 {

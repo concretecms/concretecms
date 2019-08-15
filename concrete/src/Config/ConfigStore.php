@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Config;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class ConfigStore
 {

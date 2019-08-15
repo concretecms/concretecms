@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Legacy;
 
-use File as ConcreteFile;
-use User;
-use FileAttributeKey;
+use Concrete\Core\File\File as ConcreteFile;
+use Concrete\Core\User\User;
+use Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
 
 /**
  * An object that allows a filtered list of files to be returned.

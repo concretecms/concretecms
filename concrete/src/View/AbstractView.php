@@ -2,7 +2,7 @@
 namespace Concrete\Core\View;
 
 use Concrete\Core\Http\ResponseAssetGroup;
-use Request;
+use Concrete\Core\Http\Request;
 use URL;
 use Core;
 

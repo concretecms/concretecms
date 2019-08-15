@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class CustomLayout extends Layout
 {

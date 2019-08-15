@@ -34,7 +34,7 @@
     <select name="registration_group" class="form-control">
         <option value="0"><?= t("None") ?></option>
         <?php
-        /** @var \Group $group */
+        /** @var \Concrete\Core\User\Group\Group $group */
         foreach ($groups as $group) {
             ?>
             <option value="<?= $group->getGroupID() ?>" <?= intval($group->getGroupID(), 10) === intval(

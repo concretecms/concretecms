@@ -28,7 +28,7 @@ class PageTypeType extends Type
         }
         $path = (string) $txml['path'];
         if ($path) {
-            $c = \Page::getByPath($path);
+            $c = \Concrete\Core\Page\Page::getByPath($path);
             $configuration->setStartingPointPageID($c->getCollectionID());
         }
 

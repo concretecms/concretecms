@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class SiteResponse extends Response
 {
@@ -9,7 +9,7 @@ class SiteResponse extends Response
     public function canViewSiteInSelector()
     {
         $home = $this->getPermissionObject()->getSiteHomePageObject();
-        $cp = new \Permissions($home);
+        $cp = new \Concrete\Core\Permission\Checker($home);
         return $cp->canViewPageInSitemap();
     }
 

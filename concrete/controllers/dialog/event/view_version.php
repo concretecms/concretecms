@@ -45,7 +45,7 @@ class ViewVersion extends BackendInterfaceController
         if (is_object($version)) {
             $calendar = $version->getEvent()->getCalendar();
             if (is_object($calendar)) {
-                $cp = new \Permissions($calendar);
+                $cp = new \Concrete\Core\Permission\Checker($calendar);
                 return $cp->canEditCalendarEvents();
             }
         }

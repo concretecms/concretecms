@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class TreeNodeKey extends Key
 {

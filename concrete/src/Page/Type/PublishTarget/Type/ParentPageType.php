@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
 
 use Concrete\Core\Page\Type\Type as PageType;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\PublishTarget\Configuration\ParentPageConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 

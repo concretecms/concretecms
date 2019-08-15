@@ -54,7 +54,7 @@ class Manager implements EntryManagerInterface
     {
         $entry = new Entry();
         if (!$author) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             if ($u->isRegistered()) {
                 $author = $u->getUserInfoObject()->getEntityObject();
                 $entry->setAuthor($author);

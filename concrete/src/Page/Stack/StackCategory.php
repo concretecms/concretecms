@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Stack;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Type;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 
 class StackCategory
 {
@@ -46,7 +46,7 @@ class StackCategory
             $text = Core::make('helper/text');
             $locale = $section->getLocale();
             $path = STACKS_PAGE_PATH . '/' . $locale;
-            $page = \Page::getByPath($path);
+            $page = \Concrete\Core\Page\Page::getByPath($path);
             if (is_object($page) && !$page->isError()) {
                 $sc = new self($page);
             }
@@ -82,7 +82,7 @@ class StackCategory
      */
     public static function createFromMultilingualSection(Section $section)
     {
-        $parent = \Page::getByPath(STACKS_PAGE_PATH);
+        $parent = \Concrete\Core\Page\Page::getByPath(STACKS_PAGE_PATH);
         $data = array();
         $data['name'] = $section->getLocale();
         $data['cHandle'] = $section->getLocale();

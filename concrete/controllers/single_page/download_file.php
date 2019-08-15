@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
-use PageController;
+use Concrete\Core\Page\Controller\PageController;
 use Core;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\File\File;
 
@@ -126,7 +126,7 @@ class DownloadFile extends PageController
         $configuration = $fsl->getConfigurationObject();
         $fv = $file->getVersion();
         if ($configuration->hasPublicURL()) {
-            return \Redirect::url($fv->getURL(),'303')->send();
+            return \Concrete\Core\Routing\Redirect::url($fv->getURL(),'303')->send();
         } else {
             return $fv->forceDownload();
         }

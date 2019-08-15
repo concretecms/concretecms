@@ -3,7 +3,7 @@ namespace Concrete\Core\Html\Service;
 
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Asset\JavascriptAsset;
-use View;
+use Concrete\Core\View\View;
 
 /**
  * \@package Helpers

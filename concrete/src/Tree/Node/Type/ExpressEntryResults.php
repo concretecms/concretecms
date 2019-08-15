@@ -4,7 +4,7 @@ namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\ExpressEntryResultsListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryResultsFolderMenu;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class ExpressEntryResults extends ExpressEntryCategory
 {

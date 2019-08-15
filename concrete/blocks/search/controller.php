@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Block\Search;
 
-use CollectionAttributeKey;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\PageList;
 use Core;
 use Database;
-use Page;
-use Request;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Http\Request;
 
 class Controller extends BlockController
 {

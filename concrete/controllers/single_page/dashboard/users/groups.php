@@ -3,13 +3,13 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Controller\Search\Groups as SearchGroupsController;
-use Permissions;
-use Group;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\User\Group\Group;
 use Exception;
-use User;
-use Loader;
+use Concrete\Core\User\User;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Tree\Type\Group as GroupTree;
-use Page;
+use Concrete\Core\Page\Page;
 
 class Groups extends DashboardPageController
 {

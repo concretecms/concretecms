@@ -48,7 +48,7 @@ class StandardValidator implements ValidatorInterface
                 $e->add(t('You must choose a page to publish this page beneath.'));
             }
         } else {
-            $ppc = new \Permissions($target);
+            $ppc = new \Concrete\Core\Permission\Checker($target);
             if (!$ppc->canAddSubCollection($this->getPageTypeObject())) {
                 $e->add(t('You do not have permission to publish a page in this location.'));
             }

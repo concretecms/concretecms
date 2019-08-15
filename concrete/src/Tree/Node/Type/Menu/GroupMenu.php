@@ -17,7 +17,7 @@ class GroupMenu extends Menu
     public function __construct(Group $group)
     {
         parent::__construct($group);
-        $p = new \Permissions($group);
+        $p = new \Concrete\Core\Permission\Checker($group);
         if ($p->canEditTreeNode()) {
             $url = \URL::to('/dashboard/users/groups', 'edit', $group->getTreeNodeGroupID());
             $this->addItem(new LinkItem($url, t('Edit Group')));

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Editor;
 
-use AssetList;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Legacy\FilePermissions;

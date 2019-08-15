@@ -2,7 +2,7 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use UserInfo as ConcreteUserInfo;
 
 class Statistics extends ConcreteObject

@@ -3,7 +3,7 @@ namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Controller\Element\Search\Pages\Header;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Search extends BackendInterfaceController
 {

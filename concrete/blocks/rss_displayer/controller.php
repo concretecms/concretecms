@@ -2,7 +2,7 @@
 namespace Concrete\Block\RssDisplayer;
 
 use Concrete\Core\Block\BlockController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 
 class Controller extends BlockController

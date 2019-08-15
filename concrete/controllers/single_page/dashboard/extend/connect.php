@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use TaskPermission;
-use View;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\View\View;
 
 class Connect extends DashboardPageController
 {

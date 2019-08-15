@@ -9,7 +9,7 @@ class UploadComplete extends BulkPropertiesController
 
     protected function checkPermissions($file)
     {
-        $fp = new \Permissions($file);
+        $fp = new \Concrete\Core\Permission\Checker($file);
         return $fp->canViewFileInFileManager();
     }
 
@@ -22,7 +22,7 @@ class UploadComplete extends BulkPropertiesController
         $ids = array();
         $canEditFiles = true;
         foreach ($this->files as $file) {
-            $fp = new \Permissions($file);
+            $fp = new \Concrete\Core\Permission\Checker($file);
             if (!$fp->canEditFileProperties()) {
                 $canEditFiles = false;
             }

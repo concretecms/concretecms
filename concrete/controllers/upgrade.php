@@ -8,7 +8,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Update;
 use Exception;
-use View;
+use Concrete\Core\View\View;
 
 class Upgrade extends BackendUserInterfaceController
 {

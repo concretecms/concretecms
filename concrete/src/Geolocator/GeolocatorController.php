@@ -5,7 +5,7 @@ use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Filesystem\FileLocator;
-use Controller;
+use Concrete\Core\Controller\Controller;
 use Exception;
 use IPLib\Address\AddressInterface;
 use IPLib\Range\Type as IPRangeType;

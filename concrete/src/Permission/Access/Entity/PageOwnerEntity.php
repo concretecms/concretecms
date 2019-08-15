@@ -41,7 +41,7 @@ class PageOwnerEntity extends Entity
         if (empty($users)) {
             return false;
         } else {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
 
             return $users[0]->getUserID() == $u->getUserID();
         }

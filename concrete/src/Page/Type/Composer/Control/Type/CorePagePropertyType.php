@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 
 class CorePagePropertyType extends Type

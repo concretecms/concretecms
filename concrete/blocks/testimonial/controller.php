@@ -36,7 +36,7 @@ class Controller extends BlockController
     {
         $image = false;
         if ($this->fID) {
-            $f = \File::getByID($this->fID);
+            $f = \Concrete\Core\File\File::getByID($this->fID);
             if (is_object($f)) {
                 $image = Core::make('html/image', array($f, false))->getTag();
                 $image->alt($this->name);

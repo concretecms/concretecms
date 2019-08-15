@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Style;
 
 use Environment;
-use PageTheme;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use PHPUnit_Framework_TestCase;
 
 class StyleTest extends PHPUnit_Framework_TestCase

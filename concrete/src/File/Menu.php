@@ -23,7 +23,7 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
         $this->addItem(new LinkItem('#', t('Choose New File'), ['data-file-manager-action' => 'choose-new-file']));
         $this->addItem(new DividerItem());
 
-        $fp = new \Permissions($file);
+        $fp = new \Concrete\Core\Permission\Checker($file);
         if ($fp->canViewFile()) {
 
             if ($file->canView()) {

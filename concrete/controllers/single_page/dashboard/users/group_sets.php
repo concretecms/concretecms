@@ -3,8 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\Group\GroupSet;
-use GroupList;
-use Group;
+use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\User\Group\Group;
 
 class GroupSets extends DashboardPageController
 {

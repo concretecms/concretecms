@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 
 use Concrete\Core\Page\Type\Type;
-use Page;
+use Concrete\Core\Page\Page;
 
 class ParentPageConfiguration extends Configuration
 {

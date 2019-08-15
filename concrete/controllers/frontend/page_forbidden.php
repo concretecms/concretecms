@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
-use Controller;
-use User;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\User\User;
 use Config;
 
 class PageForbidden extends Controller

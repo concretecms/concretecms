@@ -11,7 +11,7 @@ interface AuthenticationTypeControllerInterface
      *
      * @throws AuthenticationTypeFailureException
      *
-     * @return \User|null
+     * @return \Concrete\Core\User\User|null
      */
     public function authenticate();
 
@@ -19,14 +19,14 @@ interface AuthenticationTypeControllerInterface
      * Method used to clean up.
      * This method must be defined, if it isn't needed, leave it blank.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      */
     public function deauthenticate(User $u);
 
     /**
      * Test user authentication status.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      *
      * @return bool Returns true if user is authenticated, false if not
      */
@@ -35,7 +35,7 @@ interface AuthenticationTypeControllerInterface
     /**
      * Create a cookie hash to identify the user indefinitely.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      *
      * @return string Unique hash to be used to verify the users identity
      */
@@ -54,7 +54,7 @@ interface AuthenticationTypeControllerInterface
     /**
      * tasks to finalize authentication, call on login events etc.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      */
     public function completeAuthentication(User $u);
 }

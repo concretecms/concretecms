@@ -2,10 +2,10 @@
 namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use Permissions;
-use Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Page;
 use stdClass;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 class Attributes extends BackendInterfacePageController

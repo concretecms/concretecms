@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Block\Block;
-use User;
+use Concrete\Core\User\User;
 
 class AreaResponse extends Response
 {

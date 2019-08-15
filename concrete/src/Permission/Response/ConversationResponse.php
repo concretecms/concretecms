@@ -12,7 +12,7 @@ class ConversationResponse extends Response
         if (is_object($conversation)) {
             $c = $conversation->getConversationPageObject();
             if (is_object($c) && !$c->isError()) {
-                $cp = new \Permissions($c);
+                $cp = new \Concrete\Core\Permission\Checker($c);
 
                 return $cp->canViewPage();
             }

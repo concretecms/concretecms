@@ -2,7 +2,7 @@
 namespace Concrete\Core\File;
 
 use Config;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 /**
  * \@package Helpers

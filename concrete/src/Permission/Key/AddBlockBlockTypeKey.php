@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
-use Loader;
-use User;
-use PermissionKey;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddBlockBlockTypeKey extends BlockTypeKey

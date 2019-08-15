@@ -15,12 +15,12 @@ use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Exception;
 use Imagine\Image\Box;
 use League\Csv\Writer;
-use PermissionKey;
-use Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
 use stdClass;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use User;
-use UserAttributeKey;
+use Concrete\Core\User\User;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use UserInfo;
 
 class Search extends DashboardPageController

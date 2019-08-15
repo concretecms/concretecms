@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Block\View;
 
-use Loader;
-use AssetList;
-use View;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\View\View;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Asset\JavascriptAsset;
@@ -42,7 +42,7 @@ class BlockViewTemplate
                 $this->theme = $c->getCollectionThemeObject();
             }
         } else {
-            $c = \Page::getCurrentPage();
+            $c = \Concrete\Core\Page\Page::getCurrentPage();
             if ($c) {
                 $this->theme = $c->getCollectionThemeObject();
             }

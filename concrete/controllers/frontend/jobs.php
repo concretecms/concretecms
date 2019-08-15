@@ -2,11 +2,11 @@
 namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\Job\QueueableJob;
-use Controller;
+use Concrete\Core\Controller\Controller;
 use stdClass;
-use Job;
-use JobSet;
-use Response;
+use Concrete\Core\Job\Job;
+use Concrete\Core\Job\Set as JobSet;
+use Concrete\Core\Http\Response;
 
 class Jobs extends Controller
 {
@@ -140,7 +140,7 @@ class Jobs extends Controller
                     }
 
                     $totalItems = $q->count();
-                    \View::element('progress_bar', array(
+                    \Concrete\Core\View\View::element('progress_bar', array(
                         'totalItems' => $totalItems,
                         'totalItemsSummary' => t2("%d item", "%d items", $totalItems),
                     ));

@@ -5,7 +5,7 @@ use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileContro
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Type\Type;
 use Exception;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Edit extends BackendInterfaceFileController
 {

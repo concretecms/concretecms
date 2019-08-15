@@ -6,8 +6,8 @@ use Core;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Less_Tree_Color;
 use Less_Tree_Call;
-use View;
-use Request;
+use Concrete\Core\View\View;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Service\Json;
 
 class ColorStyle extends Style

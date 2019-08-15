@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Conversation;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
-use Page;
+use Concrete\Core\Page\Page;
 use Config;
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
@@ -345,7 +345,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
                 }
             }
         } else {
-            $users = \Conversation::getDefaultSubscribedUsers();
+            $users = \Concrete\Core\Conversation\Conversation::getDefaultSubscribedUsers();
         }
 
         return $users;

@@ -5,7 +5,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\User\UserInfo;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 use URL;
 
 defined('C5_EXECUTE') or die("Access Denied.");

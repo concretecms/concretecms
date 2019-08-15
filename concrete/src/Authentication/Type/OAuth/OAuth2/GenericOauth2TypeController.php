@@ -30,7 +30,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
         }
 
         try {
-            $code = \Request::getInstance()->get('code');
+            $code = \Concrete\Core\Http\Request::getInstance()->get('code');
             $token = $this->getService()->requestAccessToken($code);
             $this->setToken($token);
         } catch (TokenResponseException $e) {
@@ -78,7 +78,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
         }
 
         try {
-            $code = \Request::getInstance()->get('code');
+            $code = \Concrete\Core\Http\Request::getInstance()->get('code');
             $token = $this->getService()->requestAccessToken($code);
         } catch (TokenResponseException $e) {
             $this->showError(t('Failed authentication: %s', $e->getMessage()));
@@ -112,7 +112,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
      * Method used to clean up.
      * This method must be defined, if it isn't needed, leave it blank.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      */
     public function deauthenticate(User $u)
     {
@@ -122,7 +122,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
     /**
      * Test user authentication status.
      *
-     * @param \User $u
+     * @param \Concrete\Core\User\User $u
      *
      * @return bool Returns true if user is authenticated, false if not
      */

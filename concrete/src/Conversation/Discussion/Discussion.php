@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Conversation\Discussion;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 use Concrete\Core\Foundation\ConcreteObject;
-use Page;
+use Concrete\Core\Page\Page;
 
 class Discussion extends ConcreteObject
 {

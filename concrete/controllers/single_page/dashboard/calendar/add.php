@@ -17,7 +17,7 @@ class Add extends DashboardCalendarPageController
         if ($caID) {
             // we're editing.
             $calendar = Calendar::getByID($caID);
-            $cp = new \Permissions($calendar);
+            $cp = new \Concrete\Core\Permission\Checker($calendar);
             if (!$cp->canEditCalendar()) {
                 unset($calendar);
             }
@@ -60,12 +60,12 @@ class Add extends DashboardCalendarPageController
         }
         if ($this->post('caID')) {
             $calendar = Calendar::getByID($this->post('caID'));
-            $cp = new \Permissions($calendar);
+            $cp = new \Concrete\Core\Permission\Checker($calendar);
             if (!$cp->canEditCalendar()) {
                 $this->error->add(t("You do not have permission to edit this calendar."));
             }
         } else {
-            $permissions = new \Permissions();
+            $permissions = new \Concrete\Core\Permission\Checker();
             if (!$permissions->canAddCalendar()) {
                 $this->error->add(t("You do not have permission to add a calendar."));
             }

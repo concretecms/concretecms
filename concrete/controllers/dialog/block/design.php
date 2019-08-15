@@ -111,8 +111,8 @@ class Design extends BackendInterfaceBlockController
             switch ($this->block->getBlockTypeHandle()) {
                 case BLOCK_HANDLE_SCRAPBOOK_PROXY:
                     $bi = $this->block->getInstance();
-                    $bx = \Block::getByID($bi->getOriginalBlockID());
-                    $bt = \BlockType::getByID($bx->getBlockTypeID());
+                    $bx = \Concrete\Core\Block\Block::getByID($bi->getOriginalBlockID());
+                    $bt = \Concrete\Core\Block\BlockType\BlockType::getByID($bx->getBlockTypeID());
                     $bFilename = $bx->getBlockFilename();
                     break;
                 case BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY:
@@ -126,7 +126,7 @@ class Design extends BackendInterfaceBlockController
                     $bFilename = $this->block->getBlockFilename();
                     break;
                 default:
-                    $bt = \BlockType::getByID($this->block->getBlockTypeID());
+                    $bt = \Concrete\Core\Block\BlockType\BlockType::getByID($this->block->getBlockTypeID());
                     $bFilename = $this->block->getBlockFilename();
                     break;
             }

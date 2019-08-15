@@ -3,10 +3,10 @@
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Page\Type\Type;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Page;
-use Controller;
+use Concrete\Core\Controller\Controller;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;

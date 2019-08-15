@@ -7,7 +7,7 @@ use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\Archive;
 use Config;
 use Exception;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class UpdateArchive extends Archive
 {
@@ -46,7 +46,7 @@ class Update extends DashboardPageController
 
     public function download_update()
     {
-        $p = new \Permissions();
+        $p = new \Concrete\Core\Permission\Checker();
         if (!$p->canUpgrade()) {
             return false;
         }
@@ -67,7 +67,7 @@ class Update extends DashboardPageController
             $remote = \Concrete\Core\Updater\Update::getApplicationUpdateInformation();
             if (is_object($remote)) {
                 // try to download
-                $r = \Marketplace::downloadRemoteFile($remote->getDirectDownloadURL());
+                $r = \Concrete\Core\Marketplace\Marketplace::downloadRemoteFile($remote->getDirectDownloadURL());
                 if (is_object($r)) {
                     // error object
                     $this->error->add($r);
@@ -91,7 +91,7 @@ class Update extends DashboardPageController
 
     public function view()
     {
-        $p = new \Permissions();
+        $p = new \Concrete\Core\Permission\Checker();
         if ($p->canUpgrade()) {
             $upd = new \Concrete\Core\Updater\Update();
             $updates = $upd->getLocalAvailableUpdates();
@@ -124,7 +124,7 @@ class Update extends DashboardPageController
 
     public function get_update_diagnostic_information()
     {
-        $p = new \Permissions();
+        $p = new \Concrete\Core\Permission\Checker();
         if ($p->canUpgrade()) {
             $updateVersion = trim($this->post('version'));
             if ($updateVersion) {
@@ -140,7 +140,7 @@ class Update extends DashboardPageController
 
     public function do_update()
     {
-        $p = new \Permissions();
+        $p = new \Concrete\Core\Permission\Checker();
         if (!$p->canUpgrade()) {
             return false;
         }
@@ -176,7 +176,7 @@ class Update extends DashboardPageController
                 }
             } else {
                 $token = Loader::helper("validation/token");
-                \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
+                \Concrete\Core\Routing\Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
                 exit;
             }
         }
@@ -184,7 +184,7 @@ class Update extends DashboardPageController
 
     public function start()
     {
-        $p = new \Permissions();
+        $p = new \Concrete\Core\Permission\Checker();
         if (!$p->canUpgrade()) {
             return false;
         }
@@ -218,7 +218,7 @@ class Update extends DashboardPageController
                 }
             } else {
                 $token = Loader::helper("validation/token");
-                \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
+                \Concrete\Core\Routing\Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
                 exit;
             }
             */

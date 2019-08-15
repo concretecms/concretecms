@@ -23,7 +23,7 @@ class Alert extends AbstractController
     {
         $id = intval($this->request->request->get('naID'));
         if ($this->token->validate() && $id > 0) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             if ($u->isRegistered()) {
                 $r = $this->entityManager->getRepository('Concrete\Core\Entity\Notification\NotificationAlert');
                 $alert = $r->findOneById($id);

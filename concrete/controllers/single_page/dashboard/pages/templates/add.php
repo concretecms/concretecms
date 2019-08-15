@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Templates;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use PageTemplate;
-use Loader;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Legacy\Loader;
 
 class Add extends DashboardPageController
 {

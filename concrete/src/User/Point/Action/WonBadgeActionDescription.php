@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\User\Point\Action;
 
-use Group;
+use Concrete\Core\User\Group\Group;
 
 class WonBadgeActionDescription extends ActionDescription
 {

@@ -12,7 +12,7 @@ use Concrete\Core\Search\Field\ManagerFactory;
 use Doctrine\ORM\EntityManager;
 use League\Url\Url as LeagueUrl;
 use URL;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 use Exception;
 
 class AdvancedSearch extends AdvancedSearchController

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Validation\BannedWord;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class BannedWord extends ConcreteObject
 {

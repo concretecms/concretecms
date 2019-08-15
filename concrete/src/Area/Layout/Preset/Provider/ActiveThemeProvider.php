@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Area\Layout\Preset\Provider;
 
-use Page;
+use Concrete\Core\Page\Page;
 
 class ActiveThemeProvider implements ProviderInterface
 {

@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Legacy\Controller;
 
-use Controller;
-use Environment;
-use BlockType;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\View\DialogView;
 

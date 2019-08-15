@@ -10,16 +10,16 @@ class Subscribe extends Controller
 
     protected function loadConversation($cnvID)
     {
-        $conversation = \Conversation::getByID($cnvID);
+        $conversation = \Concrete\Core\Conversation\Conversation::getByID($cnvID);
         if (is_object($conversation) && $conversation->getConversationSubscriptionEnabled()) {
-            $cp = new \Permissions($conversation);
+            $cp = new \Concrete\Core\Permission\Checker($conversation);
             if ($cp->canViewConversation()) {
-                $u = new \User();
+                $u = new \Concrete\Core\User\User();
                 $this->user = $u;
                 $this->conversation = $conversation;
                 $this->set('conversation', $conversation);
                 $this->set('isSubscribed', $conversation->isUserSubscribed($u));
-                $this->setViewObject(new \View('/dialogs/conversation/subscribe'));
+                $this->setViewObject(new \Concrete\Core\View\View('/dialogs/conversation/subscribe'));
             }
         }
 

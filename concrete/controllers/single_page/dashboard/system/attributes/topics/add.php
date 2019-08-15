@@ -2,9 +2,9 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes\Topics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class Add extends DashboardPageController
 {

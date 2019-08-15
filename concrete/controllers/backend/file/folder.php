@@ -27,7 +27,7 @@ class Folder extends AbstractController
         if (!isset($folder)) {
             $folder = $filesystem->getRootFolder();
         }
-        $permissions = new \Permissions($folder);
+        $permissions = new \Concrete\Core\Permission\Checker($folder);
         $error = $this->app->make('error');
         $response = new EditResponse();
         $response->setError($error);

@@ -7,10 +7,10 @@ use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Support\Facade\Application;
-use Loader;
-use Page;
-use Permissions;
-use Stack;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Stack\Stack;
 
 class GlobalArea extends Area
 {
@@ -91,7 +91,7 @@ class GlobalArea extends Area
     }
 
     /**
-     * @return \Block[]
+     * @return \Concrete\Core\Block\Block[]
      */
     public function getAreaBlocks()
     {

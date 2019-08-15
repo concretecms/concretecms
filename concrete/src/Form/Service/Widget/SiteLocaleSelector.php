@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Utility\Service\Identifier;
-use View;
+use Concrete\Core\View\View;
 
 class SiteLocaleSelector
 {

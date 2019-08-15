@@ -3,8 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Core;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use PageTemplate;
-use PageType;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
 use Exception;
 
 class Templates extends DashboardPageController

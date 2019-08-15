@@ -9,7 +9,7 @@ class RelationListItem extends Item
 
     public function __construct()
     {
-        $page = \Page::getCurrentPage();
+        $page = \Concrete\Core\Page\Page::getCurrentPage();
         $app = \Core::make('app');
         $controller = $app->make('Concrete\Core\Page\Relation\Menu\Item\RelationListController', array($page));
         $this->setController($controller);

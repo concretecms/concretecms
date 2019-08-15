@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\User\Group;
 
-use CacheLocal;
+use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
@@ -10,10 +10,10 @@ use Concrete\Core\User\User;
 use Config;
 use Database;
 use Events;
-use File;
+use Concrete\Core\File\File;
 use Gettext\Translations;
-use GroupTree;
-use GroupTreeNode;
+use Concrete\Core\Tree\Type\Group as GroupTree;
+use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\User\UserList;
 
 class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
@@ -428,7 +428,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function getGroupAutomationControllerClass()
     {
         $ts = \Core::make('helper/text');
-        $env = \Environment::get();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $r = $env->getRecord(DIRNAME_CLASSES . '/User/Group/AutomatedGroup/' . camelcase($ts->handle($this->getGroupName())) . '.php');
         $prefix = $r->override ? true : $this->getPackageHandle();
         $class = core_class('\\Core\\User\\Group\\AutomatedGroup\\' . camelcase($ts->handle($this->getGroupName())), $prefix);

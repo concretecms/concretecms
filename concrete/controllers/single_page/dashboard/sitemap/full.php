@@ -6,7 +6,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RedirectResponse;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Full extends DashboardPageController
 {

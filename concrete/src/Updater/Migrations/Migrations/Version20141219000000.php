@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Permission\Access\Entity\Type;
@@ -12,7 +12,7 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Exception;
-use Page;
+use Concrete\Core\Page\Page;
 
 class Version20141219000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
@@ -98,8 +98,8 @@ class Version20141219000000 extends AbstractMigration implements RepeatableMigra
         }
 
         // fix register page permissions
-        $g1 = \Group::getByID(GUEST_GROUP_ID);
-        $register = \Page::getByPath('/register', 'RECENT');
+        $g1 = \Concrete\Core\User\Group\Group::getByID(GUEST_GROUP_ID);
+        $register = \Concrete\Core\Page\Page::getByPath('/register', 'RECENT');
         $register->assignPermissions($g1, ['view_page']);
 
         // add new permissions, set it to the same value as edit page permissions on all pages.

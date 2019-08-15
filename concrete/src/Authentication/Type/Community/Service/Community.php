@@ -22,7 +22,7 @@ class Community extends AbstractService
      */
     protected function parseAccessTokenResponse($responseBody)
     {
-        $request = \Request::getInstance();
+        $request = \Concrete\Core\Http\Request::getInstance();
         if ($request->get('error')) {
             $reason = $request->get('error_description');
             throw new TokenResponseException($reason);

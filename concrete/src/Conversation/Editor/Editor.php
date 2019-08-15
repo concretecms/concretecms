@@ -4,10 +4,10 @@ namespace Concrete\Core\Conversation\Editor;
 use Concrete\Core\Conversation\Conversation;
 use Core;
 use Database;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Foundation\ConcreteObject;
-use Package;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
 
 abstract class Editor extends ConcreteObject
@@ -214,7 +214,7 @@ abstract class Editor extends ConcreteObject
      */
     public function outputConversationEditorAddMessageForm()
     {
-        \View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
+        \Concrete\Core\View\View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
             $this->cnvEditorHandle . '/message', ['editor' => $this], $this->getPackageHandle());
     }
 
@@ -223,7 +223,7 @@ abstract class Editor extends ConcreteObject
      */
     public function outputConversationEditorReplyMessageForm()
     {
-        \View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
+        \Concrete\Core\View\View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
             $this->cnvEditorHandle . '/reply', ['editor' => $this], $this->getPackageHandle());
     }
 

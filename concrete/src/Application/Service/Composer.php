@@ -5,13 +5,13 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
-use View;
+use Concrete\Core\View\View;
 
 class Composer
 {
     /**
      * @param Type $pagetype
-     * @param bool|\Page $page
+     * @param bool|\Concrete\Core\Page\Page $page
      */
     public function display(Type $pagetype, $page = false)
     {
@@ -20,7 +20,7 @@ class Composer
 
     /**
      * @param Type $pagetype
-     * @param bool|\Page $page
+     * @param bool|\Concrete\Core\Page\Page $page
      */
     public function displayButtons(Type $pagetype, $page = false)
     {
@@ -32,9 +32,9 @@ class Composer
 
     /**
      * @param Type $pt
-     * @param \Controller $cnt
+     * @param \Concrete\Core\Controller\Controller $cnt
      */
-    public function addAssetsToRequest(Type $pt, \Controller $cnt)
+    public function addAssetsToRequest(Type $pt, \Concrete\Core\Controller\Controller $cnt)
     {
         $list = PageTypeComposerControl::getList($pt);
         foreach ($list as $l) {

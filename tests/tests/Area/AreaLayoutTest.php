@@ -6,7 +6,7 @@ use Concrete\Core\Area\Layout\Layout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 use Request;
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase

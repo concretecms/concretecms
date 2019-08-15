@@ -127,7 +127,7 @@ class ImporterTest extends FileStorageTestCase
         $fi = new Importer();
         $fi->import($file, 'test.txt');
 
-        $f = \File::getByID(1);
+        $f = \Concrete\Core\File\File::getByID(1);
         $versions = $f->getFileVersions();
         $this->assertEquals(1, count($versions));
     }
@@ -272,7 +272,7 @@ class ImporterTest extends FileStorageTestCase
         $fi = new Importer();
         $file = $fi->import($sample, 'sample.txt');
 
-        $f = \File::getByID($file->getFileID());
+        $f = \Concrete\Core\File\File::getByID($file->getFileID());
         $fv = $f->getVersion(1);
         $this->assertEquals('sample.txt', $fv->getFilename());
         $fv->delete();
@@ -309,7 +309,7 @@ class ImporterTest extends FileStorageTestCase
         $fi = new Importer();
         $file = $fi->import($sample, 'sample.txt');
 
-        $f = \File::getByID($file->getFileID());
+        $f = \Concrete\Core\File\File::getByID($file->getFileID());
         $f2 = $f->duplicate();
         $this->assertNotEquals($file->getFileID(), $f2->getFileID());
 
@@ -389,7 +389,7 @@ class ImporterTest extends FileStorageTestCase
         $fv2 = $r->duplicate();
         $fv3 = $r->duplicate();
         $fv4 = $r->duplicate();
-        $f = \File::getByID($r->getFileID());
+        $f = \Concrete\Core\File\File::getByID($r->getFileID());
         $fv4b = $f->getVersion(4);
 
         $this->assertEquals(1, $r->getFileVersionID());
@@ -402,7 +402,7 @@ class ImporterTest extends FileStorageTestCase
         $fv3->approve();
         $this->assertEquals(true, $fv3->isApproved());
 
-        $f = \File::getByID($r->getFileID());
+        $f = \Concrete\Core\File\File::getByID($r->getFileID());
         $fv1 = $f->getVersion(1);
         $this->assertEquals(false, $fv1->isApproved());
         $fva = $f->getApprovedVersion();

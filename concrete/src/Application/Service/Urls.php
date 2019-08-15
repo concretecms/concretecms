@@ -21,7 +21,7 @@ class Urls
     /**
      * Gets a full URL to an icon for a particular application.
      *
-     * @param \Package $pkg
+     * @param \Concrete\Core\Package\Package $pkg
      *
      * @return string URL to the package's icon
      */
@@ -37,7 +37,7 @@ class Urls
     /**
      * Get the package's URL.
      *
-     * @param \Package $pkg
+     * @param \Concrete\Core\Package\Package $pkg
      *
      * @return mixed
      */
@@ -142,7 +142,7 @@ class Urls
     /**
      * Get the URL of the "auto.js" file of a block type, to be loaded when adding/editing a block.
      *
-     * @param \BlockType $bt
+     * @param \Concrete\Core\Block\BlockType\BlockType $bt
      *
      * @return string $url Empty string if the auto.js file doesn't exist
      */
@@ -154,7 +154,7 @@ class Urls
     /**
      * Get the URL of the "auto.css" file of a block type, to be loaded when adding/editing a block.
      *
-     * @param \BlockType $bt
+     * @param \Concrete\Core\Block\BlockType\BlockType $bt
      *
      * @return string $url Empty string if the auto.css file doesn't exist
      *
@@ -169,7 +169,7 @@ class Urls
      * @deprecated
      * Gets a full URL to a block's tools directory
      *
-     * @param \BlockType $bt
+     * @param \Concrete\Core\Block\BlockType\BlockType $bt
      *
      * @return string $url
      */

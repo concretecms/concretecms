@@ -9,7 +9,7 @@ abstract class AbstractRoutine implements RoutineInterface
         $pkg = null;
         if ($pkgHandle) {
             $pkgHandle = (string) $pkgHandle;
-            $pkg = \Package::getByHandle($pkgHandle);
+            $pkg = \Concrete\Core\Package\Package::getByHandle($pkgHandle);
         }
 
         return $pkg;

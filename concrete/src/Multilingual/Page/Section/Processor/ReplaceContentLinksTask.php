@@ -14,7 +14,7 @@ class ReplaceContentLinksTask implements TaskInterface
         $target = $action->getTarget();
         $subject = $action->getSubject();
 
-        \Cache::disableAll();
+        \Concrete\Core\Cache\Cache::disableAll();
         $c = Page::getByID($subject['cID']);
         if (is_object($c) && !$c->isError()) {
             $blocks = $c->getBlocks();
@@ -41,7 +41,7 @@ class ReplaceContentLinksTask implements TaskInterface
                         $content);
                     $ob = $b;
                     // replace the block with the version of the block in the later version (if applicable)
-                    $b2 = \Block::getByID($b->getBlockID(), $nvc, $b->getAreaHandle());
+                    $b2 = \Concrete\Core\Block\Block::getByID($b->getBlockID(), $nvc, $b->getAreaHandle());
 
                     if ($b2->isAlias()) {
                         $nb = $ob->duplicate($nvc);

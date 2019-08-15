@@ -57,7 +57,7 @@ if ($canUpgrade) {
                     <a name="addons"></a>
                     <a href="<?=URL::to('/dashboard/extend/update')?>" class="btn btn-default pull-right btn-xs "><?=t('Update Add-Ons')?></a>
                     <h3><?=t('Add-On Compatibility')?></h3>
-                    <?php $list = \Package::getInstalledList();
+                    <?php $list = \Concrete\Core\Package\Package::getInstalledList();
     $ci = Core::make('helper/concrete/urls');
     if (count($list) == 0) {
         ?>

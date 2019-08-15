@@ -2,7 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Mail\Importer\MailImporter;
 
 class Importers extends DashboardPageController

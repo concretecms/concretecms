@@ -11,7 +11,7 @@ class FileFolderSelector
 
     public function selectFileFolder($field, $folder = null)
     {
-        $v = \View::getInstance();
+        $v = \Concrete\Core\View\View::getInstance();
         $v->requireAsset('core/file-folder-selector');
 
         $identifier = new Identifier();

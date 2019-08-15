@@ -7,7 +7,7 @@ use Concrete\Core\Attribute\Context\DashboardFormContext;
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Page\Desktop\DesktopList;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\Controller\PageController as CorePageController;
 
 class AccountPageController extends CorePageController
@@ -16,7 +16,7 @@ class AccountPageController extends CorePageController
 
     public function on_start()
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if (!$u->isRegistered()) {
             return $this->replace('/login');
         }

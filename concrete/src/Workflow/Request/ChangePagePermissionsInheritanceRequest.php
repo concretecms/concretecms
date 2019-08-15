@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
-use Loader;
-use Page;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 

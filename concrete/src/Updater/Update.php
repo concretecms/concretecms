@@ -13,8 +13,8 @@ use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Localization;
-use Marketplace;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\Marketplace;
 
 class Update
 {

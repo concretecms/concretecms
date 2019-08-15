@@ -60,7 +60,7 @@ class Controller extends BlockController
     public function view()
     {
         if ($this->mode == 'P') {
-            $page = \Page::getCurrentPage();
+            $page = \Concrete\Core\Page\Page::getCurrentPage();
             $topics = $page->getAttribute($this->topicAttributeKeyHandle);
             if (is_array($topics)) {
                 $this->set('topics', $topics);
@@ -81,9 +81,9 @@ class Controller extends BlockController
     public function getTopicLink(\Concrete\Core\Tree\Node\Node $topic = null)
     {
         if ($this->cParentID) {
-            $c = \Page::getByID($this->cParentID);
+            $c = \Concrete\Core\Page\Page::getByID($this->cParentID);
         } else {
-            $c = \Page::getCurrentPage();
+            $c = \Concrete\Core\Page\Page::getCurrentPage();
         }
         if ($topic) {
             $nodeName = $topic->getTreeNodeName();
@@ -118,7 +118,7 @@ class Controller extends BlockController
         }
         $path = null;
         if ($this->cParentID) {
-            $parent = \Page::getByID($this->cParentID);
+            $parent = \Concrete\Core\Page\Page::getByID($this->cParentID);
             $path = '{ccm:export:page:' . $parent->getCollectionPath() . '}';
         }
         $data->addChild('cParentID', $path);
@@ -140,7 +140,7 @@ class Controller extends BlockController
         $args['topicAttributeKeyHandle'] = (string) $blockNode->data->topicAttributeKeyHandle;
         if ($page) {
             if (preg_match('/\{ccm:export:page:(.*?)\}/i', $page, $matches)) {
-                $c = \Page::getByPath($matches[1]);
+                $c = \Concrete\Core\Page\Page::getByPath($matches[1]);
                 $args['externalTarget'] = 1;
                 $args['cParentID'] = $c->getCollectionID();
             }

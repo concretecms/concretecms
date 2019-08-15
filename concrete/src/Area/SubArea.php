@@ -1,19 +1,19 @@
 <?php
 namespace Concrete\Core\Area;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class SubArea extends Area
 {
     const AREA_SUB_DELIMITER = ' : ';
 
     /**
-     * @var \Block
+     * @var \Concrete\Core\Block\Block
      */
     protected $parentBlock;
 
     /**
-     * @param \Block $block
+     * @param \Concrete\Core\Block\Block $block
      */
     public function setSubAreaBlockObject($block)
     {
@@ -21,7 +21,7 @@ class SubArea extends Area
     }
 
     /**
-     * @param \Page $c
+     * @param \Concrete\Core\Page\Page $c
      * @param string $arHandle
      *
      * @return Area
@@ -68,7 +68,7 @@ class SubArea extends Area
     }
 
     /**
-     * @return \Block
+     * @return \Concrete\Core\Block\Block
      */
     public function getSubAreaBlockObject()
     {
@@ -113,7 +113,7 @@ class SubArea extends Area
 
     /**
      * @param \SimpleXMLElement $p
-     * @param \Page $page
+     * @param \Concrete\Core\Page\Page $page
      */
     public function export($p, $page)
     {
@@ -134,7 +134,7 @@ class SubArea extends Area
         $db = Loader::db();
         $blocks = $this->getAreaBlocksArray();
         foreach ($blocks as $b) {
-            $bp = new \Permissions($b);
+            $bp = new \Concrete\Core\Permission\Checker($b);
             if ($bp->canDeleteBlock()) {
                 $b->deleteBlock();
             }

@@ -8,11 +8,11 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Concrete\Core\Site\Config\Liaison as Repository;
 use Concrete\Core\Utility\Service\Identifier;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use stdClass;
 use URL;
-use User;
+use Concrete\Core\User\User;
 
 class CkeditorEditor implements EditorInterface
 {

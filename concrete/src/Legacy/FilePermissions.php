@@ -3,8 +3,8 @@ namespace Concrete\Core\Legacy;
 
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\Tree\Node\Type\FileFolder;
-use FileSet;
-use Permissions;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Permission\Checker as Permissions;
 
 /**
  * @deprecated

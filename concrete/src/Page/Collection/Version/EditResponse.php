@@ -2,9 +2,9 @@
 namespace Concrete\Core\Page\Collection\Version;
 
 use Core;
-use PageEditResponse;
-use Page;
-use Permissions;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use stdClass;
 
 class EditResponse extends PageEditResponse

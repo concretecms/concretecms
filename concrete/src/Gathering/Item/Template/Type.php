@@ -2,9 +2,9 @@
 namespace Concrete\Core\Gathering\Item\Template;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Package\PackageList;
-use CacheLocal;
+use Concrete\Core\Cache\CacheLocal;
 
 class Type extends ConcreteObject
 {

@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
-use Loader;
-use Page;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
 
 class ThemeGridLayout extends Layout
 {

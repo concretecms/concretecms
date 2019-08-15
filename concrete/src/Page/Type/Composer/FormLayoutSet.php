@@ -3,8 +3,8 @@ namespace Concrete\Core\Page\Type\Composer;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Type\Type;
-use PageType;
-use Loader;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Legacy\Loader;
 
 class FormLayoutSet extends ConcreteObject
 {

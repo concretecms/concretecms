@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Validation\BannedWord\BannedWordList;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 

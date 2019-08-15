@@ -40,7 +40,7 @@ while ($questionRow = $questionsRS->fetchRow()) {
 }
 
 //Prep thank-you message
-$success = (\Request::request('surveySuccess') && \Request::request('qsid') == intval($qsID));
+$success = (\Concrete\Core\Http\Request::request('surveySuccess') && \Concrete\Core\Http\Request::request('qsid') == intval($qsID));
 $thanksMsg = $survey->thankyouMsg;
 
 //Collate all errors and put them into divs

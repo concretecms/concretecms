@@ -90,7 +90,7 @@ class Controller extends GenericOauth1aTypeController
         $this->set('apikey', $config->get('auth.twitter.appid', ''));
         $this->set('apisecret', $config->get('auth.twitter.secret', ''));
 
-        $list = new \GroupList();
+        $list = new \Concrete\Core\User\Group\GroupList();
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }

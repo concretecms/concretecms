@@ -27,7 +27,7 @@ class EventOccurrenceMenu extends Menu
         $this->addItem(new DialogLinkItem(
             \URL::to('ccm/calendar/dialogs/event/occurrence') . '?occurrenceID=' . $occurrence->getID(), t('Details'),
         t('View Event'), 500, 500));
-        $permissions = new \Permissions($calendar);
+        $permissions = new \Concrete\Core\Permission\Checker($calendar);
 
         if ($permissions->canEditCalendarEvents()) {
             $this->addItem(new DividerItem());

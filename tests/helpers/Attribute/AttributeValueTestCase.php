@@ -10,7 +10,7 @@ use Concrete\Core\Entity\Attribute\Key\PageKey as PageKeyEntity;
 use Concrete\Core\Entity\Attribute\Value\PageValue as PageAttributeValueEntity;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 
 abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 {

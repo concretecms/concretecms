@@ -145,7 +145,7 @@ class Controller extends BlockController
     {
         $this->loadTypes();
         $types = $this->get('types');
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         $ui = \UserInfo::getByID($u->getUserID());
 
         if (in_array('signups', $types)) {

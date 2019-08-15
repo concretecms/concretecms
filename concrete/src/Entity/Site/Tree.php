@@ -37,7 +37,7 @@ abstract class Tree implements LocalizableTreeInterface, TypeInterface
 
     public function getSiteHomePageObject($version = 'RECENT')
     {
-        $home = \Page::getByID($this->siteHomePageID, $version);
+        $home = \Concrete\Core\Page\Page::getByID($this->siteHomePageID, $version);
         if (is_object($home) && !$home->isError()) {
             return $home;
         }

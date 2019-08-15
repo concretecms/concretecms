@@ -19,7 +19,7 @@ class ExpressEntryCategoryMenu extends Menu
     public function __construct(Category $category)
     {
         parent::__construct($category);
-        $p = new \Permissions($category);
+        $p = new \Concrete\Core\Permission\Checker($category);
         if ($p->canAddCategoryTreeNode()) {
             $this->addItem(new AddExpressEntryCategoryItem($category));
             /**

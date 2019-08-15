@@ -3,7 +3,7 @@ namespace Concrete\Core\Gathering\Item;
 
 use Core;
 use Database;
-use View;
+use Concrete\Core\View\View;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use RuntimeException;

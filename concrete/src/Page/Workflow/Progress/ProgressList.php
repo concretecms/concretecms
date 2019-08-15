@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Workflow\Progress;
 
 use Concrete\Core\Legacy\PageList as PageList;
 use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Page\Page as ConcretePage;
 use Concrete\Core\Legacy\DatabaseItemList;
 

@@ -3,8 +3,8 @@ namespace Concrete\Block\Tags;
 
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Block\BlockController;
-use CollectionAttributeKey;
-use Page;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Page\Page;
 
 class Controller extends BlockController
 {
@@ -141,7 +141,7 @@ class Controller extends BlockController
     {
         $target = $this->get('target');
         if (!is_object($target)) {
-            $target = \Page::getCurrentPage();
+            $target = \Concrete\Core\Page\Page::getCurrentPage();
         }
         if ($option) {
             return \URL::page($target, 'tag', mb_strtolower($option->getSelectAttributeOptionDisplayValue()));

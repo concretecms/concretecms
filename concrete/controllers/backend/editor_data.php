@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Controller\Backend;
 
-use Controller;
-use Loader;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Legacy\Loader;
 use stdClass;
-use User as ConcreteUser;
-use Page as ConcretePage;
-use Permissions;
+use Concrete\Core\User\User as ConcreteUser;
+use Concrete\Core\Page\Page as ConcretePage;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class EditorData extends Controller
 {

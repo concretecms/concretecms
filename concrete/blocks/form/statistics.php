@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\Form;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 use Concrete\Core\Support\Facade\Application;
 

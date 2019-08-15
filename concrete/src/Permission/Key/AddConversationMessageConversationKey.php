@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Permission\Access\ListItem\AddConversationMessageConversationListItem;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddConversationMessageConversationKey extends ConversationKey

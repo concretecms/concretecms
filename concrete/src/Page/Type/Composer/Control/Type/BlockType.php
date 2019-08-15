@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
-use Loader;
-use BlockType as ConcreteBlockType;
-use BlockTypeList;
-use Environment;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Block\BlockType\BlockType as ConcreteBlockType;
+use Concrete\Core\Block\BlockType\BlockTypeList;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 
 class BlockType extends Type

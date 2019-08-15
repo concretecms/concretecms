@@ -349,7 +349,7 @@ class Feed
             $pl->ignorePermissions();
         } else {
             $vp = \Concrete\Core\Permission\Key\Key::getByHandle('view_page');
-            $guest = \Group::getByID(GUEST_GROUP_ID);
+            $guest = \Concrete\Core\User\Group\Group::getByID(GUEST_GROUP_ID);
             $access = GroupEntity::getOrCreate($guest);
             // we set page permissions to be Guest group only, because
             // authentication won't work with RSS feeds
@@ -365,7 +365,7 @@ class Feed
         }
         $parent = null;
         if ($this->cParentID) {
-            $parent = \Page::getByID($this->cParentID);
+            $parent = \Concrete\Core\Page\Page::getByID($this->cParentID);
             if (!is_object($parent) || $parent->isError()) {
                 $parent = null;
             }
@@ -405,7 +405,7 @@ class Feed
                 $content = $p->getCollectionDescription();
                 break;
             case 'A':
-                $a = new \Area($this->getAreaHandleToDisplay());
+                $a = new \Concrete\Core\Area\Area($this->getAreaHandleToDisplay());
                 $blocks = $a->getAreaBlocksArray($p);
                 $r = Request::getInstance();
                 $r->setCurrentPage($p);
@@ -451,7 +451,7 @@ class Feed
             $writer->setTitle($this->getTitle());
             $writer->setDescription($this->getDescription());
             if ($this->getIconFileID()) {
-                $f = \File::getByID($this->getIconFileID());
+                $f = \Concrete\Core\File\File::getByID($this->getIconFileID());
                 if (is_object($f)) {
                     $data = [
                         'uri' => $f->getURL(),

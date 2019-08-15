@@ -2,10 +2,10 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Loader;
-use PageType;
-use Page as ConcretePage;
-use Permissions;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Page as ConcretePage;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Sitemap extends BackendInterfaceController
 {

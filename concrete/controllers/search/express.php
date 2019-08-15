@@ -5,7 +5,7 @@ use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Support\Facade\Express as ExpressFacade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Express extends Standard
 {

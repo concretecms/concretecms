@@ -24,21 +24,21 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Database;
-use CacheLocal;
-use Collection;
-use Request;
+use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Statistics as PageStatistics;
-use PageCache;
-use PageTemplate;
+use Concrete\Core\Cache\Page\PageCache;
+use Concrete\Core\Page\Template as PageTemplate;
 use Events;
 use Core;
 use Config;
-use PageController;
-use User;
-use Block;
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\User\User;
+use Concrete\Core\Block\Block;
 use UserInfo;
-use PageType;
-use PageTheme;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
@@ -49,12 +49,12 @@ use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombin
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Entity\Page\PagePath;
-use Queue;
+use Concrete\Core\Foundation\Queue\Queue;
 use Log;
-use Environment;
-use Group;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\User\Group\Group;
 use Session;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -374,7 +374,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if (isset($class) && class_exists($class)) {
                 $this->controller = Core::make($class, [$this]);
             } else {
-                $this->controller = Core::make('\PageController', [$this]);
+                $this->controller = Core::make('\Concrete\Core\Page\Controller\PageController', [$this]);
             }
         }
 
@@ -933,7 +933,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q2 = 'insert into PagePaths (cID, cPath, ppIsCanonical, ppGeneratedFromURLSlugs) values (?, ?, ?, ?)';
         $v2 = [$newCID, $cPath.'/'.$handle, 1, 1];
         $db->executeQuery($q2, $v2);
-        $pe = new Event(\Page::getByID($newCID));
+        $pe = new Event(\Concrete\Core\Page\Page::getByID($newCID));
         Events::dispatch('on_page_alias_add', $pe);
         return $newCID;
     }
@@ -3415,7 +3415,7 @@ EOT
                     // Grab the top level parent
                     $fragments = explode('/', $path);
                     $topPath = '/' . $fragments[1];
-                    $c = \Page::getByPath($topPath);
+                    $c = \Concrete\Core\Page\Page::getByPath($topPath);
                     if (is_object($c) && !$c->isError()) {
                         if ($c->getCollectionParentID() == 0 && !$c->isHomePage()) {
                             $systemPage = true;

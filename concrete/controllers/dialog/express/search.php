@@ -13,7 +13,7 @@ class Search extends BackendInterfaceController
     {
         $entity = $this->getEntity();
         if (is_object($entity)) {
-            $ep = new \Permissions($entity);
+            $ep = new \Concrete\Core\Permission\Checker($entity);
             return $ep->canViewExpressEntries();
         }
         return false;

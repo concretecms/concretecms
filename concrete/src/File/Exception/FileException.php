@@ -6,7 +6,7 @@ class FileException extends \Exception
     protected $fileObject;
 
     /**
-     * @param \File      $file
+     * @param \Concrete\Core\File\File      $file
      * @param string     $message
      * @param int        $code
      * @param \Exception $previous
@@ -22,7 +22,7 @@ class FileException extends \Exception
     }
 
     /**
-     * @return \File
+     * @return \Concrete\Core\File\File
      */
     public function getFileObject()
     {

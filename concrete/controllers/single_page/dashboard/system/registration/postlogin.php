@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Postlogin extends DashboardPageController
 {

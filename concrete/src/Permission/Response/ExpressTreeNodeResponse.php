@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class ExpressTreeNodeResponse extends TreeNodeResponse
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Validator\String\EmailValidator;
 

@@ -6,7 +6,7 @@ class MultilingualSectionResponse extends PageResponse
 {
     public function canImportMultilingualSection()
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
 
         return $u->isSuperUser();
     }

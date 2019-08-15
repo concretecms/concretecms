@@ -1,20 +1,20 @@
 <?php
 namespace Concrete\Controller\Dialog\Page;
 
-use Area;
-use Block;
-use BlockType;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\Events\BlockAdd;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Block\View\BlockView;
 use Events;
 use Exception;
-use Loader;
-use PageEditResponse;
-use Permissions;
-use Stack;
-use User;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\User\User;
 
 class AddBlock extends BackendInterfacePageController
 {

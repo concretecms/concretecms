@@ -36,7 +36,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function __construct(StickyRequest $req = null)
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }
@@ -249,7 +249,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             } else {
                 switch ($this->siteTree) {
                     case self::SITE_TREE_CURRENT:
-                        $c = \Page::getCurrentPage();
+                        $c = \Concrete\Core\Page\Page::getCurrentPage();
                         $tree = false;
                         if (is_object($c) && !$c->isError()) {
                             $tree = $c->getSiteTreeObject();
@@ -305,7 +305,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function getTotalResults()
     {
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We need to reset the potential custom order by here because otherwise, if we've added
@@ -339,17 +339,17 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $c = Page::getByID($queryRow['cID'], 'ACTIVE');
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
-                $cp = new \Permissions($c);
+                $cp = new \Concrete\Core\Permission\Checker($c);
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT');
                 }
             } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_SCHEDULED) {
-                $cp = new \Permissions($c);
+                $cp = new \Concrete\Core\Permission\Checker($c);
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('SCHEDULED');
                 }
             } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT_UNAPPROVED) {
-                $cp = new \Permissions($c);
+                $cp = new \Concrete\Core\Permission\Checker($c);
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT_UNAPPROVED');
                 }
@@ -372,7 +372,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             }
         }
 
-        $cp = new \Permissions($mixed);
+        $cp = new \Concrete\Core\Permission\Checker($mixed);
 
         return $cp->canViewPage();
     }
@@ -580,7 +580,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $this->query->expr()->like('psi.content', ':keywords'),
         ];
 
-        $keys = \CollectionAttributeKey::getSearchableIndexedList();
+        $keys = \Concrete\Core\Attribute\Key\CollectionKey::getSearchableIndexedList();
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
             $expressions[] = $cnt->searchKeywords($keywords, $this->query);

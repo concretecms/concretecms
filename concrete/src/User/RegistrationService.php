@@ -116,7 +116,7 @@ class RegistrationService implements RegistrationServiceInterface
 
         if (is_object($ui)) {
             $uo = $ui->getUserObject();
-            $groupControllers = \Group::getAutomatedOnRegisterGroupControllers($uo);
+            $groupControllers = \Concrete\Core\User\Group\Group::getAutomatedOnRegisterGroupControllers($uo);
             foreach ($groupControllers as $ga) {
                 if ($ga->check($uo)) {
                     $uo->enterGroup($ga->getGroupObject());

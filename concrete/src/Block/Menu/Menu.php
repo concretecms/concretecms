@@ -24,7 +24,7 @@ class Menu extends ContextMenu
     protected $area;
 
     /**
-     * @return \Permissions
+     * @return \Concrete\Core\Permission\Checker
      */
     public function getPermissions()
     {
@@ -58,7 +58,7 @@ class Menu extends ContextMenu
     public function __construct(Application $app, $config, Block $b, Page $c, Area $a)
     {
         parent::__construct();
-        $p = new \Permissions($b);
+        $p = new \Concrete\Core\Permission\Checker($b);
 
         $this->permissions = $p;
         $this->block = $b;
@@ -104,7 +104,7 @@ class Menu extends ContextMenu
         }
 
         $isAlias = $b->isAlias();
-        $u = new \User();
+        $u = new \Concrete\Core\User\User();
         $numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
         if ($isAlias) {
             $deleteMessage = t('Do you want to delete this block?');
@@ -121,9 +121,9 @@ class Menu extends ContextMenu
                 $bi = $b->getInstance();
             }
 
-            $stack = \Stack::getByID($bi->stID);
+            $stack = \Concrete\Core\Page\Stack\Stack::getByID($bi->stID);
             if (is_object($stack)) {
-                $sp = new \Permissions($stack);
+                $sp = new \Concrete\Core\Permission\Checker($stack);
                 if ($sp->canWrite()) {
                     $this->addItem(new LinkItem(\URL::to(STACKS_LISTING_PAGE_PATH, 'view_details', $stack->getCollectionID()), t('Manage Stack Contents')));
                 }

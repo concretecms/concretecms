@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Gathering\DataSource;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringDataSourceConfiguration;
 
 class RssFeedDataSource extends DataSource

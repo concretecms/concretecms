@@ -3,11 +3,11 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use PermissionKey;
-use TaskPermission;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Permission\Access\Access;
-use FileSet;
+use Concrete\Core\File\Set\Set as FileSet;
 
 class Permissions extends DashboardPageController
 {

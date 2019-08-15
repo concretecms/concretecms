@@ -3,8 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use PageType;
-use PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 
 class Add extends DashboardPageController

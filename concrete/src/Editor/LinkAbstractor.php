@@ -11,7 +11,7 @@
 namespace Concrete\Core\Editor;
 
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 use URL;
 use Sunra\PhpSimple\HtmlDomParser;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -339,7 +339,7 @@ class LinkAbstractor extends ConcreteObject
         if (is_object($r)) {
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
-                $f = \File::getByID($fID);
+                $f = \Concrete\Core\File\File::getByID($fID);
                 if (is_object($f)) {
                     $picture->fid = false;
                     $picture->file = $f->getPrefix() . ':' . $f->getFilename();

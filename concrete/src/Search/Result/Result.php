@@ -106,7 +106,7 @@ class Result
         $this->list = $il;
         $this->baseURL = $url;
         $this->fields = $fields;
-        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $factory = new PaginationFactory(\Concrete\Core\Http\Request::createFromGlobals());
         $this->pagination = $factory->createPaginationObject($il, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
     }
 

@@ -66,7 +66,7 @@ class Controller extends GenericOauth2TypeController
         $this->set('apikey', \Config::get('auth.community.appid', ''));
         $this->set('apisecret', \Config::get('auth.community.secret', ''));
 
-        $list = new \GroupList();
+        $list = new \Concrete\Core\User\Group\GroupList();
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }

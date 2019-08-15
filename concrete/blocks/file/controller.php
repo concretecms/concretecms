@@ -2,7 +2,7 @@
 namespace Concrete\Block\File;
 
 use Core;
-use File;
+use Concrete\Core\File\File;
 use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController

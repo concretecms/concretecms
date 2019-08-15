@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Page\Collection;
 
-use Area;
-use Block;
-use CacheLocal;
-use CollectionVersion;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -24,12 +24,12 @@ use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
 use Config;
-use Loader;
-use Page;
-use PageCache;
-use Permissions;
-use Stack;
-use User;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Cache\Page\PageCache;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\User\User;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -794,7 +794,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             if ($return == true) {
                 return $styleHeader;
             } else {
-                $v = \View::getInstance();
+                $v = \Concrete\Core\View\View::getInstance();
                 $v->addHeaderItem($styleHeader);
             }
         }

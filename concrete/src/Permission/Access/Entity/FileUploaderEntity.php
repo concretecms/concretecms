@@ -2,11 +2,11 @@
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Permission\Access\FileFolderAccess;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use UserInfo;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Permission\Access\FileSetAccess as FileSetPermissionAccess;
 use Concrete\Core\Permission\Access\FileAccess as FilePermissionAccess;
 

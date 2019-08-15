@@ -4,19 +4,19 @@ namespace Concrete\Core\Page\Theme;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Config;
-use Loader;
-use Page;
-use Environment;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Foundation\Environment;
 use Core;
 use Concrete\Core\Page\Theme\File as PageThemeFile;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Foundation\ConcreteObject;
-use PageTemplate;
+use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\StyleCustomizer\Preset;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
-use Localization;
+use Concrete\Core\Localization\Localization;
 
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.

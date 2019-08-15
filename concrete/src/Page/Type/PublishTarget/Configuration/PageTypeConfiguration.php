@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
-use PageType;
+use Concrete\Core\Page\Type\Type as PageType;
 
 class PageTypeConfiguration extends Configuration
 {

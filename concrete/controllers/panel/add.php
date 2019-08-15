@@ -45,7 +45,7 @@ class Add extends BackendInterfacePageController
         $this->set('ci', $this->app->make('helper/concrete/urls'));
         $stack = Stack::getByID($this->request->request->get('stackID'));
         if ($stack && !$stack->isError()) {
-            $sp = new \Permissions($stack);
+            $sp = new \Concrete\Core\Permission\Checker($stack);
             if ($sp->canViewPage()) {
                 $blocks = $stack->getBlocks();
                 $this->set('blocks', $blocks);

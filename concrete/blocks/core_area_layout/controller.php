@@ -15,7 +15,7 @@ use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Asset\CssAsset;
 use URL;
-use Page;
+use Concrete\Core\Page\Page;
 
 class Controller extends BlockController
 {
@@ -290,7 +290,7 @@ class Controller extends BlockController
                 $page->setCustomStyleSet($area, $set);
             }
             foreach ($columnNode->block as $bx) {
-                $bt = \BlockType::getByHandle($bx['type']);
+                $bt = \Concrete\Core\Block\BlockType\BlockType::getByHandle($bx['type']);
                 if (!is_object($bt)) {
                     throw new \Exception(t('Invalid block type handle: %s', strval($bx['type'])));
                 }

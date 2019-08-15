@@ -5,7 +5,7 @@ use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Package\PackageList;
 use Database;
 use Core;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -108,7 +108,7 @@ class Type
         if ($location instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
             $configuration = $location->getConfigurationObject();
         }
-        \View::element(DIRNAME_FILE_STORAGE_LOCATION_TYPES . '/' . $this->getHandle(),
+        \Concrete\Core\View\View::element(DIRNAME_FILE_STORAGE_LOCATION_TYPES . '/' . $this->getHandle(),
         array(
             'type' => $this,
             'location' => $location,

@@ -35,7 +35,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     public function addNotifications()
     {
         $this->output(t('Adding notifications...'));
-        $adminGroupEntity = GroupEntity::getOrCreate(\Group::getByID(ADMIN_GROUP_ID));
+        $adminGroupEntity = GroupEntity::getOrCreate(\Concrete\Core\User\Group\Group::getByID(ADMIN_GROUP_ID));
         $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
         $pk = Key::getByHandle('notify_in_notification_center');
         $pa = Access::create($pk);
@@ -243,7 +243,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             // Now we move all the files that were in that set into this folder.
             $r2 = $this->connection->executeQuery('select fID from FileSetFiles where fsID = ?', [$row['fsID']]);
             while ($row2 = $r2->fetch()) {
-                $f = \File::getByID($row2['fID']);
+                $f = \Concrete\Core\File\File::getByID($row2['fID']);
                 if (is_object($f)) {
                     $node = $f->getFileNodeObject();
                     if (is_object($node)) {
@@ -871,7 +871,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             $desktop->moveToTrash();
         }
 
-        $page = \Page::getByPath('/account/messages');
+        $page = \Concrete\Core\Page\Page::getByPath('/account/messages');
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
         }
@@ -896,7 +896,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     protected function updateWorkflows()
     {
         $this->output(t('Updating Workflows...'));
-        $page = \Page::getByPath('/dashboard/workflow');
+        $page = \Concrete\Core\Page\Page::getByPath('/dashboard/workflow');
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
         }
@@ -933,7 +933,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             // migrate theme
             $homeCID = null;
             try {
-                $homeCID = \Page::getHomePageID();
+                $homeCID = \Concrete\Core\Page\Page::getHomePageID();
             } catch (\Exception $x) {
             } catch (\Throwable $x) {
             }
@@ -941,7 +941,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
                 $homeCID = 1;
             }
 
-            $c = \Page::getByID($homeCID);
+            $c = \Concrete\Core\Page\Page::getByID($homeCID);
             $site->setThemeID($c->getCollectionThemeID());
 
             $em->persist($site);
@@ -1110,8 +1110,8 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     protected function updateJobs()
     {
         $this->output(t('Updating jobs...'));
-        if (!$job = \Job::getByHandle('update_statistics')) {
-            \Job::installByHandle('update_statistics');
+        if (!$job = \Concrete\Core\Job\Job::getByHandle('update_statistics')) {
+            \Concrete\Core\Job\Job::installByHandle('update_statistics');
         }
     }
 
@@ -1139,7 +1139,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
 
         // Delete members page if profiles not enabled
         if (!\Config::get('concrete.user.profiles_enabled')) {
-            $c = \Page::getByPath('/members');
+            $c = \Concrete\Core\Page\Page::getByPath('/members');
             $c->moveToTrash();
         }
     }
@@ -1151,7 +1151,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         // people really want that.
         $homeCID = null;
         try {
-            $homeCID = \Page::getHomePageID();
+            $homeCID = \Concrete\Core\Page\Page::getHomePageID();
         } catch (\Exception $x) {
         } catch (\Throwable $x) {
         }
@@ -1190,7 +1190,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         }
 
         foreach ($sections as $section) {
-            $sectionPage = \Page::getByID($section['cID']);
+            $sectionPage = \Concrete\Core\Page\Page::getByID($section['cID']);
             $this->output(t('Migrating multilingual section: %s...', $sectionPage->getCollectionName()));
             // Create a locale for this section
 
@@ -1249,26 +1249,26 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             }
             foreach ($this->connection->fetchAll('select * from Stacks where stMultilingualSection <> 0') as $row) {
                 $neutralKey = $row['stName'] . '@' . $row['stType'];
-                $child = \Stack::getByID($row['cID']);
+                $child = \Concrete\Core\Page\Stack\Stack::getByID($row['cID']);
                 if ($child) {
                     if (isset($neutrals[$neutralKey]) && is_numeric(isset($neutrals[$neutralKey]))) {
-                        if ($row['stType'] == \Stack::ST_TYPE_GLOBAL_AREA) {
-                            $neutrals[$neutralKey] = \Page::getByID($neutrals[$neutralKey]);
+                        if ($row['stType'] == \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) {
+                            $neutrals[$neutralKey] = \Concrete\Core\Page\Page::getByID($neutrals[$neutralKey]);
                             if ($neutrals[$neutralKey] && $neutrals[$neutralKey]->isError()) {
                                 $neutrals[$neutralKey] = null;
                             }
                         } else {
-                            $neutrals[$neutralKey] = \Stack::getByID($neutrals[$neutralKey]);
+                            $neutrals[$neutralKey] = \Concrete\Core\Page\Stack\Stack::getByID($neutrals[$neutralKey]);
                         }
                         if (!$neutrals[$neutralKey]) {
                             unset($neutrals[$neutralKey]);
                         }
                     }
                     if (!isset($neutrals[$neutralKey])) {
-                        if ($row['stType'] == \Stack::ST_TYPE_GLOBAL_AREA) {
-                            $neutrals[$neutralKey] = \Stack::addGlobalArea($row['stName']);
+                        if ($row['stType'] == \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) {
+                            $neutrals[$neutralKey] = \Concrete\Core\Page\Stack\Stack::addGlobalArea($row['stName']);
                         } else {
-                            $neutrals[$neutralKey] = \Stack::addStack($row['stName']);
+                            $neutrals[$neutralKey] = \Concrete\Core\Page\Stack\Stack::addStack($row['stName']);
                         }
                     }
                     $child->move($neutrals[$neutralKey]);

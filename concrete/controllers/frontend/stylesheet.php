@@ -3,10 +3,10 @@ namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\Layout;
-use Controller;
-use Page;
-use Permissions;
-use Response;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Http\Response;
 
 class Stylesheet extends Controller
 {

@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Attribute\Rating;
 
-use View;
-use Loader;
+use Concrete\Core\View\View;
+use Concrete\Core\Legacy\Loader;
 
 class Service
 {

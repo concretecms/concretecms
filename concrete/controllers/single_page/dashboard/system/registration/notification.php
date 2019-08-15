@@ -3,9 +3,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Key\Key;
-use Loader;
-use PermissionKey;
-use TaskPermission;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 
 class Notification extends DashboardPageController

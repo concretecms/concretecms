@@ -4,7 +4,7 @@ namespace Concrete\Controller\Backend\Page;
 use Concrete\Controller\Backend\UserInterface;
 use Core;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Page;
+use Concrete\Core\Page\Page;
 
 class SitemapSelector extends UserInterface
 {

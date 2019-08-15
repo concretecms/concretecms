@@ -13,8 +13,8 @@ class Design extends BackendPageController
     public function on_start()
     {
         parent::on_start();
-        $this->area = \Area::getOrCreate($this->page, $_REQUEST['arHandle']);
-        $this->permissions = new \Permissions($this->area);
+        $this->area = \Concrete\Core\Area\Area::getOrCreate($this->page, $_REQUEST['arHandle']);
+        $this->permissions = new \Concrete\Core\Permission\Checker($this->area);
         $this->set('a', $this->area);
     }
     protected function canAccess()

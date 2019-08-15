@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Editor;
 
-use Page;
+use Concrete\Core\Page\Page;
 
 class PageNameSnippet extends Snippet
 {

@@ -1,17 +1,17 @@
 <?php
 namespace Concrete\Block\PageList;
 
-use BlockType;
-use CollectionAttributeKey;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Url\SeoCanonical;
 use Database;
-use Page;
+use Concrete\Core\Page\Page;
 use Core;
-use PageList;
+use Concrete\Core\Page\PageList;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Tree\Node\Type\Topic;
 

@@ -16,7 +16,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\File\Importer;
 use Core;
-use File;
+use Concrete\Core\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface

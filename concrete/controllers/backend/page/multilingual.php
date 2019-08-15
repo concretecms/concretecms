@@ -34,7 +34,7 @@ class Multilingual extends Page
         $section = Section::getByID((int) $this->request->request('section'));
         if (is_object($section)) {
             $relatedID = $section->getTranslatedPageID($this->page);
-            $relatedPage = \Page::getByID((int) $relatedID);
+            $relatedPage = \Concrete\Core\Page\Page::getByID((int) $relatedID);
             $r = new PageEditResponse();
             $r->setPage($relatedPage);
             if (!$relatedPage->isError()) {
@@ -53,7 +53,7 @@ class Multilingual extends Page
             throw new UserMessageException(t("You cannot assign this page to itself."));
         }
 
-        $destPage = \Page::getByID($_POST['destID']);
+        $destPage = \Concrete\Core\Page\Page::getByID($_POST['destID']);
         if (Section::isMultilingualSection($destPage)) {
             $ms = Section::getByID($destPage->getCollectionID());
         } else {
@@ -88,22 +88,22 @@ class Multilingual extends Page
         } else {
             $cParentID = $this->page->getCollectionParentID();
         }
-        $cParent = \Page::getByID($cParentID);
+        $cParent = \Concrete\Core\Page\Page::getByID($cParentID);
         $cParentRelatedID = $ms->getTranslatedPageID($cParent);
         if ($cParentRelatedID > 0) {
             // we copy the page underneath it and store it
-            $ct = \PageType::getByID($this->page->getPageTypeID());
+            $ct = \Concrete\Core\Page\Type\Type::getByID($this->page->getPageTypeID());
             if ($this->page->isPageDraft()) {
-                $ptp = new \Permissions($ct);
+                $ptp = new \Concrete\Core\Permission\Checker($ct);
                 if (!$ptp->canAddPageType()) {
                     throw new UserMessageException(t('You do not have permission to add a page of this type.'));
                 }
             }
-            $newParent = \Page::getByID($cParentRelatedID);
-            $cp = new \Permissions($newParent);
+            $newParent = \Concrete\Core\Page\Page::getByID($cParentRelatedID);
+            $cp = new \Concrete\Core\Permission\Checker($newParent);
             if ($cp->canAddSubCollection($ct)) {
                 if ($this->page->isPageDraft()) {
-                    $targetParent = \Page::getDraftsParentPage();
+                    $targetParent = \Concrete\Core\Page\Page::getDraftsParentPage();
                 } else {
                     $targetParent = $newParent;
                 }

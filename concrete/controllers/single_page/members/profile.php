@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Members;
 
 use Concrete\Core\Page\Controller\PublicProfilePageController;
-use Loader;
-use User;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
 use UserInfo;
 use Exception;
 

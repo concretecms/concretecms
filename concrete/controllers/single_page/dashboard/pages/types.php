@@ -5,9 +5,9 @@ use Concrete\Controller\Element\Dashboard\Pages\Types\Header;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use PageType;
-use Loader;
-use PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Template as PageTemplate;
 
 class Types extends DashboardPageController
 {
@@ -39,7 +39,7 @@ class Types extends DashboardPageController
     public function edit($ptID = false)
     {
         $cm = PageType::getByID($ptID);
-        $cmp = new \Permissions($cm);
+        $cmp = new \Concrete\Core\Permission\Checker($cm);
         if (!$cmp->canEditPageType()) {
             throw new \Exception(t('You do not have access to edit this page type.'));
         }
@@ -75,7 +75,7 @@ class Types extends DashboardPageController
         if (!is_object($pagetype)) {
             $this->error->add(t('Invalid page type object.'));
         }
-        $cmp = new \Permissions($pagetype);
+        $cmp = new \Concrete\Core\Permission\Checker($pagetype);
         if (!$cmp->canDeletePageType()) {
             $this->error->add(t('You do not have access to delete this page type.'));
         }

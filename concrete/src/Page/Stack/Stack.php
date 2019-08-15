@@ -1,16 +1,16 @@
 <?php
 namespace Concrete\Core\Page\Stack;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
 use Concrete\Core\Site\Tree\TreeInterface;
-use GlobalArea;
+use Concrete\Core\Area\GlobalArea;
 use Config;
 use Database;
 use Core;
 use Concrete\Core\Page\Page;
-use PageType;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Entity\Site\Site;
 
 /**
@@ -206,7 +206,7 @@ class Stack extends Page
         if ($type == self::MULTILINGUAL_CONTENT_SOURCE_DEFAULT) {
             $ms = Section::getDefaultSection();
         } else {
-            $c = \Page::getCurrentPage();
+            $c = \Concrete\Core\Page\Page::getCurrentPage();
             $ms = Section::getBySectionOfSite($c);
             if (!is_object($ms)) {
                 $ms = $detector->getPreferredSection();
@@ -223,7 +223,7 @@ class Stack extends Page
      */
     public static function addGlobalArea($area)
     {
-        $parent = \Page::getByPath(STACKS_PAGE_PATH);
+        $parent = \Concrete\Core\Page\Page::getByPath(STACKS_PAGE_PATH);
 
         return self::addStackToCategory($parent, $area, static::ST_TYPE_GLOBAL_AREA);
     }
@@ -236,7 +236,7 @@ class Stack extends Page
      */
     public static function addStack($stack, Folder $folder = null)
     {
-        $parent = \Page::getByPath(STACKS_PAGE_PATH);
+        $parent = \Concrete\Core\Page\Page::getByPath(STACKS_PAGE_PATH);
         if ($folder) {
             $parent = $folder->getPage();
         }

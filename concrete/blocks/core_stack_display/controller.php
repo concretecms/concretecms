@@ -3,9 +3,9 @@ namespace Concrete\Block\CoreStackDisplay;
 
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Support\Facade\Application;
-use Stack;
-use Permissions;
-use Page;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section\Section;
 

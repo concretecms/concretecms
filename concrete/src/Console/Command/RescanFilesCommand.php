@@ -49,7 +49,7 @@ class RescanFilesCommand extends Command
         $currentFilename = null;
         $currentID = 0;
         try {
-            \Cache::disableAll();
+            \Concrete\Core\Cache\Cache::disableAll();
             if ($input->getOption('limit') !== null) {
                 $pagination = $paginationFactory->createPaginationObject($list);
                 $pagination->setMaxPerPage($input->getOption('limit'));

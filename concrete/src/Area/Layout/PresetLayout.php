@@ -2,7 +2,7 @@
 namespace Concrete\Core\Area\Layout;
 
 use Concrete\Core\Area\Layout\Preset\PresetInterface;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 
 class PresetLayout extends Layout

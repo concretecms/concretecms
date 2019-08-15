@@ -2,8 +2,8 @@
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Marketplace\RemoteItem;
-use TaskPermission;
-use Marketplace;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
 abstract class MarketplaceDashboardPageController extends DashboardPageController

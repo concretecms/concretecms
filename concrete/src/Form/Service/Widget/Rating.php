@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Rating
 {

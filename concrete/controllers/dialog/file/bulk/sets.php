@@ -38,7 +38,7 @@ class Sets extends BackendInterfaceController
         if (count($this->files) > 0) {
             $this->canEdit = true;
             foreach ($this->files as $f) {
-                $fp = new \Permissions($f);
+                $fp = new \Concrete\Core\Permission\Checker($f);
                 if (!$fp->canViewFileInFileManager()) {
                     $this->canEdit = false;
                 }

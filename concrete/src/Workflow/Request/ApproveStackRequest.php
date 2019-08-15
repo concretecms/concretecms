@@ -2,9 +2,9 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use CollectionVersion;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Events;
-use Stack;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class ApproveStackRequest extends ApprovePageRequest

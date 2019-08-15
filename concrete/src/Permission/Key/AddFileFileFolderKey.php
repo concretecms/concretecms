@@ -2,8 +2,8 @@
 namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Entity\File\File;
-use Loader;
-use User;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddFileFileFolderKey extends FileFolderKey

@@ -4,7 +4,7 @@ namespace Concrete\Tests\Page;
 
 use Concrete\TestHelpers\Page\PageTestCase;
 use Group;
-use Page;
+use Concrete\Core\Page\Page;
 
 class PageListTopicTest extends PageTestCase
 {

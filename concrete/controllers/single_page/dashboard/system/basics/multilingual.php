@@ -5,8 +5,8 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Config;
-use Loader;
-use Localization;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Localization\Localization;
 
 class Multilingual extends DashboardPageController
 {

@@ -5,11 +5,11 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Utility\Service\Validation\Strings;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Node\Node as TreeNode;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Topics extends DashboardPageController
 {
@@ -57,7 +57,7 @@ class Topics extends DashboardPageController
                 $treeTypeHandle = $treeType->getTreeTypeHandle();
             }
             if (is_object($tree) && 'topic' == $treeTypeHandle) {
-                if (\PermissionKey::getByHandle('remove_topic_tree')->validate()) {
+                if (\Concrete\Core\Permission\Key\Key::getByHandle('remove_topic_tree')->validate()) {
                     $tree->delete();
                     $this->redirect('/dashboard/system/attributes/topics', 'tree_deleted');
                 }
@@ -131,7 +131,7 @@ class Topics extends DashboardPageController
             $treeTypeHandle = $treeType->getTreeTypeHandle();
         }
         if (is_object($tree) && 'topic' == $treeTypeHandle) {
-            if (\PermissionKey::getByHandle('edit_topic_tree')->validate()) {
+            if (\Concrete\Core\Permission\Key\Key::getByHandle('edit_topic_tree')->validate()) {
                 $topic = new \Concrete\Core\Tree\Type\Topic();
                 $topic->setPropertiesFromArray($tree);
                 $topic->setTopicTreeName($treeName);

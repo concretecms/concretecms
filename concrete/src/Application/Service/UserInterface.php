@@ -3,11 +3,11 @@ namespace Concrete\Core\Application\Service;
 
 use Concrete\Core\Http\Response;
 use HtmlObject\Traits\Tag;
-use PermissionKey;
-use User as ConcreteUser;
-use Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\User\User as ConcreteUser;
+use Concrete\Core\Legacy\Loader;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 use Config;
 use Session;
 use Concrete\Core\View\ErrorView;

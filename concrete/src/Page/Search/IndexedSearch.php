@@ -5,13 +5,13 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Support\Facade\Application;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Config;
-use PageList;
-use Collection;
-use Area;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\SubArea;
-use Block;
+use Concrete\Core\Block\Block;
 use stdClass;
 
 class IndexedSearch

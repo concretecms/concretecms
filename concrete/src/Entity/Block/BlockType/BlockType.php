@@ -2,7 +2,7 @@
 namespace Concrete\Core\Entity\Block\BlockType;
 
 use Concrete\Core\Block\Block;
-use BlockTypeSet;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Concrete\Block\CoreStackDisplay\Controller;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Block\View\BlockView;
@@ -13,12 +13,12 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Database as DB;
-use Environment;
-use Loader;
-use Localization;
-use Package;
-use Page;
-use User;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Database\Connection\Connection;
 
@@ -627,8 +627,8 @@ EOT
      * Passes page and area data along if it is available, however.
      *
      * @param mixed            $data
-     * @param bool|\Collection $c
-     * @param bool|\Area       $a
+     * @param bool|\Concrete\Core\Page\Collection\Collection $c
+     * @param bool|\Concrete\Core\Area\Area       $a
      *
      * @return bool|\Concrete\Core\Block\Block
      */

@@ -5,7 +5,7 @@ use Concrete\Core\Search\Result\Item as SearchResultItem;
 use Concrete\Core\Search\Result\ItemColumn as SearchResultItemColumn;
 use Concrete\Core\Search\Result\Result as SearchResult;
 use Concrete\Core\Search\Column\Set;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Item extends SearchResultItem
 {

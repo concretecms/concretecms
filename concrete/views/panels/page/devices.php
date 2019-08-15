@@ -16,7 +16,7 @@ use Concrete\Core\Device\Device;
 
         <?php
         $preview_url = \URL::to('/ccm/system/panels/page/devices/preview');
-        $preview_url = $preview_url->setQuery(array('cID' => \Page::getCurrentPage()->getCollectionID()));
+        $preview_url = $preview_url->setQuery(array('cID' => \Concrete\Core\Page\Page::getCurrentPage()->getCollectionID()));
 
         $manager = \Core::make('device/manager');
 
@@ -55,7 +55,7 @@ use Concrete\Core\Device\Device;
             <div class="ccm-menu-device-set">
                 <ul>
                     <?php
-                    $page = \Page::getCurrentPage();
+                    $page = \Concrete\Core\Page\Page::getCurrentPage();
             foreach ($device_list as $device) {
                 $device_preview_url = $preview_url->setQuery(array(
                             'cID' => $page->getCollectionID(),

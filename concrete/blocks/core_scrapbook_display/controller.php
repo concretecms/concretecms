@@ -2,7 +2,7 @@
 namespace Concrete\Block\CoreScrapbookDisplay;
 
 use Concrete\Core\Block\BlockController;
-use Block;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\View\BlockViewTemplate;
 
 /**

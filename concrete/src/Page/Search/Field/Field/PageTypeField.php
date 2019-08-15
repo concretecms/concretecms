@@ -40,7 +40,7 @@ class PageTypeField extends AbstractField
         if (count($types) == 1) {
             $form = \Core::make('helper/form');
             $html = $form->select('ptID', array_reduce(
-                \PageType::getList(), function ($types, $type) {
+                \Concrete\Core\Page\Type\Type::getList(), function ($types, $type) {
                 $types[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
                 return $types;
             }
@@ -49,7 +49,7 @@ class PageTypeField extends AbstractField
             $html = '<select name="ptID" class="form-control">';
             foreach($types as $type) {
                 $html .= '<optgroup label="' . $type->getSiteTypeName() . '">';
-                $types = \PageType::getList(false, $type);
+                $types = \Concrete\Core\Page\Type\Type::getList(false, $type);
                 foreach($types as $pageType) {
                     $selected = $pageType->getPageTypeID() == $this->data['ptID'] ? ' selected ' : '';
                     $html .= '<option value="' . $pageType->getPageTypeID() . '" ' . $selected . '>' . $pageType->getPageTypeDisplayName() . '</option>';

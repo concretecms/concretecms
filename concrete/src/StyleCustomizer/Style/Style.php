@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style;
 
-use Environment;
+use Concrete\Core\Foundation\Environment;
 
 /**
  * @method static Value[] getValuesFromVariables($rules = [])

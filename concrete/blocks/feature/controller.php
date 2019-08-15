@@ -2,7 +2,7 @@
 namespace Concrete\Block\Feature;
 
 use Concrete\Core\Editor\LinkAbstractor;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Less_Parser;
 use Less_Tree_Rule;

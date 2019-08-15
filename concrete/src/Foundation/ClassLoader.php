@@ -187,7 +187,7 @@ class ClassLoader
     public function registerPackage($pkg)
     {
         if (is_string($pkg)) {
-            $pkg = \Package::getClass($pkg);
+            $pkg = \Concrete\Core\Package\Package::getClass($pkg);
         }
 
         $pkgHandle = $pkg->getPackageHandle();
@@ -252,7 +252,7 @@ class ClassLoader
     public function registerPackageCustomAutoloaders($pkg)
     {
         if (is_string($pkg)) {
-            $pkg = \Package::getClass($pkg);
+            $pkg = \Concrete\Core\Package\Package::getClass($pkg);
         }
 
         $pkgHandle = $pkg->getPackageHandle();

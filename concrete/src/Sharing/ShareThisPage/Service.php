@@ -3,7 +3,7 @@ namespace Concrete\Core\Sharing\ShareThisPage;
 
 use Concrete\Core\Page\Page;
 use Concrete\Core\Sharing\SocialNetwork\Service as SocialNetworkService;
-use Request;
+use Concrete\Core\Http\Request;
 use URL;
 
 class Service extends SocialNetworkService

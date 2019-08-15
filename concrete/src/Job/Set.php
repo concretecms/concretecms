@@ -2,8 +2,8 @@
 namespace Concrete\Core\Job;
 
 use Gettext\Translations;
-use Loader;
-use JobSet;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Job\Set as JobSet;
 use Concrete\Core\Foundation\ConcreteObject;
 
 class Set extends ConcreteObject

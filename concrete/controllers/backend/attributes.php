@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Controller\Backend;
 
-use Controller;
-use Permissions;
-use Loader;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Set;
 use stdClass;
@@ -37,7 +37,7 @@ class Attributes extends Controller
             $uats = array_filter($uats, 'is_numeric');
         }
         if (count($uats)) {
-            $db = \Loader::db();
+            $db = \Concrete\Core\Legacy\Loader::db();
             for ($i = 0; $i < count($uats); $i++) {
                 $v = array($i, $as->getAttributeSetID(), $uats[$i]);
                 $db->query("update AttributeSetKeys set asDisplayOrder = ? where asID = ? and akID = ?", $v);

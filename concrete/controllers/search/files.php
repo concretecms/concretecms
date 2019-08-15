@@ -74,7 +74,7 @@ class Files extends Standard
 
     protected function canAccess()
     {
-        $cp = \FilePermissions::getGlobal();
+        $cp = \Concrete\Core\Legacy\FilePermissions::getGlobal();
         if ($cp->canSearchFiles()) {
             return true;
         }

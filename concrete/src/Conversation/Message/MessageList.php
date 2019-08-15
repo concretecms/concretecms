@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Legacy\DatabaseItemList;

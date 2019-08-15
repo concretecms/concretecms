@@ -1,17 +1,17 @@
 <?php
 namespace Concrete\Controller\Dialog\Type;
 
-use Block;
+use Concrete\Core\Block\Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\PageList;
-use Page;
-use PageTemplate;
-use PageType;
-use Permissions;
-use View;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\View\View;
 
 class UpdateFromType extends BackendInterfaceController
 {

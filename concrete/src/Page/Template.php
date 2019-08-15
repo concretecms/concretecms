@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
-use PageType;
+use Concrete\Core\Page\Type\Type as PageType;
 use Core;
 
 class Template

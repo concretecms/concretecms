@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class Versions extends BackendInterfacePageController
 {

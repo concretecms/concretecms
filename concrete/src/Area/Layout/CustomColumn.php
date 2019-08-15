@@ -2,7 +2,7 @@
 namespace Concrete\Core\Area\Layout;
 
 use HtmlObject\Element;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class CustomColumn extends Column
 {

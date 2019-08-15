@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
-use AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Validation\CSRF\Token;
 use Exception;

@@ -14,7 +14,7 @@ class FileFolderMenu extends Menu
     public function __construct(FileFolder $folder)
     {
         parent::__construct();
-        $p = new \Permissions($folder);
+        $p = new \Concrete\Core\Permission\Checker($folder);
         if ($p->canEditTreeNode()) {
             $this->addItem(new EditFolderItem($folder));
         }

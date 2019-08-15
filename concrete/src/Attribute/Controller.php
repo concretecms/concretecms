@@ -91,7 +91,7 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getAttributeTypeFileURL($_file)
     {
-        $env = \Environment::get();
+        $env = \Concrete\Core\Foundation\Environment::get();
         $r = $env->getRecord(
             implode('/', [DIRNAME_ATTRIBUTES . '/' . $this->attributeType->getAttributeTypeHandle() . '/' . $_file]),
             $this->attributeType->getPackageHandle()

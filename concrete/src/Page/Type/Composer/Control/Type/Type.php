@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Core;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;

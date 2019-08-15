@@ -26,13 +26,13 @@ class Devices extends BackendInterfacePageController
 
     public function preview()
     {
-        $request = \Request::getInstance();
-        $c = \Page::getByID($this->request->get('cID'));
-        $cp = new \Permissions($c);
+        $request = \Concrete\Core\Http\Request::getInstance();
+        $c = \Concrete\Core\Page\Page::getByID($this->request->get('cID'));
+        $cp = new \Concrete\Core\Permission\Checker($c);
         if ($cp->canViewPageVersions()) {
             $c->loadVersionObject(\Core::make('helper/security')->sanitizeInt($_REQUEST['cvID']));
 
-            $spoofed_request = \Request::createFromGlobals();
+            $spoofed_request = \Concrete\Core\Http\Request::createFromGlobals();
 
             if ($device_handle = $request->headers->get('x-device-handle')) {
                 if ($device = \Core::make('device/manager')->get($device_handle)) {
@@ -45,16 +45,16 @@ class Devices extends BackendInterfacePageController
             $spoofed_request->setCustomRequestUser(-1);
             $spoofed_request->setCurrentPage($c);
 
-            \Request::setInstance($spoofed_request);
+            \Concrete\Core\Http\Request::setInstance($spoofed_request);
 
             $controller = $c->getPageController();
             $controller->runTask('view', array());
             $view = $controller->getViewObject();
-            $response = new \Response();
+            $response = new \Concrete\Core\Http\Response();
             $content = $view->render();
 
             // Reset just in case.
-            \Request::setInstance($request);
+            \Concrete\Core\Http\Request::setInstance($request);
 
             $response->setContent($content);
             $response->send();

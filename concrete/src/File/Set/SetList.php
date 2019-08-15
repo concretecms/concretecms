@@ -2,9 +2,9 @@
 namespace Concrete\Core\File\Set;
 
 use Concrete\Core\Legacy\DatabaseItemList;
-use FileSet;
-use Loader;
-use User;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\User;
 
 class SetList extends DatabaseItemList
 {

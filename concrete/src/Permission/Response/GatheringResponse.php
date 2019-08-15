@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class GatheringResponse extends Response
 {

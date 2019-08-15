@@ -18,8 +18,8 @@ class FlatSitemapProvider extends StandardSitemapProvider
             $cParentID = $this->request->query->get('cParentID');
         }
         if ($cParentID > 0) {
-            $c = \Page::getByID($cParentID);
-            $parent = \Page::getByID($c->getCollectionParentID());
+            $c = \Concrete\Core\Page\Page::getByID($cParentID);
+            $parent = \Concrete\Core\Page\Page::getByID($c->getCollectionParentID());
         }
 
         if (is_object($parent) && !$parent->isError()) {

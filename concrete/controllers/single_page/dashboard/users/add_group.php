@@ -5,7 +5,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Node\Node as TreeNode;
-use Group as ConcreteGroup;
+use Concrete\Core\User\Group\Group as ConcreteGroup;
 
 class AddGroup extends DashboardPageController
 {
@@ -81,7 +81,7 @@ class AddGroup extends DashboardPageController
         }
 
         if (is_object($parentGroup)) {
-            $pp = new \Permissions($parentGroup);
+            $pp = new \Concrete\Core\Permission\Checker($parentGroup);
             if (!$pp->canAddSubGroup()) {
                 $this->error->add(t('You do not have permission to add a group beneath %s', $parentGroup->getGroupDisplayName()));
             }

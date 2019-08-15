@@ -5,7 +5,7 @@ use Core;
 use Database;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use Exception;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class Page extends Item
 {

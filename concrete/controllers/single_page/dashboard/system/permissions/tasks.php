@@ -2,9 +2,9 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use PermissionKey;
-use TaskPermission;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 
 class Tasks extends DashboardPageController

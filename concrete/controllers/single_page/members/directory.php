@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Members;
 
 use Concrete\Core\Page\Controller\PublicProfilePageController;
-use UserAttributeKey;
-use Loader;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\User\UserList;
 
 class Directory extends PublicProfilePageController

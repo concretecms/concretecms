@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Attribute\Value;
 
 use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
-use Page;
+use Concrete\Core\Page\Page;
 
 class PageValueTest extends AttributeValueTestCase
 {
@@ -94,10 +94,10 @@ class PageValueTest extends AttributeValueTestCase
         return [
             [
                 function () {
-                    return \Page::getByID(1);
+                    return \Concrete\Core\Page\Page::getByID(1);
                 },
                 function () {
-                    return \Page::getByID(1);
+                    return \Concrete\Core\Page\Page::getByID(1);
                 },
             ],
         ];
@@ -108,7 +108,7 @@ class PageValueTest extends AttributeValueTestCase
         return [
             [
                 function () {
-                    return \Page::getByID(1);
+                    return \Concrete\Core\Page\Page::getByID(1);
                 },
                 'Home',
             ],
@@ -120,7 +120,7 @@ class PageValueTest extends AttributeValueTestCase
         return [
             [
                 function () {
-                    return \Page::getByID(1);
+                    return \Concrete\Core\Page\Page::getByID(1);
                 },
                 'Home',
             ],
@@ -132,7 +132,7 @@ class PageValueTest extends AttributeValueTestCase
         return [
             [
                 function () {
-                    return \Page::getByID(1);
+                    return \Concrete\Core\Page\Page::getByID(1);
                 },
                 1,
             ],

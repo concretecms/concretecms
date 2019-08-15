@@ -23,7 +23,7 @@ class Url extends Facade
      * \Url::to('/some/path', 'some_action', $some_variable = 2)
      *     http://example.com/some/path/some_action/2/
      *
-     * \Url::to($page_object = \Page::getByPath('blog'), 'action')
+     * \Url::to($page_object = \Concrete\Core\Page\Page::getByPath('blog'), 'action')
      *     http://example.com/blog/action/
      *
      * @return \League\URL\URLInterface
@@ -46,7 +46,7 @@ class Url extends Facade
         if (!$arguments) {
             $arguments = array();
         }
-        $route = static::getFacadeApplication()->make(\Router::class)->route($data);
+        $route = static::getFacadeApplication()->make(\Concrete\Core\Routing\Router::class)->route($data);
         array_unshift($arguments, $route);
 
         return static::getFacadeRoot()->resolve($arguments);

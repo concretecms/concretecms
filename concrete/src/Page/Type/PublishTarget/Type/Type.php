@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
 
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Package\Package as Package;
 use Core;
 use Database;

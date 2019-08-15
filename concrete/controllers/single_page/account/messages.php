@@ -5,10 +5,10 @@ use Concrete\Core\Page\Controller\AccountPageController;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
 use UserInfo;
-use Loader;
-use View;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
 use Core;
-use User;
+use Concrete\Core\User\User;
 
 class Messages extends AccountPageController
 {

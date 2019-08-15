@@ -5,7 +5,7 @@ use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\Search\Menu\SavedSearchMenu;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Formatter\SavedSearchListFormatter;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class SearchPreset extends Node
 {

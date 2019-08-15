@@ -7,8 +7,8 @@ use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
-use Controller;
-use Environment;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Foundation\Environment;
 
 class AssetsLocalization extends Controller
 {

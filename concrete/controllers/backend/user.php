@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Controller\Backend;
 
-use Controller;
-use Group;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\EditResponse as UserEditResponse;
-use Permissions;
+use Concrete\Core\Permission\Checker as Permissions;
 use UserInfo;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 use stdClass;
 use Core;
 use Exception;

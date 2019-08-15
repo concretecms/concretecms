@@ -4,8 +4,8 @@ namespace Concrete\Core\Routing;
 use Core;
 use League\Url\Url;
 use League\Url\UrlInterface;
-use Request;
-use Page;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 
 class Redirect
 {

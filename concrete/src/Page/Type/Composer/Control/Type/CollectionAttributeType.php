@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
-use CollectionAttributeKey;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl;
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
 

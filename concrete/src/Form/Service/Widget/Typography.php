@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
-use View;
+use Concrete\Core\View\View;
 
 class Typography
 {

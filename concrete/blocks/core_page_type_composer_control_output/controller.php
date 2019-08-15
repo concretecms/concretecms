@@ -6,7 +6,7 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFor
 use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Backup\ContentExporter;
-use PageTemplate;
+use Concrete\Core\Page\Template as PageTemplate;
 
 class Controller extends BlockController
 {

@@ -51,7 +51,7 @@ class Detector
 
         if ($result === null) {
             // Detect locale by user's preferred language
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             if ($u->isRegistered()) {
                 $userDefaultLanguage = $u->getUserDefaultLanguage();
                 if ($userDefaultLanguage) {

@@ -4,13 +4,13 @@ namespace Concrete\Core\Application\Service;
 use Config;
 use Core;
 use Database;
-use File;
-use Localization;
-use Page;
-use Permissions;
+use Concrete\Core\File\File;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use Session;
-use User as ConcreteUser;
-use View;
+use Concrete\Core\User\User as ConcreteUser;
+use Concrete\Core\View\View;
 
 class Dashboard
 {

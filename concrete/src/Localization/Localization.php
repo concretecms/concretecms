@@ -149,7 +149,7 @@ class Localization
      *
      * @example
      * ```php
-     * $loc = \Localization::getInstance();
+     * $loc = \Concrete\Core\Localization\Localization::getInstance();
      * // Let's assume the current context is 'original_context'
      *
      * $loc->pushActiveContext('new_context');

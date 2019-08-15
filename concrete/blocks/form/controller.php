@@ -8,11 +8,11 @@ use Core;
 use Database;
 use Events;
 use Exception;
-use File;
-use FileImporter;
-use FileSet;
-use Page;
-use User;
+use Concrete\Core\File\File;
+use Concrete\Core\File\Importer as FileImporter;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 use UserInfo;
 use Concrete\Core\Validator\String\EmailValidator;
 
@@ -638,9 +638,9 @@ class Controller extends BlockController
                     }
                 }
                 if (is_object($targetPage)) {
-                    $response = \Redirect::page($targetPage);
+                    $response = \Concrete\Core\Routing\Redirect::page($targetPage);
                 } else {
-                    $response = \Redirect::page(Page::getCurrentPage());
+                    $response = \Concrete\Core\Routing\Redirect::page(Page::getCurrentPage());
                     $url = $response->getTargetUrl() . '?surveySuccess=1&qsid=' . $this->questionSetId . '#formblock' . $this->bID;
                     $response->setTargetUrl($url);
                 }

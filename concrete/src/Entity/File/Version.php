@@ -40,13 +40,13 @@ use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\MountManager;
 use League\Flysystem\Util;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Throwable;
-use User;
+use Concrete\Core\User\User;
 
 /**
  * Represents a version of a file.

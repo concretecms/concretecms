@@ -8,7 +8,7 @@ abstract class Node extends UserInterface
     protected function getNode()
     {
         if (!isset($this->node)) {
-            $this->node = \Concrete\Core\Tree\Node\Node::getByID(\Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeID']));
+            $this->node = \Concrete\Core\Tree\Node\Node::getByID(\Concrete\Core\Legacy\Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeID']));
         }
         return $this->node;
     }

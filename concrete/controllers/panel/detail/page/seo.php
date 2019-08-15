@@ -3,11 +3,11 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
-use PageEditResponse;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Attribute\Set as AttributeSet;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Page\Collection\Version\Version;
-use User;
+use Concrete\Core\User\User;
 
 class Seo extends BackendInterfacePageController
 {

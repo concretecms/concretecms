@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
-use Controller;
+use Concrete\Core\Controller\Controller;
 
 class PageNotFound extends Controller
 {

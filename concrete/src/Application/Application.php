@@ -26,18 +26,18 @@ use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 use Config;
 use Database;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Exception;
 use Illuminate\Container\Container;
-use Job;
-use JobSet;
+use Concrete\Core\Job\Job;
+use Concrete\Core\Job\Set as JobSet;
 use Log;
-use Page;
+use Concrete\Core\Page\Page;
 use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
-use Redirect;
+use Concrete\Core\Routing\Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
-use View;
+use Concrete\Core\View\View;
 
 class Application extends Container
 {
@@ -212,7 +212,7 @@ class Application extends Container
         $pla = \Concrete\Core\Package\PackageList::get();
         $pl = $pla->getPackages();
         $cl = ClassLoader::getInstance();
-        /** @var \Package[] $pl */
+        /** @var \Concrete\Core\Package\Package[] $pl */
         foreach ($pl as $p) {
             \Config::package($p);
             if ($p->isPackageInstalled()) {
@@ -238,7 +238,7 @@ class Application extends Container
 
         foreach ($this->packages as $pkg) {
             if ($config->get('concrete.updates.enable_auto_update_packages')) {
-                $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
+                $dbPkg = \Concrete\Core\Package\Package::getByHandle($pkg->getPackageHandle());
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {

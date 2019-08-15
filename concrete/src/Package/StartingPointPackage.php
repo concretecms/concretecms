@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Package;
 
-use AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
 use Concrete\Core\Backup\ContentImporter;
@@ -29,15 +29,15 @@ use Database;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Exception;
-use Group;
-use GroupTree;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Tree\Type\Group as GroupTree;
 use Hautelook\Phpass\PasswordHash;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use Package as BasePackage;
-use Page;
-use PermissionKey;
+use Concrete\Core\Package\Package as BasePackage;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Throwable;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
@@ -409,7 +409,7 @@ class StartingPointPackage extends BasePackage
 
     protected function install_desktops()
     {
-        $desktop = \Page::getByPath('/dashboard/welcome');
+        $desktop = \Concrete\Core\Page\Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
     }
 
@@ -519,7 +519,7 @@ class StartingPointPackage extends BasePackage
         UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
 
         // Install conversation default email
-        \Conversation::setDefaultSubscribedUsers([$superuser]);
+        \Concrete\Core\Conversation\Conversation::setDefaultSubscribedUsers([$superuser]);
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
     }

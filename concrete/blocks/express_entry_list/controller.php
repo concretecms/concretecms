@@ -388,7 +388,7 @@ class Controller extends BlockController
     {
         $detailPage = false;
         if ($this->detailPage) {
-            $c = \Page::getByID($this->detailPage);
+            $c = \Concrete\Core\Page\Page::getByID($this->detailPage);
             if (is_object($c) && !$c->isError()) {
                 $detailPage = $c;
             }

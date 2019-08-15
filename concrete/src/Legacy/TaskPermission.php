@@ -5,7 +5,7 @@ namespace Concrete\Core\Legacy;
 /**
  * @deprecated Use \Concrete\Core\Permission\Checker
  */
-final class TaskPermission extends \Permissions
+final class TaskPermission extends \Concrete\Core\Permission\Checker
 {
     /**
      * @deprecated Use \Concrete\Core\Permission\Key\Key::getByHandle()
@@ -16,7 +16,7 @@ final class TaskPermission extends \Permissions
      */
     public static function getByHandle($handle)
     {
-        $pk = \PermissionKey::getByHandle($handle);
+        $pk = \Concrete\Core\Permission\Key\Key::getByHandle($handle);
 
         return $pk;
     }

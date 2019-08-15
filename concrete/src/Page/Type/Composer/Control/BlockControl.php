@@ -2,14 +2,14 @@
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Package\PackageList;
-use Controller;
-use Package;
-use Block;
-use BlockType;
-use Environment;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Page\Page;
-use Area;
-use PageTemplate;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\View;

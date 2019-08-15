@@ -6,7 +6,7 @@ use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use Concrete\Core\Workflow\Progress\Progress;
 use Concrete\Core\Workflow\Progress\UserProgress;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use URL;
 
 class DeleteUserRequest extends UserRequest

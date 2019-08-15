@@ -45,7 +45,7 @@ class TranslateInterface extends DashboardSitePageController
     public function reset_languages()
     {
         if (Core::make('token')->validate('reset_languages')) {
-            $u = new \User();
+            $u = new \Concrete\Core\User\User();
             $extractor = Core::make('multilingual/extractor');
             if ($u->isSuperUser()) {
                 $list = Section::getList();
@@ -108,7 +108,7 @@ class TranslateInterface extends DashboardSitePageController
                         $extractor->saveSectionTranslationsToFile($section, $translations);
                     }
                 }
-                \Localization::clearCache();
+                \Concrete\Core\Localization\Localization::clearCache();
                 $this->redirect('/dashboard/system/multilingual/translate_interface', 'exported');
             } else {
                 $this->error->add(Core::make('token')->getErrorMessage());
@@ -180,7 +180,7 @@ class TranslateInterface extends DashboardSitePageController
             $extractor = Core::make('multilingual/extractor');
             $extractor->mergeTranslationsWithSectionFile($section, $translations);
             $extractor->saveSectionTranslationsToFile($section, $translations);
-            \Localization::clearCache();
+            \Concrete\Core\Localization\Localization::clearCache();
             $result->setAdditionalDataAttribute('newToken', Core::make('token')->generate('export_translations'));
             $result->message = t('The translations have been exported to file and will be used by the website.');
         } catch (\Exception $x) {

@@ -7,7 +7,7 @@ use Concrete\Core\Tree\Node\Type\Formatter\ExpressEntryResultsListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
 use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryCategoryMenu;
 use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryLocationMenu;
-use Loader;
+use Concrete\Core\Legacy\Loader;
 
 class ExpressEntryCategory extends Category
 {

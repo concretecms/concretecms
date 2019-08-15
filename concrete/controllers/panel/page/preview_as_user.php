@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Controller\Panel\Page;
 
-use Controller;
-use Page;
-use Permissions;
-use Request;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Http\Request;
 use UserInfo;
-use View;
+use Concrete\Core\View\View;
 use Core;
 use Config;
 
@@ -48,7 +48,7 @@ class PreviewAsUser extends Controller
             $controller = $page->getPageController();
             $view = $controller->getViewObject();
 
-            $response = new \Response();
+            $response = new \Concrete\Core\Http\Response();
             $response->setContent($view->render());
             $response->send();
         }

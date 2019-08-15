@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use User;
-use Group;
-use PermissionKey;
-use Permissions;
+use Concrete\Core\User\User;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Checker as Permissions;
 
 class UserInfoResponse extends Response
 {

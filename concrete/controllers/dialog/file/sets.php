@@ -25,7 +25,7 @@ class Sets extends BackendInterfaceFileController
         if (is_array($this->request->request->get('fsID'))) {
             $requestSets = $this->request->request->get('fsID');
         }
-        $fsp = \FilePermissions::getGlobal();
+        $fsp = \Concrete\Core\Legacy\FilePermissions::getGlobal();
         if ($this->validateAction()) {
             $sets = Set::getMySets();
             foreach ($sets as $set) {

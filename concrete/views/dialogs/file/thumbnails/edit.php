@@ -16,7 +16,7 @@ $handle = Request::request('thumbnail', '');
 try {
     $thumbnails = $file_version->getThumbnails();
 } catch (InvalidDimensionException $e) {
-    $view = \View::getInstance();
+    $view = \Concrete\Core\View\View::getInstance();
     $view->renderError(
         t('Invalid File Dimensions'),
         t(
@@ -25,7 +25,7 @@ try {
 
     return;
 } catch (\Exception $e) {
-    $view = \View::getInstance();
+    $view = \Concrete\Core\View\View::getInstance();
     $view->renderError(
         t('Unknown Error'),
         t('An unknown error occurred while trying to find the thumbnails!'));
@@ -45,7 +45,7 @@ if ($type_version) {
     $height = $type_version->getHeight();
     $width = $type_version->getWidth();
 } else {
-    $view = \View::getInstance();
+    $view = \Concrete\Core\View\View::getInstance();
     $view->renderError(
         t('Unable to find requested thumbnail'),
         t(

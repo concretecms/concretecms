@@ -193,7 +193,7 @@ abstract class ItemList
      */
     public function getPagination()
     {
-        $factory = new PaginationFactory(\Request::getInstance());
+        $factory = new PaginationFactory(\Concrete\Core\Http\Request::getInstance());
         if (method_exists($this, 'createPaginationObject')) {
             $pagination = $this->createPaginationObject();
             $pagination = $factory->deliverPaginationObject($this, $pagination);
@@ -212,7 +212,7 @@ abstract class ItemList
             if ($request) {
                 $data = $request->getSearchRequest();
             } else {
-                $data = \Request::getInstance()->query->all();
+                $data = \Concrete\Core\Http\Request::getInstance()->query->all();
             }
             $direction = 'asc';
             if (isset($data[$this->getQuerySortDirectionParameter()])) {

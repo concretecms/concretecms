@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\DesktopLatestForm;
 
-use Package;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Block\BlockController;
 
     class Controller extends BlockController

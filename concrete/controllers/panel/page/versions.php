@@ -5,17 +5,17 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Workflow\Request\UnapprovePageRequest;
-use Permissions;
-use Page;
-use Loader;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Legacy\Loader;
 use Core;
 use Config;
-use CollectionVersion;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
-use PageEditResponse;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use Concrete\Core\Page\Collection\Version\VersionList;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class Versions extends BackendInterfacePageController
@@ -79,7 +79,7 @@ class Versions extends BackendInterfacePageController
             $e = Core::make('helper/validation/error');
             $pt = $c->getPageTypeObject();
             if (is_object($pt)) {
-                $ptp = new \Permissions($pt);
+                $ptp = new \Concrete\Core\Permission\Checker($pt);
                 if (!$ptp->canAddPageType()) {
                     $e->add(t('You do not have permission to create new pages of this type.'));
                 }

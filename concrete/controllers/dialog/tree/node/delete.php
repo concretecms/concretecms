@@ -12,7 +12,7 @@ class Delete extends Node
     protected function canAccess()
     {
         $node = $this->getNode();
-        $np = new \Permissions($node);
+        $np = new \Concrete\Core\Permission\Checker($node);
         return $np->canDeleteTreeNode();
     }
 

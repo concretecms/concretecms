@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\FlagType;
 
-use ConversationFlagType;
+use Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use Concrete\Core\Legacy\DatabaseItemList;
 
 class FlagTypeList extends DatabaseItemList
