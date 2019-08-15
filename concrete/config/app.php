@@ -33,7 +33,6 @@ return [
         'ConversationFlagType' => '\Concrete\Core\Conversation\FlagType\FlagType',
         'ConversationMessage' => '\Concrete\Core\Conversation\Message\Message',
         'ConversationRatingType' => '\Concrete\Core\Conversation\Rating\Type',
-        'Cookie' => '\Concrete\Core\Cookie\Cookie',
         'Environment' => '\Concrete\Core\Foundation\Environment',
         'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
         'File' => '\Concrete\Core\File\File',
