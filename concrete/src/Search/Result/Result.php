@@ -20,9 +20,9 @@ class Result
      * @since 8.0.0
      */
     protected $query; // This is a search request, it gets rid of folders, etc...
-/**
- * @since 8.0.0
- */
+    /**
+     * @since 8.0.0
+     */
     protected $filters; // These are search filters - they display folders, don't display a "reset search" label, etc...
 
     /** @var \Concrete\Core\Search\Pagination\Pagination */

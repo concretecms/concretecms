@@ -22,9 +22,9 @@ abstract class ItemList
     // This still checks the auto sort columns if set to true –
     // we just turn it off to save processing in the attributed item list (so it doesn't have to instantiate
     // all those objects if it's not necessary)
-/**
- * @since 5.7.2
- */
+    /**
+     * @since 5.7.2
+     */
     protected $enableAutomaticSorting = true;
     protected $autoSortColumns = array();
 

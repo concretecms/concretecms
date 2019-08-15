@@ -27,9 +27,9 @@ class Stack extends Page
      * @since 5.7.5
      */
     const MULTILINGUAL_CONTENT_SOURCE_CURRENT = 100; // in multilingual sites, loads based on current page's locale
-/**
- * @since 5.7.5
- */
+    /**
+     * @since 5.7.5
+     */
     const MULTILINGUAL_CONTENT_SOURCE_DEFAULT = 200; // in multilingual sites, loads based on default locale (ignores current)
 
     /**

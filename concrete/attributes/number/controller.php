@@ -94,9 +94,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     }
 
     // run when we call setAttribute(), instead of saving through the UI
-/**
- * @since 8.0.0
- */
+    /**
+     * @since 8.0.0
+     */
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
