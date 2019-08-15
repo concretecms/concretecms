@@ -644,6 +644,9 @@ return [
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
+        'core/draft_list' => [
+            ['javascript', 'js/build/core/blocks/draft_list.js', ['minify' => false]],
+        ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
         ],
@@ -752,6 +755,12 @@ return [
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
+            ],
+        ],
+        'core/draft_list' => [
+            [
+                ['javascript', 'core/draft_list'],
+                ['javascript', 'core/events'],
             ],
         ],
         'core/colorpicker' => [
