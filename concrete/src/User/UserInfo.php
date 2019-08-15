@@ -10,6 +10,7 @@ use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
@@ -274,6 +275,18 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 $this->entityManager->remove($userSignup);
             }
 
+        }
+
+        $expressEntities = $this->entityManager->getRepository(Entry::class)->findBy(['author' => (int) $this->getUserID()]);
+        /** @var Entry $expressEntity */
+        foreach ($expressEntities as $expressEntity) {
+            // If there is no SuperAdmin Just remove the Express Entry
+            if (is_object($superAdminEntity)) {
+                $expressEntity->setAuthor($superAdminEntity);
+                $this->entityManager->persist($expressEntity);
+            } else {
+                $this->entityManager->remove($expressEntity);
+            }
         }
 
         $this->entityManager->remove($this->entity);
