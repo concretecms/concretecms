@@ -66,7 +66,6 @@ class Controller extends BlockController
     public function view()
     {
         $myDrafts = [];
-        $showPagination = false;
         $pagination = null;
         $site = $this->app->make('site')->getSite();
         if (is_object($site)) {
