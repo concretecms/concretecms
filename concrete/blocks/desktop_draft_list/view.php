@@ -24,16 +24,20 @@
             <?php
     } ?>
             <?php
-                if ($showPagination) {
-                    echo $pagination;
-                } ?>
+            if ($pagination && $pagination->haveToPaginate()) {
+                $pagination->setBaseURL($view->action('reload_drafts')); ?>
+                <div class="ccm-search-results-pagination">
+                    <?= $pagination->renderDefaultView(); ?>
+                </div>
+                <?php
+            } ?>
         </div>
     <?php
 } else {
-                    ?>
+                ?>
         <p><?= t('There are no drafts.'); ?></p>
     <?php
-                } ?>
+            } ?>
 </div>
 
 <script type="text/javascript">

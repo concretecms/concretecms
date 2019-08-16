@@ -82,10 +82,6 @@ class Controller extends BlockController
                 $list->setItemsPerPage((!empty($this->draftsPerPage)) ? $this->draftsPerPage : $this->defaultDraftsPerPage);
                 $pagination = $list->getPagination();
                 $drafts = $pagination->getCurrentPageResults();
-                if ($pagination->haveToPaginate()) {
-                    $showPagination = true;
-                    $pagination = $pagination->renderDefaultView();
-                }
             }
         }
 
@@ -123,7 +119,6 @@ class Controller extends BlockController
             }
         }
         $this->set('drafts', $myDrafts);
-        $this->set('showPagination', $showPagination);
         $this->set('pagination', $pagination);
     }
 
