@@ -645,7 +645,7 @@ return [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
         'core/draft_list' => [
-            ['javascript', 'js/build/core/blocks/draft_list.js', ['minify' => false]],
+            ['javascript', 'js/draft-list.js', ['minify' => false]],
         ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
