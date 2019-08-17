@@ -80,6 +80,11 @@ class Feeds extends DashboardPageController
         } else {
             $pf->displayShortDescriptionContent();
         }
+        if ($this->post('ignorePermissions')) {
+            $pf->setCheckPagePermissions(false);
+        } else {
+            $pf->setCheckPagePermissions(true);
+        }
 
         return $pf;
     }
