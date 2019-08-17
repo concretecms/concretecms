@@ -21,7 +21,7 @@ class Feed
     protected $itemsPerFeed = 20;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(type="boolean")
      */
     protected $checkPagePermissions = true;
@@ -163,6 +163,7 @@ class Feed
 
     /**
      * @param string $format
+     *
      * @return string
      */
     public function getFeedDisplayTitle($format = 'html')
@@ -318,6 +319,7 @@ class Feed
     {
         return \URL::to('/rss/' . $this->getHandle());
     }
+
     /**
      * @ORM\Column(type="boolean")
      */
@@ -351,7 +353,7 @@ class Feed
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function shouldCheckPagePermissions()
     {
