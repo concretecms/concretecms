@@ -43,6 +43,7 @@ class StorageLocationFactory
      * @param StorageLocationEntity $storageLocation
      *
      * @return StorageLocationEntity The persisted location, may not be the same as the passed in object
+     * @throws \Exception
      */
     public function persist(StorageLocationEntity $storageLocation)
     {
@@ -83,13 +84,10 @@ class StorageLocationFactory
      *
      * @return StorageLocationEntity|null
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function fetchByName($name)
     {
-        return $this->entityManager->getRepository(StorageLocationEntity::class, 'l')->findBy(['fslName' => $name]);
+        return $this->entityManager->getRepository(StorageLocationEntity::class, 'l')->findOneBy(['fslName' => $name]);
     }
 
     /**
