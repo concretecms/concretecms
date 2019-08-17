@@ -68,6 +68,7 @@ $canEdit = $permissionsCallback($ak, isset($permissionsArguments) ? $permissions
                         data-editable-field-type="xeditableAttribute"
                         data-url="<?= $saveAction ?>"
                         data-type="concreteattribute"
+                        data-placement="bottom"
                         <?php
                         if ($ak->getAttributeTypeHandle() === 'textarea') {
                             echo ' data-editableMode="inline" ';
