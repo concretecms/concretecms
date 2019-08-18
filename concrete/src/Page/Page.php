@@ -979,8 +979,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cParentID = $this->getCollectionID();
         $uID = $u->getUserID();
 
-        $handle = $this->getCollectionHandle();
-
         // make the handle out of the title
         $cLink = $ds->sanitizeURL($cLink);
         $handle = $dt->urlify($cName);
