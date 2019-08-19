@@ -10,7 +10,9 @@ use stdClass;
 use Exception;
 
 /**
- * @since 5.7.2 (but not in 8.0.0 8.0.1 8.0.2 8.0.3 8.1.0)
+ * @since 5.7.2
+ * @since 8.0.0 removed
+ * @since 8.2.0 re-implemented
  */
 class Attributes extends Controller
 {

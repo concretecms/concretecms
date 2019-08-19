@@ -188,7 +188,9 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     }
 
     /**
-     * @since 5.7.5.2 (but not in 5.7.5.3 5.7.5.4 5.7.5.5 5.7.5.6 5.7.5.7 5.7.5.8 5.7.5.9 5.7.5.10 5.7.5.11 5.7.5.12 5.7.5.13 8.0.0 8.0.1 8.0.2 8.0.3 8.1.0 8.2.0 8.2.1 8.3.0 8.3.1 8.3.2)
+     * @since 5.7.5.2
+     * @since 5.7.5.3 removed
+     * @since 8.4.0 re-implemented
      */
     public function getSubAreaObject()
     {

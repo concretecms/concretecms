@@ -117,7 +117,9 @@ class Key extends Facade implements AttributeKeyInterface
      * this class and would call parent::add(). Do NOT use this method. It is here
      * for backward compatibility.
      * @deprecated
-     * @since 5.7.0 (but not in 5.7.5.4 5.7.5.5 5.7.5.6 5.7.5.7 5.7.5.8 5.7.5.9 5.7.5.10 5.7.5.11 5.7.5.12 5.7.5.13)
+     * @since 5.7.0
+     * @since 5.7.5.4 removed
+     * @since 8.0.0 re-implemented
      */
     public static function add($handle, $type, $args, $pkg = false)
     {

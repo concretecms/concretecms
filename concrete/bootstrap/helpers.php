@@ -339,7 +339,9 @@ function core_log($message,
  * @param  string  $abstract
  * @param  array   $parameters
  * @return mixed
- * @since 5.7.0 (but not in 8.3.0 8.3.1 8.3.2 8.4.0 8.4.1 8.4.2 8.4.3 8.4.4 8.4.5 8.5.0 8.5.1)
+ * @since 5.7.0 defined by illuminate/support
+ * @since 8.3.0 removed
+ * @since 8.5.2 re-implemented
  */
 function app($abstract = null, array $parameters = [])
 {

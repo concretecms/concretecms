@@ -209,7 +209,9 @@ abstract class Package implements LocalizablePackageInterface
      * The full path of the package directory moved to the trash folder.
      *
      * @var string|null
-     * @since 5.7.0 (but not in 8.0.0 8.0.1 8.0.2 8.0.3 8.1.0 8.2.0 8.2.1)
+     * @since 5.7.0
+     * @since 8.0.0 removed
+     * @since 8.3.0 re-implemented
      */
     protected $backedUpFname;
 
@@ -242,7 +244,9 @@ abstract class Package implements LocalizablePackageInterface
      * Initialize the instance.
      *
      * @param Application $app the application instance
-     * @since 5.7.0 (but not in 5.7.0.3 5.7.0.4 5.7.1 5.7.2 5.7.2.1 5.7.3 5.7.3.1 5.7.4 5.7.4.1 5.7.4.2 5.7.5 5.7.5.1 5.7.5.2 5.7.5.3 5.7.5.4 5.7.5.5 5.7.5.6 5.7.5.7 5.7.5.8 5.7.5.9 5.7.5.10 5.7.5.11 5.7.5.12 5.7.5.13)
+     * @since 5.7.0
+     * @since 5.7.0.3 removed
+     * @since 8.0.0 re-implemented
      */
     public function __construct(Application $app)
     {
