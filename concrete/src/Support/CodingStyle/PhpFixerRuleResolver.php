@@ -56,10 +56,11 @@ class PhpFixerRuleResolver
      *
      * @param int $flags A combination of PhpFixer::FLAG_... flags.
      * @param bool $onlyAvailableOnes return only the available rules
+     * @param string $minimumPhpVersion the minimum PHP version that the files to be checked/fixed must be compatible with
      *
      * @return array
      */
-    public function getRules($flags, $onlyAvailableOnes)
+    public function getRules($flags, $onlyAvailableOnes, $minimumPhpVersion = '')
     {
         $flags = (int) $flags;
 
@@ -424,7 +425,7 @@ class PhpFixerRuleResolver
         $rules = $invariantRules + [
             // PHP arrays should be declared using the configured syntax.
             'array_syntax' => [
-                'syntax' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? 'long' : 'short',
+                'syntax' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '5.4') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? 'long' : 'short',
             ],
 
             // Ensure there is no code on the same line as the PHP open tag and it is followed by a blank line.
@@ -436,7 +437,7 @@ class PhpFixerRuleResolver
             'braces' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? ['allow_single_line_closure' => true] : false,
 
             // Replaces `dirname(__FILE__)` expression with equivalent `__DIR__` constant.
-            'dir_constant' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
+            'dir_constant' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '5.3') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
 
             // Code MUST use configured indentation type.
             'indentation_type' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
@@ -445,7 +446,7 @@ class PhpFixerRuleResolver
             'linebreak_after_opening_tag' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
 
             // Replace short-echo `<?=` with long format `<?php echo` syntax.
-            'no_short_echo_tag' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? true : false,
+            'no_short_echo_tag' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '5.4') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? true : false,
 
             // Class names should match the file name.
             'psr4' => $hasFlag(PhpFixer::FLAG_PSR4CLASS) ? true : false,

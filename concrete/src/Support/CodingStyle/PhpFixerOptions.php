@@ -114,6 +114,13 @@ class PhpFixerOptions
     private $isCacheDisabled = false;
 
     /**
+     * The minimum PHP version.
+     *
+     * @var string
+     */
+    private $minimumPhpVersion = '';
+
+    /**
      * Initialize the instance.
      *
      * @param \Concrete\Core\Config\Repository\Repository $config
@@ -545,6 +552,30 @@ class PhpFixerOptions
     public function setIsCacheDisabled($value)
     {
         $this->isCacheDisabled = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the minimum PHP version.
+     *
+     * @return string empty string if the default one
+     */
+    public function getMinimumPhpVersion()
+    {
+        return $this->minimumPhpVersion;
+    }
+
+    /**
+     * Set the minimum PHP version.
+     *
+     * @param string $value empty string if the default one
+     *
+     * @return $this
+     */
+    public function setMinimumPhpVersion($value)
+    {
+        $this->minimumPhpVersion = (string) $value;
 
         return $this;
     }
