@@ -6,7 +6,6 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\TestHelpers\TestHeadersTrait;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -15,8 +14,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class SessionValidatorTest extends PHPUnit_Framework_TestCase
 {
-    use TestHeadersTrait;
-
     protected $preserveGlobalState = false;
 
     /** @var \Concrete\Core\Application\Application */
@@ -33,8 +30,6 @@ class SessionValidatorTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->skipIfHeadersSent();
-
         $this->app = clone Application::getFacadeApplication();
         $this->app['config'] = clone $this->app['config'];
 
