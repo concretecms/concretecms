@@ -1,6 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
+
 if (!Loader::helper('validation/numbers')->integer($_REQUEST['fID'])) {
     die(t('Access Denied'));
 }

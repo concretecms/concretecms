@@ -1,4 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Legacy\Loader;
+
 $u = new User();
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {

@@ -1,5 +1,7 @@
 <?php 
 defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\View\View;
 ?>
 
 <h1><?=t('Download File')?></h1>

@@ -1,7 +1,10 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+
 use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 $cp = new Permissions($c);
 $pk = PermissionKey::getByHandle('edit_page_properties');

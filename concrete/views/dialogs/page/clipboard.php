@@ -1,5 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Block\Block;
 ?>
 <div id="ccm-panel-add-clipboard-block-list">
     <ul class="item-select-list">

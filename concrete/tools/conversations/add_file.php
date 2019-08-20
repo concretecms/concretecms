@@ -1,7 +1,15 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Conversation\Conversation as Conversation;
+use Concrete\Core\File\Importer as FileImporter;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 
 $val = Loader::helper('validation/token');
 $helperFile = Loader::helper('concrete/file');

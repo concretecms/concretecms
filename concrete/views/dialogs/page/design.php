@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
 $form = Loader::Helper('form');
 $selectedThemeID = 0;
 $selectedTemplateID = 0;

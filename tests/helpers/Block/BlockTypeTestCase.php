@@ -2,14 +2,14 @@
 
 namespace Concrete\TestHelpers\Block;
 
-use BlockType;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Database;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Illuminate\Filesystem\Filesystem;
 
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase

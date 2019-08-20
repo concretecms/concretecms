@@ -2,6 +2,8 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Page\Page;
+
 if ($calendar) {
     $pagination = $list->getPagination();
     $pagination->setMaxPerPage($totalToRetrieve);

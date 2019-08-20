@@ -1,4 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type as PageType;
+
 $c = Page::getCurrentPage();
 $siteType = null;
 if ($c) {

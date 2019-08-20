@@ -1,6 +1,13 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Block\Form\MiniSurvey;
 
 $miniSurvey = new MiniSurvey();

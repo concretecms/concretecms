@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php
+use Concrete\Core\View\View;
+
 if (!isset($headerMenu) || !is_object($headerMenu)) { ?>
 
 <div class="ccm-dashboard-header-buttons">

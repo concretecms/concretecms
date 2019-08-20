@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+?>
 
 <?php $cat = PermissionKeyCategory::getByHandle('basic_workflow');?>
 

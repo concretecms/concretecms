@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Block\BlockType\BlockType;
+?>
 
 <div class="ccm-ui">
 <?php

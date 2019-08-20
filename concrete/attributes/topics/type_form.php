@@ -1,4 +1,8 @@
-<?php if (is_object($tree)) {
+<?php
+
+use Concrete\Core\Legacy\Loader;
+
+if (is_object($tree)) {
     ?>
 
     <script type="text/javascript">

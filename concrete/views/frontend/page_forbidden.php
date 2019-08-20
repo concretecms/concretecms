@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+use Concrete\Core\Area\Area;
+defined('C5_EXECUTE') or die("Access Denied.");
+?>
 
 <h1 class="error"><?=t('Page Forbidden')?></h1>
 

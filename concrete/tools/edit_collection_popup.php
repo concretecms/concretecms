@@ -1,5 +1,9 @@
 <?php
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 if (!Loader::helper('validation/numbers')->integer($_GET['cID'])) {

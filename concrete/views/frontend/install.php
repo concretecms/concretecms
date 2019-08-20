@@ -4,6 +4,7 @@ use Concrete\Core\Error\ErrorList\Error\AbstractError;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Package\StartingPointPackage;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 

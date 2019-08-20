@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+
+?>
 <div class="ccm-block-desktop-site-activity">
 
     <?php

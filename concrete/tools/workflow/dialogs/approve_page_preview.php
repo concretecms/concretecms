@@ -1,5 +1,10 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $wp = \Concrete\Core\Workflow\Progress\Progress::getByID($_REQUEST['wpID']);
 $ih = Loader::helper('concrete/ui');
 $wf = $wp->getWorkflowObject();

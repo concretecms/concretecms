@@ -1,7 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\Loader;
 
-<?php
 if ($fID > 0) {
     $fo = File::getByID($fID);
     if (!is_object($fo)) {

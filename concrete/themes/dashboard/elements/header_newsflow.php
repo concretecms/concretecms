@@ -1,6 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+
 $_c = Page::getCurrentPage();
 $valt = Loader::Helper('validation/token');
 $token = '&' . $valt->getParameter();

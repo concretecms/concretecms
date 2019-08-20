@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Area\Area;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 <div id="ccm-profile-header">

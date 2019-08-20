@@ -11,7 +11,7 @@ use Concrete\Core\Page\Sitemap\Element\SitemapElement;
 use Concrete\Core\Page\Sitemap\Element\SitemapPage;
 use Concrete\Core\Page\Sitemap\PageListGenerator;
 use Concrete\Core\Page\Sitemap\SitemapWriter;
-use Job as AbstractJob;
+use Concrete\Core\Job\Job as AbstractJob;
 use RuntimeException;
 
 /**

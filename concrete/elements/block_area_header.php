@@ -1,7 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-/* @var Area $a */
+use Concrete\Core\Block\BlockType\BlockTypeList;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
+/** @var Concrete\Core\Area\Area $a */
 
 $btl = new BlockTypeList();
 $blockTypes = $btl->get();

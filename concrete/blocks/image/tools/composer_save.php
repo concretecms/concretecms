@@ -1,6 +1,11 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\File\File;
+use Concrete\Core\File\Importer as FileImporter;
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Legacy\Loader;
+
 $u = new User();
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {

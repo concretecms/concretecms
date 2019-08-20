@@ -1,4 +1,6 @@
 <?php
+use Concrete\Core\Legacy\Loader;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $al = Loader::helper('concrete/asset_library');
 ?>

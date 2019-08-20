@@ -1,5 +1,10 @@
 <?php  defined('C5_EXECUTE') or die('Access Denied');
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\View\View;
+
 $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');

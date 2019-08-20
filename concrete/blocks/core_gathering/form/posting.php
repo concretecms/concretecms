@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Page\Type\Type as PageType;
+
 $pagetypes = PageType::getList();
 $types = array();
 foreach ($pagetypes as $pt) {

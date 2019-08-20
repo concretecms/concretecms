@@ -1,6 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\User\UserList;
+
 $valt = Loader::helper('validation/token');
 if ($valt->validate('quick_user_select_' . $_REQUEST['key'], $_REQUEST['token'])) {
     $u = new User();

@@ -1,5 +1,9 @@
 <?php
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Legacy\Loader;
+
 defined('C5_EXECUTE') or die("Access Denied.");
+
 $form = Core::make('helper/form');
 $val = Core::make('token');
 $u = new User();

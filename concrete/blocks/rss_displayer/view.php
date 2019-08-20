@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Legacy\Loader;
+?>
 
 <div class="ccm-block-rss-displayer-wrapper">
     <div class="ccm-block-rss-displayer">

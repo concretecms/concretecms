@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
 // used when confirming bulk user operations.. would you like to do xyz to the following users??
 if (is_array($users)) {
     ?>

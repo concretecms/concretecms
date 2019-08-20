@@ -1,8 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 use Concrete\Core\Conversation\Message\ThreadedList as ConversationMessageThreadedList;
+use Concrete\Core\Legacy\Loader;
 
 $cnv = Conversation::getByID($_POST['cnvID']);
 if (is_object($cnv)) {

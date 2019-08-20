@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+?>
 
 <form method="post" data-dialog-form="move-to-folder" action="<?=$controller->action('submit')?>">
 

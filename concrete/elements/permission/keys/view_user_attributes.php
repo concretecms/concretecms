@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $included = $permissionAccess->getAccessListItems();
 $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE);
 $attribs = UserAttributeKey::getList();

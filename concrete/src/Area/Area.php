@@ -62,7 +62,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * Array of Blocks within the current area.
      *
-     * @see Area::getAreaBlocksArray()
+     * @see \Concrete\Core\Area\Area::getAreaBlocksArray()
      *
      * @var Block[]
      */
@@ -619,7 +619,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
         // first, we obtain the inheritance of permissions for this particular collection
         $areac = $this->getAreaCollectionObject();
-        if (is_a($areac, 'Page')) {
+        if ($areac instanceof Page) {
             if ($areac->getCollectionInheritance() == 'PARENT') {
                 $cIDToCheck = $areac->getCollectionParentID();
                 // first, we temporarily set the arInheritPermissionsFromAreaOnCID to whatever the arInheritPermissionsFromAreaOnCID is set to
@@ -715,7 +715,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * similar to rescanSubAreaPermissions, but for those who have setup their pages to inherit master collection permissions.
      *
-     * @see Area::rescanSubAreaPermissions()
+     * @see \Concrete\Core\Area\Area::rescanSubAreaPermissions()
      *
      * @param Page $masterCollection
      *

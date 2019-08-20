@@ -1,7 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-use Concrete\Core\Entity\OAuth\Client; ?>
-<?php
+use Concrete\Core\Entity\OAuth\Client;
+use Concrete\Core\Legacy\Loader;
+
 /**
  * @var \Concrete\Core\Entity\OAuth\Client $client
  */

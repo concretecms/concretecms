@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Legacy\Loader;
+
 // HELPERS
 $bt = Loader::helper('concrete/ui');
 $valt = Loader::helper('validation/token');

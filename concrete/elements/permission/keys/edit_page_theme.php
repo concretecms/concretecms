@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+?>
 
 <?php $included = $permissionAccess->getAccessListItems(); ?>
 <?php $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>

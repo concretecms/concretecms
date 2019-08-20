@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\View\View;
+
 $color = \Core::make('helper/form/color');
 ?>
 

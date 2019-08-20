@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Block\Block;
+
 /* @var Concrete\Core\Block\Block $b */
 
 $bt = $b->getBlockTypeObject();

@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
     $set = \Concrete\Core\Permission\Set::getSavedPermissionSetFromSession();
 
     $uid = uniqid();

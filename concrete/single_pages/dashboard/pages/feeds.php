@@ -1,6 +1,10 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php if ($controller->getTask() == 'add'
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
+
+if ($controller->getTask() == 'add'
     || $controller->getTask() == 'add_feed'
     || $controller->getTask() == 'edit'
     || $controller->getTask() == 'edit_feed'

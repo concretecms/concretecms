@@ -1,5 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Area\Area;
+use Concrete\Core\Legacy\Loader;
 $this->inc('elements/header.php'); ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($c->getCollectionName())?>

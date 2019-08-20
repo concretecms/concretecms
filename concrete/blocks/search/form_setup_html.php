@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Page\Page;
+
 /* @var Concrete\Core\Entity\Block\BlockType\BlockType $bt */
 /* @var Concrete\Core\Block\Block $b */
 /* @var Concrete\Core\Page\Page $c */

@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Legacy\Loader;
+
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
 /* @var Concrete\Core\Page\View\PageView $view */

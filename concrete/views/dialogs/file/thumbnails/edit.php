@@ -1,8 +1,11 @@
 <?php
 
 use Concrete\Core\File\Exception\InvalidDimensionException;
+use Concrete\Core\File\File;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\View\View;
 
 $view = new View('image-editor/editor');
 

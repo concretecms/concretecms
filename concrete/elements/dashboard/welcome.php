@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Page\Page;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $image = date('Ymd') . '.jpg';
 $c = \Concrete\Core\Page\Page::getCurrentPage();

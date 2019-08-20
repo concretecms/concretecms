@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
 $ip = Loader::helper('validation/ip');

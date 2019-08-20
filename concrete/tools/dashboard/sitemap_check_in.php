@@ -1,6 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+
 if (Loader::helper('validation/token')->validate()) {
     if ($_REQUEST['cID'] && Loader::helper('validation/numbers')->integer($_REQUEST['cID'])) {
         $c = Page::getByID($_REQUEST['cID'], 'RECENT');

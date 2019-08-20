@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Localization\Localization;
+?>
 
 <h2><?= t($c->getCollectionName()); ?></h2>
 
@@ -51,7 +55,7 @@
 	<?php
     $ats = [];
     foreach (AuthenticationType::getList(true, true) as $at) {
-        /* @var AuthenticationType $at */
+        /** @var Concrete\Core\Authentication\AuthenticationType $at */
         if ($at->isHooked($profile)) {
             if ($at->hasHooked()) {
                 $ats[] = [$at, 'renderHooked'];

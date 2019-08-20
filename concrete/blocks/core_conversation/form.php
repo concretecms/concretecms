@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Conversation\Conversation;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $config = $app->make('config');
 $helperFile = $app->make('helper/concrete/file');

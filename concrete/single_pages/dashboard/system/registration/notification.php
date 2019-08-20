@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Concrete\Core\View\View;
 
 $permissionAccess = $key->getPermissionAssignmentObject()->getPermissionAccessObject();
 if (!is_object($permissionAccess)) {

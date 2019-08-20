@@ -1,4 +1,8 @@
 <?php
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Permission\Checker as Permissions;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');

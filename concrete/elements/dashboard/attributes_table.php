@@ -1,5 +1,8 @@
-
 <?php
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+
 //Used on both page and file attributes
 $c = Page::getCurrentPage();
 

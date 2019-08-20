@@ -1,6 +1,9 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
 $u = new User();
 $h = Loader::helper('concrete/ui/help');
 if ($u->isRegistered() && Loader::helper('validation/token')->validate()) {

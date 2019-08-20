@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Permission\Checker as Permissions;
+?>
 <div class="ccm-ui">
     <br/>
 <?php if ($fcnt == 0) {

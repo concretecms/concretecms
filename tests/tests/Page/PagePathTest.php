@@ -2,9 +2,10 @@
 
 namespace Concrete\Tests\Page;
 
-use CollectionVersion;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template;
+use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Type\Type;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Config;
@@ -321,7 +322,7 @@ class PagePathTest extends PageTestCase
         $cache = Core::make('cache/request');
         $cache->disable();
 
-        \SinglePage::add(Config::get('concrete.paths.trash'));
+        SinglePage::add(Config::get('concrete.paths.trash'));
 
         $about = self::createPage('About');
         self::createPage('Contact Us', $about);

@@ -1,4 +1,7 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Page\Page;
+
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 $page = Page::getCurrentPage();
 $date = $dh->formatDate($page->getCollectionDatePublic(), true);

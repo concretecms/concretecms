@@ -1,5 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\File\FileList as FileList;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\View\View;
+
 $ih = Core::make('helper/concrete/ui');
 $dh = Core::make('helper/date');
 

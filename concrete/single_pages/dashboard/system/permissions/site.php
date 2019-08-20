@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+
 $h = Loader::helper('concrete/dashboard');
 $ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');

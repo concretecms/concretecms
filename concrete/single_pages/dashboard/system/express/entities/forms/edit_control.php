@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+?>
 
 <form data-form="edit-control" data-form-control="<?=$control->getID()?>" action="<?=$view->action('save_control', $control->getID())?>" method="post">
 

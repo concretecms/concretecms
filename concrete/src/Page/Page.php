@@ -1215,7 +1215,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, $includeThisPage);
         // now, since this is deletion, we want to order the pages by level, which
         // should get us no funny business if the queue dies.
-        usort($pages, ['Page', 'queueForDeletionSort']);
+        usort($pages, ['Concrete\Core\Page\Page', 'queueForDeletionSort']);
         $q = Queue::get('delete_page');
         foreach ($pages as $page) {
             $q->send(serialize($page));
@@ -1234,7 +1234,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, $includeThisPage);
         // now, since this is deletion, we want to order the pages by level, which
         // should get us no funny business if the queue dies.
-        usort($pages, ['Page', 'queueForDeletionSort']);
+        usort($pages, ['Concrete\Core\Page\Page', 'queueForDeletionSort']);
         if (!$queue) {
             $queue = Queue::get('delete_page_request');
         }
@@ -1255,7 +1255,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, $includeParent);
         // we want to order the pages by level, which should get us no funny
         // business if the queue dies.
-        usort($pages, ['Page', 'queueForDuplicationSort']);
+        usort($pages, ['Concrete\Core\Page\Page', 'queueForDuplicationSort']);
         $q = Queue::get('copy_page');
         foreach ($pages as $page) {
             $page['destination'] = $destination->getCollectionID();

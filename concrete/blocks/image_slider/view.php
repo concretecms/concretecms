@@ -1,4 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\File\File;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+
 $navigationTypeText = (0 == $navigationType) ? 'arrows' : 'pages';
 $c = Page::getCurrentPage();
 if ($c->isEditMode()) {

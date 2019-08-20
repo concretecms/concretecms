@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Block\Block;
+
 /* @var Concrete\Core\Block\Block $b */
 /* @var Concrete\Core\Application\Service\Urls $ci */
 /* @var Concrete\Core\Application\Service\UserInterface\Help\BlockTypeManager $bth */

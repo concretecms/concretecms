@@ -1,6 +1,10 @@
 <?php
     defined('C5_EXECUTE') or die("Access Denied.");
 
+    use Concrete\Core\File\File;
+    use Concrete\Core\File\Set\Set as FileSet;
+    use Concrete\Core\Permission\Checker as Permissions;
+
     $file_set = FileSet::createAndGetSet('Starred Files', FileSet::TYPE_STARRED);
     $f = File::getByID($_POST['file-id']);
     $fp = new Permissions($f);

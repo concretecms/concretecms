@@ -1,6 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Concrete\Core\Workflow\Workflow;
+
 if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
     $pa = PermissionAccess::getByID($_REQUEST['paID'], $permissionKey);
     if ($pa->isPermissionAccessInUse() || (isset($_REQUEST['duplicate']) && $_REQUEST['duplicate'] == '1')) {

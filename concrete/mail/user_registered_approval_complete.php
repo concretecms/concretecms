@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\View\View;
+
 $subject = $siteName.' '.t('Registration Approved');
 
 /*

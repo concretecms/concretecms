@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\View\View;
+?>
 
 <div class="ccm-header-search-form ccm-ui" data-header="user-search">
     <form method="get" action="<?php echo URL::to('/ccm/system/search/users/basic')?>">

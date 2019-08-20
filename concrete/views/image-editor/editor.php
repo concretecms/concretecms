@@ -1,8 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\ImageEditor\ImageEditor;
 use Concrete\Core\File\Image\BitmapFormat;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
 use Whoops\Exception\ErrorException;
 
 $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.

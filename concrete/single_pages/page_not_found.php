@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Area\Area;
+
+?>
 <h1 class="error"><?=t('Page Not Found')?></h1>
 
 <?=t('No page could be found at this address.')?>

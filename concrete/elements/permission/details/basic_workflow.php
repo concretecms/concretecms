@@ -1,8 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-?>
 
-<?php
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $pk = PermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($workflow);
 ?>

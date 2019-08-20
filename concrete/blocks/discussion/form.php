@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>  
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Page\Type\Type as PageType;
+
 if ($controller->getTask() == 'add') {
     $enableNewTopics = 1;
     $orderBy = 'date_last_message';

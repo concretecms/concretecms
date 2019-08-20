@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
 $h = Loader::helper('concrete/dashboard');
 $form = Loader::helper('form');
 echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offset3', false);?>

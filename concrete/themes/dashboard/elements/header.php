@@ -2,6 +2,8 @@
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Controller\Element\Navigation\DashboardMobileMenu;
 use Concrete\Controller\Panel\Dashboard as DashboardPanel;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 

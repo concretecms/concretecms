@@ -4,10 +4,10 @@ namespace Concrete\Tests\Area;
 
 use Concrete\Core\Area\Layout\Layout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
+use Concrete\Core\Http\Request;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
 use Concrete\Core\Page\Page;
-use Request;
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase
 {

@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Environment'), false, 'span8 offset2');?>
 
 <textarea style="width: 99%; height: 340px;" onclick="this.select()" id="ccm-dashboard-environment-info"><?php echo t('Unable to load environment info')?></textarea>

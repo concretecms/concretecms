@@ -1,4 +1,5 @@
 <?php
+use Concrete\Core\Legacy\Loader;
 
 foreach ($attributes as $ak) {
     Loader::element(

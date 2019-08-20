@@ -1,5 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php Loader::element('files/move_to_folder', array(
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
+Loader::element('files/move_to_folder', array(
     'isCurrentFolder' => function ($folder) use ($files) {
         if (isset($files[0])) {
             $fileFolderObject = $files[0]->getFileFolderObject();

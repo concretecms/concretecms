@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
 ?>
 
 <?php if (isset($template) && is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {

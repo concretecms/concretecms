@@ -1,6 +1,13 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $pk = PermissionKey::getByHandle('empty_trash');
 if (!$pk->validate()) {
     die(t("Access Denied."));

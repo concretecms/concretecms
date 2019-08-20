@@ -9,9 +9,9 @@ use Database;
 use Exception;
 use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\Type\Type as PageType;
-use SinglePage;
 
 class PageTest extends PageTestCase
 {
@@ -354,7 +354,7 @@ class PageTest extends PageTestCase
 
     public function testPageMoveToTrashNoAliases()
     {
-        \SinglePage::add(Config::get('concrete.paths.trash'));
+        SinglePage::add(Config::get('concrete.paths.trash'));
 
         extract($aliases = $this->setupAliases());
 
@@ -387,7 +387,7 @@ class PageTest extends PageTestCase
 
     public function testPageMoveToTrashAliases()
     {
-        \SinglePage::add(Config::get('concrete.paths.trash'));
+        SinglePage::add(Config::get('concrete.paths.trash'));
 
         extract($aliases = $this->setupAliases());
 

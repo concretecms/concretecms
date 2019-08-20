@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php
+use Concrete\Core\Legacy\Loader;
+
 $list = $category->getPendingWorkflowProgressList();
 $items = $list->get();
 

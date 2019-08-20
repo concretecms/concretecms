@@ -4,6 +4,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Calendar\Event\EventOccurrence;
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Permission\Checker as Permissions;
 
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();

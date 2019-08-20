@@ -1,5 +1,6 @@
 <?php
 use Concrete\Core\Attribute\Key\Key;
+use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Http\ResponseAssetGroup;
 
 defined('C5_EXECUTE') or die('Access denied.');

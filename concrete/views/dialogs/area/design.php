@@ -2,6 +2,8 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('core/style-customizer');
 

@@ -1,6 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
+
 if (isset($c) && is_object($c)) {
     Loader::element('footer_required');
 } else {

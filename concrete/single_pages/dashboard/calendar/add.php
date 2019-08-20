@@ -1,4 +1,5 @@
 <?php
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\Type\Type;
 
 defined('C5_EXECUTE') or die("Access Denied.");

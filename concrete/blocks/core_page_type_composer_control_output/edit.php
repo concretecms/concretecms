@@ -1,7 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use Concrete\Core\Page\Type\Type as PageType;
 
 $c = Page::getCurrentPage();
     // retrieve all block controls attached to this page template.

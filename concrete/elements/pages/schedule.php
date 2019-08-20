@@ -1,5 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+
 $datetime = loader::helper('form/date_time');
 
 $publishDate = '';

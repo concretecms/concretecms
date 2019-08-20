@@ -1,5 +1,8 @@
 <?php
+
 use Concrete\Core\Page\Desktop\DesktopList;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Support\Facade\Application;
 
 defined('C5_EXECUTE') or die('Access Denied.');

@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Page\Page;
+
 $final_label = $control->getDisplayLabel();
 $original_label = $control->getControlLabel();
 $type_name = $control->getControlType()->getDisplayName();

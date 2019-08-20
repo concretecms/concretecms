@@ -2,7 +2,7 @@
 
 namespace Concrete\Tests\Style;
 
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Page\Theme\Theme as PageTheme;
 use PHPUnit_Framework_TestCase;
 

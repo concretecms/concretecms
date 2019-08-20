@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\View\View;
+?>
 
 <form action="<?php echo View::action('save'); ?>" method="post">
     <?php

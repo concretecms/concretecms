@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Area\GlobalArea;
+
 $this->inc('elements/header_top.php');
 
 $as = new GlobalArea('Header Search');

@@ -2,8 +2,11 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Area\SubArea;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
-/* @var Area $a */
+/** @var Concrete\Core\Area\Area $a */
 
 // simple file that controls the adding of blocks.
 

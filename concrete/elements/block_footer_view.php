@@ -2,6 +2,9 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 if ($a->isGlobalArea()) {
     $c = Page::getCurrentPage();
     $cID = $c->getCollectionID();

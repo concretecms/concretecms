@@ -1,6 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Legacy\Loader;
+
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
     die(t("Unable to access the file manager."));

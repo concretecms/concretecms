@@ -1,6 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use Concrete\Core\User\Group\GroupSetList;
 
 $type = PermissionAccessEntityType::getByHandle('group_set');
 $url = $type->getAccessEntityTypeToolsURL();

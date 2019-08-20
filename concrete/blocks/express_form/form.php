@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Legacy\Loader;
+?>
 
 <div id="ccm-block-express-form-tabs">
 <?php echo Loader::helper('concrete/ui')->tabs([

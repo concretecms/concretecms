@@ -1,6 +1,10 @@
 <?php
+use Concrete\Core\Area\Area;
 use Concrete\Core\Attribute\Key\Key;
+use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
 
 defined('C5_EXECUTE') or die('Access denied.');
 
@@ -89,7 +93,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                         <?php
 
                     } else {
-                        /** @var AuthenticationType[] $activeAuths */
+                        /** @var Concrete\Core\Authentication\AuthenticationType[] $activeAuths */
                         foreach ($activeAuths as $auth) {
                             ?>
                             <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
@@ -132,7 +136,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     <?php
 
                 } else {
-                    /** @var AuthenticationType[] $activeAuths */
+                    /** @var Concrete\Core\Authentication\AuthenticationType[] $activeAuths */
                     foreach ($activeAuths as $auth) {
                         ?>
                         <div data-handle="<?= $auth->getAuthenticationTypeHandle() ?>"

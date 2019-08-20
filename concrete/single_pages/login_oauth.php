@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access denied.');
 
+use Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Legacy\Loader;
+
 $activeAuths = AuthenticationType::getList(true, true);
 $form = Loader::helper('form');
 ?>

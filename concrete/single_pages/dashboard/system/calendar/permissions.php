@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\View\View;
+?>
 
 <?php ob_start(); ?>
 <?=Loader::element('permission/help');?>

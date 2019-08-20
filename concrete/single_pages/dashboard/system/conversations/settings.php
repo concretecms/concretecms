@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+
 $form = \Core::make('helper/form');
 $file = \Core::make('helper/file');
 $token = \Core::make('token');

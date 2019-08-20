@@ -2,9 +2,18 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\User\Group\Group;
 
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_REQUEST['arHandle']);

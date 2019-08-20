@@ -1,5 +1,9 @@
 <?php
+
+use Concrete\Core\View\View;
+
 defined('C5_EXECUTE') or die("Access Denied.");
+
 $this->inc('elements/header.php');
 ?>
 

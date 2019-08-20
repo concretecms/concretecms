@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Block\Block;
+use Concrete\Core\Legacy\Loader;
+
 $set = $b->getCustomStyle();
 $btHandle = $b->getBlockTypeHandle();
 if ($btHandle == BLOCK_HANDLE_SCRAPBOOK_PROXY) {

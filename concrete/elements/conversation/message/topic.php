@@ -1,5 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\Loader;
+
 $class = 'ccm-conversation-message ccm-conversation-message-topic';
 if ($message->isConversationMessageDeleted()) {
     $class .= ' ccm-conversation-message-deleted';

@@ -1,5 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\View\View;
+
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 $dh = Loader::helper('concrete/dashboard');

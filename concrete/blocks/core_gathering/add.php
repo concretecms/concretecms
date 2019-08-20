@@ -1,5 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Legacy\Loader;
 ?>
 
 <?=Loader::helper('concrete/ui')->tabs(array(

@@ -2,7 +2,7 @@
 
 namespace Concrete\TestHelpers\Database;
 
-use CacheLocal;
+use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;

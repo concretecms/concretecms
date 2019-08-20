@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
 $nh = Loader::helper('navigation');
 if (is_array($image)) {
     $image = $image[0];

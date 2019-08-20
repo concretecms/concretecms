@@ -1,5 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Area\Area;
 $this->inc('elements/header.php', array('enableEditing' => true));
 ?>
 

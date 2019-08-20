@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+?>
 <div class="ccm-panel-content-inner">
 
 <?php if (count($frequentPageTypes) || count($otherPageTypes)) {

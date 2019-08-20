@@ -2,6 +2,9 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Block\PageList\Controller;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
 
 $request = Request::getInstance();
 $request->setCurrentPage(Page::getByID($_REQUEST['current_page']));

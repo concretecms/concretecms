@@ -1,6 +1,10 @@
 <?php
 
 use Concrete\Core\Area\SubArea;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\View\View;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 

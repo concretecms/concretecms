@@ -2,8 +2,8 @@
 
 namespace Concrete\Tests\Block;
 
-use Block;
-use BlockType;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\TestHelpers\Page\PageTestCase;
 
 class BlockStyleTest extends PageTestCase

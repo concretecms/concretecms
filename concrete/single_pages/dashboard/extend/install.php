@@ -1,6 +1,11 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Attribute\Key\Category as AttributeCategory;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Package\Package;
+use Concrete\Core\View\View;
 
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $valt = $app->make('helper/validation/token');

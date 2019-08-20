@@ -1,6 +1,9 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 
 if ($_REQUEST['treeNodeID'] > 0) {

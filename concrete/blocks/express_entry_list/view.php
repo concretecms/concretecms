@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Page\Page;
+
 $c = Page::getCurrentPage();
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 

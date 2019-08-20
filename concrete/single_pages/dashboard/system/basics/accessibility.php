@@ -1,3 +1,6 @@
+<?php
+use Concrete\Core\View\View;
+?>
 <form action="<?= View::action('save') ?>" method="post">
     <?php
     Core::make('token')->output('accessibility');

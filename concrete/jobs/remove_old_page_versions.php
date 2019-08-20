@@ -2,7 +2,7 @@
 namespace Concrete\Job;
 
 use Concrete\Core\Page\Collection\Version\VersionList;
-use Job as AbstractJob;
+use Concrete\Core\Job\Job as AbstractJob;
 use Config;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Collection\Version\Version;

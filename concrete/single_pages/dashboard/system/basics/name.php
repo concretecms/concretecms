@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\View\View;
+?>
 
 <div class="ccm-dashboard-header-buttons">
 	<a href="<?php echo View::url('/dashboard/system/basics/attributes')?>" class="btn btn-default"><?php echo t("Manage Attributes")?></a>

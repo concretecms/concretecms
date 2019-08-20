@@ -1,5 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $wp = PageWorkflowProgress::getByID($_REQUEST['wpID']);
 if (is_object($wp)) {
     $w = $wp->getWorkflowObject();

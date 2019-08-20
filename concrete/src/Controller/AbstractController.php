@@ -6,6 +6,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\View\View;
 
 /**
@@ -261,7 +262,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     public function redirect()
     {
         $args = func_get_args();
-        $r = call_user_func_array(['Redirect', 'to'], $args);
+        $r = call_user_func_array([Redirect::class, 'to'], $args);
         $r->send();
         exit;
     }

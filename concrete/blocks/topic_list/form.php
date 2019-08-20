@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Legacy\Loader;
+?>
 <fieldset>
     <div class="form-group">
         <label class="control-label" for="modeSelect"><?=t('Mode')?></label>

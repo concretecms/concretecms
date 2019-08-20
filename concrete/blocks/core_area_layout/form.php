@@ -1,6 +1,8 @@
 <?php
     defined('C5_EXECUTE') or die("Access Denied.");
 
+    use Concrete\Core\Permission\Checker as Permissions;
+
     $minColumns = 1;
 
     if ($controller->getTask() == 'add') {

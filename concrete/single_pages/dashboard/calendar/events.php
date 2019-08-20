@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Calendar\Event\EventOccurrence;
+use Concrete\Core\Legacy\Loader;
 use Punic\Calendar as PunicCalendar;
 
 if (!isset($topic)) {

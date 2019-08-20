@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied');
+
+use Concrete\Core\Legacy\Loader;
+
 $form = Loader::helper('form'); ?>
 	<form method="post" id="url-form" action="<?php echo $view->action('')?>">
 		<?=$this->controller->token->output('update_statistics')?>

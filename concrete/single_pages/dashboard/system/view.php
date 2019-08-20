@@ -1,5 +1,10 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php $rowCount = 0;
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
+$rowCount = 0;
 for ($i = 0; $i < count($categories); ++$i) {
     $cat = $categories[$i];
     if ($rowCount == 3 || $i == 0) {

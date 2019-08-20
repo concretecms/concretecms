@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+
 // Content
 if ($this->controller->getTask() == 'viewDetail') { ?>
     <?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(

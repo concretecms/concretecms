@@ -1,4 +1,8 @@
 <?php
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Type\Type as PageType;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $ctArray = PageType::getList(false, $sitetype);

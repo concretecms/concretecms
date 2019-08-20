@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $nh = Loader::helper('validation/numbers');
 $form = Loader::helper('form');
 $gaiID = intval($_REQUEST['gaiID']);

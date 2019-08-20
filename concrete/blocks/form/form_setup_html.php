@@ -1,5 +1,11 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+
 $uh = Loader::helper('concrete/urls');
 $form = Loader::helper('form');
 $datetime = loader::helper('form/date_time');

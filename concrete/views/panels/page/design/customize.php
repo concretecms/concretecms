@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $pk = PermissionKey::getByHandle('customize_themes');
 ?>
 

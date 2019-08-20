@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
 $form = Loader::helper('form');
 $ih = Loader::helper("concrete/ui");
 $valt = Loader::helper('validation/token');

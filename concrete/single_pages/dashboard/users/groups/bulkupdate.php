@@ -1,4 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
+use Concrete\Core\User\Group\Group;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $form = $app->make('helper/form');
 $request = $controller->getRequest();

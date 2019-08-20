@@ -1,6 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\PageList;
+
 $valt = Loader::helper('validation/token');
 if ($valt->validate('quick_page_select_' . $_REQUEST['key'], $_REQUEST['token'])) {
     $u = new User();

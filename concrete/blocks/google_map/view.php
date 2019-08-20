@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+
 $c = Page::getCurrentPage();
 if ($c->isEditMode()) {
     $loc = Localization::getInstance();

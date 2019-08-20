@@ -1,5 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
 ?>
 <section class="ccm-ui">
 	<header><?=t('Location')?></header>

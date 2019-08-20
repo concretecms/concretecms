@@ -1,7 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
-use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 ?>
 
 <?php if (count($locales) > 1) {

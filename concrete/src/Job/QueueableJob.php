@@ -3,7 +3,7 @@
 namespace Concrete\Core\Job;
 
 use Config;
-use Job as AbstractJob;
+use Concrete\Core\Job\Job as AbstractJob;
 use Concrete\Core\Foundation\Queue\Queue;
 use ZendQueue\Message as ZendQueueMessage;
 use ZendQueue\Queue as ZendQueue;

@@ -1,6 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
 
 $c = Page::getCurrentPage();
 

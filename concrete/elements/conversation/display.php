@@ -1,5 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+use Concrete\Core\View\View;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 if (!is_array($messages)) {

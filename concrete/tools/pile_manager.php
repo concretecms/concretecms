@@ -1,7 +1,13 @@
 <?php
 
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Pile\Pile;
 use Concrete\Core\Page\Stack\Pile\PileContent;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Checker as Permissions;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

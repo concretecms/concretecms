@@ -6,7 +6,7 @@ use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
-use Job as AbstractJob;
+use Concrete\Core\Job\Job as AbstractJob;
 use Core;
 use Concrete\Core\User\UserInfoRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

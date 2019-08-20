@@ -1120,7 +1120,7 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @return array
      *
-     * @see Package::$packageDependencies
+     * @see \Concrete\Core\Package\Package::$packageDependencies
      */
     public function getPackageDependencies()
     {

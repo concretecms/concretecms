@@ -1,5 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $ap = new Permissions($item->getGatheringObject());
 $type = GatheringItemTemplateType::getByHandle('tile');
 $types = GatheringItemTemplateType::getList();

@@ -7,6 +7,7 @@ use Concrete\TestHelpers\Page\PageTestCase;
 use Config;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Type\Type as PageType;
 
 class PageListTest extends PageTestCase
@@ -258,7 +259,7 @@ class PageListTest extends PageTestCase
 
     public function testFilterByActiveAndSystem()
     {
-        \SinglePage::addGlobal(Config::get('concrete.paths.trash'));
+        SinglePage::addGlobal(Config::get('concrete.paths.trash'));
 
         $c = Page::getByPath('/test-trash');
         $c->moveToTrash();

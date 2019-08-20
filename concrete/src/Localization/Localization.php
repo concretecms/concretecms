@@ -76,8 +76,8 @@ class Localization
      *
      * @var array
      *
-     * @see Localization::pushActiveContext()
-     * @see Localization::popActiveContext()
+     * @see \Concrete\Core\Localization\Localization::pushActiveContext()
+     * @see \Concrete\Core\Localization\Localization::popActiveContext()
      */
     protected $activeContextQueue = [];
 
@@ -145,7 +145,7 @@ class Localization
      *
      * @param string $newContext The new translation context to activate (default contexts are defined by the Localization::CONTEXT_... constants).
      *
-     * @see Localization::popActiveContext()
+     * @see \Concrete\Core\Localization\Localization::popActiveContext()
      *
      * @example
      * ```php
@@ -171,7 +171,7 @@ class Localization
     /**
      * Restore the context that was active before calling pushActiveContext.
      *
-     * @see Localization::pushActiveContext()
+     * @see \Concrete\Core\Localization\Localization::pushActiveContext()
      */
     public function popActiveContext()
     {

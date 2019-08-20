@@ -1,5 +1,12 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
+use Concrete\Core\File\File;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\View\View;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $im = $app->make('helper/image');
 

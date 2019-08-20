@@ -1,8 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
-?>
 
-<?php
+use Concrete\Core\Permission\Checker as Permissions;
+
 $color = Core::make('helper/form/color');
 echo Core::make('helper/concrete/ui')->tabs(array(
     array('sources', t('Sources'), true),

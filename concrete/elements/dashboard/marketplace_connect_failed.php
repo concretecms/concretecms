@@ -1,5 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\View\View;
+
 $mi = Marketplace::getInstance();
 if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED) {
     ?>

@@ -1,5 +1,6 @@
 <?php
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Checker;

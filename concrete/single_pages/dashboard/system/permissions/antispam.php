@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $config = $app->make('config');
 ?>

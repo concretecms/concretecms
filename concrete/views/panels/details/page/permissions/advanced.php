@@ -1,6 +1,8 @@
 <?php
 
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 

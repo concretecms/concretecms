@@ -1,3 +1,6 @@
+<?php
+use Concrete\Core\Http\Request;
+?>
 <div class="preview-frame-container">
     <iframe
         style="display:none"

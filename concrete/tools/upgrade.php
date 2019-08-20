@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Routing\Redirect;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 // Legacy.

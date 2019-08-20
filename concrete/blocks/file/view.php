@@ -1,4 +1,8 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $f = $controller->getFileObject();
 $fp = new Permissions($f);
 if ($f && $fp->canViewFile()) {

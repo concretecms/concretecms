@@ -1,6 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\View\View;
+
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 
 $dh = $app->make('helper/concrete/dashboard');

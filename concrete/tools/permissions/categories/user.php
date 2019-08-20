@@ -2,7 +2,10 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Key\UserKey as UserPermissionKey;
 use Concrete\Core\Workflow\Workflow as Workflow;

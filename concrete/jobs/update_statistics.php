@@ -5,7 +5,7 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Support\Facade\Application;
 use Config;
-use Job as AbstractJob;
+use Concrete\Core\Job\Job as AbstractJob;
 use Core;
 use Database;
 use Concrete\Core\Permission\Key\Key as PermissionKey;

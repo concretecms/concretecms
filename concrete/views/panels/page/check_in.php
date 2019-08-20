@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Page\Type\Type as PageType;
+
 $v = $c->getVersionObject();
 $require_version_comments = (bool) Config::get('concrete.misc.require_version_comments');
 ?>

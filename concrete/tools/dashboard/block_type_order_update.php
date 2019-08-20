@@ -1,6 +1,11 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $canRead = false;
 $ch = Page::getByPath('/dashboard/blocks/types');
 $cp = new Permissions($ch);

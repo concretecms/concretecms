@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die('Access Denied'); ?>
-<?php
+<?php defined('C5_EXECUTE') or die('Access Denied');
+
+use Concrete\Core\Legacy\Loader;
+
 $dh = Loader::helper('concrete/dashboard/sitemap');
 if ($dh->canRead()) {
     ?>

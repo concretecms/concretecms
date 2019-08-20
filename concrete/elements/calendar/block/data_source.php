@@ -2,6 +2,8 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\View\View;
+
 $form = Core::make('helper/form');
 
 $calendars = array_filter(

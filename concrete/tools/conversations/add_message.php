@@ -1,6 +1,15 @@
 <?php
 
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use Concrete\Core\Conversation\Message\Message as ConversationMessage;
+use Concrete\Core\File\File;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Validator\String\EmailValidator;
 

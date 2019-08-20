@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
+
 $cnvMessageSubject = '';
 if (is_object($message)) {
     $cnvMessageSubject = $message->getConversationMessageSubject();

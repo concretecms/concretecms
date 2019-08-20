@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+
+use Concrete\Core\View\View;
+
+defined('C5_EXECUTE') or die("Access Denied.");
 
 if (! is_array($users) || count($users) ==0) {
 	?>

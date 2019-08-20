@@ -1,5 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $c = $b->getBlockCollectionObject();
 $arHandle = $b->getAreaHandle();
 use Concrete\Core\Permission\Duration as PermissionDuration;

@@ -1,5 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $u = new User();
 $form = Loader::helper('form');
 $sh = Loader::helper('concrete/dashboard/sitemap');

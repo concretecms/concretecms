@@ -1,8 +1,15 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 if ($_REQUEST['ptID'] > 0) {
     $pt = PageType::getByID($_REQUEST['ptID']);

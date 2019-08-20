@@ -1,3 +1,6 @@
+<?php
+use Concrete\Core\Legacy\Loader;
+?>
 <div class="control-group">
 <fieldset>
 <legend><?=t("Workflow Access")?></legend>

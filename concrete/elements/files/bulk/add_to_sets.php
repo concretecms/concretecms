@@ -1,5 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php Loader::element('files/add_to_sets', array(
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
+Loader::element('files/add_to_sets', array(
     'displayFileSet' => function ($fileset) use ($files) {
         $fp = \Concrete\Core\Legacy\FilePermissions::getGlobal();
         foreach ($files as $f) {

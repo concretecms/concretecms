@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die('Access denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access denied.');
 
-<?php
+use Concrete\Core\View\View;
+
 $_error = array();
 if (isset($error)) {
     if ($error instanceof Exception) {

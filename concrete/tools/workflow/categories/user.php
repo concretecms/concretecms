@@ -1,13 +1,16 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$u = User::getByUserID($_REQUEST['uID']);
-$obj = new stdClass;
-$obj->tableData=t('None');
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\View\View;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
+
+$u = User::getByUserID($_REQUEST['uID']);
+$obj = new stdClass;
+$obj->tableData=t('None');
 
 if ($_REQUEST['task'] == 'save_user_workflow_progress' && Loader::helper("validation/token")->validate('save_user_workflow_progress')) {
     $wp = UserWorkflowProgress::getByID($_REQUEST['wpID']);

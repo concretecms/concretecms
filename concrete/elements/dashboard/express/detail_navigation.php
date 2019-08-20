@@ -1,5 +1,8 @@
 <?php
+use Concrete\Core\Page\Page;
+
 defined('C5_EXECUTE') or die("Access Denied.");
+
 $c = Page::getCurrentPage();
 ?>
 <div class="col-md-4">

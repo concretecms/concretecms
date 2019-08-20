@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+
+use Concrete\Core\Legacy\Loader;
+
+defined('C5_EXECUTE') or die("Access Denied.");
 
 /*
  * Checkbox list.

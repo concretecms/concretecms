@@ -1,6 +1,9 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Marketplace\Marketplace;
+
 session_write_close();
 
 // first, we check to see if the dashboard image data has been set in the cache

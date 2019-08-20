@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 
 $form = Loader::helper('form');

@@ -1,5 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Conversation\Message\Message as ConversationMessage;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\View\View;
 
 $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');

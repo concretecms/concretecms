@@ -1,4 +1,8 @@
 <?php
+
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\View\View;
+
 if (isset($user) && is_object($user)) {
     $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
     ?>

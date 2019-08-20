@@ -1,7 +1,9 @@
 <?php
 
+use Concrete\Core\Conversation\Message\Message as ConversationMessage;
 use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;

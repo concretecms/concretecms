@@ -1,6 +1,11 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Legacy\TaskPermission;
+
 ini_set('memory_limit', -1);
 set_time_limit(0);
 

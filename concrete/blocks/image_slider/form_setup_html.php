@@ -1,5 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Legacy\TaskPermission;
+
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 

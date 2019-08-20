@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?php
+use Concrete\Core\Permission\Checker as Permissions;
+
 $cp = new Permissions($calendar);
 if (!isset($occurrence) || !$occurrence) {
     $occurrence = null;

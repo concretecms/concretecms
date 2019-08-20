@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Foundation\Queue\Queue;
+use Concrete\Core\Legacy\Loader;
+
 $sh = Loader::helper('concrete/dashboard/sitemap');
 ?>
 

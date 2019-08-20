@@ -1,5 +1,8 @@
 <?php
+
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;

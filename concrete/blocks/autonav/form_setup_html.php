@@ -1,6 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+
 /* @var Concrete\Block\Autonav\Controller $controller */
 /* @var Concrete\Core\Block\View\BlockView $view */
 

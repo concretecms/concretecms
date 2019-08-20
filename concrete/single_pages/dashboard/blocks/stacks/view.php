@@ -1,9 +1,13 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\View\View;
 
 /* @var Concrete\Core\Html\Service\Html $html */
 /* @var Concrete\Core\Application\Service\UserInterface $interface */
@@ -16,8 +20,8 @@ use Concrete\Core\Page\Stack\Stack;
 
 
 if (isset($neutralStack)) {
-    /* @var Stack $neutralStack */
-    /* @var Stack|null $stackToEdit */
+    /* @var Concrete\Core\Page\Stack\Stack $neutralStack */
+    /* @var Concrete\Core\Page\Stack\Stack|null $stackToEdit */
     /* @var bool $isGlobalArea */
     ?>
     <div class="ccm-dashboard-header-buttons">
@@ -266,7 +270,7 @@ $(function() {
         <?php
     }
 } elseif (isset($duplicateStack)) {
-    /* @var Stack $duplicateStack */
+    /* @var Concrete\Core\Page\Stack\Stack $duplicateStack */
     $sv = CollectionVersion::get($duplicateStack, 'ACTIVE');
     ?>
     <form name="duplicate_form" action="<?=$view->action('duplicate', $duplicateStack->getCollectionID())?>" method="POST">

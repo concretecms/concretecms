@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\View\View;
+?>
 <?php
 $view->requireAsset('javascript', 'backstretch');
 $view->inc('elements/header.php'); ?>

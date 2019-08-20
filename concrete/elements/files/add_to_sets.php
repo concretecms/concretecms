@@ -1,5 +1,5 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\File\Set\Set as FileSet;
 
 $sets = FileSet::getMySets();
 ?>

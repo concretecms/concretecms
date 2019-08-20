@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+?>
 
 <div style="text-align:center; margin-top: 20px; margin-bottom: 20px;">
 <?php

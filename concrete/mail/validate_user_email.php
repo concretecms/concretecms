@@ -2,6 +2,8 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\View\View;
+
 $subject = $site . " " . t("Registration - Validate Email Address");
 $body = t("
 

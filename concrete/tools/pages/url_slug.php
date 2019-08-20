@@ -1,6 +1,8 @@
 <?php
 
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
+use Concrete\Core\Page\Page;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 if (Core::make('helper/validation/token')->validate('get_url_slug', $_REQUEST['token'])) {

@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Legacy\Loader;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 

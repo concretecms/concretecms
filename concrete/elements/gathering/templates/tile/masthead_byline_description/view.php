@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+
 $ownerID = $this->page->vObj->cvAuthorUID;
 $u = User::getByUserID($ownerID);
 $ownerName = $u->getUserName();

@@ -2,6 +2,9 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $calendarPermissions = new Permissions($calendar);
 $preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
 if (!isset($mode)) {

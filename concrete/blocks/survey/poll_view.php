@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Area\Area;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $a2 = new Area('Poll');

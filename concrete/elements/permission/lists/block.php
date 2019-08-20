@@ -1,4 +1,10 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+?>
 <div class="ccm-ui">
 	<?php
     $c = Page::getCurrentPage();

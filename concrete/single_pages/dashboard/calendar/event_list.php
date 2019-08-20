@@ -2,6 +2,9 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Http\Request;
+use Concrete\Core\Legacy\Loader;
+
 Loader::element('calendar/header', array(
     'calendar' => $calendar,
     'calendars' => $calendars,

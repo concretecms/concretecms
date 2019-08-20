@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Legacy\Loader;
 ?>
 
 <?php
@@ -168,7 +171,7 @@ if ($cap->canAccessComposer()) {
                         </div>
                 
                             <?php 
-        } elseif ($ci instanceof Block) {
+        } elseif ($ci instanceof Concrete\Core\Block\Block) {
             $b = $ci;
             ?>
             

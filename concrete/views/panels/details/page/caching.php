@@ -1,6 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Cache\Page\PageCache;
+use Concrete\Core\Legacy\Loader;
+
 $form = Loader::helper('form');
 switch (Config::get('concrete.cache.pages')) {
     case 'blocks':

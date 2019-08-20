@@ -1,6 +1,11 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $ih = Loader::helper('validation/numbers');
 $dh = Loader::helper('concrete/dashboard');
 $ish = Loader::helper('concrete/ui');

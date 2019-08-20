@@ -1,6 +1,8 @@
 <?php
 
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Permission\Checker as Permissions;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 

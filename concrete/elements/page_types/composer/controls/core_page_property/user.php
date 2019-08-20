@@ -1,5 +1,8 @@
 <?php
+use Concrete\Core\Legacy\Loader;
+
 defined('C5_EXECUTE') or die("Access Denied.");
+
 $user = Loader::helper('form/user_selector');
 ?>
 

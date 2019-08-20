@@ -1,5 +1,8 @@
 <?php
-    defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Block\Block;
+use Concrete\Core\Page\Page;
 
 $area = $b->getBlockAreaObject();
 $_bx = Block::getByID($bOriginalID);

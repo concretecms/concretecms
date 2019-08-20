@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Page\Page;
+
 $c = Page::getCurrentPage();
 ?>
 

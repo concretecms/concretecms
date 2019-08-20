@@ -1,6 +1,12 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\File\File;
+use Concrete\Core\File\Importer as FileImporter;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $f = File::getByID($_REQUEST['fID']);
 $fp = new Permissions($f);
 if (is_object($f) && $fp->canWrite()) {

@@ -1,6 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Legacy\Loader;
+
 $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');
 $ve = Loader::helper('validation/error');

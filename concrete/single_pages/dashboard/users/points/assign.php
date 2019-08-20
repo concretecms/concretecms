@@ -1,3 +1,7 @@
+<?php
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Assign Community Points'), false, false, false, array(), Page::getByPath('/dashboard/users/points', 'ACTIVE'))?>
 <form method="post" action="<?=$view->action('save')?>" id="ccm-community-point-entry">
 	<?php

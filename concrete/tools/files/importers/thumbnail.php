@@ -2,6 +2,9 @@
 
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Entity\Version;
+use Concrete\Core\File\File;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\Checker as Permissions;
 
 defined("C5_EXECUTE") or die("Access Denied.");
 $fID = isset($_REQUEST['fID']) ? intval($_REQUEST['fID']) : 0;

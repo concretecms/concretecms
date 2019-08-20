@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Legacy\Loader;
+
 /**
  * @var \Concrete\Core\Attribute\Key\Category
  * @var $objects

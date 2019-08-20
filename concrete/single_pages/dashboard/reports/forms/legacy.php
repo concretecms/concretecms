@@ -1,4 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Block\Block;
+use Concrete\Core\File\File;
+use Concrete\Core\Legacy\Loader;
+
 /* @var $h ConcreteDashboardHelper */
 $h = Loader::helper('concrete/dashboard');
 /* @var $ih ConcreteInterfaceHelper */

@@ -1,5 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<!DOCTYPE html>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\View\View;
+
+?><!DOCTYPE html>
 <html lang="<?php echo Localization::activeLanguage() ?>">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

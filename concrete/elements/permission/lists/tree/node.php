@@ -1,7 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Tree\Node\Node as TreeNode;
-
 ?>
 <div id="topics-tree-node-permissions">
 <?php

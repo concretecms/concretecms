@@ -1,4 +1,5 @@
 <?php
+use Concrete\Core\Legacy\Loader;
 if (is_object($key)) {
     $uakProfileDisplay = $key->isAttributeKeyDisplayedOnProfile();
     $uakProfileEdit = $key->isAttributeKeyEditableOnProfile();

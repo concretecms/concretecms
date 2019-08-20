@@ -1,5 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Block\Block;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $cID = intval($_REQUEST['cID']);
 $bID = intval($_REQUEST['bID']);
 $arHandle = Loader::helper('security')->sanitizeString($_REQUEST['arHandle']);

@@ -7,8 +7,8 @@ use Concrete\TestHelpers\Page\PageTestCase;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Type\Type as PageType;
-use SinglePage;
 use Site;
 
 class PageControllerTest extends PageTestCase

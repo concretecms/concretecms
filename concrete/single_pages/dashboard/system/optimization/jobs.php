@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Job\Set as JobSet;
+use Concrete\Core\Legacy\Loader;
+
 /* @var $jh JsonHelper */
 $json = Core::make('helper/json');
 /* @var $dh \Concrete\Core\Localization\Service\Date */

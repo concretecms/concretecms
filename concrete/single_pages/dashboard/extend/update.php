@@ -1,5 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Package\Package;
+use Concrete\Core\View\View;
+
 $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/ui');

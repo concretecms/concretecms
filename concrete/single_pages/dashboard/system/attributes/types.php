@@ -2,6 +2,7 @@
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\PendingType as PendingAttributeType;
+use Concrete\Core\Legacy\Loader;
 
 $types = AttributeType::getAttributeTypeList();
 $categories = AttributeKeyCategory::getList();

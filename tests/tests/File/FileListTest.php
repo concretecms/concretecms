@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\TestHelpers\File\FileStorageTestCase;
 
@@ -143,13 +144,13 @@ class FileListTest extends FileStorageTestCase
 
     public function testFilterBySet()
     {
-        $fs = \FileSet::add('test');
+        $fs = FileSet::add('test');
         $f = \Concrete\Core\File\File::getByID(1);
         $f2 = \Concrete\Core\File\File::getByID(4);
         $fs->addFileToSet($f);
         $fs->addFileToSet($f2);
 
-        $fs2 = \FileSet::add('test2');
+        $fs2 = FileSet::add('test2');
         $fs2->addFiletoSet($f);
 
         $this->list->filterBySet($fs);

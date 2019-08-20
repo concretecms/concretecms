@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use Concrete\Core\Legacy\Loader;
+
 $token = \Core::make('token');
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>

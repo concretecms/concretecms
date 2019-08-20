@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 $form = $app->make('helper/form');

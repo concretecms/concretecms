@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+?>
 
 <div class="ccm-dashboard-header-buttons btn-group">
     <a href="<?=URL::to('/dashboard/system/express/entities/forms', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>

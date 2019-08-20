@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Legacy\Loader;
+
 if (!isset($defaultNewOptionNm)) {
     $defaultNewOptionNm = null;
 }

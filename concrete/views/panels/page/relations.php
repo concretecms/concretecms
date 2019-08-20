@@ -1,5 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Page\Page;
 ?>
 
 <div class="ccm-panel-content-inner">

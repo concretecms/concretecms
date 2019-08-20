@@ -2,6 +2,8 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Permission\Checker as Permissions;
+
 ?>
 
 <div class="ccm-dashboard-content-full">

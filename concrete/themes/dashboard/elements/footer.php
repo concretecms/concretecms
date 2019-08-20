@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\View\View;
+
 if (!empty($showPrivacyPolicyNotice)) { ?>
 <div class="ccm-dashboard-privacy-policy">
     <div class="ccm-dashboard-privacy-policy-inner">

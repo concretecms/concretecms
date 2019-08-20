@@ -1,8 +1,14 @@
 <?php
+
+use Concrete\Core\File\File;
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\View\View;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 defined('C5_EXECUTE') or die("Access Denied.");

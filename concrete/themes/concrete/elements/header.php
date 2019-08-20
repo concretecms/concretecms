@@ -1,5 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<!DOCTYPE html>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Http\Request;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
+?><!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />

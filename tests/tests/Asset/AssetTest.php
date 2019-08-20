@@ -2,7 +2,7 @@
 
 namespace Concrete\Tests\Asset;
 
-use AssetList;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Asset\Asset;
 use PHPUnit_Framework_TestCase;
 

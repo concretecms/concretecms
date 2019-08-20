@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+
 if (!isset($pa)) {
     $pa = $pk->getPermissionAccessObject();
 }

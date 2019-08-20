@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Job;
 
-use Job as AbstractJob;
+use Concrete\Core\Job\Job as AbstractJob;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Legacy\Loader;
 

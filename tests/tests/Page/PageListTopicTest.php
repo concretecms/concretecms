@@ -3,8 +3,8 @@
 namespace Concrete\Tests\Page;
 
 use Concrete\TestHelpers\Page\PageTestCase;
-use Group;
 use Concrete\Core\Page\Page;
+use Concrete\Core\User\Group\Group;
 
 class PageListTopicTest extends PageTestCase
 {

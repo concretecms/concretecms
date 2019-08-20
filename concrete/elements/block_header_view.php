@@ -1,5 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+
 $app = \Core::make('app');
 if ($a->isGlobalArea()) {
     $c = Page::getCurrentPage();

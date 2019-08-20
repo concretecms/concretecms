@@ -3,13 +3,13 @@
 namespace Concrete\Tests\Area;
 
 use Concrete\Core\Area\Layout\Preset\Preset;
+use Concrete\Core\Http\Request;
 use Concrete\TestHelpers\Area\BrokenTestAreaLayoutPresetProvider;
 use Concrete\TestHelpers\Area\TestAreaLayoutPresetProvider;
 use Concrete\TestHelpers\Area\TestThemeClass;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Core;
 use Concrete\Core\Page\Page;
-use Request;
 
 class AreaLayoutPresetTest extends PageTestCase
 {

@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Page\Page;
+
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $form = $app->make('helper/form');
 $c = Page::getCurrentPage();

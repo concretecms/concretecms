@@ -2,6 +2,8 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Conversation\Message\Message as ConversationMessage;
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Checker as Permissions;
 
 $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');

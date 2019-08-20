@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Page\Page;
+
 // basically a stub that includes some other files
 $u = new User();
 $uID = $u->getUserID();

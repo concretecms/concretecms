@@ -1,6 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Legacy\Loader;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Set as PermissionSet;
 
 if ($_REQUEST['task'] == 'copy_permission_set' && Loader::helper("validation/token")->validate('copy_permission_set')) {
