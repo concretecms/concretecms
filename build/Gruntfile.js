@@ -163,6 +163,13 @@ module.exports = function(grunt) {
             ]
         },
 
+        draftlist: {
+            dest: '<%= DIR_BASE %>/concrete/js/draft-list.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/blocks/draft-list.js',
+            ]
+        },
+
         express: {
             dest: '<%= DIR_BASE %>/concrete/js/express.js',
             src: [
