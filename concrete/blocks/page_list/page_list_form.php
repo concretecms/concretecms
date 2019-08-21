@@ -170,7 +170,7 @@ $form = Loader::helper('form/page_selector');
 
                 <div class="filterDateOptionDetail" data-filterDateOption="between">
                     <?php
-                    $datetime = loader::helper('form/date_time');
+                    $datetime = Loader::helper('form/date_time');
                     echo $datetime->date('filterDateStart', $filterDateStart);
                     echo "<p>" . t('and') . "</p>";
                     echo $datetime->date('filterDateEnd', $filterDateEnd);
