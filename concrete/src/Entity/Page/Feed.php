@@ -348,6 +348,7 @@ class Feed
 
     /**
      * @param bool $checkPagePermissions
+     * @since 8.5.2
      */
     public function setCheckPagePermissions($checkPagePermissions)
     {
@@ -356,6 +357,7 @@ class Feed
 
     /**
      * @return bool
+     * @since 8.5.2
      */
     public function shouldCheckPagePermissions()
     {

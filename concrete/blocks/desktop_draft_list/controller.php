@@ -124,6 +124,9 @@ class Controller extends BlockController
         $this->set('pagination', $pagination);
     }
 
+    /**
+     * @since 8.5.2
+     */
     public function action_reload_drafts()
     {
         $b = $this->getBlockObject();
