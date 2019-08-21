@@ -17,19 +17,19 @@ class Feeds extends DashboardPageController
 
     public function feed_updated()
     {
-        $this->set('success', t("Feed Updated."));
+        $this->set('success', t('Feed Updated.'));
         $this->view();
     }
 
     public function feed_deleted()
     {
-        $this->set('success', t("Feed Deleted."));
+        $this->set('success', t('Feed Deleted.'));
         $this->view();
     }
 
     public function feed_added()
     {
-        $this->set('success', t("Feed Added."));
+        $this->set('success', t('Feed Added.'));
         $this->view();
     }
 
@@ -80,6 +80,11 @@ class Feeds extends DashboardPageController
         } else {
             $pf->displayShortDescriptionContent();
         }
+        if ($this->post('ignorePermissions')) {
+            $pf->setCheckPagePermissions(false);
+        } else {
+            $pf->setCheckPagePermissions(true);
+        }
 
         return $pf;
     }
@@ -98,7 +103,7 @@ class Feeds extends DashboardPageController
     public function delete_feed()
     {
         $pfID = $this->request->request->get('pfID');
-        if (Core::make("helper/validation/numbers")->integer($pfID)) {
+        if (Core::make('helper/validation/numbers')->integer($pfID)) {
             if ($pfID > 0) {
                 $feed = Feed::getByID($pfID);
             }
@@ -133,14 +138,14 @@ class Feeds extends DashboardPageController
 
     public function add()
     {
-        $pageTypes = array('0' => t('** No Filtering'));
+        $pageTypes = ['0' => t('** No Filtering')];
         $types = Type::getList();
         foreach ($types as $type) {
             $pageTypes[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
         }
         $this->set('pageTypes', $pageTypes);
 
-        $attributeKeys = array();
+        $attributeKeys = [];
         $keys = CollectionKey::getList();
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
@@ -150,7 +155,7 @@ class Feeds extends DashboardPageController
         $this->set('topicAttributes', $attributeKeys);
 
         $areas = Area::getHandleList();
-        $select = array();
+        $select = [];
         foreach ($areas as $handle) {
             $select[$handle] = $handle;
         }
@@ -160,7 +165,7 @@ class Feeds extends DashboardPageController
 
     public function edit($pfID = null)
     {
-        if (Core::make("helper/validation/numbers")->integer($pfID)) {
+        if (Core::make('helper/validation/numbers')->integer($pfID)) {
             if ($pfID > 0) {
                 $feed = Feed::getByID($pfID);
             }
