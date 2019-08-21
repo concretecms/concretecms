@@ -293,11 +293,14 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeClassAliases(Repository $config)
     {
         $list = ClassAliasList::getInstance();
-        $list->registerMultiple($config->get('app.aliases'));
+        $aliases = $config->get('app.aliases');
+        $list->registerMultiple($aliases);
         $list->registerMultiple($config->get('app.facades'));
 
-        // Autoload some aliases to prevent typehinting errors
-        class_exists('\Request');
+        // Autoload aliases to prevent typehinting errors
+        foreach (array_keys($aliases) as $alias) {
+            class_exists($alias);
+        }
         if (version_compare(PHP_VERSION, '7.2.0alpha1') < 0) {
             $list->register('Concrete\Core\Foundation\Object', 'Concrete\Core\Foundation\ConcreteObject');
         }
