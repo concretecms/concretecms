@@ -1,6 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
-
-<?php if ($controller->getTask() == 'add'
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+/** @var \Concrete\Core\Entity\Page\Feed $feed */
+if ($controller->getTask() == 'add'
     || $controller->getTask() == 'add_feed'
     || $controller->getTask() == 'edit'
     || $controller->getTask() == 'edit_feed'
@@ -39,6 +39,7 @@
         if ($iconFID) {
             $imageFile = File::getByID($iconFID);
         }
+        $ignorePermissions = !$feed->shouldCheckPagePermissions();
         $action = $view->action('edit_feed', $feed->getID());
         $tokenString = 'edit_feed';
         $button = t('Update');
@@ -197,6 +198,15 @@
         <div class="form-group" data-row="area" style="display: none">
             <?=$form->label('pfAreaHandleToDisplay', t('Select Area'))?>
             <?=$form->select('pfAreaHandleToDisplay', $areas, $pfAreaHandleToDisplay)?>
+        </div>
+        <div class="form-group">
+            <?=$form->label('ignorePermissions', t('Ignore Page Permissions'))?>
+            <div class="checkbox">
+                <label>
+                    <?=$form->checkbox('ignorePermissions', 1, $ignorePermissions)?>
+                    <?=t('Show all pages in the RSS Feed even if the guest can not view the pages.')?>
+                </label>
+            </div>
         </div>
 
         <div class="ccm-dashboard-form-actions-wrapper">

@@ -20,6 +20,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Feed
 {
     protected $itemsPerFeed = 20;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
     protected $checkPagePermissions = true;
 
     /**
@@ -159,6 +164,7 @@ class Feed
 
     /**
      * @param string $format
+     *
      * @return string
      * @since 8.2.0
      */
@@ -315,6 +321,7 @@ class Feed
     {
         return \URL::to('/rss/' . $this->getHandle());
     }
+
     /**
      * @ORM\Column(type="boolean")
      */
@@ -337,6 +344,22 @@ class Feed
     public function ignorePermissions()
     {
         $this->checkPagePermissions = false;
+    }
+
+    /**
+     * @param bool $checkPagePermissions
+     */
+    public function setCheckPagePermissions($checkPagePermissions)
+    {
+        $this->checkPagePermissions = (bool) $checkPagePermissions;
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldCheckPagePermissions()
+    {
+        return $this->checkPagePermissions;
     }
 
     /**

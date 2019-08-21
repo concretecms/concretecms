@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Url\Resolver;
 
-use League\Url\UrlImmutable;
-
 /**
  * @since 5.7.4
  */
@@ -39,7 +37,7 @@ class PageUrlResolver implements UrlResolverInterface
 
         if ($page instanceof \Concrete\Core\Page\Page) {
             if ($externalUrl = $page->getCollectionPointerExternalLink()) {
-                return UrlImmutable::createFromUrl($externalUrl);
+                return $this->resolveWithResolver($externalUrl, []);
             }
 
             if ($path = $page->getCollectionPath()) {

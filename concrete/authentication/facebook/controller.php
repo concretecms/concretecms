@@ -75,7 +75,6 @@ class Controller extends GenericOauth2TypeController
         $this->set('apisecret', $config->get('auth.facebook.secret', ''));
 
         $list = new \GroupList();
-        $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }
 
