@@ -9,7 +9,6 @@ use Concrete\Core\User\User;
 use Page;
 use Controller;
 use Concrete\Core\Support\Facade\Application;
-use Hautelook\Phpass\PasswordHash;
 
 abstract class AuthenticationTypeController extends Controller implements LoggerAwareInterface,
     AuthenticationTypeControllerInterface
@@ -57,19 +56,4 @@ abstract class AuthenticationTypeController extends Controller implements Logger
      * @return string
      */
     abstract public function getHandle();
-
-    /**
-     * Get an instance of a PasswordHash to be used to has the access token.
-     *
-     * @return \Hautelook\Phpass\PasswordHash
-     */
-    protected function getHasher()
-    {
-        $config = $this->app->make('config');
-
-        return new PasswordHash(
-            $config->get('concrete.user.password.hash_cost_log2'),
-            $config->get('concrete.user.password.hash_portable')
-        );
-    }
 }

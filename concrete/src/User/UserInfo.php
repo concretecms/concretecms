@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\User\User as UserEntity;
@@ -501,7 +502,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 if (isset($data['uPasswordConfirm']) && $data['uPassword'] === $data['uPasswordConfirm']) {
                     $passwordChangedOn = $this->application->make('date')->getOverridableNow();
                     $fields[] = 'uPassword = ?';
-                    $values[] = $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']);
+                    $values[] = $this->application->make(PasswordHasher::class)->hashPassword($data['uPassword']);
                     $fields[] = 'uLastPasswordChange = ?';
                     $values[] = $passwordChangedOn;
                     if (isset($data['uIsPasswordReset'])) {

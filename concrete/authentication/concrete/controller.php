@@ -3,6 +3,7 @@ namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
@@ -39,10 +40,10 @@ class Controller extends AuthenticationTypeController
         if ($authCookie === null || $authCookie->getAuthenticationTypeHandle() !== 'concrete') {
             return;
         }
-        $hasher = $this->getHasher();
+        $hasher = $this->app->make(PasswordHasher::class);
         $db = $this->app->make(Connection::class);
         foreach ($db->fetchAll('select token from authTypeConcreteCookieMap WHERE uID = ?', [$authCookie->getUserID()]) as $row) {
-            if ($hasher->CheckPassword($authCookie->getToken(), $row['token'])) {
+            if ($hasher->checkPassword($authCookie->getToken(), $row['token'])) {
                 $db->delete('authTypeConcreteCookieMap', ['uID' => $authCookie->getUserID(), 'token' => $row['token']]);
             }
         }
@@ -57,10 +58,10 @@ class Controller extends AuthenticationTypeController
     {
         $uID = (int) $u->getUserID();
         $db = $this->app->make(Connection::class);
-        $hasher = $this->getHasher();
+        $hasher = $this->app->make(PasswordHasher::class);
         $validRow = null;
         foreach ($db->fetchAll('select validThrough, token from authTypeConcreteCookieMap WHERE uID = ?', [$uID]) as $row) {
-            if ($hasher->CheckPassword($hash, $row['token'])) {
+            if ($hasher->checkPassword($hash, $row['token'])) {
                 $validRow = $row;
                 break;
             }
@@ -101,11 +102,11 @@ class Controller extends AuthenticationTypeController
 
         $validThrough = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
         $token = $this->genString();
-        $hasher = $this->getHasher();
+        $hasher = $this->app->make(PasswordHasher::class);
         try {
             $db->executeQuery(
                 'INSERT INTO authTypeConcreteCookieMap (token, uID, validThrough) VALUES (?,?,?)',
-                [$hasher->HashPassword($token), $u->getUserID(), $validThrough]
+                [$hasher->hashPassword($token), $u->getUserID(), $validThrough]
             );
         } catch (\Exception $e) {
             // HOLY CRAP.. SERIOUSLY?

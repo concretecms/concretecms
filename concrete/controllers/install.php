@@ -4,6 +4,7 @@ namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
@@ -18,7 +19,6 @@ use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTra
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\View\View;
 use Exception;
-use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
 use stdClass;
 
@@ -325,11 +325,11 @@ class Install extends Controller
                 $configuration['session-handler'] = $post->get('sessionHandler');
                 $options->setConfiguration($configuration);
 
-                $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+                $hasher = $this->app->make(PasswordHasher::class);
                 $options
                     ->setPrivacyPolicyAccepted($post->get('privacy') == '1' ? true : false)
                     ->setUserEmail($post->get('uEmail'))
-                    ->setUserPasswordHash($hasher->HashPassword($post->get('uPassword')))
+                    ->setUserPasswordHash($hasher->hashPassword($post->get('uPassword')))
                     ->setStartingPointHandle($post->get('SAMPLE_CONTENT'))
                     ->setSiteName($post->get('SITE'))
                     ->setSiteLocaleId($post->get('siteLocaleLanguage') . '_' . $post->get('siteLocaleCountry'))
