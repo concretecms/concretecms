@@ -2,6 +2,7 @@
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
@@ -11,6 +12,7 @@ use Concrete\Core\User\Exception\UserException;
 use Concrete\Core\User\Exception\UserPasswordResetException;
 use Concrete\Core\User\Login\LoginService;
 use Concrete\Core\User\User;
+use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Concrete\Core\User\ValidationHash;
 use Concrete\Core\Validation\CSRF\Token;
 use Config;
@@ -33,12 +35,15 @@ class Controller extends AuthenticationTypeController
 
     public function deauthenticate(User $u)
     {
-        $cookie = array_get($_COOKIE, 'ccmAuthUserHash', '');
-        if ($cookie) {
-            list($uID, $authType, $hash) = explode(':', $cookie);
-            if ($authType == 'concrete') {
-                $db = Database::connection();
-                $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', [$uID, $hash]);
+        $authCookie = $this->app->make(CookieService::class)->getCookie();
+        if ($authCookie === null || $authCookie->getAuthenticationTypeHandle() !== 'concrete') {
+            return;
+        }
+        $hasher = $this->getHasher();
+        $db = $this->app->make(Connection::class);
+        foreach ($db->fetchAll('select token from authTypeConcreteCookieMap WHERE uID = ?', [$authCookie->getUserID()]) as $row) {
+            if ($hasher->CheckPassword($authCookie->getToken(), $row['token'])) {
+                $db->delete('authTypeConcreteCookieMap', ['uID' => $authCookie->getUserID(), 'token' => $row['token']]);
             }
         }
     }
@@ -50,21 +55,35 @@ class Controller extends AuthenticationTypeController
 
     public function verifyHash(User $u, $hash)
     {
-        $uID = $u->getUserID();
-        $db = Database::connection();
-        $q = $db->fetchColumn(
-            'SELECT validThrough FROM authTypeConcreteCookieMap WHERE uID=? AND token=?',
-            [$uID, $hash]
-        );
-        $bool = time() < $q;
-        if (!$bool) {
-            $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', [$uID, $hash]);
+        $uID = (int) $u->getUserID();
+        $db = $this->app->make(Connection::class);
+        $hasher = $this->getHasher();
+        $validRow = null;
+        foreach ($db->fetchAll('select validThrough, token from authTypeConcreteCookieMap WHERE uID = ?', [$uID]) as $row) {
+            if ($hasher->CheckPassword($hash, $row['token'])) {
+                $validRow = $row;
+                break;
+            }
+        }
+        if ($validRow === null) {
+            return;
+        }
+        $stillValid = time() < $validRow['validThrough'];
+        if ($stillValid) {
+            $newTime = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
+            $db->update(
+                'authTypeConcreteCookieMap',
+                ['validThrough' => $newTime],
+                ['uID' => $uID, 'token' => $row['token']]
+            );
         } else {
-            $newTime = strtotime('+2 weeks');
-            $db->executeQuery('UPDATE authTypeConcreteCookieMap SET validThrough=?', [$newTime]);
+            $db->delete(
+                'authTypeConcreteCookieMap',
+                ['uID' => $uID, 'token' => $row['token']]
+            );
         }
 
-        return $bool;
+        return $stillValid;
     }
 
     public function view()
@@ -80,12 +99,13 @@ class Controller extends AuthenticationTypeController
         }
         $db = Database::connection();
 
-        $validThrough = strtotime('+2 weeks');
+        $validThrough = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
         $token = $this->genString();
+        $hasher = $this->getHasher();
         try {
             $db->executeQuery(
                 'INSERT INTO authTypeConcreteCookieMap (token, uID, validThrough) VALUES (?,?,?)',
-                [$token, $u->getUserID(), $validThrough]
+                [$hasher->HashPassword($token), $u->getUserID(), $validThrough]
             );
         } catch (\Exception $e) {
             // HOLY CRAP.. SERIOUSLY?

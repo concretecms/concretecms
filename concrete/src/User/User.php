@@ -379,22 +379,10 @@ class User extends ConcreteObject
     public function setAuthTypeCookie($authType)
     {
         $app = Application::getFacadeApplication();
-        $config = $app['config'];
-        $jar = $app['cookie'];
-
-        $cookie = array($this->getUserID(), $authType);
         $at = AuthenticationType::getByHandle($authType);
-        $cookie[] = $at->controller->buildHash($this);
-
-        $jar->set(
-            'ccmAuthUserHash',
-            implode(':', $cookie),
-            time() + $config->get('concrete.session.remember_me.lifetime'),
-            DIR_REL . '/',
-            $config->get('concrete.session.cookie.cookie_domain'),
-            $config->get('concrete.session.cookie.cookie_secure'),
-            $config->get('concrete.session.cookie.cookie_httponly')
-        );
+        $token = $at->getController()->buildHash($this);
+        $value = new PersistentAuthentication\CookieValue((int) $this->getUserID(), $authType, $token);
+        $app->make(PersistentAuthentication\CookieService::class)->setCookie($value);
     }
 
     /**
@@ -467,16 +455,7 @@ class User extends ConcreteObject
             $cookie->clear($config->get('concrete.session.name'));
         }
 
-        if ($cookie->has('ccmAuthUserHash') && $cookie->get('ccmAuthUserHash')) {
-            $cookie->set('ccmAuthUserHash',
-                '',
-                315532800,
-                DIR_REL . '/',
-                $config->get('concrete.session.cookie.cookie_domain'),
-                $config->get('concrete.session.cookie.cookie_secure'),
-                $config->get('concrete.session.cookie.cookie_httponly')
-            );
-        }
+        $app->make(PersistentAuthentication\CookieService::class)->deleteCookie();
 
         $loginCookie = sprintf('%s_LOGIN', $app['config']->get('concrete.session.name'));
         if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
@@ -486,16 +465,18 @@ class User extends ConcreteObject
 
     public static function verifyAuthTypeCookie()
     {
-        if ($cookie = array_get($_COOKIE, 'ccmAuthUserHash')) {
-            list($_uID, $authType, $uHash) = explode(':', $cookie);
-            $at = AuthenticationType::getByHandle($authType);
-            $u = self::getByUserID($_uID);
-            if ((!is_object($u)) || $u->isError()) {
-                return;
-            }
-            if ($at->controller->verifyHash($u, $uHash)) {
-                self::loginByUserID($_uID);
-            }
+        $app = Application::getFacadeApplication();
+        $cookie = $app->make(PersistentAuthentication\CookieService::class)->getCookie();
+        if ($cookie === null) {
+            return;
+        }
+        $at = AuthenticationType::getByHandle($cookie->getAuthenticationTypeHandle());
+        $u = self::getByUserID($cookie->getUserID());
+        if ($u === null || $u->isError()) {
+            return;
+        }
+        if ($at->controller->verifyHash($u, $cookie->getToken())) {
+            self::loginByUserID($cookie->getUserID());
         }
     }
 
