@@ -12,4 +12,4 @@ travis_retry yarn global add grunt
 
 echo 'Installing Node packages'
 cd "$TRAVIS_BUILD_DIR/build"
-travis_retry yarn
+travis_retry npm install
