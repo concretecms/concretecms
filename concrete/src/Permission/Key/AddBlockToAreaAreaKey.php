@@ -2,8 +2,11 @@
 
 namespace Concrete\Core\Permission\Key;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
@@ -164,6 +167,23 @@ class AddBlockToAreaAreaKey extends AreaKey
                 $item->set($allBTIDs)->save();
             } else {
                 $allBTIDs = $item->get();
+            }
+            
+            $a = $this->getPermissionObject();
+            $stack = null;
+            if ($a instanceof Area) {
+                $areaPage = $a->getAreaCollectionObject();
+                if ($areaPage instanceof Page && $areaPage->getPageTypeHandle() === STACKS_PAGE_TYPE) {
+                    $stack = $areaPage;
+                } elseif ($a->isGlobalArea()) {
+                    $stack = Stack::getByName($a->getAreaHandle());
+                    if (!$stack || $stack->isError()) {
+                        $stack = null;
+                    }
+                }
+            }
+            if ($stack !== null) {
+                return $allBTIDs;
             }
             foreach ($list as $l) {
                 switch ($l->getBlockTypesAllowedPermission()) {
