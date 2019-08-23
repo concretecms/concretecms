@@ -202,6 +202,13 @@ return [
         'pages' => false,
 
         /*
+         * Cache Page Attributes
+         *
+         * @var bool
+         */
+        'page_attributes' => false,
+
+        /*
          * Use Doctrine development mode
          *
          * @var bool

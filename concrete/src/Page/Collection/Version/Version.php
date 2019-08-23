@@ -328,6 +328,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public function getAttribute($ak, $mode = false)
     {
         $app = Facade::getFacadeApplication();
+        if (!$app['config']->get('concrete.cache.page_attributes')) {
+            return parent::getAttribute($ak, $mode);
+        }
+
         $cache = $app->make('cache/request');
         $item = $cache->getItem(sprintf(
             '/page/%s/%s/attribute/%s/%s',
