@@ -293,7 +293,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeClassAliases(Repository $config)
     {
         $list = ClassAliasList::getInstance();
-        $list->registerMultiple($config->get('app.aliases'));
+        $list->registerMultipleRequired($config->get('app.aliases'));
         $list->registerMultiple($config->get('app.facades'));
 
         // Autoload aliases to prevent typehinting errors
