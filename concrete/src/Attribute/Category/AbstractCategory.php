@@ -146,7 +146,9 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $item = $cache->getItem(sprintf('/attribute/%s/handle/%s', $category, $handle));
         if (!$item->isMiss()) {
             $key = $item->get();
-        } else {
+        }
+
+        if (!is_object($key)) {
             $key = $this->getAttributeKeyRepository()->findOneBy([
                 'akHandle' => $handle,
             ]);
@@ -171,12 +173,14 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $item = $cache->getItem(sprintf('/attribute/%s/id/%s', $category, $akID));
         if (!$item->isMiss()) {
             $key = $item->get();
-        } else {
-            $key = $this->getAttributeKeyRepository()->findOneBy([
-                'akID' => $akID,
-            ]);
-            $cache->save($item->set($key));
         }
+
+	    if (!is_object($key)) {
+		    $key = $this->getAttributeKeyRepository()->findOneBy([
+			    'akID' => $akID,
+		    ]);
+		    $cache->save($item->set($key));
+	    }
 
         return $key;
     }
