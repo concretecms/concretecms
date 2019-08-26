@@ -131,6 +131,12 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </div>
             <div class="checkbox">
                 <label>
+                    <?php echo $form->checkbox('showCaptions', 1, !empty($showCaptions)); ?>
+                    <?php echo t("Show captions") ?>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
                     <?php echo $form->checkbox('startTimeEnabled', 1, !empty($startTimeEnabled)); ?>
                     <?php echo t("Start video at:") ?>
                 </label>

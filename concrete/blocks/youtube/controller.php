@@ -112,6 +112,7 @@ class Controller extends BlockController
             'showinfo' => false,
             'controls' => false,
             'modestbranding' => false,
+            'showCaptions' => false,
 
             'color' => null,
 
@@ -135,6 +136,7 @@ class Controller extends BlockController
             'showinfo' => $data['showinfo'] ? 1 : 0,
             'controls' => $data['controls'] ? 1 : 0,
             'modestbranding' => $data['modestbranding'] ? 1 : 0,
+            'showCaptions' => $data['showCaptions'] ? 1 : 0,
 
             'color' => $data['color'],
 
