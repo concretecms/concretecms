@@ -33,6 +33,10 @@ if (-Not(Test-Path -PathType Leaf -Path 'C:\tools\gettext\bin\msgen.exe')) {
     Expand-Archive -Path "C:\tools\downloads\gettext$GettextVersion-iconv$IconvVersion.zip" -DestinationPath 'C:\tools\gettext' -Force
 }
 
+# Update the module used to install PowerShell modules
+Write-Host 'Updating PowerShellGet PowerShell module'
+Update-Module -Name PowerShellGet -Force
+
 # Setup VcRedist PowerShell module
 if (-Not(Get-Module -ListAvailable -Name VcRedist)) {
     Write-Host 'Installing VcRedist PowerShell module'
@@ -75,4 +79,16 @@ if (-Not(Test-Path -PathType Leaf -Path C:\tools\bin\composer.bat)) {
 } else {
     Write-Host 'Updating Composer'
     & composer self-update
+}
+
+# Install hirak/prestissimo composer global package
+try {
+    & composer global show hirak/prestissimo -q 2>&1
+} catch {
+    Write-Host 'Installing hirak/prestissimo composer global package'
+    try {
+        & composer global require --no-interaction --no-progress --optimize-autoloader hirak/prestissimo
+    } catch {
+        Write-Host 'Failed to install hirak/prestissimo'
+    }
 }

@@ -1,14 +1,18 @@
 <?php
+
 namespace Concrete\Core\Url\Resolver\Manager;
 
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
 
 class ResolverManager implements ResolverManagerInterface
 {
-    protected $priorityTree;
+    /**
+     * @var string[][]
+     */
+    protected $priorityTree = [];
 
     /**
-     * @var UrlResolverInterface
+     * @var \Concrete\Core\Url\Resolver\UrlResolverInterface[]
      */
     protected $resolvers;
 
@@ -18,32 +22,30 @@ class ResolverManager implements ResolverManagerInterface
     protected $default;
 
     /**
-     * @param string               $default_handle
-     * @param URLResolverInterface $default_resolver
+     * @param string $default_handle
+     * @param \Concrete\Core\Url\Resolver\UrlResolverInterface|null $default_resolver
      */
     public function __construct($default_handle = '', UrlResolverInterface $default_resolver = null)
     {
         if ($default_resolver) {
             $this->addResolver($default_handle, $default_resolver);
         }
-
         $this->default = $default_handle;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface::addResolver()
      */
-    public function addResolver(
-        $handle,
-        UrlResolverInterface $resolver,
-        $priority = 512
-    ) {
-        $priority = min(1024, max(1, intval($priority, 10)));
+    public function addResolver($handle, UrlResolverInterface $resolver, $priority = 512)
+    {
+        $priority = min(1024, max(1, (int) $priority));
 
         $this->resolvers[$handle] = $resolver;
 
         if (!isset($this->priorityTree[$priority])) {
-            $this->priorityTree[$priority] = array();
+            $this->priorityTree[$priority] = [];
             ksort($this->priorityTree);
         }
         $this->priorityTree[$priority][] = $handle;
@@ -51,6 +53,8 @@ class ResolverManager implements ResolverManagerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface::getDefaultResolver()
      */
     public function getDefaultResolver()
     {
@@ -59,6 +63,8 @@ class ResolverManager implements ResolverManagerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface::getResolver()
      */
     public function getResolver($handle)
     {
@@ -66,7 +72,7 @@ class ResolverManager implements ResolverManagerInterface
     }
 
     /**
-     * @return array
+     * @return \Concrete\Core\Url\Resolver\UrlResolverInterface[]
      */
     public function getResolvers()
     {
@@ -75,6 +81,8 @@ class ResolverManager implements ResolverManagerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface::resolve()
      */
     public function resolve(array $args)
     {

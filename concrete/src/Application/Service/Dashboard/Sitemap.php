@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Closure;
@@ -310,6 +311,18 @@ class Sitemap
         }
 
         return $node;
+    }
+
+    public function canViewSitemapPanel()
+    {
+        $types = Type::getList();
+        foreach($types as $pt) {
+            $ptp = new \Permissions($pt);
+            if ($ptp->canAddPageType()) {
+                return true;
+            }
+        }
+        return $this->canRead();
     }
 
     /**

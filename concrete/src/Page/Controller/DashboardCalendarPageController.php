@@ -19,7 +19,7 @@ class DashboardCalendarPageController extends DashboardSitePageController
         if (count($calendars) == 0) {
             $this->redirect('/dashboard/calendar/add');
         }
-        $defaultCalendar = $calendars[0];
+        $defaultCalendar = reset($calendars);
         if ($caID) {
             $calendar = Calendar::getByID(intval($caID));
             $cp = new \Permissions($calendar);

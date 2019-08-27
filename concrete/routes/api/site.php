@@ -16,4 +16,4 @@ $router->get('/site/trees', function() use ($app) {
         $collection,
         new \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionTransformer()
     );
-});
+})->setScopes('site:trees:read');

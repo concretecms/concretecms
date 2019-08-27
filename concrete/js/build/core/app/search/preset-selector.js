@@ -16,11 +16,7 @@
             e.preventDefault();
             if (!$(e.target).is('button') && $(this).data('action')) {
                 $.fn.dialog.closeTop();
-                my.ajaxUpdate($(this).data('action'));
-                my.$resetSearchButton.show();
-                my.$headerSearch.find('div.btn-group').hide();
-                my.$headerSearchInput.prop('disabled', true).val('');
-                my.$headerSearchInput.attr('placeholder', '');
+                ConcreteEvent.publish('SavedPresetSubmit',$(this).data('action'));
             }
         });
 
@@ -55,7 +51,7 @@
                 url: $presetForm.attr('action'),
                 success: function(r) {
                     $.fn.dialog.closeAll();
-                    ConcreteEvent.publish('SavedSearchCreated', {search: r});
+                    ConcreteEvent.publish('SavedSearchCreated', r);
                 }
             });
             return false;
@@ -75,19 +71,7 @@
             });
         });
 
-        ConcreteEvent.unsubscribe('SavedSearchDeleted');
-        ConcreteEvent.subscribe('SavedSearchDeleted', function() {
-            $.fn.dialog.closeAll();
-            my.ajaxUpdate(my.$resetSearchButton.data('button-action-url'));
-        });
 
-        ConcreteEvent.unsubscribe('SavedSearchUpdated');
-        ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
-            $.fn.dialog.closeAll();
-            if (data.preset && data.preset.actionURL) {
-                my.ajaxUpdate(data.preset.actionURL);
-            }
-        });
     }
 
 

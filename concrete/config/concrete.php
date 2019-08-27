@@ -6,10 +6,10 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.1',
-    'version_installed' => '8.5.1',
-    'version_db' => '20190301133300', // the key of the latest database migration
-
+    'version' => '8.5.2a2',
+    'version_installed' => '8.5.2a2',
+    'version_db' => '20190822160700', // the key of the latest database migration
+ 
     /*
      * Installation status
      *
@@ -603,6 +603,11 @@ return [
             'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
             'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
         ],
+        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer) 
+        'skip_core' => false,
+        // List of package handles that shouldn't be checked for new versions in marketplace (useful for example if the core is upgraded via composer)
+        // Set to true to skip all the packages
+        'skip_packages' => [],
     ],
     'paths' => [
         'trash' => '/!trash',
@@ -660,7 +665,25 @@ return [
                 // Space-separated list of attributes to be kept
                 'allowed_attributes' => '',
             ],
+            /*
+             * Background color of the Image Editor saveArea
+             * Leave empty to use a transparent background
+             *
+             * @var string
+             */
+            'image_editor_save_area_background_color' => '',
         ],
+        /*
+         * Options for the results per page dropdown
+         *
+         * @var array
+         */
+        'items_per_page_options' => [10, 25, 50, 100, 250],
+        /*
+         * Default number of results per page
+         *
+         * @var int
+         */
         'results' => 10,
     ],
 
@@ -812,6 +835,9 @@ return [
             'cookie_secure' => false,
             'cookie_httponly' => true,
         ],
+        'remember_me' => [
+            'lifetime' => 1209600, // 2 weeks in seconds
+        ]
     ],
 
     /*

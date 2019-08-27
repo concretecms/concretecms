@@ -335,28 +335,38 @@
 
             $wrapper.find('input[type=checkbox]').prop('checked', false);
 
-            switch (startDate.getDay()) {
-                case 0:
-                    $wrapper.find("input[value=0]").prop('checked', true);
-                    break;
-                case 1:
-                    $wrapper.find("input[value=1]").prop('checked', true);
-                    break;
-                case 2:
-                    $wrapper.find("input[value=2]").prop('checked', true);
-                    break;
-                case 3:
-                    $wrapper.find("input[value=3]").prop('checked', true);
-                    break;
-                case 4:
-                    $wrapper.find("input[value=4]").prop('checked', true);
-                    break;
-                case 5:
-                    $wrapper.find("input[value=5]").prop('checked', true);
-                    break;
-                case 6:
-                    $wrapper.find("input[value=6]").prop('checked', true);
-                    break;
+            if (my.repetition.repetitionID > 0) {
+                
+                for (var i = 0; i < my.repetition.pdRepeatPeriodWeekDays.length; i++) {
+                    var dow = my.repetition.pdRepeatPeriodWeekDays[i];
+                    $wrapper.find("input[value=" + dow + "]").prop('checked', true);
+                }
+                
+            } else {
+
+                switch (startDate.getDay()) {
+                    case 0:
+                        $wrapper.find("input[value=0]").prop('checked', true);
+                        break;
+                    case 1:
+                        $wrapper.find("input[value=1]").prop('checked', true);
+                        break;
+                    case 2:
+                        $wrapper.find("input[value=2]").prop('checked', true);
+                        break;
+                    case 3:
+                        $wrapper.find("input[value=3]").prop('checked', true);
+                        break;
+                    case 4:
+                        $wrapper.find("input[value=4]").prop('checked', true);
+                        break;
+                    case 5:
+                        $wrapper.find("input[value=5]").prop('checked', true);
+                        break;
+                    case 6:
+                        $wrapper.find("input[value=6]").prop('checked', true);
+                        break;
+                }
             }
 
         },

@@ -475,6 +475,7 @@ class Form
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
      * @param string $selectedCountryCode the code of the Country to be initially selected
      * @param array $configuration Configuration options. Supported keys are:
+     * - 'noCountryText': the text to be displayed when no country is selected
      * - 'required': do users must choose a Country?
      * - 'allowedCountries': an array containing a list of acceptable Country codes. If not set, all the countries will be selectable.
      * - 'linkStateProvinceField': set to true to look for text fields that have a "data-countryfield" attribute with the same value as this Country field name (updating the Country select will automatically update the State/Province list).
@@ -483,6 +484,7 @@ class Form
     public function selectCountry($key, $selectedCountryCode = '', array $configuration = [], array $miscFields = [])
     {
         $configuration += [
+            'noCountryText' => '',
             'required' => false,
             'allowedCountries' => null,
             'linkStateProvinceField' => false,
@@ -523,7 +525,7 @@ class Form
             $id = $key;
         }
         if ($selectedCountryCode === '' || !$configuration['required']) {
-            $optionValues = ['' => ''];
+            $optionValues = ['' => (string) $configuration['noCountryText']];
         } else {
             $optionValues = [];
         }
@@ -582,11 +584,25 @@ class Form
         }
         $str = "<select id=\"$key\" name=\"{$key}[]\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
-            $str .= '<option value="' . h($k) . '"';
-            if (in_array($k, $selectedValues)) {
-                $str .= ' selected="selected"';
+            if (is_array($text)) {
+                if (count($text) > 0) {
+                    $str .= '<optgroup label="' . h($k) . '">';
+                    foreach ($text as $k1 => $text1) {
+                        $str .= '<option value="' . h($k1) . '"';
+                        if (in_array($k1, $selectedValues)) {
+                            $str .= ' selected="selected"';
+                        }
+                        $str .= '>' . h($text1) . '</option>';
+                    }
+                    $str .= '</optgroup>';
+                }
+            } else {
+                $str .= '<option value="' . h($k) . '"';
+                if (in_array($k, $selectedValues)) {
+                    $str .= ' selected="selected"';
+                }
+                $str .= '>' . h($text) . '</option>';
             }
-            $str .= '>' . $text . '</option>';
         }
         $str .= '</select>';
 

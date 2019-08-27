@@ -76,7 +76,6 @@ class Controller extends GenericOauth2TypeController
         $this->set('apisecret', $config->get('auth.google.secret', ''));
 
         $list = new \GroupList();
-        $list->includeAllGroups();
         $this->set('groups', $list->getResults());
 
         $this->set('whitelist', $config->get('auth.google.email_filters.whitelist', []));
