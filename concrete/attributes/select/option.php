@@ -7,7 +7,7 @@ use Gettext\Translations;
 
 
 /**
- * @deprecated
+ * @deprecated use methods in Concrete\Attribute\Select\Controller instead
  */
 class Option
 {
@@ -17,6 +17,7 @@ class Option
      * @param $option
      * @param int $isEndUserAdded
      * @return Option
+     * @deprecated use Concrete\Attribute\Select\Controller::setOptions()
      */
     public static function add($ak, $value, $isEndUserAdded = 0)
     {
@@ -38,13 +39,18 @@ class Option
         return $option;
     }
 
+    /**
+     * @deprecated use Concrete\Attribute\Select\Controller::getOptionByID()
+     */
     public static function getByID($id)
     {
         $em = \Database::connection()->getEntityManager();
         return $em->find('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption', $id);
     }
 
-
+    /**
+     * @deprecated use Concrete\Attribute\Select\Controller::getOptionByValue()
+     */
     public static function getByValue($value, $ak = false)
     {
         $em = \Database::connection()->getEntityManager();
@@ -52,6 +58,9 @@ class Option
         return $controller->getOptionByValue($value, $ak);
     }
 
+    /**
+     * @deprecated
+     */
     public static function exportTranslations()
     {
         $translations = new Translations();

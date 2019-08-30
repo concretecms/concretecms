@@ -91,7 +91,6 @@ class Controller extends GenericOauth1aTypeController
         $this->set('apisecret', $config->get('auth.twitter.secret', ''));
 
         $list = new \GroupList();
-        $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }
 

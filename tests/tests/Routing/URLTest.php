@@ -50,15 +50,16 @@ class URLTest extends PHPUnit_Framework_TestCase
         });
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
-        $this->oldUrl = Config::get('concrete.seo.canonical_url');
-        Config::set('concrete.seo.canonical_url', 'http://dummyurl.com');
+        $siteConfig = Core::make('site')->getSite()->getConfigRepository();
+        $this->oldUrl = $siteConfig->get('seo.canonical_url');
+        $siteConfig->set('seo.canonical_url', 'http://dummyurl.com');
 
         parent::setUp();
     }
 
     public function tearDown()
     {
-        Config::set('concrete.seo.canonical_url', $this->oldUrl);
+        Core::make('site')->getSite()->getConfigRepository()->set('seo.canonical_url', $this->oldUrl);
         $this->clearCanonicalUrl();
 
         $app = \Concrete\Core\Support\Facade\Facade::getFacadeApplication();
@@ -74,12 +75,12 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testNoUrlRewriting()
     {
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/path/to/my/page', (string) $this->page->getCollectionLink());
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/path/to/my/page',
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/path/to/my/page', (string) $this->page->getCollectionLink());
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/path/to/my/page',
                             (string) $this->service->getLinkToCollection($this->page)
         );
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/path/to/my/page', (string) URL::to('/path/to/my/page'));
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/path/to/my/page', (string) URL::page($this->page));
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/path/to/my/page', (string) URL::to('/path/to/my/page'));
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/path/to/my/page', (string) URL::page($this->page));
     }
 
     public function testNoUrlRewritingNoRelativePath()
@@ -90,12 +91,12 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $app->make('Concrete\Core\Url\Resolver\CanonicalUrlResolver')->clearCached();
 
-        $this->assertEquals('http://www.dummyco.com/index.php/path/to/my/page', (string) $this->page->getCollectionLink());
-        $this->assertEquals('http://www.dummyco.com/index.php/path/to/my/page',
+        $this->assertEquals('http://dummyurl.com/index.php/path/to/my/page', (string) $this->page->getCollectionLink());
+        $this->assertEquals('http://dummyurl.com/index.php/path/to/my/page',
                             (string) $this->service->getLinkToCollection($this->page)
         );
-        $this->assertEquals('http://www.dummyco.com/index.php/path/to/my/page', (string) URL::to('/path/to/my/page'));
-        $this->assertEquals('http://www.dummyco.com/index.php/path/to/my/page', (string) URL::page($this->page));
+        $this->assertEquals('http://dummyurl.com/index.php/path/to/my/page', (string) URL::to('/path/to/my/page'));
+        $this->assertEquals('http://dummyurl.com/index.php/path/to/my/page', (string) URL::page($this->page));
     }
 
     public function testUrlRewriting()
@@ -105,12 +106,12 @@ class URLTest extends PHPUnit_Framework_TestCase
         $app->instance('app', $app);
 
         Config::set('concrete.seo.url_rewriting', true);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', (string) $this->page->getCollectionLink());
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page',
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page', (string) $this->page->getCollectionLink());
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page',
                             (string) $this->service->getLinkToCollection($this->page)
         );
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', (string) URL::to('/path/to/my/page'));
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', (string) URL::page($this->page));
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page', (string) URL::to('/path/to/my/page'));
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page', (string) URL::page($this->page));
     }
 
     public function testCanonicalURLRedirection()
@@ -276,24 +277,24 @@ class URLTest extends PHPUnit_Framework_TestCase
     {
         Config::set('concrete.seo.url_rewriting', true);
         Config::set('concrete.seo.url_rewriting_all', true);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', (string) $this->page->getCollectionLink());
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page',
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page', (string) $this->page->getCollectionLink());
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page',
                             (string) $this->service->getLinkToCollection($this->page)
         );
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', URL::to('/path/to/my/page'));
-        $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', URL::page($this->page));
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page', URL::to('/path/to/my/page'));
+        $this->assertEquals('http://dummyurl.com/path/to/server/path/to/my/page', URL::page($this->page));
     }
 
     public function testNoUrlRewritingDashboard()
     {
         $app = Core::make('app');
         $app['app_relative_path'] = '/path/to/server';
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page',
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page',
                             (string) $this->service->getLinkToCollection($this->dashboard)
         );
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
     }
 
     public function testPagesWithNoPaths()
@@ -310,10 +311,10 @@ class URLTest extends PHPUnit_Framework_TestCase
         $home->siteTree = $siteTree;
 
         $url = \URL::to($home);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=' . $home->cID, (string) $url);
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php?cID=' . $home->cID, (string) $url);
 
         $url = \URL::to('/');
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php', (string) $url);
 
         $page = new Page();
         $page->cPath = null;
@@ -321,37 +322,35 @@ class URLTest extends PHPUnit_Framework_TestCase
         $page->siteTree = $siteTree;
 
         $url = \URL::to($page);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=777', (string) $url);
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php?cID=777', (string) $url);
     }
 
     public function testUrlRewritingDashboard()
     {
         Config::set('concrete.seo.url_rewriting', true);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page',
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page',
                             (string) $this->service->getLinkToCollection($this->dashboard)
         );
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
+        $this->assertEquals('http://dummyurl.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
     }
 
     public function testUrlRewritingAllDashboard()
     {
         Config::set('concrete.seo.url_rewriting', true);
         Config::set('concrete.seo.url_rewriting_all', true);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
-        $this->assertEquals('http://www.dummyco.com/path/to/server/dashboard/my/awesome/page',
+        $this->assertEquals('http://dummyurl.com/path/to/server/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
+        $this->assertEquals('http://dummyurl.com/path/to/server/dashboard/my/awesome/page',
                             (string) $this->service->getLinkToCollection($this->dashboard)
         );
-        $this->assertEquals('http://www.dummyco.com/path/to/server/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
-        $this->assertEquals('http://www.dummyco.com/path/to/server/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
+        $this->assertEquals('http://dummyurl.com/path/to/server/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
+        $this->assertEquals('http://dummyurl.com/path/to/server/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
     }
 
     public function testCanonicalUrl()
     {
-        $this->markTestIncomplete('This needs to be updated to use the new site-based canonical url');
-
-        Config::set('concrete.seo.canonical_url', 'http://www.derpco.com');
+        Core::make('site')->getSite()->getConfigRepository()->set('seo.canonical_url', 'http://www.derpco.com');
         $this->clearCanonicalUrl();
 
         $this->assertEquals('http://www.derpco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
@@ -360,9 +359,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testCanonicalUrlWithPort()
     {
-        $this->markTestIncomplete('This needs to be updated to use the new site-based canonical url');
-
-        Config::set('concrete.seo.canonical_url', 'http://www.derpco.com:8080');
+        Core::make('site')->getSite()->getConfigRepository()->set('seo.canonical_url', 'http://www.derpco.com:8080');
         $this->clearCanonicalUrl();
         $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
         $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
@@ -370,9 +367,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testURLFunctionWithCanonicalURL()
     {
-        $this->markTestIncomplete('This needs to be updated to use the new site-based canonical url');
-
-        Config::set('concrete.seo.canonical_url', 'http://concrete5');
+        Core::make('site')->getSite()->getConfigRepository()->set('seo.canonical_url', 'http://concrete5');
 
         $this->clearCanonicalUrl();
 
@@ -382,14 +377,13 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testURLFunctionWithoutCanonicalURL()
     {
-        $this->markTestIncomplete('This needs to be updated to use the new site-based canonical url');
-
-        Config::set('concrete.seo.canonical_url', '');
+        Core::make('site')->getSite()->getConfigRepository()->set('seo.canonical_url', '');
 
         $this->clearCanonicalUrl();
 
         $url = URL::to('/dashboard/system/test', 'outstanding');
-        $this->assertEquals('/path/to/server/index.php/dashboard/system/test/outstanding', (string) $url);
+        // www.requestdomain.com is set by the bootstrap.php file
+        $this->assertEquals('http://www.requestdomain.com/path/to/server/index.php/dashboard/system/test/outstanding', (string) $url);
     }
 
     private function clearCanonicalUrl()

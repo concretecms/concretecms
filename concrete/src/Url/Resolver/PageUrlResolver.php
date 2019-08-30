@@ -40,7 +40,7 @@ class PageUrlResolver implements UrlResolverInterface
         if (isset($page) && $page instanceof Page) {
 
             if ($externalUrl = $page->getCollectionPointerExternalLink()) {
-                return UrlImmutable::createFromUrl($externalUrl);
+                return $this->resolveWithResolver($externalUrl, []);
             }
 
             $tree = $page->getSiteTreeObject();

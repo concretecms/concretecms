@@ -364,6 +364,7 @@
 
     <systemcaptcha>
         <library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
+        <library handle="recaptchaV3" name="reCAPTCHA v3" package="" activated="0"/>
     </systemcaptcha>
 
     <workflowtypes>

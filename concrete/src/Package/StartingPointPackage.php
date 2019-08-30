@@ -31,7 +31,6 @@ use Doctrine\ORM\Tools\Setup;
 use Exception;
 use Group;
 use GroupTree;
-use Hautelook\Phpass\PasswordHash;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use Package as BasePackage;
 use Page;
