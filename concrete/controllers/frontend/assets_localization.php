@@ -581,28 +581,47 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
      */
     public function getDropzoneJavascript()
     {
-        $content = ';
-Dropzone.prototype.defaultOptions.dictDefaultMessage = ' . json_encode(t('Drop files here or click to upload.')) . ';
-Dropzone.prototype.defaultOptions.dictFallbackMessage = ' . json_encode(t("Your browser does not support drag'n'drop file uploads.")) . ';
-Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please use the fallback form below to upload your files like in the olden days.')) . ';
-Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please use the fallback form below to upload your files like in the olden days.')) . ';
-Dropzone.prototype.defaultOptions.dictFileTooBig = ' . json_encode(t('File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.')) . ';
-Dropzone.prototype.defaultOptions.dictInvalidFileType = ' . json_encode(t('You can\'t upload files of this type.')) . ';
-Dropzone.prototype.defaultOptions.dictResponseError = ' . json_encode(t('Server responded with {{statusCode}} code.')) . ';
-Dropzone.prototype.defaultOptions.dictCancelUpload = ' . json_encode(t('Cancel upload')) . ';
-Dropzone.prototype.defaultOptions.dictCancelUploadConfirmation = ' . json_encode(t('Are you sure you want to cancel this upload?')) . ';
-Dropzone.prototype.defaultOptions.dictRemoveFile = ' . json_encode(t('Remove file')) . ';
-Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = ' . json_encode(t('You can not upload any more files.')) . ';
-Dropzone.prototype.defaultOptions.resizeQuality = ' . ($this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100) . ';
-';
         $config = $this->app->make('config');
+        $token = $this->app->make('token');
+
+        $maxExecutionTime = (int) ini_get('max_execution_time');
+        $maxInputType = (int) ini_get('max_input_time');
+        $timeout = $maxExecutionTime <= 0 ? 24 * 60 * 60 : $maxExecutionTime;
+        if ($maxInputType === 0) {
+            $timeout += 24 * 60 * 60;
+        } elseif ($maxInputType > 0) {
+            $timeout += $maxInputType;
+        }
+        $options = [
+            'dictDefaultMessage' => t('Drop files here or click to upload.'),
+            'dictFallbackMessage' => t("Your browser does not support drag'n'drop file uploads."),
+            'dictFallbackText' => t('Please use the fallback form below to upload your files like in the olden days.'),
+            'dictFileTooBig' => t('File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.'),
+            'dictInvalidFileType' => t('You can\'t upload files of this type.'),
+            'dictResponseError' => t('Server responded with {{statusCode}} code.'),
+            'dictCancelUpload' => t('Cancel upload'),
+            'dictCancelUploadConfirmation' => t('Are you sure you want to cancel this upload?'),
+            'dictRemoveFile' => t('Remove file'),
+            'dictMaxFilesExceeded' => t('You can not upload any more files.'),
+            'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
+            'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
+            'chunkSize' => $this->getDropzoneChunkSize(),
+            'params' => [
+                $token::DEFAULT_TOKEN_NAME => $token->generate(),
+            ],
+            'timeout' => 1000 * $timeout,
+        ];
         $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
         if ($maxWidth > 0) {
-            $content .= "Dropzone.prototype.defaultOptions.resizeWidth = {$maxWidth};\n";
+            $options['resizeWidth'] = $maxWidth;
         }
         $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
         if ($maxHeight > 0) {
-            $content .= "Dropzone.prototype.defaultOptions.resizeHeight = {$maxHeight};\n";
+            $options['resizeHeight'] = $maxHeight;
+        }
+        $content = '';
+        foreach ($options as $optionKey => $optionValue) {
+            $content .= 'Dropzone.prototype.defaultOptions[' . json_encode($optionKey) . '] = ' . json_encode($optionValue) . ";\n";
         }
         if ($maxWidth > 0 || $maxHeight > 0) {
             $content .= <<<'EOT'
@@ -680,21 +699,36 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
     }
 
     /**
-     * @param string $content
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return int
      */
-    private function createJavascriptResponse($content)
+    private function getDropzoneChunkSize()
     {
-        $rf = $this->app->make(ResponseFactoryInterface::class);
+        $config = $this->app->make('config');
+        $chunkSize = (int) $config->get('concrete.upload.chunking.chunkSize');
 
-        return $rf->create(
-            $content,
-            200,
-            [
-                'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
-                'Content-Length' => strlen($content),
-            ]
-        );
+        return $chunkSize > 0 ? $chunkSize : $this->getDropzoneAutomaticChunkSize();
+    }
+
+    /**
+     * @return int
+     */
+    private function getDropzoneAutomaticChunkSize()
+    {
+        $nh = $this->app->make('helper/number');
+        // Maximum size of an uploaded file, minus a small value (just in case)
+        $uploadMaxFilesize = (int) $nh->getBytes(ini_get('upload_max_filesize')) - 100;
+        // Max size of post data allowed, minus enough space to consider other posted fields.
+        $postMaxSize = (int) $nh->getBytes(ini_get('post_max_size')) - 10000;
+        if ($uploadMaxFilesize < 1 && $postMaxSize < 1) {
+            return 2000000;
+        }
+        if ($uploadMaxFilesize < 1) {
+            return $postMaxSize;
+        }
+        if ($postMaxSize < 1) {
+            return $uploadMaxFilesize;
+        }
+
+        return min($uploadMaxFilesize, $postMaxSize);
     }
 }

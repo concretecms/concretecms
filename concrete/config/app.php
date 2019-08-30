@@ -33,7 +33,6 @@ return [
         'ConversationFlagType' => '\Concrete\Core\Conversation\FlagType\FlagType',
         'ConversationMessage' => '\Concrete\Core\Conversation\Message\Message',
         'ConversationRatingType' => '\Concrete\Core\Conversation\Rating\Type',
-        'Cookie' => '\Concrete\Core\Cookie\Cookie',
         'Environment' => '\Concrete\Core\Foundation\Environment',
         'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
         'File' => '\Concrete\Core\File\File',
@@ -635,6 +634,9 @@ return [
             ['javascript', 'js/file-manager.js', ['minify' => false]],
             ['css', 'css/file-manager.css', ['minify' => false]],
         ],
+        'core/file-uploader' => [
+            ['javascript', 'js/file-uploader.js', ['minify' => false]],
+        ],
         'core/express' => [
             ['javascript', 'js/express.js', ['minify' => false]],
         ],
@@ -656,6 +658,9 @@ return [
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
+        ],
+        'core/draft_list' => [
+            ['javascript', 'js/draft-list.js', ['minify' => false]],
         ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
@@ -768,6 +773,12 @@ return [
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
+            ],
+        ],
+        'core/draft_list' => [
+            [
+                ['javascript', 'core/draft_list'],
+                ['javascript', 'core/events'],
             ],
         ],
         'core/colorpicker' => [
@@ -932,6 +943,7 @@ return [
                 ['css', 'jquery/ui'],
                 ['css', 'core/file-manager'],
                 ['css', 'selectize'],
+                ['javascript', 'dropzone'],
                 ['javascript', 'core/events'],
                 ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
@@ -941,10 +953,20 @@ return [
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'selectize'],
                 ['javascript-localized', 'core/localization'],
+                ['javascript-localized', 'dropzone'],
                 ['javascript', 'core/app'],
                 ['javascript', 'jquery/fileupload'],
                 ['javascript', 'core/tree'],
+                ['javascript', 'core/file-uploader'],
                 ['javascript', 'core/file-manager'],
+            ],
+        ],
+        'core/file-uploader' => [
+            [
+                ['css', 'dropzone'],
+                ['javascript', 'dropzone'],
+                ['javascript-localized', 'dropzone'],
+                ['javascript', 'core/file-uploader'],
             ],
         ],
         'core/duration' => [

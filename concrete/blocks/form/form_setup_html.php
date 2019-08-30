@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 $uh = Loader::helper('concrete/urls');
 $form = Loader::helper('form');
-$datetime = loader::helper('form/date_time');
+$datetime = Loader::helper('form/date_time');
 $ih = Loader::helper('concrete/ui');
 $a = $view->getAreaObject();
 $bt = BlockType::getByHandle('form');

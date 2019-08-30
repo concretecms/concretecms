@@ -6,6 +6,7 @@ use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
 use Concrete\Core\Page\Search\Field\Field\DateAddedField;
 use Concrete\Core\Page\Search\Field\Field\DateLastModifiedField;
 use Concrete\Core\Page\Search\Field\Field\DatePublicField;
+use Concrete\Core\Page\Search\Field\Field\IncludePageAliasesField;
 use Concrete\Core\Page\Search\Field\Field\NumberOfChildrenField;
 use Concrete\Core\Page\Search\Field\Field\PageTemplateField;
 use Concrete\Core\Page\Search\Field\Field\PageTypeField;
@@ -38,6 +39,7 @@ class Manager extends FieldManager
             new NumberOfChildrenField(),
             new PageTemplateField(),
             new ThemeField(),
+            new IncludePageAliasesField(),
             new VersionStatusField(),
             new PermissionsInheritanceField(),
             new DateLastModifiedField(),

@@ -14,6 +14,19 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
     <fieldset>
         <div class="form-group">
+            <?= $form->label('EMAIL_ENABLED', t('Email Sending')) ?>
+            <div class="radio">
+                <label><?= $form->radio('EMAIL_ENABLED', false, $config->get('concrete.email.enabled')) ?><span><?= t('Disabled') ?></span></label>
+            </div>
+            <div class="radio">
+                <label><?= $form->radio('EMAIL_ENABLED', true, $config->get('concrete.email.enabled')) ?><span><?= t('Enabled') ?></span></label>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <div class="form-group">
+            <?= $form->label('MAIL_SEND_METHOD', t('Email Sending Method')) ?>
             <div class="radio">
                 <label><?= $form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', strtoupper($config->get('concrete.mail.method'))) ?><span><?= t('Default PHP Mail Function') ?></span></label>
             </div>
