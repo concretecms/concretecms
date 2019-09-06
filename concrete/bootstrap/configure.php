@@ -305,6 +305,9 @@ const USER_SUPER_ID = 1;
 const GUEST_GROUP_ID = '1';
 const REGISTERED_GROUP_ID = '2';
 const ADMIN_GROUP_ID = '3';
+/**
+ * @deprecated Use Config::get('concrete.session.remember_me.lifetime')
+ */
 const USER_FOREVER_COOKIE_LIFETIME = 1209600; // 14 days
 const USER_CHANGE_PASSWORD_URL_LIFETIME = 7200;
 const ONLINE_NOW_TIMEOUT = 300;

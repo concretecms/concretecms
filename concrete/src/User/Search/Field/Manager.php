@@ -33,8 +33,8 @@ class Manager extends FieldManager
         $attributeSets = $setManager->getAttributeSets();
         $unassigned = $setManager->getUnassignedAttributeKeys();
 
-        $attributes = [];
         foreach($attributeSets as $set) {
+            $attributes = [];
             foreach($set->getAttributeKeys() as $key) {
                 $field = new AttributeKeyField($key);
                 $attributes[] = $field;

@@ -7,6 +7,9 @@ use Concrete\Core\Logging\Levels;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LogList;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Log;
 use Request;
@@ -83,6 +86,14 @@ class Logs extends DashboardPageController
         $this->set('date_to', $date_to);
 
         $this->set('query', $query);
+
+        $settingsPage = Page::getByPath('/dashboard/system/environment/logging');
+        $settingsPagePermissions = $settingsPage && !$settingsPage->isError() ? new Checker($settingsPage) : null;
+        if ($settingsPagePermissions !== null && $settingsPagePermissions->canViewPage()) {
+            $this->set('settingsPage', (string) $this->app->make(ResolverManagerInterface::class)->resolve([$settingsPage]));
+        } else {
+            $this->set('settingsPage', null);
+        }
     }
 
     public function csv($token = '')

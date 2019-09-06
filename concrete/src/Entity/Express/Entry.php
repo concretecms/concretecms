@@ -442,7 +442,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\User\User
      */
     public function getAuthor()
     {

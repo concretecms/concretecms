@@ -2,7 +2,7 @@
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Page\Single;
-use Concrete\Core\Permission\Category;
+use Concrete\Core\Support\Facade\Application;
 
 class ImportSinglePageStructureRoutine extends AbstractRoutine implements SpecifiableHomePageRoutineInterface
 {
@@ -20,6 +20,8 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine implements Specif
     {
 
         if (isset($sx->singlepages)) {
+            $app = Application::getFacadeApplication();
+            $defaultSite = $app->make('site')->getDefault();
             foreach ($sx->singlepages->page as $p) {
                 $pkg = static::getPackageObject($p['package']);
 
@@ -37,6 +39,10 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine implements Specif
                     } else {
                         $home = \Page::getByID(\Page::getHomePageID());
                         $siteTree = $home->getSiteTreeObject();
+                    }
+
+                    if ($siteTree === null) {
+                        $siteTree = $defaultSite;
                     }
 
                     $spl = Single::createPageInTree($p['path'], $siteTree, $root, $pkg);

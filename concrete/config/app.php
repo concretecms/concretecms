@@ -211,9 +211,9 @@ return [
         'storage_location_type',
         'theme',
         'user_point_action',
+        'workflow',
         'workflow_progress_category',
         'workflow_type',
-        'workflow',
     ],
 
     'importer_routines' => [
@@ -548,13 +548,11 @@ return [
             ['css', 'css/fancytree.css', ['minify' => false]],
         ],
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.18.1']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
         'moment-timezone' => [
-            ['javascript', 'js/moment-timezone.js', ['minify' => false, 'version' => '0.5.13']],
-        ],
-        'moment-timezone-data' => [
-            ['javascript', 'js/moment-timezone-data.js', ['minify' => false, 'version' => '0.5.13']],
+            ['javascript', 'js/moment-timezone-with-data.js', ['minify' => false, 'version' => '0.5.25']],
         ],
         'bootstrap/dropdown' => [
             ['javascript', 'js/bootstrap/dropdown.js'],
@@ -620,6 +618,9 @@ return [
         'core/file-manager' => [
             ['javascript', 'js/file-manager.js', ['minify' => false]],
             ['css', 'css/file-manager.css', ['minify' => false]],
+        ],
+        'core/file-uploader' => [
+            ['javascript', 'js/file-uploader.js', ['minify' => false]],
         ],
         'core/express' => [
             ['javascript', 'js/express.js', ['minify' => false]],
@@ -826,7 +827,7 @@ return [
             [
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
+                ['javascript-localized', 'moment'],
             ],
         ],
         'fancytree' => [
@@ -913,6 +914,7 @@ return [
                 ['css', 'jquery/ui'],
                 ['css', 'core/file-manager'],
                 ['css', 'selectize'],
+                ['javascript', 'dropzone'],
                 ['javascript', 'core/events'],
                 ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
@@ -922,10 +924,20 @@ return [
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'selectize'],
                 ['javascript-localized', 'core/localization'],
+                ['javascript-localized', 'dropzone'],
                 ['javascript', 'core/app'],
                 ['javascript', 'jquery/fileupload'],
                 ['javascript', 'core/tree'],
+                ['javascript', 'core/file-uploader'],
                 ['javascript', 'core/file-manager'],
+            ],
+        ],
+        'core/file-uploader' => [
+            [
+                ['css', 'dropzone'],
+                ['javascript', 'dropzone'],
+                ['javascript-localized', 'dropzone'],
+                ['javascript', 'core/file-uploader'],
             ],
         ],
         'core/duration' => [
@@ -936,7 +948,6 @@ return [
                 ['javascript', 'selectize'],
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
                 ['javascript', 'core/duration'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1111,6 +1122,7 @@ return [
         ],
         'core/account' => [
             [
+                ['javascript', 'jquery'],
                 ['javascript', 'core/account'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['css', 'bootstrap/dropdown'],

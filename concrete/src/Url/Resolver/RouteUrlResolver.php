@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Core\Url\Resolver;
 
-use Concrete\Core\Url\Url;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -10,13 +10,23 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * \@package Concrete\Core\Url\Resolver
  *
- * @deprecated Use RouterUrlResolver instead.
+ * @deprecated use RouterUrlResolver instead
  */
 class RouteUrlResolver implements UrlResolverInterface
 {
+    /**
+     * @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface
+     */
     protected $generator;
+
+    /**
+     * @var \Symfony\Component\Routing\RouteCollection
+     */
     protected $routeList;
 
+    /**
+     * @var \Concrete\Core\Url\Resolver\UrlResolverInterface
+     */
     protected $pathUrlResolver;
 
     public function __construct(UrlResolverInterface $path_url_resolver,
@@ -29,7 +39,7 @@ class RouteUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * @return UrlGeneratorInterface
+     * @return \Symfony\Component\Routing\Generator\UrlGeneratorInterface
      */
     public function getGenerator()
     {
@@ -37,7 +47,7 @@ class RouteUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * @return RouteCollection
+     * @return \Symfony\Component\Routing\RouteCollection
      */
     public function getRouteList()
     {
@@ -66,24 +76,24 @@ class RouteUrlResolver implements UrlResolverInterface
      *
      * @param array $arguments [ string $handle, array $parameters = array() ]
      *                         The first parameter MUST be prepended with
-     *                         "route/" for it to be tested.
-     * @param \League\URL\URLInterface $resolved
+     *                         "route/" for it to be tested
+     * @param \League\URL\URLInterface|null $resolved
      *
-     * @return \League\URL\URLInterface
+     * @return \League\URL\URLInterface|null
      */
     public function resolve(array $arguments, $resolved = null)
     {
         if (count($arguments) < 3) {
             $route_handle = array_shift($arguments);
-            $route_parameters = count($arguments) ? array_shift($arguments) : array();
+            $route_parameters = count($arguments) ? array_shift($arguments) : [];
 
             if (is_string($route_handle) &&
                 strtolower(substr($route_handle, 0, 6)) == 'route/' &&
                 is_array($route_parameters)) {
                 $route_handle = substr($route_handle, 6);
-                if ($route = $this->getRouteList()->get($route_handle)) {
+                if ($this->getRouteList()->get($route_handle)) {
                     if ($path = $this->getGenerator()->generate($route_handle, $route_parameters, UrlGeneratorInterface::ABSOLUTE_PATH)) {
-                        return $this->pathUrlResolver->resolve(array($path));
+                        return $this->pathUrlResolver->resolve([$path]);
                     }
                 }
             }

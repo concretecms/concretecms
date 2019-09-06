@@ -389,7 +389,7 @@ class User extends ConcreteObject
         $jar->set(
             'ccmAuthUserHash',
             implode(':', $cookie),
-            time() + USER_FOREVER_COOKIE_LIFETIME,
+            time() + $config->get('concrete.session.remember_me.lifetime'),
             DIR_REL . '/',
             $config->get('concrete.session.cookie.cookie_domain'),
             $config->get('concrete.session.cookie.cookie_secure'),

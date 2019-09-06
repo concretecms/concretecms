@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
@@ -57,16 +58,16 @@ class Login extends PageController implements LoggerAwareInterface
      *
      * @param string $type
      * @param string $method
-     * @param null   $a
-     * @param null   $b
-     * @param null   $c
-     * @param null   $d
-     * @param null   $e
-     * @param null   $f
-     * @param null   $g
-     * @param null   $h
-     * @param null   $i
-     * @param null   $j
+     * @param null $a
+     * @param null $b
+     * @param null $c
+     * @param null $d
+     * @param null $e
+     * @param null $f
+     * @param null $g
+     * @param null $h
+     * @param null $i
+     * @param null $j
      *
      * @throws \Concrete\Core\Authentication\AuthenticationTypeFailureException
      * @throws \Exception
@@ -77,9 +78,11 @@ class Login extends PageController implements LoggerAwareInterface
             return $this->view();
         }
         $at = AuthenticationType::getByHandle($type);
-        if ($at) {
-            $this->set('authType', $at);
+        if (!$at || !$at->isEnabled()) {
+            throw new AuthenticationTypeFailureException(t('Invalid authentication type.'));
         }
+
+        $this->set('authType', $at);
         if (!method_exists($at->controller, $method)) {
             return $this->view();
         }
@@ -119,6 +122,9 @@ class Login extends PageController implements LoggerAwareInterface
         } else {
             try {
                 $at = AuthenticationType::getByHandle($type);
+                if (!$at->isEnabled()) {
+                    throw new AuthenticationTypeFailureException(t('Invalid authentication type.'));
+                }
                 $user = $at->controller->authenticate();
                 if ($user && $user->isRegistered()) {
                     return $this->finishAuthentication($at, $user);
@@ -143,7 +149,8 @@ class Login extends PageController implements LoggerAwareInterface
     public function finishAuthentication(
         AuthenticationType $type,
         User $u
-    ) {
+    )
+    {
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }
@@ -223,7 +230,7 @@ class Login extends PageController implements LoggerAwareInterface
             $session = $this->app->make('session');
             $this->logger->notice(
                 t('Session made it to login_complete but was not attached to an authenticated session.'),
-                    ['session' => $session->getId(), 'ip_address' => $_SERVER['REMOTE_ADDR']]
+                ['session' => $session->getId(), 'ip_address' => $_SERVER['REMOTE_ADDR']]
             );
             $this->error->add(t('User is not registered. Check your authentication controller.'));
             $u->logout();
@@ -280,7 +287,7 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $pll = $this->app->make(PostLoginLocation::class);
         $url = $pll->getPostLoginUrl(true);
-        
+
         return $url;
     }
 
@@ -306,8 +313,10 @@ class Login extends PageController implements LoggerAwareInterface
         if (strlen($type)) {
             try {
                 $at = AuthenticationType::getByHandle($type);
-                $this->set('authType', $at);
-                $this->set('authTypeElement', $element);
+                if ($at->isEnabled()) {
+                    $this->set('authType', $at);
+                    $this->set('authTypeElement', $element);
+                }
             } catch (\Exception $e) {
                 // Don't fail loudly
             }
@@ -332,7 +341,7 @@ class Login extends PageController implements LoggerAwareInterface
             $u = new User();
             $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
             $session->remove('uRequiredAttributeUserAuthenticationType');
-            if (!$at) {
+            if (!$at || !$at->isEnabled()) {
                 throw new Exception(t('Invalid Authentication Type'));
             }
 

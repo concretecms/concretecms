@@ -1,13 +1,13 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div id="ccm-block-express-form-tabs">
-<?php echo Loader::helper('concrete/ui')->tabs([
-    ['form-add', t('Add')],
-    ['form-edit', t('Edit')],
-    ['form-express', t('Express Object')],
-    ['form-results', t('Results')],
-    ['form-options', t('Options')],
-]); ?>
+    <?php echo Loader::helper('concrete/ui')->tabs([
+        ['form-add', t('Add')],
+        ['form-edit', t('Edit')],
+        ['form-express', t('Express Object')],
+        ['form-results', t('Results')],
+        ['form-options', t('Options')],
+    ]); ?>
 </div>
 <?php if (isset($bOriginalID)):?>
     <?= $form->hidden('submit_form_scrapbook_display', true);?>
@@ -58,12 +58,12 @@
 
     <div data-view="form-fields">
 
-    <fieldset>
-        <legend><?php echo t('Fields'); ?></legend>
+        <fieldset>
+            <legend><?php echo t('Fields'); ?></legend>
 
-        <ul class="list-group">
-        </ul>
-    </fieldset>
+            <ul class="list-group">
+            </ul>
+        </fieldset>
 
     </div>
 
@@ -95,19 +95,19 @@
             <?=$form->label('exEntityID', t('Choose Entity Form')); ?>
             <select name="exFormID" class="form-control">
                 <option value=""><?=t('** Choose Entity Form'); ?></option>
-            <?php foreach ($entities as $entity) {
-    ?>
-                <optgroup label="<?=t('Entity: %s', $entity->getName()); ?>">
-                    <?php foreach ($entity->getForms() as $entityForm) {
-        ?>
-                        <option value="<?=$entityForm->getID(); ?>" <?php if ($entityForm->getID() == $exFormID) {
-            ?>selected<?php
-        } ?>><?=h($entityForm->getName()); ?></option>
+                <?php foreach ($entities as $entity) {
+                    ?>
+                    <optgroup label="<?=t('Entity: %s', $entity->getName()); ?>">
+                        <?php foreach ($entity->getForms() as $entityForm) {
+                            ?>
+                            <option value="<?=$entityForm->getID(); ?>" <?php if ($entityForm->getID() == $exFormID) {
+                            ?>selected<?php
+                            } ?>><?=h($entityForm->getName()); ?></option>
+                            <?php
+                        } ?>
+                    </optgroup>
                     <?php
-    } ?>
-                </optgroup>
-            <?php
-} ?>
+                } ?>
             </select>
         </div>
 
@@ -217,15 +217,15 @@
         <legend><?=t('Files'); ?></legend>
         <div class="form-group">
             <label class="control-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?'); ?></label>
-                <?php
+            <?php
 
-                $fileSets = Concrete\Core\File\Set\Set::getMySets();
-                $sets = [0 => t('None')];
-                foreach ($fileSets as $fileSet) {
-                    $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetDisplayName();
-                }
-                echo $form->select('addFilesToSet', $sets, $addFilesToSet);
-                ?>
+            $fileSets = Concrete\Core\File\Set\Set::getMySets();
+            $sets = [0 => t('None')];
+            foreach ($fileSets as $fileSet) {
+                $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetDisplayName();
+            }
+            echo $form->select('addFilesToSet', $sets, $addFilesToSet);
+            ?>
         </div>
         <div class="form-group">
             <label class="control-label"><?=t('Add uploaded files to folder'); ?></label>
@@ -238,22 +238,22 @@
 </div>
 
 <script type="text/template" data-template="express-form-form-control">
-<li class="list-group-item"
-    data-action="<?=$view->action('get_control'); ?>"
-    data-form-control-field-type="<%=control.attributeType%>"
-    data-form-control-label="<%=control.displayLabel%>"
-    data-form-control-id="<%=control.id%>">
-    <input type="hidden" name="controlID[]" value="<%=control.id%>">
-    <%=control.displayLabel%>
-    <span class="pull-right">
+    <li class="list-group-item"
+        data-action="<?=$view->action('get_control'); ?>"
+        data-form-control-field-type="<%=control.attributeType%>"
+        data-form-control-label="<%=control.displayLabel%>"
+        data-form-control-id="<%=control.id%>">
+        <input type="hidden" name="controlID[]" value="<%=control.id%>">
+        <%=control.displayLabel%>
+        <span class="pull-right">
         <i style="cursor: move" class="fa fa-arrows"></i>
         <a href="javascript:void(0)" class="icon-link" data-action="edit-control"><i class="fa fa-pencil"></i></a>
         <a href="javascript:void(0)" class="icon-link" data-action="delete-control"><i class="fa fa-trash"></i></a>
         </span>
-    <% if (control.isRequired) { %>
-    <span style="margin-right: 20px" class="badge badge-info"><?=t('Required'); ?></span>
-    <% } %>
-</li>
+        <% if (control.isRequired) { %>
+        <span style="margin-right: 20px" class="badge badge-info"><?=t('Required'); ?></span>
+        <% } %>
+    </li>
 </script>
 
 <script type="text/template" data-template="express-form-reply-to-email">
@@ -271,27 +271,27 @@
 <script type="text/template" data-template="express-form-form-question">
 
     <% if (id) { %>
-        <input type="hidden" name="id" value="<%=id%>">
+    <input type="hidden" name="id" value="<%=id%>">
     <% } %>
 
     <div class="form-group" data-action="<?=$view->action('get_type_form'); ?>" data-group="field-types">
         <?=$form->label('type', t('Answer Type')); ?>
 
         <% if (!id) { %>
-            &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
-            <select name="type" class="form-control">
-                <option value=""><?=t('** Choose Field'); ?></option>
+        &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
+        <select name="type" class="form-control">
+            <option value=""><?=t('** Choose Field'); ?></option>
             <% _.each(types, function(group) { %>
-                <optgroup label="<%=group.label%>">
-                    <% _.each(group.fields, function(type) { %>
-                        <option value="<%=type.id%>" <% if (selectedType == type.id) { %>selected<% } %>><%=_.escape(type.displayName)%></option>
-                    <% }); %>
-                </optgroup>
+            <optgroup label="<%=group.label%>">
+                <% _.each(group.fields, function(type) { %>
+                <option value="<%=type.id%>" <% if (selectedType == type.id) { %>selected<% } %>><%=_.escape(type.displayName)%></option>
+                <% }); %>
+            </optgroup>
             <% }); %>
-            </select>
+        </select>
         <% } else { %>
-            <input type="hidden" name="type" value="<%=selectedType%>">
-            <div><strong><%=selectedTypeDisplayName%></strong></div>
+        <input type="hidden" name="type" value="<%=selectedType%>">
+        <div><strong><%=selectedTypeDisplayName%></strong></div>
         <% } %>
     </div>
 
@@ -301,21 +301,21 @@
     </div>
 
     <% if (typeContent) { %>
-        <div data-group="field-type-data"><%=typeContent%></div>
+    <div data-group="field-type-data"><%=typeContent%></div>
     <% } else { %>
-        <div style="display: none" data-group="field-type-data"></div>
+    <div style="display: none" data-group="field-type-data"></div>
     <% } %>
 
     <div class="form-group" data-group="control-required" style="display: none">
         <label class="control-label"><?=t('Required'); ?></label>
         <div class="radio"><label>
-            <input type="radio" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>
-            <?=t('Yes'); ?>
-        </label></div>
+                <input type="radio" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>
+                <?=t('Yes'); ?>
+            </label></div>
         <div class="radio"><label>
-            <input type="radio" name="required<% if (id) { %>Edit<% } %>" value="0" <% if (!isRequired) { %>checked<% } %>>
-            <?=t('No'); ?>
-        </label></div>
+                <input type="radio" name="required<% if (id) { %>Edit<% } %>" value="0" <% if (!isRequired) { %>checked<% } %>>
+                <?=t('No'); ?>
+            </label></div>
     </div>
 </script>
 
@@ -324,18 +324,18 @@
     Concrete.event.publish('open.block_express_form', {
         task: '<?=$controller->getTask(); ?>',
         <?php if ('edit' == $controller->getTask()) {
-                ?>
-            <?php if (isset($expressEntity) && is_object($expressEntity) && $expressEntity->getIncludeInPublicList()) {
-                    ?>
-                mode: 'existing',
-            <?php
-                } else {
-                    ?>
-                mode: 'new',
-            <?php
-                } ?>
+        ?>
+        <?php if (isset($expressEntity) && is_object($expressEntity) && $expressEntity->getIncludeInPublicList()) {
+        ?>
+        mode: 'existing',
         <?php
-            } ?>
+        } else {
+        ?>
+        mode: 'new',
+        <?php
+        } ?>
+        <?php
+        } ?>
         controls: <?=json_encode($controls);?>,
         types: <?=json_encode($types_select);?>,
         settings: {

@@ -769,7 +769,7 @@ class Service
         return $this->bodyHTML !== false
             && $attachment->getId()
             && in_array((string) $attachment->getDisposition(), ['', Mime::DISPOSITION_INLINE], true)
-        ;
+            ;
     }
 
     /**
