@@ -87,6 +87,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
+		$value = $value === null ? null : preg_replace("/[^0-9]./", '', $value);
         $av->setValue($value);
 
         return $av;
