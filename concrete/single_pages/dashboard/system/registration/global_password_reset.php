@@ -1,7 +1,5 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$resetText = tc(/*i18n: a text to be asked to the users to confirm the global password reset operation */'GlobalPasswordReset', 'RESET');
-
 ?>
 <form id="global-password-reset-form" action="<?= $view->action('reset_passwords') ?>" method="post">
     <?= Core::make('helper/validation/token')->output('global_password_reset_token') ?>
@@ -52,27 +50,10 @@ $resetText = tc(/*i18n: a text to be asked to the users to confirm the global pa
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <button type="submit" class="btn btn-danger pull-right disabled" name="global-password-reset-form"><?= t('Reset all passwords') ?></button>
+                    <button type="submit" class="btn btn-danger pull-right" name="global-password-reset-form"><?= t('Reset all passwords') ?></button>
                 </div>
             </div>
 
         </div>
     </div>
 </form>
-
-<script type="text/javascript">
-    $(function () {
-        var disableForm = <?php echo json_encode($disableForm) ?>;
-        if (disableForm) {
-            $("#global-password-reset-form :input").prop("disabled", true);
-        }
-
-        $('input[name=confirmation]').on('keyup', function () {
-            if ($(this).val() === <?=json_encode($resetText)?>) {
-                $('button[name=global-password-reset-form]').removeClass("disabled");
-            } else {
-                $('button[name=global-password-reset-form]').addClass("disabled");
-            }
-        });
-    });
-</script>
