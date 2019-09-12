@@ -326,3 +326,21 @@ function core_log($message,
     }
     $logger->log($level, $message, $context);
 }
+
+/**
+ * Resolve the given type from the container.
+ *
+ * @param  string  $abstract
+ * @param  array   $parameters
+ * @return mixed
+ */
+function app($abstract = null, array $parameters = [])
+{
+    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
+    if (is_null($abstract)) {
+        return $app;
+    }
+
+    return $app->make($abstract, $parameters);
+}

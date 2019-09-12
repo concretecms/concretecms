@@ -414,11 +414,11 @@ class StatesProvincesList
                     'BS' => tc('Italian Provinces', 'Brescia'),
                     'BT' => tc('Italian Provinces', 'Barletta-Andria-Trani'),
                     'BZ' => tc('Italian Provinces', 'South Tyrol'),
-                    'CA' => tc('Italian Provinces', 'Cagliari'),
+                    'CA' => tc('Italian Provinces', 'Cagliari'), // Replaced by the Province of South Sardinia on 2016-02-04
                     'CB' => tc('Italian Provinces', 'Campobasso'),
                     'CE' => tc('Italian Provinces', 'Caserta'),
                     'CH' => tc('Italian Provinces', 'Chieti'),
-                    'CI' => tc('Italian Provinces', 'Carbonia-Iglesias'),
+                    'CI' => tc('Italian Provinces', 'Carbonia-Iglesias'), // Replaced by the Province of South Sardinia on 2016-02-04
                     'CL' => tc('Italian Provinces', 'Caltanissetta'),
                     'CN' => tc('Italian Provinces', 'Cuneo'),
                     'CO' => tc('Italian Provinces', 'Como'),
@@ -456,9 +456,9 @@ class StatesProvincesList
                     'NA' => tc('Italian Provinces', 'Naples'),
                     'NO' => tc('Italian Provinces', 'Novara'),
                     'NU' => tc('Italian Provinces', 'Nuoro'),
-                    'OG' => tc('Italian Provinces', 'Ogliastra'),
+                    'OG' => tc('Italian Provinces', 'Ogliastra'), // Merged into the Province of Nuoro on 2016-02-04
                     'OR' => tc('Italian Provinces', 'Oristano'),
-                    'OT' => tc('Italian Provinces', 'Olbia-Tempio'),
+                    'OT' => tc('Italian Provinces', 'Olbia-Tempio'), // Merged into the Province of Sassari on 2016-02-04
                     'PA' => tc('Italian Provinces', 'Palermo'),
                     'PC' => tc('Italian Provinces', 'Piacenza'),
                     'PD' => tc('Italian Provinces', 'Padua'),
@@ -486,6 +486,7 @@ class StatesProvincesList
                     'SP' => tc('Italian Provinces', 'La Spezia'),
                     'SR' => tc('Italian Provinces', 'Syracuse'),
                     'SS' => tc('Italian Provinces', 'Sassari'),
+                    'SU' => tc('Italian Provinces', 'South Sardinia'), // Since 2016-02-04
                     'SV' => tc('Italian Provinces', 'Savona'),
                     'TA' => tc('Italian Provinces', 'Taranto'),
                     'TE' => tc('Italian Provinces', 'Teramo'),
@@ -502,7 +503,7 @@ class StatesProvincesList
                     'VE' => tc('Italian Provinces', 'Venice'),
                     'VI' => tc('Italian Provinces', 'Vicenza'),
                     'VR' => tc('Italian Provinces', 'Verona'),
-                    'VS' => tc('Italian Provinces', 'Medio Campidano'),
+                    'VS' => tc('Italian Provinces', 'Medio Campidano'), // Replaced by the Province of South Sardinia on 2016-02-04
                     'VT' => tc('Italian Provinces', 'Viterbo'),
                     'VV' => tc('Italian Provinces', 'Vibo Valentia'),
                 ],

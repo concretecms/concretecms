@@ -127,7 +127,7 @@ if ($entity) { ?>
             <?php } ?>
         </style>
     <?php } else { ?>
-        <p><?=t('No "%s" entries can be found', $entity->getEntityDisplayName())?>
+        <p><?=t('No "%s" entries can be found', $entity->getEntityDisplayName())?></p>
     <?php } ?>
 
     <?php if ($enableKeywordSearch) { ?>

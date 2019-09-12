@@ -33,7 +33,6 @@ return [
         'ConversationFlagType' => '\Concrete\Core\Conversation\FlagType\FlagType',
         'ConversationMessage' => '\Concrete\Core\Conversation\Message\Message',
         'ConversationRatingType' => '\Concrete\Core\Conversation\Rating\Type',
-        'Cookie' => '\Concrete\Core\Cookie\Cookie',
         'Environment' => '\Concrete\Core\Foundation\Environment',
         'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
         'File' => '\Concrete\Core\File\File',
@@ -644,6 +643,9 @@ return [
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
+        'core/draft_list' => [
+            ['javascript', 'js/draft-list.js', ['minify' => false]],
+        ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
         ],
@@ -752,6 +754,12 @@ return [
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
+            ],
+        ],
+        'core/draft_list' => [
+            [
+                ['javascript', 'core/draft_list'],
+                ['javascript', 'core/events'],
             ],
         ],
         'core/colorpicker' => [

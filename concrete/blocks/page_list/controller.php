@@ -4,8 +4,10 @@ namespace Concrete\Block\PageList;
 use BlockType;
 use CollectionAttributeKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Url\SeoCanonical;
 use Database;
 use Page;
 use Core;
@@ -285,8 +287,14 @@ class Controller extends BlockController
             $topicObj = Topic::getByID(intval($treeNodeID));
             if (is_object($topicObj) && $topicObj instanceof Topic) {
                 $this->list->filterByTopic(intval($treeNodeID));
-                $seo = Core::make('helper/seo');
+
+                /** @var Seo $seo */
+                $seo = $this->app->make('helper/seo');
                 $seo->addTitleSegment($topicObj->getTreeNodeDisplayName());
+
+                /** @var SeoCanonical $canonical */
+                $canonical = $this->app->make(SeoCanonical::class);
+                $canonical->setPathArguments(['topic', $treeNodeID, $topic]);
             }
         }
         $this->view();
@@ -294,8 +302,14 @@ class Controller extends BlockController
 
     public function action_filter_by_tag($tag = false)
     {
-        $seo = Core::make('helper/seo');
+        /** @var Seo $seo */
+        $seo = $this->app->make('helper/seo');
         $seo->addTitleSegment($tag);
+
+        /** @var SeoCanonical $canonical */
+        $canonical = $this->app->make(SeoCanonical::class);
+        $canonical->setPathArguments(['tag', $tag]);
+
         $this->list->filterByTags(h($tag));
         $this->view();
     }
@@ -322,9 +336,14 @@ class Controller extends BlockController
             $this->list->filterByPublicDate($start, '>=');
             $this->list->filterByPublicDate($end, '<=');
 
-            $seo = Core::make('helper/seo');
+            /** @var Seo $seo */
+            $seo = $this->app->make('helper/seo');
             $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true).' '.$year);
             $seo->addTitleSegment($date);
+
+            /** @var SeoCanonical $canonical */
+            $canonical = $this->app->make(SeoCanonical::class);
+            $canonical->setPathArguments([$year, $month]);
         }
         $this->view();
     }

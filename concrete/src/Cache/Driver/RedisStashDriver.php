@@ -145,6 +145,11 @@ class RedisStashDriver extends AbstractDriver
     {
         if (!empty($servers)) {
             foreach ($servers as $server) {
+                $password = null;
+                if (isset($server['password'])) {
+                    $password = $server['password'];
+                }
+
                 if (isset($server['socket'])) {
                     $server = [
                         'server' => array_get($server, 'socket', ''),
@@ -160,6 +165,11 @@ class RedisStashDriver extends AbstractDriver
                         'ttl' => array_get($server, 'ttl', null),
                     ];
                 }
+
+                if ($password != null) {
+                    $server['password'] = $password;
+                }
+
                 yield $server;
             }
         } else {

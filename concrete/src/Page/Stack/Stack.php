@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Stack;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
 use Concrete\Core\Site\Tree\TreeInterface;

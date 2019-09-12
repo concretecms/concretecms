@@ -6,6 +6,8 @@
     'use strict';
 
     var html = $('html');
+    var baseClasses = $('div.ccm-page').attr('class');
+
     function ConcretePanel(options) {
         this.options = options;
         this.isOpen = false;
@@ -236,7 +238,7 @@
             html.removeClass('ccm-panel-detail-open');
             $('.ccm-panel-detail').remove();
             $('.ccm-panel-detail-form-actions').remove();
-            $('.ccm-page').removeClass().addClass('ccm-page');
+            $('.ccm-page').removeClass().addClass(baseClasses);
             Concrete.event.publish('PanelCloseDetail', this.detail);
             this.detail = false;
         };

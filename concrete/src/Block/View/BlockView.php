@@ -7,7 +7,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
 use Config;
-use Area;
+use Concrete\Core\Area\Area;
 use Environment;
 use User;
 use Page;

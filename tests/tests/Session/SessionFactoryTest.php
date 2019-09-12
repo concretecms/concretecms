@@ -7,13 +7,10 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
 use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
-use Concrete\TestHelpers\TestHeadersTrait;
 use PHPUnit_Framework_TestCase;
 
 class SessionFactoryTest extends PHPUnit_Framework_TestCase
 {
-    use TestHeadersTrait;
-
     /** @var Application */
     protected $app;
 
@@ -63,8 +60,6 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testHandlerConfiguration()
     {
-        $this->skipIfHeadersSent();
-
         // Make the private `getSessionHandler` method accessible
         $reflection = new \ReflectionClass(get_class($this->factory));
         $method = $reflection->getMethod('getSessionHandler');
