@@ -873,6 +873,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $q2 = "update CollectionVersions set cvIsApproved = 0, cvApproverUID = 0 where cID = ? and cvID = ?";
         $db->executeQuery($q2, $v2);
         $this->refreshCache();
+        $page= \Page::getByID($this->getCollectionID(), $this->getVersionID());;
+        $ev = new Event($page);
+        $ev->setCollectionVersionObject($page->getVersionObject());
+        $app->make('director')->dispatch('on_page_version_unapproved', $ev);
+
     }
 
     /**
