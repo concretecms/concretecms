@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /* @var int $itemsPerPage */
 ?>
 
-<div class="ccm-ui" data-header="file-manager">
+<div class="ccm-header-search-form ccm-ui" data-header="file-manager">
     <?php if ($includeBreadcrumb) { ?>
         <div class="ccm-search-results-breadcrumb <?= (isset($breadcrumbClass)) ? $breadcrumbClass : ''; ?>">
         </div>
@@ -59,7 +59,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </ul>
     </form>
 </div>
-<div class="clearfix"></div>
 <div style="display: none">
     <div class="dialog-buttons"></div>
     <div data-dialog="add-file-manager-folder" class="ccm-ui">
