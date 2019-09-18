@@ -58,6 +58,7 @@ class Setup extends DashboardSitePageController
             }
         }
         $this->set('mlLink', $mlLink);
+        $this->set('supportScriptSpecificLocale', $siteConfig->get('multilingual.support_script_specific_locale'));
     }
 
     public function get_countries_for_language()
@@ -157,6 +158,7 @@ class Setup extends DashboardSitePageController
                 }
                 $siteConfig->save('multilingual.default_source_locale', $defaultSourceLocale);
                 $siteConfig->save('multilingual.always_track_user_locale', $this->post('alwaysTrackUserLocale') ? true : false);
+                $siteConfig->save('multilingual.support_script_specific_locale', $this->post('supportScriptSpecificLocale') ? true : false);
                 $this->flash('success', t('Default Section settings updated.'));
                 $this->redirect('/dashboard/system/multilingual/setup', 'view');
             } else {
