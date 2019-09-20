@@ -19,8 +19,6 @@ class TwitterDataSource extends DataSource
         return $o;
     }
 
-    /**
-     */
     private function getTwitterService()
     {
         $key = TWITTER_APP_CONSUMER_KEY;

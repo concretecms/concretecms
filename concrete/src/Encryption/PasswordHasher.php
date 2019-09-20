@@ -5,6 +5,9 @@ namespace Concrete\Core\Encryption;
 use Concrete\Core\Config\Repository\Repository;
 use Hautelook\Phpass\PasswordHash;
 
+/**
+ * @since 8.5.2
+ */
 class PasswordHasher
 {
     /**

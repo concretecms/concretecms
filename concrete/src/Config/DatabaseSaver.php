@@ -63,8 +63,6 @@ class DatabaseSaver implements SaverInterface
         $this->doSave($item, $value, $environment, $group, $namespace);
     }
 
-    /**
-     */
     private function doSave($item, $value, $environment, $group, $namespace = null)
     {
         $connection = $this->getConnection();

@@ -36,8 +36,7 @@ class CacheClearer
     /** @var \Illuminate\Filesystem\Filesystem */
     private $filesystem;
 
-    /** @var LoggerInterface
-     */
+    /** @var LoggerInterface */
     private $logger;
 
     /** @var \Concrete\Core\Cache\Level\ObjectCache */

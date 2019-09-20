@@ -202,8 +202,6 @@ class EditorServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     */
     private function registerCorePlugins(PluginManager $pluginManager)
     {
         $coreAssetDir = 'js/ckeditor4/core/';

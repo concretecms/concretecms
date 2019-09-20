@@ -45,6 +45,7 @@ class ClassAliasList
      * @deprecated Don't use this method: it will be removed in future versions (use register)
      * @param string $alias
      * @param string $class
+     * @since 8.5.2
      */
     public function registerRequired($alias, $class)
     {
@@ -55,6 +56,7 @@ class ClassAliasList
     /**
      * Register a list of class aliases to be pre-resolved as soon as possible.
      * @deprecated Don't use this method: it will be removed in future versions (use registerMultiple)
+     * @since 8.5.2
      */
     public function registerMultipleRequired($array)
     {
@@ -65,6 +67,7 @@ class ClassAliasList
     /**
      * Pre-load the class aliases marked as required.
      * @deprecated Don't use this method: it will be removed in future versions.
+     * @since 8.5.2
      */
     public function resolveRequired()
     {

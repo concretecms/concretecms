@@ -288,6 +288,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      * Argument 1 passed to functionName() must be an instance of Area, instance of Concrete\Core\Area\Area given.
      *
      * @deprecated Don't use this method: it will be removed in future concrete5 versions
+     * @since 8.5.2
      */
     protected function preloadClassAliases()
     {

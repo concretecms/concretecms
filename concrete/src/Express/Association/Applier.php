@@ -424,8 +424,6 @@ class Applier
         }
     }
 
-    /**
-     */
     private function rescanAssociationDisplayOrder(Entry\Association $association)
     {
         $displayOrder = 0;

@@ -357,8 +357,6 @@ class Stack extends Page
         }
     }
 
-    /**
-     */
     private $multilingualSectionID;
 
     /**

@@ -416,8 +416,6 @@ class Controller extends AuthenticationTypeController
         throw $e;
     }
 
-    /**
-     */
     private function isPasswordReset()
     {
         $app = Application::getFacadeApplication();

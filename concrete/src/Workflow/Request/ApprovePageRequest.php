@@ -17,14 +17,8 @@ use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class ApprovePageRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
-    /**
-     */
     private $isScheduled = false;
-    /**
-     */
     private $cvPublishDate;
-    /**
-     */
     private $cvPublishEndDate;
 
     public function __construct()

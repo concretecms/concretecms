@@ -223,8 +223,6 @@ EOT
         }
     }
     
-    /**
-     */
     private function guessPackageDetails($packageDirectory)
     {
         $packageHandle = null;

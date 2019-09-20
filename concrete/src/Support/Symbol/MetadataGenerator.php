@@ -157,8 +157,6 @@ class MetadataGenerator
         return $result;
     }
 
-    /**
-     */
     private function getOverride($string, $makeMethod, $comment)
     {
         $output = [

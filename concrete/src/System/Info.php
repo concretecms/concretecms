@@ -14,7 +14,6 @@ class Info
 {
     /**
      * @var \Concrete\Core\Application\Application
-     * @since 8.5.2
      */
     private $app;
 
@@ -88,13 +87,11 @@ class Info
 
     /**
      * @var string|null
-     * @since 8.5.2
      */
     private $dbmsVersion;
 
     /**
      * @var string|null
-     * @since 8.5.2
      */
     private $dbmsSqlMode;
 
@@ -265,7 +262,8 @@ class Info
     }
 
     /**
-     * @since 8.2.0
+     * @since 8.2.0 visibility: protected
+     * @since 8.2.1 visibility: public
      */
     public function getOverrideList()
     {

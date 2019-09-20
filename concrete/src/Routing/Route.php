@@ -93,8 +93,6 @@ class Route extends SymfonyRoute
         $router->getRoutes()->add($name, $this);
     }
 
-    /**
-     */
     private function getGeneratedName()
     {
         $methods = $this->getMethods();

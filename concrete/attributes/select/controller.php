@@ -25,12 +25,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     ];
     private $akSelectAllowMultipleValues;
     private $akSelectAllowOtherValues;
-    /**
-     */
     private $akHideNoneOption;
     private $akSelectOptionDisplayOrder;
-    /**
-     */
     private $akDisplayMultipleValuesOnSelect;
 
     /**

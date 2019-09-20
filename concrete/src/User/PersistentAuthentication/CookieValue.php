@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\User\PersistentAuthentication;
 
+/**
+ * @since 8.5.2
+ */
 class CookieValue
 {
     /**

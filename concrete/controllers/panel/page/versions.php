@@ -160,8 +160,6 @@ class Versions extends BackendInterfacePageController
     }
 
 
-    /**
-     */
     private function countVersions(Collection $c)
     {
         /** @var Connection $database */

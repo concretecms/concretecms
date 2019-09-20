@@ -69,7 +69,6 @@ class Install extends Controller
      * The installer instance.
      *
      * @var Installer|null
-     * @since 8.3.0
      */
     private $installer = null;
 
@@ -528,9 +527,6 @@ class Install extends Controller
         }
     }
 
-    /**
-     * @since 8.4.0
-     */
     private function setInstallStep()
     {
         $sets = $this->getSets();
@@ -550,7 +546,6 @@ class Install extends Controller
      * @param string $languageID
      *
      * @return array
-     * @since 8.2.0
      */
     private function getCountriesForLanguage($languageID)
     {

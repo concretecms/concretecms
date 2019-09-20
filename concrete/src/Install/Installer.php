@@ -201,7 +201,6 @@ class Installer
      * @param \Concrete\Core\Database\Connection\Connection $connection
      *
      * @return \Concrete\Core\Database\Connection\Connection
-     * @since 8.5.0
      */
     private function setPreferredCharsetCollation(Connection $connection)
     {
@@ -229,7 +228,6 @@ class Installer
      * @param string $collation
      *
      * @return \Concrete\Core\Database\Connection\Connection
-     * @since 8.5.0
      */
     private function reconfigureCharacterSetCollation(Connection $connection, $characterSet, $collation)
     {

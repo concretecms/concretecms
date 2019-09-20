@@ -34,8 +34,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public $helpers = ['form'];
 
     protected $searchIndexFieldDefinition = ['type' => 'text', 'options' => ['default' => null, 'notnull' => false]];
-    /**
-     */
     private $akTopicAllowMultipleValues = true;
 
     /**

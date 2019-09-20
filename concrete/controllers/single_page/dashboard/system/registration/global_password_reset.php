@@ -34,6 +34,9 @@ class GlobalPasswordReset extends DashboardPageController
         $this->redirect('/');
     }
     
+    /**
+     * @since 8.5.2
+     */
     protected function getResetText()
     {
         return tc(

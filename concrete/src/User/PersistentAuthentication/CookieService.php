@@ -5,6 +5,9 @@ namespace Concrete\Core\User\PersistentAuthentication;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Cookie\CookieJar;
 
+/**
+ * @since 8.5.2
+ */
 class CookieService
 {
     /**
