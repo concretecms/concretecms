@@ -35,19 +35,24 @@ if (-Not(Test-Path -PathType Leaf -Path 'C:\tools\gettext\bin\msgen.exe')) {
 
 # Update the module used to install PowerShell modules
 Write-Host 'Updating PowerShellGet PowerShell module'
-Update-Module -Name PowerShellGet -Force
+Update-Module -Name PowerShellGet -Force -ErrorAction SilentlyContinue
 
 # Setup VcRedist PowerShell module
-if (-Not(Get-Module -ListAvailable -Name VcRedist)) {
+try {
+    Import-Module VcRedist -ErrorAction Stop
+} catch {
     Write-Host 'Installing VcRedist PowerShell module'
     Install-Module -Name VcRedist -Repository PSGallery -Scope AllUsers -Force
 }
 
 # Setup PhpManager PowerShell module
-if (-Not(Get-Module -ListAvailable -Name PhpManager)) {
+try {
+    Import-Module PhpManager -ErrorAction Stop
+} catch {
     Write-Host 'Installing PhpManager PowerShell module'
     Install-Module -Name PhpManager -Repository PSGallery -Scope AllUsers -Force
 }
+
 Set-PhpDownloadCache -Path 'C:\tools\downloads'
 
 # Setup PHP
