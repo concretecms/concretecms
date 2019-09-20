@@ -5,7 +5,7 @@ use Concrete\Core\Page\Type\Type;
 use Loader;
 use User;
 use Permissions;
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use Config;
 use Session;

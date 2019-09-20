@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Collection;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
 use CollectionVersion;

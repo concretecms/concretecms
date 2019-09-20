@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Block;
 
-use Area;
 use BlockType;
 use CacheLocal;
 use Collection;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
