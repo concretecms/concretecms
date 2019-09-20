@@ -19,7 +19,6 @@ abstract class AbstractError implements HtmlAwareErrorInterface
     /**
      * Does the message contain an HTML-formatted string?
      *
-     * @since 8.4.4
      *
      * @var bool
      */

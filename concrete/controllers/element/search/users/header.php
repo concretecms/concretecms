@@ -49,7 +49,6 @@ class Header extends ElementController
 
     /**
      * @return bool
-     * @since 8.2.0
      */
     private function canExportUsers()
     {

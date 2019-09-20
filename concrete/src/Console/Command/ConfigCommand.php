@@ -16,6 +16,10 @@ use Illuminate\Filesystem\Filesystem;
 class ConfigCommand extends Command
 {
 
+    /**
+     * @since 5.7.5 defined by symfony/console, visibility: private
+     * @since 8.5.0 re-implemented, visibility: protected
+     */
     protected $description = 'Set or get configuration parameters.';
 
     /**
@@ -148,7 +152,6 @@ EOT
      *
      * @param $repository
      * @param $item
-     * @since 8.5.0
      */
     private function doGetAction($repository, $item)
     {
@@ -160,7 +163,6 @@ EOT
      *
      * @param Repository $repository
      * @param string $item
-     * @since 8.5.0
      */
     private function doSetAction(Repository $repository, $item)
     {
@@ -176,7 +178,6 @@ EOT
      * @param \Concrete\Core\Config\Repository\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      * @return \Concrete\Core\Config\Repository\Repository
-     * @since 8.5.0
      */
     private function getRepository(Repository $config, Filesystem $filesystem)
     {

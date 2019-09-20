@@ -11,7 +11,6 @@ class Timezone extends DashboardSitePageController
 {
     /**
      * @var ConnectionTimezone|null
-     * @since 8.2.0
      */
     private $connectionTimezone;
 

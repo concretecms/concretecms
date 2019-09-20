@@ -471,7 +471,6 @@ class BlockView extends AbstractView
      * Custom code can modify the block contents before
      * the block contents are 'echoed' out on the page.
      *
-     * @since 8.4.1
      */
     private function fireOnBlockOutputEvent()
     {

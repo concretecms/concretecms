@@ -1374,7 +1374,6 @@ EOT
      * @param int $cID
      *
      * @return int[]
-     * @since 8.4.0
      */
     private function getCollectionIdTrail($cID)
     {

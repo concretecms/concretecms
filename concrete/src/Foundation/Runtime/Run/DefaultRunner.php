@@ -139,6 +139,8 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      * @deprecated In a future major version this will be part of HTTP middleware
      *
      * @return Response|void Returns a response if an error occurs
+     * @since 8.0.0 visibility: private
+     * @since 8.2.0 visibility: protected
      */
     protected function initializeLegacyURLDefinitions()
     {
@@ -383,7 +385,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      * Get the default config repository to use.
      *
      * @return Repository
-     * @since 8.2.0
      */
     private function getDefaultConfig()
     {
@@ -428,7 +429,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      * Get the default router to use.
      *
      * @return RouterInterface
-     * @since 8.2.0
      */
     private function getDefaultRouter()
     {
@@ -473,7 +473,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      * Get the default site service to use.
      *
      * @return SiteService
-     * @since 8.2.0
      */
     private function getDefaultSiteService()
     {
@@ -520,7 +519,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      * @deprecated In a future major version this will be part of HTTP middleware
      *
      * @return UrlResolverInterface
-     * @since 8.2.0
      */
     private function getDefaultUrlResolver()
     {
@@ -567,7 +565,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      * @deprecated In a future major version this will be part of HTTP middleware
      *
      * @return EventDispatcherInterface
-     * @since 8.2.0
      */
     private function getDefaultEventDispatcher()
     {

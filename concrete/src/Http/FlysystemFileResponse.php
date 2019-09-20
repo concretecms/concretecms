@@ -222,7 +222,6 @@ class FlysystemFileResponse extends Response
     }
 
     /**
-     * @since 8.4.0
      */
     private function hasValidIfRangeHeader($header)
     {

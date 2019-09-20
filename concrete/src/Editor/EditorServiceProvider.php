@@ -203,7 +203,6 @@ class EditorServiceProvider extends ServiceProvider
     }
 
     /**
-     * @since 8.0.0
      */
     private function registerCorePlugins(PluginManager $pluginManager)
     {

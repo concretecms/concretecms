@@ -224,7 +224,6 @@ EOT
     }
     
     /**
-     * @since 8.2.0
      */
     private function guessPackageDetails($packageDirectory)
     {

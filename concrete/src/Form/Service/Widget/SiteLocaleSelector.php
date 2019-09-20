@@ -209,7 +209,6 @@ EOL;
      * @param \Concrete\Core\Entity\Site\Locale[] $locales
      *
      * @return bool
-     * @since 8.5.0
      */
     private function shouldDisplayLocaleCode(array $options, array $locales)
     {

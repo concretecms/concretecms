@@ -213,7 +213,6 @@ class RegistrationService implements RegistrationServiceInterface
      * @param string $string
      *
      * @return string
-     * @since 8.3.2
      */
     private function stringToUsernameChunk($string)
     {

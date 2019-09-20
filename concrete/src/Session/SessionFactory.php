@@ -26,6 +26,10 @@ use RedisArray;
  */
 class SessionFactory implements SessionFactoryInterface
 {
+    /**
+     * @since 5.7.5.4 visibility: private
+     * @since 8.5.0 visibility: protected
+     */
     protected $app;
 
     /**
@@ -38,6 +42,8 @@ class SessionFactory implements SessionFactoryInterface
      * @var \Concrete\Core\Session\Request
      *
      * @deprecated
+     * @since 5.7.5.4 visibility: private
+     * @since 8.5.0 visibility: protected
      */
     protected $request;
 
@@ -231,7 +237,6 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $servers The servers as described in config
      *
      * @return \Generator|string[] [ $host, $port, $weight ]
-     * @since 8.5.0
      */
     private function newMemcachedServers(Memcached $memcached, array $servers)
     {
@@ -291,7 +296,6 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
      *
      * @return \Redis | \RedisArray
-     * @since 8.5.0
      */
     private function getRedisInstance(array $servers)
     {
@@ -344,7 +348,6 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
      *
      * @return \Generator| string[] [ $server, $port, $ttl ]
-     * @since 8.5.0
      */
     private function getRedisServers(array $servers)
     {

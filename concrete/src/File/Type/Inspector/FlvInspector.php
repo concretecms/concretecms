@@ -110,7 +110,6 @@ class FlvInspector extends Inspector
      * @param Version $fv
      *
      * @return resource|null
-     * @since 8.3.1
      */
     private function getStream(Version $fv)
     {
@@ -129,7 +128,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return array|null
-     * @since 8.3.1
      */
     private function readFlvHeader($fp)
     {
@@ -160,7 +158,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return array|null
-     * @since 8.3.1
      */
     private function readFlvTag($fp, $tagOffset)
     {
@@ -187,7 +184,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return int
-     * @since 8.3.1
      */
     private function parseUI8($data)
     {
@@ -204,7 +200,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return int
-     * @since 8.3.1
      */
     private function parseUI16($data)
     {
@@ -222,7 +217,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return int
-     * @since 8.3.1
      */
     private function parseUI24($data)
     {
@@ -240,7 +234,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return int
-     * @since 8.3.1
      */
     private function parseUI32($data)
     {
@@ -260,7 +253,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return float
-     * @since 8.3.1
      */
     private function parseDouble($data)
     {
@@ -278,7 +270,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return array|null
-     * @since 8.3.1
      */
     private function extractScriptTagBody(&$data)
     {
@@ -300,7 +291,6 @@ class FlvInspector extends Inspector
      * @throws \UnexpectedValueException
      *
      * @return mixed
-     * @since 8.3.1
      */
     private function extractScriptDataValue(&$data)
     {
@@ -347,7 +337,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return int
-     * @since 8.3.1
      */
     private function extractScriptDataValue_UI16(&$data)
     {
@@ -363,7 +352,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return float
-     * @since 8.3.1
      */
     private function extractScriptDataValue_Double(&$data)
     {
@@ -379,7 +367,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return bool
-     * @since 8.3.1
      */
     private function extractScriptDataValue_Boolean(&$data)
     {
@@ -395,7 +382,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return string
-     * @since 8.3.1
      */
     private function extractScriptDataValue_String(&$data)
     {
@@ -412,7 +398,6 @@ class FlvInspector extends Inspector
      * @throws UnexpectedValueException
      *
      * @return array
-     * @since 8.3.1
      */
     private function extractScriptDataValue_ECMAArray(&$data)
     {

@@ -160,7 +160,6 @@ class Controller extends BlockController
      * @param bool $previous
      *
      * @return Page|false
-     * @since 8.4.1
      */
     private function getNextPreviousCollection($previous)
     {

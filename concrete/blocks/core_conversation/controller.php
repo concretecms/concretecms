@@ -304,7 +304,6 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
     /**
      * @return \Generator
-     * @since 8.2.0
      */
     private function getReviewAttributeKeys()
     {

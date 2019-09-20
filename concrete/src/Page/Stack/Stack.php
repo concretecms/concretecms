@@ -174,7 +174,6 @@ class Stack extends Page
      * @param int $type
      *
      * @return self|false
-     * @since 5.7.5.3
      */
     private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
@@ -359,7 +358,6 @@ class Stack extends Page
     }
 
     /**
-     * @since 8.0.0
      */
     private $multilingualSectionID;
 
@@ -367,7 +365,8 @@ class Stack extends Page
      * Returns the ID of the multilingual section associated to this stack (or 0 if it's the language-neutral version).
      *
      * @return int
-     * @since 8.0.0
+     * @since 8.0.0 visibility: protected
+     * @since 8.5.0 visibility: public
      */
     public function getMultilingualSectionID()
     {

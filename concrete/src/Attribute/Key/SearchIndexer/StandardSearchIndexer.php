@@ -50,7 +50,6 @@ class StandardSearchIndexer implements SearchIndexerInterface
      * @param array $options
      *
      * @return array
-     * @since 8.2.0
      */
     private function setTypeLength($options)
     {

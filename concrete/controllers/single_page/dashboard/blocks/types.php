@@ -356,7 +356,6 @@ EOT
 
     /**
      * @param \Concrete\Core\Entity\Block\BlockType\BlockType[] $normalBlockTypes
-     * @since 8.4.1
      */
     private function getSetsData(array $normalBlockTypes)
     {

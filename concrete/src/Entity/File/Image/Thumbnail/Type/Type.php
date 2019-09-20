@@ -508,7 +508,6 @@ class Type
      * @param bool $doubled
      *
      * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
-     * @since 8.4.0
      */
     private function getVersion($doubled)
     {

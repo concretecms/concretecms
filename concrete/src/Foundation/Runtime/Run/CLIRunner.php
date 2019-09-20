@@ -22,7 +22,6 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * @since 8.2.0
      */
     private function loadBootstrap()
     {
@@ -32,7 +31,6 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * @since 8.2.0
      */
     private function initializeSystemTimezone()
     {

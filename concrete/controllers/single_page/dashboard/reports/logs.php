@@ -165,7 +165,8 @@ class Logs extends DashboardPageController
     }
 
     /**
-     * @since 5.7.5
+     * @since 5.7.5 visibility: public
+     * @since 8.5.0 visibility: protected
      */
     protected function getFilteredList()
     {

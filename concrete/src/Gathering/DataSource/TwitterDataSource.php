@@ -20,7 +20,6 @@ class TwitterDataSource extends DataSource
     }
 
     /**
-     * @since 5.7.5.4
      */
     private function getTwitterService()
     {

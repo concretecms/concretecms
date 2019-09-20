@@ -94,7 +94,6 @@ class Route extends SymfonyRoute
     }
 
     /**
-     * @since 8.5.0
      */
     private function getGeneratedName()
     {

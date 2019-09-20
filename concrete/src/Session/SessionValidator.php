@@ -35,7 +35,6 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     private $request;
 
     /** @var \Concrete\Core\Permission\IPService
-     * @since 8.4.0
      */
     private $ipService;
 

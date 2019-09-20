@@ -96,7 +96,6 @@ abstract class Cache implements FlushableInterface
      * @param array $driverConfig The config item belonging to the driver
      *
      * @return null|\Stash\Interfaces\DriverInterface
-     * @since 8.5.0
      */
     private function buildDriver(array $driverConfig)
     {

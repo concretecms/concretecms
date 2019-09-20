@@ -64,7 +64,6 @@ class DatabaseSaver implements SaverInterface
     }
 
     /**
-     * @since 5.7.5.4
      */
     private function doSave($item, $value, $environment, $group, $namespace = null)
     {

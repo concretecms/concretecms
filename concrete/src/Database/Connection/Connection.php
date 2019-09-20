@@ -39,7 +39,6 @@ class Connection extends \Doctrine\DBAL\Connection
      * Overridden params.
      *
      * @var array
-     * @since 8.5.0
      */
     private $overriddenParams = [];
 

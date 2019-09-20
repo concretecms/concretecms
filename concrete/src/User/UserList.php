@@ -179,7 +179,6 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @var UserInfoRepository|null
-     * @since 8.2.0
      */
     private $userInfoRepository = null;
 
@@ -386,7 +385,6 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Function used to check if a group join has already been set
-     * @since 8.4.0
      */
     private function checkGroupJoin() {
         $query = $this->getQueryObject();

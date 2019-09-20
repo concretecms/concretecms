@@ -29,7 +29,6 @@ class LinkAbstractor extends ConcreteObject
     /**
      * Takes a chunk of content containing full urls
      * and converts them to abstract link references.
-     * @since 5.7.5.2
      */
     private static $blackListImgAttributes = ['src', 'fid', 'data-verified', 'data-save-url'];
 

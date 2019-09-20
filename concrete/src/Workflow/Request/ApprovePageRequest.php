@@ -18,15 +18,12 @@ class ApprovePageRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
     /**
-     * @since 8.0.0
      */
     private $isScheduled = false;
     /**
-     * @since 8.4.0
      */
     private $cvPublishDate;
     /**
-     * @since 8.4.0
      */
     private $cvPublishEndDate;
 

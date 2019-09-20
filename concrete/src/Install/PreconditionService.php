@@ -127,7 +127,6 @@ class PreconditionService
      * Get all the defined preconditions, of any kind.
      *
      * @return PreconditionInterface[]
-     * @since 8.4.0
      */
     private function getAllPreconditions()
     {

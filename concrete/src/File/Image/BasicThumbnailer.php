@@ -48,7 +48,6 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
 
     /**
      * @var StorageLocationInterface
-     * @since 8.0.0
      */
     private $storageLocation;
 
@@ -112,6 +111,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      * {@inheritdoc}
      *
      * @see ThumbnailerInterface::getJpegCompression()
+     * @since 5.7.5 visibility: protected
+     * @since 8.2.0 visibility: public
      */
     public function getJpegCompression()
     {
@@ -242,7 +243,6 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      * @param bool $crop
      *
      * @return \stdClass
-     * @since 8.2.0
      */
     private function returnThumbnailObjectFromResolver($obj, $maxWidth, $maxHeight, $crop = false)
     {
@@ -259,7 +259,6 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      * @param bool $crop
      *
      * @return \stdClass
-     * @since 8.2.0
      */
     private function checkForThumbnailAndCreateIfNecessary($obj, $maxWidth, $maxHeight, $crop = false)
     {
@@ -274,7 +273,6 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      * @param bool $crop
      *
      * @return \stdClass
-     * @since 8.3.0
      */
     private function processThumbnail($async, $obj, $maxWidth, $maxHeight, $crop)
     {

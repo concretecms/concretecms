@@ -19,7 +19,6 @@ class AssetsLocalization extends Controller
      * @param string $content
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @since 8.2.0
      */
     private function createJavascriptResponse($content)
     {
@@ -725,7 +724,6 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
 
     /**
      * @return int
-     * @since 8.5.2
      */
     private function getDropzoneChunkSize()
     {
@@ -737,7 +735,6 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
 
     /**
      * @return int
-     * @since 8.5.2
      */
     private function getDropzoneAutomaticChunkSize()
     {

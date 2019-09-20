@@ -109,6 +109,8 @@ class TrustedProxies extends DashboardPageController
      * @param string|mixed $input
      *
      * @return string[][]
+     * @since 8.5.0 visibility: private
+     * @since 8.5.2 visibility: protected
      */
     protected function parseIPList($input)
     {

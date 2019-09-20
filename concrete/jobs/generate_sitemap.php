@@ -132,7 +132,6 @@ class GenerateSitemap extends AbstractJob implements ApplicationAwareInterface
      *
      * @param \Concrete\Core\Page\Page $page
      * @param array $instances
-     * @since 8.4.1
      */
     private static function _canIncludePageInSitemap($page, $instances)
     {

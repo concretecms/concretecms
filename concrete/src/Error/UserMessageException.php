@@ -22,7 +22,6 @@ class UserMessageException extends Exception implements JsonSerializable, HtmlAw
     /**
      * Does the message contain an HTML-formatted string?
      *
-     * @since 8.4.4
      *
      * @var bool
      */

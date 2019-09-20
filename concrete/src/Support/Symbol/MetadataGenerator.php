@@ -138,7 +138,6 @@ class MetadataGenerator
      * @param string $abstract
      *
      * @return string|null
-     * @since 8.3.0
      */
     private function resolveAbstractToClassName(Application $app, $abstract)
     {
@@ -159,7 +158,6 @@ class MetadataGenerator
     }
 
     /**
-     * @since 8.0.0
      */
     private function getOverride($string, $makeMethod, $comment)
     {

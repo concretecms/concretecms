@@ -161,7 +161,6 @@ class Versions extends BackendInterfacePageController
 
 
     /**
-     * @since 8.0.0
      */
     private function countVersions(Collection $c)
     {

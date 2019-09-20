@@ -95,6 +95,8 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
      * @param array $args
      *
      * @return \Concrete\Core\Url\UrlInterface|\League\Url\Url
+     * @since 5.7.4 visibility: public
+     * @since 5.7.5.4 visibility: protected
      */
     protected function handlePath(UrlInterface $url, $path, $args)
     {
@@ -148,6 +150,8 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
      * @param array $args
      *
      * @return \Concrete\Core\Url\Components\Path
+     * @since 5.7.4 visibility: public
+     * @since 5.7.5.4 visibility: protected
      */
     protected function basePath($url, $path, $args)
     {

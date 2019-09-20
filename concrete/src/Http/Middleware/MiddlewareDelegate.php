@@ -27,7 +27,6 @@ final class MiddlewareDelegate implements DelegateInterface
 
     /**
      * @var \Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
-     * @since 8.5.0
      */
     private $foundationFactory;
 

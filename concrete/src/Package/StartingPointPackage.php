@@ -207,7 +207,8 @@ class StartingPointPackage extends BasePackage
     }
 
     /**
-     * @since 8.0.0
+     * @since 8.0.0 visibility: public
+     * @since 8.1.0 visibility: protected
      */
     protected function install_data_objects()
     {
@@ -443,7 +444,8 @@ class StartingPointPackage extends BasePackage
     }
 
     /**
-     * @since 8.0.0
+     * @since 8.0.0 visibility: public
+     * @since 8.1.0 visibility: protected
      */
     protected function install_desktops()
     {
@@ -640,7 +642,8 @@ class StartingPointPackage extends BasePackage
     }
 
     /**
-     * @since 8.0.0
+     * @since 8.0.0 visibility: public
+     * @since 8.1.0 visibility: protected
      */
     protected function install_site()
     {
@@ -661,7 +664,8 @@ class StartingPointPackage extends BasePackage
     }
 
     /**
-     * @since 8.0.0
+     * @since 8.0.0 visibility: public
+     * @since 8.1.0 visibility: protected
      */
     protected function install_site_permissions()
     {

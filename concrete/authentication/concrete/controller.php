@@ -396,7 +396,6 @@ class Controller extends AuthenticationTypeController
     }
 
     /**
-     * @since 8.0.0
      */
     private function isPasswordReset()
     {

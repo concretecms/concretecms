@@ -425,7 +425,6 @@ class Applier
     }
 
     /**
-     * @since 8.5.0
      */
     private function rescanAssociationDisplayOrder(Entry\Association $association)
     {

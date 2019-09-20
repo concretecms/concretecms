@@ -39,7 +39,6 @@ class File extends Controller
      * The file to be replaced (if any).
      *
      * @var \Concrete\Core\Entity\File\File|null|false FALSE when uninitialized, NULL when none
-     * @since 8.5.0
      */
     private $fileToBeReplaced = false;
 
@@ -47,7 +46,6 @@ class File extends Controller
      * The destination folder where the uploaded files should be placed.
      *
      * @var \Concrete\Core\Tree\Node\Type\FileFolder|false FALSE when uninitialized
-     * @since 8.5.0
      */
     private $destinationFolder = false;
 
@@ -55,7 +53,6 @@ class File extends Controller
      * The original page to be used when importing files (if any).
      *
      * @var \Concrete\Core\Page\Page|null|false FALSE when uninitialized, NULL when none
-     * @since 8.5.0
      */
     private $importOriginalPage = false;
 
@@ -790,7 +787,6 @@ class File extends Controller
      * @param bool $deleteFile output parameter that's set to true if the uploaded file should be deleted manually
      *
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile|null
-     * @since 8.5.0
      */
     private function getFileToImport(UploadedFile $file, &$deleteFile)
     {
@@ -819,7 +815,6 @@ class File extends Controller
      * @param int $totalChunks
      *
      * @return bool
-     * @since 8.5.0
      */
     private function isFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
     {
@@ -839,7 +834,6 @@ class File extends Controller
      * @param \Symfony\Component\HttpFoundation\File\UploadedFile $originalFile
      *
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @since 8.5.0
      */
     private function combineFileChunks($fileUuid, $tempPath, $totalChunks, UploadedFile $originalFile)
     {

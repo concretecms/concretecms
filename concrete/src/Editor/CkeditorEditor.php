@@ -501,7 +501,6 @@ EOL;
      * Build an object containing the CKEditor preconfigured snippets and classes.
      *
      * @return \stdClass
-     * @since 8.3.0
      */
     private function getEditorSnippetsAndClasses()
     {

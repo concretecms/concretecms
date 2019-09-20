@@ -340,7 +340,6 @@ class FileLoader implements LoaderInterface
      * @param string $namespace
      *
      * @return string[]
-     * @since 8.5.0
      */
     private function getNamespaceDefaultPaths($namespace)
     {

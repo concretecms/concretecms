@@ -219,7 +219,6 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     /**
      * @return int
-     * @since 8.2.0
      */
     private function getItemsPerPage()
     {

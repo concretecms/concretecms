@@ -34,13 +34,22 @@ abstract class Command extends SymfonyCommand
      */
     protected $output;
 
-    /** @var string */
+    /** @var string
+     * @since 8.2.0 defined by symfony/console, visibility: private
+     * @since 8.5.0 re-implemented, visibility: protected
+     */
     protected $name = '';
 
-    /** @var string */
+    /** @var string
+     * @since 8.2.0 defined by symfony/console, visibility: private
+     * @since 8.5.0 re-implemented, visibility: protected
+     */
     protected $description = '';
 
-    /** @var bool */
+    /** @var bool
+     * @since 8.2.0 defined by symfony/console, visibility: private
+     * @since 8.5.0 re-implemented, visibility: protected
+     */
     protected $hidden = false;
 
     /**

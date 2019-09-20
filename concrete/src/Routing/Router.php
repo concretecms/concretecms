@@ -328,7 +328,6 @@ class Router implements RouterInterface
     }
 
     /**
-     * @since 8.5.0
      */
     private function normalizePath($path)
     {
@@ -337,7 +336,6 @@ class Router implements RouterInterface
     }
 
     /**
-     * @since 8.5.0
      */
     private function createRouteBuilder($path, $action, $methods)
     {
@@ -353,7 +351,6 @@ class Router implements RouterInterface
      * @param string $path
      *
      * @return \Symfony\Component\Routing\RouteCollection
-     * @since 8.5.0
      */
     private function filterRouteCollectionForPath(RouteCollection $routes, $path)
     {

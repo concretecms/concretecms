@@ -966,7 +966,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
     /**
      * Make sure that other collection versions aren't approved and valid at the same time as this version.
-     * @since 8.5.0
      */
     private function avoidApprovalOverlapping()
     {

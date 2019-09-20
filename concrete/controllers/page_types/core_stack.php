@@ -11,7 +11,6 @@ class CoreStack extends PageTypeController
 
     /**
      * @var \Concrete\Core\Http\ResponseFactory
-     * @since 8.0.0
      */
     private $factory;
 

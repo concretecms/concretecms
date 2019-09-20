@@ -26,7 +26,6 @@ class Query implements \JsonSerializable
 
     /**
      * @ORM\Column(type="smallint")
-     * @since 8.2.0
      */
     private $itemsPerPage;
 
