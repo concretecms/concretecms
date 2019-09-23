@@ -49,7 +49,7 @@ use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombin
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Entity\Page\PagePath;
 use Queue;
 use Log;
@@ -978,8 +978,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cParentID = $this->getCollectionID();
         $uID = $u->getUserID();
-
-        $handle = $this->getCollectionHandle();
 
         // make the handle out of the title
         $cLink = $ds->sanitizeURL($cLink);

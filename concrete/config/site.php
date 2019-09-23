@@ -137,6 +137,7 @@ return [
                 'use_browser_detected_locale' => false,
                 'default_source_locale' => 'en_US',
                 'always_track_user_locale' => true,
+                'support_script_specific_locale' => false,
             ],
             'seo' => [
                 'canonical_tag' => [

@@ -4,6 +4,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Console\Command;
+use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\PreconditionResult;
@@ -14,7 +15,6 @@ use Concrete\Core\Support\Facade\Application;
 use Database;
 use DateTimeZone;
 use Exception;
-use Hautelook\Phpass\PasswordHash;
 use InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -708,7 +708,7 @@ EOT
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-        $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+        $hasher = $app->make(PasswordHasher::class);
         $installer = $app->make(Installer::class);
         $installer->getOptions()
             ->setConfiguration([
@@ -735,7 +735,7 @@ EOT
             ->setStartingPointHandle($options['starting-point'])
             ->setSiteName($options['site'])
             ->setUserEmail($options['admin-email'])
-            ->setUserPasswordHash($hasher->HashPassword($options['admin-password']))
+            ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
         ;
 

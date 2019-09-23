@@ -7,6 +7,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\View\AbstractView;
 use Config;
@@ -14,7 +15,6 @@ use Concrete\Core\Page\Stack\StackList;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Page\Stack\Stack;
 use Page;
-use Permissions;
 use User;
 use Concrete\Core\Workflow\Request\DeletePageRequest;
 use Concrete\Core\Workflow\Request\ApproveStackRequest;
@@ -230,7 +230,7 @@ class Stacks extends DashboardPageController
     protected function canMoveStacks($parent)
     {
         $page = ($parent instanceof \Concrete\Core\Page\Page) ? $parent : $parent->getPage();
-        $cpc = new Permissions($page);
+        $cpc = new Checker($page);
 
         return (bool) $cpc->canMoveOrCopyPage();
     }
@@ -335,7 +335,7 @@ class Stacks extends DashboardPageController
                 }
             }
             if ($neutralStack) {
-                $cpc = new Permissions($neutralStack);
+                $cpc = new Checker($neutralStack);
                 if (!$cpc->canAddSubpage()) {
                     $this->error->add(t('Access denied'));
                 }
@@ -404,7 +404,7 @@ class Stacks extends DashboardPageController
                     }
                 }
                 if (!$this->error->has()) {
-                    $sps = new Permissions($s);
+                    $sps = new Checker($s);
                     if ($sps->canDeletePage()) {
                         $u = new \User();
                         $pkr = new DeletePageRequest();
@@ -439,7 +439,7 @@ class Stacks extends DashboardPageController
             $s = Stack::getByID($stackID);
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
-                $sps = new Permissions($s);
+                $sps = new Checker($s);
                 if ($sps->canApprovePageVersions()) {
                     $u = new User();
                     $v = Version::get($s, 'RECENT');
@@ -495,7 +495,7 @@ class Stacks extends DashboardPageController
             $this->error->add(t('Invalid stack'));
             $this->view();
         } else {
-            $sps = new Permissions($page);
+            $sps = new Checker($page);
             if (!$sps->canEditPageProperties()) {
                 if ($isFolder) {
                     $this->error->add(t("You don't have the permission to rename this stack"));
@@ -639,7 +639,7 @@ class Stacks extends DashboardPageController
             if ($ns !== null) {
                 $this->redirect('/dashboard/blocks/stacks', 'duplicate', $ns->getCollectionID());
             }
-            $sps = new Permissions($s);
+            $sps = new Checker($s);
             if (!$sps->canMoveOrCopyPage()) {
                 $this->error->add(t("You don't have the permission to clone this stack"));
                 $this->view_details($cID);
@@ -683,7 +683,7 @@ class Stacks extends DashboardPageController
                 $this->error->add(t("Unable to find the specified stack folder."));
             } else {
                 $parentID = $folder->getPage()->getCollectionParentID();
-                $sps = new Permissions($folder->getPage());
+                $sps = new Checker($folder->getPage());
                 if (!$sps->canDeletePage()) {
                     $this->error->add(t('You do not have access to delete this stack folder.'));
                 } else {
