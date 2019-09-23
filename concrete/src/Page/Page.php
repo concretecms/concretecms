@@ -49,7 +49,7 @@ use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombin
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Entity\Page\PagePath;
 use Queue;
 use Log;

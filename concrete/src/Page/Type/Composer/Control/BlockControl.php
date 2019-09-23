@@ -8,7 +8,7 @@ use Block;
 use BlockType;
 use Environment;
 use Concrete\Core\Page\Page;
-use Area;
+use Concrete\Core\Area\Area;
 use PageTemplate;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Support\Facade\Application;

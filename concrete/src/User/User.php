@@ -17,6 +17,7 @@ use Concrete\Core\User\Group\GroupList;
 use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
+use Concrete\Core\Encryption\PasswordHasher;
 
 class User extends ConcreteObject
 {
@@ -174,12 +175,13 @@ class User extends ConcreteObject
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uName = ?";
             }
 
+            $hasher = $app->make(PasswordHasher::class);
             $db = $app->make('Concrete\Core\Database\Connection\Connection');
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetchRow();
                 $pw_is_valid_legacy = ($config->get('concrete.user.password.legacy_salt') && self::legacyEncryptPassword($password) == $row['uPassword']);
-                $pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
+                $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
                 if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
                 } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
@@ -212,11 +214,11 @@ class User extends ConcreteObject
                 if ($pw_is_valid_legacy) {
                     // this password was generated on a previous version of Concrete5.
                     // We re-hash it to make it more secure.
-                    $v = array($this->getUserPasswordHasher()->HashPassword($password), $this->uID);
+                    $v = array($hasher->hashPassword($password), $this->uID);
                     $db->execute($db->prepare("update Users set uPassword = ? where uID = ?"), $v);
                 }
             } else {
-                $this->getUserPasswordHasher()->HashPassword($password); // HashPassword and CheckPassword are slow functions.
+                $hasher->hashPassword($password); // HashPassword and CheckPassword are slow functions.
                 // We run one here just take time.
                 // Without it an attacker would be able to tell that the
                 // username doesn't exist using a timing attack.
@@ -289,7 +291,7 @@ class User extends ConcreteObject
      */
     public function encryptPassword($uPassword, $salt = null)
     {
-        return $this->getUserPasswordHasher()->HashPassword($uPassword);
+        return app(PasswordHasher::class)->hashPassword($uPassword);
     }
 
     /**
@@ -379,22 +381,10 @@ class User extends ConcreteObject
     public function setAuthTypeCookie($authType)
     {
         $app = Application::getFacadeApplication();
-        $config = $app['config'];
-        $jar = $app['cookie'];
-
-        $cookie = array($this->getUserID(), $authType);
         $at = AuthenticationType::getByHandle($authType);
-        $cookie[] = $at->controller->buildHash($this);
-
-        $jar->set(
-            'ccmAuthUserHash',
-            implode(':', $cookie),
-            time() + $config->get('concrete.session.remember_me.lifetime'),
-            DIR_REL . '/',
-            $config->get('concrete.session.cookie.cookie_domain'),
-            $config->get('concrete.session.cookie.cookie_secure'),
-            $config->get('concrete.session.cookie.cookie_httponly')
-        );
+        $token = $at->getController()->buildHash($this);
+        $value = new PersistentAuthentication\CookieValue((int) $this->getUserID(), $authType, $token);
+        $app->make(PersistentAuthentication\CookieService::class)->setCookie($value);
     }
 
     /**
@@ -467,16 +457,7 @@ class User extends ConcreteObject
             $cookie->clear($config->get('concrete.session.name'));
         }
 
-        if ($cookie->has('ccmAuthUserHash') && $cookie->get('ccmAuthUserHash')) {
-            $cookie->set('ccmAuthUserHash',
-                '',
-                315532800,
-                DIR_REL . '/',
-                $config->get('concrete.session.cookie.cookie_domain'),
-                $config->get('concrete.session.cookie.cookie_secure'),
-                $config->get('concrete.session.cookie.cookie_httponly')
-            );
-        }
+        $app->make(PersistentAuthentication\CookieService::class)->deleteCookie();
 
         $loginCookie = sprintf('%s_LOGIN', $app['config']->get('concrete.session.name'));
         if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
@@ -486,16 +467,18 @@ class User extends ConcreteObject
 
     public static function verifyAuthTypeCookie()
     {
-        if ($cookie = array_get($_COOKIE, 'ccmAuthUserHash')) {
-            list($_uID, $authType, $uHash) = explode(':', $cookie);
-            $at = AuthenticationType::getByHandle($authType);
-            $u = self::getByUserID($_uID);
-            if ((!is_object($u)) || $u->isError()) {
-                return;
-            }
-            if ($at->controller->verifyHash($u, $uHash)) {
-                self::loginByUserID($_uID);
-            }
+        $app = Application::getFacadeApplication();
+        $cookie = $app->make(PersistentAuthentication\CookieService::class)->getCookie();
+        if ($cookie === null) {
+            return;
+        }
+        $at = AuthenticationType::getByHandle($cookie->getAuthenticationTypeHandle());
+        $u = self::getByUserID($cookie->getUserID());
+        if ($u === null || $u->isError()) {
+            return;
+        }
+        if ($at->controller->verifyHash($u, $cookie->getToken())) {
+            self::loginByUserID($cookie->getUserID());
         }
     }
 
@@ -911,9 +894,9 @@ class User extends ConcreteObject
     }
 
     /**
-     * @see PasswordHash
+     * @deprecated Use $app->make(\Concrete\Core\Encryption\PasswordHasher::class)
      *
-     * @return PasswordHash
+     * @return \Hautelook\Phpass\PasswordHash
      */
     public function getUserPasswordHasher()
     {

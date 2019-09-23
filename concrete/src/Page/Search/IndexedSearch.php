@@ -9,7 +9,7 @@ use Loader;
 use Config;
 use PageList;
 use Collection;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\SubArea;
 use Block;
 use stdClass;
