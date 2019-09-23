@@ -157,6 +157,15 @@ foreach ($locales as $locale) {
             <?= $form->select('defaultSourceCountry', array_merge(['' => t('*** Undetermined country')], $countries), $defaultSourceCountry) ?>
         </div>
     </div>
+    <div class="form-group">
+        <label class="control-label"><?= t('Advanced') ?></label>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('supportScriptSpecificLocale', 1, $supportScriptSpecificLocale) ?>
+                <span><?= t('Support script-specific locale.') ?> <i class="launch-tooltip control-label fa fa-question-circle" title="<?= h(t('Make it enable to choose script-specific languages (eg "Simplified Chinese") for site locale.')) ?>"></i></span>
+            </label>
+        </div>
+    </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <?php $token->output('set_default') ?>
