@@ -1,23 +1,19 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
-use Concrete\Core\Cache\Cache;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
 use Loader;
 use Exception;
-use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
-
-class InstallThemeCommand extends Command{
-
-    protected function configure(){
+class InstallThemeCommand extends Command
+{
+    protected function configure()
+    {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this->setName('c5:theme:install')
         ->setAliases([
@@ -30,25 +26,25 @@ class InstallThemeCommand extends Command{
         ->addArgument('theme-handle', null, InputOption::VALUE_REQUIRED, 'The handle name of the theme');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output){
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $theme = Theme::getByFileHandle($input->getArgument('theme-handle'));
-        
+
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-        
+
         $v = Loader::helper('validation/error');
         try {
             if (is_object($theme)) {
                 $theme = Theme::add($input->getArgument('theme-handle'));
                 $output->writeln('<info>Theme Installed successfully!</info>');
-                if($input->getOption('activate')){
+                if ($input->getOption('activate')) {
                     $theme->applyToSite();
                 }
             } else {
                 throw new Exception('Invalid Theme');
             }
-        } 
-        catch (Exception $e) {
+        } catch (Exception $e) {
             switch ($e->getMessage()) {
                 case Theme::E_THEME_INSTALLED:
                     $output->writeln('That theme has already been installed.');
@@ -58,7 +54,5 @@ class InstallThemeCommand extends Command{
                     break;
             }
         }
-        
     }
 }
-
