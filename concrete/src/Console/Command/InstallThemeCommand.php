@@ -7,17 +7,11 @@ use Concrete\Core\Console\Command;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
 use Loader;
-use Database;
-use DateTimeZone;
 use Exception;
-use Hautelook\Phpass\PasswordHash;
 use InvalidArgumentException;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 
 
 
