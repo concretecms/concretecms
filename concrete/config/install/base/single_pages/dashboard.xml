@@ -622,7 +622,7 @@
             </attributes>
         </page>
 
-        <page name="Customize Search" path="/dashboard/system/express/entities/order_entries"
+        <page name="Update Entry Display Order" path="/dashboard/system/express/entities/order_entries"
               filename="/dashboard/system/express/entities/order_entries.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
