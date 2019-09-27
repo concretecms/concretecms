@@ -14,7 +14,7 @@ class ExpressValue extends AbstractValue
 {
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry", inversedBy="attributes")
      * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID"),
      */
     protected $entry;

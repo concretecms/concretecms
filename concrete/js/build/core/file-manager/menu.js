@@ -40,6 +40,16 @@
 			_.defer(function() { container.$element.html(container._chooseTemplate); });
 			return false;
 		});
+		$menu.find('a[data-file-manager-action=choose-new-file]')
+			.on('click', function(e) {
+				e.preventDefault();
+				var menu = ConcreteMenuManager.getActiveMenu();
+				if (menu) {
+					menu.hide();
+				}
+				container.chooseNewFile();
+			})
+		;
 		$menu.find('a[data-file-manager-action=download]').on('click', function(e) {
 			e.preventDefault();
 			window.frames['ccm-file-manager-download-target'].location= CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fID;

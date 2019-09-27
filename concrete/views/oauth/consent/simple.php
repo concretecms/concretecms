@@ -5,10 +5,6 @@ $token = $app->make(\Concrete\Core\Validation\CSRF\Token::class);
 $mainScopes = [];
 $additionalScopes = [];
 foreach ($auth->getScopes() as $scope) {
-    if ($scope->getIdentifier() === 'openid') {
-        continue;
-    }
-
     if (!$scope->getDescription()) {
         $additionalScopes[] = h($scope->getIdentifier());
     } else {

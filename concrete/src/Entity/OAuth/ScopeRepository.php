@@ -40,8 +40,10 @@ class ScopeRepository extends EntityRepository implements ScopeRepositoryInterfa
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {
-        $app = Facade::getFacadeApplication();
-        $allowedScopes = $app->make('config')->get('app.api.scopes');
+        $allowedScopes = [];
+        foreach($this->findAll() as $scopeFromDb) {
+            $allowedScopes[] = $scopeFromDb->getIdentifier();
+        }
         $winnowed = [];
         foreach ($scopes as $scope) {
             if (in_array($scope->getIdentifier(), $allowedScopes)) {

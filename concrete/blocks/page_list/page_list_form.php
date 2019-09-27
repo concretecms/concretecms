@@ -157,20 +157,20 @@ $form = Loader::helper('form/page_selector');
                 <div class="filterDateOptionDetail" data-filterDateOption="past">
                     <div class="form-group">
                         <label class="control-label"><?=t('Days in the Past')?> <i class="launch-tooltip fa fa-question-circle" title="<?=t('Leave 0 to show all past dated pages')?>"></i></label>
-                        <input type="text" name="filterDatePast" value="<?= $filterDateDays ?>" class="form-control">
+                        <input type="text" name="filterDatePast" value="<?= $filterDateDays ? $filterDateDays : 0 ?>" class="form-control">
                     </div>
                 </div>
 
                 <div class="filterDateOptionDetail" data-filterDateOption="future">
                     <div class="form-group">
                         <label class="control-label"><?=t('Days in the Future')?> <i class="launch-tooltip fa fa-question-circle" title="<?=t('Leave 0 to show all future dated pages')?>"></i></label>
-                        <input type="text" name="filterDateFuture" value="<?= $filterDateDays ?>" class="form-control">
+                        <input type="text" name="filterDateFuture" value="<?= $filterDateDays ? $filterDateDays : 0 ?>" class="form-control">
                     </div>
                 </div>
 
                 <div class="filterDateOptionDetail" data-filterDateOption="between">
                     <?php
-                    $datetime = loader::helper('form/date_time');
+                    $datetime = Loader::helper('form/date_time');
                     echo $datetime->date('filterDateStart', $filterDateStart);
                     echo "<p>" . t('and') . "</p>";
                     echo $datetime->date('filterDateEnd', $filterDateEnd);

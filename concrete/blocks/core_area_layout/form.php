@@ -42,7 +42,7 @@
 	<li data-grid-form-view="themegrid">
 		<label for="themeGridColumns"><?=t("Columns:")?></label>
 		<input type="text" name="themeGridColumns" id="themeGridColumns" style="width: 40px" <?php if ($controller->getTask() == 'add') {
-    ?>  data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$themeGridMaxColumns?>" <?php 
+    ?>  data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?= isset($themeGridMaxColumns) ? $themeGridMaxColumns : '' ?>" <?php 
 } ?> value="<?=$columnsNum?>" />
 		<?php if ($controller->getTask() == 'edit') {
     // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>

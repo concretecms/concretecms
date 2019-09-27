@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Collection;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
 use CollectionVersion;
@@ -513,7 +513,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function getAttributeValueObject($akHandle, $createIfNotExists = false)
     {
         if (is_object($this->vObj)) {
-            return $this->vObj->getAttributeValue($akHandle);
+            return $this->vObj->getAttributeValueObject($akHandle, $createIfNotExists);
         }
     }
 

@@ -28,4 +28,5 @@ $router->all('/tools/required/jobs/run_single', '\Concrete\Controller\Frontend\J
 $router->all('/ccm/system/upgrade/', '\Concrete\Controller\Upgrade::view');
 $router->all('/ccm/system/upgrade/submit', '\Concrete\Controller\Upgrade::submit');
 $router->all('/ccm/system/country-stateprovince-link/get_stateprovinces', '\Concrete\Controller\Frontend\CountryStateprovinceLink::getStateprovinces');
-$router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller\Dialog\Editor\Settings\Preview::view');
+$router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller\Dialog\Editor\Settings\Preview::view');$router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Controller\Backend\Attribute\Set\UpdateOrder::view');
+$router->all('/ccm/system/heartbeat', '\Concrete\Controller\Frontend\Heartbeat::view');

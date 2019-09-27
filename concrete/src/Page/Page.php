@@ -49,7 +49,7 @@ use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombin
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Entity\Page\PagePath;
 use Queue;
 use Log;
@@ -57,6 +57,7 @@ use Environment;
 use Group;
 use Session;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents including blocks, page metadata, page permissions.
@@ -932,7 +933,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q2 = 'insert into PagePaths (cID, cPath, ppIsCanonical, ppGeneratedFromURLSlugs) values (?, ?, ?, ?)';
         $v2 = [$newCID, $cPath.'/'.$handle, 1, 1];
         $db->executeQuery($q2, $v2);
-
+        $pe = new Event(\Page::getByID($newCID));
+        Events::dispatch('on_page_alias_add', $pe);
         return $newCID;
     }
 
@@ -977,11 +979,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cParentID = $this->getCollectionID();
         $uID = $u->getUserID();
 
-        $handle = $this->getCollectionHandle();
-
         // make the handle out of the title
         $cLink = $ds->sanitizeURL($cLink);
-        $handle = $dt->urlify($cLink);
+        $handle = $dt->urlify($cName);
         $data = [
             'handle' => $handle,
             'name' => $cName,
@@ -1078,6 +1078,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function removeThisAlias()
     {
+        $pe = new DeletePageEvent($this);
+        Events::dispatch('on_page_alias_delete', $pe);
+
         if ($this->isExternalLink()) {
             $this->delete();
         } elseif ($this->isAliasPage()) {
@@ -3125,6 +3128,19 @@ EOT
             }
         }
 
+        $entityManager = Application::getFacadeApplication()->make(EntityManagerInterface::class);
+
+        try {
+            $site = $entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+                ->findOneBy(['siteIsDefault' => true]);
+            if ($site !== null) {
+                return $site->getSiteHomePageID();
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
+
         return null;
     }
 
@@ -3223,8 +3239,12 @@ EOT
 
             $children = $this->getCollectionChildren();
             if (count($children) > 0) {
+                $myCollectionID = $this->getCollectionID();
                 foreach ($children as $child) {
-                    $child->rescanCollectionPath();
+                    // Let's avoid recursion caused by potentially malformed data
+                    if ($child->getCollectionID() !== $myCollectionID) {
+                        $child->rescanCollectionPath();
+                    }
                 }
             }
         //}
@@ -3574,8 +3594,9 @@ EOT
      **/
     public static function addHomePage(TreeInterface $siteTree = null)
     {
+        $app = Application::getFacadeApplication();
         // creates the home page of the site
-        $db = Database::connection();
+        $db = $app->make(Connection::class);
 
         $cParentID = 0;
         $uID = HOME_UID;
@@ -3597,6 +3618,11 @@ EOT
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $r->execute($v);
+        if (!$siteTree->getSiteHomePageID()) {
+            $siteTree->setSiteHomePageID($cID);
+            $em = $app->make(EntityManagerInterface::class);
+            $em->flush($siteTree);
+        }
         $pc = self::getByID($cID, 'RECENT');
 
         return $pc;

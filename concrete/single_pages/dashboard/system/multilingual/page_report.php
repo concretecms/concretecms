@@ -5,72 +5,74 @@ $nav = Loader::helper('navigation');
 
 if (count($sections) > 0) {
     ?>
-    <div class="ccm-dashboard-content-full">
-        <form role="form" action="<?= $controller->action('view') ?>" data-form="search-multilingual-pages" class="form-inline ccm-search-fields">
-            <input type="hidden" name="sectionID" value="<?= $sectionID ?>" />
-            <div class="ccm-search-fields-row">
-                <div class="form-group">
-                    <?= $form->label('keywords', t('Search')) ?>
-                    <div class="ccm-search-field-content">
-                        <div class="ccm-search-main-lookup-field">
-                            <i class="fa fa-search"></i>
-                            <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>
-                            <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?= t('Search') ?></button>
-                        </div>
+    
+    <form role="form" action="<?= $controller->action('view') ?>" data-form="search-multilingual-pages" class="ccm-search-fields">
+        <input type="hidden" name="sectionID" value="<?= $sectionID ?>" />
+        <div class="ccm-search-fields-row">
+            <div class="form-group">
+                <?= $form->label('keywords', t('Search')) ?>
+                <div class="ccm-search-field-content">
+                    <div class="ccm-search-main-lookup-field">
+                        <i class="fa fa-search"></i>
+                        <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>
+                        <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?= t('Search') ?></button>
                     </div>
                 </div>
             </div>
-            <div class="ccm-search-fields-row">
-                <div class="form-group">
-                    <label class="control-label" for="sectionIDSelect"><?= t('Choose Source') ?></label>
-                    <div class="ccm-search-field-content">
-                        <?= $form->select('sectionIDSelect', $sections, $sectionID) ?>
-                    </div>
+        </div>
+        <div class="ccm-search-fields-row">
+            <div class="form-group">
+                <label class="control-label" for="sectionIDSelect"><?= t('Choose Source') ?></label>
+                <div class="ccm-search-field-content">
+                    <?= $form->select('sectionIDSelect', $sections, $sectionID) ?>
                 </div>
             </div>
-            <div class="ccm-search-fields-row" data-list="multilingual-targets">
-                <div class="form-group">
-                    <label class="control-label"><?= t('Choose Targets') ?></label>
-                    <div class="ccm-search-field-content">
-                        <?php
-                        foreach ($sectionList as $sc) {
-                            $args = array('style' => 'vertical-align: middle');
-                            if ($sectionID == $sc->getCollectionID()) {
-                                $args['disabled'] = 'disabled';
-                            }
-                            ?>
-                            <div>
-                                <label class="checkbox-inline">
-                                    <?= $form->checkbox('targets[' . $sc->getCollectionID() . ']', $sc->getCollectionID(), in_array($sc->getCollectionID(), $targets), $args) ?>
-                                    <?= $fh->getSectionFlagIcon($sc) ?>
-                                    <?= $sc->getLanguageText(). " (".$sc->getLocale().")" ?>
-                                </label>
-                            </div>
-                            <?php
+        </div>
+        <div class="ccm-search-fields-row" data-list="multilingual-targets">
+            <div class="form-group">
+                <label class="control-label"><?= t('Choose Targets') ?></label>
+                <div class="ccm-search-field-content">
+                    <?php
+                    foreach ($sectionList as $sc) {
+                        $args = array('style' => 'vertical-align: middle');
+                        if ($sectionID == $sc->getCollectionID()) {
+                            $args['disabled'] = 'disabled';
                         }
                         ?>
-                    </div>
+                        <div>
+                            <label class="checkbox-inline">
+                                <?= $form->checkbox('targets[' . $sc->getCollectionID() . ']', $sc->getCollectionID(), in_array($sc->getCollectionID(), $targets), $args) ?>
+                                <?= $fh->getSectionFlagIcon($sc) ?>
+                                <?= $sc->getLanguageText(). " (".$sc->getLocale().")" ?>
+                            </label>
+                        </div>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
-            <div class="ccm-search-fields-row">
-                <div class="form-group">
-                    <label class="control-label"><?= t('Display') ?></label>
-                    <div class="ccm-search-field-content">
-                        <label class="radio-inline">
-                            <?= $form->radio('showAllPages', 0, 0) ?>
-                            <?= t('Only Missing Pages') ?>
-                        </label>
-                        <label class="radio-inline">
-                            <?= $form->radio('showAllPages', 1, false) ?>
-                            <?= t('All Pages') ?>
-                        </label>
-                    </div>
+        </div>
+        <div class="ccm-search-fields-row">
+            <div class="form-group">
+                <label class="control-label"><?= t('Display') ?></label>
+                <div class="ccm-search-field-content">
+                    <label class="radio-inline">
+                        <?= $form->radio('showAllPages', 0, 0) ?>
+                        <?= t('Only Missing Pages') ?>
+                    </label>
+                    <label class="radio-inline">
+                        <?= $form->radio('showAllPages', 1, false) ?>
+                        <?= t('All Pages') ?>
+                    </label>
                 </div>
             </div>
-            <div class="ccm-search-fields-submit">
-                <button type="submit" class="btn btn-primary pull-right"><?= t('Search') ?></button>
-            </div>
-        </form>
+        </div>
+        <div class="ccm-search-fields-submit">
+            <button type="submit" class="btn btn-primary pull-right"><?= t('Search') ?></button>
+        </div>
+    </form>
+
+    <div class="ccm-dashboard-content-full">
         <?php
         if (count($sections) > 1) {
                 $width = 100 / count($sections);

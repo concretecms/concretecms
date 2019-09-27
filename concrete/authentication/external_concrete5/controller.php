@@ -141,7 +141,6 @@ class Controller extends GenericOauth2TypeController
         $this->set('redirectUri', $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/callback']));
 
         $list = $this->app->make(GroupList::class);
-        $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }
 

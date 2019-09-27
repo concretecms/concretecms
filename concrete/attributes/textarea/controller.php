@@ -81,7 +81,7 @@ class Controller extends DefaultController
         $this->load();
         $value = null;
         if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValue();
+            $value = $this->getAttributeValue()->getValueObject();
 
             if ($value) {
                 if ($this->akTextareaDisplayMode == 'rich_text') {

@@ -33,7 +33,9 @@ abstract class AbstractFormatter implements FormatterInterface
             $name = $formatter->format($mask, $entry);
         }
 
-        $name = $entry->getLabel();
+        if (!$name) {
+            $name = $entry->getLabel();
+        }
 
         if ($name = trim($name)) {
             return $name;

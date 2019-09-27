@@ -1,53 +1,6 @@
 /**
  * These are search forms for the new style search in v8 (file manager)
  */
-div.ccm-header-search-form + div.ui-dialog-content {
-  .border-top-radius(0px);
-}
-
-div.ccm-header-search-form {
-  float: none;
-  position: relative;
-  height: 68px;
-
-  div.input-group {
-    float: right;
-    width: 369px;
-  }
-
-  ul.ccm-header-search-navigation {
-    text-align: right;
-    position: relative;
-    float:right;
-    width: 100%;
-  }
-
-  span.input-group-btn {
-    border-left: 0px;
-  }
-
-  input {
-    border-right-width: 0px !important;
-  }
-
-  form {
-    position: absolute;
-    right: 0.5em;
-    width: 90vw;
-
-    input.form-control {
-      .border-top-left-radius(4px) !important;
-      .border-bottom-left-radius(4px) !important;
-      .border-top-right-radius(0px) !important;
-      .border-bottom-right-radius(0px) !important;
-    }
-
-
-    input[type=text].form-control {
-      width: 200px;
-    }
-  }
-}
 
 div.ccm-header-search-form-input {
   position: relative;
@@ -100,7 +53,8 @@ ul.ccm-header-search-navigation {
   }
   list-style: none;
   text-align: right;
-  padding: 4px 0px 10px 0px;
+  padding: 4px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
   a {
     color: #777;
     .transition(0.1s linear all);
@@ -136,23 +90,6 @@ ul.ccm-header-search-navigation {
 }
 
 div.ui-dialog {
-  div.ccm-header-search-form {
-    width: auto;
-    box-sizing: content-box;
-    padding-top: 18px;
-    padding-bottom: 4px;
-    background-color: #fff;
-    .border-top-radius(4px);
-
-    form {
-      right: 18px;
-    }
-
-    div.input-group {
-      float: right;
-      width: 369px;
-    }
-  }
 
   div.table-responsive {
     margin: -15px -26px -20px -26px;
@@ -179,11 +116,18 @@ div.ui-dialog {
       margin-right: 20px;
     }
   }
-
-  form.form-inline {
+  
+  // If the search header comes inside of a ui-dialog and not in the dashboard, it's safe to say it needs its own
+  // positioning, because the dashboard is what takes of positioning it in the Dashboard context. So let's position
+  // it manually (but only in the div.ui-dialog)
+  div.ccm-header-search-form {
+    float: right;
     margin-bottom: 20px;
   }
-
+  
+  div[data-search-element=results] {
+    clear: both;
+  }
 }
 
 /**

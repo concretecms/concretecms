@@ -42,16 +42,18 @@ class CountryList
         return $this->countries[Localization::activeLocale()];
     }
 
-    /** Gets a country full name given its code
+    /**
+     * Gets a country name given its code.
+     *
      * @param string $code The country code
      *
-     * @return string
+     * @return string|null returns NULL if $code is not valid
      */
     public function getCountryName($code)
     {
         $countries = $this->getCountries(true);
 
-        return $countries[$code];
+        return isset($countries[$code]) ? $countries[$code] : null;
     }
 
     /**
