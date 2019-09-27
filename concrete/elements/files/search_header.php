@@ -52,14 +52,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </div>
 
         </div><!-- /input-group -->
-        <ul class="ccm-header-search-navigation-files ccm-header-search-navigation">
-            <li><a data-launch-dialog="navigate-file-manager" href="#">
-                    <i class="fa fa-share"></i> <?=t('Jump to Folder')?>
-                </a>
-            </li>
-            <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
-            <li><a href="#" id="ccm-file-manager-upload" data-dialog="add-files"><i class="fa fa-upload"></i> <?=t('Upload Files')?></a></li>
-        </ul>
+
     </form>
 </div>
 <div class="clearfix"></div>
