@@ -16,29 +16,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <label class="control-label"><?= t('Filter By Topic') ?></label>
         <div class="radio">
             <label>
-                <input type="radio" name="filterByTopic" value="none" <?php if ($filterByTopic == 'none') {
-    ?> checked <?php 
-} ?>>
-                No topic filtering.
+                <input type="radio" name="filterByTopic" value="none" <?php echo ($filterByTopic == 'none' ? 'checked' : ''); ?>>
+                <?php echo t('No topic filtering'); ?>
             </label>
         </div>
         <div class="radio">
             <label>
-                <input type="radio" name="filterByTopic" value="specific" <?php if ($filterByTopic == 'specific') {
-    ?> checked <?php 
-} ?>>
-                Specific Topic
+                <input type="radio" name="filterByTopic" value="specific" <?php ($filterByTopic == 'specific' ? 'checked' : ''); ?>>
+                <?php echo t('Specific Topic'); ?>
             </label>
         </div>
         <?php if (count($pageAttributeKeys)) {
     ?>
             <div class="radio">
                 <label>
-                    <input type="radio" name="filterByTopic" value="page_attribute" <?php if ($filterByTopic == 'page_attribute') {
-    ?> checked <?php 
-}
-    ?>>
-                    Current Page
+                    <input type="radio" name="filterByTopic" value="page_attribute" <?php echo ($filterByTopic == 'page_attribute' ? 'checked' : ''); ?>>
+                    <?php echo t('Current Page'); ?>
                 </label>
             </div>
             <div data-row="page-attribute">
