@@ -39,6 +39,35 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return SelectValue::class;
     }
 
+    /**
+     * @param mixed $newAK
+     */
+    public function duplicateKey($newAK)
+    {
+       $currentAttributeKeySettings=$this->getAttributeKeySettings();
+       $aks=clone $currentAttributeKeySettings;
+        /**
+         * @var $selectValueOption SelectValueOption
+         */
+       $newList=new ArrayCollection();
+       $selectValueOptionList=new SelectValueOptionList();
+       foreach($currentAttributeKeySettings->getOptionList()->getOptions() as $selectValueOption)
+       {
+           $clonedSelectOption=clone $selectValueOption;
+           $clonedSelectOption->setSelectAttributeOptionID(null);
+           $clonedSelectOption->setSelectAttributeOptionID(null);
+           $clonedSelectOption->setOptionList($selectValueOptionList);
+           $newList->add($clonedSelectOption);
+       }
+       $selectValueOptionList->setOptions($newList);
+       $aks->setOptionList($selectValueOptionList);
+       $aks->setAttributeKey($newAK);
+       $newAK->setAttributeKeySettings($aks);
+       $this->entityManager->persist($aks);
+       //$this->entityManager->flush();
+    }
+
+
     public function type_form()
     {
         $this->set('form', Core::make('helper/form'));

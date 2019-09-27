@@ -66,6 +66,11 @@ class ClonerOptions
      * @var string
      */
     private $versionComments = '';
+    /**
+     * duplicate express entity when copy express block form by default
+     * @var bool
+     */
+    private $duplicateExpressEntity=true;
 
     /**
      * Initialize the instance.
@@ -252,6 +257,23 @@ class ClonerOptions
     {
         $this->versionComments = (string) $value;
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function duplicateExpressEntity()
+    {
+        return $this->duplicateExpressEntity;
+    }
+    /**
+     * @param bool $duplicateExpressEntity
+     * @return ClonerOptions
+     */
+    public function setDuplicateExpressEntity(bool $duplicateExpressEntity)
+    {
+        $this->duplicateExpressEntity = $duplicateExpressEntity;
         return $this;
     }
 }

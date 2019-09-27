@@ -516,4 +516,19 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     {
 
     }
+
+    /**
+     * @Constructor new instance Entity :: Clone
+     */
+    public function __clone()
+    {
+        $this->attributes= new ArrayCollection();
+        $this->associations=new ArrayCollection();
+        $this->entries=new ArrayCollection();
+        $this->forms=new ArrayCollection();
+        $this->created_date = new \DateTime();
+        $this->default_edit_form=null;
+        $this->default_view_form=null;
+        $this->id=null;
+    }
 }

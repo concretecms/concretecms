@@ -235,7 +235,9 @@
         </div>
     </fieldset>
 </div>
-
+<?php if (isset($bOriginalID)):?>
+    <?= $form->hidden('submit_form_scrapbook_display', true);?>
+<?php endif;?>
 <script type="text/template" data-template="express-form-form-control">
 <li class="list-group-item"
     data-action="<?=$view->action('get_control'); ?>"

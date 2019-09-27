@@ -97,8 +97,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
         if (!isset($renderer)) {
             $page = $this->block->getBlockCollectionObject();
-            $this->app->make('log')
-                ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()));
+                $this->app->make('log')
+                    ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()));
         }
     }
 
@@ -196,8 +196,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 if ($this->displayCaptcha) {
                     $validator->addRoutine(
                         new CaptchaRoutine(
-                        $this->app->make('helper/validation/captcha')
-                    )
+                            $this->app->make('helper/validation/captcha')
+                        )
                     );
                 }
 
@@ -263,7 +263,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
                     $notifier = $controller->getNotifier($this);
                     $notifications = $notifier->getNotificationList();
-                    array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues,$key) {
+                    array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues, $key) {
                         if (method_exists($notification, "setAttributeValues")) {
                             $notification->setAttributeValues($submittedAttributeValues);
                         }
@@ -353,7 +353,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
             return new JsonResponse($e);
         }
 
-        $controls[$control->getId()]= $control;
+        $controls[$control->getId()] = $control;
         $session->set('block.express_form.new', $controls);
 
         return new JsonResponse($control);
@@ -444,20 +444,34 @@ class Controller extends BlockController implements NotificationProviderInterfac
             return new JsonResponse($e);
         }
 
-        $sessionControls[$control->getId()]= $control;
+        $sessionControls[$control->getId()] = $control;
         $session->set('block.express_form.new', $sessionControls);
 
         return new JsonResponse($control);
     }
+
     public function save($data)
     {
         $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
-        if (isset($data['exFormID']) && '' != $data['exFormID']) {
+
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        $saveAndReturn = false;
+        if (isset($data['exFormID']) && $data['exFormID'] != '') {
+            $this->exFormID = $data['exFormID'];
+            $saveAndReturn = true;
+        }
+        //express Entity duplication & associated to the new Scraped block ++ Form:: OnSubmit/Edit
+        if (isset($data['submit_form_scrapbook_display'])) {
+            $data['exFormID'] = $this->duplicateEntityExpress()->getId();
+            unset($data['submit_form_scrapbook_display']);
+            $saveAndReturn = true;
+        }
+        if ($saveAndReturn) {
             return parent::save($data);
         }
 
-        $requestControls = (array) $this->request->request->get('controlID');
-        $entityManager = $this->app->make(EntityManagerInterface::class);
+
+        $requestControls = (array)$this->request->request->get('controlID');
         $session = $this->app->make('session');
         $sessionControls = $session->get('block.express_form.new');
 
@@ -866,4 +880,31 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
             ->findOneById($this->exFormID);
     }
+
+
+    /**
+     * duplicate express entity attached to block express form and update block type data
+     * @param $update boolean if we like to save block type data after duplication
+     * @return Form cloned express form entity id
+     */
+    public function duplicateEntityExpress($update = false)
+    {
+        $form = $this->getFormEntity();
+        $objectManager = $this->app->make('express');
+        if (is_object($form)) {
+            $entity = $form->getEntity();
+            $duplicatedEntity = $objectManager->duplicateObject($entity);
+            foreach ($duplicatedEntity->getForms() as $f) {
+                if ($form->getName() == $f->getName()) {
+                    $this->exFormID = $f->getId();
+                    if ($update) {
+                        $this->save(['exFormID' => $f->getId()]);
+                    }
+                    return $f;
+
+                }
+            }
+        }
+    }
 }
+
