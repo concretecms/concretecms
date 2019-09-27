@@ -25,6 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <form method="get" class="form-inline" action="<?php echo URL::to('/ccm/system/search/files/basic')?>">
 
         <div class="input-group">
+
             <div class="ccm-header-search-form-input btn-group">
                 <a class="ccm-header-reset-search" href="#" data-button-action-url="<?=URL::to('/ccm/system/search/files/clear')?>" data-button-action="clear-search"><?=t('Reset Search')?></a>
                 <a class="ccm-header-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
@@ -47,23 +48,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 ?>
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
             </div>
-        </div>
 
-        <div class="btn-group"  style="margin-left: 10px;">
-            <a class="btn btn-info" data-dialog="add-files" href="#" id="ccm-file-manager-upload"><i class="fa fa-upload"></i> <?=t('Upload')?></a>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-folder-open-o"></i> Folders
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a data-launch-dialog="navigate-file-manager" href="#"><?=t('Open Folder')?></a></li>
-                    <li><a href="#" data-launch-dialog="add-file-manager-folder"><?=t('New Folder')?></a></li>
-                </ul>
+            <div class="btn-group"  style="margin-left: 10px;">
+                <a class="btn btn-info" data-dialog="add-files" href="#" id="ccm-file-manager-upload"><i class="fa fa-upload"></i> <?=t('Upload')?></a>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-folder-open-o"></i> Folders
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a data-launch-dialog="navigate-file-manager" href="#"><?=t('Open Folder')?></a></li>
+                        <li><a href="#" data-launch-dialog="add-file-manager-folder"><?=t('New Folder')?></a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
+        </div><!-- /input-group -->
     </form>
 </div>
 <div style="display: none">
