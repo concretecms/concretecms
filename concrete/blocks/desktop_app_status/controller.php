@@ -1,10 +1,11 @@
 <?php
+
 namespace Concrete\Block\DesktopAppStatus;
 
-use Concrete\Core\Updater\Update;
-use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Updater\Update;
 
 class Controller extends BlockController
 {
@@ -26,25 +27,22 @@ class Controller extends BlockController
 
     public function view()
     {
+        $config = $this->app->make('config');
+        $this->set('current_version', $config->get('concrete.version'));
         $this->set('latest_version', Update::getLatestAvailableVersionNumber());
-        $local = [];
-        $remote = [];
-        $p = new Permissions();
-        if ($p->canInstallPackages()) {
-            $local = Package::getLocalUpgradeablePackages();
-            $remote = Package::getRemotelyUpgradeablePackages();
-        }
-
-        // now we strip out any dupes for the total
         $updates = 0;
-        $localHandles = [];
-        foreach ($local as $_pkg) {
-            ++$updates;
-            $localHandles[] = $_pkg->getPackageHandle();
-        }
-        foreach ($remote as $_pkg) {
-            if (!in_array($_pkg->getPackageHandle(), $localHandles)) {
+        $p = new Checker();
+        if ($p->canInstallPackages()) {
+            $packageService = $this->app->make(PackageService::class);
+            $localHandles = [];
+            foreach ($packageService->getLocalUpgradeablePackages() as $pkg) {
                 ++$updates;
+                $localHandles[] = $pkg->getPackageHandle();
+            }
+            foreach ($packageService->getRemotelyUpgradeablePackages() as $pkg) {
+                if (!in_array($pkg->getPackageHandle(), $localHandles)) {
+                    ++$updates;
+                }
             }
         }
         $this->set('updates', $updates);

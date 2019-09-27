@@ -3,6 +3,7 @@
 namespace Concrete\Core\Install\Preconditions;
 
 use Concrete\Core\Database\CharacterSetCollation\Exception as CharacterSetCollationException;
+use Concrete\Core\Database\CharacterSetCollation\Exception\LongKeysUnsupportedByCollation;
 use Concrete\Core\Database\CharacterSetCollation\Exception\NoCharacterSetCollationDefinedException;
 use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Concrete\Core\Database\Connection\Connection;
@@ -98,6 +99,16 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
         } catch (NoCharacterSetCollationDefinedException $x) {
             return new PreconditionResult(PreconditionResult::STATE_SKIPPED, t('preferred database character set and collation are not configured.'));
         } catch (CharacterSetCollationException $x) {
+            if ($x instanceof LongKeysUnsupportedByCollation && $x->getCollation() === 'utf8mb4_unicode_ci' && $x->getWantedKeyLength() === 255) {
+                // Let's simplify a bit the error message for the default concrete5 values
+                // If users customize these values, let's keep the original (complex) message (assuming that they know what they are doing)
+                return new PreconditionResult(PreconditionResult::STATE_FAILED,
+                    t('The database does not have a complete support for all the Unicode characters.')
+                    . ' ' . t("This implies, for example, that you may not be able to save emoticons (it's the same behavior as concrete5 versions older than 8.5.0).")
+                    . ' ' . t('You should upgrade your database to fix this issue.')
+                );
+            }
+
             return new PreconditionResult(PreconditionResult::STATE_FAILED, $x->getMessage());
         } catch (Exception $x) {
             return new PreconditionResult(PreconditionResult::STATE_SKIPPED, $x->getMessage());

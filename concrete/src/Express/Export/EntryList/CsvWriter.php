@@ -92,6 +92,13 @@ class CsvWriter
             yield 'ccm_date_created' => null;
         }
 
+        $author = $entry->getAuthor();
+        if ($author) {
+            yield 'author_name' => $author->getUserInfoObject()->getUserDisplayName();
+        } else {
+            yield 'author_name' => null;
+        }
+
         $attributes = $entry->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKey()->getAttributeKeyHandle() => $attribute->getPlainTextValue();
@@ -106,6 +113,7 @@ class CsvWriter
     private function getHeaders(Entity $entity)
     {
         yield 'ccm_date_created' => 'dateCreated';
+        yield 'author_name' => 'authorName';
 
         $attributes = $entity->getAttributes();
         foreach ($attributes as $attribute) {

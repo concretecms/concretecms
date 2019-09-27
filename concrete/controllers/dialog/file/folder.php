@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\Tree\Node\Node;
 use URL;
@@ -26,10 +27,10 @@ class Folder extends BackendInterfaceFileController
         if (is_object($destNode)) {
             $dp = new \Permissions($destNode);
             if (!$dp->canAddTreeSubNode()) {
-                throw new \Exception(t('You are not allowed to move files to this location.'));
+                throw new UserMessageException(t('You are not allowed to move files to this location.'));
             }
         } else {
-            throw new \Exception(t('You have not selected a valid folder.'));
+            throw new UserMessageException(t('You have not selected a valid folder.'));
         }
 
         $sourceNode = $this->file->getFileNodeObject();
@@ -37,10 +38,10 @@ class Folder extends BackendInterfaceFileController
         if (is_object($sourceNode)) {
             $dp = new \Permissions($sourceNode);
             if (!$dp->canEditTreeNode()) {
-                throw new \Exception(t('You are not allowed to move this file.'));
+                throw new UserMessageException(t('You are not allowed to move this file.'));
             }
         } else {
-            throw new \Exception(t('Invalid source file object.'));
+            throw new UserMessageException(t('Invalid source file object.'));
         }
 
         if ($this->validateAction()) {

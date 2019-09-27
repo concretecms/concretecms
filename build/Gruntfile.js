@@ -131,6 +131,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/personalize.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/location-panel.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/heartbeat.js',
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
@@ -152,6 +153,20 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/header.js'
+            ]
+        },
+
+        fileuploader: {
+            dest: '<%= DIR_BASE %>/concrete/js/file-uploader.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/app/file-uploader.js',
+            ]
+        },
+
+        draftlist: {
+            dest: '<%= DIR_BASE %>/concrete/js/draft-list.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/blocks/draft-list.js',
             ]
         },
 
@@ -482,7 +497,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.0/bootstrap.less',
+        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.1/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
     };

@@ -257,7 +257,7 @@ $(document).ready(function() {
                 } else if (res.message) {
                     alert(res.message);
                 } else {
-                    alert('<?php echo t('An error occured while saving.'); ?>');
+                    alert('<?php echo t('An error occurred while saving.'); ?>');
                 }
             }
         });

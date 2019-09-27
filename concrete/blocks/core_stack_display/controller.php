@@ -118,6 +118,23 @@ class Controller extends BlockController implements TrackableInterface
         return $controller->runAction($action, $parameters);
     }
 
+    public function registerViewAssets($outputContent = '')
+    {
+        $stack = $this->getStack(true);
+        if ($stack === null) {
+            return null;
+        }
+
+        $blocks = $stack->getBlocks();
+        foreach ($blocks as $b) {
+            $controller = $b->getController();
+            if ($controller) {
+                $outputContent = $controller->registerViewAssets($outputContent);
+            }
+        }
+        return $outputContent;
+    }
+
     /**
      * Returns the Stack instance (if found).
      *

@@ -2,16 +2,13 @@
 
 <fieldset>
     <legend><?=t('Display')?></legend>
-    <div class="form-group ccm-block-feature-select-icon">
-        <label class="control-label" for="icon"><?=t('Icon')?></label>
-        <?=$form->select('icon', $icons, $icon);?>
-    </div>
-    <div class="form-group">
-        <label class="control-label"><?=t('Preview')?></label>
-        <div>
-        <i data-preview="icon" <?php if ($icon) {
-        ?>class="fa fa-<?=$icon?>"<?php
-        } ?>></i>
+    <div class="form-group ccm-block-select-icon">
+        <?php echo $form->label('icon', t('Icon'))?>
+        <div class="input-group">
+            <?php echo $form->select('icon', $icons, $icon); ?>
+            <div class="input-group-addon">
+                <i data-preview="icon" class="<?php echo !$icon ?: 'fa fa-' . $icon ?>"></i>
+            </div>
         </div>
     </div>
 
@@ -55,10 +52,10 @@
 
 <script type="text/javascript">
 $(function() {
-    $('div.ccm-block-feature-select-icon').on('change', 'select', function() {
-        $('i[data-preview="icon"]').removeClass();
-        if($(this).val()) {
-            $('i[data-preview="icon"]').addClass('fa fa-' + $(this).val());
+    $('div.ccm-block-select-icon').on('change', 'select', function(event) {
+        $(event.delegateTarget).find('i[data-preview="icon"]').removeClass();
+        if ($(this).val()) {
+            $(event.delegateTarget).find('i[data-preview="icon"]').addClass('fa fa-' + $(this).val());
         }
     });
     $('select[data-select=feature-link-type]').on('change', function() {
@@ -79,15 +76,10 @@ $(function() {
 </script>
 
 <style type="text/css">
-    div.ccm-block-feature-select-icon {
-        position: relative;
+    div.ccm-block-select-icon .input-group-addon {
+        min-width:70px;
     }
-    div.ccm-block-feature-select-icon i {
-        position: absolute;
-        right: -25px;
-        top: 10px;
-    }
-    [data-preview="icon"] {
-        font-size: 50px;
+    div.ccm-block-select-icon i {
+        font-size: 22px;
     }
 </style>

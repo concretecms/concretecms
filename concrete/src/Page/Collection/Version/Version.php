@@ -680,7 +680,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $uID = $u->getUserID();
         $cvID = $this->getVersionID();
         $cID = $this->getCollectionID();
-        $c = Page::getByID($cID, $cvID);
         $now = $dh->getOverridableNow();
 
         $cvPublishDate = $dh->toDB($cvPublishDate) ?: null;
@@ -726,7 +725,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->cvPublishDate = $cvPublishDate;
         $this->cvPublishEndDate = $cvPublishEndDate;
         $this->avoidApprovalOverlapping();
-
+        $c = Page::getByID($cID, $cvID);
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
         if ($oldHandle != $newHandle && !$c->isGeneratedCollection()) {
             $c->rescanCollectionPath();
@@ -764,7 +763,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 [(int) $masterC->getCollectionID(), $c->getCollectionID()]
             );
         }
-
         $ev = new Event($c);
         $ev->setCollectionVersionObject($this);
         $app->make('director')->dispatch('on_page_version_approve', $ev);

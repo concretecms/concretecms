@@ -86,8 +86,8 @@ if test $CHANGES_DETECTED -eq 0; then
 fi
 
 printf '%s: commiting and pushing changes.\n' "$AUTO_COMMIT_NAME_BASE"
-git status
-git add --all .
+cd "$TRAVIS_BUILD_DIR"
+git status --short
 git config user.name "$AUTO_COMMIT_AUTHOR_NAME"
 git config user.email "$AUTO_COMMIT_AUTHOR_EMAIL"
 git commit -m "$AUTO_COMMIT_NAME"

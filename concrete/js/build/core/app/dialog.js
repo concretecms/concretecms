@@ -13,17 +13,55 @@
         }
     });
     
+    function fixDialogButtons($dialog) {
+        var $ccmButtons = $dialog.find('.dialog-buttons').eq(0);
+        if ($ccmButtons.length === 0) {
+            return;
+        }
+        if ($.trim($ccmButtons.html()).length === 0) {
+            return;
+        }
+        var $dialogParent = $dialog.parent();
+        if ($dialogParent.find('.ui-dialog-buttonset').length !== 0) {
+        	return;
+        }
+        $dialog.jqdialog('option', 'buttons', [{}]);
+        $dialogParent.find('.ui-dialog-buttonset').remove();
+        $ccmButtons
+            .removeClass()
+            .addClass('ccm-ui')
+            .appendTo($dialogParent.find('.ui-dialog-buttonpane').empty())
+        ;
+    }
+
     $.widget.bridge( "jqdialog", $.concrete.dialog );
     // wrap our old dialog function in the new dialog() function.
     $.fn.dialog = function() {
         // Pass this over to jQuery UI Dialog in a few circumstances
-        if (arguments.length > 0) {
-            $(this).jqdialog(arguments[0], arguments[1], arguments[2]);
-            return;
-        } else if ($(this).is('div')) {
-            $(this).jqdialog();
-            return;
-        }
+        switch (arguments.length) {
+            case 0:
+                if ($(this).is('div')) {
+                    $(this).jqdialog();
+                    return;
+                }
+                break;
+            case 1:
+            	var arg = arguments[0];
+            	if ($.isPlainObject(arg)) {
+            		var originalOpen = arg.open || null;
+            		arg.open = function(e, ui) {
+            			fixDialogButtons($(this));
+            			if (originalOpen) {
+            				originalOpen.call(this, e, ui);
+            			}
+            		};
+            	}
+            	$.fn.jqdialog.call($(this), arg);
+            	return;
+            default:
+            	$.fn.jqdialog.apply($(this), arguments);
+            	return;
+    	}
         // LEGACY SUPPORT
         return $(this).each(function() {
             $(this).unbind('click.make-dialog').bind('click.make-dialog', function(e) {
@@ -267,17 +305,8 @@
         $dialog.find('button[data-dialog-action=submit]').on('click', function() {
             $dialog.find('[data-dialog-form]').submit();
         });
-    
-        if ($dialog.find('.dialog-buttons').length > 0) {
-            var html = $dialog.find('.dialog-buttons').html();
-            if (html) {
-                $dialog.jqdialog('option', 'buttons', [{}]);
-                $dialog.parent().find(".ui-dialog-buttonset").remove();
-                $dialog.parent().find(".ui-dialog-buttonpane").html('');
-                $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
-            }
-        }
-    
+        
+        fixDialogButtons($dialog);
     
         // make dialogs
         $dialog.find('.dialog-launch').dialog();
