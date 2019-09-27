@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <label class="control-label"><?= t('Filter By Topic') ?></label>
         <div class="radio">
             <label>
-                <input type="radio" name="filterByTopic" value="none" <?= $filterByTopic == 'none' ? 'checked' : ''q ?>>
+                <input type="radio" name="filterByTopic" value="none" <?= $filterByTopic == 'none' ? 'checked' : '' ?>>
                 <?php echo t('No topic filtering'); ?>
             </label>
         </div>
