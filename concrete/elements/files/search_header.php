@@ -32,7 +32,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             <span class="input-group-btn">
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
-              </span>
+            </span>
+
+            <div class="ccm-header-search-form-actions" style="margin-left: 10px;">
+                <div class="input-group-btn">
+                    <a class="btn btn-info" data-dialog="add-files" href="#" id="ccm-file-manager-upload"><i class="fa fa-upload"></i> <?=t('Upload Files')?></a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-folder-open-o"></i> Folders
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a data-launch-dialog="navigate-file-manager" href="#"><i class="fa fa-folder-open-o"></i> <?=t('Open Folder')?></a></li>
+                            <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div><!-- /input-group -->
         <ul class="ccm-header-search-navigation-files ccm-header-search-navigation">
             <li><a data-launch-dialog="navigate-file-manager" href="#">
