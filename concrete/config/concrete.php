@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.2a2',
-    'version_installed' => '8.5.2a2',
+    'version' => '8.5.2',
+    'version_installed' => '8.5.2',
     'version_db' => '20190925072210', // the key of the latest database migration
  
     /*
