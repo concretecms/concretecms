@@ -17,7 +17,7 @@
 
 * Fixed error where external form actions were not working.
 * Fix Exception already used in CharsetCollation\Manager (thanks mlocati)
-* Fixed error where move/copy didn’t work in site map flat view (thanks biplobice)
+* Fixed error where move/copy didn’t work in site map flat view (thanks deek87)
 * Fix resuming copy language tree operation (thanks mlocati)
 * Fixed inability to run some user bulk actions in the Dashboard.
 * Fixed JavaScript error when changing default calendar colors in the Dashboard.

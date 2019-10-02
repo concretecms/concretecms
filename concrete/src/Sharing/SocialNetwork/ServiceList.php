@@ -21,6 +21,7 @@ class ServiceList
             ['googleplus', 'Google Plus', 'google-plus-square'],
             ['reddit', 'Reddit', 'reddit'],
             ['steam', 'Steam', 'steam'],
+            ['twitch', 'Twitch', 'twitch'],
             ['vine', 'Vine', 'vine'],
             ['stumbleupon', 'Stumbleupon', 'stumbleupon'],
             ['skype', 'Skype', 'skype'],

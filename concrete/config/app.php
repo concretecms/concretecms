@@ -33,7 +33,6 @@ return [
         'ConversationFlagType' => '\Concrete\Core\Conversation\FlagType\FlagType',
         'ConversationMessage' => '\Concrete\Core\Conversation\Message\Message',
         'ConversationRatingType' => '\Concrete\Core\Conversation\Rating\Type',
-        'Cookie' => '\Concrete\Core\Cookie\Cookie',
         'Environment' => '\Concrete\Core\Foundation\Environment',
         'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
         'File' => '\Concrete\Core\File\File',
@@ -211,9 +210,9 @@ return [
         'storage_location_type',
         'theme',
         'user_point_action',
+        'workflow',
         'workflow_progress_category',
         'workflow_type',
-        'workflow',
     ],
 
     'importer_routines' => [
@@ -477,6 +476,9 @@ return [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
         ],
+        'core/imageeditor/control/colors' => [
+            ['javascript', 'js/image-editor/controls/colors.js'],
+        ],
         'core/duration' => [
             ['javascript', 'js/duration.js'],
             ['css', 'css/duration.css'],
@@ -545,13 +547,11 @@ return [
             ['css', 'css/fancytree.css', ['minify' => false]],
         ],
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.18.1']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
         'moment-timezone' => [
-            ['javascript', 'js/moment-timezone.js', ['minify' => false, 'version' => '0.5.13']],
-        ],
-        'moment-timezone-data' => [
-            ['javascript', 'js/moment-timezone-data.js', ['minify' => false, 'version' => '0.5.13']],
+            ['javascript', 'js/moment-timezone-with-data.js', ['minify' => false, 'version' => '0.5.25']],
         ],
         'bootstrap/dropdown' => [
             ['javascript', 'js/bootstrap/dropdown.js'],
@@ -618,6 +618,9 @@ return [
             ['javascript', 'js/file-manager.js', ['minify' => false]],
             ['css', 'css/file-manager.css', ['minify' => false]],
         ],
+        'core/file-uploader' => [
+            ['javascript', 'js/file-uploader.js', ['minify' => false]],
+        ],
         'core/express' => [
             ['javascript', 'js/express.js', ['minify' => false]],
         ],
@@ -639,6 +642,9 @@ return [
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
+        ],
+        'core/draft_list' => [
+            ['javascript', 'js/draft-list.js', ['minify' => false]],
         ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
@@ -750,6 +756,12 @@ return [
                 ['javascript', 'core/notification'],
             ],
         ],
+        'core/draft_list' => [
+            [
+                ['javascript', 'core/draft_list'],
+                ['javascript', 'core/events'],
+            ],
+        ],
         'core/colorpicker' => [
             [
                 ['javascript', 'jquery'],
@@ -823,7 +835,7 @@ return [
             [
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
+                ['javascript-localized', 'moment'],
             ],
         ],
         'fancytree' => [
@@ -910,6 +922,7 @@ return [
                 ['css', 'jquery/ui'],
                 ['css', 'core/file-manager'],
                 ['css', 'selectize'],
+                ['javascript', 'dropzone'],
                 ['javascript', 'core/events'],
                 ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
@@ -919,10 +932,20 @@ return [
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'selectize'],
                 ['javascript-localized', 'core/localization'],
+                ['javascript-localized', 'dropzone'],
                 ['javascript', 'core/app'],
                 ['javascript', 'jquery/fileupload'],
                 ['javascript', 'core/tree'],
+                ['javascript', 'core/file-uploader'],
                 ['javascript', 'core/file-manager'],
+            ],
+        ],
+        'core/file-uploader' => [
+            [
+                ['css', 'dropzone'],
+                ['javascript', 'dropzone'],
+                ['javascript-localized', 'dropzone'],
+                ['javascript', 'core/file-uploader'],
             ],
         ],
         'core/duration' => [
@@ -933,7 +956,6 @@ return [
                 ['javascript', 'selectize'],
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
                 ['javascript', 'core/duration'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1108,6 +1130,7 @@ return [
         ],
         'core/account' => [
             [
+                ['javascript', 'jquery'],
                 ['javascript', 'core/account'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['css', 'bootstrap/dropdown'],
@@ -1178,18 +1201,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-
-    'api' => [
-        'scopes' => [
-            'system',
-            'site',
-            'account',
-
-            // For OIDC authentication
-            'openid',
-        ],
-    ],
-
+    
     // HTTP middleware for processing http requests
     'middleware' => [
         [

@@ -15,3 +15,4 @@ $router->get('/jquery/ui/js', 'AssetsLocalization::getJQueryUIJavascript');
 $router->get('/translator/js', 'AssetsLocalization::getTranslatorJavascript');
 $router->get('/dropzone/js', 'AssetsLocalization::getDropzoneJavascript');
 $router->get('/conversations/js', 'AssetsLocalization::getConversationsJavascript');
+$router->get('/moment/js', 'AssetsLocalization::getMomentJavascript');

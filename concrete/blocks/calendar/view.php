@@ -39,6 +39,13 @@ if ($c->isEditMode()) {
                 <?php } ?>
 
                 events: '<?=$view->action('get_events')?>',
+                nextDayThreshold: '00:00:00',
+                eventDataTransform: function(event) {
+                    if(event.allDay) {
+                        event.end = moment(event.end).add(1, 'days')
+                    }
+                    return event;
+                },
 
                 eventRender: function(event, element) {
                     <?php if ($controller->supportsLightbox()) { ?>

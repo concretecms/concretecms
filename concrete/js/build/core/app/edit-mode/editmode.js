@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global Concrete, ConcreteAlert, ConcreteEvent, ConcreteMenuManager, ConcretePanelManager, ConcreteToolbar, ccmi18n, _, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH */
+/* global Concrete, ConcreteAlert, ConcreteEvent, ConcreteMenuManager, ConcretePanelManager, ConcreteToolbar, ConcreteAjaxRequest, ccmi18n, _, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH */
 
 ;(function(window, $) {
     'use strict';
@@ -378,12 +378,12 @@
                     sourceArea = data.sourceArea,
                     send = {
                         ccm_token: window.CCM_SECURITY_TOKEN,
-                        btask: 'ajax_do_arrange',
                         area: targetArea.getId(),
                         sourceArea: sourceArea.getId(),
                         block: block.getId(),
-                        blocks: []
-                    };
+                        blocks: [],
+                    },
+                    loaderDisplayed = false;
 
                 targetArea = targetArea.inEditMode(targetArea.getEditMode());
 
@@ -391,18 +391,30 @@
                     send.blocks.push(block.getId());
                 });
                 block.bindMenu();
-                var loading = false, timeout = setTimeout(function () {
-                    loading = true;
+                var timeout = setTimeout(function () {
+                	loaderDisplayed = true;
                     $.fn.dialog.showLoader();
                 }, 150);
 
                 $.concreteAjax({
                     url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + block.getCID(),
+                    dataType: 'json',
                     data: send,
+                    skipResponseValidation: true,
                     success: function (r) {
-                        ConcreteToolbar.disableDirectExit();
-                        $.fn.dialog.hideLoader();
                         clearTimeout(timeout);
+                        if (loaderDisplayed) {
+                        	$.fn.dialog.hideLoader();
+                        }
+                    	ConcreteAjaxRequest.validateResponse(r, function(ok) {
+                    		if (ok) {
+                    			ConcreteToolbar.disableDirectExit();
+                    		} else {
+                    			if (data.revert) {
+                    				data.revert();
+                    			}
+                    		}
+                    	});
                     }
                 });
 

@@ -8,7 +8,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 
 use Concrete\Core\System\Info;
+use Concrete\Core\System\InfoTransformer;
+use League\Fractal\Resource\Item;
 
 $router->get('/system/info', function() {
-    return new \League\Fractal\Resource\Item(new Info(), new \Concrete\Core\System\InfoTransformer());
-});
+    return new Item(new Info(), new InfoTransformer());
+})->setScopes('system:info:read');

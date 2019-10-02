@@ -22,7 +22,7 @@ abstract class Association
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry", inversedBy="associations")
      * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID")
      */
     protected $entry;

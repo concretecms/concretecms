@@ -17,31 +17,23 @@ class Version20170118000000 extends AbstractMigration implements RepeatableMigra
         $this->addVersionIdToPageTypeOutputBlocks();
     }
 
-    protected function output($message)
-    {
-        $this->version->getConfiguration()->getOutputWriter()->write($message);
-    }
-
     protected function addVersionIdToPageTypeOutputBlocks()
     {
-        $this->output(t('Adding cvID to PageTypeComposerOutputBlocks...'));
-        // Update tables that still exist in db.xml
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
-            'PageTypeComposerOutputBlocks',
-        ]);
-
-        $db = $this->connection;
-        $r = $db->executeQuery('select cID, bID, arHandle from PageTypeComposerOutputBlocks');
-        while ($row = $r->fetch()) {
-            $cvID = $db->fetchColumn('select cvID from CollectionVersionBlocks where cID = ? and bID = ? and arHandle = ?',
-                [$row['cID'], $row['bID'], $row['arHandle']]
-            );
-            if (!$cvID) {
-                $cvID = 0;
-            }
-            $db->executeQuery('update PageTypeComposerOutputBlocks set cvID = ? where cID = ? and bID = ? and arHandle = ?',
-                [$cvID, $row['cID'], $row['bID'], $row['arHandle']]
-            );
-        }
+        $this->refreshDatabaseTables(['PageTypeComposerOutputBlocks']);
+        $this->output(t('Updating cvID of PageTypeComposerOutputBlocks...'));
+        $this->connection->executeQuery(<<<'EOT'
+UPDATE
+    PageTypeComposerOutputBlocks
+    LEFT JOIN CollectionVersionBlocks
+    ON PageTypeComposerOutputBlocks.cID = CollectionVersionBlocks.cID
+    AND PageTypeComposerOutputBlocks.bID = CollectionVersionBlocks.bID
+    AND PageTypeComposerOutputBlocks.arHandle = CollectionVersionBlocks.arHandle
+SET
+    PageTypeComposerOutputBlocks.cvID = IFNULL(CollectionVersionBlocks.cvID, 0)
+WHERE
+    PageTypeComposerOutputBlocks.cvID IS NULL
+    OR PageTypeComposerOutputBlocks.cvID = 0
+EOT
+        );
     }
 }

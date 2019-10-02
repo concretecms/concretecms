@@ -15,8 +15,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var string $formID */
 /* @var Concrete\Core\Tree\Node\Type\FileFolder|null $currentFolder */
 /* @var Concrete\Core\Page\Page|null $originalPage */
-/* @var bool $isChunkingEnabled */
-/* @var int $chunkSize */
 /* @var Concrete\Core\Entity\File\StorageLocation\StorageLocation $incomingStorageLocation */
 /* @var string $incomingPath */
 /* @var array $incomingContents */
@@ -31,20 +29,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
     ]) ?>
 
     <div class="ccm-tab-content" id="ccm-tab-content-local">
-        <form action="<?= $resolverManager->resolve(['/ccm/system/file/upload']) ?>" class="dropzone">
-            <?php $token->output() ?>
-            <input type="hidden" name="responseFormat" value="dropzone" />
-            <?php
-            if ($currentFolder !== null) {
-                ?><input type="hidden" name="currentFolder" value="<?= $currentFolder->getTreeNodeID() ?> " /><?php
-            }
-            if ($originalPage !== null) {
-                ?><input type="hidden" name="ocID" value="<?= $originalPage->getCollectionID() ?> " /><?php
-            }
-            if ($replacingFile !== null) {
-                ?><input type="hidden" name="fID" value="<?= $replacingFile->getFileID() ?> " /><?php
-            }
-            ?>
+        <form class="dropzone">
+            <div class="dz-default dz-message"><span><?= t('Drop files here or click to upload.') ?></span></div>
         </form>
     </div>
 
@@ -173,26 +159,69 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $(document).ready(function() {
 var $dialog = $('#' + <?= json_encode($formID) ?>).closest('.ui-dialog-content'),
     $dialogContainer = $dialog.closest('.ui-dialog'),
-    uploadedFiles = [];
+    uploadedFiles = [],
+    uploaderOptions = {
+        maxFiles: <?= json_encode($replacingFile === null ? null : 1) ?>,
+        previewsContainer: $('#ccm-tab-content-local form')[0],
+        clickable: $('#ccm-tab-content-local form')[0],
+        replacingFileID: <?= json_encode($replacingFile === null ? null : $replacingFile->getFileID()) ?>,
+        originalPageID: <?= json_encode($originalPage === null ? null : $originalPage->getCollectionID()) ?>,
+        folderID: <?= json_encode($currentFolder === null ? null : $currentFolder->getTreeNodeID()) ?>,
+        uploadStarted: function() {
+            $dialogContainer.find('.ui-dialog-buttonpane button').attr('disabled', 'disabled');
+        },
+        uploadFailed: function() {
+        },
+        uploadCompleted: function(files) {
+            handleImportSuccessfull(files, <?= $replacingFile ? 'true' : 'false' ?>);
+        },
+        uploadQueueCompleted: function() {
+            refreshDialogButtons();
+        },
+        previewTemplate: <?= json_encode(<<<'EOT'
+<div class="dz-preview dz-file-preview">
+    <div class="dz-details">
+        <div class="dz-filename"><span data-dz-name></span></div>
+        <div class="dz-size" data-dz-size></div>
+        <img data-dz-thumbnail />
+    </div>
+    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+    <div class="dz-success-mark"><span>✔</span></div>
+    <div class="dz-error-mark"><span>✘</span></div>
+    <div class="dz-error-message"><span data-dz-errormessage></span></div>
+</div>
+EOT
+        ) ?>
+    };
 
 $dialog.jqdialog('option', 'buttons', [{}]);
 $dialogContainer.find('.ui-dialog-buttonset').remove();
+window.ccm_fileUploader.start(uploaderOptions);
 $dialog.on('dialogclose', function() {
-    if (uploadedFiles.length === 0) {
-        return;
-    }
-    <?php
-    if ($replacingFile === null) {
-        ?>
-        ConcreteEvent.publish('FileManagerAddFilesComplete', {files: uploadedFiles});
+    window.ccm_fileUploader.stop(uploaderOptions);
+    if (uploadedFiles.length > 0) {
         <?php
-    } else {
+        if ($replacingFile === null) {
+            ?>
+            ConcreteEvent.publish('FileManagerAddFilesComplete', {files: uploadedFiles});
+            <?php
+        } else {
+            ?>
+            ConcreteEvent.publish('FileManagerReplaceFileComplete', {files: uploadedFiles});
+            <?php
+        }
         ?>
-        ConcreteEvent.publish('FileManagerReplaceFileComplete', {files: uploadedFiles});
-        <?php
     }
-    ?>
 });
+
+function handleImportSuccessfull(files, isSingleUploadOperation) {
+    files.forEach(function(file) {
+        uploadedFiles.push(file);
+    });
+    if (isSingleUploadOperation) {
+        $dialog.jqdialog('close');
+    }
+}
 
 function handleImportResponse(response, isSingleUploadOperation) {
     if (!response) {
@@ -208,12 +237,9 @@ function handleImportResponse(response, isSingleUploadOperation) {
                     appendTo: document.body
                 });
             }
-            if (response.files && response.files.length) {
-                $.each(response.files, function() {
-                    uploadedFiles.push(this);
-                })
-                if (isSingleUploadOperation) {
-                    $dialog.jqdialog('close');
+            if (!failed) {
+                if (response.files && response.files.length) {
+                    handleImportSuccessfull(response.files);
                 }
             }
         }
@@ -260,63 +286,6 @@ $dialog.find('ul.nav-tabs a[data-tab]').on('click', function() {
     setTimeout(function() { refreshDialogButtons(); }, 0);
 });
 setTimeout(function() { refreshDialogButtons(); }, 0);
-
-//Setup upload tab
-var $dropzone = $dialog.find('#ccm-tab-content-local form').dropzone({
-    maxFiles: <?= $replacingFile === null ? 'null' : 1 ?>,
-    sending: function() {
-        $dialogContainer.find('.ui-dialog-buttonpane button').attr('disabled', 'disabled');
-    },
-    success: function(data, r) {
-        handleImportResponse(r, <?= $replacingFile ? 'true' : 'false' ?>);
-    },
-    <?php
-    if ($replacingFile) {
-        // We may need to allow people to re-try uploading a file if maxFiles === 1 and the upload of the file filed
-        ?>
-        error: function(files, message, xhr) {
-            this.defaultOptions.error.apply(this, arguments);
-            if (files) {
-                if (!(files instanceof Array)) {
-                    files = [files];
-                }
-                $.each(files, function(index, file) {
-                    if (file && file.accepted) {
-                        file.accepted = false;
-                    }
-                });
-            }
-        },
-        <?php
-    }
-    ?>
-    chunksUploaded: function (file, done) {
-        if (file.xhr.response) {
-            handleImportResponse(JSON.parse(file.xhr.response), <?= $replacingFile ? 'true' : 'false' ?>);
-        }
-        done();
-    },
-    queuecomplete: function() {
-        refreshDialogButtons();
-    },
-    chunking: <?= $isChunkingEnabled ? 'true' : 'false' ?>,
-    chunkSize: <?= $chunkSize ?>,
-    retryChunks: <?= $isChunkingEnabled ? 'true' : 'false' ?>,
-    previewTemplate: <?= json_encode(<<<'EOT'
-<div class="dz-preview dz-file-preview">
-    <div class="dz-details">
-        <div class="dz-filename"><span data-dz-name></span></div>
-        <div class="dz-size" data-dz-size></div>
-        <img data-dz-thumbnail />
-    </div>
-    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-    <div class="dz-success-mark"><span>✔</span></div>
-    <div class="dz-error-mark"><span>✘</span></div>
-    <div class="dz-error-message"><span data-dz-errormessage></span></div>
-</div>
-EOT
-        ) ?>
-});
 
 // Setup incoming tab
 <?php
