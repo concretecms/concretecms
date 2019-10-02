@@ -75,7 +75,7 @@ class MovePageRequest extends PageRequest
         $dc = Page::getByID($this->targetCID);
         if (is_object($c) && is_object($dc) && (!$c->isError()) && (!$dc->isError())) {
             if ($c->canMoveCopyTo($dc)) {
-                if ($this->saveOldPagePath) {
+                if (!$c->isExternalLink() && $this->saveOldPagePath) {
                     // retain old page path.
                     $path = $c->getCollectionPathObject();
                     if (is_object($path)) {
