@@ -1593,6 +1593,10 @@ class Version implements ObjectInterface
         $app = Application::getFacadeApplication();
 
         $path = null;
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl !== null) {
+            $configuration = $fsl->getConfigurationObject();
+            if ($configuration->hasPublicURL()) {
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
@@ -1603,6 +1607,11 @@ class Version implements ObjectInterface
             if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                 $path_resolver = $app->make(Resolver::class);
                 $path = $path_resolver->getPath($this, $type);
+            }
+        }
+            } else {
+                $urlResolver = $app->make(ResolverManagerInterface::class);
+                $path = $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
             }
         }
         if (!$path) {
