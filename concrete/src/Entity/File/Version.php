@@ -1443,94 +1443,98 @@ class Version implements ObjectInterface
     public function generateThumbnail(ThumbnailTypeVersion $type)
     {
         $app = Application::getFacadeApplication();
-        $config = $app->make('config');
-        $image = $this->getImagineImage();
-        $imageSize = $image->getSize();
-        $bitmapFormat = $app->make(BitmapFormat::class);
-        $inplaceOperations = false;
-        $inplacePixelsLimit = (float) $config->get('concrete.misc.inplace_image_operations_limit');
-        if ($inplacePixelsLimit >= 1) {
-            $totalImagePixels = $imageSize->getWidth() * $imageSize->getHeight() * max($image->layers()->count(), 1);
-            if ($totalImagePixels > $inplacePixelsLimit) {
-                $inplaceOperations = true;
-                $this->releaseImagineImage();
-            }
-        }
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl !== null) {
+            $fslConfig = $fsl->getConfigurationObject();
+            if ($fslConfig->hasPublicURL()) {
+                $config = $app->make('config');
+                $image = $this->getImagineImage();
+                $imageSize = $image->getSize();
+                $bitmapFormat = $app->make(BitmapFormat::class);
+                $inplaceOperations = false;
+                $inplacePixelsLimit = (float)$config->get('concrete.misc.inplace_image_operations_limit');
+                if ($inplacePixelsLimit >= 1) {
+                    $totalImagePixels = $imageSize->getWidth() * $imageSize->getHeight() * max($image->layers()->count(), 1);
+                    if ($totalImagePixels > $inplacePixelsLimit) {
+                        $inplaceOperations = true;
+                        $this->releaseImagineImage();
+                    }
+                }
 
-        $filesystem = $this->getFile()
-            ->getFileStorageLocationObject()
-            ->getFileSystemObject();
+                $filesystem = $fsl->getFileSystemObject();
 
-        $height = $type->getHeight();
-        $width = $type->getWidth();
-        if ($height && $width) {
-            $size = new Box($width, $height);
-        } elseif ($width) {
-            $size = $imageSize->widen($width);
-        } else {
-            $size = $imageSize->heighten($height);
-        }
+                $height = $type->getHeight();
+                $width = $type->getWidth();
+                if ($height && $width) {
+                    $size = new Box($width, $height);
+                } elseif ($width) {
+                    $size = $imageSize->widen($width);
+                } else {
+                    $size = $imageSize->heighten($height);
+                }
 
-        // isCropped only exists on the CustomThumbnail type
-        if (method_exists($type, 'isCropped') && $type->isCropped()) {
-            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-        } else {
-            switch ($type->getSizingMode()) {
-                case ThumbnailType::RESIZE_EXACT:
+                // isCropped only exists on the CustomThumbnail type
+                if (method_exists($type, 'isCropped') && $type->isCropped()) {
                     $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-                    break;
-                case ThumbnailType::RESIZE_PROPORTIONAL:
-                default:
-                    $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
-                    break;
+                } else {
+                    switch ($type->getSizingMode()) {
+                        case ThumbnailType::RESIZE_EXACT:
+                            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+                            break;
+                        case ThumbnailType::RESIZE_PROPORTIONAL:
+                        default:
+                            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+                            break;
+                    }
+                }
+                if ($inplaceOperations) {
+                    $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_NOCLONE;
+                }
+                if ($type->isUpscalingEnabled()) {
+                    $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_UPSCALE;
+                }
+
+                $thumbnail = $image->thumbnail($size, $thumbnailMode);
+                unset($image);
+                $thumbnailPath = $type->getFilePath($this);
+                if ($type->isKeepAnimations() && $thumbnail->layers()->count() > 1) {
+                    $isAnimation = true;
+                    $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+                } else {
+                    $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+                    $isAnimation = false;
+                }
+
+                $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
+                $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailFormat);
+                if ($isAnimation) {
+                    $thumbnailOptions['animated'] = true;
+                }
+
+                $filesystem->write(
+                    $thumbnailPath,
+                    $thumbnail->get($thumbnailFormat, $thumbnailOptions),
+                    [
+                        'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                        'mimetype' => $mimetype,
+                    ]
+                );
+                unset($thumbnail);
+                gc_collect_cycles();
+
+                $app['director']->dispatch('on_thumbnail_generate',
+                    new \Concrete\Core\File\Event\ThumbnailGenerate($thumbnailPath, $type)
+                );
+
+                if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
+                    $this->fvHasListingThumbnail = true;
+                    $this->save();
+                }
+                if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && !$this->fvHasDetailThumbnail) {
+                    $this->fvHasDetailThumbnail = true;
+                    $this->save();
+                }
             }
-        }
-        if ($inplaceOperations) {
-            $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_NOCLONE;
-        }
-        if ($type->isUpscalingEnabled()) {
-            $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_UPSCALE;
-        }
-
-        $thumbnail = $image->thumbnail($size, $thumbnailMode);
-        unset($image);
-        $thumbnailPath = $type->getFilePath($this);
-        if ($type->isKeepAnimations() && $thumbnail->layers()->count() > 1) {
-            $isAnimation = true;
-            $thumbnailFormat = BitmapFormat::FORMAT_GIF;
-        } else {
-            $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
-            $isAnimation = false;
-        }
-
-        $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
-        $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailFormat);
-        if ($isAnimation) {
-            $thumbnailOptions['animated'] = true;
-        }
-
-        $filesystem->write(
-            $thumbnailPath,
-            $thumbnail->get($thumbnailFormat, $thumbnailOptions),
-            [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => $mimetype,
-            ]
-        );
-        unset($thumbnail);
-        gc_collect_cycles();
-
-        $app['director']->dispatch('on_thumbnail_generate',
-            new \Concrete\Core\File\Event\ThumbnailGenerate($thumbnailPath, $type)
-        );
-
-        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
-            $this->fvHasListingThumbnail = true;
-            $this->save();
-        }
-        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && !$this->fvHasDetailThumbnail) {
-            $this->fvHasDetailThumbnail = true;
-            $this->save();
         }
     }
 
@@ -1597,18 +1601,18 @@ class Version implements ObjectInterface
         if ($fsl !== null) {
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasPublicURL()) {
-        if (!($type instanceof ThumbnailTypeVersion)) {
-            $type = ThumbnailTypeVersion::getByHandle($type);
-        }
-        if ($type !== null) {
-            $imageWidth = (int) $this->getAttribute('width');
-            $imageHeight = (int) $this->getAttribute('height');
-            $file = $this->getFile();
-            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
-                $path_resolver = $app->make(Resolver::class);
-                $path = $path_resolver->getPath($this, $type);
-            }
-        }
+                if (!($type instanceof ThumbnailTypeVersion)) {
+                    $type = ThumbnailTypeVersion::getByHandle($type);
+                }
+                if ($type !== null) {
+                    $imageWidth = (int) $this->getAttribute('width');
+                    $imageHeight = (int) $this->getAttribute('height');
+                    $file = $this->getFile();
+                    if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                        $path_resolver = $app->make(Resolver::class);
+                        $path = $path_resolver->getPath($this, $type);
+                    }
+                }
             } else {
                 $urlResolver = $app->make(ResolverManagerInterface::class);
                 $path = $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
