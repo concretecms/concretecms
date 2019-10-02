@@ -102,7 +102,7 @@ echo Core::make('helper/concrete/ui')->tabs([
             <div class="checkbox">
                 <label>
                     <?php echo $form->checkbox('rel', 1, !empty($rel)); ?>
-                    <?php echo t('Show related videos when playback ends'); ?>
+                    <?php echo t('Show related videos from different channels when playback ends'); ?>
                 </label>
             </div>
             <div class="checkbox">
