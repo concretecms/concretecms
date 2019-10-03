@@ -108,7 +108,11 @@ echo Core::make('helper/concrete/ui')->tabs([
             <div class="checkbox">
                 <label>
                     <?php echo $form->checkbox('rel', 1, !empty($rel)); ?>
-                    <?php echo t('Show related videos when playback ends'); ?>
+                    <?php echo t('Show related videos from other channels'); ?>
+                    <?php echo sprintf(
+                    '<i class="launch-tooltip fa fa-exclamation-circle z-indexable z-1000" data-toggle="tooltip" data-placement="bottom" title="%s"></i>',
+                    t('Disabling this will show related videos from the same channel as the video')
+                    ); ?>
                 </label>
             </div>
             <div class="checkbox">
