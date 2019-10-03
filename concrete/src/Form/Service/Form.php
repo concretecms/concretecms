@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Form\Service;
 
 use Concrete\Core\Application\Application;
@@ -95,8 +94,10 @@ class Form
         if ($this->request == null) {
             $this->request = $this->app->make(Request::class);
         }
+
         return $this->request;
     }
+
     /**
      * Returns an action suitable for including in a form action property.
      *
@@ -425,7 +426,7 @@ class Form
             $selectedValue = (string) $valueOrMiscFields;
         }
         if ($selectedValue !== '') {
-            $miscFields['ccm-passed-value'] = $selectedValue;
+            $miscFields['ccm-passed-value'] = h($selectedValue);
         }
         $requestValue = $this->getRequestValue($key);
         if (is_array($requestValue) && isset($requestValue[0]) && is_string($requestValue[0])) {
@@ -475,6 +476,7 @@ class Form
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
      * @param string $selectedCountryCode the code of the Country to be initially selected
      * @param array $configuration Configuration options. Supported keys are:
+     * - 'noCountryText': the text to be displayed when no country is selected
      * - 'required': do users must choose a Country?
      * - 'allowedCountries': an array containing a list of acceptable Country codes. If not set, all the countries will be selectable.
      * - 'linkStateProvinceField': set to true to look for text fields that have a "data-countryfield" attribute with the same value as this Country field name (updating the Country select will automatically update the State/Province list).
@@ -483,9 +485,12 @@ class Form
     public function selectCountry($key, $selectedCountryCode = '', array $configuration = [], array $miscFields = [])
     {
         $configuration += [
+            'noCountryText' => '',
             'required' => false,
             'allowedCountries' => null,
             'linkStateProvinceField' => false,
+            'hideUnusedStateProvinceField' => false,
+            'clearStateProvinceOnChange' => false,
         ];
         $allCountries = $this->app->make(CountryList::class)->getCountries();
         if (is_array($configuration['allowedCountries'])) {
@@ -523,7 +528,7 @@ class Form
             $id = $key;
         }
         if ($selectedCountryCode === '' || !$configuration['required']) {
-            $optionValues = ['' => ''];
+            $optionValues = ['' => (string) $configuration['noCountryText']];
         } else {
             $optionValues = [];
         }
@@ -543,10 +548,18 @@ class Form
         if ($configuration['linkStateProvinceField']) {
             $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $id);
             $r = ResponseAssetGroup::get();
-            $r->requireAsset('core/country-stateprovince-link');
-            $str .= '<script>';
-            $str .= '$(document).ready(function() { ccmCountryStateprovinceLink.withCountryField($(' . json_encode('#' . $escapedID) . ')); });';
-            $str .= '</script>';
+            $r->requireAsset('core/country-data-link');
+            $config = [
+                'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
+                'clearStateProvinceOnChange' => (bool) $configuration['clearStateProvinceOnChange'],
+            ];
+
+            $str .= '<script>$(document).ready(function() {';
+            $str .= 'ccmCountryDataLink.withCountryField(';
+            $str .= '$(' . json_encode('#' . $escapedID) . ')';
+            $str .= ', ' . json_encode($config);
+            $str .= ');';
+            $str .= '});</script>';
         }
 
         return $str;
@@ -582,11 +595,25 @@ class Form
         }
         $str = "<select id=\"$key\" name=\"{$key}[]\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
-            $str .= '<option value="' . h($k) . '"';
-            if (in_array($k, $selectedValues)) {
-                $str .= ' selected="selected"';
+            if (is_array($text)) {
+                if (count($text) > 0) {
+                    $str .= '<optgroup label="' . h($k) . '">';
+                    foreach ($text as $k1 => $text1) {
+                        $str .= '<option value="' . h($k1) . '"';
+                        if (in_array($k1, $selectedValues)) {
+                            $str .= ' selected="selected"';
+                        }
+                        $str .= '>' . h($text1) . '</option>';
+                    }
+                    $str .= '</optgroup>';
+                }
+            } else {
+                $str .= '<option value="' . h($k) . '"';
+                if (in_array($k, $selectedValues)) {
+                    $str .= ' selected="selected"';
+                }
+                $str .= '>' . h($text) . '</option>';
             }
-            $str .= '>' . $text . '</option>';
         }
         $str .= '</select>';
 

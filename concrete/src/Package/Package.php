@@ -290,7 +290,18 @@ abstract class Package implements LocalizablePackageInterface
     public function installContentFile($file)
     {
         $ci = new ContentImporter();
-        $ci->importContentFile($this->getPackagePath() . '/' . $file);
+        $cache = $this->app->make('cache/request');
+        $cacheEnabled = $cache->isEnabled();
+        if ($cacheEnabled) {
+            $cache->disable();
+        }
+        try {
+            $ci->importContentFile($this->getPackagePath() . '/' . $file);
+        } finally {
+            if ($cacheEnabled) {
+                $cache->enable();
+            }
+        }
     }
 
     /**

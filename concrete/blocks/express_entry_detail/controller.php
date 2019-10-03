@@ -13,6 +13,7 @@ use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Url\SeoCanonical;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController
@@ -118,6 +119,11 @@ class Controller extends BlockController
                 /** @var Seo $seo */
                 $seo = $this->app->make('helper/seo');
                 $seo->addTitleSegmentBefore($entry->getLabel());
+
+                /** @var SeoCanonical $canonical */
+                $canonical = $this->app->make(SeoCanonical::class);
+                $canonical->setPathArguments(['view_express_entity', $exEntryID]);
+
                 $this->set('entry', $entry);
                 $this->view();
             }

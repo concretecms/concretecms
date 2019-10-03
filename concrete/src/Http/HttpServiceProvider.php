@@ -18,6 +18,9 @@ class HttpServiceProvider extends ServiceProvider
         $singletons = [
             'helper/ajax' => '\Concrete\Core\Http\Service\Ajax',
             'helper/json' => '\Concrete\Core\Http\Service\Json',
+            ResponseAssetGroup::class => function() {
+                return ResponseAssetGroup::get();
+            },
         ];
 
         foreach ($singletons as $key => $value) {

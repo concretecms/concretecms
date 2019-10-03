@@ -109,39 +109,75 @@
             return current;
         },
 
-        addToDragArea: function blockAddToDragArea(drag_area) {
+        move: function (targetArea, afterBlock) {
             var my = this,
-                sourceArea = my.getArea(),
-                targetArea = drag_area.getArea(),
-                selected_block, wrapper;
+                targetDragAreas = targetArea.getDragAreas(),
+                myElem;
 
-            sourceArea.removeBlock(my);
-
+            afterBlock = afterBlock || null;
+            my.getArea().removeBlock(my);
             my.getContainer().remove();
             if (my.getWraps()) {
-                wrapper = $(targetArea.getBlockTemplate()());
-                drag_area.getElem().after(wrapper);
-                if (wrapper.children().length) {
-                    wrapper.find('div.block').replaceWith(my.getElem());
+                myElem = $(targetArea.getBlockTemplate()());
+                if (myElem.children().length) {
+                    myElem.find('div.block').replaceWith(my.getElem());
                 } else {
-                    wrapper.append(my.getElem());
+                    myElem.append(my.getElem());
                 }
             } else {
-                drag_area.getElem().after(my.getElem());
+                myElem = my.getElem();
             }
-            selected_block = drag_area.getBlock();
-            if (selected_block) {
-                drag_area.getArea().addBlock(my, selected_block);
+            if (targetDragAreas.length > 0) {
+                var targetDragArea;
+                $.each(targetArea.getDragAreas(), function() {
+                    if (this.getBlock() === afterBlock) {
+                        targetDragArea = this;
+                        return false;
+                    }
+                });
+                targetDragArea.getElem().after(myElem);
             } else {
-                drag_area.getArea().addBlockToIndex(my, 0);
+                if (afterBlock === null) {
+                    targetArea.getBlockContainer().prepend(myElem);
+                } else {
+                    afterBlock.getContainer().after(myElem);
+                }
+            }
+            if (afterBlock) {
+                targetArea.addBlock(my, afterBlock);
+            } else {
+                targetArea.addBlockToIndex(my, 0);
             }
             my.getPeper().pep(my.getPepSettings());
-
             my.getEditMode().scanBlocks();
+        },
+
+        addToDragArea: function blockAddToDragArea(targetDragArea) {
+            var my = this,
+                sourceArea = my.getArea(),
+                targetArea = targetDragArea.getArea(),
+                reverted = false,
+                originalPreviousBlock = null,
+                previousBlock = null;
+            $.each(sourceArea.getBlocks(), function() {
+                if (this === my) {
+                    originalPreviousBlock = previousBlock;
+                    return false;
+                }
+                previousBlock = this;
+            });
+            my.move(targetArea, targetDragArea.getBlock());
             Concrete.event.fire('EditModeBlockMove', {
                 block: my,
                 sourceArea: sourceArea,
-                targetArea: targetArea
+                targetArea: targetArea,
+                revert: function() {
+                    if (reverted) {
+                        return;
+                    }
+                    reverted = true;
+                    my.move(sourceArea, originalPreviousBlock);
+                }
             });
         },
 

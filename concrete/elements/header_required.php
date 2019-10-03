@@ -7,6 +7,15 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * Arguments:
+ *
+ * @var string|null $pageTitle
+ * @var string|null $pageDescription
+ * @var string|null $pageMetaKeywords
+ * @var bool|null $disableTrackingCode
+ */
+
 $c = Page::getCurrentPage();
 $cp = false;
 $isEditMode = false;
@@ -181,7 +190,7 @@ if (!empty($alternateHreflangTags)) {
 
 <?php
 $v = View::getRequestInstance();
-$u = new User();
+$u = $app->make(Concrete\Core\User\User::class);
 if ($u->isRegistered()) {
     $v->requireAsset('core/account');
     $v->addFooterItem('<script type="text/javascript">$(function() { if (window.ccm_enableUserProfileMenu) ccm_enableUserProfileMenu(); });</script>');

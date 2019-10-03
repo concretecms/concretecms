@@ -22,14 +22,5 @@ class SessionServiceProvider extends ServiceProvider
             return $app->make('Concrete\Core\Session\SessionFactoryInterface')->createSession();
         });
         $this->app->bind('Symfony\Component\HttpFoundation\Session\Session', 'session');
-
-        $this->app
-            ->when(SessionValidator::class)
-            ->needs(LoggerInterface::class)
-            ->give(function (Application $app) {
-                $factory = $app->make(LoggerFactory::class);
-                return $factory->createLogger(Channels::CHANNEL_AUTHENTICATION);
-            });
-
     }
 }

@@ -54,7 +54,10 @@ class ControllerRouteAction implements RouteActionInterface
         $method = $callback[1];
 
         if (method_exists($controller, 'on_start')) {
-            $controller->on_start();
+            $response = $controller->on_start();
+            if ($response instanceof Response) {
+                return $response;
+            }
         }
 
         if (method_exists($controller, 'runAction')) {

@@ -175,7 +175,9 @@ class RouteGroupBuilder
 
     protected function processScope(Route $route)
     {
-        $route->setOption('oauth_scopes', $this->scope);
+        if (!$route->getOption('oauth_scopes')) {
+            $route->setOption('oauth_scopes', $this->scope);
+        }
     }
 
 

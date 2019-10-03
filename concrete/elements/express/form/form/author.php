@@ -5,7 +5,7 @@ $author = null;
 if ($entry) {
     $author = $entry->getAuthor()->getUserID();
 } else {
-    $u = new User();
+    $u = Core::make(Concrete\Core\User\User::class);
     $author = $u->getUserID();
 }
 ?>

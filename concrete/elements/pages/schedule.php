@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$datetime = loader::helper('form/date_time');
+$datetime = Loader::helper('form/date_time');
 
 $publishDate = '';
 $publishEndDate = '';

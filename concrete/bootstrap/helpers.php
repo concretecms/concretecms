@@ -299,7 +299,7 @@ function output_vars(array $get_defined_vars, $valueOfThis = null, $return = fal
         $get_defined_vars['this'] = $valueOfThis;
     }
     $generator = new Concrete\Core\Support\Symbol\PhpDocGenerator();
-    $phpDoc = $generator->describeVars($get_defined_vars);
+    $phpDoc = $generator->setIsSingleDocBlock(true)->describeVars($get_defined_vars);
     if (!$return) {
         echo '</script><pre>', $phpDoc;
         die();
@@ -325,4 +325,22 @@ function core_log($message,
         $message = $message[0];
     }
     $logger->log($level, $message, $context);
+}
+
+/**
+ * Resolve the given type from the container.
+ *
+ * @param  string  $abstract
+ * @param  array   $parameters
+ * @return mixed
+ */
+function app($abstract = null, array $parameters = [])
+{
+    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
+    if (is_null($abstract)) {
+        return $app;
+    }
+
+    return $app->make($abstract, $parameters);
 }

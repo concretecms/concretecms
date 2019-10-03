@@ -76,7 +76,6 @@ class Controller extends GenericOauth2TypeController
         $this->set('apisecret', $config->get('auth.google.secret', ''));
 
         $list = new \GroupList();
-        $list->includeAllGroups();
         $this->set('groups', $list->getResults());
 
         $this->set('whitelist', $config->get('auth.google.email_filters.whitelist', []));
@@ -130,13 +129,12 @@ class Controller extends GenericOauth2TypeController
 
     public function handle_detach_attempt()
     {
-
-        if (!User::isLoggedIn()) {
+        $user = $this->app->make(User::class);
+        if (!$user->isRegistered()) {
             $response = new RedirectResponse(\URL::to('/login'), 302);
             $response->send();
             exit;
         }
-        $user = new User();
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
 

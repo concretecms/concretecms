@@ -7,14 +7,16 @@ use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\User\User;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Localization\Service\Date;
-use Concrete\Tests\TestCase;
+use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use League\Csv\Writer;
 use Mockery as M;
+use Concrete\Tests\TestCase;
 
 class CsvWriterTest extends TestCase
 {
@@ -35,12 +37,20 @@ class CsvWriterTest extends TestCase
 
         $entity = M::mock(Entity::class);
         $entity->shouldReceive('getAttributes')->andReturn($entityKeys);
+        $entity->shouldReceive('getAssociations')->andReturn([]);
 
         $entry = M::mock(Entry::class);
 
         $created = Carbon::now()->subDays(mt_rand(1, 10000));
+        $userInfo = M::mock(UserInfo::class);
+        $userInfo->shouldReceive('getUserDisplayName')->andReturn('author name');
+        $author = M::mock(User::class);
+        $author->shouldReceive('getUserInfoObject')->andReturn($userInfo);
         $entry->shouldReceive('getDateCreated')->andReturn($created);
+        $entry->shouldReceive('getAuthor')->andReturn($author);
         $entry->shouldReceive('getAttributes')->andReturn($entryKeys);
+        $entry->shouldReceive('getPublicIdentifier')->andReturn('abc');
+        $entry->shouldReceive('getAssociations')->andReturn([]);
 
         $list = M::mock(TestEntryList::class);
         $list->shouldReceive('deliverQueryObject')->andReturnSelf();
@@ -62,7 +72,9 @@ class CsvWriterTest extends TestCase
         $csvWriter->insertEntryList($list);
 
         $this->assertSame([
+            'publicIdentifier' => 'publicIdentifier',
             'ccm_date_created' => 'dateCreated',
+            'author_name' => 'authorName',
             'foo' => 'Foo',
             'bar' => 'Bar',
             'baz' => 'Baz',
@@ -70,7 +82,9 @@ class CsvWriterTest extends TestCase
 
         $this->assertSame([
             [
+                'publicIdentifier' => 'abc',
                 'ccm_date_created' => 'not now',
+                'author_name' => 'author name',
                 'foo' => 'Foo value',
                 'bar' => 'BAR value',
                 'baz' => 'Baz value',

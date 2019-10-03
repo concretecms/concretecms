@@ -29,6 +29,7 @@
         <category handle="multilingual_section" package=""/>
         <category handle="calendar_admin" package=""/>
         <category handle="calendar" package=""/>
+        <category handle="express_entry" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -239,6 +240,14 @@
         <permissionkey handle="delete_express_entries" name="Delete Entry" package="" category="express_tree_node">
         </permissionkey>
 
+        <permissionkey handle="view_express_entry" name="View Entries" package="" category="express_entry">
+        </permissionkey>
+        <permissionkey handle="edit_express_entry" name="Edit Entry" package="" category="express_entry">
+        </permissionkey>
+        <permissionkey handle="delete_express_entry" name="Delete Entry" package="" category="express_entry">
+        </permissionkey>
+
+
         <!-- groups //-->
 
         <permissionkey handle="search_users_in_group" name="Search User Group" package="" category="group_tree_node">
@@ -359,6 +368,7 @@
 
     <systemcaptcha>
         <library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
+        <library handle="recaptchaV3" name="reCAPTCHA v3" package="" activated="0"/>
     </systemcaptcha>
 
     <workflowtypes>
@@ -383,6 +393,7 @@
                 <category handle="page_type" />
                 <category handle="gathering" />
                 <category handle="express_tree_node" />
+                <category handle="express_entry" />
                 <category handle="group_tree_node" />
                 <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
@@ -411,6 +422,7 @@
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="express_tree_node" />
+                <category handle="express_entry" />
                 <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
@@ -438,6 +450,7 @@
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="express_tree_node" />
+                <category handle="express_entry" />
                 <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
@@ -464,6 +477,7 @@
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="express_tree_node" />
+                <category handle="express_entry" />
                 <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
@@ -490,6 +504,13 @@
             <categories>
                 <category handle="conversation" />
                 <category handle="conversation_message" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="site_group" name="Site Group" package="">
+            <categories>
+                <category handle="page" />
+                <category handle="page_type" />
+                <category handle="basic_workflow" package=""/>
             </categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>

@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Controller\Element\Package\ItemList;
 use Concrete\Core\Entity\Package;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 abstract class AbstractCategory implements ItemInterface
 {
-
     protected $items;
 
     public function hasItems(Package $package)
@@ -27,7 +27,7 @@ abstract class AbstractCategory implements ItemInterface
 
     public function removeItems(Package $package)
     {
-        foreach($this->getItems($package) as $item) {
+        foreach ($this->getItems($package) as $item) {
             $this->removeItem($item);
         }
     }
@@ -37,6 +37,7 @@ abstract class AbstractCategory implements ItemInterface
         if (!isset($this->items)) {
             $this->items = $this->getPackageItems($package);
         }
+
         return $this->items;
     }
 
@@ -45,5 +46,4 @@ abstract class AbstractCategory implements ItemInterface
         $controller = new ItemList($this, $package);
         $controller->render();
     }
-
 }

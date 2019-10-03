@@ -33,7 +33,6 @@ return [
         'ConversationFlagType' => '\Concrete\Core\Conversation\FlagType\FlagType',
         'ConversationMessage' => '\Concrete\Core\Conversation\Message\Message',
         'ConversationRatingType' => '\Concrete\Core\Conversation\Rating\Type',
-        'Cookie' => '\Concrete\Core\Cookie\Cookie',
         'Environment' => '\Concrete\Core\Foundation\Environment',
         'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
         'File' => '\Concrete\Core\File\File',
@@ -125,6 +124,7 @@ return [
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
+        'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
@@ -199,6 +199,7 @@ return [
         'geolocator_library',
         'group',
         'group_set',
+        'ip_access_control_category',
         'job',
         'mail_importer',
         'permission_access_entity_type',
@@ -213,9 +214,9 @@ return [
         'storage_location_type',
         'theme',
         'user_point_action',
+        'workflow',
         'workflow_progress_category',
         'workflow_type',
-        'workflow',
     ],
 
     'importer_routines' => [
@@ -262,6 +263,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypeSkeletonsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageContentRoutine',
@@ -270,6 +272,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
     ],
 
     /*
@@ -356,6 +359,18 @@ return [
     ],
 
     /*
+     * Importer processors
+     */
+    'import_processors' => [
+        'ccm.file.exists' => Concrete\Core\File\Import\Processor\FileExistingValidator::class,
+        'ccm.file.extension' => Concrete\Core\File\Import\Processor\FileExtensionValidator::class,
+        'ccm.image.autorotate' => Concrete\Core\File\Import\Processor\ImageAutorotator::class,
+        'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
+        'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
+        'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
+    ],
+
+    /*
      * Assets
      */
     'assets' => [
@@ -429,7 +444,7 @@ return [
         'fullcalendar/print' => [
             ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
         ],
-        'vue'=> [
+        'vue' => [
             ['javascript', 'js/vue.js', ['minify' => false, 'combine' => false]],
         ],
         'html5-shiv' => [
@@ -478,6 +493,9 @@ return [
         'core/imageeditor/control/position' => [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
+        ],
+        'core/imageeditor/control/colors' => [
+            ['javascript', 'js/image-editor/controls/colors.js'],
         ],
         'core/duration' => [
             ['javascript', 'js/duration.js'],
@@ -547,13 +565,11 @@ return [
             ['css', 'css/fancytree.css', ['minify' => false]],
         ],
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.18.1']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
         'moment-timezone' => [
-            ['javascript', 'js/moment-timezone.js', ['minify' => false, 'version' => '0.5.13']],
-        ],
-        'moment-timezone-data' => [
-            ['javascript', 'js/moment-timezone-data.js', ['minify' => false, 'version' => '0.5.13']],
+            ['javascript', 'js/moment-timezone-with-data.js', ['minify' => false, 'version' => '0.5.25']],
         ],
         'bootstrap/dropdown' => [
             ['javascript', 'js/bootstrap/dropdown.js'],
@@ -620,6 +636,9 @@ return [
             ['javascript', 'js/file-manager.js', ['minify' => false]],
             ['css', 'css/file-manager.css', ['minify' => false]],
         ],
+        'core/file-uploader' => [
+            ['javascript', 'js/file-uploader.js', ['minify' => false]],
+        ],
         'core/express' => [
             ['javascript', 'js/express.js', ['minify' => false]],
         ],
@@ -637,10 +656,13 @@ return [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
         'core/avatar' => [
-            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]]
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
+        ],
+        'core/draft_list' => [
+            ['javascript', 'js/draft-list.js', ['minify' => false]],
         ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
@@ -680,6 +702,9 @@ return [
         ],
         'core/country-stateprovince-link' => [
             ['javascript', 'js/country-stateprovince-link.js', ['minify' => false]],
+        ],
+        'core/country-data-link' => [
+            ['javascript', 'js/country-data-link.js', ['minify' => false]],
         ],
     ],
     'asset_groups' => [
@@ -743,13 +768,19 @@ return [
             [
                 ['javascript', 'dropzone'],
                 ['javascript-localized', 'dropzone'],
-                ['javascript','vue'],
+                ['javascript', 'vue'],
                 ['javascript', 'core/avatar'],
             ],
         ],
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
+            ],
+        ],
+        'core/draft_list' => [
+            [
+                ['javascript', 'core/draft_list'],
+                ['javascript', 'core/events'],
             ],
         ],
         'core/colorpicker' => [
@@ -825,7 +856,7 @@ return [
             [
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
+                ['javascript-localized', 'moment'],
             ],
         ],
         'fancytree' => [
@@ -886,6 +917,7 @@ return [
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'jquery/touch-punch'],
+                ['javascript', 'selectize'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'dashboard'],
@@ -901,6 +933,7 @@ return [
                 ['javascript', 'core/app'],
                 ['javascript-conditional', 'respond'],
                 ['javascript-conditional', 'html5-shiv'],
+                ['css', 'selectize'],
                 ['css', 'core/app'],
                 ['css', 'jquery/ui'],
                 ['css', 'font-awesome'],
@@ -912,6 +945,7 @@ return [
                 ['css', 'jquery/ui'],
                 ['css', 'core/file-manager'],
                 ['css', 'selectize'],
+                ['javascript', 'dropzone'],
                 ['javascript', 'core/events'],
                 ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
@@ -921,10 +955,20 @@ return [
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'selectize'],
                 ['javascript-localized', 'core/localization'],
+                ['javascript-localized', 'dropzone'],
                 ['javascript', 'core/app'],
                 ['javascript', 'jquery/fileupload'],
                 ['javascript', 'core/tree'],
+                ['javascript', 'core/file-uploader'],
                 ['javascript', 'core/file-manager'],
+            ],
+        ],
+        'core/file-uploader' => [
+            [
+                ['css', 'dropzone'],
+                ['javascript', 'dropzone'],
+                ['javascript-localized', 'dropzone'],
+                ['javascript', 'core/file-uploader'],
             ],
         ],
         'core/duration' => [
@@ -935,7 +979,6 @@ return [
                 ['javascript', 'selectize'],
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
-                ['javascript', 'moment-timezone-data'],
                 ['javascript', 'core/duration'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1110,6 +1153,7 @@ return [
         ],
         'core/account' => [
             [
+                ['javascript', 'jquery'],
                 ['javascript', 'core/account'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['css', 'bootstrap/dropdown'],
@@ -1127,6 +1171,12 @@ return [
             [
                 ['javascript', 'jquery'],
                 ['javascript', 'core/country-stateprovince-link'],
+            ],
+        ],
+        'core/country-data-link' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'core/country-data-link'],
             ],
         ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
@@ -1179,17 +1229,6 @@ return [
         'persistent' => false,
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
-    ],
-
-    'api' => [
-        'scopes' => [
-            'system',
-            'site',
-            'account',
-
-            // For OIDC authentication
-            'openid',
-        ],
     ],
 
     // HTTP middleware for processing http requests

@@ -688,6 +688,7 @@ class Controller extends BlockController
         $order = $this->displayOrderDesc ? 'desc' : 'asc';
         $orderBy = $this->getSortColumnKey($this->orderBy, 'filelist');
         if ($orderBy) {
+            $list->getQueryObject()->addSelect($orderBy);
             $list->sortBy($orderBy, $order);
         }
 
@@ -718,7 +719,7 @@ class Controller extends BlockController
         }
 
         if ($this->onlyCurrentUser) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             if ($u->isRegistered()) {
                 $uID = $u->getUserID();
                 $query = $list->getQueryObject();
@@ -868,8 +869,8 @@ class Controller extends BlockController
                 );
             case 'title':
                 $view = new BlockView($this->getBlockObject());
-                /** @var UrlImmutable $action */
-                $action = $view->action('navigate');
+                /** @var UrlImmutable $action */ 
+                $action = $this->getActionURL('navigate');
                 $actionPath = $action->getPath();
                 $actionPath->append($folder->getTreeNodeID());
                 $action = $action->setPath($actionPath);
@@ -901,7 +902,7 @@ class Controller extends BlockController
             if ($crumb->getTreeNodeID() == $this->getRootFolder()->getTreeNodeID()) {
                 $action = $this->getBlockObject()->getBlockCollectionObject()->getCollectionLink();
             } else {
-                $action = $view->action('navigate');
+                $action = $this->getActionURL('navigate');
                 $actionPath = $action->getPath();
                 $actionPath->append($crumb->getTreeNodeID());
                 $action = $action->setPath($actionPath);

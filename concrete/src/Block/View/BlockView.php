@@ -7,17 +7,15 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
 use Config;
-use Area;
+use Concrete\Core\Area\Area;
 use Environment;
-use User;
+use Concrete\Core\User\User;
 use Page;
 use Concrete\Core\Block\Block;
-use BlockType;
-use URL;
 use View;
 
 /**
- * Work with the rendered view of a block
+ * Work with the rendered view of a block.
  *
  * <code>
  * $b = $this->getBlockObject();
@@ -39,11 +37,9 @@ class BlockView extends AbstractView
     protected $didPullFromOutputCache = false;
 
     /**
-     * Construct a block view object
+     * Construct a block view object.
      *
      * @param mixed $mixed block or block type to view
-     *
-     * @return void
      */
     protected function constructView($mixed)
     {
@@ -105,7 +101,7 @@ class BlockView extends AbstractView
     }
 
     /**
-     * @deprecated In views, use $controller->getActionURL() using the same arguments.
+     * @deprecated in views, use $controller->getActionURL() using the same arguments
      *
      * @return \Concrete\Core\Url\UrlImmutable|null
      */
@@ -136,7 +132,7 @@ class BlockView extends AbstractView
             }
         }
         $customFilenameToRender = null;
-        if (!in_array($this->viewToRender, array('view', 'add', 'edit', 'scrapbook'))) {
+        if (!in_array($this->viewToRender, ['view', 'add', 'edit', 'scrapbook'])) {
             // then we're trying to render a custom view file, which we'll pass to the bottom functions as $_filename
             $customFilenameToRender = $view . '.php';
             $view = 'view';
@@ -216,22 +212,20 @@ class BlockView extends AbstractView
 
     protected function onBeforeGetContents()
     {
-        if (in_array($this->viewPerformed, array('scrapbook', 'view'))) {
-            $this->controller->runAction('on_page_view', array($this));
+        if (in_array($this->viewPerformed, ['scrapbook', 'view'])) {
+            $this->controller->runAction('on_page_view', [$this]);
             $this->controller->outputAutoHeaderItems();
         }
     }
 
     /**
-     * Echo block contents
+     * Echo block contents.
      *
      * @param array $scopeItems array of items to render (outputContent, blockViewHeaderFile, blockViewFooterFile)
-     *
-     * @return void
      */
     public function renderViewContents($scopeItems)
     {
-        $shouldRender = function() {
+        $shouldRender = function () {
             $app = Application::getFacadeApplication();
 
             // If you hook into this event and use `preventRendering()`,
@@ -255,6 +249,12 @@ class BlockView extends AbstractView
             $this->outputContent = ob_get_contents();
             ob_end_clean();
         }
+
+        // In case the view changes any scope items, the block header/footer
+        // could break without extracting the scope items again. This can happen
+        // if the block view changes any local variables such as the `$b`
+        // variable which is possible as they can be user defined.
+        extract($scopeItems);
 
         // The translatable texts in the block header/footer need to be printed
         // out in the system language.
@@ -351,7 +351,7 @@ class BlockView extends AbstractView
         return $base;
     }
 
-    public function inc($fileToInclude, $args = array())
+    public function inc($fileToInclude, $args = [])
     {
         extract($args);
         extract($this->getScopeItems());
@@ -374,7 +374,7 @@ class BlockView extends AbstractView
 
     protected function useBlockCache()
     {
-        $u = new User();
+        $u = Application::getFacadeApplication()->make(User::class);
         $c = Page::getCurrentPage();
         if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
             && $this->block->cacheBlockOutput() && is_object($c) && $c->isPageDraft() === false
@@ -423,7 +423,7 @@ class BlockView extends AbstractView
 
         if (!$this->outputContent) {
             $this->didPullFromOutputCache = false;
-            if (in_array($this->viewToRender, array('view', 'add', 'edit', 'composer'))) {
+            if (in_array($this->viewToRender, ['view', 'add', 'edit', 'composer'])) {
                 $method = $this->viewToRender;
             } else {
                 $method = 'view';
@@ -441,7 +441,7 @@ class BlockView extends AbstractView
                 }
             }
 
-            $parameters = array();
+            $parameters = [];
             if (!$passthru) {
                 $this->controller->runAction($method, $parameters);
             }
@@ -460,7 +460,7 @@ class BlockView extends AbstractView
     }
 
     /**
-     * Fire an event just before the block is outputted on the page
+     * Fire an event just before the block is outputted on the page.
      *
      * Custom code can modify the block contents before
      * the block contents are 'echoed' out on the page.

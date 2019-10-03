@@ -10,7 +10,6 @@
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb.ccm-file-manager-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
-            'appendToOuterDialog': true,
             'selectMode': 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
 
@@ -27,6 +26,7 @@
         ConcreteTree.setupTreeEvents();
 
         my.setupEvents();
+        my.setupItemsPerPageOptions();
         my.setupAddFolder();
         my.setupFolderNavigation();
         my.setupFileUploads();
@@ -214,36 +214,28 @@
         }
     };
 
-    ConcreteFileManager.onDragOver = function (e) {
-        if (ConcreteFileManager.openingFileImporter) {
-            return;
-        }
-        var dataTransfer = e.originalEvent && e.originalEvent.dataTransfer;
-        if (dataTransfer && $.inArray('Files', dataTransfer.types) !== -1) {
-            if ($('div.ccm-file-manager-import-files').length === 0) {
-                e.stopPropagation();
-                $('a[data-dialog=add-files]').trigger('click');
-            }
-        }
-    };
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this;
-        $(document)
-            .off('dragover', ConcreteFileManager.onDragOver)
-            .on('dragover', ConcreteFileManager.onDragOver)
-        ;
+        my.fileUploaderOptions = {
+        	folderID: function() {
+        		return my.currentFolder;
+        	}
+        };
+        window.ccm_fileUploader.start(my.fileUploaderOptions);
+        var $dialog = this.$element.closest('.ui-dialog-content');
+        if ($dialog.length !== 0) {
+        	$dialog.on('dialogclose', function() {
+        		window.ccm_fileUploader.stop(my.fileUploaderOptions);
+        	});
+        }
         $('a[data-dialog=add-files]').on('click', function(e) {
-            ConcreteFileManager.openingFileImporter = true;
             e.preventDefault();
             $.fn.dialog.open({
                 width: 620,
                 height: 400,
                 modal: true,
                 title: ccmi18n_filemanager.addFiles,
-                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/import?currentFolder=' + my.currentFolder,
-                onOpen: function() {
-                    ConcreteFileManager.openingFileImporter = false;
-                }
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/import?currentFolder=' + my.currentFolder
             });
         });
 
@@ -300,6 +292,11 @@
             my.reloadFolder();
         });
 
+        ConcreteEvent.unsubscribe('ConcreteTreeAddTreeNode.concreteTree');
+        ConcreteEvent.subscribe('ConcreteTreeAddTreeNode.concreteTree', function(e, r) {
+            my.reloadFolder();
+        });
+
         ConcreteEvent.unsubscribe('ConcreteTreeUpdateTreeNode.concreteTree');
         ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
@@ -314,10 +311,12 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
         });
-        ConcreteEvent.unsubscribe('SavedSearchCreated');
-        ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
-            my.ajaxUpdate(data.search.baseUrl, {});
 
+        ConcreteEvent.unsubscribe('FileManagerUpdateFileProperties');
+        ConcreteEvent.subscribe('FileManagerUpdateFileProperties', function(e, r) {
+            if (r.file.fID) {
+                $('[data-file-manager-file=' + r.file.fID + ']').find('.ccm-search-results-name').text(r.file.title);
+            }
         });
 
     };
@@ -343,7 +342,7 @@
                 placement: 'auto',
                 trigger: 'manual'
             });
-            $(this).hover(function(){
+            my.hover(function(){
                 var image = new Image();
                 image.src = my.data('hover-image');
                 if (image.complete) {
@@ -354,6 +353,9 @@
                         my.popover('toggle');
                     });
                 }
+            });
+            my.closest('.ui-dialog').on('dialogclose', function() {
+                my.popover('destroy');
             });
         });
     };
@@ -388,9 +390,11 @@
 
         // Hide clear if we're not in choose mode
         if (my.options.selectMode != 'choose') {
+            var $choose = $menu.find('a[data-file-manager-action=choose-new-file]').parent();
             var $clear = $menu.find('a[data-file-manager-action=clear]').parent();
-            $clear.next('li.divider').remove();
+            $choose.next('li.divider').remove();
             $clear.remove();
+            $choose.remove();
         }
 
     };
@@ -440,24 +444,19 @@
 
     ConcreteFileManager.prototype.setupAddFolder = function() {
         var my = this;
-        $('a[data-launch-dialog=add-file-manager-folder]').on('click', function(e) {
-            $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
-            $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
-
-            $.fn.dialog.open({
-                element: 'div[data-dialog=add-file-manager-folder]',
-                modal: true,
-                width: 320,
-                title: 'Add Folder',
-                height: 'auto'
-            });
-
-            $('div[data-dialog=add-file-manager-folder]').on('dialogopen', function() {
-                var $this = $(this);
-                $this.off('dialogopen');
-                $this.find('[autofocus]').focus();
-            });
+        var data = {
+            treeNodeID: my.currentFolder
+        };
+        $('a[data-dialog=add-file-manager-folder]').on('click', function(e) {
             e.preventDefault();
+            $.fn.dialog.open({
+                width: 550,
+                height: 'auto',
+                modal: true,
+                title: ccmi18n_filemanager.addFiles,
+                data: data,
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/tree/node/add/file_folder'
+            });
         });
     };
 
@@ -479,6 +478,26 @@
         return !my.interactionIsDragging;
     };
 
+    ConcreteFileManager.prototype.setupItemsPerPageOptions = function() {
+        var my = this;
+        my.$element.on('click', '.dropdown-menu li', function() {
+            var action = $(this).parent().attr('data-action');
+            var itemsPerPage = parseInt($(this).data('items-per-page'));
+            if (action && itemsPerPage) {
+                my.ajaxUpdate(action + '?fSearchItemsPerPage=' + itemsPerPage);
+                $(this).parents('.input-group-btn').removeClass('open');
+                my.updateActiveItemsPerPageOption(parseInt($(this).text()));
+            }
+            return false;
+        });
+    };
+
+    ConcreteFileManager.prototype.updateActiveItemsPerPageOption = function(itemsPerPage) {
+        var my = this;
+        my.$element.find('.dropdown-menu li').removeClass('active');
+        my.$element.find('.dropdown-menu li[data-items-per-page=' + itemsPerPage + ']').addClass('active');
+        my.$element.find('.dropdown-toggle #selected-option').text(itemsPerPage);
+    };
 
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
@@ -487,6 +506,12 @@
         my.setupBreadcrumb(result);
         my.setupRowDragging();
         my.setupImageThumbnails();
+        if (result.itemsPerPage) {
+            my.updateActiveItemsPerPageOption(parseInt(result.itemsPerPage));
+        }
+        if (result.baseUrl) {
+            my.$element.find('.dropdown-menu').attr('data-action', result.baseUrl);
+        }
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
             my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {

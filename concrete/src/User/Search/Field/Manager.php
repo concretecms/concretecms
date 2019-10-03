@@ -1,16 +1,17 @@
 <?php
+
 namespace Concrete\Core\User\Search\Field;
 
-use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
 use Concrete\Core\User\Search\Field\Field\DateAddedField;
 use Concrete\Core\User\Search\Field\Field\GroupSetField;
 use Concrete\Core\User\Search\Field\Field\IsActiveField;
-use Concrete\Core\User\Search\Field\Field\UserGroupField;
 use Concrete\Core\User\Search\Field\Field\IsValidatedField;
+use Concrete\Core\User\Search\Field\Field\UserGroupField;
 
 class Manager extends FieldManager
 {
@@ -25,7 +26,7 @@ class Manager extends FieldManager
             new IsActiveField(),
             new IsValidatedField(),
             new DateAddedField(),
-            new GroupSetField()
+            new GroupSetField(),
         ]);
 
         $service = \Core::make(CategoryService::class);
@@ -33,9 +34,9 @@ class Manager extends FieldManager
         $attributeSets = $setManager->getAttributeSets();
         $unassigned = $setManager->getUnassignedAttributeKeys();
 
-        $attributes = [];
-        foreach($attributeSets as $set) {
-            foreach($set->getAttributeKeys() as $key) {
+        foreach ($attributeSets as $set) {
+            $attributes = [];
+            foreach ($set->getAttributeKeys() as $key) {
                 $field = new AttributeKeyField($key);
                 $attributes[] = $field;
             }
@@ -43,7 +44,7 @@ class Manager extends FieldManager
         }
 
         $attributes = [];
-        foreach($unassigned as $key) {
+        foreach ($unassigned as $key) {
             $field = new AttributeKeyField($key);
             $attributes[] = $field;
         }

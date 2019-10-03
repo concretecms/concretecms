@@ -6,7 +6,7 @@ use Concrete\Core\Page\Command\DeletePageCommand;
 use Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
-use User;
+use Concrete\Core\User\User;
 use Page;
 
 class Delete extends BackendInterfacePageController
@@ -35,8 +35,8 @@ class Delete extends BackendInterfacePageController
         if ($this->validateAction()) {
             $c = $this->page;
             $cp = $this->permissions;
-            $u = new User();
             if ($cp->canDeletePage() && $c->getCollectionID() != Page::getHomePageID() && (!$c->isMasterCollection())) {
+                $u = $this->app->make(User::class);
                 $children = $c->getNumChildren();
                 if ($children == 0 || $u->isSuperUser()) {
                     if ($c->isExternalLink()) {

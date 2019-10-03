@@ -3,9 +3,10 @@ namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Page\Type\Type;
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Permissions;
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use Config;
 use Session;
@@ -135,7 +136,8 @@ class PageResponse extends Response
     // convenience function
     public function canViewToolbar()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if (!$u->isRegistered()) {
             return false;
         }
@@ -143,15 +145,13 @@ class PageResponse extends Response
             return true;
         }
 
-        $types = Type::getList();
-        foreach($types as $pt) {
-            $ptp = new \Permissions($pt);
-            if ($ptp->canAddPageType()) {
-                return true;
-            }
+        $app = Application::getFacadeApplication();
+        $sh = $app->make('helper/concrete/dashboard/sitemap');
+        if ($sh->canViewSitemapPanel()) {
+            return true;
         }
 
-        $dh = Loader::helper('concrete/dashboard');
+        $dh = $app->make('helper/concrete/dashboard');
         if ($dh->canRead() ||
             $this->canViewPageVersions() ||
             $this->canPreviewPageAsUser() ||

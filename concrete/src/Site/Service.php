@@ -2,17 +2,26 @@
 namespace Concrete\Core\Site;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Category\SiteTypeCategory;
 use Concrete\Core\Attribute\Key\SiteKey;
+use Concrete\Core\Entity\Attribute\Value\SiteTypeValue;
+use Concrete\Core\Entity\Site\Domain;
+use Concrete\Core\Entity\Site\Group\Relation;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Type;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
+use Concrete\Core\Site\Type\Controller\Manager;
+use Concrete\Core\User\Group\Group;
 use Doctrine\ORM\EntityManagerInterface;
 use Punic\Comparer;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Site\Type\Service as SiteTypeService;
 
 class Service
 {
@@ -42,6 +51,11 @@ class Service
     protected $cache;
 
     /**
+     * @var SiteTypeService
+     */
+    protected $siteTypeService;
+
+    /**
      * @param EntityManagerInterface $entityManager
      */
     public function setEntityManager($entityManager)
@@ -49,19 +63,20 @@ class Service
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param Application $app
-     * @param \Illuminate\Config\Repository $configRepository
-     * @param ResolverFactory $resolverFactory
-     */
-    public function __construct(EntityManagerInterface $entityManager, Application $app, \Illuminate\Config\Repository $configRepository, ResolverFactory $resolverFactory)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Application $app,
+        Repository $configRepository,
+        ResolverFactory $resolverFactory,
+        SiteTypeService $siteTypeService
+    )
     {
         $this->app = $app;
         $this->entityManager = $entityManager;
         $this->config = $configRepository;
         $this->cache = $this->app->make('cache/request');
         $this->resolverFactory = $resolverFactory;
+        $this->siteTypeService = $siteTypeService;
     }
 
     /**
@@ -177,7 +192,73 @@ class Service
 
         $this->entityManager->refresh($site);
 
+        $skeletonService = $this->siteTypeService->getSkeletonService();
+        $skeleton = $skeletonService->getSkeleton($type);
+        if ($skeleton) {
+            $skeletonService->publishSkeletonToSite($skeleton, $site);
+        }
+
+        // Add the default groups
+        $groupService = $this->siteTypeService->getGroupService();
+        $parent = $groupService->createSiteGroup($site);
+        $groups = $groupService->getSiteTypeGroups($type);
+        if ($groups) {
+            foreach ($groups as $group) {
+                /**
+                 * @var $group \Concrete\Core\Entity\Site\Group\Group
+                 */
+                $siteGroup = $groupService->createInstanceGroup($group, $parent);
+                $relation = new Relation();
+                $relation->setSite($site);
+                $relation->setInstanceGroupID($siteGroup->getGroupID());
+                $relation->setSiteGroup($group);
+                $group->getSiteGroupRelations()->add($relation);
+                $this->entityManager->persist($group);
+            }
+        }
+
+        // Add the default attributes
+        if ($skeleton) {
+            $attributes = $skeletonService->getAttributeValues($skeleton);
+            foreach ($attributes as $attribute) {
+                /**
+                 * @var $attribute SiteTypeValue
+                 */
+                $site->setAttribute($attribute->getAttributeKey(), $attribute->getValueObject());
+            }
+        }
+
+        $this->entityManager->flush();
+
+        // Populate all the config values from the default site into this new site.
+        // This is not ideal since it will fail if we don't update it after we add new
+        // config values, but this will have to do for now
+
+        // This code is not great, let's find a better solution
+        /*
+        $defaultSite = $this->getDefault();
+        $defaultSiteConfig = $defaultSite->getConfigRepository();
+        $config = $site->getConfigRepository();
+        if ($defaultSiteConfig) {
+            foreach (['user', 'editor'] as $key) {
+                $config->save($key, $defaultSiteConfig->get($key));
+            }
+        }
+        */
+
+        /**
+         * @var $manager Manager;
+         */
+        $request = Request::createFromGlobals();
+        $controller = $this->getController($site);
+        $site = $controller->add($site, $request);
+
         return $site;
+    }
+
+    public function getController(Site $site)
+    {
+        return $this->siteTypeService->getController($site->getType());
     }
 
     /**
@@ -211,6 +292,19 @@ class Service
      */
     public function delete(Site $site)
     {
+        // Delete group relations
+        $relations = $this->entityManager->getRepository(Relation::class)
+            ->findBySite($site);
+        foreach($relations as $relation) {
+            $this->entityManager->remove($relation);
+        }
+        $this->entityManager->flush();
+
+        // Run the site type controller delete method.
+        $controller = $this->getController($site);
+        $controller->delete($site);
+
+        // Delete attribute values.
         $attributes = SiteKey::getAttributeValues($site);
         foreach ($attributes as $av) {
             $this->entityManager->remove($av);
@@ -218,6 +312,8 @@ class Service
 
         $this->entityManager->flush();
 
+
+        // Delete all pages in the site.
         $r = $this->entityManager->getConnection()
             ->executeQuery('select cID from Pages where siteTreeID = ? and cParentID = 0', [$site->getSiteTreeID()]);
         while ($row = $r->fetch()) {
@@ -227,6 +323,7 @@ class Service
             }
         }
 
+        // Delete the locales
         $locales = $site->getLocales();
         $service = new \Concrete\Core\Localization\Locale\Service($this->entityManager);
 
@@ -234,6 +331,7 @@ class Service
             $service->delete($locale);
         }
 
+        // Finally, remove the site.
         $this->entityManager->remove($site);
         $this->entityManager->flush();
     }
@@ -301,7 +399,10 @@ class Service
             $cID = $connection->fetchColumn('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', [$data[0], $data[1]]);
         }
         if (!$cID) {
-            $cID = Page::getHomePageID() ?: 1;
+            $cID = (int) Page::getHomePageID();
+            if ($cID === 0) {
+                $cID = HOME_CID;
+            }
         }
         $tree->setSiteHomePageID($cID);
         $tree->setLocale($locale);
@@ -309,7 +410,7 @@ class Service
 
         $site->getLocales()->add($locale);
 
-        $service = $this->app->make('site/type');
+        $service = $this->siteTypeService;
         $type = $service->getDefault();
         $site->setType($type);
 
@@ -326,9 +427,12 @@ class Service
     }
 
     /**
+     * Resolve the active site
+     * This method MUST be treated as `final` by extending drivers, but MAY be replaced by a complete override.
+     *
      * @return Site|null
      */
-    final public function getSite()
+    public function getSite()
     {
         $item = $this->cache->getItem('site');
         if (!$item->isMiss()) {
@@ -341,11 +445,33 @@ class Service
         return $site;
     }
 
+
     /**
+     * Resolve the active site for editing
+     * This method MUST be treated as `final` by extending drivers, but MAY be replaced by a complete override.
+     *
      * @return Site|null
      */
-    final public function getActiveSiteForEditing()
+    public function getActiveSiteForEditing()
     {
         return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();
     }
+
+    public function getSiteDomains(Site $site)
+    {
+        $domains = $this->entityManager->getRepository(Domain::class)
+            ->findBySite($site);
+        return $domains;
+    }
+
+    public function getSiteByDomain($domain)
+    {
+        $domain = $this->entityManager->getRepository(Domain::class)
+            ->findOneByDomain($domain);
+        if ($domain) {
+            $factory = new Factory($this->config);
+            return $factory->createEntity($domain->getSite());
+        }
+    }
+
 }

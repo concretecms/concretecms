@@ -14,11 +14,12 @@ use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use FileSet;
 use League\Flysystem\AdapterInterface;
 use Loader;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use Events;
 use Page;
 use PermissionKey;
@@ -307,13 +308,36 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Returns the user ID of the author of the file (if available).
+     * Get the user ID of the author of the file (if available).
      *
      * @return int|null
      */
     public function getUserID()
     {
-        return $this->author ? $this->author->getUserID() : null;
+        $user = $this->getUser();
+
+        return $user ? $user->getUserID() : null;
+    }
+
+    /**
+     * Get the author of the file (if available).
+     *
+     * @return \Concrete\Core\Entity\User\User|null
+     *
+     * @since concrete5 8.5.2
+     */
+    public function getUser()
+    {
+        if ($this->author) {
+            // Check that the user was not deleted
+            try {
+                $this->author->getUserID();
+            } catch (EntityNotFoundException $x) {
+                $this->author = null;
+            }
+        }
+
+        return $this->author;
     }
 
     /**
@@ -370,7 +394,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function isStarred($u = false)
     {
         if (!$u) {
-            $u = new User();
+            $u = Core::make(User::class);
         }
         $db = Loader::db();
         $r = $db->GetOne(
@@ -430,7 +454,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function getVersionToModify($forceCreateNew = false)
     {
-        $u = new User();
+        $u = Core::make(User::class);
         $createNew = false;
 
         $fv = $this->getRecentVersion();
@@ -774,7 +798,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function trackDownload($rcID = null)
     {
-        $u = new User();
+        $u = Core::make(User::class);
         $uID = intval($u->getUserID());
         $fv = $this->getApprovedVersion();
         $fvID = $fv->getFileVersionID();

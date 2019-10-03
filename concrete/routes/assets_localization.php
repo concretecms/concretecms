@@ -1,8 +1,8 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/assets/localization
  * Namespace: Concrete\Controller\Frontend\
  */
@@ -15,3 +15,4 @@ $router->get('/jquery/ui/js', 'AssetsLocalization::getJQueryUIJavascript');
 $router->get('/translator/js', 'AssetsLocalization::getTranslatorJavascript');
 $router->get('/dropzone/js', 'AssetsLocalization::getDropzoneJavascript');
 $router->get('/conversations/js', 'AssetsLocalization::getConversationsJavascript');
+$router->get('/moment/js', 'AssetsLocalization::getMomentJavascript');

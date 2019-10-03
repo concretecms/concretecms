@@ -505,7 +505,7 @@ class Controller extends AbstractController implements AttributeInterface
     {
         $request = array_merge($this->request->request->all(), $this->request->query->all());
         $req = ($this->requestArray == false) ? $request : $this->requestArray;
-        if ($this->attributeKey && is_array($req['akID'])) {
+        if ($this->attributeKey && isset($req['akID']) && is_array($req['akID'])) {
             $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
             if ($field) {
                 return $p[$field];

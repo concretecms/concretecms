@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Collection;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
 use CollectionVersion;
@@ -29,7 +29,6 @@ use Page;
 use PageCache;
 use Permissions;
 use Stack;
-use User;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -380,7 +379,6 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getVersionToModify()
     {
-        $u = new User();
         $vObj = $this->getVersionObject();
         if ($this->isMasterCollection() || ($vObj->isNew())) {
             return $this;
@@ -513,7 +511,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function getAttributeValueObject($akHandle, $createIfNotExists = false)
     {
         if (is_object($this->vObj)) {
-            return $this->vObj->getAttributeValue($akHandle);
+            return $this->vObj->getAttributeValueObject($akHandle, $createIfNotExists);
         }
     }
 

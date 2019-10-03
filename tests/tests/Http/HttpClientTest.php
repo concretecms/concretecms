@@ -20,14 +20,14 @@ class HttpClientTest extends TestCase
     private static $app;
 
     /**
-     * @var string|null
+     * @var string
      */
     private static $testRemoteURI;
 
     public static function setUpBeforeClass()
     {
         self::$app = Application::getFacadeApplication();
-        self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: null;
+        self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: 'https://www.concrete5.org/';
     }
 
     public function adapterListProvider()
@@ -92,6 +92,8 @@ class HttpClientTest extends TestCase
      * @param mixed $caFile
      * @param mixed $caPath
      * @param mixed $shouldBeOK
+     *
+     * @group online
      */
     public function testSSLOptions($adapterClass, $caFile, $caPath, $shouldBeOK)
     {
@@ -117,7 +119,7 @@ class HttpClientTest extends TestCase
         }
         $this->assertTrue($error === null, 'sslverifypeer turned off should always succeed (error: ' . ($error ? $error->getMessage() : '') . ')');
 
-        if ($shouldBeOK && $caPath == $certsFolder = self::SKIP_VALID_CERTS) {
+        if ($shouldBeOK && $caPath === self::SKIP_VALID_CERTS) {
             $this->markTestSkipped('Unable to find a local folder containing CA certificates');
         }
         $client = $factory->createFromOptions([

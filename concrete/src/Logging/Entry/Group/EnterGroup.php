@@ -10,7 +10,7 @@ class EnterGroup extends UserGroup
 
     public function getEntryMessage()
     {
-        return t('User %s (ID %s) was added to group %s (ID %s) by an automated process.',
+        return t('User %1$s (ID %2$s) was added to group %3$s (ID %4$s) by an automated process.',
             $this->user->getUserName(),
             $this->user->getUserID(),
             $this->group->getGroupName(),
@@ -20,7 +20,7 @@ class EnterGroup extends UserGroup
 
     public function getEntryMessageWithApplier()
     {
-        return t('User %s (ID %s) was added to group %s (ID %s) by %s (ID %s).',
+        return t('User %1$s (ID %2$s) was added to group %3$s (ID %4$s) by %5$s (ID %6$s).',
             $this->user->getUserName(),
             $this->user->getUserID(),
             $this->group->getGroupName(),

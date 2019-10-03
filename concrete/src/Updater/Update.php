@@ -260,7 +260,7 @@ class Update
             $response = $app->make('http/client')->post($config->get('concrete.updates.services.get_available_updates'),
                 ['form_params' => [
                     'LOCALE' =>  Localization::activeLocale(),
-                    'BASE_URL_FU' => (string) Application::getApplicationURL(),
+                    'BASE_URL_FULL' => (string) Application::getApplicationURL(),
                     'APP_VERSION' => APP_VERSION
                 ]]
             );

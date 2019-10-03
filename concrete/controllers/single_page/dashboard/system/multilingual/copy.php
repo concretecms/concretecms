@@ -9,6 +9,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Command\RescanMultilingualPageBatchProcessFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Foundation\Queue\Batch\Processor;
+use Concrete\Core\User\User;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -34,7 +35,7 @@ class Copy extends DashboardSitePageController
     public function rescan_locale()
     {
         if ($this->token->validate('rescan_locale')) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             if ($u->isSuperUser()) {
                 $queue = $this->app->make(QueueService::class);
                 $q = $queue->get('rescan_multilingual_page');
