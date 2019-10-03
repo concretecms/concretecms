@@ -9,7 +9,6 @@ use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Import\FileImporter;
-use Concrete\Core\File\Import\ImportException;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\File\FileStorageTestCase;
@@ -73,25 +72,31 @@ class FileImporterTest extends FileStorageTestCase
         CacheLocal::flush();
     }
 
+    /**
+     * @expectedException \Concrete\Core\File\Import\ImportException
+     */
     public function testFileNotFound()
     {
-        $this->setExpectedException(ImportException::class, '', ImportException::E_FILE_INVALID);
         $fi = static::$app->make(FileImporter::class);
         $fi->importLocalFile('foo.txt', 'foo.txt');
     }
 
+    /**
+     * @expectedException \Concrete\Core\File\Import\ImportException
+     */
     public function testFileInvalidExtension()
     {
-        $this->setExpectedException(ImportException::class, '', ImportException::E_FILE_INVALID_EXTENSION);
         $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/test.invalid';
         touch($file);
         $fi = static::$app->make(FileImporter::class);
         $fi->importLocalFile($file, 'test.invalid');
     }
 
+    /**
+     * @expectedException \Concrete\Core\File\Import\ImportException
+     */
     public function testFileInvalidStorageLocation()
     {
-        $this->setExpectedException(ImportException::class, '', ImportException::E_FILE_INVALID_STORAGE_LOCATION);
         $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/test.txt';
         touch($file);
         $fi = static::$app->make(FileImporter::class);
