@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /* @var int $itemsPerPage */
 ?>
 
-<div class="ccm-ui" data-header="file-manager">
+<div class="ccm-header-search-form ccm-ui" data-header="file-manager">
     <?php if ($includeBreadcrumb) { ?>
         <div class="ccm-search-results-breadcrumb <?= (isset($breadcrumbClass)) ? $breadcrumbClass : ''; ?>">
         </div>
@@ -54,9 +54,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <i class="fa fa-share"></i> <?=t('Jump to Folder')?>
                 </a>
             </li>
-            <li><a href="#" data-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
+            <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
             <li><a href="#" id="ccm-file-manager-upload" data-dialog="add-files"><i class="fa fa-upload"></i> <?=t('Upload Files')?></a></li>
         </ul>
     </form>
 </div>
-<div class="clearfix"></div>
+<div style="display: none">
+    <div class="dialog-buttons"></div>
+    <div data-dialog="add-file-manager-folder" class="ccm-ui">
+        <form data-dialog-form="add-folder" method="post" action="<?=$addFolderAction?>">
+            <?=$token->output('add_folder')?>
+            <?=$form->hidden('currentFolder', $currentFolder);?>
+            <div class="form-group">
+                <?=$form->label('folderName', t('Folder Name'))?>
+                <?=$form->text('folderName', '', array('autofocus' => true))?>
+            </div>
+        </form>
+        <div class="dialog-buttons">
+            <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+            <button class="btn btn-primary pull-right" data-dialog-action="submit"><?=t('Add Folder')?></button>
+        </div>
+    </div>
+
+</div>

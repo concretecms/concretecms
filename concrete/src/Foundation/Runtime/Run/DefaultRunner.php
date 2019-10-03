@@ -118,6 +118,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             ]);
         } else {
             $this->initializeSystemTimezone();
+            $this->preloadClassAliases();
         }
 
         // Create the request to use

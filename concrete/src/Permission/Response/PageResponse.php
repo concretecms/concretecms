@@ -6,7 +6,7 @@ use Loader;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
 use Permissions;
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use Config;
 use Session;
