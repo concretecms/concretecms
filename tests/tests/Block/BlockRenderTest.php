@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Tests\Block;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;

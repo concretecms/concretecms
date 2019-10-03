@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\Dialog\Page;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use BlockType;
 use Concrete\Core\Block\Events\BlockAdd;

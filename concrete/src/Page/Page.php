@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Page;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
-use Collection;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Database\Connection\Connection;

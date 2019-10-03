@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Block\Block;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Permission\Inheritance\Registry\RegistryInterface;
 use PermissionKey;

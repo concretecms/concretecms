@@ -10,7 +10,6 @@
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb.ccm-file-manager-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
-            'appendToOuterDialog': true,
             'selectMode': 'multiple' // Enables multiple advanced item selection, range click, etc
         }, options);
 

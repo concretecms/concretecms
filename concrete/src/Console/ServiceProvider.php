@@ -48,6 +48,7 @@ class ServiceProvider extends Provider
         Command\InstallPackageCommand::class,
         Command\UninstallPackageCommand::class,
         Command\UpdatePackageCommand::class,
+        Command\InstallThemeCommand::class,
         Command\BlacklistClear::class,
         Command\JobCommand::class,
         Command\RefreshEntitiesCommand::class,
