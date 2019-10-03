@@ -13,16 +13,16 @@ if (empty($sizing)) {
 ?>
 
 <?php
-echo Core::make('helper/concrete/ui')->tabs(array(
-    array('video', t('Video'), true),
-    array('settings', t('Settings')),
-));
+echo Core::make('helper/concrete/ui')->tabs([
+    ['video', t('Video'), true],
+    ['settings', t('Settings')],
+]);
 ?>
 
 <div class="ccm-tab-content" id="ccm-tab-content-video">
     <div class="form-group">
         <label class="control-label"><?php echo t('YouTube URL'); ?></label>
-        <?php echo $form->text('videoURL', isset($videoURL) ? $videoURL : '', array('required' => 'required')); ?>
+        <?php echo $form->text('videoURL', isset($videoURL) ? $videoURL : '', ['required' => 'required']); ?>
     </div>
     <div class="form-group">
         <label class="control-label"><?=t('Size'); ?></label>
@@ -45,7 +45,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </label>
         </div>
     </div>
-    <div id="fixedsizes" class="<?php echo 'fixed' == $sizing ? '' : 'hidden'; ?>">
+    <div id="fixedsizes" class="<?php echo $sizing == 'fixed' ? '' : 'hidden'; ?>">
         <div class="form-group">
             <label class="control-label"><?php echo t('Width'); ?></label>
             <div class="input-group">
@@ -77,8 +77,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                     <div class="checkbox">
                         <label>
                             <?php
-                            $disabledattr = array();
-                            if (isset($color) && 'white' == $color) {
+                            $disabledattr = [];
+                            if (isset($color) && $color == 'white') {
                                 $disabledattr['disabled'] = 'disabled';
                             }
                             echo $form->checkbox('modestbranding', 1, (isset($modestbranding) ? $modestbranding : true), $disabledattr); ?>
@@ -89,9 +89,9 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </div>
 
             <div class="col-xs-6">
-                <div class="form-group controls-only <?php echo isset($controls) && 0 == $controls ? 'hidden' : ''; ?>">
+                <div class="form-group controls-only <?php echo isset($controls) && $controls == 0 ? 'hidden' : ''; ?>">
                     <?php  echo $form->label('color', t('Progress Bar Color')); ?>
-                    <?php  echo $form->select('color', array('red' => t('Red'), 'white' => t('White')), isset($color) ? $color : null); ?>
+                    <?php  echo $form->select('color', ['red' => t('Red'), 'white' => t('White')], isset($color) ? $color : null); ?>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </div>
             <div class="checkbox">
                 <label>
-                    <?php echo $form->checkbox('iv_load_policy', 1, isset($iv_load_polict) && 3 == $iv_load_policy); ?>
+                    <?php echo $form->checkbox('iv_load_policy', 1, isset($iv_load_polict) && $iv_load_policy == 3); ?>
                     <?php echo t('Hide annotations by default'); ?>
                 </label>
             </div>

@@ -1,10 +1,9 @@
 <?php
-
 namespace Concrete\Block\Youtube;
 
 use Concrete\Core\Block\BlockController;
 
-class controller extends BlockController
+class Controller extends BlockController
 {
     protected $btTable = 'btYouTube';
     protected $btInterfaceWidth = '400';
@@ -60,11 +59,11 @@ class controller extends BlockController
             $this->set('youtubeDomain', 'www.youtube.com');
         }
 
-        if (false !== strpos($videoID, ',')) {
+        if (strpos($videoID, ',') !== false) {
             $this->set('playlist', $videoID);
         }
 
-        if (1 == $this->startTimeEnabled && ('0' === $this->startTime || $this->startTime)) {
+        if ($this->startTimeEnabled == 1 && ($this->startTime === '0' || $this->startTime)) {
             $this->set('startSeconds', $this->convertStringToSeconds($this->startTime));
         } elseif (!empty($params['t'])) {
             $this->set('startSeconds', $this->convertStringToSeconds($params['t']));
@@ -77,21 +76,21 @@ class controller extends BlockController
     public function convertStringToSeconds($string)
     {
         if (preg_match_all('/(\d+)(h|m|s)/i', $string, $matches)) {
-            $h = (false !== ($key = array_search('h', $matches[2]))) ? (int) $matches[1][$key] : 0;
-            $m = (false !== ($key = array_search('m', $matches[2]))) ? (int) $matches[1][$key] : 0;
-            $s = (false !== ($key = array_search('s', $matches[2]))) ? (int) $matches[1][$key] : 0;
+            $h = (($key = array_search('h', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
+            $m = (($key = array_search('m', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
+            $s = (($key = array_search('s', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
             $seconds = ($h * 3600) + ($m * 60) + $s;
         } else {
             $pieces = array_reverse(explode(':', $string));
             $seconds = 0;
-            $multipliers = array(1, 60, 3600);
+            $multipliers = [1, 60, 3600];
             foreach ($multipliers as $key => $multiplier) {
-                if (\array_key_exists($key, $pieces)) {
+                if (array_key_exists($key, $pieces)) {
                     $seconds += (int) $pieces[$key] * $multiplier;
                 }
             }
         }
-        if (0 === $seconds || $seconds > 0) {
+        if ($seconds === 0 || $seconds > 0) {
             return $seconds;
         }
 
@@ -100,7 +99,7 @@ class controller extends BlockController
 
     public function save($data)
     {
-        $data += array(
+        $data += [
             'title' => '',
 
             'videoURL' => '',
@@ -123,9 +122,9 @@ class controller extends BlockController
             'startTime' => '',
 
             'noCookie' => false,
-        );
+        ];
 
-        $args = array(
+        $args = [
             'title' => trim($data['title']),
 
             'videoURL' => trim($data['videoURL']),
@@ -147,17 +146,17 @@ class controller extends BlockController
             'startTime' => trim($data['startTime']),
 
             'noCookie' => $data['noCookie'] ? 1 : 0,
-        );
-        if ('fixed' === $args['sizing']) {
-            $args += array(
+        ];
+        if ($args['sizing'] === 'fixed') {
+            $args += [
                 'vWidth' => trim($data['vWidth']),
                 'vHeight' => trim($data['vHeight']),
-            );
+            ];
         } else {
-            $args += array(
+            $args += [
                 'vWidth' => '',
                 'vHeight' => '',
-            );
+            ];
         }
 
         parent::save($args);
