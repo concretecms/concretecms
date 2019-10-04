@@ -1,9 +1,9 @@
 <?php
-
 namespace Concrete\Attribute\Email;
 
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Settings\EmailSettings;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -12,15 +12,75 @@ use Concrete\Core\Validator\String\EmailValidator;
 
 class Controller extends DefaultController
 {
+    protected $akEmailPlaceholder;
     public $helpers = ['form'];
+
+    public function saveKey($data)
+    {
+        $type = $this->getAttributeKeySettings();
+        $data += [
+            'akEmailPlaceholder' => null,
+        ];
+        $akEmailPlaceholder = $data['akEmailPlaceholder'];
+
+        $type->setPlaceholder($akEmailPlaceholder);
+
+        return $type;
+    }
 
     public function form()
     {
+        $this->load();
         $value = null;
         if (is_object($this->attributeValue)) {
             $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
         $this->set('value', $value);
+
+        $akEmailPlaceholder = '';
+        if (isset($this->akEmailPlaceholder)) {
+            $akEmailPlaceholder = $this->akEmailPlaceholder;
+        }
+        $this->set('akEmailPlaceholder', $akEmailPlaceholder);
+    }
+
+    public function type_form()
+    {
+        $this->load();
+    }
+
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $type = $ak->getAttributeKeySettings();
+        /**
+         * @var $type EmailSettings
+         */
+        $this->akEmailPlaceholder = $type->getPlaceholder();
+        $this->set('akEmailPlaceholder', $type->getPlaceholder());
+    }
+
+    public function exportKey($akey)
+    {
+        $this->load();
+        $akey->addChild('type')->addAttribute('email-placeholder', $this->akEmailPlaceholder);
+
+        return $akey;
+    }
+
+    public function importKey(\SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeySettings();
+        if (isset($akey->type)) {
+            $data['akEmailPlaceholder'] = $akey->type['email-placeholder'];
+            $type->setPlaceholder((string) $akey->type['email-placeholder']);
+        }
+
+        return $type;
     }
 
     public function getIconFormatter()
@@ -63,5 +123,10 @@ class Controller extends DefaultController
         }
 
         return $value;
+    }
+
+    public function getAttributeKeySettingsClass()
+    {
+        return EmailSettings::class;
     }
 }
