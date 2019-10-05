@@ -67,7 +67,7 @@ class Controller extends DefaultController
     public function exportKey($akey)
     {
         $this->load();
-        $akey->addChild('type')->addAttribute('email-placeholder', $this->akEmailPlaceholder);
+        $akey->addChild('type')->addAttribute('placeholder', $this->akEmailPlaceholder);
 
         return $akey;
     }
@@ -76,8 +76,8 @@ class Controller extends DefaultController
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $data['akEmailPlaceholder'] = $akey->type['email-placeholder'];
-            $type->setPlaceholder((string) $akey->type['email-placeholder']);
+            $data['akEmailPlaceholder'] = $akey->type['placeholder'];
+            $type->setPlaceholder((string) $akey->type['placeholder']);
         }
 
         return $type;
