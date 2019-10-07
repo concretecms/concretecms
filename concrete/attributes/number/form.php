@@ -1,9 +1,12 @@
 <?php
-    defined('C5_EXECUTE') or die("Access Denied.");
-    print $form->number(
-        $this->field('value'),
-        $value,
-        [
-            'step' => 'any'
-        ]
-    );
+defined('C5_EXECUTE') or die('Access Denied.');
+echo $form->number(
+    $this->field('value'),
+    $value,
+    [
+        'placeholder' => h($akNumberPlaceholder),
+    ],
+    [
+        'step' => 'any',
+    ]
+);
