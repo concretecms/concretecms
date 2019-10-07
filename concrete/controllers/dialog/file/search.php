@@ -30,9 +30,6 @@ class Search extends BackendInterfaceController
 
         if ($this->request->query->get('mode') == 'selectMultiple') {
             $this->set('selectMultiple', true);
-        } else {
-            echo $this->request->query->get('mode');
-            $this->set('selectMultiple', false);
         }
 
         if (is_object($result)) {
