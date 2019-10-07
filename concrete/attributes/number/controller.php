@@ -1,27 +1,36 @@
 <?php
-
 namespace Concrete\Attribute\Number;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
+    protected $akNumberPlaceholder;
     protected $searchIndexFieldDefinition = [
         'type' => 'decimal',
         'options' => ['precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false],
     ];
 
-    public function getIconFormatter()
+    public function saveKey($data)
     {
-        return new FontAwesomeIconFormatter('hashtag');
+        $type = $this->getAttributeKeySettings();
+        $data += [
+            'akNumberPlaceholder' => null,
+        ];
+        $akNumberPlaceholder = $data['akNumberPlaceholder'];
+
+        $type->setPlaceholder($akNumberPlaceholder);
+
+        return $type;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\AttributeInterface::getDisplayValue()
      */
@@ -30,6 +39,24 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $value = $this->attributeValue->getValue();
 
         return $value === null ? '' : (float) $value;
+    }
+
+    public function form()
+    {
+        $this->load();
+        if (is_object($this->attributeValue)) {
+            $value = $this->getAttributeValue()->getValue();
+        } else {
+            $value = null;
+        }
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('value', $value);
+
+        $akNumberPlaceholder = '';
+        if (isset($this->akNumberPlaceholder)) {
+            $akNumberPlaceholder = $this->akNumberPlaceholder;
+        }
+        $this->set('akNumberPlaceholder', $akNumberPlaceholder);
     }
 
     public function getAttributeValueClass()
@@ -60,15 +87,44 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         echo $html;
     }
 
-    public function form()
+    public function type_form()
     {
-        if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValue();
-        } else {
-            $value = null;
-        }
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('value', $value);
+        $this->load();
+    }
+
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $type = $ak->getAttributeKeySettings();
+        /**
+         * @var $type NumberSettings
+         */
+        $this->akNumberPlaceholder = $type->getPlaceholder();
+        $this->set('akNumberPlaceholder', $type->getPlaceholder());
+    }
+
+    public function exportKey($akey)
+    {
+        $this->load();
+        $akey->addChild('type')->addAttribute('placeholder', $this->akNumberPlaceholder);
+
+        return $akey;
+    }
+
+    public function importKey(\SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeySettings();
+        if (isset($akey->type)) {
+            $data['akNumberPlaceholder'] = $akey->type['placeholder'];
+            $type->setPlaceholder((string) $akey->type['placeholder']);
+        }
+
+        return $type;
     }
 
     public function validateForm($p)
@@ -141,5 +197,15 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         return $value;
+    }
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('hashtag');
+    }
+
+    public function getAttributeKeySettingsClass()
+    {
+        return NumberSettings::class;
     }
 }
