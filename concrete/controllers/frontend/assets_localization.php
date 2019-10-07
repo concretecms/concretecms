@@ -219,6 +219,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'view' => t('View'),
     'download' => t('Download'),
     'select' => t('Choose'),
+    'selectMultiple' => t('Choose Files'),
     'duplicateFile' => t('Copy File'),
     'clear' => t('Clear'),
     'edit' => t('Edit'),

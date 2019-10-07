@@ -10,7 +10,8 @@
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb.ccm-file-manager-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
-            'selectMode': 'multiple' // Enables multiple advanced item selection, range click, etc
+            'selectMode': 'multiple',// Enables multiple advanced item selection, range click, etc
+            'chooseMultiple': false, // Enable multiple choice mode
         }, options);
 
         my.currentFolder = 0;
@@ -367,7 +368,15 @@
 
     ConcreteFileManager.prototype.activateMenu = function($menu) {
         var my = this;
+
         if (my.getSelectedResults().length > 1) {
+            if (my.options.chooseMultiple) {
+                // Get the download parent's parent (ul)
+                var holder = $menu.find('ul');
+
+                holder.prepend('<li><a data-bulk-action="choose" href="#">'+ccmi18n_filemanager.selectMultiple+'</a></li>' +
+                    '<li class="divider"></li>');
+            }
             // bulk menu
             $menu.find('a').on('click.concreteFileManagerBulkAction', function(e) {
 
@@ -381,6 +390,23 @@
 
                 my.handleSelectedBulkAction(value, type, $(this), ids);
             });
+        } else if (my.options.chooseMultiple) {
+            var holder = $menu.find('ul');
+            //holder.children().remove();
+            holder.prepend('<li><a data-file-manager-action="choose" href="#">'+ccmi18n_filemanager.select+'</a></li>' +
+                '<li class="divider"></li>');
+            holder.on('click.concreteFileManagerChooseFile','a[data-file-manager-action=choose]', function(e) {
+                var ids = [];
+
+                $.each(my.getSelectedResults(), function(i, result) {
+                    ids.push(result.fID);
+                });
+                ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: ids });
+                ConcreteEvent.publish('FileManagerSelectFile', { fID: ids });
+                my.$downloadTarget.remove();
+                return false;
+            });
+
         }
 
         // Hide clear if we're not in choose mode
@@ -391,6 +417,7 @@
             $clear.remove();
             $choose.remove();
         }
+
 
     };
 
@@ -406,7 +433,6 @@
                 $list.attr('data-search-file-menu', $menu.attr('data-search-file-menu'));
                 $(this).parent().find('ul').remove();
                 $(this).parent().append($list);
-
                 var fileMenu = new ConcreteFileMenu();
                 fileMenu.setupMenuOptions($(this).next('ul'));
 
@@ -592,7 +618,9 @@
         };
 
         $.extend(options, opts);
-
+        if (options.multipleSelection) {
+            data['mode'] = 'selectMultiple';
+        }
         if (options.filters.length > 0) {
             data['field\[\]'] = [];
 
