@@ -368,12 +368,10 @@
 
     ConcreteFileManager.prototype.activateMenu = function($menu) {
         var my = this;
+        var holder = $menu.find('ul');
 
         if (my.getSelectedResults().length > 1) {
             if (my.options.chooseMultiple) {
-                // Get the download parent's parent (ul)
-                var holder = $menu.find('ul');
-
                 holder.prepend('<li><a data-bulk-action="choose" href="#">'+ccmi18n_filemanager.selectMultiple+'</a></li>' +
                     '<li class="divider"></li>');
             }
@@ -391,8 +389,7 @@
                 my.handleSelectedBulkAction(value, type, $(this), ids);
             });
         } else if (my.options.chooseMultiple) {
-            var holder = $menu.find('ul');
-            //holder.children().remove();
+            // prepend choose
             holder.prepend('<li><a data-file-manager-action="choose" href="#">'+ccmi18n_filemanager.select+'</a></li>' +
                 '<li class="divider"></li>');
             holder.on('click.concreteFileManagerChooseFile','a[data-file-manager-action=choose]', function(e) {
@@ -619,7 +616,7 @@
 
         $.extend(options, opts);
         if (options.multipleSelection) {
-            data['mode'] = 'selectMultiple';
+            data.mode = 'selectMultiple';
         }
         if (options.filters.length > 0) {
             data['field\[\]'] = [];
