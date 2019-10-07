@@ -571,6 +571,9 @@ return [
         'moment-timezone' => [
             ['javascript', 'js/moment-timezone-with-data.js', ['minify' => false, 'version' => '0.5.25']],
         ],
+        'bootstrap' => [
+            ['javascript', 'js/bootstrap.js', ['minify' => false]],
+        ],
         'bootstrap/dropdown' => [
             ['javascript', 'js/bootstrap/dropdown.js'],
             ['css', 'css/app.css', ['minify' => false]],
@@ -597,9 +600,6 @@ return [
         ],
         'bootstrap/transition' => [
             ['javascript', 'js/bootstrap/transition.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap' => [
             ['css', 'css/app.css', ['minify' => false]],
         ],
         'core/app' => [

@@ -490,8 +490,10 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/themes/dashboard/main.css': '<%= DIR_BASE %>/concrete/css/build/themes/dashboard/main.less',
         '<%= DIR_BASE %>/concrete/css/style-customizer.css': '<%= DIR_BASE %>/concrete/css/build/core/style-customizer.less',
         '<%= DIR_BASE %>/concrete/css/font-awesome.css': '<%= DIR_BASE %>/concrete/css/build/vendor/font-awesome.less',
+        /*
         '<%= DIR_BASE %>/concrete/css/views/install.css': '<%= DIR_BASE %>/concrete/css/build/views/install.less',
         '<%= DIR_BASE %>/concrete/themes/concrete/main.css': '<%= DIR_BASE %>/concrete/css/build/themes/concrete/main.less',
+        */
         '<%= DIR_BASE %>/concrete/css/spectrum.css': '<%= DIR_BASE %>/concrete/css/build/vendor/spectrum/spectrum.less',
         '<%= DIR_BASE %>/concrete/css/image-editor.css': '<%= DIR_BASE %>/concrete/css/build/core/image-editor/image-editor.less',
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',

@@ -7,6 +7,5 @@ if (isset($c) && is_object($c)) {
     View::getInstance()->markFooterAssetPosition();
 }
 ?>
-
 </body>
 </html>

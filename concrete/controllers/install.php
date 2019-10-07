@@ -88,10 +88,6 @@ class Install extends Controller
      */
     public function on_start()
     {
-        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
-        $this->requireAsset('core/app');
-        $this->requireAsset('javascript', 'backstretch');
-        $this->requireAsset('javascript', 'bootstrap/collapse');
         $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
 
         $config = $this->app->make('config');

@@ -1,0 +1,11 @@
+// Import the theme foundation for this whole theme.
+@import "../../../foundation/theme/foundation";
+
+// Import the toolbar from the CMS foundation because the toolbar sits atop our theme.
+@import "../../../foundation/cms/variables";
+@import "../../../foundation/cms/toolbar";
+
+@import "container";
+
+// Install-page specific CSS
+@import "install";

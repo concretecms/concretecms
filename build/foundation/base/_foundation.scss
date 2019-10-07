@@ -1,0 +1,10 @@
+// Import Bootstrap
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// Import Font Awesome
+$fa-font-path: "~/concrete/css/fonts" !default;
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+
