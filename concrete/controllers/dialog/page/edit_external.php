@@ -4,6 +4,8 @@ namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\EditResponse;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EditExternal extends BackendInterfacePageController
 {
@@ -31,7 +33,8 @@ class EditExternal extends BackendInterfacePageController
             $pr = new EditResponse();
             $pr->setMessage(t('External Link updated.'));
             $pr->setPage($c);
-            $pr->outputJSON();
+            $pr->setRedirectURL($this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/sitemap']));
+            return JsonResponse::create($pr);
         }
     }
 
