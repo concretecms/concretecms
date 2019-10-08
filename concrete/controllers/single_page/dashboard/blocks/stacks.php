@@ -658,6 +658,7 @@ class Stacks extends DashboardPageController
                             $ns->update(array(
                                 'stackName' => $stackName,
                             ));
+                            $ns->copyLocalizedStacksFrom($s);
                             $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->getCollectionParentID(), 'stack_duplicated');
                         }
                     }

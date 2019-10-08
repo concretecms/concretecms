@@ -163,14 +163,6 @@ class Cloner
                 'stMultilingualSection' => 0,
             ]);
             $newPage = Stack::getByID($newPage->getCollectionID());
-            if ($page->isNeutralStack()) {
-                foreach (Section::getList() as $section) {
-                    $localized = $page->getLocalizedStack($section);
-                    if ($localized !== null) {
-                        $this->clonePage($localized, $options, $newPage, $site);
-                    }
-                }
-            }
         }
 
         return $newPage;
