@@ -217,6 +217,9 @@ class Sitemap
         $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
 
+        $cPointerExternalLinkNewWindows = (bool) $c->openCollectionPointerExternalLinkInNewWindow();
+        $newWindow = $cPointerExternalLinkNewWindows ? '_blank' : '_self';
+
         $isInTrash = $c->isInTrash();
 
         $config = $this->app->make('config');
@@ -269,6 +272,7 @@ class Sitemap
         $node = new stdClass();
         $node->title = $cvName;
         $node->link = $c->getCollectionLink();
+        $node->newWindow = $newWindow;
         if ($numSubpages > 0) {
             $node->lazy = true;
         }
