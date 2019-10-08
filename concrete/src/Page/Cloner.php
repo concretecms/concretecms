@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Area\Area;
@@ -337,7 +336,7 @@ class Cloner
         $uniquePageName = $pageName;
         $parentID = (int) $parentID;
         $index = 1;
-        for (; ;) {
+        for (;;) {
             $pageWithSameName = $this->connection->fetchColumn(
                 'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvName = ? limit 1',
                 [$parentID, $uniquePageName]
@@ -363,7 +362,7 @@ class Cloner
         $uniqueHandle = $handle;
         $parentID = (int) $parentID;
         $index = 1;
-        for (; ;) {
+        for (;;) {
             $pageWithSameHandle = $this->connection->fetchColumn(
                 'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvHandle = ? limit 1',
                 [$parentID, $uniqueHandle]
