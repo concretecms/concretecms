@@ -77,38 +77,20 @@ div#ccm-page-install {
   }
 
 
+  // Installing page
+  #success-message {
+    display: none;
+  }
+
+  #install-success {display: none;}
+  #install-progress-error-wrapper {display: none;}
+
+  div#install-progress-summary {
+    font-size: 24px;
+    font-weight: 300;
+    color: #fff;
+    float: left;
+  }
+  
 
 }
-
-/*
-table#sample-content-selector td {
-  cursor: pointer;
-  padding-top: 0px;
-}
-
-#success-message {
-  display: none;
-}
-
-
-div.well {
-  text-align: center;
-}
-
-div.alert-danger {
-  margin-top: 20px;
-}
-
-.ccm-ui div.page-header {
-  margin-top: 10px;
-}
-
-#install-success {display: none;}
-#install-progress-error-wrapper {display: none;}
-
-div#install-progress-summary {
-  font-size: 24px;
-  font-weight: 300;
-  color: #fff;
-}
-*/

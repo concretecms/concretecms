@@ -603,7 +603,7 @@ if ($install_config) {
                 NProgress.done();
                 inviteToStayHere = false;
                 $("#install-progress-errors").append('<div class="alert alert-danger">' + message + '</div>');
-                $("#ccm-install-intro").hide();
+                $("#interstitial-message").hide();
                 $("#install-progress-error-wrapper").show();
                 $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Back'))?>).on('click', function () {
                     window.location.href = <?= json_encode((string)$urlResolver->resolve(['install'])) ?>;
@@ -720,9 +720,9 @@ if ($install_config) {
     </div>
 
     <div id="success-message">
-        <div class="panel panel-success">
-            <div class="panel-heading"><?= t('Installation Complete') ?></div>
-            <div class="panel-body">
+        <div class="card text-white bg-success">
+            <div class="card-header"><?= t('Installation Complete') ?></div>
+            <div class="card-body">
                 <?= $successMessage ?>
             </div>
         </div>
@@ -735,7 +735,7 @@ if ($install_config) {
     </div>
 
     <div class="ccm-install-actions">
-        <div class="pull-left" id="install-progress-summary"><?= t('Beginning Installation') ?></div>
+        <div id="install-progress-summary"><?= t('Beginning Installation') ?></div>
         <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
                 data-button="installation-complete" class="btn btn-primary">
             <?= t('Installing...') ?>

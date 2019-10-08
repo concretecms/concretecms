@@ -4,6 +4,9 @@
 // Import the toolbar from the CMS foundation because the toolbar sits atop our theme.
 @import "../../../foundation/cms/variables";
 @import "../../../foundation/cms/toolbar";
+@import "../../../foundation/cms/nprogress";
+
+// Import other app foundation assets that we'll need.
 
 @import "container";
 

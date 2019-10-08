@@ -5,9 +5,11 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme
 {
     public function registerAssets()
     {
-        $this->requireAsset('javascript', 'jquery');
-        $this->requireAsset('javascript', 'bootstrap');
+        $this->providesAsset('javascript', 'jquery');
+        $this->providesAsset('javascript', 'bootstrap');
+        $this->providesAsset('nprogress');
+
         $this->requireAsset('javascript', 'backstretch');
-        $this->providesAsset('css', 'core/frontend/*');
+
     }
 }

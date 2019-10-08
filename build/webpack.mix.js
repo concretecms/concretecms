@@ -24,7 +24,6 @@ mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css
 mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.js', '../concrete/js/bootstrap.js');
 //mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
 
-
 // Build themes
 mix
     .sass('themes/concrete/scss/main.scss', 'themes/concrete')

@@ -1,8 +1,8 @@
 {
     "/js/components/avatar.bundle.js": "/js/components/avatar.bundle.js",
-    "/themes/concrete/main.css": "/themes/concrete/main.css",
     "/themes/concrete/main.js": "/themes/concrete/main.js",
     "/js/vue.js": "/js/vue.js",
     "/js/jquery.js": "/js/jquery.js",
-    "/js/bootstrap.js": "/js/bootstrap.js"
+    "/js/bootstrap.js": "/js/bootstrap.js",
+    "/themes/concrete/main.css": "/themes/concrete/main.css"
 }

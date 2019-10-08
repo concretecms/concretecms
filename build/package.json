@@ -27,7 +27,9 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
+    "backstretch": "^1.2.2",
     "bootstrap": "^4.3.1",
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "nprogress": "^0.2.0"
   }
 }
