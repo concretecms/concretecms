@@ -435,10 +435,11 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/fancytree.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fancytree/jquery.fancytree-all.js'
         },
+        /*
         account: {
             dest: '<%= DIR_BASE %>/concrete/js/account.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/account/account.js'
-        },
+        },*/
         ccm_imageeditor: {
             dest: '<%= DIR_BASE %>/concrete/js/image-editor.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/image-editor/image-editor.js'
@@ -487,7 +488,9 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',
         '<%= DIR_BASE %>/concrete/css/jquery-awesome-rating.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-awesome-rating/jquery-awesome-rating.less',
+        /*
         '<%= DIR_BASE %>/concrete/themes/dashboard/main.css': '<%= DIR_BASE %>/concrete/css/build/themes/dashboard/main.less',
+         */
         '<%= DIR_BASE %>/concrete/css/style-customizer.css': '<%= DIR_BASE %>/concrete/css/build/core/style-customizer.less',
         '<%= DIR_BASE %>/concrete/css/font-awesome.css': '<%= DIR_BASE %>/concrete/css/build/vendor/font-awesome.less',
         /*
@@ -496,7 +499,9 @@ module.exports = function(grunt) {
         */
         '<%= DIR_BASE %>/concrete/css/spectrum.css': '<%= DIR_BASE %>/concrete/css/build/vendor/spectrum/spectrum.less',
         '<%= DIR_BASE %>/concrete/css/image-editor.css': '<%= DIR_BASE %>/concrete/css/build/core/image-editor/image-editor.less',
+        /*
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
+        */
         '<%= DIR_BASE %>/concrete/css/fancytree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-fancytree/fancytree-bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
         '<%= DIR_BASE %>/concrete/css/duration.css': '<%= DIR_BASE %>/concrete/css/build/core/date-time-duration.less',

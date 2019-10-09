@@ -21,9 +21,7 @@ $valt = Loader::helper('validation/token');
 $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
         $request = \Request::getInstance();
-
-        $v->requireAsset('core/app');
-
+        
         $editMode = $c->isEditMode();
         $tools = REL_DIR_FILES_TOOLS_REQUIRED;
         $htmlTagClasses = 'ccm-toolbar-visible';

@@ -7,7 +7,8 @@ if (!empty($top)) {
         <?php if (isset($title) && $title) {
             ?><h3><?=$title?></h3><?php
         } ?>
-        <ul class="nav">
+
+        <div class="nav flex-column nav-pills">
             <?php
             $walk = function ($pages) use (&$walk, &$view) {
                 $n = count($pages);
@@ -16,8 +17,7 @@ if (!empty($top)) {
                         $page = $pages[$i];
                         $next = ($i + 1 < $n) ? $pages[$i + 1] : null;
                         ?>
-                        <li class="<?=$view->controller->getMenuItemClass($page)?>">
-                            <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
+                            <a class="nav-link <?=$view->controller->getMenuItemClass($page)?>" href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
                             <?php
                             if ($view->controller->displayChildPages($page)) {
                                 $children = $view->controller->getChildPages($page);
@@ -29,8 +29,6 @@ if (!empty($top)) {
                                 }
                             }
                             ?>
-                        </li>
-
                         <?php
                         if ($page->getAttribute('is_desktop')) {
                             echo '<li class="nav-divider"></li>';
@@ -42,7 +40,7 @@ if (!empty($top)) {
             };
             $walk($top);
             ?>
-        </ul>
+        </div>
     </div>
     <?php
 }

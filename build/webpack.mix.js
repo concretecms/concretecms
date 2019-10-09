@@ -27,6 +27,7 @@ mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.js', '../concrete/js/b
 // Build themes
 mix
     .sass('themes/concrete/scss/main.scss', 'themes/concrete')
+    .sass('themes/dashboard/scss/main.scss', 'themes/dashboard')
     .js('themes/concrete/js/main.js', 'themes/concrete');
 
 

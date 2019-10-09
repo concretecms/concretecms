@@ -307,7 +307,7 @@ class UserInterface
                 $dt = '';
                 $href = $t[0];
             }
-            $html .= '<li class="' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '"><a href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
+            $html .= '<li class="nav-item"><a class="nav-link ' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '" href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
         }
         $html .= '</ul>';
         if ($jstabs) {

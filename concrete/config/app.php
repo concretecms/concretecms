@@ -912,7 +912,7 @@ return [
             ],
         ],
         'dashboard' => [
-            [
+            [/*
                 ['javascript', 'jquery'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -937,7 +937,7 @@ return [
                 ['css', 'core/app'],
                 ['css', 'jquery/ui'],
                 ['css', 'font-awesome'],
-            ],
+            */],
         ],
         'core/file-manager' => [
             [
@@ -1152,13 +1152,13 @@ return [
             ],
         ],
         'core/account' => [
-            [
+            [/*
                 ['javascript', 'jquery'],
                 ['javascript', 'core/account'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['css', 'bootstrap/dropdown'],
                 ['css', 'core/account'],
-            ],
+            */],
         ],
         'core/translator' => [
             [

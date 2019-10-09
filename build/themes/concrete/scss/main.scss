@@ -1,10 +1,10 @@
 // Import the theme foundation for this whole theme.
-@import "../../../foundation/theme/foundation";
+@import "../../../foundation/scss/frontend/foundation";
 
-// Import the toolbar from the CMS foundation because the toolbar sits atop our theme.
-@import "../../../foundation/cms/variables";
-@import "../../../foundation/cms/toolbar";
-@import "../../../foundation/cms/nprogress";
+// Import the basics from the CMS foundation because the toolbar sits atop our theme.
+@import "../../../foundation/scss/cms/variables";
+@import "../../../foundation/scss/cms/toolbar";
+@import "../../../foundation/scss/cms/nprogress";
 
 // Import other app foundation assets that we'll need.
 
