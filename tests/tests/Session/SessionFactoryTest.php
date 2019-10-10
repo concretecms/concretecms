@@ -78,7 +78,7 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(NativeFileSessionHandler::class, $native_handler);
 
         $config['concrete.session'] = $this->getRedisConfig();
-        $redis_handler = $method->invokeArgs($this->factory, $this->getRedisConfig());
+        $redis_handler = $method->invokeArgs($this->factory, [$this->getRedisConfig()]);
         $this->assertInstanceOf(RedisSessionHandler::class, $redis_handler);
     }
 
@@ -94,7 +94,7 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
 
         $config['concrete.session'] = $this->getRedisConfig();
         /** @var $redis_handler  RedisSessionHandler */
-        $redis_handler = $method->invokeArgs($this->factory, $this->getRedisConfig());
+        $redis_handler = $method->invokeArgs($this->factory, [$this->getRedisConfig()]);
         $reflection = new \ReflectionClass(RedisSessionHandler::class);
         $property = $reflection->getProperty('redis');
         $property->setAccessible(true);
@@ -103,7 +103,7 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(\Redis::class, $redisClass);
         $this->assertTrue($redisClass->ping());
-        $redisConfig = $this->getRedisConfig(2);
+        $redisConfig = [$this->getRedisConfig(2)];
         $config['concrete.session'] = $redisConfig;
         /** @var $redis_handler  RedisSessionHandler */
         $redis_handler = $method->invokeArgs($this->factory, $redisConfig);

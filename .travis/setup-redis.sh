@@ -1,6 +1,6 @@
 #!/bin/bash
-echo "Installing php-redis"
-pecl install redis
+
+php -m
 
 PORTS="6379 6380"
 
