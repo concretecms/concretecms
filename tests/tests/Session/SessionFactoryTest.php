@@ -7,6 +7,7 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
 use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
+use Concrete\Core\Session\Storage\Handler\RedisSessionHandler;
 use PHPUnit_Framework_TestCase;
 
 class SessionFactoryTest extends PHPUnit_Framework_TestCase
@@ -75,5 +76,88 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
         /** @var \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler $native_handler */
         $native_handler = $method->invokeArgs($this->factory, [['handler' => 'file', 'save_path' => '/tmp']]);
         $this->assertInstanceOf(NativeFileSessionHandler::class, $native_handler);
+
+        $config['concrete.session'] = $this->getRedisConfig();
+        $redis_handler = $method->invokeArgs($this->factory, $this->getRedisConfig());
+        $this->assertInstanceOf(RedisSessionHandler::class, $redis_handler);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRedisSessionHandler() {
+        // Make the private `getSessionHandler` method accessible
+        $reflection = new \ReflectionClass(get_class($this->factory));
+        $method = $reflection->getMethod('getSessionHandler');
+        $method->setAccessible(true);
+
+        $config['concrete.session'] = $this->getRedisConfig();
+        /** @var $redis_handler  RedisSessionHandler */
+        $redis_handler = $method->invokeArgs($this->factory, $this->getRedisConfig());
+        $reflection = new \ReflectionClass(RedisSessionHandler::class);
+        $property = $reflection->getProperty('redis');
+        $property->setAccessible(true);
+        $redisClass = $property->getValue($redis_handler);
+        /** @var \Redis $redisClass */
+
+        $this->assertInstanceOf(\Redis::class, $redisClass);
+        $this->assertTrue($redisClass->ping());
+        $redisConfig = $this->getRedisConfig(2);
+        $config['concrete.session'] = $redisConfig;
+        /** @var $redis_handler  RedisSessionHandler */
+        $redis_handler = $method->invokeArgs($this->factory, $redisConfig);
+        $property->setAccessible(true);
+        /** @var  $redisClass  \RedisArray */
+        $redisClass = $property->getValue($redis_handler);
+        $this->assertInstanceOf(\RedisArray::class, $redisClass);
+        $this->assertTrue($redisClass->ping());
+        $hosts = $redisClass->_hosts();
+
+        $this->assertSame($hosts, $this->getRedisHosts($redisConfig));
+
+    }
+
+    private function getRedisHosts($config)
+    {
+        $hosts = [];
+        if (is_array($config) && isset($config['redis'])) {
+            $config = $config['redis'];
+            if (is_array($config['servers'])) {
+                foreach ($config['servers'] as $server) {
+                    if (is_array($server)) {
+                        $hosts[] = $server['server'] . ':'. $server['port'];
+                    }
+
+                }
+            }
+        }
+
+        return $hosts;
+
+
+    }
+
+    private function getRedisConfig($servers = 1) {
+        $config = ['handler' => 'redis',
+            'redis' => [
+                'servers'=>[]
+            ]
+        ];
+        if ($servers < 1) {
+            $servers = 1;
+        }
+        $i = 0;
+        while ($i < $servers) {
+                $port = 6379 + $i;
+                $config['redis']['servers'][] =[
+                    'server' => '127.0.0.1',
+                    'port' => $port,
+                    'ttl' => 30,
+                    'password'=>'randomredis',
+                ];
+            $i++;
+        }
+        return $config;
     }
 }

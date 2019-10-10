@@ -55,6 +55,7 @@ matrix:
       php: '5.5'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -62,6 +63,7 @@ matrix:
       php: '5.6'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -69,6 +71,7 @@ matrix:
       php: '7.0'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -76,6 +79,7 @@ matrix:
       php: '7.1'
       before_script:
         - COMPOSER_FLAGS='--prefer-lowest' ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -83,6 +87,7 @@ matrix:
       php: '7.2'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -90,6 +95,7 @@ matrix:
       php: '7.3'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -97,6 +103,7 @@ matrix:
       php: 7.4snapshot
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -104,5 +111,8 @@ matrix:
       php: nightly
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
+services:
+  - redis-server
