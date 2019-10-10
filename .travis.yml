@@ -23,6 +23,7 @@ matrix:
       before_script:
         - wget --tries=5 https://scrutinizer-ci.com/ocular.phar
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - phpdbg -qrr ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover
       after_script:
@@ -32,7 +33,6 @@ matrix:
       php: '7.1'
       before_script:
         - ./.travis/composer-deps.sh
-        - ./.travis/setup-redis.sh
       script:
         - composer phpcs
 
