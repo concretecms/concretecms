@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Installing php-redis"
-if [[ $("pecl install $REDIS_VERSION <<< ''") =~ "redis is already installed" ]]; then
+if [[ "pecl install $REDIS_VERSION <<< ''" =~ "redis is already installed" ]]; then
   echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 fi
 
