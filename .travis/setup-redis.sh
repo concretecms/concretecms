@@ -1,11 +1,6 @@
 #!/bin/bash
 echo "Installing php-redis"
-
-if [TRAVIS_PHP_VERSION = "5.5"] || [TRAVIS_PHP_VERSION = "5.6" ]; then
-  pecl install redis-2.2.8 <<< ""
-else
-  pecl install redis <<< ""
-fi
+pecl install $REDIS_VERSION <<< ""
 
 PORTS="6379 6380"
 
