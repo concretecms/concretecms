@@ -9,7 +9,7 @@ cache:
     - build/node_modules
 notifications:
   email: false
-global:
+env:
   - REDIS_VERSION=redis
 
 # Job list
