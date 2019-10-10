@@ -930,20 +930,47 @@ class Version implements ObjectInterface
     public function getURL()
     {
         $url = null;
-        $fsl = $this->getFile()->getFileStorageLocationObject();
-        if ($fsl !== null) {
             $app = Application::getFacadeApplication();
             $cf = $app->make('helper/concrete/file');
-            $configuration = $fsl->getConfigurationObject();
-            if ($configuration->hasPublicURL()) {
+        $configuration = $this->getFileStorageLocationConfiguration();
+        if ($this->hasPublicURL() && $configuration !== null) {
                 $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
             if (!$url) {
                 $url = (string) $this->getDownloadURL();
             }
-        }
 
         return $url;
+    }
+
+    /**
+     * Get File Storage Location Configuration object of this file.
+     *
+     * @return \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface|null
+     */
+    protected function getFileStorageLocationConfiguration()
+    {
+        $configuration = null;
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl !== null) {
+            $configuration = $fsl->getConfigurationObject();
+        }
+
+        return $configuration;
+    }
+
+    /**
+     * If the file storage location of this file has public URL or not.
+     * @return bool
+     */
+    public function hasPublicURL()
+    {
+        $configuration = $this->getFileStorageLocationConfiguration();
+        if ($configuration !== null) {
+            return $configuration->hasPublicURL();
+        }
+
+        return false;
     }
 
     /**
@@ -1443,10 +1470,7 @@ class Version implements ObjectInterface
     public function generateThumbnail(ThumbnailTypeVersion $type)
     {
         $app = Application::getFacadeApplication();
-        $fsl = $this->getFile()->getFileStorageLocationObject();
-        if ($fsl !== null) {
-            $fslConfig = $fsl->getConfigurationObject();
-            if ($fslConfig->hasPublicURL()) {
+        if ($this->hasPublicURL()) {
                 $config = $app->make('config');
                 $image = $this->getImagineImage();
                 $imageSize = $image->getSize();
@@ -1461,7 +1485,9 @@ class Version implements ObjectInterface
                     }
                 }
 
-                $filesystem = $fsl->getFileSystemObject();
+            $filesystem = $this->getFile()
+                ->getFileStorageLocationObject()
+                ->getFileSystemObject();
 
                 $height = $type->getHeight();
                 $width = $type->getWidth();
@@ -1536,7 +1562,6 @@ class Version implements ObjectInterface
                 }
             }
         }
-    }
 
     /**
      * Import an existing file as a thumbnail type version.
@@ -1597,10 +1622,7 @@ class Version implements ObjectInterface
         $app = Application::getFacadeApplication();
 
         $path = null;
-        $fsl = $this->getFile()->getFileStorageLocationObject();
-        if ($fsl !== null) {
-            $configuration = $fsl->getConfigurationObject();
-            if ($configuration->hasPublicURL()) {
+        if ($this->hasPublicURL()) {
                 if (!($type instanceof ThumbnailTypeVersion)) {
                     $type = ThumbnailTypeVersion::getByHandle($type);
                 }
@@ -1617,7 +1639,6 @@ class Version implements ObjectInterface
                 $urlResolver = $app->make(ResolverManagerInterface::class);
                 $path = $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
             }
-        }
         if (!$path) {
             $url = $this->getURL();
             $path = $url ? (string) $url : null;
