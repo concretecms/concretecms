@@ -32,6 +32,7 @@ matrix:
       php: '7.1'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer phpcs
 
