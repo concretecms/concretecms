@@ -53,7 +53,7 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $config = $app['config'];
         $config['concrete.cache.levels.object.drivers'] = [];
         $config['concrete.cache.levels.object.preferred_driver'] = [];
-        $cacheLocal = $this->app->make('cache');
+        $cacheLocal = $app->make('cache');
         $reflection = new \ReflectionClass(ObjectCache::class);
         $loadConfigMethod = $reflection->getMethod('loadConfig');
         $loadConfigMethod->setAccessible(true);
@@ -62,10 +62,31 @@ class CacheTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public function testEnableDisableCache() {
+
+        $app = Application::getFacadeApplication();
+        $requestCache = $app->make('cache/request');
+        $requestCache->disable();
+        $this->assertFalse($requestCache->isEnabled());
+        $expensiveCache = $app->make('cache/expensive');
+        $expensiveCache->disable();
+        $this->assertFalse($expensiveCache->isEnabled());
+        $objectCache = $app->make('cache');
+        $objectCache->disable();
+        $this->assertFalse($objectCache->isEnabled());
+        ObjectCache::enableAll();
+        $this->assertTrue($requestCache->isEnabled());
+        $this->assertTrue($expensiveCache->isEnabled());
+        $this->assertTrue($objectCache->isEnabled());
+        ObjectCache::disableAll();
+        $this->assertFalse($requestCache->isEnabled());
+        $this->assertFalse($expensiveCache->isEnabled());
+        $this->assertFalse($objectCache->isEnabled());
+    }
+
     public function tearDown()
     {
         Application::setFacadeApplication($this->app);
-        $config = $this->app['config'];
         $this->app = null;
         parent::tearDown();
     }
