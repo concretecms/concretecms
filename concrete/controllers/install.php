@@ -77,7 +77,7 @@ class Install extends Controller
     {
         $v = new View('/frontend/install');
         $v->setViewTheme('concrete');
-
+        $v->setViewTemplate('background_image.php');
         return $v;
     }
 
@@ -91,11 +91,8 @@ class Install extends Controller
         $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
 
         $config = $this->app->make('config');
-        $this->set('backgroundFade', 0);
         $this->set('pageTitle', t('Install concrete5'));
         $image = date('Ymd') . '.jpg';
-        $this->set('image', date('Ymd') . '.jpg');
-        $this->set('imagePath', $config->get('concrete.urls.background_feed') . '/' . $image);
         $this->set('concreteVersion', $config->get('concrete.version'));
 
         $locale = $this->request->request->get('locale');
@@ -112,7 +109,6 @@ class Install extends Controller
 
     public function view()
     {
-        $this->set('backgroundFade', 500);
         if ($this->getInstallerOptions()->hasConfigurationFiles()) {
             $this->testAndRunInstall();
         } else {
@@ -496,7 +492,6 @@ class Install extends Controller
         if ($e->has()) {
             $this->set('error', $e);
         } else {
-            $this->set('backgroundFade', 0);
             $spl = $this->getInstaller()->getStartingPoint(true);
             $this->set('installPackage', $spl->getPackageHandle());
             $this->set('installRoutines', $spl->getInstallRoutines());

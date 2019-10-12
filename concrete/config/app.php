@@ -287,7 +287,10 @@ return [
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
-        '/install' => VIEW_CORE_THEME,
+        '/frontend/install' => [
+            VIEW_CORE_THEME,
+            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
+        ],
         '/login' => [
             VIEW_CORE_THEME,
             VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
@@ -374,6 +377,41 @@ return [
      * Assets
      */
     'assets' => [
+        /* proper assets here */
+        'jquery' => [
+            [
+                'javascript',
+                'js/jquery.js',
+                ['position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false],
+            ],
+        ],
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+
         'google-charts' => [
             [
                 'javascript',
@@ -382,13 +420,6 @@ return [
             ],
         ],
 
-        'jquery' => [
-            [
-                'javascript',
-                'js/jquery.js',
-                ['position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false],
-            ],
-        ],
         'jquery/ui' => [
             ['javascript', 'js/jquery-ui.js', ['minify' => false, 'combine' => false]],
             ['javascript-localized', '/ccm/assets/localization/jquery/ui/js'],
@@ -546,19 +577,18 @@ return [
         'ace' => [
             ['javascript', 'js/ace/ace.js', ['minify' => false]],
         ],
+        /*
         'backstretch' => [
             ['javascript', 'js/backstretch.js'],
         ],
         'background-check' => [
             ['javascript', 'js/background-check.js'],
         ],
-        /*
         'dynatree' => array(
             array('javascript', 'js/dynatree.js', array('minify' => false)),
             array('javascript-localized', '/ccm/assets/localization/dynatree/js', array('minify' => false)),
             array('css', 'css/dynatree.css', array('minify' => false)),
         ),
-        */
         'fancytree' => [
             ['javascript', 'js/fancytree.js', ['minify' => false, 'version' => '2.18.0']],
             ['javascript-localized', '/ccm/assets/localization/fancytree/js', ['minify' => false]],
@@ -706,8 +736,27 @@ return [
         'core/country-data-link' => [
             ['javascript', 'js/country-data-link.js', ['minify' => false]],
         ],
+    
+    */
+
     ],
+
+
+
+
+
+
     'asset_groups' => [
+        /* proper groups here */
+        'jquery' => [
+            [
+                ['javascript', 'jquery'],
+            ],
+        ],
+
+
+        /*
+
         'jquery/ui' => [
             [
                 ['javascript', 'jquery/ui'],
@@ -719,16 +768,6 @@ return [
             [
                 ['javascript', 'jquery/visualize'],
                 ['css', 'jquery/visualize'],
-            ],
-        ],
-        /*
-         * @deprecated
-         */
-        'select2' => [
-            [
-                ['javascript', 'select2'],
-                ['javascript-localized', 'select2'],
-                ['css', 'select2'],
             ],
         ],
         'selectize' => [
@@ -912,7 +951,7 @@ return [
             ],
         ],
         'dashboard' => [
-            [/*
+            [
                 ['javascript', 'jquery'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -937,7 +976,7 @@ return [
                 ['css', 'core/app'],
                 ['css', 'jquery/ui'],
                 ['css', 'font-awesome'],
-            */],
+            ],
         ],
         'core/file-manager' => [
             [
@@ -1109,17 +1148,6 @@ return [
                 ['css', 'fancytree'],
             ],
         ],
-        'core/gathering' => [
-            [
-                ['javascript', 'core/gathering'],
-                ['javascript', 'redactor'],
-                ['javascript-localized', 'redactor'],
-                ['css', 'core/gathering/base'],
-                ['css', 'core/conversation'],
-                ['css', 'core/gathering/display'],
-                ['css', 'redactor'],
-            ],
-        ],
         'core/conversation' => [
             [
                 ['javascript', 'jquery'],
@@ -1141,7 +1169,6 @@ return [
                 ['css', 'core/lightbox'],
                 ['css', 'jquery/ui'],
             ],
-            true,
         ],
         'core/lightbox' => [
             [
@@ -1152,13 +1179,13 @@ return [
             ],
         ],
         'core/account' => [
-            [/*
+            [
                 ['javascript', 'jquery'],
                 ['javascript', 'core/account'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['css', 'bootstrap/dropdown'],
                 ['css', 'core/account'],
-            */],
+            ],
         ],
         'core/translator' => [
             [
@@ -1179,11 +1206,8 @@ return [
                 ['javascript', 'core/country-data-link'],
             ],
         ],
-        /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
-        'core/legacy' => [
-            [
-            ],
-        ],
+        */
+
     ],
     // HTTP Client options
     'http_client' => [

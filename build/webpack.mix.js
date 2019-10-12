@@ -3,6 +3,7 @@ let mix = require('laravel-mix');
 mix.webpackConfig({
     externals: {
         dropzone: 'Dropzone',
+        jquery: 'jQuery',
         vue: 'Vue'
     }
 });
@@ -11,7 +12,7 @@ mix.webpackConfig({
 mix.setPublicPath('../concrete');
 
 // Build our components into a bundle
-mix.js('components/avatar.js', 'js/components/avatar.bundle.js')
+mix.js('components/avatar.js', 'js/components/avatar.bundle.js');
 if (mix.inProduction()) {
     mix.copy('node_modules/vue/dist/vue.min.js', '../concrete/js/vue.js');
 } else {
@@ -28,6 +29,7 @@ mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.js', '../concrete/js/b
 mix
     .sass('themes/concrete/scss/main.scss', 'themes/concrete')
     .sass('themes/dashboard/scss/main.scss', 'themes/dashboard')
+    .js('themes/dashboard/js/main.js', 'themes/dashboard')
     .js('themes/concrete/js/main.js', 'themes/concrete');
 
 

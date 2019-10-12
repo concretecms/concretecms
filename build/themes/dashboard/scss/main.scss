@@ -362,3 +362,29 @@ div.ccm-system-errors {
     margin: 0px;
   }
 }
+
+@import "./header";
+
+@import "./welcome";
+@import "./welcome/site-activity";
+@import "./welcome/rss-displayer";
+@import "./welcome/latest-form";
+@import "./welcome/marketplace";
+@import "./welcome/waiting-for-me";
+@import "./welcome/draft-list";
+
+@import "./marketplace/general";
+@import "./marketplace/header";
+@import "./marketplace/results";
+@import "./marketplace/theme-detail";
+@import "./marketplace/addon-detail";
+
+@import "./editable-fields";
+@import "./users";
+@import "./attributes";
+@import "./panels";
+@import "./form-and-set-builder";
+@import "./multilingual";
+@import "./update";
+@import "./privacy-policy.scss";
+@import "./translator";

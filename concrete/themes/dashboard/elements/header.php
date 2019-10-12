@@ -19,14 +19,16 @@ if (!isset($hideDashboardPanel)) {
     $hideDashboardPanel = false;
 }
 
+/*
 $view->requireAsset('dashboard');
 $view->requireAsset('javascript-localized', 'core/localization');
 $view->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar.start(); });</script>');
 if ($config->get('concrete.misc.enable_progressive_page_reindex') && $config->get('concrete.misc.do_page_reindex_check')) {
     $view->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
+*/
+
 $view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
-$view->addFooterItem('<script type="text/javascript">$(function() { ConcreteDashboard.start(); });</script>');
 
 $u = $app->make(Concrete\Core\User\User::class);
 $frontendPageID = $u->getPreviousFrontendPageID();
@@ -54,8 +56,8 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                 <ul class="ccm-mobile-menu-entries">
                     <li>
                         <?php
-                        $dashboardMenu = $app->make(DashboardMobileMenu::class, [$c]);
-                        $dashboardMenu->render();
+                        //$dashboardMenu = $app->make(DashboardMobileMenu::class, [$c]);
+                        //$dashboardMenu->render();
                         ?>
                     </li>
                     <li>

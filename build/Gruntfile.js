@@ -65,23 +65,6 @@ module.exports = function(grunt) {
     // List of the JavaScripts to be generated
     var js = {
 
-        redactor: {
-            dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
-            src: [
-                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/redactor.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontcolor.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontfamily.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontsize.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/table.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/undoredo.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/lightbox.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/underline.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/inline.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/magic.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/specialcharacters.js'
-            ]
-        },
-
         ccm_app: {
             dest: '<%= DIR_BASE %>/concrete/js/app.js',
             src: [
@@ -311,6 +294,7 @@ module.exports = function(grunt) {
             ]
         },
 
+        /*
         kinetic: {
             dest: '<%= DIR_BASE %>/concrete/js/kinetic.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/kinetic/kinetic.js'
@@ -319,7 +303,7 @@ module.exports = function(grunt) {
         jquery_backstretch: {
             dest: '<%= DIR_BASE %>/concrete/js/backstretch.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/backstretch/backstretch.js'
-        },
+        },*/
 
         ccm_events: {
             dest: '<%= DIR_BASE %>/concrete/js/events.js',
@@ -509,7 +493,9 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
+        /*
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
+        */
         '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.1/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'

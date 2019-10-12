@@ -30,21 +30,6 @@ if ($install_config) {
 }
 
 ?>
-<script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/jquery-cookie.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $('.launch-tooltip').tooltip({
-            placement: 'bottom'
-        });
-    });
-</script>
-<script type="text/javascript">
-    $(function () {
-        $.backstretch("<?= $imagePath ?>", {
-            fade: <?= (int)$backgroundFade ?>
-        });
-    });
-</script>
 
 <div id="ccm-page-install">
     <div class="ccm-install-version">
@@ -101,7 +86,6 @@ if ($install_config) {
 
     <?php } else if ($installStep === $controller::STEP_PRECONDITIONS) { ?>
 
-        <div class="spacer-row-3"></div>
     <?php
     $showRerunTests = false;
     $requiredPreconditionFailed = false;
@@ -117,7 +101,7 @@ if ($install_config) {
     }
     $leftRightPreconditions = array_chunk($preconditions, ceil($numPreconditions / 2));
     ?>
-        <div class="card card-default mb-4">
+        <div class="card card-default mt-5 mb-5">
             <div class="card-header"><?= $preconditionsTitle ?></div>
             <div class="card-body">
                 <div class="row">
@@ -370,7 +354,7 @@ if ($install_config) {
             }
             ?>
 
-            <div class="card card-default mb-4">
+            <div class="card card-default mt-5 mb-5">
                 <div class="card-header"><?= t('Site') ?></div>
                 <div id="site" class="">
                     <div class="card-body">

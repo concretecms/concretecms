@@ -212,6 +212,7 @@ class View extends AbstractView
         }
         if ($this->themeHandle) {
             if (is_object($this->controller)) {
+                $this->controller->setViewObject($this);
                 $templateFile = $this->controller->getThemeViewTemplate();
             } else {
                 $templateFile = $this->getViewTemplateFile();

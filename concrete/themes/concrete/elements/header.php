@@ -18,6 +18,7 @@ if (isset($c) && is_object($c)) {
     $this->markHeaderAssetPosition();
     if (isset($pageTitle)) {
         echo '<title>' . h($pageTitle) . '</title>';
+        echo '<script>var CCM_DISPATCHER_FILENAME = "' . DIR_REL . '/' . DISPATCHER_FILENAME . '";</script>';
     }
 }
 
@@ -39,7 +40,6 @@ $config = $site->getConfigRepository();
     }
 }
 ?>
-    <script type="text/javascript" src="<?=$view->getThemePath()?>/main.js"></script>
 </head>
 <body>
 

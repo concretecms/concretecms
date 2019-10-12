@@ -7,8 +7,9 @@
 @import "../../../foundation/scss/cms/nprogress";
 
 // Import other app foundation assets that we'll need.
-
 @import "container";
 
 // Install-page specific CSS
 @import "install";
+@import "login";
+@import "background-image";
