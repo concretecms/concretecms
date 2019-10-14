@@ -69,13 +69,11 @@ class Controller extends BlockController implements FileTrackableInterface
     public function add()
     {
         $this->requireAsset('core/file-manager');
-        $this->requireAsset('core/sitemap');
     }
 
     public function edit()
     {
         $this->requireAsset('core/file-manager');
-        $this->requireAsset('core/sitemap');
         $db = Database::get();
         $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
         $this->set('rows', $query);

@@ -27,20 +27,11 @@ $(function () {
     if (backgroundImage !== 'none' && !backgroundUrl) {
         var date = new Date(), shown = false, info;
         var image = date.getFullYear() + '' + (date.getMonth() + 1) + '' + date.getDate() + '.jpg';
-        $.getJSON(CCM_DISPATCHER_FILENAME + '/tools/required/dashboard/get_image_data', {'image': image}, function (data) {
-            if (shown) {
-                $('div.ccm-page-background-credit').fadeIn().children().attr('href', data.link).text(data.author.join());
-            } else {
-                info = data;
-            }
+        $.getJSON(CCM_DISPATCHER_FILENAME + '/tools/required/dashboard/get_image_data', {'image': image}, function (responseData) {
+            info = responseData;
         });
         $(window).on('backstretch.show', function () {
             shown = true;
-            if (shown) {
-                $('div.ccm-page-background-credit').fadeIn().children().attr('href', data.link).text(data.author.join());
-            } else {
-                info = data;
-            }
             if (info) {
                 $('div.ccm-page-background-credit').fadeIn().find('div.ccm-page-background-photo-credit').children().attr('href', info.link).text(info.author.join());
             }

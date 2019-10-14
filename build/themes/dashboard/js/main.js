@@ -1,10 +1,47 @@
 import * as FrontendFoundation from '../../../foundation/js/frontend/foundation';
 
+// Move these imports into cms foundation?
+import JSON from 'json5';
+import * as _ from 'underscore';
+import jQueryUI from 'jquery-ui/ui/widgets/dialog';
 import NProgress from 'NProgress';
-window.NProgress = NProgress;
+import Selectize from 'selectize';
 
-/* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global CCM_DISPATCHER_FILENAME */
+window.NProgress = NProgress;
+window._ = _;
+
+import 'jquery-form';
+import '../../../foundation/js/cms/events';
+import '../../../foundation/js/cms/ajax-request/base';
+import '../../../foundation/js/cms/ajax-request/form';
+import '../../../foundation/js/cms/ajax-request/block';
+import '../../../foundation/js/cms/dialog';
+
+// Search
+import '../../../foundation/js/cms/search/base';
+import '../../../foundation/js/cms/search/table';
+import '../../../foundation/js/cms/search/field-selector';
+import '../../../foundation/js/cms/search/preset-selector';
+
+// Sitemap
+import 'jquery.fancytree/dist/modules/jquery.fancytree.glyph';
+import 'jquery.fancytree/dist/modules/jquery.fancytree.persist';
+import 'jquery.fancytree/dist/modules/jquery.fancytree.dnd';
+import 'jquery.fancytree/dist/modules/jquery.fancytree';
+import  '../../../foundation/js/cms/sitemap/sitemap';
+import  '../../../foundation/js/cms/in-context-menu';
+import  '../../../foundation/js/cms/sitemap/menu';
+import  '../../../foundation/js/cms/sitemap/search';
+
+// end possible cms foundation?
+
+// possible account foundation?
+import DraftList from '../../../foundation/js/account/draft-list';
+// note - these require jquery dialog
+import Notification from '../../../foundation/js/account/notification';
+
+// Dashboard specific scripts.
+import jQueryBootstrapSelectToButton from './jquery-bootstrap-select-to-button';
 
 var setupResultMessages = function() {
     if ($('#ccm-dashboard-result-message').length > 0) {

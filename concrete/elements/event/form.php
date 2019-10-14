@@ -22,9 +22,6 @@ $renderer = new \Concrete\Core\Attribute\Form\Renderer(
     $version
 );
 
-//$group = ResponseAssetGroup::get();
-//$group->requireAsset('javascript', 'autosize');
-
 $category = \Concrete\Core\Attribute\Key\Category::getByHandle('event');
 if (is_object($category) && $category->allowAttributeSets()) {
     $sets = $category->getAttributeSets();

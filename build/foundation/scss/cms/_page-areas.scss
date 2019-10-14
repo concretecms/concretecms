@@ -8,17 +8,17 @@ div#ccm-menu-click-proxy {
   width: 0px;
   position: absolute;
   cursor: pointer;
-  z-index: @index-level-in-context-click-proxy;
+  z-index: $index-level-in-context-click-proxy;
   background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
 }
 
 div#ccm-menu-highlighter {
-  z-index: @index-level-in-context-menu-highlighter;
+  z-index: $index-level-in-context-menu-highlighter;
   height: 0px;
   width: 0px;
   position: absolute;
   background-color: transparent;
-  .transition(background-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+  transition: background-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
 }
 
 /**
@@ -27,19 +27,19 @@ div#ccm-menu-highlighter {
 div.ccm-block-edit, div.ccm-area, div.ccm-area-disabled {
   position: relative;
   opacity: 1;
-  .clearfix();
+  @include clearfix();
 }
 
 /**
  * sorting blocks in page
  */
 div.ccm-block-type-sorting {
-  border: 1px solid darken(@wellBackground, 7%);
-  .box-shadow(0px 0px 2px 0px rgba(0, 0, 0, 0.5));
+  border: 1px solid $gray-700;
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   padding: 10px;
   background-color: rgba(128, 128, 128, 0.1);
-  .rotate(5deg);
+  transform: rotate(5 deg);
 }
 
 /**
@@ -49,10 +49,10 @@ div.ccm-block-type-sorting {
 div.ccm-block-edit {
   position: relative;
   opacity: 1;
-  .clear_float();
+  @include clearfix();
   min-height: 16px;
 
-  .transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+  transition: outline-color 0.5 s cubic-bezier(0.190, 1.000, 0.220, 1.000);
   outline: 1px solid transparent;
   outline-offset: -1px;
 }
@@ -81,7 +81,7 @@ div.ccm-global-area {
 
 div.ccm-area {
   /* margin-bottom: 50px; */
-  .transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+  transition: outline-color 0.5 s cubic-bezier(0.190, 1.000, 0.220, 1.000);
   outline: 1px solid transparent;
   outline-offset: -1px;
 
@@ -126,12 +126,12 @@ div.ccm-area.ccm-menu-item-hover {
 
 div.ccm-area-footer {
   opacity: 0;
-  .transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+  transition: opacity 0.5 s cubic-bezier(0.190, 1.000, 0.220, 1.000);
   position: absolute;
   bottom: -35px;
   left: 0px;
   padding-top: 15px;
-  z-index: @index-level-in-context-area-handle;
+  z-index: $index-level-in-context-area-handle;
   padding-left: 20px;
   white-space: nowrap;
   max-width: 100%;
@@ -144,7 +144,7 @@ div.ccm-area-footer {
     padding: 8px 15px 8px 15px;
     color: #666;
     height: 35px;
-    font-size: @baseFontSize !important;
+    font-size: $font-size-base !important;
     background-color: #f5f5f5;
     max-width: 100%;
 
@@ -189,8 +189,8 @@ div.ccm-area[data-total-blocks="0"] {
  */
 @-moz-document url-prefix() {
   div.ccm-area[data-total-blocks="0"] {
-    border:1px solid #e6e6e6;
-    outline:none!important;
+    border: 1px solid #e6e6e6;
+    outline: none !important;
   }
 }
 
@@ -273,17 +273,17 @@ div.ccm-area.ccm-area-inline-edit-disabled {
   }
 
   div.ccm-block-edit {
-    .opacity(0.4);
+    opacity: 0.4;
   }
 
   div.ccm-block-edit-layout {
-    .opacity(1); // layouts shouldn't be affected by this
+    opacity: 1;
   }
 
   div.ccm-block-edit-inline-active {
     outline: 1px solid #5eed5e;
     outline-offset: -1px;
-    .opacity(1);
+    opacity: 1;
   }
 
 }
@@ -301,7 +301,6 @@ div#ccm-menu-highlighter.ccm-block-highlight {
   }
 }
 
-
 /**
  * Inline commands
  */
@@ -315,7 +314,7 @@ ul.ccm-edit-mode-inline-commands {
   right: 1px;
   height: 20px !important;
   background-color: #fff;
-  z-index: @index-level-inline-commands; // has to be over the click proxy
+  z-index: $index-level-inline-commands; // has to be over the click proxy
   li {
     display: inline-block;
     line-height: 20px !important;
@@ -353,7 +352,7 @@ ul.ccm-edit-mode-inline-commands {
 }
 
 ul.ccm-edit-mode-inline-commands:hover {
-  .opacity(1);
+  opacity: 1;
 }
 
 /**
@@ -391,14 +390,16 @@ ul.ccm-edit-mode-inline-commands:hover {
     float: none !important;
     padding: 0px;
     border: 0px;
-    .box-shadow(none) !important;
+    box-shadow: none !important;
 
     li:last-child a {
-      .border-bottom-radius(4px);
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
     }
 
     li:first-child a {
-      .border-top-radius(4px);
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
     }
 
     li {
@@ -417,9 +418,9 @@ ul.ccm-edit-mode-inline-commands:hover {
         background-color: transparent !important;
       }
 
-      font-family: @baseFontFamily !important;
+      font-family: $font-family-base !important;
       font-size: 14px !important;
-      line-height: @baseLineHeight !important;
+      line-height: $line-height-base !important;
 
     }
 
@@ -431,7 +432,7 @@ ul.ccm-edit-mode-inline-commands:hover {
 }
 
 .ccm-ui div.popover ul.dropdown-menu a:hover {
-  color: @dropdownLinkColor !important;
+  color: $dropdown-link-color !important;
   text-decoration: none !important;
 }
 
@@ -439,7 +440,7 @@ ul.ccm-edit-mode-inline-commands:hover {
  * Edit mode drag areas - The green hover state things
  */
 div.ccm-area-drag-area {
-  -webkit-transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+  transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
   outline-width: 0;
   outline-style: solid;
   text-indent: -10000em;
@@ -465,7 +466,6 @@ div.ccm-global-area {
     }
   }
 }
-
 
 html.ccm-panel-add-block, html.ccm-block-dragging {
   div.ccm-area-drag-area {
@@ -514,7 +514,6 @@ body {
   }
 }
 
-
 /**
  * Disabled edit mode blocks
  */
@@ -524,11 +523,10 @@ div.ccm-edit-mode-disabled-item {
   text-align: center;
   padding: 10px;
   color: #666;
-  font-family: @font-family-sans-serif;
-  font-size: @font-size-base;
+  font-family: $font-family-sans-serif;
+  font-size: $font-size-base;
   font-weight: 200;
 }
-
 
 div.ccm-block-edit {
   > div.ccm-block-cover {

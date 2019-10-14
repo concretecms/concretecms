@@ -1,7 +1,7 @@
 div#ccm-intelligent-search-results {
   text-align: left;
   padding: 0px 0px 0px 40px;
-  z-index: @index-level-intelligent-search;
+  z-index: $index-level-intelligent-search;
   position: fixed;
   background-color: #fff;
   display: none;
@@ -11,7 +11,8 @@ div#ccm-intelligent-search-results {
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
-  .border-bottom-radius(4px);
+  border-bottom-left-radius: 4px;
+  border-bototm-right-radius: 4px;
 
   span {
     display: none;
@@ -138,7 +139,7 @@ div#ccm-intelligent-search-results {
       padding: 1px 15px 1px 15px;
       text-decoration: none;
     }
-
+oncfrete
     a:hover {
       text-decoration: none;
       color: #369;
@@ -184,97 +185,3 @@ div#ccm-intelligent-search-results {
     -webkit-transform: translateX(1.5em);
   }
 }
-
-/*
-
-div#ccm-toolbar-menu-dashboard {
-
-	width: 420px;
-	background-color: #f8f8f8;
-	padding-top: 0px;
-
-
-	div.ccm-dashboard-dropdown-inner {
-		padding: 10px 20px;
-
-		h6 {
-			margin: 0px;
-			padding: 0px;
-			font-size: 11px;
-			line-height: 11px;
-			color: #666;
-
-		}
-
-		font-size: 11px;
-		color: #999;
-
-		a, a:hover {
-			color: #999;
-		}
-
-	}
-
-	ul.ccm-dashboard-recent-pages {
-		.clear_float();
-
-		li {
-			list-style-type: none;
-			display: inline-block;
-			float: left;
-			padding-left: 0px;
-			margin-left: 0px;
-
-		}
-		
-		margin: 10px 0px 0px 0px;
-	}	
-
-	#ccm-dashboard-dropdown-recent {
-		background-color: #fff;
-		padding-top: 15px;
-	}
-
-	#ccm-dashboard-dropdown-favorites {
-		border-top: 1px solid #d6d6d6;
-
-		h6 {
-			a {
-				font-weight: normal;
-			}
-		}
-
-		a:hover {
-			background-color: #f8f8f8 !important
-		}
-
-		ul {
-			.clear_float();
-
-			li {
-				list-style-type: none;
-				float: left;
-				width: 120px;
-				padding-left: 0px;
-				margin-left: 0px;
-
-				a, a:hover {
-					color: @linkColor;
-				}
-
-			}
-			
-			margin: 10px 0px 0px 0px;
-		}
-	}
-
-	span.dashboard-divider {
-		color: #ccc;
-		display: inline-block;
-		margin-left: 6px;
-		margin-right: 6px;
-	}
-
-}
-
-*/

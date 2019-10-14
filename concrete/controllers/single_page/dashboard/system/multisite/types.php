@@ -379,7 +379,6 @@ class Types extends DashboardPageController
         } else {
             $this->redirect('/dashboard/system/multisite/types');
         }
-        $this->requireAsset('core/sitemap');
         $this->render('/dashboard/system/multisite/types/view_skeleton');
     }
 

@@ -12,9 +12,3 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<?php endif; ?>
 	<?=$form->textarea($this->field('description'), $control->getPageTypeComposerControlDraftValue(), array('rows' => 3))?>
 </div>
-
-<script type="text/javascript">
-	$(function() {
-		autosize($('div[data-group=composer-description] textarea'));
-	});
-</script>

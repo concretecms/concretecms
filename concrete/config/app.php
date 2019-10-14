@@ -672,10 +672,6 @@ return [
         'core/express' => [
             ['javascript', 'js/express.js', ['minify' => false]],
         ],
-        'core/sitemap' => [
-            ['javascript', 'js/sitemap.js', ['minify' => false]],
-            ['css', 'css/sitemap.css', ['minify' => false]],
-        ],
         'core/users' => [
             ['javascript', 'js/users.js', ['minify' => false]],
         ],
@@ -687,12 +683,6 @@ return [
         ],
         'core/avatar' => [
             ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
-        ],
-        'core/notification' => [
-            ['javascript', 'js/notification.js', ['minify' => false]],
-        ],
-        'core/draft_list' => [
-            ['javascript', 'js/draft-list.js', ['minify' => false]],
         ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
@@ -809,17 +799,6 @@ return [
                 ['javascript-localized', 'dropzone'],
                 ['javascript', 'vue'],
                 ['javascript', 'core/avatar'],
-            ],
-        ],
-        'core/notification' => [
-            [
-                ['javascript', 'core/notification'],
-            ],
-        ],
-        'core/draft_list' => [
-            [
-                ['javascript', 'core/draft_list'],
-                ['javascript', 'core/events'],
             ],
         ],
         'core/colorpicker' => [
@@ -1038,25 +1017,7 @@ return [
             ],
         ],
 
-        'core/sitemap' => [
-            [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'fancytree'],
-                ['javascript', 'selectize'],
-                ['javascript-localized', 'fancytree'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'core/app'],
-                ['javascript', 'core/sitemap'],
-                ['css', 'fancytree'],
-                ['css', 'selectize'],
-                ['css', 'core/sitemap'],
-            ],
-        ],
+
         'core/users' => [
             [
                 ['javascript', 'core/events'],
