@@ -751,16 +751,14 @@ class Controller extends BlockController
 
         $this->requireAsset('css', 'font-awesome');
         if ($this->enableSearch) {
-            $this->requireAsset('jquery/ui');
         }
         $this->set('canAddFiles', false);
         $fp = \FilePermissions::getGlobal();
         if ($this->allowInPageFileManagement) {
-            $this->requireAsset('core/file-manager');
+
         }
 
         if ($this->allowFileUploading && $fp->canAddFile()) {
-            $this->requireAsset('core/file-manager');
             $this->set('canAddFiles', true);
         }
 

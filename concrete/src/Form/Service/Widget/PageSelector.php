@@ -54,7 +54,6 @@ EOL;
     public function quickSelect($key, $cID = false, $args = array())
     {
         $v = \View::getInstance();
-        $v->requireAsset('selectize');
         $selectedCID = 0;
         if (isset($_REQUEST[$key])) {
             $selectedCID = $_REQUEST[$key];

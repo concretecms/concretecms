@@ -1,21 +1,50 @@
 import * as FrontendFoundation from '../../../foundation/js/frontend/foundation';
 
-// Move these imports into cms foundation?
-import JSON from 'json5';
+// !!! Move these imports into cms foundation?
+
+// Import required libraries.
+import 'json5';
 import * as _ from 'underscore';
-import jQueryUI from 'jquery-ui/ui/widgets/dialog';
+import 'jquery.cookie';
+
+import 'jquery-ui/ui/widgets/dialog';
+import 'jquery-ui/ui/widgets/datepicker';
+import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/widgets/droppable';
+import 'jquery-ui/ui/widgets/sortable';
 import NProgress from 'NProgress';
-import Selectize from 'selectize';
+import 'selectize';
+import 'spectrum-colorpicker';
+import 'tristate/jquery.tristate';
+import 'jquery-text-counter/textcounter';
 
 window.NProgress = NProgress;
 window._ = _;
 
-import 'jquery-form';
 import '../../../foundation/js/cms/events';
+import '../../../foundation/js/cms/asset-loader';
+import '../../../foundation/js/cms/page-indexer';
+import '../../../foundation/js/cms/concrete5';
+import '../../../foundation/js/cms/liveupdate/quicksilver';
+import '../../../foundation/js/cms/liveupdate/jquery-liveupdate';
+
+// CMS UI Components
+import '../../../foundation/js/cms/panels';
+import '../../../foundation/js/cms/toolbar';
+
+// Edit Mode
+import '../../../foundation/js/cms/edit-mode';
+
+// AJAX Forms and in-page notifications
+import 'jquery-form';
 import '../../../foundation/js/cms/ajax-request/base';
 import '../../../foundation/js/cms/ajax-request/form';
 import '../../../foundation/js/cms/ajax-request/block';
 import '../../../foundation/js/cms/dialog';
+import '../../../foundation/js/cms/alert';
+
+// Progressive operations
+import '../../../foundation/js/cms/progressive-operations';
 
 // Search
 import '../../../foundation/js/cms/search/base';
@@ -23,25 +52,61 @@ import '../../../foundation/js/cms/search/table';
 import '../../../foundation/js/cms/search/field-selector';
 import '../../../foundation/js/cms/search/preset-selector';
 
-// Sitemap
+// Tree
+import '../../../foundation/js/cms/tree';
 import 'jquery.fancytree/dist/modules/jquery.fancytree.glyph';
 import 'jquery.fancytree/dist/modules/jquery.fancytree.persist';
 import 'jquery.fancytree/dist/modules/jquery.fancytree.dnd';
 import 'jquery.fancytree/dist/modules/jquery.fancytree';
+
+// Sitemap
 import  '../../../foundation/js/cms/sitemap/sitemap';
 import  '../../../foundation/js/cms/in-context-menu';
 import  '../../../foundation/js/cms/sitemap/menu';
 import  '../../../foundation/js/cms/sitemap/search';
+import  '../../../foundation/js/cms/sitemap/selector';
+
+// Users
+import '../../../foundation/js/cms/users';
+
+// Express
+import '../../../foundation/js/cms/express';
+
+// In-page editable fields
+// TBD
+
+// File Manager
+import '../../../foundation/js/cms/file-manager/uploader';
+import '../../../foundation/js/cms/file-manager/search';
+import '../../../foundation/js/cms/file-manager/selector';
+import '../../../foundation/js/cms/file-manager/menu';
+
+// attribute helper scripts
+import '../../../foundation/js/cms/jquery-awesome-rating';
+
+// Help
+import '../../../foundation/js/cms/help/help';
+
+// Calendar component
+import '../../../foundation/js/cms/calendar';
 
 // end possible cms foundation?
 
-// possible account foundation?
-import DraftList from '../../../foundation/js/account/draft-list';
+
+// possible account domain?
+import '../../../foundation/js/account/draft-list';
 // note - these require jquery dialog
-import Notification from '../../../foundation/js/account/notification';
+import '../../../foundation/js/account/notification';
 
 // Dashboard specific scripts.
-import jQueryBootstrapSelectToButton from './jquery-bootstrap-select-to-button';
+// Calendar component
+import '../../../foundation/js/backend/calendar';
+
+// Other
+import './jquery-bootstrap-select-to-button';
+import './translator';
+import './stacks/menu';
+import './remote-marketplace';
 
 var setupResultMessages = function() {
     if ($('#ccm-dashboard-result-message').length > 0) {

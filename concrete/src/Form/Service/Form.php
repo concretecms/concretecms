@@ -555,7 +555,7 @@ class Form
             ];
 
             $str .= '<script>$(document).ready(function() {';
-            $str .= 'ccmCountryDataLink.withCountryField(';
+            $str .= 'ConcreteCountryDataLink.withCountryField(';
             $str .= '$(' . json_encode('#' . $escapedID) . ')';
             $str .= ', ' . json_encode($config);
             $str .= ');';

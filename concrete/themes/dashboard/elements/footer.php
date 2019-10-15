@@ -33,7 +33,6 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
 <script type="text/javascript" src="<?=$view->getThemePath()?>/main.js"></script>
 
 <script type="text/javascript">
-    /*
 (function() {
     ConcretePanelManager.register({'overlay': false, 'identifier': 'dashboard', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/dashboard')?>'});
     ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/sitemap')?>'});
@@ -65,7 +64,9 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
         });
     });
 })();
-*/
+<?php if ($config->get('concrete.misc.enable_progressive_page_reindex') && $config->get('concrete.misc.do_page_reindex_check')) { ?>
+    ConcretePageIndexer.reindexPendingPages();
+<?php } ?>
 </script>
 </body>
 </html>

@@ -214,7 +214,6 @@ class Types extends DashboardPageController
         $this->set('skeleton', $this->skeleton);
         $this->set('category', $this->app->make(CategoryService::class)->getByHandle('site_type'));
         $this->set('type_menu', new Menu($this->siteType));
-        $this->requireAsset('core/app/editable-fields');
         $this->render('/dashboard/system/multisite/types/view_attributes');
     }
 

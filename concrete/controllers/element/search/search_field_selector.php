@@ -84,7 +84,6 @@ class SearchFieldSelector extends ElementController
 
     public function view()
     {
-        $this->requireAsset('selectize');
         $this->set('manager', $this->fieldManager);
         $this->set('addFieldAction', $this->addFieldAction);
         $this->set('query', $this->query);

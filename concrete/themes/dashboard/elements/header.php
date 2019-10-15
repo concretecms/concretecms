@@ -19,15 +19,7 @@ if (!isset($hideDashboardPanel)) {
     $hideDashboardPanel = false;
 }
 
-/*
-$view->requireAsset('dashboard');
-$view->requireAsset('javascript-localized', 'core/localization');
 $view->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar.start(); });</script>');
-if ($config->get('concrete.misc.enable_progressive_page_reindex') && $config->get('concrete.misc.do_page_reindex_check')) {
-    $view->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
-}
-*/
-
 $view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 
 $u = $app->make(Concrete\Core\User\User::class);

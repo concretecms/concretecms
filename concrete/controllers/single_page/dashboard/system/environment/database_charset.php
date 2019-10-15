@@ -13,7 +13,6 @@ class DatabaseCharset extends DashboardPageController
 {
     public function view()
     {
-        $this->requireAsset('selectize');
         $connection = $this->app->make(Connection::class);
         $this->set('charsetsAndCollations', $this->listCharsetsAndCollations($connection));
         $this->set('collation', $this->getConfiguredCollation($connection));

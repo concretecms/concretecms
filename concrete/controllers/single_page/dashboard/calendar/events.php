@@ -13,9 +13,6 @@ class Events extends DashboardCalendarPageController
 {
     public function view($caID = null, $year = null, $month = null)
     {
-
-        $this->requireAsset('core/calendar/admin');
-
         /**
          * @var $preferences Preferences
          */
@@ -87,7 +84,6 @@ class Events extends DashboardCalendarPageController
 
         $editor = $this->app->make('editor');
         $editor->requireEditorAssets();
-        $this->requireAsset('moment');
     }
 
     public function calendar_deleted()

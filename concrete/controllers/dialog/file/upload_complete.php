@@ -16,7 +16,6 @@ class UploadComplete extends BulkPropertiesController
     public function view()
     {
         parent::view();
-        $this->requireAsset('javascript', 'jquery/tristate');
 
         $sets = array();
         $ids = array();

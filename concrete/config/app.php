@@ -420,32 +420,12 @@ return [
             ],
         ],
 
-        'jquery/ui' => [
-            ['javascript', 'js/jquery-ui.js', ['minify' => false, 'combine' => false]],
-            ['javascript-localized', '/ccm/assets/localization/jquery/ui/js'],
-            ['css', 'css/jquery-ui.css', ['minify' => false]],
-        ],
         'jquery/visualize' => [
             ['javascript', 'js/jquery-visualize.js', ['minify' => false, 'combine' => false]],
             ['css', 'css/jquery-visualize.css', ['minify' => false]],
         ],
         'jquery/touch-punch' => [
             ['javascript', 'js/jquery-ui-touch-punch.js'],
-        ],
-        'jquery/tristate' => [
-            ['javascript', 'js/jquery-tristate.js'],
-        ],
-        'select2' => [
-            ['javascript', 'js/select2.js', ['minify' => false, 'combine' => false]],
-            ['javascript-localized', '/ccm/assets/localization/select2/js'],
-            ['css', 'css/select2.css', ['minify' => false]],
-        ],
-        'selectize' => [
-            ['javascript', 'js/selectize.js', ['minify' => false, 'combine' => false]],
-            ['css', 'css/selectize.css', ['minify' => false]],
-        ],
-        'underscore' => [
-            ['javascript', 'js/underscore.js', ['minify' => false]],
         ],
         'backbone' => [
             ['javascript', 'js/backbone.js', ['minify' => false]],
@@ -528,10 +508,6 @@ return [
         'core/imageeditor/control/colors' => [
             ['javascript', 'js/image-editor/controls/colors.js'],
         ],
-        'core/duration' => [
-            ['javascript', 'js/duration.js'],
-            ['css', 'css/duration.css'],
-        ],
         'core/imageeditor/control/filter' => [
             ['css', 'css/image-editor/controls/filter.css'],
             ['javascript', 'js/image-editor/controls/filter.js'],
@@ -562,9 +538,6 @@ return [
         ],
         'jquery/fileupload' => [
             ['javascript', 'js/jquery-fileupload.js'],
-        ],
-        'jquery/textcounter' => [
-            ['javascript', 'js/textcounter.js'],
         ],
         'swfobject' => [
             ['javascript', 'js/swfobject.js'],
@@ -639,16 +612,8 @@ return [
         'bootstrap-editable' => [
             ['javascript', 'js/bootstrap-editable.js', ['minify' => false]],
         ],
-        'core/app/editable-fields' => [
-            ['css', 'css/editable-fields.css', ['minify' => false]],
-        ],
         'kinetic' => [
             ['javascript', 'js/kinetic.js'],
-        ],
-        'core/imageeditor' => [
-            ['javascript', 'js/image-editor.js'],
-            ['javascript-localized', '/ccm/assets/localization/imageeditor/js'],
-            ['css', 'css/image-editor.css'],
         ],
         'dashboard' => [
             ['javascript', 'js/dashboard.js'],
@@ -661,10 +626,6 @@ return [
         ],
         'core/frontend/errors' => [
             ['css', 'css/frontend/errors.css'],
-        ],
-        'core/file-manager' => [
-            ['javascript', 'js/file-manager.js', ['minify' => false]],
-            ['css', 'css/file-manager.css', ['minify' => false]],
         ],
         'core/file-uploader' => [
             ['javascript', 'js/file-uploader.js', ['minify' => false]],
@@ -686,18 +647,6 @@ return [
         ],
         'core/tree' => [
             ['javascript', 'js/tree.js', ['minify' => false]],
-        ],
-        'core/groups' => [
-            ['javascript', 'js/groups.js', ['minify' => false]],
-        ],
-        'core/gathering' => [
-            ['javascript', 'js/gathering.js'],
-        ],
-        'core/gathering/display' => [
-            ['css', 'css/gathering/display.css'],
-        ],
-        'core/gathering/base' => [
-            ['css', 'css/gathering/base.css'],
         ],
         'core/conversation' => [
             ['javascript', 'js/conversations.js'],
@@ -747,13 +696,6 @@ return [
 
         /*
 
-        'jquery/ui' => [
-            [
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['css', 'jquery/ui'],
-            ],
-        ],
         'jquery/visualize' => [
             [
                 ['javascript', 'jquery/visualize'],
@@ -799,15 +741,6 @@ return [
                 ['javascript-localized', 'dropzone'],
                 ['javascript', 'vue'],
                 ['javascript', 'core/avatar'],
-            ],
-        ],
-        'core/colorpicker' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'core/events'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'spectrum'],
-                ['css', 'spectrum'],
             ],
         ],
         'font-awesome' => [
@@ -903,32 +836,7 @@ return [
                 ['css', 'jquery/ui'],
             ],
         ],
-        'core/app/editable-fields' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'bootstrap/dropdown'],
-                ['javascript', 'bootstrap/tooltip'],
-                ['javascript', 'bootstrap/popover'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'core/events'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'core/app'],
-                ['javascript', 'bootstrap-editable'],
-                ['css', 'core/app/editable-fields'],
-                ['javascript', 'jquery/fileupload'],
-            ],
-        ],
-        'core/imageeditor' => [
-            [
-                ['javascript', 'kinetic'],
-                ['javascript-localized', 'core/imageeditor'],
-                ['javascript', 'core/imageeditor'],
-                ['css', 'core/imageeditor'],
-            ],
-        ],
+
         'dashboard' => [
             [
                 ['javascript', 'jquery'],
@@ -957,30 +865,6 @@ return [
                 ['css', 'font-awesome'],
             ],
         ],
-        'core/file-manager' => [
-            [
-                ['css', 'core/app'],
-                ['css', 'jquery/ui'],
-                ['css', 'core/file-manager'],
-                ['css', 'selectize'],
-                ['javascript', 'dropzone'],
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'bootstrap/tooltip'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'selectize'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript-localized', 'dropzone'],
-                ['javascript', 'core/app'],
-                ['javascript', 'jquery/fileupload'],
-                ['javascript', 'core/tree'],
-                ['javascript', 'core/file-uploader'],
-                ['javascript', 'core/file-manager'],
-            ],
-        ],
         'core/file-uploader' => [
             [
                 ['css', 'dropzone'],
@@ -989,20 +873,6 @@ return [
                 ['javascript', 'core/file-uploader'],
             ],
         ],
-        'core/duration' => [
-            [
-                ['css', 'selectize'],
-                ['css', 'jquery/ui'],
-                ['css', 'core/duration'],
-                ['javascript', 'selectize'],
-                ['javascript', 'moment'],
-                ['javascript', 'moment-timezone'],
-                ['javascript', 'core/duration'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-            ],
-        ],
-
         'core/file-folder-selector' => [
             [
                 ['javascript', 'core/events'],
@@ -1039,21 +909,6 @@ return [
                 ['css', 'jquery/ui'],
             ],
         ],
-        'core/calendar/admin' => [
-            [
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'jquery'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'core/events'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'core/app'],
-                ['javascript', 'core/calendar/admin'],
-                ['css', 'core/app'],
-                ['css', 'jquery/ui'],
-            ],
-        ],
         'core/express' => [
             [
                 ['javascript', 'underscore'],
@@ -1084,19 +939,6 @@ return [
             ],
         ],
         'core/tree' => [
-            [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'fancytree'],
-                ['javascript-localized', 'fancytree'],
-                ['javascript', 'core/tree'],
-                ['css', 'fancytree'],
-            ],
-        ],
-        'core/groups' => [
             [
                 ['javascript', 'core/events'],
                 ['javascript', 'core/asset-loader'],

@@ -14,7 +14,6 @@ $calendars = array_filter(
 );
 if (isset($multiple) && $multiple) {
     $calendarSelect = [];
-    View::getInstance()->requireAsset('selectize');
 } else {
     $calendarSelect = ['' => t('** Select a Calendar')];
 }
