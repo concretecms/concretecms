@@ -51,10 +51,6 @@ class Controller extends GenericOauth2TypeController
     public function saveAuthenticationType($args)
     {
         $config = $this->app->make('config');
-        $config->save('auth.google.appid', $args['apikey']);
-        $config->save('auth.google.secret', $args['apisecret']);
-        $config->save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
-        $config->save('auth.google.registration.group', intval($args['registration_group'], 10));
 
         $stringsValidator = $this->app->make(Strings::class);
 
@@ -80,6 +76,10 @@ class Controller extends GenericOauth2TypeController
             $blacklist[] = $decoded;
         }
 
+        $config->save('auth.google.appid', $args['apikey']);
+        $config->save('auth.google.secret', $args['apisecret']);
+        $config->save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
+        $config->save('auth.google.registration.group', (int) $args['registration_group']);
         $config->save('auth.google.email_filters.whitelist', $whitelist);
         $config->save('auth.google.email_filters.blacklist', $blacklist);
     }
