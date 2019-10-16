@@ -17630,6 +17630,469 @@ a.text-dark:focus {
   }
 }
 
+div.ccm-conversation-avatar {
+  width: 40px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin-right: 10px;
+}
+
+div.ccm-conversation-avatar img {
+  border-radius: 4px;
+  max-width: 40px !important;
+  max-height: 40px !important;
+}
+
+div.ccm-conversation-message-form ul.redactor-toolbar {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 1px solid #ddd;
+}
+
+div.ccm-conversation-message-form .redactor-editor {
+  padding: 10px;
+  border: 1px solid #eee;
+}
+
+.cnv-admin-pane {
+  position: absolute;
+  right: 0;
+  top: -10px;
+}
+
+.cnv-admin-pane a.dropdown-toggle {
+  font-size: 10px;
+}
+
+.cnv-admin-pane ul.dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+.cnv-admin-pane ul.dropdown-menu a.admin-edit {
+  color: #00cc66;
+}
+
+.cnv-admin-pane ul.dropdown-menu a.admin-edit:hover {
+  color: white;
+}
+
+.cnv-admin-pane ul.dropdown-menu a.admin-delete {
+  color: #ff7070;
+}
+
+.cnv-admin-pane ul.dropdown-menu a.admin-delete:hover {
+  color: white;
+}
+
+div.ccm-conversation-message-count {
+  font-weight: bold;
+  margin-top: 20px;
+  float: left;
+}
+
+div.ccm-conversation-messages-header {
+  margin-bottom: 15px;
+}
+
+div.ccm-conversation-messages-header::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+div.ccm-conversation-messages-header select.ccm-sort-conversations {
+  font-size: 0.875rem;
+  width: auto;
+  margin-top: 10px;
+  float: right;
+}
+
+div.ccm-conversation-add-reply,
+div.ccm-conversation-add-new-message,
+div.ccm-conversation-edit-message {
+  clear: both;
+  position: relative;
+}
+
+div.ccm-conversation-add-reply::after,
+div.ccm-conversation-add-new-message::after,
+div.ccm-conversation-edit-message::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+div.ccm-conversation-add-reply form,
+div.ccm-conversation-add-new-message form,
+div.ccm-conversation-edit-message form {
+  margin-bottom: 0px;
+}
+
+div.ccm-conversation-add-reply div.ccm-conversation-avatar + div.ccm-conversation-message-form,
+div.ccm-conversation-add-new-message div.ccm-conversation-avatar + div.ccm-conversation-message-form,
+div.ccm-conversation-edit-message div.ccm-conversation-avatar + div.ccm-conversation-message-form {
+  padding-left: 50px;
+}
+
+div.ccm-conversation-add-reply div.ccm-conversation-message-form::after,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form::after,
+div.ccm-conversation-edit-message div.ccm-conversation-message-form::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+div.ccm-conversation-add-reply div.ccm-conversation-message-form textarea,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form textarea,
+div.ccm-conversation-edit-message div.ccm-conversation-message-form textarea {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 100%;
+  font-size: 0.875rem;
+  height: 80px;
+}
+
+div.ccm-conversation-add-reply div.ccm-conversation-message-form .ccm-conversation-attachment-toggle,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form .ccm-conversation-attachment-toggle,
+div.ccm-conversation-edit-message div.ccm-conversation-message-form .ccm-conversation-attachment-toggle {
+  float: right;
+  opacity: 0.7;
+}
+
+div.ccm-conversation-add-reply div.ccm-conversation-message-form .ccm-conversation-attachment-toggle.btn-success,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form .ccm-conversation-attachment-toggle.btn-success,
+div.ccm-conversation-edit-message div.ccm-conversation-message-form .ccm-conversation-attachment-toggle.btn-success {
+  border-top: 0;
+  border-bottom: 0;
+}
+
+div.ccm-conversation-add-reply div.ccm-conversation-message-form button,
+div.ccm-conversation-add-reply div.ccm-conversation-message-form a.btn,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form button,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form a.btn,
+div.ccm-conversation-edit-message div.ccm-conversation-message-form button,
+div.ccm-conversation-edit-message div.ccm-conversation-message-form a.btn {
+  margin: 16px 0 0 16px;
+}
+
+div.ccm-conversation-add-new-message {
+  margin-bottom: 20px;
+}
+
+div.ccm-conversation-add-reply {
+  display: none;
+  margin-top: 20px;
+}
+
+div.ccm-conversation-attachment-container {
+  margin-top: 20px;
+}
+
+div.ccm-conversation-attachment-container .dropzone {
+  border: 1px dashed #dee2e6;
+}
+
+div.ccm-conversation-errors {
+  display: none;
+}
+
+div.ccm-conversation-message-list div.ccm-conversation-delete-message {
+  display: none;
+}
+
+div.ccm-conversation-message-list div.ccm-conversation-delete-attachment {
+  display: none;
+}
+
+div.ccm-conversation-dialog textarea {
+  width: 100%;
+}
+
+div.ccm-conversation-dialog div.ui-dialog-buttonset {
+  float: none !important;
+}
+
+div.ccm-conversation-message.ccm-conversation-message-topic {
+  padding-left: 0px;
+}
+
+div.ccm-conversation-message {
+  position: relative;
+  padding-top: 0px;
+  padding-bottom: 20px;
+  padding-right: 0px;
+  padding-left: 50px;
+}
+
+div.ccm-conversation-message::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-byline {
+  padding: 0px 8px 8px 8px;
+  color: #9f9f9f;
+  margin-bottom: 0;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-byline span.ccm-conversation-message-date {
+  color: #9f9f9f;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-byline span.ccm-conversation-message-username {
+  font-weight: bold;
+  color: #0099ff;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-byline span.ccm-conversation-message-divider {
+  padding: 0px 10px 0px 10px;
+}
+
+div.ccm-conversation-message .message-attachments::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container {
+  position: relative;
+  background: #f9f9f9;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 20px;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container .attachment-preview-container {
+  width: 90px;
+  min-height: 90px;
+  float: left;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover {
+  top: 0;
+  left: 0;
+  position: absolute;
+  background: transparent;
+  width: 90px;
+  height: 90px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  cursor: pointer;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover .glyph-container {
+  padding: 8px 0px 0px 10px;
+  color: #fff;
+  display: none;
+  margin: 29px 0px 0px 27px;
+  background-color: black;
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover .glyph-container i {
+  margin-left: 1px;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover:hover {
+  background: #0a5d99;
+  opacity: 0.8;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover:hover .glyph-container {
+  display: block;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container img {
+  float: left;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+div.ccm-conversation-message .message-attachments .attachment-container p.image-preview {
+  display: block;
+  float: left;
+  padding: 20px 0px 10px 20px;
+}
+
+div.ccm-conversation-message .ccm-conversation-message-body {
+  padding: 0px 8px;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls {
+  padding: 0px 0px 0px 8px;
+  color: #999;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls a.ccm-conversation-message-control-icon {
+  color: #999;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls a.ccm-conversation-message-control-icon:hover {
+  color: #333;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls .ccm-conversation-social-share {
+  display: none;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls span.control-divider {
+  display: block;
+  padding: 8px;
+  float: left;
+  margin-left: 15px;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls li:first-child {
+  margin-left: 0;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls ul {
+  float: left;
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls ul li {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls ul li.dropdown {
+  margin-left: 0px;
+}
+
+div.ccm-conversation-message div.ccm-conversation-message-controls ul a {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: block;
+}
+
+div.ccm-conversation-message-deleted,
+div.ccm-conversation-message-flagged {
+  opacity: 0.3;
+}
+
+div.ccm-conversation-message:hover .ccm-conversation-message-admin-control {
+  display: inline-block;
+}
+
+.ccm-conversation-message-admin-control {
+  display: none;
+}
+
+div.ccm-conversation-message:hover div.ccm-conversation-message-controls .ccm-conversation-social-share {
+  display: inline-block;
+}
+
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level0 {
+  margin-left: 0px;
+}
+
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level1 {
+  margin-left: 50px;
+}
+
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level2 {
+  margin-left: 100px;
+}
+
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level3 {
+  margin-left: 150px;
+}
+
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level4 {
+  margin-left: 200px;
+}
+
+div.ccm-conversation-form-submitted {
+  opacity: 0.4;
+}
+
+div.ccm-conversation-load-more-messages {
+  text-align: center;
+  padding: 0px 0px 20px 0px;
+}
+
+/**
+ * Basic editor styles
+ */
+
+.conversation-editor {
+  height: 200px;
+}
+
+/**
+ * Discussions
+ */
+
+ul.ccm-discussion-topics {
+  list-style-type: none;
+  margin: 0px 0px 20px 0px;
+  padding: 0px;
+}
+
+ul.ccm-discussion-topics li {
+  display: block;
+  padding: 4px 4px 10px 80px;
+  position: relative;
+  min-height: 60px;
+  border-bottom: 1px inset #ccc;
+}
+
+ul.ccm-discussion-topics li div.ccm-discussion-topic-replies {
+  position: absolute;
+  top: 18px;
+  left: 0px;
+  height: 62px;
+  width: 62px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #999;
+}
+
+ul.ccm-discussion-topics li div.ccm-discussion-topic-replies em {
+  font-size: 1.6em;
+  font-style: normal;
+  display: block;
+  line-height: 1em;
+  color: #999;
+  margin: 5px auto 0px auto;
+}
+
+ul.ccm-discussion-topics li div.ccm-discussion-topic-details {
+  color: #444;
+}
+
+ul.ccm-discussion-topics h3 {
+  font-size: 1.4em;
+  line-height: 1.4em;
+  margin-bottom: 2px;
+}
+
+div.ccm-discussion select.ccm-discussion-order-by {
+  float: right;
+  margin-right: 10px;
+}
+
 /* Base page */
 
 /* Dashboard form actions wrapper */

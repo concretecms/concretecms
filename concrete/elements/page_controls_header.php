@@ -22,6 +22,8 @@ $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
         $request = \Request::getInstance();
         
+        $v->requireAsset('core/cms');
+        
         $editMode = $c->isEditMode();
         $tools = REL_DIR_FILES_TOOLS_REQUIRED;
         $htmlTagClasses = 'ccm-toolbar-visible';

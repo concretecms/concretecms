@@ -43,7 +43,6 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
     "nprogress": "^0.2.0",
-    "pepjs": "^0.5.2",
     "pnotify": "^4.0.0",
     "selectize": "^0.12.6",
     "spectrum-colorpicker": "^1.8.0",

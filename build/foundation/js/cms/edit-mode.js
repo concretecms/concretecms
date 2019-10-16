@@ -1,6 +1,7 @@
-import 'pepjs';
+import './jquery.pep.js';
 
 import './edit-mode/editmode';
+import './edit-mode/area';
 import './edit-mode/dragarea';
 import './edit-mode/block';
 import './edit-mode/blocktype';

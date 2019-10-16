@@ -57,7 +57,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             if ($c->isEditMode()) {
                                 ?>
                                 <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit">
-                                    <i class="fa fa-pencil mobile-leading-icon"></i>
+                                    <i class="fas fa-pencil-alt mobile-leading-icon"></i>
                                     <a
                                         <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                         data-toolbar-action="check-in"
@@ -80,7 +80,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             } elseif ($permissions->canEditPageContents()) {
                                 ?>
                                 <li class="ccm-toolbar-page-edit">
-                                    <i class="fa fa-pencil mobile-leading-icon"></i>
+                                    <i class="fas fa-pencil-alt mobile-leading-icon"></i>
                                     <a
                                         <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                         data-toolbar-action="check-out"
@@ -237,8 +237,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             ?>
                             <li class="parent-ul">
                                 <?php
-                                $dashboardMenu = new \Concrete\Controller\Element\Navigation\DashboardMobileMenu();
-                                $dashboardMenu->render();
+                               // $dashboardMenu = new \Concrete\Controller\Element\Navigation\DashboardMobileMenu();
+                               // $dashboardMenu->render();
                                 ?>
                             </li>
                             <?php
@@ -280,7 +280,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
                                 title="<?= t('Exit Edit Mode') ?>"
                             >
-                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
+                                <i class="fas fa-pencil-alt"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -293,7 +293,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
-                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
+                                <i class="fas fa-pencil-alt"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -374,7 +374,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li data-guide-toolbar-action="dashboard" class="float-right hidden-xs ">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
-                            <i class="fa fa-sliders"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
+                            <i class="fas fa-sliders-h"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                         </a>
                     </li>
                     <?php
@@ -394,7 +394,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                            data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
                            data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                            title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
-                            <i class="fa fa-files-o"></i><span
+                            <i class="fas fa-sitemap"></i><span
                                     class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
                         </a>
                     </li>

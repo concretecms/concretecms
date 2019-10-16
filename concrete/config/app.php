@@ -377,16 +377,22 @@ return [
      * Assets
      */
     'assets' => [
-        /* proper assets here */
+        // Basic JavaScript requirements
         'jquery' => [
             [
                 'javascript',
                 'js/jquery.js',
-                ['position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false],
+                ['position' => Asset::ASSET_POSITION_HEADER],
             ],
         ],
 
-        
+        // Foundational Assets
+        'core/cms' => [
+            ['javascript', 'js/cms.js'],
+            ['javascript-localized', '/ccm/assets/localization/core/js'],
+            ['css', 'css/cms.css'],
+        ],
+
 
 
 
@@ -424,9 +430,6 @@ return [
             ['javascript', 'js/jquery-visualize.js', ['minify' => false, 'combine' => false]],
             ['css', 'css/jquery-visualize.css', ['minify' => false]],
         ],
-        'jquery/touch-punch' => [
-            ['javascript', 'js/jquery-ui-touch-punch.js'],
-        ],
         'backbone' => [
             ['javascript', 'js/backbone.js', ['minify' => false]],
         ],
@@ -440,10 +443,6 @@ return [
         ],
         'picturefill' => [
             ['javascript', 'js/picturefill.js', ['minify' => false]],
-        ],
-        'responsive-slides' => [
-            ['javascript', 'js/responsive-slides.js', ['minify' => false]],
-            ['css', 'css/responsive-slides.css', ['minify' => false]],
         ],
         'fullcalendar' => [
             ['javascript', 'js/fullcalendar/fullcalendar.js', ['minify' => false, 'combine' => false]],
@@ -492,9 +491,6 @@ return [
             ['javascript', 'js/style-customizer.js', ['minify' => false]],
             ['css', 'css/style-customizer.css', ['minify' => false]],
         ],
-        'core/localization' => [
-            ['javascript-localized', '/ccm/assets/localization/core/js'],
-        ],
         'core/frontend/parallax-image' => [
             ['javascript', 'js/frontend/parallax-image.js', ['minify' => false]],
         ],
@@ -538,9 +534,6 @@ return [
         ],
         'jquery/fileupload' => [
             ['javascript', 'js/jquery-fileupload.js'],
-        ],
-        'swfobject' => [
-            ['javascript', 'js/swfobject.js'],
         ],
         'redactor' => [
             ['javascript', 'js/redactor.js', ['minify' => false]],
@@ -692,6 +685,14 @@ return [
                 ['javascript', 'jquery'],
             ],
         ],
+        
+        'core/cms' => [
+            [
+                ['javascript', 'core/cms'],
+                ['javascript-localized', 'core/cms'],
+                ['css', 'core/cms'],
+            ]
+        ],
 
 
         /*
@@ -722,12 +723,6 @@ return [
                 ['javascript', 'dropzone'],
                 ['javascript-localized', 'dropzone'],
                 ['css', 'dropzone'],
-            ],
-        ],
-        'responsive-slides' => [
-            [
-                ['javascript', 'responsive-slides'],
-                ['css', 'responsive-slides'],
             ],
         ],
         'ace' => [
@@ -788,19 +783,6 @@ return [
         'jquery/fileupload' => [
             [
                 ['javascript', 'jquery/fileupload'],
-            ],
-        ],
-        'swfobject' => [
-            [
-                ['javascript', 'swfobject'],
-            ],
-        ],
-        'redactor' => [
-            [
-                ['javascript', 'redactor'],
-                ['javascript-localized', 'redactor'],
-                ['css', 'redactor'],
-                ['css', 'font-awesome'],
             ],
         ],
         'moment' => [

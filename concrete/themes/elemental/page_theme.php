@@ -8,6 +8,7 @@ class PageTheme extends Theme implements ThemeProviderInterface
 {
     public function registerAssets()
     {
+        /*
         //$this->providesAsset('javascript', 'bootstrap/*');
         $this->providesAsset('css', 'bootstrap/*');
         $this->providesAsset('css', 'blocks/form');
@@ -29,6 +30,8 @@ class PageTheme extends Theme implements ThemeProviderInterface
         $this->requireAsset('javascript', 'picturefill');
         $this->requireAsset('javascript-conditional', 'html5-shiv');
         $this->requireAsset('javascript-conditional', 'respond');
+        */
+        $this->requireAsset('jquery');
     }
 
     protected $pThemeGridFrameworkHandle = 'bootstrap3';

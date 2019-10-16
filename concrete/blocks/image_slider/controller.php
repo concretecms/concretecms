@@ -77,15 +77,7 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         $this->edit();
     }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        $al = \Concrete\Core\Asset\AssetList::getInstance();
-
-        $this->requireAsset('javascript', 'jquery');
-        $this->requireAsset('responsive-slides');
-    }
-
+    
     public function getEntries()
     {
         $db = Database::get();

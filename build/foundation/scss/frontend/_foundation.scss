@@ -2,5 +2,8 @@
 @import "../base/foundation";
 
 // Import the full Bootstrap
-@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap";
+
+// Components
+@import "./conversations";
 

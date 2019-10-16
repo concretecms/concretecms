@@ -387,9 +387,8 @@
             }
 
             if (!my.getElem().parent().is('#ccm-stack-container')) {
-                elem.text(_(ccmi18n.emptyArea).template({
-                    area_handle: my.getElem().data('area-display-name')
-                }));
+                var template = _(ccmi18n.emptyArea).template();
+                elem.text(template({area_handle: my.getElem().data('area-display-name')}));
             }
             my.getDragAreas().push(drag_area);
             return drag_area;
