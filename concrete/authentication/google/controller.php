@@ -63,7 +63,7 @@ class Controller extends GenericOauth2TypeController
             if (!$stringsValidator->isValidRegex($entry)) {
                 throw new UserMessageException(t('The regular expression "%s" is not valid.', $entry));
             }
-            $whitelist[] = trim($entry);
+            $whitelist[] = $entry;
         }
 
         $blacklist = [];
