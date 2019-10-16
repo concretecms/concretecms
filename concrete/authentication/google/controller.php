@@ -80,8 +80,8 @@ class Controller extends GenericOauth2TypeController
             $blacklist[] = $decoded;
         }
 
-        $config->save('auth.google.email_filters.whitelist', array_values(array_filter($whitelist)));
-        $config->save('auth.google.email_filters.blacklist', array_values(array_filter($blacklist)));
+        $config->save('auth.google.email_filters.whitelist', $whitelist);
+        $config->save('auth.google.email_filters.blacklist', $blacklist);
     }
 
     public function edit()
