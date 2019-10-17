@@ -24,21 +24,21 @@ class Version20150515000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
+        $this->refreshDatabaseTables([
             'PageFeeds',
+            'PageTypeComposerOutputBlocks',
         ]);
 
         // I can't seem to get the doctrine cache to clear any other way.
-        $cms = \Core::make('app');
-        $cms->clearCaches();
+        $this->app->clearCaches();
 
         $this->purgeOrphanedScrapbooksBlocks();
     }
 
     protected function purgeOrphanedScrapbooksBlocks()
     {
-        $db = \Database::connection();
-        $orphanedCollectionVersionBlocks = $db->fetchAll(
+        $this->refreshDatabaseTables(['PageTypeComposerOutputBlocks']);
+        $orphanedCollectionVersionBlocks = $this->connection->fetchAll(
             '
             select cID, cvID, cvb.bID, arHandle
             from CollectionVersionBlocks cvb

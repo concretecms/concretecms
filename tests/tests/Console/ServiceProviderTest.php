@@ -15,7 +15,6 @@ use Symfony\Component\Console\Command\Command;
 
 class ServiceProviderTest extends TestCase
 {
-
     /** @var \Mockery\Mock|Application */
     protected $app;
 
@@ -30,126 +29,6 @@ class ServiceProviderTest extends TestCase
 
     /** @var array The tracked command classes that get added */
     protected $addedClasses = [];
-
-    public function testProviderExtends()
-    {
-        // Run the register function
-        $this->provider->register();
-
-        // Make sure that we have a valid callable after registering
-        $this->assertTrue(is_callable($this->consoleFactory), 'The bound value isn\'t callable.');
-    }
-
-    /**
-     * Make sure that the expected commands exist when concrete5 is not installed
-     */
-    public function testUninstalledHasExpectedCommands()
-    {
-        $this->app->shouldReceive('isInstalled')->andReturn(false);
-
-        // Run the provider registration
-        $this->provider->register();
-
-        // Pass the mock through the factory
-        $factory = $this->consoleFactory;
-        $factory($this->console);
-
-
-        $subset = [
-            \Concrete\Core\Console\Command\InfoCommand::class,
-            \Concrete\Core\Console\Command\InstallCommand::class,
-            \Concrete\Core\Console\Command\InstallLanguageCommand::class,
-            \Concrete\Core\Console\Command\TranslatePackageCommand::class,
-            \Concrete\Core\Console\Command\GenerateIDESymbolsCommand::class,
-            \Concrete\Core\Console\Command\ConfigCommand::class,
-            \Concrete\Core\Console\Command\PackPackageCommand::class,
-            \Concrete\Core\Console\Command\ExecCommand::class,
-            \Concrete\Core\Console\Command\ServiceCommand::class,
-            \Concrete\Core\Console\Command\ResetCommand::class,
-        ];
-
-        sort($subset);
-        sort($this->addedClasses);
-
-        // Check that the classes we expect have been added
-        $this->assertArraySubset($subset, $this->addedClasses);
-    }
-
-    /**
-     * Make sure expected commands exist when concrete5 is installed
-     */
-    public function testInstalledHasExpectedCommands()
-    {
-        $this->app->shouldReceive('isInstalled')->andReturn(true);
-
-        // Run the provider registration
-        $this->provider->register();
-
-        // Pass the mock through the factory
-        $factory = $this->consoleFactory;
-        $factory($this->console);
-
-        // Check that the classes we expect have been added
-        $subset = [
-            \Concrete\Core\Console\Command\InfoCommand::class,
-            \Concrete\Core\Console\Command\InstallCommand::class,
-            \Concrete\Core\Console\Command\InstallLanguageCommand::class,
-            \Concrete\Core\Console\Command\TranslatePackageCommand::class,
-            \Concrete\Core\Console\Command\GenerateIDESymbolsCommand::class,
-            \Concrete\Core\Console\Command\ConfigCommand::class,
-            \Concrete\Core\Console\Command\PackPackageCommand::class,
-            \Concrete\Core\Console\Command\ExecCommand::class,
-            \Concrete\Core\Console\Command\ServiceCommand::class,
-            \Concrete\Core\Console\Command\ResetCommand::class,
-            \Concrete\Core\Console\Command\CompareSchemaCommand::class,
-            \Concrete\Core\Console\Command\ClearCacheCommand::class,
-            \Concrete\Core\Console\Command\InstallPackageCommand::class,
-            \Concrete\Core\Console\Command\UninstallPackageCommand::class,
-            \Concrete\Core\Console\Command\UpdatePackageCommand::class,
-            \Concrete\Core\Console\Command\BlacklistClear::class,
-            \Concrete\Core\Console\Command\SetDatabaseCharacterSetCommand::class,
-            \Concrete\Core\Console\Command\QueueProcessCommand::class,
-            \Concrete\Core\Console\Command\JobCommand::class,
-            \Concrete\Core\Console\Command\UpdateCommand::class,
-            \Concrete\Core\Console\Command\RescanFilesCommand::class,
-            \Concrete\Core\Console\Command\FillThumbnailsTableCommand::class,
-            \Concrete\Core\Console\Command\GenerateSitemapCommand::class,
-            \Concrete\Core\Console\Command\RefreshEntitiesCommand::class,
-            \Doctrine\DBAL\Tools\Console\Command\ImportCommand::class,
-            \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand::class,
-            \Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\EntityRegionCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryRegionCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ConvertDoctrine1SchemaCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\RunDqlCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\InfoCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class
-        ];
-
-        sort($subset);
-        sort($this->addedClasses);
-
-        $this->assertArraySubset($subset, $this->addedClasses);
-    }
 
     public function setUp()
     {
@@ -188,5 +67,129 @@ class ServiceProviderTest extends TestCase
         $this->provider = null;
         $this->consoleFactory = null;
         $this->addedClasses = [];
+    }
+
+    public function testProviderExtends()
+    {
+        // Run the register function
+        $this->provider->register();
+
+        // Make sure that we have a valid callable after registering
+        $this->assertTrue(is_callable($this->consoleFactory), 'The bound value isn\'t callable.');
+    }
+
+    /**
+     * Make sure that the expected commands exist when concrete5 is not installed.
+     */
+    public function testUninstalledHasExpectedCommands()
+    {
+        $this->app->shouldReceive('isInstalled')->andReturn(false);
+
+        // Run the provider registration
+        $this->provider->register();
+
+        // Pass the mock through the factory
+        $factory = $this->consoleFactory;
+        $factory($this->console);
+
+
+        $subset = [
+            \Concrete\Core\Console\Command\InfoCommand::class,
+            \Concrete\Core\Console\Command\InstallCommand::class,
+            \Concrete\Core\Console\Command\InstallLanguageCommand::class,
+            \Concrete\Core\Console\Command\TranslatePackageCommand::class,
+            \Concrete\Core\Console\Command\GenerateIDESymbolsCommand::class,
+            \Concrete\Core\Console\Command\ConfigCommand::class,
+            \Concrete\Core\Console\Command\PackPackageCommand::class,
+            \Concrete\Core\Console\Command\ExecCommand::class,
+            \Concrete\Core\Console\Command\ServiceCommand::class,
+            \Concrete\Core\Console\Command\ResetCommand::class,
+            \Concrete\Core\Console\Command\PhpCodingStyleCommand::class,
+        ];
+
+        sort($subset);
+        sort($this->addedClasses);
+
+        // Check that the classes we expect have been added
+        $this->assertArraySubset($subset, $this->addedClasses);
+    }
+
+    /**
+     * Make sure expected commands exist when concrete5 is installed.
+     */
+    public function testInstalledHasExpectedCommands()
+    {
+        $this->app->shouldReceive('isInstalled')->andReturn(true);
+
+        // Run the provider registration
+        $this->provider->register();
+
+        // Pass the mock through the factory
+        $factory = $this->consoleFactory;
+        $factory($this->console);
+
+        // Check that the classes we expect have been added
+        $subset = [
+            \Concrete\Core\Console\Command\InfoCommand::class,
+            \Concrete\Core\Console\Command\InstallCommand::class,
+            \Concrete\Core\Console\Command\InstallLanguageCommand::class,
+            \Concrete\Core\Console\Command\TranslatePackageCommand::class,
+            \Concrete\Core\Console\Command\GenerateIDESymbolsCommand::class,
+            \Concrete\Core\Console\Command\ConfigCommand::class,
+            \Concrete\Core\Console\Command\PackPackageCommand::class,
+            \Concrete\Core\Console\Command\ExecCommand::class,
+            \Concrete\Core\Console\Command\ServiceCommand::class,
+            \Concrete\Core\Console\Command\ResetCommand::class,
+            \Concrete\Core\Console\Command\PhpCodingStyleCommand::class,
+            \Concrete\Core\Console\Command\CompareSchemaCommand::class,
+            \Concrete\Core\Console\Command\ClearCacheCommand::class,
+            \Concrete\Core\Console\Command\InstallPackageCommand::class,
+            \Concrete\Core\Console\Command\UninstallPackageCommand::class,
+            \Concrete\Core\Console\Command\UpdatePackageCommand::class,
+            \Concrete\Core\Console\Command\InstallThemeCommand::class,
+            \Concrete\Core\Console\Command\BlacklistClear::class,
+            \Concrete\Core\Console\Command\SetDatabaseCharacterSetCommand::class,
+            \Concrete\Core\Console\Command\QueueProcessCommand::class,
+            \Concrete\Core\Console\Command\JobCommand::class,
+            \Concrete\Core\Console\Command\UpdateCommand::class,
+            \Concrete\Core\Console\Command\RescanFilesCommand::class,
+            \Concrete\Core\Console\Command\FillThumbnailsTableCommand::class,
+            \Concrete\Core\Console\Command\GenerateSitemapCommand::class,
+            \Concrete\Core\Console\Command\RefreshEntitiesCommand::class,
+            \Concrete\Core\Console\Command\Express\ExportCommand::class,
+            \Doctrine\DBAL\Tools\Console\Command\ImportCommand::class,
+            \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand::class,
+            \Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\EntityRegionCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryRegionCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ConvertDoctrine1SchemaCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\RunDqlCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\InfoCommand::class,
+            \Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand::class,
+            \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand::class,
+            \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand::class,
+            \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand::class,
+            \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand::class,
+            \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand::class,
+            \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class,
+        ];
+
+        sort($subset);
+        sort($this->addedClasses);
+
+        $this->assertArraySubset($subset, $this->addedClasses);
     }
 }

@@ -1,12 +1,13 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/system/page
  * Namespace: Concrete\Controller\Backend\
  */
 $router->all('/arrange_blocks/', 'Page\ArrangeBlocks::arrange');
+$router->all('/add_stack/', 'Page\AddStack::addStack');
 $router->all('/check_in/{cID}/{token}', 'Page::exitEditMode');
 $router->all('/create/{ptID}', 'Page::create');
 $router->all('/create/{ptID}/{parentID}', 'Page::create');

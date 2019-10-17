@@ -103,6 +103,7 @@ class MetadataGenerator
 
         $output = array_merge($output, $this->getOverride('\Illuminate\Contracts\Container\Container::make(0)', $makeMethod, '$app->make(\'something\') or $app->make(SomeClass::class)'));
         $output = array_merge($output, $this->getOverride('new \Illuminate\Contracts\Container\Container', $makeMethod, '$app[SomeClass::class]'));
+        $output = array_merge($output, $this->getOverride('\app(0)', $makeMethod, 'app(\'something\') or app(SomeClass::class)'));
 
         $customEntityRepositories = $this->getCustomEntityRepositories();
         if (!empty($customEntityRepositories)) {

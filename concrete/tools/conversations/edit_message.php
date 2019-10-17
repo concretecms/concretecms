@@ -12,7 +12,7 @@ $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 
 $form = Loader::helper('form');
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $ui = UserInfo::getByID($u->getUserID());
 $val = Loader::helper('validation/token');
 

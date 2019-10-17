@@ -3,7 +3,7 @@
 namespace Concrete\Core\File;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\File\Image\Svg\SanitizerOptions;
+use Concrete\Core\File\Import\ProcessorManager;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
@@ -58,15 +58,17 @@ class FileServiceProvider extends ServiceProvider
             );
         });
 
-        $this->app->bindIf(SanitizerOptions::class, function (Application $app) {
+        $this->app->bind(ProcessorManager::class, function (Application $app) {
             $config = $app->make('config');
-            $options = $app->build(SanitizerOptions::class);
-            $options
-                ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_tags'))
-                ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_attributes'))
-            ;
+            $processorManager = $app->build(ProcessorManager::class);
+            foreach ($config->get('app.import_processors') as $processorClass) {
+                if ($processorClass) {
+                    $processor = $app->make($processorClass);
+                    $processorManager->registerProcessor($processor->readConfiguration($config));
+                }
+            }
 
-            return $options;
+            return $processorManager;
         });
     }
 }

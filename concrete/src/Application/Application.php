@@ -19,7 +19,6 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
-use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Package;
@@ -28,7 +27,6 @@ use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 use Config;
-use Database;
 use Environment;
 use Exception;
 use Illuminate\Container\Container;
@@ -185,6 +183,8 @@ class Application extends Container
 
     /**
      * Checks to see whether we should deliver a concrete5 response from the page cache.
+     *
+     * @param \Concrete\Core\Http\Request $request
      */
     public function checkPageCache(\Concrete\Core\Http\Request $request)
     {
@@ -209,10 +209,20 @@ class Application extends Container
      */
     public function handleAutomaticUpdates()
     {
+        $update = false;
         $config = $this['config'];
-        $installed = $config->get('concrete.version_db_installed');
-        $core = $config->get('concrete.version_db');
-        if ($installed < $core) {
+        $installedDb = $config->get('concrete.version_db_installed');
+        $coreDb = $config->get('concrete.version_db');
+        if ($installedDb < $coreDb) {
+            $update = true;
+        } else {
+            $installedVersion = $config->get('concrete.version_installed');
+            $coreVersion = $config->get('concrete.version');
+            if (version_compare($installedVersion, $coreVersion, '<')) {
+                $update = true;
+            }
+        }
+        if ($update) {
             $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
                 Update::updateToCurrentVersion();
             });
@@ -305,6 +315,9 @@ class Application extends Container
      * Using the configuration value, determines whether we need to redirect to a URL with
      * a trailing slash or not.
      *
+     * @param SymfonyRequest $request
+     * @param Site $site
+     *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
@@ -330,6 +343,9 @@ class Application extends Container
 
     /**
      * If we have redirect to canonical host enabled, we need to honor it here.
+     *
+     * @param SymfonyRequest $r
+     * @param Site $site
      *
      * @return \Concrete\Core\Routing\RedirectResponse|null
      */
@@ -390,9 +406,9 @@ class Application extends Container
     {
         if (count(func_get_args()) > 0) {
             return in_array($this->environment, func_get_args());
-        } else {
-            return $this->environment;
         }
+
+        return $this->environment;
     }
 
     /**
@@ -426,9 +442,9 @@ class Application extends Container
      * @param  string $concrete
      * @param  array $parameters
      *
-     * @return mixed
-     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return mixed
      */
     public function build($concrete, array $parameters = [])
     {
@@ -502,4 +518,5 @@ class Application extends Container
     {
         return $this->singleton($abstract, $concrete);
     }
+    
 }

@@ -281,7 +281,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     public function form()
     {
-        $this->set('user', new User());
+        $this->set('user', $this->app->make(User::class));
         $this->set('authenticationType', $this->getAuthenticationType());
     }
 
@@ -579,12 +579,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     public function handle_detach_attempt()
     {
-        if (!User::isLoggedIn()) {
+        $user = $this->app->make(User::class);
+        if (!$user->isRegistered()) {
             $response = new RedirectResponse(\URL::to('/login'), 302);
             $response->send();
             exit;
         }
-        $user = new User();
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
         $binding = $this->getBindingForUser($user);

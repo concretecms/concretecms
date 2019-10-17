@@ -21,7 +21,7 @@ class Detector
      *
      * @return Section|null
      */
-    public static function getPreferredSection()
+    public function getPreferredSection()
     {
         $app = Facade::getFacadeApplication();
         $site = $app->make('site')->getSite();
@@ -51,7 +51,7 @@ class Detector
 
         if ($result === null) {
             // Detect locale by user's preferred language
-            $u = new \User();
+            $u = $app->make(User::class);
             if ($u->isRegistered()) {
                 $userDefaultLanguage = $u->getUserDefaultLanguage();
                 if ($userDefaultLanguage) {
@@ -98,6 +98,8 @@ class Detector
      * Set the locale associated to the 'site' localization context.
      *
      * @param Page $c The page to be used to determine the site locale (if null we'll use the current page)
+     *
+     * @throws \Exception
      */
     public function setupSiteInterfaceLocalization(Page $c = null)
     {
@@ -116,13 +118,13 @@ class Detector
                 $useUserLocale = $dh->inDashboard($c);
             }
             if ($useUserLocale) {
-                $u = new User();
+                $u = $app->make(User::class);
                 $locale = $u->getUserLanguageToDisplay();
             } else {
                 if ($this->isEnabled()) {
                     $ms = Section::getBySectionOfSite($c);
                     if (!$ms) {
-                        $ms = static::getPreferredSection();
+                        $ms = $this->getPreferredSection();
                     }
                     if ($ms) {
                         $locale = $ms->getLocale();
@@ -150,8 +152,10 @@ class Detector
      * Check if there's some multilingual section.
      *
      * @return bool
+     *
+     * @throws \Exception
      */
-    public static function isEnabled()
+    public function isEnabled()
     {
         $app = Facade::getFacadeApplication();
         $cache = $app->make('cache/request');

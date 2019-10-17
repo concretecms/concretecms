@@ -36,7 +36,12 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
     if ($singleOriginalPage === null) {
         echo t('What do you wish to do?');
     } else {
-        echo t('You dragged "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+        if ($dragRequestData->getDragMode() === 'none') {
+            echo t('You selected to move/copy "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+        } else {
+            echo t('You dragged "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+        }
+
     }
     ?>
 </div>
@@ -69,12 +74,18 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                      }
                      ?>
                 </label>
-                <div class="checkbox" style="margin: 0 0 0 20px">
-                    <label>
-                        <input type="checkbox" name="saveOldPagePath" value="1" />
-                        <?= t('Save old page path') ?>
-                    </label>
-                </div>
+                <?php
+                if (!$singleOriginalPage->isExternalLink()) {
+                    ?>
+                    <div class="checkbox" style="margin: 0 0 0 20px">
+                        <label>
+                            <input type="checkbox" name="saveOldPagePath" value="1" />
+                            <?= t('Save old page path') ?>
+                        </label>
+                    </div>
+                    <?php
+                }
+                ?>
             </div>
         </div>
         <?php

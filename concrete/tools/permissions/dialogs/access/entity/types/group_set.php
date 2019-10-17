@@ -3,7 +3,7 @@
 use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 
 $type = PermissionAccessEntityType::getByHandle('group_set');
-$url = $type->getAccessEntityTypeToolsURL();
+$url = $type->getControllerUrl();
 
 $tp = new TaskPermission();
 if (!$tp->canAccessGroupSearch()) {

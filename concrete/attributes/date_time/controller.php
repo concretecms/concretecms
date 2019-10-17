@@ -242,7 +242,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function getPlainTextValue()
     {
-        return $this->getDisplayValue();
+        $datetime = $this->getDateTime();
+        if ($datetime !== null) {
+            $dh = $this->app->make('helper/date');
+            return $dh->formatCustom(\DateTime::ATOM, $datetime);
+        }
+        return '';
     }
 
     /**

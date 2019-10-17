@@ -12,16 +12,22 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     protected $replyTo;
     protected $attributeValues;
 
-    protected function getFromEmail()
+    protected function getFromEmail(Entry $entry = null)
     {
         if (!isset($this->from)) {
             $config = $this->app->make('config');
-            if ($config->get('concrete.email.form_block.address') && strstr($config->get('concrete.email.form_block.address'), '@')) {
+            if ($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address') && strstr($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address'), '@')) {
+                $this->from = $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address');
+            }
+            else{
+                if ($config->get('concrete.email.form_block.address') && strstr($config->get('concrete.email.form_block.address'), '@')) {
                 $this->from = $config->get('concrete.email.form_block.address');
             } else {
                 $adminUserInfo = $this->app->make(UserInfoRepository::class)->getByID(USER_SUPER_ID);
                 $this->from = $adminUserInfo->getUserEmail();
             }
+            }
+            
         }
 
         return $this->from;
@@ -30,7 +36,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     protected function getReplyToEmail(Entry $entry)
     {
         $entityManager = $this->app->make(EntityManager::class);
-        $replyToEmailAddress = $this->getFromEmail();
+        $replyToEmailAddress = $this->getFromEmail($entry);
         $email = false;
         if ($this->blockController->replyToEmailControlID) {
             $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
@@ -87,17 +93,19 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
         if ($this->blockController->notifyMeOnSubmission) {
             $mh = $this->app->make('mail');
             $mh->to($this->getToEmail());
-            $mh->from($this->getFromEmail());
+            $mh->from($this->getFromEmail($entry));
             $mh->replyto($this->getReplyToEmail($entry));
             $mh->addParameter('entity', $entry->getEntity());
             $mh->addParameter('formName', $this->getFormName($entry));
-            $mh->addParameter("dataSaveEnabled", $this->blockController->saveData);
+            $mh->addParameter("dataSaveEnabled", $this->blockController->storeFormSubmission);
             if (!$this->blockController->storeFormSubmission) {//if save submitted data is not active we send also files as attachments in email becuase it will be removed after entry remove
                 foreach ($this->getAttributeValues($entry) as $attributeValue) {
-                    if ("image_file" == $attributeValue->getAttributeTypeObject()->getAttributeTypeHandle()) {
+                    if ($attributeValue->getAttributeTypeObject()->getAttributeTypeHandle() == "image_file") {
                         $file = $attributeValue->getValue();
-                        $files[] = $file;
-                        $mh->addAttachment($file);
+                        if ($file) {
+                            $files[] = $file;
+                            $mh->addAttachment($file);
+                        }
                     }
                 }
             }

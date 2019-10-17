@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
 use Concrete\Core\Database\DatabaseStructureManager;
@@ -48,14 +49,12 @@ class Entities extends DashboardPageController
 
                     $this->flash('success', t('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.'));
                     $this->redirect('/dashboard/system/environment/entities', 'view');
-                } else {
-                    $this->app->make('config')->save('concrete.cache.doctrine_dev_mode', $ddm);
-                    $this->flash('success', t('Doctrine development settings updated.'));
                 }
+                $this->app->make('config')->save('concrete.cache.doctrine_dev_mode', $ddm);
+                $this->flash('success', t('Doctrine development settings updated.'));
                 $this->redirect('/dashboard/system/environment/entities', 'view');
             }
-        } else {
-            $this->set('error', [$this->token->getErrorMessage()]);
         }
+        $this->view();
     }
 }

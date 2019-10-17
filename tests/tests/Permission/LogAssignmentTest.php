@@ -4,7 +4,6 @@ namespace Concrete\Tests\Permission;
 
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Configuration\AdvancedConfiguration;
-use Concrete\Core\Logging\Configuration\ConfigurationFactory;
 use Concrete\Core\Logging\Configuration\SimpleDatabaseConfiguration;
 use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\Entry\Permission\Assignment\Assignment;
@@ -16,7 +15,6 @@ use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Permission\Access\ListItem\ListItem;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Logger;
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Concrete\Tests\TestCase;
 use Mockery as M;
@@ -24,7 +22,6 @@ use Psr\Log\LoggerInterface;
 
 class LogAssignmentTest extends TestCase
 {
-
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     public function testShouldLogPermissionAssignment()
@@ -116,12 +113,11 @@ class LogAssignmentTest extends TestCase
                     'access_type' => 10,
                     'entity_type' => 'group',
                     'entity_name' => 'Administrators',
-                ]]
+                ]],
             ]]);
 
         $entry = new Assignment($user, $key, $access);
         $logger = new Logger($factory);
         $logger->log($entry);
     }
-
 }

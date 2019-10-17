@@ -1,7 +1,10 @@
 <?php
+
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Block\BlockType\BlockType;
+use Concrete\Core\Entity\Package;
+use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
@@ -9,12 +12,11 @@ use Concrete\Core\Search\ItemList\Pager\Manager\PageListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Core\Entity\Package;
 use Concrete\Core\Search\StickyRequest;
-use Concrete\Core\Entity\Page\Template as TemplateEntity;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 /**
  * An object that allows a filtered list of pages to be returned.
@@ -28,38 +30,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     const SITE_TREE_CURRENT = -1;
     const SITE_TREE_ALL = 0;
-
-    public function getPagerManager()
-    {
-        return new PageListPagerManager($this);
-    }
-
-    public function __construct(StickyRequest $req = null)
-    {
-        $u = new \User();
-        if ($u->isSuperUser()) {
-            $this->ignorePermissions();
-        }
-        parent::__construct($req);
-    }
-
-    /**
-     * @return \Closure|int|null
-     */
-    public function getPermissionsChecker()
-    {
-        return $this->permissionsChecker;
-    }
-
-    public function getPagerVariableFactory()
-    {
-        return new VariableFactory($this, $this->getSearchRequest());
-    }
-
-    protected function getAttributeKeyClassName()
-    {
-        return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';
-    }
 
     /** @var \Closure | integer | null */
     protected $permissionsChecker;
@@ -106,6 +76,33 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * @var bool
      */
     protected $includeInactivePages = false;
+
+    public function __construct(StickyRequest $req = null)
+    {
+        $u = Application::getFacadeApplication()->make(User::class);
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
+    }
+
+    public function getPagerManager()
+    {
+        return new PageListPagerManager($this);
+    }
+
+    /**
+     * @return \Closure|int|null
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
 
     public function setSiteTreeObject(TreeInterface $tree)
     {
@@ -255,7 +252,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                             $tree = $c->getSiteTreeObject();
                         }
                         if (!is_object($tree)) {
-                            $site = \Core::make("site")->getSite();
+                            $site = \Core::make('site')->getSite();
                             $tree = $site->getSiteTreeObject();
                         }
                         break;
@@ -305,16 +302,15 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function getTotalResults()
     {
-        $u = new \User();
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
             // when we get total results, because we're resetting the select
             return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
-        } else {
-            return -1; // unknown
         }
+
+        return -1; // unknown
     }
 
     public function getPaginationAdapter()
@@ -367,9 +363,9 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (isset($this->permissionsChecker)) {
             if ($this->permissionsChecker === -1) {
                 return true;
-            } else {
-                return call_user_func_array($this->permissionsChecker, [$mixed]);
             }
+
+            return call_user_func_array($this->permissionsChecker, [$mixed]);
         }
 
         $cp = new \Permissions($mixed);
@@ -399,6 +395,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filters by page template.
      *
      * @param mixed $ptHandle
+     * @param TemplateEntity $template
      */
     public function filterByPageTemplate(TemplateEntity $template)
     {
@@ -410,6 +407,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filters by date added.
      *
      * @param string $date
+     * @param mixed $comparison
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
@@ -424,7 +422,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByNumberOfChildren($number, $comparison = '>')
     {
-        $number = intval($number);
+        $number = (int) $number;
         if ($this->includeAliases) {
             $this->query->andWhere(
                 $this->query->expr()->orX(
@@ -453,6 +451,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filters by public date.
      *
      * @param string $date
+     * @param mixed $comparison
      */
     public function filterByPublicDate($date, $comparison = '=')
     {
@@ -461,6 +460,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by package.
+     *
+     * @param Package $package
      */
     public function filterByPackage(Package $package)
     {
@@ -495,7 +496,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters by page type ID.
      *
-     * @param array | integer $cParentID
+     * @param array | integer $ptID
      */
     public function filterByPageTypeID($ptID)
     {
@@ -602,6 +603,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by topic. Doesn't look at specific attributes –instead, actually joins to the topics table.
+     *
+     * @param mixed $topic
      */
     public function filterByTopic($topic)
     {
@@ -731,17 +734,10 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
-    protected function selectDistinct()
-    {
-        $selects = $this->query->getQueryPart('select');
-        if ($selects[0] ==='p.cID') {
-            $selects[0] = 'distinct p.cID';
-            $this->query->select($selects);
-        }
-    }
-
     /**
      * @deprecated
+     *
+     * @param mixed $ctHandle
      */
     public function filterByCollectionTypeHandle($ctHandle)
     {
@@ -750,6 +746,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @deprecated
+     *
+     * @param mixed $ctID
      */
     public function filterByCollectionTypeID($ctID)
     {
@@ -772,5 +770,19 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function displayUnapprovedPages()
     {
         $this->setPageVersionToRetrieve(self::PAGE_VERSION_RECENT);
+    }
+
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';
+    }
+
+    protected function selectDistinct()
+    {
+        $selects = $this->query->getQueryPart('select');
+        if ($selects[0] === 'p.cID') {
+            $selects[0] = 'distinct p.cID';
+            $this->query->select($selects);
+        }
     }
 }

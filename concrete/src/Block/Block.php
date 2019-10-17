@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Block;
 
-use Area;
 use BlockType;
 use CacheLocal;
 use Collection;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
@@ -169,12 +169,10 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
  CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?';
         }
 
-        $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $db->fetchAssoc($q, $v);
 
-        if (is_array($row)) {
+        if ($row !== false) {
             $b->setPropertiesFromArray($row);
-            $r->free();
 
             $bt = BlockType::getByID($b->getBlockTypeID());
             $class = $bt->getBlockTypeClass();
@@ -474,9 +472,8 @@ EOT
         if ($bID) {
             $db = Loader::db();
             $q = 'select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = ? and CollectionVersionBlocks.isOriginal = 1';
-            $r = $db->query($q, [$bID]);
-            if ($r) {
-                $row = $r->fetchRow();
+            $row = $db->fetchAssoc($q, [$bID]);
+            if ($row !== false) {
                 $cID = $row['cID'];
                 $nc = Page::getByID($cID, 'ACTIVE');
                 if (is_object($nc) && !$nc->isError()) {
@@ -1862,11 +1859,11 @@ EOT
      * Populate the queue to be used to add/update blocks of the pages of a specific type.
      *
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
-     * @param \ZendQueue\Queue $queue The queue to add the messages too (it will be emptied before adding the new messages)
+     * @param bool $updateForkedBlocks
      *
      * @return \ZendQueue\Queue
      */
-    public function queueForDefaultsAliasing($addBlock)
+    public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
     {
         $records = [];
         $db = \Database::connection();
@@ -1901,7 +1898,7 @@ EOT
                     $row['cID'], $row['cvID'], $cbRelationID,
                 ]);
 
-                if ($r2['bID'] || (!$r2['bID'] && $addBlock)) {
+                if (($r2['bID'] && $updateForkedBlocks) || (!$r2['bID'] && $addBlock)) {
                     // Ok, so either this block doesn't appear on the page at all, but addBlock set to true,
                     // or, the block appears on the page and it is forked. Either way we're going to add it to the page.
 

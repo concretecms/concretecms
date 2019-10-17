@@ -8,6 +8,8 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 class ContentSwapper implements ContentSwapperInterface
 {
@@ -19,14 +21,15 @@ class ContentSwapper implements ContentSwapperInterface
 
     protected function validateClearSiteContents($options)
     {
-        if (\Core::make('app')->isRunThroughCommandLineInterface()) {
+        $app = Application::getFacadeApplication();
+        if ($app->isRunThroughCommandLineInterface()) {
             $result = true;
         } else {
             $result = false;
-            $u = new \User();
+            $u = $app->make(User::class);
             if ($u->isSuperUser()) {
                 // this can ONLY be used through the post. We will use the token to ensure that
-                $valt = \Core::make('helper/validation/token');
+                $valt = $app->make('helper/validation/token');
                 if ($valt->validate('install_options_selected', $options['ccm_token'])) {
                     $result = true;
                 }

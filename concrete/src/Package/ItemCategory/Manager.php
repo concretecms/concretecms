@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Support\Manager as CoreManager;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Manager extends CoreManager
 {
-
     public function createAuthenticationTypeDriver()
     {
         return new AuthenticationType();
@@ -164,30 +164,36 @@ class Manager extends CoreManager
         return $this->app->make(ExpressEntity::class);
     }
 
-
     public function createSiteTypeDriver()
     {
         return $this->app->make(SiteType::class);
     }
 
+    public function createIpAccessControlCategoryDriver()
+    {
+        return $this->app->make(IpAccessControlCategory::class);
+    }
+
     public function getPackageItems(Package $package)
     {
-        $items = array();
-        foreach($this->getPackageItemCategories() as $category) {
+        $items = [];
+        foreach ($this->getPackageItemCategories() as $category) {
             /**
-             * @var $category ItemInterface
+             * @var ItemInterface
              */
             $items = array_merge($items, $category->getItems($package));
         }
+
         return $items;
     }
 
     public function getPackageItemCategories()
     {
-        $return = array();
-        foreach($this->app['config']->get('app.package_items') as $item) {
+        $return = [];
+        foreach ($this->app['config']->get('app.package_items') as $item) {
             $return[] = $this->driver($item);
         }
+
         return $return;
     }
 }

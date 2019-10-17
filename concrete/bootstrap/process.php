@@ -19,77 +19,12 @@ $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 
 // If the user has checked out something for editing, we'll increment the lastedit variable within the database
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $u->refreshCollectionEdit($c);
 }
 
 $securityHelper = Loader::helper('security');
-
-if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
-    switch ($_GET['atask']) {
-        case 'add_stack':
-            $a = Area::get($c, $_GET['arHandle']);
-            $cx = $c;
-            $ax = $a;
-
-            if ($a->isGlobalArea()) {
-                $cx = Stack::getByName($_REQUEST['arHandle']);
-                $ax = Area::get($cx, STACKS_AREA_NAME);
-            }
-            $obj = new stdClass();
-
-            $ap = new Permissions($ax);
-            $stack = Stack::getByID($_REQUEST['stID']);
-            if (is_object($stack)) {
-                if ($ap->canAddStackToArea($stack)) {
-                    // we've already run permissions on the stack at this point, at least for viewing the stack.
-                    $btx = BlockType::getByHandle(BLOCK_HANDLE_STACK_PROXY);
-                    $nvc = $cx->getVersionToModify();
-                    if ($a->isGlobalArea()) {
-                        $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
-                        $xvc->relateVersionEdits($nvc);
-                    }
-                    $data['stID'] = $stack->getCollectionID();
-                    $nb = $nvc->addBlock($btx, $ax, $data);
-
-                    $obj->aID = $a->getAreaID();
-                    $obj->arHandle = $a->getAreaHandle();
-                    $obj->cID = $c->getCollectionID();
-                    $obj->bID = $nb->getBlockID();
-                    $obj->error = false;
-
-                    if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
-                            ->integer(
-                                $_REQUEST['dragAreaBlockID'])
-                    ) {
-                        $db = Block::getByID(
-                            $_REQUEST['dragAreaBlockID'],
-                            $this->pageToModify,
-                            $this->areaToModify);
-                        if (is_object($db) && !$db->isError()) {
-                            $nb->moveBlockToDisplayOrderPosition($db);
-                        }
-                    }
-                    if (!is_object($db)) {
-                        $nb->moveBlockToDisplayOrderPosition(false);
-                    }
-                } else {
-                    $obj->error = true;
-                    $obj->response = array(t('The stack contains invalid block types.'));
-                }
-            } else {
-                $obj->error = true;
-                $obj->response = array(t('Invalid stack.'));
-            }
-
-            echo Loader::helper('json')->encode($obj);
-            exit;
-
-            break;
-
-    }
-}
 
 if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
     switch ($_REQUEST['ctask']) {
@@ -98,7 +33,6 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
         case 'check-out-first':
             if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApprovePageVersions()) {
                 // checking out the collection for editing
-                $u = new User();
                 $u->loadCollectionEdit($c);
 
                 if ($_REQUEST['ctask'] == 'check-out-add-block') {
@@ -113,7 +47,6 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
 
         case 'approve-recent':
             if ($cp->canApprovePageVersions()) {
-                $u = new User();
                 $pkr = new \Concrete\Core\Workflow\Request\ApprovePageRequest();
                 $pkr->setRequestedPage($c);
                 $v = CollectionVersion::get($c, "RECENT");

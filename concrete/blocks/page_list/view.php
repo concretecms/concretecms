@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 $c = Page::getCurrentPage();
 
@@ -8,7 +8,7 @@ $th = Core::make('helper/text');
 /** @var \Concrete\Core\Localization\Service\Date $dh */
 $dh = Core::make('helper/date');
 
-if ($c->isEditMode() && $controller->isBlockEmpty()) {
+if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
     ?>
     <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Page List Block.') ?></div>
     <?php
@@ -104,7 +104,7 @@ if ($c->isEditMode() && $controller->isBlockEmpty()) {
                         ?>
                         <div class="ccm-block-page-list-page-entry-thumbnail">
                             <?php
-                            $img = Core::make('html/image', array($thumbnail));
+                            $img = Core::make('html/image', [$thumbnail]);
                             $tag = $img->getTag();
                             $tag->addClass('img-responsive');
                             echo $tag; ?>

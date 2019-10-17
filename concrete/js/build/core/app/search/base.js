@@ -76,11 +76,13 @@
 
 		my.$advancedSearchButton.html(advancedSearchText);
 
-		if (result.query && result.folder && result.folder.treeNodeTypeHandle !== 'search_preset') {
+		// Disabling the search input if we are in advanced search and not in a search preset
+		if (result.query && (!result.folder || (result.folder && result.folder.treeNodeTypeHandle !== 'search_preset'))) {
 			my.$headerSearch.find('div.btn-group').hide(); // hide any fancy button groups we've added here.
 			my.$headerSearchInput.prop('disabled', true);
 			my.$headerSearchInput.attr('placeholder', '');
 			my.$resetSearchButton.show();
+			
 		}
 	};
 
@@ -239,7 +241,7 @@
 			if (event.which == 3) {
 				my.handleMenuClick(event, $row);
 			} else {
-				if (!event.metaKey) {
+				if (!event.metaKey && !event.ctrlKey) {
 					$selected.removeClass('ccm-search-select-selected');
 				}
 				if (!$row.hasClass('ccm-search-select-selected')) {
@@ -303,7 +305,7 @@
 					});
 				}
 			}
-	
+
 			cs.setupResetButton(result);
 		}
 
@@ -401,6 +403,9 @@
 				modal: true,
 				title: ccmi18n.search,
 				onOpen: function() {
+                    $('div[data-component=search-field-selector]').concreteSearchFieldSelector({
+                        result: cs.result
+                    });
 					cs.setupSearch();
 				}
 			});
@@ -435,7 +440,32 @@
 			cs.ajaxUpdate($(this).attr('action'), data);
 			return false;
 		});
+		ConcreteEvent.unsubscribe('SavedPresetSubmit');
+		ConcreteEvent.subscribe('SavedPresetSubmit', function (e, data) {
+			cs.ajaxUpdate(data);
+			cs.$resetSearchButton.show();
+			cs.$headerSearch.find('div.btn-group').hide();
+			cs.$headerSearchInput.prop('disabled', true).val('');
+			cs.$headerSearchInput.attr('placeholder', '');
+		});
+		ConcreteEvent.unsubscribe('SavedSearchDeleted');
+		ConcreteEvent.subscribe('SavedSearchDeleted', function() {
+			$.fn.dialog.closeAll();
+			cs.$resetSearchButton.trigger('click');
+		});
 
+		ConcreteEvent.unsubscribe('SavedSearchUpdated');
+		ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
+			$.fn.dialog.closeAll();
+			if (data.preset && data.preset.actionURL) {
+				cs.ajaxUpdate(data.preset.actionURL);
+			}
+		});
+		ConcreteEvent.unsubscribe('SavedSearchCreated');
+		ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
+			cs.updateResults(data);
+
+		});
 		// NEW SEARCH
 		cs.$element.find('div[data-header] form').on('submit', function() {
 			var data = $(this).serializeArray();

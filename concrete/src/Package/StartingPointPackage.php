@@ -3,6 +3,7 @@ namespace Concrete\Core\Package;
 
 use AuthenticationType;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
@@ -28,10 +29,12 @@ use Doctrine\ORM\Tools\Setup;
 use Exception;
 use Group;
 use GroupTree;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use Package as BasePackage;
 use Page;
 use PermissionKey;
 use Throwable;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
@@ -409,12 +412,10 @@ class StartingPointPackage extends Package
 
     protected function install_api()
     {
-        $scopes = $this->app->make('config')->get('app.api.scopes');
+        $scopes = $this->app->make(ScopeRegistryInterface::class)->getScopes();
         $em = $this->app->make(EntityManager::class);
-        foreach($scopes as $scope) {
-            $s = new Scope();
-            $s->setIdentifier($scope);
-            $em->persist($s);
+        foreach ($scopes as $scope) {
+            $em->persist($scope);
             $em->flush();
         }
     }
@@ -683,7 +684,7 @@ class StartingPointPackage extends Package
             ]
         );
 
-        $home = Page::getByID(1, 'RECENT');
+        $home = Page::getByID(Page::getHomePageID(), 'RECENT');
         $home->assignPermissions($g1, ['view_page']);
         $home->assignPermissions(
             $g3,

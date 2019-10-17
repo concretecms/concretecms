@@ -81,7 +81,7 @@ class DefaultDispatcher implements DispatcherInterface
     private function validateUser()
     {
         // check to see if this is a valid user account
-        $user = new User();
+        $user = $this->app->make(User::class);
         if (!$user->checkLogin()) {
             $isActive = $user->isActive();
             $user->logout();
@@ -105,7 +105,6 @@ class DefaultDispatcher implements DispatcherInterface
 
     private function handleDispatch($request)
     {
-        $callDispatcher = false;
         try {
             $route = $this->router->matchRoute($request)->getRoute();
             $dispatcher = new RouteDispatcher($this->router, $route, []);
@@ -126,14 +125,10 @@ class DefaultDispatcher implements DispatcherInterface
             }
             return $stack->process($request);
         } catch (ResourceNotFoundException $e) {
-            $callDispatcher = true;
         } catch (MethodNotAllowedException $e) {
-            $callDispatcher = true;
         }
-        if ($callDispatcher) {
-            $c = \Page::getFromRequest($request);
-            $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
-        }
+        $c = \Page::getFromRequest($request);
+        $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
 
         return $response;
     }

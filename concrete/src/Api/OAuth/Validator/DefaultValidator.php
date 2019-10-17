@@ -37,6 +37,8 @@ class DefaultValidator implements AuthorizationValidatorInterface
         $user = $this->app->make(User::class);
 
         // Allow logged in users to bypass API authentication entirely if the route allows it
+        // This functionality is NOT READY. We will not allow this yet.
+        /*
         $route = $request->getAttribute('_route');
 
         if ($user->checkLogin()) {
@@ -49,6 +51,7 @@ class DefaultValidator implements AuthorizationValidatorInterface
 
             return $request;
         }
+        */
 
         // Delegate the rest to the passed in validator
         return $this->validator->validateAuthorization($request);

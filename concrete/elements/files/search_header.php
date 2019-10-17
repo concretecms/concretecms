@@ -12,6 +12,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /* @var int|null $imageMaxWidth */
 /* @var int|null $imageMaxHeight */
 /* @var int $jpegQuality */
+/* @var array $itemsPerPageOptions */
+/* @var int $itemsPerPage */
 ?>
 
 <div class="ccm-header-search-form ccm-ui" data-header="file-manager">
@@ -20,20 +22,33 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </div>
     <?php } ?>
 
-    <form method="get" action="<?php echo URL::to('/ccm/system/search/files/basic')?>">
+    <form method="get" class="form-inline" action="<?php echo URL::to('/ccm/system/search/files/basic')?>">
 
-        <div class="input-group">
+        <div class="ccm-header-search-form-input">
+            <a class="ccm-header-reset-search" href="#" data-button-action-url="<?=URL::to('/ccm/system/search/files/clear')?>" data-button-action="clear-search"><?=t('Reset Search')?></a>
+            <a class="ccm-header-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
+            <input type="text" class="form-control" autocomplete="off" name="fKeywords" placeholder="<?=t('Search')?>">
+        </div>
 
-            <div class="ccm-header-search-form-input">
-                <a class="ccm-header-reset-search" href="#" data-button-action-url="<?=URL::to('/ccm/system/search/files/clear')?>" data-button-action="clear-search"><?=t('Reset Search')?></a>
-                <a class="ccm-header-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
-                <input type="text" class="form-control" autocomplete="off" name="fKeywords" placeholder="<?=t('Search')?>">
+        <?php
+        if (!empty($itemsPerPageOptions)) { ?>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="selected-option"><?= $itemsPerPage; ?></span> <span class="caret"></span></button>
+                <ul class="dropdown-menu" data-action="<?= URL::to('/ccm/system/file/folder/contents'); ?>">
+                    <li class="dropdown-header"><?=t('Items per page')?></li>
+                    <?php foreach ($itemsPerPageOptions as $itemsPerPageOption) { ?>
+                        <li data-items-per-page="<?= $itemsPerPageOption; ?>" <?= ($itemsPerPageOption === $itemsPerPage) ? 'class="active"' : ''; ?>>
+                            <a href="#"><?= $itemsPerPageOption; ?></a>
+                        </li>
+                    <?php } ?>
+                </ul>
             </div>
+        <?php }
+        ?>
 
-            <span class="input-group-btn">
-                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
-              </span>
-        </div><!-- /input-group -->
+
+        <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
+
         <ul class="ccm-header-search-navigation-files ccm-header-search-navigation">
             <li><a data-launch-dialog="navigate-file-manager" href="#">
                     <i class="fa fa-share"></i> <?=t('Jump to Folder')?>
@@ -44,7 +59,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </ul>
     </form>
 </div>
-<div class="clearfix"></div>
 <div style="display: none">
     <div class="dialog-buttons"></div>
     <div data-dialog="add-file-manager-folder" class="ccm-ui">

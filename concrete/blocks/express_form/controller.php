@@ -260,11 +260,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     }
                 }
                 if (isset($e) && !$e->has()) {
-                    if ($this->areFormSubmissionsStored() && isset($values)) {
-                        $submittedAttributeValues = $values;
-                    } else {
-                        $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
-                    }
+                    $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
                     $notifier = $controller->getNotifier($this);
                     $notifications = $notifier->getNotificationList();
                     array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues,$key) {
@@ -278,7 +274,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $c = Page::getByID($this->redirectCID);
                         if (is_object($c) && !$c->isError()) {
                             $r = Redirect::page($c);
-                            $r->setTargetUrl($r->getTargetUrl() . '?form_success=1');
+                            $r->setTargetUrl($r->getTargetUrl() . '?form_success=1&entry=' . $entry->getID());
                         }
                     }
 

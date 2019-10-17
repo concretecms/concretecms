@@ -1,69 +1,81 @@
+# Global/default configuration
 dist: trusty
 language: php
 sudo: false
-
-php:
-- 7.2
-- 7.3
-- nightly
-env:
-  global:
-  - COMPOSER_DISABLE_XDEBUG_WARN=1
-  - PREFER_LOWEST=""
-  - DO_PHPUNIT=1
-  - DO_CS_PHP=0
-  - DO_CS_JS=0
-  - DO_BUILDASSETS=0
-
-matrix:
-  fast_finish: true
-  include:
-  - php: 7.2
-    env:
-    - DO_PHPUNIT=2
-    - ALLOW_FAILURE=1
-  - php: 7.2
-    env:
-    - DO_CS_PHP=1
-    - DO_PHPUNIT=0
-  - php: 7.2
-    env:
-    - PREFER_LOWEST="--prefer-lowest"
-  - language: node_js
-    dist: trusty
-    node_js: lts/*
-    env:
-    - DO_PHPUNIT=0
-    - DO_CS_JS=1
-    - DO_BUILDASSETS=1
-  allow_failures:
-  - php: nightly
-  - env: DO_PHPUNIT=2
-  - env: DO_BUILDASSETS=1
-
-before_script:
-- if test $DO_CS_JS -ne 0 || test $DO_BUILDASSETS -ne 0; then ./.travis/setup-build.sh; fi
-- if test $DO_PHPUNIT -ne 0 || test $DO_CS_PHP -ne 0; then ./.travis/composer-deps.sh; fi
-
-script:
-- if test $DO_CS_PHP -ne 0; then echo 'Testing PHP coding style'; composer phpcs; fi
-- if test $DO_CS_JS -ne 0; then echo 'Testing JS coding style'; pushd build && grunt js:check && popd; fi
-- if test $DO_PHPUNIT -eq 1; then echo 'Running tests'; composer test; fi
-- if test $DO_PHPUNIT -gt 1; then echo 'Running tests (with coverage)'; composer coverage; fi
-- if test $DO_BUILDASSETS -ne 0; then ./.travis/rebuild-assets.sh; fi
-
 cache:
-  yarn: true
+  npm: true
   directories:
-  - "$HOME/.composer/cache"
-  - build/node_modules
-
+    - $HOME/.composer/cache
+    - build/node_modules
 notifications:
   email: false
 
-after_script:
-- |
-  if test $DO_PHPUNIT -gt 1; then
-    wget https://scrutinizer-ci.com/ocular.phar
-    php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-  fi
+# Job list
+matrix:
+  fast_finish: true
+  allow_failures:
+    - name: Test with PHP nightly
+    - name: Test with PHP 7.4
+    - name: Check PHP coding style
+  include:
+
+    - name: Test with PHP 7.2 (with code coverage)
+      php: '7.2'
+      before_script:
+        - wget --tries=5 https://scrutinizer-ci.com/ocular.phar
+        - ./.travis/composer-deps.sh
+      script:
+        - phpdbg -qrr ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover
+      after_script:
+        - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+    - name: Check PHP coding style
+      php: '7.2'
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - ./.travis/check-php-coding-style.sh
+
+    - name: Check JS coding style
+      language: node_js
+      node_js: '10'
+      before_script:
+        - ./.travis/setup-build.sh
+      script:
+        - pushd build && grunt js:check && popd
+
+    - name: Rebuild JS assets
+      language: node_js
+      node_js: '10'
+      before_script:
+        - ./.travis/setup-build.sh
+      script:
+        - ./.travis/rebuild-assets.sh
+
+    - name: Test with PHP 7.2
+      php: '7.2'
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test
+
+    - name: Test with PHP 7.3
+      php: '7.3'
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test
+
+    - name: Test with PHP 7.4
+      php: 7.4snapshot
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test
+
+    - name: Test with PHP nightly
+      php: nightly
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test

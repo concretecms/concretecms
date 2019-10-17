@@ -7,7 +7,7 @@ use Concrete\Core\User\Group\GroupList;
 use Loader;
 use QueueableJob;
 use Group;
-use User;
+use Concrete\Core\User\User;
 
 class CheckAutomatedGroups extends QueueableJob
 {

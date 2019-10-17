@@ -203,24 +203,81 @@ abstract class PageCache implements FlushableInterface
     public function getCacheKey($mixed)
     {
         if ($mixed instanceof ConcretePage) {
-            $collectionPath = trim((string) $mixed->getCollectionPath(), '/');
+            $host = $this->getCacheHost($mixed);
+            if (empty($host)) {
+                // Default to the request host. This should only happen in case
+                // the canonical URL has not been set for the site that the page
+                // belongs to.
+                $host = Request::getInstance()->getHttpHost();
+            }
+
+            $collectionPath = (string) $mixed->getCollectionPath();
+
+            // Add the "extra" parts to the path that can be added to the URL
+            // because the page/page type controller can have request actions.
+            $ctrl = $mixed->getPageController();
+            if (is_object($ctrl) &&
+                !empty($action = $ctrl->getRequestAction())
+            ) {
+                $extra = [];
+                if ($action !== 'view') {
+                    $extra[] = $action;
+                }
+                $extra = array_merge(
+                    $extra,
+                    $ctrl->getRequestActionParameters()
+                );
+
+                if (count($extra) > 0) {
+                    $collectionPath .= '/' . implode('/', $extra);
+                }
+            }
+
+            $collectionPath = trim($collectionPath, '/');
             if ($collectionPath !== '') {
-                return urlencode($collectionPath);
+                return urlencode($host . '/' . $collectionPath);
             }
             $cID = $mixed->getCollectionID();
             if ($cID && $cID == ConcretePage::getHomePageID()) {
-                return '!' . $cID;
+                return urlencode($host) . '!' . $cID;
             }
         } elseif ($mixed instanceof Request) {
+            $host = $this->getCacheHost($mixed);
             $path = trim((string) $mixed->getPath(), '/');
             if ($path !== '') {
-                return urlencode($path);
+                return urlencode($host . '/' . $path);
             }
 
-            return '!' . ConcretePage::getHomePageID();
+            return urlencode($host) . '!' . ConcretePage::getHomePageID();
         } elseif ($mixed instanceof PageCacheRecord) {
             return $mixed->getCacheRecordKey();
         }
+    }
+
+    /**
+     * Get the host name under which the page or request belongs to.
+     *
+     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|mixed $mixed
+     *
+     * @return string|null Returns NULL if $mixed is not a recognized type, a string otherwise
+     */
+    public function getCacheHost($mixed)
+    {
+        if ($mixed instanceof ConcretePage) {
+            $site = $mixed->getSite();
+            if (is_object($site)) {
+                $host = $site->getSiteCanonicalURL();
+                if (!empty($host)) {
+                    $host = preg_replace('#^https?://#', '', $host);
+
+                    return $host;
+                }
+            }
+        } elseif ($mixed instanceof Request) {
+            return $mixed->getHttpHost();
+        }
+
+        return null;
     }
 
     /**

@@ -6,10 +6,12 @@ use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\TestHelpers\File\FileStorageTestCase;
+use Core;
 
 class FileListTest extends FileStorageTestCase
 {
@@ -69,7 +71,7 @@ class FileListTest extends FileStorageTestCase
 
         $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
-        $fi = new Importer();
+        $fi = Core::make(FileImporter::class);
 
         $files = [
             'sample1.txt' => $sample,
@@ -86,7 +88,7 @@ class FileListTest extends FileStorageTestCase
         ];
 
         foreach ($files as $filename => $pointer) {
-            $fi->import($pointer, $filename);
+            $fi->importLocalFile($pointer, $filename);
         }
     }
 
@@ -232,7 +234,7 @@ class FileListTest extends FileStorageTestCase
         // first lets make some more files.
         $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
-        $fi = new Importer();
+        $fi = Core::make(FileImporter::class);
 
         $files = [
             'another.txt' => $sample,
@@ -243,7 +245,7 @@ class FileListTest extends FileStorageTestCase
         ];
 
         foreach ($files as $filename => $pointer) {
-            $fi->import($pointer, $filename);
+            $fi->importLocalFile($pointer, $filename);
         }
 
         $nl = new \Concrete\Core\File\FileList();

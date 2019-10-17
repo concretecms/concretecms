@@ -1,10 +1,15 @@
 <?php
+
 namespace Concrete\Core\Permission;
 
+use Concrete\Core\Entity\Permission\IpAccessControlRange;
 use DateTime;
 use IPLib\Factory as IPFactory;
 use IPLib\Range\RangeInterface;
 
+/**
+ * @deprecated Use the methods of $app->make('failed_login')
+ */
 class IPRange
 {
     /**
@@ -73,6 +78,7 @@ class IPRange
 
     /**
      * @param array $row
+     * @param mixed $dateTimeFormat
      *
      * @return static
      */
@@ -83,6 +89,22 @@ class IPRange
         $result->ipRange = IPFactory::rangeFromBoundaries($row['lcirIpFrom'], $row['lcirIpTo']);
         $result->type = (int) $row['lcirType'];
         $result->expires = empty($row['lcirExpires']) ? null : DateTime::createFromFormat($dateTimeFormat, $row['lcirExpires']);
+
+        return $result;
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\Permission\IpAccessControlRange $range
+     *
+     * @return static
+     */
+    public static function createFromEntity(IpAccessControlRange $range)
+    {
+        $result = new static();
+        $result->id = $range->getIpAccessControlRangeID();
+        $result->ipRange = $range->getIpRange();
+        $result->type = $range->getType();
+        $result->expires = $range->getExpiration();
 
         return $result;
     }

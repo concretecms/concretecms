@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-ui" data-header="page-search">
+<div class="ccm-header-search-form ccm-ui" data-header="page-search">
     <?php if (isset($includeBreadcrumb) && $includeBreadcrumb) { ?>
         <div class="ccm-search-results-breadcrumb">
         </div>

@@ -6,6 +6,7 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Loader;
 
 /**
@@ -80,8 +81,9 @@ class Pile extends ConcreteObject
      */
     public static function create($name)
     {
+        $app = Application::getFacadeApplication();
         $db = Loader::db();
-        $u = new User();
+        $u = $app->make(User::class);
         $v = array($u->getUserID(), 0, $name, 'READY');
         $q = "insert into Piles (uID, isDefault, name, state) values (?, ?, ?, ?)";
         $r = $db->query($q, $v);
@@ -122,8 +124,9 @@ class Pile extends ConcreteObject
      */
     public static function getOrCreate($name)
     {
+        $app = Application::getFacadeApplication();
         $db = Loader::db();
-        $u = new User();
+        $u = $app->make(User::class);
         $v = array($name, $u->getUserID());
         $q = "select pID from Piles where name = ? and uID = ?";
         $pID = $db->getOne($q, $v);
@@ -180,9 +183,10 @@ class Pile extends ConcreteObject
      */
     public static function getDefault()
     {
+        $app = Application::getFacadeApplication();
         $db = Loader::db();
         // checks to see if we're registered, or if we're a visitor. Either way, we get a pile entry
-        $u = new User();
+        $u = $app->make(User::class);
         if ($u->isRegistered()) {
             $v = array($u->getUserID(), 1);
             $q = "select pID from Piles where uID = ? and isDefault = ?";
@@ -205,9 +209,10 @@ class Pile extends ConcreteObject
      */
     public static function createDefaultPile()
     {
+        $app = Application::getFacadeApplication();
         $db = Loader::db();
         // for the sake of data integrity, we're going to ensure that a general pile does not exist
-        $u = new User();
+        $u = $app->make(User::class);
         if ($u->isRegistered()) {
             $v = array($u->getUserID(), 1);
             $q = "select pID from Piles where uID = ? and isDefault = ?";
@@ -235,9 +240,10 @@ class Pile extends ConcreteObject
      */
     public static function getMyPiles()
     {
+        $app = Application::getFacadeApplication();
         $db = Loader::db();
 
-        $u = new User();
+        $u = $app->make(User::class);
         if ($u->isRegistered()) {
             $v = array($u->getUserID());
             $q = "select pID from Piles where uID = ? order by name asc";
@@ -259,7 +265,8 @@ class Pile extends ConcreteObject
      */
     public function isMyPile()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
 
         if ($u->isRegistered()) {
             return $this->getUserID() == $u->getUserID();

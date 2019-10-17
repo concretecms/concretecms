@@ -20,6 +20,6 @@ if (is_object($parent) && $parent->isError()) {
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
 	<?php endif; ?>
 	<div data-composer-field="name">
-		<?=$target->includeChooseTargetForm($control, $pagetype, $parent)?>
+		<?=$target->includeChooseTargetForm($control, $pagetype, isset($parent) ? $parent : null)?>
 	</div>
 </div>
