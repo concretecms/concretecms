@@ -1,15 +1,14 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
 
-use Concrete\Core\Attribute\AttributeKeyInterface;
 use CommunityTranslation\Notification\CategoryInterface;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Page;
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\StandardSetManager;
+use Concrete\Core\Page;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @var Concrete\Core\Url\UrlImmutable $action
@@ -82,7 +81,7 @@ if ($key !== null) {
                 <?= $form->label('asID', t('Set')) ?>
                 <div class="controls">
                     <?php
-                    $sel = array('0' => t('** None'));
+                    $sel = ['0' => t('** None')];
                     $sets = $category->getSetManager()->getAttributeSets();
                     foreach ($sets as $as) {
                         $sel[$as->getAttributeSetID()] = $as->getAttributeSetDisplayName();
@@ -140,7 +139,7 @@ if ($key !== null) {
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
         View::element(
             'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
-            array('key' => $key),
+            ['key' => $key],
             $category->getCategoryEntity()->getPackageID() ? $category->getCategoryEntity()->getPackageHandle() : null
         );
     }
