@@ -77,9 +77,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         $diff = $comparator->diffTable($fromTable, $toTable);
         if ($diff !== false) {
             $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
-            $arr = [];
             foreach ($sql as $q) {
-                $arr[] = $q;
                 $this->connection->exec($q);
             }
         }
@@ -152,9 +150,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         $diff = $comparator->diffTable($fromTable, $toTable);
         if ($diff !== false) {
             $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
-            $arr = [];
             foreach ($sql as $q) {
-                $arr[] = $q;
                 $this->connection->exec($q);
             }
         }
