@@ -1,68 +1,45 @@
 <?php
+
 namespace Concrete\Core\Attribute\Key\SearchIndexer;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
-use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Entity\Attribute\Value\Value;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Comparator;
-use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type;
 
 class StandardSearchIndexer implements SearchIndexerInterface
 {
+    /**
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
     protected $connection;
 
+    /**
+     * @var \Doctrine\DBAL\Schema\Comparator
+     */
     protected $comparator;
 
+    /**
+     * Initialize the instance.
+     *
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     * @param \Doctrine\DBAL\Schema\Comparator $comparator
+     */
     public function __construct(Connection $connection, Comparator $comparator)
     {
         $this->connection = $connection;
         $this->comparator = $comparator;
     }
 
-    protected function getIndexEntryColumn(Key $key, $subKey = false)
-    {
-        if ($subKey) {
-            $column = sprintf('ak_%s_%s', $key->getAttributeKeyHandle(), $subKey);
-        } else {
-            $column = sprintf('ak_%s', $key->getAttributeKeyHandle());
-        }
-
-        return $column;
-    }
-
-    /**
-     * For certain fields (eg TEXT) Doctrine uses the length of the longest column to determine what field type to use.
-     * For search indexing even if we may not currently have something long in a column,
-     * we need the longest possible column so that we don't truncate any data.
-     *
-     * @param array $options
-     *
-     * @return array
-     */
-    private function setTypeLength($options)
-    {
-        // If we have explicitly set a length, use it
-        if (isset($options['length']) && $options['length']) {
-            return $options;
-        }
-        if ($options['type']->getName() == 'text') {
-            $options['length'] = MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT + 1; // This forces Doctrine to use `LONGTEXT` instead of `TINYTEXT`
-        }
-
-        return $options;
-    }
-
     /**
      * Refresh the Search Index columns (if there are schema changes for example).
      *
-     * @param CategoryInterface $category
-     * @param AttributeKeyInterface $key
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
      */
     public function refreshSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key)
     {
@@ -73,7 +50,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
             $controller->getSearchIndexFieldDefinition() == false) {
             return false;
         }
-        
+
         $definition = $controller->getSearchIndexFieldDefinition();
         $sm = $this->connection->getSchemaManager();
         $fromTable = $sm->listTableDetails($category->getIndexedSearchTable());
@@ -109,19 +86,13 @@ class StandardSearchIndexer implements SearchIndexerInterface
     }
 
     /**
-     * @param StandardSearchIndexerInterface $category
-     * @param Key $key
-     * @param $previousHandle
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface::updateSearchIndexKeyColumns()
      */
     public function updateSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null)
     {
         $controller = $key->getController();
-        /*
-         * Added this for some backward compatibility reason – but it's obviously not
-         * right because it makes it so no search index columns get created.
-        if (!$previousHandle) {
-            $previousHandle = $key->getAttributeKeyHandle();
-        }*/
 
         if ($key->getAttributeKeyHandle() == $previousHandle ||
             $key->isAttributeKeySearchable() == false ||
@@ -190,9 +161,57 @@ class StandardSearchIndexer implements SearchIndexerInterface
     }
 
     /**
-     * @param StandardSearchIndexerInterface $category
-     * @param Value $value
-     * @param mixed $subject
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface::indexEntry()
+     */
+    public function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
+    {
+        $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
+
+        $attributeValue = $value->getSearchIndexValue();
+        $details = $category->getSearchIndexFieldDefinition();
+        $primary = $details['primary'][0];
+        $primaryValue = $category->getIndexedSearchPrimaryKeyValue($subject);
+        $columnValues = [];
+
+        $exists = $this->connection->query(
+            "select count({$primary}) from {$category->getIndexedSearchTable()} where {$primary} = {$primaryValue}"
+        )->fetchColumn();
+
+        if (is_array($attributeValue)) {
+            foreach ($attributeValue as $valueKey => $valueValue) {
+                $col = $this->getIndexEntryColumn($value->getAttributeKey(), $valueKey);
+                if (isset($columns[strtolower($col)])) {
+                    $columnValues[$col] = $valueValue;
+                }
+            }
+        } else {
+            $col = $this->getIndexEntryColumn($value->getAttributeKey());
+            if (isset($columns[strtolower($col)])) {
+                $columnValues[$col] = $attributeValue;
+            }
+        }
+
+        if (count($columnValues)) {
+            $primaries = [$primary => $primaryValue];
+
+            if ($exists) {
+                $this->connection->update(
+                    $category->getIndexedSearchTable(),
+                    $columnValues,
+                    $primaries
+                );
+            } else {
+                $this->connection->insert($category->getIndexedSearchTable(), $primaries + $columnValues);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface::clearIndexEntry()
      */
     public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
@@ -233,53 +252,45 @@ class StandardSearchIndexer implements SearchIndexerInterface
     }
 
     /**
-     * @param StandardSearchIndexerInterface $category
-     * @param Value $value
-     * @param mixed $subject
+     * Get the name of the column associated to an attribute key.
+     *
+     * @param \Concrete\Core\Entity\Attribute\Key\Key $key
+     * @param string|false $subKey the part of the name of a sub-field (if any - to be used for example if an attribute key needs multiple columns)
+     *
+     * @return string
      */
-    public function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
+    protected function getIndexEntryColumn(Key $key, $subKey = false)
     {
-        $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
-
-        $attributeValue = $value->getSearchIndexValue();
-        $details = $category->getSearchIndexFieldDefinition();
-        $primary = $details['primary'][0];
-        $primaryValue = $category->getIndexedSearchPrimaryKeyValue($subject);
-        $columnValues = [];
-
-        /**
-         * @var Statement
-         */
-        $exists = $this->connection->query(
-            "select count({$primary}) from {$category->getIndexedSearchTable()} where {$primary} = {$primaryValue}"
-        )->fetchColumn();
-
-        if (is_array($attributeValue)) {
-            foreach ($attributeValue as $valueKey => $valueValue) {
-                $col = $this->getIndexEntryColumn($value->getAttributeKey(), $valueKey);
-                if (isset($columns[strtolower($col)])) {
-                    $columnValues[$col] = $valueValue;
-                }
-            }
+        if ($subKey) {
+            $column = sprintf('ak_%s_%s', $key->getAttributeKeyHandle(), $subKey);
         } else {
-            $col = $this->getIndexEntryColumn($value->getAttributeKey());
-            if (isset($columns[strtolower($col)])) {
-                $columnValues[$col] = $attributeValue;
-            }
+            $column = sprintf('ak_%s', $key->getAttributeKeyHandle());
         }
 
-        if (count($columnValues)) {
-            $primaries = [$primary => $primaryValue];
+        return $column;
+    }
 
-            if ($exists) {
-                $this->connection->update(
-                    $category->getIndexedSearchTable(),
-                    $columnValues,
-                    $primaries
-                );
-            } else {
-                $this->connection->insert($category->getIndexedSearchTable(), $primaries + $columnValues);
-            }
+    /**
+     * Set the 'length' key of an array containing the column options.
+     *
+     * For certain fields (eg TEXT) Doctrine uses the length of the longest column to determine what field type to use.
+     * For search indexing even if we may not currently have something long in a column,
+     * we need the longest possible column so that we don't truncate any data.
+     *
+     * @param array $options
+     *
+     * @return array the $options argument, with the 'length' key set (if needed)
+     */
+    private function setTypeLength(array $options)
+    {
+        // If we have explicitly set a length, use it
+        if (isset($options['length']) && $options['length']) {
+            return $options;
         }
+        if ($options['type']->getName() == 'text') {
+            $options['length'] = MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT + 1; // This forces Doctrine to use `LONGTEXT` instead of `TINYTEXT`
+        }
+
+        return $options;
     }
 }
