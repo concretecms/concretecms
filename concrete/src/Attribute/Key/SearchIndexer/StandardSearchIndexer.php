@@ -5,10 +5,12 @@ namespace Concrete\Core\Attribute\Key\SearchIndexer;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 
 class StandardSearchIndexer implements SearchIndexerInterface
@@ -36,51 +38,14 @@ class StandardSearchIndexer implements SearchIndexerInterface
     }
 
     /**
-     * Refresh the Search Index columns (if there are schema changes for example).
+     * @deprecated use the updateRepositoryColumns() method, with TRUE as the fourth argument
      *
      * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
      * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
      */
     public function refreshSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key)
     {
-        $controller = $key->getController();
-
-        if ($key->isAttributeKeySearchable() == false ||
-            $category->getIndexedSearchTable() == false ||
-            $controller->getSearchIndexFieldDefinition() == false) {
-            return false;
-        }
-
-        $definition = $controller->getSearchIndexFieldDefinition();
-        $sm = $this->connection->getSchemaManager();
-        $fromTable = $sm->listTableDetails($category->getIndexedSearchTable());
-        $toTable = $sm->listTableDetails($category->getIndexedSearchTable());
-
-        if (isset($definition['type'])) {
-            $options = [
-                'type' => Type::getType($definition['type']),
-            ];
-            $options = array_merge($options, $definition['options']);
-            $options = $this->setTypeLength($options);
-            $toTable->changeColumn('ak_' . $key->getAttributeKeyHandle(), $options);
-        } else {
-            foreach ($definition as $name => $column) {
-                $options = [
-                    'type' => Type::getType($column['type']),
-                ];
-                $options = array_merge($options, $column['options']);
-                $options = $this->setTypeLength($options);
-                $toTable->changeColumn('ak_' . $key->getAttributeKeyHandle() . '_' . $name, $options);
-            }
-        }
-        $comparator = $this->comparator;
-        $diff = $comparator->diffTable($fromTable, $toTable);
-        if ($diff !== false) {
-            $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
-            foreach ($sql as $q) {
-                $this->connection->exec($q);
-            }
-        }
+        $this->updateSearchIndexKeyColumns($category, $key);
     }
 
     /**
@@ -90,64 +55,80 @@ class StandardSearchIndexer implements SearchIndexerInterface
      */
     public function updateSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null)
     {
-        $controller = $key->getController();
-
-        if ($key->getAttributeKeyHandle() == $previousHandle ||
-            $key->isAttributeKeySearchable() == false ||
-            $category->getIndexedSearchTable() == false ||
-            $controller->getSearchIndexFieldDefinition() == false) {
+        $indexTable = $category instanceof StandardSearchIndexerInterface || method_exists($category, 'getIndexedSearchTable') ? (string) $category->getIndexedSearchTable() : '';
+        if ($indexTable === '') {
+            // The attribute category doesn't support the indexing feature
             return false;
         }
 
-        $fields = [];
-        $dropColumns = [];
+        $controller = $key->getController();
+
         $definition = $controller->getSearchIndexFieldDefinition();
+        if (!$definition) {
+            // The attribute type doesn't support the indexing feature
+            return false;
+        }
+
+        $dropColumns = [];
+        if (((string) $previousHandle !== '' && $key->getAttributeKeyHandle() !== $previousHandle)) {
+            // The handle of the attribute key changed: we need to drop the previous columns
+            if (isset($definition['type'])) {
+                $dropColumns[] = $this->getIndexEntryColumnName($previousHandle);
+            } else {
+                foreach (array_keys($definition) as $name) {
+                    $dropColumns[] = $this->getIndexEntryColumnName($previousHandle, $name);
+                }
+            }
+        } elseif (!$key->isAttributeKeySearchable()) {
+            // The attribute key is (no more) searchable: we need to drop the previous columns
+            if (isset($definition['type'])) {
+                $dropColumns[] = $this->getIndexEntryColumnName($key->getAttributeKeyHandle());
+            } else {
+                foreach (array_keys($definition) as $name) {
+                    $dropColumns[] = $this->getIndexEntryColumnName($key->getAttributeKeyHandle(), $name);
+                }
+            }
+        }
+
+        if (!$key->isAttributeKeySearchable() && $dropColumns === []) {
+            // Nothing needs to be done/checked
+            return false;
+        }
 
         $sm = $this->connection->getSchemaManager();
-        $toTable = $sm->listTableDetails($category->getIndexedSearchTable());
+        $fromTable = $sm->listTableDetails($indexTable);
+        $toTable = clone $fromTable;
 
-        if ($previousHandle) {
+        array_walk(
+            $dropColumns,
+            function ($columnName) use ($toTable) {
+                if ($toTable->hasColumn($columnName)) {
+                    $toTable->dropColumn($columnName);
+                }
+            }
+        );
+
+        if ($key->isAttributeKeySearchable()) {
             if (isset($definition['type'])) {
-                $dropColumns[] = 'ak_' . $previousHandle;
+                $this->processColumn(
+                    $toTable,
+                    $this->getIndexEntryColumnName($key->getAttributeKeyHandle()),
+                    $definition['type'],
+                    isset($definition['options']) ? $definition['options'] : []
+                );
             } else {
                 foreach ($definition as $name => $column) {
-                    $dropColumns[] = 'ak_' . $previousHandle . '_' . $name;
+                    $this->processColumn(
+                        $toTable,
+                        $this->getIndexEntryColumnName($key->getAttributeKeyHandle(), $name),
+                        $column['type'],
+                        isset($column['options']) ? $column['options'] : []
+                    );
                 }
             }
         }
 
-        if (isset($definition['type'])) {
-            if (!$toTable->hasColumn('ak_' . $key->getAttributeKeyHandle())) {
-                $fields[] = [
-                    'name' => 'ak_' . $key->getAttributeKeyHandle(),
-                    'type' => $definition['type'],
-                    'options' => $definition['options'],
-                ];
-            }
-        } else {
-            foreach ($definition as $name => $column) {
-                if (!$toTable->hasColumn('ak_' . $key->getAttributeKeyHandle() . '_' . $name)) {
-                    $fields[] = [
-                        'name' => 'ak_' . $key->getAttributeKeyHandle() . '_' . $name,
-                        'type' => $column['type'],
-                        'options' => $column['options'],
-                    ];
-                }
-            }
-        }
-
-        $fromTable = $sm->listTableDetails($category->getIndexedSearchTable());
-        $parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser();
-        $comparator = $this->comparator;
-
-        if ($previousHandle != false) {
-            foreach ($dropColumns as $column) {
-                $toTable->dropColumn($column);
-            }
-        }
-
-        $toTable = $parser->addColumns($toTable, $fields);
-        $diff = $comparator->diffTable($fromTable, $toTable);
+        $diff = $this->comparator->diffTable($fromTable, $toTable);
         if ($diff !== false) {
             $sql = $this->connection->getDatabasePlatform()->getAlterTableSQL($diff);
             foreach ($sql as $q) {
@@ -250,20 +231,27 @@ class StandardSearchIndexer implements SearchIndexerInterface
     /**
      * Get the name of the column associated to an attribute key.
      *
+     * @param string $attributeKeyHandle the handle of the attribute key
+     * @param string $subKey the part of the name of a sub-field (if any - to be used for example if an attribute key needs multiple columns)
+     *
+     * @return string
+     */
+    protected function getIndexEntryColumnName($attributeKeyHandle, $subKey = '')
+    {
+        return (string) $subKey === '' ? "ak_{$attributeKeyHandle}" : "ak_{$attributeKeyHandle}_{$subKey}";
+    }
+
+    /**
+     * @deprecated use the getIndexEntryColumnName() method
+     *
      * @param \Concrete\Core\Entity\Attribute\Key\Key $key
-     * @param string|false $subKey the part of the name of a sub-field (if any - to be used for example if an attribute key needs multiple columns)
+     * @param string|false $subKey
      *
      * @return string
      */
     protected function getIndexEntryColumn(Key $key, $subKey = false)
     {
-        if ($subKey) {
-            $column = sprintf('ak_%s_%s', $key->getAttributeKeyHandle(), $subKey);
-        } else {
-            $column = sprintf('ak_%s', $key->getAttributeKeyHandle());
-        }
-
-        return $column;
+        return $this->getIndexEntryColumnName($key->getAttributeKeyHandle(), (string) $subKey);
     }
 
     /**
@@ -288,5 +276,27 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
 
         return $options;
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Schema\Table $toTable
+     * @param string $columnName
+     * @param string $typeName
+     * @param array $options
+     */
+    private function processColumn(Table $toTable, $columnName, $typeName, array $options)
+    {
+        if ($toTable->hasColumn($columnName)) {
+            $toTable->changeColumn(
+                $columnName,
+                $this->setTypeLength($options + ['type' => Type::getType($typeName)])
+            );
+        } else {
+            $toTable->addColumn(
+                $columnName,
+                $typeName,
+                $options
+            );
+        }
     }
 }
