@@ -107,6 +107,28 @@ if ($key !== null) {
                 <label>
                     <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable()) ?>
                     <?= t('Field available in advanced search.') ?>
+                    <?php
+                    if ($key && $key->isAttributeKeySearchable()) {
+                        ?>
+                        <div class="alert alert-danger small hide" id="akIsSearchable-warning">
+                            <?= t(
+                                'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
+                                '<strong>' . t('Index Search Engine - All') . '</strong>'
+                            ) ?>
+                        </div>
+                        <script>
+                        $(document).ready(function() {
+                            $('#akIsSearchable')
+                                .on('change', function() {
+                                    $('#akIsSearchable-warning').toggleClass('hide', $(this).is(':checked'))
+                                })
+                                .trigger('change')
+                            ;
+                        });
+                        </script>
+                        <?php
+                    }
+                    ?>
                 </label>
             </div>
         </div>
