@@ -68,12 +68,12 @@
           }
 
           p.ccm-panel-page-versions-description {
-            font-size: 12px;
+            font-size: $font-size-sm;
           }
 
           div.ccm-panel-page-versions-more-info {
             display: none;
-            font-size: 12px;
+            font-size: $font-size-sm;
           }
         }
 
@@ -167,7 +167,6 @@
     user-select: none;
     width: 100%;
     th, td {
-      font-size: 13px;
       padding-left: 16px;
       padding-bottom: 16px;
       padding-top: 16px;

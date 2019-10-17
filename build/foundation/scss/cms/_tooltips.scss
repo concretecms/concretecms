@@ -24,8 +24,8 @@ div#ccm-tooltip-holder {
 }
 
 div.tooltip-inner {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: $font-size-sm;
+  line-height: $line-height-sm;
   font-weight: 300;
   padding: 7px 10px;
   max-width: 250px;

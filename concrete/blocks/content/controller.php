@@ -69,14 +69,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
         return $str;
     }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        if (preg_match('/data-concrete5-link-lightbox/i', $outputContent)) {
-            $this->requireAsset('core/lightbox');
-        }
-    }
-
+    
     public function view()
     {
         $this->set('content', $this->getContent());

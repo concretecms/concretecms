@@ -646,13 +646,6 @@ return [
             ['javascript-localized', '/ccm/assets/localization/conversations/js'],
             ['css', 'css/conversations.css'],
         ],
-        'core/lightbox' => [
-            ['javascript', 'js/jquery-magnific-popup.js'],
-            ['css', 'css/jquery-magnific-popup.css'],
-        ],
-        'core/lightbox/launcher' => [
-            ['javascript', 'js/lightbox.js'],
-        ],
         'core/account' => [
             ['javascript', 'js/account.js'],
             ['css', 'css/account.css'],

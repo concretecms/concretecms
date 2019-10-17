@@ -270,12 +270,7 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-magnific-popup.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-magnific-popup/jquery-magnific-popup.js'
         },
-
-        core_lightbox: {
-            dest: '<%= DIR_BASE %>/concrete/js/lightbox.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/core/lightbox.js'
-        },
-
+        
         spectrum: {
             dest: '<%= DIR_BASE %>/concrete/js/spectrum.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/spectrum/spectrum.js'

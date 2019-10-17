@@ -8,7 +8,7 @@ div#ccm-dashboard-content {
         li {
           float: left;
           margin-right: 20px;
-          font-size: 1.2em;
+          font-size: $font-size-lg;
           font-weight: bold;
 
           a {
@@ -98,20 +98,6 @@ div#ccm-dashboard-content {
         position: absolute;
       }
 
-      /*
-      a.ccm-marketplace-search-advanced {
-        top: 15px;
-        right: 15px;
-        color: #b7cadd;
-        position: absolute;
-        font-size: 0.9em;
-
-        &:hover {
-          color: #09f;
-          text-decoration: none;
-        }
-      }
-      */
     }
   }
 

@@ -72,7 +72,6 @@ div.ccm-dashboard-welcome {
       position: absolute;
       bottom: -50px;
       right: -80px;
-      font-size: 14px;
       background-color: rgba(255,255,255,0.9);
       border-left: 10px solid rgba(255,255,255,0.9);
       border-top: 10px solid rgba(255,255,255,0.9);
@@ -92,7 +91,7 @@ div.ccm-dashboard-welcome {
     padding-top: 10px;
     padding-bottom: 10px;
     -webkit-box-shadow: inset 0px 20px 20px 0px rgba(0,0,0,0.3), inset 0px -5px 10px 0px rgba(0,0,0,0.3);
-    font-size: 12px;
+    font-size: $font-size-sm;
 
     margin-bottom: 40px;
 

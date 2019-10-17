@@ -18215,7 +18215,7 @@ div.ccm-conversation-message-form .redactor-editor {
 }
 
 .cnv-admin-pane a.dropdown-toggle {
-  font-size: 10px;
+  font-size: 0.875rem;
 }
 
 .cnv-admin-pane ul.dropdown-menu {
@@ -18618,12 +18618,10 @@ ul.ccm-discussion-topics li div.ccm-discussion-topic-replies {
   height: 62px;
   width: 62px;
   text-align: center;
-  font-size: 0.9em;
   color: #999;
 }
 
 ul.ccm-discussion-topics li div.ccm-discussion-topic-replies em {
-  font-size: 1.6em;
   font-style: normal;
   display: block;
   line-height: 1em;
@@ -18636,8 +18634,6 @@ ul.ccm-discussion-topics li div.ccm-discussion-topic-details {
 }
 
 ul.ccm-discussion-topics h3 {
-  font-size: 1.4em;
-  line-height: 1.4em;
   margin-bottom: 2px;
 }
 
@@ -19356,7 +19352,7 @@ div#ccm-toolbar.titles .spinner {
 }
 
 div#ccm-toolbar.large-font li > a {
-  font-size: 20px !important;
+  font-size: 1.25rem !important;
   padding: 10px 16px;
 }
 
@@ -19384,7 +19380,6 @@ div#ccm-toolbar > ul > li > a {
           box-sizing: border-box;
   text-align: center;
   position: relative;
-  font-size: 14px;
   color: #999;
   border-right: 1px solid #ccc;
   border-left: 1px solid #ccc;
@@ -19435,7 +19430,6 @@ div#ccm-toolbar > ul > li > a .double-bounce2 {
 }
 
 div#ccm-toolbar > ul > li > a i {
-  font-size: 14px;
   -webkit-transition: opacity cubic-bezier(0.355, 0, 1, 0.035) 0.5s;
   transition: opacity cubic-bezier(0.355, 0, 1, 0.035) 0.5s;
 }
@@ -19524,8 +19518,8 @@ div#ccm-toolbar > ul li.ccm-toolbar-page-edit-mode-pinned a:hover {
 
 div#ccm-toolbar > ul > li#ccm-white-label-message {
   color: #ccc;
-  font-size: 11px;
-  line-height: 11px;
+  font-size: 0.875rem;
+  line-height: 1.5;
   padding: 18px 24px 0px 24px;
   height: 30px;
   border-right: 0px !important;
@@ -19664,7 +19658,7 @@ div#ccm-toolbar-disabled {
 }
 
 .ccm-toolbar-mobile-menu-button i {
-  font-size: 23px;
+  font-size: 1.25rem;
 }
 
 .ccm-toolbar-mobile-menu-button:hover,
@@ -19737,7 +19731,6 @@ div#ccm-toolbar-disabled {
   color: #4674a1;
   padding: 12px 5px;
   font-weight: normal;
-  font-size: 13px;
   background: none;
 }
 
@@ -19749,29 +19742,18 @@ div#ccm-toolbar-disabled {
 .ccm-mobile-menu-overlay .ccm-mobile-menu-entries li i.fa-caret-up {
   color: #4674a1;
   cursor: pointer;
-  font-size: 14px;
   padding: 14px 17px;
 }
 
 .ccm-mobile-menu-overlay .ccm-mobile-menu-entries li i.mobile-leading-icon {
   display: inline-block !important;
   color: #CAC9C9;
-  font-size: 17px;
   min-width: 30px;
   text-align: center;
 }
 
-.ccm-mobile-menu-overlay .ccm-mobile-menu-entries li i.mobile-leading-icon.fa-th-large {
-  font-size: 16px;
-}
-
-.ccm-mobile-menu-overlay .ccm-mobile-menu-entries li i.mobile-leading-icon.fa-cog {
-  font-size: 19px;
-}
-
 .ccm-mobile-menu-overlay .ccm-mobile-menu-entries li a {
   color: #4674a1;
-  font-size: 18px;
   display: inline-block;
   padding: 8px 5% 8px 15px;
   height: 100%;
@@ -19847,16 +19829,16 @@ div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module h1 
   padding: 0px;
   text-align: left;
   border-bottom: 1px solid #e3e4e4;
-  font-size: 12px;
+  font-size: 0.875rem;
   font-weight: normal;
   color: #09f;
-  line-height: 14px;
+  line-height: 1.5;
 }
 
 div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module ul {
   margin-left: 0px;
   margin-bottom: 0px !important;
-  font-size: 13px;
+  font-size: 0.875rem;
   margin-top: 3px !important;
   padding: 0px;
 }
@@ -19872,7 +19854,7 @@ div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module.ccm
 
 div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .loader {
   display: block;
-  font-size: 20px;
+  font-size: 1.25rem;
   position: relative;
   width: 4em;
   height: 1em;
@@ -20064,7 +20046,7 @@ div.ui-dialog .ui-dialog-title {
 
 div.ui-dialog .ui-dialog-titlebar {
   padding: 0px 0px 5px 0px;
-  font-size: 24px;
+  font-size: 1.25rem;
   border: 0px;
   -webkit-font-smoothing: antialiased;
   background-image: none;
@@ -20083,8 +20065,6 @@ div.ui-dialog .ui-dialog-titlebar a {
   border: 0px !important;
   opacity: 1;
   position: absolute;
-  font-size: 18px;
-  line-height: 18px;
   overflow: hidden;
 }
 
@@ -20374,7 +20354,6 @@ div.ccm-panel-content section {
 }
 
 div.ccm-panel-content header {
-  font-size: 16px;
   padding: 15px 15px 15px 40px;
   margin-bottom: 10px;
   font-weight: 500;
@@ -20382,7 +20361,7 @@ div.ccm-panel-content header {
 
 div.ccm-panel-content header aside {
   float: right;
-  font-size: 11px;
+  font-size: 0.875rem;
   font-weight: lighter;
   margin-top: 4px;
 }
@@ -20417,7 +20396,6 @@ div.ccm-panel-content ul.nav li a,
 div.ccm-panel-content menu li a {
   display: block;
   text-decoration: none;
-  font-size: 14px;
   font-weight: 500;
   padding: 5px 21px 5px 21px;
   border-radius: 4px;
@@ -20594,7 +20572,7 @@ div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item 
 div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item div.block-name {
   border-top: solid 1px #07080a;
   background: #0f1825;
-  font-size: 13px;
+  font-size: 0.875rem;
   padding-left: 40px;
   padding-right: 40px;
   padding-bottom: 16px;
@@ -21004,7 +20982,7 @@ div.ccm-panel-content.ccm-panel-content-visible {
 
 a.ccm-panel-back,
 a.ccm-panel-back:hover {
-  font-size: 12px;
+  font-size: 0.875rem;
   text-decoration: none;
   margin-right: 4px;
 }
@@ -21061,7 +21039,7 @@ div.ccm-panel-detail-content section {
 }
 
 div.ccm-panel-detail header {
-  font-size: 22px;
+  font-size: 1.25rem;
   margin: -40px -40px 30px -95px;
   padding: 39px 80px 39px 95px;
   font-weight: 300;
@@ -21360,8 +21338,6 @@ div.ccm-panel-header-accordion nav li > a,
 div.ccm-panel-header-accordion nav span {
   display: block;
   position: relative;
-  line-height: 15px;
-  font-size: 15px;
   padding: 18px 15px 18px 40px;
   font-weight: normal;
   text-decoration: none;
@@ -21440,7 +21416,7 @@ div.ccm-panel-header-accordion-dropdown-visible nav span:after {
 
 .ccm-panel .list-group a.list-group-item-collapse {
   padding-left: 45px;
-  font-size: 12px;
+  font-size: 0.875rem;
   position: relative;
 }
 
@@ -21659,7 +21635,6 @@ div.preview-frame-container div.cover {
   top: 0;
   width: 100%;
   height: 100%;
-  font-size: 20px;
   background: rgba(0, 0, 0, 0.5);
   color: #cccccc;
   min-height: 600px;
@@ -21850,8 +21825,8 @@ div#ccm-panel-add-block div.ccm-panel-add-block-set {
 }
 
 div#ccm-panel-add-block div.ccm-panel-add-block-set header {
-  font-size: 13px;
-  line-height: 13px;
+  font-size: 0.875rem;
+  line-height: 1.5;
   padding: 0px;
   border-top: 1px solid #474645;
   padding-top: 5px;
@@ -21963,8 +21938,8 @@ a.ccm-panel-add-block-draggable-block-type span {
   display: block;
   color: #8f969a;
   background-color: #000;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 0.875rem;
+  line-height: 1.5;
   padding-left: 2px;
   padding-right: 2px;
   padding-top: 6px;
@@ -22048,7 +22023,6 @@ div.ccm-menu-page-attributes-set ul li {
 div.ccm-menu-page-attributes-set ul li a {
   display: block;
   padding: 10px 20px 10px 20px;
-  font-size: 15px;
   border-radius: 4px;
   -webkit-transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
@@ -22326,7 +22300,7 @@ div#ccm-panel-check-in div.ccm-panel-check-in-publish div#ccm-check-in-schedule-
 }
 
 div#ccm-panel-check-in div.ccm-panel-check-in-publish div#ccm-check-in-schedule-wrapper .timezone {
-  font-size: 11px;
+  font-size: 0.875rem;
   color: #676767;
   display: block;
   margin: 4px 0 10px 0;
@@ -22728,7 +22702,6 @@ div.ccm-menu-device-set .ccm-panel-devicelist-device > a {
   background-color: #272a2e;
   display: block;
   padding: 10px 20px 10px 20px;
-  font-size: 15px;
   border-radius: 4px;
   -webkit-transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
@@ -22780,7 +22753,7 @@ div.ccm-menu-device-set ul li {
 
 .ccm-panel-device-resolution {
   font-weight: 300;
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 
 div#ccm-panel-multilingual {
@@ -22789,7 +22762,6 @@ div#ccm-panel-multilingual {
 
 div#ccm-panel-multilingual h5 {
   border-bottom: 1px solid #c0dcf2;
-  font-size: 15px;
   padding-bottom: 5px;
   font-weight: 300;
 }
@@ -22841,7 +22813,6 @@ div#ccm-panel-sitemap {
 
 div#ccm-panel-sitemap h5 {
   border-bottom: 1px solid #c0dcf2;
-  font-size: 15px;
   padding-bottom: 5px;
   font-weight: 300;
 }
@@ -22860,8 +22831,6 @@ div#ccm-panel-sitemap ul.ccm-panel-sitemap-list li {
 div#ccm-panel-sitemap ul.ccm-panel-sitemap-list li a {
   color: #7097b4;
   display: block;
-  font-size: 13px;
-  line-height: 16px;
   border-radius: 2px;
   padding: 2px 5px 2px 5px;
 }
@@ -22989,12 +22958,12 @@ div#ccm-panel-sitemap #ccm-sitemap-panel-sitemap ul.fancytree-container {
 }
 
 #ccm-panel-page #ccm-panel-page-versions table tbody td p.ccm-panel-page-versions-description {
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 
 #ccm-panel-page #ccm-panel-page-versions table tbody td div.ccm-panel-page-versions-more-info {
   display: none;
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 
 #ccm-panel-page #ccm-panel-page-versions table tbody tr.ccm-panel-page-versions-hover td {
@@ -23069,7 +23038,6 @@ div#ccm-panel-sitemap #ccm-sitemap-panel-sitemap ul.fancytree-container {
 
 #ccm-panel-page-versions table th,
 #ccm-panel-page-versions table td {
-  font-size: 13px;
   padding-left: 16px;
   padding-bottom: 16px;
   padding-top: 16px;
@@ -23507,7 +23475,6 @@ ul.ccm-edit-mode-inline-commands li a i {
   position: absolute;
   top: 3px;
   left: 3px;
-  font-size: 14px !important;
   vertical-align: middle;
 }
 
@@ -23571,7 +23538,7 @@ ul.ccm-edit-mode-inline-commands:hover {
 #ccm-popover-menu-container div.popover ul.dropdown-menu li {
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
-  font-size: 14px !important;
+  font-size: 1rem !important;
   line-height: 1.5 !important;
 }
 
@@ -23642,8 +23609,6 @@ div.ccm-area[data-total-blocks="0"] div.ccm-area-drag-area {
   text-indent: 0;
   text-align: center;
   padding: 18px;
-  font-size: 14px;
-  line-height: 14px;
   color: #bbb;
 }
 
@@ -23723,13 +23688,13 @@ div.ccm-block-edit > div.ccm-block-cover {
   display: table-cell;
   border-right: 1px solid #e1e1e1;
   vertical-align: middle;
-  font-size: 15px !important;
+  font-size: 1rem !important;
   background: #fff;
   /* spinner */
 }
 
 .ccm-inline-toolbar > li label {
-  font-size: 12px;
+  font-size: 0.875rem;
   display: inline;
   margin: 0px 0px 8px 0px;
 }
@@ -23755,7 +23720,7 @@ div.ccm-block-edit > div.ccm-block-cover {
 .ccm-inline-toolbar > li select,
 .ccm-inline-toolbar > li input[type=text] {
   border: 0px;
-  font-size: 12px;
+  font-size: 0.875rem;
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
   -webkit-appearance: none;
@@ -23763,7 +23728,7 @@ div.ccm-block-edit > div.ccm-block-cover {
   display: inline-block;
   padding: 0px;
   margin: 0px;
-  line-height: 15px;
+  line-height: 1.5;
   height: auto;
   outline: none !important;
   border-radius: 0;
@@ -23822,7 +23787,7 @@ div.ccm-block-edit > div.ccm-block-cover {
 }
 
 .ccm-inline-toolbar > li.ccm-inline-toolbar-icon-cell > a i {
-  font-size: 14px;
+  font-size: 0.875rem;
   display: inline-block;
   line-height: 33px;
 }
@@ -23853,7 +23818,7 @@ div.ccm-block-edit > div.ccm-block-cover {
   text-align: center;
   padding: 0px 20px 0px 20px;
   display: inline-block;
-  font-size: 12px;
+  font-size: 0.875rem;
   color: #333;
   border: 0px;
   width: 100%;
@@ -23983,7 +23948,7 @@ div.ccm-block-edit > div.ccm-block-cover {
   float: left;
   color: #8f969a !important;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 0.875rem;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-transform: capitalize;
 }
@@ -24003,7 +23968,7 @@ div.ccm-block-edit > div.ccm-block-cover {
   float: right;
   color: #8f969a !important;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 0.875rem;
   border: none !important;
   text-shadow: none !important;
   background-color: transparent !important;
@@ -24159,7 +24124,7 @@ div.ccm-block-edit > div.ccm-block-cover {
 .ccm-ui div.dropdown-menu.ccm-inline-design-dropdown-menu input[type="text"] {
   border-radius: 3px;
   padding: 5px 10px;
-  font-size: 13px;
+  font-size: 0.875rem;
   font-weight: 200;
   margin-top: 5px;
   margin-bottom: 15px;
@@ -24212,7 +24177,7 @@ div.ccm-block-edit > div.ccm-block-cover {
 
 .ccm-ui div.dropdown-menu.ccm-inline-design-dropdown-menu h3 {
   font-weight: bold;
-  font-size: 13px;
+  font-size: 0.875rem;
   color: #fff;
   margin: 0px 0px 20px 0px;
 }
@@ -24307,189 +24272,6 @@ div.ccm-area-layout-control-bar i {
   position: absolute;
   top: -2px;
   left: -2px;
-}
-
-div#ccm-intelligent-search-results {
-  text-align: left;
-  padding: 0px 0px 0px 40px;
-  z-index: 1200;
-  position: fixed;
-  background-color: #fff;
-  display: none;
-  top: 48px;
-  right: 120px;
-  width: 251px;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-bottom-left-radius: 4px;
-  border-bototm-right-radius: 4px;
-}
-
-div#ccm-intelligent-search-results span {
-  display: none;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module-offsite {
-  display: block;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module-onsite {
-  display: none;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module {
-  margin-top: -1px;
-  position: relative;
-  min-height: 60px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module h1 {
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  border-bottom: 1px solid #e3e4e4;
-  font-size: 12px;
-  font-weight: normal;
-  color: #09f;
-  line-height: 14px;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module ul {
-  margin-left: 0px;
-  margin-bottom: 0px !important;
-  font-size: 13px;
-  margin-top: 3px !important;
-  padding: 0px;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module li {
-  list-style-type: none;
-  margin-left: -15px;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module.ccm-intelligent-search-results-module-loaded .loader {
-  display: none;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .loader {
-  display: block;
-  font-size: 20px;
-  position: relative;
-  width: 4em;
-  height: 1em;
-  margin: 20px 0px 20px 0px;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot {
-  width: 0.4em;
-  height: 0.4em;
-  border-radius: 0.25em;
-  background: #09f;
-  position: absolute;
-  animation-duration: 0.5s;
-  animation-timing-function: ease;
-  animation-iteration-count: infinite;
-  -webkit-animation-duration: 0.5s;
-  -webkit-animation-timing-function: ease;
-  -webkit-animation-iteration-count: infinite;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot1,
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot2 {
-  left: 0;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot3 {
-  left: 1.5em;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot4 {
-  left: 3em;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot1 {
-  animation-name: loader-reveal;
-  -webkit-animation-name: loader-reveal;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot2,
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot3 {
-  animation-name: loader-slide;
-  -webkit-animation-name: loader-slide;
-}
-
-div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module .dot4 {
-  animation-name: loader-reveal;
-  animation-direction: reverse;
-  /* thx @HugoGiraudel */
-  -webkit-animation-name: loader-reveal;
-  -webkit-animation-direction: reverse;
-  /* thx @HugoGiraudel */
-}
-
-div#ccm-intelligent-search-results ul#ccm-intelligent-search-results-list-marketplace li a img {
-  float: left;
-  margin-right: 8px;
-  margin-top: 1px;
-  width: 16px;
-  height: 16px;
-}
-
-div#ccm-intelligent-search-results li a {
-  display: block;
-  border-color: transparent;
-  color: #888;
-  padding: 1px 15px 1px 15px;
-  text-decoration: none;
-}
-
-div#ccm-intelligent-search-results li oncfrete a:hover {
-  text-decoration: none;
-  color: #369;
-}
-
-div#ccm-intelligent-search-results li a.ccm-intelligent-search-result-selected {
-  color: #369;
-}
-
-@keyframes loader-reveal {
-  from {
-    transform: scale(0.001);
-    -webkit-transform: scale(0.001);
-  }
-
-  to {
-    -webkit-transform: scale(1);
-  }
-}
-
-@keyframes loader-slide {
-  to {
-    transform: translateX(1.5em);
-    -webkit-transform: translateX(1.5 em);
-  }
-}
-
-@-webkit-keyframes loader-reveal {
-  from {
-    transform: scale(0.001);
-    -webkit-transform: scale(0.001);
-  }
-
-  to {
-    transform: scale(1);
-    -webkit-transform: scale(1);
-  }
-}
-
-@-webkit-keyframes loader-slide {
-  to {
-    transform: translateX(1.5em);
-    -webkit-transform: translateX(1.5em);
-  }
 }
 
 div.ccm-style-customizer-palette {
@@ -24675,9 +24457,9 @@ div.ccm-notification-help-launcher a:focus {
 div.ccm-notification-help-launcher i {
   margin-left: 9px;
   vertical-align: middle;
-  font-size: 26px;
+  font-size: 1.25rem;
   font-weight: normal;
-  line-height: 40px;
+  line-height: 1.5;
 }
 
 div.ccm-notification-help {
@@ -24718,7 +24500,6 @@ div.ccm-notification-help {
 }
 
 div.ccm-notification-help i.ccm-notification-icon {
-  font-size: 16px;
   position: absolute;
   top: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -24788,7 +24569,6 @@ div.ccm-notification-help div.ccm-notification-actions a:hover {
 }
 
 .ccm-notification div.ui-pnotify-icon {
-  font-size: 16px;
   position: absolute;
   top: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -24801,7 +24581,6 @@ div.ccm-notification-help div.ccm-notification-actions a:hover {
 }
 
 .ccm-notification h4.ui-pnotify-title {
-  font-size: 1.2rem;
   font-weight: 300;
   margin: 0px 0px 10px 70px;
   padding: 0px;
@@ -24882,147 +24661,6 @@ div.ccm-notification-page-alert {
     right: 60px;
   }
 }
-
-/* In-page HUD */
-
-/*
-.ccm-notification {
-  max-width: 90%;
-  font-family: @font-family-sans-serif;
-  font-size: @font-size-base;
-  z-index: @index-level-hud;
-  -webkit-font-smoothing: antialiased;
-  .border-radius(3px);
-  i.ccm-notification-icon {
-    font-size: 16px;
-    position: absolute;
-    top: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 11px 12px;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    left: 20px;
-    .border-radius(40px);
-  }
-
-  form {
-    position: relative;
-  }
-
-  div.ccm-notification-inner-wrapper {
-    max-height: 320px;
-    overflow: auto;
-  }
-
-  div.ccm-notification-inner {
-    h3 {
-      font-size: @font-size-base * 1.2;
-      font-weight: 300;
-      margin: 0px 0px 10px 0px;
-      padding: 0px;
-    }
-
-  }
-}
-
-div.ccm-notification-inner {
-  width: 360px;
-  max-width: 100%;
-  padding: 30px 30px 30px 80px;
-}
-
-div.ccm-notification-actions {
-  font-size: @font-size-small;
-  font-weight: 400;
-  background-color: rgba(17, 47, 76, 0.9);
-  border-top: 1px solid #002a53;
-  .border-bottom-radius(3px);
-  text-align: right;
-  a {
-    display: inline-block;
-    text-align: center;
-    padding: 6px 10px 6px 10px;
-    margin-left: 0px;
-  }
-  a, a:hover {
-    text-decoration: none;
-  }
-
-}
-
-div#ccm-notification-hud {
-  position: fixed;
-  top: 110px;
-  right: 0px;
-  z-index: @index-level-hud;
-  .opacity(0);
-}
-
-div#ccm-notification-page-alert, div#ccm-notification-page-alert-workflow {
-  position: fixed;
-  top: 110px;
-  right: 10px;
-  z-index: @index-level-page-alert;
-  @media (min-width: @screen-sm-min) {
-    right: 60px;
-  }
-}
-
-div#ccm-notification-user-alert-workflow {
-  margin-bottom: 50px;
-  position: fixed;
-  top: 100px;
-  right: 50px;
-  width: 400px;
-}
-
-div#ccm-notification-page-alert-workflow {
-  div.ccm-notification-inner {
-    width: 440px;
-  }
-}
-
-*/
-
-/**
- * Colors
- */
-
-/*
-
-div.ccm-notification-help,
-div.ccm-notification-info {
-  background-color: rgba(19, 72, 125, 0.9);
-  color: #adeef7;
-  h3 {
-    color: #fff;
-  }
-  .ccm-notification-icon {
-    color: #fff;
-  }
-
-  form {
-    border-bottom: 1px solid #002a53;
-  }
-  div.ccm-notification-actions {
-    a {
-      border-left: 1px solid #002a53;
-      color: #88aee7;
-
-      &.ccm-notification-actions-dismiss-single {
-        color: #ffff00;
-      }
-
-    }
-    a:hover {
-      color: #fff;
-    }
-  }
-}
-
-
-*/
 
 /**
  * Error dialogs
@@ -25411,7 +25049,6 @@ table.ccm-search-results-table span.ccm-search-results-checkbox {
 }
 
 table.ccm-search-results-table span.ccm-search-results-checkbox select.ccm-search-bulk-action {
-  font-size: 14px;
   display: inline-block;
   width: auto;
   margin-right: 10px;
@@ -25466,7 +25103,7 @@ table.ccm-search-results-table thead th.ccm-results-list-active-sort-desc a:afte
   font-family: FontAwesome;
   font-style: normal;
   text-decoration: inherit;
-  font-size: 9px;
+  font-size: 0.5rem;
   display: inline-block;
   position: relative;
   top: -6px;
@@ -25480,7 +25117,7 @@ table.ccm-search-results-table thead th.ccm-results-list-active-sort-asc a:after
   font-family: FontAwesome;
   font-style: normal;
   text-decoration: inherit;
-  font-size: 9px;
+  font-size: 0.5rem;
   display: inline-block;
   position: relative;
   top: -6px;
@@ -25549,7 +25186,6 @@ table.ccm-search-results-table thead th button.btn-menu-launcher[disabled] i {
 
 table.ccm-search-results-table tbody td {
   border-bottom: 1px solid #dbdbdb;
-  font-size: 13px;
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
   padding: 15px 0px 15px 15px;
@@ -25661,7 +25297,6 @@ div.ccm-header-search-form-input a.ccm-header-reset-search,
 div.ccm-header-search-form-input a.ccm-header-launch-advanced-search {
   position: absolute;
   top: 10px;
-  font-size: 14px;
   z-index: 550;
 }
 
@@ -25688,7 +25323,6 @@ ul.ccm-header-search-navigation {
 ul.ccm-header-search-navigation li {
   display: inline-block;
   margin-left: 20px;
-  font-size: 14px;
 }
 
 ul.ccm-header-search-navigation a {
@@ -25748,7 +25382,6 @@ div.ui-dialog div.ccm-search-results-breadcrumb ol {
 div.ui-dialog div.ccm-search-results-breadcrumb ol li a,
 div.ui-dialog div.ccm-search-results-breadcrumb ol li span {
   position: static;
-  font-size: 14px !important;
   font-weight: normal;
 }
 
@@ -25804,7 +25437,7 @@ div.ccm-search-results-breadcrumb ol.breadcrumb > li a.ccm-search-select-active-
 
 div.ccm-search-results-breadcrumb ol.breadcrumb > li + li:before {
   content: ">";
-  font-size: 11px;
+  font-size: 0.875rem;
   color: #999;
   font-style: normal;
   text-decoration: inherit;
@@ -25826,7 +25459,7 @@ div.ccm-draggable-search-item:after {
   font-family: FontAwesome;
   font-style: normal;
   text-decoration: inherit;
-  font-size: 24px;
+  font-size: 1.25rem;
   color: #666;
   display: inline-block;
 }
@@ -25867,7 +25500,6 @@ html.ccm-search-results-dragging div.ccm-search-results-breadcrumb ol.breadcrumb
 
 div.ccm-sitemap-tree ul.fancytree-container {
   background-color: transparent;
-  font-size: 14px;
 }
 
 div.ccm-sitemap-tree-selector-wrapper {
@@ -25946,8 +25578,6 @@ div.ccm-file-selector {
   color: #ffffff;
   background-color: #3f9edc;
   text-align: center;
-  font-size: 18px;
-  line-height: 1.5;
   -webkit-transition: 0.1s linear all;
   transition: 0.1s linear all;
   cursor: pointer;
@@ -26012,7 +25642,7 @@ div.ccm-file-manager-import-files form.dropzone {
 }
 
 div.ccm-file-manager-import-files form.dropzone .dz-default.dz-message span {
-  font-size: 32px;
+  font-size: 2rem;
   -webkit-font-smoothing: antialiased;
   font-weight: normal;
   display: block;
@@ -26090,7 +25720,6 @@ div.ccm-file-manager-import-files table.incoming_file_table .incoming_file_table
   padding: 20px;
   text-align: center;
   background-color: #efefef;
-  font-size: 18px;
   font-weight: 300;
   color: #999;
 }
@@ -26107,7 +25736,6 @@ div.ccm-file-manager-import-files table.incoming_file_table .incoming_file_table
   display: block;
   margin-bottom: 10px;
   color: #999;
-  font-size: 13.5px;
 }
 
 div.ccm-ui ul.nav-tabs {
@@ -26271,7 +25899,6 @@ ul.item-select-list li > span img {
 
 ul.item-select-list > li > a i {
   vertical-align: middle;
-  font-size: 16px;
   width: 16px;
   text-align: center;
   -webkit-font-smoothing: antialiased;
@@ -26377,8 +26004,8 @@ div#ccm-tooltip-holder {
 }
 
 div.tooltip-inner {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.5;
   font-weight: 300;
   padding: 7px 10px;
   max-width: 250px;
@@ -26480,7 +26107,6 @@ div#ccm-dashboard-content .ccm-dashboard-section-menu h2 {
   width: 100%;
   padding: 0;
   margin-bottom: 10px;
-  font-size: 21px;
   font-weight: 200;
   margin-top: 0px;
   line-height: inherit;
@@ -26493,7 +26119,6 @@ div#ccm-dashboard-content > header {
   margin-right: -50px;
   padding: 39px 80px 39px 97px;
   position: relative;
-  font-size: 14px;
   background-color: #f3f3f3;
   /**
      * since moving from margin to padding wte dont' need this anymore
@@ -26503,7 +26128,6 @@ div#ccm-dashboard-content > header {
 }
 
 div#ccm-dashboard-content > header h1 {
-  font-size: 22px;
   font-weight: 600;
   font-weight: normal;
   display: inline-block;
@@ -26749,7 +26373,6 @@ div.ccm-dashboard-my-account div#ccm-dashboard-content > header > h1 {
 div.ccm-dashboard-my-account div#ccm-dashboard-content > h2 {
   font-weight: 200;
   -webkit-font-smoothing: antialiased;
-  font-size: 24px;
 }
 
 select[data-select=bootstrap] {
@@ -26872,7 +26495,6 @@ div.ccm-dashboard-welcome h1 a {
   position: absolute;
   bottom: -50px;
   right: -80px;
-  font-size: 14px;
   background-color: rgba(255, 255, 255, 0.9);
   border-left: 10px solid rgba(255, 255, 255, 0.9);
   border-top: 10px solid rgba(255, 255, 255, 0.9);
@@ -26885,7 +26507,7 @@ div.ccm-dashboard-welcome h1 a {
   padding-top: 10px;
   padding-bottom: 10px;
   -webkit-box-shadow: inset 0px 20px 20px 0px rgba(0, 0, 0, 0.3), inset 0px -5px 10px 0px rgba(0, 0, 0, 0.3);
-  font-size: 12px;
+  font-size: 0.875rem;
   margin-bottom: 40px;
 }
 
@@ -26939,7 +26561,6 @@ div#ccm-block-desktop-site-activity-legend h6 {
 }
 
 div#ccm-block-desktop-site-activity-legend div.ccm-block-desktop-site-activity-legend-row {
-  font-size: 18px;
   margin-bottom: 4px;
 }
 
@@ -26969,11 +26590,9 @@ body.ccm-dashboard-desktop div.ccm-block-rss-displayer-wrapper div.ccm-block-rss
   position: absolute;
   top: 0px;
   left: 10px;
-  font-size: 14px;
 }
 
 body.ccm-dashboard-desktop div.ccm-block-rss-displayer-wrapper div.ccm-block-rss-displayer div.ccm-block-rss-displayer-item-title {
-  font-size: 18px;
   color: #189df6;
   font-weight: normal;
 }
@@ -27090,7 +26709,6 @@ div.ccm-block-desktop-featured-theme h6 {
 
 div.ccm-block-desktop-featured-theme div.ccm-block-desktop-featured-theme-inner h3 {
   font-weight: bold;
-  font-size: 18px;
   color: #212326;
 }
 
@@ -27122,7 +26740,6 @@ div.ccm-block-desktop-waiting-for-me i.ccm-block-desktop-waiting-for-me-loader {
   position: absolute;
   top: 5px;
   right: 0px;
-  font-size: 18px;
 }
 
 div.ccm-block-desktop-waiting-for-me div.ccm-block-desktop-waiting-for-me-loading i.ccm-block-desktop-waiting-for-me-loader {
@@ -27184,7 +26801,6 @@ div.ccm-block-desktop-waiting-for-me div.ccm-block-desktop-waiting-for-me-item d
 
 div.ccm-block-desktop-waiting-for-me div.ccm-block-desktop-waiting-for-me-item div.ccm-block-desktop-waiting-for-me-about {
   margin-top: 5px;
-  font-size: 0.9em;
 }
 
 div.ccm-block-desktop-waiting-for-me div.ccm-block-desktop-waiting-for-me-item div.ccm-block-desktop-waiting-for-me-about div.ccm-block-desktop-waiting-for-me-author-comment {
@@ -27212,7 +26828,7 @@ div.ccm-block-desktop-waiting-for-me div.ccm-block-desktop-waiting-for-me-item d
   border-radius: 50%;
   text-align: center;
   text-decoration: none;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: bold;
   position: relative;
   -webkit-transition: none;
@@ -27414,7 +27030,7 @@ div#ccm-dashboard-content header.ccm-marketplace div.ccm-marketplace-nav nav {
 div#ccm-dashboard-content header.ccm-marketplace div.ccm-marketplace-nav nav li {
   float: left;
   margin-right: 20px;
-  font-size: 1.2em;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 
@@ -27442,20 +27058,6 @@ div#ccm-dashboard-content header.ccm-marketplace div.ccm-marketplace-search {
   background-color: #fff;
   border-bottom: 1px solid #b7cadd;
   position: relative;
-  /*
-      a.ccm-marketplace-search-advanced {
-        top: 15px;
-        right: 15px;
-        color: #b7cadd;
-        position: absolute;
-        font-size: 0.9em;
-
-        &:hover {
-          color: #09f;
-          text-decoration: none;
-        }
-      }
-      */
 }
 
 div#ccm-dashboard-content header.ccm-marketplace div.ccm-marketplace-search::after {
@@ -27539,7 +27141,6 @@ div#ccm-dashboard-content div#ccm-marketplace-wrapper header.ccm-marketplace-lis
 
 div#ccm-dashboard-content div#ccm-marketplace-wrapper header.ccm-marketplace-list h1 {
   font-weight: lighter;
-  font-size: 32px;
 }
 
 div#ccm-dashboard-content div#ccm-marketplace-wrapper header.ccm-marketplace-list div.ccm-marketplace-sort nav {
@@ -27575,7 +27176,6 @@ div#ccm-dashboard-content div#ccm-marketplace-wrapper div.ccm-marketplace-list-i
 div#ccm-dashboard-content div#ccm-marketplace-wrapper div.ccm-marketplace-list-item h2 {
   font-weight: 200;
   margin-bottom: 20px;
-  font-size: 24px;
   color: #212326;
   margin-top: 0px;
   line-height: 24px;
@@ -27724,9 +27324,7 @@ div.ccm-marketplace-detail-columns {
 .ccm-marketplace-detail-theme-details h2 {
   margin: 0px 0px 20px 0px;
   padding: 0px;
-  line-height: 24px;
   font-weight: 300;
-  font-size: 24px;
 }
 
 .ccm-marketplace-detail-theme-details div.ccm-marketplace-detail-theme-buy {
@@ -27758,7 +27356,7 @@ div.ccm-marketplace-detail-add-on-details h2 {
   line-height: 24px;
   color: #333 !important;
   font-weight: 300;
-  font-size: 24px;
+  font-size: 1.25rem;
 }
 
 div.ccm-marketplace-detail-add-on-gallery {
@@ -27860,7 +27458,6 @@ div[data-container=editable-fields] .editable-attribute-wrapper div[data-editabl
   background-color: transparent;
   right: 15px;
   top: 4px;
-  font-size: 16px;
 }
 
 div[data-container=editable-fields] .editable-attribute-wrapper div[data-editable-field-inline-commands] .editable-attribute-field-inline:hover ul.ccm-edit-mode-inline-commands li a {
@@ -27875,7 +27472,6 @@ div[data-container=editable-fields] .editable-attribute-wrapper div[data-editabl
 }
 
 div[data-container=editable-fields] .editable-attribute-wrapper div[data-editable-field-inline-commands] .editable-attribute-field-inline:hover ul.ccm-edit-mode-inline-commands li a i {
-  font-size: 16px !important;
   top: 8px;
   left: 9px;
 }
@@ -27912,7 +27508,6 @@ div.ccm-attribute-list-wrapper {
 }
 
 ul.dropdown-menu .ccm-attribute-icon {
-  font-size: 16px;
   width: 16px;
   text-align: center;
   height: 16px;
@@ -28037,10 +27632,8 @@ div.ccm-dashboard-update-details div.ccm-dashboard-update-thumbnail img {
 div.ccm-dashboard-update-details h2 {
   margin: 10px 0px 20px 0px;
   padding: 0px;
-  line-height: 24px;
   color: #333 !important;
   font-weight: 300;
-  font-size: 24px;
 }
 
 div.ccm-dashboard-update-nav {
@@ -28090,8 +27683,6 @@ div.ccm-dashboard-update-detail-columns .ccm-dashboard-update-detail-main h3 {
 }
 
 div.ccm-dashboard-update-detail-release-notes h2 {
-  font-size: 16px;
-  margin: 0px 0px 10px 0px;
   line-height: 16px;
 }
 

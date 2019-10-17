@@ -338,7 +338,6 @@ ul.ccm-edit-mode-inline-commands {
         position: absolute;
         top: 3px;
         left: 3px;
-        font-size: 14px !important;
         vertical-align: middle;
       }
     }
@@ -419,7 +418,7 @@ ul.ccm-edit-mode-inline-commands:hover {
       }
 
       font-family: $font-family-base !important;
-      font-size: 14px !important;
+      font-size: $font-size-base !important;
       line-height: $line-height-base !important;
 
     }
@@ -481,8 +480,6 @@ div.ccm-area[data-total-blocks="0"] {
     text-indent: 0;
     text-align: center;
     padding: 18px;
-    font-size: 14px;
-    line-height: 14px;
     color: #bbb;
   }
 }

@@ -18,7 +18,6 @@ div.ccm-block-desktop-waiting-for-me {
     position: absolute;
     top: 5px;
     right: 0px;
-    font-size: 18px;
   }
 
   div.ccm-block-desktop-waiting-for-me-loading {
@@ -78,7 +77,6 @@ div.ccm-block-desktop-waiting-for-me {
 
     div.ccm-block-desktop-waiting-for-me-about {
       margin-top: 5px;
-      font-size: 0.9em;
 
       div.ccm-block-desktop-waiting-for-me-author-comment {
         color: #999;
@@ -105,7 +103,7 @@ div.ccm-block-desktop-waiting-for-me {
         border-radius: 50%;
         text-align:center;
         text-decoration:none;
-        font-size:20px;
+        font-size: $font-size-lg;
         font-weight:bold;
         position: relative;
         transition: none;

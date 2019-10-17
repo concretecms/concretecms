@@ -38,16 +38,16 @@ div#ccm-intelligent-search-results {
       padding: 0px;
       text-align: left;
       border-bottom: 1px solid #e3e4e4;
-      font-size: 12px;
+      font-size: $font-size-sm;
       font-weight: normal;
       color: #09f;
-      line-height: 14px;
+      line-height: $line-height-sm;
     }
 
     ul {
       margin-left: 0px;
       margin-bottom: 0px !important;
-      font-size: 13px;
+      font-size: $font-size-sm;
       margin-top: 3px !important;
       padding: 0px;
     }
@@ -65,7 +65,7 @@ div#ccm-intelligent-search-results {
 
     .loader {
       display: block;
-      font-size: 20px;
+      font-size: $font-size-lg;
       position: relative;
       width: 4em;
       height: 1em;

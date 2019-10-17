@@ -94,9 +94,9 @@ div.ccm-notification-help-launcher {
   i {
     margin-left: 9px;
     vertical-align: middle;
-    font-size: 26px;
+    font-size: $font-size-lg;
     font-weight: normal;
-    line-height: 40px;
+    line-height: $line-height-lg;
   }
 }
 
@@ -139,7 +139,6 @@ div.ccm-notification-help {
   -webkit-font-smoothing: antialiased;
   border-radius: 3px;
   i.ccm-notification-icon {
-    font-size: 16px;
     position: absolute;
     top: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);

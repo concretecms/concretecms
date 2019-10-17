@@ -28,7 +28,7 @@ div.ccm-conversation-message-form {
   right: 0;
   top: -10px;
   a.dropdown-toggle {
-    font-size: 10px;
+    font-size: $font-size-sm;
   }
   ul.dropdown-menu {
     left: auto;
@@ -394,7 +394,6 @@ ul.ccm-discussion-topics {
       text-align: center;
 
       em {
-        font-size: 1.6em;
         font-style: normal;
         display: block;
         line-height: 1em;
@@ -402,7 +401,6 @@ ul.ccm-discussion-topics {
         margin: 5px auto 0px auto;
       }
 
-      font-size: 0.9em;
       color: #999;
 
     }
@@ -413,8 +411,6 @@ ul.ccm-discussion-topics {
   }
 
   h3 {
-    font-size: 1.4em;
-    line-height: 1.4em;
     margin-bottom: 2px;
   }
 }

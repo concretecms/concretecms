@@ -40,7 +40,6 @@ div#ccm-dashboard-content {
       width: 100%;
       padding: 0;
       margin-bottom: 10px;
-      font-size: 21px;
       font-weight: 200;
       margin-top: 0px;
       line-height: inherit;
@@ -59,10 +58,8 @@ div#ccm-dashboard-content {
     margin-right: -50px;
     padding: 39px 80px 39px 97px;
     position: relative;
-    font-size: 14px;
 
     h1 {
-      font-size: 22px;
       font-weight: 600;
       font-weight: normal;
       display: inline-block;
@@ -336,7 +333,6 @@ div.ccm-dashboard-my-account {
     > h2 {
       font-weight: 200;
       -webkit-font-smoothing: antialiased;
-      font-size: 24px;
     }
   }
 }

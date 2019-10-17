@@ -292,7 +292,6 @@ table.ccm-search-results-table {
 
 
     select.ccm-search-bulk-action {
-      font-size: 14px;
       display: inline-block;
       width: auto;
       margin-right: 10px;
@@ -348,7 +347,7 @@ table.ccm-search-results-table {
         font-family: FontAwesome;
         font-style: normal;
         text-decoration: inherit;
-        font-size: 9px;
+        font-size: $font-size-base / 2;
         display: inline-block;
         position: relative;
         top: -6px;
@@ -362,7 +361,7 @@ table.ccm-search-results-table {
         font-family: FontAwesome;
         font-style: normal;
         text-decoration: inherit;
-        font-size: 9px;
+        font-size: $font-size-base / 2;
         display: inline-block;
         position: relative;
         top: -6px;
@@ -436,7 +435,6 @@ table.ccm-search-results-table {
         }
       }
       border-bottom: 1px solid #dbdbdb;
-      font-size: 13px;
 
       transition: all 0.1s;
 

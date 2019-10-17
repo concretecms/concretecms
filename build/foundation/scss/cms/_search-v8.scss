@@ -27,7 +27,6 @@ div.ccm-header-search-form-input {
   a.ccm-header-launch-advanced-search {
     position: absolute;
     top: 10px;
-    font-size: 14px;
     z-index: $index-level-search-reset;
   }
 
@@ -49,7 +48,6 @@ ul.ccm-header-search-navigation {
   li {
     display: inline-block;
     margin-left: 20px;
-    font-size: 14px;
   }
   list-style: none;
   text-align: right;
@@ -105,7 +103,6 @@ div.ui-dialog {
       margin-bottom: 0px;
       li a, li span {
         position: static;
-        font-size: 14px !important;
         font-weight: normal;
       }
     }
@@ -165,7 +162,7 @@ div.ccm-search-results-breadcrumb {
 
     > li + li:before {
       content: ">";
-      font-size: 11px;
+      font-size: $font-size-sm;
       color: #999;
       font-style: normal;
       text-decoration: inherit;
@@ -189,7 +186,7 @@ div.ccm-draggable-search-item {
     font-family: FontAwesome;
     font-style: normal;
     text-decoration: inherit;
-    font-size: 24px;
+    font-size: $font-size-lg;
     color: #666;
     display: inline-block;
   }

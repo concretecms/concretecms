@@ -167,14 +167,13 @@ div.ccm-panel.ccm-panel-loaded div.ccm-panel-content {
 
 div.ccm-panel-content {
   header {
-    font-size: 16px;
     padding: 15px 15px 15px 40px;
     margin-bottom: 10px;
     font-weight: 500;
 
     aside {
       float: right;
-      font-size: 11px;
+      font-size: $font-size-sm;
       font-weight: lighter;
       margin-top: 4px;
 
@@ -205,7 +204,6 @@ div.ccm-panel-content {
       a {
         display: block;
         text-decoration: none;
-        font-size: 14px;
         font-weight: 500;
         padding: 5px 21px 5px 21px;
         border-radius: 4px;
@@ -386,7 +384,7 @@ div#ccm-panel-add-clipboard-block-list {
     div.block-name {
       border-top: solid 1px rgb(7, 8, 10);
       background: rgb(15, 24, 37);
-      font-size: 13px;
+      font-size: $font-size-sm;
       padding-left: 40px;
       padding-right: 40px;
       padding-bottom: 16px;
@@ -595,7 +593,7 @@ div.ccm-panel-content.ccm-panel-content-visible {
 
 a.ccm-panel-back,
 a.ccm-panel-back:hover {
-  font-size: 12px;
+  font-size: $font-size-sm;
   text-decoration: none;
   margin-right: 4px;
 }
@@ -655,7 +653,7 @@ div.ccm-panel-detail-content {
 div.ccm-panel-detail {
 
   header {
-    font-size: 22px;
+    font-size: $font-size-lg;
     margin: -40px -40px 30px -95px;
     padding: 39px 80px 39px 95px;
     font-weight: 300;
@@ -885,8 +883,6 @@ div.ccm-panel-header-accordion {
     li > a, span {
       display: block;
       position: relative;
-      line-height: 15px;
-      font-size: 15px;
       padding: 18px 15px 18px 40px;
       font-weight: normal;
       text-decoration: none;
@@ -964,7 +960,7 @@ div.ccm-panel-header-accordion-dropdown-visible {
 
     a.list-group-item-collapse {
       padding-left: 45px;
-      font-size: 12px;
+      font-size: $font-size-sm;
       position: relative;
       span {
 
@@ -1191,7 +1187,6 @@ div.preview-frame-container {
     top: 0;
     width: 100%;
     height: 100%;
-    font-size: 20px;
     background: rgba(0, 0, 0, 0.5);
     color: rgb(204, 204, 204);
     min-height: 600px;

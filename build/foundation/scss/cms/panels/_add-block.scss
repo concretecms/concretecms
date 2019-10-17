@@ -17,8 +17,8 @@ div#ccm-panel-add-block {
 		clear: both;
 
 		header {
-			font-size: 13px;
-			line-height: 13px;
+			font-size: $font-size-sm;
+			line-height: $line-height-sm;
 			padding: 0px;
 			border-top: 1px solid #474645;
 			padding-top: 5px;
@@ -136,8 +136,8 @@ a.ccm-panel-add-block-draggable-block-type {
 		display: block;
 		color: #8f969a;
 		background-color: #000;
-		font-size: 12px;
-		line-height: 14px;
+		font-size: $font-size-sm;
+		line-height: $line-height-sm;
 		padding-left: 2px;
 		padding-right: 2px;
 		padding-top: 6px;
