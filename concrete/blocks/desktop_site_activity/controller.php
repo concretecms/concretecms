@@ -37,11 +37,6 @@ class Controller extends BlockController
         $this->set('types', array());
     }
 
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('javascript', 'google-charts');
-    }
-
     protected function loadTypes()
     {
         $types = @json_decode($this->types);

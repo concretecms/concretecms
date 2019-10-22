@@ -115,9 +115,6 @@ EOL;
      */
     public function selectLocaleMultiple($fieldName, Site $site, array $selectedLocales = [], array $options = [])
     {
-        $v = View::getInstance();
-        $v->requireAsset('selectize');
-
         $siteLocales = $site->getLocales()->toArray();
         $displayLocaleCode = $this->shouldDisplayLocaleCode($options, $siteLocales);
 

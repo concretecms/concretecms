@@ -26,6 +26,5 @@ class Search extends BackendInterfaceController
         $this->set('result', $result);
         $this->set('searchController', $cnt);
         $this->set('tree', GroupTree::get());
-        $this->requireAsset('core/groups');
     }
 }

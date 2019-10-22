@@ -22,8 +22,6 @@ class SiteSelector
      */
     public function selectSite($fieldName, $siteID = false, $includeCurrent = false, $includeAll = false)
     {
-        $v = \View::getInstance();
-        $v->requireAsset('selectize');
         $currentSelected = $siteID !== 'current' ? 'selected' : '';
         $allSelected = $siteID === 'all' ? 'selected' : '';
         $current = t('Current Site');

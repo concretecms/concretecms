@@ -44,7 +44,6 @@ class Sitemap extends BackendInterfaceController
 
     public function view()
     {
-        $this->requireAsset('core/sitemap');
         $drafts = ConcretePage::getDrafts($this->site);
         $mydrafts = array();
         foreach ($drafts as $d) {

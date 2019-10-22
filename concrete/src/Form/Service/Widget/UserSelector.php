@@ -126,9 +126,6 @@ EOL;
      */
     public function quickSelect($fieldName, $uID = false, $miscFields = [])
     {
-        $v = View::getRequestInstance();
-        $v->requireAsset('selectize');
-
         $request = $this->app->make(Request::class);
         if ($request->request->has($fieldName)) {
             $selectedUID = $request->request->get($fieldName);

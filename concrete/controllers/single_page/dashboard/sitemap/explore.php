@@ -16,7 +16,6 @@ class Explore extends DashboardPageController
         if (!$dh->canRead()) {
             return;
         }
-        $this->requireAsset('core/sitemap');
         $task = $this->request->request->get('task');
         if ($task === null) {
             $task = $this->request->query->get('task');

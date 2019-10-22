@@ -116,7 +116,6 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/conversation');
-        $this->requireAsset('core/lightbox');
         $u = $this->app->make(User::class);
         if (!$u->isRegistered()) {
             $this->requireAsset('css', 'core/frontend/captcha');

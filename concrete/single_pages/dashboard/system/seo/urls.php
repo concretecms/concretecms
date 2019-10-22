@@ -72,12 +72,9 @@
 <script>
 $(function () {
     var steps = [{
-        content: <?= json_encode('<p><span class="h5">' . t('Pretty URLs') . '</span><br/>' . t('Check this checkbox to remove index.php from your URLs. You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.') . '</p>') ?>,
-        highlightTarget: false,
-        nextButton: true,
-        target: $('input[name=URL_REWRITING]'),
-        my: 'bottom left',
-        at: 'top left'
+        content: <?= json_encode('<p><span class="h5">' . t('Pretty URLs') . '</span><br/>' . t('Check this checkbox to remove index.php from your URLs.<br/>You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.') . '</p>') ?>,
+        next: 1,
+        element: 'input[name=URL_REWRITING]',
     },{
         content: <?= json_encode('<p><span class="h5">' . t('Canonical URL') . '</span><br/>' . t('If you are running a site at multiple domains, enter the canonical domain here. This will be used for sitemap generation, any other purposes that require a specific domain. You can usually leave this blank.') . '</p>') ?>,
         highlightTarget: false,
@@ -105,18 +102,17 @@ $(function () {
         at: 'top left'
     }];
 
-    var tour = new Tourist.Tour({
+    var tour = new Tour({
+        name: 'dashboard-system-urls',
         steps: steps,
-        tipClass: 'Bootstrap',
-        tipOptions:{
-            showEffect: 'slidein'
+        storage: false,
+        framework: 'bootstrap4',
+        onStart: function() {
+            ConcreteHelpLauncher.close();
+        },
+        'onEnd': function() {
+            $(document).scrollTop(0);
         }
-    });
-    tour.on('start', function() {
-        ConcreteHelpLauncher.close();
-    });
-    tour.on('stop', function() {
-        $(document).scrollTop(0);
     });
     ConcreteHelpGuideManager.register('dashboard-system-urls', tour);
 });

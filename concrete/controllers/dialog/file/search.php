@@ -35,6 +35,5 @@ class Search extends BackendInterfaceController
         $header = $this->app->build(Header::class);
         $header->setIncludeBreadcrumb(true);
         $this->set('header', $header);
-        $this->requireAsset('core/file-manager');
     }
 }

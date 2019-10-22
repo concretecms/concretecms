@@ -3,7 +3,7 @@
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
-<h2><?=$c->getCollectionName(); ?></h2>
+<h3><?=$c->getCollectionName(); ?></h3>
 
 	<?php switch ($this->controller->getTask()) {
         case 'view_message': ?>
@@ -13,7 +13,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
             [$view->action('view_mailbox', 'sent'), t('Sent'), 'sent' == $box],
         ], false); ?>
 
-		<div id="ccm-private-message-detail">
+		<div class="mt-4" id="ccm-private-message-detail">
 		<?php
         $profileURL = $msg->getMessageRelevantUserObject()->getUserPublicProfileURL();
         if ($profileURL) {
@@ -87,7 +87,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         ], false); ?>
 
 
-		<table class="ccm-profile-messages-list table-striped table" border="0" cellspacing="0" cellpadding="0">
+		<table class="mt-4 ccm-profile-messages-list table-striped table" border="0" cellspacing="0" cellpadding="0">
 		<thead>
 		<tr>
 			<th><?php if ('sent' == $mailbox) {

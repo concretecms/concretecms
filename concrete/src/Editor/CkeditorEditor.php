@@ -333,7 +333,6 @@ EOL;
      */
     public function requireEditorAssets()
     {
-        $this->assets->requireAsset('core/file-manager');
         $this->assets->requireAsset('editor/ckeditor4');
 
         $plugins = $this->pluginManager->getSelectedPluginObjects();

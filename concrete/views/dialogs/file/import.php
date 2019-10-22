@@ -196,9 +196,9 @@ EOT
 
 $dialog.jqdialog('option', 'buttons', [{}]);
 $dialogContainer.find('.ui-dialog-buttonset').remove();
-window.ccm_fileUploader.start(uploaderOptions);
+window.concreteFileUploader.start(uploaderOptions);
 $dialog.on('dialogclose', function() {
-    window.ccm_fileUploader.stop(uploaderOptions);
+    window.concreteFileUploader.stop(uploaderOptions);
     if (uploadedFiles.length > 0) {
         <?php
         if ($replacingFile === null) {

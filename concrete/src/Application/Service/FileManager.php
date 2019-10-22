@@ -59,7 +59,6 @@ class FileManager
         $request = $app->make(Request::class);
         $vh = $app->make('helper/validation/numbers');
 
-        $view->requireAsset('core/file-manager');
         $fileSelectorArguments = [
             'inputName' => (string) $inputName,
             'fID' => null,

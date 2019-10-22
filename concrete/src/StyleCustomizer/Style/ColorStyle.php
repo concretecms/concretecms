@@ -31,10 +31,7 @@ class ColorStyle extends Style
         } else {
             $color = '';
         }
-
-        $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/colorpicker');
-
+        
         $json = [
             'color' => json_encode($color),
             'cancel' => json_encode(t('Cancel')),

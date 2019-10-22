@@ -372,7 +372,7 @@ class Controller extends BlockController
             $permissions = new \Permissions($calendar);
             $this->requireAsset('fullcalendar');
             if ($this->supportsLightbox()) {
-                $this->requireAsset('core/lightbox');
+
             }
 
             if ($permissions->canAccessCalendarRssFeed()) {

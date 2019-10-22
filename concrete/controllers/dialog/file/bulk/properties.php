@@ -65,7 +65,6 @@ class Properties extends BackendInterfaceController
     public function view()
     {
         $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/app/editable-fields');
         $form = $this->app->make('helper/form');
         $attribs = FileAttributeKey::getList();
         $this->set('files', $this->files);

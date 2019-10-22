@@ -72,7 +72,6 @@ class Bulk extends DashboardPageController
     public function view()
     {
         $html = $this->app->make('helper/html');
-        $this->requireAsset('javascript', 'jquery/textcounter');
         $pageList = $this->getRequestedSearchResults();
         if (is_object($pageList)) {
             $pagination = $pageList->getPagination();
