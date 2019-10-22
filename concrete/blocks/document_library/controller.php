@@ -571,7 +571,7 @@ class Controller extends BlockController
                 break;
             case 'image':
                 if ($file->getTypeObject()->getGenericType() == Type::T_IMAGE) {
-                    return sprintf('<img src="%s" class="img-responsive" />', $file->getRelativePath());
+                    return sprintf('<img src="%s" class="img-fluid" />', $file->getRelativePath());
                 }
                 break;
             case 'edit_properties':

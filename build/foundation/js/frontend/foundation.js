@@ -7,6 +7,7 @@ import './locations/country-data-link';
 import './locations/country-stateprovince-link';
 
 // Components
+import './blocks/image-slider/responsiveslides';
 import './conversations';
 
 window.$ = window.jQuery = jQuery;

@@ -553,6 +553,78 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 }
 @charset "UTF-8";
 
+.z-0 {
+  z-index: 0;
+}
+
+.z-1 {
+  z-index: 1;
+}
+
+.z-2 {
+  z-index: 2;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.z-100 {
+  z-index: 100;
+}
+
+.z-250 {
+  z-index: 250;
+}
+
+.z-500 {
+  z-index: 500;
+}
+
+.z-1000 {
+  z-index: 1000;
+}
+
+.spacer-row-1 {
+  height: 1rem;
+}
+
+.spacer-row-2 {
+  height: 2rem;
+}
+
+.spacer-row-3 {
+  height: 3rem;
+}
+
+.spacer-row-4 {
+  height: 4rem;
+}
+
+.spacer-row-5 {
+  height: 5rem;
+}
+
+.spacer-row-6 {
+  height: 6rem;
+}
+
+.spacer-row-7 {
+  height: 7rem;
+}
+
+.spacer-row-8 {
+  height: 8rem;
+}
+
+.spacer-row-9 {
+  height: 9rem;
+}
+
+.spacer-row-10 {
+  height: 10rem;
+}
+
 /*!
  * Font Awesome Free 5.11.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -6445,78 +6517,6 @@ readers do not read off random characters that represent icons */
 
 .fab {
   font-family: 'Font Awesome 5 Brands';
-}
-
-.z-0 {
-  z-index: 0;
-}
-
-.z-1 {
-  z-index: 1;
-}
-
-.z-2 {
-  z-index: 2;
-}
-
-.z-10 {
-  z-index: 10;
-}
-
-.z-100 {
-  z-index: 100;
-}
-
-.z-250 {
-  z-index: 250;
-}
-
-.z-500 {
-  z-index: 500;
-}
-
-.z-1000 {
-  z-index: 1000;
-}
-
-.spacer-row-1 {
-  height: 1rem;
-}
-
-.spacer-row-2 {
-  height: 2rem;
-}
-
-.spacer-row-3 {
-  height: 3rem;
-}
-
-.spacer-row-4 {
-  height: 4rem;
-}
-
-.spacer-row-5 {
-  height: 5rem;
-}
-
-.spacer-row-6 {
-  height: 6rem;
-}
-
-.spacer-row-7 {
-  height: 7rem;
-}
-
-.spacer-row-8 {
-  height: 8rem;
-}
-
-.spacer-row-9 {
-  height: 9rem;
-}
-
-.spacer-row-10 {
-  height: 10rem;
 }
 
 .ccm-ui {

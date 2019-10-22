@@ -41,7 +41,7 @@ class Service
         if ($this->customHTML) {
             return $this->customHTML;
         } else {
-            return '<i class="fa fa-' . $this->getIcon() . '" aria-hidden="true" title="' . $this->getDisplayName() . '"></i>';
+            return '<i class="fab fa-' . $this->getIcon() . '" aria-hidden="true" title="' . $this->getDisplayName() . '"></i>';
         }
     }
 

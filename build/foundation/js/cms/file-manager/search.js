@@ -334,7 +334,7 @@ ConcreteFileManager.prototype.setupImageThumbnails = function() {
         my.popover({
             animation: true,
             html: true,
-            content: '<img class="img-responsive" src="'+my.data('hover-image')+'" alt="Thumbnail"' + style + '/>',
+            content: '<img class="img-fluid" src="'+my.data('hover-image')+'" alt="Thumbnail"' + style + '/>',
             container: 'body',
             placement: 'auto',
             trigger: 'manual'

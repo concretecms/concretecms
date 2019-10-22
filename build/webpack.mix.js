@@ -30,7 +30,9 @@ mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css
 mix
     .sass('themes/concrete/scss/main.scss', 'themes/concrete')
     .sass('themes/dashboard/scss/main.scss', 'themes/dashboard')
+    .sass('themes/elemental/scss/main.scss', 'themes/elemental/css')
     .sass('foundation/scss/cms.scss', 'css/cms.css')
+    .js('themes/elemental/js/main.js', 'themes/elemental')
     .js('themes/dashboard/js/main.js', 'themes/dashboard')
     .js('themes/concrete/js/main.js', 'themes/concrete')
     .js('foundation/js/cms.js', 'js/cms.js');

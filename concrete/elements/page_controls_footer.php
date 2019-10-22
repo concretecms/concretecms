@@ -49,7 +49,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     ?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
-            <div class="ccm-mobile-menu-overlay" style="height: calc(100vh - 48px)">
+            <?php /* <div class="ccm-mobile-menu-overlay" style="height: calc(100vh - 48px)">
                 <div class="ccm-mobile-menu-main">
                     <ul class="ccm-mobile-menu-entries">
                         <?php
@@ -251,7 +251,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     </ul>
                 </div>
             </div>
-            <ul class="ccm-toolbar-item-list">
+            */ ?><ul class="ccm-toolbar-item-list">
                 <li class="ccm-logo float-left"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
                 <?php
                 if ($c->isMasterCollection()) {
