@@ -141,6 +141,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
             $this->set('addMessageToken', $addMessageToken);
             $this->set('editMessageToken', $tokenHelper->generate('edit_conversation_message'));
             $this->set('deleteMessageToken', $tokenHelper->generate('delete_conversation_message'));
+            $this->set('flagMessageToken', $tokenHelper->generate('flag_conversation_message'));
             $this->set('cID', Page::getCurrentPage()->getCollectionID());
             $this->set('users', $this->getActiveUsers(true));
             $this->set('maxFilesGuest', $fileSettings['maxFilesGuest']);
