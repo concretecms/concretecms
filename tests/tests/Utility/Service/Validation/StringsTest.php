@@ -235,6 +235,34 @@ class StringsTest extends TestCase
         ];
     }
 
+    public function isValidRegexProvider()
+    {
+        return [
+            [false, null, false],
+            [false, null, true],
+            [false, $this, false],
+            [false, $this, true],
+            [false, [], false],
+            [false, [], true],
+            [false, 1, false],
+            [false, 1, true],
+            [true, '', false],
+            [false, '', true],
+            [true, '//', true],
+            [false, '(', true],
+            [false, '(', false],
+            [true, 'Test', false],
+            [false, 'Test', true],
+            [true, '/Test/', true],
+            [false, '+', false],
+            [false, '+', true],
+            [false, '/+/', true],
+            [true, '.+', false],
+            [false, '.+', true],
+            [true, '/.+/', true],
+        ];
+    }
+
     /**
      * @dataProvider emailDataProvider
      *
@@ -348,5 +376,17 @@ class StringsTest extends TestCase
     public function testContainsSymbol($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsSymbol($string));
+    }
+
+    /**
+     * @dataProvider isValidRegexProvider
+     *
+     * @param bool $expected
+     * @param string|mixed $pattern
+     * @param bool $includesDelimiters
+     */
+    public function testIsValidRegex($expected, $pattern, $includesDelimiters)
+    {
+        $this->assertSame($expected, $this->object->isValidRegex($pattern, $includesDelimiters));
     }
 }

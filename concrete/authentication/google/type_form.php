@@ -1,4 +1,16 @@
-<?php defined('C5_EXECUTE') or die('Access denied.'); ?>
+<?php
+
+defined('C5_EXECUTE') or die('Access denied.');
+
+/**
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\User\Group\Group[] $groups
+ * @var string $apikey
+ * @var string $apisecret
+ * @var string[] $blacklist
+ * @var string[] $whitelist
+ */
+?>
 
 <div class='form-group'>
     <?= $form->label('apikey', t('App ID')) ?>
@@ -15,32 +27,23 @@
 </div>
 <div class='form-group'>
     <div class="input-group">
-        <label type="checkbox">
-            <input type="checkbox" name="registration_enabled" value="1" <?= \Config::get(
-                'auth.google.registration.enabled',
-                false) ? 'checked' : '' ?>>
+        <label>
+            <?= $form->checkbox('registration_enabled', '1', Config::get('auth.google.registration.enabled')) ?>
             <span style="font-weight:normal"><?= t('Allow automatic registration') ?></span>
         </label>
     </div>
 </div>
 <div class='form-group registration-group'>
     <label for="registration_group" class="control-label"><?= t('Group to enter on registration') ?></label>
-    <select name="registration_group" class="form-control">
-        <option value="0"><?= t("None") ?></option>
-        <?php
-        /** @var \Group $group */
-        foreach ($groups as $group) {
-            ?>
-            <option value="<?= $group->getGroupID() ?>" <?= intval($group->getGroupID(), 10) === intval(
-                \Config::get('auth.google.registration.group', false),
-                10) ? 'selected' : '' ?>>
-                <?= $group->getGroupDisplayName(false) ?>
-            </option>
-        <?php
-
-        }
-        ?>
-    </select>
+    <?php
+    $optionValues = [
+        '0' => t('None'),
+    ];
+    foreach ($groups as $group) {
+        $optionValues[$group->getGroupID()] = $group->getGroupDisplayName(false);
+    }
+    echo $form->select('registration_group', $optionValues, (int) Config::get('auth.google.registration.group'));
+    ?>
 </div>
 
 <h4><?= t('Domain Filtering') ?></h4>
@@ -50,20 +53,16 @@
         'For example user@example.com would filter against "example.com".') ?></p>
 
 <div class="form-group">
-    <label for="whitelist">
-        <?= t('Domain Whitelist regex') ?>
-    </label>
+    <?= $form->label('whitelist', t('Domain Whitelist regex')) ?>
     <span class="help-block"><?= t(
             'One per line, to whitelist all %s domains: %s',
             '<code>concrete5.org</code>',
             '<code>~^concrete5\\.org$~i</code>') ?></span>
-    <textarea type="text" name="whitelist" class="form-control"><?= implode(PHP_EOL, (array) $whitelist) ?></textarea>
+    <?= $form->textarea('whitelist', implode("\n", (array) $whitelist)) ?>
 </div>
 
 <div class="form-group">
-    <label for="whitelist">
-        <?= t('Domain Blacklist regex') ?>
-    </label>
+    <?= $form->label('blacklist', t('Domain Blacklist regex')) ?>
     <span class="help-block"><?= t('One per line') ?></span>
     <span class="help-block"><?= t(
             'Format: %s.',
@@ -71,7 +70,7 @@
     <span class="help-block"><?= t(
             'To disallow everything other than whitelist: %s.',
             sprintf('<code>[ "~.*~", "%s" ]</code>', t('Invalid domain.'))) ?></span>
-    <textarea type="text" name="blacklist" class="form-control"><?= implode(PHP_EOL, $blacklist) ?></textarea>
+    <?= $form->textarea('blacklist', implode("\n", $blacklist)) ?>
 </div>
 
 <div class="alert alert-info">
