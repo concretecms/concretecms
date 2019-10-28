@@ -121,7 +121,7 @@ EOT
         }
         $output->writeln('<info>passed.</info>');
 
-        $output->write('Installing...');
+        $output->write('Installing... ');
         $r = $packageService->install($pkg, []);
         if ($r instanceof ErrorList) {
             throw new Exception(implode("\n", $r->getList()));
