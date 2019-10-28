@@ -32,6 +32,6 @@ class ColumnSet extends Set
             return $columns;
         }
 
-        return new DefaultSet();
+        return $provider->getDefaultColumnSet();
     }
 }
