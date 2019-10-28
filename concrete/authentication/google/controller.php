@@ -6,9 +6,11 @@ defined('C5_EXECUTE') or die('Access Denied');
 use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Authentication\Type\Google\Factory\GoogleServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
+use Concrete\Core\Error\UserMessageException;
 use OAuth\OAuth2\Service\Google;
 use Concrete\Core\User\User;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Utility\Service\Validation\Strings;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -49,23 +51,37 @@ class Controller extends GenericOauth2TypeController
     public function saveAuthenticationType($args)
     {
         $config = $this->app->make('config');
-        $config->save('auth.google.appid', $args['apikey']);
-        $config->save('auth.google.secret', $args['apisecret']);
-        $config->save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
-        $config->save('auth.google.registration.group', intval($args['registration_group'], 10));
+
+        $stringsValidator = $this->app->make(Strings::class);
 
         $whitelist = [];
-        foreach (explode(PHP_EOL, $args['whitelist']) as $entry) {
-            $whitelist[] = trim($entry);
+        foreach (preg_split('/\s*[\r\n]\s*/', array_get($args, 'whitelist', ''), -1, PREG_SPLIT_NO_EMPTY) as $entry) {
+            if (!$stringsValidator->isValidRegex($entry)) {
+                throw new UserMessageException(t('The regular expression "%s" is not valid.', $entry));
+            }
+            $whitelist[] = $entry;
         }
 
         $blacklist = [];
-        foreach (explode(PHP_EOL, $args['blacklist']) as $entry) {
-            $blacklist[] = json_decode(trim($entry), true);
+        foreach (preg_split('/\s*[\r\n]\s*/', array_get($args, 'blacklist', ''), -1, PREG_SPLIT_NO_EMPTY) as $entry) {
+            set_error_handler(function () {}, -1);
+            $decoded = @json_decode($entry, true);
+            restore_error_handler();
+            if (!is_array($decoded) || !isset($decoded[0])) {
+                throw new UserMessageException(t('The black list line "%s" is not valid.', $entry));
+            }
+            if (!$stringsValidator->isValidRegex($decoded[0])) {
+                throw new UserMessageException(t('The regular expression "%s" is not valid.', $entry));
+            }
+            $blacklist[] = $decoded;
         }
 
-        $config->save('auth.google.email_filters.whitelist', array_values(array_filter($whitelist)));
-        $config->save('auth.google.email_filters.blacklist', array_values(array_filter($blacklist)));
+        $config->save('auth.google.appid', $args['apikey']);
+        $config->save('auth.google.secret', $args['apisecret']);
+        $config->save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
+        $config->save('auth.google.registration.group', (int) $args['registration_group']);
+        $config->save('auth.google.email_filters.whitelist', $whitelist);
+        $config->save('auth.google.email_filters.blacklist', $blacklist);
     }
 
     public function edit()

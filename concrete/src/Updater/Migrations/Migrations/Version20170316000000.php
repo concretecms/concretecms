@@ -41,7 +41,7 @@ class Version20170316000000 extends AbstractMigration implements RepeatableMigra
                 // Refresh the column from the attribute's search index definition if we can
                 // (we don't require this method in the interface yet)
                 try {
-                    $category->getSearchIndexer()->refreshRepositoryColumns($category, $key);
+                    $category->getSearchIndexer()->updateRepositoryColumns($category, $key);
                 } catch (\Exception $e) {
                 }
             }
