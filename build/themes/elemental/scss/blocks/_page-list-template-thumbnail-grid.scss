@@ -3,6 +3,7 @@ div.ccm-block-page-list-thumbnail-grid-wrapper {
   @include make-row();
 
   div.ccm-block-page-list-page-entry-grid-item {
+    @include make-col-ready();
     @include make-col(4);
     margin-bottom: $grid-gutter-width;
     overflow: hidden;

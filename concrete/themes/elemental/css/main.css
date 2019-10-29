@@ -12769,6 +12769,10 @@ div.ccm-page div.ccm-block-page-list-thumbnail-grid-wrapper {
 }
 
 div.ccm-page div.ccm-block-page-list-thumbnail-grid-wrapper div.ccm-block-page-list-page-entry-grid-item {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 33.33333333%;
           flex: 0 0 33.33333333%;
@@ -12976,6 +12980,10 @@ div.ccm-page .ccm-image-slider-container .ccm-image-slider-inner {
       flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 100%;
           flex: 0 0 100%;
@@ -13208,6 +13216,10 @@ div.ccm-page div.ccm-block-testimonial {
 }
 
 div.ccm-page div.ccm-block-testimonial div.ccm-block-testimonial-image {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 25%;
           flex: 0 0 25%;
@@ -13215,6 +13227,10 @@ div.ccm-page div.ccm-block-testimonial div.ccm-block-testimonial-image {
 }
 
 div.ccm-page div.ccm-block-testimonial div.ccm-block-testimonial-text {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 75%;
           flex: 0 0 75%;
@@ -13415,6 +13431,10 @@ div.ccm-page .ccm-faq-container {
 }
 
 div.ccm-page .ccm-faq-block-links {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 25%;
           flex: 0 0 25%;
@@ -13427,6 +13447,10 @@ div.ccm-page .ccm-faq-block-links a {
 }
 
 div.ccm-page .ccm-faq-block-entries {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 66.66666667%;
           flex: 0 0 66.66666667%;
@@ -13589,6 +13613,10 @@ div.ccm-page div.blog-entry-list div.ccm-block-page-list-page-entry-horizontal {
 }
 
 div.ccm-page div.blog-entry-list div.ccm-block-page-list-page-entry-horizontal div.ccm-block-page-list-page-entry-thumbnail {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 16.66666667%;
           flex: 0 0 16.66666667%;
@@ -13597,6 +13625,10 @@ div.ccm-page div.blog-entry-list div.ccm-block-page-list-page-entry-horizontal d
 }
 
 div.ccm-page div.blog-entry-list div.ccm-block-page-list-page-entry-horizontal div.ccm-block-page-list-page-entry-text {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 83.33333333%;
           flex: 0 0 83.33333333%;

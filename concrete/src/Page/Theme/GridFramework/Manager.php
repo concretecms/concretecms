@@ -27,7 +27,7 @@ class Manager extends CoreManager
 
     protected function createBootstrap4Driver()
     {
-        return new Bootstrap4()ccm-block-testimonial-image;
+        return new Bootstrap4();
     }
 
     protected function createFoundationDriver()

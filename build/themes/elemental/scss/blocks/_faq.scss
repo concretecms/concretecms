@@ -2,6 +2,7 @@
   @include make-row();
 }
 .ccm-faq-block-links {
+  @include make-col-ready();
   @include make-col(3);
 
   a {
@@ -19,6 +20,7 @@
     margin-bottom: 50px;
   }
 
+  @include make-col-ready();
   @include make-col(8);
   @include make-col-offset(1);
 }
