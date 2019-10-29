@@ -206,7 +206,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $this->load();
         $this->requireAsset('core/topics');
-        $this->requireAsset('javascript', 'jquery/form');
         if (is_object($this->attributeValue)) {
             $valueIDs = [];
             foreach ($this->attributeValue->getValueObject()->getSelectedTopics() as $value) {
@@ -301,7 +300,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function type_form()
     {
         $this->requireAsset('core/topics');
-        $this->requireAsset('javascript', 'jquery/form');
         $this->load();
         $tt = new TopicTree();
         $defaultTree = $tt->getDefault();

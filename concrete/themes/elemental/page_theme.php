@@ -25,6 +25,7 @@ class PageTheme extends Theme implements ThemeProviderInterface
         $this->providesAsset('javascript', 'blocks/image_slider');
 
         $this->providesAsset('css', 'component/calendar');
+        $this->requireAsset('font-awesome');
         $this->requireAsset('jquery');
     }
 

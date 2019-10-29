@@ -12,7 +12,7 @@
 
 // 05. Utilities & Font Awesome
 @import "../../../foundation/scss/base/utilities";
-@import "../../../foundation/scss/base/font-awesome";
+@import "~@fortawesome/fontawesome-free/scss/variables";
 
 // 06. Bootstrap
 @import "~bootstrap/scss/bootstrap";

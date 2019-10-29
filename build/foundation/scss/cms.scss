@@ -6,9 +6,9 @@ $concrete-directory: '../../../concrete';
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
-// Import the base classes like core utilities, core variables, Font awesome, etc...
+// Import the base classes like core utilities and variables
 @import "../../foundation/scss/base/utilities";
-@import "../../foundation/scss/base/font-awesome";
+@import "~@fortawesome/fontawesome-free/scss/variables";
 
 // Import the subset of Bootstrap that is required in the CMS entry point.
 // Make sure to namespace it to .ccm-ui

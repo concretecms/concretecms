@@ -21,10 +21,11 @@ if (mix.inProduction()) {
 
 // Copy already minified assets
 mix.copy('node_modules/jquery/dist/jquery.min.js', '../concrete/js/jquery.js');
-mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/fonts');
+mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/webfonts');
+mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
+
 //delete these?!
 // mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.js', '../concrete/js/bootstrap.js');
-//mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
 
 // Build themes
 mix

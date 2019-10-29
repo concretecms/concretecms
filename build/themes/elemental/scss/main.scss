@@ -10,9 +10,8 @@
 // 04. Theme variables, some of which can now be based on bootstrap variable/constants/
 @import "./variables";
 
-// 05. Utilities & Font Awesome
+// 05. Utilities
 @import "../../../foundation/scss/base/utilities";
-@import "../../../foundation/scss/base/font-awesome";
 
 // 06. Bootstrap
 @import "~bootstrap/scss/bootstrap";
