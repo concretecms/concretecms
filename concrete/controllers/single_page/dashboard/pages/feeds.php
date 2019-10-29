@@ -160,7 +160,6 @@ class Feeds extends DashboardPageController
             $select[$handle] = $handle;
         }
         $this->set('areas', $select);
-        $this->requireAsset('core/topics');
     }
 
     public function edit($pfID = null)

@@ -155,7 +155,6 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->requireAsset('core/topics');
         $calendars = array_filter(Calendar::getList(), function ($calendar) {
             $p = new \Permissions($calendar);
 

@@ -288,7 +288,6 @@ class Controller extends BlockController
         $this->set('viewTypesSelected', (array) json_decode($this->viewTypes));
         $this->set('viewTypesOrder', (array) json_decode($this->viewTypesOrder));
         $this->set('lightboxPropertiesSelected', $this->getSelectedLightboxProperties());
-        $this->requireAsset('core/topics');
         $calendars = array_filter(Calendar::getList(), function ($calendar) {
             $p = new \Permissions($calendar);
 

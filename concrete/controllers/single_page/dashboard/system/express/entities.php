@@ -179,7 +179,6 @@ class Entities extends DashboardPageController
     {
         $tree = ExpressEntryResults::get();
         $this->set('tree', $tree);
-        $this->requireAsset('core/topics');
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $this->entity = $r->findOneById($id);
         if (is_object($this->entity)) {

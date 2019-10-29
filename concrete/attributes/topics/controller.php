@@ -205,7 +205,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function form($additionalClass = false)
     {
         $this->load();
-        $this->requireAsset('core/topics');
         if (is_object($this->attributeValue)) {
             $valueIDs = [];
             foreach ($this->attributeValue->getValueObject()->getSelectedTopics() as $value) {
@@ -264,7 +263,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function search()
     {
-        $this->requireAsset('core/topics');
         $this->load();
         $tree = TopicTree::getByID(Core::make('helper/security')->sanitizeInt($this->akTopicTreeID));
         $this->set('tree', $tree);
@@ -299,7 +297,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function type_form()
     {
-        $this->requireAsset('core/topics');
         $this->load();
         $tt = new TopicTree();
         $defaultTree = $tt->getDefault();
