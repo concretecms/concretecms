@@ -29,7 +29,7 @@ class PageTheme extends Theme implements ThemeProviderInterface
         $this->requireAsset('jquery');
     }
 
-    protected $pThemeGridFrameworkHandle = 'bootstrap3';
+    protected $pThemeGridFrameworkHandle = 'bootstrap4';
 
     public function getThemeName()
     {
