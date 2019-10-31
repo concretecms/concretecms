@@ -102,7 +102,7 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
         /** @var \Redis $redisClass */
 
         $this->assertInstanceOf(\Redis::class, $redisClass);
-        if (version_compare(phpversion('redis'), '4.9.9', '<=')) {
+        if (version_compare(phpversion('redis'), '5.0.0', '<')) {
             // In redis versions below 5.0 ping will return +PONG
             // PHP 5.x only supports up to 4.3.0
             $this->assertSame('+PONG', $redisClass->ping());
@@ -143,8 +143,10 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
             // In redis versions below 5.0 ping will return +PONG
             // PHP 5.x only supports up to 4.3.0
             $this->assertSame(['127.0.0.1:6379'=>'+PONG','127.0.0.1:6380'=>'+PONG'], $redisClass->ping());
-        } else {
-            $this->assertTrue($redisClass->ping());
+        } elseif (version_compare(phpversion('redis'), '5.0.9', '>')) {
+            // From phpredis version 5.0.0 and before 5.1.0
+            // RedisArray ping function returns null in array and causes a segfault error
+            $this->assertSame(['127.0.0.1:6379'=>true,'127.0.0.1:6380'=>true], $redisClass->ping());
         }
 
         $this->assertSame($redisClass->_hosts(), $this->getRedisHosts($redisConfig[0]));
