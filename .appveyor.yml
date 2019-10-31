@@ -25,6 +25,11 @@ services:
 init:
   - set PATH=C:\Program Files\MySQL\MySQL Server 5.7\bin;%PATH%
   - set MYSQL_PWD=Password12!
+  - nuget install redis-64 -excludeversion -OutputDirectory ../redis
+  - ..\redis\redis-64\tools\redis-server.exe --service-install --service-name redis1 --port 6379 --requirepass "randomredis"
+  - ..\redis\redis-64\tools\redis-server.exe --service-start --service-name redis1
+  - ..\redis\redis-64\tools\redis-server.exe --service-install --service-name redis2 --port 6380 --requirepass "randomredis"
+  - ..\redis\redis-64\tools\redis-server.exe --service-start --service-name redis2
 
 install:
   - ps: .\.appveyor\configure.ps1
