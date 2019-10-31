@@ -102,31 +102,52 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
         /** @var \Redis $redisClass */
 
         $this->assertInstanceOf(\Redis::class, $redisClass);
-        if (version_compare(phpversion('redis'), '5.0.0', '<')) {
-            // In redis versions below 5.0 ping will return +PONG
-            // PHP 5.x only supports up to 4.3.0
-        } else {
-            $this->assertTrue($redisClass->ping());
-        }
-
-        $redisConfig = [$this->getRedisConfig(2)];
-        $config['concrete.session'] = $redisConfig;
-        /** @var $redis_handler  RedisSessionHandler */
-        $redis_handler = $method->invokeArgs($this->factory, $redisConfig);
-        $property->setAccessible(true);
-        /** @var  $redisClass  \RedisArray */
-        $redisClass = $property->getValue($redis_handler);
-        $this->assertInstanceOf(\RedisArray::class, $redisClass);
-        if (version_compare(phpversion('redis'), '5.0.0', '<')) {
+        if (version_compare(phpversion('redis'), '4.9.9', '<=')) {
             // In redis versions below 5.0 ping will return +PONG
             // PHP 5.x only supports up to 4.3.0
             $this->assertSame('+PONG', $redisClass->ping());
         } else {
             $this->assertTrue($redisClass->ping());
         }
-        $hosts = $redisClass->_hosts();
 
-        $this->assertSame($hosts, $this->getRedisHosts($redisConfig));
+
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRedisArraySessionHandler()
+    {
+
+        // Make the private `getSessionHandler` method accessible
+        $reflection = new \ReflectionClass(get_class($this->factory));
+        $method = $reflection->getMethod('getSessionHandler');
+        $method->setAccessible(true);
+        $reflection = new \ReflectionClass(RedisSessionHandler::class);
+        $property = $reflection->getProperty('redis');
+        $property->setAccessible(true);
+
+
+        $redisConfig = [$this->getRedisConfig(2)];
+        $config['concrete.session'] = $redisConfig;
+        /** @var $redis_handler  RedisSessionHandler */
+        $redis_handler = $method->invokeArgs($this->factory, $redisConfig);
+
+        /** @var  $redisClass  \RedisArray */
+        $redisClass = $property->getValue($redis_handler);
+
+        $this->assertInstanceOf(\RedisArray::class, $redisClass);
+
+        if (version_compare(phpversion('redis'), '5.0.0', '<')) {
+            // In redis versions below 5.0 ping will return +PONG
+            // PHP 5.x only supports up to 4.3.0
+            $this->assertSame(['127.0.0.1:6379'=>'+PONG','127.0.0.1:6380'=>'+PONG'], $redisClass->ping());
+        } else {
+            $this->assertTrue($redisClass->ping());
+        }
+
+        $this->assertSame($redisClass->_hosts(), $this->getRedisHosts($redisConfig[0]));
 
     }
 
@@ -150,7 +171,8 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
 
     }
 
-    private function getRedisConfig($servers = 1) {
+    private function getRedisConfig($servers = 1)
+    {
         $config = ['handler' => 'redis',
             'redis' => [
                 'servers'=>[]

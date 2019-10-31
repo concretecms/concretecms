@@ -1,4 +1,5 @@
 #!/bin/bash
+pecl uninstall redis
 echo "Installing php-redis"
 INSTALL_REDIS=$(pecl install $REDIS_VERSION <<< '')
 if [[ "$INSTALL_REDIS" =~ "redis is already installed" ]]; then
@@ -10,7 +11,7 @@ PORTS="6379 6380"
 function start_node() {
 	P=$1
   echo "Starting Redis server on port: $P"
-	redis-server --port $P --requirepass "randomredis" > /dev/null 2>/dev/null &
+	redis-server --daemonize yes --port $P --requirepass "randomredis"
 	sleep 1
 }
 

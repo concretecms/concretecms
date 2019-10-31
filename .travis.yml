@@ -121,5 +121,3 @@ matrix:
         - ./.travis/setup-redis.sh
       script:
         - composer test
-services:
-  - redis-server
