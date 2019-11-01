@@ -548,6 +548,8 @@ class Controller extends BlockController
             $file = $file->getTreeNodeFileObject();
         } elseif ($file instanceof FileFolder) {
             return $this->getFolderColumnValue($key, $file);
+        } else {
+            return false;
         }
 
         switch ($key) {
