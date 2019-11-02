@@ -24,8 +24,10 @@ class Avatar extends AccountProfileEditPageController
         ];
         $this->view();
         $token = $this->app->make('token');
-        if (!$token->validate('avatar/save_avatar')) {
-            $this->redirect('/profile/avatar', 'token');
+        if (!$token->validate('avatar/save_avatar', $this->request->query->get('ccm_token'))) {
+            $result['error'] = true;
+            $result['message'] = $token->getErrorMessage();
+            return new JsonResponse($result, 400);
         }
 
         /** @var UserInfo $profile */
