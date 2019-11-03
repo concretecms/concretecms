@@ -264,32 +264,32 @@ class GroupTest extends UserTestCase
         $fuu4->enterGroup($group1);
 
         //Check they aren exclusively in group 1
-        $this->assertFalse($fuu1->isInExactGroup($group1));
+        $this->assertFalse($fuu1->inExactGroup($group1));
         // Check they are a member of group 1
-        $this->assertTrue($fuu1->isInGroup($group1));
+        $this->assertTrue($fuu1->inGroup($group1));
         // Check they are not a member of similar group path
-        $this->assertFalse($fui1->isInGroup($group2));
+        $this->assertFalse($fui1->inGroup($group2));
 
-        $this->assertTrue($fuu2->isInExactGroup($group1));
+        $this->assertTrue($fuu2->inExactGroup($group1));
         // Check they are a member of group 1
-        $this->assertTrue($fuu2->isInGroup($group1));
+        $this->assertTrue($fuu2->inGroup($group1));
         // Check they are not a member of any children
-        $this->assertFalse($fui2->isInGroup($group2));
-        $this->assertFalse($fui3->isInGroup($group3));
+        $this->assertFalse($fui2->inGroup($group2));
+        $this->assertFalse($fui3->inGroup($group3));
 
         // Check they are a member of group 1 from child only
-        $this->assertFalse($fuu3->isInExactGroup($group1));
-        $this->assertTrue($fuu3->isInGroup($group1));
+        $this->assertFalse($fuu3->inExactGroup($group1));
+        $this->assertTrue($fuu3->inGroup($group1));
         // Check they are not a member of any children
-        $this->assertTrue($fui3->isInGroup($group2));
-        $this->assertFalse($fui3->isInGroup($group3));
+        $this->assertTrue($fui3->inGroup($group2));
+        $this->assertFalse($fui3->inGroup($group3));
 
         // Check they are a member of group 1
-        $this->assertTrue($fuu4->isInExactGroup($group1));
-        $this->assertTrue($fuu4->isInGroup($group1));
+        $this->assertTrue($fuu4->inExactGroup($group1));
+        $this->assertTrue($fuu4->inGroup($group1));
         // Check they are not a member of any children
-        $this->assertFalse($fui4->isInGroup($group2));
-        $this->assertTrue($fui4->isInGroup($group3));
+        $this->assertFalse($fui4->inGroup($group2));
+        $this->assertTrue($fui4->inGroup($group3));
 
     }
 }
