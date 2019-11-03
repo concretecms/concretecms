@@ -94,6 +94,7 @@ class GroupTest extends UserTestCase
         $group1 = Group::add('HGroup', 'This is a test group 1');
         $group2 = Group::add('Group 1', 'This is a test group 2', $group1);
         $group3 = Group::add('Approvers', 'This is a test group 1', $group2);
+        $group4 = Group::add('Group 10', 'This is a test group 10', $group1);
 
         $newPath = $group3->getGroupPath();
         $this->assertEquals('/HGroup/Group 1/Approvers', $newPath);
@@ -149,11 +150,13 @@ class GroupTest extends UserTestCase
         $this->assertTrue($userA->inGroup($group3));
         $this->assertTrue($userA->inGroup($group2));
         $this->assertTrue($userA->inGroup($group1));
+        $this->assertFalse($userB->inGroup($group4));
         $userB = $userB->getUserObject();
 
         $this->assertFalse($userB->inGroup($group3));
         $this->assertTrue($userB->inGroup($group2));
         $this->assertTrue($userB->inGroup($group1));
+        $this->assertFalse($userB->inGroup($group4));
     }
 
     public function testInMultipleGroups()
