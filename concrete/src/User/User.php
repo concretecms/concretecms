@@ -656,7 +656,7 @@ class User extends ConcreteObject
         $dt = $app->make('helper/date');
 
         if (is_object($g)) {
-            if (!$this->inGroup($g)) {
+            if (!$this->inExactGroup($g)) {
                 $gID = $g->getGroupID();
                 $db = $app['database']->connection();
 
@@ -715,7 +715,7 @@ class User extends ConcreteObject
     }
 
     /**
-     * Return true if user is in Group.
+     * Return true if user is in Group or any of this groups children
      *
      * @param Group $g
      * @return bool
@@ -729,6 +729,30 @@ class User extends ConcreteObject
         $cnt = $db->GetOne("select Groups.gID from UserGroups inner join " . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . " on UserGroups.gID = Groups.gID where uID = ? and gPath like " . $db->quote($g->getGroupPath() . '%'), $v);
 
         return $cnt > 0;
+    }
+
+    /**
+     * Return true if user is in this Group.
+     * Does not check if user is a member of children
+     *
+     * @param Group $g
+     * @return bool
+     */
+    public function inExactGroup($g)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
+        $db = $app['database']->connection();
+        $query = $db->createQueryBuilder();
+        $query->select('ug.gID')->from('UserGroups', 'ug')
+            ->where($query->expr()->eq('ug.uID', ':userID'))
+            ->andWhere(
+                $query->expr()->eq('ug.gID', ':gID'))->setParameter('userID', $this->uID)
+            ->setParameter('gID', $g->getGroupID())
+            ->setMaxResults(1);
+        $results = $query->execute()->fetchColumn();
+
+        return $results;
     }
 
     /**
