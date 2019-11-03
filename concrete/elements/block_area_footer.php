@@ -59,21 +59,38 @@ $class = 'ccm-area-footer';
                         $axp = new Permissions($ax);
                         if ($axp->canAddLayout()) {
                             $bx = $a->getSubAreaBlockObject();
-                            if (is_object($bx) && !$bx->isError()) {
-                                ?>
-                                <li class="divider"></li>
-                                <li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>"><?=t("Edit Container Layout")?></a></li>
-                                <?php if ($showAreaDesign) { ?>
-                                    <li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout-style"><?=t("Edit Layout Design")?></a></li>
-                                <?php } ?>
-                                <?php
-                                if ($pk->validate()) {
-                                    $btc = $bx->getController();
-                                    $arLayout = $btc->getAreaLayoutObject();
+                            if ($bx->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+                                if (is_object($bx) && !$bx->isError()) {
                                     ?>
-                                    <li><a class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID())?>" dialog-title="<?=t('Save Layout as Preset')?>" dialog-width="360" dialog-height="300" dialog-modal="true"><?=t("Save Layout as Preset")?></a></li>
-                                    <li><a class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/area/layout/presets/manage')?>" dialog-title="<?=t('Manage Presets')?>" dialog-width="360" dialog-height="240" dialog-modal="true"><?=t("Manage Presets")?></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="javascript:void(0)"
+                                           data-container-layout-block-id="<?= $bx->getBlockID() ?>"
+                                           data-menu-action="edit-container-layout"
+                                           data-area-grid-maximum-columns="<?= $a->getAreaGridMaximumColumns() ?>"><?= t("Edit Container Layout") ?></a>
+                                    </li>
+                                    <?php if ($showAreaDesign) { ?>
+                                        <li><a href="javascript:void(0)"
+                                               data-container-layout-block-id="<?= $bx->getBlockID() ?>"
+                                               data-menu-action="edit-container-layout-style"><?= t("Edit Layout Design") ?></a>
+                                        </li>
+                                    <?php } ?>
                                     <?php
+                                    if ($pk->validate()) {
+                                        $btc = $bx->getController();
+                                        $arLayout = $btc->getAreaLayoutObject();
+                                        ?>
+                                        <li><a class="dialog-launch"
+                                               href="<?= URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID()) ?>"
+                                               dialog-title="<?= t('Save Layout as Preset') ?>" dialog-width="360"
+                                               dialog-height="300"
+                                               dialog-modal="true"><?= t("Save Layout as Preset") ?></a></li>
+                                        <li><a class="dialog-launch"
+                                               href="<?= URL::to('/ccm/system/dialogs/area/layout/presets/manage') ?>"
+                                               dialog-title="<?= t('Manage Presets') ?>" dialog-width="360"
+                                               dialog-height="240" dialog-modal="true"><?= t("Manage Presets") ?></a>
+                                        </li>
+                                        <?php
+                                    }
                                 }
                             }
                         }

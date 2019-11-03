@@ -56,7 +56,7 @@ if ($showMenu) {
     $arHandle = $a->getAreaHandle();
 
     $btw = BlockType::getByID($b->getBlockTypeID());
-    if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+    if (in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY, BLOCK_HANDLE_CONTAINER_PROXY])) {
         $class = 'ccm-block-edit-layout ccm-block-edit';
     } else {
         $class = 'ccm-block-edit';
@@ -91,8 +91,8 @@ if ($showMenu) {
         data-block-type-handle="<?=$btHandle?>"
         data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"
         data-dragging-avatar="<?=h('<p><img src="' . Loader::helper('concrete/urls')->getBlockTypeIconURL($btw) . '" /><span>' . t($btw->getBlockTypeName()) . '</span></p>')?>"
-        <?php if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
-    ?> data-block-menu-handle="none"<?php
+        <?php if (in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY, BLOCK_HANDLE_CONTAINER_PROXY])) { ?>
+    data-block-menu-handle="none"<?php
 }
     ?>
         >
@@ -112,7 +112,8 @@ if ($showMenu) {
     ?>
 
         <ul class="ccm-edit-mode-inline-commands ccm-ui">
-            <?php if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) {
+            <?php if ($p->canEditBlock() && (!in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY,
+    BLOCK_HANDLE_CONTAINER_PROXY]))) {
     ?>
                 <li><a data-inline-command="move-block" href="#"><i class="fa fa-arrows"></i></a></li>
             <?php

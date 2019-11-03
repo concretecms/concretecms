@@ -3,6 +3,10 @@
     <themes>
         <theme handle="elemental" package="" activated="1"/>
     </themes>
+    <containers>
+        <container theme="elemental" template-file="two_column_accent.php" name="Two Column Accent"
+                   icon="two_column.png" package=""/>
+    </containers>
     <thumbnailtypes>
         <thumbnailtype name="Small Image" handle="small" sizingMode="proportional" width="740"/>
         <thumbnailtype name="Medium Image" handle="medium" sizingMode="proportional" width="940"/>

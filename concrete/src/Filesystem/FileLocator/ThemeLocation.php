@@ -19,10 +19,14 @@ class ThemeLocation extends AbstractLocation
 
     public function __construct(Theme $theme)
     {
+        $this->setTheme($theme);
+    }
+
+    public function setTheme(Theme $theme)
+    {
         $this->themeHandle = $theme->getThemeHandle();
         $this->pkgHandle = $theme->getPackageHandle();
     }
-
     /**
      * @return mixed
      */

@@ -1261,7 +1261,36 @@ div.ccm-panel-header-accordion {
 div.ccm-panel-header-accordion-dropdown-visible {
   nav {
     ul {
-      height: 220px !important;
+      height: 250px !important;
     }
+  }
+}
+
+/* Containers */
+ul#ccm-panel-add-container-list {
+  @include list-unstyled();
+  
+  img {
+    max-width: 40px;
+    margin-right: 10px;
+  }
+  
+  a {
+    font-size: 0.9rem;
+    border-bottom: 1px solid #333;
+    color: #ccc !important;
+    text-decoration: none;
+    display: block;
+    padding: 10px 0px 10px 30px;
+
+    transition: background-color 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+    &:hover {
+      background-color: #000 !important;
+    }
+
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    cursor: grab;
+
   }
 }

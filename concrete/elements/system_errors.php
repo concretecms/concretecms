@@ -37,7 +37,7 @@ if (isset($error) && $error) {
         }
         if (isset($format) && $format == 'block') {
             ?>
-            <div class="ccm-system-errors alert alert-danger alert-dismissable mb-5 mt-5"><button type="button" class="close" data-dismiss="alert">×</button>
+            <div class="ccm-system-errors alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">×</button>
                 <?php
                 foreach ($_htmlErrors as $e) {
                     ?><div><?= $e ?></div><?php

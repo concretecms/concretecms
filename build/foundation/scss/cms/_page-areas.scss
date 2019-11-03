@@ -128,9 +128,9 @@ div.ccm-area-footer {
   opacity: 0;
   transition: opacity 0.5 s cubic-bezier(0.190, 1.000, 0.220, 1.000);
   position: absolute;
-  bottom: -35px;
+  //bottom: -35px;
   left: 0px;
-  padding-top: 15px;
+  //padding-top: 15px;
   z-index: $index-level-in-context-area-handle;
   padding-left: 20px;
   white-space: nowrap;
@@ -444,7 +444,6 @@ div.ccm-area-drag-area {
   outline-style: solid;
   text-indent: -10000em;
   line-height: 0px;
-  font-size: 0px;
   outline-color: rgb(170, 255, 170);
 
   &.ccm-area-drag-area-contender {
@@ -479,7 +478,7 @@ div.ccm-area[data-total-blocks="0"] {
   div.ccm-area-drag-area {
     text-indent: 0;
     text-align: center;
-    padding: 18px;
+    padding: 24px;
     color: #bbb;
   }
 }

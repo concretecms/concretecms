@@ -18,11 +18,48 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <li><a data-panel-accordion-tab="blocks"<?= $tab === 'blocks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Blocks') ?></a></li>
                 <li><a data-panel-accordion-tab="clipboard"<?= $tab === 'clipboard' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Clipboard') ?></a></li>
                 <li><a data-panel-accordion-tab="stacks"<?= $tab === 'stacks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Stacks') ?></a></li>
+                <li><a data-panel-accordion-tab="containers"<?= $tab === 'containers' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Containers') ?></a></li>
             </ul>
         </nav>
     </div>
     <?php
     switch ($tab) {
+    case 'containers':
+        /* @var Concrete\Core\Entity\Page\Container[] $containers */
+        ?>
+        <ul id="ccm-panel-add-container-list">
+            <?php
+            foreach ($containers as $container) {
+                ?>
+                <li>
+                    <a
+                        href="#"
+                        class="ccm-panel-add-container-item"
+                        data-panel-add-block-drag-item="container"
+                        data-cID="<?= (int) $c->getCollectionID() ?>"
+                        data-container-id="<?=$container->getContainerID() ?>"
+                        data-block-type-handle="core_container"
+                        data-has-add-template="no"
+                        data-supports-inline-add="no"
+                        data-btID="0"
+                        data-dragging-avatar="<?= h('<p>' . $container->getContainerIconImage() . '<span>' . $container->getContainerName() . '</span></p>') ?>"
+                    >
+                       <span class="handle">
+                           <img src="<?=$container->getContainerIconImage(false)?>" />
+                            <span><?= h($container->getContainerName()) ?></span>
+                       </span>
+                    </a>
+                </li>
+                <?php
+            }
+            ?>
+        </ul>
+        <script>
+
+        </script>
+    <?php
+    break;   
+
         case 'stacks':
             /* @var Concrete\Core\Page\Stack\Stack[] $stacks */
             ?>

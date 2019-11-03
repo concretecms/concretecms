@@ -14028,7 +14028,36 @@ div.ccm-panel-header-accordion nav span:hover {
 }
 
 div.ccm-panel-header-accordion-dropdown-visible nav ul {
-  height: 220px !important;
+  height: 250px !important;
+}
+
+/* Containers */
+
+ul#ccm-panel-add-container-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+ul#ccm-panel-add-container-list img {
+  max-width: 40px;
+  margin-right: 10px;
+}
+
+ul#ccm-panel-add-container-list a {
+  font-size: 0.9rem;
+  border-bottom: 1px solid #333;
+  color: #ccc !important;
+  text-decoration: none;
+  display: block;
+  padding: 10px 0px 10px 30px;
+  -webkit-transition: background-color 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: background-color 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+ul#ccm-panel-add-container-list a:hover {
+  background-color: #000 !important;
 }
 
 /**
@@ -15588,9 +15617,7 @@ div.ccm-area-footer {
   -webkit-transition: opacity 0.5 s cubic-bezier(0.19, 1, 0.22, 1);
   transition: opacity 0.5 s cubic-bezier(0.19, 1, 0.22, 1);
   position: absolute;
-  bottom: -35px;
   left: 0px;
-  padding-top: 15px;
   z-index: 2;
   padding-left: 20px;
   white-space: nowrap;
@@ -15901,7 +15928,6 @@ div.ccm-area-drag-area {
   outline-style: solid;
   text-indent: -10000em;
   line-height: 0px;
-  font-size: 0px;
   outline-color: #aaffaa;
 }
 
@@ -15933,7 +15959,7 @@ html.ccm-block-dragging div.ccm-area-drag-area {
 div.ccm-area[data-total-blocks="0"] div.ccm-area-drag-area {
   text-indent: 0;
   text-align: center;
-  padding: 18px;
+  padding: 24px;
   color: #bbb;
 }
 

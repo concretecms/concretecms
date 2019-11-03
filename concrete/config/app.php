@@ -258,6 +258,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportContainersRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypesBaseRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
@@ -496,6 +497,9 @@ return [
         ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
         ['Concrete\Core\User\Group\Command\AddGroupCommand', 'Concrete\Core\User\Group\Command\AddGroupCommandHandler'],
         ['Concrete\Core\User\Group\Command\DeleteGroupCommand', 'Concrete\Core\User\Group\Command\DeleteGroupCommandHandler'],
+        ['Concrete\Core\Page\Container\Command\AddContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
+        ['Concrete\Core\Page\Container\Command\UpdateContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
+        ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
     ],
 
 ];

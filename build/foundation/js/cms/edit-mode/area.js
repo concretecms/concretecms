@@ -104,7 +104,9 @@
             $('div.ccm-block-edit[data-area-id=' + my.getId() + ']', this.getElem()).each(function () {
                 var me = $(this), handle = me.data('block-type-handle');
 
-                if (handle === 'core_area_layout') {
+                if (handle === 'core_container') {
+                    type = Concrete.ContainerBlock;
+                } else if (handle === 'core_area_layout') {
                     type = Concrete.Layout;
                 } else if (handle === 'core_stack_display') {
                     type = Concrete.StackDisplay;

@@ -505,6 +505,12 @@
                 new Concrete.DuplicateBlock(me, my, next_area);
             });
 
+            $(element).find('a.ccm-panel-add-container-item').each(function () {
+                var me = $(this), dragger = me;
+                new Concrete.Container(me, my, dragger, next_area);
+            });
+
+
             /*
             $(element).find('.ccm-panel-content').mousewheel(function (e) {
 

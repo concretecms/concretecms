@@ -26832,17 +26832,21 @@ let PNotify,posTimer,onDocumentLoaded=()=>{PNotify.defaultStack.context=document
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__edit_mode_block___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__edit_mode_block__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__edit_mode_blocktype__ = __webpack_require__(66);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__edit_mode_duplicateblock__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__edit_mode_layout__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__edit_mode_stack__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__edit_mode_stackblock__ = __webpack_require__(70);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__edit_mode_stackdisplay__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__edit_mode_heartbeat__ = __webpack_require__(72);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__edit_mode_heartbeat___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__edit_mode_heartbeat__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__edit_mode_style_customizer_style_customizer__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__edit_mode_layouts__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__edit_mode_layouts___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13__edit_mode_layouts__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__edit_mode_composer_save_coordinator__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__edit_mode_composer_save_coordinator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14__edit_mode_composer_save_coordinator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__edit_mode_containerblock__ = __webpack_require__(341);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__edit_mode_layout__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__edit_mode_container__ = __webpack_require__(340);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__edit_mode_stack__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__edit_mode_stackblock__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__edit_mode_stackdisplay__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__edit_mode_heartbeat__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__edit_mode_heartbeat___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13__edit_mode_heartbeat__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__edit_mode_style_customizer_style_customizer__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__edit_mode_layouts__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__edit_mode_layouts___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_15__edit_mode_layouts__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__edit_mode_composer_save_coordinator__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__edit_mode_composer_save_coordinator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16__edit_mode_composer_save_coordinator__);
+
+
 
 
 
@@ -28499,6 +28503,12 @@ let PNotify,posTimer,onDocumentLoaded=()=>{PNotify.defaultStack.context=document
                 new Concrete.DuplicateBlock(me, my, next_area);
             });
 
+            $(element).find('a.ccm-panel-add-container-item').each(function () {
+                var me = $(this),
+                    dragger = me;
+                new Concrete.Container(me, my, dragger, next_area);
+            });
+
             /*
             $(element).find('.ccm-panel-content').mousewheel(function (e) {
                  if (!e.deltaY || !e.deltaFactor) {
@@ -28796,7 +28806,9 @@ let PNotify,posTimer,onDocumentLoaded=()=>{PNotify.defaultStack.context=document
                 var me = $(this),
                     handle = me.data('block-type-handle');
 
-                if (handle === 'core_area_layout') {
+                if (handle === 'core_container') {
+                    type = Concrete.ContainerBlock;
+                } else if (handle === 'core_area_layout') {
                     type = Concrete.Layout;
                 } else if (handle === 'core_stack_display') {
                     type = Concrete.StackDisplay;
@@ -56265,6 +56277,154 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 }));
 //# sourceMappingURL=toast.js.map
 
+
+/***/ }),
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_underscore__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_underscore___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_underscore__);
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, Concrete, ConcreteAlert, ccmi18n, CCM_SECURITY_TOKEN, CCM_DISPATCHER_FILENAME */
+
+
+
+(function (window, $) {
+    'use strict';
+
+    /**
+     * Container object used in the add panel. This is a BlockType subclass.
+     * @type {Function}
+     */
+
+    var Container = Concrete.Container = function Container(elem, edit_mode, dragger) {
+        this.init.apply(this, __WEBPACK_IMPORTED_MODULE_0_underscore__(arguments).toArray());
+    };
+
+    Container.prototype = __WEBPACK_IMPORTED_MODULE_0_underscore__["extend"](Object.create(Concrete.BlockType.prototype), {
+
+        removeElement: function removeElement() {
+            this.getElem().remove();
+        },
+
+        addToDragArea: function ContainerAddToDragArea(drag_area) {
+            var my = this,
+                elem = my.getElem(),
+                area = drag_area.getArea(),
+                area_handle = area.getHandle(),
+                dragAreaBlockID = 0,
+                dragAreaBlock = drag_area.getBlock();
+
+            if (dragAreaBlock) {
+                dragAreaBlockID = dragAreaBlock.getId();
+            }
+
+            $.fn.dialog.closeAll();
+
+            var settings = {
+                cID: elem.data('cid'),
+                arHandle: area_handle,
+                containerID: elem.data('container-id'),
+                ccm_token: CCM_SECURITY_TOKEN
+            };
+
+            if (dragAreaBlockID) {
+                settings.dragAreaBlockID = dragAreaBlockID;
+            }
+
+            $.fn.dialog.showLoader();
+            $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/page/add_container', settings, function (response) {
+                my.handleAddResponse(response, area, dragAreaBlock);
+            });
+        },
+
+        showSuccessfulAdd: function containerShowSuccessfulAdd() {
+            ConcreteAlert.notify({
+                'message': ccmi18n.addBlockContainerMsg,
+                'title': ccmi18n.addBlockContainer
+            });
+        }
+
+    });
+})(window, jQuery);
+
+/***/ }),
+/* 341 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_underscore__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_underscore___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_underscore__);
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, Concrete */
+
+
+
+;(function (window, $) {
+    'use strict';
+
+    var ContainerBlock = Concrete.ContainerBlock = function ContainerBlock(elem, edit_mode) {
+        this.init.apply(this, __WEBPACK_IMPORTED_MODULE_0_underscore__(arguments).toArray());
+    };
+
+    ContainerBlock.prototype = __WEBPACK_IMPORTED_MODULE_0_underscore__["extend"](Object.create(Concrete.Block.prototype), {
+
+        init: function init(elem, edit_mode) {
+            var my = this;
+            my.bindEvent('EditModeInlineEditLoaded.editmode', function (e, data) {
+                if (data.block === my) {
+                    my.bindDrag();
+                }
+            });
+            Concrete.Block.prototype.init.call(my, elem, edit_mode, $());
+
+            elem.children('.ccm-block-cover').remove();
+        },
+
+        bindDrag: function containerBlockBindDrag() {
+            var my = this,
+                peper = $('a[data-layout-command="move-block"]').parent();
+
+            $.pep.unbind(peper);
+            peper.pep(my.getPepSettings());
+        },
+
+        addToDragArea: function containerBlockAddToDragArea() {
+            Concrete.Block.prototype.addToDragArea.apply(this, __WEBPACK_IMPORTED_MODULE_0_underscore__["toArray"](arguments));
+
+            var container = $('#ccm-inline-toolbar-container');
+            container.css({
+                top: this.getElem().offset().top - container.outerHeight() - 5
+            });
+        }
+
+    });
+})(window, jQuery);
 
 /***/ })
 /******/ ]);
