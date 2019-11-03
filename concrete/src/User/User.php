@@ -738,7 +738,7 @@ class User extends ConcreteObject
             ->where($query->expr()->eq('ug.uID', ':userID'))
             ->andWhere($query->expr()->orX(
                 $query->expr()->eq('ug.gID', ':gID'),
-                $query->expr()->like('ug.gPath', 'groupPath')
+                $query->expr()->like('g.gPath', 'groupPath')
             ))
             ->setParameter('userID', $this->uID)
             ->setParameter('gID', $g->getGroupID())
