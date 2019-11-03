@@ -717,7 +717,7 @@ class User extends ConcreteObject
     }
 
     /**
-     * Return true if user is in Group or any of this groups children
+     * Return true if user is in Group or any of this groups children.
      *
      * @param Group $g
      *
@@ -749,9 +749,10 @@ class User extends ConcreteObject
 
     /**
      * Return true if user is in this Group.
-     * Does not check if user is a member of children
+     * Does not check if user is a member of children.
      *
      * @param Group $g
+     *
      * @return bool
      */
     public function inExactGroup($g)
