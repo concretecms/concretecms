@@ -5,8 +5,6 @@ use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\Entry\Group\EnterGroup;
-use Concrete\Core\Logging\Entry\Group\ExitGroup;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Session\SessionValidator;
@@ -733,7 +731,7 @@ class User extends ConcreteObject
         /** @var $likeBuilder LikeBuilder */
         $likeBuilder = $app->make(LikeBuilder::class);
         $query = $db->createQueryBuilder();
-        $results = $query->select('ug.gID')->from('UserGroups', 'ug')
+        $query->select('ug.gID')->from('UserGroups', 'ug')
             ->innerJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID')
             ->where($query->expr()->eq('ug.uID', ':userID'))
             ->andWhere($query->expr()->orX(
@@ -743,10 +741,10 @@ class User extends ConcreteObject
             ->setParameter('userID', $this->uID)
             ->setParameter('gID', $g->getGroupID())
             ->setParameter('groupPath', $likeBuilder->escapeForLike($g->getGroupPath()) . '/%')
-            ->setMaxResults(1)
-            ->execute();
+            ->setMaxResults(1);
+        $results = $query->execute()->fetchColumn();
 
-        return !empty($results);
+        return $results;
     }
 
     /**
