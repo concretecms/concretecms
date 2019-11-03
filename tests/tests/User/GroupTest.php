@@ -150,7 +150,7 @@ class GroupTest extends UserTestCase
         $this->assertTrue($userA->inGroup($group3));
         $this->assertTrue($userA->inGroup($group2));
         $this->assertTrue($userA->inGroup($group1));
-        $this->assertFalse($userB->inGroup($group4));
+        $this->assertFalse($userA->inGroup($group4));
         $userB = $userB->getUserObject();
 
         $this->assertFalse($userB->inGroup($group3));
@@ -271,28 +271,28 @@ class GroupTest extends UserTestCase
         // Check they are a member of group 1
         $this->assertTrue($fuu1->inGroup($group1));
         // Check they are not a member of similar group path
-        $this->assertFalse($fui1->inGroup($group2));
+        $this->assertFalse($fuu1->inGroup($group2));
 
         $this->assertTrue($fuu2->inExactGroup($group1));
         // Check they are a member of group 1
         $this->assertTrue($fuu2->inGroup($group1));
         // Check they are not a member of any children
-        $this->assertFalse($fui2->inGroup($group2));
-        $this->assertFalse($fui3->inGroup($group3));
+        $this->assertFalse($fuu2->inGroup($group2));
+        $this->assertFalse($fuu3->inGroup($group3));
 
         // Check they are a member of group 1 from child only
         $this->assertFalse($fuu3->inExactGroup($group1));
         $this->assertTrue($fuu3->inGroup($group1));
         // Check they are not a member of any children
-        $this->assertTrue($fui3->inGroup($group2));
-        $this->assertFalse($fui3->inGroup($group3));
+        $this->assertTrue($fuu3->inGroup($group2));
+        $this->assertFalse($fuu3->inGroup($group3));
 
         // Check they are a member of group 1
         $this->assertTrue($fuu4->inExactGroup($group1));
         $this->assertTrue($fuu4->inGroup($group1));
         // Check they are not a member of any children
-        $this->assertFalse($fui4->inGroup($group2));
-        $this->assertTrue($fui4->inGroup($group3));
+        $this->assertFalse($fuu4->inGroup($group2));
+        $this->assertTrue($fuu4->inGroup($group3));
 
     }
 }
