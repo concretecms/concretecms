@@ -744,7 +744,7 @@ class User extends ConcreteObject
             ->setMaxResults(1);
         $results = $query->execute()->fetchColumn();
 
-        return $results;
+        return (bool) $results;
     }
 
     /**
@@ -769,7 +769,7 @@ class User extends ConcreteObject
             ->setMaxResults(1);
         $results = $query->execute()->fetchColumn();
 
-        return $results;
+        return (bool) $results;
     }
 
     /**
