@@ -127,7 +127,6 @@ class ApiServiceProvider extends ServiceProvider
     protected function registerAuthorizationServer()
     {
         // The ResourceServer deals with authenticating requests, in other words validating tokens
-        $this->app->when(ResourceServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
         $this->app->bind(ResourceServer::class, function() {
             $cryptKey = new CryptKey($this->getKey(self::KEY_PUBLIC), null, DIRECTORY_SEPARATOR !== '\\');
             return $this->app->build(ResourceServer::class, [
