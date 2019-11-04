@@ -36,7 +36,7 @@ class ContainerExporter implements ItemInterface
             foreach($instanceAreas as $instanceArea) {
                 $arHandle = Area::getAreaHandleFromID($instanceArea->getAreaID());
                 if ($arHandle) {
-                    $containerAreaNode = $containerNode->addChild('container-area');
+                    $containerAreaNode = $containerNode->addChild('containerarea');
                     $containerAreaNode->addAttribute('name', $instanceArea->getContainerAreaName());
                     $area = Area::get($this->page, $arHandle);
                     if ($area) {

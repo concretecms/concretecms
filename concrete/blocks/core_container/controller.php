@@ -1,12 +1,15 @@
 <?php
 namespace Concrete\Block\CoreContainer;
 
+use Concrete\Core\Area\SubArea;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Container\ContainerExporter;
 use Concrete\Core\Page\Container\TemplateLocator;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Doctrine\ORM\EntityManager;
 
 class Controller extends BlockController
@@ -83,4 +86,50 @@ class Controller extends BlockController
         }
     }
 
+    public function getImportData($blockNode, $page)
+    {
+        $args = [];
+        $entityManager = $this->app->make(EntityManager::class);
+        if (isset($blockNode->container)) {
+            $template = (string) $blockNode->container['template'];
+            $container = $entityManager->getRepository(Container::class)
+                ->findOneByContainerTemplateFile($template);
+            if ($container) {
+                $args['containerID'] = $container->getContainerID();
+            }
+        }
+        return $args;
+    }
+
+    protected function importAdditionalData($b, $blockNode)
+    {
+        $parentArea = $b->getBlockAreaObject();
+        $page = $b->getBlockCollectionObject();
+
+        // go through all areas found under this node, and create the corresponding sub area.
+        foreach ($blockNode->container->containerarea as $containerAreaNode) {
+            $areaHandle = (string)$containerAreaNode['name'];
+            $subArea = new SubArea(
+                $areaHandle,
+                $parentArea->getAreaHandle(),
+                $parentArea->getAreaID()
+            );
+            $subArea->setAreaDisplayName($areaHandle);
+            $subArea->load($page);
+
+            if ($containerAreaNode->style) {
+                $set = StyleSet::import($containerAreaNode->style);
+                $page->setCustomStyleSet($subArea, $set);
+            }
+            foreach ($containerAreaNode->block as $bx) {
+                $bt = BlockType::getByHandle((string)$bx['type']);
+                if (!is_object($bt)) {
+                    throw new \Exception(t('Invalid block type handle: %s', (string)($bx['type'])));
+                }
+                $btc = $bt->getController();
+                $btc->import($page, $subArea->getAreaHandle(), $bx);
+            }
+        }
+    }
+    
 }
