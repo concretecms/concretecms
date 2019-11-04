@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Page\Container;
 
+use Concrete\Core\Entity\Page\Container;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,6 +27,21 @@ class Instance
     protected $container;
 
     /**
+     * @ORM\OneToMany(targetEntity="InstanceArea", mappedBy="instance", cascade={"remove"})
+     */
+    protected $instanceAreas;
+
+    /**
+     * @ORM\Column(type="boolean")
+     **/
+    protected $areasAreComputed = false;
+
+    public function __construct()
+    {
+        $this->instanceAreas = new ArrayCollection();
+    }
+
+    /**
      * @return mixed
      */
     public function getContainerInstanceID()
@@ -33,7 +50,7 @@ class Instance
     }
     
     /**
-     * @return mixed
+     * @return Container
      */
     public function getContainer()
     {
@@ -41,11 +58,47 @@ class Instance
     }
 
     /**
-     * @param mixed $container
+     * @param Container $container
      */
     public function setContainer($container): void
     {
         $this->container = $container;
     }
+
+    /**
+     * @return mixed
+     */
+    public function areaAreasComputed()
+    {
+        return $this->areasAreComputed;
+    }
+
+    /**
+     * @param mixed $areasAreComputed
+     */
+    public function setAreasAreComputed($areasAreComputed): void
+    {
+        $this->areasAreComputed = $areasAreComputed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstanceAreas()
+    {
+        return $this->instanceAreas;
+    }
+
+    /**
+     * @param mixed $instanceAreas
+     */
+    public function setInstanceAreas($instanceAreas): void
+    {
+        $this->instanceAreas = $instanceAreas;
+    }
+    
+    
+    
+    
 
 }

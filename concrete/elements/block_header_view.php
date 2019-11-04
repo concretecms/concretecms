@@ -115,7 +115,7 @@ if ($showMenu) {
             <?php if ($p->canEditBlock() && (!in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY,
     BLOCK_HANDLE_CONTAINER_PROXY]))) {
     ?>
-                <li><a data-inline-command="move-block" href="#"><i class="fa fa-arrows"></i></a></li>
+                <li><a data-inline-command="move-block" href="#"><i class="fas fa-arrows-alt"></i></a></li>
             <?php
 }
     ?>

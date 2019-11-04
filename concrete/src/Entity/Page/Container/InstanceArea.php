@@ -19,11 +19,11 @@ class InstanceArea
     protected $containerInstanceAreaID;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Instance")
+     * @ORM\ManyToOne(targetEntity="Instance", inversedBy="instanceAreas")
      * @ORM\JoinColumn(name="containerInstanceID", referencedColumnName="containerInstanceID", onDelete="CASCADE")
      **/
     protected $instance;
-
+    
     /**
      * @ORM\Column(type="integer")
      */

@@ -5,6 +5,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
+use Concrete\Core\Page\Container\ContainerExporter;
 use Concrete\Core\Page\Container\TemplateLocator;
 use Doctrine\ORM\EntityManager;
 
@@ -26,22 +27,30 @@ class Controller extends BlockController
         return t("Container");
     }
     
-    public function view()
+    protected function getContainerInstanceObject()
     {
         $entityManager = $this->app->make(EntityManager::class);
-        $template = null;
         if ($this->containerInstanceID) {
             $instance = $entityManager->find(Container\Instance::class, $this->containerInstanceID);
-            if ($instance) {
-                $container = $instance->getContainer();
-                if ($container) {
-                    $containerBlockInstance = new ContainerBlockInstance($this->getBlockObject(), $instance);
-                    $locator = $this->app->make(TemplateLocator::class);
-                    // no this is not a typo. Aesthetically it looks nice to pass $container to the container area
-                    // constructor, but we need the instance object, not just the outer container object.
-                    $this->set('container', $containerBlockInstance);
-                    $this->set('fileToRender', $locator->getFileToRender($this->getCollectionObject(), $container));
-                }
+            return $instance;
+        }
+        return null;
+    }
+    
+    public function view()
+    {
+        $template = null;
+        $instance = $this->getContainerInstanceObject();
+        if ($instance) {
+            $container = $instance->getContainer();
+            if ($container) {
+                $containerBlockInstance = $this->app->make(ContainerBlockInstance::class, 
+                    ['block' => $this->getBlockObject(), 'instance' => $instance]);
+                $locator = $this->app->make(TemplateLocator::class);
+                // no this is not a typo. Aesthetically it looks nice to pass $container to the container area
+                // constructor, but we need the instance object, not just the outer container object.
+                $this->set('container', $containerBlockInstance);
+                $this->set('fileToRender', $locator->getFileToRender($this->getCollectionObject(), $container));
             }
         }
     }
@@ -63,4 +72,15 @@ class Controller extends BlockController
         }
         parent::save($data);
     }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $instance = $this->getContainerInstanceObject();
+        if ($instance) {
+            $page = $this->getBlockObject()->getBlockCollectionObject();
+            $exporter = new ContainerExporter($page);
+            $exporter->export($instance, $blockNode);
+        }
+    }
+
 }
