@@ -13,6 +13,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User as UserObject;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
@@ -180,8 +181,11 @@ final class Controller implements LoggerAwareInterface
             /** @var User $user */
             $user = $userRepository->findOneBy([$emailLogin ? 'uEmail' : 'uName' => $user]);
 
+            $app = Application::getFacadeApplication();
+            $hasher = $app->make(\Concrete\Core\Encryption\PasswordHasher::class);
+
             // User successfully logged in
-            if ($user && $user->getUserID() && password_verify($password, $user->getUserPassword())) {
+            if ($user && $user->getUserID() && $hasher->checkPassword($password, $user->getUserPassword())) {
 
                 $userInfo = $this->entityManager->find(User::class, $user->getUserID());
                 $request->setUser($userInfo);
