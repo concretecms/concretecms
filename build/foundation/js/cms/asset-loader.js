@@ -51,4 +51,4 @@
 
     global.ConcreteAssetLoader = ConcreteAssetLoader;
 
-})(this, jQuery);
+})(window, jQuery);

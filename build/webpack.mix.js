@@ -23,6 +23,7 @@ if (mix.inProduction()) {
 mix.copy('node_modules/jquery/dist/jquery.min.js', '../concrete/js/jquery.js');
 mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/webfonts');
 mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
+mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
 
 //delete these?!
 // mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.js', '../concrete/js/bootstrap.js');
@@ -33,10 +34,12 @@ mix
     .sass('themes/dashboard/scss/main.scss', 'themes/dashboard')
     .sass('themes/elemental/scss/main.scss', 'themes/elemental/css')
     .sass('foundation/scss/cms.scss', 'css/cms.css')
+    .sass('foundation/scss/ckeditor/concrete.scss', 'css/ckeditor/concrete.css')
     .js('themes/elemental/js/main.js', 'themes/elemental')
     .js('themes/dashboard/js/main.js', 'themes/dashboard')
     .js('themes/concrete/js/main.js', 'themes/concrete')
-    .js('foundation/js/cms.js', 'js/cms.js');
+    .js('foundation/js/cms.js', 'js/cms.js')
+    .js('foundation/js/ckeditor/concrete.js', 'js/ckeditor/concrete.js');
 
 
 // Turn off notifications

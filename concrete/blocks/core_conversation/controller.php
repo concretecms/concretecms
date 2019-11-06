@@ -113,6 +113,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
         $this->set('notificationUsers', $conversation->getConversationSubscribedUsers());
     }
 
+    /*
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/conversation');
@@ -121,6 +122,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
             $this->requireAsset('css', 'core/frontend/captcha');
         }
     }
+    */
 
     public function view()
     {

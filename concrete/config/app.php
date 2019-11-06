@@ -387,6 +387,25 @@ return [
             ],
         ],
 
+        'ckeditor' => [
+            [
+                'javascript',
+                'js/ckeditor/ckeditor.js'
+            ],
+        ],
+
+        'ckeditor/jquery' => [
+            [
+                'javascript',
+                'js/ckeditor/adapters/jquery.js'
+            ],
+        ],
+
+        'ckeditor/concrete' => [
+            ['javascript', 'js/ckeditor/concrete.js'],
+            ['css', 'css/ckeditor/concrete.css'],
+        ],
+
         'font-awesome' => [
             [
                 'css',
@@ -415,7 +434,21 @@ return [
                 ['css', 'font-awesome'],
             ],
         ],
+
+        'ckeditor' => [
+            [
+                ['javascript', 'ckeditor'],
+                ['javascript', 'ckeditor/jquery'],
+            ],
+        ],
         
+        'ckeditor/concrete' => [
+            [
+                ['javascript', 'ckeditor/concrete'],
+                ['css', 'ckeditor/concrete'],
+            ],
+        ],
+
         'core/cms' => [
             [
                 ['jquery'],

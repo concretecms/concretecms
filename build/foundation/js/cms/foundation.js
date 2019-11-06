@@ -2,8 +2,11 @@
 // Import required libraries.
 import * as _ from 'underscore';
 import NProgress from 'NProgress';
+import PNotify from 'pnotify/dist/es/PNotify';
+
 window.NProgress = NProgress;
 window._ = _;
+window.PNotify = PNotify;
 
 // JavaScript/jQuery base libraries.
 import 'json5';

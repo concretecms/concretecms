@@ -25,9 +25,6 @@ class SiteLocaleSelector
      */
     public function selectLocale($fieldName, Site $site, Locale $selectedLocale = null, array $options = [])
     {
-        $v = View::getInstance();
-        $v->requireAsset('core/app');
-
         $siteLocales = $site->getLocales()->toArray();
 
         $allowNull = !empty($options['allowNull']);

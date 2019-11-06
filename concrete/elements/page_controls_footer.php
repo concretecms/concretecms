@@ -366,9 +366,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     <?php
                 }
                 ?>
-                <li class="float-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg<?=$c->isEditMode() ? ' ccm-toolbar-mobile-menu-button-active' : ''?>">
-                    <i class="fa fa-bars fa-2"></i>
-                </li>
                 <?php
                 if ($dh->canRead()) {
                     ?>

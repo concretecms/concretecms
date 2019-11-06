@@ -113,9 +113,6 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     <i class="fa fa-search"></i>
                     <input type="search" autocomplete="off" id="ccm-nav-intelligent-search" tabindex="1" />
                 </li>
-                <li class="float-right ccm-toolbar-mobile-menu-button d-none d-sm-block d-md-none">
-                    <i class="fa fa-bars"></i>
-                </li>
                 <?php
                 $items = $ihm->getPageHeaderMenuItems('right');
                 foreach ($items as $ih) {

@@ -3,6 +3,7 @@
   "devDependencies": {
     "browser-sync": "^2.24.5",
     "browser-sync-webpack-plugin": "2.0.1",
+    "ckeditor4": "^4.13.0",
     "download": "~4.4.3",
     "dropzone": "^5.5.1",
     "grunt": "~0.4.1",
