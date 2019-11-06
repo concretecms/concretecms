@@ -60,6 +60,7 @@
     ],
     "post-create-project-cmd": [
       "composer config --unset platform.php"
-    ]
+    ],
+    "ccm": "./concrete/bin/concrete5 --"
   }
 }
