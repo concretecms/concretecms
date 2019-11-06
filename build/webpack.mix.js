@@ -33,7 +33,7 @@ mix
     .sass('themes/concrete/scss/main.scss', 'themes/concrete')
     .sass('themes/dashboard/scss/main.scss', 'themes/dashboard')
     .sass('themes/elemental/scss/main.scss', 'themes/elemental/css')
-    .sass('foundation/scss/cms.scss', 'css/cms.css')
+    .sass('foundation/scss/cms/cms.scss', 'css/cms.css')
     .sass('foundation/scss/ckeditor/concrete.scss', 'css/ckeditor/concrete.css')
     .js('themes/elemental/js/main.js', 'themes/elemental')
     .js('themes/dashboard/js/main.js', 'themes/dashboard')

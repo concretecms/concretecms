@@ -124,7 +124,7 @@ a.ccm-panel-add-block-draggable-block-type {
 	padding: 2px;
 	box-sizing: padding-box;
 	text-align: center;
-	background-color: #161c22;
+	background-color: #161c22 !important;
 	border-radius: 4px;
 
 	span {
@@ -136,8 +136,8 @@ a.ccm-panel-add-block-draggable-block-type {
 		display: block;
 		color: #8f969a;
 		background-color: #000;
-		font-size: $font-size-sm;
-		line-height: $line-height-sm;
+		font-size: $font-size-sm * .95;
+		line-height: $line-height-sm * .95;
 		padding-left: 2px;
 		padding-right: 2px;
 		padding-top: 6px;

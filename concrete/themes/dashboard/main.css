@@ -14695,8 +14695,6 @@ div.ccm-panel-detail header {
 div.ccm-panel-detail hr {
   margin-left: -40px;
   margin-right: -40px;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
 }
 
 /**
@@ -14812,7 +14810,7 @@ div#ccm-panel-detail-page-attributes hr,
 div#ccm-panel-detail-page-caching hr,
 div#ccm-panel-detail-page-permissions hr,
 div#ccm-panel-detail-page-location hr {
-  border-bottom-color: #c6d3db;
+  border-color: #c6d3db;
 }
 
 div#ccm-panel-detail-page-properties fieldset,
@@ -15601,7 +15599,7 @@ a.ccm-panel-add-block-draggable-block-type {
   -webkit-box-sizing: padding-box;
           box-sizing: padding-box;
   text-align: center;
-  background-color: #161c22;
+  background-color: #161c22 !important;
   border-radius: 4px;
 }
 
@@ -15614,8 +15612,8 @@ a.ccm-panel-add-block-draggable-block-type span {
   display: block;
   color: #8f969a;
   background-color: #000;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 0.83125rem;
+  line-height: 1.425;
   padding-left: 2px;
   padding-right: 2px;
   padding-top: 6px;

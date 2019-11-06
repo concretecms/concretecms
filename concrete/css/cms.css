@@ -553,77 +553,73 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 }
 @charset "UTF-8";
 
-.z-0 {
-  z-index: 0;
-}
+/* Base page */
 
-.z-1 {
-  z-index: 1;
-}
+/* Dashboard form actions wrapper */
 
-.z-2 {
-  z-index: 2;
-}
+/* Menus In Page */
 
-.z-10 {
-  z-index: 10;
-}
+/* Checkboxes and stars in search results above menus */
 
-.z-100 {
-  z-index: 100;
-}
+/* Inline Editing in Page */
 
-.z-250 {
-  z-index: 250;
-}
+/* Inline Editing with Editable Fields */
 
-.z-500 {
-  z-index: 500;
-}
+/* Dropdown Menus */
 
-.z-1000 {
-  z-index: 1000;
-}
+/* Status Bar (below concrete5 toolbar and panels) */
 
-.spacer-row-1 {
-  height: 1rem;
-}
+/* Page alert (blue boxes) –similar to dashboard help but at the page level. Should come below the dialog overlay and the intelligent search */
 
-.spacer-row-2 {
-  height: 2rem;
-}
+/* Panels */
 
-.spacer-row-3 {
-  height: 3rem;
-}
+/* this is the overlay over the main content. must come below the panel z-index */
 
-.spacer-row-4 {
-  height: 4rem;
-}
+/* Draggables */
 
-.spacer-row-5 {
-  height: 5rem;
-}
+/* Main concrete5 toolbar */
 
-.spacer-row-6 {
-  height: 6rem;
-}
+/* Disable Toolbar (over toolbar) */
 
-.spacer-row-7 {
-  height: 7rem;
-}
+/* Page help – below panel detail and below widget overlay */
 
-.spacer-row-8 {
-  height: 8rem;
-}
+/* USED to come above widget overlay so we could show it while the dashboard panel is open, but moved to below panel
+/* overlay because it makes it ambiguous whether help is available in the lefthand panel or not */
 
-.spacer-row-9 {
-  height: 9rem;
-}
+/* Dashboard Help Notifications – has to come BELOW the modal dialog stuff, because it's not really an ephemeral notification */
 
-.spacer-row-10 {
-  height: 10rem;
-}
+/* also has to come below the dashboard toolbar */
+
+/* dashboard privacy policy */
+
+/* Inline Editing Toolbar - has to come above disabled toolbar */
+
+/* Main concrete5 toolbar - has to come above dashboard help notifications because of stupid webkit compositing */
+
+/* Intelligent Search */
+
+/* Dialogs */
+
+/* Magnific Popup –has to come above dialogs because it might get called from a dialog*/
+
+/* Show the toolbar over the dialog/widget overlay – used during help guided tours. Has to come above index level dialog because jQuery UI assigns that to the widget overlay */
+
+/* Redactor dropdown –can be either inline OR in a dialog box so we have to come above dialog. Hopefully this doesn't
+cause other problems */
+
+/* Dialog Content */
+
+/* Search Checkboxes */
+
+/* Dialog Chrome */
+
+/* Tooltips and hovers in dialogs */
+
+/* tooltips that live on the same plane as menus */
+
+/* Edit Response HUDs - should come above modal dialog stuff. */
+
+/* Dashboard panels */
 
 .ccm-ui {
   -webkit-box-sizing: border-box;
@@ -639,7 +635,6 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff;
 }
 
 div.ccm-ui article,
@@ -750,13 +745,13 @@ div.ccm-ui sup {
 }
 
 div.ccm-ui a {
-  color: #007bff;
+  color: #3f9edc;
   text-decoration: none;
   background-color: transparent;
 }
 
 div.ccm-ui a:hover {
-  color: #0056b3;
+  color: #2076af;
   text-decoration: underline;
 }
 
@@ -1035,8 +1030,8 @@ div.ccm-ui .display-4 {
 }
 
 div.ccm-ui hr {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 40px;
+  margin-bottom: 40px;
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -2528,23 +2523,23 @@ div.ccm-ui .table-hover tbody tr:hover {
 div.ccm-ui .table-primary,
 div.ccm-ui .table-primary > th,
 div.ccm-ui .table-primary > td {
-  background-color: #b8daff;
+  background-color: #c9e4f5;
 }
 
 div.ccm-ui .table-primary th,
 div.ccm-ui .table-primary td,
 div.ccm-ui .table-primary thead th,
 div.ccm-ui .table-primary tbody + tbody {
-  border-color: #7abaff;
+  border-color: #9bcded;
 }
 
 div.ccm-ui .table-hover .table-primary:hover {
-  background-color: #9fcdff;
+  background-color: #b3d9f1;
 }
 
 div.ccm-ui .table-hover .table-primary:hover > td,
 div.ccm-ui .table-hover .table-primary:hover > th {
-  background-color: #9fcdff;
+  background-color: #b3d9f1;
 }
 
 div.ccm-ui .table-secondary,
@@ -2849,10 +2844,10 @@ div.ccm-ui .form-control::-ms-expand {
 div.ccm-ui .form-control:focus {
   color: #495057;
   background-color: #fff;
-  border-color: #80bdff;
+  border-color: #abd4f0;
   outline: 0;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .form-control::-webkit-input-placeholder {
@@ -3428,7 +3423,7 @@ div.ccm-ui .btn {
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
-  border-radius: 0.25rem;
+  border-radius: 2px;
   -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -3450,8 +3445,8 @@ div.ccm-ui .btn:hover {
 div.ccm-ui .btn:focus,
 div.ccm-ui .btn.focus {
   outline: 0;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .btn.disabled,
@@ -3466,42 +3461,42 @@ div.ccm-ui fieldset:disabled a.btn {
 
 div.ccm-ui .btn-primary {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #3f9edc;
+  border-color: #3f9edc;
 }
 
 div.ccm-ui .btn-primary:hover {
   color: #fff;
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: #268ccf;
+  border-color: #2485c4;
 }
 
 div.ccm-ui .btn-primary:focus,
 div.ccm-ui .btn-primary.focus {
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(92, 173, 225, 0.5);
+          box-shadow: 0 0 0 0.2rem rgba(92, 173, 225, 0.5);
 }
 
 div.ccm-ui .btn-primary.disabled,
 div.ccm-ui .btn-primary:disabled {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #3f9edc;
+  border-color: #3f9edc;
 }
 
 div.ccm-ui .btn-primary:not(:disabled):not(.disabled):active,
 div.ccm-ui .btn-primary:not(:disabled):not(.disabled).active,
 .show > div.ccm-ui .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #0062cc;
-  border-color: #005cbf;
+  background-color: #2485c4;
+  border-color: #227eb9;
 }
 
 div.ccm-ui .btn-primary:not(:disabled):not(.disabled):active:focus,
 div.ccm-ui .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show > div.ccm-ui .btn-primary.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(92, 173, 225, 0.5);
+          box-shadow: 0 0 0 0.2rem rgba(92, 173, 225, 0.5);
 }
 
 div.ccm-ui .btn-secondary {
@@ -3785,25 +3780,25 @@ div.ccm-ui .btn-dark:not(:disabled):not(.disabled).active:focus,
 }
 
 div.ccm-ui .btn-outline-primary {
-  color: #007bff;
-  border-color: #007bff;
+  color: #3f9edc;
+  border-color: #3f9edc;
 }
 
 div.ccm-ui .btn-outline-primary:hover {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #3f9edc;
+  border-color: #3f9edc;
 }
 
 div.ccm-ui .btn-outline-primary:focus,
 div.ccm-ui .btn-outline-primary.focus {
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.5);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.5);
 }
 
 div.ccm-ui .btn-outline-primary.disabled,
 div.ccm-ui .btn-outline-primary:disabled {
-  color: #007bff;
+  color: #3f9edc;
   background-color: transparent;
 }
 
@@ -3811,15 +3806,15 @@ div.ccm-ui .btn-outline-primary:not(:disabled):not(.disabled):active,
 div.ccm-ui .btn-outline-primary:not(:disabled):not(.disabled).active,
 .show > div.ccm-ui .btn-outline-primary.dropdown-toggle {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #3f9edc;
+  border-color: #3f9edc;
 }
 
 div.ccm-ui .btn-outline-primary:not(:disabled):not(.disabled):active:focus,
 div.ccm-ui .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
 .show > div.ccm-ui .btn-outline-primary.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.5);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.5);
 }
 
 div.ccm-ui .btn-outline-secondary {
@@ -4090,12 +4085,12 @@ div.ccm-ui .btn-outline-dark:not(:disabled):not(.disabled).active:focus,
 
 div.ccm-ui .btn-link {
   font-weight: 400;
-  color: #007bff;
+  color: #3f9edc;
   text-decoration: none;
 }
 
 div.ccm-ui .btn-link:hover {
-  color: #0056b3;
+  color: #2076af;
   text-decoration: underline;
 }
 
@@ -4407,7 +4402,7 @@ div.ccm-ui .dropdown-item.active,
 div.ccm-ui .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #007bff;
+  background-color: #3f9edc;
 }
 
 div.ccm-ui .dropdown-item.disabled,
@@ -4800,23 +4795,23 @@ div.ccm-ui .custom-control-input {
 
 div.ccm-ui .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #007bff;
-  background-color: #007bff;
+  border-color: #3f9edc;
+  background-color: #3f9edc;
 }
 
 div.ccm-ui .custom-control-input:focus ~ .custom-control-label::before {
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
-  border-color: #80bdff;
+  border-color: #abd4f0;
 }
 
 div.ccm-ui .custom-control-input:not(:disabled):active ~ .custom-control-label::before {
   color: #fff;
-  background-color: #b3d7ff;
-  border-color: #b3d7ff;
+  background-color: #d6eaf8;
+  border-color: #d6eaf8;
 }
 
 div.ccm-ui .custom-control-input:disabled ~ .custom-control-label {
@@ -4866,8 +4861,8 @@ div.ccm-ui .custom-checkbox .custom-control-input:checked ~ .custom-control-labe
 }
 
 div.ccm-ui .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::before {
-  border-color: #007bff;
-  background-color: #007bff;
+  border-color: #3f9edc;
+  background-color: #3f9edc;
 }
 
 div.ccm-ui .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::after {
@@ -4875,11 +4870,11 @@ div.ccm-ui .custom-checkbox .custom-control-input:indeterminate ~ .custom-contro
 }
 
 div.ccm-ui .custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before {
-  background-color: rgba(0, 123, 255, 0.5);
+  background-color: rgba(63, 158, 220, 0.5);
 }
 
 div.ccm-ui .custom-checkbox .custom-control-input:disabled:indeterminate ~ .custom-control-label::before {
-  background-color: rgba(0, 123, 255, 0.5);
+  background-color: rgba(63, 158, 220, 0.5);
 }
 
 div.ccm-ui .custom-radio .custom-control-label::before {
@@ -4891,7 +4886,7 @@ div.ccm-ui .custom-radio .custom-control-input:checked ~ .custom-control-label::
 }
 
 div.ccm-ui .custom-radio .custom-control-input:disabled:checked ~ .custom-control-label::before {
-  background-color: rgba(0, 123, 255, 0.5);
+  background-color: rgba(63, 158, 220, 0.5);
 }
 
 div.ccm-ui .custom-switch {
@@ -4932,7 +4927,7 @@ div.ccm-ui .custom-switch .custom-control-input:checked ~ .custom-control-label:
 }
 
 div.ccm-ui .custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before {
-  background-color: rgba(0, 123, 255, 0.5);
+  background-color: rgba(63, 158, 220, 0.5);
 }
 
 div.ccm-ui .custom-select {
@@ -4955,10 +4950,10 @@ div.ccm-ui .custom-select {
 }
 
 div.ccm-ui .custom-select:focus {
-  border-color: #80bdff;
+  border-color: #abd4f0;
   outline: 0;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .custom-select:focus::-ms-value {
@@ -5016,9 +5011,9 @@ div.ccm-ui .custom-file-input {
 }
 
 div.ccm-ui .custom-file-input:focus ~ .custom-file-label {
-  border-color: #80bdff;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #abd4f0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .custom-file-input:disabled ~ .custom-file-label {
@@ -5081,16 +5076,16 @@ div.ccm-ui .custom-range:focus {
 }
 
 div.ccm-ui .custom-range:focus::-webkit-slider-thumb {
-  -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
+          box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .custom-range:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .custom-range:focus::-ms-thumb {
-  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .custom-range::-moz-focus-outer {
@@ -5101,7 +5096,7 @@ div.ccm-ui .custom-range::-webkit-slider-thumb {
   width: 1rem;
   height: 1rem;
   margin-top: -0.25rem;
-  background-color: #007bff;
+  background-color: #3f9edc;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -5120,7 +5115,7 @@ div.ccm-ui .custom-range::-webkit-slider-thumb {
 }
 
 div.ccm-ui .custom-range::-webkit-slider-thumb:active {
-  background-color: #b3d7ff;
+  background-color: #d6eaf8;
 }
 
 div.ccm-ui .custom-range::-webkit-slider-runnable-track {
@@ -5136,7 +5131,7 @@ div.ccm-ui .custom-range::-webkit-slider-runnable-track {
 div.ccm-ui .custom-range::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
-  background-color: #007bff;
+  background-color: #3f9edc;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -5155,7 +5150,7 @@ div.ccm-ui .custom-range::-moz-range-thumb {
 }
 
 div.ccm-ui .custom-range::-moz-range-thumb:active {
-  background-color: #b3d7ff;
+  background-color: #d6eaf8;
 }
 
 div.ccm-ui .custom-range::-moz-range-track {
@@ -5174,7 +5169,7 @@ div.ccm-ui .custom-range::-ms-thumb {
   margin-top: 0;
   margin-right: 0.2rem;
   margin-left: 0.2rem;
-  background-color: #007bff;
+  background-color: #3f9edc;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -5192,7 +5187,7 @@ div.ccm-ui .custom-range::-ms-thumb {
 }
 
 div.ccm-ui .custom-range::-ms-thumb:active {
-  background-color: #b3d7ff;
+  background-color: #d6eaf8;
 }
 
 div.ccm-ui .custom-range::-ms-track {
@@ -5584,14 +5579,14 @@ div.ccm-ui .page-link {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #007bff;
+  color: #3f9edc;
   background-color: #fff;
   border: 1px solid #dee2e6;
 }
 
 div.ccm-ui .page-link:hover {
   z-index: 2;
-  color: #0056b3;
+  color: #2076af;
   text-decoration: none;
   background-color: #e9ecef;
   border-color: #dee2e6;
@@ -5600,8 +5595,8 @@ div.ccm-ui .page-link:hover {
 div.ccm-ui .page-link:focus {
   z-index: 2;
   outline: 0;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.25);
 }
 
 div.ccm-ui .page-item:first-child .page-link {
@@ -5618,8 +5613,8 @@ div.ccm-ui .page-item:last-child .page-link {
 div.ccm-ui .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #3f9edc;
+  border-color: #3f9edc;
 }
 
 div.ccm-ui .page-item.disabled .page-link {
@@ -5707,20 +5702,20 @@ div.ccm-ui .badge-pill {
 
 div.ccm-ui .badge-primary {
   color: #fff;
-  background-color: #007bff;
+  background-color: #3f9edc;
 }
 
 adiv.ccm-ui .badge-primary:hover,
 adiv.ccm-ui .badge-primary:focus {
   color: #fff;
-  background-color: #0062cc;
+  background-color: #2485c4;
 }
 
 adiv.ccm-ui .badge-primary:focus,
 adiv.ccm-ui .badge-primary.focus {
   outline: 0;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.5);
+          box-shadow: 0 0 0 0.2rem rgba(63, 158, 220, 0.5);
 }
 
 div.ccm-ui .badge-secondary {
@@ -5878,17 +5873,17 @@ div.ccm-ui .alert-dismissible .close {
 }
 
 div.ccm-ui .alert-primary {
-  color: #004085;
-  background-color: #cce5ff;
-  border-color: #b8daff;
+  color: #215272;
+  background-color: #d9ecf8;
+  border-color: #c9e4f5;
 }
 
 div.ccm-ui .alert-primary hr {
-  border-top-color: #9fcdff;
+  border-top-color: #b3d9f1;
 }
 
 div.ccm-ui .alert-primary .alert-link {
-  color: #002752;
+  color: #16364a;
 }
 
 div.ccm-ui .alert-secondary {
@@ -6034,7 +6029,7 @@ div.ccm-ui .progress-bar {
   color: #fff;
   text-align: center;
   white-space: nowrap;
-  background-color: #007bff;
+  background-color: #3f9edc;
   -webkit-transition: width 0.6s ease;
   transition: width 0.6s ease;
 }
@@ -6139,8 +6134,8 @@ div.ccm-ui .list-group-item:disabled {
 div.ccm-ui .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #3f9edc;
+  border-color: #3f9edc;
 }
 
 div.ccm-ui .list-group-horizontal {
@@ -6296,20 +6291,20 @@ div.ccm-ui .list-group-flush:last-child .list-group-item:last-child {
 }
 
 div.ccm-ui .list-group-item-primary {
-  color: #004085;
-  background-color: #b8daff;
+  color: #215272;
+  background-color: #c9e4f5;
 }
 
 div.ccm-ui .list-group-item-primary.list-group-item-action:hover,
 div.ccm-ui .list-group-item-primary.list-group-item-action:focus {
-  color: #004085;
-  background-color: #9fcdff;
+  color: #215272;
+  background-color: #b3d9f1;
 }
 
 div.ccm-ui .list-group-item-primary.list-group-item-action.active {
   color: #fff;
-  background-color: #004085;
-  border-color: #004085;
+  background-color: #215272;
+  border-color: #215272;
 }
 
 div.ccm-ui .list-group-item-secondary {
@@ -6841,14 +6836,14 @@ div.ccm-ui .align-text-top {
 }
 
 div.ccm-ui .bg-primary {
-  background-color: #007bff !important;
+  background-color: #3f9edc !important;
 }
 
 div.ccm-ui a.bg-primary:hover,
 div.ccm-ui a.bg-primary:focus,
 div.ccm-ui button.bg-primary:hover,
 div.ccm-ui button.bg-primary:focus {
-  background-color: #0062cc !important;
+  background-color: #2485c4 !important;
 }
 
 div.ccm-ui .bg-secondary {
@@ -6977,7 +6972,7 @@ div.ccm-ui .border-left-0 {
 }
 
 div.ccm-ui .border-primary {
-  border-color: #007bff !important;
+  border-color: #3f9edc !important;
 }
 
 div.ccm-ui .border-secondary {
@@ -10851,12 +10846,12 @@ div.ccm-ui .text-white {
 }
 
 div.ccm-ui .text-primary {
-  color: #007bff !important;
+  color: #3f9edc !important;
 }
 
 div.ccm-ui a.text-primary:hover,
 div.ccm-ui a.text-primary:focus {
-  color: #0056b3 !important;
+  color: #2076af !important;
 }
 
 div.ccm-ui .text-secondary {
@@ -12472,12 +12467,12 @@ div.ui-dialog .ui-dialog-buttonpane {
 }
 
 div.ui-dialog .ui-dialog-buttonpane .btn-primary {
-  border-color: #0056b3;
-  background-color: #0056b3;
+  border-color: #2076af;
+  background-color: #2076af;
 }
 
 div.ui-dialog .ui-dialog-buttonpane .btn-primary:hover {
-  background-color: #003e80;
+  background-color: #185984;
 }
 
 div.ui-dialog .ui-dialog-buttonpane .btn-default {
@@ -12491,13 +12486,13 @@ div.ui-dialog .ui-dialog-buttonpane .btn-default:hover {
 }
 
 div.ui-dialog .ui-dialog-buttonpane .btn-success {
-  border-color: #0056b3;
+  border-color: #2076af;
   /* yes - btn success in dialogs is now just an alias to btn primary */
-  background-color: #0056b3;
+  background-color: #2076af;
 }
 
 div.ui-dialog .ui-dialog-buttonpane .btn-success:hover {
-  background-color: #003e80;
+  background-color: #185984;
 }
 
 /**
@@ -13373,8 +13368,6 @@ div.ccm-panel-detail header {
 div.ccm-panel-detail hr {
   margin-left: -40px;
   margin-right: -40px;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
 }
 
 /**
@@ -13490,7 +13483,7 @@ div#ccm-panel-detail-page-attributes hr,
 div#ccm-panel-detail-page-caching hr,
 div#ccm-panel-detail-page-permissions hr,
 div#ccm-panel-detail-page-location hr {
-  border-bottom-color: #c6d3db;
+  border-color: #c6d3db;
 }
 
 div#ccm-panel-detail-page-properties fieldset,
@@ -14279,7 +14272,7 @@ a.ccm-panel-add-block-draggable-block-type {
   -webkit-box-sizing: padding-box;
           box-sizing: padding-box;
   text-align: center;
-  background-color: #161c22;
+  background-color: #161c22 !important;
   border-radius: 4px;
 }
 
@@ -14292,8 +14285,8 @@ a.ccm-panel-add-block-draggable-block-type span {
   display: block;
   color: #8f969a;
   background-color: #000;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 0.83125rem;
+  line-height: 1.425;
   padding-left: 2px;
   padding-right: 2px;
   padding-top: 6px;

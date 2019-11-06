@@ -13,7 +13,7 @@ $composer = Core::make("helper/concrete/composer");
                 <button type="button" data-dialog-action="submit" value="preview" data-page-type-composer-form-btn="preview" class="btn btn-success"><?=t('Edit Mode')?></button>
                 <button style="margin-right: 0;" type="button" data-composer-dialog-action="publish" value="publish" class="btn btn-primary"><?=t('Publish Page')?></button>
                 <button style="padding-right: 5px; padding-left: 5px; width: 35px;" data-page-type-composer-form-btn="schedule" type="button" class="btn btn-primary">
-                    <i class="fa fa-clock-o"></i>
+                    <i class="far fa-clock"></i>
                 </button>
             </div>
         </div>

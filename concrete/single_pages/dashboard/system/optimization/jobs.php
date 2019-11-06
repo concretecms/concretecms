@@ -103,12 +103,12 @@ $uninstallToken = $token->generate('uninstall_job');
     			</td>
 
     			<td style="width: 25px">
-    				<a href="javascript:void(0)" class="ccm-automate-job-instructions icon-link launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="fa fa-clock-o"></i></a>
+    				<a href="javascript:void(0)" class="ccm-automate-job-instructions icon-link launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="far fa-clock"></i></a>
     			</td>
                 <td style="width: 25px">
                     <?php if ($j->canUninstall()) {
                         ?>
-                        <a href="<?=$view->action('uninstall', $j->getJobID(), $uninstallToken)?>" class="icon-link launch-tooltip btn-uninstall-job" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
+                        <a href="<?=$view->action('uninstall', $j->getJobID(), $uninstallToken)?>" class="icon-link launch-tooltip btn-uninstall-job" title="<?=t('Remove this Job')?>"><i class="fas fa-trash"></i></a>
                         <?php
                     }
                     ?>
