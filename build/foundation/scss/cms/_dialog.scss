@@ -58,146 +58,95 @@ div.ccm-dialog-slim {
 
 div.ui-dialog {
 
-  background-color: transparent !important;
-  background-image: none !important;
-  border-width: 0px !important;
-  box-shadow: none;
-  max-width: 100%;
+  padding: 0;
+  background-color: $modal-content-bg;
+  background-clip: padding-box;
+  border: $modal-content-border-width solid $modal-content-border-color !important;
+  @include border-radius($modal-content-border-radius);
+  @include box-shadow($modal-content-box-shadow-xs);
+  // Remove focus outline from opened modal
+  outline: 0;
+  
+  .ui-dialog-titlebar {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
+    border-radius: 0;
 
-  border-radius: 4px;
-  padding: 0px;
+    display: flex;
+    align-items: flex-start; // so the close btn always stays on the upper right corner
+    justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
 
-  .ui-dialog-title {
-    margin: 0px;
+    padding: $modal-header-padding;
+    border-bottom: $modal-header-border-width solid $modal-header-border-color;
+    background-color: $modal-content-bg;
+    @include border-top-radius($modal-content-border-radius);
+    
+    .ui-dialog-title {
+      font-size: $h5-font-size;
+      font-weight: $headings-font-weight;
+      float: none;
+      margin: 0px;
+    }
   }
 
-  .ui-dialog-titlebar {
+  .ui-dialog-titlebar-close {
 
-    padding: 0px 0px 5px 0px;
-    font-size: $font-size-lg;
-    border: 0px;
-    -webkit-font-smoothing: antialiased;
-    background-image: none;
-    border-bottom: 0px;
+    // reset jQuery UI
+    position: static;
+
+    padding: $modal-header-padding;
+    // auto on the left force icon to the right even when there is no .modal-title
+    margin: (-$modal-header-padding-y) (-$modal-header-padding-x) (-$modal-header-padding-y) auto;
+    width: auto;
+    outline: 0;
+    height: auto;
     background-color: transparent;
 
-    .ui-dialog-title {
-      font-weight: normal;
+    border: 0px;
+    @include font-size($close-font-size);
+    font-weight: $close-font-weight;
+    line-height: 1;
+    color: $close-color;
+    text-shadow: $close-text-shadow;
+    opacity: .5;
+
+    span.ui-icon {
+      display: none;
     }
 
-    button, a {
-      color: #878787;
-      background-color: transparent;
-      border: 0px !important;
-      opacity: 1;
-      position: absolute;
-      overflow: hidden;
-    }
-
-    .ui-dialog-titlebar-close {
-      height: 20px;
-      width: 20px;
-      margin: 0px;
-      background: transparent url(#{$concrete-directory}/images/icons/icon_close.png) no-repeat scroll;
-      right: 0px;
-      top: 11px;
-      padding: 0px;
-
-      span.ui-icon {
-        display: none;
-      }
-
-    }
-
-    .ui-dialog-titlebar-help {
-      right: 32px;
-      height: 20px;
-      width: 20px;
-      top: 9px;
-      margin: 0px;
-      padding: 0px;
-      i {
-        transition: opacity linear 0.1s;
-      }
-    }
-
-  }
-
-  .ui-dialog-content {
-    background-color: #fff;
-    overflow: auto;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    box-sizing: content-box;
-
-    div.form-group {
-
-      padding-left: 26px;
-      padding-right: 26px;
-      margin-left: -26px;
-      margin-right: -26px;
-    }
-
-    div.well {
-      div.form-group {
-        margin-left: 0px;
-        margin-right: 0px;
-        padding-left: 0px;
-        padding-right: 0px;
-      }
-    }
-
-    hr {
-      border-color: #dcdcdc;
-      padding-left: 26px;
-      padding-right: 26px;
-      margin-left: -26px;
-      margin-right: -26px;
-    }
-
-    a:link:not(.btn), a:visited:not(.btn) {
-      color: #4674a1;
+    // Override <a>'s hover style
+    @include hover {
+      color: $close-color;
       text-decoration: none;
     }
-    a:hover:not(.btn) {
-      color: #0c253e;
+
+    &:not(:disabled):not(.disabled) {
+      @include hover-focus {
+        opacity: .75;
+      }
     }
+
   }
+
+  .ui-dialog-titlebar-close:before {
+    content: '×';
+  }
+
 
   .ui-dialog-buttonpane {
-    margin-top: 0px;
-    overflow: hidden;
-    background-image: none;
-    background-color: #48b4fb;
-    padding: 10px 10px 10px 10px;
-    border-width: 0px;
+    padding: $modal-inner-padding;
+    border-top: $modal-footer-border-width solid $modal-footer-border-color;
+    @include border-bottom-radius($modal-content-border-radius);
 
-    .btn-primary {
-      border-color: darken(theme-color("primary"), 15%);
-      background-color: darken(theme-color("primary"), 15%);
-      &:hover {
-        background-color: darken(theme-color("primary"), 25%);
-      }
+    // Easily place margin between footer elements
+    > :not(:first-child) { margin-left: .25rem; }
+    > :not(:last-child) { margin-right: .25rem; }
+
+    button.float-right {
+      margin-right: 0px;
     }
 
-    .btn-default {
-      border-color: #3f9edc;
-      background-color: #3f9edc;
-      color: #fff;
-      &:hover {
-        background-color: #3585B9;
-      }
-    }
 
-    .btn-success {
-      border-color: darken(theme-color("primary"), 15%);
-      /* yes - btn success in dialogs is now just an alias to btn primary */
-      background-color: darken(theme-color("primary"), 15%);
-      &:hover {
-        background-color: darken(theme-color("primary"), 25%);
-      }
-
-    }
   }
-
 }

@@ -11,7 +11,7 @@
 @import "./variables";
 
 // This is the public entry point for CMS.
-$concrete-directory: '../../../../concrete';
+$concrete-directory: '/concrete';
 
 // Import the bootstrap mixins, variables and functions
 @import "~bootstrap/scss/mixins";

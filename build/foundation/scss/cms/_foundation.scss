@@ -5,6 +5,15 @@
 // Support classes
 @import "./animate";
 
+// jQuery UI
+@import "~jquery-ui/themes/base/core.css";
+@import "~jquery-ui/themes/base/dialog.css";
+@import "~jquery-ui/themes/base/datepicker.css";
+@import "~jquery-ui/themes/base/draggable.css";
+@import "~jquery-ui/themes/base/sortable.css";
+@import "./jquery-ui/theme";
+@import "./jquery-ui/overrides";
+
 // Toolbar includes
 @import "./toolbar";
 @import "./intelligent-search";
@@ -25,6 +34,7 @@
 @import "./panels/sitemap";
 @import "./panels/view-as-user";
 @import "./panels/versions";
+
 
 // In page editing
 @import "page-areas";

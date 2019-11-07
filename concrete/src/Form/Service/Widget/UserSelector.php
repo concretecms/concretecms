@@ -44,9 +44,6 @@ class UserSelector
      */
     public function selectUser($fieldName, $uID = false)
     {
-        $v = View::getRequestInstance();
-        $v->requireAsset('core/users');
-
         $request = $this->app->make(Request::class);
         if ($request->request->has($fieldName)) {
             $selectedUID = $request->request->get($fieldName);

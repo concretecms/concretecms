@@ -224,7 +224,7 @@ class Form
         }
         $checked = $checked ? ' checked="checked"' : '';
 
-        return '<input type="checkbox" id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('ccm-input-checkbox', $miscFields) . ' value="' . $value . '"' . $checked . ' />';
+        return '<input type="checkbox" id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-check-input', $miscFields) . ' value="' . $value . '"' . $checked . ' />';
     }
 
     /**
@@ -290,7 +290,7 @@ class Form
         }
         $id = $id ?: $key . $this->radioIndex;
         $str = '<input type="radio" id="' . $id . '" name="' . $key . '" value="' . $value . '"';
-        $str .= $this->parseMiscFields('ccm-input-radio', $miscFields);
+        $str .= $this->parseMiscFields('form-check-input', $miscFields);
         if ($checked) {
             $str .= ' checked="checked"';
         }

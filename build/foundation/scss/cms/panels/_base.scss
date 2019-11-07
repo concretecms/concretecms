@@ -844,6 +844,7 @@ div#ccm-panel-detail-form-actions-wrapper {
   width: 100%;
 
   div.ccm-panel-detail-form-actions {
+    @include clearfix();
     clear: both;
     margin: 0px 20px 0px 340px; /* default is margin: 0px 20px 20px 340px;*/
     background-color: rgba(40,40,40,0.85);
