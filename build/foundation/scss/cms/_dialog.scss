@@ -111,6 +111,11 @@ div.ui-dialog {
     text-shadow: $close-text-shadow;
     opacity: .5;
 
+    text-indent: -9999px; // get rid of the "Close" that jQUery UI sticks in there sometimes
+    
+    span.ui-button-icon-space {
+      display: none;
+    }
     span.ui-icon {
       display: none;
     }
@@ -131,6 +136,11 @@ div.ui-dialog {
 
   .ui-dialog-titlebar-close:before {
     content: '×';
+    position: absolute; // All these positioning hoops suck but we have to jump through them because of the jQuery UI text-indent stupidity
+    width: 40px;
+    right: 0px;
+    height: 40px;
+    text-indent: 0px !important;
   }
 
 

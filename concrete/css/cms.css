@@ -13103,6 +13103,11 @@ div.ui-dialog .ui-dialog-titlebar-close {
   color: #000;
   text-shadow: 0 1px 0 #fff;
   opacity: .5;
+  text-indent: -9999px;
+}
+
+div.ui-dialog .ui-dialog-titlebar-close span.ui-button-icon-space {
+  display: none;
 }
 
 div.ui-dialog .ui-dialog-titlebar-close span.ui-icon {
@@ -13121,6 +13126,11 @@ div.ui-dialog .ui-dialog-titlebar-close:not(:disabled):not(.disabled):focus {
 
 div.ui-dialog .ui-dialog-titlebar-close:before {
   content: '\D7';
+  position: absolute;
+  width: 40px;
+  right: 0px;
+  height: 40px;
+  text-indent: 0px !important;
 }
 
 div.ui-dialog .ui-dialog-buttonpane {
