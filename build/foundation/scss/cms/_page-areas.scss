@@ -323,22 +323,28 @@ ul.ccm-edit-mode-inline-commands {
     margin: 0px !important;
 
     a {
-      cursor: move;
       position: relative;
-      color: #333 !important;
+      color: #555 !important;
       display: inline-block;
       font-weight: lighter;
       width: 20px !important;
       height: 20px !important;
       line-height: 20px !important;
       text-align: center;
-      color: #666 !important;
-
+      
+      @include hover {
+        color: #000 !important;
+      }
+      
       i {
         position: absolute;
         top: 3px;
         left: 3px;
         vertical-align: middle;
+      }
+      
+      &.ccm-edit-mode-inline-command-move {
+        cursor: move;
       }
     }
 
@@ -531,5 +537,17 @@ div.ccm-block-edit {
     left: 0;
     width: 100%;
     height: 100%;
+  }
+}
+
+/**
+ * Containers. Hovering is a bit of a hack but there's no way to easily move or delete these things
+ * without showing them on hover.
+ */
+div.ccm-block-edit[data-block-type-handle=core_container] {
+  @include hover { 
+    > ul.ccm-edit-mode-inline-commands {
+      opacity: 1;
+    }
   }
 }

@@ -14,33 +14,29 @@ import * as _ from 'underscore';
 
         init: function(elem, edit_mode) {
             var my = this;
-            my.bindEvent('EditModeInlineEditLoaded.editmode', function (e, data) {
-                if (data.block === my) {
-                    my.bindDrag();
-                }
-            });
             Concrete.Block.prototype.init.call(my, elem, edit_mode, $());
-
+            
             elem.children('.ccm-block-cover').remove();
+            my.bindDrag();
+            my.bindDelete();
+        },
+        
+        bindDelete: function ContainerBlockDelete() {
+            var my = this,
+                deleter = my.getElem().find('a[data-inline-command=delete-block');
+            deleter.on('click', function() {
+                my.delete();
+            });
         },
 
-        bindDrag: function containerBlockBindDrag() {
+        bindDrag: function ContainerBlockBindDrag() {
             var my = this,
-                peper = $('a[data-layout-command="move-block"]').parent();
+                peper = $('a[data-inline-command="move-block"]').parent();
 
             $.pep.unbind(peper);
             peper.pep(my.getPepSettings());
-        },
-
-        addToDragArea: function containerBlockAddToDragArea() {
-            Concrete.Block.prototype.addToDragArea.apply(this, _.toArray(arguments));
-
-            var container = $('#ccm-inline-toolbar-container');
-            container.css({
-                top: this.getElem().offset().top - container.outerHeight() - 5
-            });
         }
-
+        
     });
 
 })(window, jQuery);
