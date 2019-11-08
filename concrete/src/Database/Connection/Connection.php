@@ -531,8 +531,14 @@ class Connection extends \Doctrine\DBAL\Connection
             return false;
         }
         try {
-            $sm->dropTable($tableName);
+            $this->insert($tableName, [$column->getName() => str_repeat('a', (int) $fieldLength)]);
         } catch (Exception $x) {
+            return false;
+        } finally {
+            try {
+                $sm->dropTable($tableName);
+            } catch (Exception $x) {
+            }
         }
 
         return true;
