@@ -1,26 +1,19 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
-$themes = ['' => t('** Select a Theme')];
-$list = \Concrete\Core\Page\Theme\Theme::getList();
-foreach($list as $theme) {
-    $themes[$theme->getThemeID()] = $theme->getThemeDisplayName();
-}
 $icons = Core::make(\Concrete\Core\Page\Container\IconRepository::class)->getIcons();
 
 if (isset($container) && $container) {
     $action = $view->url('/dashboard/pages/containers/update_container', $container->getContainerID());
     $buttonText = t('Save');
     $containerName = $container->getContainerName();
-    $containerTemplateFile = $container->getContainerTemplateFile();
-    $containerTheme = $container->getContainerThemeID();
+    $containerTemplateHandle = $container->getContainerTemplateHandle();
     $containerIcon = $container->getContainerIcon();
 } else {
     $action = $view->url('/dashboard/pages/containers/add', 'add_container');
     $buttonText = t('Add');
     $containerName = '';
-    $containerTemplateFile = '';
-    $containerTheme = 0;
+    $containerTemplateHandle = '';
     $containerIcon = false;
 }
 
@@ -36,17 +29,11 @@ if (isset($container) && $container) {
     </div>
 
     <div class="form-group">
-        <label for="containerTemplateFile" class="control-label"><?=t('Template File')?></label>
-        <?=$form->text('containerTemplateFile', $containerTemplateFile)?>
-        <div class="form-text text-muted"><?=t("This is the name, ending in .php, of the file in the theme's `containers/` directory.")?></div>
+        <label for="containerTemplateHandle" class="control-label"><?=t('Template Handle')?></label>
+        <?=$form->text('containerTemplateHandle', $containerTemplateHandle)?>
+        <div class="form-text text-muted"><?=t("This must be alpha-numeric. Underscores are allowed. It should match a template file that ends in .php")?></div>
     </div>
-
-    <div class="form-group">
-        <label for="containerTheme" class="control-label"><?=t('Theme')?></label>
-        <?=$form->select('containerTheme', $themes, $containerTheme)?>
-    </div>
-
-
+    
     <div class="form-group">
         <label for="containerIcon" class="control-label"><?=t('Icon')?></label>
         <div class="row">

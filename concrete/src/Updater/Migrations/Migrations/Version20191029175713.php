@@ -4,6 +4,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Page\Container;
+use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
@@ -22,6 +23,7 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
             Container::class,
             Instance::class,
             InstanceArea::class,
+            Template::class,
         ]);
         $bt = BlockType::getByHandle('core_container');
         if (!$bt) {

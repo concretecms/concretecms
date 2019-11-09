@@ -23,21 +23,17 @@ class ImportContainersRoutine extends AbstractRoutine
         if (isset($sx->containers)) {
             foreach ($sx->containers->container as $pt) {
                 $pkg = static::getPackageObject($pt['package']);
-                $theme = Theme::getByHandle((string) $pt['theme']);
                 $name = (string) $pt['name'];
                 $icon = (string) $pt['icon'];
-                $templateFile = (string) $pt['template-file'];
-                if ($theme) {
-                    $container = $em->getRepository(Container::class)->findOneByContainerTemplateFile($templateFile);
-                    if (!$container) {
-                        $container = new Container();
-                        $container->setContainerIcon($icon);
-                        $container->setContainerTemplateFile($templateFile);
-                        $container->setContainerName($name);
-                        $container->setContainerThemeID($theme->getThemeID());
-                        $em->persist($container);
-                        $em->flush();
-                    }
+                $templateHandle = (string) $pt['handle'];
+                $container = $em->getRepository(Container::class)->findOneByContainerTemplateHandle($templateHandle);
+                if (!$container) {
+                    $container = new Container();
+                    $container->setContainerIcon($icon);
+                    $container->setContainerTemplateHandle($templateHandle);
+                    $container->setContainerName($name);
+                    $em->persist($container);
+                    $em->flush();
                 }
             }
         }

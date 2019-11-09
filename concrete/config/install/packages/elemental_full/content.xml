@@ -1321,7 +1321,7 @@
                         </arealayout>
                     </block>
                     <block type="core_container" name="">
-                        <container template="two_column_accent.php">
+                        <container handle="two_column_accent">
                             <containerarea name="Header">
                                 <block type="content" name="">
                                     <data table="btContentLocal">

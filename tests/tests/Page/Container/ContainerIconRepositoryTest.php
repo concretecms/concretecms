@@ -2,7 +2,7 @@
 
 namespace Concrete\Tests\Page\Container;
 
-use Concrete\Core\Page\Container\Icon;
+use Concrete\Core\Filesystem\Icon\Icon;
 use Concrete\Core\Page\Container\IconRepository;
 use Concrete\Tests\TestCase;
 use Illuminate\Filesystem\Filesystem;

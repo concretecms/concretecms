@@ -106,6 +106,7 @@ const DIRNAME_PAGE_TEMPLATES = 'page_templates';
 const DIRNAME_PAGE_THEME = 'page_theme';
 const DIRNAME_PAGE_THEME_CUSTOM = 'custom';
 const DIRNAME_ELEMENTS = 'elements';
+const DIRNAME_CONTAINERS = 'containers';
 const DIRNAME_LANGUAGES = 'languages';
 const DIRNAME_JOBS = 'jobs';
 const DIRNAME_DASHBOARD = 'dashboard';

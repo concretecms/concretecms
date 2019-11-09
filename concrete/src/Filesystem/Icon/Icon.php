@@ -1,13 +1,13 @@
 <?php
 
-namespace Concrete\Core\Page\Container;
+namespace Concrete\Core\Filesystem\Icon;
 
 /**
  * Class Icon
  * 
- * Responsible for representing a container icon.
+ * Responsible for representing an icon in different contexts.
  */
-class Icon
+class Icon implements IconInterface
 {
 
     /**

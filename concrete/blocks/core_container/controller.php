@@ -91,9 +91,9 @@ class Controller extends BlockController
         $args = [];
         $entityManager = $this->app->make(EntityManager::class);
         if (isset($blockNode->container)) {
-            $template = (string) $blockNode->container['template'];
+            $handle = (string) $blockNode->container['handle'];
             $container = $entityManager->getRepository(Container::class)
-                ->findOneByContainerTemplateFile($template);
+                ->findOneByContainerTemplateHandle($handle);
             if ($container) {
                 $args['containerID'] = $container->getContainerID();
             }

@@ -40,14 +40,15 @@ class TemplateLocator
     {
         $theme = $page->getCollectionThemeObject();
         if ($theme) {
-            $templateFile = $container->getContainerTemplateFile();
-            if ($templateFile) {
+            $handle = $container->getContainerTemplateHandle();
+            if ($handle) {
+                $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_CONTAINERS . '/' . $handle . '.php';
                 $this->themeLocation->setTheme($theme);
                 $this->fileLocator->addLocation($this->themeLocation);
-                $record = $this->fileLocator->getRecord(
-                    TemplateRepository::TEMPLATE_DIRECTORY . DIRECTORY_SEPARATOR . $templateFile
-                );
-                return $record->getFile();
+                $record = $this->fileLocator->getRecord($filename);
+                if ($record->exists()) {
+                    return $record->getFile();
+                }
             }
         }
         

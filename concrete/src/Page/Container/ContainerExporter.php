@@ -29,7 +29,7 @@ class ContainerExporter implements ItemInterface
         $container = $instance->getContainer();
         if ($container) {
             $containerNode = $element->addChild('container');
-            $containerNode->addAttribute('template', $container->getContainerTemplateFile());
+            $containerNode->addAttribute('handle', $container->getContainerTemplateHandle());
             
             // Retrieve all the areas within this container.
             $instanceAreas = $instance->getInstanceAreas();

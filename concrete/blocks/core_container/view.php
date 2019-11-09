@@ -10,6 +10,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $container->startRender();
 
 $c = Page::getCurrentPage();
-include($fileToRender);
+if ($fileToRender) {
+    include($fileToRender);
+} else {
+    if ($c->isEditMode()) { ?>
+        <div class="ccm-edit-mode-disabled-item">
+           <?php echo t('Container: %s – no container template file found.', 
+               $container->getInstance()->getContainer()->getContainerName()); ?>
+        </div>
+    <?php }
+}
 
 $container->endRender();

@@ -7,7 +7,9 @@
         <pagetemplate handle="full" name="Full" icon="full.png" package=""/>
     </pagetemplates>
     <containers>
-        <container theme="elemental" template-file="two_column_accent.php" name="Two Column Accent"
+        <container handle="two_column_accent" name="Two Column Accent"
+                   icon="two_column.png" package=""/>
+        <container handle="two_column_equal" name="Two Column Equal"
                    icon="two_column.png" package=""/>
     </containers>
     <pagetypes>

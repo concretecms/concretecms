@@ -18,16 +18,11 @@ class Container
      * @ORM\GeneratedValue
      */
     protected $containerID;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $containerThemeID = 0;
-
+    
     /**
      * @ORM\Column(type="string")
      */
-    protected $containerTemplateFile = '';
+    protected $containerTemplateHandle = '';
 
     /**
      * @ORM\Column(type="string")
@@ -40,6 +35,12 @@ class Container
     protected $containerName = '';
 
     /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Package")
+     * @ORM\JoinColumn(name="pkgID", referencedColumnName="pkgID", nullable=true)
+     */
+    protected $package;
+
+    /**
      * @return mixed
      */
     public function getContainerID()
@@ -50,33 +51,17 @@ class Container
     /**
      * @return mixed
      */
-    public function getContainerThemeID()
+    public function getContainerTemplateHandle()
     {
-        return $this->containerThemeID;
+        return $this->containerTemplateHandle;
     }
 
     /**
-     * @param mixed $containerThemeID
+     * @param mixed $containerTemplateHandle
      */
-    public function setContainerThemeID($containerThemeID): void
+    public function setContainerTemplateHandle($containerTemplateHandle): void
     {
-        $this->containerThemeID = $containerThemeID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContainerTemplateFile()
-    {
-        return $this->containerTemplateFile;
-    }
-
-    /**
-     * @param mixed $containerTemplateFile
-     */
-    public function setContainerTemplateFile($containerTemplateFile): void
-    {
-        $this->containerTemplateFile = $containerTemplateFile;
+        $this->containerTemplateHandle = $containerTemplateHandle;
     }
 
     /**
@@ -110,6 +95,23 @@ class Container
     {
         $this->containerIcon = $containerIcon;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
+
+    /**
+     * @param mixed $package
+     */
+    public function setPackage($package): void
+    {
+        $this->package = $package;
+    }
+    
     
     public function getContainerIconImage($asTag = true)
     {
