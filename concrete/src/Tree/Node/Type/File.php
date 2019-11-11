@@ -41,7 +41,7 @@ class File extends TreeNode
     {
         $file = $this->getTreeNodeFileObject();
         if (is_object($file)) {
-            return new Menu($file);
+            return app(Menu::class, [$file]);
         }
     }
 

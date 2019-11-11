@@ -1881,7 +1881,7 @@ class Version implements ObjectInterface
         $r->fileName = $this->getFileName();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
-        $r->treeNodeMenu = new Menu($this->getfile());
+        $r->treeNodeMenu = app(Menu::class, [$this->getfile()]);
 
         return $r;
     }
