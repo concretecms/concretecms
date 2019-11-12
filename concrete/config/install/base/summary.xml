@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <summarycategories>
+        <category handle="page" name="Page" package=""/>
+    </summarycategories>
+    <summaryfields>
+        <field handle="title" name="Title" package=""/>
+        <field handle="link" name="Link" package=""/>
+        <field handle="description" name="Description" package=""/>
+        <field handle="thumbnail" name="Thumbnail" package=""/>
+    </summaryfields>
+    <summarytemplates>
+        <template handle="default" name="Default Summary Template"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field>description</field>
+            </fields>
+        </template>
+        <template handle="thumbnail_title_description" name="Thumbnail Title Description"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">description</field>
+                <field required="1">thumbnail</field>
+            </fields>
+        </template>
+    </summarytemplates>
+</concrete5-cif>

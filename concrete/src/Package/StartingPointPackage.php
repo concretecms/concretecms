@@ -339,6 +339,8 @@ class StartingPointPackage extends Package
     protected function install_themes()
     {
         $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/containers.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
         if (file_exists($this->getPackagePath() . '/themes.xml')) {
             $ci->importContentFile($this->getPackagePath() . '/themes.xml');

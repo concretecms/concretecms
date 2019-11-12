@@ -134,6 +134,7 @@ return [
         'core_search' => \Concrete\Core\Search\SearchServiceProvider::class,
         'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
+        'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -154,6 +155,7 @@ return [
         'core_attribute' => '\Concrete\Core\Attribute\AttributeServiceProvider',
         'core_express' => '\Concrete\Core\Express\ExpressServiceProvider',
 
+        // 
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
     ],
@@ -259,6 +261,9 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportContainersRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryFieldsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypesBaseRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',

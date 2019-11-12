@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Summary;
 
 use Concrete\Core\Html\Image;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,17 +20,7 @@ class Template
      * @ORM\GeneratedValue
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $category;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $file = '';
-
+    
     /**
      * @ORM\Column(type="string")
      */
@@ -39,12 +30,33 @@ class Template
      * @ORM\Column(type="string")
      */
     protected $name = '';
+    
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $handle;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\ManyToMany(targetEntity="Category", inversedBy="templates")
+     * @ORM\JoinTable(name="SummaryTemplateCategories"
+     * )
      */
-    protected $criteria;
+    protected $categories;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TemplateField", mappedBy="template", cascade={"persist", "remove"})
+     **/
+    protected $fields;
+    
+    /**
+     * Template constructor.
+     */
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+        $this->fields = new ArrayCollection();
+    }
+    
     /**
      * @return mixed
      */
@@ -56,35 +68,19 @@ class Template
     /**
      * @return mixed
      */
-    public function getCategory()
+    public function getHandle()
     {
-        return $this->category;
+        return $this->handle;
     }
 
     /**
-     * @param mixed $category
+     * @param mixed $handle
      */
-    public function setCategory($category): void
+    public function setHandle($handle): void
     {
-        $this->category = $category;
+        $this->handle = $handle;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * @param mixed $file
-     */
-    public function setFile($file): void
-    {
-        $this->file = $file;
-    }
-
+    
     /**
      * @return mixed
      */
@@ -120,17 +116,33 @@ class Template
     /**
      * @return mixed
      */
-    public function getCriteria()
+    public function getCategories()
     {
-        return $this->criteria;
+        return $this->categories;
     }
 
     /**
-     * @param mixed $criteria
+     * @param mixed $categories
      */
-    public function setCriteria($criteria): void
+    public function setCategories($categories): void
     {
-        $this->criteria = $criteria;
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @param mixed $fields
+     */
+    public function setFields($fields): void
+    {
+        $this->fields = $fields;
     }
     
     public function getContainerIconImage($asTag = true)

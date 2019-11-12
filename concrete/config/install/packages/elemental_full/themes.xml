@@ -3,12 +3,6 @@
     <themes>
         <theme handle="elemental" package="" activated="1"/>
     </themes>
-    <containers>
-        <container handle="two_column_accent" name="Two Column Accent"
-                   icon="two_column.png" package=""/>
-        <container handle="two_column_equal" name="Two Column Equal"
-                   icon="two_column.png" package=""/>
-    </containers>
     <thumbnailtypes>
         <thumbnailtype name="Small Image" handle="small" sizingMode="proportional" width="740"/>
         <thumbnailtype name="Medium Image" handle="medium" sizingMode="proportional" width="940"/>
