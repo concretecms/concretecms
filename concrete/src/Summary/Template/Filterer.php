@@ -42,9 +42,11 @@ class Filterer
                 foreach($templates as $template) {
                     $include = true;
                     $fields = $template->getFields();
-                    foreach($fields as $field) {
-                        if ($field->isRequired() && !$collection->containsField($field)) {
-                            $include = false;
+                    if ($fields) {
+                        foreach ($fields as $field) {
+                            if ($field->isRequired() && !$collection->containsField($field->getField())) {
+                                $include = false;
+                            }
                         }
                     }
                     if ($include) {

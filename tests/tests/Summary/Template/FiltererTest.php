@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Summary\Category;
 use Concrete\Core\Entity\Summary\Field;
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Entity\Summary\TemplateField;
+use Concrete\Core\Entity\Summary\TemplateRepository;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Template\Filterer;
 use Concrete\Tests\TestCase;
@@ -50,7 +51,7 @@ class FiltererTest extends TestCase
         $collection = M::mock(Collection::class);
         $category = M::mock(Category::class);
         $categoryRepository = M::mock(EntityRepository::class);
-        $templateRepository = M::mock(EntityRepository::class);
+        $templateRepository = M::mock(TemplateRepository::class);
         
         $templates = [];
         foreach($templateData as $templateRecord) {
@@ -69,7 +70,7 @@ class FiltererTest extends TestCase
                 
                 $containsField = in_array($fieldIdentifier, $collectionFields);
                 if ($required) {
-                    $collection->shouldReceive('containsField')->with($templateField)->once()->andReturn($containsField);
+                    $collection->shouldReceive('containsField')->with($field)->once()->andReturn($containsField);
                 }
                 $fields[] = $templateField;
             }
