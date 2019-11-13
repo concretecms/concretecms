@@ -37,6 +37,11 @@ class PageTemplate
     protected $template;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    protected $data;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -76,6 +81,21 @@ class PageTemplate
         $this->template = $template;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
+    }
 
     
     

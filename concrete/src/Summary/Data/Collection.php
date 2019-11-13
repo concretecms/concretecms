@@ -1,14 +1,17 @@
 <?php
 namespace Concrete\Core\Summary\Data;
 
+use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\DataFieldInterface;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
  * Responsible for joining fields in the system to actual data gleaned from an object. 
  */
-class Collection
+class Collection implements \JsonSerializable, DenormalizableInterface
 {
     /**
      * @var ArrayCollection 
@@ -48,5 +51,23 @@ class Collection
         return $this->collection->get($field);
     }
     
+    public function jsonSerialize()
+    {
+        $json = [
+            'fields' => []
+        ];
+        foreach($this->collection as $fieldIdentifier => $dataField) {
+            $json['fields'][$fieldIdentifier] = $dataField; 
+        }
+        return $json;
+    }
+    
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
+    {
+        foreach($data['fields'] as $fieldIdentifier => $dataData) {
+            $dataFieldData = $denormalizer->denormalize($dataData['data'], $dataData['class'], 'json');
+            $this->addField(new DataField($fieldIdentifier, $dataFieldData));
+        }
+    }
 
 }

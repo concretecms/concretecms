@@ -8,7 +8,7 @@ class DataField implements DataFieldInterface
 {
 
     /**
-     * @var mixed
+     * @var DataFieldDataInterface
      */
     protected $data;
 
@@ -20,18 +20,21 @@ class DataField implements DataFieldInterface
     /**
      * DataField constructor.
      * @param string $fieldIdentifier   
-     * @param mixed $data
+     * @param string|int|bool|DataFieldDataInterface $data
      */
     public function __construct(string $fieldIdentifier, $data)
     {
         $this->fieldIdentifier = $fieldIdentifier;
+        if (!($data instanceof DataFieldInterface)) {
+            $data = new DataFieldData($data);
+        }
         $this->data = $data;
     }
 
     /**
      * @return mixed
      */
-    public function getData()
+    public function getData() : DataFieldDataInterface
     {
         return $this->data;
     }

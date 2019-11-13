@@ -57,6 +57,7 @@ class PagePopulator
                 $pageTemplate = new PageTemplate();
                 $pageTemplate->setPageID($page->getCollectionID());
                 $pageTemplate->setTemplate($template);
+                $pageTemplate->setData($data);
                 $this->entityManager->persist($pageTemplate);
             }
         }

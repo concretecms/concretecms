@@ -6,6 +6,6 @@ interface DataFieldInterface
     
     public function getFieldIdentifier() : string;
     
-    public function getData();
+    public function getData() : DataFieldDataInterface;
 
 }
