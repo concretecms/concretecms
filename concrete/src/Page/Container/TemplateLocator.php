@@ -40,7 +40,7 @@ class TemplateLocator
     {
         $theme = $page->getCollectionThemeObject();
         if ($theme) {
-            $handle = $container->getContainerTemplateHandle();
+            $handle = $container->getContainerHandle();
             if ($handle) {
                 $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_CONTAINERS . '/' . $handle . '.php';
                 $this->themeLocation->setTheme($theme);

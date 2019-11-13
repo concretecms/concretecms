@@ -74,4 +74,17 @@ class Field implements FieldInterface
     {
         return $this->getHandle();
     }
+
+    public function export(\SimpleXMLElement $node)
+    {
+        $container = $node->addChild('field');
+        $container->addAttribute('handle', $this->getHandle());
+        $container->addAttribute('name', h($this->getName()));
+        $container->addAttribute('package', '');
+    }
+
+
+
+
+
 }

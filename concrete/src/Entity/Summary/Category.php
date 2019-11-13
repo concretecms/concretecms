@@ -91,6 +91,16 @@ class Category
         $this->templates = $templates;
     }
 
-    
-    
+    public function export(\SimpleXMLElement $node)
+    {
+        $container = $node->addChild('category');
+        $container->addAttribute('handle', $this->getHandle());
+        $container->addAttribute('name', h($this->getName()));
+        $container->addAttribute('package', '');
+    }
+
+
+
+
+
 }

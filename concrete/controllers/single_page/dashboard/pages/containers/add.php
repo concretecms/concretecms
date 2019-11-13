@@ -22,7 +22,7 @@ class Add extends DashboardPageController
         if ($this->token->validate('add_container')) {
             $container = new Container();
             $container->setContainerName($this->request->request->get('containerName'));
-            $container->setContainerTemplateHandle($this->request->request->get('containerTemplateHandle'));
+            $container->setContainerHandle($this->request->request->get('containerHandle'));
             $container->setContainerIcon($this->request->request->get('containerIcon'));
             $command = new AddContainerCommand($container);
             $validator = $this->app->make(ContainerCommandValidator::class);

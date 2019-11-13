@@ -156,5 +156,25 @@ class Template
         }
     }
 
-    
+    public function export(\SimpleXMLElement $node)
+    {
+        $template = $node->addChild('template');
+        $template->addAttribute('handle', $this->getHandle());
+        $template->addAttribute('name', h($this->getName()));
+        $template->addAttribute('icon', h($this->getIcon()));
+        $template->addAttribute('package', '');
+        
+        $categories = $template->addChild('categories');
+        foreach($this->getCategories() as $category) {
+            $categoryNode = $categories->addChild('category');
+            $categoryNode->addAttribute('handle', $category->getHandle());
+        }
+        $fields = $template->addChild('fields');
+        foreach($this->getFields() as $field) {
+            $fieldNode = $fields->addChild('field', $field->getField()->getHandle());
+            if ($field->isRequired()) {
+                $fieldNode->addAttribute('required', '1');
+            }
+        }
+    }
 }

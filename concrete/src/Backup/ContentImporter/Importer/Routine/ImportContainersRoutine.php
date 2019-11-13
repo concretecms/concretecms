@@ -25,12 +25,12 @@ class ImportContainersRoutine extends AbstractRoutine
                 $pkg = static::getPackageObject($pt['package']);
                 $name = (string) $pt['name'];
                 $icon = (string) $pt['icon'];
-                $templateHandle = (string) $pt['handle'];
-                $container = $em->getRepository(Container::class)->findOneByContainerTemplateHandle($templateHandle);
+                $handle = (string) $pt['handle'];
+                $container = $em->getRepository(Container::class)->findOneByContainerHandle($handle);
                 if (!$container) {
                     $container = new Container();
                     $container->setContainerIcon($icon);
-                    $container->setContainerTemplateHandle($templateHandle);
+                    $container->setContainerHandle($handle);
                     $container->setContainerName($name);
                     $em->persist($container);
                     $em->flush();

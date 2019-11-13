@@ -35,8 +35,8 @@ class ContainerCommandValidator implements ValidatorInterface
         if (empty($command->getContainer()->getContainerName())) {
             $this->errorList->add(t('You must give your container a valid name.'));
         }
-        $templateHandle = $command->getContainer()->getContainerTemplateHandle();
-        if (!$this->stringValidator->handle($templateHandle)) {
+        $handle = $command->getContainer()->getContainerHandle();
+        if (!$this->stringValidator->handle($handle)) {
             $this->errorList->add(t('You must specify a valid handle for this container.'));
         }
         return $this->errorList;

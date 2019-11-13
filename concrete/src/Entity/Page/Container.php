@@ -22,7 +22,7 @@ class Container
     /**
      * @ORM\Column(type="string")
      */
-    protected $containerTemplateHandle = '';
+    protected $containerHandle = '';
 
     /**
      * @ORM\Column(type="string")
@@ -47,23 +47,23 @@ class Container
     {
         return $this->containerID;
     }
-    
+
     /**
      * @return mixed
      */
-    public function getContainerTemplateHandle()
+    public function getContainerHandle()
     {
-        return $this->containerTemplateHandle;
+        return $this->containerHandle;
     }
 
     /**
-     * @param mixed $containerTemplateHandle
+     * @param mixed $containerHandle
      */
-    public function setContainerTemplateHandle($containerTemplateHandle): void
+    public function setContainerHandle($containerHandle): void
     {
-        $this->containerTemplateHandle = $containerTemplateHandle;
+        $this->containerHandle = $containerHandle;
     }
-
+    
     /**
      * @return mixed
      */
@@ -122,6 +122,23 @@ class Container
             }
             return $image;
         }
+    }
+    
+    public function getPackageHandle()
+    {
+        if ($this->package) {
+            return $this->package->getPackageHandle();
+        }
+        return null;
+    }
+    
+    public function export(\SimpleXMLElement $node)
+    {
+        $container = $node->addChild('container');
+        $container->addAttribute('handle', $this->getContainerHandle());
+        $container->addAttribute('name', h($this->getContainerName()));
+        $container->addAttribute('icon', $this->getContainerIcon());
+        $container->addAttribute('package', $this->getPackageHandle());
     }
 
     

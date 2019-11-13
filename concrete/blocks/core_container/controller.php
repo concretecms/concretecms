@@ -93,7 +93,7 @@ class Controller extends BlockController
         if (isset($blockNode->container)) {
             $handle = (string) $blockNode->container['handle'];
             $container = $entityManager->getRepository(Container::class)
-                ->findOneByContainerTemplateHandle($handle);
+                ->findOneByContainerHandle($handle);
             if ($container) {
                 $args['containerID'] = $container->getContainerID();
             }

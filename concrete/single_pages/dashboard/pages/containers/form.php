@@ -7,13 +7,13 @@ if (isset($container) && $container) {
     $action = $view->url('/dashboard/pages/containers/update_container', $container->getContainerID());
     $buttonText = t('Save');
     $containerName = $container->getContainerName();
-    $containerTemplateHandle = $container->getContainerTemplateHandle();
+    $containerHandle = $container->getContainerHandle();
     $containerIcon = $container->getContainerIcon();
 } else {
     $action = $view->url('/dashboard/pages/containers/add', 'add_container');
     $buttonText = t('Add');
     $containerName = '';
-    $containerTemplateHandle = '';
+    $containerHandle = '';
     $containerIcon = false;
 }
 
@@ -29,8 +29,8 @@ if (isset($container) && $container) {
     </div>
 
     <div class="form-group">
-        <label for="containerTemplateHandle" class="control-label"><?=t('Template Handle')?></label>
-        <?=$form->text('containerTemplateHandle', $containerTemplateHandle)?>
+        <label for="containerHandle" class="control-label"><?=t('Handle')?></label>
+        <?=$form->text('containerHandle', $containerHandle)?>
         <div class="form-text text-muted"><?=t("This must be alpha-numeric. Underscores are allowed. It should match a template file that ends in .php")?></div>
     </div>
     
