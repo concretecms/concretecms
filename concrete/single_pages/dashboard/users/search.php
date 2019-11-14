@@ -238,14 +238,16 @@ if (isset($user) && is_object($user)) {
                 <form data-dialog-form="change-password" action="<?= $view->action('change_password', $user->getUserID()) ?>">
                     <?= $token->output('change_password') ?>
 
-                    <div class="form-group">
+                    <div class="form-group has-feedback">
                         <?= $form->label('uPassword', t('Password')) ?>
                         <?= $form->password('uPassword', ['autocomplete' => 'off']) ?>
+                        <span class="fa fa-eye form-control-feedback show-password"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group has-feedback">
                         <?= $form->label('uPasswordConfirm', t('Confirm Password')) ?>
                         <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']) ?>
+                        <span class="fa fa-eye form-control-feedback show-password"></span>
                     </div>
 
                     <div class="dialog-buttons">

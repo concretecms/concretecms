@@ -14,12 +14,10 @@ $ih = Loader::helper('concrete/ui');
 			</div>
 		</div>
 
-		<div class="form-group">
+		<div class="form-group has-feedback">
 			<label for="uPassword" class="control-label"><?php echo t('Password'); ?></label>
-			<div class="input-group">
-				<?php echo $form->password('uPassword', array('autocomplete' => 'off')); ?>
-				<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-			</div>
+			<?php echo $form->password('uPassword', array('autocomplete' => 'off')); ?>
+			<span class="fa fa-eye form-control-feedback show-password"></span
 		</div>
 
 		<div class="form-group">

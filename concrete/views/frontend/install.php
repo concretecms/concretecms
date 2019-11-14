@@ -416,17 +416,17 @@ switch ($installStep) {
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="uPassword"
-                                                       class="control-label"><?= t('Administrator Password') ?></label>
+                                            <div class="form-group has-feedback">
+                                                <label for="uPassword" class="control-label"><?= t('Administrator Password') ?></label>
                                                 <?= $form->password('uPassword', $passwordAttributes) ?>
+                                                <span class="fa fa-eye form-control-feedback show-password"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="uPassword"
-                                                       class="control-label"><?= t('Confirm Password') ?></label>
+                                            <div class="form-group has-feedback">
+                                                <label for="uPassword" class="control-label"><?= t('Confirm Password') ?></label>
                                                 <?= $form->password('uPasswordConfirm', $passwordAttributes) ?>
+                                                <span class="fa fa-eye form-control-feedback show-password"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -483,10 +483,11 @@ switch ($installStep) {
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group has-feedback">
                                                 <label class="control-label"
                                                        for="DB_PASSWORD"><?= t('MySQL Password') ?></label>
                                                 <?= $form->password('DB_PASSWORD', ['autocomplete' => 'off']) ?>
+                                                <span class="fa fa-eye form-control-feedback show-password"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
