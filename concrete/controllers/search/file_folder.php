@@ -92,7 +92,6 @@ class FileFolder extends AbstractController
 
             if ($itemsPerPage) {
                 $list->setItemsPerPage($itemsPerPage);
-                $provider->setItemsPerPageSession($itemsPerPage);
             }
 
             if (count($filters)) {

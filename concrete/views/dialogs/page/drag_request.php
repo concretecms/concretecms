@@ -74,12 +74,18 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                      }
                      ?>
                 </label>
-                <div class="checkbox" style="margin: 0 0 0 20px">
-                    <label>
-                        <input type="checkbox" name="saveOldPagePath" value="1" />
-                        <?= t('Save old page path') ?>
-                    </label>
-                </div>
+                <?php
+                if (!$singleOriginalPage->isExternalLink()) {
+                    ?>
+                    <div class="checkbox" style="margin: 0 0 0 20px">
+                        <label>
+                            <input type="checkbox" name="saveOldPagePath" value="1" />
+                            <?= t('Save old page path') ?>
+                        </label>
+                    </div>
+                    <?php
+                }
+                ?>
             </div>
         </div>
         <?php

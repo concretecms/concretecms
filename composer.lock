@@ -2705,20 +2705,25 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.6.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "256e554f2285a4517af68bc2e4c3f3d25ae6fc99"
+                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/256e554f2285a4517af68bc2e4c3f3d25ae6fc99",
-                "reference": "256e554f2285a4517af68bc2e4c3f3d25ae6fc99",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
+                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "ext-pdo_sqlite": "*",
+                "phpunit/dbunit": "^1.4 || ^2 || ^3 || ^4",
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
             },
             "type": "library",
             "autoload": {
@@ -2735,7 +2740,7 @@
                     "name": "Michele Locati",
                     "email": "mlocati@gmail.com",
                     "homepage": "https://github.com/mlocati",
-                    "role": "Developer"
+                    "role": "Author"
                 }
             ],
             "description": "Handle IPv4, IPv6 addresses and ranges",
@@ -2752,7 +2757,7 @@
                 "range",
                 "subnet"
             ],
-            "time": "2018-08-12T22:03:03+00:00"
+            "time": "2019-09-20T08:26:10+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

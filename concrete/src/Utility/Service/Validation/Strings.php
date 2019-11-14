@@ -172,4 +172,30 @@ class Strings
 
         return strlen(trim(preg_replace('/([a-zA-Z0-9]*)/', '', $str)));
     }
+
+    /**
+     * Check if a variable contains a valid regular expression.
+     *
+     * @param string|mixed $pattern the variable to be checked
+     * @param bool $includesDelimiters set to TRUE if $pattern should contain delimiters, FALSE if we need to add them
+     *
+     * @return bool
+     */
+    public function isValidRegex($pattern, $includesDelimiters = true)
+    {
+        if (!is_string($pattern)) {
+            return false;
+        }
+        if ($pattern === '') {
+            return $includesDelimiters ? false : true;
+        }
+        if (!$includesDelimiters) {
+            $pattern = "/{$pattern}/";
+        }
+        set_error_handler(function () {}, -1);
+        $result = @preg_match($pattern, 'X');
+        restore_error_handler();
+
+        return $result !== false;
+    }
 }

@@ -8,7 +8,7 @@ $th = Core::make('helper/text');
 /** @var \Concrete\Core\Localization\Service\Date $dh */
 $dh = Core::make('helper/date');
 
-if ($c->isEditMode() && $controller->isBlockEmpty()) {
+if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
     ?>
     <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Page List Block.') ?></div>
     <?php

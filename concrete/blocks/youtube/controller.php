@@ -108,7 +108,6 @@ class Controller extends BlockController
             'vHeight' => null,
             'vWidth' => null,
 
-            'showinfo' => false,
             'controls' => false,
             'modestbranding' => false,
             'showCaptions' => false,
@@ -132,7 +131,6 @@ class Controller extends BlockController
 
             'sizing' => $data['sizing'],
 
-            'showinfo' => $data['showinfo'] ? 1 : 0,
             'controls' => $data['controls'] ? 1 : 0,
             'modestbranding' => $data['modestbranding'] ? 1 : 0,
             'showCaptions' => $data['showCaptions'] ? 1 : 0,
