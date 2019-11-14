@@ -20087,64 +20087,6 @@ div.ccm-file-manager-import-files table.incoming_file_table .incoming_file_table
   color: #999;
 }
 
-div.ccm-ui ul.nav-tabs {
-  padding-left: 10px;
-  margin-left: -26px;
-  margin-right: -26px;
-  margin-bottom: 0px;
-}
-
-div.ccm-ui ul.nav-tabs > li {
-  margin-bottom: 0px;
-}
-
-div.ccm-ui ul.nav-tabs > li a {
-  padding: 10px 15px;
-  -webkit-font-smoothing: antialiased;
-}
-
-div.ccm-ui ul.nav-tabs > li.active:after {
-  text-align: center;
-  content: "\F0D7";
-  font-family: FontAwesome;
-  position: absolute;
-  bottom: -15px;
-  left: 0px;
-  width: 100%;
-  color: #48b4fb;
-  text-align: center;
-}
-
-div.ccm-ui ul.nav-tabs > li > a,
-div.ccm-ui ul.nav-tabs > li > a:hover,
-div.ccm-ui ul.nav-tabs > li > a:focus {
-  outline: none;
-  color: #999;
-  border-width: 0px !important;
-}
-
-div.ccm-ui ul.nav-tabs > li > a:hover {
-  background-color: transparent;
-  text-decoration: underline;
-}
-
-div.ccm-ui ul.nav-tabs > li.active > a,
-div.ccm-ui ul.nav-tabs > li.active > a:hover,
-div.ccm-ui ul.nav-tabs > li.active > a:focus {
-  color: #48b4fb;
-  font-weight: bold;
-  text-decoration: none;
-  background-color: transparent;
-  outline: none;
-  border-width: 0px !important;
-  position: relative;
-}
-
-div.ccm-ui .ccm-tab-content {
-  padding-top: 20px;
-  display: none;
-}
-
 /**
  * Page/entity selector
  */

@@ -25,7 +25,7 @@ class DataField implements DataFieldInterface
     public function __construct(string $fieldIdentifier, $data)
     {
         $this->fieldIdentifier = $fieldIdentifier;
-        if (!($data instanceof DataFieldInterface)) {
+        if (!($data instanceof DataFieldDataInterface)) {
             $data = new DataFieldData($data);
         }
         $this->data = $data;

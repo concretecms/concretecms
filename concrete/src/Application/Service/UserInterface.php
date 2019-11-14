@@ -298,8 +298,8 @@ class UserInterface
         $html = '<ul class="nav-tabs nav">';
         foreach ($tabs as $t) {
             $dt = $t[0];
-            $href = '#';
-            $html .= '<li class="nav-item"><a class="nav-link ' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '" href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
+            $href = '#' . $dt;
+            $html .= '<li class="nav-item"><a class="nav-link ' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '" href="' . $href . '" data-toggle="tab">' . $t[1] . '</a></li>';
         }
         $html .= '</ul>';
 

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Summary\Data\Extractor\Driver;
 
+use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 
 interface DriverInterface 
@@ -22,9 +23,9 @@ interface DriverInterface
     /**
      * Extracts data from an object and returns it normalized into a collection.
      * 
-     * @param $mixed
+     * @param CategoryMemberInterface $mixed
      * @return Collection
      */
-    public function extractData($mixed) : Collection;
+    public function extractData(CategoryMemberInterface $mixed) : Collection;
     
 }

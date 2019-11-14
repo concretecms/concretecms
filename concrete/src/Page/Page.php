@@ -35,6 +35,7 @@ use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
@@ -57,7 +58,13 @@ use UserInfo;
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents including blocks, page metadata, page permissions.
  */
-class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AttributeObjectInterface, AssignableObjectInterface, TreeInterface, SiteAggregateInterface, ExportableInterface
+class Page extends Collection implements CategoryMemberInterface,
+    \Concrete\Core\Permission\ObjectInterface, 
+    AttributeObjectInterface, 
+    AssignableObjectInterface, 
+    TreeInterface, 
+    SiteAggregateInterface, 
+    ExportableInterface
 {
     use AssignableObjectTrait;
 
@@ -267,6 +274,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
      */
     public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'page';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Summary\Template\Category\CategoryMemberInterface::getSummaryCategoryHandle()
+     */
+    public function getSummaryCategoryHandle() : string
     {
         return 'page';
     }
@@ -799,6 +816,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $this->assignPermissions(UserInfo::getByID($u['uID']), $pkHandles);
             }
         }
+    }
+    
+    public function getSummaryTemplates(): array
+    {
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
+        return $em->getRepository(\Concrete\Core\Entity\Summary\PageTemplate::class)
+            ->findByCID($this->getCollectionID());
     }
 
     /**

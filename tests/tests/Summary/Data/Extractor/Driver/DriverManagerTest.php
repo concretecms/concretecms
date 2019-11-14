@@ -5,6 +5,7 @@ namespace Concrete\Tests\Summary\Data\Extractor\Driver;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Data\Collection;
+use Concrete\Core\Summary\Data\Extractor\Driver\DriverCollection;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverInterface;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverManager;
 use Concrete\Core\Summary\Data\Extractor\Driver\RegisteredDriver;
@@ -95,46 +96,75 @@ class DriverManagerTest extends TestCase
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
         $event = M::mock(CalendarEvent::class);
-        $driver = $driverManager->getDriver($event);
+        $driverCollection = $driverManager->getDriverCollection($event);
+        $this->assertInstanceOf(DriverCollection::class, $driverCollection);
+        $drivers = $driverCollection->getDrivers();
+        $this->assertCount(1, $drivers);
+        $driver = $drivers[0];
         $this->assertInstanceOf(MockEventDriver::class, $driver);
+        
         $page = M::mock(Page::class);
-        $driver = $driverManager->getDriver($page);
+        $driverCollection = $driverManager->getDriverCollection($page);
+        $drivers = $driverCollection->getDrivers();
+        $this->assertCount(1, $drivers);
+        $driver = $drivers[0];
         $this->assertInstanceOf(MockPageDriver::class, $driver);
     }
     
-    public function testGetWithIncorrectScoreShouldNotOverride()
+    public function testAddMatchingCustomDriverWithNoScore()
     {
         $driverManager = new DriverManager();
-        $driverManager->register(MockPageDriver::class);
-        $driverManager->register(MockEventDriver::class);
         $driverManager->register(MockCustomDriver::class);
-        $page = M::mock(Page::class);
-        $driver = $driverManager->getDriver($page);
-        $this->assertInstanceOf(MockPageDriver::class, $driver);
-    }
-
-    public function testGetWithHighScoreToOverrideAndProperPageType()
-    {
-        $driverManager = new DriverManager();
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
-        $driverManager->register(MockCustomDriver::class, 50);
         $page = M::mock(Page::class);
         $page->shouldReceive('getCollectionTypeHandle')->andReturn('project');
-        $driver = $driverManager->getDriver($page);
+        $driverCollection = $driverManager->getDriverCollection($page);
+        $drivers = $driverCollection->getDrivers();
+        $this->assertCount(2, $drivers);
+        $driver = $drivers[0];
+        $this->assertInstanceOf(MockCustomDriver::class, $driver);
+        $driver = $drivers[1];
+        $this->assertInstanceOf(MockPageDriver::class, $driver);
+
+        $event = M::mock(CalendarEvent::class);
+        $driverCollection = $driverManager->getDriverCollection($event);
+        $this->assertInstanceOf(DriverCollection::class, $driverCollection);
+        $drivers = $driverCollection->getDrivers();
+        $this->assertCount(1, $drivers);
+        $driver = $drivers[0];
+        $this->assertInstanceOf(MockEventDriver::class, $driver);
+    }
+
+    public function testAddMatchingCustomDriverScore()
+    {
+        $driverManager = new DriverManager();
+        $driverManager->register(MockCustomDriver::class, 50);
+        $driverManager->register(MockPageDriver::class);
+        $driverManager->register(MockEventDriver::class);
+        $page = M::mock(Page::class);
+        $page->shouldReceive('getCollectionTypeHandle')->andReturn('project');
+        $driverCollection = $driverManager->getDriverCollection($page);
+        $drivers = $driverCollection->getDrivers();
+        $this->assertCount(2, $drivers);
+        $driver = $drivers[0];
+        $this->assertInstanceOf(MockPageDriver::class, $driver);
+        $driver = $drivers[1];
         $this->assertInstanceOf(MockCustomDriver::class, $driver);
     }
 
-    public function testOverrideWithProperScoreButNonMatchingPageType()
+    public function testAddNonMatchingCustomDriverScore()
     {
         $driverManager = new DriverManager();
+        $driverManager->register(MockCustomDriver::class, 50);
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
-        $driverManager->register(MockCustomDriver::class, 50);
         $page = M::mock(Page::class);
         $page->shouldReceive('getCollectionTypeHandle')->andReturn('foo');
-        $driver = $driverManager->getDriver($page);
+        $driverCollection = $driverManager->getDriverCollection($page);
+        $drivers = $driverCollection->getDrivers();
+        $this->assertCount(1, $drivers);
+        $driver = $drivers[0];
         $this->assertInstanceOf(MockPageDriver::class, $driver);
     }
-    
 }

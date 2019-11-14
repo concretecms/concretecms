@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Summary\Template;
 
 use Concrete\Core\Entity\Summary\PageTemplate;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Summary\Data\Extractor\Driver\DriverCollection;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverInterface;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverManager;
 use Concrete\Core\Summary\Template\Filterer;
@@ -46,12 +47,12 @@ class PagePopulator
         $queryBuilder->getQuery()->execute();
         
         /**
-         * @var $driver DriverInterface
+         * @var $driverCollection DriverCollection
          */
-        $driver = $this->driverManager->getDriver($page);
+        $driverCollection = $this->driverManager->getDriverCollection($page);
         
-        if ($driver) {
-            $data = $driver->extractData($page);
+        if ($driverCollection) {
+            $data = $driverCollection->extractData($page);
             $templates = $this->filterer->getTemplates('page', $data);
             foreach($templates as $template) {
                 $pageTemplate = new PageTemplate();

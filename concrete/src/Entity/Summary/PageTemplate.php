@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Summary;
 
+use Concrete\Core\Summary\Data\Collection;
+use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="PageSummaryTemplates"
  * )
  */
-class PageTemplate
+class PageTemplate implements RenderableTemplateInterface
 {
     
     /**
@@ -68,7 +70,7 @@ class PageTemplate
     /**
      * @return mixed
      */
-    public function getTemplate()
+    public function getTemplate() : Template
     {
         return $this->template;
     }
@@ -84,7 +86,7 @@ class PageTemplate
     /**
      * @return mixed
      */
-    public function getData()
+    public function getData() : Collection
     {
         return $this->data;
     }

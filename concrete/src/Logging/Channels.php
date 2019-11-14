@@ -72,6 +72,13 @@ class Channels
     const CHANNEL_USERS = 'users';
 
     /**
+     * Channel identifier: content.
+     *
+     * @var string
+     */
+    const CHANNEL_CONTENT = 'content';
+
+    /**
      * Channel identifier: permissions.
      *
      * @var string

@@ -1,14 +1,13 @@
 <?php
 
-namespace Concrete\Core\Page\Container;
+namespace Concrete\Core\Summary\Template;
 
-use Concrete\Core\Entity\Page\Container;
+use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Filesystem\FileLocator;
-use Concrete\Core\Filesystem\FileLocator\Record;
 use Concrete\Core\Page\Page;
 
 /**
- * Responsible for locating and rendering templates in a theme.
+ * Responsible for locating and rendering summary templates.
  */
 class TemplateLocator
 {
@@ -31,16 +30,16 @@ class TemplateLocator
 
     /**
      * @param Page $page
-     * @param Container $container
+     * @param Template $template
      * @return string file
      */
-    public function getFileToRender(Page $page, Container $container)
+    public function getFileToRender(Page $page, Template $template)
     {
         $theme = $page->getCollectionThemeObject();
         if ($theme) {
-            $handle = $container->getContainerHandle();
+            $handle = $template->getHandle();
             if ($handle) {
-                $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_CONTAINERS . '/' . $handle . '.php';
+                $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/' . $handle . '.php';
                 $this->themeLocation->setTheme($theme);
                 $this->fileLocator->addLocation($this->themeLocation);
                 $record = $this->fileLocator->getRecord($filename);

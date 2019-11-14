@@ -3,10 +3,11 @@
 namespace Concrete\Tests\Summary\Data\Extractor\Driver;
 
 use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Data\Collection;
-use Concrete\Core\Summary\Data\Extractor\Driver\PageDriver;
-use Concrete\Core\Summary\Data\Field\DataField;
+use Concrete\Core\Summary\Data\Extractor\Driver\BasicPageDriver;
+use Concrete\Core\Summary\Data\Extractor\Driver\PageThumbnailDriver;
 use Concrete\Core\Summary\Data\Field\DataFieldDataInterface;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
 use Concrete\Tests\TestCase;
@@ -27,7 +28,7 @@ class PageDriverTest extends TestCase
     {
         $event = M::mock(CalendarEvent::class);
         $page = M::mock(Page::class);
-        $driver = new PageDriver();
+        $driver = new BasicPageDriver();
         $this->assertFalse($driver->isValidForObject($event));
         $this->assertTrue($driver->isValidForObject($page));
     }
@@ -38,7 +39,7 @@ class PageDriverTest extends TestCase
         $page->shouldReceive('getCollectionLink')->once()->andReturn('https://www.foo.com/path/to/page');
         $page->shouldReceive('getCollectionName')->once()->andReturn('My Name');
         $page->shouldReceive('getCollectionDescription')->once()->andReturn('');
-        $driver = new PageDriver();
+        $driver = new BasicPageDriver();
         $data = $driver->extractData($page);
         $this->assertInstanceOf(Collection::class, $data);
         $fields = $data->getFields();
@@ -67,6 +68,22 @@ class PageDriverTest extends TestCase
         $this->assertEquals('My Name', $field);
     }
 
-    
-    
+    public function testExtractThumbnail()
+    {
+        $page = M::mock(Page::class);
+        $file = M::mock(File::class);
+        $file->shouldReceive('getFileID')->andReturn(4);
+        $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
+        $driver = new PageThumbnailDriver();
+        $data = $driver->extractData($page);
+        $this->assertInstanceOf(Collection::class, $data);
+        $fields = $data->getFields();
+        $this->assertCount(1, $fields);
+        $field = $data->getField(FieldInterface::FIELD_THUMBNAIL);
+        $this->assertInstanceOf(DataFieldDataInterface::class, $field);
+    }
+
+
+
+
 }

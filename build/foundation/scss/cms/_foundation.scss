@@ -63,7 +63,7 @@
 @import "./file-manager";
 
 // Miscellaneous components
-@import "./tabs";
+//@import "./tabs"; - this isn't working well let's just not use it right now
 @import "./item-selector";
 @import "./item-select-list";
 @import "./permission-grid";

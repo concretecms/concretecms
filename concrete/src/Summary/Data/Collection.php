@@ -33,7 +33,7 @@ class Collection implements \JsonSerializable, DenormalizableInterface
     
     public function getFields()
     {
-        return $this->collection->getKeys();
+        return $this->collection->toArray();
     }
 
     /**
@@ -57,7 +57,7 @@ class Collection implements \JsonSerializable, DenormalizableInterface
             'fields' => []
         ];
         foreach($this->collection as $fieldIdentifier => $dataField) {
-            $json['fields'][$fieldIdentifier] = $dataField; 
+            $json['fields'][$fieldIdentifier] = $dataField;
         }
         return $json;
     }

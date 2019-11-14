@@ -20,11 +20,13 @@ class DriverManager
     
     public function getDrivers()
     {
+        // Sort the drivers so that the highest score come last, so that the highest scored
+        // drivers run and have a chance to override fields set by lower scored drivers.
         usort($this->drivers, function($a, $b) {
             if ($a->getPriority() > $b->getPriority()) {
-                return -1;
-            } else if ($a->getPriority() < $b->getPriority()) {
                 return 1;
+            } else if ($a->getPriority() < $b->getPriority()) {
+                return -1;
             } else {
                 return 0;
             }
@@ -35,16 +37,18 @@ class DriverManager
     /**
      * @param string $category
      * @param $object
-     * @return DriverInterface
+     * @return DriverCollection
      */
-    public function getDriver($object) : ?DriverInterface
+    public function getDriverCollection($object) : DriverCollection
     {
         $drivers = $this->getDrivers();
+        $collection = new DriverCollection();
         foreach($drivers as $driver) {
             if ($driver->isValidForObject($object)) {
-                return $driver->inflateClass();
+                $collection->addDriver($driver->inflateClass());
             }
         }
+        return $collection;
     }
 
 }
