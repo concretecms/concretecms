@@ -198,9 +198,8 @@ $txt = Loader::helper('text'); ?>
             if (count($categories) > 0) {
                 foreach ($categories as $cat) {
                     ?>
-					<li class="ccm-group" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
-
-						<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>">
+					<li class="item-select-list" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
+						<a href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>">
                             <i class="fa fa-cubes"></i>
                             <?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?>
                         </a>

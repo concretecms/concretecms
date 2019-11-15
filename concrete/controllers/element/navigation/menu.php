@@ -72,6 +72,7 @@ class Menu extends ElementController
         $classes = [];
         if (is_object($this->currentPage) && $page->getCollectionID() == $this->currentPage->getCollectionID()) {
             $classes[] = 'nav-selected';
+            $classes[] = 'active';
         }
         if (in_array($page->getCollectionID(), $this->trail)) {
             $classes[] = 'nav-path-selected';

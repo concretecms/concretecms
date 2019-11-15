@@ -6,13 +6,13 @@ use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
+use Concrete\Core\Page\Summary\Template\PagePopulator;
 use Page;
 use PageType;
 use Permissions;
 use Concrete\Core\User\User;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
-use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
@@ -876,7 +876,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     }
 
     /**
-     * Delete this version and its related data (blocks, feature assignments, attributes, custom styles, ...).
+     * Delete this version and its related data (blocks, attributes, custom styles, ...).
      */
     public function delete()
     {
@@ -901,12 +901,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 unset($b);
             }
         }
-
-        $features = CollectionVersionFeatureAssignment::getList($this);
-        foreach ($features as $fa) {
-            $fa->delete();
-        }
-
+        
         $category = $app->make('Concrete\Core\Attribute\Category\PageCategory');
         $attributes = $category->getAttributeValues($this);
         foreach ($attributes as $attribute) {

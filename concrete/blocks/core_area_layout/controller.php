@@ -297,7 +297,6 @@ class Controller extends BlockController
             $this->render('edit_preset');
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
-        $this->requireAsset('core/style-customizer');
     }
 
     public function add()
@@ -321,7 +320,6 @@ class Controller extends BlockController
         }
         $this->set('columnsNum', 1);
         $this->set('maxColumns', $maxColumns);
-        $this->requireAsset('core/style-customizer');
     }
 
     protected function setupCacheSettings()

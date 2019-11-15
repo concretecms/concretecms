@@ -45,9 +45,7 @@ class Logs extends DashboardPageController
     public function view($page = 0)
     {
         $this->set('isReportEnabled', $this->isReportEnabled());
-
-        $this->requireAsset('selectize');
-
+        
         $levels = [];
         foreach (Log::getLevels() as $level) {
             $levels[$level] = Levels::getLevelDisplayName($level);

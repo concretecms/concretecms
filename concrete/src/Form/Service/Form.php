@@ -224,7 +224,7 @@ class Form
         }
         $checked = $checked ? ' checked="checked"' : '';
 
-        return '<input type="checkbox" id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('ccm-input-checkbox', $miscFields) . ' value="' . $value . '"' . $checked . ' />';
+        return '<input type="checkbox" id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-check-input', $miscFields) . ' value="' . $value . '"' . $checked . ' />';
     }
 
     /**
@@ -290,7 +290,7 @@ class Form
         }
         $id = $id ?: $key . $this->radioIndex;
         $str = '<input type="radio" id="' . $id . '" name="' . $key . '" value="' . $value . '"';
-        $str .= $this->parseMiscFields('ccm-input-radio', $miscFields);
+        $str .= $this->parseMiscFields('form-check-input', $miscFields);
         if ($checked) {
             $str .= ' checked="checked"';
         }
@@ -547,15 +547,13 @@ class Form
         $str .= '</select>';
         if ($configuration['linkStateProvinceField']) {
             $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $id);
-            $r = ResponseAssetGroup::get();
-            $r->requireAsset('core/country-data-link');
             $config = [
                 'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
                 'clearStateProvinceOnChange' => (bool) $configuration['clearStateProvinceOnChange'],
             ];
 
             $str .= '<script>$(document).ready(function() {';
-            $str .= 'ccmCountryDataLink.withCountryField(';
+            $str .= 'ConcreteCountryDataLink.withCountryField(';
             $str .= '$(' . json_encode('#' . $escapedID) . ')';
             $str .= ', ' . json_encode($config);
             $str .= ');';

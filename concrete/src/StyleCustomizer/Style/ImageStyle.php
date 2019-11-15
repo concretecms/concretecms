@@ -21,9 +21,6 @@ class ImageStyle extends Style
      */
     public function render($value = false)
     {
-        $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/style-customizer');
-
         $options = [
             'inputName' => $this->getVariable(),
         ];

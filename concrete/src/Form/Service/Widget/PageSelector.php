@@ -22,9 +22,6 @@ class PageSelector
      */
     public function selectPage($fieldName, $cID = false)
     {
-        $v = \View::getInstance();
-        $v->requireAsset('core/sitemap');
-
         $selectedCID = 0;
         if (isset($_REQUEST[$fieldName])) {
             $selectedCID = intval($_REQUEST[$fieldName]);
@@ -57,7 +54,6 @@ EOL;
     public function quickSelect($key, $cID = false, $args = array())
     {
         $v = \View::getInstance();
-        $v->requireAsset('selectize');
         $selectedCID = 0;
         if (isset($_REQUEST[$key])) {
             $selectedCID = $_REQUEST[$key];
@@ -117,9 +113,6 @@ EOL;
 
     public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = 'HOME_CID', $filters = array())
     {
-        $v = \View::getInstance();
-        $v->requireAsset('core/sitemap');
-
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
 
@@ -162,9 +155,6 @@ EOL;
 
     public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', SiteTree $siteTree = null, $filters = array())
     {
-        $v = \View::getInstance();
-        $v->requireAsset('core/sitemap');
-
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
 

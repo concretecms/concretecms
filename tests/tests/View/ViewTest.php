@@ -31,7 +31,7 @@ class ViewTest extends TestCase
         $template = $view->getViewTemplate();
         $this->assertEquals('concrete', $view->getThemeHandle());
         $this->assertEquals($base . '/views/frontend/install.php', $inner);
-        $this->assertEquals($base . '/themes/concrete/view.php', $template);
+        $this->assertEquals($base . '/themes/concrete/background_image.php', $template);
     }
 
     public function testRenderMaintenanceMode()

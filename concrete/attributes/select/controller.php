@@ -219,7 +219,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
         $this->set('selectedOptionIDs', $selectedOptionIDs);
         $this->set('selectedOptions', $selectedOptions);
-        $this->requireAsset('selectize');
     }
 
     public function search()

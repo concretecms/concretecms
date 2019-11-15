@@ -25,9 +25,6 @@ class SiteLocaleSelector
      */
     public function selectLocale($fieldName, Site $site, Locale $selectedLocale = null, array $options = [])
     {
-        $v = View::getInstance();
-        $v->requireAsset('core/app');
-
         $siteLocales = $site->getLocales()->toArray();
 
         $allowNull = !empty($options['allowNull']);
@@ -115,9 +112,6 @@ EOL;
      */
     public function selectLocaleMultiple($fieldName, Site $site, array $selectedLocales = [], array $options = [])
     {
-        $v = View::getInstance();
-        $v->requireAsset('selectize');
-
         $siteLocales = $site->getLocales()->toArray();
         $displayLocaleCode = $this->shouldDisplayLocaleCode($options, $siteLocales);
 

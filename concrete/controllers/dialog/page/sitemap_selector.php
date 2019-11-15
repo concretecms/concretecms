@@ -31,8 +31,6 @@ class SitemapSelector extends UserInterfaceController
 
     public function view()
     {
-        $this->requireAsset('core/sitemap');
-
         /** @var $sanitizer SanitizeService */
         $sanitizer = $this->app->make(SanitizeService::class);
         $cID = $this->request->query->get('cID');

@@ -18,7 +18,6 @@ class Icons extends DashboardSitePageController
 
     public function view()
     {
-        $this->requireAsset('core/colorpicker');
         $config = $this->getSite()->getConfigRepository();
 
         $fid = (int) $config->get('misc.favicon_fid');

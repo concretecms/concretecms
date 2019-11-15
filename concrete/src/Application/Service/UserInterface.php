@@ -289,30 +289,19 @@ class UserInterface
     }
 
     /**
-     * @param \Concrete\Core\Page\Page[] $tabs
-     * @param bool $jstabs
-     * @param string $callback
+     * @param $tabs
      *
      * @return string
      */
-    public function tabs($tabs, $jstabs = true, $callback = 'ccm_activateTabBar')
+    public function tabs($tabs)
     {
-        $tcn = rand(0, getrandmax());
-
-        $html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
+        $html = '<ul class="nav-tabs nav">';
         foreach ($tabs as $t) {
             $dt = $t[0];
-            $href = '#';
-            if (!$jstabs) {
-                $dt = '';
-                $href = $t[0];
-            }
-            $html .= '<li class="' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '"><a href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
+            $href = '#' . $dt;
+            $html .= '<li class="nav-item"><a class="nav-link ' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '" href="' . $href . '" data-toggle="tab">' . $t[1] . '</a></li>';
         }
         $html .= '</ul>';
-        if ($jstabs) {
-            $html .= '<script type="text/javascript">$(function() { ' . $callback . '($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
-        }
 
         return $html;
     }

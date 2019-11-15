@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a1',
     'version_installed' => '9.0.0a1',
-    'version_db' => '20191002000000', // the key of the latest database migration
+    'version_db' => '20191029175713', // the key of the latest database migration
  
     /*
      * Installation status
@@ -875,11 +875,20 @@ return [
         'name' => false,
 
         /*
-         * Background image url
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed = 
+         * standard behavior, "custom" = custom image.
          *
-         * @var null|string
+         * @var string "none"|"feed"|"custom"
          */
-        'background_image' => null,
+        'background_image' => 'feed',
+
+        /*
+         * If the background image is custom, this is where it loads from.
+         *
+         * @var null|string Custom URL for background image.
+         */
+        'background_url' => null,
+        
     ],
     'session' => [
         'name' => 'CONCRETE5',

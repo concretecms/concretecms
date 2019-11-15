@@ -85,18 +85,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <script type="text/template" class="footer">
     <tr>
         <td colspan="3">
-            <ul class="pager">
+            <div class="pager">
                 <% if (hasPreviousPage == '1') { %>
-                <li><a href="#" data-version-navigation="<%=previousPageNum%>"><?= t('&larr; Newer') ?></a></li>
+                <a href="#" class="btn btn-outline float-left" data-version-navigation="<%=previousPageNum%>"><?= t('&larr; Newer') ?></a>
                 <% } else { %>
-                <li class="disabled"><a href="#"><?= t('&larr; Newer') ?></a></li>
+                <a href="#" class="btn btn-outline float-left disabled" href="#"><?= t('&larr; Newer') ?></a>
                 <% } %>
                 <% if (hasNextPage == '1') { %>
-                <li><a href="#" data-version-navigation="<%=nextPageNum%>"><?= t('Older &rarr;') ?></a></li>
+
+                <a href="#" class="btn btn-outline float-right" data-version-navigation="<%=nextPageNum%>"><?= t('Older &rarr;') ?></a>
                 <% } else { %>
-                <li class="disabled"><a href="#"><?= t('Older &rarr;') ?></a></li>
+                <a href="#" class="btn btn-outline float-right disabled" href="#"><?= t('Older &rarr;') ?></a>
+
                 <% } %>
-            </ul>
+            </div>
         </td>
     </tr>
 </script>
@@ -400,7 +402,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <tr>
             <th colspan="2"><input type="checkbox"/></th>
             <th>
-                <button type="button" class="btn-link disabled" data-version-action="delete"><?= t('Delete') ?></button>
+                <button type="button" class="btn btn-link disabled" data-version-action="delete"><?= t('Delete') ?></button>
             </th>
         </tr>
         </thead>

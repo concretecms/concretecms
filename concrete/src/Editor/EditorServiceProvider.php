@@ -197,161 +197,40 @@ class EditorServiceProvider extends ServiceProvider
 
     private function registerCorePlugins(PluginManager $pluginManager)
     {
-        $coreAssetDir = 'js/ckeditor4/core/';
-        $vendorAssetDir = 'js/ckeditor4/vendor/';
-
-        $assetList = AssetList::getInstance();
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4',
-            $vendorAssetDir . 'ckeditor.js',
-            ['combine' => false, 'minify' => false]
-        );
-        $assetList->register(
-            'css',
-            'editor/ckeditor4',
-            $coreAssetDir . 'ckeditor.css'
-        );
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4/jquery_adapter',
-            $vendorAssetDir . 'adapters/jquery.js'
-        );
-
-        $assetList->registerGroup(
-            'editor/ckeditor4',
-            [
-                ['javascript', 'editor/ckeditor4'],
-                ['css', 'editor/ckeditor4'],
-                ['javascript', 'editor/ckeditor4/jquery_adapter'],
-            ]
-        );
-
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4/concrete5inline',
-            $coreAssetDir . 'concrete5inline/register.js'
-        );
-        $assetList->register(
-            'css',
-            'editor/ckeditor4/concrete5inline',
-            $coreAssetDir . 'concrete5inline/styles.css'
-        );
-
-        $assetList->registerGroup(
-            'editor/ckeditor4/concrete5inline',
-            [
-                ['javascript', 'editor/ckeditor4/concrete5inline'],
-                ['css', 'editor/ckeditor4/concrete5inline'],
-            ]
-        );
-
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4/concrete5filemanager',
-            $coreAssetDir . 'concrete5filemanager/register.js'
-        );
-        $assetList->register(
-            'css',
-            'editor/ckeditor4/concrete5filemanager',
-            $coreAssetDir . 'concrete5filemanager/styles.css'
-        );
-        $assetList->registerGroup(
-            'editor/ckeditor4/concrete5filemanager',
-            [
-                ['javascript', 'editor/ckeditor4/concrete5filemanager'],
-                ['css', 'editor/ckeditor4/concrete5filemanager'],
-            ]
-        );
-
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4/concrete5uploadimage',
-            $coreAssetDir . 'concrete5uploadimage/register.js'
-        );
-        $assetList->registerGroup(
-            'editor/ckeditor4/concrete5uploadimage',
-            [
-                ['javascript', 'editor/ckeditor4/concrete5uploadimage'],
-            ]
-        );
-
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4/concrete5link',
-            $coreAssetDir . 'concrete5link/register.js'
-        );
-        $assetList->registerGroup(
-            'editor/ckeditor4/concrete5link',
-            [
-                ['javascript', 'editor/ckeditor4/concrete5link'],
-            ]
-        );
-
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4/normalizeonchange',
-            $coreAssetDir . 'normalizeonchange/register.js'
-        );
-        $assetList->registerGroup(
-            'editor/ckeditor4/normalizeonchange',
-            [
-                ['javascript', 'editor/ckeditor4/normalizeonchange'],
-            ]
-        );
-
-        $assetList->register(
-            'javascript',
-            'editor/ckeditor4/concrete5styles',
-            $coreAssetDir . 'concrete5styles/register.js'
-        );
-        $assetList->register(
-            'css',
-            'editor/ckeditor4/concrete5styles',
-            $coreAssetDir . 'concrete5styles/styles.css'
-        );
-        $assetList->registerGroup(
-            'editor/ckeditor4/concrete5styles',
-            [
-                ['javascript', 'editor/ckeditor4/concrete5styles'],
-                ['css', 'editor/ckeditor4/concrete5styles'],
-            ]
-        );
-
         $plugin = new Plugin();
         $plugin->setKey('concrete5inline');
         $plugin->setName(t('concrete5 Inline'));
-        $plugin->requireAsset('editor/ckeditor4/concrete5inline');
+        $plugin->requireAsset('ckeditor/concrete');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5filemanager');
         $plugin->setName(t('concrete5 File Browser'));
-        $plugin->requireAsset('editor/ckeditor4/concrete5filemanager');
+        $plugin->requireAsset('ckeditor/concrete');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5uploadimage');
         $plugin->setName(t('concrete5 Upload Image'));
-        $plugin->requireAsset('editor/ckeditor4/concrete5uploadimage');
+        $plugin->requireAsset('ckeditor/concrete');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5link');
         $plugin->setName(t('concrete5 Link'));
-        $plugin->requireAsset('editor/ckeditor4/concrete5link');
+        $plugin->requireAsset('ckeditor/concrete');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('normalizeonchange');
         $plugin->setName(t('Normalize On Change'));
-        $plugin->requireAsset('editor/ckeditor4/normalizeonchange');
+        $plugin->requireAsset('ckeditor/concrete');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5styles');
         $plugin->setName(t('concrete5 Styles'));
-        $plugin->requireAsset('editor/ckeditor4/concrete5styles');
+        $plugin->requireAsset('ckeditor/concrete');
         $pluginManager->register($plugin);
     }
 

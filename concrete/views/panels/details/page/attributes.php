@@ -76,8 +76,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
-        <button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+        <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+		<button class="float-right btn btn-primary" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 
 </section>

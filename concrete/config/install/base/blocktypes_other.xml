@@ -3,6 +3,7 @@
 
     <blocktypes>
         <blocktype handle="core_area_layout" package=""/>
+        <blocktype handle="core_container" package=""/>
         <blocktype handle="core_page_type_composer_control_output" package=""/>
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>

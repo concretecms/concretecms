@@ -21,9 +21,9 @@ $valt = Loader::helper('validation/token');
 $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
         $request = \Request::getInstance();
-
-        $v->requireAsset('core/app');
-
+        
+        $v->requireAsset('core/cms');
+        
         $editMode = $c->isEditMode();
         $tools = REL_DIR_FILES_TOOLS_REQUIRED;
         $htmlTagClasses = 'ccm-toolbar-visible';
@@ -79,7 +79,7 @@ EOL;
         $v->addFooterItem($js);
 
         if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
-            $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
+            $v->addFooterItem('<script type="text/javascript">$(function() { ConcretePageIndexer.reindexPendingPages(); });</script>');
         }
         $cih = Loader::helper('concrete/ui');
         if (Localization::activeLanguage() != 'en') {

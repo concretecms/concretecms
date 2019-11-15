@@ -22,6 +22,16 @@ class ThemeElementLocation extends ThemeLocation
                 . DIRNAME_ELEMENTS
                 . '/'
                 . 'concrete';
+        } else if ($this->themeHandle === 'elemental') {
+            return DIR_BASE_CORE
+                . '/'
+                . DIRNAME_THEMES
+                . '/'
+                . $this->themeHandle
+                . '/'
+                . DIRNAME_ELEMENTS
+                . '/'
+                . 'concrete';
         } else {
             return DIR_APPLICATION
                 . '/'
@@ -57,6 +67,16 @@ class ThemeElementLocation extends ThemeLocation
             . DIRNAME_ELEMENTS
             . '/'
             . 'concrete';
+        } else if ($this->themeHandle === 'elemental') {
+            return ASSETS_URL
+                . '/'
+                . DIRNAME_THEMES
+                . '/'
+                . $this->themeHandle
+                . '/'
+                . DIRNAME_ELEMENTS
+                . '/'
+                . 'concrete';
         } else {
             return REL_DIR_APPLICATION
             . '/'

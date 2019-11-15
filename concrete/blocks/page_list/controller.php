@@ -231,7 +231,6 @@ class Controller extends BlockController
 
     public function add()
     {
-        $this->requireAsset('core/topics');
         $c = Page::getCurrentPage();
         $uh = Core::make('helper/concrete/urls');
         $this->set('c', $c);
@@ -246,7 +245,6 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->requireAsset('core/topics');
         $b = $this->getBlockObject();
         $bCID = $b->getBlockCollectionID();
         $bID = $b->getBlockID();

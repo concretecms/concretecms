@@ -7,7 +7,7 @@ if (!empty($top)) {
         <?php if (isset($title) && $title) {
             ?><h3><?=$title?></h3><?php
         } ?>
-        <ul class="nav">
+        <ul class="nav flex-column">
             <?php
             $walk = function ($pages) use (&$walk, &$view) {
                 $n = count($pages);
@@ -24,7 +24,7 @@ if (!empty($top)) {
                                 if (!empty($children)) {
                                     ?>
                                     <ul>
-                                        <?php $walk($children); ?>
+                                    <?php $walk($children); ?>
                                     </ul><?php
                                 }
                             }

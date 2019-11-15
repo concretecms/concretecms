@@ -322,6 +322,17 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Containers" path="/dashboard/pages/containers" filename="/dashboard/pages/containers/view.php"
+              pagetype="" description="Container Templates for Areas." package="" />
+        <page name="Add Container" path="/dashboard/pages/containers/add"
+              filename="/dashboard/pages/containers/add.php" pagetype="" description="Add page containers."
+              package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php"
               pagetype="" description="" package="">
             <attributes>

@@ -17,9 +17,6 @@ if (!$fp->canEditFileContents()) {
 }
 $token = Core::make('token')->generate();
 
-$req = ResponseAssetGroup::get();
-$req->requireAsset('core/imageeditor');
-
 /** @var ImageEditor $editor */
 if (!isset($editor) || !$editor) {
     $editor = \Core::make('editor/image/core');

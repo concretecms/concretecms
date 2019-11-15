@@ -18,8 +18,6 @@ class Search extends DashboardPageController
         $header = $this->app->build(Header::class);
         $this->set('headerMenu', $header);
         $this->set('breadcrumbClass', 'ccm-file-manager-breadcrumb');
-        $this->requireAsset('core/file-manager');
-        $this->requireAsset('core/imageeditor');
 
         $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
         $query = $provider->getSessionCurrentQuery();

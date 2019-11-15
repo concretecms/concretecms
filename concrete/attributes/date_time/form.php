@@ -24,11 +24,9 @@ switch ($displayMode) {
         echo $form->text($view->field('value'), $value, ['placeholder' => $placeholder]);
         break;
     case 'date':
-        $view->requireAsset('jquery/ui');
         echo $form_date_time->date($view->field('value'), $value);
         break;
     default:
-        $view->requireAsset('jquery/ui');
         echo $form_date_time->datetime($view->field('value'), $value, false, true, null, $timeResolution);
         break;
 }

@@ -1,0 +1,43 @@
+// Note: these are not SASS overrides in the traditional sense. Since jQuery just imports
+// via base CSS, we have to do CSS based overrides for the concrete5 stuff.
+
+html.ccm-toolbar-visible {
+  .ui-front {
+    z-index: $index-level-modal-overlay;
+  }
+
+  .ui-dialog {
+    /* hide section titles for panels when those panels are shown in dialogs */
+    section {
+      header {
+        display: none;
+      }
+    }
+
+    z-index: $index-level-dialog;
+
+  }
+
+  .ui-widget {
+    font-family: inherit;
+  }
+  
+  .ui-widget-header {
+    color: inherit;
+  }
+  
+  .ui-widget-content {
+    color: inherit; // These inherits ensure that this comes from bootstrap not jQuery UI
+  }
+  
+  .ui-widget-overlay {
+    background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity); 
+  }
+  
+  .ui-dialog-buttonpane {
+    padding: 0px;
+    margin-top: 0px;
+    border-width: 0px;
+  
+  }
+}

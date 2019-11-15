@@ -20,8 +20,8 @@ $form = Loader::helper('form/page_selector');
     ['page-list-preview', t('Preview')],
 ]); ?>
 
-<div class="ccm-tab-content" id="ccm-tab-content-page-list-settings">
-    <div class=" pagelist-form">
+<div class="ccm-tab-content">
+    <div id="settings" class="tab-pane active pagelist-form">
 
         <input type="hidden" name="pageListToolsDir" value="<?= Loader::helper('concrete/urls')->getBlockTypeToolsURL($bt) ?>/"/>
 
@@ -526,10 +526,7 @@ $form = Loader::helper('form/page_selector');
                 </div>
 
     </div>
-</div>
-
-<div class="ccm-tab-content" id="ccm-tab-content-page-list-preview">
-    <div class="preview">
+    <div id="preview" class="tab-pane preview">
         <div class="render">
 
         </div>

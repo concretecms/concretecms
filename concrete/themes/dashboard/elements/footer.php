@@ -27,6 +27,11 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
 
 
 <?php View::element('footer_required', ['disableTrackingCode' => true]); ?>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="<?=URL::to('/ccm/assets/localization/core/js')?>"></script>
+<script type="text/javascript" src="<?=$view->getThemePath()?>/main.js"></script>
+
 <script type="text/javascript">
 (function() {
     ConcretePanelManager.register({'overlay': false, 'identifier': 'dashboard', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/dashboard')?>'});
@@ -59,6 +64,11 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
         });
     });
 })();
+<?php
+$config = Core::make('config');
+if ($config->get('concrete.misc.enable_progressive_page_reindex') && $config->get('concrete.misc.do_page_reindex_check')) { ?>
+    ConcretePageIndexer.reindexPendingPages();
+<?php } ?>
 </script>
 </body>
 </html>
