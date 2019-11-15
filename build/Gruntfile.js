@@ -132,6 +132,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/location-panel.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/heartbeat.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/show-password.js',
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
