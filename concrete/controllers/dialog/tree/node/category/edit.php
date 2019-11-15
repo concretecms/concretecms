@@ -13,6 +13,7 @@ class Edit extends Node
     {
         $node = $this->getNode();
         $np = new \Permissions($node);
+
         return $np->canEditTreeNode();
     }
 
@@ -41,6 +42,7 @@ class Edit extends Node
         if (!$error->has()) {
             $node->setTreeNodeName($title);
             $r = $node->getTreeNodeJSON();
+
             return new JsonResponse($r);
         } else {
             return new JsonResponse($error);

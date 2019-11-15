@@ -16,6 +16,7 @@ class Add extends Node
     {
         $node = $this->getNode();
         $np = new \Permissions($node);
+
         return $np->canAddCategoryTreeNode();
     }
 
@@ -33,6 +34,7 @@ class Add extends Node
         if ($category instanceof ExpressEntryCategory) {
             return ExpressEntryCategory::class;
         }
+
         return Category::class;
     }
 
@@ -70,6 +72,7 @@ class Add extends Node
             }
             $category = $class::add($title, $parent);
             $r = $category->getTreeNodeJSON();
+
             return new JsonResponse($r);
         } else {
             return new JsonResponse($error);
