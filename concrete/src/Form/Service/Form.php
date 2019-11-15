@@ -547,8 +547,6 @@ class Form
         $str .= '</select>';
         if ($configuration['linkStateProvinceField']) {
             $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $id);
-            $r = ResponseAssetGroup::get();
-            $r->requireAsset('core/country-data-link');
             $config = [
                 'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
                 'clearStateProvinceOnChange' => (bool) $configuration['clearStateProvinceOnChange'],
