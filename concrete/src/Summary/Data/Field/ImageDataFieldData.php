@@ -16,7 +16,9 @@ class ImageDataFieldData implements DataFieldDataInterface, DenormalizableInterf
     
     public function __construct(FileEntity $f = null)
     {
-        $this->fID = $f->getFileID();
+        if ($f) {
+            $this->fID = $f->getFileID();
+        }
     }
 
     /**
@@ -45,8 +47,10 @@ class ImageDataFieldData implements DataFieldDataInterface, DenormalizableInterf
         ];
     }
     
-    public function denormalize(DenormalizerInterface $denormalizer, $fID, $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        $this->setData($fID);
+        if (isset($data['fID'])) {
+            $this->setData($data['fID']);
+        }
     }
 }

@@ -65,7 +65,7 @@ class Collection implements \JsonSerializable, DenormalizableInterface
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
         foreach($data['fields'] as $fieldIdentifier => $dataData) {
-            $dataFieldData = $denormalizer->denormalize($dataData['data'], $dataData['class'], 'json');
+            $dataFieldData = $denormalizer->denormalize($dataData, $dataData['class'], 'json');
             $this->addField(new DataField($fieldIdentifier, $dataFieldData));
         }
     }

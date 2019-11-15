@@ -19,10 +19,12 @@ use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Page\Summary\Template\PagePopulator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Loader;
 use Page;
@@ -441,13 +443,10 @@ class Collection extends ConcreteObject implements TrackableInterface
             $cache = PageCache::getLibrary();
             $cache->purge($this);
 
-            // we check to see if this page is referenced in any gatherings
-            $c = Page::getByID($this->getCollectionID(), $this->getVersionID());
-            $items = PageGatheringItem::getListByItem($c);
-            foreach ($items as $it) {
-                $it->deleteFeatureAssignments();
-                $it->assignFeatureAssignments($c);
-            }
+            $app = Facade::getFacadeApplication();
+            $populator = $app->make(PagePopulator::class);
+            $populator->updateAvailableSummaryTemplates($this);
+
         } else {
             $db = Loader::db();
             Config::save('concrete.misc.do_page_reindex_check', true);

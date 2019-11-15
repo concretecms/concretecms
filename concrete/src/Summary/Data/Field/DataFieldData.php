@@ -40,6 +40,6 @@ class DataFieldData implements DataFieldDataInterface, DenormalizableInterface
     
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        $this->setData($data);
+        $this->setData($data['data']);
     }
 }

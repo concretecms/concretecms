@@ -769,8 +769,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         $c->reindex(false, $doReindexImmediately);
         $c->writePageThemeCustomizations();
-        $populator = $app->make(PagePopulator::class);
-        $populator->updateAvailableSummaryTemplates($c);
         $this->refreshCache();
     }
 

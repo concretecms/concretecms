@@ -7,7 +7,7 @@ use Concrete\Core\Summary\Data\Collection;
 interface RenderableTemplateInterface
 {
     
-    public function getData() : Collection;
+    public function getData();
     
     public function getTemplate() : Template;
     

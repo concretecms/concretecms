@@ -86,7 +86,7 @@ class PageTemplate implements RenderableTemplateInterface
     /**
      * @return mixed
      */
-    public function getData() : Collection
+    public function getData()
     {
         return $this->data;
     }
