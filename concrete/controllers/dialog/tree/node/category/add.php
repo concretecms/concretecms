@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Tree\Node\Category;
 
 use Concrete\Controller\Dialog\Tree\Node;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
@@ -37,15 +38,17 @@ class Add extends Node
 
     public function add_category_node()
     {
-        $token = \Core::make('token');
-        $error = \Core::make('error');
+        $app = Facade::getFacadeApplication();
+        $token = $app->make('token');
+        $error = $app->make('error');
+        $vsh = $app->make('helper/validation/strings');
         $parent = $this->getNode();
         if (!$token->validate('add_category_node')) {
             $error->add($token->getErrorMessage());
         }
 
         $title = $_POST['treeNodeCategoryName'];
-        if (!$title) {
+        if (!$vsh->notempty($title)) {
             $error->add(t('Invalid title for category'));
         }
 
