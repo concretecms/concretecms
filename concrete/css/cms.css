@@ -14036,6 +14036,7 @@ div#ccm-panel-detail-page-seo,
 div#ccm-panel-detail-page-composer,
 div#ccm-panel-detail-page-versions,
 div#ccm-panel-detail-page-attributes,
+div#ccm-panel-detail-page-summary-templates,
 div#ccm-panel-detail-page-caching,
 div#ccm-panel-detail-page-permissions,
 div#ccm-panel-detail-page-location {
@@ -14047,6 +14048,7 @@ div#ccm-panel-detail-page-seo div.ccm-panel-detail-content,
 div#ccm-panel-detail-page-composer div.ccm-panel-detail-content,
 div#ccm-panel-detail-page-versions div.ccm-panel-detail-content,
 div#ccm-panel-detail-page-attributes div.ccm-panel-detail-content,
+div#ccm-panel-detail-page-summary-templates div.ccm-panel-detail-content,
 div#ccm-panel-detail-page-caching div.ccm-panel-detail-content,
 div#ccm-panel-detail-page-permissions div.ccm-panel-detail-content,
 div#ccm-panel-detail-page-location div.ccm-panel-detail-content {
@@ -14058,6 +14060,7 @@ div#ccm-panel-detail-page-seo div.ccm-panel-detail-content ul.nav-tabs,
 div#ccm-panel-detail-page-composer div.ccm-panel-detail-content ul.nav-tabs,
 div#ccm-panel-detail-page-versions div.ccm-panel-detail-content ul.nav-tabs,
 div#ccm-panel-detail-page-attributes div.ccm-panel-detail-content ul.nav-tabs,
+div#ccm-panel-detail-page-summary-templates div.ccm-panel-detail-content ul.nav-tabs,
 div#ccm-panel-detail-page-caching div.ccm-panel-detail-content ul.nav-tabs,
 div#ccm-panel-detail-page-permissions div.ccm-panel-detail-content ul.nav-tabs,
 div#ccm-panel-detail-page-location div.ccm-panel-detail-content ul.nav-tabs {
@@ -14071,6 +14074,7 @@ div#ccm-panel-detail-page-seo div.ccm-panel-detail-content div.form-group-highli
 div#ccm-panel-detail-page-composer div.ccm-panel-detail-content div.form-group-highlight,
 div#ccm-panel-detail-page-versions div.ccm-panel-detail-content div.form-group-highlight,
 div#ccm-panel-detail-page-attributes div.ccm-panel-detail-content div.form-group-highlight,
+div#ccm-panel-detail-page-summary-templates div.ccm-panel-detail-content div.form-group-highlight,
 div#ccm-panel-detail-page-caching div.ccm-panel-detail-content div.form-group-highlight,
 div#ccm-panel-detail-page-permissions div.ccm-panel-detail-content div.form-group-highlight,
 div#ccm-panel-detail-page-location div.ccm-panel-detail-content div.form-group-highlight {
@@ -14085,6 +14089,7 @@ div#ccm-panel-detail-page-seo div.ccm-panel-detail-content div.form-group,
 div#ccm-panel-detail-page-composer div.ccm-panel-detail-content div.form-group,
 div#ccm-panel-detail-page-versions div.ccm-panel-detail-content div.form-group,
 div#ccm-panel-detail-page-attributes div.ccm-panel-detail-content div.form-group,
+div#ccm-panel-detail-page-summary-templates div.ccm-panel-detail-content div.form-group,
 div#ccm-panel-detail-page-caching div.ccm-panel-detail-content div.form-group,
 div#ccm-panel-detail-page-permissions div.ccm-panel-detail-content div.form-group,
 div#ccm-panel-detail-page-location div.ccm-panel-detail-content div.form-group {
@@ -14103,6 +14108,7 @@ div#ccm-panel-detail-page-seo div.ccm-panel-detail-content div.form-group label.
 div#ccm-panel-detail-page-composer div.ccm-panel-detail-content div.form-group label.control-label,
 div#ccm-panel-detail-page-versions div.ccm-panel-detail-content div.form-group label.control-label,
 div#ccm-panel-detail-page-attributes div.ccm-panel-detail-content div.form-group label.control-label,
+div#ccm-panel-detail-page-summary-templates div.ccm-panel-detail-content div.form-group label.control-label,
 div#ccm-panel-detail-page-caching div.ccm-panel-detail-content div.form-group label.control-label,
 div#ccm-panel-detail-page-permissions div.ccm-panel-detail-content div.form-group label.control-label,
 div#ccm-panel-detail-page-location div.ccm-panel-detail-content div.form-group label.control-label {
@@ -14114,6 +14120,7 @@ div#ccm-panel-detail-page-seo div.ccm-panel-detail-content ul.fancytree-containe
 div#ccm-panel-detail-page-composer div.ccm-panel-detail-content ul.fancytree-container,
 div#ccm-panel-detail-page-versions div.ccm-panel-detail-content ul.fancytree-container,
 div#ccm-panel-detail-page-attributes div.ccm-panel-detail-content ul.fancytree-container,
+div#ccm-panel-detail-page-summary-templates div.ccm-panel-detail-content ul.fancytree-container,
 div#ccm-panel-detail-page-caching div.ccm-panel-detail-content ul.fancytree-container,
 div#ccm-panel-detail-page-permissions div.ccm-panel-detail-content ul.fancytree-container,
 div#ccm-panel-detail-page-location div.ccm-panel-detail-content ul.fancytree-container {
@@ -14125,6 +14132,7 @@ div#ccm-panel-detail-page-seo header,
 div#ccm-panel-detail-page-composer header,
 div#ccm-panel-detail-page-versions header,
 div#ccm-panel-detail-page-attributes header,
+div#ccm-panel-detail-page-summary-templates header,
 div#ccm-panel-detail-page-caching header,
 div#ccm-panel-detail-page-permissions header,
 div#ccm-panel-detail-page-location header {
@@ -14137,6 +14145,7 @@ div#ccm-panel-detail-page-seo hr,
 div#ccm-panel-detail-page-composer hr,
 div#ccm-panel-detail-page-versions hr,
 div#ccm-panel-detail-page-attributes hr,
+div#ccm-panel-detail-page-summary-templates hr,
 div#ccm-panel-detail-page-caching hr,
 div#ccm-panel-detail-page-permissions hr,
 div#ccm-panel-detail-page-location hr {
@@ -14148,6 +14157,7 @@ div#ccm-panel-detail-page-seo fieldset,
 div#ccm-panel-detail-page-composer fieldset,
 div#ccm-panel-detail-page-versions fieldset,
 div#ccm-panel-detail-page-attributes fieldset,
+div#ccm-panel-detail-page-summary-templates fieldset,
 div#ccm-panel-detail-page-caching fieldset,
 div#ccm-panel-detail-page-permissions fieldset,
 div#ccm-panel-detail-page-location fieldset {
@@ -14163,6 +14173,7 @@ div#ccm-panel-detail-page-seo fieldset legend,
 div#ccm-panel-detail-page-composer fieldset legend,
 div#ccm-panel-detail-page-versions fieldset legend,
 div#ccm-panel-detail-page-attributes fieldset legend,
+div#ccm-panel-detail-page-summary-templates fieldset legend,
 div#ccm-panel-detail-page-caching fieldset legend,
 div#ccm-panel-detail-page-permissions fieldset legend,
 div#ccm-panel-detail-page-location fieldset legend {
@@ -17701,7 +17712,7 @@ div#ccm-popup-alert-message {
 #nprogress .bar {
   background: #29d;
   position: fixed;
-  z-index: 1031;
+  z-index: 10000;
   top: 0;
   left: 0;
   width: 100%;
@@ -17724,7 +17735,7 @@ div#ccm-popup-alert-message {
 #nprogress .spinner {
   display: block;
   position: fixed;
-  z-index: 1031;
+  z-index: 10000;
   top: 15px;
   right: 15px;
 }

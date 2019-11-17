@@ -95,7 +95,18 @@ $seoSet = AttributeSet::getByHandle('seo');
             <?php
 
             }
-        }
+            ?>
+
+            <li>
+                <a href="#"
+                   data-launch-panel-detail="page-summary-templates"
+                   data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/summary_templates') ?>"
+                   data-panel-transition="fade">
+                    <?= t('Summary Templates') ?>
+                </a>
+            </li>
+
+        <?php }
 
         if ($cp->canEditPageSpeedSettings()) {
             ?>

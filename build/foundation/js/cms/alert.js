@@ -130,7 +130,7 @@ var ConcreteAlert = {
         if (options.hide === false) {
             notifyOptions.hide = options.hide;
         }
-
+        
         new PNotify(notifyOptions);
 
     }

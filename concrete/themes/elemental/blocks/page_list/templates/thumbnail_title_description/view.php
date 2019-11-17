@@ -18,7 +18,7 @@ $renderer = Core::make('Concrete\Core\Summary\Template\Renderer');
     
     <?php foreach ($pages as $page) {
         
-        $renderer->renderTemplate('thumbnail_title_description', $page);
+        $renderer->renderSummary($page, 'thumbnail_title_description');
         
     } ?>
     
