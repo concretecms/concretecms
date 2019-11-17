@@ -5,6 +5,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
+use Concrete\Core\Entity\Summary\CustomPageTemplateCollection;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
@@ -143,6 +144,14 @@ class Page extends Collection implements CategoryMemberInterface,
      * @var int|null
      */
     protected $siteTreeID;
+
+    /**
+     * Whether this page has a custom summary template collection assigned to it. If null/false,
+     * then we just use any that are found to fit the criteria.
+     * 
+     * @var bool|null
+     */
+    protected $hasCustomSummaryTemplateCollection;
 
     /**
      * Initialize collection until we populate it.
@@ -825,6 +834,38 @@ class Page extends Collection implements CategoryMemberInterface,
         return $em->getRepository(\Concrete\Core\Entity\Summary\PageTemplate::class)
             ->findByCID($this->getCollectionID());
     }
+
+    /**
+     * @return CustomPageTemplateCollection
+     */
+    protected function getCustomPageSummaryTemplateCollection()
+    {
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
+        return $em->getRepository(CustomPageTemplateCollection::class)
+            ->findOneByCID($this->getCollectionID());
+    }
+
+    public function hasCustomSummaryTemplateCollection(): bool
+    {
+        if ($this->getCustomPageSummaryTemplateCollection()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getCustomSelectedSummaryTemplates(): array
+    {
+        $collection = $this->getCustomPageSummaryTemplateCollection();
+        if ($collection) {
+            $templates = $collection->getTemplates();
+            if ($templates) {
+                return $templates->toArray();
+            }
+        }
+        return [];
+    }
+
 
     /**
      * Make an alias to a page.

@@ -538,6 +538,8 @@ return [
         ['Concrete\Core\Page\Container\Command\AddContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
         ['Concrete\Core\Page\Container\Command\UpdateContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
         ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
+        ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplateCollectionCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplateCollectionCommandHandler'],
+        ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplateCollectionCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplateCollectionCommandHandler'],
     ],
 
 ];

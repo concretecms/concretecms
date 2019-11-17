@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Summary\Category;
 
+use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 
 interface CategoryMemberInterface
@@ -15,5 +16,15 @@ interface CategoryMemberInterface
      * @return RenderableTemplateInterface[]
      */
     public function getSummaryTemplates() : array;
+
+    /**
+     * @return bool
+     */
+    public function hasCustomSummaryTemplateCollection() : bool;
+
+    /**
+     * @return Template[]
+     */
+    public function getCustomSelectedSummaryTemplates() : array;
     
 }

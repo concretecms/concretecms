@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Summary\Template;
 
-use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
@@ -37,9 +36,20 @@ class Renderer implements LoggerAwareInterface
      */
     protected $serializer;
 
-    public function __construct(Serializer $serializer, EntityManager $entityManager, TemplateLocator $templateLocator, Page $currentPage)
+    /**
+     * @var RendererFilterer 
+     */
+    protected $rendererFilterer;
+    
+    public function __construct(
+        Serializer $serializer, 
+        RendererFilterer $rendererFilterer,
+        EntityManager $entityManager, 
+        TemplateLocator $templateLocator, 
+        Page $currentPage)
     {
         $this->serializer = $serializer;
+        $this->rendererFilterer = $rendererFilterer;
         $this->entityManager = $entityManager;
         $this->templateLocator = $templateLocator;
         $this->currentPage = $currentPage;
@@ -50,43 +60,28 @@ class Renderer implements LoggerAwareInterface
         return Channels::CHANNEL_CONTENT;
     }
 
-    /**
-     * @param string $templateHandle
-     * @param RenderableTemplateInterface[] $templates
-     * @return RenderableTemplateInterface
-     */
-    protected function getMatchingTemplate(string $templateHandle, array $templates): ?RenderableTemplateInterface
+    public function renderSummary(CategoryMemberInterface $object, string $templateHandle = null)
     {
-        foreach ($templates as $template) {
-            if ($template->getTemplate()->getHandle() === $templateHandle) {
-                return $template;
-
-            }
+        $allTemplates = $object->getSummaryTemplates();
+        $customTemplates = null;
+        if ($object->hasCustomSummaryTemplateCollection()) {
+            $customTemplates = $object->getCustomSelectedSummaryTemplates();
         }
-        return null;
-    }
-
-    public function renderTemplate(string $templateHandle, CategoryMemberInterface $object)
-    {
-        $template = $this->entityManager->getRepository(Template::class)
-            ->findOneByHandle($templateHandle);
-        if (!$template) {
-            throw new \RuntimeException(t('Unable to load summary template object by handle: %s', $templateHandle));
-        }
-
-        $templates = $object->getSummaryTemplates();
-        if ($templates && count($templates) > 0) {
-            if ($template = $this->getMatchingTemplate($templateHandle, $templates)) {
-                $file = $this->templateLocator->getFileToRender($this->currentPage, $template->getTemplate());
-                if ($file) {
-                    $data = $template->getData();
-                    $collection = $this->serializer->denormalize($data, Collection::class, 'json');
-                    $fields = $collection->getFields();
-                    extract($fields, EXTR_OVERWRITE);
-                    include $file;
-                } else {
-                    $this->logger->notice(t('Unable to locate file for summary template: %s', $template->getHandle()));
-                }
+        
+        if ($template = $this->rendererFilterer->getMatchingTemplate(
+            $allTemplates, $customTemplates, $templateHandle
+        )) {
+            $file = $this->templateLocator->getFileToRender($this->currentPage, $template->getTemplate());
+            if ($file) {
+                $data = $template->getData();
+                $collection = $this->serializer->denormalize($data, Collection::class, 'json');
+                $fields = $collection->getFields();
+                extract($fields, EXTR_OVERWRITE);
+                include $file;
+            } else if ($templateHandle) {
+                $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s', 
+                    $this->currentPage->getCollectionID(), $templateHandle)
+                );
             }
         }
 
