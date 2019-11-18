@@ -102,6 +102,7 @@ function startDropzone(customOptions) {
                 NProgress.start();
             }
             formData.append('responseFormat', 'dropzone');
+            formData.append('ccm_token', CCM_SECURITY_TOKEN);
             var options = optionsStack[optionsStack.length - 1];
             if (options.originalPageID) {
                 formData.append('ocID', isFunction(options.originalPageID) ? options.originalPageID() : options.originalPageID);
