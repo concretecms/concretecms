@@ -352,7 +352,7 @@ ConcreteFileManager.prototype.setupImageThumbnails = function() {
             }
         });
         my.closest('.ui-dialog').on('dialogclose', function() {
-            my.popover('destroy');
+            my.popover('dispose');
         });
     });
 };
