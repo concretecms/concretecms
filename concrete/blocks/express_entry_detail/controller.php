@@ -157,7 +157,6 @@ class Controller extends BlockController
 
     public function loadData()
     {
-        $this->requireAsset('core/express');
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entityObjects = $r->findAll();
         $entities = array('' => t("** Choose Entity"));
