@@ -38966,7 +38966,7 @@ global.ConcreteUserSelector = ConcreteUserSelector;
 
     my.$element = $element;
     my.options = options;
-    my._chooseTemplate = _.template(my.chooseTemplate, { 'options': my.options });
+    my._chooseTemplate = _.template(my.chooseTemplate)({ 'options': my.options });
     my._loadingTemplate = _.template(my.loadingTemplate);
     my._entryLoadedTemplate = _.template(my.entryLoadedTemplate);
 
@@ -39188,6 +39188,7 @@ function startDropzone(customOptions) {
                 NProgress.start();
             }
             formData.append('responseFormat', 'dropzone');
+            formData.append('ccm_token', CCM_SECURITY_TOKEN);
             var options = optionsStack[optionsStack.length - 1];
             if (options.originalPageID) {
                 formData.append('ocID', isFunction(options.originalPageID) ? options.originalPageID() : options.originalPageID);
