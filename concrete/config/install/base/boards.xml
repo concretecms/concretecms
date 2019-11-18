@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <boarddatasources>
+        <datasource handle="page" package=""/>
+    </boarddatasources>
+</concrete5-cif>

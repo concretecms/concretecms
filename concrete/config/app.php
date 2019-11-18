@@ -135,6 +135,7 @@ return [
         'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
+        'core_boards' => '\Concrete\Core\Board\ServiceProvider',
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -242,6 +243,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',

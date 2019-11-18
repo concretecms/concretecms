@@ -179,6 +179,30 @@
 
         </page>
 
+        <page name="Boards" path="/dashboard/boards" filename="/dashboard/boards/view.php" pagetype=""
+              description="Express Data Objects" package=""/>
+
+        <page name="View Boards" path="/dashboard/boards/boards" filename="/dashboard/boards/boards.php" pagetype=""
+              description="" package="">
+
+        </page>
+
+        <page name="Add Board" path="/dashboard/boards/add" filename="/dashboard/boards/add.php" pagetype=""
+              description="" package="">
+
+        </page>
+
+        <page name="Board Details" path="/dashboard/boards/details" filename="/dashboard/boards/view_board.php" pagetype=""
+              description="" package="">
+
+        </page>
+
+        <page name="Data Sources" path="/dashboard/boards/data_sources" filename="/dashboard/boards/data_sources.php" pagetype=""
+              description="" package="">
+
+        </page>
+
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>
