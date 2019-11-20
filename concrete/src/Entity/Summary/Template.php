@@ -44,7 +44,7 @@ class Template
     protected $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="TemplateField", mappedBy="template", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TemplateField", mappedBy="template", cascade={"persist", "remove"}, mappedBy="template")
      **/
     protected $fields;
     

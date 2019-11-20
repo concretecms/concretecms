@@ -43,7 +43,8 @@ class Collection implements \JsonSerializable, DenormalizableInterface
     public function containsField($field)
     {
         $field = $field instanceof FieldInterface ? $field->getFieldIdentifier() : $field;
-        return $this->collection->containsKey($field);
+        $containsKey = $this->collection->containsKey($field);
+        return $containsKey;
     }
     
     public function getField(string $field)

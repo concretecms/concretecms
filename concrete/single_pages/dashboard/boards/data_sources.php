@@ -7,11 +7,42 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="row">
     <div class="col-4">
         <?php
-        $element = Element::get('dashboard/boards/menu', ['board' => $board]);
+        $element = Element::get('dashboard/boards/menu', ['board' => $board, 'action' => 'data_sources']);
         $element->render();
         ?>
     </div>
     <div class="col-8">
+
+        <?php if (count($configuredSources)) {
+            ?>
+
+            <ul class="item-select-list" id="ccm-stack-list">
+                <?php foreach ($configuredSources as $configuredSource) {
+                    $source = $configuredSource->getDataSource();
+                    $driver = $source->getDriver();
+                    $formatter = $driver->getIconFormatter();
+                    ?>
+
+                    <li>
+                        <a href="<?=$view->action('update', $configuredSource->getConfiguredDataSourceID())?>">
+                            <?=$formatter->getListIconElement()?> <?=$source->getName()?>
+                        </a>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+            
+            <hr/>
+
+            <?php
+
+        } else {
+            ?>
+            <p><?=t('You have not added any data sources to this board.')?></p>
+            <?php
+
+        } ?>
 
         <h3 class="font-weight-light"><?=t('Add Data Source')?></h3>
         <div class="btn-group">
@@ -27,7 +58,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     $driver = $source->getDriver();
                     $formatter = $driver->getIconFormatter();
                     ?>
-                    <li><a class="dropdown-item" href="#"><?=$formatter->getListIconElement()?> <?=$source->getName()?></a></li>
+                    <li><a class="dropdown-item" href="<?=$view->action('add', $board->getBoardID(), $source->getId())?>"><?=$formatter->getListIconElement()?> <?=$source->getName()?></a></li>
                     <?php
                 }
                 ?>

@@ -2,6 +2,8 @@
 namespace Concrete\Core\Summary\Data\Extractor\Driver;
 
 
+use Concrete\Core\Application\Application;
+
 class RegisteredDriver 
 {
 
@@ -21,17 +23,12 @@ class RegisteredDriver
         $this->priority = $priority;
     }
     
-    public function inflateClass()
+    public function inflateClass(Application $app) : DriverInterface
     {
-        $driver = new $this->driver();
+        $driver = $app->make($this->driver);
         return $driver;
     }
     
-    public function isValidForObject($object)
-    {
-        return $this->inflateClass()->isValidForObject($object);
-    }
-
     /**
      * @return string
      */

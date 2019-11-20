@@ -4,15 +4,20 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Entity\Board\ConfiguredDataSource;
-use Concrete\Core\Entity\Board\DataSource;
+use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
+use Concrete\Core\Entity\Board\DataSource\Configuration\PageConfiguration;
+use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
+use Concrete\Core\Entity\Board\DataSource\DataSource;
+use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Entity\Calendar\Summary\CalendarEventTemplate;
 use Concrete\Core\Entity\Page\Container;
+use Concrete\Core\Entity\Page\Summary\PageTemplate;
 use Concrete\Core\Entity\Summary\Category;
-use Concrete\Core\Entity\Summary\CustomPageTemplateCollection;
+use Concrete\Core\Entity\Page\Summary\CustomPageTemplateCollection;
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
-use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Entity\Page\Container\Instance;
 use Concrete\Core\Entity\Page\Container\InstanceArea;
 
@@ -35,16 +40,25 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
         $this->createSinglePage('/dashboard/boards/data_sources', 'Data Sources',
             ['exclude_nav' => true]
         );
+        $this->createSinglePage('/dashboard/boards/rebuild', 'Rebuild Board',
+            ['exclude_nav' => true]
+        );
         $this->refreshEntities([
             Board::class,
+            Item::class,
             DataSource::class,
             ConfiguredDataSource::class,
+            PageConfiguration::class,
+            CalendarEventConfiguration::class,
             Container::class,
             Instance::class,
             InstanceArea::class,
             Template::class,
             Category::class,
             CustomPageTemplateCollection::class,
+            PageTemplate::class,
+            CalendarEvent::class,
+            CalendarEventTemplate::class,
         ]);
         $bt = BlockType::getByHandle('core_container');
         if (!$bt) {

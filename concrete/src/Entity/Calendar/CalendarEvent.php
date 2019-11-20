@@ -1,14 +1,17 @@
 <?php
 namespace Concrete\Core\Entity\Calendar;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Attribute\Category\EventCategory;
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Entity\Attribute\Value\EventValue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use RuntimeException;
@@ -17,7 +20,7 @@ use RuntimeException;
  * @ORM\Entity(repositoryClass="CalendarEventRepository")
  * @ORM\Table(name="CalendarEvents")
  */
-class CalendarEvent implements ObjectInterface
+class CalendarEvent implements ObjectInterface, CategoryMemberInterface
 {
 
     use ObjectTrait;
@@ -47,6 +50,25 @@ class CalendarEvent implements ObjectInterface
     protected $workflow_progress_objects;
 
     /**
+     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Calendar\Summary\CalendarEventTemplate", mappedBy="event", cascade={"persist", "remove"})
+     */
+    protected $summary_templates;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Summary\Template")
+     * @ORM\JoinTable(name="CalendarEventCustomSummaryTemplates",
+     *      joinColumns={@ORM\JoinColumn(name="eventID", referencedColumnName="eventID")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="template_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $custom_summary_templates;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $hasCustomSummaryTemplates = false;
+
+    /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -56,6 +78,8 @@ class CalendarEvent implements ObjectInterface
     {
         $this->calendar = $calendar;
         $this->versions = new ArrayCollection();
+        $this->summary_templates = new ArrayCollection();
+        $this->custom_summary_templates = new ArrayCollection();
     }
 
     /**
@@ -221,4 +245,30 @@ class CalendarEvent implements ObjectInterface
         }
         return false;
     }
+    
+    public function getSummaryCategoryHandle(): string
+    {
+        return 'calendar_event';
+    }
+
+    public function getSummaryTemplates(): array
+    {
+        return $this->summary_templates->toArray();
+    }
+
+    public function hasCustomSummaryTemplates(): bool
+    {
+        return $this->hasCustomSummaryTemplates;
+    }
+
+    public function getCustomSelectedSummaryTemplates(): array
+    {
+        $templates = [];
+        if ($this->hasCustomSummaryTemplates) {
+            $templates = $this->custom_summary_templates->toArray();
+        }
+        return $templates;
+    }
+
+
 }

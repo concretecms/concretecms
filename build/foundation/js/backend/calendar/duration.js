@@ -24,7 +24,7 @@
 
         my.repetition = repetition;
 
-        var _template = _.template($(options.template).html(), {
+        var _template = _.template($(options.template).html())({
             repetition: repetition,
             options: my.options
         });
@@ -446,4 +446,4 @@
 
     global.ConcreteDurationSelector = ConcreteDurationSelector;
 
-})(this, jQuery);
+})(window, jQuery);

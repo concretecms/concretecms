@@ -2,29 +2,22 @@
 
 namespace Concrete\Core\Page\Summary\Template\Command;
 
-use Concrete\Core\Entity\Summary\CustomPageTemplateCollection;
+use Concrete\Core\Entity\Page\Summary\CustomPageTemplateCollection;
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Summary\Template\PagePopulator;
 use Doctrine\ORM\EntityManager;
 
-class CustomPageSummaryTemplateCollectionCommandHandler
+class CustomPageSummaryTemplatesCommandHandler
 {
 
     /**
      * @var EntityManager
      */
     protected $entityManager;
-
-    /**
-     * @var PagePopulator 
-     */
-    protected $pagePopulator;
-
-    public function __construct(EntityManager $entityManager, PagePopulator $pagePopulator)
+    
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->pagePopulator = $pagePopulator;
     }
     
     protected function clearCustomCollection($pageID)
@@ -38,8 +31,8 @@ class CustomPageSummaryTemplateCollectionCommandHandler
         }
     }
 
-    public function handleEnableCustomPageSummaryTemplateCollectionCommand(
-        EnableCustomPageSummaryTemplateCollectionCommand $command)
+    public function handleEnableCustomPageSummaryTemplatesCommand(
+        EnableCustomPageSummaryTemplatesCommand $command)
     {
         $this->clearCustomCollection($command->getPageID());
         $collection = new CustomPageTemplateCollection();
@@ -61,8 +54,8 @@ class CustomPageSummaryTemplateCollectionCommandHandler
         $this->entityManager->flush();
     }
 
-    public function handleDisableCustomPageSummaryTemplateCollectionCommand(
-        DisableCustomPageSummaryTemplateCollectionCommand $command)
+    public function handleDisableCustomPageSummaryTemplatesCommand(
+        DisableCustomPageSummaryTemplatesCommand $command)
     {
         $this->clearCustomCollection($command->getPageID());
     }

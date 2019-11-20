@@ -90,4 +90,4 @@
 
     global.ConcreteSearchFieldSelector = ConcreteSearchFieldSelector;
 
-})(global, jQuery);
+})(window, jQuery);

@@ -19,7 +19,7 @@ use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
-use Concrete\Core\Page\Summary\Template\PagePopulator;
+use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
@@ -444,7 +444,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             $cache->purge($this);
 
             $app = Facade::getFacadeApplication();
-            $populator = $app->make(PagePopulator::class);
+            $populator = $app->make(Populator::class);
             $populator->updateAvailableSummaryTemplates($this);
 
         } else {

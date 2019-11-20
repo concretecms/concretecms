@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Calendar\Event\Summary\Template\Populator;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Repetition\Comparator;
 use Concrete\Core\Calendar\Event\Event\DuplicateEventEvent;
@@ -15,7 +18,7 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class EventService
+class EventService implements ApplicationAwareInterface
 {
     protected $entityManager;
     protected $config;
@@ -27,6 +30,8 @@ class EventService
     const EVENT_VERSION_APPROVED = 2;
     const INTERVAL_VERSION = 1200; // 20 minutes
 
+    use ApplicationAwareTrait;
+    
     public function __construct(EntityManagerInterface $entityManagerInterface, Repository $config, EventOccurrenceFactory $occurrenceFactory, EventCategory $eventCategory, EventDispatcher $dispatcher)
     {
         $this->entityManager = $entityManagerInterface;
@@ -165,6 +170,9 @@ class EventService
                 }
             }
         }
+
+        $populator = $this->app->make(Populator::class);
+        $populator->updateAvailableSummaryTemplates($event);
     }
 
     public function unapprove(CalendarEvent $event)

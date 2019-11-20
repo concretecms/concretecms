@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Summary\Template\Command;
 
 use Concrete\Core\Page\Command\PageCommand;
 
-class DisableCustomPageSummaryTemplateCollectionCommand extends PageCommand
+class DisableCustomPageSummaryTemplatesCommand extends PageCommand
 {
 
 

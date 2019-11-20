@@ -13,11 +13,16 @@ class Manager extends CoreManager
         return $this->app->make(PageDriver::class);
     }
 
+    public function createCalendarEventDriver()
+    {
+        return $this->app->make(CalendarEventDriver::class);
+    }
+
     public function __construct(Application $app)
     {
         parent::__construct($app);
-        // Register our drivers so that we can get a list easily.
         $this->driver('page');
+        $this->driver('calendar_event');
     }
 
 }

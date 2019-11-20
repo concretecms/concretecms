@@ -29,14 +29,20 @@ class Board
     protected $boardName;
 
     /**
-     * @ORM\OneToMany(targetEntity="ConfiguredDataSource", cascade={"remove"}, mappedBy="board")
-     * @ORM\JoinColumn(name="dsID", referencedColumnName="dsID")
+     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource", cascade={"remove"}, mappedBy="board")
      */
     protected $data_sources;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Item", cascade={"remove"}, mappedBy="board", fetch="EXTRA_LAZY")
+     */
+    protected $items;
+
 
     public function __construct()
     {
         $this->data_sources = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     /**

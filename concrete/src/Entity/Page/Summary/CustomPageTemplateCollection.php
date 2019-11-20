@@ -1,8 +1,6 @@
 <?php
-namespace Concrete\Core\Entity\Summary;
+namespace Concrete\Core\Entity\Page\Summary;
 
-use Concrete\Core\Summary\Data\Collection;
-use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,7 +20,7 @@ class CustomPageTemplateCollection
     protected $cID;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Template")
+     * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Summary\Template")
      * @ORM\JoinTable(name="PageSummaryTemplateCustomCollectionTemplates",
      *      joinColumns={@ORM\JoinColumn(name="cID", referencedColumnName="cID")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="template_id", referencedColumnName="id")}

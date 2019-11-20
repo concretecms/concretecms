@@ -44,7 +44,8 @@ class Filterer
                     $fields = $template->getFields();
                     if ($fields) {
                         foreach ($fields as $field) {
-                            if ($field->isRequired() && !$collection->containsField($field->getField())) {
+                            $templateField = $field->getField();
+                            if ($field->isRequired() && !$collection->containsField($templateField)) {
                                 $include = false;
                             }
                         }

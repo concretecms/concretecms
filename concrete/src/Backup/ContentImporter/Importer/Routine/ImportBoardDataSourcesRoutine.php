@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Entity\Board\DataSource;
+use Concrete\Core\Entity\Board\DataSource\DataSource;
 
 class ImportBoardDataSourcesRoutine extends AbstractRoutine
 {

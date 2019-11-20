@@ -1,7 +1,7 @@
 <?php
-namespace Concrete\Core\Entity\Summary;
+namespace Concrete\Core\Entity\Page\Summary;
 
-use Concrete\Core\Summary\Data\Collection;
+use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,7 +34,7 @@ class PageTemplate implements RenderableTemplateInterface
     protected $cID;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Template")
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Summary\Template")
      */
     protected $template;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Board;
+namespace Concrete\Core\Entity\Board\DataSource;
 
 use Concrete\Core\Board\DataSource\Driver\DriverInterface;
 use Concrete\Core\Support\Facade\Facade;

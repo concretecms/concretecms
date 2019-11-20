@@ -72,7 +72,8 @@ class Field implements FieldInterface
     
     public function getFieldIdentifier()
     {
-        return $this->getHandle();
+        $handle = $this->getHandle();
+        return $handle;
     }
 
     public function export(\SimpleXMLElement $node)

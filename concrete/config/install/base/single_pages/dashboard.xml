@@ -199,9 +199,11 @@
 
         <page name="Data Sources" path="/dashboard/boards/data_sources" filename="/dashboard/boards/data_sources.php" pagetype=""
               description="" package="">
-
         </page>
 
+        <page name="Rebuild Board" path="/dashboard/boards/rebuild" filename="/dashboard/boards/rebuild.php" pagetype=""
+              description="" package="">
+        </page>
 
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">

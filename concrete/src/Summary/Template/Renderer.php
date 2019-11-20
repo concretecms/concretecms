@@ -64,7 +64,7 @@ class Renderer implements LoggerAwareInterface
     {
         $allTemplates = $object->getSummaryTemplates();
         $customTemplates = null;
-        if ($object->hasCustomSummaryTemplateCollection()) {
+        if ($object->hasCustomSummaryTemplates()) {
             $customTemplates = $object->getCustomSelectedSummaryTemplates();
         }
         

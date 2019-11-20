@@ -33,7 +33,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
         'Concrete\Core\Entity\Summary\Category',
-        'Concrete\Core\Entity\Summary\PageTemplate',
+        'Concrete\Core\Entity\Page\Summary\PageTemplate',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Type',

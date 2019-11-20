@@ -20,7 +20,7 @@ interface CategoryMemberInterface
     /**
      * @return bool
      */
-    public function hasCustomSummaryTemplateCollection() : bool;
+    public function hasCustomSummaryTemplates() : bool;
 
     /**
      * @return Template[]
