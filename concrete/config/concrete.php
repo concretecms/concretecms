@@ -612,6 +612,7 @@ return [
     'paths' => [
         'trash' => '/!trash',
         'drafts' => '/!drafts',
+        'login' => '/login'
     ],
     'icons' => [
         'page_template' => [

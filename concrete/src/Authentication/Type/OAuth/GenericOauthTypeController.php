@@ -88,7 +88,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($error) {
             $this->markError($error);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
+        id(new \RedirectResponse($this->app->make('helper/navigation')->getLoginUrl(['callback', $this->getHandle(), 'handle_error'])))->send();
     }
 
     public function markError($error)
@@ -112,7 +112,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($message) {
             $this->markSuccess($message);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
+        id(new \RedirectResponse($this->app->make('helper/navigation')->getLoginUrl(['callback', $this->getHandle(), 'handle_success'])))->send();
     }
 
     public function markSuccess($message)
@@ -214,7 +214,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
                 $flashbag->set('token', $this->getToken());
 
 
-                $response = \Redirect::to('/login/callback/' . $this->getHandle() . '/handle_register/', id(new Token())->generate($this->getHandle() . '_register'));
+                $response = \Redirect::to($this->app->make('helper/navigation')->getLoginUrl([
+                    'callback',
+                    $this->getHandle(),
+                    'handle_register',
+                    id(new Token())->generate($this->getHandle() . '_register'),
+                ]));
                 $response->send();
                 exit;
 
@@ -246,7 +251,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         if (!$token_helper->validate($this->getHandle().'_register', $token) && !$token_helper->validate($this->getHandle().'_register') ||
             !$this->token) {
-            $this->redirect('/login/');
+            $this->redirect($this->app->make('helper/navigation')->getLoginUrl());
             exit;
         }
         if (\Request::request('uEmail', false)) {
@@ -580,7 +585,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     public function handle_detach_attempt()
     {
         if (!User::isLoggedIn()) {
-            $response = new RedirectResponse(\URL::to('/login'), 302);
+            $response = new \RedirectResponse($this->app->make('helper/navigation')->getLoginUrl(), 302);
             $response->send();
             exit;
         }

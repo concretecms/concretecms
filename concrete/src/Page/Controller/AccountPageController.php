@@ -18,7 +18,7 @@ class AccountPageController extends CorePageController
     {
         $u = new \User();
         if (!$u->isRegistered()) {
-            return $this->replace('/login');
+            return $this->replace($this->app->make('helper/navigation')->getLoginPath());
         }
         $profile = \UserInfo::getByID($u->getUserID());
 

@@ -122,7 +122,7 @@ class AutomatedLogout extends DashboardPageController
         $this->flash('error', t('All sessions have been invalidated. You must log back in to continue.'));
 
         // Redirect to the login page
-        return $this->factory->redirect($this->urls->resolve(['/login']));
+        return $this->factory->redirect($this->app->make('helper/navigation')->getLoginUrl());
     }
 
     /**

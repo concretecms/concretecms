@@ -60,7 +60,7 @@ $form = Loader::helper('form');
 			<div class='help-block'>
 				<?=t('Enter your email address below. We will send you instructions to reset your password.')?>
 			</div>
-			<form method="post" action="<?=$view->url('/login', 'forgot_password')?>" class="form-horizontal">
+			<form method="post" action="<?=h(app('helper/navigation')->getLoginUrl(['forgot_password']))?>" class="form-horizontal">
 				<div class='control-group'>
 					<label class='control-label' for='uEmail'><?=t('Email Address')?></label>
 					<div class='controls'>

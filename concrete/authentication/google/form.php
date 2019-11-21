@@ -15,7 +15,7 @@ if (isset($message)) {
 
 if (isset($show_email) && $show_email) {
     ?>
-    <form action="<?= \URL::to('/login/callback/google/handle_register') ?>">
+    <form action="<?= h(app('helper/navigation')->getLoginUrl(['callback', 'google', 'handle_register'])) ?>">
         <?php
         // It's best to show full name here for regional variations of display order of names
         if (isset($fullName) && !empty($fullName)) {?>

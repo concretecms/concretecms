@@ -14,7 +14,7 @@ class Postlogin extends DashboardPageController
         parent::__construct($c);
         $this->token = Loader::helper('validation/token');
 
-        //login redirection
+        // login redirection
         $this->set('site_login_redirect', Config::get('concrete.misc.login_redirect'));
         $this->set('login_redirect_cid', intval(Config::get('concrete.misc.login_redirect_cid')));
     }

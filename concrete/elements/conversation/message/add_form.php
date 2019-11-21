@@ -122,7 +122,7 @@ $u = new User();
                 print '<p>';
                 echo ' ';
                 if (!$u->isRegistered()) {
-                    echo t('You must <a href="%s">sign in</a> to post to this conversation.', URL::to('/login'));
+                    echo t('You must <a href="%s">sign in</a> to post to this conversation.', h(app('helper/navigation')->getLoginUrl()));
                 } else {
                     echo t('You do not have permission to post this to conversation.');
                 }

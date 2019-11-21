@@ -208,7 +208,7 @@ class Login extends PageController implements LoggerAwareInterface
         $this->app->make('director')->dispatch('on_user_login', $ue);
 
         return new RedirectResponse(
-            $this->app->make('url/manager')->resolve(['/login', 'login_complete'])
+            $this->app->make('helper/navigation')->getLoginUrl(['login_complete'])
         );
     }
 

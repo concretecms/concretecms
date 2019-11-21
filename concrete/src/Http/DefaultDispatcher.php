@@ -88,10 +88,10 @@ class DefaultDispatcher implements DispatcherInterface
             if ($user->isError()) {
                 switch ($user->getError()) {
                     case USER_SESSION_EXPIRED:
-                        return Redirect::to('/login', 'session_invalidated')->send();
+                        return Redirect::to($this->app->make('helper/navigation')->getLoginUrl(['session_invalidated']))->send();
                 }
             } elseif (!$isActive) {
-                return Redirect::to('/login', 'account_deactivated')->send();
+                return Redirect::to($this->app->make('helper/navigation')->getLoginUrl(['account_deactivated']))->send();
             } else {
                 $v = new View('/frontend/user_error');
                 $v->setViewTheme('concrete');

@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
 <div class="forgotPassword">
-	<form method="post" action="<?= URL::to('/login', 'callback', $authType->getAuthenticationTypeHandle(), 'forgot_password') ?>">
+	<form method="post" action="<?= h(app('helper/navigation')->getLoginUrl(['callback', $authType->getAuthenticationTypeHandle(), 'forgot_password'])) ?>">
 		<?php $token->output(); ?>
 		<h4><?= t('Forgot Your Password?') ?></h4>
 		<div class="ccm-message"><?= isset($intro_msg) ? $intro_msg : '' ?></div>

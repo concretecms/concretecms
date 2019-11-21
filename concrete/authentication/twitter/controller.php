@@ -98,7 +98,7 @@ class Controller extends GenericOauth1aTypeController
     {
 
         if (!User::isLoggedIn()) {
-            $response = new RedirectResponse(\URL::to('/login'), 302);
+            $response = new RedirectResponse($this->app->make('helper/navigation')->getLoginUrl(), 302);
             $response->send();
             exit;
         }

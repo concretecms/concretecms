@@ -4,7 +4,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 /* @var Concrete\Core\Form\Service\Form $form */
 ?>
 
-<form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
+<form method="post" action="<?= h(app('helper/navigation')->getLoginUrl(['authenticate', $this->getAuthenticationTypeHandle()])) ?>">
 
 	<div class="form-group">
 		<label class="control-label" for="uName"><?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?></label>
@@ -36,7 +36,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 
 	<div class="form-group">
 		<button class="btn btn-primary"><?= t('Log in') ?></button>
-		<a href="<?= URL::to('/login', 'concrete', 'forgot_password')?>" class="btn pull-right"><?= t('Forgot Password') ?></a>
+		<a href="<?= h(app('helper/navigation')->getLoginUrl(['concrete', 'forgot_password']))?>" class="btn pull-right"><?= t('Forgot Password') ?></a>
 	</div>
 
 	<?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>

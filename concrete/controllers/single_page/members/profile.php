@@ -24,7 +24,7 @@ class Profile extends PublicProfilePageController
             $profile = UserInfo::getByID($u->getUserID());
         } else {
             $this->set('intro_msg', t('You must sign in order to access this page!'));
-            return $this->replace('/login');
+            return $this->replace($this->app->make('helper/navigation')->getLoginPath());
         }
         if (is_object($profile) && $profile->getUserID() == $u->getUserID()) {
             $canEdit = true;

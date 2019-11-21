@@ -232,12 +232,12 @@ class Controller extends AuthenticationTypeController
                     //generate hash that'll be used to authenticate user, allowing them to change their password
                     $h = new ValidationHash();
                     $uHash = $h->add($oUser->getUserID(), intval(UVTYPE_CHANGE_PASSWORD), true);
-                    $changePassURL = View::url(
-                        '/login',
+                    $changePassURL = $this->app->make('helper/navigation')->getLoginUrl([
                         'callback',
                         $this->getAuthenticationType()->getAuthenticationTypeHandle(),
                         'change_password',
-                        $uHash);
+                        $uHash,
+                    ]);
 
                     $mh->addParameter('changePassURL', $changePassURL);
 
@@ -268,8 +268,10 @@ class Controller extends AuthenticationTypeController
             if ($error->has()) {
                 $this->set('error', $error);
             } else {
-                $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(),
-                    'password_sent');
+                $this->redirect($this->app->make('helper/navigation')->getLoginUrl([
+                    $this->getAuthenticationType()->getAuthenticationTypeHandle(),
+                    'password_sent',
+                ]));
             }
         }
     }
@@ -299,7 +301,10 @@ class Controller extends AuthenticationTypeController
                         $h->deleteKey('UserValidationHashes', 'uHash', $uHash);
                         $this->set('passwordChanged', true);
 
-                        $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_changed');
+                        $this->redirect($this->app->make('helper/navigation')->getLoginUrl([
+                            $this->getAuthenticationType()->getAuthenticationTypeHandle(),
+                            'password_changed',
+                        ]));
                     } else {
                         $this->set('error', $e);
                     }
@@ -309,7 +314,10 @@ class Controller extends AuthenticationTypeController
                 return;
             }
         }
-        $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'invalid_token');
+        $this->redirect($this->app->make('helper/navigation')->getLoginUrl([
+            $this->getAuthenticationType()->getAuthenticationTypeHandle(),
+            'invalid_token'
+        ]));
     }
 
     public function password_changed()
@@ -357,7 +365,10 @@ class Controller extends AuthenticationTypeController
             $user = $loginService->login($uName, $uPassword);
         } catch (UserPasswordResetException $e) {
             Session::set('uPasswordResetUserName', $this->post('uName'));
-            $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
+            $this->redirect($this->app->make('helper/navigation')->getLoginUrl([
+                $this->getAuthenticationType()->getAuthenticationTypeHandle(),
+                'required_password_upgrade',
+            ]));
         } catch (UserException $e) {
             $this->handleFailedLogin($loginService, $uName, $uPassword, $e);
         }
@@ -423,9 +434,18 @@ class Controller extends AuthenticationTypeController
             } else {
                 $mode = 'workflow';
             }
-            $this->redirect('/login/callback/concrete', 'email_validated', $mode);
+            $this->redirect($this->app->make('helper/navigation')->getLoginUrl([
+                'callback',
+                'concrete',
+                'email_validated',
+                $mode,
+            ]));
             exit;
         }
-        $this->redirect('/login/callback/concrete', 'invalid_token');
+        $this->redirect($this->app->make('helper/navigation')->getLoginUrl([
+            'callback',
+            'concrete',
+            'invalid_token',
+        ]));
     }
 }

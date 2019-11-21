@@ -15,7 +15,7 @@ if (isset($message)) {
 
 if (isset($show_email) && $show_email) {
     ?>
-    <form action="<?= \URL::to('/login/callback/twitter/handle_register') ?>">
+    <form action="<?= h(app('helper/navigation')->getLoginUrl(['callback', 'twitter', 'handle_register'])) ?>">
         <span><?= t('Register an account for "%s"', "@{$username}") ?></span>
         <hr />
         <div class="input-group">

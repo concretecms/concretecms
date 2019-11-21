@@ -246,7 +246,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         ?>
                         <li>
                             <i class="fa fa-sign-out mobile-leading-icon"></i>
-                            <a href="<?= URL::to('/login', 'do_logout', $valt->generate('do_logout')); ?>"><?= t('Sign Out'); ?></a>
+                            <a href="<?= h($app->make('helper/navigation')->getLogoutUrl()) ?>"><?= t('Sign Out'); ?></a>
                         </li>
                     </ul>
                 </div>
@@ -381,7 +381,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 } else {
                     ?>
                     <li class="pull-right hidden-xs">
-                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?=URL::to('/login', 'logout', $valt->generate('logout'))?>" title="<?=t('Sign Out')?>">
+                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?=h($app->make('helper/navigation')->getLogoutUrl())?>" title="<?=t('Sign Out')?>">
                             <i class="fa fa-sign-out"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
                         </a>
                     </li>

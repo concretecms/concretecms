@@ -47,7 +47,7 @@ abstract class AuthenticationTypeController extends Controller implements Logger
 
     public function completeAuthentication(User $u)
     {
-        $c = Page::getByPath('/login');
+        $c = Page::getByPath($this->app->make('helper/navigation')->getLoginPath());
         $controller = $c->getPageController();
         return $controller->finishAuthentication($this->getAuthenticationType(), $u);
     }

@@ -5,7 +5,7 @@ use Database;
 use Page;
 use URL;
 use User;
-use Concrete\Core\Validation\CSRF\Token;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class Navigation
 {
@@ -64,13 +64,55 @@ class Navigation
         return $this->getLinkToCollection($cObj);
     }
 
+    /**
+     * Get the path to the login page, relative to the concrete5 web root.
+     *
+     * @return string
+     */
+    public function getLoginPath()
+    {
+        return app('config')->get('concrete.paths.login');
+    }
+
+    /**
+     * Get the URL to the login page.
+     *
+     * @param array $arguments additional arguments for the login page.
+     *
+     * @return \Concrete\Core\Url\UrlImmutable
+     */
+    public function getLoginUrl(array $arguments = [])
+    {
+        array_unshift($arguments, $this->getLoginPath());
+
+        return app(ResolverManagerInterface::class)->resolve($arguments);
+    }
+
+    /**
+     * Get the URL to be visited to log out the current user.
+     *
+     * @return \Concrete\Core\Url\UrlImmutable
+     */
+    public function getLogoutUrl()
+    {
+        return $this->getLoginUrl([
+            'do_logout',
+            app('token')->generate('do_logout'),
+        ]);
+    }
+
+    /**
+     * Get an "<a>" HTML element pointing to the login page (if the user is not logged in) or to the URL that logs out the user.
+     *
+     * @return string
+     */
     public function getLogInOutLink()
     {
         if (!id(new User())->isLoggedIn()) {
-            $url = URL::to('/login');
+            $url = $this->getLoginUrl();
             $label = t('Log in');
         } else {
-            $url = URL::to('/login', 'do_logout', id(new Token())->generate('do_logout'));
+            $url = $this->getLogoutUrl();
             $label = t('Log out');
         }
 

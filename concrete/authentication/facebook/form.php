@@ -20,7 +20,7 @@ if (isset($message)) {
 
 if (isset($show_email) && $show_email) {
     ?>
-    <form action="<?= \URL::to('/login/callback/facebook/handle_register') ?>">
+    <form action="<?= h(app('helper/navigation')->getLoginUrl(['callback', 'facebook', 'handle_register'])) ?>">
         <?php // It's best to show full name here for regional variations
         if (isset($fullName) && !empty($fullName)) {?>
         <span><?= t('Register an account for "%s"', $fullName) ?></span>

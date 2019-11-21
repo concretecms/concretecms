@@ -250,7 +250,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         // maintenance mode
-        if ($collection->getCollectionPath() != '/login') {
+        if ($collection->getCollectionPath() !== $this->app->make('helper/navigation')->getLoginPath()) {
             $smm = $this->config->get('concrete.maintenance_mode');
             if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');

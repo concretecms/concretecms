@@ -641,7 +641,7 @@ class StartingPointPackage extends BasePackage
         );
 
         // login
-        $login = Page::getByPath('/login', 'RECENT');
+        $login = Page::getByPath($this->app->make('helper/navigation')->getLoginPath(), 'RECENT');
         $login->assignPermissions($g1, ['view_page']);
 
         // register

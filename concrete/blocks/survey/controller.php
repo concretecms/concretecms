@@ -112,7 +112,7 @@ class Controller extends BlockController
 
         if ($this->requiresRegistration()) {
             if (!$u->isRegistered()) {
-                $this->redirect('/login');
+                $this->redirect($this->app->make('helper/navigation')->getLoginUrl());
             }
         }
 

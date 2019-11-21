@@ -25,7 +25,7 @@ if (!empty($_error)) {
 <h4><?= t('Reset Password') ?></h4>
 <div class="help-block"><?= t('Enter your new password below.') ?></div>
 <div class="change-password">
-	<form method="post" action="<?= URL::to('/login', 'callback', $authType->getAuthenticationTypeHandle(), 'change_password', $uHash) ?>">
+	<form method="post" action="<?= h(app('helper/navigation')->getLoginUrl(['callback', $authType->getAuthenticationTypeHandle(), 'change_password', $uHash])) ?>">
 		<div class="form-group">
 			<label class="control-label" for="uPassword"><?= t('New Password') ?></label>
 			<input type="password" name="uPassword" id="uPassword" class="form-control" autocomplete="off"/>
