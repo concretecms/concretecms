@@ -68,7 +68,7 @@ class Multilingual extends Page
             Section::relatePage($this->page, $destPage, $ms->getLocale());
             $ih = Core::make('multilingual/interface/flag');
             $icon = (string) $ih->getSectionFlagIcon($ms);
-            $pr->setAdditionalDataAttribute('name', $destPage->getCollectionName());
+            $pr->setAdditionalDataAttribute('name', $destPage->getCollectionDisplayName());
             $pr->setAdditionalDataAttribute('link', $destPage->getCollectionLink());
             $pr->setAdditionalDataAttribute('icon', $icon);
             $pr->setMessage(t('Page assigned.'));
@@ -124,7 +124,7 @@ class Multilingual extends Page
                     $ih = Core::make('multilingual/interface/flag');
                     $icon = (string) $ih->getSectionFlagIcon($ms);
                     $pr->setPage($newPage);
-                    $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
+                    $pr->setAdditionalDataAttribute('name', $newPage->getCollectionDisplayName());
                     $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
                     $pr->setAdditionalDataAttribute('icon', $icon);
                 }

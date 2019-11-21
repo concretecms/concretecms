@@ -29,7 +29,7 @@ class Service extends SocialNetworkService
         }
 
         if (is_object($c) && !$c->isError()) {
-            $title = $c->getCollectionName();
+            $title = $c->getCollectionDisplayName();
         } else {
             $title = \Core::make('site')->getSite()->getSiteName();
         }

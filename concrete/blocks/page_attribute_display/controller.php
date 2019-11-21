@@ -58,7 +58,7 @@ class Controller extends BlockController
         $content = "";
         switch ($this->attributeHandle) {
             case "rpv_pageName":
-                $content = h($c->getCollectionName());
+                $content = h($c->getCollectionDisplayName());
                 break;
             case "rpv_pageDescription":
                 $content = nl2br(h($c->getCollectionDescription()));

@@ -18,7 +18,7 @@ class SinglePage extends AbstractCategory
 
     public function getItemName($page)
     {
-        return $page->getCollectionName();
+        return $page->getCollectionDisplayName();
     }
 
     public function renderList(Package $package)

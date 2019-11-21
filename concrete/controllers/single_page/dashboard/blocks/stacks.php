@@ -257,7 +257,7 @@ class Stacks extends DashboardPageController
                 $breadcrumb[] = [
                     'id' => $item->getCollectionID(),
                     'active' => $item->getCollectionID() == $page->getCollectionID(),
-                    'name' => $item->getCollectionName(),
+                    'name' => $item->getCollectionDisplayName(),
                     'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $item->getCollectionID()),
                 ];
             }
@@ -619,7 +619,7 @@ class Stacks extends DashboardPageController
             $moveFolder->getPage()->move($destinationPage);
         }
         JsonResponse::create(
-            t2('%d item has been moved under the folder %s', '%d items have been moved under the folder %s', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
+            t2('%d item has been moved under the folder %s', '%d items have been moved under the folder %s', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionDisplayName()))
         )->send();
         exit;
     }

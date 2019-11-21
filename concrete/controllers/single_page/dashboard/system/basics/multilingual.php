@@ -24,7 +24,7 @@ class Multilingual extends DashboardPageController
             $cp = new Checker($mlPage);
             if ($cp->canViewPage()) {
                 $mlLink = [
-                    t($mlPage->getCollectionName()),
+                    $mlPage->getCollectionDisplayName(),
                     $mlPage->getCollectionLink(),
                 ];
             }

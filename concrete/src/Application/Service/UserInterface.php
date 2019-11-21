@@ -152,7 +152,7 @@ class UserInterface
         if (method_exists($cnt, 'getQuickNavigationLinkHTML')) {
             return $cnt->getQuickNavigationLinkHTML();
         } else {
-            return '<a href="' . Core::make('helper/navigation')->getLinkToCollection($c) . '">' . $c->getCollectionName() . '</a>';
+            return '<a href="' . Core::make('helper/navigation')->getLinkToCollection($c) . '">' . h($c->getCollectionDisplayName()) . '</a>';
         }
     }
 
@@ -268,7 +268,7 @@ class UserInterface
                 $_c = $t[0];
             } else {
                 $_c = $t;
-                $name = $t->getCollectionName();
+                $name = $t->getCollectionDisplayName();
             }
 
             $href = Core::make('helper/navigation')->getLinkToCollection($_c);

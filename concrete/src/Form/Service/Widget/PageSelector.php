@@ -72,7 +72,7 @@ EOL;
             $oc = Page::getByID($selectedCID);
             $cp = new Permissions($oc);
             if ($cp->canViewPage()) {
-                $cName = $oc->getCollectionName();
+                $cName = $oc->getCollectionDisplayName();
             }
         }
 

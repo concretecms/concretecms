@@ -8,7 +8,7 @@ $save_url = $save_url->setQuery(array(
 
 
 <div vue-enabled>
-<h2><?=$c->getCollectionName()?></h2>
+<h2><?=h($c->getCollectionDisplayName())?></h2>
 
 	<p><?php echo t('Change the picture attached to my posts.')?></p>
 

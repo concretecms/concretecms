@@ -104,7 +104,7 @@ class Bulk extends DashboardPageController
         }
         $titleFormat = $this->app->make('config')->get('concrete.seo.title_format');
         $siteName = $this->getSiteNameForPage($c);
-        if (trim(sprintf($titleFormat, $siteName, $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
+        if (trim(sprintf($titleFormat, $siteName, $c->getCollectionDisplayName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
             $c->setAttribute('meta_title', trim($this->post('meta_title')));
         }
 

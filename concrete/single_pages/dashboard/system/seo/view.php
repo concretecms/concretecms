@@ -7,7 +7,7 @@ foreach ($categories as $cat) {
     ?>
 
 	<div class="page-header">
-	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$cat->getCollectionName()?></a>
+	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=h($cat->getCollectionDisplayName())?></a>
 	<small><?=$cat->getCollectionDescription()?></small>
 	</h3>
 	</div>
@@ -32,7 +32,7 @@ foreach ($categories as $cat) {
     ?>
 	
 	<div class="span4">
-		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=$subcat->getCollectionName()?></a>
+		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat)?>"><?=h($subcat->getCollectionDisplayName())?></a>
 	</div>
 	
 	<?php 

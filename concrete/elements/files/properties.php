@@ -78,7 +78,7 @@ if ($downloadUrl !== $url) {
     $oc = $f->getOriginalPageObject();
     if (is_object($oc)) {
         $fileManager = Page::getByPath('/dashboard/files/search');
-        $ocName = $oc->getCollectionName();
+        $ocName = $oc->getCollectionDisplayName();
         if (is_object($fileManager) && !$fileManager->isError()) {
             if ($fileManager->getCollectionID() == $oc->getCollectionID()) {
                 $ocName = t('Dashboard File Manager');
@@ -88,7 +88,7 @@ if ($downloadUrl !== $url) {
         <div class="row">
             <div class="col-md-3"><p><?= t('Page Added To') ?></p></div>
             <div class="col-md-9"><p><a href="<?= Loader::helper('navigation')->getLinkToCollection($oc) ?>"
-                                        target="_blank"><?= $ocName ?></a></p></div>
+                                        target="_blank"><?= h($ocName) ?></a></p></div>
         </div>
     <?php
     }

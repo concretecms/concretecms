@@ -123,13 +123,13 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
             $cID = $cobj->getCollectionID();
             ?>
             <div class="row page-title">
-                <legend><?php echo $cobj->getCollectionName() ?></legend>
+                <legend><?= h($cobj->getCollectionDisplayName()) ?></legend>
             </div>
             <div class="ccm-seoRow-<?php echo $cID; ?> ccm-seo-rows <?php echo $i % 2 == 0 ? 'even' : '' ?> row">
                 <div class="col-md-3 col-md-offset-1 seo-page-details">
                     <strong><?php echo t('Page Name'); ?></strong>
                     <br/>
-                    <?php echo $cobj->getCollectionName() ? $cobj->getCollectionName() : ''; ?>
+                    <?= h($cobj->getCollectionDisplayName()) ?>
                     <br/>
                     <br/>
                     <strong><?php echo t('Page Type'); ?></strong>
@@ -145,7 +145,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 <div class="col-md-7 seo-page-edit">
                     <div class="form-group">
                         <label class="control-label"><?php echo t('Meta Title'); ?></label>
-                        <?php $seoPageTitle = $cobj->getCollectionName();
+                        <?php $seoPageTitle = $cobj->getCollectionDisplayName();
                         $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
                         $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $controller->getSiteNameForPage($cobj), $seoPageTitle);
                         $titleInfo = array('title' => $cID);

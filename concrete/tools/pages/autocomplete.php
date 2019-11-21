@@ -13,7 +13,7 @@ if ($valt->validate('quick_page_select_' . $_REQUEST['key'], $_REQUEST['token'])
     $pageNames = array();
     foreach ($pages as $c) {
         $obj = new stdClass();
-        $obj->label = $c->getCollectionName();
+        $obj->label = $c->getCollectionDisplayName();
         $obj->value = $c->getCollectionID();
         $pageNames[] = $obj;
     }

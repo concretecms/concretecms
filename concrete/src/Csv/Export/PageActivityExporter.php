@@ -60,7 +60,7 @@ class PageActivityExporter extends AbstractExporter
 
         yield (int) $page->getCollectionID();
         yield (string) $page->getCollectionPath();
-        yield (string) $page->getCollectionName();
+        yield $page->getCollectionDisplayName();
         yield (int) $version->getVersionID();
         yield (string) $this->getLocalizedDate($version->getVersionDateApproved());
         yield (string) $version->getVersionComments();

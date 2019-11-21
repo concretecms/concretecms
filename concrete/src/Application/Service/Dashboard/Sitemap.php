@@ -214,8 +214,10 @@ class Sitemap
             $numSubpages = (int) $c->getNumChildren();
         }
 
-        $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
-        $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
+        $cvName = $c->getCollectionDisplayName();
+        if ($cvName === '') {
+            $cvName = '(No Title)';
+        }
 
         $isInTrash = $c->isInTrash();
 

@@ -17,7 +17,7 @@ class SiblingFormatter implements FormatterInterface
     public function getDisplayName()
     {
         $page = $this->relation->getPageObject();
-        $title = sprintf('%s > %s', $page->getSiteTreeObject()->getDisplayName(), $page->getCollectionName());
+        $title = sprintf('%s > %s', $page->getSiteTreeObject()->getDisplayName(), $page->getCollectionDisplayName());
         return $title;
     }
 }

@@ -585,7 +585,7 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
                 foreach ($users as $ui) {
                     $mail = Core::make('mail');
                     $mail->to($ui->getUserEmail());
-                    $mail->addParameter('title', $c->getCollectionName());
+                    $mail->addParameter('title', $c->getCollectionDisplayName());
                     $mail->addParameter('link', $c->getCollectionLink(true));
                     $mail->addParameter('poster', $formatter->getDisplayName());
                     $mail->addParameter('body', Core::make('helper/text')->prettyStripTags($cnvMessageBody));

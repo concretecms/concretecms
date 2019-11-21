@@ -38,7 +38,7 @@ class Controller extends BlockController
         } else {
             $p = Page::getCurrentPage();
             if ($p instanceof Page) {
-                $title = $p->getCollectionName();
+                $title = $p->getCollectionDisplayName();
                 if (!strlen($title) && $p->isMasterCollection()) {
                     $title = '[' . t('Page Title') . ']';
                 }

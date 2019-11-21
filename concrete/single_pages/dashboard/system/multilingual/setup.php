@@ -30,7 +30,7 @@ $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
             <td>
                 <?php
                 if (is_object($home)) {
-                    ?><a href="<?= $home->getCollectionLink() ?>"><?= $home->getCollectionName() ?></a><?php
+                    ?><a href="<?= $home->getCollectionLink() ?>"><?= h($home->getCollectionDisplayName()) ?></a><?php
                 } else {
                     ?><span class="text-warning"><?= t('None Created.') ?></span><?php
                 }

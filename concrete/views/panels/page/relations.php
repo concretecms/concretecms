@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <?php if ($relatedID && $currentSection->getCollectionID() != $m->getCollectionID()) {
         $relatedPage = Page::getByID($relatedID, 'RECENT');
         ?>
-                        <a href="<?=$relatedPage->getCollectionLink()?>"><?=$icon?> <?=$relatedPage->getCollectionName()?></a>
+                        <a href="<?=$relatedPage->getCollectionLink()?>"><?=$icon?> <?=h($relatedPage->getCollectionDisplayName())?></a>
                     <?php
     } else {
         ?>

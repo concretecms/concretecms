@@ -446,7 +446,7 @@ class Controller extends BlockController
                     $tc1 = Page::getByID($cParentID, "ACTIVE");
                 }
                 $niRow = array();
-                $niRow['cvName'] = $tc1->getCollectionName();
+                $niRow['cvName'] = $tc1->getCollectionDisplayName();
                 $niRow['cID'] = $cParentID;
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
                 $niRow['cPath'] = Core::make('helper/navigation')->getLinkToCollection($tc1);
@@ -461,7 +461,7 @@ class Controller extends BlockController
 
             if ($displayHeadPage) {
                 $niRow = array();
-                $niRow['cvName'] = $tc1->getCollectionName();
+                $niRow['cvName'] = $tc1->getCollectionDisplayName();
                 $niRow['cID'] = $row['cID'];
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
                 $niRow['cPath'] = $tc1->getCollectionPath();
@@ -588,7 +588,7 @@ class Controller extends BlockController
 
                     if ($displayPage) {
                         $niRow = array();
-                        $niRow['cvName'] = $tc->getCollectionName();
+                        $niRow['cvName'] = $tc->getCollectionDisplayName();
                         $niRow['cID'] = $row['cID'];
                         $niRow['cvDescription'] = $tc->getCollectionDescription();
                         $niRow['cPath'] = Core::make('helper/navigation')->getLinkToCollection($tc);
@@ -603,7 +603,7 @@ class Controller extends BlockController
                         $sorted_array[$niRow['cID']] = $ni;
 
                         $_c = $ni->getCollectionObject();
-                        $object_name = $_c->getCollectionName();
+                        $object_name = $_c->getCollectionDisplayName();
                         $navObjectNames[$niRow['cID']] = $object_name;
                     }
                 }

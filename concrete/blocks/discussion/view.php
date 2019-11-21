@@ -57,7 +57,7 @@ if (is_object($discussion)) {
 }
     ?>
 
-		<h3><?=$c->getCollectionName()?></h3>
+		<h3><?=h($c->getCollectionDisplayName())?></h3>
 	
 		<?php if (count($topics)) {
     ?>
@@ -84,7 +84,7 @@ if (is_object($discussion)) {
 					<?=t2('<em>%s</em> Reply', '<em>%s</em> Replies', $replies)?>
 				</div>
 				<div class="ccm-discussion-topic-details">
-					<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3>
+					<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=h($t->getCollectionDisplayName())?></a></h3>
 					<p><?=t(/*i18n: %s is a date/time*/'Topic Posted on %s.', $dh->formatDateTime($t->getCollectionDatePublic(), true))?>
 					<?php if ($replies > 0) {
     ?>

@@ -143,15 +143,15 @@ class Dashboard
                         $class = '';
                     }
 
-                    $relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc) . '">' . t($sc->getCollectionName()) . '</a></li>';
+                    $relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc) . '">' . h($sc->getCollectionDisplayName()) . '</a></li>';
                 }
 
                 if ($upToPage) {
                     $relatedPages .= '<li class="ccm-menu-separator"></li>';
-                    $relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage) . '">' . t('&lt; Back to %s', t($upToPage->getCollectionName())) . '</a></li>';
+                    $relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage) . '">' . t('&lt; Back to %s', h($upToPage->getCollectionDisplayName())) . '</a></li>';
                 }
                 $relatedPages .= '</ul>';
-                $navigateTitle = t($parent->getCollectionName());
+                $navigateTitle = $parent->getCollectionDisplayName();
             }
         }
 
@@ -192,7 +192,7 @@ class Dashboard
         $html .= '<li><a href="javascript:void(0)" onclick="CCMDashboard.closePane(this)"><i class="icon-remove"></i></a></li>';
         $html .= '</ul>';
         if (!$title) {
-            $title = $c->getCollectionName();
+            $title = h($c->getCollectionDisplayName());
         }
         $html .= '<h3>' . $title . '</h3>';
         $html .= '</div>';
@@ -249,18 +249,18 @@ class Dashboard
                 $ch2 = $page->getCollectionChildrenArray(true);
             } ?>
                 <div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
-                    <h1><?=t($page->getCollectionName())?></h1>
+                    <h1><?=h($page->getCollectionDisplayName())?></h1>
                     <ul class="ccm-intelligent-search-results-list">
                         <?php
                         if (count($ch2) == 0) {
                             ?>
-                            <li><a href="<?=$navHelper->getLinkTocollection($page)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
+                            <li><a href="<?=$navHelper->getLinkTocollection($page)?>"><?=h($page->getCollectionDisplayName())?></a><span><?=h($page->getCollectionDisplayName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
                             <?php
 
                         }
             if ($page->getCollectionPath() == '/dashboard/system') {
                 ?>
-                            <li><a href="<?=$navHelper->getLinkTocollection($page)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
+                            <li><a href="<?=$navHelper->getLinkTocollection($page)?>"><?=t('View All')?></a><span><?=h($page->getCollectionDisplayName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
                             <?php
 
             }
@@ -275,10 +275,10 @@ class Dashboard
                 }
 
                 ?>
-                    <li><a href="<?=$navHelper->getLinkTocollection($subpage)?>"><?=t($subpage->getCollectionName())?></a><span><?php if ($page->getCollectionPath() != '/dashboard/system') {
-    ?><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?> <?php
+                    <li><a href="<?=$navHelper->getLinkTocollection($subpage)?>"><?=h($subpage->getCollectionDisplayName())?></a><span><?php if ($page->getCollectionPath() != '/dashboard/system') {
+    ?><?=h($page->getCollectionDisplayName())?> <?=t($page->getAttribute('meta_keywords'))?> <?php
 }
-                ?><?=t($subpage->getCollectionName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
+                ?><?=h($subpage->getCollectionDisplayName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
                     <?php
 
             } ?>

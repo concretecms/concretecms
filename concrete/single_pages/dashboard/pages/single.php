@@ -55,7 +55,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
     }
     ?>
 					<tr>
-						<td style="width: 30%"><a href="<?=URL::to($p)?>"><?php echo $p->getCollectionName()?></a></td>
+						<td style="width: 30%"><a href="<?=URL::to($p)?>"><?= h($p->getCollectionDisplayName()) ?></a></td>
 						<td style="width: 40%"><?php echo $p->getCollectionPath()?></td>
 						<td style="width: 30%"><?php echo $packageName;
     ?></td>

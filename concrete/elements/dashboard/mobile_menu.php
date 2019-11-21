@@ -13,7 +13,7 @@
                 $children = $view->controller->getChildPages($page);
                 ?>
                 <li class="<?=$view->controller->getMenuItemClass($page)?>">
-                    <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
+                    <a href="<?=$page->getCollectionLink()?>"><?=$page->getCollectionDisplayName()?></a>
                     <?php
                     if ($children) {
                         echo '<i class="fa fa-caret-down drop-down-toggle"></i>';

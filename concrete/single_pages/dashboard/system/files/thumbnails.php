@@ -89,7 +89,7 @@ if (isset($type)) {
                             $optionsPageName = t('Image Options');
                             $optionsPage = Page::getByPath('/dashboard/system/files/image_uploading');
                             if ($optionsPage && !$optionsPage->isError()) {
-                                $optionsPageName = h(t($optionsPage->getCollectionName()));
+                                $optionsPageName = h($optionsPage->getCollectionDisplayName());
                                 $optionsPagePermissions = new Checker($optionsPage);
                                 if ($optionsPagePermissions->canViewPage()) {
                                     $optionsPageName = '<a href="' . h($optionsPage->getCollectionLink()) . '" target="_blank">' . $optionsPageName . '</a>';

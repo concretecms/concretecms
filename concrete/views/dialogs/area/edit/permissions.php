@@ -37,7 +37,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     echo t(
                         /*i18n: %s is the name of a page */
                         'The following area permissions are inherited from an area set on %s.',
-                        '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $areac->getCollectionID() . '">' . h($areac->getCollectionName()) . '</a>'
+                        '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $areac->getCollectionID() . '">' . h($areac->getCollectionDisplayName()) . '</a>'
                     );
                 }
                 ?>

@@ -12,7 +12,7 @@ for ($i = 0; $i < count($categories); ++$i) {
     ?>
 
     <div class="col-md-4 ccm-dashboard-section-menu">
-        <h2><?=t($cat->getCollectionName())?></h2>
+        <h2><?=h($cat->getCollectionDisplayName())?></h2>
 
 
         <?php
@@ -35,7 +35,7 @@ for ($i = 0; $i < count($categories); ++$i) {
             <?php foreach ($show as $subcat) {
     ?>
 
-                <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=t($subcat->getCollectionName())?></a></li>
+                <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=h($subcat->getCollectionDisplayName())?></a></li>
 
             <?php 
 }

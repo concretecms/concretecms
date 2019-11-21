@@ -3,7 +3,7 @@
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
-<h2><?=$c->getCollectionName(); ?></h2>
+<h2><?= h($c->getCollectionDisplayName()) ?></h2>
 
 	<?php switch ($this->controller->getTask()) {
         case 'view_message': ?>

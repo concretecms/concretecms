@@ -34,6 +34,6 @@ class Item extends SearchResultItem
         $this->canEditPageType = $cp->canEditPageType();
         $this->canViewPageVersions = $cp->canViewPageVersions();
         $this->canDeletePage = $cp->canDeletePage();
-        $this->cvName = $item->getCollectionName();
+        $this->cvName = $item->getCollectionDisplayName();
     }
 }

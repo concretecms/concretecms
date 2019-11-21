@@ -41,9 +41,9 @@ class UnapprovePageRequest extends PageRequest
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
         $v = $c->getVersionObject();
         if (is_object($v)) {
-            $d->setEmailDescription(t("Page unapproval requested for page: \"%s\".\n\nView the page here: %s.", $c->getCollectionName(), $link));
-            $d->setDescription(t("Page %s submitted for unapproval.", '<a target="_blank" href="' . $c->getCollectionLink() . '">' . $c->getCollectionName() . '</a>'));
-            $d->setInContextDescription(t("Page %s submitted for unapproval.", $c->getCollectionName()));
+            $d->setEmailDescription(t("Page unapproval requested for page: \"%s\".\n\nView the page here: %s.", $c->getCollectionDisplayName(), $link));
+            $d->setDescription(t("Page %s submitted for unapproval.", '<a target="_blank" href="' . $c->getCollectionLink() . '">' . $c->getCollectionDisplayName() . '</a>'));
+            $d->setInContextDescription(t("Page %s submitted for unapproval.", $c->getCollectionDisplayName()));
             $d->setShortStatus(t("Page Version Unapproval"));
         }
 

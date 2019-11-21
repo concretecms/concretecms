@@ -90,7 +90,7 @@ class Controller extends BlockController
             foreach ($drafts as $draft) {
                 $dp = new Permissions($draft);
                 if ($dp->canEditPageContents()) {
-                    $draftName = $draft->getCollectionName();
+                    $draftName = $draft->getCollectionDisplayName();
                     if (empty($draftName)) {
                         $draftName = t('(Untitled)');
                     }

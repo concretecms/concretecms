@@ -47,7 +47,7 @@ $url = $app->make('url/manager');
                     }
                 }
                 foreach ($categories as $cc) {
-                    ?><li><a href="<?=$url->resolve([$cc])?>"><?=h(t($cc->getCollectionName()))?></a></li><?php
+                    ?><li><a href="<?=$url->resolve([$cc])?>"><?=h($cc->getCollectionDisplayName())?></a></li><?php
                 }
             ?>
             <li class="divider"></li>

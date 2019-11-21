@@ -53,7 +53,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
                 // Prepare data for each page being listed...
                 $buttonClasses = 'ccm-block-page-list-read-more';
                 $entryClasses = 'ccm-block-page-list-page-entry';
-                $title = $page->getCollectionName();
+                $title = $page->getCollectionDisplayName();
                 if ($page->getCollectionPointerExternalLink() != '') {
                     $url = $page->getCollectionPointerExternalLink();
                     if ($page->openCollectionPointerExternalLinkInNewWindow()) {

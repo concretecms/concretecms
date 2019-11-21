@@ -1191,7 +1191,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
 
         foreach ($sections as $section) {
             $sectionPage = \Page::getByID($section['cID']);
-            $this->output(t('Migrating multilingual section: %s...', $sectionPage->getCollectionName()));
+            $this->output(t('Migrating multilingual section: %s...', $sectionPage->getCollectionDisplayName()));
             // Create a locale for this section
 
             if ($site->getDefaultLocale()->getLocale() != $section['msLanguage'] . '_' . $section['msCountry']) {
@@ -1214,7 +1214,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
 
                     // We actually do nothing in this case since this is all already set up automatically earlier.
                 } else {
-                    $this->output(t('Setting pages for section %s to site tree %s...', $sectionPage->getCollectionName(), $tree->getSiteTreeID()));
+                    $this->output(t('Setting pages for section %s to site tree %s...', $sectionPage->getCollectionDisplayName(), $tree->getSiteTreeID()));
                     $tree->setSiteHomePageID($section['cID']);
                     $em->persist($tree);
                     $em->flush();

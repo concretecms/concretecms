@@ -106,7 +106,7 @@ foreach ($pages as $c) {
 		<?=$form->hidden('cID[]', $c->getCollectionID())?>
 
 		<tr>
-			<td class="ccm-page-list-name"><?=$c->getCollectionName()?></td>
+			<td class="ccm-page-list-name"><?=h($c->getCollectionDisplayName())?></td>
 			<td><?=$c->getPageTypeName()?></td>
 			<td><?=$dh->formatDateTime($c->getCollectionDatePublic())?></td>
 			<td><?php

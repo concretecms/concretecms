@@ -63,7 +63,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
                     <li <?php if ($c->getCollectionPath() == '/dashboard/welcome') {?>class="active"<?php } ?>><a href="<?=URL::to('/dashboard/welcome')?>"><?=t('Welcome')?></a></li>
                     <?php foreach($nav as $page) { ?>
                         <li <?php if ($page->getCollectionID() == $c->getCollectionID()) {?>class="active"<?php } ?>>
-                            <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
+                            <a href="<?=$page->getCollectionLink()?>"><?=h($page->getCollectionDisplayName())?></a>
                         </li>
                     <?php } ?>
                     <li><a href="<?=URL::to('/account')?>"><?=t('My Account')?></a></li>

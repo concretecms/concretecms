@@ -325,7 +325,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getJSONObject()
     {
         $r = new \stdClass();
-        $r->name = $this->getCollectionName() !== '' ? $this->getCollectionName() : t('(No Title)');
+        $r->name = $this->getCollectionDisplayName() !== '' ? $this->getCollectionDisplayName() : t('(No Title)');
         if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
@@ -2985,7 +2985,7 @@ EOT
         $app = Facade::getFacadeApplication();
         $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
         $logger->notice(t('Page "%s" at path "%s" deleted',
-            $this->getCollectionName(),
+            $this->getCollectionDisplayName(),
             $this->getCollectionPath()
         ));
 
@@ -3053,7 +3053,7 @@ EOT
         $app = Facade::getFacadeApplication();
         $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
         $logger->notice(t('Page "%s" at path "%s" Moved to trash',
-            $this->getCollectionName(),
+            $this->getCollectionDisplayName(),
             $this->getCollectionPath()
         ));
 

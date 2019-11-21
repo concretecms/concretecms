@@ -92,7 +92,7 @@ if ($this->controller->getTask() == 'translate_po') {
                         foreach ($pages as $pc) {
                             $pcl = \Concrete\Core\Multilingual\Page\Section\Section::getByID($pc->getCollectionID()); ?><tr>
                                 <td><?php echo $ch->getSectionFlagIcon($pc); ?></td>
-                                <td><a href="<?php echo $nav->getLinkToCollection($pc); ?>"><?php echo $pc->getCollectionName(); ?></a></td>
+                                <td><a href="<?php echo $nav->getLinkToCollection($pc); ?>"><?= h($pc->getCollectionDisplayName()) ?></a></td>
                                 <td style="white-space: nowrap">
                                     <?php
                                     echo $pc->getLocale();

@@ -27,7 +27,7 @@ if (isset($neutralStack)) {
             <a href="<?=$view->action('view_details', $neutralStack->getCollectionParentID())?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
         <?php } ?>
     </div>
-    <p class="lead"><?=h($neutralStack->getCollectionName())?></p>
+    <p class="lead"><?=h($neutralStack->getCollectionDisplayName())?></p>
     <?php
     if ($stackToEdit === null) {
         ?>
@@ -346,7 +346,7 @@ $(function() {
                             ?>
                             <tr class="<?=$formatter->getSearchResultsClass()?>" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>" data-collection-id="<?=$st->getCollectionID()?>">
                                 <td class="ccm-search-results-icon"><?=$formatter->getIconElement()?></td>
-                                <td class="ccm-search-results-name"><?=h($st->getCollectionName())?></td>
+                                <td class="ccm-search-results-name"><?=h($st->getCollectionDisplayName())?></td>
                                 <td><?=$dh->formatDateTime($st->getCollectionDateAdded())?></td>
                                 <td class="ccm-search-results-menu-launcher">
                                     <?php if ($st->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) { ?>

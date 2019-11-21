@@ -108,7 +108,7 @@ if (count($sections) > 0) {
                             ?>
                             <tr>
                                 <td>
-                                    <a href="<?= $pc->getCollectionLink() ?>"><?= $pc->getCollectionName() ?></a>
+                                    <a href="<?= $pc->getCollectionLink() ?>"><?= h($pc->getCollectionDisplayName()) ?></a>
                                     <div><small><?= $pc->getCollectionPath() ?></small></div>
                                 </td>
                                 <?php
@@ -124,7 +124,7 @@ if (count($sections) > 0) {
                                                     $cID = $sc->getTranslatedPageID($pc);
                                                     if ($cID) {
                                                         $p = Page::getByID($cID);
-                                                        echo '<a href="' . $nav->getLinkToCollection($p) . '">' . $p->getCollectionName() . '</a>';
+                                                        echo '<a href="' . $nav->getLinkToCollection($p) . '">' . h($p->getCollectionDisplayName()) . '</a>';
                                                     } elseif ($cID === '0') {
                                                         echo t('Ignored');
                                                     }

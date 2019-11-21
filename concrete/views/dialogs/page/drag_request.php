@@ -37,9 +37,9 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
         echo t('What do you wish to do?');
     } else {
         if ($dragRequestData->getDragMode() === 'none') {
-            echo t('You selected to move/copy "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+            echo t('You selected to move/copy "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionDisplayName()), h($dragRequestData->getDestinationPage()->getCollectionDisplayName()));
         } else {
-            echo t('You dragged "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+            echo t('You dragged "%s" onto "%s". What do you wish to do?', h($singleOriginalPage->getCollectionDisplayName()), h($dragRequestData->getDestinationPage()->getCollectionDisplayName()));
         }
 
     }
@@ -68,9 +68,9 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                     <input type="radio" name="ctask" value="<?= $dragRequestData::OPERATION_MOVE ?>" />
                     <?php
                     if ($singleOriginalPage !== null) {
-                        echo t('<strong>Move</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+                        echo t('<strong>Move</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionDisplayName()), h($dragRequestData->getDestinationPage()->getCollectionDisplayName()));
                      } else {
-                         echo t('<strong>Move</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionName()));
+                         echo t('<strong>Move</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionDisplayName()));
                      }
                      ?>
                 </label>
@@ -99,9 +99,9 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                     <input type="radio" name="ctask" value="<?= $dragRequestData::OPERATION_ALIAS ?>" />
                     <?php
                     if ($singleOriginalPage !== null) {
-                        echo t('<strong>Alias</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+                        echo t('<strong>Alias</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionDisplayName()), h($dragRequestData->getDestinationPage()->getCollectionDisplayName()));
                     } else {
-                        echo t('<strong>Alias</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionName()));
+                        echo t('<strong>Alias</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionDisplayName()));
                     }
                     ?>
                 </label>
@@ -130,9 +130,9 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                                 <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPY ?>" />
                                 <?php
                                 if ($singleOriginalPage !== null) {
-                                    echo h(t('Copy "%1$s" beneath "%2$s"', $singleOriginalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName()));
+                                    echo h(t('Copy "%1$s" beneath "%2$s"', $singleOriginalPage->getCollectionDisplayName(), $dragRequestData->getDestinationPage()->getCollectionDisplayName()));
                                 } else {
-                                    echo h(t('Copy pages beneath "%s"', $dragRequestData->getDestinationPage()->getCollectionName()));
+                                    echo h(t('Copy pages beneath "%s"', $dragRequestData->getDestinationPage()->getCollectionDisplayName()));
                                 }
                                 ?>
                             </label>
@@ -144,7 +144,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                         <div class="checkbox">
                             <label>
                                 <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYALL ?>" />
-                                <?= h(t('Copy "%1$s" and all its children beneath "%2$s"', $singleOriginalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName())) ?>
+                                <?= h(t('Copy "%1$s" and all its children beneath "%2$s"', $singleOriginalPage->getCollectionDisplayName(), $dragRequestData->getDestinationPage()->getCollectionDisplayName())) ?>
                             </label>
                         </div>
                         <?php
@@ -154,7 +154,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                         <div class="checkbox">
                             <label>
                                 <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYVERSION ?>" />
-                                <?= h(t('Replace "%1$s" with a copy of "%2$s"', $dragRequestData->getDestinationPage()->getCollectionName(), $singleOriginalPage->getCollectionName())) ?>
+                                <?= h(t('Replace "%1$s" with a copy of "%2$s"', $dragRequestData->getDestinationPage()->getCollectionDisplayName(), $singleOriginalPage->getCollectionDisplayName())) ?>
                             </label>
                         </div>
                     </div>

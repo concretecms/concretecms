@@ -17,7 +17,7 @@ if (!empty($top)) {
                         $next = ($i + 1 < $n) ? $pages[$i + 1] : null;
                         ?>
                         <li class="<?=$view->controller->getMenuItemClass($page)?>">
-                            <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
+                            <a href="<?=$page->getCollectionLink()?>"><?=h($page->getCollectionDisplayName())?></a>
                             <?php
                             if ($view->controller->displayChildPages($page)) {
                                 $children = $view->controller->getChildPages($page);

@@ -49,7 +49,7 @@ if (is_object($c)) {
      * We can set a title 3 ways:
      * 1. It comes through programmatically as $pageTitle. If this is the case then we pass it through, no questions asked
      * 2. It comes from meta title
-     * 3. It comes from getCollectionName()
+     * 3. It comes from getCollectionDisplayName()
      * In the case of 3, we also pass it through page title format.
      */
     if ($pageTitle === null) {
@@ -58,10 +58,7 @@ if (is_object($c)) {
         if (!is_string($pageTitle) || $pageTitle === '') {
             $seo = $app->make('helper/seo');
             if (!$seo->hasCustomTitle()) {
-                $pageTitle = $c->getCollectionName();
-                if ($c->isSystemPage()) {
-                    $pageTitle = t($pageTitle);
-                }
+                $pageTitle = $c->getCollectionDisplayName();
                 $seo->addTitleSegmentBefore($pageTitle);
             }
             $seo->setSiteName(tc('SiteName', $site->getSiteName()));

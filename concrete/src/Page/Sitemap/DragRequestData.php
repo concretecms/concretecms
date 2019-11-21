@@ -386,21 +386,21 @@ class DragRequestData
         $destinationPageID = $this->getDestinationPage()->getCollectionID();
         foreach ($this->getOriginalPages() as $originalPage) {
             if ($originalPage->getCollectionParentID() == $destinationPageID) {
-                return t('"%1$s" is already the parent page of "%2$s".', $this->getDestinationPage()->getCollectionName(), $originalPage->getCollectionName());
+                return t('"%1$s" is already the parent page of "%2$s".', $this->getDestinationPage()->getCollectionDisplayName(), $originalPage->getCollectionDisplayName());
             }
             $originalPageChecker = new Checker($originalPage);
             if (!$originalPageChecker->canMoveOrCopyPage()) {
-                return t('You don\'t have the permission move the page "%s".', $originalPage->getCollectionName());
+                return t('You don\'t have the permission move the page "%s".', $originalPage->getCollectionDisplayName());
             }
             if ($originalPage->getCollectionID() == $destinationPageID) {
-                return t('It\'s not possible to move the page "%s" under itself.', $originalPage->getCollectionName());
+                return t('It\'s not possible to move the page "%s" under itself.', $originalPage->getCollectionDisplayName());
             }
             if (in_array($destinationPageID, $originalPage->getCollectionChildrenArray())) {
-                return t('It\'s not possible to move the page "%s" under one of its child pages.', $originalPage->getCollectionName());
+                return t('It\'s not possible to move the page "%s" under one of its child pages.', $originalPage->getCollectionDisplayName());
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to move the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to move the page "%1$s" under "%2$s".', $originalPage->getCollectionDisplayName(), $this->getDestinationPage()->getCollectionDisplayName());
             }
         }
 
@@ -421,11 +421,11 @@ class DragRequestData
         foreach ($this->getOriginalPages() as $originalPage) {
             $originalPageChecker = new Checker($originalPage);
             if (!$originalPageChecker->canMoveOrCopyPage()) {
-                return t('You don\'t have the permission to create an alias of the page "%s".', $originalPage->getCollectionName());
+                return t('You don\'t have the permission to create an alias of the page "%s".', $originalPage->getCollectionDisplayName());
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to alias the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to alias the page "%1$s" under "%2$s".', $originalPage->getCollectionDisplayName(), $this->getDestinationPage()->getCollectionDisplayName());
             }
         }
 
@@ -443,11 +443,11 @@ class DragRequestData
         foreach ($this->getOriginalPages() as $originalPage) {
             $originalPageChecker = new Checker($originalPage);
             if (!$originalPageChecker->canMoveOrCopyPage()) {
-                return t('You don\'t have the permission copy the page "%s".', $originalPage->getCollectionName());
+                return t('You don\'t have the permission copy the page "%s".', $originalPage->getCollectionDisplayName());
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to copy the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to copy the page "%1$s" under "%2$s".', $originalPage->getCollectionDisplayName(), $this->getDestinationPage()->getCollectionDisplayName());
             }
         }
 
@@ -469,10 +469,10 @@ class DragRequestData
         $somePageWithChildren = false;
         foreach ($this->getOriginalPages() as $originalPage) {
             if ($originalPage->getCollectionID() == $destinationPageID) {
-                return t('It\'s not possible to copy the page "%s" and its child pages under the page itself.', $originalPage->getCollectionName());
+                return t('It\'s not possible to copy the page "%s" and its child pages under the page itself.', $originalPage->getCollectionDisplayName());
             }
             if (in_array($destinationPageID, $originalPage->getCollectionChildrenArray())) {
-                return t('It\'s not possible to copy the page "%s" and its child pages under one of its child pages.', $originalPage->getCollectionName());
+                return t('It\'s not possible to copy the page "%s" and its child pages under one of its child pages.', $originalPage->getCollectionDisplayName());
             }
             if ($somePageWithChildren === false && !$originalPage->isAliasPageOrExternalLink() && $originalPage->getNumChildrenDirect() > 0) {
                 $somePageWithChildren = true;
@@ -508,7 +508,7 @@ class DragRequestData
         }
         $pc = new Checker($destinationPage);
         if (!$pc->canWrite()) {
-            return t('You don\'t have the permission to edit the contents of "%s".', $destinationPage->getCollectionName());
+            return t('You don\'t have the permission to edit the contents of "%s".', $destinationPage->getCollectionDisplayName());
         }
 
         return '';

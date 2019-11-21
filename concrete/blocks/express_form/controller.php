@@ -98,7 +98,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if (!isset($renderer)) {
             $page = $this->block->getBlockCollectionObject();
             $this->app->make('log')
-                ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()));
+                ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionDisplayName(), $page->getCollectionID()));
         }
     }
 
@@ -110,7 +110,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function add()
     {
-        $this->set('formName', $this->request->getCurrentPage()->getCollectionName());
+        $this->set('formName', $this->request->getCurrentPage()->getCollectionDisplayName());
         $this->set('submitLabel', t('Submit'));
         $this->set('thankyouMsg', t('Thanks!'));
         $this->edit();

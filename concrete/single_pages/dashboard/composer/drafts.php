@@ -23,10 +23,10 @@ $num = 0;
         $pdr = new Permissions($dr);
         if ($pdr->canEditPage()) {
             ++$num;
-            $pageName = ($dr->getCollectionName()) ? $dr->getCollectionName() : t('(Untitled Page)');
+            $pageName = $dr->getCollectionDisplayName() ?: t('(Untitled Page)');
             ?>
 	<tr>
-		<td><a href="<?=$view->url('/dashboard/composer/write', 'draft', $dr->getCollectionID())?>"><?=$pageName?></a></td>
+		<td><a href="<?=$view->url('/dashboard/composer/write', 'draft', $dr->getCollectionID())?>"><?=h($pageName)?></a></td>
 		<td><?php
         $ui = UserInfo::getByID($dr->getCollectionUserID());
             if (is_object($ui)) {

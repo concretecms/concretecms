@@ -14,7 +14,7 @@ $c = Page::getCurrentPage();
 
     <?php foreach ($pages as $page):
 
-        $title = $th->entities($page->getCollectionName());
+        $title = $th->entities($page->getCollectionDisplayName());
         $url = $nh->getLinkToCollection($page);
         $target = ($page->getCollectionPointerExternalLink() != '' && $page->openCollectionPointerExternalLinkInNewWindow()) ? '_blank' : $page->getAttribute('nav_target');
         $target = empty($target) ? '_self' : $target;

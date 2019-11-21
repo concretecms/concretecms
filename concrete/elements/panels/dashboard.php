@@ -35,7 +35,7 @@ foreach ($parents as $pc) {
     if ($cp->canViewPage()) {
         ?>
 					<li <?php if ($active) {
-    ?>class="nav-selected"<?php } ?>><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>"><?=t($cc->getCollectionName())?></a></li>
+    ?>class="nav-selected"<?php } ?>><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>"><?=h($cc->getCollectionDisplayName())?></a></li>
 
 			<?php
 		$next = $nav[$i + 1];

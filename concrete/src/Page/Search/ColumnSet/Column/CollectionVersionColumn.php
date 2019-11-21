@@ -21,7 +21,7 @@ class CollectionVersionColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return 'getCollectionName';
+        return 'getCollectionDisplayName';
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
@@ -29,7 +29,7 @@ class CollectionVersionColumn extends Column implements PagerColumnInterface
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('(cv.cvName, p.cID) %s (:sortName, :sortID)', $sort);
-        $query->setParameter('sortName', $mixed->getCollectionName());
+        $query->setParameter('sortName', $mixed->getCollectionDisplayName());
         $query->setParameter('sortID', $mixed->getCollectionID());
         $query->andWhere($where);
     }

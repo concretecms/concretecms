@@ -36,7 +36,7 @@ class IntelligentSearch extends UserInterface
             $obj = new \stdClass();
             $obj->href = $nh->getLinkToCollection($c);
             $obj->cID = $c->getCollectionID();
-            $obj->name = $c->getCollectionName();
+            $obj->name = $c->getCollectionDisplayName();
             $results[] = $obj;
         }
         echo json_encode($results);

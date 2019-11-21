@@ -9,7 +9,7 @@ class PageNameSnippet extends Snippet
     {
         $c = Page::getCurrentPage();
         if (is_object($c)) {
-            return $c->getCollectionName();
+            return $c->getCollectionDisplayName();
         }
     }
 }

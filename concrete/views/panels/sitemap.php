@@ -48,8 +48,8 @@
             <?php foreach ($drafts as $dc) {
                 ?>
                 <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($dc)?>"><?php
-                        if ($dc->getCollectionName()) {
-                            echo $dc->getCollectionName() . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
+                        if ($dc->getCollectionDisplayName() !== '') {
+                            echo $dc->getCollectionDisplayName() . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
                         } else {
                             echo t('(Untitled)') . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
                         }

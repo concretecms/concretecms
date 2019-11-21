@@ -53,10 +53,10 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
 					if (is_array($trail)) {
 						$trail = array_reverse($trail);
 						for ($i = 0; $i < count($trail); $i++) {
-							$label .= $trail[$i]->getCollectionName() . ' &gt; ';
+						    $label .= h($trail[$i]->getCollectionDisplayName()) . ' &gt; ';
 						}
 					}
-					$label .= $p->getCollectionName();
+					$label .= $p->getCollectionDisplayName();
 					$options[$p->getCollectionID()] = $label;
                 }
             }
@@ -64,7 +64,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         } elseif (count($pages) == 1) {
             $p = $pages[0];
             echo $form->hidden('cParentID', $p->getCollectionID());
-            echo t('This page will be published beneath "%s."', $p->getCollectionName());
+            echo t('This page will be published beneath "%s."', h($p->getCollectionDisplayName()));
         }
     }
 }

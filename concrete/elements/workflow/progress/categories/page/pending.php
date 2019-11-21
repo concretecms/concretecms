@@ -26,7 +26,7 @@ $noitems = true;
             $noitems = false;
             ?>
 <tr class="ccm-workflow-waiting-for-me-row<?=$wp->getWorkflowProgressID()?>">
-	<td><?=$p->getCollectionName()?></td>
+	<td><?=h($p->getCollectionDisplayName())?></td>
 	<td><a href="<?=Loader::helper('navigation')->getLinkToCollection($p)?>"><?=$p->getCollectionPath()?></a>
 	<td><?=$dh->formatDateTime($wp->getWorkflowProgressDateLastAction(), true)?></td>
 	<td><a href="javascript:void(0)" title="<?=t('Click for history.')?>" onclick="$(this).parentsUntil('tr').parent().next().show()"><?=$wf->getWorkflowProgressStatusDescription($wp)?></a></td>

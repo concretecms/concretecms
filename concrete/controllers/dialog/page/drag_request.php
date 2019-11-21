@@ -174,7 +174,7 @@ class DragRequest extends UserInterfaceController
         $destipationPage = $dragRequestData->getDestinationPage();
         foreach ($dragRequestData->getOriginalPages() as $originalPage) {
             $newCIDs[] = $originalPage->addCollectionAlias($destipationPage);
-            $successMessages[] = t('"%1$s" was successfully aliased beneath "%2$s".', $originalPage->getCollectionName(), $destipationPage->getCollectionName());
+            $successMessages[] = t('"%1$s" was successfully aliased beneath "%2$s".', $originalPage->getCollectionDisplayName(), $destipationPage->getCollectionDisplayName());
         }
         $this->setNewPagesDisplayOrder($dragRequestData, $newCIDs);
 
@@ -201,7 +201,7 @@ class DragRequest extends UserInterfaceController
                 throw new UserMessageException(t('An error occurred while attempting the copy operation.'));
             }
             $newCIDs[] = $newPage->getCollectionID();
-            $successMessages[] = t('"%1$s" was successfully copied beneath "%2$s".', $originalPage->getCollectionName(), $destipationPage->getCollectionName());
+            $successMessages[] = t('"%1$s" was successfully copied beneath "%2$s".', $originalPage->getCollectionDisplayName(), $destipationPage->getCollectionDisplayName());
         }
         $this->setNewPagesDisplayOrder($dragRequestData, $newCIDs);
 
@@ -228,9 +228,9 @@ class DragRequest extends UserInterfaceController
             $r = $pkr->trigger();
             $newCIDs[] = $originalPage->getCollectionID();
             if ($r instanceof \Concrete\Core\Workflow\Progress\Response) {
-                $successMessages[] = t('"%1$s" was moved beneath "%2$s".', $originalPage->getCollectionName(), $destipationPage->getCollectionName());
+                $successMessages[] = t('"%1$s" was moved beneath "%2$s".', $originalPage->getCollectionDisplayName(), $destipationPage->getCollectionDisplayName());
             } else {
-                $successMessages[] = t('Your request to move "%1$s" beneath "%2$s" has been stored. Someone with approval rights will have to activate the change.', $originalPage->getCollectionName(), $destipationPage->getCollectionName());
+                $successMessages[] = t('Your request to move "%1$s" beneath "%2$s" has been stored. Someone with approval rights will have to activate the change.', $originalPage->getCollectionDisplayName(), $destipationPage->getCollectionDisplayName());
             }
         }
         $this->setNewPagesDisplayOrder($dragRequestData, $newCIDs);
@@ -256,13 +256,13 @@ class DragRequest extends UserInterfaceController
         $cloner = $this->app->make(Cloner::class);
         $clonerOptions = $this->app->build(ClonerOptions::class)
             ->setForceUnapproved(true)
-            ->setVersionComments(t('Contents copied from %s', $originalPage->getCollectionName()))
+            ->setVersionComments(t('Contents copied from %s', $originalPage->getCollectionDisplayName()))
         ;
         $newVersion = $cloner->cloneCollectionVersion($originalVersion, $dragRequestData->getDestinationPage(), $clonerOptions);
 
         return $this->buildOperationCompletedResponse(
             [$newVersion->getCollectionID()],
-            [t('The contents of "%1$s" has been copied to "%2$s".', $originalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName())]
+            [t('The contents of "%1$s" has been copied to "%2$s".', $originalPage->getCollectionDisplayName(), $dragRequestData->getDestinationPage()->getCollectionDisplayName())]
         );
     }
 

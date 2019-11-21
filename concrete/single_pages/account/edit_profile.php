@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
-<h2><?= t($c->getCollectionName()); ?></h2>
+<h2><?= h($c->getCollectionDisplayName()) ?></h2>
 
 <form method="post" action="<?= $view->action('save'); ?>" enctype="multipart/form-data">
 	<?php $valt->output('profile_edit'); ?>

@@ -104,7 +104,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<% if (parentID && parentID > 0) { %>
 	<ol class="breadcrumb">
 	  <li><a href="<%=parentLink%>" target="_blank"><%=parentName%></a></li>
-	  <li class="active"><?=$c->getCollectionName()?></li>
+	  <li class="active"><?=h($c->getCollectionDisplayName())?></li>
 	</ol>
 	<% } else { %>
 		<div class="breadcrumb">
@@ -152,7 +152,7 @@ $(function() {
 
 	$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 		parentLink: '<?=Loader::helper('navigation')->getLinkToCollection($parent);?>',
-		parentName: <?=json_encode($parent->getCollectionName())?>,
+		parentName: <?=json_encode($parent->getCollectionDisplayName())?>,
 		parentID: '<?=$cParentID?>'
 	}));
 

@@ -33,9 +33,9 @@ class ChangePagePermissionsInheritanceRequest extends PageRequest
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'ACTIVE');
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $d->setEmailDescription(t("\"%s\" has pending permission inheritance. View the page here: %s.", $c->getCollectionName(), $link));
+        $d->setEmailDescription(t("\"%s\" has pending permission inheritance. View the page here: %s.", $c->getCollectionDisplayName(), $link));
         $d->setInContextDescription(t("Page Submitted to Change Permission Inheritance to %s.", ucfirst(strtolower($this->inheritance))));
-        $d->setDescription(t("<a href=\"%s\">%s</a> submitted to change permission inheritance to %s.", $link, $c->getCollectionName(), ucfirst(strtolower($this->inheritance))));
+        $d->setDescription(t("<a href=\"%s\">%s</a> submitted to change permission inheritance to %s.", $link, $c->getCollectionDisplayName(), ucfirst(strtolower($this->inheritance))));
         $d->setShortStatus(t("Permission Inheritance Changes"));
 
         return $d;

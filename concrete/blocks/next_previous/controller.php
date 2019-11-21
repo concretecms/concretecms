@@ -77,7 +77,7 @@ class Controller extends BlockController
         $nextCollection = $this->getNextCollection();
         if (is_object($nextCollection) && !$nextCollection->isError()) {
             $nextLinkURL = $nextCollection->getCollectionLink();
-            $nextLinkText = $nextCollection->getCollectionName();
+            $nextLinkText = $nextCollection->getCollectionDisplayName();
         }
 
         $this->set('nextCollection', $nextCollection);
@@ -92,7 +92,7 @@ class Controller extends BlockController
 
         if (is_object($previousCollection) && !$previousCollection->isError()) {
             $previousLinkURL = $previousCollection->getCollectionLink();
-            $previousLinkText = $previousCollection->getCollectionName();
+            $previousLinkText = $previousCollection->getCollectionDisplayName();
         }
 
         $this->set('previousCollection', $previousCollection);

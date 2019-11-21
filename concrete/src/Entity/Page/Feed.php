@@ -488,7 +488,7 @@ class Feed
 
             foreach ($results as $p) {
                 $entry = $writer->createEntry();
-                $entry->setTitle($p->getCollectionName());
+                $entry->setTitle($p->getCollectionDisplayName());
                 $entry->setDateCreated(strtotime($p->getCollectionDatePublic()));
                 $content = $this->getPageFeedContent($p);
                 if (!$content) {

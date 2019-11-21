@@ -41,7 +41,7 @@ if (!isset($query) || !is_string($query)) {
                 foreach ($results as $r) {
                     $currentPageBody = $this->controller->highlightedExtendedMarkup($r->getPageIndexContent(), $query);
                     ?><div class="searchResult">
-                        <h3><a href="<?=$r->getCollectionLink()?>"><?=$r->getCollectionName()?></a></h3>
+                        <h3><a href="<?=$r->getCollectionLink()?>"><?=h($r->getCollectionDisplayName())?></a></h3>
                         <p><?php
                             if ($r->getCollectionDescription()) {
                                 echo $this->controller->highlightedMarkup($tt->shortText($r->getCollectionDescription()), $query);

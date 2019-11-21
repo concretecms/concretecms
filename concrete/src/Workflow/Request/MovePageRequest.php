@@ -41,9 +41,9 @@ class MovePageRequest extends PageRequest
         $target = Page::getByID($this->targetCID, 'ACTIVE');
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
         $targetLink = Loader::helper('navigation')->getLinkToCollection($target, true);
-        $d->setEmailDescription(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s.", $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));
-        $d->setInContextDescription(t("This page is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $targetLink, $target->getCollectionName()));
-        $d->setDescription(t("<a href=\"%s\">%s</a> is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $link, $c->getCollectionName(), $targetLink, $target->getCollectionName()));
+        $d->setEmailDescription(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s.", $c->getCollectionDisplayName(), $target->getCollectionDisplayName(), $link, $targetLink));
+        $d->setInContextDescription(t("This page is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $targetLink, $target->getCollectionDisplayName()));
+        $d->setDescription(t("<a href=\"%s\">%s</a> is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $link, $c->getCollectionDisplayName(), $targetLink, $target->getCollectionDisplayName()));
         $d->setShortStatus(t("Pending Move"));
 
         return $d;

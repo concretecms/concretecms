@@ -46,7 +46,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     echo t('This page inherits its permissions from:');
                 }
                 ?>
-                <a target="_blank" href="<?=URL::to($cpc)?>"><?=$cpc->getCollectionName()?></a>
+                <a target="_blank" href="<?=URL::to($cpc)?>"><?=h($cpc->getCollectionDisplayName())?></a>
             </div>
             <?php
         }
