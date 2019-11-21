@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
+use Concrete\Core\Board\Populator;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\DataSource\DataSource;
@@ -23,7 +24,8 @@ class Rebuild extends DashboardSitePageController
                 $this->error->add(t($this->token->getErrorMessage()));
             }
             if (!$this->error->has()) {
-                
+                $populator = $this->app->make(Populator::class);
+                $populator->rebuild($board);
                 $this->flash('success', t('Board rebuilt.'));
                 return $this->redirect('/dashboard/boards/details/', 'view', $board->getBoardID());
             }

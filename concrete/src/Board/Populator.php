@@ -2,6 +2,8 @@
 namespace Concrete\Core\Board;
 
 use Concrete\Core\Entity\Board\Board;
+use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Entity\Board\ItemBatch;
 use Doctrine\ORM\EntityManager;
 
 class Populator
@@ -19,12 +21,42 @@ class Populator
     
     public function reset(Board $board)
     {
-        
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->delete(Item::class, 'i')
+            ->where('i.board = :board');
+        $queryBuilder->setParameter('board', $board);
+        $queryBuilder->getQuery()->execute();
     }
     
     public function populate(Board $board)
     {
-        
+        $configuredDataSources = $board->getDataSources();
+        $batch = new ItemBatch();
+        $batch->setBoard($board);
+        $this->entityManager->persist($batch);
+        foreach($configuredDataSources as $configuredDataSource) {
+            $configuration = $configuredDataSource->getConfiguration();
+            $dataSource = $configuredDataSource->getDataSource();
+            $dataSourceDriver = $dataSource->getDriver();
+            $populator = $dataSourceDriver->getBoardPopulator();
+            $objects = $populator->getDataSourceObjects($board, $configuration);
+            foreach($objects as $object) {
+                $item = new Item();
+                $item->setBoard($board);
+                $item->setDataSource($configuredDataSource);
+                $item->setDateCreated($batch->getDateCreated());
+                $item->setBatch($batch);
+                $item->setRelevantDate($populator->getObjectRelevantDate($object));
+                $this->entityManager->persist($item);
+            }
+        }
+        $this->entityManager->flush();
+    }
+    
+    public function rebuild(Board $board)
+    {
+        $this->reset($board);
+        $this->populate($board);
     }
 
 }

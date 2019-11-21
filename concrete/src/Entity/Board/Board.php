@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,11 +39,22 @@ class Board
      */
     protected $items;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ItemBatch", cascade={"remove"}, mappedBy="board", fetch="EXTRA_LAZY")
+     */
+    protected $batches;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $dateLastUpdated;
+
 
     public function __construct()
     {
         $this->data_sources = new ArrayCollection();
         $this->items = new ArrayCollection();
+        $this->batches = new ArrayCollection();
     }
 
     /**
@@ -86,7 +98,7 @@ class Board
     }
 
     /**
-     * @return mixed
+     * @return ConfiguredDataSource[]
      */
     public function getDataSources()
     {
@@ -99,6 +111,54 @@ class Board
     public function setDataSources($data_sources): void
     {
         $this->data_sources = $data_sources;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param mixed $items
+     */
+    public function setItems($items): void
+    {
+        $this->items = $items;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBatches()
+    {
+        return $this->batches;
+    }
+
+    /**
+     * @param mixed $batches
+     */
+    public function setBatches($batches): void
+    {
+        $this->batches = $batches;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateLastUpdated()
+    {
+        return $this->dateLastUpdated;
+    }
+
+    /**
+     * @param mixed $dateLastUpdated
+     */
+    public function setDateLastUpdated($dateLastUpdated): void
+    {
+        $this->dateLastUpdated = $dateLastUpdated;
     }
     
     

@@ -29,6 +29,7 @@ class ConfiguredDataSource
     /**
      * @ORM\ManyToOne(targetEntity="DataSource")
      * @ORM\JoinColumn(name="dataSourceID", referencedColumnName="dataSourceID")
+     * @var DataSource
      */
     protected $data_source;
 
@@ -79,7 +80,7 @@ class ConfiguredDataSource
     }
 
     /**
-     * @return mixed
+     * @return DataSource
      */
     public function getDataSource()
     {

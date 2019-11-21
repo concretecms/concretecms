@@ -24,6 +24,12 @@ class Item
     protected $board;
 
     /**
+     * @ORM\ManyToOne(targetEntity="ItemBatch", inversedBy="items")
+     * @ORM\JoinColumn(name="boardItemBatchID", referencedColumnName="boardItemBatchID")
+     */
+    protected $batch;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource")
      * @ORM\JoinColumn(name="configuredDataSourceID", referencedColumnName="configuredDataSourceID")
      **/
@@ -42,7 +48,7 @@ class Item
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
-    protected $bID;
+    protected $bID = 0;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
@@ -153,6 +159,23 @@ class Item
         $this->slot = $slot;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getBatch()
+    {
+        return $this->batch;
+    }
+
+    /**
+     * @param mixed $batch
+     */
+    public function setBatch($batch): void
+    {
+        $this->batch = $batch;
+    }
+
+    
     
 
 

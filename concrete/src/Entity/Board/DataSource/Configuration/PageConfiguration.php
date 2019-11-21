@@ -15,7 +15,7 @@ class PageConfiguration extends Configuration
     protected $query;
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Search\Query
      */
     public function getQuery()
     {
