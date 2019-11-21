@@ -155,6 +155,9 @@ class PageController extends Controller
         }
     }
 
+    /**
+     * @return \Concrete\Core\Page\Page
+     */
     public function getPageObject()
     {
         return $this->c;
@@ -348,7 +351,7 @@ class PageController extends Controller
      */
     public function useUserLocale()
     {
-        return false;
+        return $this->getPageObject()->isPageTranslatable();
     }
 
     /**

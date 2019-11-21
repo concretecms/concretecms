@@ -57,13 +57,4 @@ class AccountPageController extends CorePageController
         $this->set('error', $this->error);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Page\Controller\PageController::useUserLocale()
-     */
-    public function useUserLocale()
-    {
-        return true;
-    }
 }

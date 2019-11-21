@@ -108,14 +108,4 @@ class DashboardPageController extends PageController
     {
         return $this->entityManager;
     }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Page\Controller\PageController::useUserLocale()
-     */
-    public function useUserLocale()
-    {
-        return true;
-    }
 }
