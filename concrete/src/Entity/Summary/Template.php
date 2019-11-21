@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Summary;
 
-use Concrete\Core\Html\Image;
+use HtmlObject\Image;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -145,7 +145,7 @@ class Template
         $this->fields = $fields;
     }
     
-    public function getContainerIconImage($asTag = true)
+    public function getTemplateIconImage($asTag = true)
     {
         if ($this->getIcon()) {
             $image = ASSETS_URL_IMAGES . '/icons/summary_templates/' . $this->getIcon();

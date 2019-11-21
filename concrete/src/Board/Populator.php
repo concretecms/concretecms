@@ -26,6 +26,12 @@ class Populator
             ->where('i.board = :board');
         $queryBuilder->setParameter('board', $board);
         $queryBuilder->getQuery()->execute();
+
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->delete(ItemBatch::class, 'ib')
+            ->where('ib.board = :board');
+        $queryBuilder->setParameter('board', $board);
+        $queryBuilder->getQuery()->execute();
     }
     
     public function populate(Board $board)
@@ -47,6 +53,10 @@ class Populator
                 $item->setDateCreated($batch->getDateCreated());
                 $item->setBatch($batch);
                 $item->setRelevantDate($populator->getObjectRelevantDate($object));
+                $block = $populator->createBoardItemBlock($object);
+                if ($block) {
+                    $item->setBlockID($block->getBlockID());
+                }
                 $this->entityManager->persist($item);
             }
         }

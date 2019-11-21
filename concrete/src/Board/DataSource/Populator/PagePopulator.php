@@ -2,18 +2,20 @@
 namespace Concrete\Core\Board\DataSource\Populator;
 
 use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\PageConfiguration;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Entity\Board\Item;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Summary\Template\RendererFilterer;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class PagePopulator implements PopulatorInterface
+class PagePopulator extends AbstractPopulator
 {
-
+    
     /**
      * @param Board $board
      * @param PageConfiguration $configuration
@@ -46,9 +48,5 @@ class PagePopulator implements PopulatorInterface
     {
         return $mixed->getCollectionDatePublicObject()->getTimestamp();
     }
-
-    public function createBoardItemBlock($mixed): Block
-    {
-    }
-
+    
 }

@@ -4,4 +4,9 @@
         <datasource handle="page" name="Page" package=""/>
         <datasource handle="calendar_event" name="Calendar Event" package=""/>
     </boarddatasources>
+    <boardtemplates>
+        <template handle="nine_by_nine" name="9x9 Grid"
+                  icon="blank.png" package="">
+        </template>
+    </boardtemplates>
 </concrete5-cif>

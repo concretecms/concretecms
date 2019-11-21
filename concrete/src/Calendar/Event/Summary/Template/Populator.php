@@ -21,6 +21,12 @@ class Populator extends AbstractPopulator
         $queryBuilder->getQuery()->execute();
     }
 
+    public function updateAvailableSummaryTemplates(CategoryMemberInterface $mixed)
+    {
+        $this->entityManager->refresh($mixed);
+        parent::updateAvailableSummaryTemplates($mixed);
+    }
+
     /**
      * @param CalendarEvent $mixed
      */

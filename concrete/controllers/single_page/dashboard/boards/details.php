@@ -13,6 +13,10 @@ class Details extends DashboardSitePageController
         $r = $this->entityManager->getRepository(Board::class);
         $board = $r->findOneByBoardID($id);
         if (is_object($board)) {
+            $template = $board->getTemplate();
+            $templateDriver = $template->getDriver();
+            $this->set('template', $template);
+            $this->set('templateDriver', $templateDriver);
             $this->set('board', $board);
         } else {
             return $this->redirect('/dashboard/boards/boards');

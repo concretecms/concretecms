@@ -2,6 +2,7 @@
 namespace Concrete\Core\Board\DataSource\Populator;
 
 use Concrete\Core\Block\Block;
+use Concrete\Core\Calendar\Event\EventList;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
@@ -9,7 +10,7 @@ use Concrete\Core\Entity\Calendar\CalendarEvent;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class CalendarEventPopulator implements PopulatorInterface
+class CalendarEventPopulator extends AbstractPopulator
 {
 
     /**
@@ -19,16 +20,10 @@ class CalendarEventPopulator implements PopulatorInterface
      */
     public function getDataSourceObjects(Board $board, Configuration $configuration): array
     {
-        return [];
-    }
-
-    /**
-     * @param CalendarEvent $mixed
-     * @return Block
-     */
-    public function createBoardItemBlock($mixed): Block
-    {
-        return null;
+        $list = new EventList();
+        $list->filterByCalendar($configuration->getCalendar());
+        $list->setItemsPerPage(100);
+        return $list->getResults();
     }
 
     /**
@@ -37,7 +32,7 @@ class CalendarEventPopulator implements PopulatorInterface
      */
     public function getObjectRelevantDate($mixed) : int
     {
-        return 0;
+        return $mixed->getOccurrences()[0]->getStart();
     }
 
 }

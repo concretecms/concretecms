@@ -2,12 +2,29 @@
 
 namespace Concrete\Core\Summary\Template;
 
+use Concrete\Core\Summary\Category\CategoryMemberInterface;
+
 class RendererFilterer
 {
 
-    public function getMatchingTemplate(array $allTemplates, array $customTemplates = null, string $templateHandle = null): ?RenderableTemplateInterface
+    public function getSpecificTemplateIfExists(CategoryMemberInterface $object, string $templateHandle)
     {
-        
+        $templatesToCheck = $this->getTemplatesToCheck($object);
+        foreach ($templatesToCheck as $template) {
+            if ($template->getTemplate()->getHandle() === $templateHandle) {
+                return $template;
+            }
+        }
+    }
+    
+    protected function getTemplatesToCheck(CategoryMemberInterface $object)
+    {
+        $allTemplates = $object->getSummaryTemplates();
+        $customTemplates = null;
+        if ($object->hasCustomSummaryTemplates()) {
+            $customTemplates = $object->getCustomSelectedSummaryTemplates();
+        }
+
         $templatesToCheck = [];
         if ($customTemplates) {
             $customTemplateHandles = [];
@@ -23,16 +40,13 @@ class RendererFilterer
             $templatesToCheck = $allTemplates;
         }
         
-        if ($templateHandle) {
-            foreach ($templatesToCheck as $template) {
-                if ($template->getTemplate()->getHandle() === $templateHandle) {
-                    return $template;
-                }
-            }
-        } else {
-            return $templatesToCheck[array_rand($templatesToCheck)];
-        }
-        return null;
+        return $templatesToCheck;
+    }
+    
+    public function getRandomTemplate(CategoryMemberInterface $object): ?RenderableTemplateInterface
+    {
+        $templatesToCheck = $this->getTemplatesToCheck($object);
+        return $templatesToCheck[array_rand($templatesToCheck)];
     }
 
 }

@@ -6,6 +6,9 @@
     </div>
     <div class="col-8">
         <a href="<?=$link?>"><?=$title?></a>
+        <?php if ($date) { ?>
+            <div><small class="text-muted"><?=date('F d, Y', (string) $date)?></small></div>
+        <?php } ?>
         <?php if ($description) { ?>
             <div><?=$description?></div>
         <?php } ?>

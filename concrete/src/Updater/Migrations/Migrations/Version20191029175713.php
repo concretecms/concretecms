@@ -3,6 +3,7 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\BlockType\Set;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
 use Concrete\Core\Entity\Board\DataSource\Configuration\PageConfiguration;
@@ -66,5 +67,24 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
         } else {
             $bt->refresh();
         }
+        $bt = BlockType::getByHandle('core_summary');
+        if (!$bt) {
+            BlockType::installBlockType('core_summary');
+        } else {
+            $bt->refresh();
+        }
+        
+        $bt = BlockType::getByHandle('board');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('board');
+            $multimediaSet = Set::getByHandle('multimedia');
+            if ($multimediaSet) {
+                $multimediaSet->addBlockType($bt);
+            }
+        } else {
+            $bt->refresh();
+        }
+
+
     }
 }

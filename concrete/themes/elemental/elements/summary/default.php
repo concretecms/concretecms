@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div>
-    <a href="">name</a>
+    <a href="<?=$link?>"><?=$title?></a>
     <?php if ($description) { ?>
-        <div><?=$description?>></div>
+        <div><?=$description?></div>
     <?php } ?>
 </div>

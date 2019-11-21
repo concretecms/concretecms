@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
 use Concrete\Core\Entity\Board\Board;
+use Concrete\Core\Entity\Board\Template;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\SanitizeService;
@@ -10,6 +11,11 @@ class Add extends DashboardSitePageController
 {
     public function view()
     {
+        $templates = ['' => t('** Select a Template')];
+        foreach($this->entityManager->getRepository(Template::class)->findAll() as $template) {
+            $templates[$template->getId()] = $template->getName();
+        }
+        $this->set('templates', $templates);
     }
 
     public function submit()
@@ -25,10 +31,20 @@ class Add extends DashboardSitePageController
             $this->error->add(t('You must specify a valid name for your board.'));
         }
         
+        $template = null;
+        if ($this->request->request->has('templateID')) {
+            $template = $this->entityManager->find(Template::class, $this->request->request->get('templateID'));
+        }
+        
+        if (!$template) {
+            $this->error->add(t('You must specify a valid template for your board.'));
+        }
+        
         if (!$this->error->has()) {
             $board = new Board();
             $board->setSite($this->getSite());
             $board->setBoardName($name);
+            $board->setTemplate($template);
             $this->entityManager->persist($board);
             $this->entityManager->flush();
             $this->redirect('/dashboard/boards/details', 'view', $board->getBoardID());

@@ -6,6 +6,8 @@
     </summarycategories>
     <summaryfields>
         <field handle="title" name="Title" package=""/>
+        <field handle="date" name="Date" package=""/>
+        <field handle="date_complex" name="Complex Date" package=""/>
         <field handle="link" name="Link" package=""/>
         <field handle="description" name="Description" package=""/>
         <field handle="thumbnail" name="Thumbnail" package=""/>
@@ -21,6 +23,7 @@
                 <field required="1">title</field>
                 <field required="1">link</field>
                 <field>description</field>
+                <field>date</field>
             </fields>
         </template>
         <template handle="thumbnail_title_description" name="Thumbnail Title Description"
@@ -32,8 +35,9 @@
             <fields>
                 <field required="1">title</field>
                 <field required="1">link</field>
-                <field required="1">description</field>
                 <field required="1">thumbnail</field>
+                <field>description</field>
+                <field>date</field>
             </fields>
         </template>
     </summarytemplates>

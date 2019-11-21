@@ -13,6 +13,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
     <div class="col-8">
 
+        <div>
+            <h3><?=t('Template')?></h3>
+            <p><?=$template->getName()?></p>
+        </div>
+        
+        <div>
+            <h3><?=t('Total Slots')?></h3>
+            <p><?=$templateDriver->getTotalSlots()?></p>
+        </div>
         
     </div>
 </div>

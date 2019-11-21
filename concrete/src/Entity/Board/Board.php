@@ -45,7 +45,12 @@ class Board
     protected $batches;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\ManyToOne(targetEntity="Template")
+     */
+    protected $template;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
      */
     protected $dateLastUpdated;
 
@@ -160,12 +165,23 @@ class Board
     {
         $this->dateLastUpdated = $dateLastUpdated;
     }
-    
-    
-    
 
+    /**
+     * @return mixed
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
 
-
+    /**
+     * @param mixed $template
+     */
+    public function setTemplate($template): void
+    {
+        $this->template = $template;
+    }
+    
 
 
 }

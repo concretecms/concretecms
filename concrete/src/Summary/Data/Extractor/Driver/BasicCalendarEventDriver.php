@@ -49,6 +49,10 @@ class BasicCalendarEventDriver implements DriverInterface
             if ($description) {
                 $collection->addField(new DataField(FieldInterface::FIELD_DESCRIPTION, $description));
             }
+            $occurrence = $version->getOccurrences()[0];
+            if ($occurrence) {
+                $collection->addField(new DataField(FieldInterface::FIELD_DATE, $occurrence->getStart()));
+            }
         }
         return $collection;
     }
