@@ -1681,9 +1681,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Get the page name.
+     * Get the (untranslated) page name.
      *
-     * @return string
+     * @return string|null
      */
     public function getCollectionName()
     {
@@ -1692,6 +1692,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         return isset($this->cvName) ? $this->cvName : null;
+    }
+
+    /**
+     * Get the (possibly translated) page name.
+     *
+     * @return string
+     */
+    public function getCollectionDisplayName()
+    {
+        $name = (string) $this->getCollectionName();
+        if ($this->isPageTranslatable()) {
+            $name = t($name);
+        }
+        
+        return $name;
     }
 
     /**
