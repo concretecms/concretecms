@@ -1695,6 +1695,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Check if this page can be (possibly) rendered in different languages depending on the current user/language.
+     *
+     * @return bool
+     */
+    public function isPageTranslatable()
+    {
+        return $this->isSystemPage() || $this->isGeneratedCollection();
+    }
+
+    /**
      * Get the collection ID for the aliased page (returns 0 unless used on an actual alias).
      *
      * @return int
