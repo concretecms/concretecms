@@ -215,7 +215,6 @@ EOL;
             $identifier,
             [
                 'startupFocus' => true,
-                'disableAutoInline' => true,
             ]
         );
 
@@ -243,9 +242,7 @@ EOL;
      */
     public function outputEditorWithOptions($key, array $options = [], $content = null)
     {
-        $options += [
-            'disableAutoInline' => true,
-        ];
+        $options += [];
 
         $pluginManager = $this->getPluginManager();
         if ($pluginManager->isSelected('sourcearea')) {
@@ -275,9 +272,7 @@ EOL;
      */
     public function outputStandardEditorInitJSFunction()
     {
-        $options = [
-            'disableAutoInline' => true,
-        ];
+        $options = [];
 
         $pluginManager = $this->getPluginManager();
         if ($pluginManager->isSelected('sourcearea')) {
@@ -461,6 +456,7 @@ EOL;
 
         $html = <<<EOL
         <script type="text/javascript">
+        CKEDITOR.disableAutoInline = true;
         $(function() {
             var initEditor = {$jsFunc};
             initEditor('#{$identifier}');
