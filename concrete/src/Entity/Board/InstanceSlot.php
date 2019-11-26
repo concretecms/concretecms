@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,9 +32,19 @@ class InstanceSlot
     protected $template;
 
     /**
+     * @ORM\OneToMany(targetEntity="InstanceContentSlot", cascade={"persist", "remove"}, mappedBy="instance_slot")
+     */
+    protected $content_slots;
+    
+    /**
      * @ORM\Column(type="integer")
      */
     protected $slot;
+
+    public function __construct()
+    {
+        $this->content_slots = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -75,6 +86,40 @@ class InstanceSlot
         $this->slot = $slot;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInstance()
+    {
+        return $this->instance;
+    }
+
+    /**
+     * @param mixed $instance
+     */
+    public function setInstance($instance): void
+    {
+        $this->instance = $instance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContentSlots()
+    {
+        return $this->content_slots;
+    }
+
+    /**
+     * @param mixed $content_slots
+     */
+    public function setContentSlots($content_slots): void
+    {
+        $this->content_slots = $content_slots;
+    }
+
+    
+    
     
     
 }

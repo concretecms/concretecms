@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Board\Slot\Template\Driver\DriverInterface;
+use Concrete\Core\Board\Slot\Template\Driver\Manager;
+use Concrete\Core\Support\Facade\Facade;
 use HtmlObject\Image;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -122,7 +125,14 @@ class SlotTemplate
             return $image;
         }
     }
-    
+
+    public function getDriver() : DriverInterface
+    {
+        $app = Facade::getFacadeApplication();
+        $manager = $app->make(Manager::class);
+        return $manager->driver($this->getHandle());
+    }
+
     public function export(\SimpleXMLElement $node)
     {
         $template = $node->addChild('template');

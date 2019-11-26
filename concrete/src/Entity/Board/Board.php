@@ -180,7 +180,7 @@ class Board
     /**
      * @return mixed
      */
-    public function getTemplate()
+    public function getTemplate() : Template
     {
         return $this->template;
     }

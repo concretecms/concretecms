@@ -13,6 +13,9 @@
         <template handle="stripe" form-factor="stripe" name="Stripe"
                   icon="blank.png" package="">
         </template>
+        <template handle="two_column" form-factor="stripe" name="Two Column"
+                  icon="blank.png" package="">
+        </template>
         <template handle="card" form-factor="card" name="Card"
                   icon="blank.png" package="">
         </template>

@@ -29,7 +29,7 @@ class Instance
     protected $dateCreated;
 
     /**
-     * @ORM\OneToMany(targetEntity="InstanceSlot", cascade={"remove"}, mappedBy="instance")
+     * @ORM\OneToMany(targetEntity="InstanceSlot", cascade={"persist", "remove"}, mappedBy="instance")
      */
     protected $slots;
 
@@ -45,12 +45,28 @@ class Instance
     {
         return $this->boardInstanceID;
     }
-    
 
     /**
      * @return mixed
      */
-    public function getBoard()
+    public function getSlots()
+    {
+        return $this->slots;
+    }
+
+    /**
+     * @param mixed $slots
+     */
+    public function setSlots($slots): void
+    {
+        $this->slots = $slots;
+    }
+    
+    
+    /**
+     * @return mixed
+     */
+    public function getBoard() : Board
     {
         return $this->board;
     }
