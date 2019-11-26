@@ -20,6 +20,26 @@ $buttonText = t("Add");
             <?=$form->select('templateID', $templates)?>
         </div>
 
+        <?php if ($multisite) { ?>
+            <div class="form-group">
+                <label class="control-label"><?=t('Site')?></label>
+    
+                <div class="form-check">
+                    <?=$form->radio('sharedBoard', 0)?>
+                    <label class="form-check-label" for="sharedBoard1">
+                        <?=t('Add to current site.')?>
+                    </label>
+                </div>
+    
+                <div class="form-check">
+                    <?=$form->radio('sharedBoard', 1)?>
+                    <label class="form-check-label" for="sharedBoard2">
+                        <?=t('Share board with all sites.')?>
+                    </label>
+                </div>
+            </div>
+        <?php } ?>
+        
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions ">
                 <a href="<?=$view->url('/dashboard/boards/boards')?>" class="btn btn-secondary float-left"><?=t("Cancel")?></a>

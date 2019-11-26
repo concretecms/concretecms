@@ -1,10 +1,13 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
+use Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Utility\Service\Validation\Strings;
+use Concrete\Core\Validation\SanitizeService;
 
 class DataSources extends DashboardSitePageController
 {
@@ -51,14 +54,23 @@ class DataSources extends DashboardSitePageController
             if (!$this->token->validate('update_data_source')) {
                 $this->error->add($this->token->getErrorMessage());
             }
+            $security = new SanitizeService();
+            $strings = $this->app->make(Strings::class);
+            $name = $security->sanitizeString($this->post('dataSourceName'));
+
+            if (!$strings->notempty($name)) {
+                $this->error->add(t('You must specify a valid name for your data source.'));
+            }
             if (!$this->error->has()) {
                 /**
                  * @var $dataSource DataSource
                  */
                 $driver = $dataSource->getDriver();
                 $saver = $driver->getSaver();
-                $saver->updateConfiguredDataSourceFromRequest($configuredDataSource, $this->request);
+                $saver->updateConfiguredDataSourceFromRequest($name, $configuredDataSource, $this->request);
                 $this->flash('success', t('Data Source updated successfully.'));
+                $resetCommand = new ResetBoardCustomWeightingCommand($board);
+                $this->executeCommand($resetCommand);
                 return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
             }
             $this->update($board->getBoardID(), $dataSource->getId());
@@ -78,11 +90,13 @@ class DataSources extends DashboardSitePageController
                 $board = $configuredDataSource->getBoard();
                 $this->entityManager->remove($configuredDataSource);
                 $this->entityManager->flush();
+                $resetCommand = new ResetBoardCustomWeightingCommand($board);
+                $this->executeCommand($resetCommand);
 
                 $this->flash('success', t('Data Source removed successfully.'));
                 return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
             }
-            $this->update($board->getBoardID(), $dataSource->getId());
+            $this->update($configuredDataSource->getId());
         } else {
             return $this->redirect('/dashboard/boards/boards');
         }
@@ -97,13 +111,24 @@ class DataSources extends DashboardSitePageController
             if (!$this->token->validate('add_data_source')) {
                 $this->error->add($this->token->getErrorMessage());
             }
+            $security = new SanitizeService();
+            $strings = $this->app->make(Strings::class);
+            $name = $security->sanitizeString($this->post('dataSourceName'));
+
+            if (!$strings->notempty($name)) {
+                $this->error->add(t('You must specify a valid name for your data source.'));
+            }
+
             if (!$this->error->has()) {
                 /**
                  * @var $dataSource DataSource
                  */
                 $driver = $dataSource->getDriver();
                 $saver = $driver->getSaver();
-                $saver->addConfiguredDataSourceFromRequest($board, $dataSource, $this->request);
+                $saver->addConfiguredDataSourceFromRequest($name, $board, $dataSource, $this->request);
+                $resetCommand = new ResetBoardCustomWeightingCommand($board);
+                $this->executeCommand($resetCommand);
+
                 $this->flash('success', t('Data Source created successfully.'));
                 return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
             }

@@ -19,6 +19,12 @@ $driver = $dataSource->getDriver();
         <h3 class="font-weight-light"><?=t('Add Data Source')?></h3>
         <form method="post" action="<?=$view->action('add_data_source', $board->getBoardID(), $dataSource->getID())?>">
             <?=$token->output('add_data_source')?>
+
+            <div class="form-group">
+                <?=$form->label('dataSourceName', t('Data Source Name'))?>
+                <?=$form->text('dataSourceName')?>
+            </div>
+
             <?php
             $element = $driver->getConfigurationFormElement();
             $element->render();

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Board;
 
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
+use Concrete\Core\Entity\Site\Site;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,6 +41,11 @@ class Board
     protected $items;
 
     /**
+     * @ORM\OneToMany(targetEntity="Instance", cascade={"remove"}, mappedBy="board", fetch="EXTRA_LAZY")
+     */
+    protected $instances;
+
+    /**
      * @ORM\OneToMany(targetEntity="ItemBatch", cascade={"remove"}, mappedBy="board", fetch="EXTRA_LAZY")
      */
     protected $batches;
@@ -52,20 +58,25 @@ class Board
     /**
      * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
      */
-    protected $dateLastUpdated;
+    protected $dateLastRefreshed;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $hasCustomWeightingRules = false;
 
     public function __construct()
     {
         $this->data_sources = new ArrayCollection();
         $this->items = new ArrayCollection();
         $this->batches = new ArrayCollection();
+        $this->instances = new ArrayCollection();
     }
 
     /**
      * @return mixed
      */
-    public function getSite()
+    public function getSite(): ?Site
     {
         return $this->site;
     }
@@ -153,17 +164,17 @@ class Board
     /**
      * @return mixed
      */
-    public function getDateLastUpdated()
+    public function getDateLastRefreshed()
     {
-        return $this->dateLastUpdated;
+        return $this->dateLastRefreshed;
     }
 
     /**
-     * @param mixed $dateLastUpdated
+     * @param mixed $dateLastRefreshed
      */
-    public function setDateLastUpdated($dateLastUpdated): void
+    public function setDateLastRefreshed($dateLastRefreshed): void
     {
-        $this->dateLastUpdated = $dateLastUpdated;
+        $this->dateLastRefreshed = $dateLastRefreshed;
     }
 
     /**
@@ -181,6 +192,42 @@ class Board
     {
         $this->template = $template;
     }
+
+    /**
+     * @return mixed
+     */
+    public function hasCustomWeightingRules()
+    {
+        return $this->hasCustomWeightingRules;
+    }
+
+    /**
+     * @param mixed $hasCustomWeightingRules
+     */
+    public function setHasCustomWeightingRules($hasCustomWeightingRules): void
+    {
+        $this->hasCustomWeightingRules = $hasCustomWeightingRules;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstances()
+    {
+        return $this->instances;
+    }
+
+    /**
+     * @param mixed $instances
+     */
+    public function setInstances($instances): void
+    {
+        $this->instances = $instances;
+    }
+    
+    
+    
+    
     
 
 

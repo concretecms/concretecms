@@ -19,6 +19,13 @@ $driver = $dataSource->getDriver();
         <h3 class="font-weight-light"><?=t('Update Data Source')?></h3>
         <form method="post" action="<?=$view->action('update_data_source', $configuredDataSource->getConfiguredDataSourceID())?>">
             <?=$token->output('update_data_source')?>
+
+            <div class="form-group">
+                <?=$form->label('dataSourceName', t('Data Source Name'))?>
+                <?=$form->text('dataSourceName', $configuredDataSource->getName())?>
+            </div>
+
+
             <?php
             $element = $driver->getConfigurationFormElement();
             $element->getElementController()->setConfiguredDataSource($configuredDataSource);

@@ -30,7 +30,7 @@ class Item
     protected $batch;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource")
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource", inversedBy="items")
      * @ORM\JoinColumn(name="configuredDataSourceID", referencedColumnName="configuredDataSourceID")
      **/
     protected $data_source;
@@ -44,16 +44,28 @@ class Item
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $relevantDate;
-    
-    /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    protected $bID = 0;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $slot = 0;
+    protected $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ItemCategory", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
+     * 
+     */
+    protected $categories;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ItemTag", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
+     */
+    protected $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -126,39 +138,7 @@ class Item
     {
         $this->relevantDate = $relevantDate;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getBlockID()
-    {
-        return $this->bID;
-    }
-
-    /**
-     * @param mixed $bID
-     */
-    public function setBlockID($bID): void
-    {
-        $this->bID = $bID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlot()
-    {
-        return $this->slot;
-    }
-
-    /**
-     * @param mixed $slot
-     */
-    public function setSlot($slot): void
-    {
-        $this->slot = $slot;
-    }
-
+    
     /**
      * @return mixed
      */
@@ -175,6 +155,37 @@ class Item
         $this->batch = $batch;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
     
     
 

@@ -1,7 +1,6 @@
 <?php
-namespace Concrete\Core\Board\DataSource\Populator;
+namespace Concrete\Core\Board\Item\Populator;
 
-use Concrete\Core\Block\Block;
 use Concrete\Core\Calendar\Event\EventList;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
@@ -18,7 +17,7 @@ class CalendarEventPopulator extends AbstractPopulator
      * @param CalendarEventConfiguration $configuration
      * @return array
      */
-    public function getDataSourceObjects(Board $board, Configuration $configuration): array
+    public function getDataObjects(Board $board, Configuration $configuration): array
     {
         $list = new EventList();
         $list->filterByCalendar($configuration->getCalendar());
@@ -34,5 +33,28 @@ class CalendarEventPopulator extends AbstractPopulator
     {
         return $mixed->getOccurrences()[0]->getStart();
     }
+
+    /**
+     * @param CalendarEvent $mixed
+     * @return null|string
+     */
+    public function getObjectName($mixed): ?string
+    {
+        $version = $mixed->getApprovedVersion();
+        if ($version) {
+            return $version->getName();
+        }
+    }
+
+    public function getObjectCategories($mixed): array
+    {
+        return [];
+    }
+
+    public function getObjectTags($mixed): array
+    {
+        return [];
+    }
+
 
 }

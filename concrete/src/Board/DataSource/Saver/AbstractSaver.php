@@ -29,11 +29,13 @@ abstract class AbstractSaver implements SaverInterface
     abstract public function createConfiguration(Request $request);
 
     public function addConfiguredDataSourceFromRequest(
+        string $datSourceName,
         Board $board,
         DataSource $dataSource,
         Request $request) : ConfiguredDataSource
     {
         $configuredDataSource = new ConfiguredDataSource();
+        $configuredDataSource->setName($datSourceName);
 
         $configuration = $this->createConfiguration($request);
         $configuration->setDataSource($configuredDataSource);
@@ -48,6 +50,7 @@ abstract class AbstractSaver implements SaverInterface
     }
 
     public function updateConfiguredDataSourceFromRequest(
+        string $dataSourceName,
         ConfiguredDataSource $configuredDataSource,
         Request $request) : ConfiguredDataSource
     {
@@ -56,7 +59,7 @@ abstract class AbstractSaver implements SaverInterface
         $this->entityManager->remove($configuredDataSource);
         $this->entityManager->flush();
         
-        return $this->addConfiguredDataSourceFromRequest($board, $dataSource, $request);
+        return $this->addConfiguredDataSourceFromRequest($dataSourceName, $board, $dataSource, $request);
         
     }
 

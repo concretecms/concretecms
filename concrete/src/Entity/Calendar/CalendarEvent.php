@@ -38,7 +38,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     protected $calendar;
 
     /**
-     * @ORM\OneToMany(targetEntity="CalendarEventVersion", mappedBy="event", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="CalendarEventVersion", mappedBy="event", cascade={"all"})
      * @ORM\JoinColumn(name="eventVersionID", referencedColumnName="eventVersionID")
      */
     protected $versions;

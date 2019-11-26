@@ -14,9 +14,9 @@ class Manager extends CoreManager
         parent::__construct($app);
     }
 
-    public function createNineByNineDriver()
+    public function createThreeByThreeDriver()
     {
-        return $this->app->make(NineByNineDriver::class);
+        return $this->app->make(ThreeByThreeDriver::class);
     }
 
 

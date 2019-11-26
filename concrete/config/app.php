@@ -245,6 +245,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardSlotTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',
@@ -543,6 +544,13 @@ return [
         ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
         ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
         ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
+
+        ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
+        ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearBoardDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\PopulateBoardDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
     ],
 
 ];

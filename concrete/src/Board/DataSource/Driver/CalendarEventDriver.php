@@ -3,10 +3,10 @@ namespace Concrete\Core\Board\DataSource\Driver;
 
 use Concrete\Core\Application\UserInterface\Icon\BasicIconFormatter;
 use Concrete\Core\Application\UserInterface\Icon\IconFormatterInterface;
-use Concrete\Core\Board\DataSource\Populator\CalendarEventPopulator;
-use Concrete\Core\Board\DataSource\Populator\PopulatorInterface;
 use Concrete\Core\Board\DataSource\Saver\CalendarEventSaver;
 use Concrete\Core\Board\DataSource\Saver\SaverInterface;
+use Concrete\Core\Board\Item\Populator\CalendarEventPopulator;
+use Concrete\Core\Board\Item\Populator\PopulatorInterface;
 use Concrete\Core\Filesystem\Element;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -29,7 +29,7 @@ class CalendarEventDriver extends AbstractDriver
         return $this->app->make(CalendarEventSaver::class);
     }
 
-    public function getBoardPopulator(): PopulatorInterface
+    public function getItemPopulator(): PopulatorInterface
     {
         return $this->app->make(CalendarEventPopulator::class);
     }

@@ -23,7 +23,7 @@ class ItemBatch
     protected $items;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Board",  inversedBy="batch")
+     * @ORM\ManyToOne(targetEntity="Board",  inversedBy="batches")
      * @ORM\JoinColumn(name="boardID", referencedColumnName="boardID")
      **/
     protected $board;

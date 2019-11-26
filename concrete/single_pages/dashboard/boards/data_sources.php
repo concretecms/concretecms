@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
                     <li>
                         <a href="<?=$view->action('update', $configuredSource->getConfiguredDataSourceID())?>">
-                            <?=$formatter->getListIconElement()?> <?=$source->getName()?>
+                            <?=$formatter->getListIconElement()?> <?=$configuredSource->getName()?>
                         </a>
                     </li>
                     <?php
@@ -63,6 +63,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 }
                 ?>
             </ul>
+        </div>
+        
+        
+        <div class="mt-3 help-block">
+            <small class="text-muted"><?=t('Note: Adding or removing a data source will reset any custom weighting rules you have applied.')?></small>
         </div>
 
         

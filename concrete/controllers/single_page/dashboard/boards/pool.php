@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
-use Concrete\Core\Board\Populator;
+use Concrete\Core\Board\Command\ClearBoardDataPoolCommand;
+use Concrete\Core\Board\Command\PopulateBoardDataPoolCommand;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
-use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 
-class Rebuild extends DashboardSitePageController
+class Pool extends DashboardSitePageController
 {
 
     protected function getBoard($id)
@@ -16,17 +16,19 @@ class Rebuild extends DashboardSitePageController
         return $r->findOneByBoardID($id);
     }
     
-    public function rebuild_board($id = null)
+    public function refresh_pool($id = null)
     {
         $board = $this->getBoard($id);
         if (is_object($board)) {
-            if (!$this->token->validate('rebuild_board')) {
+            if (!$this->token->validate('refresh_pool')) {
                 $this->error->add(t($this->token->getErrorMessage()));
             }
             if (!$this->error->has()) {
-                $populator = $this->app->make(Populator::class);
-                $populator->rebuild($board);
-                $this->flash('success', t('Board rebuilt.'));
+                $clear = new ClearBoardDataPoolCommand($board);
+                $populate = new PopulateBoardDataPoolCommand($board);
+                $this->executeCommand($clear);
+                $this->executeCommand($populate);
+                $this->flash('success', t('Board data pool refreshed.'));
                 return $this->redirect('/dashboard/boards/details/', 'view', $board->getBoardID());
             }
             $this->view($id);
@@ -41,6 +43,9 @@ class Rebuild extends DashboardSitePageController
     {
         $board = $this->getBoard($id);
         if (is_object($board)) {
+            $configuredSources = $this->entityManager->getRepository(ConfiguredDataSource::class)
+                ->findByBoard($board);
+            $this->set('configuredSources', $configuredSources);
             $this->set('board', $board);
         } else {
             return $this->redirect('/dashboard/boards/boards');

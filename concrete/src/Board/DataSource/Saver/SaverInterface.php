@@ -15,12 +15,14 @@ interface SaverInterface
 {
 
     public function addConfiguredDataSourceFromRequest(
+        string $dataSourceName,
         Board $board, 
         DataSource $dataSource, 
         Request $request
     ): ConfiguredDataSource;
 
     public function updateConfiguredDataSourceFromRequest(
+        string $dataSourceName,
         ConfiguredDataSource $configuredDataSource,
         Request $request
     ): ConfiguredDataSource;

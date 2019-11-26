@@ -194,16 +194,66 @@
 
         <page name="Board Details" path="/dashboard/boards/details" filename="/dashboard/boards/view_board.php" pagetype=""
               description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
 
         </page>
 
         <page name="Data Sources" path="/dashboard/boards/data_sources" filename="/dashboard/boards/data_sources.php" pagetype=""
               description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
         </page>
 
-        <page name="Rebuild Board" path="/dashboard/boards/rebuild" filename="/dashboard/boards/rebuild.php" pagetype=""
+        <page name="Weighting" path="/dashboard/boards/weighting" filename="/dashboard/boards/weighting.php" pagetype=""
               description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
         </page>
+
+
+        <page name="Data Pool" path="/dashboard/boards/pool" filename="/dashboard/boards/pool.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Instances" path="/dashboard/boards/instances" filename="/dashboard/boards/instances.php" pagetype=""
+              description="View instances of your board." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
 
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">

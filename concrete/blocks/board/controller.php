@@ -3,7 +3,6 @@
 namespace Concrete\Block\Board;
 
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Board\ItemCollection\Populator;
 use Concrete\Core\Board\Template\TemplateLocator;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Board\Template\TemplateInstance;

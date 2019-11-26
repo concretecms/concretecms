@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Board\DataSource;
 
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,10 +35,30 @@ class ConfiguredDataSource
     protected $data_source;
 
     /**
+     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Board\Item", cascade={"remove"}, mappedBy="data_source", fetch="EXTRA_LAZY")
+     */
+    protected $items;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $name = '';
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $customWeight = 0;
+
+    /**
      * @ORM\OneToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\Configuration\Configuration", 
      *     mappedBy="data_source",  cascade={"persist","remove"})
      **/
     protected $configuration;
+
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+    }
 
     /**
      * @return Board|null
@@ -86,10 +107,44 @@ class ConfiguredDataSource
     {
         return $this->data_source;
     }
-    
-    
 
-    
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomWeight()
+    {
+        return $this->customWeight;
+    }
+
+    /**
+     * @param mixed $customWeight
+     */
+    public function setCustomWeight($customWeight): void
+    {
+        $this->customWeight = $customWeight;
+    }
+
+    public function getItemCount()
+    {
+        return $this->items->count();
+    }
+    
+    
     
 }

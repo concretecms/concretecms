@@ -28,21 +28,27 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
     {
         $this->createSinglePage('/dashboard/pages/containers');
         $this->createSinglePage('/dashboard/pages/containers/add', 'Add Container', 
-            ['exclude_nav' => true]
+            ['exclude_nav' => true, 'exclude_search_index' => true]
         );
         $this->createSinglePage('/dashboard/boards');
         $this->createSinglePage('/dashboard/boards/boards', 'View Boards');
         $this->createSinglePage('/dashboard/boards/add', 'Add Board',
-            ['exclude_nav' => true]
+            ['exclude_nav' => true, 'exclude_search_index' => true]
         );
         $this->createSinglePage('/dashboard/boards/details', 'Board Details',
-            ['exclude_nav' => true]
+            ['exclude_nav' => true, 'exclude_search_index' => true]
         );
         $this->createSinglePage('/dashboard/boards/data_sources', 'Data Sources',
-            ['exclude_nav' => true]
+            ['exclude_nav' => true, 'exclude_search_index' => true]
         );
-        $this->createSinglePage('/dashboard/boards/rebuild', 'Rebuild Board',
-            ['exclude_nav' => true]
+        $this->createSinglePage('/dashboard/boards/weighting', 'Weighting',
+            ['exclude_nav' => true, 'exclude_search_index' => true]
+        );
+        $this->createSinglePage('/dashboard/boards/pool', 'Data Pool',
+            ['exclude_nav' => true, 'exclude_search_index' => true]
+        );
+        $this->createSinglePage('/dashboard/boards/instances', 'Board Instances',
+            ['exclude_nav' => true, 'exclude_search_index' => true]
         );
         $this->refreshEntities([
             Board::class,
