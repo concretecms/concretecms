@@ -313,7 +313,6 @@ class Service
             $this->from($from[0], isset($from[1]) ? $from[1] : null);
         }
         $this->template = $template;
-        $this->subject = $subject;
         $this->body = (isset($body) && is_string($body)) ? $body : false;
         $this->bodyHTML = (isset($bodyHTML) && is_string($bodyHTML)) ? $bodyHTML : false;
     }
