@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -51,6 +52,11 @@ class Item
     protected $name;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    protected $data;
+
+    /**
      * @ORM\OneToMany(targetEntity="ItemCategory", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
      * 
      */
@@ -94,7 +100,7 @@ class Item
     /**
      * @return mixed
      */
-    public function getDataSource()
+    public function getDataSource() : ConfiguredDataSource
     {
         return $this->data_source;
     }
@@ -186,6 +192,23 @@ class Item
     {
         return $this->tags;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
+    }
+    
     
     
 

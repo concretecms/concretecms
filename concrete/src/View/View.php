@@ -165,10 +165,15 @@ class View extends AbstractView
     {
         $env = Environment::get();
         $app = Facade::getFacadeApplication();
-        $tmpTheme = $app->make(ThemeRouteCollection::class)
-            ->getThemeByRoute($this->getViewPath());
-        if (isset($tmpTheme[0])) {
-            $this->themeHandle = $tmpTheme[0];
+        // Note: Making this ALWAYS override the $controller->setTheme() was making this really inflexible. 
+        // We need to be able to set site themes from dashboard pages for complex board rendering. So I'm only going
+        // to go to the theme route collection if the theme isn't set explicitly in the controller.
+        if (!$this->getThemeHandle()) {
+            $tmpTheme = $app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->getViewPath());
+            if (isset($tmpTheme[0])) {
+                $this->themeHandle = $tmpTheme[0];
+            }
         }
 
         if ($this->themeHandle) {

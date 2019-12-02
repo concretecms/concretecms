@@ -73,9 +73,9 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
         } else {
             $bt->refresh();
         }
-        $bt = BlockType::getByHandle('core_summary');
+        $bt = BlockType::getByHandle('core_board_slot');
         if (!$bt) {
-            BlockType::installBlockType('core_summary');
+            BlockType::installBlockType('core_board_slot');
         } else {
             $bt->refresh();
         }

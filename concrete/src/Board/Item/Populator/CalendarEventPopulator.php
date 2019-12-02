@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Board\Item\Populator;
 
+use Concrete\Core\Board\Item\Data\CalendarEventData;
+use Concrete\Core\Board\Item\Data\DataInterface;
 use Concrete\Core\Calendar\Event\EventList;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
@@ -44,6 +46,15 @@ class CalendarEventPopulator extends AbstractPopulator
         if ($version) {
             return $version->getName();
         }
+    }
+
+    /**
+     * @param CalendarEvent $mixed
+     * @return DataInterface
+     */
+    public function getObjectData($mixed): DataInterface
+    {
+        return new CalendarEventData($mixed);
     }
 
     public function getObjectCategories($mixed): array

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Board\Item\Populator;
 
+use Concrete\Core\Board\Item\Data\DataInterface;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
@@ -22,6 +23,8 @@ abstract class AbstractPopulator implements PopulatorInterface
 
     abstract public function getObjectName($mixed) : ?string;
 
+    abstract public function getObjectData($mixed) : DataInterface;
+    
     /**
      * @param $mixed
      * @return string[]
@@ -46,6 +49,7 @@ abstract class AbstractPopulator implements PopulatorInterface
             $item->setBatch($batch);
             $item->setRelevantDate($this->getObjectRelevantDate($object));
             $item->setName($this->getObjectName($object));
+            $item->setData($this->getObjectData($object));
             $tags = $this->getObjectTags($object);
             foreach($tags as $tag) {
                 $item->getTags()->add(new ItemTag($item, $tag));

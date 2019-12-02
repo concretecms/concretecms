@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
-use Concrete\Core\Board\Slot\Template\Driver\DriverInterface;
-use Concrete\Core\Board\Slot\Template\Driver\Manager;
+use Concrete\Core\Board\Template\Slot\Driver\DriverInterface;
+use Concrete\Core\Board\Template\Slot\Driver\Manager;
 use Concrete\Core\Support\Facade\Facade;
 use HtmlObject\Image;
 use Doctrine\ORM\Mapping as ORM;

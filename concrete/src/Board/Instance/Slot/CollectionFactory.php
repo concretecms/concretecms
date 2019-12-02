@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Board\Instance\Slot\ContentSlot\CollectionFactory as ContentSlotCollectionFactory;
+
 class CollectionFactory
 {
     
@@ -19,16 +19,10 @@ class CollectionFactory
      * @var array
      */
     protected $slotTemplatesByFormFactor;
-
-    /**
-     * @var ContentSlotCollectionFactory 
-     */
-    protected $collectionFactory;
     
-    public function __construct(EntityManager $entityManager, ContentSlotCollectionFactory $collectionFactory)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->collectionFactory = $collectionFactory;
         $slotTemplates = $entityManager->getRepository(SlotTemplate::class)->findAll();
         foreach($slotTemplates as $slotTemplate) {
             $this->slotTemplatesByFormFactor[$slotTemplate->getFormFactor()][] = $slotTemplate;
@@ -60,10 +54,7 @@ class CollectionFactory
             $slot->setSlot($i);
             $slot->setInstance($instance);
             $slot->setTemplate($template);
-
-            $contentSlotCollection = $this->collectionFactory->createContentSlotCollection($slot);
-            $slot->setContentSlots($contentSlotCollection);
-
+            
             $collection->add($slot);
         }
         return $collection;

@@ -1,57 +1,59 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); 
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-use Concrete\Core\Board\Template\TemplateSlot;
+/**
+ * @var $slot \Concrete\Core\Board\Instance\Slot\SlotRenderer
+ */
 ?>
 
 <div class="container p-5 bg-light">
     <div class="row mb-4">
         <div class="col-4">
             <?php
-            (new TemplateSlot($template, 1))->display();
+            $slot->display(1);
             ?>
         </div>
         <div class="col-4">
             <?php
-            (new TemplateSlot($template, 2))->display();
+            $slot->display(2);
             ?>
         </div>
         <div class="col-4">
             <?php
-            (new TemplateSlot($template, 3))->display();
-            ?>
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-4">
-            <?php
-            (new TemplateSlot($template, 4))->display();
-            ?>
-        </div>
-        <div class="col-4">
-            <?php
-            (new TemplateSlot($template, 5))->display();
-            ?>
-        </div>
-        <div class="col-4">
-            <?php
-            (new TemplateSlot($template, 6))->display();
+            $slot->display(3);
             ?>
         </div>
     </div>
     <div class="row mb-4">
         <div class="col-4">
             <?php
-            (new TemplateSlot($template, 7))->display();
+            $slot->display(4);
             ?>
         </div>
         <div class="col-4">
             <?php
-            (new TemplateSlot($template, 8))->display();
+            $slot->display(5);
             ?>
         </div>
         <div class="col-4">
             <?php
-            (new TemplateSlot($template, 9))->display();
+            $slot->display(6);
+            ?>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-4">
+            <?php
+            $slot->display(7);
+            ?>
+        </div>
+        <div class="col-4">
+            <?php
+            $slot->display(8);
+            ?>
+        </div>
+        <div class="col-4">
+            <?php
+            $slot->display(9);
             ?>
         </div>
     </div>

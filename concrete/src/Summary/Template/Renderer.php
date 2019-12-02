@@ -3,6 +3,7 @@
 namespace Concrete\Core\Summary\Template;
 
 use Concrete\Core\Entity\Summary\Template;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
@@ -10,7 +11,6 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Serializer\Serializer;
 
 class Renderer implements LoggerAwareInterface
 {
@@ -33,7 +33,7 @@ class Renderer implements LoggerAwareInterface
     protected $currentPage;
 
     /**
-     * @var Serializer
+     * @var JsonSerializer
      */
     protected $serializer;
 
@@ -43,7 +43,7 @@ class Renderer implements LoggerAwareInterface
     protected $rendererFilterer;
     
     public function __construct(
-        Serializer $serializer, 
+        JsonSerializer $serializer, 
         RendererFilterer $rendererFilterer,
         EntityManager $entityManager, 
         TemplateLocator $templateLocator, 
@@ -63,7 +63,7 @@ class Renderer implements LoggerAwareInterface
 
     public function render(Collection $collection, Template $template)
     {
-        $file = $this->templateLocator->getFileToRender($this->currentPage, $template);
+        $file = $this->templateLocator->getFileToRender($template);
         if ($file) {
             $fields = $collection->getFields();
             extract($fields, EXTR_OVERWRITE);

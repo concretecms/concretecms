@@ -2,7 +2,8 @@
 namespace Concrete\Core\Board\DataSource\Driver;
 
 use Concrete\Core\Application\UserInterface\Icon\IconFormatterInterface;
-use Concrete\Core\Board\Item\Populator\PopulatorInterface;
+use Concrete\Core\Board\Item\Populator\PopulatorInterface as ItemPopulatorInterface;
+use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
 use Concrete\Core\Board\DataSource\Saver\SaverInterface;
 use Concrete\Core\Filesystem\Element;
 
@@ -17,5 +18,7 @@ interface DriverInterface
 
     public function getSaver() : SaverInterface;
     
-    public function getItemPopulator() : PopulatorInterface;
+    public function getItemPopulator() : ItemPopulatorInterface;
+    
+    public function getContentPopulator() : ContentPopulatorInterface;
 }

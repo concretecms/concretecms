@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Board\Item\Populator;
 
+use Concrete\Core\Board\Item\Data\DataInterface;
+use Concrete\Core\Board\Item\Data\PageData;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Page\Page;
@@ -46,6 +48,15 @@ class PagePopulator extends AbstractPopulator
     public function getObjectName($mixed): ?string
     {
         return $mixed->getCollectionName();
+    }
+
+    /**
+     * @param Page $mixed
+     * @return PageData
+     */
+    public function getObjectData($mixed): DataInterface
+    {
+        return new PageData($mixed);
     }
 
     /**

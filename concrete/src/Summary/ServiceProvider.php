@@ -35,18 +35,6 @@ class ServiceProvider extends Provider
             ->give(function () {
                 return Page::getCurrentPage();
             });
-        $this->app
-            ->when(Renderer::class)
-            ->needs(Serializer::class)
-            ->give(function () {
-                $serializer = new Serializer([
-                    new JsonSerializableNormalizer(),
-                    new CustomNormalizer()
-                ], [
-                    new JsonEncoder()
-                ]);
-                return $serializer;
-            });
 
 
     }

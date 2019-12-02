@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Board\Slot\Template\Driver;
+namespace Concrete\Core\Board\Template\Slot\Driver;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

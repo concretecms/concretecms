@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"\Concrete\Core\Board\Instance\Slot\Listener"})
  * @ORM\Table(
  *     name="BoardInstanceSlots"
  * )
@@ -30,16 +31,17 @@ class InstanceSlot
      * @ORM\ManyToOne(targetEntity="SlotTemplate")
      */
     protected $template;
-
-    /**
-     * @ORM\OneToMany(targetEntity="InstanceContentSlot", cascade={"persist", "remove"}, mappedBy="instance_slot")
-     */
-    protected $content_slots;
     
     /**
      * @ORM\Column(type="integer")
      */
     protected $slot;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $bID = 0;
+
 
     public function __construct()
     {
@@ -57,7 +59,7 @@ class InstanceSlot
     /**
      * @return mixed
      */
-    public function getTemplate()
+    public function getTemplate() : SlotTemplate
     {
         return $this->template;
     }
@@ -116,6 +118,22 @@ class InstanceSlot
     public function setContentSlots($content_slots): void
     {
         $this->content_slots = $content_slots;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBlockID()
+    {
+        return $this->bID;
+    }
+
+    /**
+     * @param mixed $bID
+     */
+    public function setBlockID($bID): void
+    {
+        $this->bID = $bID;
     }
 
     

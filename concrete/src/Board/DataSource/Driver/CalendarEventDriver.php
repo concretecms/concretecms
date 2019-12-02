@@ -5,8 +5,11 @@ use Concrete\Core\Application\UserInterface\Icon\BasicIconFormatter;
 use Concrete\Core\Application\UserInterface\Icon\IconFormatterInterface;
 use Concrete\Core\Board\DataSource\Saver\CalendarEventSaver;
 use Concrete\Core\Board\DataSource\Saver\SaverInterface;
-use Concrete\Core\Board\Item\Populator\CalendarEventPopulator;
-use Concrete\Core\Board\Item\Populator\PopulatorInterface;
+use Concrete\Core\Board\Item\Populator\CalendarEventPopulator as CalendarEventItemPopulator;
+use Concrete\Core\Board\Instance\Slot\Content\Populator\CalendarEventPopulator as CalendarEventContentPopulator;
+use Concrete\Core\Board\Item\Populator\PopulatorInterface as ItemPopulatorInterface;
+use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
+
 use Concrete\Core\Filesystem\Element;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -29,11 +32,15 @@ class CalendarEventDriver extends AbstractDriver
         return $this->app->make(CalendarEventSaver::class);
     }
 
-    public function getItemPopulator(): PopulatorInterface
+    public function getItemPopulator(): ItemPopulatorInterface
     {
-        return $this->app->make(CalendarEventPopulator::class);
+        return $this->app->make(CalendarEventItemPopulator::class);
     }
-
+    
+    public function getContentPopulator(): ContentPopulatorInterface
+    {
+        return $this->app->make(CalendarEventContentPopulator::class);
+    }
 
 
 }

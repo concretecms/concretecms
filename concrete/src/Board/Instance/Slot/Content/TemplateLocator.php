@@ -1,15 +1,12 @@
 <?php
 
-namespace Concrete\Core\Summary\Template;
+namespace Concrete\Core\Board\Instance\Slot\Content;
 
-use Concrete\Core\Entity\Summary\Template;
+use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Service;
 
-/**
- * Responsible for locating and rendering summary templates.
- */
 class TemplateLocator
 {
 
@@ -24,7 +21,7 @@ class TemplateLocator
     protected $themeLocation;
 
     /**
-     * @var Service 
+     * @var Service
      */
     protected $siteService;
     
@@ -37,10 +34,10 @@ class TemplateLocator
 
     /**
      * @param Page $page
-     * @param Template $template
+     * @param SlotTemplate $template
      * @return string file
      */
-    public function getFileToRender(Template $template)
+    public function getFileToRender(SlotTemplate $template)
     {
         $site = $this->siteService->getSite();
         if ($site) {
@@ -48,7 +45,7 @@ class TemplateLocator
             if ($theme) {
                 $handle = $template->getHandle();
                 if ($handle) {
-                    $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/' . $handle . '.php';
+                    $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/' . DIRNAME_BOARD_SLOTS . '/' . $handle . '.php';
                     $this->themeLocation->setTheme($theme);
                     $this->fileLocator->addLocation($this->themeLocation);
                     $record = $this->fileLocator->getRecord($filename);

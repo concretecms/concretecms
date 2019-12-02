@@ -28,8 +28,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     ?>
                     <tr>
                         <td class="w-100"><?=$instance->getDateCreatedObject()->format('Y-m-d H:i:s')?></td>
-                        <td><a href="" data-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>" class="icon-link"><i class="fas fa-trash"></i></a>
-
+                        <td>
+                            <div class="text-nowrap">
+                                <a class="mr-1" href="<?=$view->action('view_instance', $instance->getBoardInstanceID())?>" target="_blank" class="icon-link"><i class="fas fa-search"></i></a>
+                                <a href="" data-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>" class="icon-link"><i class="fas fa-trash"></i></a>
+                            </div>
+                            
                             <div class="modal fade" id="delete-instance-<?=$instance->getBoardInstanceID()?>" tabindex="-1">
                                 <form method="post" action="<?=$view->action('delete_instance', $instance->getBoardInstanceID())?>">
                                     <?=$token->output('delete_instance')?>

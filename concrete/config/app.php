@@ -305,6 +305,10 @@ return [
             VIEW_CORE_THEME,
             VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
         ],
+        '/oauth/authorize' => [
+            VIEW_CORE_THEME,
+            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
+        ],
         '/register' => VIEW_CORE_THEME,
         '/frontend/maintenance_mode' => VIEW_CORE_THEME,
         '/upgrade' => VIEW_CORE_THEME,

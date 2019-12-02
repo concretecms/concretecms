@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Board\Slot\Template\Driver;
+namespace Concrete\Core\Board\Template\Slot\Driver;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Support\Manager as CoreManager;

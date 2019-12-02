@@ -3,10 +3,14 @@ namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
 use Concrete\Core\Board\Command\CreateBoardInstanceCommand;
 use Concrete\Core\Board\Command\DeleteBoardInstanceCommand;
+use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Page;
+use Concrete\Core\View\View;
+use Concrete\Theme\Concrete\PageTheme;
+use Symfony\Component\HttpFoundation\Response;
 
 class Instances extends DashboardSitePageController
 {
@@ -35,6 +39,33 @@ class Instances extends DashboardSitePageController
             return $this->redirect('/dashboard/boards/boards');
         }
     }
+
+    public function view_instance($id = null)
+    {
+        $instance = $this->entityManager->find(Instance::class, $id);
+        if ($instance) {
+            /**
+             * @var $instance Instance
+             */
+            $site = $instance->getBoard()->getSite();
+            if ($site) {
+                $home = $site->getSiteHomePageObject();
+                $theme = $home->getCollectionThemeObject();
+            } else {
+                $theme = PageTheme::getSiteTheme();
+            }
+
+            $this->set('renderer',$this->app->make(Renderer::class, ['theme' => $theme]));
+            $this->set('instance', $instance);
+            
+            $this->setTheme($theme);
+            $this->render('/dashboard/boards/instances/view_instance');
+
+        } else {
+            return $this->redirect('/dashboard/boards/boards');
+        }
+    }
+
 
     public function delete_instance($boardInstanceID = null)
     {

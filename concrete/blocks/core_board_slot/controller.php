@@ -1,39 +1,39 @@
 <?php
-namespace Concrete\Block\CoreSummary;
+namespace Concrete\Block\CoreBoardSlot;
 
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Entity\Summary\Template;
-use Concrete\Core\Summary\Template\Renderer;
+use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
+use Concrete\Core\Entity\Board\SlotTemplate;
 use Doctrine\ORM\EntityManager;
 
 class Controller extends BlockController
 {
-    protected $btTable = 'btCoreSummary';
+    protected $btTable = 'btCoreBoardSlot';
     protected $btIsInternal = true;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
     
-    public $data;
+    public $contentObjectCollection;
     
-    public $templateID;
+    public $slotTemplateID;
     
     public function getBlockTypeDescription()
     {
-        return t("Proxy block for summary blocks.");
+        return t("Proxy block for board slots.");
     }
 
     public function getBlockTypeName()
     {
-        return t("Summary");
+        return t("Board Slot");
     }
     
     public function view()
     {
         $template = null;
-        if ($this->templateID) {
+        if ($this->slotTemplateID) {
             $template = $this->app->make(EntityManager::class)
-                ->find(Template::class, $this->templateID);
-            $renderer = $this->app->make(Renderer::class);
-            $collection = $renderer->denormalizeIntoCollection(json_decode($this->data, true));
+                ->find(SlotTemplate::class, $this->slotTemplateID);
+            $renderer = $this->app->make(ContentRenderer::class);
+            $collection = $renderer->denormalizeIntoCollection(json_decode($this->contentObjectCollection, true));
             $this->set('dataCollection', $collection);
             $this->set('renderer', $renderer);
             $this->set('template', $template);

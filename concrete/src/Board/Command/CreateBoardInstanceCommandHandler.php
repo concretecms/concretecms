@@ -3,6 +3,8 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Board\Instance\Slot\CollectionFactory;
+use Concrete\Core\Board\Instance\Slot\ContentPopulator;
+use Concrete\Core\Board\Instance\ItemSegmenter;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
 use Doctrine\ORM\EntityManager;
@@ -19,11 +21,27 @@ class CreateBoardInstanceCommandHandler
      * @var CollectionFactory 
      */
     protected $collectionFactory;
+
+    /**
+     * @var ContentPopulator 
+     */
+    protected $contentPopulator;
+
+    /**
+     * @var ItemSegmenter
+     */
+    protected $itemSegmenter;
     
-    public function __construct(EntityManager $entityManager, CollectionFactory $collectionFactory)
+    public function __construct(
+        EntityManager $entityManager, 
+        CollectionFactory $collectionFactory,
+        ContentPopulator $contentPopulator,
+        ItemSegmenter $itemSegmenter)
     {
         $this->collectionFactory = $collectionFactory;
         $this->entityManager = $entityManager;
+        $this->contentPopulator = $contentPopulator;
+        $this->itemSegmenter = $itemSegmenter;
     }
 
     protected function createInstanceDateTime(Board $board)
@@ -46,14 +64,18 @@ class CreateBoardInstanceCommandHandler
         
         // First, let's create board instance slots for all the board slots in this board template
         $collection = $this->collectionFactory->createSlotCollection($instance);
+
+        // Now that we have slots, let's pick a subset of our data pool to populate in these slots
+        $items = $this->itemSegmenter->getBoardItemsForInstance($instance, $collection);
+
+        // Now we have the items we're going to use to build our content objects.
+        $this->contentPopulator->populateInstanceSlotContent($instance, $collection, $items);
+
+        // Now save the board instance.
         $instance->setSlots($collection);
-        
         $this->entityManager->persist($instance);
         $this->entityManager->flush();
         
-        // Now we have an empty board instance. It has empty slot templates as well as empty
-        // content slot templates within them. So let's look at our board, find the number of 
-        // content slots we have, and fill those with content from our data pool.
         
         
     }
