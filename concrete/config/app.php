@@ -1201,7 +1201,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-    
+
     // HTTP middleware for processing http requests
     'middleware' => [
         [
@@ -1209,6 +1209,7 @@ return [
             'class' => \Concrete\Core\Http\Middleware\ApplicationMiddleware::class,
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
+        'core_session' => \Concrete\Core\Http\Middleware\SessionMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
