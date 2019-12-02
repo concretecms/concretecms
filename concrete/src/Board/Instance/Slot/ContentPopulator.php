@@ -28,8 +28,8 @@ class ContentPopulator
      */
     protected function getItemFromPool(array $items)
     {
-        $item = array_shift($items);
-        return $item;
+        $key = array_rand($items, 1);
+        return $items[$key];
     }
     
     /**
