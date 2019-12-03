@@ -7,6 +7,7 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
 use Illuminate\Support\Str;
 use Memcached;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Concrete\Core\Session\Storage\Handler\RedisSessionHandler;
 use Redis;
 use RedisArray;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
 /**
  * Class SessionFactory
@@ -173,13 +175,15 @@ class SessionFactory implements SessionFactoryInterface
             return $app->make(MockArraySessionStorage::class);
         }
 
+        $maxLifetime = (int) array_get($config, 'max_lifetime');
+
         // Resolve the handler based on config
         $handler = $this->getSessionHandler($config);
         $storage = $app->make(NativeSessionStorage::class, [[], $handler]);
 
         // Initialize the storage with some options
         $options = array_get($config, 'cookie', []);
-        $options['gc_maxlifetime'] = array_get($config, 'max_lifetime');
+        $options['gc_maxlifetime'] = $maxLifetime;
 
         if (array_get($options, 'cookie_path', false) === false) {
             $options['cookie_path'] = $app['app_relative_path'] . '/';
@@ -187,7 +191,41 @@ class SessionFactory implements SessionFactoryInterface
 
         $storage->setOptions($options);
 
-        return $app->make(Storage\LoggedStorage::class, [$storage]);
+        $loggedStorage = $app->make(Storage\LoggedStorage::class, [$storage]);
+
+        $this->configureGarbageCollection($loggedStorage, $handler, $maxLifetime);
+
+        return $loggedStorage;
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface $storage
+     * @param \SessionHandlerInterface $handler
+     * @param int $maxLifetime
+     */
+    private function configureGarbageCollection(SessionStorageInterface $storage, \SessionHandlerInterface $handler, $maxLifetime)
+    {
+        if (!$this->shouldPerformGarbageCollection()) {
+            return;
+        }
+        $this->app->make(EventDispatcherInterface::class)->addListener('on_shutdown', function () use (
+            $storage, $handler,
+            $maxLifetime
+        ) {
+            if ($storage->isStarted()) {
+                $handler->gc($maxLifetime);
+            }
+        });
+    }
+
+    /**
+     * Should we perform the garbage collection?
+     *
+     * @return bool
+     */
+    private function shouldPerformGarbageCollection()
+    {
+        return mt_rand(0, 100) <= 1;
     }
 
     /**

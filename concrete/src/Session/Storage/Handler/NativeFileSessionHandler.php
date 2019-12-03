@@ -67,4 +67,13 @@ class NativeFileSessionHandler extends NativeSessionHandler
             }
         }
     }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function gc($maxlifetime)
+    {
+        return true;
+    }
 }
