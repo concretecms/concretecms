@@ -50,7 +50,7 @@
                 }
             },
             onSelectNode: function(node, flag) {
-                if (!node.data.hideCheckbox) {
+                if (node.data.checkbox) {
                     if (flag) {
                         if (my.options.mode == 'single') {
                             my.deselectAll();

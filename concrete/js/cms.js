@@ -34141,24 +34141,11 @@ ConcreteTree.prototype = {
 			titlesTabbable: false,
 			extensions: ["glyph", "dnd"],
 			glyph: {
-				map: {
-					doc: "fa fa-file-o",
-					docOpen: "fa fa-file-o",
-					checkbox: "fa fa-square-o",
-					checkboxSelected: "fa fa-check-square-o",
-					checkboxUnknown: "fa fa-share-square",
-					dragHelper: "fa fa-share",
-					dropMarker: "fa fa-angle-right",
-					error: "fa fa-warning",
-					expanderClosed: "fa fa-plus-square-o",
-					expanderLazy: "fa fa-plus-square-o", // glyphicon-expand
-					expanderOpen: "fa fa-minus-square-o", // glyphicon-collapse-down
-					loading: "fa fa-spin fa-refresh"
-				}
+				preset: 'awesome5'
 			},
 			source: {
 				url: ajaxURL,
-				type: 'post',
+				method: 'POST',
 				data: ajaxData
 			},
 			lazyLoad: function lazyLoad(event, data) {

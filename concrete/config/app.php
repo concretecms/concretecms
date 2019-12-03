@@ -251,9 +251,10 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowProgressCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
+        // if we want the express entity attribute to work we need this to be first.
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeSetsRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressAssociationsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressFormsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressRelationsRoutine',
