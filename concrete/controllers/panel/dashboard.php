@@ -3,7 +3,6 @@ namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Controller\Element\Dashboard\Navigation;
-use Concrete\Controller\Element\Navigation\Menu;
 use Concrete\Core\Application\Service\DashboardMenu;
 use Cookie;
 use Loader;

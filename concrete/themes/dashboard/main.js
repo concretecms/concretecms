@@ -24996,15 +24996,7 @@ function loadDataForCountry(countryCode, callback) {
         dataType: 'json',
         method: 'GET',
         url: CCM_DISPATCHER_FILENAME + '/ccm/system/country-data-link/all'
-    }).fail(function (xhr, status, error) {
-        if (window.console && window.console.error) {
-            window.console.error(xhr.responseJSON || error);
-        }
-        loadDataForCountry.cache[countryCode] = {
-            statesProvices: {},
-            addressUsedFields: []
-        };
-    }).success(function (data) {
+    }).done(function (data) {
         var statesProvinces = {};
         if (data.statesProvices instanceof Object) {
             statesProvinces = data.statesProvices;
@@ -25017,6 +25009,14 @@ function loadDataForCountry(countryCode, callback) {
         loadDataForCountry.cache[countryCode] = {
             statesProvices: statesProvinces,
             addressUsedFields: addressUsedFields
+        };
+    }).fail(function (xhr, status, error) {
+        if (window.console && window.console.error) {
+            window.console.error(xhr.responseJSON || error);
+        }
+        loadDataForCountry.cache[countryCode] = {
+            statesProvices: {},
+            addressUsedFields: []
         };
     }).always(function () {
         callback(countryCode, loadDataForCountry.cache[countryCode]);
@@ -50650,20 +50650,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 				titlesTabbable: false,
 				extensions: extensions,
 				glyph: {
-					map: {
-						doc: "fa fa-file-o",
-						docOpen: "fa fa-file-o",
-						checkbox: "fa fa-square-o",
-						checkboxSelected: "fa fa-check-square-o",
-						checkboxUnknown: "fa fa-share-square",
-						dragHelper: "fa fa-share",
-						dropMarker: "fa fa-angle-right",
-						error: "fa fa-warning",
-						expanderClosed: "fa fa-plus-square-o",
-						expanderLazy: "fa fa-plus-square-o", // glyphicon-expand
-						expanderOpen: "fa fa-minus-square-o", // glyphicon-collapse-down
-						loading: "fa fa-spin fa-refresh"
-					}
+					preset: 'awesome5'
 				},
 				persist: {
 					// Available options with their default:

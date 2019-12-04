@@ -198,22 +198,9 @@
 				tabindex: null,
 				titlesTabbable: false,
 				extensions: extensions,
-				glyph: {
-					map: {
-						doc: "fa fa-file-o",
-						docOpen: "fa fa-file-o",
-						checkbox: "fa fa-square-o",
-						checkboxSelected: "fa fa-check-square-o",
-						checkboxUnknown: "fa fa-share-square",
-						dragHelper: "fa fa-share",
-						dropMarker: "fa fa-angle-right",
-						error: "fa fa-warning",
-						expanderClosed: "fa fa-plus-square-o",
-						expanderLazy: "fa fa-plus-square-o", // glyphicon-expand
-						expanderOpen: "fa fa-minus-square-o", // glyphicon-collapse-down
-						loading: "fa fa-spin fa-refresh"
-					}
-				},
+                glyph: {
+                    preset: 'awesome5'
+                },
 				persist: {
 					// Available options with their default:
 					cookieDelimiter: "~", // character used to join key strings

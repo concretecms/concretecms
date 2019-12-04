@@ -6,13 +6,38 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 
-class Menu extends ElementController
+/**
+ * Note: this is an internal class with weird internal behaviors. If you want to use an actually maintained,
+ * simpler version of this class styled explicitly for bootstrap 4, use the menu class instead.
+ * 
+ * Class ApplicationMenu
+ * @package Concrete\Controller\Element\Navigation
+ */
+class ApplicationMenu extends ElementController
 {
 
     protected $currentPage;
     protected $startingParentPage;
     protected $trail = [];
-    
+    protected $title;
+    protected $wrapperClass;
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param mixed $wrapperClass
+     */
+    public function setWrapperClass($wrapperClass)
+    {
+        $this->wrapperClass = $wrapperClass;
+    }
+
     public function __construct(Page $startingParentPage, Page $currentPage = null)
     {
         parent::__construct();
@@ -26,13 +51,14 @@ class Menu extends ElementController
             }
         }
 
-        //array_pop($this->trail);
+        // pop off the dashboard node
+        array_pop($this->trail);
         $this->currentPage = $currentPage;
     }
 
     public function getElement()
     {
-        return 'navigation/menu';
+        return 'navigation/application_menu';
     }
 
     public function displayChildPages(Page $page)
@@ -50,7 +76,7 @@ class Menu extends ElementController
 
     public function getMenuItemClass(Page $page)
     {
-        $classes = ['nav-link'];
+        $classes = [];
         if (is_object($this->currentPage) && $page->getCollectionID() == $this->currentPage->getCollectionID()) {
             $classes[] = 'nav-selected';
             $classes[] = 'active';
@@ -60,7 +86,12 @@ class Menu extends ElementController
         }
         return implode($classes, ' ');
     }
-    
+
+    public function displayDivider(Page $page, Page $next = null)
+    {
+        return false;
+    }
+
     protected function getPageList($parent)
     {
         $list = new PageList();
@@ -81,5 +112,7 @@ class Menu extends ElementController
     {
         $pages = $this->getChildPages($this->startingParentPage);
         $this->set('top', $pages);
+        $this->set('title', $this->title);
+        $this->set('wrapperClass', $this->wrapperClass);
     }
 }

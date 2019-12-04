@@ -6530,15 +6530,7 @@ function loadDataForCountry(countryCode, callback) {
         dataType: 'json',
         method: 'GET',
         url: CCM_DISPATCHER_FILENAME + '/ccm/system/country-data-link/all'
-    }).fail(function (xhr, status, error) {
-        if (window.console && window.console.error) {
-            window.console.error(xhr.responseJSON || error);
-        }
-        loadDataForCountry.cache[countryCode] = {
-            statesProvices: {},
-            addressUsedFields: []
-        };
-    }).success(function (data) {
+    }).done(function (data) {
         var statesProvinces = {};
         if (data.statesProvices instanceof Object) {
             statesProvinces = data.statesProvices;
@@ -6551,6 +6543,14 @@ function loadDataForCountry(countryCode, callback) {
         loadDataForCountry.cache[countryCode] = {
             statesProvices: statesProvinces,
             addressUsedFields: addressUsedFields
+        };
+    }).fail(function (xhr, status, error) {
+        if (window.console && window.console.error) {
+            window.console.error(xhr.responseJSON || error);
+        }
+        loadDataForCountry.cache[countryCode] = {
+            statesProvices: {},
+            addressUsedFields: []
         };
     }).always(function () {
         callback(countryCode, loadDataForCountry.cache[countryCode]);
