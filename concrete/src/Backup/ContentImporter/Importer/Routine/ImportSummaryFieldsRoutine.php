@@ -24,6 +24,7 @@ class ImportSummaryFieldsRoutine extends AbstractRoutine
                     $template = new Field();
                     $template->setHandle($handle);
                     $template->setName($name);
+                    $template->setPackage($pkg);
                     $em->persist($template);
                 }
             }

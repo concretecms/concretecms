@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Summary;
 
+use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Field implements FieldInterface
 {
+    
+    use PackageTrait;
     
     /**
      * @ORM\Id
@@ -29,7 +32,7 @@ class Field implements FieldInterface
      * @ORM\Column(type="string")
      */
     protected $handle;
-    
+
     /**
      * @return mixed
      */
@@ -81,7 +84,7 @@ class Field implements FieldInterface
         $container = $node->addChild('field');
         $container->addAttribute('handle', $this->getHandle());
         $container->addAttribute('name', h($this->getName()));
-        $container->addAttribute('package', '');
+        $container->addAttribute('package', $this->getPackageHandle());
     }
 
 

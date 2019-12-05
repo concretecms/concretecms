@@ -28,6 +28,7 @@ class ImportBoardSlotTemplatesRoutine extends AbstractRoutine
                     $template->setIcon($icon);
                     $template->setHandle($handle);
                     $template->setName($name);
+                    $template->setPackage($pkg);
                     $em->persist($template);
                 }
             }

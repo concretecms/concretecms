@@ -36,8 +36,6 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->requireAsset('core/calendar/event-selector');
-
         $eventKeys = EventKey::getList();
         $calendars = ['' => t('** Choose a Calendar')];
         $calendarEventPageKeys = ['' => t('** Choose an Event')];

@@ -23,6 +23,7 @@ class ImportBoardDataSourcesRoutine extends AbstractRoutine
                     $source = new DataSource();
                     $source->setHandle($handle);
                     $source->setName($name);
+                    $source->setPackage($pkg);
                     $em->persist($source);
                 }
             }

@@ -3,8 +3,9 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Board\Instance\Slot\CollectionFactory;
-use Concrete\Core\Board\Instance\Slot\ContentPopulator;
+use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
 use Concrete\Core\Board\Instance\ItemSegmenter;
+use Concrete\Core\Board\Instance\Slot\SlotPopulator;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
 use Doctrine\ORM\EntityManager;
@@ -31,16 +32,23 @@ class CreateBoardInstanceCommandHandler
      * @var ItemSegmenter
      */
     protected $itemSegmenter;
-    
+
+    /**
+     * @var SlotPopulator
+     */
+    protected $slotPopulator;
+
     public function __construct(
         EntityManager $entityManager, 
         CollectionFactory $collectionFactory,
         ContentPopulator $contentPopulator,
+        SlotPopulator $slotPopulator,
         ItemSegmenter $itemSegmenter)
     {
         $this->collectionFactory = $collectionFactory;
         $this->entityManager = $entityManager;
         $this->contentPopulator = $contentPopulator;
+        $this->slotPopulator = $slotPopulator;
         $this->itemSegmenter = $itemSegmenter;
     }
 
@@ -68,15 +76,16 @@ class CreateBoardInstanceCommandHandler
         // Now that we have slots, let's pick a subset of our data pool to populate in these slots
         $items = $this->itemSegmenter->getBoardItemsForInstance($instance, $collection);
 
-        // Now we have the items we're going to use to build our content objects.
-        $this->contentPopulator->populateInstanceSlotContent($instance, $collection, $items);
-
+        // Now that we have items, let's create a pool of content objects.
+        $contentObjects = $this->contentPopulator->createContentObjects($items);
+        
+        // Now, let's assign those content objects to our slot templates.
+        $this->slotPopulator->populateSlotCollectionWithContent($contentObjects, $collection);
+            
         // Now save the board instance.
         $instance->setSlots($collection);
         $this->entityManager->persist($instance);
         $this->entityManager->flush();
-        
-        
         
     }
 

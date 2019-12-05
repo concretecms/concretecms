@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Board\DataSource;
 
 use Concrete\Core\Board\DataSource\Driver\DriverInterface;
+use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Board\DataSource\Driver\Manager;
@@ -14,6 +15,8 @@ use Concrete\Core\Board\DataSource\Driver\Manager;
  */
 class DataSource
 {
+    
+    use PackageTrait;
     
     /**
      * @ORM\Id

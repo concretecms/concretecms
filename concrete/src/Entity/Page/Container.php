@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Page;
 
+use Concrete\Core\Entity\PackageTrait;
 use Doctrine\ORM\Mapping as ORM;
 use HtmlObject\Image;
 
@@ -12,6 +13,9 @@ use HtmlObject\Image;
  */
 class Container
 {
+    
+    use PackageTrait;
+    
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -33,13 +37,7 @@ class Container
      * @ORM\Column(type="string")
      */
     protected $containerName = '';
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Package")
-     * @ORM\JoinColumn(name="pkgID", referencedColumnName="pkgID", nullable=true)
-     */
-    protected $package;
-
+    
     /**
      * @return mixed
      */
@@ -95,24 +93,7 @@ class Container
     {
         $this->containerIcon = $containerIcon;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getPackage()
-    {
-        return $this->package;
-    }
-
-    /**
-     * @param mixed $package
-     */
-    public function setPackage($package): void
-    {
-        $this->package = $package;
-    }
-    
-    
+   
     public function getContainerIconImage($asTag = true)
     {
         if ($this->getContainerIcon()) {
@@ -124,14 +105,7 @@ class Container
         }
     }
     
-    public function getPackageHandle()
-    {
-        if ($this->package) {
-            return $this->package->getPackageHandle();
-        }
-        return null;
-    }
-    
+   
     public function export(\SimpleXMLElement $node)
     {
         $container = $node->addChild('container');

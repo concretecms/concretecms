@@ -38,6 +38,9 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
         $this->createSinglePage('/dashboard/boards/details', 'Board Details',
             ['exclude_nav' => true, 'exclude_search_index' => true]
         );
+        $this->createSinglePage('/dashboard/boards/appearance', 'Board Appearance',
+            ['exclude_nav' => true, 'exclude_search_index' => true]
+        );
         $this->createSinglePage('/dashboard/boards/data_sources', 'Data Sources',
             ['exclude_nav' => true, 'exclude_search_index' => true]
         );

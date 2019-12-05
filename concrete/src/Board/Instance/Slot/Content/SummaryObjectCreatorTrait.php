@@ -7,17 +7,18 @@ use Concrete\Core\Summary\Template\RendererFilterer;
 trait SummaryObjectCreatorTrait
 {
     
-    public function createSummaryContentObject(CategoryMemberInterface $mixed) : ObjectInterface
+    public function createSummaryContentObjects(CategoryMemberInterface $mixed) : array
     {
-        /**
-         * @var $rendererFilterer RendererFilterer
-         */
-        $rendererFilterer = $this->app->make(RendererFilterer::class);
-        $template = $rendererFilterer->getRandomTemplate($mixed);
-        if ($template) {
-            return new SummaryObject($template);
+        $objects = [];
+        if ($mixed->hasCustomSummaryTemplates()) {
+            $templates = $mixed->getCustomSelectedSummaryTemplates();
+        } else {
+            $templates = $mixed->getSummaryTemplates();
         }
-        
+        foreach($templates as $template) {
+            $objects[] = new SummaryObject($template);
+        }
+        return $objects;        
     }
 
     

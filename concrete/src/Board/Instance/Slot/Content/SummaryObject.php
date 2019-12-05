@@ -44,6 +44,23 @@ class SummaryObject implements ObjectInterface
         ];
     }
 
+    /**
+     * @return Template
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    
     public function display(Application $app): void
     {
         $renderer = $app->make(Renderer::class);

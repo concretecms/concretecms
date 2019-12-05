@@ -21,13 +21,13 @@ class PagePopulator extends AbstractPopulator
 
     /**
      * @param PageData $data
-     * @return ObjectInterface
+     * @return ObjectInterface[]
      */
-    public function createContentObject(DataInterface $data): ObjectInterface
+    public function createContentObjects(DataInterface $data): array
     {
         $page = Page::getByID($data->getPageID(), 'ACTIVE');
         if ($page && !$page->isError()) {
-            return $this->createSummaryContentObject($page);
+            return $this->createSummaryContentObjects($page);
         }
     }
 

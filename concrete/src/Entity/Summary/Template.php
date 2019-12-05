@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Summary;
 
+use Concrete\Core\Entity\PackageTrait;
 use HtmlObject\Image;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Template
 {
+    
+    use PackageTrait;
     
     /**
      * @ORM\Id
@@ -47,7 +50,7 @@ class Template
      * @ORM\OneToMany(targetEntity="TemplateField", mappedBy="template", cascade={"persist", "remove"}, mappedBy="template")
      **/
     protected $fields;
-    
+
     /**
      * Template constructor.
      */
@@ -162,7 +165,7 @@ class Template
         $template->addAttribute('handle', $this->getHandle());
         $template->addAttribute('name', h($this->getName()));
         $template->addAttribute('icon', h($this->getIcon()));
-        $template->addAttribute('package', '');
+        $template->addAttribute('package', $this->getPackageHandle());
         
         $categories = $template->addChild('categories');
         foreach($this->getCategories() as $category) {

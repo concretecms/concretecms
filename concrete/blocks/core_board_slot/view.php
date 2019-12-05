@@ -7,6 +7,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var $template \Concrete\Core\Entity\Board\SlotTemplate
  */
 
-
 $renderer->render($dataCollection, $template);
 ?>
+

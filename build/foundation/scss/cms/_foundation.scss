@@ -65,12 +65,15 @@
 // File Manager
 @import "./file-manager";
 
+// Selectize
+@import "~selectize/dist/css/selectize.css";
+@import "./selectize";
+
 // Miscellaneous components
 //@import "./tabs"; - this isn't working well let's just not use it right now
 @import "./item-selector";
 @import "./item-select-list";
 @import "./permission-grid";
-@import "./selectize";
 @import "./tooltips";
 @import "~spectrum-colorpicker/spectrum.css";
 @import "./icons";

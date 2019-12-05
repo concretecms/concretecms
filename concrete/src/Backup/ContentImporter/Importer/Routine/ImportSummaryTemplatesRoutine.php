@@ -31,6 +31,7 @@ class ImportSummaryTemplatesRoutine extends AbstractRoutine
                     $template->setIcon($icon);
                     $template->setHandle($handle);
                     $template->setName($name);
+                    $template->setPackage($pkg);
                     $em->persist($template);
 
                     if (isset($pt->categories)) {

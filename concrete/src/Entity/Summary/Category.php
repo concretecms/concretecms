@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Summary;
 
+use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Html\Image;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Category
 {
+    
+    use PackageTrait;
     
     /**
      * @ORM\Id
@@ -96,7 +99,7 @@ class Category
         $container = $node->addChild('category');
         $container->addAttribute('handle', $this->getHandle());
         $container->addAttribute('name', h($this->getName()));
-        $container->addAttribute('package', '');
+        $container->addAttribute('package', $this->getPackageHandle());
     }
 
 

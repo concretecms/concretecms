@@ -217,6 +217,18 @@
             </attributes>
         </page>
 
+        <page name="Board Appearance" path="/dashboard/boards/appearance" filename="/dashboard/boards/appearance.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Weighting" path="/dashboard/boards/weighting" filename="/dashboard/boards/weighting.php" pagetype=""
               description="" package="">
             <attributes>

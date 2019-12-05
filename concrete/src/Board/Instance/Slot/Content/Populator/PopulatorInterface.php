@@ -18,8 +18,8 @@ interface PopulatorInterface
     
     /**
      * @param Item $item
-     * @return ObjectInterface
+     * @return ObjectInterface[]
      */
-    public function createContentObject(DataInterface $data) : ObjectInterface;
+    public function createContentObjects(DataInterface $data) : array;
     
 }

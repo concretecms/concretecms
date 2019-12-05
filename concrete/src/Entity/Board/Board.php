@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Board;
 
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
+use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Entity\Site\Site;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Board
 {
+    
+    use PackageTrait;
     
     /**
      * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Site\Site")
@@ -55,6 +58,21 @@ class Board
      */
     protected $template;
 
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Board\SlotTemplate")
+     * @ORM\JoinTable(name="BoardCustomSlotTemplates",
+     *      joinColumns={@ORM\JoinColumn(name="boardID", referencedColumnName="boardID")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="slotTemplateID", referencedColumnName="id")}
+     *      )
+     */
+    protected $custom_slot_templates;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $hasCustomSlotTemplates = false;
+
     /**
      * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
      */
@@ -71,6 +89,7 @@ class Board
         $this->items = new ArrayCollection();
         $this->batches = new ArrayCollection();
         $this->instances = new ArrayCollection();
+        $this->custom_slot_templates = new ArrayCollection();
     }
 
     /**
@@ -196,6 +215,38 @@ class Board
     /**
      * @return mixed
      */
+    public function getCustomSlotTemplates()
+    {
+        return $this->custom_slot_templates;
+    }
+
+    /**
+     * @param mixed $custom_slot_templates
+     */
+    public function setCustomSlotTemplates($custom_slot_templates)
+    {
+        $this->custom_slot_templates = $custom_slot_templates;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function hasCustomSlotTemplates()
+    {
+        return $this->hasCustomSlotTemplates;
+    }
+
+    /**
+     * @param mixed $hasCustomSlotTemplates
+     */
+    public function setHasCustomSlotTemplates($hasCustomSlotTemplates)
+    {
+        $this->hasCustomSlotTemplates = $hasCustomSlotTemplates;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function hasCustomWeightingRules()
     {
         return $this->hasCustomWeightingRules;
@@ -224,11 +275,9 @@ class Board
     {
         $this->instances = $instances;
     }
-    
-    
-    
-    
-    
+
+
+
 
 
 }

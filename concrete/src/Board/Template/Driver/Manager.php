@@ -18,6 +18,6 @@ class Manager extends CoreManager
     {
         return $this->app->make(ThreeByThreeDriver::class);
     }
-
+    
 
 }

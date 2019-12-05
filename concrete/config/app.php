@@ -556,6 +556,8 @@ return [
         ['Concrete\Core\Board\Command\PopulateBoardDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardDataPoolCommandHandler'],
         ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
+        ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
     ],
 
 ];

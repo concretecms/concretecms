@@ -17,6 +17,12 @@ $c = Page::getCurrentPage();
         <?=t('Data Sources')?>
     </a>
     <a
+            class="list-group-item <?=($action === 'appearance') ? ' active' : ''?>"
+            href="<?=URL::to('/dashboard/boards/appearance', $board->getBoardID())?>"
+    >
+        <?=t('Appearance')?>
+    </a>
+    <a
             class="list-group-item <?=($action === 'weighting') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/boards/weighting', $board->getBoardID())?>"
     >

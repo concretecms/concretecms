@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\Board;
 
 use Concrete\Core\Board\Template\Driver\DriverInterface;
 use Concrete\Core\Board\Template\Driver\Manager;
+use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Support\Facade\Facade;
 use HtmlObject\Image;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Template
 {
+    
+    use PackageTrait;
     
     /**
      * @ORM\Id
@@ -118,6 +121,6 @@ class Template
         $template->addAttribute('handle', $this->getHandle());
         $template->addAttribute('name', h($this->getName()));
         $template->addAttribute('icon', h($this->getIcon()));
-        $template->addAttribute('package', '');
+        $template->addAttribute('package', $this->getPackageHandle());
     }
 }
