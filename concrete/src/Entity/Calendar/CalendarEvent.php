@@ -246,6 +246,11 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
         return false;
     }
     
+    public function getSummaryIdentifier()
+    {
+        return $this->getID();
+    }
+
     public function getSummaryCategoryHandle(): string
     {
         return 'calendar_event';

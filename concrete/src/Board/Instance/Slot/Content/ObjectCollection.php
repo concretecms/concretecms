@@ -35,7 +35,7 @@ class ObjectCollection implements \JsonSerializable, DenormalizableInterface
             'objects' => $this->getContentObjects()
         ];
     }
-
+    
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
         foreach($data['objects'] as $slot => $object) {

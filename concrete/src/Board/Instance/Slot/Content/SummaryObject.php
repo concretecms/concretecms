@@ -2,36 +2,25 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Summary\Category;
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Summary\Data\Collection;
-use Concrete\Core\Summary\Template\RenderableTemplateInterface;
+use Concrete\Core\Summary\Data\Extractor\Driver\DriverManager;
 use Concrete\Core\Summary\Template\Renderer;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Concrete\Core\Summary\SummaryObjectInterface;
+use Concrete\Core\Summary\SummaryObject as BaseSummaryObject;
 
 class SummaryObject implements ObjectInterface 
 {
 
-    /**
-     * @var Template
-     */
-    protected $template;
-
-    /**
-     * @var array
-     */
-    protected $data;
+    protected $summaryObject;
     
-    /**
-     * SummaryObject constructor.
-     * @param RenderableTemplateInterface $template
-     * @param Collection $data
-     */
-    public function __construct(RenderableTemplateInterface $template = null)
+    public function __construct(SummaryObjectInterface $summaryObject = null)
     {
-        if ($template) {
-            $this->template = $template->getTemplate();
-            $this->data = $template->getData();
+        if ($summaryObject) {
+            $this->summaryObject = $summaryObject;
         }
     }
 
@@ -39,42 +28,45 @@ class SummaryObject implements ObjectInterface
     {
         return [
             'class' => self::class,
-            'templateID' => $this->template->getId(),
-            'data' => $this->data
+            'templateID' => $this->summaryObject->getTemplate()->getId(),
+            'dataSourceCategoryHandle' => $this->summaryObject->getDataSourceCategoryHandle(),
+            'identifier' => $this->summaryObject->getIdentifier(),
+            'data' => $this->summaryObject->getData()
         ];
     }
 
-    /**
-     * @return Template
-     */
-    public function getTemplate()
+    public function refresh(Application $app): void
     {
-        return $this->template;
+        $r = $app->make(EntityManager::class)->getRepository(Category::class);
+        $category = $r->findOneByHandle($this->summaryObject->getDataSourceCategoryHandle());
+        if ($category) {
+            $object = $category->getDriver()->getCategoryMemberFromIdentifier($this->summaryObject->getIdentifier());
+            if ($object) {
+                $driverManager = $app->make(DriverManager::class);
+                $driverCollection = $driverManager->getDriverCollection($object);
+                $data = $driverCollection->extractData($object);
+                $this->summaryObject->setData($data);
+            }
+        }
     }
 
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    
     public function display(Application $app): void
     {
         $renderer = $app->make(Renderer::class);
-        $renderer->render($this->data, $this->template);
+        $renderer->render($this->summaryObject);
     }
 
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
+        
         $entityManager = $context['app']->make(EntityManager::class);
         $template = $entityManager->find(Template::class, $data['templateID']);
+        $identifier = $data['identifier'];
+        $dataSourceCategoryHandle = $data['dataSourceCategoryHandle'];
+        $data = $denormalizer->denormalize($data['data'], Collection::class, 'json');
         if ($template) {
-            $this->template = $template;
+            $this->summaryObject = new BaseSummaryObject($dataSourceCategoryHandle, $identifier, $template, $data);
         }
-        $this->data = $denormalizer->denormalize($data['data'], Collection::class, 'json');
     }
 
 

@@ -11,6 +11,7 @@ use Concrete\Core\Board\Item\Populator\PopulatorInterface as ItemPopulatorInterf
 use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
 
 use Concrete\Core\Filesystem\Element;
+use Concrete\Core\Page\Page;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

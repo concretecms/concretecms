@@ -2,9 +2,9 @@
 namespace Concrete\Core\Board\DataSource\Driver;
 
 use Concrete\Core\Application\UserInterface\Icon\IconFormatterInterface;
-use Concrete\Core\Board\Item\Populator\PopulatorInterface as ItemPopulatorInterface;
-use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
 use Concrete\Core\Board\DataSource\Saver\SaverInterface;
+use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
+use Concrete\Core\Board\Item\Populator\PopulatorInterface as ItemPopulatorInterface;
 use Concrete\Core\Filesystem\Element;
 
 defined('C5_EXECUTE') or die("Access Denied.");

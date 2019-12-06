@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
 use Concrete\Core\Board\Command\CreateBoardInstanceCommand;
 use Concrete\Core\Board\Command\DeleteBoardInstanceCommand;
+use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
 use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
@@ -32,6 +33,26 @@ class Instances extends DashboardSitePageController
                 $generate = new CreateBoardInstanceCommand($board);
                 $this->executeCommand($generate);
                 $this->flash('success', t('Board instance created.'));
+                return $this->redirect('/dashboard/boards/instances/', 'view', $board->getBoardID());
+            }
+            $this->view($id);
+        } else {
+            return $this->redirect('/dashboard/boards/boards');
+        }
+    }
+
+    public function refresh_instance($id = null, $token = null)
+    {
+        $instance = $this->entityManager->find(Instance::class, $id);
+        if (is_object($instance)) {
+            if (!$this->token->validate('refresh_instance', $token)) {
+                $this->error->add(t($this->token->getErrorMessage()));
+            }
+            if (!$this->error->has()) {
+                $board = $instance->getBoard();
+                $command = new RefreshBoardInstanceCommand($instance);
+                $this->executeCommand($command);
+                $this->flash('success', t('Board instance refreshed.'));
                 return $this->redirect('/dashboard/boards/instances/', 'view', $board->getBoardID());
             }
             $this->view($id);
