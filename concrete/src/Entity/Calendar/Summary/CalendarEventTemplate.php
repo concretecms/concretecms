@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Entity\Calendar\Summary;
 
+use Concrete\Core\Entity\Summary\GetTemplateDataTrait;
 use Concrete\Core\Entity\Summary\Template;
+use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CalendarEventTemplate implements RenderableTemplateInterface
 {
+    
+    use GetTemplateDataTrait;
     
     /**
      * @ORM\Id
@@ -79,10 +83,7 @@ class CalendarEventTemplate implements RenderableTemplateInterface
         $this->template = $template;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getData()
+    public function getRawData()
     {
         return $this->data;
     }

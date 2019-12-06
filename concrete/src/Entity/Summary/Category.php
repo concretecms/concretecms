@@ -3,6 +3,9 @@ namespace Concrete\Core\Entity\Summary;
 
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Html\Image;
+use Concrete\Core\Summary\Category\Driver\DriverInterface;
+use Concrete\Core\Summary\Category\Driver\Manager;
+use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -100,6 +103,13 @@ class Category
         $container->addAttribute('handle', $this->getHandle());
         $container->addAttribute('name', h($this->getName()));
         $container->addAttribute('package', $this->getPackageHandle());
+    }
+
+    public function getDriver() : DriverInterface
+    {
+        $app = Facade::getFacadeApplication();
+        $manager = $app->make(Manager::class);
+        return $manager->driver($this->getHandle());
     }
 
 

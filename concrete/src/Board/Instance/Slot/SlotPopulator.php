@@ -48,16 +48,6 @@ class SlotPopulator
             for ($i = 1; $i <= $contentSlots; $i++) {
 
                 $contentSlotObjectGroups = $objectGroups[$i - 1];
-                if (!$contentSlotObjectGroups) {
-                    foreach($instanceSlots as $instanceSlot) {
-
-                        $templateDriver = $instanceSlot->getTemplate()->getDriver();
-                        $contentSlots = $templateDriver->getTotalContentSlots();
-
-                        Dumper::dump($instanceSlot->getTemplate());
-                    }
-                    exit;
-                }
                 $contentObjects = $contentSlotObjectGroups->getContentObjects();
 
                 $filterer = $templateDriver->getSlotFilterer();

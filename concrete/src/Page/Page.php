@@ -298,6 +298,14 @@ class Page extends Collection implements CategoryMemberInterface,
     }
 
     /**
+     * @return int|null
+     */
+    public function getSummaryIdentifier()
+    {
+        return $this->getCollectionID();
+    }
+
+    /**
      * Return a representation of the Page object as something easily serializable.
      *
      * @return \stdClass

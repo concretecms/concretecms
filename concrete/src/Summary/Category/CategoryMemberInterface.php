@@ -7,6 +7,8 @@ use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 interface CategoryMemberInterface
 {
 
+    public function getSummaryIdentifier();
+    
     /**
      * @return string
      */

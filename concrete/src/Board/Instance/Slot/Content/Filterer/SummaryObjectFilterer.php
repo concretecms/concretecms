@@ -21,7 +21,8 @@ class SummaryObjectFilterer implements FiltererInterface
         $return = [];
         foreach($objects as $object) {
             if ($object instanceof SummaryObject) {
-                $template = $object->getTemplate();
+                $summaryObject = $object->getSummaryObject();
+                $template = $summaryObject->getTemplate();
                 $templateHandles = $this->slots[$slot];
                 if (in_array($template->getHandle(), $templateHandles)) {
                     $return[] = $object;

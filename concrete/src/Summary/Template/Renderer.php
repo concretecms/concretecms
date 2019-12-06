@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Summary\Template;
 
-use Concrete\Core\Entity\Summary\Template;
+use Concrete\Core\Summary\SummaryObjectInterface;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
@@ -11,6 +11,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 use Doctrine\ORM\EntityManager;
+use Concrete\Core\Summary\SummaryObject;
 
 class Renderer implements LoggerAwareInterface
 {
@@ -61,11 +62,12 @@ class Renderer implements LoggerAwareInterface
         return Channels::CHANNEL_CONTENT;
     }
 
-    public function render(Collection $collection, Template $template)
+    public function render(SummaryObjectInterface $summaryObject)
     {
+        $template = $summaryObject->getTemplate();
         $file = $this->templateLocator->getFileToRender($template);
         if ($file) {
-            $fields = $collection->getFields();
+            $fields = $summaryObject->getData()->getFields();
             extract($fields, EXTR_OVERWRITE);
             include $file;
         } else if ($template->getHandle()) {
@@ -73,11 +75,6 @@ class Renderer implements LoggerAwareInterface
                     $this->currentPage->getCollectionID(), $template->getHandle())
             );
         }
-    }
-    
-    public function denormalizeIntoCollection($data) : ?Collection
-    {
-        return $this->serializer->denormalize($data, Collection::class, 'json');
     }
     
     public function renderSummaryForObject(CategoryMemberInterface $object, string $templateHandle = null)
@@ -91,9 +88,15 @@ class Renderer implements LoggerAwareInterface
         if ($categoryTemplate) {
             $template = $categoryTemplate->getTemplate();
             if ($template) {
-                $data = $categoryTemplate->getData();
-                $collection = $this->denormalizeIntoCollection($data);
-                $this->render($collection, $template);
+                $collection = $categoryTemplate->getData();
+                
+                $object = new SummaryObject(
+                    $object->getSummaryCategoryHandle(), 
+                    $object->getSummaryIdentifier(),
+                    $template,
+                    $collection
+                );
+                $this->render($object);
             }
         }
     }

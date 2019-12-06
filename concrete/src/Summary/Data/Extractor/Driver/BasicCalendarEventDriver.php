@@ -7,6 +7,7 @@ use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
+use Doctrine\ORM\EntityManager;
 
 class BasicCalendarEventDriver implements DriverInterface
 {
@@ -15,9 +16,15 @@ class BasicCalendarEventDriver implements DriverInterface
      * @var LinkFormatter 
      */
     protected $linkFormatter;
+
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
     
-    public function __construct(LinkFormatter $linkFormatter)
+    public function __construct(EntityManager $entityManager, LinkFormatter $linkFormatter)
     {
+        $this->entityManager = $entityManager;
         $this->linkFormatter = $linkFormatter;
     }
 
@@ -40,6 +47,7 @@ class BasicCalendarEventDriver implements DriverInterface
         $collection = new Collection();
         $version = $mixed->getApprovedVersion();
         if ($version) {
+            $this->entityManager->refresh($version);
             $collection->addField(new DataField(FieldInterface::FIELD_TITLE, $version->getName()));
             $link = $this->linkFormatter->getEventFrontendViewLink($mixed);
             if ($link) {

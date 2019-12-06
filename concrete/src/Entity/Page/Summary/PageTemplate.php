@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Entity\Page\Summary;
 
+use Concrete\Core\Entity\Summary\GetTemplateDataTrait;
 use Concrete\Core\Entity\Summary\Template;
+use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,7 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PageTemplate implements RenderableTemplateInterface
 {
-    
+
+    use GetTemplateDataTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -82,11 +86,8 @@ class PageTemplate implements RenderableTemplateInterface
     {
         $this->template = $template;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
+    
+    public function getRawData()
     {
         return $this->data;
     }
