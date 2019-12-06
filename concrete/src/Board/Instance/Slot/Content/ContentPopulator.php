@@ -27,16 +27,15 @@ class ContentPopulator
      */
     public function createContentObjects($items) : array
     {
-        $objects = [];
+        $groups = [];
         foreach($items as $item) {
             $dataSourceDriver = $item->getDataSource()->getDataSource()->getDriver();
             $contentPopulator = $dataSourceDriver->getContentPopulator();
             $data = $this->serializer->denormalize($item->getData(), $contentPopulator->getDataClass(), 'json');
             $contentObjects = $contentPopulator->createContentObjects($data);
-            $objects[] = $contentObjects;
+            $groups[] = new ItemObjectGroup($item, $contentObjects);
         }
-        $objects = array_merge([], ...$objects);
-        return $objects;
+        return $groups;
     }
 
 }

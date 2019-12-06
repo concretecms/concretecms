@@ -70,18 +70,18 @@ class CreateBoardInstanceCommandHandler
         $instance->setBoard($board);
         $instance->setDateCreated($this->createInstanceDateTime($board)->getTimestamp());
         
-        // First, let's create board instance slots for all the board slots in this board template
-        $collection = $this->collectionFactory->createSlotCollection($instance);
-
-        // Now that we have slots, let's pick a subset of our data pool to populate in these slots
-        $items = $this->itemSegmenter->getBoardItemsForInstance($instance, $collection);
+        // Let's create items from our data sources to put into our board.
+        $items = $this->itemSegmenter->getBoardItemsForInstance($instance);
 
         // Now that we have items, let's create a pool of content objects.
-        $contentObjects = $this->contentPopulator->createContentObjects($items);
+        $contentObjectGroups = $this->contentPopulator->createContentObjects($items);
         
-        // Now, let's assign those content objects to our slot templates.
-        $this->slotPopulator->populateSlotCollectionWithContent($contentObjects, $collection);
-            
+        // Now, let's create the outer slot objects for our board. We'll use the content object groups
+        // to determine the layout of our board, how many slots it can support, etc
+        $collection = $this->collectionFactory->createSlotCollection($instance, $contentObjectGroups);
+        
+        $this->slotPopulator->populateSlotCollectionWithContent($contentObjectGroups, $collection);
+
         // Now save the board instance.
         $instance->setSlots($collection);
         $this->entityManager->persist($instance);
