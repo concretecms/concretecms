@@ -75,7 +75,7 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_blocktypes_multimedia', 57, t('Adding Multimedia block types.')),
             new StartingPointInstallRoutine('install_blocktypes_core_desktop', 61, t('Adding Desktop block types.')),
             new StartingPointInstallRoutine('install_blocktypes_other', 64, t('Adding other block types.')),
-            new StartingPointInstallRoutine('install_gathering', 66, t('Adding gathering data sources.')),
+            new StartingPointInstallRoutine('install_boards', 66, t('Adding boards.')),
             new StartingPointInstallRoutine('install_page_types', 67, t('Page type basic setup.')),
             new StartingPointInstallRoutine('install_themes', 68, t('Adding themes.')),
             new StartingPointInstallRoutine('install_jobs', 69, t('Installing automated jobs.')),
@@ -240,10 +240,10 @@ class StartingPointPackage extends Package
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/dashboard.xml');
     }
 
-    protected function install_gathering()
+    protected function install_boards()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/gathering.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/boards.xml');
     }
 
     protected function install_page_types()

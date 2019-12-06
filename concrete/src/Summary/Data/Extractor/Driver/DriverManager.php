@@ -2,12 +2,28 @@
 namespace Concrete\Core\Summary\Data\Extractor\Driver;
 
 
+use Concrete\Core\Application\Application;
+
 class DriverManager 
 {
 
-    const PRIORITY_DEFAULT = 1;
     
+    const PRIORITY_DEFAULT = 1;
+
+    /**
+     * @var Application 
+     */
+    protected $app;
+    
+    /**
+     * @var RegisteredDriver[]
+     */
     protected $drivers = [];
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * @param string $class
@@ -17,7 +33,10 @@ class DriverManager
     {
         $this->drivers[] = new RegisteredDriver($class, $priority);    
     }
-    
+
+    /**
+     * @return RegisteredDriver[]
+     */
     public function getDrivers()
     {
         // Sort the drivers so that the highest score come last, so that the highest scored
@@ -44,8 +63,9 @@ class DriverManager
         $drivers = $this->getDrivers();
         $collection = new DriverCollection();
         foreach($drivers as $driver) {
-            if ($driver->isValidForObject($object)) {
-                $collection->addDriver($driver->inflateClass());
+            $inflatedDriver = $driver->inflateClass($this->app);
+            if ($inflatedDriver->isValidForObject($object)) {
+                $collection->addDriver($inflatedDriver);
             }
         }
         return $collection;

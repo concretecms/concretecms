@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Summary;
 
-use Concrete\Core\Html\Image;
+use Concrete\Core\Entity\PackageTrait;
+use HtmlObject\Image;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Template
 {
+    
+    use PackageTrait;
     
     /**
      * @ORM\Id
@@ -44,10 +47,10 @@ class Template
     protected $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="TemplateField", mappedBy="template", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TemplateField", mappedBy="template", cascade={"persist", "remove"}, mappedBy="template")
      **/
     protected $fields;
-    
+
     /**
      * Template constructor.
      */
@@ -145,7 +148,7 @@ class Template
         $this->fields = $fields;
     }
     
-    public function getContainerIconImage($asTag = true)
+    public function getTemplateIconImage($asTag = true)
     {
         if ($this->getIcon()) {
             $image = ASSETS_URL_IMAGES . '/icons/summary_templates/' . $this->getIcon();
@@ -162,7 +165,7 @@ class Template
         $template->addAttribute('handle', $this->getHandle());
         $template->addAttribute('name', h($this->getName()));
         $template->addAttribute('icon', h($this->getIcon()));
-        $template->addAttribute('package', '');
+        $template->addAttribute('package', $this->getPackageHandle());
         
         $categories = $template->addChild('categories');
         foreach($this->getCategories() as $category) {

@@ -4,17 +4,20 @@
 
     <?php
         echo $concrete_ui->tabs([
-            ['sitemap', t('Full Sitemap')],
-            ['explore', t('Flat View')],
-            ['search', t('Search')],
+            ['sitemap-sitemap', t('Full Sitemap')],
+            ['sitemap-explore', t('Flat View')],
+            ['sitemap-search', t('Search')],
         ]);
     ?>
+    
+    <div class="tab-content">
+        <div id="sitemap-sitemap" class="tab-pane active"></div>
 
-    <div id="ccm-tab-content-sitemap" class="ccm-tab-content"></div>
+        <div id="sitemap-explore" class="tab-pane"></div>
 
-    <div id="ccm-tab-content-explore" class="ccm-tab-content"></div>
+        <div id="sitemap-search" class="tab-pane"></div>
+    </div>
 
-    <div id="ccm-tab-content-search" class="ccm-tab-content"></div>
 
 </div>
 
@@ -39,9 +42,9 @@
                 break;
         }
 
-        if ($('#ccm-tab-content-' + type).html() == '') {
+        if ($('#sitemap-' + type).html() == '') {
             jQuery.fn.dialog.showLoader();
-            $('#ccm-tab-content-' + type).load(url, function() {
+            $('#sitemap-' + type).load(url, function() {
                 jQuery.fn.dialog.hideLoader();
             });
         }
@@ -76,15 +79,15 @@
         if (sst !== 'explore' && sst !== 'search') {
             sst = 'sitemap';
         }
-        $('a[data-tab=' + sst + ']').parent().addClass('active');
+        $("a[href='#sitemap-" + sst + "']").parent().addClass('active');
         ccm_sitemapSearchSelectorHideBottom();
-        $('a[data-tab=sitemap]').click(function() {
+        $("a[href='#sitemap-sitemap']").click(function() {
             loadSitemapOverlay('sitemap', CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_overlay');
         });
-        $('a[data-tab=explore]').click(function() {
+        $("a[href='#sitemap-explore']").click(function() {
             loadSitemapOverlay('explore', CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_overlay?display=flat&cParentID=' + cParentID);
         });
-        $('a[data-tab=search]').click(function() {
+        $("a[href='#sitemap-search']").click(function() {
             loadSitemapOverlay('search', '<?= URL::to('/ccm/system/dialogs/page/search'); ?>');
         });
 

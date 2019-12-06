@@ -13,10 +13,15 @@ use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
 use Concrete\Core\Foundation\Queue\Receiver\QueueCommandMessageReceiver;
 use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Foundation\Service\Provider;
 use League\Tactician\Bernard\QueueableCommand;
 use League\Tactician\Bernard\QueueCommandNormalizer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
+use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class QueueServiceProvider extends Provider
 {
@@ -61,6 +66,16 @@ class QueueServiceProvider extends Provider
 
         $this->app->singleton('queue', function($app) {
             return $app->make(QueueService::class);
+        });
+
+        $this->app->singleton(JsonSerializer::class, function($app) {
+            $serializer = new JsonSerializer([
+                new JsonSerializableNormalizer(),
+                new CustomNormalizer()
+            ], [
+                new JsonEncoder()
+            ]);
+            return $serializer;
         });
     }
 }

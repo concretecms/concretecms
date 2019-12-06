@@ -52,7 +52,7 @@ class SitemapSelector extends UserInterface
             if (isset($request['filters']) && is_array($request['filters'])) {
                 foreach ($request['filters'] as $key => $filter) {
                     if ($key == 'ptID' && $filter != $node->ptID) {
-                        $node->hideCheckbox = true;
+                        $node->checkbox = true;
                     }
                 }
             }

@@ -6,7 +6,6 @@ use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
-use Concrete\Core\Page\Summary\Template\PagePopulator;
 use Page;
 use PageType;
 use Permissions;

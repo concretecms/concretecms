@@ -80,9 +80,9 @@ class Category extends TreeNode
             $p = new \Permissions($this);
             $data = $this->getTreeObject()->getRequestData();
             if (is_array($data) && !empty($data['allowFolderSelection'])) {
-                $obj->hideCheckbox = false;
+                $obj->checkbox = true;
             } else {
-                $obj->hideCheckbox = true;
+                $obj->checkbox = false;
             }
             $obj->icon = 'fa fa-folder';
             $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();

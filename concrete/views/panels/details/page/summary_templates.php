@@ -8,9 +8,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <div class="form-group form-check">
             <label class="form-check-label">
-                <input type="checkbox" <?php if ($c->hasCustomSummaryTemplateCollection()) { ?>checked<?php } ?>
-                       name="hasCustomSummaryTemplateCollection" class="form-check-input">
-                <?= t('Enable custom summary template collection.') ?>
+                <input type="checkbox" <?php if ($c->hasCustomSummaryTemplates()) { ?>checked<?php } ?>
+                       name="hasCustomSummaryTemplates" class="form-check-input">
+                <?= t('Enable custom summary templates.') ?>
             </label>
         </div>
 
@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="form-check">
                 <label class="form-check-label">
                     <input type="checkbox"
-                           name="templateIDs[]" <?php if (!$c->hasCustomSummaryTemplateCollection() || in_array($template->getID(), $selectedTemplateIDs)) { ?>checked<?php } ?> value="<?=$template->getID()?>" class="form-check-input">
+                           name="templateIDs[]" <?php if (!$c->hasCustomSummaryTemplates() || in_array($template->getID(), $selectedTemplateIDs)) { ?>checked<?php } ?> value="<?=$template->getID()?>" class="form-check-input">
                     <?=$template->getName()?>
                 </label>
             </div>
@@ -43,7 +43,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/javascript">
     $(function() {
-        $('input[name=hasCustomSummaryTemplateCollection]').on('change', function() {
+        $('input[name=hasCustomSummaryTemplates]').on('change', function() {
             if ($(this).is(':checked')) {
                 $('div[data-list=summary-templates] input[type=checkbox]').prop('disabled', false);
             } else {

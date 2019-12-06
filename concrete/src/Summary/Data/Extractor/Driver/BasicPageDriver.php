@@ -28,6 +28,7 @@ class BasicPageDriver implements DriverInterface
         $collection = new Collection();
         $collection->addField(new DataField(FieldInterface::FIELD_TITLE, $mixed->getCollectionName()));
         $collection->addField(new DataField(FieldInterface::FIELD_LINK, $mixed->getCollectionLink()));
+        $collection->addField(new DataField(FieldInterface::FIELD_DATE, $mixed->getCollectionDatePublicObject()->getTimestamp()));
         $description = $mixed->getCollectionDescription();
         if ($description) {
             $collection->addField(new DataField(FieldInterface::FIELD_DESCRIPTION, $description));

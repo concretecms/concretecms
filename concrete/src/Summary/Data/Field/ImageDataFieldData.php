@@ -6,7 +6,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Concrete\Core\File\File;
 
-class ImageDataFieldData implements DataFieldDataInterface, DenormalizableInterface
+class ImageDataFieldData implements DataFieldDataInterface
 {
 
     /**

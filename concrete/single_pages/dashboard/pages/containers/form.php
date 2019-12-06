@@ -75,7 +75,7 @@ if (isset($container) && $container) {
 
 <?php if ($container) { ?>
 
-    <div class="modal fade" id="delete-container" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="delete-container" tabindex="-1">
         <form method="post" action="<?=$view->action('delete_container', $container->getContainerID())?>">
             <?=$token->output('delete_container')?>
             <div class="modal-dialog" role="document">

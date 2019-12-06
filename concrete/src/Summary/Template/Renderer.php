@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Summary\Template;
 
+use Concrete\Core\Entity\Summary\Template;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
@@ -9,7 +11,6 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Serializer\Serializer;
 
 class Renderer implements LoggerAwareInterface
 {
@@ -32,7 +33,7 @@ class Renderer implements LoggerAwareInterface
     protected $currentPage;
 
     /**
-     * @var Serializer
+     * @var JsonSerializer
      */
     protected $serializer;
 
@@ -42,7 +43,7 @@ class Renderer implements LoggerAwareInterface
     protected $rendererFilterer;
     
     public function __construct(
-        Serializer $serializer, 
+        JsonSerializer $serializer, 
         RendererFilterer $rendererFilterer,
         EntityManager $entityManager, 
         TemplateLocator $templateLocator, 
@@ -60,31 +61,41 @@ class Renderer implements LoggerAwareInterface
         return Channels::CHANNEL_CONTENT;
     }
 
-    public function renderSummary(CategoryMemberInterface $object, string $templateHandle = null)
+    public function render(Collection $collection, Template $template)
     {
-        $allTemplates = $object->getSummaryTemplates();
-        $customTemplates = null;
-        if ($object->hasCustomSummaryTemplateCollection()) {
-            $customTemplates = $object->getCustomSelectedSummaryTemplates();
+        $file = $this->templateLocator->getFileToRender($template);
+        if ($file) {
+            $fields = $collection->getFields();
+            extract($fields, EXTR_OVERWRITE);
+            include $file;
+        } else if ($template->getHandle()) {
+            $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s',
+                    $this->currentPage->getCollectionID(), $template->getHandle())
+            );
         }
-        
-        if ($template = $this->rendererFilterer->getMatchingTemplate(
-            $allTemplates, $customTemplates, $templateHandle
-        )) {
-            $file = $this->templateLocator->getFileToRender($this->currentPage, $template->getTemplate());
-            if ($file) {
-                $data = $template->getData();
-                $collection = $this->serializer->denormalize($data, Collection::class, 'json');
-                $fields = $collection->getFields();
-                extract($fields, EXTR_OVERWRITE);
-                include $file;
-            } else if ($templateHandle) {
-                $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s', 
-                    $this->currentPage->getCollectionID(), $templateHandle)
-                );
+    }
+    
+    public function denormalizeIntoCollection($data) : ?Collection
+    {
+        return $this->serializer->denormalize($data, Collection::class, 'json');
+    }
+    
+    public function renderSummaryForObject(CategoryMemberInterface $object, string $templateHandle = null)
+    {
+        $categoryTemplate = null;
+        if ($templateHandle) {
+            $categoryTemplate = $this->rendererFilterer->getSpecificTemplateIfExists($object, $templateHandle);
+        } else {
+            $categoryTemplate = $this->rendererFilterer->getRandomTemplate($object);
+        }
+        if ($categoryTemplate) {
+            $template = $categoryTemplate->getTemplate();
+            if ($template) {
+                $data = $categoryTemplate->getData();
+                $collection = $this->denormalizeIntoCollection($data);
+                $this->render($collection, $template);
             }
         }
-
     }
 
 

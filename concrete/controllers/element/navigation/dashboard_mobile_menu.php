@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 
-class DashboardMobileMenu extends Menu
+class DashboardMobileMenu extends ApplicationMenu
 {
 
     public function __construct(Page $currentPage = null)

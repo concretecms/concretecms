@@ -5,7 +5,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
-use Concrete\Core\Entity\Summary\CustomPageTemplateCollection;
+use Concrete\Core\Entity\Page\Summary\CustomPageTemplateCollection;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
@@ -831,7 +831,7 @@ class Page extends Collection implements CategoryMemberInterface,
     {
         $app = Application::getFacadeApplication();
         $em = $app->make(EntityManagerInterface::class);
-        return $em->getRepository(\Concrete\Core\Entity\Summary\PageTemplate::class)
+        return $em->getRepository(\Concrete\Core\Entity\Page\Summary\PageTemplate::class)
             ->findByCID($this->getCollectionID());
     }
 
@@ -846,7 +846,7 @@ class Page extends Collection implements CategoryMemberInterface,
             ->findOneByCID($this->getCollectionID());
     }
 
-    public function hasCustomSummaryTemplateCollection(): bool
+    public function hasCustomSummaryTemplates(): bool
     {
         if ($this->getCustomPageSummaryTemplateCollection()) {
             return true;

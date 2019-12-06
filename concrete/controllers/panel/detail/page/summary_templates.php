@@ -3,9 +3,8 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\EditResponse;
-use Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplateCollectionCommand;
-use Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplateCollectionCommand;
-use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand;
+use Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand;
 
 class SummaryTemplates extends BackendInterfacePageController
 {
@@ -39,14 +38,14 @@ class SummaryTemplates extends BackendInterfacePageController
     public function submit()
     {
         if ($this->validateAction()) {
-            if ($this->request->request->get('hasCustomSummaryTemplateCollection')) {
-                $command = new EnableCustomPageSummaryTemplateCollectionCommand($this->page->getCollectionID());
+            if ($this->request->request->get('hasCustomSummaryTemplates')) {
+                $command = new EnableCustomPageSummaryTemplatesCommand($this->page->getCollectionID());
                 $templateIDs = $this->request->request->get('templateIDs');
                 if ($templateIDs) {
                     $command->setTemplateIDs($templateIDs);
                 }
             } else {
-                $command = new DisableCustomPageSummaryTemplateCollectionCommand($this->page->getCollectionID());
+                $command = new DisableCustomPageSummaryTemplatesCommand($this->page->getCollectionID());
             }
             $this->app->executeCommand($command);
             

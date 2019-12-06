@@ -135,6 +135,7 @@ return [
         'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
+        'core_boards' => '\Concrete\Core\Board\ServiceProvider',
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -242,14 +243,18 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardDataSourcesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardSlotTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowProgressCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
+        // if we want the express entity attribute to work we need this to be first.
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeSetsRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressAssociationsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressFormsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressRelationsRoutine',
@@ -298,6 +303,10 @@ return [
             VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
         ],
         '/login' => [
+            VIEW_CORE_THEME,
+            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
+        ],
+        '/oauth/authorize' => [
             VIEW_CORE_THEME,
             VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
         ],
@@ -538,8 +547,17 @@ return [
         ['Concrete\Core\Page\Container\Command\AddContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
         ['Concrete\Core\Page\Container\Command\UpdateContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
         ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
-        ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplateCollectionCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplateCollectionCommandHandler'],
-        ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplateCollectionCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplateCollectionCommandHandler'],
+        ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
+
+        ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
+        ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearBoardDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\PopulateBoardDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
+        ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
     ],
 
 ];

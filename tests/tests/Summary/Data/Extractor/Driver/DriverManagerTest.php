@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Summary\Data\Extractor\Driver;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Data\Collection;
@@ -79,20 +80,26 @@ class DriverManagerTest extends TestCase
     
     public function testRegister()
     {
-        $driverManager = new DriverManager();
+        $app = M::mock(Application::class);
+        $app->shouldReceive('make')->with(MockPageDriver::class)->andReturn(new MockPageDriver());
+        $driverManager = new DriverManager($app);
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
         $drivers = $driverManager->getDrivers();
         $this->assertCount(2, $drivers);
         $driver = $drivers[0];
         $this->assertInstanceOf(RegisteredDriver::class, $driver);
-        $this->assertEquals('page', $driver->inflateClass()->getCategory());
+        $this->assertEquals('page', $driver->inflateClass($app)->getCategory());
         $this->assertEquals(MockPageDriver::class, $driver->getDriver());
     }
 
     public function testGet()
     {
-        $driverManager = new DriverManager();
+        $app = M::mock(Application::class);
+        $driverManager = new DriverManager($app);
+
+        $app->shouldReceive('make')->with(MockEventDriver::class)->andReturn(new MockEventDriver());
+        $app->shouldReceive('make')->with(MockPageDriver::class)->andReturn(new MockPageDriver());
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
         $event = M::mock(CalendarEvent::class);
@@ -113,10 +120,14 @@ class DriverManagerTest extends TestCase
     
     public function testAddMatchingCustomDriverWithNoScore()
     {
-        $driverManager = new DriverManager();
+        $app = M::mock(Application::class);
+        $driverManager = new DriverManager($app);
         $driverManager->register(MockCustomDriver::class);
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
+        $app->shouldReceive('make')->with(MockCustomDriver::class)->andReturn(new MockCustomDriver());
+        $app->shouldReceive('make')->with(MockPageDriver::class)->andReturn(new MockPageDriver());
+        $app->shouldReceive('make')->with(MockEventDriver::class)->andReturn(new MockEventDriver());
         $page = M::mock(Page::class);
         $page->shouldReceive('getCollectionTypeHandle')->andReturn('project');
         $driverCollection = $driverManager->getDriverCollection($page);
@@ -138,10 +149,15 @@ class DriverManagerTest extends TestCase
 
     public function testAddMatchingCustomDriverScore()
     {
-        $driverManager = new DriverManager();
+        $app = M::mock(Application::class);
+        $driverManager = new DriverManager($app);
         $driverManager->register(MockCustomDriver::class, 50);
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
+        $app->shouldReceive('make')->with(MockCustomDriver::class)->andReturn(new MockCustomDriver());
+        $app->shouldReceive('make')->with(MockPageDriver::class)->andReturn(new MockPageDriver());
+        $app->shouldReceive('make')->with(MockEventDriver::class)->andReturn(new MockEventDriver());
+
         $page = M::mock(Page::class);
         $page->shouldReceive('getCollectionTypeHandle')->andReturn('project');
         $driverCollection = $driverManager->getDriverCollection($page);
@@ -155,10 +171,14 @@ class DriverManagerTest extends TestCase
 
     public function testAddNonMatchingCustomDriverScore()
     {
-        $driverManager = new DriverManager();
+        $app = M::mock(Application::class);
+        $driverManager = new DriverManager($app);
         $driverManager->register(MockCustomDriver::class, 50);
         $driverManager->register(MockPageDriver::class);
         $driverManager->register(MockEventDriver::class);
+        $app->shouldReceive('make')->with(MockCustomDriver::class)->andReturn(new MockCustomDriver());
+        $app->shouldReceive('make')->with(MockPageDriver::class)->andReturn(new MockPageDriver());
+        $app->shouldReceive('make')->with(MockEventDriver::class)->andReturn(new MockEventDriver());
         $page = M::mock(Page::class);
         $page->shouldReceive('getCollectionTypeHandle')->andReturn('foo');
         $driverCollection = $driverManager->getDriverCollection($page);

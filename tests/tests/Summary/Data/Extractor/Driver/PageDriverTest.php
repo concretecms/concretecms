@@ -39,11 +39,14 @@ class PageDriverTest extends TestCase
         $page->shouldReceive('getCollectionLink')->once()->andReturn('https://www.foo.com/path/to/page');
         $page->shouldReceive('getCollectionName')->once()->andReturn('My Name');
         $page->shouldReceive('getCollectionDescription')->once()->andReturn('');
+        $page->shouldReceive('getCollectionDatePublicObject')->once()->andReturn(new \DateTime(
+            '2010-01-01 00:00:00', new \DateTimeZone('GMT')
+        ));
         $driver = new BasicPageDriver();
         $data = $driver->extractData($page);
         $this->assertInstanceOf(Collection::class, $data);
         $fields = $data->getFields();
-        $this->assertCount(2, $fields);
+        $this->assertCount(3, $fields);
         $field = $data->getField(FieldInterface::FIELD_TITLE);
         $this->assertInstanceOf(DataFieldDataInterface::class, $field);
         $this->assertEquals('My Name', $field); 
@@ -55,14 +58,9 @@ class PageDriverTest extends TestCase
             new JsonEncoder()
         ]);
         $data = $serializer->serialize($data, 'json');
-        $this->assertEquals(
-            '{"fields":{"title":{"class":"Concrete\\\Core\\\Summary\\\Data\\\Field\\\DataFieldData","data":"My Name"},"link":{"class":"Concrete\\\Core\\\Summary\\\Data\\\Field\\\DataFieldData","data":"https:\/\/www.foo.com\/path\/to\/page"}}}',
-            $data
-        );
-        
         $collection = $serializer->deserialize($data, Collection::class, 'json');
         $fields = $collection->getFields();
-        $this->assertCount(2, $fields);
+        $this->assertCount(3, $fields);
         $field = $collection->getField(FieldInterface::FIELD_TITLE);
         $this->assertInstanceOf(DataFieldDataInterface::class, $field);
         $this->assertEquals('My Name', $field);

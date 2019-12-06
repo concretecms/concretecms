@@ -23,6 +23,7 @@ class ImportSummaryCategoriesRoutine extends AbstractRoutine
                     $category = new Category();
                     $category->setHandle($handle);
                     $category->setName($name);
+                    $category->setPackage($pkg);
                     $em->persist($category);
                 }
             }

@@ -17,6 +17,8 @@ class SearchFieldSelector extends ElementController
     protected $fieldManager;
 
     protected $query;
+    
+    protected $includeJavaScript = false;
 
     public function __construct(ManagerInterface $fieldManager, $addFieldAction, Query $query = null)
     {
@@ -80,12 +82,19 @@ class SearchFieldSelector extends ElementController
         $this->query = $query;
     }
 
-
-
+    /**
+     * @param bool $includeJavaScript
+     */
+    public function setIncludeJavaScript(bool $includeJavaScript): void
+    {
+        $this->includeJavaScript = $includeJavaScript;
+    }
+    
     public function view()
     {
         $this->set('manager', $this->fieldManager);
         $this->set('addFieldAction', $this->addFieldAction);
         $this->set('query', $this->query);
+        $this->set('includeJavaScript', $this->includeJavaScript);
     }
 }

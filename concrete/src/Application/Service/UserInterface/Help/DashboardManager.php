@@ -70,10 +70,5 @@ class DashboardManager extends AbstractManager
             '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.'),
             '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.') . ' ' . t('Auto-rotate images accordingly to EXIF metadata.') . '<br />' . t('Set PNG and JPEG compression options.'),
         ]);
-
-        $message = new Message();
-        $message->addGuide('add-calendar');
-        $message->setMessageContent(t('Add a calendar using the form. You may add multiple calendars, but you must add at least one before you can use the Calendar add-on.'));
-        $this->setMessage('/dashboard/calendar/add', $message);
     }
 }

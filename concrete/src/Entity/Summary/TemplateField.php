@@ -25,7 +25,7 @@ class TemplateField
     protected $is_required;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Template")
+     * @ORM\ManyToOne(targetEntity="Template", inversedBy="fields")
      */
     protected $template;
 

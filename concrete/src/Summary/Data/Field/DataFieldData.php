@@ -4,7 +4,7 @@ namespace Concrete\Core\Summary\Data\Field;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class DataFieldData implements DataFieldDataInterface, DenormalizableInterface
+class DataFieldData implements DataFieldDataInterface
 {
 
     /**
