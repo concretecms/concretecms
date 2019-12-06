@@ -24,6 +24,14 @@ class SummaryObject implements ObjectInterface
         }
     }
 
+    /**
+     * @return SummaryObjectInterface
+     */
+    public function getSummaryObject(): SummaryObjectInterface
+    {
+        return $this->summaryObject;
+    }
+    
     public function jsonSerialize()
     {
         return [
