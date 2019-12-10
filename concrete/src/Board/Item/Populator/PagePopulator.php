@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Search\Field\Field\SiteField;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -18,9 +19,20 @@ class PagePopulator extends AbstractPopulator
         $list = new PageList();
         $query = $configuration->getQuery();
         $list->ignorePermissions();
+        $containsSitefield = false;
         if ($query) {
             foreach($query->getFields() as $field) {
+                if ($field instanceof SiteField) {
+                    $containsSitefield = true;
+                }
                 $field->filterList($list);
+            }
+        }
+        if (!$containsSitefield) {
+            if ($board->getSite()) {
+                $list->setSiteTreeObject($board->getSite()->getSiteTreeObject());
+            } else {
+                $list->setSiteTreeToAll();
             }
         }
         if ($board->getDateLastRefreshed()) {
