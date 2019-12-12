@@ -68,6 +68,14 @@ class Client extends ZendClient implements LoggerAwareInterface
             } else {
                 $shortBody = mb_substr($body, 0, 197) . '...';
             }
+
+            // If the content-type is an octet stream, don't log it.
+            $headers = array_change_key_case($response->getHeaders()->toArray());
+            if (array_key_exists('content-type', $headers) &&
+                $headers['content-type'] === 'application/octet-stream') {
+                $shortBody = 'of the content-type: application/octet-stream';
+            }
+
             $logger->debug(
                 'The response code was {statusCode} and the body was {shortBody}',
                 [
