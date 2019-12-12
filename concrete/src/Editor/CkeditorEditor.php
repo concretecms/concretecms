@@ -453,12 +453,11 @@ EOL;
     protected function getEditorScript($identifier, $options = [])
     {
         $jsFunc = $this->getEditorInitJSFunction($options);
-
         $html = <<<EOL
         <script type="text/javascript">
-        CKEDITOR.disableAutoInline = true;
         $(function() {
             var initEditor = {$jsFunc};
+            CKEDITOR.disableAutoInline = true;
             initEditor('#{$identifier}');
          });
         </script>
