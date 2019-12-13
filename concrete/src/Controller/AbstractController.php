@@ -311,9 +311,9 @@ abstract class AbstractController implements ApplicationAwareInterface
 
     /**
      * Dispatches a command to the command bus.
-     * @param CommandInterface $command
+     * @param mixed $command
      */
-    public function executeCommand(CommandInterface $command)
+    public function executeCommand($command)
     {
         return $this->app->executeCommand($command);
     }

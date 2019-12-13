@@ -69,7 +69,8 @@ class DataSources extends DashboardSitePageController
                 $saver = $driver->getSaver();
                 $saver->updateConfiguredDataSourceFromRequest($name, $configuredDataSource, $this->request);
                 $this->flash('success', t('Data Source updated successfully.'));
-                $resetCommand = new ResetBoardCustomWeightingCommand($board);
+                $resetCommand = new ResetBoardCustomWeightingCommand();
+                $resetCommand->setBoard($board);
                 $this->executeCommand($resetCommand);
                 return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
             }
@@ -90,7 +91,8 @@ class DataSources extends DashboardSitePageController
                 $board = $configuredDataSource->getBoard();
                 $this->entityManager->remove($configuredDataSource);
                 $this->entityManager->flush();
-                $resetCommand = new ResetBoardCustomWeightingCommand($board);
+                $resetCommand = new ResetBoardCustomWeightingCommand();
+                $resetCommand->setBoard($board);
                 $this->executeCommand($resetCommand);
 
                 $this->flash('success', t('Data Source removed successfully.'));
@@ -126,7 +128,8 @@ class DataSources extends DashboardSitePageController
                 $driver = $dataSource->getDriver();
                 $saver = $driver->getSaver();
                 $saver->addConfiguredDataSourceFromRequest($name, $board, $dataSource, $this->request);
-                $resetCommand = new ResetBoardCustomWeightingCommand($board);
+                $resetCommand = new ResetBoardCustomWeightingCommand();
+                $resetCommand->setBoard($board);
                 $this->executeCommand($resetCommand);
 
                 $this->flash('success', t('Data Source created successfully.'));

@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Board\Command;
 
-class CreateBoardInstanceCommand
+class RegenerateBoardInstanceCommand
 {
     
-    use BoardTrait;
+    use BoardInstanceTrait;
 
     
     

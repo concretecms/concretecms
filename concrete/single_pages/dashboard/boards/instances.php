@@ -20,7 +20,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <table class="table table-striped">
             <thead>
                 <tr>
-                    <th class="w-100"><?=t('Date Created')?></th>
+                    <th class="w-100" colspan="2"><?=t('Date Created')?></th>
                 </tr>
             </thead>
             <tbody>
@@ -30,9 +30,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <td class="w-100"><?=$instance->getDateCreatedObject()->format('Y-m-d H:i:s')?></td>
                         <td>
                             <div class="text-nowrap">
-                                <a class="launch-tooltip icon-link mr-1" href="<?=$view->action('refresh_instance', $instance->getBoardInstanceID(), $token->generate('refresh_instance'))?>" title="<?=t('Refreshes content within the board but keeps the same slot templates and data.')?>"><i class="fas fa-sync-alt"></i></a>
+                                <a href="#" class="launch-tooltip icon-link mr-1" data-toggle="modal" data-target="#update-instance-<?=$instance->getBoardInstanceID()?>"><i class="fas fa-sync-alt"></i></a>
                                 <a class="icon-link mr-1" href="<?=$view->action('view_instance', $instance->getBoardInstanceID())?>" target="_blank"><i class="fas fa-search"></i></a>
-                                <a href="" data-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>" class="icon-link"><i class="fas fa-trash"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>" class="icon-link"><i class="fas fa-trash"></i></a>
                             </div>
                             
                             <div class="modal fade" id="delete-instance-<?=$instance->getBoardInstanceID()?>" tabindex="-1">
@@ -56,6 +56,50 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                         </div>
                                     </div>
                                 </form>
+                            </div>
+
+                            <div class="modal fade" id="update-instance-<?=$instance->getBoardInstanceID()?>" tabindex="-1">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"><?=t('Update')?></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <form method="post" action="<?=$view->action('refresh_instance', $instance->getBoardInstanceID())?>">
+                                                <?=$token->output('refresh_instance')?>
+
+                                                <h5 class="font-weight-light"><?=t('Refresh')?></h5>
+                                                <p><?=t('Refresh the dynamic elements within board slots without getting new items or changing any positioning.')?></p>
+                                                <button type="submit" class="btn btn-block btn-secondary"><?=t("Refresh")?></button>
+                                            </form>
+
+                                            <hr>
+                                            
+                                            <form method="post" action="<?=$view->action('add_content', $instance->getBoardInstanceID())?>">
+                                                <?=$token->output('add_content')?>
+
+                                                <h5 class="font-weight-light"><?=t('Add Content')?></h5>
+                                                <p><?=t('Refreshes dynamic elements within board slots, and adds new items to the board in applicable spots.')?></p>
+                                                <button type="submit" class="btn btn-block btn-secondary"><?=t("Add Content")?></button>
+                                            </form>
+
+                                            <hr>
+                                            
+                                            <form method="post" action="<?=$view->action('regenerate_instance', $instance->getBoardInstanceID())?>">
+                                                <?=$token->output('regenerate_instance')?>
+
+                                                <h5 class="font-weight-light"><?=t('Regenerate')?></h5>
+                                                <p><?=t('Regenerate board instance based on current items. Completely removes and rebuilds any board contents.')?></p>
+                                                <button type="submit" class="btn btn-block btn-secondary"><?=t("Regenerate")?></button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>

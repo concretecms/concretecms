@@ -2,13 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class CreateBoardInstanceCommand
+class DeleteBoardCommand
 {
     
     use BoardTrait;
-
-    
-    
-
     
 }

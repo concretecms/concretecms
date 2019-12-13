@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 use Concrete\Core\Board\Command\CreateBoardInstanceCommand;
 use Concrete\Core\Board\Command\DeleteBoardInstanceCommand;
 use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
+use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
@@ -30,7 +31,8 @@ class Instances extends DashboardSitePageController
                 $this->error->add(t($this->token->getErrorMessage()));
             }
             if (!$this->error->has()) {
-                $generate = new CreateBoardInstanceCommand($board);
+                $generate = new CreateBoardInstanceCommand();
+                $generate->setBoard($board);
                 $this->executeCommand($generate);
                 $this->flash('success', t('Board instance created.'));
                 return $this->redirect('/dashboard/boards/instances/', 'view', $board->getBoardID());
@@ -41,16 +43,17 @@ class Instances extends DashboardSitePageController
         }
     }
 
-    public function refresh_instance($id = null, $token = null)
+    public function refresh_instance($id = null)
     {
         $instance = $this->entityManager->find(Instance::class, $id);
         if (is_object($instance)) {
-            if (!$this->token->validate('refresh_instance', $token)) {
+            if (!$this->token->validate('refresh_instance')) {
                 $this->error->add(t($this->token->getErrorMessage()));
             }
             if (!$this->error->has()) {
                 $board = $instance->getBoard();
-                $command = new RefreshBoardInstanceCommand($instance);
+                $command = new RefreshBoardInstanceCommand();
+                $command->setInstance($instance);
                 $this->executeCommand($command);
                 $this->flash('success', t('Board instance refreshed.'));
                 return $this->redirect('/dashboard/boards/instances/', 'view', $board->getBoardID());
@@ -60,6 +63,28 @@ class Instances extends DashboardSitePageController
             return $this->redirect('/dashboard/boards/boards');
         }
     }
+
+    public function regenerate_instance($id = null)
+    {
+        $instance = $this->entityManager->find(Instance::class, $id);
+        if (is_object($instance)) {
+            if (!$this->token->validate('regenerate_instance')) {
+                $this->error->add(t($this->token->getErrorMessage()));
+            }
+            if (!$this->error->has()) {
+                $board = $instance->getBoard();
+                $command = new RegenerateBoardInstanceCommand();
+                $command->setInstance($instance);
+                $this->executeCommand($command);
+                $this->flash('success', t('Board instance regenerated.'));
+                return $this->redirect('/dashboard/boards/instances/', 'view', $board->getBoardID());
+            }
+            $this->view($id);
+        } else {
+            return $this->redirect('/dashboard/boards/boards');
+        }
+    }
+
 
     public function view_instance($id = null)
     {
@@ -97,7 +122,8 @@ class Instances extends DashboardSitePageController
                 $this->error->add($this->token->getErrorMessage());
             }
             if (!$this->error->has()) {
-                $resetCommand = new DeleteBoardInstanceCommand($instance);
+                $resetCommand = new DeleteBoardInstanceCommand();
+                $resetCommand->setInstance($instance);
                 $this->executeCommand($resetCommand);
 
                 $this->flash('success', t('Board instance removed successfully.'));

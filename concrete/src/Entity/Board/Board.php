@@ -14,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Board
 {
     
+    const ORDER_BY_RELEVANT_DATE_DESC = 'relevant_date_desc';
+    const ORDER_BY_RELEVANT_DATE_ASC = 'relevant_date_asc';
+
     use PackageTrait;
     
     /**
@@ -58,7 +61,12 @@ class Board
      */
     protected $template;
 
-
+    /**
+     * Values include relevant_date_asc, relevant_date_desc
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $sortBy = self::ORDER_BY_RELEVANT_DATE_ASC;
+    
     /**
      * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Board\SlotTemplate")
      * @ORM\JoinTable(name="BoardCustomSlotTemplates",
@@ -276,8 +284,21 @@ class Board
         $this->instances = $instances;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSortBy()
+    {
+        return $this->sortBy;
+    }
 
+    /**
+     * @param mixed $sortBy
+     */
+    public function setSortBy($sortBy)
+    {
+        $this->sortBy = $sortBy;
+    }
 
-
-
+    
 }

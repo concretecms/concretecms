@@ -50,13 +50,15 @@ class Appearance extends DashboardSitePageController
             if (!$this->error->has()) {
 
                 if ($this->request->request->get('hasCustomSlotTemplates')) {
-                    $command = new EnableCustomSlotTemplatesCommand($board);
+                    $command = new EnableCustomSlotTemplatesCommand();
+                    $command->setBoard($board);
                     $templateIDs = $this->request->request->get('templateIDs');
                     if ($templateIDs) {
                         $command->setTemplateIDs($templateIDs);
                     }
                 } else {
-                    $command = new DisableCustomSlotTemplatesCommand($board);
+                    $command = new DisableCustomSlotTemplatesCommand();
+                    $command->setBoard($board);
                 }
                 $this->executeCommand($command);
                 $this->flash('success', t('Board appearance saved.'));

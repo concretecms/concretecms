@@ -3,11 +3,13 @@ namespace Concrete\Core\Board\Item\Populator;
 
 use Concrete\Core\Board\Item\Data\CalendarEventData;
 use Concrete\Core\Board\Item\Data\DataInterface;
-use Concrete\Core\Calendar\Event\EventList;
+use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
+use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -21,35 +23,32 @@ class CalendarEventPopulator extends AbstractPopulator
      */
     public function getDataObjects(Board $board, Configuration $configuration): array
     {
-        $list = new EventList();
+        $list = new EventOccurrenceList();
         $list->filterByCalendar($configuration->getCalendar());
         $list->setItemsPerPage(100);
         return $list->getResults();
     }
 
     /**
-     * @param CalendarEvent $mixed
+     * @param CalendarEventVersionOccurrence $mixed
      * @return int
      */
     public function getObjectRelevantDate($mixed) : int
     {
-        return $mixed->getOccurrences()[0]->getStart();
+        return $mixed->getOccurrence()->getStart();
     }
 
     /**
-     * @param CalendarEvent $mixed
+     * @param CalendarEventVersionOccurrence $mixed
      * @return null|string
      */
     public function getObjectName($mixed): ?string
     {
-        $version = $mixed->getApprovedVersion();
-        if ($version) {
-            return $version->getName();
-        }
+        return $mixed->getEvent()->getName();
     }
 
     /**
-     * @param CalendarEvent $mixed
+     * @param CalendarEventVersionOccurrence $mixed
      * @return DataInterface
      */
     public function getObjectData($mixed): DataInterface

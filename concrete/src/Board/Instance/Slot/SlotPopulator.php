@@ -35,7 +35,6 @@ class SlotPopulator
         $type = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
         
         foreach($instanceSlots as $instanceSlot) {
-            shuffle($contentObjectGroups);
 
             $templateDriver = $instanceSlot->getTemplate()->getDriver();
             $contentSlots = $templateDriver->getTotalContentSlots();

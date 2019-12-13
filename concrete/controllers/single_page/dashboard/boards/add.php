@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
+use Concrete\Core\Board\Command\CreateBoardCommand;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Template;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
@@ -21,7 +22,7 @@ class Add extends DashboardSitePageController
         $this->set('multisite', $service->isMultisiteEnabled());
     }
 
-    public function submit()
+    protected function validateBoardRequest()
     {
         $security = new SanitizeService();
         $strings = $this->app->make(Strings::class);
@@ -33,27 +34,36 @@ class Add extends DashboardSitePageController
         if (!$strings->notempty($name)) {
             $this->error->add(t('You must specify a valid name for your board.'));
         }
-        
+
         $template = null;
         if ($this->request->request->has('templateID')) {
             $template = $this->entityManager->find(Template::class, $this->request->request->get('templateID'));
         }
-        
+
         if (!$template) {
             $this->error->add(t('You must specify a valid template for your board.'));
         }
         
+        return [$name, $template];
+    }
+    
+    public function submit()
+    {
+        list($name, $template) = $this->validateBoardRequest();
         if (!$this->error->has()) {
-            $board = new Board();
-            $site = $this->getSite();
-            if ($this->request->request->has('sharedBoard') && $this->request->request->get('sharedBoard') === '1') {
-                $site = null;
+            $command = new CreateBoardCommand();
+            if (empty($this->request->request->get('sharedBoard'))) {
+                $command->setSite($this->getSite());
             }
-            $board->setSite($this->getSite());
-            $board->setBoardName($name);
-            $board->setTemplate($template);
-            $this->entityManager->persist($board);
-            $this->entityManager->flush();
+            $sortBy = 'relevant_date_asc';
+            if (in_array($this->request->request->get('sortBy'), ['relevant_date_desc'])) {
+                $sortBy = $this->request->request->get('sortBy');
+            }
+            $command->setSortBy($sortBy);
+            $command->setName($name);
+            $command->setTemplate($template);
+            $board = $this->executeCommand($command);
+
             $this->redirect('/dashboard/boards/details', 'view', $board->getBoardID());
         }
         $this->view();

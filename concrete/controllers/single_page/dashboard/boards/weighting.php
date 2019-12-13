@@ -37,7 +37,8 @@ class Weighting extends DashboardSitePageController
             if (!$this->token->validate('update_weighting')) {
                 $this->error->add(t($this->token->getErrorMessage()));
             }
-            $command = new SetBoardCustomWeightingCommand($board);
+            $command = new SetBoardCustomWeightingCommand();
+            $command->setBoard($board);
             $configuredSources = $this->entityManager->getRepository(ConfiguredDataSource::class)
                 ->findByBoard($board);
             $weighting = $this->request->request->get('weighting');
@@ -75,7 +76,8 @@ class Weighting extends DashboardSitePageController
             if (!$this->token->validate('reset_weighting')) {
                 $this->error->add(t($this->token->getErrorMessage()));
             }
-            $command = new ResetBoardCustomWeightingCommand($board);
+            $command = new ResetBoardCustomWeightingCommand();
+            $command->setBoard($board);
             if (!$this->error->has()) {
                 $this->executeCommand($command);
                 $this->flash('success', t('Board weighting reset.'));
