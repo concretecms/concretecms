@@ -31,7 +31,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <td>
                             <div class="text-nowrap">
                                 <a href="#" class="launch-tooltip icon-link mr-1" data-toggle="modal" data-target="#update-instance-<?=$instance->getBoardInstanceID()?>"><i class="fas fa-sync-alt"></i></a>
-                                <a class="icon-link mr-1" href="<?=$view->action('view_instance', $instance->getBoardInstanceID())?>" target="_blank"><i class="fas fa-search"></i></a>
+                                <a class="icon-link mr-1" href="<?=$view->action('view_instance', $instance->getBoardInstanceID())?>"><i class="fas fa-search"></i></a>
                                 <a href="#" data-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>" class="icon-link"><i class="fas fa-trash"></i></a>
                             </div>
                             

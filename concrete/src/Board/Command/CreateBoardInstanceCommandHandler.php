@@ -45,12 +45,12 @@ class CreateBoardInstanceCommandHandler
         $instance = new Instance();
         $instance->setBoard($board);
         $instance->setDateCreated($this->createInstanceDateTime($board)->getTimestamp());
+        $this->entityManager->persist($instance);
 
         $collection = $this->collectionFactory->createSlotCollection($instance);
 
         // Now save the board instance.
         $instance->setSlots($collection);
-        $this->entityManager->persist($instance);
         $this->entityManager->flush();
         
     }

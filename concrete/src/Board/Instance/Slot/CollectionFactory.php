@@ -110,6 +110,9 @@ class CollectionFactory
                 $slot->setSlot($i);
                 $slot->setInstance($instance);
                 $slot->setTemplate($template);
+
+                $this->entityManager->persist($slot);
+
                 $collection->add($slot);
 
                 $templateContentSlots = $template->getDriver()->getTotalContentSlots();
@@ -119,6 +122,8 @@ class CollectionFactory
                 break;
             }
         }
+        
+        $this->entityManager->flush(); // need to do this here so our instance slots have IDs.
 
         $this->slotPopulator->populateSlotCollectionWithContent($contentObjectGroups, $collection);
 

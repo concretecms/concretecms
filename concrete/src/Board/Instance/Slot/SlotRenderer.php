@@ -39,6 +39,8 @@ class SlotRenderer
             $block = Block::getByID($matched->getBlockID());
             if ($block) {
                 $view = new BlockView($block);
+                $view->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/boards/slot_header.php');
+                $view->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/boards/slot_footer.php');
                 $view->render();
             }
         }

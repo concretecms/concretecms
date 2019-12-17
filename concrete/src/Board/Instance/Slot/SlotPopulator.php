@@ -63,10 +63,13 @@ class SlotPopulator
 
             // Now that we have an object collection, let's serialize it and to our core_board_slot object.
             $json = $this->serializer->serialize($contentObjectCollection, 'json');
-            $block = $type->add([
+            $data = [
+                'instanceSlotID' => $instanceSlot->getBoardInstanceSlotID(),
                 'contentObjectCollection' => $json,
                 'slotTemplateID' => $instanceSlot->getTemplate()->getId(),
-            ]);
+            ];
+
+            $block = $type->add($data);
 
             if ($block) {
                 $instanceSlot->setBlockID($block->getBlockID());

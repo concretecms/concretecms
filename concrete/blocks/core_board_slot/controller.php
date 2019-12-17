@@ -16,6 +16,8 @@ class Controller extends BlockController
     
     public $slotTemplateID;
     
+    public $instanceSlotID;
+    
     public function getBlockTypeDescription()
     {
         return t("Proxy block for board slots.");
@@ -25,6 +27,12 @@ class Controller extends BlockController
     {
         return t("Board Slot");
     }
+    
+    public function getInstanceSlotID()
+    {
+        return $this->instanceSlotID;
+    }
+    
     
     public function view()
     {

@@ -60,35 +60,35 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 319);
+/******/ 	return __webpack_require__(__webpack_require__.s = 322);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 319:
+/***/ 322:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(320);
+module.exports = __webpack_require__(323);
 
 
 /***/ }),
 
-/***/ 320:
+/***/ 323:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__normalizeonchange__ = __webpack_require__(321);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__normalizeonchange__ = __webpack_require__(324);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__normalizeonchange___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__normalizeonchange__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__inline__ = __webpack_require__(322);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__inline__ = __webpack_require__(325);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__inline___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__inline__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link__ = __webpack_require__(323);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link__ = __webpack_require__(326);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__link__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__file_manager__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__file_manager__ = __webpack_require__(327);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__file_manager___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__file_manager__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__styles__ = __webpack_require__(325);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__styles__ = __webpack_require__(328);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__styles___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__styles__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__upload_image__ = __webpack_require__(326);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__upload_image__ = __webpack_require__(329);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__upload_image___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__upload_image__);
 // Import the concrete5 CKEditor plugins
 
@@ -100,7 +100,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 321:
+/***/ 324:
 /***/ (function(module, exports) {
 
 (function () {
@@ -121,7 +121,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 322:
+/***/ 325:
 /***/ (function(module, exports) {
 
 CKEDITOR.plugins.add('concrete5inline', {
@@ -162,7 +162,7 @@ CKEDITOR.plugins.add('concrete5inline', {
 
 /***/ }),
 
-/***/ 323:
+/***/ 326:
 /***/ (function(module, exports) {
 
 (function () {
@@ -422,7 +422,7 @@ CKEDITOR.plugins.add('concrete5inline', {
 
 /***/ }),
 
-/***/ 324:
+/***/ 327:
 /***/ (function(module, exports) {
 
 (function () {
@@ -497,7 +497,7 @@ CKEDITOR.plugins.add('concrete5inline', {
 
 /***/ }),
 
-/***/ 325:
+/***/ 328:
 /***/ (function(module, exports) {
 
 (function () {
@@ -651,7 +651,7 @@ CKEDITOR.plugins.add('concrete5inline', {
 
 /***/ }),
 
-/***/ 326:
+/***/ 329:
 /***/ (function(module, exports) {
 
 (function () {

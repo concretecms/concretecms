@@ -6,6 +6,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Board\Instance\Slot\SlotRenderer;
 use Concrete\Core\Board\Template\TemplateLocator;
 use Concrete\Core\Entity\Board\Instance;
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Theme\Theme;
 
 class Renderer implements ApplicationAwareInterface
@@ -22,13 +23,15 @@ class Renderer implements ApplicationAwareInterface
      * @var Theme 
      */
     protected $theme;
-    
+
     /**
-     * Renderer constructor.
-     * @param TemplateLocator $templateLocator
+     * @var FileLocator 
      */
-    public function __construct(TemplateLocator $templateLocator, Theme $theme)
+    protected $fileLocator;
+    
+    public function __construct(FileLocator $fileLocator, TemplateLocator $templateLocator, Theme $theme)
     {
+        $this->fileLocator = $fileLocator;
         $this->templateLocator = $templateLocator;
         $this->theme = $theme;
     }
@@ -37,8 +40,12 @@ class Renderer implements ApplicationAwareInterface
     {
         $file = $this->templateLocator->getFileToRender($this->theme, $instance->getBoard()->getTemplate());
         if ($file) {
+            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_header.php')
+                ->getFile();
             $slot = $this->app->make(SlotRenderer::class, ['instance' => $instance]);
             include $file;
+            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_footer.php')
+                ->getFile();
         }
     }
 
