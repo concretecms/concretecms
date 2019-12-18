@@ -2278,7 +2278,7 @@ EOT
             $ptm = $this->getPageTemplateObject();
         }
 
-        $classes = ['ccm-page'];
+        $classes = ['ccm-page', 'pageid-' . $this->getCollectionID()];
         if (is_object($pt)) {
             $classes[] = 'page-type-'.str_replace('_', '-', $pt->getPageTypeHandle());
         }
