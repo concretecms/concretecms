@@ -53,7 +53,13 @@ class UserEntity extends Entity
 
     public function getAccessEntityUsers(PermissionAccess $pa)
     {
-        return array($this->getUserObject());
+        $users = [];
+        $u = $this->getUserObject();
+        if (is_object($u)) {
+            $users[] = $u;
+        }
+        
+        return $users;
     }
 
     public function getUserObject()
