@@ -62,7 +62,7 @@ class EmailValidator extends AbstractTranslatableValidator
         $this->setErrorString(
             self::E_INVALID_ADDRESS,
             function (EmailValidator $validator, $code, $mixed) {
-                return t('The email address "%s" is not valid.', $mixed);
+                return t('Invalid email address.');
             }
         );
     }
