@@ -275,6 +275,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         if ($row !== false) {
             $cv->setPropertiesFromArray($row);
+        } else {
+            $cv->loadError(VERSION_NOT_FOUND);
         }
 
         $cv->cID = $c->getCollectionID();
