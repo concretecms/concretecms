@@ -73,6 +73,21 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 exit;
             }
             break;
+
+        case 'cancel-schedule':
+            if ($cp->canApprovePageVersions()) {
+                $u = new User();
+                $pkr = new UnapprovePageRequest();
+                $pkr->setRequestedPage($c);
+                $v = CollectionVersion::get($c, "SCHEDULED");
+                $v->setPublishInterval(null, null);
+                $pkr->setRequestedVersionID($v->getVersionID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                header(
+                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+                exit;
+            }
     }
 }
 
