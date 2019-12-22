@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Page\Stack\Pile\PileContent;
+use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 
 # Filename: _process.php
 # Author: Andrew Embler (andrew@concrete5.org)
