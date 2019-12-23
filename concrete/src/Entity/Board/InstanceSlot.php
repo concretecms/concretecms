@@ -38,6 +38,11 @@ class InstanceSlot
     protected $slot;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isPinned = false;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $bID = 0;
@@ -136,6 +141,23 @@ class InstanceSlot
         $this->bID = $bID;
     }
 
+    /**
+     * @return mixed
+     */
+    public function isPinned()
+    {
+        return $this->isPinned;
+    }
+
+    /**
+     * @param mixed $isPinned
+     */
+    public function setIsPinned($isPinned): void
+    {
+        $this->isPinned = $isPinned;
+    }
+
+    
     
     
     

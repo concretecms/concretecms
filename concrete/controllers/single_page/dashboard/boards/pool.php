@@ -6,14 +6,26 @@ use Concrete\Core\Board\Command\PopulateBoardDataPoolCommand;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 
 class Pool extends DashboardSitePageController
 {
 
+
+    /**
+     * @param $id
+     * @return Board
+     */
     protected function getBoard($id)
     {
         $r = $this->entityManager->getRepository(Board::class);
-        return $r->findOneByBoardID($id);
+        $board = $r->findOneByBoardID($id);
+        if ($board) {
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $board;
+            }
+        }
     }
     
     public function refresh_pool($id = null)
@@ -24,12 +36,14 @@ class Pool extends DashboardSitePageController
                 $this->error->add(t($this->token->getErrorMessage()));
             }
             if (!$this->error->has()) {
-                $clear = new ClearBoardDataPoolCommand($board);
-                $populate = new PopulateBoardDataPoolCommand($board);
+                $clear = new ClearBoardDataPoolCommand();
+                $clear->setBoard($board);
+                $populate = new PopulateBoardDataPoolCommand();
+                $populate->setBoard($board);
                 $this->executeCommand($clear);
                 $this->executeCommand($populate);
                 $this->flash('success', t('Board data pool refreshed.'));
-                return $this->redirect('/dashboard/boards/details/', 'view', $board->getBoardID());
+                return $this->redirect('/dashboard/boards/pool/', 'view', $board->getBoardID());
             }
             $this->view($id);
         } else {

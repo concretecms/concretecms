@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Board\Command;
 
-class PopulateBoardDataPoolCommand extends BoardCommand
+class PopulateBoardDataPoolCommand
 {
-
     
+    use BoardTrait;   
     
 
     

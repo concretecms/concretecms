@@ -2,9 +2,10 @@
 
 namespace Concrete\Core\Board\Command;
 
-class EnableCustomSlotTemplatesCommand extends BoardCommand
+class EnableCustomSlotTemplatesCommand
 {
 
+    use BoardTrait;
 
     protected $templateIDs = [];
 

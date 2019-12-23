@@ -279,12 +279,12 @@ class BlockView extends AbstractView
         $loc->popActiveContext();
     }
 
-    protected function setBlockViewHeaderFile($file)
+    public function setBlockViewHeaderFile($file)
     {
         $this->blockViewHeaderFile = $file;
     }
 
-    protected function setBlockViewFooterFile($file)
+    public function setBlockViewFooterFile($file)
     {
         $this->blockViewFooterFile = $file;
     }

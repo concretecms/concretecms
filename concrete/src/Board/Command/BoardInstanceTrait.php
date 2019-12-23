@@ -3,9 +3,8 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Foundation\Command\CommandInterface;
 
-abstract class BoardInstanceCommand implements CommandInterface
+trait BoardInstanceTrait
 {
 
     /**
@@ -14,10 +13,9 @@ abstract class BoardInstanceCommand implements CommandInterface
     protected $instance;
 
     /**
-     * BoardInstanceCommand constructor.
      * @param Instance $instance
      */
-    public function __construct(Instance $instance)
+    public function setInstance(Instance $instance): void
     {
         $this->instance = $instance;
     }

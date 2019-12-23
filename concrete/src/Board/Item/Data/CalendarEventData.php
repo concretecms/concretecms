@@ -2,6 +2,7 @@
 namespace Concrete\Core\Board\Item\Data;
 
 use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -12,39 +13,31 @@ class CalendarEventData implements DataInterface
     /**
      * @var int
      */
-    protected $eventID = 0;
+    protected $occurrenceID = 0;
 
-    public function __construct(CalendarEvent $event = null)
+    public function __construct(CalendarEventVersionOccurrence $occurrence = null)
     {
-        if ($event) {
-            $this->eventID = $event->getID();
+        if ($occurrence) {
+            $this->occurrenceID = $occurrence->getID();
         }
     }
 
     /**
      * @return int
      */
-    public function getEventID(): int
+    public function getOccurrenceID()
     {
-        return $this->eventID;
+        return $this->occurrenceID;
     }
 
-    /**
-     * @param int $eventID
-     */
-    public function setEventID(int $eventID): void
+    public function jsonSerialize()
     {
-        $this->eventID = $eventID;
-    }
-    
-        public function jsonSerialize()
-    {
-        return ['eventID' => $this->eventID];
+        return ['occurrenceID' => $this->occurrenceID];
     }
 
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        $this->eventID = $data['eventID'];
+        $this->occurrenceID = $data['occurrenceID'];
     }
 
 

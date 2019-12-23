@@ -205,6 +205,18 @@
 
         </page>
 
+        <page name="Edit Board" path="/dashboard/boards/edit" filename="/dashboard/boards/edit.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Data Sources" path="/dashboard/boards/data_sources" filename="/dashboard/boards/data_sources.php" pagetype=""
               description="" package="">
             <attributes>
@@ -243,6 +255,18 @@
 
 
         <page name="Data Pool" path="/dashboard/boards/pool" filename="/dashboard/boards/pool.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Board Permissions" path="/dashboard/boards/permissions" filename="/dashboard/boards/permissions.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -1130,6 +1154,16 @@
               description="" package="" />
         <page name="Import Calendar Data" path="/dashboard/system/calendar/import"
               filename="/dashboard/system/calendar/import.php" pagetype=""
+              description="" package="" />
+
+        <page name="Boards" path="/dashboard/system/boards"
+              filename="/dashboard/system/boards/view.php" pagetype=""
+              description="Manage global board settings" package="" />
+        <page name="Board Settings" path="/dashboard/system/boards/settings"
+              filename="/dashboard/system/boards/settings.php" pagetype=""
+              description="" package="" />
+        <page name="Permissions" path="/dashboard/system/boards/permissions"
+              filename="/dashboard/system/boards/permissions.php" pagetype=""
               description="" package="" />
 
         <page name="Conversations" path="/dashboard/system/conversations"

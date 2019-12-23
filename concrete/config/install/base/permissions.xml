@@ -30,6 +30,8 @@
         <category handle="calendar_admin" package=""/>
         <category handle="calendar" package=""/>
         <category handle="express_entry" package=""/>
+        <category handle="board_admin" package=""/>
+        <category handle="board" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -229,6 +231,44 @@
         <permissionkey handle="access_calendar_rss_feed" name="Access RSS Feed" description="" package="" category="calendar"/>
         <permissionkey handle="delete_calendar" name="Delete Calendar" description="" package="" category="calendar"/>
 
+        <!-- boards //-->
+        <permissionkey handle="add_board" name="Add Board" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_boards" name="View Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_settings" name="Edit Board Settings" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_contents" name="Edit Board Content" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_permissions" name="Edit Permissions" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_boards" name="Delete Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_board" name="View Board" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_settings" name="Edit Settings" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_permissions" name="Edit Permissions" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_contents" name="Edit Contents" description="" package="" category="board"/>
+        <permissionkey handle="delete_board" name="Delete Board" description="" package="" category="board"/>
+
         <!-- express //-->
 
         <permissionkey handle="view_express_entries" name="View Entries" package="" category="express_tree_node">
@@ -402,6 +442,8 @@
                 <category handle="multilingual_section" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -430,6 +472,8 @@
                 <category handle="multilingual_section" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -457,6 +501,8 @@
                 <category handle="conversation_message" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -485,6 +531,8 @@
                 <category handle="multilingual_section" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
 
         </permissionaccessentitytype>

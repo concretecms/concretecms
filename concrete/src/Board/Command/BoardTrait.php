@@ -3,9 +3,8 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Foundation\Command\CommandInterface;
 
-abstract class BoardCommand implements CommandInterface
+trait BoardTrait
 {
 
     /**
@@ -14,10 +13,9 @@ abstract class BoardCommand implements CommandInterface
     protected $board;
 
     /**
-     * BoardCommand constructor.
      * @param Board $board
      */
-    public function __construct(Board $board)
+    public function setBoard(Board $board): void
     {
         $this->board = $board;
     }
