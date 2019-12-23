@@ -3,6 +3,8 @@ namespace Concrete\Block\CoreBoardSlot;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
+use Concrete\Core\Board\Instance\Slot\Menu\Manager;
+use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Doctrine\ORM\EntityManager;
 
@@ -38,13 +40,19 @@ class Controller extends BlockController
     {
         $template = null;
         if ($this->slotTemplateID) {
-            $template = $this->app->make(EntityManager::class)
-                ->find(SlotTemplate::class, $this->slotTemplateID);
-            $renderer = $this->app->make(ContentRenderer::class);
-            $collection = $renderer->denormalizeIntoCollection(json_decode($this->contentObjectCollection, true));
-            $this->set('dataCollection', $collection);
-            $this->set('renderer', $renderer);
-            $this->set('template', $template);
+            $entityManager = $this->app->make(EntityManager::class);
+            $slot = $entityManager->find(InstanceSlot::class, $this->instanceSlotID);
+            if ($slot) {
+                $template = $entityManager->find(SlotTemplate::class, $this->slotTemplateID);
+                $renderer = $this->app->make(ContentRenderer::class);
+                $collection = $renderer->denormalizeIntoCollection(json_decode($this->contentObjectCollection, true));
+                $menuManager = $this->app->make(Manager::class);
+                $this->set('dataCollection', $collection);
+                $this->set('renderer', $renderer);
+                $this->set('template', $template);
+                $this->set('slot', $slot);
+                $this->set('menu', $menuManager->getMenu($slot));
+            }
         }
     }
     

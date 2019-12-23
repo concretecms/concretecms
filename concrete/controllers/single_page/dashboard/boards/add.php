@@ -5,12 +5,23 @@ use Concrete\Core\Board\Command\CreateBoardCommand;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Template;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\SanitizeService;
 
 class Add extends DashboardSitePageController
 {
+    
+    public function on_start()
+    {
+        $permissions = new Checker();
+        if (!$permissions->canAddBoard()) {
+            return $this->redirect('/dashboard/boards/boards');
+        }
+        parent::on_start();
+    }
+
     public function view()
     {
         $templates = ['' => t('** Select a Template')];

@@ -23,6 +23,7 @@ trait GetThumbnailTrait
                 new ImageDataFieldData($thumbnail)
             );
         }
+        return null;
     }
     
 }

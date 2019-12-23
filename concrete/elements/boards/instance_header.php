@@ -1,3 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div data-board-instance-id="<?=$instance->getBoardInstanceID()?>">
+<div data-vue="board">
+<board instance-id="<?=$instance->getBoardInstanceID()?>">

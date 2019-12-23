@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 
 class Appearance extends DashboardSitePageController
 {
@@ -18,7 +19,13 @@ class Appearance extends DashboardSitePageController
     protected function getBoard($id)
     {
         $r = $this->entityManager->getRepository(Board::class);
-        return $r->findOneByBoardID($id);
+        $board = $r->findOneByBoardID($id);
+        if ($board) {
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $board;
+            }
+        }
     }
     
     public function view($id = null)

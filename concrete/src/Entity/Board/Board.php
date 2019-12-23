@@ -1,9 +1,16 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Board\Permissions\PermissionsManager;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Permission\AssignableObjectInterface;
+use Concrete\Core\Permission\AssignableObjectTrait;
+use Concrete\Core\Permission\Assignment\BoardAssignment;
+use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Permission\Response\BoardResponse;
+use Concrete\Core\Support\Facade\Facade;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,9 +18,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Boards")
  */
-class Board
+class Board implements ObjectInterface, AssignableObjectInterface
 {
-    
+
+    use AssignableObjectTrait;
+
     const ORDER_BY_RELEVANT_DATE_DESC = 'relevant_date_desc';
     const ORDER_BY_RELEVANT_DATE_ASC = 'relevant_date_asc';
 
@@ -57,6 +66,11 @@ class Board
     protected $batches;
 
     /**
+     * @ORM\OneToMany(targetEntity="BoardPermissionAssignment", mappedBy="board", cascade={"remove"})
+     */
+    protected $permission_assignments;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Template")
      */
     protected $template;
@@ -90,6 +104,11 @@ class Board
      * @ORM\Column(type="boolean")
      */
     protected $hasCustomWeightingRules = false;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    protected $overridePermissions = false;
 
     public function __construct()
     {
@@ -300,5 +319,57 @@ class Board
         $this->sortBy = $sortBy;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function arePermissionsSetToOverride()
+    {
+        return $this->overridePermissions;
+    }
+
+    /**
+     * @param mixed $overridePermissions
+     */
+    public function setOverridePermissions($overridePermissions)
+    {
+        $this->overridePermissions = $overridePermissions;
+    }
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getBoardID();
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return BoardAssignment::class;
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'board';
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return BoardResponse::class;
+    }
+
+    public function setChildPermissionsToOverride()
+    {
+        return false;
+    }
+
+    public function setPermissionsToOverride()
+    {
+        $app = Facade::getFacadeApplication();
+        $manager = $app->make(PermissionsManager::class);
+        /**
+         * @var $manager PermissionsManager
+         */
+        $manager->setPermissionsToOverride($this);
+    }
+
+
+
 }

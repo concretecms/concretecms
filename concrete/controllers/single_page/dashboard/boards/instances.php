@@ -10,6 +10,7 @@ use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\View\View;
 use Concrete\Theme\Concrete\PageTheme;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +18,21 @@ use Symfony\Component\HttpFoundation\Response;
 class Instances extends DashboardSitePageController
 {
 
+
+    /**
+     * @param $id
+     * @return Board
+     */
     protected function getBoard($id)
     {
         $r = $this->entityManager->getRepository(Board::class);
-        return $r->findOneByBoardID($id);
+        $board = $r->findOneByBoardID($id);
+        if ($board) {
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $board;
+            }
+        }
     }
     
     public function generate_instance($id = null)

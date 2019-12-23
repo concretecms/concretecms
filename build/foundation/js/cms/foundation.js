@@ -89,11 +89,11 @@ import './jquery-awesome-rating';
 import './liveupdate/quicksilver';
 import './liveupdate/jquery-liveupdate';
 
-// Boards
-import "./boards";
-
 // Help
 import './help/help';
+
+// Boards
+import './boards';
 
 // Calendar component
 import './calendar';

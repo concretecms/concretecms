@@ -193,6 +193,7 @@
             if (options.menuContainerClass) {
                 $container.addClass(options.menuContainerClass);
             }
+            
             $menu.css('opacity', 0).show();
 
             var mwidth = $menu.width(),
@@ -229,7 +230,7 @@
 
 
             var placement = available.shift();
-            $menu.removeClass(all).addClass(placement);
+            $menu.removeClass(all).addClass('bs-popover-' + placement);
 
             pageX -= 2;
             pageY -= 2;

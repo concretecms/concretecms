@@ -41,6 +41,12 @@ $c = Page::getCurrentPage();
         <?=t('Data Pool')?>
     </a>
     <a
+            class="list-group-item <?=($action === 'permissions') ? ' active' : ''?>"
+            href="<?=URL::to('/dashboard/boards/permissions', $board->getBoardID())?>"
+    >
+        <?=t('Permissions')?>
+    </a>
+    <a
             class="list-group-item <?=($action === 'instances') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/boards/instances', $board->getBoardID())?>"
     >

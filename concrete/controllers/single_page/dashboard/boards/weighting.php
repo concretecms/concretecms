@@ -7,14 +7,25 @@ use Concrete\Core\Board\Command\SetBoardCustomWeightingCommandValidator;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 
 class Weighting extends DashboardSitePageController
 {
 
+    /**
+     * @param $id
+     * @return Board
+     */
     protected function getBoard($id)
     {
         $r = $this->entityManager->getRepository(Board::class);
-        return $r->findOneByBoardID($id);
+        $board = $r->findOneByBoardID($id);
+        if ($board) {
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $board;
+            }
+        }
     }
     
     public function view($id = null)

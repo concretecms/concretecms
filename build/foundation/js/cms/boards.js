@@ -1,14 +1,14 @@
+import Vue from 'vue';
+import Board from "./boards/components/Board";
+import BoardSlot from "./boards/components/BoardSlot";
 
-import BoardInstance from './boards/instance';
-
-let $$ = document.querySelectorAll.bind(document),
-    instances = $$('div[data-board-instance-id]');
-
-if (instances) {
-    for (var i = 0; i < instances.length; i++) {
-        let instance = new BoardInstance({
-            'element': instances[i]
-        })
-        console.log(instance);
-    }
+let $boards = $('div[data-vue=board');
+if ($boards.length) {
+    new Vue({
+        el: 'div[data-vue=board]',
+        components: {
+            Board,
+            BoardSlot
+        }
+    });
 }
