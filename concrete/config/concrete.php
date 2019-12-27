@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.6.0a3',
     'version_installed' => '8.6.0a3',
-    'version_db' => '20190925072210', // the key of the latest database migration
+    'version_db' => '20191002000000', // the key of the latest database migration
  
     /*
      * Installation status
@@ -357,6 +357,13 @@ return [
          * @var bool
          */
         'spam' => false,
+
+        /*
+         * Whether to log REST API requests headers
+         *
+         * @var bool
+         */
+        'api' => false,
 
         'enable_dashboard_report' => true,
 

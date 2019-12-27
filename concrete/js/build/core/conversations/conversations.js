@@ -72,7 +72,8 @@
                 uninitialized: true,
                 deleteMessageToken: null,
                 addMessageToken: null,
-                editMessageToken: null
+                editMessageToken: null,
+                flagMessageToken: null
             }, options);
 
             var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
@@ -598,6 +599,9 @@
             var obj = this;
             obj.publish('conversationBeforeFlagMessage', { msgID: msgID });
             var formArray = [{
+                'name': 'token',
+                'value': obj.options.flagMessageToken
+            },{
                 'name': 'cnvMessageID',
                 'value': msgID
             }];
