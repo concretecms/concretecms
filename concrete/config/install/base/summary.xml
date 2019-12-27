@@ -7,10 +7,12 @@
     <summaryfields>
         <field handle="title" name="Title" package=""/>
         <field handle="date" name="Date" package=""/>
-        <field handle="date_complex" name="Complex Date" package=""/>
+        <field handle="date_start" name="Start Date" package=""/>
+        <field handle="date_end" name="End Date" package=""/>
         <field handle="link" name="Link" package=""/>
         <field handle="description" name="Description" package=""/>
         <field handle="thumbnail" name="Thumbnail" package=""/>
+        <field handle="categories" name="Categories" package=""/>
     </summaryfields>
     <summarytemplates>
         <template handle="default" name="Default Summary Template"

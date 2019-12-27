@@ -7,14 +7,25 @@ use Concrete\Core\Board\Command\SetBoardCustomWeightingCommandValidator;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 
 class Weighting extends DashboardSitePageController
 {
 
+    /**
+     * @param $id
+     * @return Board
+     */
     protected function getBoard($id)
     {
         $r = $this->entityManager->getRepository(Board::class);
-        return $r->findOneByBoardID($id);
+        $board = $r->findOneByBoardID($id);
+        if ($board) {
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $board;
+            }
+        }
     }
     
     public function view($id = null)
@@ -37,7 +48,8 @@ class Weighting extends DashboardSitePageController
             if (!$this->token->validate('update_weighting')) {
                 $this->error->add(t($this->token->getErrorMessage()));
             }
-            $command = new SetBoardCustomWeightingCommand($board);
+            $command = new SetBoardCustomWeightingCommand();
+            $command->setBoard($board);
             $configuredSources = $this->entityManager->getRepository(ConfiguredDataSource::class)
                 ->findByBoard($board);
             $weighting = $this->request->request->get('weighting');
@@ -75,7 +87,8 @@ class Weighting extends DashboardSitePageController
             if (!$this->token->validate('reset_weighting')) {
                 $this->error->add(t($this->token->getErrorMessage()));
             }
-            $command = new ResetBoardCustomWeightingCommand($board);
+            $command = new ResetBoardCustomWeightingCommand();
+            $command->setBoard($board);
             if (!$this->error->has()) {
                 $this->executeCommand($command);
                 $this->flash('success', t('Board weighting reset.'));

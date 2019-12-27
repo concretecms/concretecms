@@ -20,6 +20,24 @@ $buttonText = t("Add");
             <?=$form->select('templateID', $templates)?>
         </div>
 
+        <div class="form-group">
+            <label class="control-label"><?=t('Sort By')?></label>
+
+            <div class="form-check">
+                <?=$form->radio('sortBy', 'relevant_date_asc', true)?>
+                <label class="form-check-label" for="sortBy1">
+                    <?=t('Ascending Date.')?>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <?=$form->radio('sortBy', 'relevant_date_desc')?>
+                <label class="form-check-label" for="sortBy1">
+                    <?=t('Descending Date.')?>
+                </label>
+            </div>
+        </div>
+
         <?php if ($multisite) { ?>
             <div class="form-group">
                 <label class="control-label"><?=t('Site')?></label>

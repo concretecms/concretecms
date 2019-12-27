@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Board\Instance\Slot;
 
+use Concrete\Core\Board\Instance\ItemSegmenter;
+use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
 use Concrete\Core\Board\Instance\Slot\Content\ItemObjectGroup;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlot;
@@ -15,10 +17,32 @@ class CollectionFactory
      * @var EntityManager 
      */
     protected $entityManager;
+
+    /**
+     * @var ItemSegmenter 
+     */
+    protected $itemSegmenter;
+
+    /**
+     * @var ContentPopulator 
+     */
+    protected $contentPopulator;
+
+    /**
+     * @var SlotPopulator 
+     */
+    protected $slotPopulator;
     
-    public function __construct(EntityManager $entityManager)
+    public function __construct(
+        EntityManager $entityManager,
+        ItemSegmenter $itemSegmenter,
+        ContentPopulator $contentPopulator,
+        SlotPopulator $slotPopulator)
     {
         $this->entityManager = $entityManager;
+        $this->itemSegmenter = $itemSegmenter;
+        $this->contentPopulator = $contentPopulator;
+        $this->slotPopulator = $slotPopulator;
     }
 
     /**
@@ -57,15 +81,22 @@ class CollectionFactory
      * @param ItemObjectGroup[] $contentObjectGroups
      * @return ArrayCollection
      */
-    public function createSlotCollection(Instance $instance, array $contentObjectGroups) : ArrayCollection
+    public function createSlotCollection(Instance $instance) : ArrayCollection
     {
+
+        // Let's create items from our data sources to put into our board.
+        $items = $this->itemSegmenter->getBoardItemsForInstance($instance);
+
+        // Now that we have items, let's create a pool of content objects.
+        $contentObjectGroups = $this->contentPopulator->createContentObjects($items);
+        
         $board = $instance->getBoard();
         if ($board->hasCustomSlotTemplates()) {
             $availableTemplates = $board->getCustomSlotTemplates();
         } else {
             $availableTemplates = $this->entityManager->getRepository(SlotTemplate::class)->findAll();
         }
-        
+
         $collection = new ArrayCollection();
         $driver = $board->getTemplate()->getDriver();
         $slots = $driver->getTotalSlots();
@@ -79,6 +110,9 @@ class CollectionFactory
                 $slot->setSlot($i);
                 $slot->setInstance($instance);
                 $slot->setTemplate($template);
+
+                $this->entityManager->persist($slot);
+
                 $collection->add($slot);
 
                 $templateContentSlots = $template->getDriver()->getTotalContentSlots();
@@ -89,6 +123,10 @@ class CollectionFactory
             }
         }
         
+        $this->entityManager->flush(); // need to do this here so our instance slots have IDs.
+
+        $this->slotPopulator->populateSlotCollectionWithContent($contentObjectGroups, $collection);
+
         return $collection;
     }
 

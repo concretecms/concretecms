@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 
 class Appearance extends DashboardSitePageController
 {
@@ -18,7 +19,13 @@ class Appearance extends DashboardSitePageController
     protected function getBoard($id)
     {
         $r = $this->entityManager->getRepository(Board::class);
-        return $r->findOneByBoardID($id);
+        $board = $r->findOneByBoardID($id);
+        if ($board) {
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $board;
+            }
+        }
     }
     
     public function view($id = null)
@@ -50,13 +57,15 @@ class Appearance extends DashboardSitePageController
             if (!$this->error->has()) {
 
                 if ($this->request->request->get('hasCustomSlotTemplates')) {
-                    $command = new EnableCustomSlotTemplatesCommand($board);
+                    $command = new EnableCustomSlotTemplatesCommand();
+                    $command->setBoard($board);
                     $templateIDs = $this->request->request->get('templateIDs');
                     if ($templateIDs) {
                         $command->setTemplateIDs($templateIDs);
                     }
                 } else {
-                    $command = new DisableCustomSlotTemplatesCommand($board);
+                    $command = new DisableCustomSlotTemplatesCommand();
+                    $command->setBoard($board);
                 }
                 $this->executeCommand($command);
                 $this->flash('success', t('Board appearance saved.'));

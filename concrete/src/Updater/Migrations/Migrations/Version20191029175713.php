@@ -38,6 +38,9 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
         $this->createSinglePage('/dashboard/boards/details', 'Board Details',
             ['exclude_nav' => true, 'exclude_search_index' => true]
         );
+        $this->createSinglePage('/dashboard/boards/edit', 'Edit Board',
+            ['exclude_nav' => true, 'exclude_search_index' => true]
+        );
         $this->createSinglePage('/dashboard/boards/appearance', 'Board Appearance',
             ['exclude_nav' => true, 'exclude_search_index' => true]
         );
@@ -50,9 +53,15 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
         $this->createSinglePage('/dashboard/boards/pool', 'Data Pool',
             ['exclude_nav' => true, 'exclude_search_index' => true]
         );
+        $this->createSinglePage('/dashboard/boards/permissions', 'Board Permissions',
+            ['exclude_nav' => true, 'exclude_search_index' => true]
+        );
         $this->createSinglePage('/dashboard/boards/instances', 'Board Instances',
             ['exclude_nav' => true, 'exclude_search_index' => true]
         );
+        $this->createSinglePage('/dashboard/system/boards');
+        $this->createSinglePage('/dashboard/system/boards/settings', 'Board Settings');
+        $this->createSinglePage('/dashboard/system/boards/permissions', 'Board Permissions');
         $this->refreshEntities([
             Board::class,
             Item::class,

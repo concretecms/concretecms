@@ -5,7 +5,7 @@ use Concrete\Core\Board\Instance\Slot\Content\ObjectInterface;
 use Concrete\Core\Board\Instance\Slot\Content\SummaryObjectCreatorTrait;
 use Concrete\Core\Board\Item\Data\CalendarEventData;
 use Concrete\Core\Board\Item\Data\DataInterface;
-use Concrete\Core\Calendar\Event\EventService;
+use Concrete\Core\Calendar\Event\EventOccurrenceService;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -15,13 +15,13 @@ class CalendarEventPopulator extends AbstractPopulator
     use SummaryObjectCreatorTrait;
 
     /**
-     * @var EventService 
+     * @var EventOccurrenceService 
      */
-    protected $eventService;
+    protected $eventOccurrenceService;
     
-    public function __construct(EventService $eventService)
+    public function __construct(EventOccurrenceService $eventOccurrenceService)
     {
-        $this->eventService = $eventService;
+        $this->eventOccurrenceService = $eventOccurrenceService;
     }
     
     public function getDataClass(): string
@@ -35,9 +35,9 @@ class CalendarEventPopulator extends AbstractPopulator
      */
     public function createContentObjects(DataInterface $data): array
     {
-        $event = $this->eventService->getByID($data->getEventID());
-        if ($event) {
-            return $this->createSummaryContentObjects($event);            
+        $occurrence = $this->eventOccurrenceService->getByID($data->getOccurrenceID());
+        if ($occurrence) {
+            return $this->createSummaryContentObjects($occurrence);            
         }
     }
 
