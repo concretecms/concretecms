@@ -27,6 +27,8 @@ class ServiceList
             ['skype', 'Skype', 'skype'],
             ['vk', 'Vkontakte', 'vk'],
             ['personal_website', 'Personal Website', 'external-link'],
+            ['email', 'Email', 'envelope'],
+            ['phone', 'Phone', 'phone-square'],
         ];
 
         // if additional social media services have been defined in custom config, append to built-in list or override

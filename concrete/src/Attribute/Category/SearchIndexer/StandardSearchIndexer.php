@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
@@ -9,22 +10,26 @@ use Doctrine\DBAL\Schema\Schema;
 
 class StandardSearchIndexer implements SearchIndexerInterface
 {
+    /**
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
     protected $connection;
 
+    /**
+     * Initialize the instance.
+     *
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    protected function isValid(CategoryInterface $category)
-    {
-        if (!($category instanceof StandardSearchIndexerInterface)) {
-            throw new \Exception(t('Category %s must implement StandardSearchIndexerInterface.'), $category->getCategoryEntity()->getAttributeCategoryHandle());
-        }
-
-        return true;
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\SearchIndexer\SearchIndexerInterface::indexEntry()
+     */
     public function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
         if ($this->isValid($category)) {
@@ -33,6 +38,11 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\SearchIndexer\SearchIndexerInterface::clearIndexEntry()
+     */
     public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
         if ($this->isValid($category)) {
@@ -41,6 +51,11 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\SearchIndexer\SearchIndexerInterface::createRepository()
+     */
     public function createRepository(CategoryInterface $category)
     {
         $schema = new Schema([], [], $this->connection->getSchemaManager()->createSchemaConfig());
@@ -81,6 +96,11 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\SearchIndexer\SearchIndexerInterface::updateRepositoryColumns()
+     */
     public function updateRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null)
     {
         if ($this->isValid($category)) {
@@ -89,11 +109,35 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
+    /**
+     * @deprecated use the updateRepositoryColumns() method
+     *
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
+     */
     public function refreshRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key)
     {
         if ($this->isValid($category)) {
             $attributeIndexer = $key->getSearchIndexer();
             $attributeIndexer->refreshSearchIndexKeyColumns($category, $key);
         }
+    }
+
+    /**
+     * Check if a category is correctly configured to handle indexing stuff.
+     *
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
+     *
+     * @throws \Exception in case of errors
+     *
+     * @return bool
+     */
+    protected function isValid(CategoryInterface $category)
+    {
+        if (!($category instanceof StandardSearchIndexerInterface)) {
+            throw new \Exception(t('Category %s must implement StandardSearchIndexerInterface.'), $category->getCategoryEntity()->getAttributeCategoryHandle());
+        }
+
+        return true;
     }
 }

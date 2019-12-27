@@ -47,6 +47,7 @@ class Edit extends BackendInterfaceBlockController
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
+            $app = Application::getFacadeApplication();
             $b = $this->getBlockToEdit();
             $e = $this->validateBlock($b);
             $pr = $this->getEditResponse($b, $e);
@@ -63,11 +64,10 @@ class Edit extends BackendInterfaceBlockController
                 $formatter = new JsonFormatter($e);
                 $response = $formatter->asArray();
                 $response['newbID'] = intval($b->getBlockID());
-                $app = Application::getFacadeApplication();
                 return $app->make(ResponseFactoryInterface::class)->create(json_encode($response));
             }
 
-            $pr->outputJSON();
+            return $app->make(ResponseFactoryInterface::class)->json($pr);
         }
     }
 

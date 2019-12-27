@@ -5,7 +5,6 @@ use Concrete\Core\Page\Search\ColumnSet\Column\CollectionVersionColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\DateLastModifiedColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\DatePublicColumn;
 use Concrete\Core\Search\Column\Column;
-use Concrete\Core\Search\Column\Set;
 use UserInfo;
 use Core;
 
@@ -38,7 +37,7 @@ class DefaultSet extends ColumnSet
         $this->addColumn(new CollectionVersionColumn());
         $this->addColumn(new DatePublicColumn());
         $this->addColumn(new DateLastModifiedColumn());
-        $this->addColumn(new Column('author', t('Author'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionAuthor'), false));
+        $this->addColumn(new Column('author', t('Author'), ['\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionAuthor'], false));
         $date = $this->getColumnByKey('c.cDateModified');
         $this->setDefaultSortColumn($date, 'desc');
     }

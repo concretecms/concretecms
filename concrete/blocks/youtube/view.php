@@ -58,12 +58,6 @@ if (isset($rel) && $rel) {
     $params[] = 'rel=0';
 }
 
-if (isset($showinfo) && $showinfo) {
-    $params[] = 'showinfo=1';
-} else {
-    $params[] = 'showinfo=0';
-}
-
 if (isset($showCaptions) && $showCaptions) {
     $params[] = 'cc_load_policy=1';
     $params[] = 'cc_lang_pref=' . Localization::activeLanguage();
