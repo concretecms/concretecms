@@ -1,11 +1,10 @@
 <?php
 namespace Concrete\Core\User;
 
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\Entry\Group\EnterGroup;
-use Concrete\Core\Logging\Entry\Group\ExitGroup;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Session\SessionValidator;
@@ -23,12 +22,12 @@ class User extends ConcreteObject
 {
     public $uID = '';
     public $uName = '';
-    public $uGroups = array();
+    public $uGroups = [];
     public $superUser = false;
     public $uTimezone = null;
     protected $uDefaultLanguage = null;
     // an associative array of all access entity objects that are associated with this user.
-    protected $accessEntities = array();
+    protected $accessEntities = [];
     protected $hasher;
     protected $uLastPasswordChange;
 
@@ -44,8 +43,8 @@ class User extends ConcreteObject
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        $v = array($uID);
-        $q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage, uLastPasswordChange FROM Users WHERE uID = ? LIMIT 1";
+        $v = [$uID];
+        $q = 'SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage, uLastPasswordChange FROM Users WHERE uID = ? LIMIT 1';
         $r = $db->query($q, $v);
         $row = $r ? $r->FetchRow() : null;
         $nu = null;
@@ -80,6 +79,7 @@ class User extends ConcreteObject
     public static function isLoggedIn()
     {
         $u = new User();
+
         return $u->isRegistered();
     }
 
@@ -105,7 +105,7 @@ class User extends ConcreteObject
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
 
-            $row = $db->GetRow("select * from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
+            $row = $db->GetRow('select * from Users where uID = ? and uName = ?', [$session->get('uID'), $session->get('uName')]);
             $checkUID = (isset($row['uID'])) ? ($row['uID']) : (false);
 
             if ($checkUID == $session->get('uID')) {
@@ -128,7 +128,7 @@ class User extends ConcreteObject
                     // This code throttles the writing of uLastOnline to the database, so that we're not constantly
                     // updating the Users table. If you need to have the exact up to date metric on when a session
                     // last looked at a page, use uOnlineCheck.
-                    $db->query("update Users set uLastOnline = ? where uID = ?", array($session->get('uOnlineCheck'), $this->uID));
+                    $db->query('update Users set uLastOnline = ? where uID = ?', [$session->get('uOnlineCheck'), $this->uID]);
                     $session->set('uLastOnline', $session->get('uOnlineCheck'));
                 }
 
@@ -168,11 +168,11 @@ class User extends ConcreteObject
                 $session->remove('uGroups');
                 $session->remove('accessEntities');
             }
-            $v = array($username);
+            $v = [$username];
             if ($config->get('concrete.user.registration.email_registration')) {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uEmail = ?";
+                $q = 'select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uEmail = ?';
             } else {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uName = ?";
+                $q = 'select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uName = ?';
             }
 
             $hasher = $app->make(PasswordHasher::class);
@@ -214,8 +214,8 @@ class User extends ConcreteObject
                 if ($pw_is_valid_legacy) {
                     // this password was generated on a previous version of Concrete5.
                     // We re-hash it to make it more secure.
-                    $v = array($hasher->hashPassword($password), $this->uID);
-                    $db->execute($db->prepare("update Users set uPassword = ? where uID = ?"), $v);
+                    $v = [$hasher->hashPassword($password), $this->uID];
+                    $db->execute($db->prepare('update Users set uPassword = ? where uID = ?'), $v);
                 }
             } else {
                 $hasher->hashPassword($password); // HashPassword and CheckPassword are slow functions.
@@ -244,10 +244,9 @@ class User extends ConcreteObject
                 } elseif ($ux === -1) {
                     $this->uID = -1;
                     $this->uName = t('Guest');
-
                 }
                 $this->uGroups = $this->_getUserGroups(true);
-            } else if ($validator->hasActiveSession() || $this->uID) {
+            } elseif ($validator->hasActiveSession() || $this->uID) {
                 if ($session->has('uID')) {
                     $this->uID = $session->get('uID');
                     $this->uName = $session->get('uName');
@@ -274,12 +273,12 @@ class User extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
-        $uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
+        $uLastLogin = $db->getOne('select uLastLogin from Users where uID = ?', [$this->uID]);
 
         /** @var \Concrete\Core\Permission\IPService $iph */
         $iph = $app->make('helper/validation/ip');
         $ip = $iph->getRequestIP();
-        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID));
+        $db->query('update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?', [($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID]);
     }
 
     /**
@@ -287,6 +286,7 @@ class User extends ConcreteObject
      *
      * @param string $uPassword
      * @param null $salt
+     *
      * @return string
      */
     public function encryptPassword($uPassword, $salt = null)
@@ -299,6 +299,7 @@ class User extends ConcreteObject
      * Use only for checking password hashes, not generating new ones to store.
      *
      * @param string $uPassword
+     *
      * @return string
      */
     public function legacyEncryptPassword($uPassword)
@@ -376,6 +377,7 @@ class User extends ConcreteObject
 
     /**
      * @param string $authType
+     *
      * @throws \Exception
      */
     public function setAuthTypeCookie($authType)
@@ -394,7 +396,7 @@ class User extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
-        $db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
+        $db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', [$at->getAuthenticationTypeID(), $this->getUserID()]);
     }
 
     /**
@@ -404,7 +406,7 @@ class User extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
-        $id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
+        $id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', [$this->getUserID()]);
 
         return intval($id);
     }
@@ -505,7 +507,6 @@ class User extends ConcreteObject
         return $this->uGroups;
     }
 
-
     /**
      * Sets a default language for a user record.
      *
@@ -519,7 +520,7 @@ class User extends ConcreteObject
 
         $this->uDefaultLanguage = $lang;
         $session->set('uDefaultLanguage', $lang);
-        $db->Execute('update Users set uDefaultLanguage = ? where uID = ?', array($lang, $this->getUserID()));
+        $db->Execute('update Users set uDefaultLanguage = ? where uID = ?', [$lang, $this->getUserID()]);
     }
 
     /**
@@ -604,11 +605,13 @@ class User extends ConcreteObject
                 $entities = [];
             }
         }
+
         return $entities;
     }
 
     /**
      * @param bool $disableLogin
+     *
      * @return array
      */
     public function _getUserGroups($disableLogin = false)
@@ -626,8 +629,8 @@ class User extends ConcreteObject
                 $ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_ID;
 
                 $uID = $this->uID;
-                $q = "select gID from UserGroups where uID = ?";
-                $r = $db->query($q, array($uID));
+                $q = 'select gID from UserGroups where uID = ?';
+                $r = $db->query($q, [$uID]);
                 while ($row = $r->fetch()) {
                     $g = Group::getByID($row['gID']);
                     if ($g->isUserExpired($this)) {
@@ -656,16 +659,16 @@ class User extends ConcreteObject
         $dt = $app->make('helper/date');
 
         if (is_object($g)) {
-            if (!$this->inGroup($g)) {
+            if (!$this->inExactGroup($g)) {
                 $gID = $g->getGroupID();
                 $db = $app['database']->connection();
 
-                $db->Replace('UserGroups', array(
+                $db->Replace('UserGroups', [
                     'uID' => $this->getUserID(),
                     'gID' => $g->getGroupID(),
                     'ugEntered' => $dt->getOverridableNow(),
-                ),
-                array('uID', 'gID'), true);
+                ],
+                ['uID', 'gID'], true);
 
                 if ($g->isGroupBadge()) {
                     $action = UserPointAction::getByHandle('won_badge');
@@ -697,7 +700,6 @@ class User extends ConcreteObject
      */
     public function exitGroup($g)
     {
-
         // takes a group object, and, if the user is in the group, they exit the group
         if (is_object($g)) {
             $app = Application::getFacadeApplication();
@@ -710,25 +712,64 @@ class User extends ConcreteObject
             $app['director']->dispatch('on_user_exit_group', $ue);
 
             $q = 'delete from UserGroups where uID = ? and gID = ?';
-            $r = $db->executeQuery($q, array($this->uID, $gID));
+            $r = $db->executeQuery($q, [$this->uID, $gID]);
         }
     }
 
     /**
-     * Return true if user is in Group.
+     * Return true if user is in Group or any of this groups children.
      *
      * @param Group $g
+     *
      * @return bool
      */
     public function inGroup($g)
     {
         $app = Application::getFacadeApplication();
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = $app['database']->connection();
+        /** @var $likeBuilder LikeBuilder */
+        $likeBuilder = $app->make(LikeBuilder::class);
+        $query = $db->createQueryBuilder();
+        $query->select('ug.gID')->from('UserGroups', 'ug')
+            ->innerJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID')
+            ->where($query->expr()->eq('ug.uID', ':userID'))
+            ->andWhere($query->expr()->orX(
+                $query->expr()->eq('ug.gID', ':gID'),
+                $query->expr()->like('g.gPath', ':groupPath')
+            ))
+            ->setParameter('userID', $this->uID)
+            ->setParameter('gID', $g->getGroupID())
+            ->setParameter('groupPath', $likeBuilder->escapeForLike($g->getGroupPath()) . '/%')
+            ->setMaxResults(1);
+        $results = $query->execute()->fetchColumn();
 
-        $v = array($this->uID);
-        $cnt = $db->GetOne("select Groups.gID from UserGroups inner join " . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . " on UserGroups.gID = Groups.gID where uID = ? and gPath like " . $db->quote($g->getGroupPath() . '%'), $v);
+        return (bool) $results;
+    }
 
-        return $cnt > 0;
+    /**
+     * Return true if user is in this Group.
+     * Does not check if user is a member of children.
+     *
+     * @param Group $g
+     *
+     * @return bool
+     */
+    public function inExactGroup($g)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
+        $db = $app['database']->connection();
+        $query = $db->createQueryBuilder();
+        $query->select('ug.gID')->from('UserGroups', 'ug')
+            ->where($query->expr()->eq('ug.uID', ':userID'))
+            ->andWhere(
+                $query->expr()->eq('ug.gID', ':gID'))->setParameter('userID', $this->uID)
+            ->setParameter('gID', $g->getGroupID())
+            ->setMaxResults(1);
+        $results = $query->execute()->fetchColumn();
+
+        return (bool) $results;
     }
 
     /**
@@ -749,6 +790,7 @@ class User extends ConcreteObject
      * Loads a page in edit mode.
      *
      * @param Page $c
+     *
      * @return bool
      */
     public function loadCollectionEdit(&$c)
@@ -768,7 +810,7 @@ class User extends ConcreteObject
         $this->unloadCollectionEdit(false);
 
         $q = 'select cIsCheckedOut, cCheckedOutDatetime from Pages where cID = ?';
-        $r = $db->executeQuery($q, array($cID));
+        $r = $db->executeQuery($q, [$cID]);
         if ($r) {
             $row = $r->fetchRow();
             if (!$row['cIsCheckedOut']) {
@@ -777,7 +819,7 @@ class User extends ConcreteObject
                 $dh = $app->make('helper/date');
                 $datetime = $dh->getOverridableNow();
                 $q2 = 'update Pages set cIsCheckedOut = ?, cCheckedOutUID = ?, cCheckedOutDatetime = ?, cCheckedOutDatetimeLastEdit = ? where cID = ?';
-                $r2 = $db->executeQuery($q2, array(1, $uID, $datetime, $datetime, $cID));
+                $r2 = $db->executeQuery($q2, [1, $uID, $datetime, $datetime, $cID]);
 
                 $c->cIsCheckedOut = 1;
                 $c->cCheckedOutUID = $uID;
@@ -798,7 +840,7 @@ class User extends ConcreteObject
         $db = $app['database']->connection();
 
         if ($this->getUserID() > 0) {
-            $col = $db->GetCol('select cID from Pages where cCheckedOutUID = ?', array($this->getUserID()));
+            $col = $db->GetCol('select cID from Pages where cCheckedOutUID = ?', [$this->getUserID()]);
             foreach ($col as $cID) {
                 $p = Page::getByID($cID);
                 if ($removeCache) {
@@ -806,13 +848,14 @@ class User extends ConcreteObject
                 }
             }
 
-            $q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = ?";
-            $db->query($q, array($this->getUserID()));
+            $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = ?';
+            $db->query($q, [$this->getUserID()]);
         }
     }
 
     /**
      * @param string $cfKey
+     *
      * @return string|null
      */
     public function config($cfKey)
@@ -821,7 +864,7 @@ class User extends ConcreteObject
             $app = Application::getFacadeApplication();
             $db = $app['database']->connection();
 
-            $val = $db->GetOne("select cfValue from ConfigStore where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
+            $val = $db->GetOne('select cfValue from ConfigStore where uID = ? and cfKey = ?', [$this->getUserID(), $cfKey]);
 
             return $val;
         }
@@ -855,7 +898,7 @@ class User extends ConcreteObject
     public function saveConfig($cfKey, $cfValue)
     {
         $app = Application::getFacadeApplication();
-        $app['database']->connection()->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
+        $app['database']->connection()->Replace('ConfigStore', ['cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()], ['cfKey', 'uID'], true);
     }
 
     /**
@@ -872,7 +915,7 @@ class User extends ConcreteObject
             $datetime = $dh->getOverridableNow();
 
             $q = 'update Pages set cCheckedOutDatetimeLastEdit = ? where cID = ?';
-            $r = $db->executeQuery($q, array($datetime, $cID));
+            $r = $db->executeQuery($q, [$datetime, $cID]);
 
             $c->cCheckedOutDatetimeLastEdit = $datetime;
         }
@@ -887,7 +930,7 @@ class User extends ConcreteObject
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        $q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null";
+        $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null';
         $r = $db->query($q);
 
         return $r;
