@@ -30,6 +30,9 @@
             <a class="ccm-avatar-cancel" :style="{width: width / 2 + 'px'}" @click="handleCancel"></a>
         </div>
         <canvas ref="canvas" style="height: 0px"></canvas>
+        <div v-if="hasError" class="alert alert-danger">
+            {{errorMessage}}
+        </div>
     </div>
 </template>
 
