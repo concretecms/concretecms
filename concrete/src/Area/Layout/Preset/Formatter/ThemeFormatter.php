@@ -22,17 +22,33 @@ class ThemeFormatter implements FormatterInterface
             $node = $nodes[0];
 
             if (is_object($node)) {
-                $element = new Element($node->tag);
-                foreach ($node->getAllAttributes() as $key => $value) {
-                    $element->setAttribute($key, $value);
+                $root = $this->getElementForNode($node);
+
+                $children = $node->children();
+                $element = $root;
+                while (count($children) > 0) {
+                    $node = $children[0];
+
+                    $parent = $element;
+                    $element = $this->getElementForNode($node);
+                    $parent->appendChild($element);
+                    $children = $node->children();
                 }
             }
         }
 
-        if (!isset($element)) {
-            $element = '';
+        if (!isset($root)) {
+            $root = '';
         }
 
+        return $root;
+    }
+
+    private function getElementForNode($node) {
+        $element = new Element($node->tag);
+        foreach ($node->getAllAttributes() as $key => $value) {
+            $element->setAttribute($key, $value);
+        }
         return $element;
     }
 }

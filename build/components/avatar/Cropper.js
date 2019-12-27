@@ -27,6 +27,8 @@ export default {
             imageWidth: 0,
             saving: false,
             currentimage: null,
+            hasError: false,
+            errorMessage: '',
         }
     },
 
@@ -41,7 +43,14 @@ export default {
         this.setupUploading();
     },
     methods: {
-
+        setError(error) {
+            this.hasError = true;
+            this.errorMessage = error;
+        },
+        clearError() {
+            this.hasError = false;
+            this.errorMessage = '';
+        },
         /**
          * Setup dropzone for uploading
          */
@@ -78,18 +87,26 @@ export default {
                     });
 
                     this.on('success', function(event, data) {
-                        component.currentimage = data.avatar;
+                        if (!component.hasError) {
+                            component.currentimage = data.avatar;
+                        }
+
                     });
 
-                    this.on('complete', function() {
-                        component.saving = false;
-                        component.img = null;
-                        component.dropzone.destroy();
-                        component.dropzone = null;
+                    this.on('error', function (event, data) {
+                        component.setError(data.message);
+                        component.currentimage = component.src;
+                    })
 
-                        setTimeout(function() {
-                            component.setupUploading();
-                        }, 0);
+                    this.on('complete', function() {
+                            component.saving = false;
+                            component.img = null;
+                            component.dropzone.destroy();
+                            component.dropzone = null;
+
+                            setTimeout(function () {
+                                component.setupUploading();
+                            }, 0);
                     });
                 },
 
@@ -165,7 +182,9 @@ export default {
             if (window.confirm('Are you sure you want to quit?')) {
                 this.done.call(this.dropzone, 'Cancelled upload.');
                 this.img = null;
+                this.saving = false
                 this.dropzone.destroy();
+                this.clearError()
                 this.dropzone = null;
                 this.setupUploading();
             }

@@ -418,6 +418,13 @@ return [
          */
         'spam' => false,
 
+        /*
+         * Whether to log REST API requests headers
+         *
+         * @var bool
+         */
+        'api' => false,
+
         'enable_dashboard_report' => true,
 
         'configuration' => [

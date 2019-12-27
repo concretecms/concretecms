@@ -19,10 +19,12 @@ class Logging extends DashboardPageController
         $strStatus = (string) $strStatus;
         $intLogErrors = $config->get('concrete.log.errors') == 1 ? 1 : 0;
         $intLogEmails = $config->get('concrete.log.emails') == 1 ? 1 : 0;
+        $intLogApi = $config->get('concrete.log.api') == 1 ? 1 : 0;
 
         $this->set('fh', Loader::helper('form'));
         $this->set('intLogErrors', $intLogErrors);
         $this->set('intLogEmails', $intLogEmails);
+        $this->set('intLogApi', $intLogApi);
 
         if ($strStatus == 'logging_saved') {
             $this->set('message', t('Logging configuration saved.'));
@@ -79,9 +81,11 @@ class Logging extends DashboardPageController
         if (!$this->error->has()) {
             $intLogErrorsPost = $this->post('ENABLE_LOG_ERRORS') == 1 ? 1 : 0;
             $intLogEmailsPost = $this->post('ENABLE_LOG_EMAILS') == 1 ? 1 : 0;
+            $intLogApiPost = $this->post('ENABLE_LOG_API') == 1 ? 1 : 0;
 
             $config->save('concrete.log.errors', $intLogErrorsPost);
             $config->save('concrete.log.emails', $intLogEmailsPost);
+            $config->save('concrete.log.api', $intLogApiPost);
 
             $mode = $this->request->request->get('logging_mode');
             if ($mode != 'advanced') {
