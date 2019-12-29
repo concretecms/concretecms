@@ -17,7 +17,7 @@ $ih = Loader::helper('concrete/ui');
 		<div class="form-group has-feedback">
 			<label for="uPassword" class="control-label"><?php echo t('Password'); ?></label>
 			<?php echo $form->password('uPassword', array('autocomplete' => 'off')); ?>
-			<span class="fa fa-eye form-control-feedback show-password"></span
+			<span class="fa fa-eye form-control-feedback show-password"></span>
 		</div>
 
 		<div class="form-group">
