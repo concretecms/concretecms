@@ -215,7 +215,6 @@ EOL;
             $identifier,
             [
                 'startupFocus' => true,
-                'disableAutoInline' => true,
             ]
         );
 
@@ -243,10 +242,6 @@ EOL;
      */
     public function outputEditorWithOptions($key, array $options = [], $content = null)
     {
-        $options += [
-            'disableAutoInline' => true,
-        ];
-
         $pluginManager = $this->getPluginManager();
         if ($pluginManager->isSelected('sourcearea')) {
             $pluginManager->deselect('sourcedialog');
@@ -275,9 +270,7 @@ EOL;
      */
     public function outputStandardEditorInitJSFunction()
     {
-        $options = [
-            'disableAutoInline' => true,
-        ];
+        $options = [];
 
         $pluginManager = $this->getPluginManager();
         if ($pluginManager->isSelected('sourcearea')) {
