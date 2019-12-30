@@ -42,7 +42,14 @@ class Controller extends BlockController
     public function edit()
     {
         $db = $this->app->make('database')->connection();
-        $query = $db->fetchAll('SELECT * FROM btFaqEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+        $rows = $db->fetchAll('SELECT * FROM btFaqEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+
+        $query = [];
+        foreach ($rows as $q) {
+            $q['description'] = LinkAbstractor::translateFromEditMode($q['description']);
+            $query[] = $q;
+        }
+
         $this->set('rows', $query);
     }
 

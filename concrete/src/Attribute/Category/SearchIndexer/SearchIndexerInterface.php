@@ -1,50 +1,47 @@
 <?php
+
 namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
-use Concrete\Core\Entity\Attribute\Value\Value;
 
+/**
+ * Interface that all the classes that handle the search index of attribute categories must implement.
+ */
 interface SearchIndexerInterface
 {
     /**
-     * @param CategoryInterface $category
-     * @return void
+     * Create the database table where the data of the indexed attributes will be stored.
+     *
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
      */
     public function createRepository(CategoryInterface $category);
 
     /**
-     * @param CategoryInterface $category
-     * @param AttributeKeyInterface $key
+     * Create or update the column that contains the indexed data of a specific attribute.
+     *
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
      * @param string|null $previousHandle
-     * @return void
      */
     public function updateRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null);
 
-    /*
-     * This was added in v8.2 but we can't assume that everyone has implemented this yet.
-     * Uncomment this in the future when we are sure we won't break anything
-     *
-     * @param CategoryInterface $category
-     * @param AttributeKeyInterface $key
-     * @return void
-     */
-//     public function refreshRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key);
-
     /**
-     * @param CategoryInterface $category
-     * @param AttributeValueInterface $attributeValue
-     * @param mixed $subject
-     * @return void
+     * Store in the index table the value of an attribute of an item.
+     *
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
+     * @param \Concrete\Core\Attribute\AttributeValueInterface $attributeValue
+     * @param object $subject The item owning the attribute value
      */
     public function indexEntry(CategoryInterface $category, AttributeValueInterface $attributeValue, $subject);
 
     /**
-     * @param CategoryInterface $category
-     * @param AttributeValueInterface $attributeValue
-     * @param mixed $subject
-     * @return void
+     * Remove from the index table the value of an attribute of an item.
+     *
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
+     * @param \Concrete\Core\Attribute\AttributeValueInterface $attributeValue
+     * @param object $subject The item owning the attribute value
      */
     public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $attributeValue, $subject);
 }

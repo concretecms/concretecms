@@ -29,6 +29,7 @@ if (is_object($conversation)) { ?>
             addMessageToken: '<?=$addMessageToken?>',
             editMessageToken: '<?=$editMessageToken?>',
             deleteMessageToken: '<?=$deleteMessageToken?>',
+            flagMessageToken: '<?=$flagMessageToken?>',
             displayMode: '<?=$displayMode?>',
             addMessageLabel: '<?=$addMessageLabel?>',
             paginate: <?=$paginate?>,

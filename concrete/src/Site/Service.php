@@ -302,6 +302,9 @@ class Service
         }
         if (!$cID) {
             $cID = (int) Page::getHomePageID();
+            if ($cID === 0) {
+                $cID = HOME_CID;
+            }
         }
         $tree->setSiteHomePageID($cID);
         $tree->setLocale($locale);

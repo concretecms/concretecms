@@ -264,7 +264,7 @@ class Update
             ->setMethod('POST')
             ->getPost()
                 ->set('LOCALE', Localization::activeLocale())
-                ->set('BASE_URL_FU', Application::getApplicationURL())
+                ->set('BASE_URL_FULL', Application::getApplicationURL())
                 ->set('APP_VERSION', APP_VERSION);
         try {
             $response = $client->send();

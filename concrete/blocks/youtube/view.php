@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $responsiveClass = 'youtubeBlockResponsive16by9';
 $sizeDisabled = '';
@@ -16,10 +16,10 @@ if (isset($lazyLoad) && $lazyLoad) {
     $lazyLoadAttribute = 'loading="lazy"';
 }
 
-$params = array();
+$params = [];
 
 if (isset($playlist)) {
-    $params[] = 'playlist='. $playlist;
+    $params[] = 'playlist=' . $playlist;
     $videoID = '';
 }
 
@@ -49,7 +49,7 @@ if (isset($iv_load_policy) && $iv_load_policy > 0) {
 if (isset($loopEnd) && $loopEnd) {
     $params[] = 'loop=1';
     if (!isset($playlist) && $videoID !== '') {
-        $params[] = 'playlist='.$videoID;
+        $params[] = 'playlist=' . $videoID;
     }
 }
 
@@ -63,10 +63,9 @@ if (isset($rel) && $rel) {
     $params[] = 'rel=0';
 }
 
-if (isset($showinfo) && $showinfo) {
-    $params[] = 'showinfo=1';
-} else {
-    $params[] = 'showinfo=0';
+if (isset($showCaptions) && $showCaptions) {
+    $params[] = 'cc_load_policy=1';
+    $params[] = 'cc_lang_pref=' . Localization::activeLanguage();
 }
 
 if (!empty($startSeconds)) {
@@ -77,8 +76,7 @@ $paramstring = '?' . implode('&', $params);
 
 if (Page::getCurrentPage()->isEditMode()) {
     $loc = Localization::getInstance();
-    $loc->pushActiveContext(Localization::CONTEXT_UI);
-    ?>
+    $loc->pushActiveContext(Localization::CONTEXT_UI); ?>
     <div class="ccm-edit-mode-disabled-item youtubeBlock <?php echo $responsiveClass; ?>" <?php echo $sizeDisabled; ?>>
         <div><?= t('YouTube Video disabled in edit mode.'); ?></div>
     </div>

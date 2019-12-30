@@ -43,7 +43,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="showinfo" type="boolean">
+    <field name="showCaptions" type="boolean">
       <default value="0"/>
       <notnull/>
     </field>
