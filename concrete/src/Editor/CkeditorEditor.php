@@ -204,7 +204,7 @@ EOL;
 
         $html = sprintf(
             '<textarea id="%s_content" style="display:none;" name="%s"></textarea>' .
-            '<div contenteditable="true" id="%s">%s</div>',
+            '<div id="%s">%s</div>',
             $identifier,
             $key,
             $identifier,
@@ -463,6 +463,7 @@ EOL;
         <script type="text/javascript">
         $(function() {
             var initEditor = {$jsFunc};
+            $('#{$identifier}').attr('contenteditable', 'true');
             initEditor('#{$identifier}');
          });
         </script>
