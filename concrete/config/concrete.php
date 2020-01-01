@@ -9,7 +9,7 @@ return [
     'version' => '8.5.2',
     'version_installed' => '8.5.2',
     'version_db' => '20191002000000', // the key of the latest database migration
- 
+
     /*
      * Installation status
      *
@@ -88,7 +88,7 @@ return [
          *
          * @var string semi-colon separated.
          */
-        'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
+        'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.webp;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
 
@@ -603,7 +603,7 @@ return [
             'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
             'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
         ],
-        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer) 
+        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
         // List of package handles that shouldn't be checked for new versions in marketplace (useful for example if the core is upgraded via composer)
         // Set to true to skip all the packages
