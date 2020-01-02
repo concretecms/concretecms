@@ -75,31 +75,22 @@ class Controller extends BlockController implements FileTrackableInterface
 
         if (is_object($f) && is_object($foS)) {
             if (!$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
-                if ($this->cropImage && ($this->maxWidth > 0 && $this->maxHeight > 0)) {
+                if ($f->getTypeObject()->isWEBP()) {
+                    $fFallback = $this->getFileFallbackObject();
+                    $this->set('fFallback', $fFallback);
+                }
+                if ($foS->getTypeObject()->isWEBP()) {
+                    $fFallbackoS = $this->getFileOnstateFallbackObject();
+                    $this->set('fFallbackoS', $fFallbackoS);
+                }
+                if ($this->maxWidth > 0 || $this->maxHeight > 0) {
                     $im = $this->app->make('helper/image');
 
-                    $fIDThumb = $im->getThumbnail($f, $this->maxWidth, $this->maxHeight, true);
+                    $fIDThumb = $im->getThumbnail($f, $this->maxWidth, $this->maxHeight, $this->cropImage);
                     $imgPaths['default'] = $fIDThumb->src;
 
-                    $fOnstateThumb = $im->getThumbnail($foS, $this->maxWidth, $this->maxHeight, true);
+                    $fOnstateThumb = $im->getThumbnail($foS, $this->maxWidth, $this->maxHeight, $this->cropImage);
                     $imgPaths['hover'] = $fOnstateThumb->src;
-
-                    if ($f->getTypeObject()->isWEBP()) {
-                        $fFallback = $this->getFileFallbackObject();
-                        $this->set('fFallback', $fFallback);
-                        if (is_object($fFallback) && !$fFallback->getTypeObject()->isSVG()) {
-                            $fFallbackIDThumb = $im->getThumbnail($fFallback, $this->maxWidth, $this->maxHeight, true);
-                            $imgPaths['defaultFallback'] = $fFallbackIDThumb->src;
-                        }
-                    }
-                    if ($foS->getTypeObject()->isWEBP()) {
-                        $fFallbackoS = $this->getFileOnstateFallbackObject();
-                        $this->set('fFallbackoS', $fFallbackoS);
-                        if (is_object($fFallbackoS) && !$fFallbackoS->getTypeObject()->isSVG()) {
-                            $fOnstateFallbackThumb = $im->getThumbnail($fFallbackoS, $this->maxWidth, $this->maxHeight, true);
-                            $imgPaths['hoverFallback'] = $fOnstateFallbackThumb->src;
-                        }
-                    }
                 } else {
                     $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
                     $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
@@ -397,20 +388,26 @@ class Controller extends BlockController implements FileTrackableInterface
         $e = $this->app->make('helper/validation/error');
         $f = File::getByID($args['fID']);
         $svg = false;
-        $webp = false
+        $webp = false;
         if (is_object($f)) {
             $svg = $f->getTypeObject()->isSVG();
             $webp = $f->getTypeObject()->isWEBP();
         }
 
+        $foS = File::getByID($args['fOnstateID']);
+        $webpoS = false;
+        if (is_object($foS)) {
+            $webpoS = $foS->getTypeObject()->isWEBP();
+        }
+
         $fFallbackID = File::getByID($args['fFallbackID']);
-        $fallbackWebp = false
+        $fallbackWebp = false;
         if (is_object($fFallbackID)) {
             $fallbackWebp = $fFallbackID->getTypeObject()->isWEBP();
         }
 
         $fFallbackOnstateID = File::getByID($args['fFallbackOnstateID']);
-        $fallbackOnStateWebp = false
+        $fallbackOnStateWebp = false;
         if (is_object($fFallbackOnstateID)) {
             $fallbackOnStateWebp = $fFallbackOnstateID->getTypeObject()->isWEBP();
         }
@@ -429,6 +426,12 @@ class Controller extends BlockController implements FileTrackableInterface
 
         if ($fallbackWebp || $fallbackOnStateWebp) {
             $e->add(t('Fallback images for WEBP images cannot be WEBP images themselves.'));
+        }
+
+        if ($webp && $webpoS) {
+            if ((is_object($fFallbackID) && !is_object($fFallbackOnstateID)) || (!is_object($fFallbackID) && is_object($fFallbackOnstateID))) {
+                $e->add(t('You are using the WEBP format for both your images but have selected a fallback for only one of them. This will give unpredictable results.'));
+            }
         }
 
         $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), $e, t('Image Link'), $args);

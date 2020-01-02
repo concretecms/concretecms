@@ -22,11 +22,11 @@ $al = $app->make('helper/concrete/asset_library');
         ?>
     </div>
 
-    <div id="imageFallback" style="display: none;" class="form-group">
-        <label class="control-label"><?php echo t('Image Fallback')?> <small style="color: #999999; font-weight: 200;"><?php echo t('(Optional)'); ?></small></label>
-        <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo t('If your image is a WebP image, this fallback will be used in browsers that do not support the WebP format.'); ?>"></i>
+    <div class="form-group">
+        <label class="control-label"><?php echo t('Unsupported Image Fallback')?> <small style="color: #999999; font-weight: 200;"><?php echo t('(Optional)'); ?></small></label>
+        <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo t('If your image is a WebP image, this fallback will be used in browsers that do not support the WebP format. This is only needed when not resizing your image. When resizing, the image will be converted into a PNG.'); ?>"></i>
         <?php
-        echo $al->image('ccm-b-image-fallback', 'fFallbackID', t('Choose Image Fallback'), $bff);
+        echo $al->image('ccm-b-image-fallback', 'fFallbackID', t('Choose Unsupported Image Fallback'), $bff);
         ?>
     </div>
 
@@ -38,11 +38,11 @@ $al = $app->make('helper/concrete/asset_library');
         ?>
     </div>
 
-    <div id="imageOnStateFallback" style="display: none;" class="form-group">
-        <label class="control-label"><?php echo t('Image Hover Fallback')?> <small style="color: #999999; font-weight: 200;"><?php echo t('(Optional)'); ?></small></label>
-        <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo t('If your hover image is a WebP image, this fallback will be used in browsers that do not support the WebP format.'); ?>"></i>
+    <div class="form-group">
+        <label class="control-label"><?php echo t('Unsupported Image Hover Fallback')?> <small style="color: #999999; font-weight: 200;"><?php echo t('(Optional)'); ?></small></label>
+        <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo t('If your hover image is a WebP image, this fallback will be used in browsers that do not support the WebP format. This is only needed when not resizing your image. When resizing, the image will be converted into a PNG.'); ?>"></i>
         <?php
-        echo $al->image('ccm-b-image-onstate-fallback', 'fFallbackOnstateID', t('Choose Image Hover Fallback'), $bffo);
+        echo $al->image('ccm-b-image-onstate-fallback', 'fFallbackOnstateID', t('Choose Unsupported Image Hover Fallback'), $bffo);
         ?>
     </div>
 </fieldset>
@@ -135,6 +135,7 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <script>
+    console.log('i am here');
 $(document).ready(function() {
     $('#imageLink__which')
         .change(function() {
@@ -151,33 +152,5 @@ $(document).ready(function() {
             $('#maxHeight').val('');
         }
     }).trigger('change');
-    $('#fID')
-        .change(function() {
-            var ext = getImageExtension($(this));
-            $('#imageFallback').toggle(ext == 'webp')
-        })
-        .trigger('change')
-    ;
-    $('#fOnstateID')
-        .change(function() {
-            var ext = getImageExtension($(this));
-            $('#imageOnStateFallback').toggle(ext == 'webp')
-        })
-        .trigger('change')
-    ;
-    function getImageExtension(el) {
-        el = el || false;
-        var ext = '';
-        if (el && el.val()) {
-            ext = el
-                    .siblings('.ccm-file-selector-file-selected-thumbnail')
-                    .eq(0)
-                    .find('img')
-                    .attr('src')
-                    .split('.')
-                    .pop();
-        }
-        return ext;
-    }
 });
 </script>

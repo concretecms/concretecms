@@ -1,26 +1,18 @@
 $(function() {
-    var hoverImg = $('.ccm-image-block-hover');
-
-    hoverImg.each(function(index) {
-        var hoverImgPictureParent = $(this).parent('picture');
-        if (hoverImgPictureParent) {
-            hoverImgPictureParent
-                .mouseover(function() {
-                    $(this).find('source').attr('srcset', $(this).data('hover-src'));
-                    $(this).find('img').attr('src', $(this).data('hover-src'));
-                })
-                .mouseout(function() {
-                    $(this).find('source').attr('srcset', $(this).data('default-src'));
-                    $(this).find('img').attr('src', $(this).data('default-src'));
-                });
-        } else {
-            $(this)
-                .mouseover(function() {
-                    $(this).attr('src', $(this).data('hover-src'));
-                })
-                .mouseout(function() {
-                    $(this).attr('src', $(this).data('default-src'));
-                });
-        }
-    });
+    var hoverImgPictureParentSource;
+    $('.ccm-image-block-hover')
+        .mouseover(function() {
+            $(this).attr('src', $(this).data('hover-src'));
+            hoverImgPictureParentSource = hoverImgPictureParentSource || $(this).parent('picture').find('source');
+            if (hoverImgPictureParentSource) {
+                hoverImgPictureParentSource.attr('srcset', hoverImgPictureParentSource.data('hover-src'));
+            }
+        })
+        .mouseout(function() {
+            $(this).attr("src", $(this).data('default-src'));
+            hoverImgPictureParentSource = hoverImgPictureParentSource || $(this).parent('picture').find('source');
+            if (hoverImgPictureParentSource) {
+                hoverImgPictureParentSource.attr('srcset', hoverImgPictureParentSource.data('default-src'));
+            }
+        });
 });
