@@ -106,7 +106,10 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         return StreamedResponse::create(function () use ($entity, $me, $bom) {
             $entryList = new EntryList($entity);
 
-            $writer = new CsvWriter($this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'), new Date());
+            $writer = $this->app->make(CsvWriter::class, [
+                $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                new Date()
+            ]);
             echo $bom;
             $writer->insertHeaders($entity);
             $writer->insertEntryList($entryList);
