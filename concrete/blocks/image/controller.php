@@ -75,17 +75,9 @@ class Controller extends BlockController implements FileTrackableInterface
 
         if (is_object($f) && is_object($foS)) {
             if (!$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
-                if ($f->getTypeObject()->isWEBP()) {
-                    $fFallback = $this->getFileFallbackObject();
-                    $this->set('fFallback', $fFallback);
-                }
-                if ($foS->getTypeObject()->isWEBP()) {
-                    $fFallbackoS = $this->getFileOnstateFallbackObject();
-                    $this->set('fFallbackoS', $fFallbackoS);
-                }
-                if ($this->maxWidth > 0 || $this->maxHeight > 0) {
-                    $im = $this->app->make('helper/image');
+                $im = $this->app->make('helper/image');
 
+                if ($this->maxWidth > 0 || $this->maxHeight > 0) {
                     $fIDThumb = $im->getThumbnail($f, $this->maxWidth, $this->maxHeight, $this->cropImage);
                     $imgPaths['default'] = $fIDThumb->src;
 
@@ -94,10 +86,25 @@ class Controller extends BlockController implements FileTrackableInterface
                 } else {
                     $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
                     $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
-                    $imgPaths['defaultFallback'] = File::getRelativePathFromID($this->fFallbackID);
-                    $imgPaths['hoverFallback'] = File::getRelativePathFromID($this->fFallbackOnstateID);
+
+                    // This is a bit of a hack. We need a non WEBP fallback for non-supporting browsers
+                    // Because of the way C5 works, when trying to resize a WEBP image, even to its normal size,
+                    // it is automatically converted to a PNG file so we can use that as a fallback.
+                    if ($f->getTypeObject()->isWEBP()) {
+                        $fIDThumb = $im->getThumbnail($f, $f->getAttribute('width'), $f->getAttribute('height'), false);
+                        $imgPaths['defaultFallback'] = $fIDThumb->src;
+                    }
+
+                    if ($foS->getTypeObject()->isWEBP()) {
+                        $fOnstateThumb = $im->getThumbnail($foS, $foS->getAttribute('width'), $foS->getAttribute('height'), false);
+                        $imgPaths['hoverFallback'] = $fOnstateThumb->src;
+                    }
                 }
             }
+        } elseif (is_object($f) && $f->getTypeObject()->isWEBP() && empty($this->maxWidth) && empty($this->maxHeight)) {
+            $im = $this->app->make('helper/image');
+            $fIDThumb = $im->getThumbnail($f, $f->getAttribute('width'), $f->getAttribute('height'), false);
+            $imgPaths['defaultFallback'] = $fIDThumb->src;
         }
 
         $this->set('imgPaths', $imgPaths);
@@ -112,8 +119,6 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         $this->set('bf', null);
         $this->set('bfo', null);
-        $this->set('bff', null);
-        $this->set('bffo', null);
         $this->set('constrainImage', false);
         $this->set('destinationPicker', $this->app->make(DestinationPicker::class));
         $this->set('imageLinkPickers', $this->getImageLinkPickers());
@@ -136,20 +141,6 @@ class Controller extends BlockController implements FileTrackableInterface
             $bfo = $this->getFileOnstateObject();
         }
         $this->set('bfo', $bfo);
-
-        // WebP Image fallback file object
-        $bff = null;
-        if ($this->fFallbackID > 0) {
-            $bff = $this->getFileFallbackObject();
-        }
-        $this->set('bff', $bff);
-
-        // WebP Image On-State fallback file object
-        $bffo = null;
-        if ($this->fFallbackOnstateID > 0) {
-            $bffo = $this->getFileOnstateFallbackObject();
-        }
-        $this->set('bffo', $bffo);
 
         // Constrain dimensions
         $constrainImage = $this->maxWidth > 0 || $this->maxHeight > 0;
@@ -272,26 +263,6 @@ class Controller extends BlockController implements FileTrackableInterface
     /**
      * @return \Concrete\Core\Entity\File\File|null
      */
-    public function getFileOnstateFallbackObject()
-    {
-        if (isset($this->fFallbackOnstateID) && $this->fFallbackOnstateID) {
-            return File::getByID($this->fFallbackOnstateID);
-        }
-    }
-
-    /**
-     * @return \Concrete\Core\Entity\File\File|null
-     */
-    public function getFileFallbackObject()
-    {
-        if (isset($this->fFallbackID) && $this->fFallbackID) {
-            return File::getByID($this->fFallbackID);
-        }
-    }
-
-    /**
-     * @return \Concrete\Core\Entity\File\File|null
-     */
     public function getFileLinkObject()
     {
         if ($this->fileLinkID) {
@@ -388,28 +359,8 @@ class Controller extends BlockController implements FileTrackableInterface
         $e = $this->app->make('helper/validation/error');
         $f = File::getByID($args['fID']);
         $svg = false;
-        $webp = false;
         if (is_object($f)) {
             $svg = $f->getTypeObject()->isSVG();
-            $webp = $f->getTypeObject()->isWEBP();
-        }
-
-        $foS = File::getByID($args['fOnstateID']);
-        $webpoS = false;
-        if (is_object($foS)) {
-            $webpoS = $foS->getTypeObject()->isWEBP();
-        }
-
-        $fFallbackID = File::getByID($args['fFallbackID']);
-        $fallbackWebp = false;
-        if (is_object($fFallbackID)) {
-            $fallbackWebp = $fFallbackID->getTypeObject()->isWEBP();
-        }
-
-        $fFallbackOnstateID = File::getByID($args['fFallbackOnstateID']);
-        $fallbackOnStateWebp = false;
-        if (is_object($fFallbackOnstateID)) {
-            $fallbackOnStateWebp = $fFallbackOnstateID->getTypeObject()->isWEBP();
         }
 
         if (!$args['fID']) {
@@ -422,16 +373,6 @@ class Controller extends BlockController implements FileTrackableInterface
 
         if ($svg && isset($args['cropImage'])) {
             $e->add(t('SVG images cannot be cropped.'));
-        }
-
-        if ($fallbackWebp || $fallbackOnStateWebp) {
-            $e->add(t('Fallback images for WEBP images cannot be WEBP images themselves.'));
-        }
-
-        if ($webp && $webpoS) {
-            if ((is_object($fFallbackID) && !is_object($fFallbackOnstateID)) || (!is_object($fFallbackID) && is_object($fFallbackOnstateID))) {
-                $e->add(t('You are using the WEBP format for both your images but have selected a fallback for only one of them. This will give unpredictable results.'));
-            }
         }
 
         $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), $e, t('Image Link'), $args);
@@ -456,8 +397,6 @@ class Controller extends BlockController implements FileTrackableInterface
         $args = $args + [
             'fID' => 0,
             'fOnstateID' => 0,
-            'fFallbackID' => 0,
-            'fFallbackOnstateID' => 0,
             'maxWidth' => 0,
             'maxHeight' => 0,
             'constrainImage' => 0,
@@ -466,8 +405,6 @@ class Controller extends BlockController implements FileTrackableInterface
 
         $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
         $args['fOnstateID'] = $args['fOnstateID'] != '' ? $args['fOnstateID'] : 0;
-        $args['fFallbackID'] = $args['fFallbackID'] != '' ? $args['fFallbackID'] : 0;
-        $args['fFallbackOnstateID'] = $args['fFallbackOnstateID'] != '' ? $args['fFallbackOnstateID'] : 0;
         $args['cropImage'] = isset($args['cropImage']) ? 1 : 0;
         $args['maxWidth'] = (int) $args['maxWidth'] > 0 ? (int) $args['maxWidth'] : 0;
         $args['maxHeight'] = (int) $args['maxHeight'] > 0 ? (int) $args['maxHeight'] : 0;

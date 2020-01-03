@@ -23,8 +23,8 @@ if (is_object($f) && $f->getFileID()) {
         if ($f->getTypeObject()->isWEBP()) {
             $sources = ['src' => $f->getRelativePath(), 'width' => 0];
             $fallbackSrc = false;
-            if ($fFallback && is_object($fFallback)) {
-                $fallbackSrc = $fFallback->getRelativePath();
+            if (isset($imgPaths['defaultFallback']) && $imgPaths['defaultFallback']) {
+                $fallbackSrc = $imgPaths['defaultFallback'];
             }
             $tag = new \Concrete\Core\Html\Object\Picture([$sources], $fallbackSrc);
         } else {
