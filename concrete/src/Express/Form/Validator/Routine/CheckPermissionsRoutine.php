@@ -16,9 +16,9 @@ class CheckPermissionsRoutine implements RoutineInterface
         $entity = $form->getEntity();
         $permissions = new \Permissions($entity);
         if ($requestType = ProcessorInterface::REQUEST_TYPE_ADD) {
-            $valid = $permissions->canAddExpressEntries();
+            $valid = $permissions->canAddExpressEntry();
         } else {
-            $valid = $permissions->canEditExpressEntries();
+            $valid = $permissions->canEditExpressEntry();
         }
         if (!$valid) {
             $error->add(t('You do not have access to submit this form.'));

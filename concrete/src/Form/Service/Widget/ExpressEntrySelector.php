@@ -14,7 +14,7 @@ class ExpressEntrySelector
     {
         $v = \View::getInstance();
         $p = new \Permissions($entity);
-        if ($p->canViewExpressEntries()) {
+        if ($p->canViewExpressEntry()) {
             $v->requireAsset('core/express');
 
             $args['entityID'] = $entity->getID();

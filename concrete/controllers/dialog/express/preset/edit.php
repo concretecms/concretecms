@@ -33,7 +33,7 @@ class Edit extends PresetEdit
         if (is_object($entity)) {
             $ep = new Permissions($entity);
 
-            return $ep->canViewExpressEntries();
+            return $ep->canViewExpressEntry();
         }
 
         return false;

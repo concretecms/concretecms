@@ -63,7 +63,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         if (isset($parent) && $parent instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
             $entity = $this->getEntity($parent);
             $permissions = new \Permissions($entity);
-            if (!$permissions->canViewExpressEntries()) {
+            if (!$permissions->canViewExpressEntry()) {
                 throw new \Exception(t('Access Denied'));
             }
             $search = new \Concrete\Controller\Search\Express\Entries();
@@ -92,7 +92,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $parent = $me->getParentNode($treeNodeParentID);
         $entity = $me->getEntity($parent);
         $permissions = new \Permissions($entity);
-        if (!$permissions->canViewExpressEntries()) {
+        if (!$permissions->canViewExpressEntry()) {
             throw new \Exception(t('Access Denied'));
         }
 

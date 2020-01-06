@@ -46,7 +46,7 @@ class Express extends Standard
         $this->loadEntity();
         $ep = new Permissions($this->entity);
 
-        return $ep->canViewExpressEntries();
+        return $ep->canViewExpressEntry();
     }
 
     public function expressSearchPreset($entityID, $presetID)

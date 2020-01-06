@@ -30,6 +30,14 @@ class ExpressEntryResponse extends Response
         }
     }
 
+    public function canAddExpressEntry()
+    {
+        $p = $this->getExpressEntryNodePermissions();
+        if (is_object($p)) {
+            return $p->validate('add_express_entries');
+        }
+    }
+
     public function canEditExpressEntry()
     {
         $p = $this->getExpressEntryNodePermissions();

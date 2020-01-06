@@ -73,7 +73,7 @@ class AdvancedSearch extends AdvancedSearchController
         $this->loadEntity();
         $ep = new Permissions($this->entity);
 
-        return $ep->canViewExpressEntries();
+        return $ep->canViewExpressEntry();
     }
 
     protected function getExpressCategory()

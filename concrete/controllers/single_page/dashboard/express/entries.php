@@ -47,7 +47,7 @@ class Entries extends DashboardExpressEntityPageController
             $this->set('entity', $entity);
             $this->renderList($folder);
             $permissions = new \Permissions($this->getEntity());
-            if ($permissions->canAddExpressEntries()) {
+            if ($permissions->canAddExpressEntry()) {
                 $header = new Header($entity, $this->getPageObject());
                 $this->set('headerMenu', $header);
                 $this->set('pageTitle', t('View %s Entries', $this->getEntity()->getName()));

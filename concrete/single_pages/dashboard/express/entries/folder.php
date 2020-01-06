@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             foreach ($nodes as $node) {
                 $formatter = $node->getListFormatter();
                 $np = new Permissions($node);
-                if ($np->canViewExpressEntries()) {
+                if ($np->canViewExpressEntry()) {
                 ?>
                 <tr data-details-url="<?=$view->action('view', $node->getTreeNodeID())?>"
                     class="<?=$formatter->getSearchResultsClass()?>">
