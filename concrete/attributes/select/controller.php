@@ -593,15 +593,19 @@ EOT
             $option = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption')
                 ->findOneByValue($value);
         }
+
+        $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
+        $qb = $list->getQueryObject();
+        $qb->andWhere(
+            $comparison === '!=' || $comparison === '<>'
+                ? $qb->expr()->notLike($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
+                : $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
+        );
         if (is_object($option)) {
-            $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
-            $qb = $list->getQueryObject();
-            $qb->andWhere(
-                $comparison === '!=' || $comparison === '<>'
-                    ? $qb->expr()->notLike($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
-                    : $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
-            );
             $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue(false) . "\n%");
+        }else{
+            // null out the actual value somehow - probably a better way to do this.
+            $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . "\n%");
         }
     }
 
