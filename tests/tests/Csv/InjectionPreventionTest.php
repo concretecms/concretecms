@@ -4,9 +4,10 @@ namespace Csv;
 
 use Concrete\Core\Csv\EscapeFormula;
 use Concrete\Core\Csv\WriterFactory;
+use Concrete\Tests\TestCase;
 use League\Csv\Writer;
 
-class InjectionPreventionTest extends \PHPUnit_Framework_TestCase
+class InjectionPreventionTest extends TestCase
 {
 
     protected $input = [

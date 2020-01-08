@@ -45,6 +45,7 @@ class FileLoader implements LoaderInterface
         $this->files = $files;
         $this->defaultPath = DIR_CONFIG_SITE;
         $this->addNamespace('core', DIR_BASE_CORE . '/config');
+        $this->addNamespace('api', DIR_BASE_CORE . '/config/api');
     }
 
     /**

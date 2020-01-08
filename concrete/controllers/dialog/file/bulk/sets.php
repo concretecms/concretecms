@@ -52,7 +52,6 @@ class Sets extends BackendInterfaceController
 
     public function view()
     {
-        $this->requireAsset('javascript', 'jquery/tristate');
         $this->set('files', $this->files);
     }
 

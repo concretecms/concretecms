@@ -6,7 +6,9 @@ use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\File\Import\FileImporter;
 use Concrete\TestHelpers\File\FileStorageTestCase;
+use Core;
 use SimpleXMLElement;
 
 class ContentFileTranslateTest extends FileStorageTestCase
@@ -47,7 +49,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
@@ -67,9 +69,9 @@ class ContentFileTranslateTest extends FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $fi = new \Concrete\Core\File\Importer();
+        $fi = Core::make(FileImporter::class);
         $file = DIR_TESTS . '/assets/Block/background-slider-blue-sky.png';
-        $r = $fi->import($file, 'background-slider-blue-sky.png');
+        $r = $fi->importLocalFile($file, 'background-slider-blue-sky.png');
         $path = $r->getRelativePath();
 
         $translated = \Concrete\Core\Editor\LinkAbstractor::translateFrom($from);

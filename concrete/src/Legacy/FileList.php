@@ -2,7 +2,6 @@
 namespace Concrete\Core\Legacy;
 
 use File as ConcreteFile;
-use User;
 use FileAttributeKey;
 
 /**
@@ -244,7 +243,7 @@ class FileList extends DatabaseItemList
     {
         /*
 
-        $u = new User();
+        $u = \Core::make(\Concrete\Core\User\User::class);
         if ($this->permissionLevel == false || $u->isSuperUser()) {
             return false;
         }

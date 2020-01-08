@@ -10,19 +10,20 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Runtime\Run\DefaultRunner;
 use Concrete\Core\Http\ServerInterface;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultRunnerTest extends PHPUnit_Framework_TestCase
+class DefaultRunnerTest extends TestCase
 {
     public function testReturnsResponseWhenNotInstalled()
     {
         // Setup Response
-        $expectedResponse = $this->getMock(Response::class);
+        $expectedResponse = $this->getMockBuilder(Response::class)
+            ->getMock();
         $expectedResponse->expects($this->once())->method('prepare')->willReturnSelf();
 
         // Create a mock server
-        $server = $this->getMock(ServerInterface::class);
+        $server = $this->getMockBuilder(ServerInterface::class)->getMock();
         $server->method('handleRequest')->willReturn($expectedResponse);
 
         // Create a mock application
@@ -32,7 +33,7 @@ class DefaultRunnerTest extends PHPUnit_Framework_TestCase
             'default'
         );
 
-        $app = $this->getMock(Application::class);
+        $app = $this->getMockBuilder(Application::class)->getMock();
         $app->method('isInstalled')->willReturn(false);
         $app->method('make')->will(
             $this->returnValueMap([

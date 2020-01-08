@@ -12,6 +12,10 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use Throwable;
 
+/**
+ * @deprecated Use Concrete\Core\File\Import\Processor\ImageAutorotator
+ * @see \Concrete\Core\File\Import\Processor\ImageAutorotator
+ */
 class AutorotateImageProcessor implements ProcessorInterface
 {
     /**

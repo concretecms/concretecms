@@ -1,0 +1,162 @@
+// Slim theme
+
+div.ccm-dialog-slim {
+
+  height: 100%;
+
+  div.ui-dialog-titlebar {
+    background: none;
+    border-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+    span.ui-dialog-title {
+      display: none;
+    }
+  }
+
+  div.ui-dialog-content {
+    padding: 0px;
+    height: 100%;
+
+    > div {
+      height: 100%;
+    }
+  }
+
+  button.ui-dialog-titlebar-close {
+    top: 10px !important;
+    right: 5px !important;
+  }
+
+  div.container-fluid,
+  div.row {
+    height: 100%;
+  }
+  div.col-accented {
+    background-color: #e9e9e9;
+    min-height: 100%;
+    overflow: auto;
+  }
+
+  div[class^="col-"] {
+    padding: 20px;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+
+  h3, h4, h5 {
+    font-weight: bold;
+  }
+
+}
+
+// V8 Theme
+
+div.ui-dialog {
+
+  padding: 0;
+  background-color: $modal-content-bg;
+  background-clip: padding-box;
+  border: $modal-content-border-width solid $modal-content-border-color !important;
+  @include border-radius($modal-content-border-radius);
+  @include box-shadow($modal-content-box-shadow-xs);
+  // Remove focus outline from opened modal
+  outline: 0;
+  
+  .ui-dialog-titlebar {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
+    border-radius: 0;
+
+    display: flex;
+    align-items: flex-start; // so the close btn always stays on the upper right corner
+    justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
+
+    padding: $modal-header-padding;
+    border-bottom: $modal-header-border-width solid $modal-header-border-color;
+    background-color: $modal-content-bg;
+    @include border-top-radius($modal-content-border-radius);
+    
+    .ui-dialog-title {
+      font-size: $h5-font-size;
+      font-weight: $headings-font-weight;
+      float: none;
+      margin: 0px;
+    }
+  }
+
+  .ui-dialog-titlebar-close {
+
+    // reset jQuery UI
+    position: static;
+
+    padding: $modal-header-padding;
+    // auto on the left force icon to the right even when there is no .modal-title
+    margin: (-$modal-header-padding-y) (-$modal-header-padding-x) (-$modal-header-padding-y) auto;
+    width: auto;
+    outline: 0;
+    height: auto;
+    background-color: transparent;
+
+    border: 0px;
+    @include font-size($close-font-size);
+    font-weight: $close-font-weight;
+    line-height: 1;
+    color: $close-color;
+    text-shadow: $close-text-shadow;
+    opacity: .5;
+
+    text-indent: -9999px; // get rid of the "Close" that jQUery UI sticks in there sometimes
+    
+    span.ui-button-icon-space {
+      display: none;
+    }
+    span.ui-icon {
+      display: none;
+    }
+
+    // Override <a>'s hover style
+    @include hover {
+      color: $close-color;
+      text-decoration: none;
+    }
+
+    &:not(:disabled):not(.disabled) {
+      @include hover-focus {
+        opacity: .75;
+      }
+    }
+
+  }
+
+  .ui-dialog-titlebar-close:before {
+    content: '×';
+    position: absolute; // All these positioning hoops suck but we have to jump through them because of the jQuery UI text-indent stupidity
+    width: 40px;
+    right: 0px;
+    height: 40px;
+    text-indent: 0px !important;
+  }
+
+
+  .ui-dialog-buttonpane {
+    padding: $modal-inner-padding;
+    border-top: $modal-footer-border-width solid $modal-footer-border-color;
+    @include border-bottom-radius($modal-content-border-radius);
+
+    // Easily place margin between footer elements
+    > :not(:first-child) { margin-left: .25rem; }
+    > :not(:last-child) { margin-right: .25rem; }
+
+    button.float-right {
+      margin-right: 0px;
+    }
+
+
+  }
+}

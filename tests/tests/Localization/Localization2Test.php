@@ -39,7 +39,7 @@ class Localization2Test extends LocalizationTestsBase
         $filesystem->copyDirectory($source, $target);
     }
 
-    protected function setUp()
+    public function setUp()
     {
         $this->loc = new Localization();
 
@@ -425,7 +425,7 @@ class Localization2Test extends LocalizationTestsBase
      */
     public function testStaticSetupSiteLocalization()
     {
-        return;
+        $this->markTestSkipped('Skipped');
 
         // Move translation files
         $langDir = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/languages/site';

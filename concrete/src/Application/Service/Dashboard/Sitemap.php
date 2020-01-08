@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Closure;
@@ -233,12 +234,12 @@ class Sitemap
             $cIconClass = null;
             $cIcon = $c->getCollectionIcon();
             if (!$cIcon) {
-                if ($cID == 1) {
-                    $cIconClass = 'fa fa-home';
+                if ($c->isHomePage()) {
+                    $cIconClass = 'fas fa-home';
                 } elseif ($numSubpages > 0) {
-                    $cIconClass = 'fa fa-folder-o';
+                    $cIconClass = 'fas fa-folder';
                 } else {
-                    $cIconClass = 'fa fa-file-o';
+                    $cIconClass = 'fas fa-file-alt';
                 }
             }
         }
@@ -310,6 +311,18 @@ class Sitemap
         }
 
         return $node;
+    }
+
+    public function canViewSitemapPanel()
+    {
+        $types = Type::getList();
+        foreach($types as $pt) {
+            $ptp = new \Permissions($pt);
+            if ($ptp->canAddPageType()) {
+                return true;
+            }
+        }
+        return $this->canRead();
     }
 
     /**

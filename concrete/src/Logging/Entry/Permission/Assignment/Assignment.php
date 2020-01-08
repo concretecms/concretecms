@@ -61,10 +61,10 @@ class Assignment implements EntryInterface
              * @var $object ObjectInterface
              */
             $object = $object->getPermissionObjectIdentifier();
-            return t('Permission assignment applied for permission %s on object %s by user %s',
+            return t('Permission assignment applied for permission %1$s on object %2$s by user %3$s',
                 $permission, $object, $applier);
         } else {
-            return t('Permission assignment applied for permission %s by user %s',
+            return t('Permission assignment applied for permission %1$s by user %2$s',
                 $permission, $applier);
         }
     }

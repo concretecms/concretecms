@@ -14,6 +14,7 @@ class Method extends DashboardPageController
     {
         if ($this->token->validate('save_settings')) {
             $config = $this->app->make('config');
+            $config->save('concrete.email.enabled', (bool) $this->post('EMAIL_ENABLED'));
             $config->save('concrete.mail.method', strtolower($this->post('MAIL_SEND_METHOD')));
             if ($this->post('MAIL_SEND_METHOD') == 'SMTP') {
                 $config->save('concrete.mail.methods.smtp.server', $this->post('MAIL_SEND_METHOD_SMTP_SERVER'));

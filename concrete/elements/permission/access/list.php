@@ -21,11 +21,11 @@
     ?>
 <tr>
     <td>
-    <a href="javascript:void(0)" class="icon-link pull-right" style="margin-left: 10px" onclick="ccm_deleteAccessEntityAssignment(<?=$pae->getAccessEntityID()?>)"><i class="fa fa-trash-o"></i></a>
+    <a href="javascript:void(0)" class="icon-link pull-right" style="margin-left: 10px" onclick="ccm_deleteAccessEntityAssignment(<?=$pae->getAccessEntityID()?>)"><i class="fas fa-trash"></i></a>
 	<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?peID=<?=$pae->getAccessEntityID()?>&pdID=<?=$pdID?>&accessType=<?=$accessType?>" dialog-width="510" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="<?php if (!is_object($pa->getPermissionDurationObject())) {
     ?>icon-link<?php
 }
-    ?> pull-right dialog-launch"><i class="fa fa-clock-o <?php if (is_object($pa->getPermissionDurationObject())) {
+    ?> pull-right dialog-launch"><i class="far fa-clock <?php if (is_object($pa->getPermissionDurationObject())) {
     ?>text-info<?php
 }
     ?>"></i></a>

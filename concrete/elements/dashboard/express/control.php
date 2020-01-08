@@ -24,9 +24,9 @@ $c = Page::getCurrentPage();
 	</td>
 	<td>
 		<ul class="ccm-item-set-controls">
-			<li><a href="#" data-command="move-control" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
-			<li><a data-command="edit-control" href="<?=URL::to('/dashboard/system/express/entities/forms', 'edit_control', $control->getId())?>" dialog-height="450" dialog-width="600" dialog-title="<?=t('Edit Control')?>" class="dialog-launch"><i class="fa fa-pencil"></i></a></li>
-			<li><a href="#" data-dialog="delete-set-control-<?=$control->getId()?>" data-dialog-title="<?=t('Delete Control')?>"><i class="fa fa-trash-o"></i></a></li>
+			<li><a href="#" data-command="move-control" style="cursor: move"><i class="fas fa-arrows-alt"></i></a></li>
+			<li><a data-command="edit-control" href="<?=URL::to('/dashboard/system/express/entities/forms', 'edit_control', $control->getId())?>" dialog-height="450" dialog-width="600" dialog-title="<?=t('Edit Control')?>" class="dialog-launch"><i class="fas fa-pencil-alt"></i></a></li>
+			<li><a href="#" data-dialog="delete-set-control-<?=$control->getId()?>" data-dialog-title="<?=t('Delete Control')?>"><i class="fas fa-trash"></i></a></li>
 		</ul>
 
 		<div style="display: none">

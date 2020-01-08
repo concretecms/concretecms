@@ -63,7 +63,6 @@ class Properties extends BackendInterfaceController
     public function view()
     {
         $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/app/editable-fields');
         $this->populateUsers();
         $form = Loader::helper('form');
         $attribs = UserAttributeKey::getList();

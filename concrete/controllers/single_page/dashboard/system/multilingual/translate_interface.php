@@ -6,9 +6,11 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Multilingual\Page\Section\Translation;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\User\User;
 use Core;
 use Database;
 use Config;
+use Punic\Misc;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -44,7 +46,7 @@ class TranslateInterface extends DashboardSitePageController
     public function reset_languages()
     {
         if (Core::make('token')->validate('reset_languages')) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             $extractor = Core::make('multilingual/extractor');
             if ($u->isSuperUser()) {
                 $list = Section::getList();
@@ -232,6 +234,7 @@ class TranslateInterface extends DashboardSitePageController
             }
 
             $this->set('translations', $jsonTranslations);
+            $this->set('textDirection', Misc::getCharacterOrder($section->getLocale()) === 'right-to-left' ? 'rtl' : 'ltr');
         } else {
             $this->redirect('/dashboard/system/multilingual/translate_interface');
         }

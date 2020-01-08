@@ -37,7 +37,6 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->requireAsset('core/topics');
         $tt = new TopicTree();
         $defaultTree = $tt->getDefault();
         $tree = $tt->getByID(Core::make('helper/security')->sanitizeInt($this->topicTreeID));

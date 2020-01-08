@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Collection;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
 use CollectionVersion;
@@ -19,17 +19,18 @@ use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Loader;
 use Page;
 use PageCache;
 use Permissions;
 use Stack;
-use User;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -380,7 +381,6 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getVersionToModify()
     {
-        $u = new User();
         $vObj = $this->getVersionObject();
         if ($this->isMasterCollection() || ($vObj->isNew())) {
             return $this;
@@ -443,13 +443,10 @@ class Collection extends ConcreteObject implements TrackableInterface
             $cache = PageCache::getLibrary();
             $cache->purge($this);
 
-            // we check to see if this page is referenced in any gatherings
-            $c = Page::getByID($this->getCollectionID(), $this->getVersionID());
-            $items = PageGatheringItem::getListByItem($c);
-            foreach ($items as $it) {
-                $it->deleteFeatureAssignments();
-                $it->assignFeatureAssignments($c);
-            }
+            $app = Facade::getFacadeApplication();
+            $populator = $app->make(Populator::class);
+            $populator->updateAvailableSummaryTemplates($this);
+
         } else {
             $db = Loader::db();
             Config::save('concrete.misc.do_page_reindex_check', true);
@@ -513,7 +510,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function getAttributeValueObject($akHandle, $createIfNotExists = false)
     {
         if (is_object($this->vObj)) {
-            return $this->vObj->getAttributeValue($akHandle);
+            return $this->vObj->getAttributeValueObject($akHandle, $createIfNotExists);
         }
     }
 

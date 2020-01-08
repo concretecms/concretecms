@@ -31,8 +31,9 @@ $info += [
 
 
 
-<div class="ccm-tab-content" id="ccm-tab-content-autonav-settings">
-    <div class="autonav-form">
+<div class="tab-content">
+    <div class="tab-pane active" id="autonav-settings">
+        <div class="autonav-form">
 
         <input type="hidden" name="autonavCurrentCID" value="<?= $c->getCollectionID() ?>"/>
         <input type="hidden" name="autonavPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
@@ -196,15 +197,17 @@ $info += [
         </fieldset>
 
     </div>
-
-</div>
-
-<div class="ccm-tab-content" id="ccm-tab-content-autonav-preview">
-    <div class="autonav-preview">
-        <div class="render"></div>
-        <div class="cover"></div>
     </div>
+    <div class="tab-preview" id="autonav-preview">
+
+        <div class="autonav-preview">
+            <div class="render"></div>
+            <div class="cover"></div>
+        </div>
+    </div>
+
 </div>
+
 
 <style type="text/css">
     div.autonav-form div.cover {

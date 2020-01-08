@@ -1,0 +1,12 @@
+a.icon-link i.fa {
+  color: $body-color;
+  text-decoration: none;
+}
+
+a.icon-link.launch-tooltip {
+  border-bottom: 0px;
+}
+
+a.icon-link:hover {
+  text-decoration: none;
+}

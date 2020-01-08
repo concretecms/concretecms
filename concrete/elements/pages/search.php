@@ -6,12 +6,12 @@ $form = Loader::helper('form');
 
 <script type="text/template" data-template="search-results-table-body">
 <% _.each(items, function (page) {%>
-<tr data-launch-search-menu="<%=page.cID%>" data-page-id="<%=page.cID%>" data-page-name="<%-page.cvName%>">
+<tr data-launch-search-menu="<%=page.cPointerID||page.cID%>" data-page-id="<%=page.cID%>" data-page-name="<%-page.cvName%>" title="<%-page.link%>">
     <td><span class="ccm-search-results-checkbox"><input type="checkbox" class="ccm-flat-checkbox" data-search-checkbox="individual" value="<%=page.cID%>" /></span></td>
     <% for (i = 0; i < page.columns.length; i++) {
         var column = page.columns[i];
         if (column.key == 'cv.cvName') { %>
-            <td class="ccm-search-results-name"><%-column.value%></td>
+            <td class="ccm-search-results-name"><%-column.value%><%=page.cPointerID ? ' <i class="fa fa-sign-in"></i>' : ''%></td>
         <% } else { %>
             <td><%-column.value%></td>
         <% } %>
@@ -54,7 +54,7 @@ $form = Loader::helper('form');
                 <?php } ?>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Design')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/design" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="405"><?=t('Design')?></option>
      */ ?>
-                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/page/bulk/delete')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
             </select>
             <input type="checkbox" data-search-checkbox="select-all" class="ccm-flat-checkbox" />
             </span>

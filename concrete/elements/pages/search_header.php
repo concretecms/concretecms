@@ -1,12 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-ui" data-header="page-search">
+<div class="ccm-header-search-form ccm-ui" data-header="page-search">
     <?php if (isset($includeBreadcrumb) && $includeBreadcrumb) { ?>
         <div class="ccm-search-results-breadcrumb">
         </div>
     <?php } ?>
 
-    <form class="form-inline" method="get" action="<?php echo URL::to('/ccm/system/search/pages/basic') ?>">
+    <form class="form-inline" data-search-form="search-pages" method="get" action="<?php echo URL::to('/ccm/system/search/pages/basic') ?>">
 
         <div class="ccm-header-search-form-input">
             <a class="ccm-header-reset-search" href="#" data-button-action-url="<?php echo URL::to('/ccm/system/search/pages/clear')?>" data-button-action="clear-search"><?php echo t('Reset Search')?></a>

@@ -3,7 +3,7 @@ dist: trusty
 language: php
 sudo: false
 cache:
-  yarn: true
+  npm: true
   directories:
     - $HOME/.composer/cache
     - build/node_modules
@@ -15,10 +15,12 @@ matrix:
   fast_finish: true
   allow_failures:
     - name: Test with PHP nightly
+    - name: Test with PHP 7.4
+    - name: Check PHP coding style
   include:
 
-    - name: Test with PHP 7.1 (with code coverage)
-      php: '7.1'
+    - name: Test with PHP 7.2 (with code coverage)
+      php: '7.2'
       before_script:
         - wget --tries=5 https://scrutinizer-ci.com/ocular.phar
         - ./.travis/composer-deps.sh
@@ -28,11 +30,11 @@ matrix:
         - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
     - name: Check PHP coding style
-      php: '7.1'
+      php: '7.2'
       before_script:
         - ./.travis/composer-deps.sh
       script:
-        - composer phpcs
+        - ./.travis/check-php-coding-style.sh
 
     - name: Check JS coding style
       language: node_js
@@ -50,34 +52,6 @@ matrix:
       script:
         - ./.travis/rebuild-assets.sh
 
-    - name: Test with PHP 5.5
-      php: '5.5'
-      before_script:
-        - ./.travis/composer-deps.sh
-      script:
-        - composer test
-
-    - name: Test with PHP 5.6
-      php: '5.6'
-      before_script:
-        - ./.travis/composer-deps.sh
-      script:
-        - composer test
-
-    - name: Test with PHP 7.0
-      php: '7.0'
-      before_script:
-        - ./.travis/composer-deps.sh
-      script:
-        - composer test
-
-    - name: Test with PHP 7.1 (lowest composer dependencies)
-      php: '7.1'
-      before_script:
-        - COMPOSER_FLAGS='--prefer-lowest' ./.travis/composer-deps.sh
-      script:
-        - composer test
-
     - name: Test with PHP 7.2
       php: '7.2'
       before_script:
@@ -87,6 +61,13 @@ matrix:
 
     - name: Test with PHP 7.3
       php: '7.3'
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test
+
+    - name: Test with PHP 7.4
+      php: 7.4snapshot
       before_script:
         - ./.travis/composer-deps.sh
       script:

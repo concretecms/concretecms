@@ -47,7 +47,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
               <div class="col-sm-2">
                 <label style="text-align: center">
                      <img src="<?=REL_DIR_FILES_PAGE_TEMPLATE_ICONS.'/'.$ic;
-        ?>" class="img-responsive" style="vertical-align: middle" />
+        ?>" class="img-fluid" style="vertical-align: middle" />
                      <?=$form->radio('pTemplateIcon', $ic, $ic == $template->getPageTemplateIcon())?>
                 </label>
               </div>

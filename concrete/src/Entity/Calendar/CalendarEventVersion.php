@@ -44,13 +44,13 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     protected $eventVersionID;
 
     /**
-     * @ORM\OneToMany(targetEntity="CalendarEventVersionRepetition", mappedBy="version", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="CalendarEventVersionRepetition", mappedBy="version", cascade={"all"})
      * @ORM\JoinColumn(name="versionRepetitionID", referencedColumnName="versionRepetitionID")
      */
     protected $repetitions;
 
     /**
-     * @ORM\OneToMany(targetEntity="CalendarEventVersionOccurrence", mappedBy="version", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="CalendarEventVersionOccurrence", mappedBy="version", cascade={"all"})
      * @ORM\JoinColumn(name="versionOccurrenceID", referencedColumnName="versionOccurrenceID")
      */
     protected $occurrences;

@@ -4,8 +4,6 @@ use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetTyp
 
 $form = Loader::helper('form');
 $templates = array();
-$ag = \Concrete\Core\Http\ResponseAssetGroup::get();
-$ag->requireAsset('selectize');
 $pagetemplates = PageTemplate::getList();
 foreach ($pagetemplates as $pt) {
     $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();

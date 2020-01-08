@@ -2,15 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
-    <?php
-$view->requireAsset('css', 'bootstrap');
-$view->requireAsset('css', 'font-awesome');
-$view->requireAsset('javascript', 'bootstrap/alert');
-$view->requireAsset('javascript', 'bootstrap/transition');
-$view->requireAsset('javascript', 'jquery');
-$view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
-
+    <link rel="stylesheet" type="text/css" href="<?=$view->getThemePath()?>/main.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+<?php
 $showLogo = true;
 if (isset($c) && is_object($c)) {
     $cp = new Permissions($c);
@@ -23,6 +18,7 @@ if (isset($c) && is_object($c)) {
     $this->markHeaderAssetPosition();
     if (isset($pageTitle)) {
         echo '<title>' . h($pageTitle) . '</title>';
+        echo '<script>var CCM_DISPATCHER_FILENAME = "' . DIR_REL . '/' . DISPATCHER_FILENAME . '";</script>';
     }
 }
 

@@ -4,7 +4,8 @@ namespace Concrete\Core\Application\Service;
 use Concrete\Core\Http\Response;
 use HtmlObject\Traits\Tag;
 use PermissionKey;
-use User as ConcreteUser;
+use Concrete\Core\User\User as ConcreteUser;
+use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Core;
 use Page;
@@ -213,7 +214,8 @@ class UserInterface
     {
         $result = false;
         if (Config::get('concrete.misc.help_overlay')) {
-            $u = new ConcreteUser();
+            $app = Application::getFacadeApplication();
+            $u = $app->make(ConcreteUser::class);
             $timestamp = $u->config('MAIN_HELP_LAST_VIEWED');
             if (!$timestamp) {
                 $result = true;
@@ -225,7 +227,8 @@ class UserInterface
 
     public function trackHelpOverlayDisplayed()
     {
-        $u = new ConcreteUser();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(ConcreteUser::class);
         $u->saveConfig('MAIN_HELP_LAST_VIEWED', time());
     }
 
@@ -234,7 +237,8 @@ class UserInterface
      */
     public function clearInterfaceItemsCache()
     {
-        $u = new ConcreteUser();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(ConcreteUser::class);
         if ($u->isRegistered()) {
             Session::remove('dashboardMenus');
         }
@@ -245,7 +249,8 @@ class UserInterface
      */
     public function cacheInterfaceItems()
     {
-        $u = new ConcreteUser();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(ConcreteUser::class);
         if ($u->isRegistered()) {
             Core::make('helper/concrete/dashboard')->getIntelligentSearchMenu();
         }
@@ -284,30 +289,19 @@ class UserInterface
     }
 
     /**
-     * @param \Concrete\Core\Page\Page[] $tabs
-     * @param bool $jstabs
-     * @param string $callback
+     * @param $tabs
      *
      * @return string
      */
-    public function tabs($tabs, $jstabs = true, $callback = 'ccm_activateTabBar')
+    public function tabs($tabs)
     {
-        $tcn = rand(0, getrandmax());
-
-        $html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
+        $html = '<ul class="nav-tabs nav">';
         foreach ($tabs as $t) {
             $dt = $t[0];
-            $href = '#';
-            if (!$jstabs) {
-                $dt = '';
-                $href = $t[0];
-            }
-            $html .= '<li class="' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '"><a href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
+            $href = '#' . $dt;
+            $html .= '<li class="nav-item"><a class="nav-link ' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '" href="' . $href . '" data-toggle="tab">' . $t[1] . '</a></li>';
         }
         $html .= '</ul>';
-        if ($jstabs) {
-            $html .= '<script type="text/javascript">$(function() { ' . $callback . '($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
-        }
 
         return $html;
     }

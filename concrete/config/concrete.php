@@ -6,10 +6,10 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.0',
-    'version_installed' => '8.5.0',
-    'version_db' => '20190301133300', // the key of the latest database migration
-
+    'version' => '9.0.0a1',
+    'version_installed' => '9.0.0a1',
+    'version_db' => '20191029175713', // the key of the latest database migration
+ 
     /*
      * Installation status
      *
@@ -322,7 +322,7 @@ return [
         ],
 
         'clear' => [
-            'thumbnails' => false,
+            'thumbnails' => false
         ],
     ],
 
@@ -330,6 +330,66 @@ return [
         'enable_custom' => true,
         'enable_layouts' => true,
     ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Queue settings
+     * ------------------------------------------------------------------------
+     */
+    'queue' => [
+
+        /*
+         * Driver
+         *
+         * @var string (redis|database)
+         */
+        'driver' => 'database',
+
+
+        /*
+         * Default queue to use
+         *
+         * @var string
+         */
+        'default' => 'default',
+
+        /*
+         * If we're consuming the queue through polling, how many entries do we do at a time
+         *
+         * @var int
+         */
+        'polling_batch' => [
+            'default' => 10,
+            'rescan_file' => 5,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+
+
+    ],
+
+    /*
+ * ------------------------------------------------------------------------
+ * Events settings
+ * ------------------------------------------------------------------------
+ */
+    'events' => [
+
+        'broadcast' => [
+
+            /*
+             * Driver
+             *
+             * @var string (redis|none)
+             */
+            'driver' => ''
+
+        ],
+
+
+    ],
+
 
     /*
      * ------------------------------------------------------------------------
@@ -357,6 +417,13 @@ return [
          * @var bool
          */
         'spam' => false,
+
+        /*
+         * Whether to log REST API requests headers
+         *
+         * @var bool
+         */
+        'api' => false,
 
         'enable_dashboard_report' => true,
 
@@ -603,6 +670,11 @@ return [
             'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
             'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
         ],
+        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
+        'skip_core' => false,
+        // List of package handles that shouldn't be checked for new versions in marketplace (useful for example if the core is upgraded via composer)
+        // Set to true to skip all the packages
+        'skip_packages' => [],
     ],
     'paths' => [
         'trash' => '/!trash',
@@ -653,14 +725,33 @@ return [
             'preview_image_popover' => true,
             // SVG sanitization
             'svg_sanitization' => [
-                // Enable the SVG sanitification?
-                'enabled' => true,
+                // The operation that the SVG sanitizer should perform.
+                // This must be value of one of the Concrete\Core\File\Import\Processor\SvgProcessor::ACTION_... constants
+                'action' => 'sanitize',
                 // Space-separated list of tags to be kept
                 'allowed_tags' => '',
                 // Space-separated list of attributes to be kept
                 'allowed_attributes' => '',
             ],
+            /*
+             * Background color of the Image Editor saveArea
+             * Leave empty to use a transparent background
+             *
+             * @var string
+             */
+            'image_editor_save_area_background_color' => '',
         ],
+        /*
+         * Options for the results per page dropdown
+         *
+         * @var array
+         */
+        'items_per_page_options' => [10, 25, 50, 100, 250],
+        /*
+         * Default number of results per page
+         *
+         * @var int
+         */
         'results' => 10,
     ],
 
@@ -791,11 +882,20 @@ return [
         'name' => false,
 
         /*
-         * Background image url
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed = 
+         * standard behavior, "custom" = custom image.
          *
-         * @var null|string
+         * @var string "none"|"feed"|"custom"
          */
-        'background_image' => null,
+        'background_image' => 'feed',
+
+        /*
+         * If the background image is custom, this is where it loads from.
+         *
+         * @var null|string Custom URL for background image.
+         */
+        'background_url' => null,
+        
     ],
     'session' => [
         'name' => 'CONCRETE5',
@@ -811,6 +911,9 @@ return [
             'cookie_domain' => false,
             'cookie_secure' => false,
             'cookie_httponly' => true,
+        ],
+        'remember_me' => [
+            'lifetime' => 1209600, // 2 weeks in seconds
         ],
     ],
 
@@ -969,9 +1072,12 @@ return [
      * ------------------------------------------------------------------------
      */
     'calendar' => [
+
         'colors' => [
+
             'text' => '#ffffff',
             'background' => '#3A87AD',
+
         ],
     ],
 
@@ -991,18 +1097,6 @@ return [
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
-            ],
-        ],
-        'ban' => [
-            'ip' => [
-                // Is the automatic ban system enabled?
-                'enabled' => true,
-                // Maximum number of login attempts before banning the IP address
-                'attempts' => 5,
-                // Time window (in seconds) for past failed login attempts
-                'time' => 300,
-                // Ban duration (in minutes) when <attempts> failed logins occurred in the past <time> seconds
-                'length' => 10,
             ],
         ],
         'misc' => [
@@ -1077,8 +1171,6 @@ return [
     ],
     'limits' => [
         'sitemap_pages' => 100,
-        'delete_pages' => 100,
-        'copy_pages' => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch' => 10,
         'style_customizer' => [
@@ -1119,7 +1211,7 @@ return [
         'enabled' => false,
 
         /**
-         * Which grant types do we allow to connect to the API
+         * Which grant types do we allow to connect to the API.
          *
          * @var array
          */

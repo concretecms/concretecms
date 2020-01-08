@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Support\Facade\Application;
 use DateTime as PHPDateTime;
 use Exception;

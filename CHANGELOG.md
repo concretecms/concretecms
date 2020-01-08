@@ -1,3 +1,31 @@
+# 8.5.1
+
+## Feature Updates
+
+* Added the ability to filter logs by time (thanks biplobice) 
+
+## Behavioral Improvements
+
+* Improved translation of user logging in multilingual environments. (Thanks katzueno )
+* Improvements to code quality and reduction in suppressed errors (thanks mlocati)
+* improvements to using multiple user selectors on a page; miscellaneous bug fixes to user selector (thanks haeflimi)
+* improvements to installation on a cluster where site home page ID may not be 1. (Thanks mlocati)
+* Improved file size of app.css; removed unnecessary and broken CSS.
+* Simplify the warning when the database does not fully support utf8mb4 (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed error where external form actions were not working.
+* Fix Exception already used in CharsetCollation\Manager (thanks mlocati)
+* Fixed error where move/copy didn’t work in site map flat view (thanks deek87)
+* Fix resuming copy language tree operation (thanks mlocati)
+* Fixed inability to run some user bulk actions in the Dashboard.
+* Fixed JavaScript error when changing default calendar colors in the Dashboard.
+* Fixed error in API where authenticated requests could pass through to read any API route.
+* Fix error on package uninstall while remove the package directory is checked (thanks biplobice)
+* Hide publish now button on versions of pages when user doesn’t have permission to publish (thanks hissy)
+* Make sure custom thumbnails have upscaling enabled (https://github.com/concrete5/concrete5/pull/7697)
+
 # 8.5.0
 
 ## Feature Updates

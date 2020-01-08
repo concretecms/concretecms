@@ -43,7 +43,7 @@ abstract class Control implements \JsonSerializable, ExportableInterface, Contro
     protected $custom_label;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\FieldSet")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\FieldSet", inversedBy="controls")
      **/
     protected $field_set;
 

@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/system/dialogs/area
  * Namespace: Concrete\Controller\Dialog\Area\
  */

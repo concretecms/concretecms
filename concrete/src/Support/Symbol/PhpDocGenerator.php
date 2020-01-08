@@ -16,6 +16,20 @@ class PhpDocGenerator
     protected $insideNamespace = false;
 
     /**
+     * Indentation.
+     *
+     * @var string
+     */
+    protected $indentation = '';
+
+    /**
+     * Insert the variable definitions in the same PHPDoc block?
+     *
+     * @var string
+     */
+    protected $singleDocBlock = false;
+
+    /**
      * Are we generating PHPDoc to be placed inside a namespace?
      *
      * @return bool
@@ -40,18 +54,11 @@ class PhpDocGenerator
     }
 
     /**
-     * Intentation.
-     *
-     * @var string
-     */
-    protected $indentation = '';
-
-    /**
      * Get the indentation.
      *
      * @return string
      */
-    public function getIntentation()
+    public function getIndentation()
     {
         return $this->indentation;
     }
@@ -63,9 +70,33 @@ class PhpDocGenerator
      *
      * @return $this
      */
-    public function setIntentation($value)
+    public function setIndentation($value)
     {
         $this->indentation = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * Insert the variable definitions in the same PHPDoc block?
+     *
+     * @return bool
+     */
+    public function isSingleDocBlock()
+    {
+        return $this->singleDocBlock;
+    }
+
+    /**
+     * Insert the variable definitions in the same PHPDoc block?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setIsSingleDocBlock($value)
+    {
+        $this->singleDocBlock = (bool) $value;
 
         return $this;
     }
@@ -80,7 +111,7 @@ class PhpDocGenerator
      */
     public function describeVar($name, $value)
     {
-        return $this->indentation . '/* @var ' . $this->getVarType($value) . ' ' . ($name[0] === '$' ? '' : '$') . $name . " */\n";
+        return $this->indentation . '/** ' . $this->describeVarUncommented($name, $value) . " */\n";
     }
 
     /**
@@ -93,15 +124,40 @@ class PhpDocGenerator
      */
     public function describeVars(array $vars, $sortByName = true)
     {
-        $result = '';
+        $count = count($vars);
+        if ($count === 0) {
+            return '';
+        }
         if ($sortByName) {
             ksort($vars, SORT_NATURAL);
         }
+        if ($count === 1 || $this->isSingleDocBlock() === false) {
+            $result = '';
+            foreach ($vars as $name => $value) {
+                $result .= $this->describeVar($name, $value);
+            }
+
+            return $result;
+        }
+        $result = $this->indentation . "/**\n";
         foreach ($vars as $name => $value) {
-            $result .= $this->describeVar($name, $value);
+            $result .= $this->indentation . ' * ' . $this->describeVarUncommented($name, $value) . "\n";
         }
 
-        return $result;
+        return $result . $this->indentation . " */\n";
+    }
+
+    /**
+     * Generate the PHPDoc content to describe a variable (without opening/closing comments).
+     *
+     * @param string $name The variable name
+     * @param mixed $value The variable value
+     *
+     * @return string
+     */
+    protected function describeVarUncommented($name, $value)
+    {
+        return '@var ' . $this->getVarType($value) . ' ' . ($name[0] === '$' ? '' : '$') . $name;
     }
 
     /**

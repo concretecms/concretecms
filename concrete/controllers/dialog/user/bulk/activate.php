@@ -54,7 +54,7 @@ class Activate extends BackendInterfaceController
             \Core::shutdown();
         }
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         $count = 0;
         if (count($this->users) > 0) {
             // check if workflow is attached to this request
@@ -92,9 +92,9 @@ class Activate extends BackendInterfaceController
 
                     if (!in_array($function, $workflowRequestActions)) {
                         if ('activate' == $function) {
-                            $ui->triggerActivate('activate', $u);
+                            $ui->triggerActivate('activate', $u->getUserID());
                         } else {
-                            $ui->triggerDeactivate($u);
+                            $ui->triggerDeactivate($u->getUserID());
                         }
                         ++$count;
                     }
@@ -137,7 +137,7 @@ class Activate extends BackendInterfaceController
             return $this->canEdit;
         }
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         $excluded_user_ids = [];
         $excluded_user_ids[] = $u->getUserID(); // can't de/activate yourself
         $excluded_user_ids[] = USER_SUPER_ID;   // can't de/activatethe super user (admin)

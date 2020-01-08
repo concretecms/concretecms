@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Attribute\Value;
 
 use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
@@ -75,7 +74,19 @@ class AddressValueTest extends AttributeValueTestCase
         return [
             [
                 $this->getAddress1(),
-                "123 Fake St.<br />\nSuite 100<br />\nPortland, Oregon 90000<br />\nUnited States",
+                (
+                    '<div class="ccm-address-text">' . "\n" .
+                    '<span class="address-line1">123 Fake St.</span>' .
+                    '<br>' . "\n" .
+                    '<span class="address-line2">Suite 100</span>' .
+                    '<br>' . "\n" .
+                    '<span class="locality">Portland</span>, ' .
+                    '<span class="administrative-area">Oregon</span> ' .
+                    '<span class="postal-code">90000</span>' .
+                    '<br>' . "\n" .
+                    '<span class="country">United States</span>' .
+                    "\n" . '</div>'
+                ),
             ],
         ];
     }
@@ -105,6 +116,79 @@ class AddressValueTest extends AttributeValueTestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * Tests that the the attribute value is formatted correctly when fetched
+     * through the controller.
+     */
+    public function testControllerDisplayValue()
+    {
+        $expected = $this->displayAttributeValues();
+        $ctrl = $this->getControllerWithValue();
+
+        $this->assertEquals($expected[0][1], $ctrl->getDisplayValue());
+    }
+
+    /**
+     * Tests address validation through the controller.
+     */
+    public function testControllerFormValidation()
+    {
+        $ctrl = $this->getControllerWithValue();
+
+        // No country
+        $this->assertFalse($ctrl->validateForm([
+            'address1' => 'No country road 1',
+            'state_province' => 'Unexisting',
+            'city' => 'Atlantis',
+            'postal_code' => '123456',
+        ]));
+
+        // US: default
+        $this->assertTrue($ctrl->validateForm([
+            'address1' => '123 Fake St.',
+            'city' => 'Portland',
+            'state_province' => 'OR',
+            'country' => 'US',
+            'postal_code' => '90000',
+        ]));
+        // US: state/province missing
+        $this->assertFalse($ctrl->validateForm([
+            'address1' => '123 Fake St.',
+            'city' => 'Portland',
+            'country' => 'US',
+            'postal_code' => '90000',
+        ]));
+
+        // FI: default
+        $this->assertTrue($ctrl->validateForm([
+            'address1' => 'Olematon kuja 1',
+            'city' => 'Helsinki',
+            'country' => 'FI',
+            'postal_code' => '00001',
+        ]));
+        // FI: city missing
+        $this->assertFalse($ctrl->validateForm([
+            'address1' => 'Olematon kuja 1',
+            'country' => 'FI',
+            'postal_code' => '00001',
+        ]));
+    }
+
+    protected function getControllerWithValue()
+    {
+        $this->object->setAttribute(
+            $this->getAttributeKeyHandle(),
+            $this->getAddress1(false)
+        );
+        $val = $this->object->getAttribute($this->getAttributeKeyHandle());
+        $gv = $val->getGenericValue();
+        $key = $gv->getAttributeKey();
+        $ctrl = $key->getController();
+        $ctrl->setAttributeValue($val);
+
+        return $ctrl;
     }
 
     protected function prepareBaseValueAfterRetrieving($value)

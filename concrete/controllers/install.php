@@ -4,6 +4,7 @@ namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
@@ -18,7 +19,6 @@ use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTra
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\View\View;
 use Exception;
-use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
 use stdClass;
 
@@ -77,7 +77,7 @@ class Install extends Controller
     {
         $v = new View('/frontend/install');
         $v->setViewTheme('concrete');
-
+        $v->setViewTemplate('background_image.php');
         return $v;
     }
 
@@ -88,18 +88,11 @@ class Install extends Controller
      */
     public function on_start()
     {
-        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
-        $this->requireAsset('core/app');
-        $this->requireAsset('javascript', 'backstretch');
-        $this->requireAsset('javascript', 'bootstrap/collapse');
         $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
 
         $config = $this->app->make('config');
-        $this->set('backgroundFade', 0);
         $this->set('pageTitle', t('Install concrete5'));
         $image = date('Ymd') . '.jpg';
-        $this->set('image', date('Ymd') . '.jpg');
-        $this->set('imagePath', $config->get('concrete.urls.background_feed') . '/' . $image);
         $this->set('concreteVersion', $config->get('concrete.version'));
 
         $locale = $this->request->request->get('locale');
@@ -116,7 +109,6 @@ class Install extends Controller
 
     public function view()
     {
-        $this->set('backgroundFade', 500);
         if ($this->getInstallerOptions()->hasConfigurationFiles()) {
             $this->testAndRunInstall();
         } else {
@@ -325,11 +317,11 @@ class Install extends Controller
                 $configuration['session-handler'] = $post->get('sessionHandler');
                 $options->setConfiguration($configuration);
 
-                $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+                $hasher = $this->app->make(PasswordHasher::class);
                 $options
                     ->setPrivacyPolicyAccepted($post->get('privacy') == '1' ? true : false)
                     ->setUserEmail($post->get('uEmail'))
-                    ->setUserPasswordHash($hasher->HashPassword($post->get('uPassword')))
+                    ->setUserPasswordHash($hasher->hashPassword($post->get('uPassword')))
                     ->setStartingPointHandle($post->get('SAMPLE_CONTENT'))
                     ->setSiteName($post->get('SITE'))
                     ->setSiteLocaleId($post->get('siteLocaleLanguage') . '_' . $post->get('siteLocaleCountry'))
@@ -341,7 +333,7 @@ class Install extends Controller
                 try {
                     $connection = $installer->createConnection();
                 } catch (UserMessageException $x) {
-                    $error->add($x);
+                    $error->add($x->getMessage());
                     $connection = null;
                 }
                 $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
@@ -359,14 +351,14 @@ class Install extends Controller
                         case PreconditionResult::STATE_PASSED:
                             break;
                         case PreconditionResult::STATE_WARNING:
-                            $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            $warnings->addHtml('<span class="label label-warning">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             break;
                         case PreconditionResult::STATE_FAILED:
                         default:
                             if ($precondition->isOptional()) {
-                                $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                                $warnings->addHtml('<span class="label label-warning">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             } else {
-                                $error->add($precondition->getName() . ': ' . $check->getMessage());
+                                $error->addHtml('<span class="label label-danger">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                             }
                             break;
                     }
@@ -490,7 +482,7 @@ class Install extends Controller
                         break;
                     case PreconditionResult::STATE_FAILED:
                     default:
-                        $e->add($precondition->getName() . ': ' . $check->getMessage());
+                        $e->addHtml('<span class="label label-danger">' . h($precondition->getName()) . '</span><br />' . nl2br(h($check->getMessage())));
                         break;
                 }
             }
@@ -500,7 +492,6 @@ class Install extends Controller
         if ($e->has()) {
             $this->set('error', $e);
         } else {
-            $this->set('backgroundFade', 0);
             $spl = $this->getInstaller()->getStartingPoint(true);
             $this->set('installPackage', $spl->getPackageHandle());
             $this->set('installRoutines', $spl->getInstallRoutines());

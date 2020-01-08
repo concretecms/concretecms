@@ -24,7 +24,7 @@ class UserTest extends UserTestCase
         $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->truncateTables();

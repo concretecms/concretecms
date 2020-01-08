@@ -23,7 +23,7 @@ if (is_object($f) && $f->getFileID()) {
         $tag = $image->getTag();
     }
 
-    $tag->addClass('ccm-image-block img-responsive bID-' . $bID);
+    $tag->addClass('ccm-image-block img-fluid bID-' . $bID);
 
     if ($altText) {
         $tag->alt(h($altText));
@@ -36,7 +36,7 @@ if (is_object($f) && $f->getFileID()) {
     }
 
     if ($linkURL) {
-        echo '<a href="' . $linkURL . '" '. ($openLinkInNewWindow ? 'target="_blank"' : '') .'>';
+        echo '<a href="' . $linkURL . '" '. ($openLinkInNewWindow ? 'target="_blank" rel="noopener noreferrer"' : '') .'>';
     }
 
     // add data attributes for hover effect

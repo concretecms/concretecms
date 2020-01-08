@@ -9,7 +9,7 @@ use Exception;
 use Loader;
 use PageType;
 use Permissions;
-use User;
+use Concrete\Core\User\User;
 use Page;
 use Request;
 use Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
@@ -37,7 +37,6 @@ class Location extends BackendInterfacePageController
     public function view()
     {
         $c = $this->page;
-        $this->requireAsset('core/sitemap');
         $cParentID = $c->getCollectionParentID();
         if ($c->isPageDraft()) {
             $cParentID = $c->getPageDraftTargetParentPageID();
@@ -97,7 +96,7 @@ class Location extends BackendInterfacePageController
                 if ($oc->isPageDraft()) {
                     $oc->setPageDraftTargetParentPageID($dc->getCollectionID());
                 } else {
-                    $u = new User();
+                    $u = $this->app->make(User::class);
                     $pkr = new MovePagePageWorkflowRequest();
                     $pkr->setRequestedPage($oc);
                     $pkr->setRequestedTargetPage($dc);

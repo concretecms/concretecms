@@ -6,6 +6,7 @@ use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
 class PageTheme extends \Concrete\Core\Page\Theme\Theme
 {
 
+    /*
     protected $pThemeGridFrameworkHandle = 'bootstrap3';
 
     public function getThemeBlockClasses()
@@ -13,6 +14,13 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme
         return array(
             'rss_displayer' => array('concrete5-org-stories')
         );
+    }*/
+
+    public function registerAssets()
+    {
+        $this->requireAsset('jquery');
+        $this->requireAsset('font-awesome');
+        $this->providesAsset('core/cms');
     }
 
 }

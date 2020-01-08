@@ -4,9 +4,9 @@ namespace Concrete\Tests\Form\Service;
 
 use Concrete\Core\Http\Request;
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FormTest extends PHPUnit_Framework_TestCase
+class FormTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Form\Service\Form
@@ -208,124 +208,124 @@ class FormTest extends PHPUnit_Framework_TestCase
             [
                 'checkbox',
                 ['Key', 'Value'],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
             ],
             [
                 'checkbox',
                 ['Key', 'Value', false],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
             ],
             [
                 'checkbox',
                 ['Key', 'Value', null],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
             ],
             [
                 'checkbox',
                 ['Key', 'Value', 0],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
             ],
             [
                 'checkbox',
                 ['Key', 'Value', '0'],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
             ],
             [
                 'checkbox',
                 ['Key', 'Value', true],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" checked="checked" />',
             ],
             [
                 'checkbox',
                 ['Key', 'Value', '1'],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" checked="checked" />',
             ],
             [
                 'checkbox',
                 ['Key', 'Value', true],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
                 ['OtherField' => 'Other value'],
             ],
             [
                 'checkbox',
                 ['Key', 'Value', false],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" checked="checked" />',
                 ['Key' => 'Value'],
             ],
             [
                 'checkbox',
                 ['Key', 'Value', false],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
                 ['Key' => ''],
             ],
             [
                 'checkbox',
                 ['Key', 'Value', false],
-                '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key" name="Key" class="form-check-input" value="Value" />',
                 ['Key' => 'Wrong value'],
             ],
             [
                 'checkbox',
                 ['Key[]', 'Value'],
-                '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key_Value" name="Key[]" class="form-check-input" value="Value" />',
             ],
             [
                 'checkbox',
                 ['Key[]', 'Value', true],
-                '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key_Value" name="Key[]" class="form-check-input" value="Value" checked="checked" />',
             ],
             [
                 'checkbox',
                 ['Key[]', 'Value', true],
-                '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key_Value" name="Key[]" class="form-check-input" value="Value" />',
                 ['OtherField' => 'Other value'],
             ],
             [
                 'checkbox',
                 ['Key[]', 'Value', false],
-                '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key_Value" name="Key[]" class="form-check-input" value="Value" checked="checked" />',
                 ['Key' => 'Value'],
             ],
             [
                 'checkbox',
                 ['Key[]', 'Value', false],
-                '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key_Value" name="Key[]" class="form-check-input" value="Value" />',
                 ['Key' => 'Other value'],
             ],
             [
                 'checkbox',
                 ['Key[]', 'Value', false],
-                '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key_Value" name="Key[]" class="form-check-input" value="Value" checked="checked" />',
                 ['Key' => ['Look', 'for', 'Value', 'in', 'this', 'array']],
             ],
             [
                 'checkbox',
                 ['Key[subkey1][subkey2]', 'Value', false],
-                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-check-input" value="Value" />',
                 ['Key' => 'Value'],
             ],
             [
                 'checkbox',
                 ['Key[subkey1][subkey2]', 'Value', false],
-                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-check-input" value="Value" />',
                 ['Key' => ['subkey1' => 'Value']],
             ],
             [
                 'checkbox',
                 ['Key[subkey1][subkey2]', 'Value', false],
-                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-check-input" value="Value" checked="checked" />',
                 ['Key' => ['subkey1' => ['subkey2' => 'Value']]],
             ],
             [
                 'checkbox',
                 ['Key[subkey1][subkey2]', 'Value', false],
-                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" checked="checked" />',
+                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-check-input" value="Value" checked="checked" />',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'Value']]]],
             ],
             [
                 'checkbox',
                 ['Key[subkey1][subkey2]', 'Value', false],
-                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" />',
+                '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-check-input" value="Value" />',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'Other value']]]],
             ],
             // textarea
@@ -394,56 +394,56 @@ class FormTest extends PHPUnit_Framework_TestCase
             [
                 'radio',
                 ['Key', 'Value'],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="form-check-input" />',
             ],
             [
                 'radio',
                 ['Key', 'Value', 'Incorrect value'],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="form-check-input" />',
             ],
             [
                 'radio',
                 ['Key', 'Value', 'Value'],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" checked="checked" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="form-check-input" checked="checked" />',
             ],
             [
                 'radio',
                 ['Key', 'Value', ['class' => 'MY-CLASS', 'data-custom' => 'My custom data']],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS ccm-input-radio" data-custom="My custom data" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS form-check-input" data-custom="My custom data" />',
             ],
             [
                 'radio',
                 ['Key', 'Value', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS ccm-input-radio" checked="checked" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS form-check-input" checked="checked" />',
             ],
             [
                 'radio',
                 ['Key', 'Value'],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="form-check-input" />',
                 ['Key' => ''],
             ],
             [
                 'radio',
                 ['Key', 'Value'],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="form-check-input" />',
                 ['Key' => 'Invalid value'],
             ],
             [
                 'radio',
                 ['Key', 'Value'],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" checked="checked" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="form-check-input" checked="checked" />',
                 ['Key' => 'Value'],
             ],
             [
                 'radio',
                 ['Key', 'Value'],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="form-check-input" />',
                 ['OtherKey' => 'OtherValue'],
             ],
             [
                 'radio',
                 ['Key[subkey1][subkey2]', 'Value'],
-                '<input type="radio" id="Key[subkey1][subkey2]**UNIQUENUMBER**" name="Key[subkey1][subkey2]" value="Value" class="ccm-input-radio" checked="checked" />',
+                '<input type="radio" id="Key[subkey1][subkey2]**UNIQUENUMBER**" name="Key[subkey1][subkey2]" value="Value" class="form-check-input" checked="checked" />',
                 ['Key' => ['subkey1' => ['subkey2' => 'Value']]],
             ],
             // inputType (text, number, email, telephone, url, search, password)
@@ -769,6 +769,12 @@ class FormTest extends PHPUnit_Framework_TestCase
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => ['One']]]]],
+            ],
+            [
+                'select',
+                ['Key', ['One' => 'First', 'Two' => 'Second'], '<Two\'">'],
+                '<select id="Key" name="Key" ccm-passed-value="&lt;Two&#039;&quot;&gt;" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                ['OtherField' => 'OtherValue'],
             ],
         ];
     }

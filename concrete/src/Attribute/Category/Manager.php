@@ -33,6 +33,11 @@ class Manager extends CoreManager
         return $this->app->make('Concrete\Core\Attribute\Category\SiteCategory');
     }
 
+    public function createSiteTypeDriver()
+    {
+        return $this->app->make('Concrete\Core\Attribute\Category\SiteTypeCategory');
+    }
+
     public function createEventDriver()
     {
         return $this->app->make('Concrete\Core\Attribute\Category\EventCategory');

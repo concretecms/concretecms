@@ -11,7 +11,7 @@ class ExpressKey extends Key
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entity")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entity", inversedBy="attributes")
      **/
     protected $entity;
 

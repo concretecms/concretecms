@@ -7,14 +7,14 @@ use Concrete\Core\Validator\String\ReuseValidator;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 use ReflectionMethod;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Entity\User\User as EntityUser;
 
-class ReuseValidatorTest extends PHPUnit_Framework_TestCase
+class ReuseValidatorTest extends TestCase
 {
 
     use MockeryPHPUnitIntegration;

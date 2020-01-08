@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Page;
 
+use Concrete\Core\Entity\Site\SkeletonTree;
 use Concrete\Core\Page\PageList;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Config;
@@ -75,6 +76,7 @@ class PageListTest extends PageTestCase
             \Concrete\Core\Entity\Attribute\Type::class,
             \Concrete\Core\Entity\Attribute\Category::class,
             \Concrete\Core\Entity\Page\Feed::class,
+            SkeletonTree::class,
         ]);
     }
 
@@ -104,7 +106,7 @@ class PageListTest extends PageTestCase
         }
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->list = new \Concrete\Core\Page\PageList();

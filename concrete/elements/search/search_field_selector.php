@@ -36,9 +36,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?php } ?>
 </div>
 
+<?php if ($includeJavaScript) { ?>
 <script type="text/javascript">
     $(function() {
-        $('div[data-component=search-field-selector]').concreteSearchFieldSelector();
+        $('div[data-component=search-field-selector]').concreteSearchFieldSelector({});
     });
 </script>
-
+<?php } ?>

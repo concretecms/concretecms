@@ -32,6 +32,8 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
+        'Concrete\Core\Entity\Summary\Category',
+        'Concrete\Core\Entity\Page\Summary\PageTemplate',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Type',
@@ -60,7 +62,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      *
      * @see \PHPUnit_Framework_TestCase::setUp()
      */
-    protected function setUp()
+    public function setUp(): void
     {
         // Truncate tables
         $this->truncateTables();
@@ -175,9 +177,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         $object->clearAttribute($ak);
         $object = $this->getAttributeObjectForGet();
         $cav = $object->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $this->fail(t("clearAttribute did not delete '%s'.", $handle));
-        }
+        $this->assertEmpty($cav, t("clearAttribute did not delete '%s'.", $handle));
     }
 
     abstract protected function getAttributeKeyClass();

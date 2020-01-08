@@ -12,9 +12,6 @@ class EventList extends DashboardCalendarPageController
 {
     public function view($caID = null, $year = null, $month = null)
     {
-
-        $this->requireAsset('core/calendar/admin');
-
         // note - month and year are not used here, but we
         // need to keep the method signature the same as the grid view
         // method.

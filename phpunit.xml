@@ -1,4 +1,6 @@
 <phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/sebastianbergmann/phpunit/4.8.36/phpunit.xsd"
         bootstrap="./tests/bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
@@ -7,7 +9,8 @@
         backupGlobals="false"
         backupStaticAttributes="false"
         verbose="true"
-        processIsolation="false">
+        processIsolation="false"
+>
     <testsuites>
         <testsuite name="Tests">
             <directory>tests/tests/</directory>
@@ -19,6 +22,17 @@
             <directory suffix=".php">concrete/controllers/</directory>
             <directory suffix="controller.php">concrete/</directory>
             <directory suffix="page_theme.php">concrete/themes/</directory>
+            <exclude>
+                <directory suffix=".php">concrete/vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
+    <groups>
+        <exclude>
+            <group>online</group>
+        </exclude>
+    </groups>
+    <php>
+        <ini name="memory_limit" value="-1"/>
+    </php>
 </phpunit>

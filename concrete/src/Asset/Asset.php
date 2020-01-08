@@ -256,6 +256,8 @@ abstract class Asset implements AssetInterface
                 $config = $app->make('config');
                 $noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db');
             }
+            $assetVersion = $this->getAssetVersion();
+            $noCacheValue = !empty($assetVersion) ? $noCacheValue . '-' . $assetVersion : $noCacheValue;
             $noCacheValue = $this->obfuscateNoCacheValue($noCacheValue);
             $result .= (strpos($result, '?') === false ? '?' : '&') . static::OUTPUT_NOCACHE_PARAM . '=' . rawurlencode($noCacheValue);
         }

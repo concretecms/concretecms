@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Application\Application;
@@ -10,13 +11,19 @@ use Concrete\Core\Url\UrlImmutable;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
-    /** @var Request */
+    /**
+     * @var \Concrete\Core\Http\Request
+     */
     protected $request;
 
-    /** @var Application */
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
     protected $app;
 
-    /** @var Url */
+    /**
+     * @var \Concrete\Core\Url\Url
+     */
     protected $cached;
 
     /**
@@ -32,18 +39,9 @@ class CanonicalUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Resolve url's from any type of input.
+     * {@inheritdoc}
      *
-     * This method MUST either return a `\League\URL\URL` when a url is resolved
-     * or null when a url cannot be resolved.
-     *
-     * If the first argument provided is a page object, we will use that object to determine the site tree
-     * (and thus the canonical url) to use.
-     *
-     * @param array $arguments A list of the arguments
-     * @param \League\URL\URLInterface $resolved
-     *
-     * @return \League\URL\URLInterface
+     * @see \Concrete\Core\Url\Resolver\UrlResolverInterface::resolve()
      */
     public function resolve(array $arguments, $resolved = null)
     {
@@ -54,7 +52,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
             $page = head($arguments);
             $tree = $page->getSiteTreeObject();
             if ($tree instanceof SiteTree) {
-                $site = $tree->getSite(); 
+                $site = $tree->getSite();
             }
         } elseif ($this->cached) {
             return $this->cached;

@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Event;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\ApproveCalendarEventRequest;
 use Core;
@@ -62,19 +63,23 @@ class DeleteOccurrence extends BackendInterfaceController
         );
 
         if (!$e->has()) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             $eventVersion = $this->eventService->getVersionToModify($occurrence->getEvent(), $u);
             $this->eventService->addEventVersion($eventVersion->getEvent(), $eventVersion->getEvent()->getCalendar(), $eventVersion);
             $this->eventOccurrenceService->delete($eventVersion, $occurrence->getOccurrence());
 
-            $pkr = new ApproveCalendarEventRequest();
-            $pkr->setCalendarEventVersionID($eventVersion->getID());
-            $pkr->setRequesterUserID($u->getUserID());
-            $response = $pkr->trigger();
-            if ($response instanceof Response) {
-                $this->flash('success', t('Event occurrence removed.'));
+            if ($eventVersion->isApproved()) {
+                $pkr = new ApproveCalendarEventRequest();
+                $pkr->setCalendarEventVersionID($eventVersion->getID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                if ($response instanceof Response) {
+                    $this->flash('success', t('Event occurrence removed.'));
+                } else {
+                    $this->flash('success', t('Event occurrence cancellation requested. This must be approved before it is fully removed.'));
+                }
             } else {
-                $this->flash('success', t('Event occurrence cancellation requested. This must be approved before it is fully removed.'));
+                $this->flash('success', t('Event occurrence removed.'));
             }
         }
 

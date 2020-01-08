@@ -12,7 +12,6 @@ class Full extends DashboardPageController
 {
     public function view()
     {
-        $this->requireAsset('core/sitemap');
         $dh = Loader::helper('concrete/dashboard/sitemap');
         $cookie = $this->app->make('cookie');
         $this->set('includeSystemPages', $dh->includeSystemPages());

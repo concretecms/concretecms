@@ -2,56 +2,67 @@
 
 namespace Concrete\Tests\Permission;
 
+use Concrete\Core\Entity\Permission\IpAccessControlCategory;
+use Concrete\Core\Entity\Permission\IpAccessControlEvent;
+use Concrete\Core\Entity\Permission\IpAccessControlRange;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Permission\IPService;
+use Concrete\Core\Site\Factory as SiteFactory;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use IPLib\Factory as IPFactory;
 
 class IPServiceTest extends ConcreteDatabaseTestCase
 {
     protected $tables = [
-        'FailedLoginAttempts',
-        'LoginControlIpRanges',
         'Logs',
     ];
 
-    /**
-     * @var \Concrete\Core\Config\Repository\Repository
-     */
-    private $config;
+    protected $metadatas = [
+        Site::class,
+        IpAccessControlCategory::class,
+        IpAccessControlEvent::class,
+        IpAccessControlRange::class,
+    ];
 
     /**
-     * @var array
+     * @var \Concrete\Core\Entity\Permission\IpAccessControlCategory
      */
-    private $originalConfig;
+    private $category;
 
     /**
-     * @var IPService
+     * @var \Concrete\Core\Permission\IPService
      */
     private $ipService;
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->connection()->executeQuery('DELETE FROM FailedLoginAttempts');
-        $this->connection()->executeQuery('DELETE FROM LoginControlIpRanges');
         $app = Application::getFacadeApplication();
-        $this->config = $app->make('config');
-        $this->originalConfig = $this->config->get('concrete.security.ban.ip');
-        $this->ipService = $app->build(
-            IPService::class,
-            [
-                'config' => $this->config,
-                'connection' => $this->connection(),
-            ]
-        );
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        $this->config->set('concrete.security.ban.ip', $this->originalConfig);
+        $app->make('cache/request')->flush();
+        $em = $app->make(EntityManagerInterface::class);
+        $em->createQueryBuilder()->delete(Site::class)->getQuery()->execute();
+        $em->createQueryBuilder()->delete(IpAccessControlEvent::class)->getQuery()->execute();
+        $em->createQueryBuilder()->delete(IpAccessControlRange::class)->getQuery()->execute();
+        $em->createQueryBuilder()->delete(IpAccessControlCategory::class)->getQuery()->execute();
+        $site = $app->make(SiteFactory::class)->createDefaultEntity();
+        $em->persist($site);
+        $em->flush($site);
+        $this->category = new IpAccessControlCategory();
+        $this->category
+            ->setHandle('failed_login')
+            ->setName('Failed Login Attempts')
+            ->setEnabled(true)
+            ->setMaxEvents(3)
+            ->setTimeWindow(300)
+            ->setBanDuration(600)
+            ->setSiteSpecific(false)
+        ;
+        $em->persist($this->category);
+        $em->flush($this->category);
+        $this->ipService = $app->make(IPService::class);
     }
 
     public function automaticBanEnabledProvider()
@@ -70,10 +81,12 @@ class IPServiceTest extends ConcreteDatabaseTestCase
      */
     public function testAutomaticBanEnabled($allowedAttempts)
     {
-        $this->config->set('concrete.security.ban.ip.enabled', true);
-        $this->config->set('concrete.security.ban.ip.attempts', $allowedAttempts);
-        $this->config->set('concrete.security.ban.ip.time', 300);
-        $this->config->set('concrete.security.ban.ip.length', 10);
+        $this->category
+            ->setEnabled(true)
+            ->setMaxEvents($allowedAttempts)
+            ->setTimeWindow(300)
+            ->setBanDuration(600)
+        ;
         $ip = IPFactory::addressFromString('1.2.3.4');
         for ($attempt = 1; $attempt <= $allowedAttempts; ++$attempt) {
             $this->assertFalse($this->ipService->isWhitelisted($ip));
@@ -98,10 +111,12 @@ class IPServiceTest extends ConcreteDatabaseTestCase
 
     public function testAutomaticBanDisabled()
     {
-        $this->config->set('concrete.security.ban.ip.enabled', false);
-        $this->config->set('concrete.security.ban.ip.attempts', 3);
-        $this->config->set('concrete.security.ban.ip.time', 300);
-        $this->config->set('concrete.security.ban.ip.length', 10);
+        $this->category
+            ->setEnabled(false)
+            ->setMaxEvents(3)
+            ->setTimeWindow(300)
+            ->setBanDuration(600)
+        ;
         $ip = IPFactory::addressFromString('1.2.3.4');
         for ($attempt = 1; $attempt <= 10; ++$attempt) {
             $this->ipService->logFailedLogin($ip);
@@ -112,10 +127,12 @@ class IPServiceTest extends ConcreteDatabaseTestCase
 
     public function testWhitelisted()
     {
-        $this->config->set('concrete.security.ban.ip.enabled', true);
-        $this->config->set('concrete.security.ban.ip.attempts', 3);
-        $this->config->set('concrete.security.ban.ip.time', 300);
-        $this->config->set('concrete.security.ban.ip.length', 10);
+        $this->category
+            ->setEnabled(true)
+            ->setMaxEvents(3)
+            ->setTimeWindow(300)
+            ->setBanDuration(600)
+        ;
         $ip = IPFactory::addressFromString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
@@ -132,10 +149,12 @@ class IPServiceTest extends ConcreteDatabaseTestCase
 
     public function testBlacklistedPermament()
     {
-        $this->config->set('concrete.security.ban.ip.enabled', true);
-        $this->config->set('concrete.security.ban.ip.attempts', 3);
-        $this->config->set('concrete.security.ban.ip.time', 300);
-        $this->config->set('concrete.security.ban.ip.length', 10);
+        $this->category
+            ->setEnabled(true)
+            ->setMaxEvents(3)
+            ->setTimeWindow(300)
+            ->setBanDuration(600)
+        ;
         $ip = IPFactory::addressFromString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
@@ -146,10 +165,12 @@ class IPServiceTest extends ConcreteDatabaseTestCase
 
     public function testBlacklistedExpiration()
     {
-        $this->config->set('concrete.security.ban.ip.enabled', true);
-        $this->config->set('concrete.security.ban.ip.attempts', 3);
-        $this->config->set('concrete.security.ban.ip.time', 300);
-        $this->config->set('concrete.security.ban.ip.length', 10);
+        $this->category
+            ->setEnabled(true)
+            ->setMaxEvents(3)
+            ->setTimeWindow(300)
+            ->setBanDuration(600)
+        ;
         $ip = IPFactory::addressFromString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
@@ -163,10 +184,12 @@ class IPServiceTest extends ConcreteDatabaseTestCase
 
     public function testBlacklistedVsWhitelisted()
     {
-        $this->config->set('concrete.security.ban.ip.enabled', true);
-        $this->config->set('concrete.security.ban.ip.attempts', 3);
-        $this->config->set('concrete.security.ban.ip.time', 300);
-        $this->config->set('concrete.security.ban.ip.length', 10);
+        $this->category
+            ->setEnabled(true)
+            ->setMaxEvents(3)
+            ->setTimeWindow(300)
+            ->setBanDuration(600)
+        ;
         $ip = IPFactory::addressFromString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));

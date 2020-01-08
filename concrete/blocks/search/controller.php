@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Search;
 
 use CollectionAttributeKey;
@@ -116,6 +117,20 @@ class Controller extends BlockController
      * @var string
      */
     protected $hColor = '#EFE795';
+
+    /**
+     * Whether or not to search all sites.
+     *
+     * @var bool
+     */
+    protected $search_all;
+
+    /**
+     * Whether or not to users can search all sites from the frontend.
+     *
+     * @var bool
+     */
+    protected $allow_user_options;
 
     /**
      * {@inheritdoc}
@@ -254,6 +269,8 @@ class Controller extends BlockController
         $this->set('buttonText', $this->buttonText);
         $this->set('baseSearchPath', $this->baseSearchPath);
         $this->set('postTo_cID', $this->postTo_cID);
+        $this->set('allowUserOptions', $this->allow_user_options);
+        $this->set('searchAll', $this->search_all);
 
         if ((string) $this->resultsURL !== '') {
             $resultsPage = null;
@@ -300,6 +317,8 @@ class Controller extends BlockController
     public function edit()
     {
         $this->set('pageSelector', $this->app->make('helper/form/page_selector'));
+        $this->set('searchAll', $this->search_all);
+        $this->set('allowUserOptions', $this->allow_user_options);
     }
 
     /**
@@ -323,6 +342,8 @@ class Controller extends BlockController
             'baseSearchPath' => '',
             'postTo_cID' => null,
             'resultsURL' => '',
+            'search_all' => 0,
+            'allow_users_options' => 0,
         ];
         switch ($data['baseSearchPath']) {
             case 'THIS':
@@ -340,11 +361,14 @@ class Controller extends BlockController
                     }
                 }
                 break;
+            case 'ALL':
+                $args['search_all'] = true;
+                break;
         }
         if ($args['baseSearchPath'] === '/') {
             $args['baseSearchPath'] = '';
         }
-        
+
         switch ($data['resultsPageKind']) {
             case 'CID':
                 if ($data['postTo_cID']) {
@@ -359,6 +383,13 @@ class Controller extends BlockController
                 $args['resultsURL'] = (string) $data['resultsURL'];
                 break;
         }
+
+        if ($data['allowUserOptions'] === 'ALLOW') {
+            $args['allow_user_options'] = true;
+        } else {
+            $args['allow_user_options'] = 0;
+        }
+
         parent::save($args);
     }
 
@@ -372,6 +403,21 @@ class Controller extends BlockController
         $query = (string) $this->request->request('query');
 
         $ipl = new PageList();
+
+        $options = $this->request->request('options');
+        if ($options) {
+            //Overrides search all settings with user submitted option
+            if ($options === 'ALL') {
+                $ipl->setSiteTreeToAll();
+            }
+        } else {
+            //If options are not send by user then use default options from the block settings.
+            //If Search All is enabled set search site tree to all.
+            if ((int) $this->search_all === 1) {
+                $ipl->setSiteTreeToAll();
+            }
+        }
+
         $aksearch = false;
         $akIDs = $this->request->request('akID');
         if (is_array($akIDs)) {

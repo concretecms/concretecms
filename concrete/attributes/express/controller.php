@@ -38,6 +38,39 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
+    public function exportKey($akey)
+    {
+        /**
+         * @var $type ExpressSettings
+         */
+        $type = $this->getAttributeKeySettings();
+        if ($entity = $type->getEntity()) {
+            $akey->addChild('entity')->addAttribute('handle', $entity->getHandle());
+        }
+
+        return $akey;
+    }
+
+
+    public function importKey(\SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeySettings();
+        /**
+         * @var $type ExpressSettings
+         */
+        if (isset($akey->entity)) {
+            $handle = (string) $akey->entity['handle'];
+            $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
+                ->findOneByHandle($handle);
+            if ($entity) {
+                $type->setEntity($entity);
+            }
+        }
+
+        return $type;
+    }
+
+
     public function type_form()
     {
         $this->load();

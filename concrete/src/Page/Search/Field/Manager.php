@@ -6,11 +6,13 @@ use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
 use Concrete\Core\Page\Search\Field\Field\DateAddedField;
 use Concrete\Core\Page\Search\Field\Field\DateLastModifiedField;
 use Concrete\Core\Page\Search\Field\Field\DatePublicField;
+use Concrete\Core\Page\Search\Field\Field\IncludePageAliasesField;
 use Concrete\Core\Page\Search\Field\Field\NumberOfChildrenField;
 use Concrete\Core\Page\Search\Field\Field\PageTemplateField;
 use Concrete\Core\Page\Search\Field\Field\PageTypeField;
 use Concrete\Core\Page\Search\Field\Field\ParentPageField;
 use Concrete\Core\Page\Search\Field\Field\PermissionsInheritanceField;
+use Concrete\Core\Page\Search\Field\Field\SiteField;
 use Concrete\Core\Page\Search\Field\Field\SiteLocaleField;
 use Concrete\Core\Page\Search\Field\Field\ThemeField;
 use Concrete\Core\Page\Search\Field\Field\VersionStatusField;
@@ -37,6 +39,7 @@ class Manager extends FieldManager
             new NumberOfChildrenField(),
             new PageTemplateField(),
             new ThemeField(),
+            new IncludePageAliasesField(),
             new VersionStatusField(),
             new PermissionsInheritanceField(),
             new DateLastModifiedField(),
@@ -44,9 +47,14 @@ class Manager extends FieldManager
             new ContainsBlockTypeField()
         ];
         $app = Facade::getFacadeApplication();
-        $site = $app->make('site')->getActiveSiteForEditing();
+        $siteService = $app->make('site');
+        $site = $siteService->getActiveSiteForEditing();
+        $sites = $siteService->getList();
         if (count($site->getLocales()) > 1) {
             $properties[] = new SiteLocaleField();
+        }
+        if (count($sites) > 1) {
+            $properties[] = new SiteField();
         }
         $this->addGroup(t('Core Properties'), $properties);
         $attributes = [];

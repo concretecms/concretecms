@@ -13,7 +13,6 @@ class Search extends DashboardSitePageController
     {
         $header = new Header();
         $this->set('headerMenu', $header);
-        $this->requireAsset('core/sitemap');
 
         $search = $this->app->make('Concrete\Controller\Search\Pages');
         $result = $search->getCurrentSearchObject();

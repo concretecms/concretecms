@@ -2,11 +2,11 @@
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Controller\Element\Navigation\AccountMenu;
-use Concrete\Controller\Element\Navigation\Menu;
 use Concrete\Core\Attribute\Context\DashboardFormContext;
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Page\Desktop\DesktopList;
+use Concrete\Core\User\User;
 use Loader;
 use Concrete\Core\Page\Controller\PageController as CorePageController;
 
@@ -16,7 +16,7 @@ class AccountPageController extends CorePageController
 
     public function on_start()
     {
-        $u = new \User();
+        $u = $this->app->make(User::class);
         if (!$u->isRegistered()) {
             return $this->replace('/login');
         }

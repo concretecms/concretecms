@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Database;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class EntityManagerClassLoaderTest extends PHPUnit_Framework_TestCase
+class EntityManagerClassLoaderTest extends TestCase
 {
     public function setUp()
     {
@@ -70,6 +70,7 @@ class EntityManagerClassLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testPackageStandardEntityLocation()
     {
+        $this->markTestIncomplete('Not implemented.');
     }
 
     /**
@@ -77,13 +78,16 @@ class EntityManagerClassLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testPackageCustomEntityLocation()
     {
+        $this->markTestIncomplete('Not implemented.');
     }
 
     public function testLegacyApplicationSrcLocation()
     {
+        $this->markTestIncomplete('Not implemented.');
     }
 
     public function testLegacyPackageSrcLocation()
     {
+        $this->markTestIncomplete('Not implemented.');
     }
 }

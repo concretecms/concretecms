@@ -1,8 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-$u = new User();
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$u = $app->make(Concrete\Core\User\User::class);
 ?>
 
 <div class="ccm-dashboard-header-buttons">

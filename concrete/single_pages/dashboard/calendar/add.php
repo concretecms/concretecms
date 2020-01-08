@@ -99,28 +99,7 @@ if ($calendar !== null) {
 
 <script type="text/javascript">
     $(function () {
-
-        var steps = [{
-            content: '<p><span class="h5"><?=t('Calendar Name')?></span><br/><?=t('Each separate calendar gets a complete separate list of events. Each front-end block can display content from one or multiple calendars.')?></p>',
-            highlightTarget: false,
-            nextButton: true,
-            target: $('input[name=calendarName]'),
-            my: 'top center',
-            at: 'bottom center'
-        }];
-
-        var tour = new Tourist.Tour({
-            steps: steps,
-            tipClass: 'Bootstrap',
-            tipOptions:{
-                showEffect: 'slidein'
-            }
-        });
-        tour.on('start', function() {
-            ConcreteHelpLauncher.close();
-        });
-        ConcreteHelpGuideManager.register('add-calendar', tour);
-
+        
         $('select[name=enableMoreDetails]').on('change', function() {
             var group = $(this).val();
             $('div[data-more-details-group]').hide();

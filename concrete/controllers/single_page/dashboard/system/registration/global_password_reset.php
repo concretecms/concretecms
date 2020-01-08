@@ -13,6 +13,7 @@ class GlobalPasswordReset extends DashboardPageController
     public function reset_passwords()
     {
         if (!$this->validateForm()) {
+            $this->view();
             return;
         }
 
@@ -29,6 +30,15 @@ class GlobalPasswordReset extends DashboardPageController
 
         $this->redirect('/');
     }
+    
+    protected function getResetText()
+    {
+        return tc(
+            /*i18n: a text to be asked to the users to confirm the global password reset operation */
+            'GlobalPasswordReset', 
+            'RESET'
+        );
+    }
 
     private function validateForm()
     {
@@ -41,8 +51,15 @@ class GlobalPasswordReset extends DashboardPageController
         if (!$this->post('resetMessage')) {
             $this->error->add('Message can not be empty.');
         }
+        
+        $resetText = $this->request->request->get('confirmation');
+        if ($resetText !== $this->getResetText()) {
+            $this->error->add(t('You must type the reset phrase "%s" in the prompt to continue.',
+                $this->getResetText()
+            ));
+        }
 
-        $user = new User();
+        $user = $this->app->make(User::class);
         if (!$user->isSuperUser()) {
             $this->error->add('Only the Super User is allowed to reset all passwords.');
         }
@@ -54,10 +71,11 @@ class GlobalPasswordReset extends DashboardPageController
     {
         $defaultMessage = t('Your user account is being upgraded and requires a new password. Please enter your email address below to create this now.');
         $resetMessage = \Core::make('config/database')->get(self::PASSWORD_RESET_MESSAGE_KEY, $defaultMessage);
-
+        
+        $this->set('resetText', $this->getResetText());
         $this->set('resetMessage', $resetMessage);
 
-        $user = new User();
+        $user = $this->app->make(User::class);
         $this->set('disableForm', !$user->isSuperUser());
     }
 }

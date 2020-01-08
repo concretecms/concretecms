@@ -36,7 +36,7 @@ class LogTest extends ConcreteDatabaseTestCase
     protected $tables = ['Logs'];
     protected $app;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -171,7 +171,6 @@ class LogTest extends ConcreteDatabaseTestCase
 
         $this->assertCount(1, $logger->getHandlers());
         $this->assertCount(2, $logger->getProcessors()); // needs to have psr processor and the concrete5 processor.
-
     }
 
     public function testLoggingFacade()

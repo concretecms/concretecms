@@ -3,6 +3,7 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Logging\Channels;
@@ -12,7 +13,6 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
 use Doctrine\ORM\EntityManagerInterface;
-use Hautelook\Phpass\PasswordHash;
 
 class RegistrationService implements RegistrationServiceInterface
 {
@@ -74,8 +74,7 @@ class RegistrationService implements RegistrationServiceInterface
             return false;
         }
 
-        $config = $this->application->make('config');
-        $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+        $hasher = $this->application->make(PasswordHasher::class);
 
         if (isset($data['uIsValidated']) && $data['uIsValidated'] == 1) {
             $uIsValidated = 1;
@@ -92,7 +91,7 @@ class RegistrationService implements RegistrationServiceInterface
         }
 
         $password_to_insert = isset($data['uPassword']) ? $data['uPassword'] : null;
-        $hash = $hasher->HashPassword($password_to_insert);
+        $hash = $hasher->hashPassword($password_to_insert);
 
         $uDefaultLanguage = null;
         if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
@@ -131,9 +130,9 @@ class RegistrationService implements RegistrationServiceInterface
             // Now we notify any relevant users.
             $type = $this->application->make('manager/notification/types')->driver('user_signup');
             /* @var UserSignupType $type */
-            $u = new User();
+            $u = $this->application->make(User::class);
             $createdBy = null;
-            if (is_object($u)) {
+            if ($u->isRegistered()) {
                 $creator = $u->getUserInfoObject();
                 if (is_object($creator)) {
                     $createdBy = $creator->getEntityObject();

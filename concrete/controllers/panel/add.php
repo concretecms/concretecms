@@ -6,10 +6,12 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Page\Stack\Pile\Pile;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\View\View;
+use Doctrine\ORM\EntityManager;
 
 class Add extends BackendInterfacePageController
 {
@@ -20,6 +22,14 @@ class Add extends BackendInterfacePageController
     {
         $tab = $this->getSelectedTab();
         switch ($tab) {
+            case 'containers':
+                $theme = $this->page->getCollectionThemeObject();
+                $containers = [];
+                if ($theme) {
+                    $containers = $this->app->make(EntityManager::class)
+                        ->getRepository(Container::class)->findAll();
+                }
+                $this->set('containers', $containers);
             case 'stacks':
                 $stacks = new StackList();
                 $stacks->filterByUserAdded();

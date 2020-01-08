@@ -1,8 +1,8 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/system/dialogs/page
  * Namespace: Concrete\Controller\Dialog\Page\
  */
@@ -18,6 +18,8 @@ $router->all('/attributes', 'Attributes::view');
 $router->all('/bulk/properties', 'Bulk\Properties::view');
 $router->all('/bulk/properties/clear_attribute', 'Bulk\Properties::clearAttribute');
 $router->all('/bulk/properties/update_attribute', 'Bulk\Properties::updateAttribute');
+$router->all('/bulk/delete', 'Bulk\Delete::view');
+$router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 $router->all('/clipboard', 'Clipboard::view');
 $router->all('/delete', 'Delete::view');
 $router->all('/delete/submit', 'Delete::submit');
@@ -27,12 +29,15 @@ $router->all('/delete_from_sitemap', 'Delete::viewFromSitemap');
 $router->all('/design', 'Design::view');
 $router->all('/design/submit', 'Design::submit');
 $router->all('/design/css', 'Design\Css::view');
+$router->all('/design/css/get', 'Design\Css::getCss');
+$router->all('/design/css/set', 'Design\Css::setCss');
 $router->all('/design/css/submit', 'Design\Css::submit');
 $router->all('/edit_external', 'EditExternal::view');
 $router->all('/edit_external/submit', 'EditExternal::submit');
 $router->all('/location', 'Location::view');
 $router->all('/search', 'Search::view');
 $router->all('/seo', 'Seo::view');
+$router->all('/sitemap_selector', 'SitemapSelector::view');
 $router->all('/drag_request', 'DragRequest::view');
 $router->all('/drag_request/submit', 'DragRequest::submit');
 $router->all('/drag_request/copy_all', 'DragRequest::doCopyAll');

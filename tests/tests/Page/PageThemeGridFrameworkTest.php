@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Page;
 
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class PageThemeGridFrameworkTest extends PHPUnit_Framework_TestCase
+class PageThemeGridFrameworkTest extends TestCase
 {
     public function testGridFrameworkManagerLoading()
     {

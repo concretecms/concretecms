@@ -5,13 +5,13 @@ namespace Concrete\Tests\Filesystem;
 use Concrete\Core\Filesystem\Template;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class TemplateLocatorTest extends PHPUnit_Framework_TestCase
+class TemplateLocatorTest extends TestCase
 {
     const ATTRIBUTE_HANDLE = 'test_attribute';
 
-    protected function setUp()
+    public function setUp()
     {
         $fs = new Filesystem();
         $dir = DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE;

@@ -10,10 +10,10 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\Event;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 
-class PasswordChangeEventHandlerTest extends PHPUnit_Framework_TestCase
+class PasswordChangeEventHandlerTest extends TestCase
 {
 
     use MockeryPHPUnitIntegration;

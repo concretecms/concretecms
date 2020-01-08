@@ -1,8 +1,8 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/system/panels
  * Namespace: Concrete\Controller\Panel\
  */
@@ -34,6 +34,7 @@ $router->all('/page/versions/duplicate', 'Page\Versions::duplicate');
 $router->all('/page/versions/new_page', 'Page\Versions::new_page');
 $router->all('/page/versions/delete', 'Page\Versions::delete');
 $router->all('/page/versions/approve', 'Page\Versions::approve');
+$router->all('/page/versions/unapprove', 'Page\Versions::unapprove');
 $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
 $router->get('/sitemap', 'Sitemap::view');

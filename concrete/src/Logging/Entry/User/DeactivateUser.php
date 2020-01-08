@@ -7,7 +7,7 @@ class DeactivateUser extends User
 
     public function getEntryMessage()
     {
-        return t('User %s (ID %s) was deactivated by code or an automated process.',
+        return t('User %1$s (ID %2$s) was deactivated by code or an automated process.',
             $this->user->getUserName(),
             $this->user->getUserID()
         );
@@ -15,7 +15,7 @@ class DeactivateUser extends User
 
     public function getEntryMessageWithApplier()
     {
-        return t('User %s (ID %s) was deactivated by %s (ID %s).',
+        return t('User %1$s (ID %2$s) was deactivated by %3$s (ID %4$s).',
             $this->user->getUserName(),
             $this->user->getUserID(),
             $this->applier->getUserName(),

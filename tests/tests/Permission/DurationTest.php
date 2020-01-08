@@ -3,13 +3,13 @@
 namespace Concrete\Tests\Permission;
 
 use Concrete\Core\Permission\Duration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * Class DurationTest
  * Tests for `\Concrete\Core\Permission\Duration`.
  */
-class DurationTest extends PHPUnit_Framework_TestCase
+class DurationTest extends TestCase
 {
     public function testDailyRecurring()
     {

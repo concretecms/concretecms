@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Validator;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty;
 use Concrete\Core\Page\Type\Type;
@@ -24,7 +26,7 @@ class StandardValidator implements ValidatorInterface
     {
         $e = Core::make('error');
         $availablePageTemplates = $this->type->getPageTypePageTemplateObjects();
-        $availablePageTemplateIDs = array();
+        $availablePageTemplateIDs = [];
         foreach ($availablePageTemplates as $ppt) {
             $availablePageTemplateIDs[] = $ppt->getPageTemplateID();
         }
@@ -55,6 +57,7 @@ class StandardValidator implements ValidatorInterface
 
         return $e;
     }
+
     public function validatePublishDraftRequest(Page $page = null)
     {
         $e = Core::make('error');
@@ -65,13 +68,17 @@ class StandardValidator implements ValidatorInterface
             if (is_object($page)) {
                 $oc->setPageObject($page);
             }
-            if ($oc instanceof CorePageProperty) {
+            if ($oc instanceof CorePageProperty || $oc instanceof BlockControl) {
                 if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
                     $validate = true;
                 } else {
                     $validate = false;
                 }
             } else {
+                // We always want to validate attributes because sometimes attributes can check if their data
+                // is in the right format. They then can complain if they are missing certain things, but if the
+                // entire field is missing, they throw a field not present error. This error is ignored if the field
+                // is not marked as required in the form.
                 $validate = true;
             }
 

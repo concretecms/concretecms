@@ -17,7 +17,7 @@ class ContentPageTranslateTest extends PageTestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         \Core::forgetInstance('url/canonical');
         parent::setUp();

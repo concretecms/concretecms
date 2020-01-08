@@ -48,7 +48,6 @@ class AddGroup extends DashboardPageController
     {
         $tree = GroupTree::get();
         $this->set('tree', $tree);
-        $this->requireAsset('core/groups');
     }
 
     public function do_add()

@@ -1,0 +1,289 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.5",
+    "title": "concrete5 API",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "paths": {
+    "/openapi.json": {
+      "get": {
+        "summary": "Return the OpenAPI 3.0 spec for this API.",
+        "responses": {
+          "200": {
+            "description": "JSON file."
+          }
+        }
+      }
+    },
+    "/file/{fileId}": {
+      "get": {
+        "summary": "Get information for a specific file.",
+        "security": [
+          {
+            "oAuth2": [
+              "files:read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "description": "The id of the file to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response to a valid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/File"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/info": {
+      "get": {
+        "summary": "Get detailed system information.",
+        "security": [
+          {
+            "oAuth2": [
+              "system:info:read"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response to a valid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SystemInfoResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/info": {
+      "get": {
+        "summary": "Get information about the currently authorized user.",
+        "security": [
+          {
+            "oAuth2": [
+              "account:read"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response to a valid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AccountResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/site/trees": {
+      "get": {
+        "summary": "Get information about the sitemap trees in the current site.",
+        "security": [
+          {
+            "oAuth2": [
+              "site:trees:read"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response to a valid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SiteTrees"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountResponse": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "SiteTrees": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SiteTree"
+        }
+      },
+      "SiteTree": {
+        "properties": {
+          "version": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
+        }
+      },
+      "SystemInfoResponse": {
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "code_version": {
+            "type": "string"
+          },
+          "db_version": {
+            "type": "integer"
+          },
+          "packages": {
+            "type": "string"
+          },
+          "overrides": {
+            "type": "string"
+          },
+          "cache": {
+            "type": "string"
+          },
+          "server": {
+            "type": "string"
+          },
+          "server_api": {
+            "type": "string"
+          },
+          "php_version": {
+            "type": "string"
+          },
+          "php_extensions": {
+            "type": "string"
+          },
+          "php_settings": {
+            "type": "string"
+          }
+        }
+      },
+      "File": {
+        "properties": {
+          "canCopyFile": {
+            "type": "integer"
+          },
+          "canEditFileProperties": {
+            "type": "integer"
+          },
+          "canEditFilePermissions": {
+            "type": "integer"
+          },
+          "canDeleteFile": {
+            "type": "integer"
+          },
+          "canReplaceFile": {
+            "type": "integer"
+          },
+          "canEditFileContents": {
+            "type": "integer"
+          },
+          "canViewFileInFileManager": {
+            "type": "integer"
+          },
+          "canRead": {
+            "type": "integer"
+          },
+          "canViewFile": {
+            "type": "boolean"
+          },
+          "canEditFile": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
+          },
+          "urlInline": {
+            "type": "string"
+          },
+          "urlDownload": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "genericTypeText": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "resultsThumbnailImg": {
+            "type": "string"
+          },
+          "fID": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

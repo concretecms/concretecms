@@ -7,7 +7,7 @@ use Whoops\Exception\ErrorException;
 
 $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $form = Loader::helper('form');
 /** @var FileVersion $fv */
 $f = $fv->getFile();
@@ -16,9 +16,6 @@ if (!$fp->canEditFileContents()) {
     die(t("Access Denied."));
 }
 $token = Core::make('token')->generate();
-
-$req = ResponseAssetGroup::get();
-$req->requireAsset('core/imageeditor');
 
 /** @var ImageEditor $editor */
 if (!isset($editor) || !$editor) {

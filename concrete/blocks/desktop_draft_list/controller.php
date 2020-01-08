@@ -2,13 +2,14 @@
 namespace Concrete\Block\DesktopDraftList;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\User\UserInfo;
 use Permissions;
 use URL;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
@@ -56,11 +57,10 @@ class Controller extends BlockController
         }
         parent::save($args);
     }
-
+    
     public function view()
     {
         $myDrafts = [];
-        $showPagination = false;
         $pagination = null;
         $site = $this->app->make('site')->getSite();
         if (is_object($site)) {
@@ -76,10 +76,6 @@ class Controller extends BlockController
                 $list->setItemsPerPage((!empty($this->draftsPerPage)) ? $this->draftsPerPage : $this->defaultDraftsPerPage);
                 $pagination = $list->getPagination();
                 $drafts = $pagination->getCurrentPageResults();
-                if ($pagination->haveToPaginate()) {
-                    $showPagination = true;
-                    $pagination = $pagination->renderDefaultView();
-                }
             }
         }
 
@@ -103,7 +99,7 @@ class Controller extends BlockController
                     }
                     $deleteLink = null;
                     if ($dp->canDeletePage()) {
-                        $deleteLink = URL::to('/ccm/system/dialogs/page/delete') . '?cID=' . $draft->getCollectionID();
+                        $deleteLink = URL::to('/ccm/system/dialogs/page/delete_from_sitemap') . '?cID=' . $draft->getCollectionID();
                     }
                     $myDrafts[] = [
                         'link' => $navigation->getLinkToCollection($draft),
@@ -117,7 +113,14 @@ class Controller extends BlockController
             }
         }
         $this->set('drafts', $myDrafts);
-        $this->set('showPagination', $showPagination);
         $this->set('pagination', $pagination);
+    }
+
+    public function action_reload_drafts()
+    {
+        $b = $this->getBlockObject();
+        $bv = new BlockView($b);
+        $bv->render('view');
+        $this->app->shutdown();
     }
 }

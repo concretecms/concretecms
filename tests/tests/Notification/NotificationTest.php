@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Notification;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class NotificationTest extends PHPUnit_Framework_TestCase
+class NotificationTest extends TestCase
 {
     public function testCreateNotification()
     {

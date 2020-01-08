@@ -2,10 +2,10 @@
 
 namespace Concrete\Tests\Utility\Service\Validation;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use stdClass;
 
-class StringsTest extends PHPUnit_Framework_TestCase
+class StringsTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Utility\Service\Validation\Strings
@@ -16,7 +16,7 @@ class StringsTest extends PHPUnit_Framework_TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    public function setUp()
     {
         $this->object = \Core::make(\Concrete\Core\Utility\Service\Validation\Strings::class);
     }
@@ -53,9 +53,6 @@ class StringsTest extends PHPUnit_Framework_TestCase
             [true, 'a.little.lengthy.but.fine@dept.example.com', false],
             [true, 'other.email-with-dash@example.com', false],
             [true, 'test@concrete5.org', false],
-
-            //mx validation
-            [true, 'test@concrete5.org', true],
         ];
     }
 
@@ -238,6 +235,34 @@ class StringsTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    public function isValidRegexProvider()
+    {
+        return [
+            [false, null, false],
+            [false, null, true],
+            [false, $this, false],
+            [false, $this, true],
+            [false, [], false],
+            [false, [], true],
+            [false, 1, false],
+            [false, 1, true],
+            [true, '', false],
+            [false, '', true],
+            [true, '//', true],
+            [false, '(', true],
+            [false, '(', false],
+            [true, 'Test', false],
+            [false, 'Test', true],
+            [true, '/Test/', true],
+            [false, '+', false],
+            [false, '+', true],
+            [false, '/+/', true],
+            [true, '.+', false],
+            [false, '.+', true],
+            [true, '/.+/', true],
+        ];
+    }
+
     /**
      * @dataProvider emailDataProvider
      *
@@ -351,5 +376,17 @@ class StringsTest extends PHPUnit_Framework_TestCase
     public function testContainsSymbol($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsSymbol($string));
+    }
+
+    /**
+     * @dataProvider isValidRegexProvider
+     *
+     * @param bool $expected
+     * @param string|mixed $pattern
+     * @param bool $includesDelimiters
+     */
+    public function testIsValidRegex($expected, $pattern, $includesDelimiters)
+    {
+        $this->assertSame($expected, $this->object->isValidRegex($pattern, $includesDelimiters));
     }
 }

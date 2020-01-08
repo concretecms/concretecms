@@ -4,17 +4,18 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Console\Command;
+use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\PreconditionService;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
+use Concrete\Core\Package\StartingPointPackage;
 use Concrete\Core\Support\Facade\Application;
 use Database;
 use DateTimeZone;
 use Exception;
-use Hautelook\Phpass\PasswordHash;
 use InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -281,7 +282,7 @@ EOT
                 $confirm = new Question('Would you like to install with these settings? [Y]es / [N]o / [E]dit: ', false);
                 $confirm->setValidator(function ($given) {
                     if (!$given || !preg_match('/^[yne]/i', $given)) {
-                        throw new InvalidArgumentException('Please answer either Y, N or R.');
+                        throw new InvalidArgumentException('Please answer either Y, N or E.');
                     }
 
                     return $given;
@@ -513,8 +514,10 @@ EOT
                 'starting-point',
                 'elemental_blank',
                 function (Question $question, InputInterface $input) {
-                    return new ChoiceQuestion($question->getQuestion(), ['elemental_blank', 'elemental_full'],
-                        $question->getDefault());
+                    $available = array_map(function($item) { return $item->getPackageHandle(); }, StartingPointPackage::getAvailableList());
+                    $available = array_unique(array_merge($available, ['elemental_blank', 'elemental_full']));
+
+                    return new ChoiceQuestion($question->getQuestion(), $available, $question->getDefault());
                 },
             ],
             'admin-email',
@@ -616,10 +619,12 @@ EOT
                 $requiredPreconditions[] = $precondition;
             }
         }
-        foreach ([
+
+        $preconditionList = [
             'Checking required preconditions:' => $requiredPreconditions,
             'Checking optional preconditions:' => $optionalPreconditions,
-        ] as $text => $preconditions) {
+        ];
+        foreach ($preconditionList as $text => $preconditions) {
             if (empty($preconditions)) {
                 continue;
             }
@@ -708,7 +713,7 @@ EOT
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-        $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+        $hasher = $app->make(PasswordHasher::class);
         $installer = $app->make(Installer::class);
         $installer->getOptions()
             ->setConfiguration([
@@ -735,7 +740,7 @@ EOT
             ->setStartingPointHandle($options['starting-point'])
             ->setSiteName($options['site'])
             ->setUserEmail($options['admin-email'])
-            ->setUserPasswordHash($hasher->HashPassword($options['admin-password']))
+            ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
         ;
 
@@ -765,10 +770,11 @@ EOT
                 $requiredPreconditions[] = $precondition;
             }
         }
-        foreach ([
+        $preconditionList = [
             'Checking required configuration preconditions:' => $requiredPreconditions,
             'Checking optional configuration preconditions:' => $optionalPreconditions,
-        ] as $text => $preconditions) {
+        ];
+        foreach ($preconditionList as $text => $preconditions) {
             if (empty($preconditions)) {
                 continue;
             }

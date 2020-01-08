@@ -3,6 +3,7 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
 use Request;
@@ -307,4 +308,14 @@ abstract class AbstractController implements ApplicationAwareInterface
     {
         return Request::request($key);
     }
+
+    /**
+     * Dispatches a command to the command bus.
+     * @param mixed $command
+     */
+    public function executeCommand($command)
+    {
+        return $this->app->executeCommand($command);
+    }
+
 }

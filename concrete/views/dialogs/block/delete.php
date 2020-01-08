@@ -7,8 +7,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<form method="post" data-form="delete-block" data-action-delete-all="<?=$deleteAllAction?>" data-action="<?=$deleteAction?>">
 
 		<div class="dialog-buttons">
-		<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-		<button type="button" data-submit="delete-block-form" class="btn btn-danger pull-right"><?=t('Delete')?></button>
+		<button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+		<button type="button" data-submit="delete-block-form" class="btn btn-danger float-right"><?=t('Delete')?></button>
 		</div>
 
 		<p><?=$message?></p>
@@ -22,9 +22,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				<div class="radio"><label><input type="radio" name="deleteAll" value="0" checked> <?=t('Delete only unforked instances on child pages.')?></label></div>
 				<div class="radio"><label><input type="radio" name="deleteAll" value="1"> <?=t('Delete even forked instances on child pages.')?></label></div>
 			</div>
-
-
-			<div data-dialog-form-element="progress-bar"></div>
 
 		<?php
 } else {
@@ -45,7 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					url: $form.attr('data-action-delete-all'),
 					data: $form.formToArray(true),
 					progressiveOperation: true,
-					progressiveOperationElement: 'div[data-dialog-form-element=progress-bar]'
+					progressiveOperationTitle: <?=json_encode(t('Delete Blocks'))?>
 				}
 			} else {
 				options = {
