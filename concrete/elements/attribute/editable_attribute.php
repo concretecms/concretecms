@@ -1,6 +1,7 @@
 <?php
 
 use Concrete\Core\Attribute\CustomNoValueTextAttributeInterface;
+use Concrete\Core\Attribute\XEditableConfigurableAttributeInterface;
 
 /**
  * @var Concrete\Core\Entity\Attribute\Key\Key $ak
@@ -12,6 +13,7 @@ use Concrete\Core\Attribute\CustomNoValueTextAttributeInterface;
  * @var string $saveAction
  * @var string $display
  */
+$xeditableOptions = null;
 $display = null;
 $noValueDisplayHtml = '';
 if (isset($objects)) {
@@ -32,6 +34,9 @@ if (isset($objects)) {
         $attributeController = $ak->getController();
         if ($attributeController instanceof CustomNoValueTextAttributeInterface) {
             $noValueDisplayHtml = (string) $attributeController->getNoneTextDisplayValue();
+        }
+        if ($attributeController instanceof XEditableConfigurableAttributeInterface) {
+            $xeditableOptions = $attributeController->getXEditableOptions();
         }
     }
     $value = $object->getAttributeValueObject($ak);
@@ -70,7 +75,11 @@ $canEdit = $permissionsCallback($ak, isset($permissionsArguments) ? $permissions
                         data-type="concreteattribute"
                         data-placement="bottom"
                         <?php
-                        if ($ak->getAttributeTypeHandle() === 'textarea') {
+                        if ($xeditableOptions !== null) {
+                            foreach ($xeditableOptions as $xeditableOptionName => $xeditableOptionValue) {
+                                echo ' ', h("data-{$xeditableOptionName}"), '="', h($xeditableOptionValue), '"';
+                            }
+                        } elseif ($ak->getAttributeTypeHandle() === 'textarea') {
                             echo ' data-editableMode="inline" ';
                         }
                         if ($noValueDisplayHtml !== '') {
