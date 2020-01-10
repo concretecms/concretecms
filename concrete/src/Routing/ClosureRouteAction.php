@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Routing;
 
 use Concrete\Core\Http\Request;
@@ -7,11 +8,11 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 
 class ClosureRouteAction implements RouteActionInterface
 {
-
     protected $callback;
 
     /**
      * ClosureRouteAction constructor.
+     *
      * @param $callback
      */
     public function __construct($callback)
@@ -28,15 +29,21 @@ class ClosureRouteAction implements RouteActionInterface
     {
         $resolver = new ArgumentResolver();
         $arguments = $resolver->getArguments($request, $this->callback);
+        ob_start();
         $response = call_user_func_array($this->callback, $arguments);
+        $echoedResponse = ob_get_contents();
+        ob_end_clean();
 
-        if (is_string($response)) {
-            $r = new Response();
-            $r->setContent($response);
-            return $r;
-        } else {
+        if ($response instanceof Response) {
             return $response;
         }
+        $r = new Response();
+        if (is_string($response)) {
+            $r->setContent($response);
+        } else {
+            $r->setContent($echoedResponse);
+        }
 
+        return $r;
     }
 }

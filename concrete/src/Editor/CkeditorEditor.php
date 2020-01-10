@@ -218,7 +218,7 @@ EOL;
 
         $html = sprintf(
             '<textarea id="%s_content" style="display:none;" name="%s"></textarea>' .
-            '<div contenteditable="true" id="%s">%s</div>',
+            '<div id="%s">%s</div>',
             $identifier,
             $key,
             $identifier,
@@ -229,7 +229,6 @@ EOL;
             $identifier,
             [
                 'startupFocus' => true,
-                'disableAutoInline' => true,
             ]
         );
 
@@ -257,10 +256,6 @@ EOL;
      */
     public function outputEditorWithOptions($key, array $options = [], $content = null)
     {
-        $options += [
-            'disableAutoInline' => true,
-        ];
-
         $pluginManager = $this->getPluginManager();
         if ($pluginManager->isSelected('sourcearea')) {
             $pluginManager->deselect('sourcedialog');
@@ -289,9 +284,7 @@ EOL;
      */
     public function outputStandardEditorInitJSFunction()
     {
-        $options = [
-            'disableAutoInline' => true,
-        ];
+        $options = [];
 
         $pluginManager = $this->getPluginManager();
         if ($pluginManager->isSelected('sourcearea')) {
@@ -477,6 +470,7 @@ EOL;
         <script type="text/javascript">
         $(function() {
             var initEditor = {$jsFunc};
+            $('#{$identifier}').attr('contenteditable', 'true');
             initEditor('#{$identifier}');
          });
         </script>
