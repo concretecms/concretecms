@@ -720,7 +720,7 @@ class Controller extends BlockController
         }
 
         if ($this->onlyCurrentUser) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             if ($u->isRegistered()) {
                 $uID = $u->getUserID();
                 $query = $list->getQueryObject();

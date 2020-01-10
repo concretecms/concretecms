@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="SiteLocales")
  * @ORM\EntityListeners({"\Concrete\Core\Site\Locale\Listener"})
  */
-class Locale implements LocaleInterface, TreeInterface
+class Locale implements LocaleInterface, LocaleEntityInterface, TreeInterface
 {
     use LocaleTrait;
 
@@ -103,10 +103,8 @@ class Locale implements LocaleInterface, TreeInterface
 
     /**
      * Set the site tree associated to this locale.
-     *
-     * @param SiteTree|null $tree
      */
-    public function setSiteTree(SiteTree $tree = null)
+    public function setSiteTree($tree)
     {
         $this->tree = $tree;
     }

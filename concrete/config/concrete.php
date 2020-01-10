@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.2',
-    'version_installed' => '8.5.2',
+    'version' => '8.6.0a3',
+    'version_installed' => '8.6.0a3',
     'version_db' => '20191002000000', // the key of the latest database migration
  
     /*
@@ -610,7 +610,7 @@ return [
             'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
             'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
         ],
-        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer) 
+        // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
         // List of package handles that shouldn't be checked for new versions in marketplace (useful for example if the core is upgraded via composer)
         // Set to true to skip all the packages
@@ -665,8 +665,9 @@ return [
             'preview_image_popover' => true,
             // SVG sanitization
             'svg_sanitization' => [
-                // Enable the SVG sanitification?
-                'enabled' => true,
+                // The operation that the SVG sanitizer should perform.
+                // This must be value of one of the Concrete\Core\File\Import\Processor\SvgProcessor::ACTION_... constants
+                'action' => 'sanitize',
                 // Space-separated list of tags to be kept
                 'allowed_tags' => '',
                 // Space-separated list of attributes to be kept
@@ -844,7 +845,7 @@ return [
         ],
         'remember_me' => [
             'lifetime' => 1209600, // 2 weeks in seconds
-        ]
+        ],
     ],
 
     /*
@@ -1026,18 +1027,6 @@ return [
                 'time' => 300,
             ],
         ],
-        'ban' => [
-            'ip' => [
-                // Is the automatic ban system enabled?
-                'enabled' => true,
-                // Maximum number of login attempts before banning the IP address
-                'attempts' => 5,
-                // Time window (in seconds) for past failed login attempts
-                'time' => 300,
-                // Ban duration (in minutes) when <attempts> failed logins occurred in the past <time> seconds
-                'length' => 10,
-            ],
-        ],
         'misc' => [
             /*
              * Defence Click Jacking.
@@ -1152,7 +1141,7 @@ return [
         'enabled' => false,
 
         /**
-         * Which grant types do we allow to connect to the API
+         * Which grant types do we allow to connect to the API.
          *
          * @var array
          */

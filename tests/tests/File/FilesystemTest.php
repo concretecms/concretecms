@@ -14,6 +14,7 @@ class FilesystemTest extends ConcreteDatabaseTestCase
 
     protected $tables = [
         'Trees',
+        'TreeFileFolderNodes',
         'TreeTypes',
         'TreeNodeTypes',
         'TreeNodes',

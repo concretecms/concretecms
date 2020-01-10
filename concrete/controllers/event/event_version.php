@@ -3,6 +3,7 @@ namespace Concrete\Controller\Event;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\ApproveCalendarEventRequest;
 use Concrete\Core\Calendar\Event\EditResponse;
@@ -74,7 +75,7 @@ class EventVersion extends \Concrete\Core\Controller\Controller
             $e->add($token->getErrorMessage());
         }
         if (!$e->has()) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             $pkr = new ApproveCalendarEventRequest();
             $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
             $pkr->setRequesterUserID($u->getUserID());

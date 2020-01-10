@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Support\Facade\Facade;
 use Database;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use CacheLocal;
@@ -10,6 +11,46 @@ use RuntimeException;
 
 abstract class Entity extends ConcreteObject
 {
+
+    /**
+     * @var int
+     */
+    public $petID;
+
+    /**
+     * @var string
+     */
+    public $petHandle;
+
+    /**
+     * @var int
+     */
+    public $peID;
+
+    /**
+     * @param int $petID
+     */
+    public function setAccessEntityTypeID($petID)
+    {
+        $this->petID = $petID;
+    }
+
+    /**
+     * @param string $petHandle
+     */
+    public function setAccessEntityTypeHandle($petHandle)
+    {
+        $this->petHandle = $petHandle;
+    }
+
+    /**
+     * @param int $peID
+     */
+    public function setAccessEntityID($peID)
+    {
+        $this->peID = $peID;
+    }
+    
     public function getAccessEntityTypeID()
     {
         return $this->petID;
@@ -35,6 +76,8 @@ abstract class Entity extends ConcreteObject
         return $this->label;
     }
 
+    abstract public function load();
+    
     abstract public function getAccessEntityUsers(PermissionAccess $pa);
 
     abstract public function getAccessEntityTypeLinkHTML();
@@ -56,9 +99,9 @@ abstract class Entity extends ConcreteObject
 
     final public static function getByID($peID)
     {
-        $obj = CacheLocal::getEntry('permission_access_entity', $peID);
-        if ($obj instanceof self) {
-            return $obj;
+        $entity = CacheLocal::getEntry('permission_access_entity', $peID);
+        if ($entity instanceof self) {
+            return $entity;
         }
         $db = Database::connection();
         $r = $db->GetRow('select petID, peID from PermissionAccessEntities where peID = ?', array($peID));
@@ -67,17 +110,22 @@ abstract class Entity extends ConcreteObject
             if (!is_object($pt)) {
                 return false;
             }
+            
+            $app = Facade::getFacadeApplication();
+            $entity = $app->make('permission/access/entity/factory')->createEntity($pt);
 
-            $class = '\\Core\\Permission\\Access\\Entity\\' . Core::make('helper/text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity';
-            $class = core_class($class, $pt->getPackageHandle());
-            $obj = Core::make($class);
-            $r['petHandle'] = $pt->getAccessEntityTypeHandle();
-            $obj->setPropertiesFromArray($r);
-            $obj->load();
+            /**
+             * @var $entity Entity
+             */
+            $entity->setAccessEntityID($r['peID']);
+            $entity->setAccessEntityTypeID($r['petID']);
+            $entity->setAccessEntityTypeHandle($pt->getAccessEntityTypeHandle());
+            $entity->load();
         }
-        CacheLocal::set('permission_access_entity', $peID, $obj);
 
-        return $obj;
+        CacheLocal::set('permission_access_entity', $peID, $entity);
+
+        return $entity;
     }
 
     public static function getForUser($user)

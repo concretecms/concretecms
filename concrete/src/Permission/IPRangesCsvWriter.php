@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission;
 
 use Concrete\Core\Localization\Service\Date;
@@ -14,7 +15,7 @@ class IPRangesCsvWriter
     protected $writer;
 
     /**
-     * One of the IPService::IPRANGETYPE_... constants.
+     * One of the IpAccessControlService::IPRANGETYPE_... constants.
      *
      * @var int
      */
@@ -29,7 +30,7 @@ class IPRangesCsvWriter
 
     /**
      * @param Writer $writer the writer we use to output
-     * @param int $type One of the IPService::IPRANGETYPE_... constants
+     * @param int $type One of the IpAccessControlService::IPRANGETYPE_... constants
      * @param Date $dateHelper the Date localization service
      */
     public function __construct(Writer $writer, $type, Date $dateHelper)
@@ -48,9 +49,9 @@ class IPRangesCsvWriter
     }
 
     /**
-     * Insert a list of IPRange instances.
+     * Insert a list of IPRange/IpAccessControlRange instances.
      *
-     * @param IPRange[]|Generator $ranges
+     * @param \Concrete\Core\Permission\IPRange[]|\Concrete\Core\Entity\Permission\IpAccessControlRange[]|\Generator $ranges
      */
     public function insertRanges($ranges)
     {
@@ -58,21 +59,21 @@ class IPRangesCsvWriter
     }
 
     /**
-     * Insert an IPRange instance.
+     * Insert an IPRange/IpAccessControlRange instance.
      *
-     * @param IPRange $range
+     * @param \Concrete\Core\Permission\IPRange|\Concrete\Core\Entity\Permission\IpAccessControlRange $range
      */
-    public function insertRange(IPRange $range)
+    public function insertRange($range)
     {
         $this->writer->insertOne($this->projectRange($range));
     }
 
     /**
-     * A generator that takes a collection of IPRange ranges and converts it to CSV rows.
+     * A generator that takes a collection of IPRange/IpAccessControlRange ranges and converts it to CSV rows.
      *
-     * @param IPRange[]|Generator $list
+     * @param \Concrete\Core\Permission\IPRange[]|\Concrete\Core\Entity\Permission\IpAccessControlRange[]|\Generator $ranges
      *
-     * @return array[]|Generator
+     * @return array[]|\Generator
      */
     private function projectRanges($ranges)
     {
@@ -82,21 +83,22 @@ class IPRangesCsvWriter
     }
 
     /**
-     * Turn an IPRange instance into an array.
+     * Turn an IPRange/IpAccessControlRange instance into an array.
      *
-     * @param IPRange $range
+     * @param \Concrete\Core\Permission\IPRange|\Concrete\Core\Entity\Permission\IpAccessControlRange $range
      *
      * @return string[]
      */
-    private function projectRange(IPRange $range)
+    private function projectRange($range)
     {
+        $ipRange = $range->getIpRange();
         $result = [
-            $range->getIpRange()->toString(),
-            $range->getIpRange()->getComparableStartString(),
-            $range->getIpRange()->getComparableEndString(),
+            $ipRange->toString(),
+            $ipRange->getComparableStartString(),
+            $ipRange->getComparableEndString(),
         ];
-        if ($this->type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
-            $dt = $range->getExpires();
+        if ($this->type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+            $dt = $range instanceof IPRange ? $range->getExpires() : $range->getExpiration();
             if ($dt === null) {
                 $result[] = '';
             } else {
@@ -115,7 +117,7 @@ class IPRangesCsvWriter
     private function getHeaders()
     {
         $headers = [t('IP Range'), t('Start address'), t('End address')];
-        if ($this->type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+        if ($this->type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
             $headers[] = t('Expiration');
         }
 

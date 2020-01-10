@@ -96,13 +96,12 @@ class Controller extends GenericOauth1aTypeController
 
     public function handle_detach_attempt()
     {
-
-        if (!User::isLoggedIn()) {
+        $user = $this->app->make(User::class);
+        if (!$user->isRegistered()) {
             $response = new RedirectResponse(\URL::to('/login'), 302);
             $response->send();
             exit;
         }
-        $user = new User();
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
 

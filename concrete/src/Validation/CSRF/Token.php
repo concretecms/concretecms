@@ -69,7 +69,8 @@ class Token
      */
     public function generate($action = '', $time = null)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $uID = $u->getUserID();
         if (!$uID) {
             $uID = 0;
@@ -134,7 +135,7 @@ class Token
                     return $diff <= static::VALID_HASH_TIME_THRESHOLD;
                 } else {
                     $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SECURITY);
-                    $u = new User();
+                    $u = $app->make(User::class);
                     $logger->debug(t('Validation token did not match'), [
                         'uID' => $u->getUserID(),
                         'action' => $action,

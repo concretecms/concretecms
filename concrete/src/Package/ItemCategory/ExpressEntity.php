@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class ExpressEntity extends AbstractCategory
 {
-
     protected $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -39,7 +39,7 @@ class ExpressEntity extends AbstractCategory
     public function getPackageItems(Package $package)
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
+
         return $r->findByPackage($package);
     }
-
 }

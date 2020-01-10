@@ -102,6 +102,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Send Message to Group" path="/dashboard/users/groups/message" filename="/dashboard/users/groups/message.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>user, group, people, messages</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php"
               pagetype="" description="" package="">
             <attributes>
@@ -638,6 +646,10 @@
               filename="/dashboard/system/express/entries.php" pagetype="" description="" package="">
         </page>
 
+        <page name="Multiple Site Hosting" path="/dashboard/system/multisite" filename="/dashboard/system/sites/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Sites &amp; Domains" path="/dashboard/system/multisite/sites" filename="/dashboard/system/multisite/sites/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Site Types" path="/dashboard/system/multisite/types" filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Multisite Settings" path="/dashboard/system/multisite/settings" filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
 
         <page name="Multilingual" path="/dashboard/system/multilingual" filename="/dashboard/system/multilingual/view.php" pagetype="" description="Run your site in multiple languages." package="">
             <attributes>
@@ -850,11 +862,19 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Configure IP Blocking" path="/dashboard/system/permissions/blacklist/configure"
+              filename="/dashboard/system/permissions/blacklist/configure.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="IP Range" path="/dashboard/system/permissions/blacklist/range"
               filename="/dashboard/system/permissions/blacklist/range.php" pagetype="" description="" package="">
             <attributes>
 				<attributekey handle="exclude_nav">
-                    <value>0</value>
+                    <value>1</value>
                 </attributekey>
             </attributes>
         </page>

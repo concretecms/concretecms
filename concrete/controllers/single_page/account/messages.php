@@ -1,20 +1,21 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Account;
 
 use Concrete\Core\Page\Controller\AccountPageController;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
-use UserInfo;
-use Loader;
-use View;
+use Concrete\Core\User\User;
 use Core;
-use User;
+use Loader;
+use UserInfo;
+use View;
 
 class Messages extends AccountPageController
 {
     public function view()
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
 
         $inbox = UserPrivateMessageMailbox::get($ui, $this->getMessageMailboxID('inbox'));
@@ -24,43 +25,11 @@ class Messages extends AccountPageController
         $this->set('sent', $sent);
     }
 
-    protected function validateUser($uID)
-    {
-        if ($uID > 0) {
-            $ui = UserInfo::getByID($uID);
-            if ((is_object($ui)) && ($ui->getAttribute('profile_private_messages_enabled') == 1)) {
-                $this->set('recipient', $ui);
-
-                return true;
-            }
-        }
-
-        $this->redirect('/account');
-    }
-
-    protected function getMessageMailboxID($box)
-    {
-        $msgMailboxID = 0;
-        switch ($box) {
-            case 'inbox':
-                $msgMailboxID = UserPrivateMessageMailbox::MBTYPE_INBOX;
-                break;
-            case 'sent':
-                $msgMailboxID = UserPrivateMessageMailbox::MBTYPE_SENT;
-                break;
-            default:
-                $msgMailboxID = $box;
-                break;
-        }
-
-        return $msgMailboxID;
-    }
-
     public function view_mailbox($box)
     {
         $msgMailboxID = $this->getMessageMailboxID($box);
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
 
         $mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
@@ -80,13 +49,14 @@ class Messages extends AccountPageController
     public function view_message($box, $msgID)
     {
         $msgMailboxID = $this->getMessageMailboxID($box);
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
         $mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
         $msg = UserPrivateMessage::getByID($msgID, $mailbox);
         if ($ui->canReadPrivateMessage($msg)) {
             $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
             $msg->markAsRead();
+            $mailbox->removeMessageNewStatus($msg->getMessageID());
             $this->set('subject', $msg->getFormattedMessageSubject());
             $this->set('msgContent', $msg->getMessageBody());
             $this->set('dateAdded', $dh->formatDateTime($msg->getMessageDateAdded(), true));
@@ -110,7 +80,7 @@ class Messages extends AccountPageController
         }
 
         $msgMailboxID = $this->getMessageMailboxID($box);
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
         $mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
 
@@ -133,7 +103,7 @@ class Messages extends AccountPageController
     public function reply($boxID, $msgID)
     {
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
         $mailbox = UserPrivateMessageMailbox::get($ui, UserPrivateMessageMailbox::MBTYPE_INBOX);
         $msg = UserPrivateMessage::getByID($msgID, $mailbox);
@@ -176,9 +146,9 @@ class Messages extends AccountPageController
         $vf = Loader::helper('validation/form');
         $vf->setData($this->post());
         $vf->addRequired('msgBody', t("You haven't written a message!"));
-        $vf->addRequiredToken("validate_send_message");
+        $vf->addRequiredToken('validate_send_message');
         if ($vf->test()) {
-            $u = new User();
+            $u = $this->app->make(User::class);
             $sender = UserInfo::getByID($u->getUserID());
             $r = $sender->sendPrivateMessage($this->get('recipient'), $this->post('msgSubject'), $this->post('msgBody'), $this->get('msg'));
             if ($r instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
@@ -208,5 +178,37 @@ class Messages extends AccountPageController
     public function on_before_render()
     {
         $this->set('error', $this->error);
+    }
+
+    protected function validateUser($uID)
+    {
+        if ($uID > 0) {
+            $ui = UserInfo::getByID($uID);
+            if ((is_object($ui)) && ($ui->getAttribute('profile_private_messages_enabled') == 1)) {
+                $this->set('recipient', $ui);
+
+                return true;
+            }
+        }
+
+        $this->redirect('/account');
+    }
+
+    protected function getMessageMailboxID($box)
+    {
+        $msgMailboxID = 0;
+        switch ($box) {
+            case 'inbox':
+                $msgMailboxID = UserPrivateMessageMailbox::MBTYPE_INBOX;
+                break;
+            case 'sent':
+                $msgMailboxID = UserPrivateMessageMailbox::MBTYPE_SENT;
+                break;
+            default:
+                $msgMailboxID = $box;
+                break;
+        }
+
+        return $msgMailboxID;
     }
 }

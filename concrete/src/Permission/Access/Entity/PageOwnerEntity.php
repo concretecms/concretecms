@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Page;
 use Database;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
@@ -9,6 +10,7 @@ use UserInfo;
 use Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;
 use Concrete\Core\Permission\Access\AreaAccess as AreaPermissionAccess;
 use Concrete\Core\Permission\Access\BlockAccess as BlockPermissionAccess;
+use Concrete\Core\User\User;
 
 class PageOwnerEntity extends Entity
 {
@@ -41,7 +43,7 @@ class PageOwnerEntity extends Entity
         if (empty($users)) {
             return false;
         } else {
-            $u = new \User();
+            $u = Application::getFacadeApplication()->make(User::class);
 
             return $users[0]->getUserID() == $u->getUserID();
         }

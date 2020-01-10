@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 $c = Page::getCurrentPage();
 $siteType = null;
 if ($c) {
@@ -15,10 +15,10 @@ if ($c) {
 $form = Loader::helper('form/page_selector');
 ?>
 
-<?=Loader::helper('concrete/ui')->tabs(array(
-    array('page-list-settings', t('Settings'), true),
-    array('page-list-preview', t('Preview'))
-));?>
+<?=Loader::helper('concrete/ui')->tabs([
+    ['page-list-settings', t('Settings'), true],
+    ['page-list-preview', t('Preview')],
+]); ?>
 
 <div class="ccm-tab-content" id="ccm-tab-content-page-list-settings">
     <div class=" pagelist-form">
@@ -134,13 +134,13 @@ $form = Loader::helper('form/page_selector');
             <div class="form-group">
                 <label class="control-label"><?= t('Filter by Public Date') ?></label>
                 <?php
-                $filterDateOptions = array(
+                $filterDateOptions = [
                     'all' => t('Show All'),
                     'now' => t('Today'),
                     'past' => t('Before Today'),
                     'future' => t('After Today'),
                     'between' => t('Between'),
-                );
+                ];
 
                 foreach ($filterDateOptions as $filterDateOptionHandle => $filterDateOptionLabel) {
                     $isChecked = ($filterDateOption == $filterDateOptionHandle) ? 'checked' : '';
@@ -172,7 +172,7 @@ $form = Loader::helper('form/page_selector');
                     <?php
                     $datetime = Loader::helper('form/date_time');
                     echo $datetime->date('filterDateStart', $filterDateStart);
-                    echo "<p>" . t('and') . "</p>";
+                    echo '<p>' . t('and') . '</p>';
                     echo $datetime->date('filterDateEnd', $filterDateEnd);
                     ?>
                 </div>
@@ -363,16 +363,16 @@ $form = Loader::helper('form/page_selector');
                 <div class="radio">
                     <label>
                         <input type="radio" name="rss" class="rssSelector"
-                               value="0" <?= (is_object($rssFeed) ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                               value="0" <?= (is_object($rssFeed) ? '' : 'checked="checked"') ?>/> <?= t('No') ?>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
                         <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector"
-                               value="1" <?= (is_object($rssFeed) ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                               value="1" <?= (is_object($rssFeed) ? 'checked="checked"' : '') ?>/> <?= t('Yes') ?>
                     </label>
                 </div>
-                <div id="ccm-pagelist-rssDetails" <?= (is_object($rssFeed) ? "" : "style=\"display:none;\"") ?>>
+                <div id="ccm-pagelist-rssDetails" <?= (is_object($rssFeed) ? '' : 'style="display:none;"') ?>>
                     <?php if (is_object($rssFeed)) {
                         ?>
                         <?=t('RSS Feed can be found here: <a href="%s" target="_blank">%s</a>', $rssFeed->getFeedURL(), $rssFeed->getFeedURL())?>
@@ -405,13 +405,13 @@ $form = Loader::helper('form/page_selector');
                 <div class="radio">
                     <label>
                         <input type="radio" name="includeName"
-                               value="0" <?= ($includeName ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                               value="0" <?= ($includeName ? '' : 'checked="checked"') ?>/> <?= t('No') ?>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
                         <input type="radio" name="includeName"
-                               value="1" <?= ($includeName ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                               value="1" <?= ($includeName ? 'checked="checked"' : '') ?>/> <?= t('Yes') ?>
                     </label>
                 </div>
             </div>
@@ -421,24 +421,24 @@ $form = Loader::helper('form/page_selector');
                 <div class="radio">
                     <label>
                         <input type="radio" name="includeDescription"
-                               value="0" <?= ($includeDescription ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                               value="0" <?= ($includeDescription ? '' : 'checked="checked"') ?>/> <?= t('No') ?>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
                         <input type="radio" name="includeDescription"
-                               value="1" <?= ($includeDescription ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                               value="1" <?= ($includeDescription ? 'checked="checked"' : '') ?>/> <?= t('Yes') ?>
                     </label>
                 </div>
-                <div class="ccm-page-list-truncate-description" <?= ($includeDescription ? "" : "style=\"display:none;\"") ?>>
+                <div class="ccm-page-list-truncate-description" <?= ($includeDescription ? '' : 'style="display:none;"') ?>>
                     <label class="control-label"><?=t('Display Truncated Description')?></label>
                     <div class="input-group">
             <span class="input-group-addon">
                 <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox"
-                       value="1" <?= ($truncateSummaries ? "checked=\"checked\"" : "") ?> />
+                       value="1" <?= ($truncateSummaries ? 'checked="checked"' : '') ?> />
             </span>
-                        <input class="form-control" id="ccm-pagelist-truncateChars" <?= ($truncateSummaries ? "" : "disabled=\"disabled\"") ?>
-                               type="text" name="truncateChars" size="3" value="<?= intval($truncateChars) ?>" />
+                        <input class="form-control" id="ccm-pagelist-truncateChars" <?= ($truncateSummaries ? '' : 'disabled="disabled"') ?>
+                               type="text" name="truncateChars" size="3" value="<?= (int) $truncateChars ?>" />
             <span class="input-group-addon">
                 <?= t('characters') ?>
             </span>
@@ -451,13 +451,13 @@ $form = Loader::helper('form/page_selector');
                 <div class="radio">
                     <label>
                         <input type="radio" name="includeDate"
-                               value="0" <?= ($includeDate ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                               value="0" <?= ($includeDate ? '' : 'checked="checked"') ?>/> <?= t('No') ?>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
                         <input type="radio" name="includeDate"
-                               value="1" <?= ($includeDate ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                               value="1" <?= ($includeDate ? 'checked="checked"' : '') ?>/> <?= t('Yes') ?>
                     </label>
                 </div>
                 <span class="help-block"><?=t('This is usually the date the page is created. It can be changed from the page attributes panel.')?></span>
@@ -468,14 +468,14 @@ $form = Loader::helper('form/page_selector');
                     <label>
                         <input type="radio" name="displayThumbnail"
                             <?= (!is_object($thumbnailAttribute) ? 'disabled ' : '')?>
-                               value="0" <?= ($displayThumbnail ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                               value="0" <?= ($displayThumbnail ? '' : 'checked="checked"') ?>/> <?= t('No') ?>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
                         <input type="radio" name="displayThumbnail"
                             <?= (!is_object($thumbnailAttribute) ? 'disabled ' : '')?>
-                               value="1" <?= ($displayThumbnail ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                               value="1" <?= ($displayThumbnail ? 'checked="checked"' : '') ?>/> <?= t('Yes') ?>
                     </label>
                 </div>
                 <?php if (!is_object($thumbnailAttribute)) {
@@ -492,16 +492,16 @@ $form = Loader::helper('form/page_selector');
                 <div class="radio">
                     <label>
                         <input type="radio" name="useButtonForLink"
-                               value="0" <?= ($useButtonForLink ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                               value="0" <?= ($useButtonForLink ? '' : 'checked="checked"') ?>/> <?= t('No') ?>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
                         <input type="radio" name="useButtonForLink"
-                               value="1" <?= ($useButtonForLink ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                               value="1" <?= ($useButtonForLink ? 'checked="checked"' : '') ?>/> <?= t('Yes') ?>
                     </label>
                 </div>
-                <div class="ccm-page-list-button-text" <?= ($useButtonForLink ? "" : "style=\"display:none;\"") ?>>
+                <div class="ccm-page-list-button-text" <?= ($useButtonForLink ? '' : 'style="display:none;"') ?>>
                     <div class="form-group">
                         <label class="control-label"><?= t('Link Text') ?></label>
                         <input class="form-control" type="text" name="buttonLinkText" value="<?=$buttonLinkText?>" />
@@ -587,7 +587,7 @@ $form = Loader::helper('form/page_selector');
             $('.tree-view-template').concreteTree({
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
-                'selectNodesByKey': [<?=intval($customTopicTreeNodeID)?>],
+                'selectNodesByKey': [<?=(int) $customTopicTreeNodeID?>],
                 'onSelect' : function(nodes) {
                     if (nodes.length) {
                         $('input[name=customTopicTreeNodeID]').val(nodes[0]);

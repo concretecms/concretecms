@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 
 $form = Loader::helper('form');
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
@@ -9,7 +9,6 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
     die(t('Access Denied'));
 }
-$u = new User();
 
 if ($_POST['task'] == 'delete_pages') {
     $q = Queue::get('delete_page_request');

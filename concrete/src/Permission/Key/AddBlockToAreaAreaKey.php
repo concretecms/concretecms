@@ -20,7 +20,7 @@ class AddBlockToAreaAreaKey extends AreaKey
      * @var string
      */
     const OPERATION_NEWBLOCK = 'new-block';
-    
+
     /**
      * Operation identifier: moving an existing block from another area.
      *
@@ -90,7 +90,8 @@ class AddBlockToAreaAreaKey extends AreaKey
      */
     public function validate($blockTypeOrBlock = false)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }
@@ -132,6 +133,8 @@ class AddBlockToAreaAreaKey extends AreaKey
         if (!in_array($operation, [static::OPERATION_NEWBLOCK, static::OPERATION_EXISTINGBLOCK], true)) {
             $operation = static::OPERATION_NEWBLOCK;
         }
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $accessEntities = $u->getUserAccessEntityObjects();
         $accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
         $list = $this->getAccessListItems(AreaKey::ACCESS_TYPE_ALL, $accessEntities);

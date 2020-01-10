@@ -8,18 +8,19 @@
  * is moved, or if an entire site is moved to a different directory
  * on the server (or to a different server).
  */
+
 namespace Concrete\Core\Editor;
 
-use Core;
-use Page;
-use URL;
-use Sunra\PhpSimple\HtmlDomParser;
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Core;
 use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Core\Entity\File\File;
-use Concrete\Core\Backup\ContentExporter;
+use Page;
+use Sunra\PhpSimple\HtmlDomParser;
+use URL;
 
 class LinkAbstractor extends ConcreteObject
 {
@@ -84,6 +85,8 @@ class LinkAbstractor extends ConcreteObject
     /**
      * Takes a chunk of content containing abstracted link references,
      * and expands them to full urls for displaying on the site front-end.
+     *
+     * @param mixed $text
      */
     public static function translateFrom($text)
     {
@@ -228,6 +231,8 @@ class LinkAbstractor extends ConcreteObject
     /**
      * Takes a chunk of content containing abstracted link references,
      * and expands them to urls suitable for the rich text editor.
+     *
+     * @param mixed $text
      */
     public static function translateFromEditMode($text)
     {
@@ -304,6 +309,8 @@ class LinkAbstractor extends ConcreteObject
 
     /**
      * For the content block's getImportData() function.
+     *
+     * @param mixed $text
      */
     public static function import($text)
     {
@@ -315,6 +322,8 @@ class LinkAbstractor extends ConcreteObject
 
     /**
      * For the content block's export() function.
+     *
+     * @param mixed $text
      */
     public static function export($text)
     {

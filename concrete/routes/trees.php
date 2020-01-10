@@ -1,10 +1,9 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  */
-
 $router->all('/ccm/system/tree/load', '\Concrete\Controller\Backend\Tree::load');
 $router->all('/ccm/system/tree/node/load', '\Concrete\Controller\Backend\Tree\Node::load');
 $router->all('/ccm/system/tree/node/load_starting', '\Concrete\Controller\Backend\Tree\Node::load_starting');
@@ -23,6 +22,11 @@ $router->all('/ccm/system/dialogs/tree/node/edit/topic/update_topic_node', '\Con
 
 $router->all('/ccm/system/dialogs/tree/node/edit/category', '\Concrete\Controller\Dialog\Tree\Node\Category\Edit::view');
 $router->all('/ccm/system/dialogs/tree/node/edit/category/update_category_node', '\Concrete\Controller\Dialog\Tree\Node\Category\Edit::update_category_node');
+
+$router->all('/ccm/system/dialogs/tree/node/add/file_folder', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Add::view');
+$router->all('/ccm/system/dialogs/tree/node/add/file_folder/add_file_folder_node', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Add::add_file_folder_node');
+$router->all('/ccm/system/dialogs/tree/node/edit/file_folder', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Edit::view');
+$router->all('/ccm/system/dialogs/tree/node/edit/file_folder/update_file_folder_node', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Edit::update_file_folder_node');
 
 $router->all('/ccm/system/dialogs/tree/node/delete', '\Concrete\Controller\Dialog\Tree\Node\Delete::view');
 $router->all('/ccm/system/dialogs/tree/node/delete/remove_tree_node', '\Concrete\Controller\Dialog\Tree\Node\Delete::remove_tree_node');

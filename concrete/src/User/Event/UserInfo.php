@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Core\User\Event;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\UserInfo as ConcreteUserInfo;
+use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
 class UserInfo extends AbstractEvent
 {
@@ -12,6 +14,15 @@ class UserInfo extends AbstractEvent
      * @var \Concrete\Core\User\User
      */
     protected $applier;
+
+    public function __construct(ConcreteUserInfo $ui)
+    {
+        $this->ui = $ui;
+        $u = Application::getFacadeApplication()->make(\Concrete\Core\User\User::class);
+        if ($u->isRegistered()) {
+            $this->applier = $u;
+        }
+    }
 
     /**
      * @return \Concrete\Core\User\User
@@ -27,15 +38,6 @@ class UserInfo extends AbstractEvent
     public function setApplier(\Concrete\Core\User\User $applier)
     {
         $this->applier = $applier;
-    }
-
-    public function __construct(ConcreteUserInfo $ui)
-    {
-        $this->ui = $ui;
-        $u = new \Concrete\Core\User\User();
-        if ($u->isRegistered()) {
-            $this->applier = $u;
-        }
     }
 
     public function getUserInfoObject()

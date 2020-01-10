@@ -1,15 +1,14 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\Package;
-use Concrete\Controller\Element\Package\ThemeItemList;
 use Doctrine\ORM\EntityManagerInterface;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class AttributeKey extends AbstractCategory
 {
-
     protected $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -36,7 +35,7 @@ class AttributeKey extends AbstractCategory
     public function getPackageItems(Package $package)
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key');
+
         return $r->findByPackage($package);
     }
-
 }

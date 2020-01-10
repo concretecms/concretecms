@@ -16,7 +16,6 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
-use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Package;
@@ -25,7 +24,6 @@ use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 use Config;
-use Database;
 use Environment;
 use Exception;
 use Illuminate\Container\Container;
@@ -90,59 +88,6 @@ class Application extends Container
     }
 
     /**
-     * If we have job scheduling running through the site, we check to see if it's time to go for it.
-     */
-    protected function handleScheduledJobs()
-    {
-        $config = $this['config'];
-
-        if ($config->get('concrete.jobs.enable_scheduling')) {
-            $c = Page::getCurrentPage();
-            if ($c instanceof Page && !$c->isAdminArea()) {
-                // check for non dashboard page
-                $jobs = Job::getList(true);
-                $auth = Job::generateAuth();
-                $url = '';
-                // jobs
-                if (count($jobs)) {
-                    foreach ($jobs as $j) {
-                        if ($j->isScheduledForNow()) {
-                            $url = View::url(
-                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
-                                                  )
-                                );
-                            break;
-                        }
-                    }
-                }
-
-                // job sets
-                if (!strlen($url)) {
-                    $jSets = JobSet::getList(true);
-                    if (is_array($jSets) && count($jSets)) {
-                        foreach ($jSets as $set) {
-                            if ($set->isScheduledForNow()) {
-                                $url = View::url(
-                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
-                                                      )
-                                    );
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (strlen($url)) {
-                    try {
-                        $this->make('http/client')->setUri($url)->send();
-                    } catch (Exception $x) {
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Returns true if concrete5 is installed, false if it has not yet been.
      */
     public function isInstalled()
@@ -160,6 +105,8 @@ class Application extends Container
 
     /**
      * Checks to see whether we should deliver a concrete5 response from the page cache.
+     *
+     * @param \Concrete\Core\Http\Request $request
      */
     public function checkPageCache(\Concrete\Core\Http\Request $request)
     {
@@ -290,6 +237,9 @@ class Application extends Container
      * Using the configuration value, determines whether we need to redirect to a URL with
      * a trailing slash or not.
      *
+     * @param SymfonyRequest $request
+     * @param Site $site
+     *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
@@ -315,6 +265,9 @@ class Application extends Container
 
     /**
      * If we have redirect to canonical host enabled, we need to honor it here.
+     *
+     * @param SymfonyRequest $r
+     * @param Site $site
      *
      * @return \Concrete\Core\Routing\RedirectResponse|null
      */
@@ -375,9 +328,9 @@ class Application extends Container
     {
         if (count(func_get_args()) > 0) {
             return in_array($this->environment, func_get_args());
-        } else {
-            return $this->environment;
         }
+
+        return $this->environment;
     }
 
     /**
@@ -411,9 +364,9 @@ class Application extends Container
      * @param  string $concrete
      * @param  array $parameters
      *
-     * @return mixed
-     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return mixed
      */
     public function build($concrete, array $parameters = [])
     {
@@ -486,5 +439,58 @@ class Application extends Container
     public function bindShared($abstract, $concrete)
     {
         return $this->singleton($abstract, $concrete);
+    }
+
+    /**
+     * If we have job scheduling running through the site, we check to see if it's time to go for it.
+     */
+    protected function handleScheduledJobs()
+    {
+        $config = $this['config'];
+
+        if ($config->get('concrete.jobs.enable_scheduling')) {
+            $c = Page::getCurrentPage();
+            if ($c instanceof Page && !$c->isAdminArea()) {
+                // check for non dashboard page
+                $jobs = Job::getList(true);
+                $auth = Job::generateAuth();
+                $url = '';
+                // jobs
+                if (count($jobs)) {
+                    foreach ($jobs as $j) {
+                        if ($j->isScheduledForNow()) {
+                            $url = View::url(
+                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
+                                                  )
+                                );
+                            break;
+                        }
+                    }
+                }
+
+                // job sets
+                if (!strlen($url)) {
+                    $jSets = JobSet::getList(true);
+                    if (is_array($jSets) && count($jSets)) {
+                        foreach ($jSets as $set) {
+                            if ($set->isScheduledForNow()) {
+                                $url = View::url(
+                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
+                                                      )
+                                    );
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (strlen($url)) {
+                    try {
+                        $this->make('http/client')->setUri($url)->send();
+                    } catch (Exception $x) {
+                    }
+                }
+            }
+        }
     }
 }

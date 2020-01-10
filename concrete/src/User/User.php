@@ -78,8 +78,8 @@ class User extends ConcreteObject
      */
     public static function isLoggedIn()
     {
-        $u = new User();
-
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         return $u->isRegistered();
     }
 
@@ -437,6 +437,9 @@ class User extends ConcreteObject
         $this->unloadAuthenticationTypes();
 
         $this->invalidateSession($hard);
+        $app->singleton(User::class, function() {
+            return new User();
+        });
         $events->dispatch('on_user_logout');
     }
 

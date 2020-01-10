@@ -16,7 +16,7 @@ use \Concrete\Core\Area\SubArea;
 $arHandle = $a->getAreaHandle();
 $c = $a->getAreaCollectionObject();
 $cID = $c->getCollectionID();
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $ap = new Permissions($a);
 $cp = new Permissions($c);
 $class = 'ccm-area-footer';
