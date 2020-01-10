@@ -288,6 +288,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -1213,12 +1214,12 @@
             "version": "v3.5.9",
             "source": {
                 "type": "git",
-                "url": "https://github.com/oscarotero/Gettext.git",
+                "url": "https://github.com/php-gettext/Gettext.git",
                 "reference": "5b1d69f5889513f7ed65060ad2a662ec3b0875c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/5b1d69f5889513f7ed65060ad2a662ec3b0875c7",
+                "url": "https://api.github.com/repos/php-gettext/Gettext/zipball/5b1d69f5889513f7ed65060ad2a662ec3b0875c7",
                 "reference": "5b1d69f5889513f7ed65060ad2a662ec3b0875c7",
                 "shasum": ""
             },
@@ -2597,16 +2598,16 @@
         },
         {
             "name": "mlocati/composer-patcher",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/composer-patcher.git",
-                "reference": "d8ba45c10b5cf8ac8da3591e09b6afd47fc10667"
+                "reference": "9a6ab04381f2507abf6bc7d742bf1b2051605924"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/d8ba45c10b5cf8ac8da3591e09b6afd47fc10667",
-                "reference": "d8ba45c10b5cf8ac8da3591e09b6afd47fc10667",
+                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/9a6ab04381f2507abf6bc7d742bf1b2051605924",
+                "reference": "9a6ab04381f2507abf6bc7d742bf1b2051605924",
                 "shasum": ""
             },
             "require": {
@@ -2619,7 +2620,7 @@
             "require-dev": {
                 "composer/composer": "^1.1.0",
                 "friendsofphp/php-cs-fixer": "2.2.*",
-                "symfony/phpunit-bridge": "^3.2 || ^4.0"
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4"
             },
             "type": "composer-plugin",
             "extra": {
@@ -2651,7 +2652,7 @@
                 "patches",
                 "plugin"
             ],
-            "time": "2018-10-15T07:27:38+00:00"
+            "time": "2019-11-23T16:33:18+00:00"
         },
         {
             "name": "mlocati/concrete5-translation-library",
