@@ -1,7 +1,7 @@
 <?php
-
 namespace Concrete\Core\Tree\Node\Type;
 
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
@@ -40,7 +40,9 @@ class Category extends TreeNode
 
     public function getTreeNodeDisplayName($format = 'html')
     {
-        if ($this->getTreeNodeName()) {
+        $app = Facade::getFacadeApplication();
+        $vsh = $app->make('helper/validation/strings');
+        if ($vsh->notempty($this->getTreeNodeName())) {
             $name = tc($this->getTreeNodeTranslationContext(), $this->getTreeNodeName());
             switch ($format) {
                 case 'html':

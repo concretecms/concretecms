@@ -322,7 +322,7 @@ return [
         ],
 
         'clear' => [
-            'thumbnails' => false
+            'thumbnails' => false,
         ],
     ],
 
@@ -1072,12 +1072,9 @@ return [
      * ------------------------------------------------------------------------
      */
     'calendar' => [
-
         'colors' => [
-
             'text' => '#ffffff',
             'background' => '#3A87AD',
-
         ],
     ],
 
