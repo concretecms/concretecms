@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Core\Express\Entry;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
-use Concrete\Core\Entity\User\User;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
+use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +20,16 @@ class Manager implements EntryManagerInterface
     protected $entityManager;
     protected $request;
 
-    public function __construct(EntityManagerInterface $entityManager, Request $request)
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    public function __construct(EntityManagerInterface $entityManager, Request $request, Application $app)
     {
         $this->request = $request;
         $this->entityManager = $entityManager;
+        $this->app = $app;
     }
 
     public function getEntityManager()
@@ -50,16 +58,18 @@ class Manager implements EntryManagerInterface
         return $displayOrder;
     }
 
-    public function createEntry(Entity $entity, User $author = null)
+    public function createEntry(Entity $entity, UserEntity $author = null)
     {
         $entry = new Entry();
         if (!$author) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             if ($u->isRegistered()) {
                 $author = $u->getUserInfoObject()->getEntityObject();
                 $entry->setAuthor($author);
             }
         }
+        $generator = $this->app->make(PublicIdentifierGenerator::class);
+        $entry->setPublicIdentifier($generator->generate());
         $entry->setEntity($entity);
         if ($entity->supportsCustomDisplayOrder()) {
             $entry->setEntryDisplayOrder($this->getNewDisplayOrder($entity));

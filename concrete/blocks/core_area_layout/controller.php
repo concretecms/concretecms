@@ -1,21 +1,22 @@
 <?php
+
 namespace Concrete\Block\CoreAreaLayout;
 
 use Concrete\Core\Area\Layout\CustomLayout;
-use Concrete\Core\Area\Layout\PresetLayout;
-use Concrete\Core\Area\Layout\ThemeGridLayout;
-use Concrete\Core\Area\SubArea;
-use Core;
-use Database;
-use Concrete\Core\Block\BlockController;
+use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
-use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
+use Concrete\Core\Area\Layout\PresetLayout;
+use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
-use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\Area\SubArea;
 use Concrete\Core\Asset\CssAsset;
-use URL;
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Core;
+use Database;
 use Page;
+use URL;
 
 class Controller extends BlockController
 {
@@ -46,84 +47,14 @@ class Controller extends BlockController
         return $this->btCacheBlockOutputLifetime;
     }
 
-    protected function setupCacheSettings()
-    {
-        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
-            return;
-        }
-
-        $this->btCacheSettingsInitialized = true;
-
-        $btCacheBlockOutput = true;
-        $btCacheBlockOutputOnPost = true;
-        $btCacheBlockOutputLifetime = 0;
-
-        $c = $this->getCollectionObject();
-
-        $blocks = [];
-        $layout = $this->getAreaLayoutObject();
-        $layout->setAreaObject($this->getAreaObject());
-        if ($layout) {
-            foreach($layout->getAreaLayoutColumns() as $column) {
-                $area = $column->getSubAreaObject();
-                if ($area) {
-                    foreach($area->getAreaBlocksArray($c) as $block) {
-                        $blocks[] = $block;
-                    }
-                }
-            }
-        }
-
-        $arrAssetBlocks = [];
-
-        foreach ($blocks as $b) {
-            if ($b->overrideAreaPermissions()) {
-                $btCacheBlockOutput = false;
-                $btCacheBlockOutputOnPost = false;
-                $btCacheBlockOutputLifetime = 0;
-                break;
-            }
-
-            $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
-            $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
-
-            //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
-            if (!$btCacheBlockOutput) {
-                return;
-            }
-
-            if ($expires = $b->getBlockOutputCacheLifetime()) {
-                if ($expires && $btCacheBlockOutputLifetime < $expires) {
-                    $btCacheBlockOutputLifetime = $expires;
-                }
-            }
-
-            $objController = $b->getController();
-            if (is_callable(array($objController, 'registerViewAssets'))) {
-                $arrAssetBlocks[] = $objController;
-            }
-
-        }
-
-        $this->btCacheBlockOutput = $btCacheBlockOutput;
-        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
-        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
-
-        foreach ($arrAssetBlocks as $objController) {
-            $objController->on_start();
-            $objController->outputAutoHeaderItems();
-            $objController->registerViewAssets();
-        }
-    }
-
     public function getBlockTypeDescription()
     {
-        return t("Proxy block for area layouts.");
+        return t('Proxy block for area layouts.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Area Layout");
+        return t('Area Layout');
     }
 
     public function registerViewAssets($outputContent = '')
@@ -142,7 +73,7 @@ class Controller extends BlockController
         $nr = $ar->duplicate();
         $db->Execute(
             'update btCoreAreaLayout set arLayoutID = ? where bID = ?',
-            array($nr->getAreaLayoutID(), $newBID)
+            [$nr->getAreaLayoutID(), $newBID]
         );
     }
 
@@ -181,54 +112,53 @@ class Controller extends BlockController
             // We need to somehow differentiate the two. If it's JUST arLayoutID we're using the migration tool
             // if it includes arLayoutEdit (which is included in the form) then run the standrd block save.
             // we are passing it in directly –likely from import
-            $values = array('arLayoutID' => $post['arLayoutID']);
+            $values = ['arLayoutID' => $post['arLayoutID']];
             parent::save($values);
 
             return;
+        }
+        $db = Database::connection();
+        $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', [$this->bID]);
+        if (!$arLayoutID) {
+            $arLayout = $this->addFromPost($post);
         } else {
-            $db = Database::connection();
-            $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
-            if (!$arLayoutID) {
-                $arLayout = $this->addFromPost($post);
-            } else {
-                $arLayout = AreaLayout::getByID($arLayoutID);
-                if ($arLayout instanceof PresetLayout) {
-                    return;
+            $arLayout = AreaLayout::getByID($arLayoutID);
+            if ($arLayout instanceof PresetLayout) {
+                return;
+            }
+            // save spacing
+            if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
+                $columns = $arLayout->getAreaLayoutColumns();
+                for ($i = 0; $i < count($columns); ++$i) {
+                    $col = $columns[$i];
+                    $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
+                    $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
+                    $col->setAreaLayoutColumnSpan($span);
+                    $col->setAreaLayoutColumnOffset($offset);
                 }
-                // save spacing
-                if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
+            } else {
+                $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
+                if ($post['isautomated']) {
+                    $arLayout->disableAreaLayoutCustomColumnWidths();
+                } else {
+                    $arLayout->enableAreaLayoutCustomColumnWidths();
                     $columns = $arLayout->getAreaLayoutColumns();
                     for ($i = 0; $i < count($columns); ++$i) {
                         $col = $columns[$i];
-                        $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
-                        $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
-                        $col->setAreaLayoutColumnSpan($span);
-                        $col->setAreaLayoutColumnOffset($offset);
-                    }
-                } else {
-                    $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
-                    if ($post['isautomated']) {
-                        $arLayout->disableAreaLayoutCustomColumnWidths();
-                    } else {
-                        $arLayout->enableAreaLayoutCustomColumnWidths();
-                        $columns = $arLayout->getAreaLayoutColumns();
-                        for ($i = 0; $i < count($columns); ++$i) {
-                            $col = $columns[$i];
-                            $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-                            $col->setAreaLayoutColumnWidth($width);
-                        }
+                        $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+                        $col->setAreaLayoutColumnWidth($width);
                     }
                 }
             }
-
-            $values = array('arLayoutID' => $arLayout->getAreaLayoutID());
-            parent::save($values);
         }
+
+        $values = ['arLayoutID' => $arLayout->getAreaLayoutID()];
+        parent::save($values);
     }
 
     public function getImportData($blockNode, $page)
     {
-        $args = array();
+        $args = [];
         if (isset($blockNode->arealayout)) {
             $type = (string) $blockNode->arealayout['type'];
             $node = $blockNode->arealayout;
@@ -236,29 +166,29 @@ class Controller extends BlockController
                 case 'theme-grid':
                     $args['gridType'] = 'TG';
                     $args['arLayoutMaxColumns'] = (string) $node['columns'];
-                    $args['themeGridColumns'] = intval(count($node->columns->column));
-                    $args['offset'] = array();
-                    $args['span'] = array();
+                    $args['themeGridColumns'] = (int) (count($node->columns->column));
+                    $args['offset'] = [];
+                    $args['span'] = [];
                     $i = 0;
                     foreach ($node->columns->column as $column) {
-                        $args['span'][$i] = intval($column['span']);
-                        $args['offset'][$i] = intval($column['offset']);
+                        $args['span'][$i] = (int) ($column['span']);
+                        $args['offset'][$i] = (int) ($column['offset']);
                         ++$i;
                     }
                     break;
                 case 'custom':
                     $args['gridType'] = 'FF';
                     $args['isautomated'] = true;
-                    $args['spacing'] = intval($node['spacing']);
-                    $args['columns'] = intval(count($node->columns->column));
-                    $customWidths = intval($node['custom-widths']);
+                    $args['spacing'] = (int) ($node['spacing']);
+                    $args['columns'] = (int) (count($node->columns->column));
+                    $customWidths = (int) ($node['custom-widths']);
                     if ($customWidths == 1) {
                         $args['isautomated'] = false;
                     }
-                    $args['width'] = array();
+                    $args['width'] = [];
                     $i = 0;
                     foreach ($node->columns->column as $column) {
-                        $args['width'][$i] = intval($column['width']);
+                        $args['width'][$i] = (int) ($column['width']);
                         ++$i;
                     }
                     break;
@@ -266,39 +196,6 @@ class Controller extends BlockController
         }
 
         return $args;
-    }
-
-    protected function importAdditionalData($b, $blockNode)
-    {
-        $controller = $b->getController();
-        $arLayout = $controller->getAreaLayoutObject();
-
-        $columns = $arLayout->getAreaLayoutColumns();
-        $layoutArea = $b->getBlockAreaObject();
-        $arLayout->setAreaObject($b->getBlockAreaObject());
-        $page = $b->getBlockCollectionObject();
-
-        $i = 0;
-        foreach ($blockNode->arealayout->columns->column as $columnNode) {
-            $column = $columns[$i];
-            $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
-            $as->load($page);
-            $column->setAreaID($as->getAreaID());
-            $area = $column->getAreaObject();
-            if ($columnNode->style) {
-                $set = StyleSet::import($columnNode->style);
-                $page->setCustomStyleSet($area, $set);
-            }
-            foreach ($columnNode->block as $bx) {
-                $bt = \BlockType::getByHandle($bx['type']);
-                if (!is_object($bt)) {
-                    throw new \Exception(t('Invalid block type handle: %s', strval($bx['type'])));
-                }
-                $btc = $bt->getController();
-                $btc->import($page, $area->getAreaHandle(), $bx);
-            }
-            ++$i;
-        }
     }
 
     public function addFromPost($post)
@@ -368,7 +265,7 @@ class Controller extends BlockController
             $formatter = $this->arLayout->getFormatter();
             $this->set('formatter', $formatter);
         } else {
-            $this->set('columns', array());
+            $this->set('columns', []);
         }
     }
 
@@ -387,7 +284,7 @@ class Controller extends BlockController
             $this->set('themeGridFramework', $gf);
             $this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
             $this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
-            $this->render("edit_grid");
+            $this->render('edit_grid');
         } elseif ($this->arLayout instanceof CustomLayout) {
             $this->set('enableThemeGrid', false);
             $this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
@@ -425,5 +322,107 @@ class Controller extends BlockController
         $this->set('columnsNum', 1);
         $this->set('maxColumns', $maxColumns);
         $this->requireAsset('core/style-customizer');
+    }
+
+    protected function setupCacheSettings()
+    {
+        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
+            return;
+        }
+
+        $this->btCacheSettingsInitialized = true;
+
+        $btCacheBlockOutput = true;
+        $btCacheBlockOutputOnPost = true;
+        $btCacheBlockOutputLifetime = 0;
+
+        $c = $this->getCollectionObject();
+
+        $blocks = [];
+        $layout = $this->getAreaLayoutObject();
+        $layout->setAreaObject($this->getAreaObject());
+        if ($layout) {
+            foreach ($layout->getAreaLayoutColumns() as $column) {
+                $area = $column->getSubAreaObject();
+                if ($area) {
+                    foreach ($area->getAreaBlocksArray($c) as $block) {
+                        $blocks[] = $block;
+                    }
+                }
+            }
+        }
+
+        $arrAssetBlocks = [];
+
+        foreach ($blocks as $b) {
+            if ($b->overrideAreaPermissions()) {
+                $btCacheBlockOutput = false;
+                $btCacheBlockOutputOnPost = false;
+                $btCacheBlockOutputLifetime = 0;
+                break;
+            }
+
+            $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
+            $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
+
+            //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
+            if (!$btCacheBlockOutput) {
+                return;
+            }
+
+            if ($expires = $b->getBlockOutputCacheLifetime()) {
+                if ($expires && $btCacheBlockOutputLifetime < $expires) {
+                    $btCacheBlockOutputLifetime = $expires;
+                }
+            }
+
+            $objController = $b->getController();
+            if (is_callable([$objController, 'registerViewAssets'])) {
+                $arrAssetBlocks[] = $objController;
+            }
+        }
+
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+
+        foreach ($arrAssetBlocks as $objController) {
+            $objController->on_start();
+            $objController->outputAutoHeaderItems();
+            $objController->registerViewAssets();
+        }
+    }
+
+    protected function importAdditionalData($b, $blockNode)
+    {
+        $controller = $b->getController();
+        $arLayout = $controller->getAreaLayoutObject();
+
+        $columns = $arLayout->getAreaLayoutColumns();
+        $layoutArea = $b->getBlockAreaObject();
+        $arLayout->setAreaObject($b->getBlockAreaObject());
+        $page = $b->getBlockCollectionObject();
+
+        $i = 0;
+        foreach ($blockNode->arealayout->columns->column as $columnNode) {
+            $column = $columns[$i];
+            $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
+            $as->load($page);
+            $column->setAreaID($as->getAreaID());
+            $area = $column->getAreaObject();
+            if ($columnNode->style) {
+                $set = StyleSet::import($columnNode->style);
+                $page->setCustomStyleSet($area, $set);
+            }
+            foreach ($columnNode->block as $bx) {
+                $bt = \BlockType::getByHandle($bx['type']);
+                if (!is_object($bt)) {
+                    throw new \Exception(t('Invalid block type handle: %s', (string) ($bx['type'])));
+                }
+                $btc = $bt->getController();
+                $btc->import($page, $area->getAreaHandle(), $bx);
+            }
+            ++$i;
+        }
     }
 }

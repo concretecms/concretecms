@@ -3,7 +3,8 @@ namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Page\Type\Type;
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Permissions;
 use Concrete\Core\Area\Area;
 use Block;
@@ -17,7 +18,6 @@ use Concrete\Core\Permission\Key\BlockKey as BlockPermissionKey;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Assignment\PageTimedAssignment as PageContentPermissionTimedAssignment;
-use Concrete\Core\Support\Facade\Application;
 
 class PageResponse extends Response
 {
@@ -136,7 +136,8 @@ class PageResponse extends Response
     // convenience function
     public function canViewToolbar()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if (!$u->isRegistered()) {
             return false;
         }

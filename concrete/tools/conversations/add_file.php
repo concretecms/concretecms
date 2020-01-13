@@ -68,7 +68,7 @@ if (!$p->canRead()) {    // block read permissions check
 
 // check for registered or guest user file size overrides / limits
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $blockRegisteredSizeOverride = $conversation->getConversationMaxFileSizeRegistered();
 $blockGuestSizeOverride = $conversation->getConversationMaxFilesGuest();
 $blockRegisteredQuantityOverride = $conversation->getConversationMaxFilesRegistered();

@@ -174,7 +174,7 @@ class Setup extends DashboardSitePageController
             $this->error->add($this->token->getErrorMessage());
         }
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         if (!$u->isSuperUser()) {
             $this->error->add(t('Only the super user may remove a multilingual section.'));
         }

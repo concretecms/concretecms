@@ -3,8 +3,9 @@ namespace Concrete\Controller\SinglePage\Account;
 
 use Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
 use Concrete\Core\User\UserInfo;
-use Imagine\Image\Palette\Color\RGB;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
+use Imagine\Image\ImagineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Avatar extends AccountProfileEditPageController
@@ -20,34 +21,61 @@ class Avatar extends AccountProfileEditPageController
     {
         $result = [
             'success' => false,
-            'avatar' => null
+            'avatar' => null,
         ];
         $this->view();
         $token = $this->app->make('token');
-        if (!$token->validate('avatar/save_avatar')) {
-            $this->redirect('/profile/avatar', 'token');
+        if (!$token->validate('avatar/save_avatar', $this->request->query->get('ccm_token'))) {
+            $result['error'] = true;
+            $result['message'] = $token->getErrorMessage();
+
+            return new JsonResponse($result, 400);
         }
 
-        /** @var UserInfo $profile */
+        /** @var UserInfo */
         $profile = $this->get('profile');
 
-        /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+        /** @var \Symfony\Component\HttpFoundation\File\UploadedFile */
         $file = $this->request->files->get('file');
         if ($file) {
-            $image = \Image::open($file->getPathname());
+            try {
+                /** @var ImagineInterface $imagine */
+                $imagine = $this->app->make(ImagineInterface::class);
+                $image = $imagine->open($file->getPathname());
 
-            $palette = new \Imagine\Image\Palette\RGB();
+                $palette = new RGB();
 
-            // Give our image a white background
-            $canvas = \Image::create($image->getSize(), $palette->color('fff'));
-            $canvas->paste($image, new Point(0, 0));
+                // Give our image a white background
+                $canvas = $imagine->create($image->getSize(), $palette->color('fff'));
+                $canvas->paste($image, new Point(0, 0));
 
-            // Update the avatar
-            $profile->updateUserAvatar($canvas);
+                // Update the avatar
+                $profile->updateUserAvatar($canvas);
 
-            // Update the result
-            $result['success'] = true;
-            $result['avatar'] = $profile->getUserAvatar()->getPath() . '?' . time();
+                // Update the result
+                $result['success'] = true;
+                $result['avatar'] = $profile->getUserAvatar()->getPath() . '?' . time();
+            } catch (\Exception $error) {
+                if ($this->app->make('config')->get('concrete.log.errors')) {
+                    $logger = $this->app->make('log/exceptions');
+                    $logger->emergency(
+                        t(
+                            "Exception Occurred: %s:%d %s (%d)\n",
+                            $error->getFile(),
+                            $error->getLine(),
+                            $error->getMessage(),
+                            $error->getCode()
+                        ),
+                        [$error]
+                    );
+                }
+
+                $result['error'] = true;
+                $result['message'] = t('Error while setting profile picture.');
+            }
+        } else {
+            $result['error'] = true;
+            $result['message'] = t('Error while uploading file.');
         }
 
         return new JsonResponse($result, $result['success'] ? 200 : 400);
@@ -66,11 +94,14 @@ class Avatar extends AccountProfileEditPageController
         if (!is_object($profile) || $profile->getUserID() < 1) {
             return false;
         }
+        $thumbnail = $this->request->request->get('thumbnail');
 
-        if (isset($_POST['thumbnail']) && strlen($_POST['thumbnail'])) {
-            $thumb = base64_decode($_POST['thumbnail']);
-            $image = \Image::load($thumb);
+        if ($thumbnail) {
+            $thumb = base64_decode($thumbnail);
+            $image = $this->app->make(ImagineInterface::class)->load($thumb);
             $profile->updateUserAvatar($image);
+        } else {
+            return false;
         }
 
         $this->redirect('/account/avatar', 'saved');
@@ -96,9 +127,8 @@ class Avatar extends AccountProfileEditPageController
         }
         if (!$this->error->has()) {
             $profile = $this->get('profile');
-            $av = $this->get('av');
 
-            $service = \Core::make('user/avatar');
+            $service = $this->app->make('user/avatar');
             $service->removeAvatar($profile);
             $this->redirect('/account/avatar', 'deleted');
         }

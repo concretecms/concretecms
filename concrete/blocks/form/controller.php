@@ -1,8 +1,11 @@
 <?php
+
 namespace Concrete\Block\Form;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\User\User;
+use Concrete\Core\Validator\String\EmailValidator;
 use Config;
 use Core;
 use Database;
@@ -12,9 +15,7 @@ use File;
 use FileImporter;
 use FileSet;
 use Page;
-use User;
 use UserInfo;
-use Concrete\Core\Validator\String\EmailValidator;
 
 class Controller extends BlockController
 {
@@ -32,6 +33,18 @@ class Controller extends BlockController
     protected $btExportPageColumns = ['redirectCID'];
     protected $lastAnswerSetId = 0;
     protected $btCopyWhenPropagate = true;
+
+    public function __construct($b = null)
+    {
+        parent::__construct($b);
+        //$this->bID = intval($this->_bID);
+        if (is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)) {
+            $this->thankyouMsg = $this->getDefaultThankYouMsg();
+        }
+        if (is_string($this->submitText) && !strlen($this->submitText)) {
+            $this->submitText = $this->getDefaultSubmitText();
+        }
+    }
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
@@ -57,57 +70,6 @@ class Controller extends BlockController
             'ajax-error' => t('AJAX Error.'),
             'form-min-1' => t('Please add at least one question to your form.'),
         ];
-    }
-
-    protected function importAdditionalData($b, $blockNode)
-    {
-        if (isset($blockNode->data)) {
-            foreach ($blockNode->data as $data) {
-                if ($data['table'] != $this->getBlockTypeDatabaseTable()) {
-                    $table = (string) $data['table'];
-                    if (isset($data->record)) {
-                        foreach ($data->record as $record) {
-                            $aar = new \Concrete\Core\Legacy\BlockRecord($table);
-                            $aar->bID = $b->getBlockID();
-                            foreach ($record->children() as $node) {
-                                $nodeName = $node->getName();
-                                $aar->{$nodeName} = (string) $node;
-                            }
-                            if ($table == 'btFormQuestions') {
-                                $db = Database::connection();
-                                $aar->questionSetId = $db->GetOne('select questionSetId from btForm where bID = ?', [$b->getBlockID()]);
-                            }
-                            $aar->Replace();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public function __construct($b = null)
-    {
-        parent::__construct($b);
-        //$this->bID = intval($this->_bID);
-        if (is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)) {
-            $this->thankyouMsg = $this->getDefaultThankYouMsg();
-        }
-        if (is_string($this->submitText) && !strlen($this->submitText)) {
-            $this->submitText = $this->getDefaultSubmitText();
-        }
-    }
-
-    /**
-     * Internal helper function.
-     */
-    private function viewRequiresJqueryUI()
-    {
-        $whereInputTypes = "inputType = 'date' OR inputType = 'datetime'";
-        $sql = "SELECT COUNT(*) FROM {$this->btQuestionsTablename} WHERE questionSetID = ? AND bID = ? AND ({$whereInputTypes})";
-        $vals = [intval($this->questionSetId), intval($this->bID)];
-        $JQUIFieldCount = Database::connection()->GetOne($sql, $vals);
-
-        return (bool) $JQUIFieldCount;
     }
 
     // we are not using registerViewAssets because this block doesn't support caching
@@ -136,6 +98,8 @@ class Controller extends BlockController
     /**
      * Form add or edit submit
      * (run after the duplicate method on first block edit of new page version).
+     *
+     * @param mixed $data
      */
     public function save($data = [])
     {
@@ -152,8 +116,8 @@ class Controller extends BlockController
         $c = $b->getBlockCollectionObject();
 
         $db = Database::connection();
-        if (intval($this->bID) > 0) {
-            $q = "select count(*) as total from {$this->btTable} where bID = " . intval($this->bID);
+        if ((int) ($this->bID) > 0) {
+            $q = "select count(*) as total from {$this->btTable} where bID = " . (int) ($this->bID);
             $total = $db->getOne($q);
         } else {
             $total = 0;
@@ -174,7 +138,7 @@ class Controller extends BlockController
         if (!$data['oldQsID']) {
             $data['oldQsID'] = $data['qsID'];
         }
-        $data['bID'] = intval($this->bID);
+        $data['bID'] = (int) ($this->bID);
 
         if (!empty($data['redirectCID'])) {
             $data['redirect'] = 1;
@@ -211,17 +175,17 @@ class Controller extends BlockController
             $data['qsID'],
             $data['surveyName'],
             $data['submitText'],
-            intval($data['notifyMeOnSubmission']),
-            trim($data['recipientEmail'], " ..,"),
+            (int) ($data['notifyMeOnSubmission']),
+            trim($data['recipientEmail'], ' ..,'),
             $data['thankyouMsg'],
-            intval($data['displayCaptcha']),
-            intval($data['redirectCID']),
-            intval($data['addFilesToSet']),
-            intval($this->bID)
+            (int) ($data['displayCaptcha']),
+            (int) ($data['redirectCID']),
+            (int) ($data['addFilesToSet']),
+            (int) ($this->bID),
         ];
 
         //is it new?
-        if (intval($total) == 0) {
+        if ((int) $total == 0) {
             $q = "insert into {$this->btTable} (questionSetId, surveyName, submitText, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, addFilesToSet, bID) values (?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         } else {
             $v[] = $data['qsID'];
@@ -244,55 +208,9 @@ class Controller extends BlockController
     }
 
     /**
-     * Ties the new or edited questions to the new block number.
-     * New and edited questions are temporarily given bID=0, until the block is saved... painfully complicated.
-     *
-     * @param array $data
-     */
-    protected function questionVersioning($data = [])
-    {
-        $data += [
-            'ignoreQuestionIDs' => '',
-            'pendingDeleteIDs' => '',
-        ];
-        $db = Database::connection();
-        $oldBID = intval($data['bID']);
-
-        //if this block is being edited a second time, remove edited questions with the current bID that are pending replacement
-        //if( intval($oldBID) == intval($this->bID) ){
-            $vals = [intval($data['oldQsID'])];
-        $pendingQuestions = $db->getAll('SELECT msqID FROM btFormQuestions WHERE bID=0 && questionSetId=?', $vals);
-        foreach ($pendingQuestions as $pendingQuestion) {
-            $vals = [intval($this->bID), intval($pendingQuestion['msqID'])];
-            $db->query('DELETE FROM btFormQuestions WHERE bID=? AND msqID=?', $vals);
-        }
-        //}
-
-        //assign any new questions the new block id
-        $vals = [intval($data['bID']), intval($data['qsID']), intval($data['oldQsID'])];
-        $rs = $db->query('UPDATE btFormQuestions SET bID=?, questionSetId=? WHERE bID=0 && questionSetId=?', $vals);
-
-        //These are deleted or edited questions.  (edited questions have already been created with the new bID).
-        $ignoreQuestionIDsDirty = explode(',', $data['ignoreQuestionIDs']);
-        $ignoreQuestionIDs = [0];
-        foreach ($ignoreQuestionIDsDirty as $msqID) {
-            $ignoreQuestionIDs[] = intval($msqID);
-        }
-        $ignoreQuestionIDstr = implode(',', $ignoreQuestionIDs);
-
-        //remove any questions that are pending deletion, that already have this current bID
-        $pendingDeleteQIDsDirty = explode(',', $data['pendingDeleteIDs']);
-        $pendingDeleteQIDs = [];
-        foreach ($pendingDeleteQIDsDirty as $msqID) {
-            $pendingDeleteQIDs[] = intval($msqID);
-        }
-        $vals = [$this->bID, intval($data['qsID'])];
-        $pendingDeleteQIDs = implode(',', $pendingDeleteQIDs);
-        $unchangedQuestions = $db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (' . $pendingDeleteQIDs . ')', $vals);
-    }
-
-    /**
      * Duplicate will run when copying a page with a block, or editing a block for the first time within a page version (before the save).
+     *
+     * @param mixed $newBID
      */
     public function duplicate($newBID)
     {
@@ -312,7 +230,7 @@ class Controller extends BlockController
             //It should only generate a new question set id if the block is copied to a new page,
             //otherwise it will loose all of its answer sets (from all the people who've used the form on this page)
             $questionSetCIDs = $db->getCol("SELECT distinct cID FROM {$this->btTable} AS f, CollectionVersionBlocks AS cvb " .
-                        'WHERE f.bID=cvb.bID AND questionSetId=' . intval($row['questionSetId']));
+                        'WHERE f.bID=cvb.bID AND questionSetId=' . (int) ($row['questionSetId']));
 
             //this question set id is used on other pages, so make a new one for this page block
             if (count($questionSetCIDs) > 1 || !in_array($c->cID, $questionSetCIDs)) {
@@ -325,13 +243,13 @@ class Controller extends BlockController
 
             //duplicate survey block record
             //with a new Block ID and a new Question
-            $v = [$newQuestionSetId, $row['surveyName'], $row['submitText'], $newBID, $row['thankyouMsg'], intval($row['notifyMeOnSubmission']), $row['recipientEmail'], $row['displayCaptcha'], $row['addFilesToSet']];
+            $v = [$newQuestionSetId, $row['surveyName'], $row['submitText'], $newBID, $row['thankyouMsg'], (int) ($row['notifyMeOnSubmission']), $row['recipientEmail'], $row['displayCaptcha'], $row['addFilesToSet']];
             $q = "insert into {$this->btTable} ( questionSetId, surveyName, submitText, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?, ?,?)";
             $result = $db->Execute($q, $v);
 
-            $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=" . intval($this->bID));
+            $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=" . (int) ($this->bID));
             while ($row = $rs->fetchRow()) {
-                $v = [$newQuestionSetId, intval($row['msqID']), intval($newBID), $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']];
+                $v = [$newQuestionSetId, (int) ($row['msqID']), (int) $newBID, $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']];
                 $sql = "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                 $db->Execute($sql, $v);
             }
@@ -366,7 +284,7 @@ class Controller extends BlockController
         $db = Database::connection();
 
         //question set id
-        $qsID = intval($_POST['qsID']);
+        $qsID = (int) ($_POST['qsID']);
         if ($qsID == 0) {
             throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
         }
@@ -378,7 +296,7 @@ class Controller extends BlockController
         }
 
         //get all questions for this question set
-        $rows = $db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=? order by position asc, msqID", [$qsID, intval($this->bID)]);
+        $rows = $db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=? order by position asc, msqID", [$qsID, (int) ($this->bID)]);
 
         if (!count($rows)) {
             throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have any questions)."));
@@ -405,7 +323,7 @@ class Controller extends BlockController
                     $_POST['Question' . $row['msqID']] = $translated;
                 }
             }
-            if (intval($row['required']) == 1) {
+            if ((int) ($row['required']) == 1) {
                 $notCompleted = 0;
                 if ($row['inputType'] == 'email') {
                     if (!isset($emailValidator)) {
@@ -449,7 +367,7 @@ class Controller extends BlockController
                     continue;
                 }
                 $questionName = 'Question' . $row['msqID'];
-                if (!intval($row['required']) &&
+                if (!(int) ($row['required']) &&
                     (
                     !isset($_FILES[$questionName]['tmp_name']) || !is_uploaded_file($_FILES[$questionName]['tmp_name'])
                     )
@@ -470,8 +388,8 @@ class Controller extends BlockController
                         break;
                 }
                 } else {
-                    $tmpFileIds[intval($row['msqID'])] = $resp->getFileID();
-                    if (intval($this->addFilesToSet)) {
+                    $tmpFileIds[(int) ($row['msqID'])] = $resp->getFileID();
+                    if ((int) ($this->addFilesToSet)) {
                         $fs = new FileSet();
                         $fs = $fs->getByID($this->addFilesToSet);
                         if ($fs->getFileSetID()) {
@@ -488,7 +406,7 @@ class Controller extends BlockController
             $this->set('errorDetails', $errorDetails);
         } else { //no form errors
             //save main survey record
-            $u = new User();
+            $u = $this->app->make(User::class);
             $uID = 0;
             if ($u->isRegistered()) {
                 $uID = $u->getUserID();
@@ -525,14 +443,13 @@ class Controller extends BlockController
                     $answer = '';
                 } elseif ($row['inputType'] == 'fileupload') {
                     $answerLong = '';
-                    $answer = intval($tmpFileIds[intval($row['msqID'])]);
+                    $answer = (int) ($tmpFileIds[(int) ($row['msqID'])]);
                     if ($answer > 0) {
                         $answerDisplay = File::getByID($answer)->getVersion()->getDownloadURL();
                     } else {
                         $answerDisplay = t('No file specified');
                     }
-                } else if ($row['inputType'] == 'datetime') {
-
+                } elseif ($row['inputType'] == 'datetime') {
                     $formPage = $this->getCollectionObject();
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
                     if ($formPage) {
@@ -543,7 +460,6 @@ class Controller extends BlockController
                     } else {
                         $answerDisplay = $txt->sanitize($_POST['Question' . $row['msqID']]);
                     }
-
                 } elseif ($row['inputType'] == 'url') {
                     $answerLong = '';
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
@@ -595,7 +511,7 @@ class Controller extends BlockController
                 $db->Execute("delete from {$this->btAnswersTablename} where asID = ?", [$this->lastAnswerSetId]);
             }
 
-            if (intval($this->notifyMeOnSubmission) > 0 && !$foundSpam) {
+            if ((int) ($this->notifyMeOnSubmission) > 0 && !$foundSpam) {
                 if (Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
                     $formFormEmailAddress = Config::get('concrete.email.form_block.address');
                 } else {
@@ -620,7 +536,7 @@ class Controller extends BlockController
 
             //launch form submission event with dispatch method
             $formEventData = [];
-            $formEventData['bID'] = intval($this->bID);
+            $formEventData['bID'] = (int) ($this->bID);
             $formEventData['questionSetID'] = $this->questionSetId;
             $formEventData['replyToEmailAddress'] = $replyToEmailAddress;
             $formEventData['formFormEmailAddress'] = $formFormEmailAddress;
@@ -661,25 +577,25 @@ class Controller extends BlockController
         $info = $miniSurvey->getMiniSurveyBlockInfo($this->bID);
 
         //get all answer sets
-        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . intval($info['questionSetId']);
+        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . (int) ($info['questionSetId']);
         $answerSetsRS = $db->query($q);
 
         //delete the questions
-        $deleteData['questionsIDs'] = $db->getAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . intval($info['questionSetId']) . ' AND bID=' . intval($this->bID));
+        $deleteData['questionsIDs'] = $db->getAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . (int) ($info['questionSetId']) . ' AND bID=' . (int) ($this->bID));
         foreach ($deleteData['questionsIDs'] as $questionData) {
-            $db->query("DELETE FROM {$this->btQuestionsTablename} WHERE qID=" . intval($questionData['qID']));
+            $db->query("DELETE FROM {$this->btQuestionsTablename} WHERE qID=" . (int) ($questionData['qID']));
         }
 
         //delete left over answers
         $strandedAnswerIDs = $db->getAll('SELECT fa.aID FROM `btFormAnswers` AS fa LEFT JOIN btFormQuestions as fq ON fq.msqID=fa.msqID WHERE fq.msqID IS NULL');
         foreach ($strandedAnswerIDs as $strandedAnswer) {
-            $db->query('DELETE FROM `btFormAnswers` WHERE aID=' . intval($strandedAnswer['aID']));
+            $db->query('DELETE FROM `btFormAnswers` WHERE aID=' . (int) ($strandedAnswer['aID']));
         }
 
         //delete the left over answer sets
         $deleteData['strandedAnswerSetIDs'] = $db->getAll('SELECT aset.asID FROM btFormAnswerSet AS aset LEFT JOIN btFormAnswers AS fa ON aset.asID=fa.asID WHERE fa.asID IS NULL');
         foreach ($deleteData['strandedAnswerSetIDs'] as $strandedAnswerSetIDs) {
-            $db->query('DELETE FROM btFormAnswerSet WHERE asID=' . intval($strandedAnswerSetIDs['asID']));
+            $db->query('DELETE FROM btFormAnswerSet WHERE asID=' . (int) ($strandedAnswerSetIDs['asID']));
         }
 
         //delete the form block
@@ -689,5 +605,92 @@ class Controller extends BlockController
         parent::delete();
 
         return $deleteData;
+    }
+
+    protected function importAdditionalData($b, $blockNode)
+    {
+        if (isset($blockNode->data)) {
+            foreach ($blockNode->data as $data) {
+                if ($data['table'] != $this->getBlockTypeDatabaseTable()) {
+                    $table = (string) $data['table'];
+                    if (isset($data->record)) {
+                        foreach ($data->record as $record) {
+                            $aar = new \Concrete\Core\Legacy\BlockRecord($table);
+                            $aar->bID = $b->getBlockID();
+                            foreach ($record->children() as $node) {
+                                $nodeName = $node->getName();
+                                $aar->{$nodeName} = (string) $node;
+                            }
+                            if ($table == 'btFormQuestions') {
+                                $db = Database::connection();
+                                $aar->questionSetId = $db->GetOne('select questionSetId from btForm where bID = ?', [$b->getBlockID()]);
+                            }
+                            $aar->Replace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Ties the new or edited questions to the new block number.
+     * New and edited questions are temporarily given bID=0, until the block is saved... painfully complicated.
+     *
+     * @param array $data
+     */
+    protected function questionVersioning($data = [])
+    {
+        $data += [
+            'ignoreQuestionIDs' => '',
+            'pendingDeleteIDs' => '',
+        ];
+        $db = Database::connection();
+        $oldBID = (int) ($data['bID']);
+
+        //if this block is being edited a second time, remove edited questions with the current bID that are pending replacement
+        //if( intval($oldBID) == intval($this->bID) ){
+        $vals = [(int) ($data['oldQsID'])];
+        $pendingQuestions = $db->getAll('SELECT msqID FROM btFormQuestions WHERE bID=0 && questionSetId=?', $vals);
+        foreach ($pendingQuestions as $pendingQuestion) {
+            $vals = [(int) ($this->bID), (int) ($pendingQuestion['msqID'])];
+            $db->query('DELETE FROM btFormQuestions WHERE bID=? AND msqID=?', $vals);
+        }
+        //}
+
+        //assign any new questions the new block id
+        $vals = [(int) ($data['bID']), (int) ($data['qsID']), (int) ($data['oldQsID'])];
+        $rs = $db->query('UPDATE btFormQuestions SET bID=?, questionSetId=? WHERE bID=0 && questionSetId=?', $vals);
+
+        //These are deleted or edited questions.  (edited questions have already been created with the new bID).
+        $ignoreQuestionIDsDirty = explode(',', $data['ignoreQuestionIDs']);
+        $ignoreQuestionIDs = [0];
+        foreach ($ignoreQuestionIDsDirty as $msqID) {
+            $ignoreQuestionIDs[] = (int) $msqID;
+        }
+        $ignoreQuestionIDstr = implode(',', $ignoreQuestionIDs);
+
+        //remove any questions that are pending deletion, that already have this current bID
+        $pendingDeleteQIDsDirty = explode(',', $data['pendingDeleteIDs']);
+        $pendingDeleteQIDs = [];
+        foreach ($pendingDeleteQIDsDirty as $msqID) {
+            $pendingDeleteQIDs[] = (int) $msqID;
+        }
+        $vals = [$this->bID, (int) ($data['qsID'])];
+        $pendingDeleteQIDs = implode(',', $pendingDeleteQIDs);
+        $unchangedQuestions = $db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (' . $pendingDeleteQIDs . ')', $vals);
+    }
+
+    /**
+     * Internal helper function.
+     */
+    private function viewRequiresJqueryUI()
+    {
+        $whereInputTypes = "inputType = 'date' OR inputType = 'datetime'";
+        $sql = "SELECT COUNT(*) FROM {$this->btQuestionsTablename} WHERE questionSetID = ? AND bID = ? AND ({$whereInputTypes})";
+        $vals = [(int) ($this->questionSetId), (int) ($this->bID)];
+        $JQUIFieldCount = Database::connection()->GetOne($sql, $vals);
+
+        return (bool) $JQUIFieldCount;
     }
 }

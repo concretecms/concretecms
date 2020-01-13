@@ -130,9 +130,9 @@ class RegistrationService implements RegistrationServiceInterface
             // Now we notify any relevant users.
             $type = $this->application->make('manager/notification/types')->driver('user_signup');
             /* @var UserSignupType $type */
-            $u = new User();
+            $u = $this->application->make(User::class);
             $createdBy = null;
-            if (is_object($u)) {
+            if ($u->isRegistered()) {
                 $creator = $u->getUserInfoObject();
                 if (is_object($creator)) {
                     $createdBy = $creator->getEntityObject();

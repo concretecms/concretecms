@@ -11,6 +11,8 @@
     <field name="title" type="string" size="255"/>
     <field name="buttonText" type="string" size="128"/>
     <field name="baseSearchPath" type="string" size="255"/>
+    <field name="search_all" type="boolean"/>
+    <field name="allow_user_options" type="boolean"/>
     <field name="postTo_cID" type="integer">
       <unsigned/>
     </field>

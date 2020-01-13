@@ -53,7 +53,4 @@ class ExpressEntryResponse extends Response
             return $p->validate('delete_express_entries');
         }
     }
-
-
-
 }

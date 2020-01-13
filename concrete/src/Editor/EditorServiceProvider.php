@@ -4,37 +4,35 @@ namespace Concrete\Core\Editor;
 
 use AssetList;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Liaison;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Site\Service;
 
 class EditorServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->app->singleton(
-            EditorInterface::class,
+            CkeditorEditor::class,
             function (Application $app) {
-                $config = $app->make('site')->getSite()->getConfigRepository();
+                $siteService = $app->make('site');
+                $activeSite = $siteService->getActiveSiteForEditing();
+                $config = $activeSite->getConfigRepository();
+
                 $styles = $config->get('editor.ckeditor4.styles', []);
+
+                // Load plugins and select the site specific ones
                 $pluginManager = new PluginManager();
-                $selectedPlugins = $config->get('editor.ckeditor4.plugins.selected');
-                if (!is_array($selectedPlugins)) {
-                    $defaultPlugins = [];
-                    $selectedHiddenPlugins = [];
-                    if (is_array($config->get('editor.ckeditor4.plugins.selected_default'))) {
-                        $defaultPlugins = $config->get('editor.ckeditor4.plugins.selected_default');
-                    }
-                    if (is_array($config->get('editor.ckeditor4.plugins.selected_hidden'))) {
-                        $selectedHiddenPlugins = $config->get('editor.ckeditor4.plugins.selected_hidden');
-                    }
-                    $selectedPlugins = array_merge($defaultPlugins, $selectedHiddenPlugins);
-                }
-                $pluginManager->select($selectedPlugins);
                 $this->registerCkeditorPlugins($pluginManager);
                 $this->registerCorePlugins($pluginManager);
-                $editor = new CkeditorEditor($config, $pluginManager, $styles);
+                $pluginManager->select($this->resolveSelectedPlugins($activeSite, $config, $siteService));
+
+                $editor = $app->build(CkeditorEditor::class,
+                    ['config' => $config, 'pluginManager' => $pluginManager, 'styles' => $styles]);
                 $editor->setToken($app->make('token')->generate('editor'));
 
                 $filePermission = FilePermissions::getGlobal();
@@ -52,7 +50,8 @@ class EditorServiceProvider extends ServiceProvider
                 return $editor;
             }
         );
-        $this->app->alias(EditorInterface::class, 'editor');
+        $this->app->alias(CkeditorEditor::class, EditorInterface::class);
+        $this->app->alias(CkeditorEditor::class, 'editor');
     }
 
     protected function registerCkeditorPlugins(PluginManager $pluginManager)
@@ -354,5 +353,35 @@ class EditorServiceProvider extends ServiceProvider
         $plugin->setName(t('concrete5 Styles'));
         $plugin->requireAsset('editor/ckeditor4/concrete5styles');
         $pluginManager->register($plugin);
+    }
+
+    /**
+     * Find the selected ckeditor plugins
+     *
+     * @param \Concrete\Core\Entity\Site\Site $activeSite
+     * @param \Concrete\Core\Config\Repository\Liaison $config
+     * @param \Concrete\Core\Site\Service $siteService
+     *
+     * @return array
+     */
+    protected function resolveSelectedPlugins(Site $activeSite, Liaison $config, Service $siteService)
+    {
+        // Load the selected plugins from the current site
+        $selectedPlugins = $config->get('editor.ckeditor4.plugins.selected');
+
+        if (!is_array($selectedPlugins)) {
+            // Resolve the default config to use
+            if ($activeSite->getSiteHandle() === 'default') {
+                $defaultConfig = $config;
+            } else {
+                $defaultConfig = $siteService->getDefault()->getConfigRepository();
+            }
+
+            // Load in default selected plugins and hidden selected plugins
+            $selectedPlugins = (array) $defaultConfig->get('editor.ckeditor4.plugins.selected_default', []);
+            $selectedPlugins = array_merge($selectedPlugins, (array) $defaultConfig->get('editor.ckeditor4.plugins.selected_hidden', []));
+        }
+
+        return $selectedPlugins;
     }
 }

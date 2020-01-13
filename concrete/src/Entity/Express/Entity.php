@@ -417,7 +417,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return Association[]
      */
     public function getAssociations()
     {

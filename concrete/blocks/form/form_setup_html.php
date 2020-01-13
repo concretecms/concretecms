@@ -1,5 +1,5 @@
 <?php 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 $uh = Loader::helper('concrete/urls');
 $form = Loader::helper('form');
 $datetime = Loader::helper('form/date_time');
@@ -10,21 +10,21 @@ $bt = BlockType::getByHandle('form');
 $addSelected = true;
 ?>
 <p>
-<?php echo Loader::helper('concrete/ui')->tabs(array(
-    array('form-add', t('Add'), $addSelected),
-    array('form-edit', t('Edit')),
-    array('form-preview', t('Preview')),
-    array('form-options', t('Options')),
-));?>
+<?php echo Loader::helper('concrete/ui')->tabs([
+    ['form-add', t('Add'), $addSelected],
+    ['form-edit', t('Edit')],
+    ['form-preview', t('Preview')],
+    ['form-options', t('Options')],
+]); ?>
 </p>
 
 <input type="hidden" name="miniSurveyServices" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/services" />
 <?php /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 <input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value="" />
 <input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value="" />
-<input type="hidden" id="qsID" name="qsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ?  intval($miniSurveyInfo['questionSetId']) : 0 ?>" />
-<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ? intval($miniSurveyInfo['questionSetId']) : 0 ?>" />
-<input type="hidden" id="msqID" name="msqID" type="text" value="<?= isset($msqID) ? intval($msqID) : 0 ?>" />
+<input type="hidden" id="qsID" name="qsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ? (int) ($miniSurveyInfo['questionSetId']) : 0 ?>" />
+<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ? (int) ($miniSurveyInfo['questionSetId']) : 0 ?>" />
+<input type="hidden" id="msqID" name="msqID" type="text" value="<?= isset($msqID) ? (int) $msqID : 0 ?>" />
 	
 
 <div class="ccm-tab-content" id="ccm-tab-content-form-options">
@@ -46,14 +46,14 @@ $addSelected = true;
         </div>
 		<div class="form-group">
 			<?=$form->label('thankyouMsg', t('Message to display when completed'))?>
-			<?=$form->textarea('thankyouMsg', $this->controller->thankyouMsg, array('rows' => 3))?>
+			<?=$form->textarea('thankyouMsg', $this->controller->thankyouMsg, ['rows' => 3])?>
 		</div>
 		<div class="form-group">
 			<?=$form->label('recipientEmail', t('Send form submissions to email addresses'))?>
 			<div class="input-group">
 				<span class="input-group-addon" style="z-index: 2000">
-				<?=$form->checkbox('notifyMeOnSubmission', 1, isset($miniSurveyInfo['notifyMeOnSubmission']) && $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
-				</span><?=$form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;'))?>
+				<?=$form->checkbox('notifyMeOnSubmission', 1, isset($miniSurveyInfo['notifyMeOnSubmission']) && $miniSurveyInfo['notifyMeOnSubmission'] == 1, ['onclick' => "$('input[name=recipientEmail]').focus()"])?>
+				</span><?=$form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], ['style' => 'z-index:2000;'])?>
 			</div>
 			<span class="help-block"><?=t('(Separate multiple emails with a comma)')?></span>
 		</div>
@@ -92,7 +92,7 @@ $addSelected = true;
 
                     $fs = new FileSet();
                     $fileSets = $fs->getMySets();
-                    $sets = array(0 => t('None'));
+                    $sets = [0 => t('None')];
                     foreach ($fileSets as $fileSet) {
                         $sets[$fileSet->fsID] = $fileSet->fsName;
                     }
@@ -115,7 +115,7 @@ $addSelected = true;
 
 		<div class="form-group">
 			<?=$form->label('question', t('Question'))?>
-			<?=$form->text('question', array('maxlength' => '255'))?>
+			<?=$form->text('question', ['maxlength' => '255'])?>
 		</div>
 		<div class="form-group">
 			<?=$form->label('answerType', t('Answer Type'))?>
@@ -137,7 +137,7 @@ $addSelected = true;
 		<div id="answerOptionsArea">
 			<div class="form-group">
 				<?=$form->label('answerOptions', t('Answer Options'))?>
-				<?=$form->textarea('answerOptions', array('rows' => 3))?>
+				<?=$form->textarea('answerOptions', ['rows' => 3])?>
 				<span class="help-block"><?=t('Put each answer options on a new line')?></span>
 			</div>
 		</div>
@@ -158,10 +158,10 @@ $addSelected = true;
                 <?=$form->label('defaultDate', t('Default Value'))?>
                 <?=$form->select(
                     'defaultDate',
-                    array(
+                    [
                         '' => t('Blank'),
                         'now' => t('Current Date/Time'),
-                    ),
+                    ],
                     'blank'
                 )?>
             </div>
@@ -175,13 +175,13 @@ $addSelected = true;
 
 			<div id="emailSettings">
 				<div class="form-group">
-				<?php echo $form->label('send_notification_from', t('Reply to this email address'));?>
+				<?php echo $form->label('send_notification_from', t('Reply to this email address')); ?>
 				<span class="send_notification_from"><?php echo $form->checkbox('send_notification_from', 1); ?></span>
 			</div>
 		</div>
 
 
-		<?=$ih->button(t('Add Question'), '#', '', '', array('id' => 'addQuestion'))?>
+		<?=$ih->button(t('Add Question'), '#', '', '', ['id' => 'addQuestion'])?>
 
 	</fieldset> 
 
@@ -224,7 +224,7 @@ $addSelected = true;
 			<div id="answerOptionsAreaEdit">
 				<div class="form-group">
 					<?=$form->label('answerOptionsEdit', t('Answer Options'))?>
-					<?=$form->textarea('answerOptionsEdit', array('rows' => 3))?>
+					<?=$form->textarea('answerOptionsEdit', ['rows' => 3])?>
 					<span class="help-block"><?=t('Put each answer options on a new line')?></span>
 				</div>
 			</div>
@@ -245,10 +245,10 @@ $addSelected = true;
                     <?=$form->label('defaultDateEdit', t('Default Value'))?>
                     <?=$form->select(
                         'defaultDateEdit',
-                        array(
+                        [
                             '' => t('Blank'),
                             'now' => t('Current Date/Time'),
-                        ),
+                        ],
                         'blank'
                     )?>
                 </div>
@@ -262,7 +262,7 @@ $addSelected = true;
 
 			<div class="form-group">
 				<div id="emailSettingsEdit">
-					<?php echo $form->label('send_notification_from_edit', t('Reply to this email address'));?>
+					<?php echo $form->label('send_notification_from_edit', t('Reply to this email address')); ?>
 					<span class="send_notification_from_edit"><?php echo $form->checkbox('send_notification_from_edit', 1); ?></span>
 				</div>
 			</div>
@@ -271,8 +271,8 @@ $addSelected = true;
 		<input type="hidden" id="positionEdit" name="position" value="1000" />
 		
 		<div>
-			<?=$ih->button(t('Cancel'), 'javascript:void(0)', 'left', '', array('id' => 'cancelEditQuestion'))?>
-			<?=$ih->button(t('Save Changes'), 'javascript:void(0)', 'right', 'primary', array('id' => 'editQuestion'))?>
+			<?=$ih->button(t('Cancel'), 'javascript:void(0)', 'left', '', ['id' => 'cancelEditQuestion'])?>
+			<?=$ih->button(t('Save Changes'), 'javascript:void(0)', 'right', 'primary', ['id' => 'editQuestion'])?>
 		</div>
 	</div>
 

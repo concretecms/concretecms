@@ -72,7 +72,7 @@ class FileFolder extends AbstractController
             if (!isset($folder)) {
                 $folder = $this->filesystem->getRootFolder();
             }
-            $u = new User();
+            $u = $this->app->make(User::class);
             $list = $folder->getFolderItemList($u, $this->request);
             $fields = $this->request->get('field');
             $filters = [];
@@ -92,7 +92,6 @@ class FileFolder extends AbstractController
 
             if ($itemsPerPage) {
                 $list->setItemsPerPage($itemsPerPage);
-                $provider->setItemsPerPageSession($itemsPerPage);
             }
 
             if (count($filters)) {

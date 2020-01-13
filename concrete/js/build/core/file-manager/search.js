@@ -292,6 +292,11 @@
             my.reloadFolder();
         });
 
+        ConcreteEvent.unsubscribe('ConcreteTreeAddTreeNode.concreteTree');
+        ConcreteEvent.subscribe('ConcreteTreeAddTreeNode.concreteTree', function(e, r) {
+            my.reloadFolder();
+        });
+
         ConcreteEvent.unsubscribe('ConcreteTreeUpdateTreeNode.concreteTree');
         ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
@@ -439,24 +444,19 @@
 
     ConcreteFileManager.prototype.setupAddFolder = function() {
         var my = this;
-        $('a[data-launch-dialog=add-file-manager-folder]').on('click', function(e) {
-            $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
-            $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
-
-            $.fn.dialog.open({
-                element: 'div[data-dialog=add-file-manager-folder]',
-                modal: true,
-                width: 320,
-                title: 'Add Folder',
-                height: 'auto'
-            });
-
-            $('div[data-dialog=add-file-manager-folder]').on('dialogopen', function() {
-                var $this = $(this);
-                $this.off('dialogopen');
-                $this.find('[autofocus]').focus();
-            });
+        var data = {
+            treeNodeID: my.currentFolder
+        };
+        $('a[data-dialog=add-file-manager-folder]').on('click', function(e) {
             e.preventDefault();
+            $.fn.dialog.open({
+                width: 550,
+                height: 'auto',
+                modal: true,
+                title: ccmi18n_filemanager.addFiles,
+                data: data,
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/tree/node/add/file_folder'
+            });
         });
     };
 
