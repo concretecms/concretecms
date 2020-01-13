@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Authentication\Type\OAuth;
 
 use Concrete\Core\Database\Connection\Connection;
@@ -32,8 +33,6 @@ class BindingService implements LoggerAwareInterface
      * @param bool $matchBoth Match the userID and binding instead of one or the other
      *
      * @return int
-     *
-     * @throws Throwable
      */
     public function clearBinding($userId, $binding, $namespace, $matchBoth = false)
     {
@@ -45,7 +44,7 @@ class BindingService implements LoggerAwareInterface
             $existingBindingBound = $this->getUserBinding($userId, $namespace);
 
             // If we're matching both exactly, notify when an exact match will be deleted
-            if ($matchBoth && $existingUserBound === $userId && $existingBindingBound === (string) $binding) {
+            if ($matchBoth && $existingUserBound === (int) $userId && $existingBindingBound === (string) $binding) {
                 $this->logger->warning('Deleting user binding: User #{user} was bound to "{binding}" in "{namespace}".', [
                     'user' => $existingUserBound,
                     'binding' => $binding,
@@ -66,7 +65,7 @@ class BindingService implements LoggerAwareInterface
 
             // Notify the log of the deletion if it doesn't match what we're inserting
             if ($existingBindingBound && $existingBindingBound !== (string) $binding) {
-                $this->logger->warning('Deleting user binding" User #{user} was bound to "{binding}" in "{namespace}".', [
+                $this->logger->warning('Deleting user binding: User #{user} was bound to "{binding}" in "{namespace}".', [
                     'user' => $userId,
                     'binding' => $existingBindingBound,
                     'namespace' => $namespace,
@@ -76,24 +75,32 @@ class BindingService implements LoggerAwareInterface
         }
 
         // Clear all bindings that match the existing user id OR binding
-        return $db->transactional(static function (Connection $db) use ($userId, $binding, $namespace, $matchBoth) {
-            $qb = $db->createQueryBuilder();
-            $ex = $qb->expr();
+        $total = 0;
+        try {
+            $db->transactional(static function (Connection $db) use ($userId, $binding, $namespace, $matchBoth, &$total) {
+                $qb = $db->createQueryBuilder();
+                $ex = $qb->expr();
 
-            $userMatch = $ex->eq('user_id', ':id');
-            $bindingMatch = $ex->eq('binding', ':binding');
-            $matches = $matchBoth ? $ex->andX($userMatch, $bindingMatch) : $ex->orX($userMatch, $bindingMatch);
+                $userMatch = $ex->eq('user_id', ':id');
+                $bindingMatch = $ex->eq('binding', ':binding');
+                $matches = $matchBoth ? $ex->andX($userMatch, $bindingMatch) : $ex->orX($userMatch, $bindingMatch);
 
-            $qb->delete('OauthUserMap');
-            $qb->where($ex->eq('namespace', ':namespace'))->andWhere($matches);
-            $qb->setParameters([
-                'namespace' => (string) $namespace,
-                'id' => (int) $userId,
-                'binding' => $binding,
-            ]);
+                $qb->delete('OauthUserMap');
+                $qb->where($ex->eq('namespace', ':namespace'))->andWhere($matches);
+                $qb->setParameters([
+                    'namespace' => (string) $namespace,
+                    'id' => (int) $userId,
+                    'binding' => $binding,
+                ]);
 
-            return $qb->execute();
-        });
+                $result = $qb->execute();
+                $total = $result->fetchColumn();
+            });
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to delete binding.');
+        }
+
+        return $total;
     }
 
     /**
@@ -188,11 +195,13 @@ class BindingService implements LoggerAwareInterface
             throw new \RuntimeException('Failed to bind user.');
         }
 
-        $this->logger->warning('Bound user: User #{user} is now bound to "{binding}" in "{namespace}".', [
-            'user' => $id,
-            'binding' => $binding,
-            'namespace' => $namespace,
-        ]);
+        if ($this->logger) {
+            $this->logger->warning('Bound user: User #{user} is now bound to "{binding}" in "{namespace}".', [
+                'user' => $id,
+                'binding' => $binding,
+                'namespace' => $namespace,
+            ]);
+        }
 
         return true;
     }

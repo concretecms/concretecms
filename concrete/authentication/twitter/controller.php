@@ -110,9 +110,7 @@ class Controller extends GenericOauth1aTypeController
 
         // Twitter Sign in is Oauth 1 so we can't revoke access only delete from the database
         try {
-            /* @var \Concrete\Core\Database\Connection\Connection $database */
-            $database = $this->app->make(Connection::class);
-            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
+            $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {

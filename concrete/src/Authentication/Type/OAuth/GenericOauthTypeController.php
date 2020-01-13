@@ -31,17 +31,23 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     protected $token;
 
-
     /* @var string $username */
     protected $username;
+
     /* @var string $email */
     protected $email;
+
     /* @var string $firstName */
     protected $firstName;
+
     /* @var string $lastName */
     protected $lastName;
+
     /* @var string $fullName */
     protected $fullName;
+
+    /** @var BindingService|null The service used to manage oauth user bindings */
+    protected $bindingService;
 
     public function __construct(AuthenticationType $type = null)
     {
@@ -298,20 +304,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * @param $binding
      *
-     * @return bool|string
+     * @return int|bool False if no user id is bound
      *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function getBoundUserID($binding)
     {
-        $result = $this->app->make(Connection::class)->executeQuery(
-            'SELECT user_id FROM OauthUserMap WHERE namespace=? AND binding=?',
-            [
-                $this->getHandle(),
-                $binding,
-            ]);
-
-        return $result->fetchColumn();
+        $id = $this->getBindingService()->getBoundUserId($binding, $this->getHandle());
+        return $id === null ? false : $id;
     }
 
     /**
@@ -505,28 +505,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if (!$binding || !$user_id) {
             return null;
         }
-        $qb = $this->app->make(Connection::class)->createQueryBuilder();
 
-        $or = $qb->expr()->orX();
-        $or->add($qb->expr()->eq('user_id', intval($user_id, 10)));
-        $or->add($qb->expr()->eq('binding', ':binding'));
+        if ($this->getBindingService()->bindUserId($user_id, $binding, $this->getHandle())) {
+            return 1;
+        }
 
-        $and = $qb->expr()->andX();
-        $and->add($qb->expr()->comparison('namespace', '=', ':namespace'));
-        $and->add($or);
-
-        $qb->delete('OauthUserMap')->where($and)
-           ->setParameter(':namespace', $this->getHandle())
-           ->setParameter(':binding', $binding)
-           ->execute();
-
-        return $this->app->make(Connection::class)->insert(
-            'OauthUserMap',
-            [
-                'user_id' => $user_id,
-                'binding' => $binding,
-                'namespace' => $this->getHandle(),
-            ]);
+        return null;
     }
 
     /**
@@ -538,30 +522,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function getBindingForUser($user)
     {
-        $result = null;
-        if (is_object($user)) {
-            $userID = $user->getUserID();
-        } else {
-            $userID = (int) $user;
-        }
-        if ($userID) {
-            $db = $this->app->make(Connection::class);
-            $qb = $db->createQueryBuilder();
-            $qb->select('oum.binding')
-                ->from('OauthUserMap', 'oum')
-                ->where($qb->expr()->eq('oum.user_id', ':user_id'))->setParameter('user_id', $userID)
-                ->andWhere($qb->expr()->eq('oum.namespace', ':namespace'))->setParameter('namespace', $this->getHandle())
-                ->setMaxResults(1);
-            $rs = $qb->execute();
-            /* @var \Concrete\Core\Database\Driver\PDOStatement $rs */
-            $row = $rs->fetch();
-            $rs->closeCursor();
-            if ($row !== false) {
-                $result = array_pop($row);
-            }
-        }
-
-        return $result;
+        return $this->getBindingService()->getUserBinding($user, $this->getHandle());
     }
 
     public function getUniqueId()
@@ -591,9 +552,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
         try {
-            /* @var \Concrete\Core\Database\Connection\Connection $database */
-            $database = $this->app->make(Connection::class);
-            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
+            $this->getBindingService()->clearBinding($uID, $namespace, $binding);
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {
@@ -601,5 +560,17 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $this->showError(t('Unable to detach account.'));
             exit;
         }
+    }
+
+    /**
+     * @return BindingService
+     */
+    protected function getBindingService()
+    {
+        if (!$this->bindingService) {
+            $this->bindingService = $this->app->make(BindingService::class);
+        }
+
+        return $this->bindingService;
     }
 }
