@@ -335,6 +335,7 @@ class Controller extends BlockController
             'externalTarget' => 0,
             'resultsURL' => '',
             'resultsPageKind' => '',
+            'allowUserOptions' => '',
         ];
         $args = [
             'title' => (string) $data['title'],
