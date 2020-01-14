@@ -8,6 +8,7 @@ exemptLabels:
   - "Status:On Hold"
   - "Status:Proposal"
   - "Status:Ready to Merge"
+  - "Status:Available"
 # Label to use when marking an issue as stale
 staleLabel: Stale
 # Comment to post when marking an issue as stale. Set to `false` to disable
