@@ -1,7 +1,7 @@
 <?php
 
-use CommunityTranslation\Notification\CategoryInterface;
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Category\StandardCategoryInterface;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\StandardSetManager;
 use Concrete\Core\Page;
@@ -24,7 +24,8 @@ $app = Application::getFacadeApplication();
 $form = $app->make('helper/form');
 $valt = $app->make('helper/validation/token');
 
-if (!isset($category) || !$category instanceof CategoryInterface) {
+
+if (!isset($category) || !$category instanceof StandardCategoryInterface) {
     $category = null;
 }
 if (!isset($key) || !$key instanceof AttributeKeyInterface) {
@@ -135,7 +136,7 @@ if ($key !== null) {
     </fieldset>
 
     <?php
-    if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
+    if ($category) {
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
         View::element(
             'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
