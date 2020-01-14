@@ -178,8 +178,11 @@ class SessionFactory implements SessionFactoryInterface
         $storage = $app->make(NativeSessionStorage::class, [[], $handler]);
 
         // Initialize the storage with some options
-        $options = array_get($config, 'cookie', []);
-        $options['gc_maxlifetime'] = array_get($config, 'max_lifetime');
+        $options = array_get($config, 'cookie', []) + [
+            'gc_maxlifetime' => (int) array_get($config, 'max_lifetime') ?: (int) ini_get('session.gc_maxlifetime') ?: 7200,
+            'gc_probability' => (int) array_get($config, 'gc_probability') ?: (int) ini_get('session.gc_probability') ?: 1,
+            'gc_divisor' => (int) array_get($config, 'gc_divisor') ?: (int) ini_get('session.gc_divisor') ?: 100,
+        ];
 
         if (array_get($options, 'cookie_path', false) === false) {
             $options['cookie_path'] = $app['app_relative_path'] . '/';
