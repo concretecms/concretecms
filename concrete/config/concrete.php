@@ -395,6 +395,19 @@ return [
                 'configuration' => [],
             ],
         ],
+
+        'http' => [
+            /*
+             * Whitelist of loggable http content types
+             * Supports wildcards
+             */
+            'content-types' => [
+                'text/*',
+                'application/json',
+                'application/xml',
+                'application/*+xml'
+            ]
+        ],
     ],
     'jobs' => [
         'enable_scheduling' => true,
