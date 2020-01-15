@@ -138,7 +138,7 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
         if ($repliedPos > -1) {
             $repliedText = substr($msgBody, $repliedPos);
             $messageText = substr($msgBody, 0, $repliedPos);
-            $msgBody = $messageText . '<div class="ccm-profile-message-replied">' . nl2br($txt->entities($repliedText)) . '</div>';
+            $msgBody = nl2br($txt->entities($messageText)) . '<div class="ccm-profile-message-replied">' . nl2br($txt->entities($repliedText)) . '</div>';
             $msgBody = str_replace($this->getMessageDelimiter(), '<hr />', $msgBody);
         } else {
             $msgBody = nl2br($txt->entities($msgBody));
