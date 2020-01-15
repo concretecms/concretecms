@@ -147,6 +147,7 @@ class LinkAbstractor extends ConcreteObject
                     $tag = $image->getTag();
 
                     foreach ($picture->attr as $attr => $val) {
+                        $attr = (string) $attr;
                         if (!in_array($attr, self::$blackListImgAttributes)) {
                             //Apply attributes to child img, if using picture tag.
                             if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
