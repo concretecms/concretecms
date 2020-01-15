@@ -80,7 +80,7 @@ class Image
                     }
                 }
             }
-            $this->tag = Picture::create($sources, $fallbackSrc, $attributes, $options['lazyLoadNative'], $options['lazyLoadJavaScript']);
+            $this->tag = Picture::create($sources, $fallbackSrc, [], $options['lazyLoadNative'], $options['lazyLoadJavaScript']);
         } else {
             $path = $f->getRelativePath();
             if (!$path) {
@@ -90,7 +90,7 @@ class Image
             if ($options['lazyLoadJavaScript']) {
                 // Return a simple img element wrapped in "<noscript></noscript>" and an img element with the
                 // image file path set to "data-src". Both img elements have the "loading" attribute optionally set to "lazy".
-                $this->tag = JavaScriptLazyImage::create($path, $attributes, $options['lazyLoadNative']);
+                $this->tag = JavaScriptLazyImage::create($path, [], $options['lazyLoadNative']);
             } else {
                 // Return a simple img element.
                 $this->tag = HtmlObjectImage::create($path);
