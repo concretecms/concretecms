@@ -29,61 +29,22 @@ if (isset($show_email) && $show_email) {
     <?php
 
 } else {
-    if ($user->isLoggedIn()) {
-        ?>
-
-        <?php if ($authenticationType->isHooked($user)):
-            ?>
-            <div class="form-group">
+    ?>
+    <div class="form-group">
         <span>
-            <?= t('Detach your %s account', t('twitter')) ?>
+            <?= t('Sign in with %s', t('twitter')) ?>
         </span>
-                <hr>
-            </div>
-            <div class="form-group">
-                <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_detach');
-                ?>" class="btn btn-primary btn-twitter btn-block">
-                    <i class="fa fa-twitter"></i>
-                    <?= t('Detach your %s account', t('twitter')) ?>
-                </a>
-            </div>
-
-        <?php else: ?>
-            <div class="form-group">
-            <span>
-                <?= t('Attach a %s account', t('twitter')) ?>
-            </span>
-                <hr>
-            </div>
-            <div class="form-group">
-                <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach');
-                ?>"
-                   class="btn btn-primary btn-twitter btn-block">
-                    <i class="fa fa-twitter"></i>
-                    <?= t('Attach a %s account', t('twitter')) ?>
-                </a>
-            </div>
-        <?php endif;
-
-    } else {
-        ?>
-        <div class="form-group">
-            <span>
-                <?= t('Sign in with %s', t('twitter')) ?>
-            </span>
-            <hr>
-        </div>
-        <div class="form-group">
-            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_auth');
-            ?>"
-               class="btn btn-primary btn-twitter btn-block">
-                <i class="fa fa-twitter"></i>
-                <?= t('Log in with %s', 'twitter') ?>
-            </a>
-        </div>
-        <?php
-
-    }
+        <hr>
+    </div>
+    <div class="form-group">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_auth');
+        ?>"
+           class="btn btn-primary btn-twitter btn-block">
+            <i class="fa fa-twitter"></i>
+            <?= t('Log in with %s', 'twitter') ?>
+        </a>
+    </div>
+    <?php
 
 }
 ?>
