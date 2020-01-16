@@ -143,6 +143,7 @@ var ccmi18n_sitemap = ' . json_encode([
                 'pageLocationTitle' => t('Location'),
                 'visitExternalLink' => t('Visit'),
                 'editExternalLink' => t('Edit External Link'),
+                'editAlias' => t('Edit Alias'),
                 'deleteExternalLink' => t('Delete'),
                 'copyProgressTitle' => t('Copy Progress'),
                 'addExternalLink' => t('Add External Link'),
