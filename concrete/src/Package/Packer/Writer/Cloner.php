@@ -129,7 +129,7 @@ class Cloner implements WriterInterface
             $this->output->writeln(t('Creating directory %s', $this->destinationDirectory));
         }
         if (!$this->fs->makeDirectory($this->destinationDirectory)) {
-            throw new RuntimeException(t('Failed to create the directory %.', $this->destinationDirectory));
+            throw new RuntimeException(t('Failed to create the directory %s.', $this->destinationDirectory));
         }
     }
 
@@ -150,7 +150,7 @@ class Cloner implements WriterInterface
             $this->output->writeln(t('Creating directory %s', $relativePath));
         }
         if (!$this->fs->makeDirectory($absoluteDestinationPath)) {
-            throw new RuntimeException(t('Failed to create the directory %.', $absoluteDestinationPath));
+            throw new RuntimeException(t('Failed to create the directory %s.', $absoluteDestinationPath));
         }
     }
 
