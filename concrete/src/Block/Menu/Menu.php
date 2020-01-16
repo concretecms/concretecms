@@ -172,10 +172,10 @@ class Menu extends ContextMenu
                 $this->addItem(new DividerItem());
                 if ($canDesign || $canEditCustomTemplate) {
                     if ($canDesign) {
-                        $menuItemText = t('Design &amp; Custom Template');
+                        $menuItemText = t('Design &amp; Block Template');
                     }
                     else {
-                        $menuItemText = t('Custom Template');
+                        $menuItemText = t('Block Template');
                     }
                     $this->addItem(new LinkItem('#', $menuItemText, [
                         'data-menu-action' => 'block_design',

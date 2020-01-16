@@ -112,6 +112,6 @@ class ContextMenuTest extends TestCase
         $menu = new \Concrete\Core\Application\UserInterface\ContextMenu\Menu();
         $menu->addItem($item);
         $html = (string) $menu->getMenuElement();
-        $this->assertEquals('<div class="popover fade"><div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu"><li><a href="#" data-tree-action="edit-node" dialog-title="Edit Permissions" data-tree-action-url="http://www.dummyco.com/path/to/server/index.php/ccm/system/dialogs/tree/node/permissions?treeNodeID=3">Edit Permissions</a></li></ul></div></div>', $html);
+        $this->assertEquals('<div class="popover fade"><div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu"><li><a href="#" data-tree-action="edit-node" dialog-title="Edit Permissions" data-tree-action-url="http://www.dummyco.com/path/to/server/index.php/ccm/system/dialogs/tree/node/permissions?treeNodeID=3" dialog-width="520" dialog-height="450">Edit Permissions</a></li></ul></div></div>', $html);
     }
 }
