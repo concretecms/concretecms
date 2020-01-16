@@ -817,14 +817,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Database Query Log" path="/dashboard/system/optimization/query_log"
-              filename="/dashboard/system/optimization/query_log.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>queries, database, mysql</value>
-                </attributekey>
-            </attributes>
-        </page>
 
         <page name="Permissions &amp; Access" path="/dashboard/system/permissions"
               filename="/dashboard/system/permissions/view.php" pagetype=""

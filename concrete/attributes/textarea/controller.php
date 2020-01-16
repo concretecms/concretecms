@@ -74,7 +74,7 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
             return htmLawed($value, ['safe' => 1]);
         }
 
-        return htmLawed($value, ['safe' => 1, 'deny_attribute' => 'style']);
+        return nl2br(h($value));
     }
 
     public function form()

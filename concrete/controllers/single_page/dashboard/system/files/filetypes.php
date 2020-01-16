@@ -7,17 +7,19 @@ use Loader;
 
 class Filetypes extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui', 'validation/token', 'concrete/file');
+    public $helpers = array('form', 'concrete/ui', 'concrete/file');
 
     public function view()
     {
-        $helper_file = Loader::helper('concrete/file');
-
-        $file_access_file_types = $helper_file->unserializeUploadFileExtensions(
-            Config::get('concrete.upload.extensions'));
-
+        $config = $this->app->make('config');
+        $helper_file = $this->app->make('helper/concrete/file');
+        
+        $file_access_file_types = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
         $file_access_file_types = implode(', ', $file_access_file_types);
         $this->set('file_access_file_types', $file_access_file_types);
+
+        $file_access_file_types_blacklist = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions_blacklist'));
+        $this->set('file_access_file_types_blacklist', $file_access_file_types_blacklist);
     }
 
     public function saved()
