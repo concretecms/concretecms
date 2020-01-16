@@ -105,6 +105,7 @@ ConcreteFileManager.prototype.setupRowDragging = function() {
         });
 
         my.$element.find('tr[data-file-manager-tree-node-type=file_folder], ol[data-search-navigation=breadcrumb] a[data-file-manager-tree-node]').droppable({
+            accept: '.ccm-search-results-folder, .ccm-search-results-file',
             tolerance: 'pointer',
             hoverClass: 'ccm-search-select-active-droppable',
             drop: function(event, ui) {

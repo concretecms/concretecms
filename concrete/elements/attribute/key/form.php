@@ -1,7 +1,7 @@
 <?php
 
-use CommunityTranslation\Notification\CategoryInterface;
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\StandardSetManager;
 use Concrete\Core\Page;

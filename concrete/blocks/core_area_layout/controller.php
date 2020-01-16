@@ -63,6 +63,17 @@ class Controller extends BlockController
             $this->requireAsset('javascript', 'jquery');
             $this->requireAsset('javascript', 'core/frontend/parallax-image');
         }
+
+        $arLayout = $this->getAreaLayoutObject();
+        if (is_object($arLayout)) {            
+            if ($arLayout instanceof CustomLayout) {
+                $asset = new CssAsset();
+                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $arLayout->getAreaLayoutID()));
+                $asset->setAssetSupportsMinification(false);
+                $asset->setAssetSupportsCombination(false);
+                $this->requireAsset($asset);
+            }
+        }
     }
 
     public function duplicate($newBID)
@@ -253,13 +264,6 @@ class Controller extends BlockController
             if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
                 $pt = $c->getCollectionThemeObject();
                 $gf = $pt->getThemeGridFrameworkObject();
-            }
-            if ($this->arLayout instanceof CustomLayout) {
-                $asset = new CssAsset();
-                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->arLayout->getAreaLayoutID()));
-                $asset->setAssetSupportsMinification(false);
-                $asset->setAssetSupportsCombination(false);
-                $this->requireAsset($asset);
             }
 
             $formatter = $this->arLayout->getFormatter();

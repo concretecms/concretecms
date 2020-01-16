@@ -31,21 +31,21 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
         $db = Database::connection();
         $db->executeQuery('delete from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
         $db->executeQuery('delete from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-        if (is_array($args['blockTypesIncluded'])) {
+        if (!empty($args['blockTypesIncluded']) && is_array($args['blockTypesIncluded'])) {
             foreach ($args['blockTypesIncluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
                 $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
-        if (is_array($args['blockTypesExcluded'])) {
+        if (!empty($args['blockTypesExcluded']) && is_array($args['blockTypesExcluded'])) {
             foreach ($args['blockTypesExcluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
                 $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
-        if (is_array($args['btIDInclude'])) {
+        if (!empty($args['btIDInclude']) && is_array($args['btIDInclude'])) {
             foreach ($args['btIDInclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = array($this->getPermissionAccessID(), $peID, $btID);
@@ -54,7 +54,7 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
             }
         }
 
-        if (is_array($args['btIDExclude'])) {
+        if (!empty($args['btIDExclude']) && is_array($args['btIDExclude'])) {
             foreach ($args['btIDExclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = array($this->getPermissionAccessID(), $peID, $btID);
