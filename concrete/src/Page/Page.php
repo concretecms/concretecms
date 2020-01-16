@@ -956,7 +956,7 @@ class Page extends Collection implements CategoryMemberInterface,
      *     <li>string <code>aliasHandle</code> the URL slug of the alias</li>
      * </ul>
      */
-    public function updateCollectionAlias(array $data)
+    public function updateCollectionAlias(array $data): void
     {
         if (!$this->isAliasPage()) {
             return;
@@ -1710,7 +1710,7 @@ class Page extends Collection implements CategoryMemberInterface,
      *
      * @return string|null NULL if the page is not an alias, empty string if we should use the name of the aliased page, the custom alias name otherwise.
      */
-    public function getCustomAliasName()
+    public function getCustomAliasName(): ?string
     {
         return $this->customAliasName;
     }
@@ -1720,7 +1720,7 @@ class Page extends Collection implements CategoryMemberInterface,
      *
      * @return string|null NULL if the page is not an alias, the alias handle otherwise
      */
-    public function getAliasHandle()
+    public function getAliasHandle(): ?string
     {
         return $this->aliasHandle;
     }

@@ -28,7 +28,7 @@ class Version20200116115000 extends AbstractMigration implements RepeatableMigra
      *
      * @return bool
      */
-    private function shouldUpdateCollectionVersions()
+    private function shouldUpdateCollectionVersions(): bool
     {
         $config = $this->app->make('config');
         $lastPerformedMigrationID = (string) $config->get('concrete.version_db_installed');
@@ -44,7 +44,7 @@ class Version20200116115000 extends AbstractMigration implements RepeatableMigra
      * Clear the cvName field of the CollectionVersions table for aliases,
      * so that concrete5 knows that users want the current name of the aliased page.
      */
-    private function updateCollectionVersions()
+    private function updateCollectionVersions(): void
     {
         $this->connection->executeUpdate(
             <<<'EOT'
