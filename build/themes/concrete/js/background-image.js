@@ -23,10 +23,11 @@ $(function () {
                     .attr('src', backgroundFade))
             .fadeIn();
     }, 0);
-
+    
     if (backgroundImage !== 'none' && !backgroundUrl) {
         var date = new Date(), shown = false, info;
-        var image = date.getFullYear() + '' + (date.getMonth() + 1) + '' + date.getDate() + '.jpg';
+        date = date.toISOString().split('T')[0].replace(/-/g, '');
+        var image = date + '.jpg';
         $.getJSON(CCM_DISPATCHER_FILENAME + '/tools/required/dashboard/get_image_data', {'image': image}, function (responseData) {
             info = responseData;
         });
