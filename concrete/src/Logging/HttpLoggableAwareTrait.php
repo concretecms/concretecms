@@ -78,8 +78,7 @@ trait HttpLoggableAwareTrait
 
             if (is_array($types)) {
                 foreach($types as $type) {
-                    preg_match($type, $responseContentType, $matches);
-                    if (count($matches)) {
+                    if (preg_match($type, $responseContentType)) {
                         $isLoggable = true;
                         break;
                     }
