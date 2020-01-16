@@ -275,6 +275,13 @@ class User extends ConcreteObject
         $db = $app['database']->connection();
         $uLastLogin = $db->getOne('select uLastLogin from Users where uID = ?', [$this->uID]);
 
+        // Add a log entry
+        $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_AUTHENTICATION);
+        $logger->info(t('Login from user {user} (ID {id}) succeeded'), [
+            'user' => $this->getUserName(),
+            'id' => $this->getUserID(),
+        ]);
+
         /** @var \Concrete\Core\Permission\IPService $iph */
         $iph = $app->make('helper/validation/ip');
         $ip = $iph->getRequestIP();
