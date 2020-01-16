@@ -4,8 +4,10 @@ $form = \Core::make('helper/form');
 $file = \Core::make('helper/file');
 $token = \Core::make('token');
 
-echo Core::make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conversations Settings'), false,
-    'span8 offset2', false);
+/**
+ * @var string[] $file_access_file_types_blacklist
+ */
+
 ?>
 <form action="<?= $view->action('save') ?>" method='post'>
     <?php $token->output('conversations.settings.save') ?>
@@ -41,6 +43,16 @@ echo Core::make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('C
         <div class="form-group">
             <label class="control-label"><?= t('Allowed File Extensions (Comma separated, no periods).') ?></label>
             <?= $form->textarea('fileExtensions', $fileExtensions) ?>
+            <?php
+            if ($file_access_file_types_blacklist !== []) {
+                ?>
+                <div class="text-muted small">
+                    <?= t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $file_access_file_types_blacklist) . '</code>') ?><br />
+                    <?= t('If you want to unblock these extensions, you have to manually set the %s configuration key.', '<code>conversations.files.disallowed_types</code>') ?>
+                </div>
+                <?php
+            }
+            ?>
         </div>
     </fieldset>
     <fieldset>
