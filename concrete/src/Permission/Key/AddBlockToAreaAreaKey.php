@@ -125,7 +125,6 @@ class AddBlockToAreaAreaKey extends AreaKey
      */
     protected function getAllowedBlockTypeIDsFor($operation)
     {
-        $u = new User();
         $pae = $this->getPermissionAccessObject();
         if (!is_object($pae)) {
             return [];

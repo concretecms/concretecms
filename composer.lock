@@ -1337,12 +1337,12 @@
             "version": "2.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mlocati/cldr-to-gettext-plural-rules.git",
+                "url": "https://github.com/php-gettext/Languages.git",
                 "reference": "78db2d17933f0765a102f368a6663f057162ddbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/cldr-to-gettext-plural-rules/zipball/78db2d17933f0765a102f368a6663f057162ddbd",
+                "url": "https://api.github.com/repos/php-gettext/Languages/zipball/78db2d17933f0765a102f368a6663f057162ddbd",
                 "reference": "78db2d17933f0765a102f368a6663f057162ddbd",
                 "shasum": ""
             },
@@ -2770,16 +2770,16 @@
         },
         {
             "name": "mlocati/concrete5-translation-library",
-            "version": "1.5.12",
+            "version": "1.5.13",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "26f806c8c1ecb6ce63115a4058ab396303622e00"
+                "url": "https://github.com/concrete5-community/translation-library.git",
+                "reference": "1ed0b6da8d9e4ca20531f3d92e8a50c1ce621ce6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/26f806c8c1ecb6ce63115a4058ab396303622e00",
-                "reference": "26f806c8c1ecb6ce63115a4058ab396303622e00",
+                "url": "https://api.github.com/repos/concrete5-community/translation-library/zipball/1ed0b6da8d9e4ca20531f3d92e8a50c1ce621ce6",
+                "reference": "1ed0b6da8d9e4ca20531f3d92e8a50c1ce621ce6",
                 "shasum": ""
             },
             "require": {
@@ -2805,7 +2805,7 @@
                 }
             ],
             "description": "Library to handle concrete5 core and package translations",
-            "homepage": "https://github.com/mlocati/concrete5-translation-library",
+            "homepage": "https://github.com/concrete5-community/translation-library",
             "keywords": [
                 "concrete5",
                 "i18n",
@@ -2816,7 +2816,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2018-07-17T06:08:03+00:00"
+            "time": "2020-01-14T10:34:25+00:00"
         },
         {
             "name": "mlocati/ip-lib",
@@ -5523,6 +5523,7 @@
                 "cache",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-cache",
             "time": "2016-12-16T11:35:47+00:00"
         },
         {
@@ -5585,6 +5586,7 @@
                 "code",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-code",
             "time": "2016-04-20T17:26:42+00:00"
         },
         {
@@ -5629,6 +5631,7 @@
                 "escaper",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-escaper",
             "time": "2016-06-30T19:48:38+00:00"
         },
         {
@@ -5683,6 +5686,7 @@
                 "events",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-eventmanager",
             "time": "2016-02-18T20:53:00+00:00"
         },
         {
@@ -5744,6 +5748,7 @@
                 "feed",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-feed",
             "time": "2016-02-11T18:54:29+00:00"
         },
         {
@@ -5804,6 +5809,7 @@
                 "http",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-http",
             "time": "2017-01-31T14:41:02+00:00"
         },
         {
@@ -5862,6 +5868,7 @@
                 "hydrator",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-hydrator",
             "time": "2016-02-18T22:38:26+00:00"
         },
         {
@@ -5929,6 +5936,7 @@
                 "i18n",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-i18n",
             "time": "2016-06-07T21:08:30+00:00"
         },
         {
@@ -5973,6 +5981,7 @@
                 "loader",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-loader",
             "time": "2015-06-03T14:05:47+00:00"
         },
         {
@@ -6043,6 +6052,7 @@
                 "mail",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-mail",
             "time": "2017-02-14T18:03:34+00:00"
         },
         {
@@ -6092,6 +6102,7 @@
                 "mime",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-mime",
             "time": "2017-01-16T16:43:38+00:00"
         },
         {
@@ -6147,6 +6158,7 @@
                 "servicemanager",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-servicemanager",
             "time": "2016-12-19T19:51:37+00:00"
         },
         {
@@ -6216,6 +6228,7 @@
                 "stdlib",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-stdlib",
             "time": "2016-04-12T21:17:31+00:00"
         },
         {
@@ -6263,6 +6276,7 @@
                 "uri",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-uri",
             "time": "2016-02-17T22:38:51+00:00"
         },
         {
@@ -6344,6 +6358,7 @@
                 "validator",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-validator",
             "time": "2017-01-29T17:24:24+00:00"
         }
     ],

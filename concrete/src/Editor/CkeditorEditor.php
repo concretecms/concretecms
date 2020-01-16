@@ -158,13 +158,22 @@ class CkeditorEditor implements EditorInterface
             if (CKEDITOR.stylesSet.get('concrete5styles') === null) {
                 CKEDITOR.stylesSet.add('concrete5styles', {$this->getStylesJson()});
             }
-            var ckeditor = $(identifier).ckeditor({$options}).editor;
+            var element = $(identifier),
+                form = element.closest('form'),
+                ckeditor = element.ckeditor({$options}).editor;
+            function resetMode() {
+                if (ckeditor.mode === 'source' && ckeditor.setMode) {
+                    ckeditor.setMode('wysiwyg');
+                }
+            }
             ckeditor.on('blur',function(){
                 return false;
             });
             ckeditor.on('remove', function(){
+                form.off('submit', resetMode);
                 $(this).destroy();
             });
+            form.on('submit', resetMode);
             if (CKEDITOR.env.ie) {
                 ckeditor.on('ariaWidget', function (e) {
                     setTimeout(function() {

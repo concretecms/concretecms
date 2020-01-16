@@ -61,7 +61,7 @@ class AssetsLocalization extends Controller
                 'arrangeBlock' => t('Move'),
                 'arrangeBlockMsg' => t('Blocks arranged successfully.'),
                 'copyBlockToScrapbook' => t('Copy to Clipboard'),
-                'changeBlockTemplate' => t('Custom Template'),
+                'changeBlockTemplate' => t('Block Template'),
                 'changeBlockCSS' => t('Design'),
                 'go' => t('Go'),
                 'confirm' => t('Confirm'),

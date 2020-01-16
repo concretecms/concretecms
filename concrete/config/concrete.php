@@ -835,7 +835,14 @@ return [
             'database' => 1, // Use different Redis Databases - optional
         ],
         'save_path' => null,
+        // Minimum duration (in seconds) of an "unoutched" session
         'max_lifetime' => 7200,
+        // gc_probability and gc_divisor together define the probability to
+        // cleanup expided sessions ("garbage collection").
+        // Example: if gc_probability is 1 and gc_divisor is 100, on average we'll have 1 GC every 100 requests (1%)
+        // Example: if gc_probability is 5 and gc_divisor is 20, on average we'll have 1 GC every 20 requests (25%)
+        'gc_probability' => 1,
+        'gc_divisor' => 100,
         'cookie' => [
             'cookie_path' => false, // set a specific path here if you know it, otherwise it'll default to relative
             'cookie_lifetime' => 0,
