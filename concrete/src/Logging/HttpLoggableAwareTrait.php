@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Logging;
 
+use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Zend\Http\Request as ZendRequest;
@@ -77,10 +78,7 @@ trait HttpLoggableAwareTrait
 
             if (is_array($types)) {
                 foreach($types as $type) {
-                    $type = str_replace( '*' , '(.*)', $type);
-                    $search = '#^'.$type.'#i'  ;
-                    preg_match($search, $responseContentType, $matches);
-
+                    preg_match($type, $responseContentType, $matches);
                     if (count($matches)) {
                         $isLoggable = true;
                         break;
@@ -98,7 +96,8 @@ trait HttpLoggableAwareTrait
      */
     public function getLoggableContentTypes()
     {
-        $config = \Core::make('config');
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
         return $config->get('concrete.log.http.content-types');
     }
 

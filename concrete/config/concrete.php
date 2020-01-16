@@ -400,12 +400,12 @@ return [
             /*
              * Whitelist of loggable http content types
              * Supports wildcards
+             * Test: tests\Logging\HttpLoggableAwareTraitTest.php
              */
             'content-types' => [
-                'text/*',
-                'application/json',
-                'application/xml',
-                'application/*+xml'
+                '#^text/#i',
+                '#^application/json$#i',
+                '#^application/(.*\+)?xml$#i',
             ]
         ],
     ],
