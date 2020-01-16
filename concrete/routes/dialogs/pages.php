@@ -32,6 +32,8 @@ $router->all('/design/css', 'Design\Css::view');
 $router->all('/design/css/get', 'Design\Css::getCss');
 $router->all('/design/css/set', 'Design\Css::setCss');
 $router->all('/design/css/submit', 'Design\Css::submit');
+$router->all('/edit_alias', 'EditAlias::view');
+$router->all('/edit_alias/submit', 'EditAlias::submit');
 $router->all('/edit_external', 'EditExternal::view');
 $router->all('/edit_external/submit', 'EditExternal::submit');
 $router->all('/location', 'Location::view');
