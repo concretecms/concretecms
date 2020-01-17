@@ -78,7 +78,7 @@ trait HttpLoggableAwareTrait
             $responseContentType = $headers['content-type'];
             if (is_string($responseContentType)) {
                 foreach($types as $type) {
-                    if (preg_match($type, $responseContentType)) {
+                    if ($type && preg_match($type, $responseContentType)) {
                         $isLoggable = true;
                         break;
                     }

@@ -40,9 +40,10 @@ class HttpLoggableAwareTraitTest extends PHPUnit_Framework_TestCase
     public function getLoggableContentTypes()
     {
         return [
-            '#^text/#i',
-            '#^application/json$#i',
-            '#^application/(.*\+)?xml$#i',
+            'disabled' => false,
+            'text' => '#^text/#i',
+            'json' => '#^application/json$#i',
+            'xml' => '#^application/(.*\+)?xml$#i',
         ];
     }
 

@@ -399,13 +399,13 @@ return [
         'http' => [
             /*
              * Whitelist of loggable http content types
-             * Supports wildcards
-             * Test: tests\Logging\HttpLoggableAwareTraitTest.php
+             * Array keys are the internal type identifier (so that it can be disabled)
+             * Array values are regular expressions that Content-Type headers must satisfy.
              */
             'content-types' => [
-                '#^text/#i',
-                '#^application/json$#i',
-                '#^application/(.*\+)?xml$#i',
+                'text' => '#^text/#i',
+                'json' => '#^application/json$#i',
+                'xml' => '#^application/(.*\+)?xml$#i',
             ]
         ],
     ],
