@@ -1,5 +1,5 @@
 <?php
-    defined('C5_EXECUTE') or die("Access Denied.");
+    defined('C5_EXECUTE') or die('Access Denied.');
 
     $minColumns = 1;
 
@@ -12,7 +12,7 @@
 
 <ul id="ccm-layouts-toolbar" class="ccm-inline-toolbar ccm-ui">
 	<li class="ccm-sub-toolbar-text-cell">
-		<label for="useThemeGrid"><?=t("Grid:")?></label>
+		<label for="useThemeGrid"><?=t('Grid:')?></label>
 		<select name="gridType" id="gridType" style="width: auto !important">
 			<optgroup label="<?=t('Grids')?>">
 			<?php if ($enableThemeGrid) {
@@ -40,29 +40,29 @@
 		</select>
 	</li>
 	<li data-grid-form-view="themegrid">
-		<label for="themeGridColumns"><?=t("Columns:")?></label>
+		<label for="themeGridColumns"><?=t('Columns:')?></label>
 		<input type="text" name="themeGridColumns" id="themeGridColumns" style="width: 40px" <?php if ($controller->getTask() == 'add') {
     ?>  data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?= isset($themeGridMaxColumns) ? $themeGridMaxColumns : '' ?>" <?php 
 } ?> value="<?=$columnsNum?>" />
 		<?php if ($controller->getTask() == 'edit') {
-    // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
+    // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode.?>
 			<input type="hidden" name="themeGridColumns" value="<?=$columnsNum?>" />
 		<?php 
 } ?>
 	</li>
 	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
-		<label for="columns"><?=t("Columns:")?></label>
+		<label for="columns"><?=t('Columns:')?></label>
 		<input type="text" name="columns" id="columns" style="width: 40px" <?php if ($controller->getTask() == 'add') {
     ?> data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$maxColumns?>" <?php 
 } ?> value="<?=$columnsNum?>" />
 		<?php if ($controller->getTask() == 'edit') {
-    // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
+    // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode.?>
 			<input type="hidden" name="columns" value="<?=$columnsNum?>" />
 		<?php 
 } ?>
 	</li>
 	<li data-grid-form-view="custom">
-		<label for="columns"><?=t("Spacing:")?></label>
+		<label for="columns"><?=t('Spacing:')?></label>
 		<input name="spacing" id="spacing" type="text" style="width: 40px" data-input="number" data-minimum="0" data-maximum="1000" value="<?=isset($spacing) ? $spacing : ''?>" />
 	</li>
 	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <?php if (empty($iscustom)) {
@@ -92,7 +92,7 @@
 } ?>
 
 	<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
-		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
+		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t('Cancel')?></button>
 	</li>
 	<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
 	  <button class="btn btn-primary" type="button" id="ccm-layouts-save-button"><?php if ($controller->getTask() == 'add') {

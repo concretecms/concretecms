@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Express\Entry\Manager as EntryManager;
 use Concrete\Core\Express\Controller\Manager as ControllerManager;
@@ -75,16 +76,40 @@ class ObjectManager
         return $builder;
     }
 
+    /**
+     * Entry ID may be the integer ID or the public identifier
+     * @param int|string $entryID
+     * @return object
+     */
     public function getEntry($entryID)
     {
-        return $this->entityManager
-            ->getRepository('Concrete\Core\Entity\Express\Entry')
-            ->findOneBy(['exEntryID' => $entryID]);
+        $numberValidator = $this->app->make(Numbers::class);
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
+        if ($numberValidator->integer($entryID)) {
+            return $r->findOneBy(['exEntryID' => $entryID]);
+        } else {
+            return $this->getEntryByPublicIdentifier($entryID);
+        }
     }
 
-    public function deleteEntry($entryID)
+    /**
+     * @param $publicIdentifier
+     * @return object
+     */
+    public function getEntryByPublicIdentifier($publicIdentifier)
     {
-        $entry = $this->getEntry($entryID);
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
+        return $r->findOneBy(['publicIdentifier' => $publicIdentifier]);
+    }
+    
+    /**
+     * @param int|Entry $entry
+     */
+    public function deleteEntry($entry)
+    {
+        if (!$entry instanceof Entry) {
+            $entry = $this->getEntry($entry);
+        }
         if ($entry) {
             /**
              * @var $entry Entry

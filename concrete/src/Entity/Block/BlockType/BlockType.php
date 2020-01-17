@@ -18,7 +18,7 @@ use Loader;
 use Localization;
 use Package;
 use Page;
-use User;
+use Concrete\Core\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Database\Connection\Connection;
 
@@ -637,7 +637,7 @@ EOT
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
 
-        $u = new User();
+        $u = $app->make(User::class);
         if (isset($data['uID'])) {
             $uID = $data['uID'];
         } else {

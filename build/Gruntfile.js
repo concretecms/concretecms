@@ -305,6 +305,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/image.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/size.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/typography.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/color.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/custom.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/inline-toolbar.js'
             ]
         },
@@ -452,6 +454,10 @@ module.exports = function(grunt) {
         ccm_country_stateprovince_link: {
             dest: '<%= DIR_BASE %>/concrete/js/country-stateprovince-link.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/country-stateprovince-link.js'
+        },
+        ccm_country_data_link: {
+            dest: '<%= DIR_BASE %>/concrete/js/country-data-link.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/country-data-link.js'
         }
     };
 

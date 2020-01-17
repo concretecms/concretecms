@@ -1,16 +1,14 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\Package;
-use Concrete\Controller\Element\Package\ThemeItemList;
-use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Site\Type\Service;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class SiteType extends AbstractCategory
 {
-
     protected $service;
 
     public function __construct(Service $service)
@@ -37,5 +35,4 @@ class SiteType extends AbstractCategory
     {
         $this->service->delete($item);
     }
-
 }

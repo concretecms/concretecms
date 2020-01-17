@@ -190,7 +190,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      */
     protected function setSystemLocale()
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         $lan = $u->getUserLanguageToDisplay();
         $loc = Localization::getInstance();
         $loc->setContextLocale(Localization::CONTEXT_UI, $lan);

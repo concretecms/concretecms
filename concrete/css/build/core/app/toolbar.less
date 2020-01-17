@@ -254,6 +254,57 @@ div#ccm-toolbar {
     border-right: 1px solid #ccc;
   }
 
+
+  /* Multisite List Item Menu Component */
+
+  a.ccm-menu-item-site-list-container {
+
+    width: 240px;
+    text-align: left;
+
+    .selectize-input {
+      background-color: transparent;
+      border: 1px;
+      height: 46px;
+      padding-left: 40px;
+      box-shadow: none !important;
+
+      div.item {
+        margin-top: 5px;
+      }
+
+    }
+
+    .selectize-dropdown-content {
+      max-height: 400px;
+    }
+  }
+
+  a.ccm-menu-item-site-list {
+
+    span.ccm-toolbar-accessibility-title {
+      display: inline-block;
+      color: #333;
+      position: absolute;
+    }
+
+  }
+
+  li > a.ccm-menu-item-site-list {
+    width: 240px;
+    text-align: left;
+    padding: 14px 16px 14px 36px;
+  }
+
+  &.titles li > a.ccm-menu-item-site-list {
+    width: 240px !important;
+  }
+
+  li > a.ccm-menu-item-site-list-inactive {
+    cursor: not-allowed;
+  }
+
+
 }
 
 @-webkit-keyframes loader-bounce {
@@ -452,4 +503,3 @@ div#ccm-toolbar-disabled {
     }
   }
 }
-

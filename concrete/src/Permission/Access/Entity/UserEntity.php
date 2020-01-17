@@ -9,18 +9,17 @@ use Concrete\Core\User\UserInfo;
 
 class UserEntity extends Entity
 {
-
     protected $uID;
 
     public static function getAccessEntitiesForUser($user)
     {
-        $entities = array();
+        $entities = [];
         $db = Loader::db();
         if ($user->isRegistered()) {
             // we find the peID for the current user, if one exists. This means that the user has special permissions set just for them.
             $peID = $db->GetOne(
                 'SELECT peID FROM PermissionAccessEntityUsers WHERE uID = ?',
-                array($user->getUserID()));
+                [$user->getUserID()]);
             if ($peID > 0) {
                 $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
                 if (is_object($entity)) {
@@ -38,14 +37,14 @@ class UserEntity extends Entity
         $petID = $db->GetOne('SELECT petID FROM PermissionAccessEntityTypes WHERE petHandle = \'user\'');
         $peID = $db->GetOne(
             'SELECT pae.peID FROM PermissionAccessEntities pae INNER JOIN PermissionAccessEntityUsers paeg ON pae.peID = paeg.peID WHERE petID = ? AND paeg.uID = ?',
-            array($petID, $ui->getUserID()));
+            [$petID, $ui->getUserID()]);
         if (!$peID) {
-            $db->Execute("INSERT INTO PermissionAccessEntities (petID) VALUES(?)", array($petID));
+            $db->Execute('INSERT INTO PermissionAccessEntities (petID) VALUES(?)', [$petID]);
             $peID = $db->Insert_ID();
             Config::save('concrete.misc.access_entity_updated', time());
             $db->Execute(
                 'INSERT INTO PermissionAccessEntityUsers (peID, uID) VALUES (?, ?)',
-                array($peID, $ui->getUserID()));
+                [$peID, $ui->getUserID()]);
         }
 
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
@@ -53,7 +52,13 @@ class UserEntity extends Entity
 
     public function getAccessEntityUsers(PermissionAccess $pa)
     {
-        return array($this->getUserObject());
+        $users = [];
+        $u = $this->getUserObject();
+        if (is_object($u)) {
+            $users[] = $u;
+        }
+
+        return $users;
     }
 
     public function getUserObject()
@@ -75,7 +80,7 @@ class UserEntity extends Entity
     public function load()
     {
         $db = Loader::db();
-        $uID = $db->GetOne('SELECT uID FROM PermissionAccessEntityUsers WHERE peID = ?', array($this->peID));
+        $uID = $db->GetOne('SELECT uID FROM PermissionAccessEntityUsers WHERE peID = ?', [$this->peID]);
         if ($uID) {
             $ui = \UserInfo::getByID($uID);
             if (is_object($ui)) {

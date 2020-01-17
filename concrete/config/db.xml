@@ -3485,31 +3485,6 @@
     </index>
   </table>
 
-  <table name="LoginControlIpRanges" comment="IP ranges used to control login attempts">
-    <field name="lcirID" type="integer" comment="Record identifier">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="lcirIpFrom" type="string" size="40" comment="Start of the range">
-      <notnull/>
-    </field>
-    <field name="lcirIpTo" type="string" size="40" comment="End of the range">
-      <notnull/>
-    </field>
-    <field name="lcirType" type="smallint" comment="Type of the record">
-      <unsigned/>
-      <notnull/>
-    </field>
-    <field name="lcirExpires" type="datetime" comment="Record end-of-life timestamp">
-    </field>
-    <index name="IX_LoginControlIpRanges_Search">
-      <col>lcirIpFrom</col>
-      <col>lcirIpTo</col>
-      <col>lcirExpires</col>
-    </index>
-  </table>
-
   <table name="UserGroups">
     <field name="uID" type="integer" size="10">
       <unsigned/>
@@ -3674,21 +3649,6 @@
       <unique/>
       <col>mHash</col>
     </index>
-  </table>
-
-  <table name="FailedLoginAttempts" comment="Records failed login attempts">
-    <field name="lcirID" type="integer" comment="Record identifier">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="flaIp" type="string" size="40" comment="IP address of the failed login attempt">
-      <notnull/>
-    </field>
-    <field name="flaTimestamp" type="timestamp" comment="Timestamp of the failed login attempt">
-      <deftimestamp/>
-      <notnull/>
-    </field>
   </table>
 
   <table name="FilePermissionAssignments">
@@ -4296,6 +4256,20 @@
     </field>
     <index name="gID">
       <col>gID</col>
+    </index>
+  </table>
+
+  <table name="TreeFileFolderNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="fslID" type="integer" size="11">
+      <unsigned/>
+    </field>
+    <index name="fslID">
+      <col>fslID</col>
     </index>
   </table>
 

@@ -80,6 +80,14 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 <span><?php echo t('Log Emails Sent'); ?></span>
             </label>
             </div>
+            <div class="checkbox">
+                <label for="ENABLE_LOG_API">
+                    <?php echo $fh->checkbox('ENABLE_LOG_API', 1, $intLogApi) ?>
+                    <span><?php echo t('Log API request headers'); ?></span>
+                    <i class="fa fa-question-circle launch-tooltip" title=""
+                       data-original-title="<?php echo t('The logging level needs to be set to the value: Debug'); ?>"></i>
+                </label>
+            </div>
         </div>
     </fieldset>
 

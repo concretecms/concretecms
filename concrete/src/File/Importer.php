@@ -1,130 +1,146 @@
 <?php
-
 namespace Concrete\Core\File;
 
 use Concrete\Core\Entity\File\File as FileEntity;
-use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
-use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
-use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\File\Import\FileImporter;
+use Concrete\Core\File\Import\ImportException;
+use Concrete\Core\File\Import\ImportOptions;
+use Concrete\Core\File\Import\Processor\LegacyPostProcessor;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
-use Concrete\Core\File\ImportProcessor\SvgSanitizerProcessor;
-use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
-use Exception;
-use League\Flysystem\AdapterInterface;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * @deprecated use the new Concrete\Core\File\Import\FileImporter class
+ * @see \Concrete\Core\File\Import\FileImporter
+ */
 class Importer
 {
     /**
-     * Standard PHP error: there is no error, the file uploaded with success.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_FILE_ERROR_DEFAULT
      *
      * @var int
      */
-    const E_PHP_FILE_ERROR_DEFAULT = UPLOAD_ERR_OK;
+    const E_PHP_FILE_ERROR_DEFAULT = ImportException::E_PHP_FILE_ERROR_DEFAULT;
 
     /**
-     * Standard PHP error: the uploaded file exceeds the upload_max_filesize directive in php.ini.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE
      *
      * @var int
      */
-    const E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE = UPLOAD_ERR_INI_SIZE;
+    const E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE = ImportException::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE;
 
     /**
-     * Standard PHP error: the uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE
      *
      * @var int
      */
-    const E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE = UPLOAD_ERR_FORM_SIZE;
+    const E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE = ImportException::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE;
 
     /**
-     * Standard PHP error: the uploaded file was only partially uploaded.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_FILE_PARTIAL_UPLOAD
      *
      * @var int
      */
-    const E_PHP_FILE_PARTIAL_UPLOAD = UPLOAD_ERR_PARTIAL;
+    const E_PHP_FILE_PARTIAL_UPLOAD = ImportException::E_PHP_FILE_PARTIAL_UPLOAD;
 
     /**
-     * Standard PHP error: no file was uploaded.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_NO_FILE
      *
      * @var int
      */
-    const E_PHP_NO_FILE = UPLOAD_ERR_NO_FILE;
+    const E_PHP_NO_FILE = ImportException::E_PHP_NO_FILE;
 
     /**
-     * Standard PHP error: missing a temporary folder.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_NO_TMP_DIR
      *
      * @var int
      */
-    const E_PHP_NO_TMP_DIR = UPLOAD_ERR_NO_TMP_DIR;
+    const E_PHP_NO_TMP_DIR = ImportException::E_PHP_NO_TMP_DIR;
 
     /**
-     * Standard PHP error: failed to write file to disk.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_CANT_WRITE
      *
      * @var int
      */
-    const E_PHP_CANT_WRITE = UPLOAD_ERR_CANT_WRITE;
+    const E_PHP_CANT_WRITE = ImportException::E_PHP_CANT_WRITE;
 
     /**
-     * Standard PHP error: a PHP extension stopped the file upload.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_PHP_EXTENSION
      *
      * @var int
      */
-    const E_PHP_EXTENSION = UPLOAD_ERR_EXTENSION;
+    const E_PHP_EXTENSION = ImportException::E_PHP_EXTENSION;
 
     /**
-     * concrete5 internal error: invalid file extension.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_FILE_INVALID_EXTENSION
      *
      * @var int
      */
-    const E_FILE_INVALID_EXTENSION = 10;
+    const E_FILE_INVALID_EXTENSION = ImportException::E_FILE_INVALID_EXTENSION;
 
     /**
-     * concrete5 internal error: pointer is invalid file, is a directory, etc...
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_FILE_INVALID
      *
      * @var int
      */
-    const E_FILE_INVALID = 11;
+    const E_FILE_INVALID = ImportException::E_FILE_INVALID;
 
     /**
-     * concrete5 internal error: unable to copy file to storage location.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_FILE_UNABLE_TO_STORE
      *
      * @var int
      */
-    const E_FILE_UNABLE_TO_STORE = 12;
+    const E_FILE_UNABLE_TO_STORE = ImportException::E_FILE_UNABLE_TO_STORE;
 
     /**
-     * concrete5 internal error: default file storage location not found.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_FILE_INVALID_STORAGE_LOCATION
      *
      * @var int
      */
-    const E_FILE_INVALID_STORAGE_LOCATION = 13;
+    const E_FILE_INVALID_STORAGE_LOCATION = ImportException::E_FILE_INVALID_STORAGE_LOCATION;
 
     /**
-     * concrete5 internal error: unable to copy file to storage location (with provided prefix).
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED
      *
      * @var int
      */
-    const E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED = 14;
+    const E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED = ImportException::E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED;
 
     /**
-     * concrete5 internal error: Uploaded file is too large.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE
      *
      * @var int
      */
-    const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = 20;
+    const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = ImportException::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE;
 
     /**
-     * Should thumbnails be scanned when importing an image?
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportOptions::isSkipThumbnailGeneration()
+     * @see \Concrete\Core\File\Import\ImportOptions::setSkipThumbnailGeneration()
      *
      * @var bool
      */
     protected $rescanThumbnailsOnImport = true;
 
     /**
-     * The list of configured import processors.
-     *
-     * @var \Concrete\Core\File\ImportProcessor\ProcessorInterface
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ProcessorManager
      */
     protected $importProcessors = [];
 
@@ -133,30 +149,26 @@ class Importer
      */
     protected $app;
 
+    /**
+     * @var \Concrete\Core\File\Import\FileImporter
+     * @var int
+     */
+    private $fileImporter;
+
+    /**
+     * @var \Concrete\Core\File\Import\ProcessorManager
+     */
+    private $deprecatedProcessorUsed = [];
+
     public function __construct()
     {
         $this->app = Application::getFacadeApplication();
-        $config = $this->app->make('config');
-        if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-            $processor = new AutorotateImageProcessor();
-            $processor->setRescanThumbnails(false);
-            $this->addImportProcessor($processor);
-        }
-        $width = (int) $config->get('concrete.file_manager.restrict_max_width');
-        $height = (int) $config->get('concrete.file_manager.restrict_max_height');
-        if ($width > 0 || $height > 0) {
-            $processor = new ConstrainImageProcessor($width, $height);
-            $processor->setRescanThumbnails(false);
-            $this->addImportProcessor($processor);
-        }
-        if ($config->get('concrete.file_manager.images.svg_sanitization.enabled')) {
-            $processor = $this->app->make(SvgSanitizerProcessor::class);
-            $this->addImportProcessor($processor);
-        }
+        $this->fileImporter = $this->app->make(FileImporter::class);
     }
 
     /**
-     * Returns a text string explaining the error that was passed.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportException::describeErrorCode()
      *
      * @param int $code
      *
@@ -164,60 +176,12 @@ class Importer
      */
     public static function getErrorMessage($code)
     {
-        $app = Application::getFacadeApplication();
-        $defaultStorage = $app->make(StorageLocationFactory::class)->fetchDefault()->getName();
-        $msg = '';
-        switch ($code) {
-            case self::E_PHP_NO_FILE:
-            case self::E_FILE_INVALID:
-                $msg = t('Invalid file.');
-                break;
-            case self::E_FILE_INVALID_EXTENSION:
-                $msg = t('Invalid file extension.');
-                break;
-            case self::E_PHP_FILE_PARTIAL_UPLOAD:
-                $msg = t('The file was only partially uploaded.');
-                break;
-            case self::E_FILE_INVALID_STORAGE_LOCATION:
-                $msg = t('No default file storage location could be found to store this file.');
-                break;
-            case self::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE:
-                $msg = t('Uploaded file is too large. The current value of post_max_filesize is %s',
-                    ini_get('post_max_size'));
-                break;
-            case self::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE:
-            case self::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE:
-                $msg = t('Uploaded file is too large. The current value of upload_max_filesize is %s',
-                    ini_get('upload_max_filesize'));
-                break;
-            case self::E_FILE_UNABLE_TO_STORE:
-                $msg = t('Unable to copy file to storage location "%s". Please check the settings for the storage location.',
-                    $defaultStorage);
-                break;
-            case self::E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED:
-                $msg = t('Unable to copy file to storage location "%s". This file already exists in your site, or there is insufficient disk space for this operation.', $defaultStorage);
-                break;
-            case self::E_PHP_NO_TMP_DIR:
-                $msg = t('Missing a temporary folder.');
-                break;
-            case self::E_PHP_CANT_WRITE:
-                $msg = t('Failed to write file to disk.');
-                break;
-            case self::E_PHP_CANT_WRITE:
-                $msg = t('A PHP extension stopped the file upload.');
-                break;
-            case self::E_PHP_FILE_ERROR_DEFAULT:
-            default:
-                $msg = t("An unknown error occurred while uploading the file. Please check that file uploads are enabled, and that your file does not exceed the size of the post_max_size or upload_max_filesize variables.\n\nFile Uploads: %s\nMax Upload File Size: %s\nPost Max Size: %s",
-                    ini_get('file_uploads'), ini_get('upload_max_filesize'), ini_get('post_max_size'));
-                break;
-        }
-
-        return $msg;
+        return ImportException::describeErrorCode($code);
     }
 
     /**
-     * Add an import processor.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ProcessorManager
      *
      * @param \Concrete\Core\File\ImportProcessor\ProcessorInterface $processor
      */
@@ -227,224 +191,128 @@ class Importer
     }
 
     /**
-     * Generate a file prefix.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\FileImporter::generatePrefix()
      *
      * @return string
      */
     public function generatePrefix()
     {
-        $prefix = mt_rand(10, 99) . time();
-
-        return $prefix;
+        return $this->fileImporter->generatePrefix();
     }
 
     /**
-     * Imports a local file into the system.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\FileImporter::importLocalFile()
      *
-     * @param string $pointer The path to the file
-     * @param string|bool $filename A custom name to give to the file. If not specified, we'll derive it from $pointer.
-     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr If it's a File entity we assign the newly imported FileVersion object to that File. If it's a FileFolder entiity we'll create a new File in that folder (otherwise the new File will be created in the root folder).
-     * @param string|null $prefix the prefix to be used to store the file (if empty we'll generate a new prefix)
+     * @param string $pointer
+     * @param string|bool $filename
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr
+     * @param string|null $prefix
      *
-     * @return \Concrete\Core\Entity\File\Version|int the imported file version (or an error code in case of problems)
+     * @return \Concrete\Core\Entity\File\Version|int
      */
     public function import($pointer, $filename = false, $fr = false, $prefix = null)
     {
-        $fh = $this->app->make('helper/validation/file');
-        $fi = $this->app->make('helper/file');
-        $cf = $this->app->make('helper/concrete/file');
-
-        $filename = (string) $filename;
-        if ($filename === '') {
-            // determine filename from $pointer
-            $filename = basename($pointer);
-        }
-
-        $sanitizedFilename = $fi->sanitize($filename);
-
-        // test if file is valid, else return FileImporter::E_FILE_INVALID
-        if (!$fh->file($pointer)) {
-            return self::E_FILE_INVALID;
-        }
-
-        if (!$fh->extension($filename)) {
-            return self::E_FILE_INVALID_EXTENSION;
-        }
-
-        if ($fr instanceof FileEntity) {
-            $fsl = $fr->getFileStorageLocationObject();
-        } else {
-            $fsl = $this->app->make(StorageLocationFactory::class)->fetchDefault();
-        }
-        if (!($fsl instanceof StorageLocation)) {
-            return self::E_FILE_INVALID_STORAGE_LOCATION;
-        }
-
-        // store the file in the file storage location.
-        $filesystem = $fsl->getFileSystemObject();
-        if ($prefix) {
-            $prefixIsAutoGenerated = false;
-        } else {
-            // note, if you pass in a prefix manually, make sure it conforms to standards
-            // (e.g. it is 12 digits, numeric only)
-            $prefix = $this->generatePrefix();
-            $prefixIsAutoGenerated = true;
-        }
-
-        $src = @fopen($pointer, 'rb');
-        if ($src === false) {
-            return self::E_FILE_INVALID;
-        }
+        $options = $this->buildOptions($fr, $prefix);
+        $this->useDeprecatedProcessors();
         try {
-            $filesystem->writeStream(
-                $cf->prefix($prefix, $sanitizedFilename),
-                $src,
-                [
-                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                    'mimetype' => $this->app->make('helper/mime')->mimeFromExtension($fi->getExtension($sanitizedFilename)),
-                ]
-            );
-        } catch (Exception $e) {
-            if (!$prefixIsAutoGenerated) {
-                return self::E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED;
-            } else {
-                return self::E_FILE_UNABLE_TO_STORE;
-            }
-        } finally {
-            @fclose($src);
+            return $this->fileImporter->importLocalFile($pointer, (string) $filename, $options);
+        } catch (ImportException $x) {
+            return $x->getCode();
         }
-
-        if (!($fr instanceof FileEntity)) {
-            // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $fsl, $fr);
-        } else {
-            // We get a new version to modify
-            $fv = $fr->getVersionToModify(true);
-            $fv->updateFile($sanitizedFilename, $prefix);
-        }
-
-        $fv->refreshAttributes(false);
-        foreach ($this->importProcessors as $processor) {
-            if ($processor->shouldProcess($fv)) {
-                $processor->process($fv);
-            }
-        }
-        if ($this->rescanThumbnailsOnImport) {
-            $fv->refreshThumbnails(true);
-        }
-        $fv->releaseImagineImage();
-
-        return $fv;
     }
 
     /**
-     * Import a file in the default file storage location's incoming directory.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\FileImporter::importFromIncoming()
      *
-     * @param string $filename the name of the file in the incoming directory
-     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr If it's a File entity we assign the newly imported FileVersion object to that File. If it's a FileFolder entiity we'll create a new File in that folder (otherwise the new File will be created in the root folder).
+     * @param string $filename
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr
      *
-     * @return \Concrete\Core\Entity\File\Version|int the imported file version (or an error code in case of problems)
+     * @return \Concrete\Core\Entity\File\Version|int
      */
     public function importIncomingFile($filename, $fr = false)
     {
-        $fh = $this->app->make('helper/validation/file');
-        if (!$fh->extension($filename)) {
-            return self::E_FILE_INVALID_EXTENSION;
-        }
-        $incoming = $this->app->make(Incoming::class);
-        $incomingStorageLocation = $incoming->getIncomingStorageLocation();
-        $incomingFilesystem = $incomingStorageLocation->getFileSystemObject();
-        $incomingPath = $incoming->getIncomingPath();
-        if (!$incomingFilesystem->has($incomingPath . '/' . $filename)) {
-            return self::E_FILE_INVALID;
-        }
-        if ($fr instanceof FileEntity) {
-            $destinationStorageLocation = $fr->getFileStorageLocationObject();
-        } else {
-            $destinationStorageLocation = $this->app->make(StorageLocationFactory::class)->fetchDefault();
-        }
-        $destinationFilesystem = $destinationStorageLocation->getFileSystemObject();
-        $prefix = $this->generatePrefix();
-        $fi = $this->app->make('helper/file');
-        $sanitizedFilename = $fi->sanitize($filename);
-        $cf = $this->app->make('helper/concrete/file');
-        $destinationPath = $cf->prefix($prefix, $sanitizedFilename);
+        $options = $this->buildOptions($fr);
+        $this->useDeprecatedProcessors();
         try {
-            $stream = $incomingFilesystem->readStream($incomingPath . '/' . $filename);
-        } catch (Exception $x) {
-            $stream = false;
+            return $this->fileImporter->importFromIncoming($filename, '', $options);
+        } catch (ImportException $x) {
+            return $x->getCode();
         }
-        if ($stream === false) {
-            return self::E_FILE_INVALID;
-        }
-        try {
-            $wrote = $destinationFilesystem->writeStream($destinationPath, $stream);
-        } catch (Exception $x) {
-            $wrote = false;
-        }
-        @fclose($stream);
-        if ($wrote === false) {
-            return self::E_FILE_UNABLE_TO_STORE;
-        }
-        if (!($fr instanceof FileEntity)) {
-            // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $destinationStorageLocation, $fr);
-            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
-
-            foreach ($this->importProcessors as $processor) {
-                if ($processor->shouldProcess($fv)) {
-                    $processor->process($fv);
-                }
-            }
-        } else {
-            // We get a new version to modify
-            $fv = $fr->getVersionToModify(true);
-            $fv->updateFile($sanitizedFilename, $prefix);
-            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
-        }
-
-        return $fv;
     }
 
     /**
-     * Import a file received via a POST request to the default file storage location.
+     * @deprecated
+     * @see \Concrete\Core\File\Import\FileImporter::importUploadedFile()
      *
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile The uploaded file
-     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr If it's a File entity we assign the newly imported FileVersion object to that File. If it's a FileFolder entiity we'll create a new File in that folder (otherwise the new File will be created in the root folder).
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr
      *
-     * @return \Concrete\Core\Entity\File\Version|int the imported file version (or an error code in case of problems)
-     *
-     * @example
-     * <pre><code>
-     * $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-     * $request = $app->make(\Concrete\Core\Http\Request::class);
-     * $importer = $app->make(\Concrete\Core\File\Importer::class);
-     * $fv = $importer->importUploadedFile($request->files->get('field_name'));
-     * if (is_int($fv)) {
-     *     $errorToShow = $importer->getErrorMessage($fv);
-     * }
-     * </code></pre>
+     * @return \Concrete\Core\Entity\File\Version|int
      */
     public function importUploadedFile(UploadedFile $uploadedFile = null, $fr = false)
     {
-        if ($uploadedFile === null) {
-            $result = self::E_PHP_NO_FILE;
-        } elseif (!$uploadedFile->isValid()) {
-            $result = $uploadedFile->getError();
-        } else {
-            $result = $this->import($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), $fr);
+        $options = $this->buildOptions($fr)->setCanChangeLocalFile(true);
+        $this->useDeprecatedProcessors();
+        try {
+            return $this->fileImporter->importUploadedFile($uploadedFile, '', $options);
+        } catch (ImportException $x) {
+            return $x->getCode();
         }
-
-        return $result;
     }
 
     /**
-     * Enable scanning of thumbnails when importing an image?
+     * @deprecated
+     * @see \Concrete\Core\File\Import\ImportOptions::isSkipThumbnailGeneration()
+     * @see \Concrete\Core\File\Import\ImportOptions::setSkipThumbnailGeneration()
      *
-     * @param bool $refresh
+     * @param bool $value
      */
-    public function setRescanThumbnailsOnImport($refresh)
+    public function setRescanThumbnailsOnImport($value)
     {
-        $this->rescanThumbnailsOnImport = $refresh;
+        $this->rescanThumbnailsOnImport = $value;
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr
+     * @param string|null $customPrefix
+     *
+     * @return \Concrete\Core\File\Import\ImportOptions
+     */
+    private function buildOptions($fr, $customPrefix = '')
+    {
+        $options = $this->app->make(ImportOptions::class);
+        if ($fr instanceof FileEntity) {
+            $options->setAddNewVersionTo($fr);
+        } elseif ($fr instanceof FileFolder) {
+            $options->setImportToFolder($fr);
+        }
+
+        return $options
+            ->setSkipThumbnailGeneration(!$this->rescanThumbnailsOnImport)
+            ->setCustomPrefix($customPrefix)
+        ;
+    }
+
+    private function useDeprecatedProcessors()
+    {
+        $configuredProcessors = [];
+        foreach ($this->importProcessors as $processor) {
+            $configuredProcessors[spl_object_hash($processor)] = $processor;
+        }
+        $hashesOfAddedProcessors = array_diff(array_keys($configuredProcessors), array_keys($this->deprecatedProcessorUsed));
+        $hashesOfRemovedProcessors = array_diff(array_keys($this->deprecatedProcessorUsed), array_keys($configuredProcessors));
+        foreach ($hashesOfAddedProcessors as $hash) {
+            $wrapper = $this->app->make(LegacyPostProcessor::class, ['implementation' => $configuredProcessors[$hash]]);
+            $this->fileImporter->getProcessorManager()->registerProcessor($wrapper);
+            $this->deprecatedProcessorUsed[$hash] = $wrapper;
+        }
+        foreach ($hashesOfRemovedProcessors as $hash) {
+            $wrapper = $this->deprecatedProcessorUsed[$hash];
+            $this->fileImporter->getProcessorManager()->unregisterProcessor($wrapper);
+            unset($this->deprecatedProcessorUsed[$hash]);
+        }
     }
 }

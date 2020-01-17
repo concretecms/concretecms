@@ -22,9 +22,9 @@
                     xhr = data.fileLoader.xhr;
 
                 if (xhr.status == 200) {
-                    var files = jQuery.parseJSON(xhr.responseText);
-                    if (files.length > 0) {
-                        data.url = files[0].urlInline;
+                    var respObj = jQuery.parseJSON(xhr.responseText);
+                    if (respObj.files.length > 0) {
+                        data.url = respObj.files[0].urlInline;
                     }
                 } else {
                     data.message = xhr.responseText;

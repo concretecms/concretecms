@@ -1,16 +1,32 @@
 <?php
+
 namespace Concrete\Core\Express\Form\Control\Type;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\Type\Item\AssociationItem;
+use Concrete\Core\Express\Form\Control\Validator\AssociationControlValidator;
 use Doctrine\ORM\EntityManager;
 
 class AssociationType implements TypeInterface
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
+
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    public function __construct(Application $app, EntityManager $entityManager)
+    {
+        $this->app = $app;
+        $this->entityManager = $entityManager;
+    }
 
     public function getType()
     {
@@ -19,12 +35,7 @@ class AssociationType implements TypeInterface
 
     public function getValidator()
     {
-        return false;
-    }
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
+        return $this->app->make(AssociationControlValidator::class);
     }
 
     public function getPluralDisplayName()
@@ -40,12 +51,13 @@ class AssociationType implements TypeInterface
     public function getItems(Entity $entity)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Association');
-        $associations = $r->findBy(array('source_entity' => $entity), array('id' => 'asc'));
-        $items = array();
+        $associations = $r->findBy(['source_entity' => $entity], ['id' => 'asc']);
+        $items = [];
         foreach ($associations as $association) {
             $item = new AssociationItem($association);
             $items[] = $item;
         }
+
         return $items;
     }
 
@@ -68,5 +80,4 @@ class AssociationType implements TypeInterface
     {
         return \Core::make('\Concrete\Core\Import\Item\Express\Control\AssociationControl');
     }
-
 }

@@ -1,18 +1,22 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\Package;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 interface ItemInterface
 {
+    public function hasItems(Package $package);
 
-    function hasItems(Package $package);
-    function getItems(Package $package);
-    function getItemName($mixed);
-    function getItemCategoryDisplayName();
-    function removeItems(Package $package);
-    function renderList(Package $package);
+    public function getItems(Package $package);
 
+    public function getItemName($mixed);
+
+    public function getItemCategoryDisplayName();
+
+    public function removeItems(Package $package);
+
+    public function renderList(Package $package);
 }

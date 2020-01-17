@@ -10,43 +10,22 @@ if (isset($message)) {
     ?>
     <div class="alert alert-success"><?= $message ?></div>
 <?php
-
-}
-
-if ($user->getUserID() && $user->checkLogin()) {
-    ?>
-    <div class="form-group">
-        <span>
-            <?= t('Attach your %s account', h($name)) ?>
-        </span>
-        <hr>
-    </div>
-    <div class="form-group">
-        <a href="<?= $attachUrl ?>" class="btn btn-success btn-login btn-attach btn-block">
-            <img src="<?= $assetBase ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
-            <?= t('Attach your %s account', h($name)) ?>
-        </a>
-    </div>
-    <?php
-
-} else {
-    ?>
-    <div class="form-group">
-        <span>
-            <?= t('Sign in with your %s account', h($name)) ?>
-        </span>
-        <hr class="ccm-authentication-type-external-concrete5">
-    </div>
-    <div class="form-group">
-        <a href="<?= $authUrl ?>" class="btn btn-success btn-login btn-block">
-            <img src="<?= $assetBase ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
-            <?= t('Log in with %s', h($name)) ?>
-        </a>
-    </div>
-    <?php
-
 }
 ?>
+
+<div class="form-group">
+    <span>
+        <?= t('Sign in with your %s account', h($name)) ?>
+    </span>
+    <hr class="ccm-authentication-type-external-concrete5">
+</div>
+<div class="form-group">
+    <a href="<?= $authUrl ?>" class="btn btn-success btn-login btn-block">
+        <img src="<?= $assetBase ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
+        <?= t('Log in with %s', h($name)) ?>
+    </a>
+</div>
+
 <style>
     .ccm-ui .btn-community {
         border-width: 0px;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\Geolocator;

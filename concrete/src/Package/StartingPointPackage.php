@@ -36,7 +36,7 @@ use Package as BasePackage;
 use Page;
 use PermissionKey;
 use Throwable;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Foundation\Environment\FunctionInspector;

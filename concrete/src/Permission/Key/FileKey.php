@@ -3,7 +3,8 @@ namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Permission\Access\Access;
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use PermissionKey;
 
@@ -11,7 +12,8 @@ class FileKey extends Key
 {
     public function validate()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

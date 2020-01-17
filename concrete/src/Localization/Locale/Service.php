@@ -3,6 +3,7 @@ namespace Concrete\Core\Localization\Locale;
 
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Locale;
+use Concrete\Core\Entity\Site\LocaleEntityInterface;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Page;
@@ -128,7 +129,7 @@ class Service
         return $home;
     }
 
-    public function delete(Locale $locale)
+    public function delete(LocaleEntityInterface $locale)
     {
         $tree = $locale->getSiteTree();
         if (is_object($tree)) {
