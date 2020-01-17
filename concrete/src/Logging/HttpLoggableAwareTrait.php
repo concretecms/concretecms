@@ -48,11 +48,11 @@ trait HttpLoggableAwareTrait
     public function isResponseBodyLoggable($response)
     {
         if ($response instanceof SymfonyResponse) {
-            $headers =  array_change_key_case($response->headers->all());
+            $headers =  $response->headers->all();
         } elseif ($response instanceof ZendResponse) {
-            $headers =  array_change_key_case($response->getHeaders()->toArray());
+            $headers =  $response->getHeaders()->toArray();
         } elseif ($response instanceof ResponseInterface) {
-            $headers = array_change_key_case($response->getHeaders());
+            $headers = $response->getHeaders();
         } else {
             $headers = [];
         }
@@ -72,6 +72,7 @@ trait HttpLoggableAwareTrait
     public function isLoggable(array $headers, array $types)
     {
         $isLoggable = false;
+        $headers = array_change_key_case($headers);
 
         if (array_key_exists('content-type', $headers)) {
             $responseContentType = $headers['content-type'];

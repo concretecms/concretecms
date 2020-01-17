@@ -17,23 +17,23 @@ class HttpLoggableAwareTraitTest extends PHPUnit_Framework_TestCase
         return [
             // contentType, expected
             // true = loggable http body types
-            [['content-type' => 'text/plain'], true],
-            [['content-type' => 'text/css'], true],
-            [['content-type' => 'text/html'], true],
-            [['content-type' => 'text/csv'], true],
-            [['content-type' => 'application/json'], true],
-            [['content-type' => 'application/xml'], true],
-            [['content-type' => 'application/rss+xml'], true],
+            [['Content-Type' => 'text/plain'], true],
+            [['Content-Type' => 'text/css'], true],
+            [['Content-Type' => 'text/html'], true],
+            [['Content-Type' => 'text/csv'], true],
+            [['Content-Type' => 'application/json'], true],
+            [['Content-Type' => 'application/xml'], true],
+            [['Content-Type' => 'application/rss+xml'], true],
             // false
-            [['content-type' => 'application/rtf'], false],
-            [['content-type' => 'application/javascript'], false],
-            [['content-type' => 'image/png'], false],
-            [['content-type' => 'image/jpeg'], false]
+            [['Content-Type' => 'application/rtf'], false],
+            [['Content-Type' => 'application/javascript'], false],
+            [['Content-Type' => 'image/png'], false],
+            [['Content-Type' => 'image/jpeg'], false]
         ];
     }
 
     /**
-     * Stub config values from log -> http -> content-types
+     * Stub config values from log -> http -> Content-Types
      *
      * @return array
      */
