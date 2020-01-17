@@ -28,12 +28,12 @@ class HttpLoggableAwareTraitTest extends PHPUnit_Framework_TestCase
             [['Content-Type' => 'application/rtf'], false],
             [['Content-Type' => 'application/javascript'], false],
             [['Content-Type' => 'image/png'], false],
-            [['Content-Type' => 'image/jpeg'], false]
+            [['Content-Type' => 'image/jpeg'], false],
         ];
     }
 
     /**
-     * Stub config values from log -> http -> Content-Types
+     * Stub config values from log -> http -> Content-Types.
      *
      * @return array
      */
@@ -49,6 +49,9 @@ class HttpLoggableAwareTraitTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider contentTypesProvider
+     *
+     * @param string $contentType
+     * @param bool $expected
      */
     public function testIsLoggable($contentType, $expected)
     {

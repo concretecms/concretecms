@@ -406,7 +406,7 @@ return [
                 'text' => '#^text/#i',
                 'json' => '#^application/json$#i',
                 'xml' => '#^application/(.*\+)?xml$#i',
-            ]
+            ],
         ],
     ],
     'jobs' => [
