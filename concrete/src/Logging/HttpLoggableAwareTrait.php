@@ -97,7 +97,7 @@ trait HttpLoggableAwareTrait
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-        return $config->get('concrete.log.http.content-types');
+        return $config->get('concrete.log.http.content_types');
     }
 
     /**
