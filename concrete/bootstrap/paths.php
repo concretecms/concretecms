@@ -9,14 +9,17 @@ defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
  */
 if (APP_UPDATED_PASSTHRU === false) {
     $ap = $app['app_relative_path'] . '/' . DIRNAME_CORE;
+    $apRoot = $app['app_relative_path'];
 } else {
     $ap = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_CORE;
+    $appRoot = $app['app_relative_path'] . '/' . DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED;
 }
 
 define('ASSETS_URL', $ap);
 define('ASSETS_URL_CSS', $ap . '/css');
 define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
 define('ASSETS_URL_IMAGES', $ap . '/images');
+define('ASSETS_URL_NODE_MODULES', $appRoot);
 
 /*
  * ----------------------------------------------------------------------------
