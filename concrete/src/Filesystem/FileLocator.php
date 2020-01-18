@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Filesystem\FileLocator\ApplicationLocation;
 use Concrete\Core\Filesystem\FileLocator\CoreLocation;
 use Concrete\Core\Filesystem\FileLocator\LocationInterface;
+use Concrete\Core\Filesystem\FileLocator\NodeModulesLocation;
 use Concrete\Core\Filesystem\FileLocator\PackageLocation;
 use Concrete\Core\Filesystem\FileLocator\Record;
 use Illuminate\Filesystem\Filesystem;
@@ -42,6 +43,7 @@ class FileLocator
     public function addDefaultLocations()
     {
         array_unshift($this->locations, new ApplicationLocation($this->filesystem));
+        $this->locations[] = new NodeModulesLocation($this->filesystem);
         $this->locations[] = new CoreLocation($this->filesystem);
     }
     public function addLocation(LocationInterface $location)
