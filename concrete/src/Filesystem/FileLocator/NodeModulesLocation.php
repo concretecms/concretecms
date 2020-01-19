@@ -3,11 +3,12 @@
 namespace Concrete\Core\Filesystem\FileLocator;
 
 /**
- * Class NodeModulesLocation
+ * Class NodeModulesLocation.
+ *
+ * Enables the possibility to load assets from {webroot}/node_modules
  */
 class NodeModulesLocation extends AbstractLocation
 {
-
     /**
      * @return string
      */
