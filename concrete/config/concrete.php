@@ -1182,4 +1182,19 @@ return [
             // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
         ],
     ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Asset locations
+     * ------------------------------------------------------------------------
+     */
+    'asset' => [
+        // Add here additional asset loading locations
+        'locations' => [
+            'node_modules' => [
+                'active' => false,
+                'class' => Concrete\Core\Filesystem\FileLocator\NodeModulesLocation::class,
+            ]
+        ]
+    ]
 ];
