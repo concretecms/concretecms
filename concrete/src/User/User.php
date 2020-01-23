@@ -579,7 +579,7 @@ class User extends ConcreteObject
         $session = $app['session'];
         $validator = $app->make(SessionValidator::class);
         // Check if the user is loggged in
-        if ($validator->hasActiveSession() && self::isLoggedIn()) {
+        if ($validator->hasActiveSession() && $session->has('uID')) {
             $req = Request::getInstance();
 
             if ($req->hasCustomRequestUser()) {
