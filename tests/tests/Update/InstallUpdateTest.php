@@ -16,7 +16,7 @@ class InstallUpdateTest extends PHPUnit_Framework_TestCase
     {
         $this->runScriptInDocker('mlocati/docker5:8.5.2-full', 'run-install.sh');
     }
-    
+
     public function testUpdatePreviousInstallation()
     {
         $this->runScriptInDocker('mlocati/docker5:8.5.2-full', 'run-update.sh');
