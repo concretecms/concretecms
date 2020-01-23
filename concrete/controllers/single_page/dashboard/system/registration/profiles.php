@@ -33,8 +33,7 @@ class Profiles extends DashboardSitePageController
 
             if (!$isProfileOptionChanged) {
                 $this->flash('success', t('Public profiles settings have been updated.'));
-                $this->view();
-                return;
+                $this->redirect('/dashboard/system/registration/profiles');
             }
 
             // $message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
