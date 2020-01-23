@@ -22,7 +22,7 @@ class Profiles extends DashboardSitePageController
         if ($this->isPost()) {
             $config = $this->getSite()->getConfigRepository();
 
-            $isProfileOptionChanged = $config->get('user.profiles_enabled') === $this->post('public_profiles') ? true : false;
+            $isProfileOptionChanged = (bool) $config->get('user.profiles_enabled') !== (bool) $this->post('public_profiles');
 
             $config->save('user.profiles_enabled', ($this->post('public_profiles') ? true : false));
             $config->save('user.gravatar.enabled', ($this->post('gravatar_fallback') ? true : false));
@@ -30,9 +30,10 @@ class Profiles extends DashboardSitePageController
             $config->save('user.gravatar.image_set', $this->app->make('helper/security')->sanitizeString($this->post('gravatar_image_set')));
             $config->save('user.display_account_menu', (bool) $this->post('display_account_menu', false));
 
-            if (!$isProfileOptionChanged) {
-                $this->redirect('/dashboard/system/registration/profiles/profiles_updated');
 
+            if (!$isProfileOptionChanged) {
+                $this->flash('success', t('Public profiles settings have been updated.'));
+                $this->view();
                 return;
             }
 
@@ -54,12 +55,6 @@ class Profiles extends DashboardSitePageController
                 $this->redirect('/dashboard/system/registration/profiles/profiles_disabled');
             }
         }
-    }
-
-    public function profiles_updated()
-    {
-        $this->set('message', t('Public profiles settings have been updated.'));
-        $this->view();
     }
 
     public function profiles_enabled()
