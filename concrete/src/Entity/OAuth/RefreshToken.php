@@ -29,7 +29,7 @@ class RefreshToken implements RefreshTokenEntityInterface
     /**
      * @var \League\OAuth2\Server\Entities\AccessTokenEntityInterface
      * @ORM\OneToOne(targetEntity="AccessToken")
-     * @ORM\JoinColumn(name="accessToken", referencedColumnName="identifier")
+     * @ORM\JoinColumn(name="accessToken", referencedColumnName="identifier", onDelete="SET NULL")
      */
     protected $accessToken;
 
