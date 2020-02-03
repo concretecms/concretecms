@@ -1161,6 +1161,7 @@ return [
             'client_credentials' => true,
             'authorization_code' => true,
             'password_credentials' => false,
+            'refresh_token' => true,
         ],
     ],
 
