@@ -425,9 +425,15 @@ class StartingPointPackage extends Package
     protected function install_database()
     {
         $db = Database::get();
-        $num = $db->GetCol('show tables');
-
-        if (count($num) > 0) {
+        $existingTables = [];
+        foreach ($db->fetchAll('show tables') as $row) {
+            $row = array_shift($row);
+            if (strpos($row, 'tmp_checkCollationFieldLength') === false) {
+                $existingTables[] = array_shift($row);
+            }
+        }
+        $numExistingTables = count($existingTables);
+        if ($numExistingTables > 0) {
             throw new \Exception(
                 t(
                     'There are already %s tables in this database. concrete5 must be installed in an empty database.',
