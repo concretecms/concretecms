@@ -429,7 +429,7 @@ class StartingPointPackage extends Package
         foreach ($db->fetchAll('show tables') as $row) {
             $row = array_shift($row);
             if (strpos($row, 'tmp_checkCollationFieldLength') === false) {
-                $existingTables[] = array_shift($row);
+                $existingTables[] = $row;
             }
         }
         $numExistingTables = count($existingTables);
