@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Concrete\Tests\Config;
 
 use Concrete\Core\Application\Application;
