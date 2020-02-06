@@ -19,35 +19,53 @@ use Redis;
 class RedisConfigServiceProvider extends Provider
 {
 
-    protected function __construct(Application $app)
+    /** @var callable A function that takes no arguments and returns an instance of \Redis */
+    protected $redisFactory;
+
+    public function __construct(Application $app, callable $redisFactory)
     {
         parent::__construct($app);
+        $this->redisFactory = $redisFactory;
     }
 
     /**
      * Register Redis as a config saver and loader.
+     * It's best to use a distinct redis connection rather than reusing one
      *
      * @param Application $app
      * @param callable $redisFactory
      */
-    public static function setup(Application $app, callable $redisFactory)
+    public function setup(Application $app, callable $redisFactory)
     {
+        (new RedisConfigServiceProvider($app, $redisFactory))->register();
+    }
+
+    public function register()
+    {
+        $app = $this->app;
+
         if ($app->bound('config')) {
             throw new \RuntimeException('RedisConfigServiceProvider must be registered before the core ConfigServiceProvider.');
         }
 
         $redis = null;
-        $memoizedRedis = function() use (&$redis, $redisFactory) {
+        // Create a callable that manages memoizing the redis instance and configuring it
+        $memoizedRedis = function() use (&$redis) {
             if (!$redis) {
-                $redis = $redisFactory();
-            }
+                $factory = $this->redisFactory;
+                $redis = $factory();
 
-            if (!$redis || !$redis instanceof Redis) {
-                throw new \RuntimeException('Cannot use Redis for config. Invalid Redis instance given.');
-            }
+                if (!$redis || !$redis instanceof Redis) {
+                    throw new \RuntimeException('Cannot use Redis for config. Invalid Redis instance given.');
+                }
 
-            if (!$redis->isConnected()) {
-                throw new \RuntimeException('Cannot use Redis for config. The given Redis instance is not connected.');
+                if (!$redis->isConnected()) {
+                    throw new \RuntimeException('Cannot use Redis for config. The given Redis instance is not connected.');
+                }
+
+                // Set some simple configuration
+                $redis->setOption($redis::OPT_PREFIX, 'cfg=');
+                $redis->setOption($redis::OPT_SCAN, $redis::SCAN_RETRY);
             }
 
             return $redis;
@@ -56,13 +74,6 @@ class RedisConfigServiceProvider extends Provider
         // Provide the memoized redis instance to both loader and saver
         $app->when(RedisLoader::class)->needs(Redis::class)->give($memoizedRedis);
         $app->when(RedisSaver::class)->needs(Redis::class)->give($memoizedRedis);
-
-        (new RedisConfigServiceProvider($app))->register();
-    }
-
-    public function register()
-    {
-        $app = $this->app;
 
         // Bind a composite loader that includes redis
         $app->bind(LoaderInterface::class, static function($app) {

@@ -54,7 +54,8 @@ class CompositeLoader implements LoaderInterface
         }
 
         if ($results) {
-            return array_replace_recursive(...$results);
+            /** @TODO Replace with argument unpacking when we can support it */
+            return call_user_func_array('array_replace_recursive', $results);
         }
 
         return [];
@@ -102,10 +103,10 @@ class CompositeLoader implements LoaderInterface
     {
         $results = [];
         foreach ($this->getLoaders() as $loader) {
-            $results[] = $loader->getNamespaces();
+            $results = array_merge($results, $loader->getNamespaces());
         }
 
-        return array_merge(...$results);
+        return $results;
     }
 
     /**
@@ -122,10 +123,10 @@ class CompositeLoader implements LoaderInterface
     {
         $results = [];
         foreach ($this->getLoaders() as $loader) {
-            $results[] = $loader->cascadePackage($environment, $package, $group, $items);
+            $results = array_merge($results, $loader->cascadePackage($environment, $package, $group, $items));
         }
 
-        return array_merge(...$results);
+        return $results;
     }
 
     /**

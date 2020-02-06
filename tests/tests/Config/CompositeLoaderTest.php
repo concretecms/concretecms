@@ -24,7 +24,6 @@ class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
         $this->loader2 = M::mock(LoaderInterface::class);
         $this->loader3 = M::mock(LoaderInterface::class);
 
-
         $this->app = M::mock(Application::class);
         $this->composite = new CompositeLoader($this->app, [
             $this->loader1,
@@ -45,11 +44,11 @@ class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testFlowsThrough($method, $args, $return, callable $expect = null)
     {
-        $this->loader1->shouldReceive($method)->once()->with(...$args)->andReturn($return[0]);
-        $this->loader2->shouldReceive($method)->once()->with(...$args)->andReturn($return[1]);
-        $this->loader3->shouldReceive($method)->once()->with(...$args)->andReturn($return[2]);
+        $this->loader1->shouldReceive($method)->once()->withArgs($args)->andReturn($return[0]);
+        $this->loader2->shouldReceive($method)->once()->withArgs($args)->andReturn($return[1]);
+        $this->loader3->shouldReceive($method)->once()->withArgs($args)->andReturn($return[2]);
 
-        $result = $this->composite->{$method}(...$args);
+        $result = call_user_func_array([$this->composite, $method], $args);
 
         if ($expect) {
             $expect($result);

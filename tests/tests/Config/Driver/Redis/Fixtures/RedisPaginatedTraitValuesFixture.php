@@ -27,7 +27,9 @@ class RedisPaginatedTraitValuesFixture
     protected function paginatedScan(Redis $redis, $pattern)
     {
         $scanMock = $this->scanMock;
-        yield from $scanMock($redis, $pattern);
+        foreach ($scanMock($redis, $pattern) as $key => $value) {
+            yield $key => $value;
+        }
     }
 
 }

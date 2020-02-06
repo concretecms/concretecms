@@ -16,7 +16,6 @@ class RedisLoader implements LoaderInterface
     public function __construct(Redis $redis)
     {
         $this->connection = $redis;
-        $this->configureRedis($redis);
     }
 
     /**

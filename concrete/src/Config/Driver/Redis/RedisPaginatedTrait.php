@@ -8,17 +8,6 @@ trait RedisPaginatedTrait
 {
 
     /**
-     * Set redis configuration we need
-     *
-     * @param Redis $redis
-     */
-    protected function configureRedis(Redis $redis)
-    {
-        $redis->setOption($redis::OPT_PREFIX, 'cfg=');
-        $redis->setOption($redis::OPT_SCAN, $redis::SCAN_RETRY);
-    }
-
-    /**
      * Scan for a specific key pattern
      *
      * @param Redis $redis

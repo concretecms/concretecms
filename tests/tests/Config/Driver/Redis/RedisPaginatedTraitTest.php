@@ -15,13 +15,37 @@ class RedisPaginatedTraitTest extends \PHPUnit_Framework_TestCase
 
     use MockeryPHPUnitIntegration;
 
+    public static function setUpBeforeClass()
+    {
+        require_once __DIR__ . '/Fixtures/Redis.php';
+    }
+
     public function testPaginatedScan()
     {
-        $redis = M::mock(Redis::class);
+        M::getConfiguration()->setInternalClassMethodParamMap('Redis', 'scan', [
+            '&$iterator',
+            '$pattern = null',
+            '$count = 0'
+        ]);
 
-        $redis->shouldReceive('scan')->once()->with(null, 'cfg=some-filter', 100)->andReturnUsing($this->scanMethodHandler());
-        $redis->shouldReceive('scan')->once()->with(0, 'cfg=some-filter', 100)->andReturnUsing($this->scanMethodHandler());
-        $redis->shouldReceive('scan')->once()->with(1, 'cfg=some-filter', 100)->andReturnUsing($this->scanMethodHandler());
+        $redis = M::mock('Redis');
+        $expectedIterators = [null, 127, 135, 205];
+        $returnValues = [['cfg=foo', 'cfg=bar'], ['cfg=baz'], false];
+
+        $redis->shouldReceive('scan')->times(3)->with(
+            M::on(function(&$iterator) use (&$expectedIterators) {
+                $expected = array_shift($expectedIterators);
+
+                if ($iterator === $expected) {
+                    $iterator = head($expectedIterators);
+                    return true;
+                }
+
+                return false;
+            }),
+            'cfg=some-filter',
+            100
+        )->andReturnValues($returnValues);
 
         // Call the scan method
         $method = new \ReflectionMethod(RedisPaginatedTraitFixture::class, 'paginatedScan');
@@ -30,6 +54,7 @@ class RedisPaginatedTraitTest extends \PHPUnit_Framework_TestCase
         $result = iterator_to_array($method->invoke($fixture, $redis, 'some-filter'));
 
         $this->assertEquals(['foo', 'bar', 'baz'], $result);
+        M::resetContainer();
     }
 
     public function testPaginatedScanValues()
@@ -39,10 +64,10 @@ class RedisPaginatedTraitTest extends \PHPUnit_Framework_TestCase
 
         $chunkedKeys = array_chunk($keys, 50);
         $chunkedValues = array_chunk($values, 50);
-
-        $scanKeys = $chunkedKeys;
         $scanMock = function() use ($keys) {
-            yield from $keys;
+            foreach ($keys as $key) {
+                yield $key;
+            }
         };
 
         $redis = M::mock(Redis::class);
@@ -67,29 +92,4 @@ class RedisPaginatedTraitTest extends \PHPUnit_Framework_TestCase
         }
         return $keys;
     }
-
-    /**
-     * Return a spoof scan method that manages increasing the iterator and returning varied results
-     *
-     * @return \Closure
-     */
-    private function scanMethodHandler()
-    {
-        return static function(&$iterator, $search, $batch) {
-            $results = [
-                ['cfg=foo', 'cfg=bar'],
-                ['cfg=baz'],
-                false
-            ];
-            if ($iterator === null) {
-                $iterator = -1;
-            }
-
-            $iterator++;
-            if (isset($results[$iterator])) {
-                return $results[$iterator];
-            }
-        };
-    }
-
 }
