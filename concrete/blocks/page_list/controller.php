@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\PageList;
 
 use BlockType;
@@ -10,7 +9,6 @@ use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
-use Concrete\Core\Utility\Service\Number;
 use Core;
 use Concrete\Core\Url\SeoCanonical;
 use Database;
