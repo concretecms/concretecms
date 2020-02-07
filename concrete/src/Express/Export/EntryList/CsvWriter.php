@@ -87,7 +87,7 @@ class CsvWriter
     {
         $date = $entry->getDateCreated();
         if ($date) {
-            yield 'ccm_date_created' => $this->dateFormatter->formatCustom(\DateTime::ATOM, $date);
+            yield 'ccm_date_created' => $this->dateFormatter->getLocalDateTime($date);
         } else {
             yield 'ccm_date_created' => null;
         }
