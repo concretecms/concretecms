@@ -10,6 +10,7 @@ use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
+use Concrete\Core\Utility\Service\Number;
 use Core;
 use Concrete\Core\Url\SeoCanonical;
 use Database;
@@ -463,7 +464,8 @@ class Controller extends BlockController
         if (!$args['filterByRelated']) {
             $args['relatedTopicAttributeKeyHandle'] = '';
         }
-        if (!$args['filterByCustomTopic']) {
+
+        if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
             $args['customTopicAttributeKeyHandle'] = '';
             $args['customTopicTreeNodeID'] = 0;
         }
