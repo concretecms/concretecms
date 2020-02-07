@@ -102,8 +102,9 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         ];
         $config = $this->app->make('config');
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
+        $datetime_format = $config->get('concrete.export.csv.datetime_format');
 
-        return StreamedResponse::create(function () use ($entity, $me, $bom) {
+        return StreamedResponse::create(function () use ($entity, $me, $bom, $datetime_format) {
             $entryList = new EntryList($entity);
 
             $writer = $this->app->make(CsvWriter::class, [
@@ -112,7 +113,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             ]);
             echo $bom;
             $writer->insertHeaders($entity);
-            $writer->insertEntryList($entryList);
+            $writer->insertEntryList($entryList,$datetime_format);
         }, 200, $headers);
     }
 
