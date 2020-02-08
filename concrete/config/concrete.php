@@ -114,7 +114,7 @@ return [
         'csv' => [
             // Include the BOM (byte-order mark) in generated CSV files?
             // @var bool
-            'include_bom' => false,,
+            'include_bom' => false,
             'datetime_format' => 'ATOM', 
         ],
     ],
