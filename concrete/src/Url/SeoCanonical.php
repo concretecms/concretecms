@@ -35,6 +35,13 @@ class SeoCanonical
     protected $excludedQuerystringParameters;
 
     /**
+     * The list of path arguments to be included in canonical URLs.
+     *
+     * @var string[]
+     */
+    protected $pathArguments = [];
+
+    /**
      * Initialize the instance.
      *
      * @param ResolverManagerInterface $resolver the instance of the class that builds page URLs
@@ -69,7 +76,11 @@ class SeoCanonical
                 if (!empty($originalCID) && $originalCID != $cID) {
                     $result = $this->getPageCanonicalURL($cID, $querystring);
                 } else {
-                    $result = $this->resolver->resolve([$page]);
+                    $args = [$page];
+                    if ($pathArguments = $this->getPathArguments()) {
+                        $args = array_merge($args, $pathArguments);
+                    }
+                    $result = $this->resolver->resolve($args);
                     $query = null;
                     if ($querystring instanceof Query) {
                         $query = clone $querystring;
@@ -122,5 +133,25 @@ class SeoCanonical
         }
 
         return $result;
+    }
+
+    /**
+     * Get path arguments to append canonical URLs
+     *
+     * @return string[]|null
+     */
+    public function getPathArguments()
+    {
+        return $this->pathArguments;
+    }
+
+    /**
+     * Set path arguments to append canonical URLs
+     *
+     * @param string[] $pathArguments
+     */
+    public function setPathArguments($pathArguments)
+    {
+        $this->pathArguments = $pathArguments;
     }
 }

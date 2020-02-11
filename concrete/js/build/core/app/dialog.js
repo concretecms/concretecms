@@ -14,7 +14,7 @@
     });
     
     function fixDialogButtons($dialog) {
-        var $ccmButtons = $dialog.find('.dialog-buttons');
+        var $ccmButtons = $dialog.find('.dialog-buttons').eq(0);
         if ($ccmButtons.length === 0) {
             return;
         }

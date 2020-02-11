@@ -26,16 +26,6 @@ class Scope implements ScopeEntityInterface
     protected $description = '';
 
     /**
-     * @ORM\ManyToMany(targetEntity="AuthCode", mappedBy="scopes")
-     */
-    protected $codes;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AccessToken", mappedBy="scopes")
-     */
-    protected $tokens;
-
-    /**
      * {@inheritdoc}
      *
      * @see \League\OAuth2\Server\Entities\ScopeEntityInterface::getIdentifier()

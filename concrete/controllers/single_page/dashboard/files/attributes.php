@@ -1,17 +1,13 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\Attribute\Type;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
-    protected function getCategoryObject()
-    {
-        return Category::getByHandle('file');
-    }
-
     public function view()
     {
         $this->renderList();
@@ -36,7 +32,8 @@ class Attributes extends DashboardAttributesPageController
 
     public function select_type($type = null)
     {
-        $type = Type::getByID($type);
+        $typeFactory = $this->app->make(TypeFactory::class);
+        $type = $typeFactory->getByID($type);
         $this->renderAdd($type,
             \URL::to('/dashboard/files/attributes', 'view')
         );
@@ -45,7 +42,8 @@ class Attributes extends DashboardAttributesPageController
     public function add($type = null)
     {
         $this->select_type($type);
-        $type = Type::getByID($type);
+        $typeFactory = $this->app->make(TypeFactory::class);
+        $type = $typeFactory->getByID($type);
         $this->executeAdd($type, \URL::to('/dashboard/files/attributes', 'view'));
     }
 
@@ -55,5 +53,17 @@ class Attributes extends DashboardAttributesPageController
         $this->executeDelete($key,
             \URL::to('/dashboard/files/attributes', 'view')
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Page\Controller\DashboardAttributesPageController::getCategoryObject()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Category
+     */
+    protected function getCategoryObject()
+    {
+        return Category::getByHandle('file');
     }
 }

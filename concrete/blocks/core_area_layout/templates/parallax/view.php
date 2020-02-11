@@ -1,6 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 $a = $b->getBlockAreaObject();
-$container = $formatter->getLayoutContainerHtmlObject();
+$rootContainer = $formatter->getLayoutContainerHtmlObject();
+$container = $rootContainer;
+while ($container->hasChildren()) {
+    $container = $container->getChildren()[0];
+}
+
 $background = '';
 $style = $b->getCustomStyle();
 if (is_object($style)) {
@@ -23,7 +28,7 @@ if (is_object($style)) {
         $container->appendChild($html);
     }
 
-    echo $container;
+    echo $rootContainer;
     ?>
 </div>
 

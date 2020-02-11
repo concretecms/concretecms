@@ -28,6 +28,7 @@
   },
   "bin": [ "bin/concrete5" ],
   "require": {
+    "ext-PDO": "*",
     "php": ">=5.5.9",
     "doctrine/dbal": "~2.5",
     "symfony/class-loader": "3.*",
@@ -35,7 +36,7 @@
     "symfony/routing": "3.*",
     "symfony/http-kernel": "3.4.*",
     "doctrine/orm": "~2.5",
-    "doctrine/migrations": "1.*",
+    "doctrine/migrations": "1.* <1.8",
     "league/flysystem": "1.*",
     "symfony/event-dispatcher": "3.*",
     "symfony/serializer": "3.*",
@@ -71,7 +72,7 @@
     "tedivm/stash": "0.14.*",
     "lusitanian/oauth": "0.8.*",
     "concrete5/oauth-user-data": "~1.0",
-    "mlocati/concrete5-translation-library": "1.5.*",
+    "mlocati/concrete5-translation-library": "^1.5.13",
     "mlocati/ip-lib": "^1.3.0",
     "league/url": "~3.3.5",
     "concrete5/doctrine-xml": "^1.2.0",
@@ -88,7 +89,8 @@
     "symfony/psr-http-message-bridge": "^1.0",
     "guzzlehttp/guzzle": "^6.3",
     "league/fractal": "^0.17.0",
-    "theorchard/monolog-cascade": "0.5.*"
+    "theorchard/monolog-cascade": "0.5.*",
+    "commerceguys/addressing": "^1.0"
   },
   "extra": {
     "branch-alias": {

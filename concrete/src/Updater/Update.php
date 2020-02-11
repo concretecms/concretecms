@@ -256,12 +256,15 @@ class Update
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
+        if ($config->get('concrete.updates.skip_core')) {
+            return null;
+        }
         $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
         $client->getRequest()
             ->setMethod('POST')
             ->getPost()
                 ->set('LOCALE', Localization::activeLocale())
-                ->set('BASE_URL_FU', Application::getApplicationURL())
+                ->set('BASE_URL_FULL', Application::getApplicationURL())
                 ->set('APP_VERSION', APP_VERSION);
         try {
             $response = $client->send();

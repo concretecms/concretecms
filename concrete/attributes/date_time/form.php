@@ -1,6 +1,8 @@
 <?php
+
 use Concrete\Core\Support\Facade\Facade;
-defined('C5_EXECUTE') or die("Access Denied.");
+
+defined('C5_EXECUTE') or die('Access Denied.');
 $app = Facade::getFacadeApplication();
 switch ($displayMode) {
     case 'text':
@@ -29,4 +31,10 @@ switch ($displayMode) {
         $view->requireAsset('jquery/ui');
         echo $form_date_time->datetime($view->field('value'), $value, false, true, null, $timeResolution);
         break;
+}
+
+$timezone = $date->getUserTimeZoneID();
+if ($timezone) {
+    $timezone = $date->getTimezoneDisplayName($timezone);
+    echo '<div class="text-muted"><small>' . $timezone . '</small></div>';
 }

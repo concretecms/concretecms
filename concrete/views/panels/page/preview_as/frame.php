@@ -1,7 +1,7 @@
 <div class="preview-frame-container">
     <iframe
         style="display:none"
-        src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') . '?&cID=' . Request::request('cID') ?>"
+        src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') . '?&cID=' . h(Request::request('cID')) ?>"
         data-src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') ?>">></iframe>
     <div class="cover"></div>
     <div class="loader">

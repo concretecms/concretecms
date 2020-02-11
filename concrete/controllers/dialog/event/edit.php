@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Event;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\ApproveCalendarEventRequest;
 use Core;
@@ -125,7 +126,7 @@ class Edit extends BackendInterfaceController
         $e = $this->validateRequest($calendar, $repetitions);
         $r = new EditResponse($e);
         if (!$e->has()) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             $eventVersionRepetitions = array();
             if ($edit_type == 'local') {
                 $event = new CalendarEvent($calendar);
@@ -209,7 +210,7 @@ class Edit extends BackendInterfaceController
             $version = $r->getEventVersion();
             $this->eventService->generateDefaultOccurrences($version);
             if ($this->request->request->get('publishAction') == 'approve') {
-                $u = new \User();
+                $u = $this->app->make(User::class);
                 $pkr = new ApproveCalendarEventRequest();
                 $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
                 $pkr->setRequesterUserID($u->getUserID());
@@ -248,7 +249,7 @@ class Edit extends BackendInterfaceController
                 $this->eventService->generateDefaultOccurrences($r->getEventVersion());
             }
             if ($this->request->request->get('publishAction') == 'approve') {
-                $u = new \User();
+                $u = $this->app->make(User::class);
                 $pkr = new ApproveCalendarEventRequest();
                 $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
                 $pkr->setRequesterUserID($u->getUserID());

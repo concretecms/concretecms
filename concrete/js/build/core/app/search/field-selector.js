@@ -25,9 +25,9 @@
                 renderFieldRowTemplate()
             );
         });
-
-        if (my.result && my.result.query) {
-            $.each(my.result.query.fields, function(i, field) {
+        
+        if (my.options.result && my.options.result.query) {
+            $.each(my.options.result.query.fields, function(i, field) {
                 $container.append(
                     renderFieldRowTemplate({'field': field})
                 );
@@ -77,7 +77,8 @@
             e.preventDefault();
             var $row = $(this).parent();
             $row.remove();
-        });    }
+        });    
+    }
 
 
     // jQuery Plugin

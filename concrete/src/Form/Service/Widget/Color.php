@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
-use Loader;
-use View;
-use Request;
+use Concrete\Core\Http\Request;
+use Concrete\Core\View\View;
 
 class Color
 {
@@ -14,40 +14,47 @@ class Color
      * </code>.
      *
      * @param string $inputName
-     * @param value  $string
-     * @param array  $options
+     * @param string|null $value
+     * @param array $options
      */
-    public function output($inputName, $value = null, $options = array())
+    public function output($inputName, $value = null, $options = [])
     {
         $view = View::getInstance();
         $view->requireAsset('core/colorpicker');
-        $form = Loader::helper('form');
         $r = Request::getInstance();
         if ($r->request->has($inputName)) {
             $value = h($r->request->get($inputName));
         }
         $strOptions = '';
-        $i = 0;
-        $defaults = array();
-        $defaults['value'] = $value;
-        $defaults['className'] = 'ccm-widget-colorpicker';
-        $defaults['showInitial'] = true;
-        $defaults['showInput'] = true;
-        $defaults['allowEmpty'] = true;
-        $defaults['cancelText'] = t('Cancel');
-        $defaults['chooseText'] = t('Choose');
-        $defaults['preferredFormat'] = 'rgb';
-        $defaults['showAlpha'] = false;
-        $defaults['clearText'] = t('Clear Color Selection');
-        $defaults['appendTo'] = '.ui-dialog';
+        $defaults = [
+            'value' => $value,
+            'className' => 'ccm-widget-colorpicker',
+            'showInitial' => true,
+            'showInput' => true,
+            'allowEmpty' => true,
+            'cancelText' => t('Cancel'),
+            'chooseText' => t('Choose'),
+            'togglePaletteMoreText' => t('more'),
+            'togglePaletteLessText' => t('less'),
+            'noColorSelectedText' => t('No Color Selected'),
+            'preferredFormat' => 'rgb',
+            'showAlpha' => false,
+            'clearText' => t('Clear Color Selection'),
+            'appendTo' => '.ui-dialog',
+        ];
         $strOptions = json_encode(array_merge($defaults, $options));
 
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
 
-        echo "<input type=\"text\" data-color-picker=\"{$identifier}\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
-        echo "<script type=\"text/javascript\">";
-        echo "$(function () { $('[data-color-picker={$identifier}]').spectrum({$strOptions}); })";
-        echo "</script>";
+        echo <<<EOT
+<input type="text" data-color-picker="{$identifier}" name="{$inputName}" value="{$value}" id="ccm-colorpicker-{$inputName}" />
+<script>
+$(function () {
+    $('[data-color-picker={$identifier}]').spectrum({$strOptions});
+});
+</script>
+EOT
+        ;
     }
 }

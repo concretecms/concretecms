@@ -32,11 +32,8 @@ class NumberValue extends AbstractValue
      */
     public function setValue($value)
     {
-        if ($value === null || $value === '') {
-            $this->value = null;
-        } else {
-            $this->value = (string) $value;
-        }
+        $value = (string) $value;
+        $this->value = $value === '' ? null : $value;
     }
 
     public function __toString()

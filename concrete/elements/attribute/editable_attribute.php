@@ -1,33 +1,47 @@
 <?php
+
+use Concrete\Core\Attribute\CustomNoValueTextAttributeInterface;
+use Concrete\Core\Attribute\XEditableConfigurableAttributeInterface;
+
 /**
  * @var Concrete\Core\Entity\Attribute\Key\Key $ak
- * @var $objects
- * @var $object
+ * @var Traversable|array|null $objects
+ * @var object|null $object
  * @var callback $permissionsCallback
  * @var array $permissionsArguments
  * @var string $clearAction
  * @var string $saveAction
  * @var string $display
  */
+$xeditableOptions = null;
+$display = null;
+$noValueDisplayHtml = '';
 if (isset($objects)) {
+    $previousDisplay = null;
     foreach ($objects as $object) {
         $value = $object->getAttributeValueObject($ak);
-        if (!is_object($value)) {
-            $display = '';
-        } else {
-            $display = $value->getDisplayValue();
+        if (is_object($value)) {
+            $display = (string) $value->getDisplayValue();
         }
-        if (isset($lastDisplay) && $display != $lastDisplay) {
+        if ($previousDisplay !== null && $display !== $previousDisplay) {
             $display = t('Multiple Values');
+            break;
         }
-        $lastDisplay = $display;
+        $previousDisplay = $display;
     }
 } else {
+    if (method_exists($ak, 'getController')) {
+        $attributeController = $ak->getController();
+        if ($attributeController instanceof CustomNoValueTextAttributeInterface) {
+            $noValueDisplayHtml = (string) $attributeController->getNoneTextDisplayValue();
+        }
+        if ($attributeController instanceof XEditableConfigurableAttributeInterface) {
+            $xeditableOptions = $attributeController->getXEditableOptions();
+        }
+    }
     $value = $object->getAttributeValueObject($ak);
     if (is_object($value)) {
-        $display = $value->getDisplayValue();
-    } else {
-        $display = '';
+        $display = (string) $value->getDisplayValue();
     }
 }
 
@@ -50,16 +64,30 @@ $canEdit = $permissionsCallback($ak, isset($permissionsArguments) ? $permissions
                     </ul>
                 <?php } ?>
                 <span
-                    <?php if ($canEdit) { ?>
+                    <?php
+                    if ($canEdit) {
+                        ?>
                         data-title="<?= $ak->getAttributeKeyDisplayName() ?>"
                         data-key-id="<?= $ak->getAttributeKeyID() ?>"
                         data-name="<?= $ak->getAttributeKeyID() ?>"
                         data-editable-field-type="xeditableAttribute"
                         data-url="<?= $saveAction ?>"
                         data-type="concreteattribute"
-                        <?php echo $ak->getAttributeTypeHandle() === 'textarea' ? "data-editableMode='inline'" : ''; ?>
-                    <?php } ?>
-                    ><?= $display ?></span>
+                        data-placement="bottom"
+                        <?php
+                        if ($xeditableOptions !== null) {
+                            foreach ($xeditableOptions as $xeditableOptionName => $xeditableOptionValue) {
+                                echo ' ', h("data-{$xeditableOptionName}"), '="', h($xeditableOptionValue), '"';
+                            }
+                        } elseif ($ak->getAttributeTypeHandle() === 'textarea') {
+                            echo ' data-editableMode="inline" ';
+                        }
+                        if ($noValueDisplayHtml !== '') {
+                            echo ' data-no-value-html="' . h($noValueDisplayHtml) . '" ';
+                        }
+                    }
+                    ?>
+                    ><?= $canEdit || $display !== null ? $display : $noValueDisplayHtml ?></span>
             </div>
         </div>
     </div>

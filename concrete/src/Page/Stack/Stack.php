@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Page\Stack;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Doctrine\DBAL\Connection;
 use GlobalArea;
 use Config;
 use Database;
@@ -493,18 +494,59 @@ class Stack extends Page
         // we have to do this because we need the area to exist before we try and add something to it.
         Area::getOrCreate($localizedStackPage, STACKS_AREA_NAME);
         $localizedStackCID = $localizedStackPage->getCollectionID();
+        $localizedStack = static::getByID($localizedStackCID);
+        $localizedStack->setMultilingualSection($section, $name);
+
+        return $localizedStack;
+    }
+
+    /**
+     * Mark this stack as a localized version.
+     *
+     * @param Section $section Multilingual Section
+     * @param string $stackName Optional
+     */
+    public function setMultilingualSection(Section $section, $stackName = '')
+    {
+        if ($stackName == '') {
+            $stackName = $this->getStackName();
+        }
+
+        /** @var Connection $db */
         $db = Database::connection();
         $db->update(
             'Stacks',
             [
                 'stMultilingualSection' => $section->getCollectionID(),
+                'stName' => $stackName,
             ],
             [
-                'cID' => $localizedStackCID,
+                'cID' => $this->getCollectionID(),
             ]
         );
-        $localizedStack = static::getByID($localizedStackCID);
+    }
 
-        return $localizedStack;
+    /**
+     * Copy localized versions from an another neutral stack.
+     *
+     * @param Stack $original The Stack that has original localized versions
+     */
+    public function copyLocalizedStacksFrom(Stack $original)
+    {
+        // Create localized stacks only this is a neutral stack
+        if ($this->isNeutralStack()) {
+            foreach (Section::getList() as $section) {
+                $localized = $this->getLocalizedStack($section);
+                // We should skip if localized stack is already created
+                if ($localized === null) {
+                    $originalLocalized = $original->getLocalizedStack($section);
+                    if ($originalLocalized !== null) {
+                        $copiedLocalized = $originalLocalized->duplicate($this);
+                        $copiedLocalized->update(['cName' => $this->getStackName()]);
+                        $copiedLocalized->setMultilingualSection($section, $this->getStackName());
+                    }
+                }
+            }
+        }
     }
 }

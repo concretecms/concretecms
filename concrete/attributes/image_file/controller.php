@@ -17,6 +17,7 @@ use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\File\Importer;
 use Core;
 use File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
@@ -78,6 +79,16 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
     }
 
+    public function getPlainTextValue()
+    {
+        $url = '';
+        $f = $this->getAttributeValue()->getValue();
+        if (is_object($f)) {
+            $url = $f->getURL();
+        }
+        return $url;
+    }
+    
     public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');
@@ -122,7 +133,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $bf = $this->getAttributeValue()->getValue();
         }
         $this->set('mode', $this->getAttributeKeySettings()->getMode());
-        $this->set('file', $bf);
+        $this->set('file', $bf ?: null);
     }
 
     public function importKey(\SimpleXMLElement $akey)
@@ -200,46 +211,51 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             }
         }
         if ($this->getAttributeKeySettings()->isModeHtmlInput()) {
-            $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
-            $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
-            if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
-                $fh = \Core::make('helper/validation/file');
-                if (!$fh->file($tmp_name)) {
-                    return new Error(t('You have not uploaded a valid file.'),
-                        new AttributeField($this->getAttributeKey())
-                    );
+            $previousFileID = empty($data['previousFile']) ? 0 : (int) $data['previousFile'];
+            if ($previousFileID !== 0) {
+                $operation = empty($data['operation']) ? 'replace' : $data['operation'];
+                if (in_array($operation, ['keep', 'remove'], true)) {
+                    return true;
                 }
-
-                if (!$fh->extension($name)) {
-                    return new Error(t('Invalid file extension.'),
-                        new AttributeField($this->getAttributeKey())
-                    );
-                }
-
-                return true;
-            } else {
+            }
+            $uploadedFile = array_get($this->request->files->all(), "akID.{$this->attributeKey->getAttributeKeyID()}.value");
+            if (!$uploadedFile instanceof UploadedFile || !$uploadedFile->isValid()) {
                 return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
             }
+            $name = $uploadedFile->getClientOriginalName();
+            $fh = $this->app->make('helper/validation/file');
+            if (!$fh->extension($name)) {
+                return new Error(t('Invalid file extension.'),
+                    new AttributeField($this->getAttributeKey())
+                );
+            }
+            return true;
         }
     }
 
     public function createAttributeValueFromRequest()
     {
-        $data = $this->post();
         if ($this->getAttributeKeySettings()->isModeFileManager()) {
-            if ($data['value'] > 0) {
-                $f = File::getByID($data['value']);
-
-                return $this->createAttributeValue($f);
+            $fID = (int) $this->post('value');
+            if ($fID !== 0) {
+                return $this->createAttributeValue(File::getByID($fID));
             }
         }
         if ($this->getAttributeKeySettings()->isModeHtmlInput()) {
-            // import the file.
-            $tmp_name = $_FILES['akID']['tmp_name'][$this->attributeKey->getAttributeKeyID()]['value'];
-            $name = $_FILES['akID']['name'][$this->attributeKey->getAttributeKeyID()]['value'];
-            if (!empty($tmp_name) && is_uploaded_file($tmp_name)) {
+            $previousFileID = (int) $this->post('previousFile');
+            if ($previousFileID !== 0) {
+                $operation = $this->post('operation') ?: 'replace';
+                if ($operation === 'remove') {
+                    return $this->createAttributeValue(null);
+                }
+                if ($operation === 'keep') {
+                    return $this->createAttributeValue(File::getByID($previousFileID));
+                }
+            }
+            $uploadedFile = array_get($this->request->files->all(), "akID.{$this->attributeKey->getAttributeKeyID()}.value");
+            if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
                 $importer = new Importer();
-                $f = $importer->import($tmp_name, $name);
+                $f = $importer->import($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName());
                 if (is_object($f)) {
                     return $this->createAttributeValue($f->getFile());
                 }

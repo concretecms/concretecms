@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Foundation\Repetition\BasicRepetition;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Service\Date;
@@ -13,9 +14,10 @@ class DurationSelector
 
     protected function getDefaultRepetition($timezone = null)
     {
+        $app = Application::getFacadeApplication();
         if (!$timezone) {
             if (\Config::get('concrete.misc.user_timezones')) {
-                $user = new User();
+                $user = $app->make(User::class);
                 $userInfo = $user->getUserInfoObject();
                 $timezone = $userInfo->getUserTimezone();
             } else {

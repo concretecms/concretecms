@@ -7,7 +7,7 @@
     <hr>
 </div>
 <div class="form-group">
-    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_deattach'); ?>" class="btn btn-primary btn-google">
+    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_detach'); ?>" class="btn btn-primary btn-google">
         <i class="fa fa-google"></i>
         <?= t('Detach your %s account', t('Google')) ?>
     </a>

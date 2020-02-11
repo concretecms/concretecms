@@ -11,6 +11,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Permission\IPService;
+use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
@@ -164,19 +165,26 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     public function hasActiveSession()
     {
-        $cookie = $this->app['cookie'];
+        if ($this->app['cookie']->has($this->config->get('concrete.session.name'))) {
+            return true;
+        }
+        if ($this->app->make(CookieService::class)->getCookie() !== null) {
+            return true;
+        }
 
-        return $cookie->has($this->config->get('concrete.session.name')) || $cookie->has('ccmAuthUserHash');
+        return false;
     }
 
     /**
      * Get the current session (if it exists).
      *
-     * @return \Symfony\Component\HttpFoundation\Session\Session|null
+     * @param bool $start set to true to initialize the current session if it's not already started
+     *
+     * @return \Symfony\Component\HttpFoundation\Session\Session|null Returns NULL if $start is falsy and the session is not already started
      */
-    public function getActiveSession()
+    public function getActiveSession($start = false)
     {
-        if ($this->hasActiveSession()) {
+        if ($start || $this->hasActiveSession()) {
             return $this->app->make('session');
         }
 

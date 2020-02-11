@@ -91,19 +91,17 @@ class Controller extends GenericOauth1aTypeController
         $this->set('apisecret', $config->get('auth.twitter.secret', ''));
 
         $list = new \GroupList();
-        $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }
 
     public function handle_detach_attempt()
     {
-
-        if (!User::isLoggedIn()) {
+        $user = $this->app->make(User::class);
+        if (!$user->isRegistered()) {
             $response = new RedirectResponse(\URL::to('/login'), 302);
             $response->send();
             exit;
         }
-        $user = new User();
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
 
@@ -112,9 +110,7 @@ class Controller extends GenericOauth1aTypeController
 
         // Twitter Sign in is Oauth 1 so we can't revoke access only delete from the database
         try {
-            /* @var \Concrete\Core\Database\Connection\Connection $database */
-            $database = $this->app->make(Connection::class);
-            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
+            $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {

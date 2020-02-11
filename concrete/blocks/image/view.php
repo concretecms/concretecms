@@ -36,7 +36,7 @@ if (is_object($f) && $f->getFileID()) {
     }
 
     if ($linkURL) {
-        echo '<a href="' . $linkURL . '" '. ($openLinkInNewWindow ? 'target="_blank"' : '') .'>';
+        echo '<a href="' . $linkURL . '" '. ($openLinkInNewWindow ? 'target="_blank" rel="noopener noreferrer"' : '') .'>';
     }
 
     // add data attributes for hover effect

@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Api;
 
+use Concrete\Core\Api\OAuth\Scope\ScopeRegistry;
+use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
 use Concrete\Core\Api\OAuth\Server\IdTokenResponse;
 use Concrete\Core\Api\OAuth\Validator\DefaultValidator;
 use Concrete\Core\Entity\OAuth\AccessToken;
@@ -27,7 +29,7 @@ use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use phpseclib\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
-use Zend\Http\Header\Authorization;
+use League\OAuth2\Server\CryptKey;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -51,6 +53,9 @@ class ApiServiceProvider extends ServiceProvider
             $list->loadRoutes($router);
             $this->registerAuthorizationServer();
         }
+        $this->app->singleton(ScopeRegistryInterface::class, function() {
+            return new ScopeRegistry();
+        });
     }
 
     private function repositoryFactory($factoryClass, $entityClass)
@@ -122,11 +127,11 @@ class ApiServiceProvider extends ServiceProvider
     protected function registerAuthorizationServer()
     {
         // The ResourceServer deals with authenticating requests, in other words validating tokens
-        $this->app->when(ResourceServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
         $this->app->bind(ResourceServer::class, function() {
+            $cryptKey = new CryptKey($this->getKey(self::KEY_PUBLIC), null, DIRECTORY_SEPARATOR !== '\\');
             return $this->app->build(ResourceServer::class, [
                 $this->app->make(AccessTokenRepositoryInterface::class),
-                $this->getKey(self::KEY_PUBLIC),
+                $cryptKey,
                 $this->app->make(DefaultValidator::class)
             ]);
         });

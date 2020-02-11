@@ -4,6 +4,7 @@ namespace Concrete\Core\Foundation\Runtime\Run;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -89,6 +90,13 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // want to give packages an opportunity to replace classes and load new classes
                 'setupPackages',
 
+                // Pre-load class aliases
+                // This is needed to avoid the problem of calling functions that accept a class alias as a parameter,
+                // but that alias isn't still auto-loaded. For example, that would result in the following error:
+                // Argument 1 passed to functionName() must be an instance of Area, instance of Concrete\Core\Area\Area given.
+                // Don't use this method: it will be removed in future concrete5 versions
+                'preloadClassAliases',
+
                 // Load site specific timezones. Has to come after packages because it
                 // instantiates the site service, which sometimes packages need to override.
                 'initializeSiteTimezone',
@@ -110,6 +118,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             ]);
         } else {
             $this->initializeSystemTimezone();
+            $this->preloadClassAliases();
         }
 
         // Create the request to use
@@ -181,7 +190,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      */
     protected function setSystemLocale()
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         $lan = $u->getUserLanguageToDisplay();
         $loc = Localization::getInstance();
         $loc->setContextLocale(Localization::CONTEXT_UI, $lan);
@@ -249,6 +258,19 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     protected function setupPackages()
     {
         $this->app->setupPackages();
+    }
+
+    /**
+     * Pre-load class aliases
+     * This is needed to avoid the problem of calling functions that accept a class alias as a parameter,
+     * but that alias isn't still auto-loaded. For example, that would result in the following error:
+     * Argument 1 passed to functionName() must be an instance of Area, instance of Concrete\Core\Area\Area given.
+     *
+     * @deprecated Don't use this method: it will be removed in future concrete5 versions
+     */
+    protected function preloadClassAliases()
+    {
+        ClassAliasList::getInstance()->resolveRequired();
     }
 
     /**

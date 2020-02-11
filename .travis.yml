@@ -3,7 +3,7 @@ dist: trusty
 language: php
 sudo: false
 cache:
-  yarn: true
+  npm: true
   directories:
     - $HOME/.composer/cache
     - build/node_modules
@@ -15,6 +15,8 @@ matrix:
   fast_finish: true
   allow_failures:
     - name: Test with PHP nightly
+    - name: Test with PHP 7.4
+    - name: Check PHP coding style
   include:
 
     - name: Test with PHP 7.1 (with code coverage)
@@ -32,7 +34,7 @@ matrix:
       before_script:
         - ./.travis/composer-deps.sh
       script:
-        - composer phpcs
+        - ./.travis/check-php-coding-style.sh
 
     - name: Check JS coding style
       language: node_js
@@ -87,6 +89,13 @@ matrix:
 
     - name: Test with PHP 7.3
       php: '7.3'
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test
+
+    - name: Test with PHP 7.4
+      php: 7.4snapshot
       before_script:
         - ./.travis/composer-deps.sh
       script:

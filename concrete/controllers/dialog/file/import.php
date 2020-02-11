@@ -45,7 +45,7 @@ class Import extends UserInterface
 
     public function view()
     {
-        $this->requireAsset('dropzone');
+        $this->requireAsset('core/file-uploader');
         $this->setViewHelpers();
         $this->setViewSets();
     }
@@ -66,17 +66,10 @@ class Import extends UserInterface
      */
     protected function setViewSets()
     {
-        $config = $this->app->make('config');
+        $incoming = $this->app->make(Incoming::class);
         $this->set('formID', 'ccm-file-manager-import-files-' . $this->app->make(Identifier::class)->getString(32));
         $this->set('currentFolder', $this->getCurrentFolder());
         $this->set('originalPage', $this->getOriginalPage());
-        $this->set('isChunkingEnabled', (bool) $config->get('concrete.upload.chunking.enabled'));
-        $chunkSize = (int) $config->get('concrete.upload.chunking.chunkSize');
-        if ($chunkSize < 1) {
-            $chunkSize = $this->getAutomaticChunkSize();
-        }
-        $this->set('chunkSize', $chunkSize);
-        $incoming = $this->app->make(Incoming::class);
         $this->set('incomingStorageLocation', $incoming->getIncomingStorageLocation());
         $this->set('incomingPath', $incoming->getIncomingPath());
         try {
@@ -202,31 +195,6 @@ class Import extends UserInterface
         $this->originalPage = $value === null || $value->isError() ? null : $value;
 
         return $this;
-    }
-
-    /**
-     * Determine the chunk size for chunked uploads.
-     *
-     * @return int
-     */
-    protected function getAutomaticChunkSize()
-    {
-        $nh = $this->app->make('helper/number');
-        // Maximum size of an uploaded file, minus a small value (just in case)
-        $uploadMaxFilesize = (int) $nh->getBytes(ini_get('upload_max_filesize')) - 100;
-        // Max size of post data allowed, minus enough space to consider other posted fields.
-        $postMaxSize = (int) $nh->getBytes(ini_get('post_max_size')) - 10000;
-        if ($uploadMaxFilesize < 1 && $postMaxSize < 1) {
-            return 2000000;
-        }
-        if ($uploadMaxFilesize < 1) {
-            return $postMaxSize;
-        }
-        if ($postMaxSize < 1) {
-            return $uploadMaxFilesize;
-        }
-
-        return min($uploadMaxFilesize, $postMaxSize);
     }
 
     /**
