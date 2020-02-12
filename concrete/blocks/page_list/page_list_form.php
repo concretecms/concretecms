@@ -12,7 +12,7 @@ if ($c) {
         }
     }
 }
-$form = Loader::helper('form/page_selector');
+$formPageSelector = Loader::helper('form/page_selector');
 ?>
 
 <?=Loader::helper('concrete/ui')->tabs([
@@ -289,7 +289,7 @@ $form = Loader::helper('form/page_selector');
                     ?> style="display: none" <?php
                 } ?>>
 
-                    <?= $form->selectPage('cParentIDValue', $isOtherPage ? $cParentID : false); ?>
+                    <?= $formPageSelector->selectPage('cParentIDValue', $isOtherPage ? $cParentID : false); ?>
                 </div>
 
                 <div class="ccm-page-list-all-descendents"
