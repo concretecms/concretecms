@@ -325,7 +325,7 @@
 
                 if (block instanceof Concrete.Layout) {
                     areas = [_(areas).find(function (a) {
-                        return block.getArea() === a;
+                        return block.getAreaId() === a.id;
                     })];
                 }
 
