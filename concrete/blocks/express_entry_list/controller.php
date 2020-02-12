@@ -6,13 +6,13 @@ use Concrete\Controller\Element\Search\SearchFieldSelector;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Entity\Express\ManyToManyAssociation;
 use Concrete\Core\Entity\Express\ManyToOneAssociation;
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
-use Concrete\Core\Express\Search\Field\AssociationField;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
+use Concrete\Core\Express\Search\Field\AssociationField;
 use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Field\ManagerFactory;
@@ -22,8 +22,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController
 {
-    protected $btInterfaceWidth = "640";
-    protected $btInterfaceHeight = "400";
+    protected $btInterfaceWidth = '640';
+    protected $btInterfaceHeight = '400';
     protected $btTable = 'btExpressEntryList';
     protected $entityAttributes = [];
 
@@ -36,17 +36,17 @@ class Controller extends BlockController
 
     public function getBlockTypeDescription()
     {
-        return t("Add a searchable Express entry list to a page.");
+        return t('Add a searchable Express entry list to a page.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Express Entry List");
+        return t('Express Entry List');
     }
 
     public function getBlockTypeInSetName()
     {
-        return t("List");
+        return t('List');
     }
 
     public function add()
@@ -57,12 +57,14 @@ class Controller extends BlockController
         $this->set('searchAssociations', []);
         $this->set('linkedProperties', []);
         $this->set('displayLimit', 20);
+        $this->set('titleFormat', 'h2');
     }
 
     protected function getSearchFieldManager(Entity $entity)
     {
         $fieldManager = ManagerFactory::get('express');
         $fieldManager->setExpressCategory($entity->getAttributeKeyCategory());
+
         return $fieldManager;
     }
 
@@ -80,7 +82,7 @@ class Controller extends BlockController
                 $field = $manager->getFieldByKey($field);
                 if (is_object($field)) {
                     return new JsonResponse($field);
-    }
+                }
             }
         }
     }
@@ -183,12 +185,12 @@ class Controller extends BlockController
             if ($this->displayLimit > 0) {
                 $list->setItemsPerPage(intval($this->displayLimit));
             }
-            
+
             // Filter by any pre-set search criteria
             if ($this->filterFields) {
                 $filterFields = unserialize($this->filterFields);
                 if (is_array($filterFields)) {
-                    foreach($filterFields as $field) {
+                    foreach ($filterFields as $field) {
                         $field->filterList($list);
                     }
                 }
@@ -336,7 +338,6 @@ class Controller extends BlockController
             $data['filterFields'] = serialize($filterFields);
         }
 
-
         parent::save($data);
     }
 
@@ -377,7 +378,7 @@ class Controller extends BlockController
     {
         $r = $this->entityManager->getRepository(Entity::class);
         $entityObjects = $r->findAll();
-        $entities = ['' => t("** Choose Entity")];
+        $entities = ['' => t('** Choose Entity')];
         foreach ($entityObjects as $entity) {
             $entities[$entity->getID()] = $entity->getEntityDisplayName();
         }

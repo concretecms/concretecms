@@ -5,24 +5,30 @@ $c = Page::getCurrentPage();
 ?>
 
 <?php if (!$ak instanceof Concrete\Core\Entity\Attribute\Key\Key) { ?>
-<div class="ccm-error"><?php echo t('Error: The required page attribute with the handle of: "%s" doesn\'t exist', $controller->attributeHandle)?><br/><br/></div>
+<div class="ccm-error"><?php echo t('Error: The required page attribute with the handle of: "%s" doesn\'t exist', $controller->attributeHandle); ?><br/><br/></div>
 <?php } else { ?>
-<input type="hidden" name="attributeHandle" value="<?php echo $controller->attributeHandle?>" />
+<input type="hidden" name="attributeHandle" value="<?php echo $controller->attributeHandle; ?>" />
+	
 	<div class="form-group">
-        <?php echo $form->label('title', t('Title'))?>
-		<?php echo $form->text('title', $title); ?>
+        <?php echo $form->label('title', t('Title')); ?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
 	</div>
 
     <div class="form-group">
-        <label class="control-label"><?php echo t('Display a List of Tags From')?></label>
+        <label class="control-label"><?php echo t('Display a List of Tags From'); ?></label>
         <div class="radio">
             <label>
-                <?php echo $form->radio('displayMode', 'page', $displayMode)?><?php echo t('The Current Page.')?>
+                <?php echo $form->radio('displayMode', 'page', $displayMode); ?><?php echo t('The Current Page.'); ?>
             </label>
         </div>
         <div class="radio">
             <label>
-                <?php echo $form->radio('displayMode', 'cloud', $displayMode)?><?php echo t('The Entire Site.')?>
+                <?php echo $form->radio('displayMode', 'cloud', $displayMode); ?><?php echo t('The Entire Site.'); ?>
             </label>
         </div>
     </div>
@@ -38,12 +44,12 @@ $c = Page::getCurrentPage();
 	<?php } ?>
 
 	<div id="ccm-tags-display-cloud" class="form-group">
-        <?php echo $form->label('cloudCount', t('Number to Display'))?>
-		<?php echo $form->text('cloudCount', $cloudCount, array('size' => 4))?>
+        <?php echo $form->label('cloudCount', t('Number to Display')); ?>
+		<?php echo $form->text('cloudCount', $cloudCount, ['size' => 4]); ?>
 	</div>
 
 	<div class="form-group">
-    	<label class="control-label"><?php echo t('Link Tags to Filtered Page List')?></label>
+    	<label class="control-label"><?php echo t('Link Tags to Filtered Page List'); ?></label>
 		<?php
         $form_selector = $app->make('helper/form/page_selector');
         echo $form_selector->selectPage('targetCID', $targetCID);

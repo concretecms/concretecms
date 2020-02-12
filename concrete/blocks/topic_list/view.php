@@ -1,9 +1,9 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php  defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <div class="ccm-block-topic-list-wrapper">
 
     <div class="ccm-block-topic-list-header">
-        <h5><?php echo h($title); ?></h5>
+        <<?php echo $titleFormat; ?>><?php echo h($title); ?></<?php echo $titleFormat; ?>>
     </div>
 
     <?php
@@ -24,16 +24,14 @@
                         ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
                         if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) {
                             ?> class="ccm-block-topic-list-topic-selected"<?php
-                        }
-                        ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a><?php
+                        } ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a><?php
                     }
                     if (count($topic->getChildNodes())) {
                         $walk($topic);
                     } ?>
                     </li>
                     <?php
-                }
-                ?></ul><?php
+                } ?></ul><?php
             };
             $walk($node);
         }
@@ -44,8 +42,7 @@
             ?><ul class="ccm-block-topic-list-page-topics"><?php
             foreach ($topics as $topic) {
                 ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>"><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php
-            }
-            ?></ul><?php
+            } ?></ul><?php
         } else {
             echo t('No topics.');
         }

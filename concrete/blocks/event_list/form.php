@@ -1,28 +1,28 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <fieldset>
-    <legend><?=t('Data Source')?></legend>
+    <legend><?=t('Data Source'); ?></legend>
 
-    <?php View::element('calendar/block/data_source', ['multiple' => true, 'caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle]) ?>
+    <?php View::element('calendar/block/data_source', ['multiple' => true, 'caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle]); ?>
 
 </fieldset>
 
 <fieldset>
-    <legend><?=t('Filtering')?></legend>
+    <legend><?=t('Filtering'); ?></legend>
 
     <div class="form-group">
-        <label class="control-label"><?= t('Filter By Topic') ?></label>
+        <label class="control-label"><?= t('Filter By Topic'); ?></label>
         <div class="radio">
             <label>
-                <input type="radio" name="filterByTopic" value="none" <?= $filterByTopic == 'none' ? 'checked' : '' ?>>
+                <input type="radio" name="filterByTopic" value="none" <?= $filterByTopic == 'none' ? 'checked' : ''; ?>>
                 <?php echo t('No topic filtering'); ?>
             </label>
         </div>
         <div class="radio">
             <label>
-                <input type="radio" name="filterByTopic" value="specific" <?= $filterByTopic == 'specific' ? 'checked' : '' ?>>
+                <input type="radio" name="filterByTopic" value="specific" <?= $filterByTopic == 'specific' ? 'checked' : ''; ?>>
                 <?php echo t('Specific Topic'); ?>
             </label>
         </div>
@@ -30,98 +30,94 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
             <div class="radio">
                 <label>
-                    <input type="radio" name="filterByTopic" value="page_attribute" <?= $filterByTopic == 'page_attribute' ? 'checked' : '' ?>>
+                    <input type="radio" name="filterByTopic" value="page_attribute" <?= $filterByTopic == 'page_attribute' ? 'checked' : ''; ?>>
                     <?php echo t('Current Page'); ?>
                 </label>
             </div>
             <div data-row="page-attribute">
                 <div class="form-group">
                     <select class="form-control" name="filterByPageTopicAttributeKeyHandle" id="filterByPageTopicAttributeKeyHandle">
-                        <option value=""><?=t('** Select Page Attribute')?></option>
+                        <option value=""><?=t('** Select Page Attribute'); ?></option>
                         <?php foreach ($pageAttributeKeys as $attributeKey) {
-    ?>
-                            <option value="<?=$attributeKey->getAttributeKeyHandle()?>" <?php if ($attributeKey->getAttributeKeyHandle() == $filterByPageTopicAttributeKeyHandle) {
-    ?>selected<?php
-
-}
-    ?>><?=$attributeKey->getAttributeKeyDisplayName()?></option>
+        ?>
+                            <option value="<?=$attributeKey->getAttributeKeyHandle(); ?>" <?php if ($attributeKey->getAttributeKeyHandle() == $filterByPageTopicAttributeKeyHandle) {
+            ?>selected<?php
+        } ?>><?=$attributeKey->getAttributeKeyDisplayName(); ?></option>
                             <?php
-
-}
-    ?>
+    } ?>
                     </select>
                 </div>
             </div>
-        <?php 
+        <?php
 } ?>
         <div data-row="specific-topic">
             <div class="form-group">
                 <select class="form-control" name="filterByTopicAttributeKeyID">
-                    <option value=""><?=t('** Select Topic Attribute')?></option>
+                    <option value=""><?=t('** Select Topic Attribute'); ?></option>
                     <?php foreach ($attributeKeys as $ak) {
-    $attributeController = $ak->getController();
-    ?>
-                        <option value="<?=$ak->getAttributeKeyID()?>" <?php if ($ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) {
-    ?>selected<?php
-
-}
-    ?> data-tree-id="<?=$attributeController->getTopicTreeID()?>"><?=$ak->getAttributeKeyDisplayName()?></option>
+        $attributeController = $ak->getController(); ?>
+                        <option value="<?=$ak->getAttributeKeyID(); ?>" <?php if ($ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) {
+            ?>selected<?php
+        } ?> data-tree-id="<?=$attributeController->getTopicTreeID(); ?>"><?=$ak->getAttributeKeyDisplayName(); ?></option>
                         <?php
-
-} ?>
+    } ?>
                 </select>
-                <input type="hidden" name="filterByTopicID" value="<?=$filterByTopicID?>">
+                <input type="hidden" name="filterByTopicID" value="<?=$filterByTopicID; ?>">
                 <div id="ccm-block-event-list-topic-tree-wrapper"></div>
             </div>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label"><?= t('Featured Events') ?></label>
+        <label class="control-label"><?= t('Featured Events'); ?></label>
         <div class="checkbox">
             <label>
                 <input <?php if (!is_object($featuredAttribute)) {
-    ?> disabled <?php 
-} ?>
+        ?> disabled <?php
+    } ?>
                     type="checkbox" name="filterByFeatured" value="1" <?php if ($filterByFeatured == 1) {
-    ?> checked <?php 
-} ?>
+        ?> checked <?php
+    } ?>
                     style="vertical-align: middle" />
-                    <?= t('Display featured events only.') ?>
+                    <?= t('Display featured events only.'); ?>
             </label>
         </div>
         <?php if (!is_object($featuredAttribute)) {
-    ?>
+        ?>
             <div class="alert alert-info">
-                <?=t('(<strong>Note</strong>: You must create the "is_featured" event attribute first.)');
-    ?>
+                <?=t('(<strong>Note</strong>: You must create the "is_featured" event attribute first.)'); ?>
             </div>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </div>
 
 </fieldset>
 
 <fieldset>
-    <legend><?=t('Results')?></legend>
+    <legend><?=t('Results'); ?></legend>
     <div class="form-group">
-        <label class="control-label" for="eventListTitle"><?= t('Title') ?></label>
-        <?=$form->text('eventListTitle', $eventListTitle)?>
+        <?php echo $form->label('eventListTitle', t('Title')); ?>
+	    <div class="input-group">
+		    <?php echo $form->text('eventListTitle', $eventListTitle); ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
+	</div>
+
+    <div class="form-group">
+        <label class="control-label" for="totalToRetrieve"><?= t('Total Number of Events to Retrieve'); ?></label>
+        <input id="totalToRetrieve" type="text" name="totalToRetrieve" value="<?= $totalToRetrieve; ?>" class="form-control">
     </div>
 
     <div class="form-group">
-        <label class="control-label" for="totalToRetrieve"><?= t('Total Number of Events to Retrieve') ?></label>
-        <input id="totalToRetrieve" type="text" name="totalToRetrieve" value="<?= $totalToRetrieve ?>" class="form-control">
+        <label class="control-label" for="totalPerPage"><?= t('Events to Display Per Page'); ?></label>
+        <input id="totalPerPage" type="text" name="totalPerPage" value="<?= $totalPerPage; ?>" class="form-control">
     </div>
 
     <div class="form-group">
-        <label class="control-label" for="totalPerPage"><?= t('Events to Display Per Page') ?></label>
-        <input id="totalPerPage" type="text" name="totalPerPage" value="<?= $totalPerPage ?>" class="form-control">
-    </div>
-
-    <div class="form-group">
-        <label class="control-label" for="linkToPage"><?= t('Link To More Events Calendar/Page') ?></label>
-        <?=Core::make('helper/form/page_selector')->selectPage('linkToPage', $linkToPage)?>
+        <label class="control-label" for="linkToPage"><?= t('Link To More Events Calendar/Page'); ?></label>
+        <?=Core::make('helper/form/page_selector')->selectPage('linkToPage', $linkToPage); ?>
     </div>
 
 
@@ -158,7 +154,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
                 <?php if ($filterByTopicID) { ?>
-                'selectNodesByKey': [<?php echo intval($filterByTopicID) ?>],
+                'selectNodesByKey': [<?php echo intval($filterByTopicID); ?>],
                 <?php } ?>
                 'onSelect' : function(nodes) {
                     if (nodes.length) {

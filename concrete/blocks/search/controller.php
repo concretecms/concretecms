@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Search;
 
 use CollectionAttributeKey;
@@ -271,6 +270,7 @@ class Controller extends BlockController
         $this->set('postTo_cID', $this->postTo_cID);
         $this->set('allowUserOptions', $this->allow_user_options);
         $this->set('searchAll', $this->search_all);
+        $this->set('titleFormat', $this->titleFormat);
 
         if ((string) $this->resultsURL !== '') {
             $resultsPage = null;
@@ -309,6 +309,7 @@ class Controller extends BlockController
     public function add()
     {
         $this->edit();
+        $this->set('titleFormat', 'h3');
     }
 
     /**
@@ -336,6 +337,7 @@ class Controller extends BlockController
             'resultsURL' => '',
             'resultsPageKind' => '',
             'allowUserOptions' => '',
+            'titleFormat' => '',
         ];
         $args = [
             'title' => (string) $data['title'],
@@ -345,6 +347,7 @@ class Controller extends BlockController
             'resultsURL' => '',
             'search_all' => 0,
             'allow_users_options' => 0,
+            'titleFormat' => (string) $data['titleFormat'],
         ];
         switch ($data['baseSearchPath']) {
             case 'THIS':
@@ -397,7 +400,7 @@ class Controller extends BlockController
     /**
      * Perform the search.
      *
-     * @return null|false
+     * @return false|null
      */
     public function do_search()
     {

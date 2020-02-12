@@ -2,15 +2,15 @@
 namespace Concrete\Block\RssDisplayer;
 
 use Concrete\Core\Block\BlockController;
-use Loader;
 use Core;
+use Loader;
 
 class Controller extends BlockController
 {
-    public $itemsToDisplay = "5";
-    public $showSummary = "1";
-    public $launchInNewWindow = "1";
-    public $title = "";
+    public $itemsToDisplay = '5';
+    public $showSummary = '1';
+    public $launchInNewWindow = '1';
+    public $title = '';
     protected $btTable = 'btRssDisplay';
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
@@ -23,7 +23,7 @@ class Controller extends BlockController
     /**
      * Default number of seconds that the output of this block should be cached
      * (Can be overridden by the user within C5 UI).
-     * 
+     *
      * @var int
      */
     protected $btCacheBlockOutputLifetime = 3600;
@@ -31,17 +31,17 @@ class Controller extends BlockController
     /**
      * Number of seconds that the RSS feed itself should be cached before fetching
      * a fresh copy.
-     * 
+     *
      * (Perhaps this could eventually become a user-setting?)
-     * 
+     *
      * Caching is important as fetching a remote URL can significantly delay
      * the rendering of a PHP page.
-     * 
+     *
      * Setting to "null" should cache it indefinitely until cache is manually cleared.
-     * 
+     *
      * Should probably be less than $btCacheBlockOutputLifetime above, otherwise the
      * block will be re-rendered using the same stale RSS data.
-     * 
+     *
      * @var int
      */
     protected $rssFeedCacheLifetime = 1800;
@@ -51,12 +51,12 @@ class Controller extends BlockController
      */
     public function getBlockTypeDescription()
     {
-        return t("Fetch, parse and display the contents of an RSS or Atom feed.");
+        return t('Fetch, parse and display the contents of an RSS or Atom feed.');
     }
 
     public function getBlockTypeName()
     {
-        return t("RSS Displayer");
+        return t('RSS Displayer');
     }
 
     public function getJavaScriptStrings()
@@ -143,7 +143,7 @@ class Controller extends BlockController
 
     public function view()
     {
-        $fp = Loader::helper("feed");
+        $fp = Loader::helper('feed');
         $posts = [];
 
         try {
@@ -164,6 +164,11 @@ class Controller extends BlockController
         $this->set('title', $this->title);
     }
 
+    public function add()
+    {
+        $this->set('titleFormat', 'h5');
+    }
+
     public function save($data)
     {
         $data += [
@@ -174,6 +179,7 @@ class Controller extends BlockController
             'title' => '',
             'standardDateFormat' => '',
             'customDateFormat' => '',
+            'titleFormat' => 'h5',
         ];
         $args = [
             'url' => $data['url'],
@@ -181,6 +187,7 @@ class Controller extends BlockController
             'showSummary' => $data['showSummary'] ? 1 : 0,
             'launchInNewWindow' => $data['launchInNewWindow'] ? 1 : 0,
             'title' => $data['title'],
+            'titleFormat' => $data['titleFormat'],
         ];
         switch ($data['standardDateFormat']) {
             case ':custom:':
@@ -195,7 +202,7 @@ class Controller extends BlockController
 
     public function getSearchableContent()
     {
-        $fp = Loader::helper("feed");
+        $fp = Loader::helper('feed');
         $posts = [];
 
         try {

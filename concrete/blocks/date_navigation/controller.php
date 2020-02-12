@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\DateNavigation;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Type;
@@ -19,12 +19,12 @@ class Controller extends BlockController
 
     public function getBlockTypeDescription()
     {
-        return t("Displays a list of months to filter a page list by.");
+        return t('Displays a list of months to filter a page list by.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Date Navigation");
+        return t('Date Navigation');
     }
 
     public function add()
@@ -32,6 +32,7 @@ class Controller extends BlockController
         $this->edit();
         $this->set('maxResults', 3);
         $this->set('title', t('Archives'));
+        $this->set('titleFormat', 'h5');
     }
 
     public function edit()
@@ -56,12 +57,12 @@ class Controller extends BlockController
 
     public function getDateLabel($dateArray)
     {
-        return \Punic\Calendar::getMonthName($dateArray['month'], 'wide', '', true).' '.$dateArray['year'];
+        return \Punic\Calendar::getMonthName($dateArray['month'], 'wide', '', true) . ' ' . $dateArray['year'];
     }
 
     public function getPassThruActionAndParameters($parameters)
     {
-        if (Loader::helper("validation/numbers")->integer($parameters[0])) {
+        if (Loader::helper('validation/numbers')->integer($parameters[0])) {
             // then we're going to treat this as a year.
             $method = 'action_filter_by_date';
             $parameters[0] = intval($parameters[0]);

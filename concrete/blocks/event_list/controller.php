@@ -2,20 +2,20 @@
 namespace Concrete\Block\EventList;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Tree\Node\Node;
-use Concrete\Core\Utility\Service\Validation\Numbers;
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 use Core;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 340;
@@ -23,12 +23,12 @@ class Controller extends BlockController
 
     public function getBlockTypeDescription()
     {
-        return t("Displays a list of events from a calendar.");
+        return t('Displays a list of events from a calendar.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Event List");
+        return t('Event List');
     }
 
     public function add()
@@ -39,6 +39,7 @@ class Controller extends BlockController
         $this->set('totalToRetrieve', 9);
         $this->set('totalPerPage', 3);
         $this->set('filterByTopic', 'none');
+        $this->set('titleFormat', 'h2');
     }
 
     protected function getCalendarOrCalendars()
@@ -57,8 +58,8 @@ class Controller extends BlockController
             } else {
                 $caIDs = json_decode($this->caID);
                 if (is_array($caIDs)) {
-                    $calendars = array();
-                    foreach($caIDs as $caID) {
+                    $calendars = [];
+                    foreach ($caIDs as $caID) {
                         $calendars[] = Calendar::getByID($caID);
                     }
                     if (count($calendars) == 1) {
@@ -82,9 +83,9 @@ class Controller extends BlockController
         if (is_object($calendar)) {
             $permissions = new \Permissions($calendar);
             $this->set('canViewCalendar', $permissions->canViewCalendar());
-        } else if (is_array($calendar)) {
+        } elseif (is_array($calendar)) {
             $canViewCalendar = true;
-            foreach($calendar as $c) {
+            foreach ($calendar as $c) {
                 $permissions = new \Permissions($c);
                 if (!$permissions->canViewCalendar()) {
                     $canViewCalendar = false;
@@ -161,12 +162,12 @@ class Controller extends BlockController
 
             return $p->canViewCalendarInEditInterface();
         });
-        $calendarSelect = array('' => t('** Select a Calendar'));
+        $calendarSelect = ['' => t('** Select a Calendar')];
         foreach ($calendars as $calendar) {
             $calendarSelect[$calendar->getID()] = $calendar->getName();
         }
         $keys = CollectionKey::getList();
-        $pageAttributeKeys = array();
+        $pageAttributeKeys = [];
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $pageAttributeKeys[] = $ak;
@@ -175,11 +176,11 @@ class Controller extends BlockController
         $this->set('pageAttributeKeys', $pageAttributeKeys);
         $this->set('calendars', $calendarSelect);
         $this->set('featuredAttribute', EventKey::getByHandle('is_featured'));
-        $this->set('pageSelector', Core::make("helper/form/page_selector"));
+        $this->set('pageSelector', Core::make('helper/form/page_selector'));
 
         $number = new Numbers();
         if ($number->integer($this->caID)) {
-            $this->set('caID', array($this->caID)); // legacy single calendar field.
+            $this->set('caID', [$this->caID]); // legacy single calendar field.
         } else {
             $this->set('caID', json_decode($this->caID));
         }
@@ -218,7 +219,7 @@ class Controller extends BlockController
 
     protected function loadKeys()
     {
-        $keys = EventKey::getList(array('atHandle' => 'topics'));
+        $keys = EventKey::getList(['atHandle' => 'topics']);
         $this->set('attributeKeys', array_filter($keys, function ($ak) {
             return $ak->getAttributeTypeHandle() == 'topics';
         }));

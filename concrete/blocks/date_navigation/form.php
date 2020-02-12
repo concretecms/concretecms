@@ -1,14 +1,14 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <fieldset>
-    <legend><?=t('Filtering')?></legend>
+    <legend><?=t('Filtering'); ?></legend>
     <div class='form-group'>
-        <label for='title' class="control-label"><?=t('By Parent Page')?>:</label>
+        <label for='title' class="control-label"><?=t('By Parent Page'); ?>:</label>
         <div class="checkbox">
             <label>
                 <input <?php if (isset($cParentID) && (int) $cParentID > 0) {
-    ?>checked<?php 
+    ?>checked<?php
 } ?> name="filterByParent" type="checkbox" value="1" />
-                <?=t('Filter by Parent Page')?>
+                <?=t('Filter by Parent Page'); ?>
             </label>
         </div>
         <div id="ccm-block-related-pages-parent-page">
@@ -19,22 +19,20 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label"><?= t('By Page Type') ?></label>
+        <label class="control-label"><?= t('By Page Type'); ?></label>
         <?php ?>
             <select class="form-control" name="ptID" id="selectPTID">
-                <option value="0">** <?php echo t('All') ?> **</option>
+                <option value="0">** <?php echo t('All'); ?> **</option>
                 <?php
                 foreach ($pagetypes as $ct) {
                     ?>
                     <option
-                        value="<?= $ct->getPageTypeID() ?>" <?php if ((isset($ptID) ? $ptID : null) == $ct->getPageTypeID()) {
-    ?> selected <?php 
-}
-                    ?>>
-                        <?= $ct->getPageTypeDisplayName() ?>
+                        value="<?= $ct->getPageTypeID(); ?>" <?php if ((isset($ptID) ? $ptID : null) == $ct->getPageTypeID()) {
+                        ?> selected <?php
+                    } ?>>
+                        <?= $ct->getPageTypeDisplayName(); ?>
                     </option>
                 <?php
-
                 }
                 ?>
             </select>
@@ -42,14 +40,14 @@
     </div>
 </fieldset>
 <fieldset>
-    <legend><?=t("Results")?></legend>
+    <legend><?=t('Results'); ?></legend>
     <div class="form-group">
         <div class="checkbox">
             <label>
                 <input <?php if (isset($cTargetID) && (int) $cTargetID > 0) {
-    ?>checked<?php 
-} ?> name="redirectToResults" type="checkbox" value="1" />
-                <?=t('Redirect to Different Page on Click')?>
+                    ?>checked<?php
+                } ?> name="redirectToResults" type="checkbox" value="1" />
+                <?=t('Redirect to Different Page on Click'); ?>
             </label>
         </div>
         <div id="ccm-block-related-pages-search-page">
@@ -60,11 +58,16 @@
     </div>
 </fieldset>
 <fieldset>
-    <legend><?=t('Formatting')?></legend>
+    <legend><?=t('Formatting'); ?></legend>
     <div class="form-group">
-        <label class="control-label" for="title"><?=t('Title')?></label>
-        <input class="form-control" name="title" id="title" value="<?=$title?>" />
-    </div>
+        <?php echo $form->label('title', t('Title')); ?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
+	</div>
 </fieldset>
 
 

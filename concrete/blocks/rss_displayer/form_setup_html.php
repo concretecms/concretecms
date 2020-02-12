@@ -1,20 +1,23 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var $form \Concrete\Core\Form\Service\Form */
 
 ?>
 <div class="form-group">
-    <?= $form->label('url', t('Feed URL')) ?>
-    <input name="url" class="form-control" placeholder="<?= h(t('Feed URL')) ?>" value="<?= h($rssObj->url) ?>" type="text" required="required" />
+    <?= $form->label('url', t('Feed URL')); ?>
+    <input name="url" class="form-control" placeholder="<?= h(t('Feed URL')); ?>" value="<?= h($rssObj->url); ?>" type="text" required="required" />
 </div>
 <div class="form-group">
-    <label for="title" class="control-label">
-        <?= t('Feed Title') ?>
-    </label>
-    <input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
+    <?php echo $form->label('title', t('Feed Title')); ?>
+    <div class="input-group">
+   	<input name="title" class="form-control" placeholder="<?= h(t('Feed Title')); ?>" value="<?= h($rssObj->title); ?>"/>
+	    <div class="input-group-addon title-format-addon">
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+	    </div>
+	</div>
 </div>
 <div class="form-group">
-    <?= $form->label('standardDateFormat', t('Date Format')) ?>
+    <?= $form->label('standardDateFormat', t('Date Format')); ?>
     <?php
     $dateFormats = $rssObj->getDefaultDateTimeFormats();
     $dateFormats[':custom:'] = t('Custom date/time format');
@@ -45,14 +48,14 @@ $(document).ready(function() {
 });
 </script>
 <div class="form-group">
-    <?= $form->label('itemsToDisplay', t('Items to Show')) ?>
-    <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
+    <?= $form->label('itemsToDisplay', t('Items to Show')); ?>
+    <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay); ?>"/>
 </div>
 <div class="form-group">
     <div class="checkbox">
         <label>
-            <input type="checkbox" value="1" name="showSummary"<?= ((bool) $rssObj->showSummary ? ' checked' : '') ?> />
-            <?= t('Include Summary') ?>
+            <input type="checkbox" value="1" name="showSummary"<?= ((bool) $rssObj->showSummary ? ' checked' : ''); ?> />
+            <?= t('Include Summary'); ?>
         </label>
     </div>
 </div>
@@ -60,8 +63,8 @@ $(document).ready(function() {
     <div class="checkbox">
         <label>
             <input type="checkbox" value="1"
-               name="launchInNewWindow"<?= ((bool) $rssObj->launchInNewWindow ? ' checked' : '') ?> />
-            <?= t('Open links in a new window') ?>
+               name="launchInNewWindow"<?= ((bool) $rssObj->launchInNewWindow ? ' checked' : ''); ?> />
+            <?= t('Open links in a new window'); ?>
         </label>
     </div>
 </div>

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\PageList;
 
 use BlockType;
@@ -10,8 +9,8 @@ use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
-use Core;
 use Concrete\Core\Url\SeoCanonical;
+use Core;
 use Database;
 use Page;
 use PageList;
@@ -241,6 +240,7 @@ class Controller extends BlockController
         $this->set('bt', BlockType::getByHandle('page_list'));
         $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
         $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
+        $this->set('titleFormat', 'h5');
         $this->loadKeys();
     }
 

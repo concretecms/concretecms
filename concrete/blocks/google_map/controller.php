@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Block\GoogleMap;
 
-use Page;
 use Concrete\Core\Block\BlockController;
 use Config;
 use Core;
+use Page;
 
 class Controller extends BlockController
 {
@@ -16,12 +16,12 @@ class Controller extends BlockController
 
     public function getBlockTypeDescription()
     {
-        return t("Enter an address and a Google Map of that location will be placed in your page.");
+        return t('Enter an address and a Google Map of that location will be placed in your page.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Google Map");
+        return t('Google Map');
     }
 
     public function validate($args)
@@ -54,9 +54,14 @@ class Controller extends BlockController
             $this->addFooterItem(
                 '<script defer src="https://maps.googleapis.com/maps/api/js?callback=concreteGoogleMapInit&key='
                 . Config::get('app.api_keys.google.maps')
-                .'"></script>'
+                . '"></script>'
             );
         }
+    }
+
+    public function add()
+    {
+        $this->set('titleFormat', 'h3');
     }
 
     public function save($data)
@@ -71,6 +76,7 @@ class Controller extends BlockController
            'height' => null,
            'scrollwheel' => 0,
            'apiKey' => '',
+           'titleFormat' => '',
         ];
 
         Config::save('app.api_keys.google.maps', trim($data['apiKey']));
@@ -83,6 +89,7 @@ class Controller extends BlockController
         $args['width'] = $data['width'];
         $args['height'] = $data['height'];
         $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;
+        $args['titleFormat'] = $data['titleFormat'];
 
         parent::save($args);
     }

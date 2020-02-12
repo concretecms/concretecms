@@ -1,4 +1,4 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php  defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
 $title = h($title);
 if ($linkURL) {
@@ -8,8 +8,8 @@ if ($linkURL) {
 <div class="ccm-block-feature-item">
     <?php if ($title) {
     ?>
-        <h4><i class="fa fa-<?=$icon?>"></i> <?=$title?></h4>
-    <?php 
+        <<?php echo $titleFormat; ?>><i class="fa fa-<?=$icon; ?>"></i> <?=$title; ?></<?php echo $titleFormat; ?>>
+    <?php
 } ?>
     <?php
     if ($paragraph) {

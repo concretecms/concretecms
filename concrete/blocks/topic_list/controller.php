@@ -4,15 +4,15 @@ namespace Concrete\Block\TopicList;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Tree\Tree;
-use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Type\Topic;
+use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Core;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 400;
@@ -26,13 +26,14 @@ class Controller extends BlockController
 
     public function getBlockTypeName()
     {
-        return t("Topic List");
+        return t('Topic List');
     }
 
     public function add()
     {
         $this->edit();
         $this->set('title', t('Topics'));
+        $this->set('titleFormat', 'h5');
     }
 
     public function edit()
@@ -46,7 +47,7 @@ class Controller extends BlockController
         }
         $trees = $tt->getList();
         $keys = CollectionKey::getList();
-        $attributeKeys = array();
+        $attributeKeys = [];
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;
@@ -111,7 +112,7 @@ class Controller extends BlockController
         $tree = Tree::getByID($this->topicTreeID);
         $data = $blockNode->addChild('data');
         $data->addChild('mode', $this->mode);
-        $data->addChild("title", $this->title);
+        $data->addChild('title', $this->title);
         $data->addChild('topicAttributeKeyHandle', $this->topicAttributeKeyHandle);
         if (is_object($tree)) {
             $data->addChild('tree', $tree->getTreeName());
@@ -126,7 +127,7 @@ class Controller extends BlockController
 
     public function getImportData($blockNode, $page)
     {
-        $args = array();
+        $args = [];
         $treeName = (string) $blockNode->data->tree;
         $page = (string) $blockNode->data->cParentID;
         $tree = Topic::getByName($treeName);
@@ -151,9 +152,9 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $data += array(
+        $data += [
             'externalTarget' => 0,
-        );
+        ];
         $externalTarget = intval($data['externalTarget']);
         if ($externalTarget === 0) {
             $data['cParentID'] = 0;

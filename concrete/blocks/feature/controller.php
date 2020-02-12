@@ -1,35 +1,35 @@
 <?php
 namespace Concrete\Block\Feature;
 
-use Concrete\Core\Editor\LinkAbstractor;
-use Page;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Editor\LinkAbstractor;
+use Core;
 use Less_Parser;
 use Less_Tree_Rule;
-use Core;
+use Page;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 400;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btExportPageColumns = array('internalLinkCID');
+    protected $btExportPageColumns = ['internalLinkCID'];
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
 
     public function getBlockTypeDescription()
     {
-        return t("Displays an icon, a title, and a short paragraph description.");
+        return t('Displays an icon, a title, and a short paragraph description.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Feature");
+        return t('Feature');
     }
 
     public function getLinkURL()
@@ -73,6 +73,7 @@ class Controller extends BlockController
     public function add()
     {
         $this->edit();
+        $this->set('titleFormat', 'h4');
     }
 
     public function view()
@@ -84,7 +85,7 @@ class Controller extends BlockController
     protected function getIconClasses()
     {
         $iconLessFile = DIR_BASE_CORE . '/css/build/vendor/font-awesome/variables.less';
-        $icons = array();
+        $icons = [];
 
         $l = new Less_Parser();
         $parser = $l->parseFile($iconLessFile, false, true);
@@ -109,7 +110,7 @@ class Controller extends BlockController
         $classes = $this->getIconClasses();
 
         // let's clean them up
-        $icons = array('' => t('Choose Icon'));
+        $icons = ['' => t('Choose Icon')];
         $txt = Core::make('helper/text');
         foreach ($classes as $class) {
             $icons[$class] = $txt->unhandle($class);

@@ -42,64 +42,69 @@ $scrollwheel = !empty($scrollwheel);
 <div class="ccm-google-map-block-container row">
     <div class="col-xs-12">
         <div class="form-group">
-            <?= $form->label('apiKey', t('API Key') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('The API Key must be enabled for Google Maps and Google Places.') . "\n" . t('API keys can be obtained in the Google Developers Console.') . '"></i>') ?>
+            <?= $form->label('apiKey', t('API Key') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('The API Key must be enabled for Google Maps and Google Places.') . "\n" . t('API keys can be obtained in the Google Developers Console.') . '"></i>'); ?>
             <div class="input-group">
-                <?= $form->text('apiKey', Config::get('app.api_keys.google.maps')) ?>
+                <?= $form->text('apiKey', Config::get('app.api_keys.google.maps')); ?>
                 <span class="input-group-btn">
                     <a id="ccm-google-map-check-key" class="btn btn-default" href="#">
-                        <?= t('Check') ?>
+                        <?= t('Check'); ?>
                         &nbsp;
                         <i id="ccm-google-map-check-key-spinner" class="fa fa-play"></i>
                     </a>
                 </span>
             </div>
-            <div id="block_note" class="alert alert-info" role="alert"><?= t('Checking API Key...') ?></div>
+            <div id="block_note" class="alert alert-info" role="alert"><?= t('Checking API Key...'); ?></div>
         </div>
 
         <div class="form-group">
         </div>
 
         <div class="form-group">
-            <?= $form->label('title', t('Map Title (optional)')) ?>
-            <?= $form->text('title', $title) ?>
-        </div>
+	        <?php echo $form->label('title', t('Map Title (optional)')); ?>
+		    <div class="input-group">
+			    <?php echo $form->text('title', $title); ?>
+			    <div class="input-group-addon title-format-addon">
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+			    </div>
+			</div>
+		</div>
 
         <div id="ccm-google-map-block-location" class="form-group">
-            <?= $form->label('location', t('Location')  . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>') ?>
-            <?= $form->text('location', $location) ?>
-            <?= $form->hidden('latitude', $latitude) ?>
-            <?= $form->hidden('longitude', $longitude) ?>
+            <?= $form->label('location', t('Location') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>'); ?>
+            <?= $form->text('location', $location); ?>
+            <?= $form->hidden('latitude', $latitude); ?>
+            <?= $form->hidden('longitude', $longitude); ?>
             <div id="map-canvas"></div>
         </div>
     </div>
 
     <div class="col-xs-4">
         <div class="form-group">
-            <?= $form->label('zoom', t('Zoom')) ?>
+            <?= $form->label('zoom', t('Zoom')); ?>
             <?php
             $zoomLevels = range(0, 21);
             $zoomArray = array_combine($zoomLevels, $zoomLevels);
             ?>
-            <?= $form->select('zoom', $zoomArray, $zoom) ?>
+            <?= $form->select('zoom', $zoomArray, $zoom); ?>
         </div>
     </div>
 
     <div class="col-xs-4">
         <div class="form-group">
-            <?= $form->label('width', t('Map Width')) ?>
+            <?= $form->label('width', t('Map Width')); ?>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
-                <?= $form->text('width', $width) ?>
+                <?= $form->text('width', $width); ?>
             </div>
         </div>
     </div>
 
     <div class="col-xs-4">
         <div class="form-group">
-            <?= $form->label('height', t('Map Height')) ?>
+            <?= $form->label('height', t('Map Height')); ?>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-arrows-v"></i></span>
-                <?= $form->text('height', $height) ?>
+                <?= $form->text('height', $height); ?>
             </div>
         </div>
     </div>
@@ -108,8 +113,8 @@ $scrollwheel = !empty($scrollwheel);
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                <?= $form->checkbox('scrollwheel', 1, $scrollwheel) ?>
-                <?= t('Enable Scroll Wheel') ?>
+                <?= $form->checkbox('scrollwheel', 1, $scrollwheel); ?>
+                <?= t('Enable Scroll Wheel'); ?>
                 </label>
             </div>
         </div>
@@ -156,7 +161,7 @@ var setupApiKey = (function() {
             var place = autocomplete.autocomplete.getPlace();
             if (!place.geometry) {
                 $location.addClass('notfound');
-                $note.text(<?= json_encode(t('The place you entered could not be found.')) ?>).removeClass('alert-info alert-success').removeClass('alert-danger').css('visibility', '');
+                $note.text(<?= json_encode(t('The place you entered could not be found.')); ?>).removeClass('alert-info alert-success').removeClass('alert-danger').css('visibility', '');
             } else {
                 $('#ccm-google-map-block-location > input[id=latitude]').val(place.geometry.location.lat());
                 $('#ccm-google-map-block-location > input[id=longitude]').val(place.geometry.location.lng());
@@ -177,7 +182,7 @@ var setupApiKey = (function() {
 
     return function(onSuccess, onError, forceRecheck) {
         if (checking) {
-            onError(<?= json_encode(t('Please wait, operation in progress.')) ?>);
+            onError(<?= json_encode(t('Please wait, operation in progress.')); ?>);
             return;
         }
         if (!onSuccess) {
@@ -239,7 +244,7 @@ var setupApiKey = (function() {
             }
             var places = new google.maps.places.PlacesService(document.createElement('div'));
             window.gm_authFailure = function() {
-                placesLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
+                placesLoaded(<?= json_encode(t('The API Key is NOT valid.')); ?>);
             };
             places.getDetails(
                 {
@@ -247,7 +252,7 @@ var setupApiKey = (function() {
                 },
                 function(place, status) {
                     if (status === 'REQUEST_DENIED') {
-                        placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places.')) ?>);
+                        placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places.')); ?>);
                     } else {
                         placesLoaded(null, places);
                     }
@@ -259,7 +264,7 @@ var setupApiKey = (function() {
             scriptLoaded(null);
         };
         window.gm_authFailure = function() {
-            scriptLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
+            scriptLoaded(<?= json_encode(t('The API Key is NOT valid.')); ?>);
         };
         $checkSpinner.removeClass('fa-play').addClass('fa-refresh fa-spin');
         $(document.body).append($script = $('<' + 'script src="https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=places&callback=' + encodeURIComponent(scriptLoadedFunctionName) + '"></' + 'script>'));
@@ -272,10 +277,10 @@ $key.on('change keydown keypress', function() {
 $('#ccm-google-map-check-key')
     .on('click', function(e) {
         e.preventDefault();
-        $note.text(<?= json_encode(t('Checking API Key...')) ?>).removeClass('alert-success alert-danger').addClass('alert-info').css('visibility', '');
+        $note.text(<?= json_encode(t('Checking API Key...')); ?>).removeClass('alert-success alert-danger').addClass('alert-info').css('visibility', '');
         setupApiKey(
             function() {
-                $note.text(<?= json_encode(t('The API Key is valid.')) ?>).removeClass('alert-info alert-danger').addClass('alert-success');
+                $note.text(<?= json_encode(t('The API Key is valid.')); ?>).removeClass('alert-info alert-danger').addClass('alert-success');
             },
             function(err) {
                 $note.text(err).removeClass('alert-success alert-info').addClass('alert-danger');

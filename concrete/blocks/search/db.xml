@@ -17,6 +17,10 @@
       <unsigned/>
     </field>
     <field name="resultsURL" type="string" size="255"/>
+    <field name="titleFormat" type="string" size="20">
+      <default value="h3"/>
+      <notnull/>
+    </field>
   </table>
 
 </schema>

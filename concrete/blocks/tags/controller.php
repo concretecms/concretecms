@@ -1,18 +1,18 @@
 <?php
 namespace Concrete\Block\Tags;
 
-use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
-use Concrete\Core\Block\BlockController;
 use CollectionAttributeKey;
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Page;
 
 class Controller extends BlockController
 {
     protected $btTable = 'btTags';
-    protected $btInterfaceWidth = "450";
-    protected $btInterfaceHeight = "439";
+    protected $btInterfaceWidth = '450';
+    protected $btInterfaceHeight = '439';
 
-    protected $btExportPageColumns = array('targetCID');
+    protected $btExportPageColumns = ['targetCID'];
 
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
@@ -23,19 +23,19 @@ class Controller extends BlockController
     public $attributeHandle = 'tags';
     public $displayMode = 'page';
     public $cloudCount = 10;
-    public $helpers = array('navigation');
+    public $helpers = ['navigation'];
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
     {
-        return t("List pages based on type, area.");
+        return t('List pages based on type, area.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Tags");
+        return t('Tags');
     }
 
     public function add()
@@ -46,6 +46,7 @@ class Controller extends BlockController
             $this->set('inStackDashboardPage', true);
         }
         $this->set('displayMode', 'page');
+        $this->set('titleFormat', 'h5');
     }
 
     protected function loadAttribute()
@@ -67,12 +68,12 @@ class Controller extends BlockController
     public function view()
     {
         $ak = $this->loadAttribute();
-        if ($this->displayMode == "cloud") {
+        if ($this->displayMode == 'cloud') {
             $type = $ak->getAttributeType();
             $controller = $type->getController();
             $controller->setAttributeKey($ak);
             $items = $controller->getOptions();
-            $options = array();
+            $options = [];
             if ($this->cloudCount > 0 && count($items) > 0) {
                 $i = 1;
                 foreach ($items as $item) {
