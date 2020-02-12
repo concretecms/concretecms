@@ -102,9 +102,14 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
     <fieldset>
         <div class="form-group">
-            <?=$form->label('tableName', t('Name'))?>
-            <?=$form->text('tableName', $tableName, array('maxlength' => '128'))?>
-        </div>
+	        <?php echo $form->label('tableName', t('Name'))?>
+		    <div class="input-group">
+            	<?=$form->text('tableName', $tableName, array('maxlength' => '128'))?>
+			    <div class="input-group-addon title-format-addon">
+					<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+			    </div>
+			</div>
+		</div>
         <div class="form-group">
             <?=$form->label('tableDescription', t('Description'))?>
             <?=$form->text('tableDescription', $tableDescription, array('maxlength' => '128'))?>

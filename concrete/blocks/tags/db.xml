@@ -16,6 +16,9 @@
     <field name="cloudCount" type="integer">
       <default value="10"/>
     </field>
+    <field name="titleFormat" type="string" size="20">
+      <notnull/>
+    </field>
   </table>
 
 </schema>

@@ -21,9 +21,14 @@ if (!$controller->indexExists()) {
 ?>
 <fieldset>
     <div class="form-group">
-        <?= $form->label('title', t('Title')) ?>
-        <?= $form->text('title', $controller->title, ['maxlength' => 255]) ?>
-    </div>
+        <?php echo $form->label('title', t('Title'))?>
+	    <div class="input-group">
+        	<?= $form->text('title', $controller->title, ['maxlength' => 255]) ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
+	</div>
     <div class="form-group">
         <?= $form->label('buttonText', t('Button Text')) ?>
         <?=$form->text('buttonText', $controller->buttonText, ['maxlength' => 255]) ?>

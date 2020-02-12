@@ -4,7 +4,7 @@ $c = Page::getCurrentPage();
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 if ($tableName) { ?>
-    <h2><?=$tableName?></h2>
+    <<?php echo $titleFormat ?>><?php echo h($tableName); ?></<?php echo $titleFormat ?>>
     <?php if ($tableDescription) { ?>
         <p><?=$tableDescription?></p>
     <?php } ?>

@@ -60,9 +60,14 @@ $scrollwheel = !empty($scrollwheel);
         </div>
 
         <div class="form-group">
-            <?= $form->label('title', t('Map Title (optional)')) ?>
-            <?= $form->text('title', $title) ?>
-        </div>
+	        <?php echo $form->label('title', t('Map Title (optional)'))?>
+		    <div class="input-group">
+			    <?php echo $form->text('title', $title); ?>
+			    <div class="input-group-addon title-format-addon">
+					<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+			    </div>
+			</div>
+		</div>
 
         <div id="ccm-google-map-block-location" class="form-group">
             <?= $form->label('location', t('Location')  . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>') ?>

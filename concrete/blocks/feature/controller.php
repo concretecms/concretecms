@@ -73,6 +73,7 @@ class Controller extends BlockController
     public function add()
     {
         $this->edit();
+        $this->set('titleFormat', 'h4');
     }
 
     public function view()

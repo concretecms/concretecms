@@ -33,6 +33,7 @@ class Controller extends BlockController
     {
         $this->edit();
         $this->set('title', t('Topics'));
+        $this->set('titleFormat', 'h5');
     }
 
     public function edit()

@@ -8,10 +8,13 @@
     <input name="url" class="form-control" placeholder="<?= h(t('Feed URL')) ?>" value="<?= h($rssObj->url) ?>" type="text" required="required" />
 </div>
 <div class="form-group">
-    <label for="title" class="control-label">
-        <?= t('Feed Title') ?>
-    </label>
-    <input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
+    <?php echo $form->label('title', t('Feed Title'))?>
+    <div class="input-group">
+   	<input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
+	    <div class="input-group-addon title-format-addon">
+			<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+	    </div>
+	</div>
 </div>
 <div class="form-group">
     <?= $form->label('standardDateFormat', t('Date Format')) ?>

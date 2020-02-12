@@ -105,9 +105,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <fieldset>
     <legend><?=t('Results')?></legend>
     <div class="form-group">
-        <label class="control-label" for="eventListTitle"><?= t('Title') ?></label>
-        <?=$form->text('eventListTitle', $eventListTitle)?>
-    </div>
+        <?php echo $form->label('eventListTitle', t('Title'))?>
+	    <div class="input-group">
+		    <?php echo $form->text('eventListTitle', $eventListTitle); ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
+	</div>
 
     <div class="form-group">
         <label class="control-label" for="totalToRetrieve"><?= t('Total Number of Events to Retrieve') ?></label>

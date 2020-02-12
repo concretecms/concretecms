@@ -309,6 +309,7 @@ class Controller extends BlockController
     public function add()
     {
         $this->edit();
+        $this->set('titleFormat', 'h3');
     }
 
     /**

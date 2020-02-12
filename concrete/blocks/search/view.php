@@ -12,7 +12,7 @@ if (!isset($query) || !is_string($query)) {
 ?>
     <form action="<?= $view->url($resultTarget) ?>" method="get" class="ccm-search-block-form"><?php
 if (isset($title) && ($title !== '')) {
-    ?><h3><?= h($title) ?></h3><?php
+    ?><<?php echo $titleFormat ?>><?php echo h($title); ?></<?php echo $titleFormat ?>><?php
 
 }
 if ($query === '') {

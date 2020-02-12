@@ -55,11 +55,16 @@
         ?>
         </div>
     </div>
-
+    
     <div class="form-group">
-        <label class="control-label" for="title"><?=t('Title')?></label>
-        <input class="form-control" name="title" id="title" value="<?=$title?>" />
-    </div>
+        <?php echo $form->label('title', t('Title'))?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
+	</div>
 
 </fieldset>
 

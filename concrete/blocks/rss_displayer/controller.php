@@ -164,6 +164,11 @@ class Controller extends BlockController
         $this->set('title', $this->title);
     }
 
+    public function add()
+    {
+        $this->set('titleFormat', 'h5');
+    }
+
     public function save($data)
     {
         $data += [
@@ -174,6 +179,7 @@ class Controller extends BlockController
             'title' => '',
             'standardDateFormat' => '',
             'customDateFormat' => '',
+            'titleFormat' => 'h5',
         ];
         $args = [
             'url' => $data['url'],
@@ -181,6 +187,7 @@ class Controller extends BlockController
             'showSummary' => $data['showSummary'] ? 1 : 0,
             'launchInNewWindow' => $data['launchInNewWindow'] ? 1 : 0,
             'title' => $data['title'],
+            'titleFormat' => $data['titleFormat'],
         ];
         switch ($data['standardDateFormat']) {
             case ':custom:':

@@ -39,6 +39,7 @@ class Controller extends BlockController
         $this->set('totalToRetrieve', 9);
         $this->set('totalPerPage', 3);
         $this->set('filterByTopic', 'none');
+        $this->set('titleFormat', 'h2');
     }
 
     protected function getCalendarOrCalendars()

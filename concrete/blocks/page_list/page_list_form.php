@@ -510,9 +510,14 @@ $form = Loader::helper('form/page_selector');
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?= t('Title of Page List') ?></label>
-                <input type="text" class="form-control" name="pageListTitle" value="<?=$pageListTitle?>" />
-            </div>
+		        <?php echo $form->label('pageListTitle', t('Title of Page List'))?>
+			    <div class="input-group">
+				    <?php echo $form->text('pageListTitle', $pageListTitle); ?>
+				    <div class="input-group-addon title-format-addon">
+						<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+				    </div>
+				</div>
+			</div>
 
             <div class="form-group">
                 <label class="control-label"><?= t('Message to Display When No Pages Listed.') ?></label>

@@ -241,6 +241,7 @@ class Controller extends BlockController
         $this->set('bt', BlockType::getByHandle('page_list'));
         $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
         $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
+        $this->set('titleFormat', 'h5');
         $this->loadKeys();
     }
 

@@ -13,9 +13,14 @@
     </div>
 
     <div class="form-group">
-        <?=$form->label('title', t('Title'))?>
-        <?php echo $form->text('title', $title); ?>
-    </div>
+        <?php echo $form->label('title', t('Title'))?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
+	</div>
 
     <div class="form-group">
         <?php echo $form->label('paragraph', t('Paragraph:'));?>

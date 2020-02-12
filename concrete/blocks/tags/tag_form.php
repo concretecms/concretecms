@@ -8,9 +8,15 @@ $c = Page::getCurrentPage();
 <div class="ccm-error"><?php echo t('Error: The required page attribute with the handle of: "%s" doesn\'t exist', $controller->attributeHandle)?><br/><br/></div>
 <?php } else { ?>
 <input type="hidden" name="attributeHandle" value="<?php echo $controller->attributeHandle?>" />
+	
 	<div class="form-group">
         <?php echo $form->label('title', t('Title'))?>
-		<?php echo $form->text('title', $title); ?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+		    <div class="input-group-addon title-format-addon">
+				<?php echo $form->select('titleFormat',  \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat); ?>
+		    </div>
+		</div>
 	</div>
 
     <div class="form-group">

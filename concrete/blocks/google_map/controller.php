@@ -59,6 +59,11 @@ class Controller extends BlockController
         }
     }
 
+    public function add()
+    {
+        $this->set('titleFormat', 'h3');
+    }
+
     public function save($data)
     {
         $data += [
@@ -71,6 +76,7 @@ class Controller extends BlockController
            'height' => null,
            'scrollwheel' => 0,
            'apiKey' => '',
+           'titleFormat' => '',
         ];
 
         Config::save('app.api_keys.google.maps', trim($data['apiKey']));
@@ -83,6 +89,7 @@ class Controller extends BlockController
         $args['width'] = $data['width'];
         $args['height'] = $data['height'];
         $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;
+        $args['titleFormat'] = $data['titleFormat'];
 
         parent::save($args);
     }

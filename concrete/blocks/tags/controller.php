@@ -46,6 +46,7 @@ class Controller extends BlockController
             $this->set('inStackDashboardPage', true);
         }
         $this->set('displayMode', 'page');
+        $this->set('titleFormat', 'h5');
     }
 
     protected function loadAttribute()
