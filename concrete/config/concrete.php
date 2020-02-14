@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.6.0a3',
     'version_installed' => '8.6.0a3',
-    'version_db' => '20191002000000', // the key of the latest database migration
+    'version_db' => '20200203000000', // the key of the latest database migration
  
     /*
      * Installation status
@@ -1161,6 +1161,7 @@ return [
             'client_credentials' => true,
             'authorization_code' => true,
             'password_credentials' => false,
+            'refresh_token' => true,
         ],
     ],
 
