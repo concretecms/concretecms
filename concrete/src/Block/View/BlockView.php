@@ -9,7 +9,7 @@ use Concrete\Core\View\AbstractView;
 use Config;
 use Concrete\Core\Area\Area;
 use Environment;
-use User;
+use Concrete\Core\User\User;
 use Page;
 use Concrete\Core\Block\Block;
 use View;
@@ -374,7 +374,7 @@ class BlockView extends AbstractView
 
     protected function useBlockCache()
     {
-        $u = new User();
+        $u = Application::getFacadeApplication()->make(User::class);
         $c = Page::getCurrentPage();
         if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
             && $this->block->cacheBlockOutput() && is_object($c) && $c->isPageDraft() === false

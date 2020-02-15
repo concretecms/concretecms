@@ -27,7 +27,7 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 <?php if ($sh->canRead()) { ?>
 
 <?php
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 if ($u->isSuperUser()) {
     if (Queue::exists('copy_page')) {
         $q = Queue::get('copy_page');

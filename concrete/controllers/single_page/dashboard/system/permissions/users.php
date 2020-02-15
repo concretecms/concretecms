@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Loader;
 use PermissionKey;
 use TaskPermission;
-use Concrete\Core\Permission\Access\Access as PermissionAccess;
 
 class Users extends DashboardPageController
 {
@@ -29,7 +30,7 @@ class Users extends DashboardPageController
                 $this->redirect('/dashboard/system/permissions/users', 'updated');
             }
         } else {
-            $this->error->add(Loader::helper("validation/token")->getErrorMessage());
+            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
         }
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Youtube;
 
 use Concrete\Core\Block\BlockController;
@@ -122,6 +123,8 @@ class Controller extends BlockController
             'startTime' => '',
 
             'noCookie' => false,
+
+            'lazyLoad' => false
         ];
 
         $args = [
@@ -146,6 +149,8 @@ class Controller extends BlockController
             'startTime' => trim($data['startTime']),
 
             'noCookie' => $data['noCookie'] ? 1 : 0,
+
+            'lazyLoad' => $data['lazyLoad'] ? 1 : 0
         ];
         if ($args['sizing'] === 'fixed') {
             $args += [

@@ -12,7 +12,7 @@ if (isset($group)) {
 <form method="post" id="update-group-form" class="form-stacked" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>" role="form">
     <?=$valt->output('add_or_update_group')?>
 	<?php
-        $u = new User();
+	$u = Core::make(Concrete\Core\User\User::class);
 
     $delConfirmJS = t('Are you sure you want to permanently remove this group?');
     if ($u->isSuperUser() == false) {

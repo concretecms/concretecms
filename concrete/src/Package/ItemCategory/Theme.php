@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
-use Concrete\Core\Entity\Package;
 use Concrete\Controller\Element\Package\ThemeItemList;
+use Concrete\Core\Entity\Package;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Theme extends AbstractCategory
 {
-
     public function getItemCategoryDisplayName()
     {
         return t('Themes');
@@ -29,5 +29,4 @@ class Theme extends AbstractCategory
     {
         return \Concrete\Core\Page\Theme\Theme::getListByPackage($package);
     }
-
 }

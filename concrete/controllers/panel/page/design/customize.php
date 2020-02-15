@@ -93,6 +93,7 @@ class Customize extends BackendInterfacePageController
             $this->set('selectedPreset', $selectedPreset);
             $this->set('styleSets', $styleList->getSets());
             $this->set('theme', $pt);
+            $this->set('token', $this->app->make('token'));
         } else {
             throw new Exception(t('Invalid or non-customizable theme.'));
         }

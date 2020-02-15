@@ -1,26 +1,27 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Config;
 use Core;
-use PermissionKey;
-use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Group;
 use GroupList;
 use Page;
-use Group;
-use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use PermissionKey;
 
 class Site extends DashboardPageController
 {
     public function view()
     {
-        $editAccess = array();
+        $editAccess = [];
         if (Config::get('concrete.permissions.model') != 'simple') {
             return;
         }
 
-        $home = Page::getByID(1, "RECENT");
+        $home = Page::getByID(1, 'RECENT');
         $pk = PermissionKey::getByHandle('view_page');
         $pk->setPermissionObject($home);
         $assignments = $pk->getAccessListItems();
@@ -40,7 +41,7 @@ class Site extends DashboardPageController
         $gl = new GroupList();
         $gl->filter('gID', REGISTERED_GROUP_ID, '>');
         $gIDs = $gl->getResults();
-        $gArray = array();
+        $gArray = [];
         foreach ($gIDs as $g) {
             $gArray[] = $g;
         }
@@ -65,13 +66,13 @@ class Site extends DashboardPageController
         if ($this->isPost()) {
             if ($this->token->validate('site_permissions_code')) {
                 switch ($_POST['view']) {
-                    case "ANYONE":
+                    case 'ANYONE':
                         $viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
                         break;
-                    case "USERS":
+                    case 'USERS':
                         $viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(REGISTERED_GROUP_ID));
                         break;
-                    case "PRIVATE":
+                    case 'PRIVATE':
                         $viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
                         break;
                 }
@@ -84,14 +85,14 @@ class Site extends DashboardPageController
                 $pa->addListItem($viewObj);
                 $pt->assignPermissionAccess($pa);
 
-                $editAccessEntities = array();
+                $editAccessEntities = [];
                 if (is_array($_POST['gID'])) {
                     foreach ($_POST['gID'] as $gID) {
                         $editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));
                     }
                 }
 
-                $editPermissions = array(
+                $editPermissions = [
                     'view_page_versions',
                     'edit_page_properties',
                     'edit_page_contents',
@@ -108,7 +109,7 @@ class Site extends DashboardPageController
                     'approve_page_versions',
                     'add_subpage',
                     'move_or_copy_page',
-                );
+                ];
                 foreach ($editPermissions as $pkHandle) {
                     $pk = PermissionKey::getByHandle($pkHandle);
                     $pk->setPermissionObject($home);

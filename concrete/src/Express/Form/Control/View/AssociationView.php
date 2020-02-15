@@ -47,6 +47,7 @@ class AssociationView extends View
 
         $this->addScopeItem('selectedEntries', $this->selectedEntries);
         $this->addScopeItem('control', $control);
+        $this->addScopeItem('association', $this->association);
         $this->addScopeItem('formatter', $this->association->getFormatter());
 
         // @deprecated - use selectedEntries instead

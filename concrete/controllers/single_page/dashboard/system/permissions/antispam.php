@@ -1,18 +1,19 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
+use Concrete\Core\Antispam\Library as SystemAntispamLibrary;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use Loader;
-use Concrete\Core\Antispam\Library as SystemAntispamLibrary;
 use GroupList;
+use Loader;
 
 class Antispam extends DashboardPageController
 {
     public function view()
     {
         $list = SystemAntispamLibrary::getList();
-        $libraries = array('' => t('** None Activated'));
+        $libraries = ['' => t('** None Activated')];
         foreach ($list as $sc) {
             $libraries[$sc->getSystemAntispamLibraryHandle()] = $sc->getSystemAntispamLibraryName();
         }
@@ -21,7 +22,7 @@ class Antispam extends DashboardPageController
         $this->set('libraries', $libraries);
 
         $db = Loader::db();
-        $groups = array('-1' => t('** None Selected'));
+        $groups = ['-1' => t('** None Selected')];
         $gl = new GroupList();
         $gl->sortBy('gID', 'asc');
         $gl->includeAllGroups();
@@ -54,7 +55,7 @@ class Antispam extends DashboardPageController
     public function update_library()
     {
         $this->save();
-        if (!$this->error->has() && Loader::helper("validation/token")->validate('update_library')) {
+        if (!$this->error->has() && Loader::helper('validation/token')->validate('update_library')) {
             if ($this->post('activeLibrary')) {
                 $scl = SystemAntispamLibrary::getByHandle($this->post('activeLibrary'));
                 if (is_object($scl)) {

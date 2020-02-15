@@ -169,7 +169,7 @@ if ($this->controller->getTask() == 'translate_po') {
             <div style="display: none">
                 <div id="ccm-dialog-reset-languages" class="ccm-ui">
                     <?php
-                    $u = new User();
+                    $u = $app->make(Concrete\Core\User\User::class);
                     if ($u->isSuperUser()) {
                         ?>
                         <form method="post" class="form-stacked" style="padding-left: 0px" action="<?php echo $view->action('reset_languages'); ?>">
