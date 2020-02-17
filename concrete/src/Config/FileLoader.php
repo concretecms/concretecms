@@ -40,12 +40,10 @@ class FileLoader implements LoaderInterface
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  string  $defaultPath
      */
-    public function __construct(Filesystem $files)
+    public function __construct(Filesystem $files, $defaultPath = DIR_CONFIG_SITE)
     {
         $this->files = $files;
-        $this->defaultPath = DIR_CONFIG_SITE;
-        $this->addNamespace('core', DIR_BASE_CORE . '/config');
-        $this->addNamespace('api', DIR_BASE_CORE . '/config/api');
+        $this->defaultPath = $defaultPath;
     }
 
     /**
@@ -83,9 +81,6 @@ class FileLoader implements LoaderInterface
 
         $paths = [];
         if ($namespace === null || $namespace == '') {
-            // No namespace, let's load up the concrete config first.
-            $items = $this->defaultLoad($environment, $group, 'core');
-
             $paths = [
                 "{$path}/generated_overrides/{$group}.php",
                 "{$path}/{$group}.php",

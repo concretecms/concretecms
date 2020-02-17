@@ -73,6 +73,15 @@ matrix:
       script:
         - composer test
 
+    - name: Test in Docker
+      php: '7.2'
+      services:
+        - docker
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test -- --group docker
+
     - name: Test with PHP nightly
       php: nightly
       before_script:
