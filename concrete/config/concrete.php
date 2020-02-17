@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a1',
     'version_installed' => '9.0.0a1',
-    'version_db' => '20200116115000', // the key of the latest database migration
+    'version_db' => '20200203000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -115,6 +115,7 @@ return [
             // Include the BOM (byte-order mark) in generated CSV files?
             // @var bool
             'include_bom' => false,
+            'datetime_format' => 'ATOM', 
         ],
     ],
 
@@ -1228,6 +1229,7 @@ return [
             'client_credentials' => true,
             'authorization_code' => true,
             'password_credentials' => false,
+            'refresh_token' => true,
         ],
     ],
 

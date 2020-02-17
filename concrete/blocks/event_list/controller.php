@@ -95,7 +95,7 @@ class Controller extends BlockController
         if ($calendar) {
             $date = Core::make('date')->date('Y-m-d');
             $time = Core::make('date')->toDateTime($date . ' 00:00:00')->getTimestamp();
-            $list->filterByStartTimeAfter($time);
+            $list->filterByEndTimeAfter($time);
             $list->filterByCalendar($calendar);
             if ($this->filterByFeatured) {
                 $list->filterByAttribute('is_featured', true);

@@ -267,6 +267,7 @@ define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE', DIR_FILES_BLOCK_TYPE
 define('DIR_FILES_UPLOADED_STANDARD', DIR_APPLICATION . '/files');
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
+define('DIR_CORE_CONFIG', DIR_BASE_CORE . '/config');
 
 /*
  * ----------------------------------------------------------------------------

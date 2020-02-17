@@ -584,14 +584,17 @@ class User extends ConcreteObject
     }
 
     /**
-     * @return array
+     * Function to return Permission Access Entities belonging to this user object
+     *
+     * @return PermissionAccessEntity[] | array
      */
     public function getUserAccessEntityObjects()
     {
         $app = Application::getFacadeApplication();
         $session = $app['session'];
         $validator = $app->make(SessionValidator::class);
-        if ($validator->hasActiveSession()) {
+        // Check if the user is loggged in
+        if ($validator->hasActiveSession() && $session->has('uID')) {
             $req = Request::getInstance();
 
             if ($req->hasCustomRequestUser()) {
@@ -600,19 +603,29 @@ class User extends ConcreteObject
                 return PermissionAccessEntity::getForUser($this);
             }
 
-            if ($session->has('accessEntities')) {
+            // If a user is logged in and running a script to get the user access entities
+            // return the correct access entities
+            if ($session->has('accessEntities') && $this->getUserID() == $session->get('uID')) {
                 $entities = $session->get('accessEntities');
-            } else {
+            } elseif ($this->getUserID() == $session->get('uID')) {
                 $entities = PermissionAccessEntity::getForUser($this);
                 $session->set('accessEntities', $entities);
                 $session->set('accessEntitiesUpdated', time());
+            } else {
+                $entities = PermissionAccessEntity::getForUser($this);
+
             }
         } else {
-            $group = Group::getByID(GUEST_GROUP_ID);
-            if ($group) {
-                $entities = [GroupEntity::getOrCreate($group)];
+
+            if ((int) $this->getUserID() > 0) {
+                $entities = PermissionAccessEntity::getForUser($this);
             } else {
-                $entities = [];
+                $group = Group::getByID(GUEST_GROUP_ID);
+                if ($group) {
+                    $entities = [GroupEntity::getOrCreate($group)];
+                } else {
+                    $entities = [];
+                }
             }
         }
 

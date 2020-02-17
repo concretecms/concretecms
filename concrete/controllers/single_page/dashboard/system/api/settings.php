@@ -29,6 +29,7 @@ class Settings extends DashboardPageController
             'client_credentials' => t('Client Credentials'),
             'authorization_code' => t('Authorization Code'),
             'password_credentials' => t('Password Credentials'),
+            'refresh_token' => t('Refresh Token'),
         ];
     }
 

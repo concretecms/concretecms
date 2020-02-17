@@ -27,6 +27,7 @@ if ($c->isEditMode()) {
                     listMonth: { buttonText: '<?= t('list month'); ?>' },
                     listYear: { buttonText: '<?= t('list year'); ?>' }
                 },
+                contentHeight: 'auto',
 
                 <?php if ($defaultView) { ?>
                     defaultView: '<?= $defaultView; ?>',
