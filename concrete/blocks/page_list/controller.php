@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\PageList;
 
 use BlockType;
@@ -463,7 +462,8 @@ class Controller extends BlockController
         if (!$args['filterByRelated']) {
             $args['relatedTopicAttributeKeyHandle'] = '';
         }
-        if (!$args['filterByCustomTopic']) {
+
+        if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
             $args['customTopicAttributeKeyHandle'] = '';
             $args['customTopicTreeNodeID'] = 0;
         }
