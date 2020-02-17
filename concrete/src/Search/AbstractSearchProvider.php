@@ -80,7 +80,11 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
             $sortColumn = $columns->getColumnByKey($value);
 
             if (is_object($sortColumn)) {
-                $direction = $data[$list->getQuerySortDirectionParameter()] ?? $sortColumn->getColumnDefaultSortDirection();
+                if (isset($data[$list->getQuerySortDirectionParameter()]) && !empty($data[$list->getQuerySortDirectionParameter()])) {
+                    $direction = $data[$list->getQuerySortDirectionParameter()];
+                } else {
+                    $direction = $sortColumn->getColumnDefaultSortDirection();
+                }
 
                 $sortColumn->setColumnSortDirection($direction);
                 $list->sortBySearchColumn($sortColumn, $direction);
