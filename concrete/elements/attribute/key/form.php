@@ -137,7 +137,9 @@ if ($key !== null) {
     <?php
     if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
-        View::element(
+
+        /** @TODO Catch the \Throwable error rather than suppressing errors */
+        @View::element(
             'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
             ['key' => $key],
             $category->getCategoryEntity()->getPackageID() ? $category->getCategoryEntity()->getPackageHandle() : null
