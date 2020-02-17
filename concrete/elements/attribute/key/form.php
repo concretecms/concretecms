@@ -137,11 +137,19 @@ if ($key !== null) {
     <?php
     if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
-        View::element(
-            'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
-            ['key' => $key],
-            $category->getCategoryEntity()->getPackageID() ? $category->getCategoryEntity()->getPackageHandle() : null
-        );
+
+        try {
+            View::element(
+                'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
+                ['key' => $key],
+                $category->getCategoryEntity()->getPackageID() ? $category->getCategoryEntity()->getPackageHandle() : null
+            );
+        } catch (ErrorException $e) {
+            if (strpos($e->getMessage(), 'No such file or directory') === false) {
+                // This isn't the error we expected to catch
+                throw $e;
+            }
+        }
     }
     $valt->output('add_or_update_attribute');
     $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), isset($key) ? $key : null);
