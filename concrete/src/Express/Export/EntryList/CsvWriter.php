@@ -22,10 +22,16 @@ class CsvWriter
      */
     protected $dateFormatter;
 
-    public function __construct(Writer $writer, Date $dateFormatter)
+    /**
+     * @var string
+     */
+    private $datetime_format;
+
+    public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = 'ATOM' )
     {
         $this->writer = $writer;
         $this->dateFormatter = $dateFormatter;
+        $this->datetime_format = $datetime_format;
     }
 
     public function insertHeaders(Entity $entity)
@@ -87,7 +93,7 @@ class CsvWriter
     {
         $date = $entry->getDateCreated();
         if ($date) {
-            yield 'ccm_date_created' => $this->dateFormatter->formatCustom(\DateTime::ATOM, $date);
+            yield 'ccm_date_created' => $this->dateFormatter->formatCustom($this->datetime_format, $date);
         } else {
             yield 'ccm_date_created' => null;
         }
