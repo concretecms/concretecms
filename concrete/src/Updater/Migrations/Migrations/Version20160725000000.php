@@ -1090,6 +1090,9 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     protected function updateFileManager()
     {
         $this->output(t('Migrating to new file manager...'));
+        $this->refreshDatabaseTables([
+            'TreeFileFolderNodes',
+        ]);
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
         if (!is_object($folder)) {
