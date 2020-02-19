@@ -153,9 +153,9 @@ class Validation
 
     /**
      * After the validation error helper has been setup, the test() method ensures that all fields that require validation
-     * pass. Returns the number of invalid fields (0 = success).
+     * pass. Returns true for success and false for failure.
      *
-     * @return int
+     * @return bool
      */
     public function test()
     {
