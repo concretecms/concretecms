@@ -41,6 +41,16 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::isTransactional()
+     */
+    public function isTransactional()
+    {
+        return false;
+    }
+
     protected function migrateCalendar()
     {
         $this->addEarlyCalendarFunctionality();

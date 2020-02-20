@@ -86,6 +86,16 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         $this->migrateDrafts();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::isTransactional()
+     */
+    public function isTransactional()
+    {
+        return false;
+    }
+
     protected function output($message)
     {
         $this->version->getConfiguration()->getOutputWriter()->write($message);

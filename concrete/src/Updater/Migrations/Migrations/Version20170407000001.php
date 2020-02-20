@@ -21,4 +21,14 @@ class Version20170407000001 extends AbstractMigration implements RepeatableMigra
         ]);
         $this->connection->executeQuery('set foreign_key_checks = 1');
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::isTransactional()
+     */
+    public function isTransactional()
+    {
+        return false;
+    }
 }
