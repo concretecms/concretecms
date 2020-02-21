@@ -34,21 +34,7 @@ abstract class Asset implements AssetInterface
      * @var bool
      */
     protected $local = true;
-
-    /**
-     * Does this asset support minification?
-     *
-     * @var bool
-     */
-    protected $assetSupportsMinification = false;
-
-    /**
-     * Can this asset be combined with other assets?
-     *
-     * @var bool
-     */
-    protected $assetSupportsCombination = false;
-
+    
     /**
      * The location of the asset (used to build the path & URL).
      *
@@ -177,43 +163,35 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Asset\AssetInterface::setAssetSupportsMinification()
+     * @deprecated. Assets no longer honor this value; it was too buggy.
      */
     public function setAssetSupportsMinification($minify)
     {
-        $this->assetSupportsMinification = $minify;
+        // Nothing here.
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Asset\AssetInterface::assetSupportsMinification()
+     * @deprecated. Assets no longer honor this value; it was too buggy.
      */
     public function assetSupportsMinification()
     {
-        return $this->local && $this->assetSupportsMinification;
+        return false;
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Asset\AssetInterface::setAssetSupportsCombination()
+     * @deprecated. Assets no longer honor this value; it was too buggy.
      */
     public function setAssetSupportsCombination($combine)
     {
-        $this->assetSupportsCombination = $combine;
+        // Nothing here.
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Asset\AssetInterface::assetSupportsCombination()
+     * @deprecated. Assets no longer honor this value; it was too buggy.
      */
     public function assetSupportsCombination()
     {
-        return $this->local && $this->assetSupportsCombination;
+        return false;
     }
 
     /**
@@ -452,12 +430,6 @@ abstract class Asset implements AssetInterface
         }
         $this->setAssetIsLocal($args['local']);
         $this->setAssetLocation($filename);
-        if ($args['minify'] === true || $args['minify'] === false) {
-            $this->setAssetSupportsMinification($args['minify']);
-        }
-        if ($args['combine'] === true || $args['combine'] === false) {
-            $this->setAssetSupportsCombination($args['combine']);
-        }
         if ($args['version']) {
             $this->setAssetVersion($args['version']);
         }

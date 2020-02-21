@@ -346,63 +346,6 @@ class View extends AbstractView
         return $contents;
     }
 
-    protected function postProcessAssets($assets)
-    {
-        $c = Page::getCurrentPage();
-        if (!Config::get('concrete.cache.assets')) {
-            return $assets;
-        }
-
-        if (!count($assets)) {
-            return [];
-        }
-
-        // goes through all assets in this list, creating new URLs and post-processing them where possible.
-        $segment = 0;
-        $groupedAssets = [];
-        for ($i = 0; $i < count($assets); ++$i) {
-            $asset = $assets[$i];
-            $nextasset = isset($assets[$i + 1]) ? $assets[$i + 1] : null;
-
-            $groupedAssets[$segment][] = $asset;
-            if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
-                ++$segment;
-                continue;
-            }
-
-            if ($asset->getOutputAssetType() != $nextasset->getOutputAssetType()) {
-                ++$segment;
-                continue;
-            }
-
-            if (!$asset->assetSupportsCombination() || !$nextasset->assetSupportsCombination()) {
-                ++$segment;
-                continue;
-            }
-        }
-
-        $return = [];
-        // now we have a sub assets array with different segments split by whether they can be combined.
-
-        foreach ($groupedAssets as $assets) {
-            if (
-                ($assets[0] instanceof Asset)
-                &&
-                (
-                    (count($assets) > 1)
-                    ||
-                    $assets[0]->assetSupportsMinification()
-                )
-            ) {
-                $class = get_class($assets[0]);
-                $assets = call_user_func([$class, 'process'], $assets);
-            }
-            $return = array_merge($return, $assets);
-        }
-
-        return $return;
-    }
-
     protected function replaceEmptyAssetPlaceholders($pageContent)
     {
         foreach (['<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->', '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->'] as $comment) {
@@ -417,8 +360,7 @@ class View extends AbstractView
         $outputItems = [];
         foreach ($outputAssets as $position => $assets) {
             $output = '';
-            $transformed = $this->postProcessAssets($assets);
-            foreach ($transformed as $item) {
+            foreach ($assets as $item) {
                 $itemstring = (string) $item;
                 if (!in_array($itemstring, $outputItems)) {
                     $output .= $this->outputAssetIntoView($item);

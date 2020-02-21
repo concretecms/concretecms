@@ -83,33 +83,6 @@
         </div>
     </fieldset>
 
-
-    <fieldset>
-
-        <legend><?=t('CSS and JavaScript Cache')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets.')?>"></i></legend>
-
-        <div class="form-group">
-
-        <div class="radio">
-            <label>
-                <input type="radio" name="ENABLE_ASSET_CACHE" value="0" <?php if (!Config::get('concrete.cache.assets')) {
-    ?> checked <?php 
-} ?> />
-                <span><?=t('Off - Good for active block and site development.')?></span>
-            </label>
-        </div>
-
-        <div class="radio">
-            <label>
-                <input type="radio" name="ENABLE_ASSET_CACHE" value="1" <?php  if (Config::get('concrete.cache.assets')) {
-     ?> checked <?php 
- } ?> />
-                <span><?=t('On - Helps speed up a live site.')?></span>
-            </label>
-        </div>
-        </div>
-    </fieldset>
-
     <fieldset>
 
         <legend><?=t('Overrides Cache')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Stores the location and existence of source code files.')?>"></i></legend>

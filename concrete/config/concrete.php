@@ -185,14 +185,7 @@ return [
          * @var bool
          */
         'blocks' => true,
-
-        /*
-         * Cache Assets
-         *
-         * @var bool
-         */
-        'assets' => false,
-
+        
         /*
          * Cache Theme CSS/JS
          *
