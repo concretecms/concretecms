@@ -200,37 +200,37 @@ class EditorServiceProvider extends ServiceProvider
         $plugin = new Plugin();
         $plugin->setKey('concrete5inline');
         $plugin->setName(t('concrete5 Inline'));
-        $plugin->requireAsset('ckeditor/concrete');
+        $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5filemanager');
         $plugin->setName(t('concrete5 File Browser'));
-        $plugin->requireAsset('ckeditor/concrete');
+        $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5uploadimage');
         $plugin->setName(t('concrete5 Upload Image'));
-        $plugin->requireAsset('ckeditor/concrete');
+        $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5link');
         $plugin->setName(t('concrete5 Link'));
-        $plugin->requireAsset('ckeditor/concrete');
+        $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('normalizeonchange');
         $plugin->setName(t('Normalize On Change'));
-        $plugin->requireAsset('ckeditor/concrete');
+        $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
         $plugin->setKey('concrete5styles');
         $plugin->setName(t('concrete5 Styles'));
-        $plugin->requireAsset('ckeditor/concrete');
+        $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
     }
 
