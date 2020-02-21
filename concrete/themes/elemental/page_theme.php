@@ -8,23 +8,6 @@ class PageTheme extends Theme implements ThemeProviderInterface
 {
     public function registerAssets()
     {
-        /*
-        $this->providesAsset('css', 'blocks/social_links');
-        $this->providesAsset('css', 'blocks/share_this_page');
-        $this->providesAsset('css', 'blocks/tags');
-        $this->providesAsset('css', 'core/frontend/*');
-        $this->providesAsset('css', 'blocks/event_list');
-        */
-
-        $this->providesAsset('css', 'blocks/faq');
-        $this->providesAsset('css', 'blocks/testimonial');
-        $this->providesAsset('css', 'blocks/topic_list');
-        $this->providesAsset('css', 'blocks/date_navigation');
-        $this->providesAsset('css', 'blocks/feature');
-        $this->providesAsset('css', 'blocks/image_slider');
-        $this->providesAsset('javascript', 'blocks/image_slider');
-
-        $this->providesAsset('css', 'component/calendar');
         $this->requireAsset('font-awesome');
         $this->requireAsset('jquery');
     }
