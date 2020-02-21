@@ -9,8 +9,9 @@ use Illuminate\Support\Arr;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Redis;
+use Concrete\Tests\TestCase;
 
-class RedisPaginatedTraitTest extends \PHPUnit_Framework_TestCase
+class RedisPaginatedTraitTest extends TestCase
 {
 
     use MockeryPHPUnitIntegration;
