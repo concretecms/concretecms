@@ -27,7 +27,6 @@ class Cache extends DashboardPageController
                 $cms->clearCaches();
 
                 Config::save('concrete.cache.blocks', (bool) $eca);
-                Config::save('concrete.cache.assets', (bool) $eac);
                 Config::save('concrete.cache.theme_css', (bool) $tcc);
                 Config::save('concrete.theme.compress_preprocessor_output', (bool) $ctc);
                 Config::save('concrete.theme.generate_less_sourcemap', (bool) $this->post('GENERATE_LESS_SOURCEMAP'));

@@ -401,20 +401,15 @@ return [
             ],
         ],
 
+        // This is the base CKEditor library from CKEditor
         'ckeditor' => [
             [
                 'javascript',
                 'js/ckeditor/ckeditor.js'
             ],
         ],
-
-        'ckeditor/jquery' => [
-            [
-                'javascript',
-                'js/ckeditor/adapters/jquery.js'
-            ],
-        ],
-
+        
+        // These are our CKEditor extensions, including custom plugins, and the jQuery adapter.
         'ckeditor/concrete' => [
             ['javascript', 'js/ckeditor/concrete.js'],
             ['css', 'css/ckeditor/concrete.css'],
@@ -452,17 +447,11 @@ return [
         'ckeditor' => [
             [
                 ['javascript', 'ckeditor'],
-                ['javascript', 'ckeditor/jquery'],
-            ],
-        ],
-        
-        'ckeditor/concrete' => [
-            [
                 ['javascript', 'ckeditor/concrete'],
                 ['css', 'ckeditor/concrete'],
             ],
         ],
-
+        
         'core/cms' => [
             [
                 ['jquery'],

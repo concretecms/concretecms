@@ -6,10 +6,6 @@ use Localization;
 
 class CssLocalizedAsset extends CssAsset
 {
-    /**
-     * @var bool
-     */
-    protected $assetSupportsMinification = false;
 
     /**
      * @return string

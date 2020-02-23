@@ -69,8 +69,6 @@ class Controller extends BlockController
             if ($arLayout instanceof CustomLayout) {
                 $asset = new CssAsset();
                 $asset->setAssetURL(URL::to('/ccm/system/css/layout', $arLayout->getAreaLayoutID()));
-                $asset->setAssetSupportsMinification(false);
-                $asset->setAssetSupportsCombination(false);
                 $this->requireAsset($asset);
             }
         }

@@ -3,12 +3,12 @@
 namespace Concrete\Tests\Update;
 
 use Concrete\TestHelpers\DockerTrait;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * @group docker
  */
-class InstallUpdateTest extends PHPUnit_Framework_TestCase
+class InstallUpdateTest extends TestCase
 {
     use DockerTrait;
 

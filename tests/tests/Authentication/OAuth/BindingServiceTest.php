@@ -12,10 +12,10 @@ use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Statement;
 use Mockery as M;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 
-class BindingServiceTest extends PHPUnit_Framework_TestCase
+class BindingServiceTest extends TestCase
 {
 
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
