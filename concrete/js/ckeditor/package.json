@@ -1,31 +1,30 @@
 {
-  "_from": "ckeditor4",
-  "_id": "ckeditor4@4.13.0",
+  "_from": "ckeditor4@^4.13.1",
+  "_id": "ckeditor4@4.13.1",
   "_inBundle": false,
-  "_integrity": "sha512-1Z1PIEI4U7ud8rntUYhWMkZGaX/MPixmlkcyQ4+4kO77ncWTO0sOmpDitrCRbUwRP0nppzGOGHtVjMF1G3fXUg==",
+  "_integrity": "sha512-Fslq8yT9YtbIWAnexnW8cTl/fK6QiAbSaimq/iZWS/FAqSyVEJk72+fA4BczCUMx7aj/Wari0vZ8nE1L5akYCQ==",
   "_location": "/ckeditor4",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "ckeditor4",
+    "raw": "ckeditor4@^4.13.1",
     "name": "ckeditor4",
     "escapedName": "ckeditor4",
-    "rawSpec": "",
+    "rawSpec": "^4.13.1",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^4.13.1"
   },
   "_requiredBy": [
-    "#DEV:/",
-    "#USER"
+    "/concretecms-bedrock"
   ],
-  "_resolved": "https://registry.npmjs.org/ckeditor4/-/ckeditor4-4.13.0.tgz",
-  "_shasum": "18dcc38ed7de8caadb5e500da88eb932bd74ce94",
-  "_spec": "ckeditor4",
-  "_where": "/Users/andrewembler/Projects/concrete5/build",
+  "_resolved": "https://registry.npmjs.org/ckeditor4/-/ckeditor4-4.13.1.tgz",
+  "_shasum": "f348f6bce2b2f0b8e89b394fa0a4579333e53469",
+  "_spec": "ckeditor4@^4.13.1",
+  "_where": "/Users/andrewembler/Projects/concrete5/build/node_modules/concretecms-bedrock",
   "author": {
     "name": "CKSource",
-    "url": "http://cksource.com/"
+    "url": "https://cksource.com/"
   },
   "bugs": {
     "url": "https://github.com/ckeditor/ckeditor4/issues"
@@ -33,7 +32,7 @@
   "bundleDependencies": false,
   "deprecated": false,
   "description": "JavaScript WYSIWYG web text editor.",
-  "homepage": "http://ckeditor.com",
+  "homepage": "https://ckeditor.com/ckeditor-4/",
   "keywords": [
     "ckeditor4",
     "ckeditor",
@@ -52,5 +51,5 @@
     "type": "git",
     "url": "git+https://github.com/ckeditor/ckeditor4-releases.git"
   },
-  "version": "4.13.0"
+  "version": "4.13.1"
 }
