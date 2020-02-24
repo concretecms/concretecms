@@ -369,11 +369,6 @@ class Controller extends BlockController
         $calendar = $this->getCalendar();
         if (is_object($calendar)) {
             $permissions = new \Permissions($calendar);
-            $this->requireAsset('fullcalendar');
-            if ($this->supportsLightbox()) {
-
-            }
-
             if ($permissions->canAccessCalendarRssFeed()) {
                 $link = new HeadLink(\URL::route(['/feed', 'calendar'], $this->getCalendar()->getID()), 'alternate', 'application/rss+xml');
                 $this->addHeaderItem($link);

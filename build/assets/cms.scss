@@ -10,9 +10,6 @@
 // 04. Theme variables, some of which can now be based on bootstrap variable/constants/
 @import "~concretecms-bedrock/assets/cms/scss/variables";
 
-// This is the public entry point for CMS.
-$concrete-directory: '/concrete';
-
 // Import the bootstrap mixins, variables and functions
 @import "~bootstrap/scss/mixins";
 

@@ -15,6 +15,10 @@
     "grunt": "~0.4.1",
     "grunt-env": "^0.4.4",
     "grunt-newer": "^0.7.0",
-    "laravel-mix": "^2.1.11"
+    "laravel-mix": "^5.0.1",
+    "resolve-url-loader": "^3.1.0",
+    "sass": "^1.25.0",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11"
   }
 }

@@ -6,6 +6,10 @@ mix.webpackConfig({
     }
 });
 
+mix.options({
+    processCssUrls: false
+});
+
 // Set our public path
 mix.setPublicPath('../concrete');
 
@@ -14,6 +18,7 @@ mix.copy('node_modules/jquery/dist/jquery.min.js', '../concrete/js/jquery.js');
 mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/webfonts');
 mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
 mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
+
 
 // CKEditor
 mix
@@ -30,15 +35,16 @@ mix
     .sass('assets/themes/concrete/scss/main.scss', 'themes/concrete')
     .js('assets/themes/concrete/js/main.js', 'themes/concrete');
 
-// Dashboard Theme
-mix
-    .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard')
-    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard');
-
 // Elemental Theme
 mix
     .sass('assets/themes/elemental/scss/main.scss', 'themes/elemental')
     .js('assets/themes/elemental/js/main.js', 'themes/elemental');
+
+
+// Dashboard Theme
+mix
+    .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard')
+    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard');
 
 
 // Turn off notifications
