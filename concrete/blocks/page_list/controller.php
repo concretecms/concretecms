@@ -34,7 +34,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function getRequiredFeatures(): array
     {
         return [
-            Features::PAGES,
+            Features::NAVIGATION,
         ];
     }
 

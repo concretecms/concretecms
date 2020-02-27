@@ -24,7 +24,7 @@ class PageTheme extends Theme implements ThemeProviderInterface
     public function getThemeSupportedFeatures()
     {
         return [
-            Features::PAGES,
+            Features::NAVIGATION,
             Features::IMAGERY
         ];
     }

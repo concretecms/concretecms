@@ -57,7 +57,7 @@ mix
  */
 // Pages
 mix
-    .sass('node_modules/concretecms-bedrock/assets/pages/scss/frontend.scss', 'css/features/pages/frontend.css')
+    .sass('node_modules/concretecms-bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css')
 
 // Imagery
 mix

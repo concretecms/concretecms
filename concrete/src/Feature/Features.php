@@ -41,6 +41,11 @@ class Features
     const CALENDAR = 'calendar';
 
     /**
+     * Accessory feature: support for autonav, page list, etc...
+     */
+    const NAVIGATION = 'navigation';
+
+    /**
      * Accessory feature: support for social networking
      */
     const SOCIAL = 'social';

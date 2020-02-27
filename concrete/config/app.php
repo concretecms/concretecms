@@ -428,8 +428,8 @@ return [
         ],
         
         // Fallback/minimal assets for accessory features
-        'core/feature/pages/frontend' => [
-            ['css', 'css/features/pages/frontend.css'],
+        'core/feature/navigation/frontend' => [
+            ['css', 'css/features/navigation/frontend.css'],
         ],
 
         'core/feature/imagery/frontend' => [
@@ -471,9 +471,9 @@ return [
         ],
 
         // Fallback/minimal assets groups
-        'core/feature/pages/frontend' => [
+        'core/feature/navigation/frontend' => [
             [
-                ['css', 'core/feature/pages/frontend'],
+                ['css', 'core/feature/navigation/frontend'],
             ]
         ],
 

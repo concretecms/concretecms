@@ -1,8 +1,7 @@
 @import "~concretecms-bedrock/assets/bedrock/scss/frontend";
 
 // Feature support - comes outside div.ccm-page
-@import "./features/pages/pages";
-
+@import "./features/navigation/navigation";
 @import "./features/imagery/imagery";
 
 
@@ -21,8 +20,6 @@ div.ccm-page {
   @import "./custom-design-classes/area-content-accent";
   @import "./custom-design-classes/block-sidebar-padded";
   @import "./custom-design-classes/block-sidebar-wrapped";
-  @import "./custom-design-classes/blog-entry-list";
-  @import "./custom-design-classes/recent-blog-entry";
   @import "./custom-design-classes/testimonial-bio";
   @import "./custom-design-classes/title-caps-bold";
   @import "./custom-design-classes/title-caps";
