@@ -1,5 +1,11 @@
 @import "~concretecms-bedrock/assets/bedrock/scss/frontend";
 
+// Feature support - comes outside div.ccm-page
+@import "./features/pages/pages";
+
+@import "./features/imagery/imagery";
+
+
 div.ccm-page {
   
   @import "./header";
@@ -8,28 +14,9 @@ div.ccm-page {
   @import "./pagination";
   @import "./search";
   @import "./footer";
-
-  // Styling for blocks
-  @import "./blocks/page-list-template-thumbnail-grid";
-  @import "./blocks/page-title";
-  @import "./blocks/image-slider";
-  @import "./blocks/feature";
-  @import "./blocks/feature-template-hover-description";
-  @import "./blocks/topic-list";
-  @import "./blocks/testimonial";
-  @import "./blocks/page-title-option-byline";
-  @import "./blocks/page-list";
-  @import "./blocks/page-list-option-buttons";
-  @import "./blocks/page-attribute-display";
-  @import "./blocks/next-previous";
-  @import "./blocks/image";
-  @import "./blocks/faq";
-  @import "./blocks/date-navigation";
-  
-  // Styling for components (version 9/10)
-  @import "./components/calendar";
   
   // Misc content styling
+  /*
   @import "./breadcrumb";
   @import "./custom-design-classes/area-content-accent";
   @import "./custom-design-classes/block-sidebar-padded";
@@ -40,7 +27,7 @@ div.ccm-page {
   @import "./custom-design-classes/title-caps-bold";
   @import "./custom-design-classes/title-caps";
   @import "./custom-design-classes/image-caption";
-  
+  */
 
 }
 

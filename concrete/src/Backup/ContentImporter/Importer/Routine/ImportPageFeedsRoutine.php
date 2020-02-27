@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Page\Feed;
-use Concrete\Core\Permission\Category;
 
 class ImportPageFeedsRoutine extends AbstractRoutine
 {

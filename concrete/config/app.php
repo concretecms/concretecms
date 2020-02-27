@@ -238,8 +238,6 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeaturesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeatureCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
@@ -429,9 +427,19 @@ return [
             ['css', 'css/cms.css'],
         ],
         
+        // Fallback/minimal assets for accessory features
+        'core/feature/pages/frontend' => [
+            ['css', 'css/features/pages/frontend.css'],
+        ],
+
+        'core/feature/imagery/frontend' => [
+            ['javascript', 'js/features/imagery/frontend.js'],
+            ['css', 'css/features/imagery/frontend.css'],
+        ],
+        
     ],
     'asset_groups' => [
-        /* proper groups here */
+
         'jquery' => [
             [
                 ['javascript', 'jquery'],
@@ -461,7 +469,21 @@ return [
                 ['css', 'core/cms'],
             ]
         ],
-        
+
+        // Fallback/minimal assets groups
+        'core/feature/pages/frontend' => [
+            [
+                ['css', 'core/feature/pages/frontend'],
+            ]
+        ],
+
+        'core/feature/imagery/frontend' => [
+            [
+                ['javascript', 'core/feature/imagery/frontend'],
+                ['css', 'core/feature/imagery/frontend'],
+            ]
+        ],
+
     ],
     // HTTP Client options
     'http_client' => [

@@ -57,3 +57,22 @@ if (is_object($f) && $f->getFileID()) {
     <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Image Block.'); ?></div>
 <?php
 }
+
+if (isset($foS) && $foS) { ?>
+
+    <script type="text/javascript">
+        var images = document.getElementsByClassName('ccm-image-block-hover');
+        for (var i = 0; i < images.length; i++) {
+            var image = images[i],
+                hoverSrc = image.getAttribute('data-hover-src'),
+                defaultSrc = image.getAttribute('data-default-src');
+            image.onmouseover = function() {
+                image.setAttribute('src', hoverSrc);
+            };
+            image.onmouseout = function() {
+                image.setAttribute('src', defaultSrc);
+            };
+        }
+    </script>
+<?php 
+}

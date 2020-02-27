@@ -1,9 +1,12 @@
 <?php
 namespace Concrete\Core\Block\View;
 
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Block\Events\BlockOutput;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
 use Config;
@@ -266,6 +269,8 @@ class BlockView extends AbstractView
         }
 
         $this->controller->registerViewAssets($this->outputContent);
+        
+        $this->handleRequiredFeatures($this->controller);
 
         $this->onBeforeGetContents();
         $this->fireOnBlockOutputEvent();
@@ -277,6 +282,24 @@ class BlockView extends AbstractView
         }
 
         $loc->popActiveContext();
+    }
+    
+    protected function handleRequiredFeatures(BlockController $controller)
+    {
+        if ($controller instanceof UsesFeatureInterface) {
+            $theme = $controller->getCollectionObject()->getCollectionThemeObject();
+            if ($theme) {
+                /**
+                 * @var $theme Theme
+                 */
+                foreach ($controller->getRequiredFeatures() as $feature) {
+                    if (!in_array($feature, $theme->getThemeSupportedFeatures())) {
+                        $assetHandle = "core/feature/{$feature}/frontend";
+                        $this->requireAsset($assetHandle);
+                    }
+                }
+            }
+        }
     }
 
     public function setBlockViewHeaderFile($file)

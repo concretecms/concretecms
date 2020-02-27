@@ -2,18 +2,15 @@
 namespace Concrete\Theme\Elemental;
 
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Page\Theme\BedrockThemeTrait;
 use Concrete\Core\Page\Theme\Theme;
 
 class PageTheme extends Theme implements ThemeProviderInterface
 {
-    public function registerAssets()
-    {
-        $this->requireAsset('font-awesome');
-        $this->requireAsset('jquery');
-    }
-
-    protected $pThemeGridFrameworkHandle = 'bootstrap4';
-
+    
+    use BedrockThemeTrait;
+    
     public function getThemeName()
     {
         return t('Elemental++');
@@ -22,6 +19,14 @@ class PageTheme extends Theme implements ThemeProviderInterface
     public function getThemeDescription()
     {
         return t('Elegant, spacious theme built on Bootstrap 4, with support for blogs, portfolios, layouts and more.');
+    }
+
+    public function getThemeSupportedFeatures()
+    {
+        return [
+            Features::PAGES,
+            Features::IMAGERY
+        ];
     }
 
     /**

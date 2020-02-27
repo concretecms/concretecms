@@ -22,9 +22,6 @@ class Controller extends BlockController implements FileTrackableInterface
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
     protected $btExportPageColumns = ['internalLinkCID'];
-    protected $btFeatures = [
-        'image',
-    ];
 
     /**
      * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
@@ -46,18 +43,7 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         return t('Adds images and onstates from the library to pages.');
     }
-
-    /**
-     * @param string $outputContent
-     */
-    public function registerViewAssets($outputContent = '')
-    {
-        // Ensure we have jQuery if we have an onState image
-        if (is_object($this->getFileOnstateObject())) {
-            $this->requireAsset('javascript', 'jquery');
-        }
-    }
-
+    
     /**
      * @return bool|null
      */
