@@ -242,8 +242,10 @@ abstract class ItemList
      */
     public function setNameSpace($nameSpace)
     {
-        $this->paginationPageParameter .= '_' . $nameSpace;
-        $this->sortColumnParameter .= '_' . $nameSpace;
-        $this->sortDirectionParameter .= '_' . $nameSpace;
+        if(!is_null($nameSpace) && $nameSpace!=""){
+            $this->paginationPageParameter .= '_' . $nameSpace;
+            $this->sortColumnParameter .= '_' . $nameSpace;
+            $this->sortDirectionParameter .= '_' . $nameSpace;
+        }
     }
 }
