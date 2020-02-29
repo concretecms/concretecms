@@ -1,5 +1,6 @@
 <?php
-use Concrete\Core\Permission\IPService;
+
+use Concrete\Core\Permission\IpAccessControlService;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -9,12 +10,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist\Range $controller */
 
 /* @var int $type */
-/* @var Concrete\Core\Permission\IPRange[]|Generator $ranges */
-/* @var IPService $ip */
+/* @var Concrete\Core\Permission\IpAccessControlService $service */
+/* @var IPLib\Address\AddressInterface $myIPAddress */
 
-$view->element('dashboard/system/permissions/blacklist/menu', ['type' => $type]);
+$view->element('dashboard/system/permissions/blacklist/menu', ['category' => $service->getCategory(), 'type' => $type]);
 
-if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
+if (($type & IpAccessControlService::IPRANGEFLAG_MANUAL) === IpAccessControlService::IPRANGEFLAG_MANUAL) {
     ?>
     <form class="form-inline" id="ccm-form-new-range">
         <fieldset>
@@ -31,9 +32,9 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
             <button type="submit" class="btn btn-default"><?= t('Add') ?></button>
             <br />
             <?php
-            if (($type & IPService::IPRANGEFLAG_WHITELIST) === IPService::IPRANGEFLAG_WHITELIST) {
+            if (($type & IpAccessControlService::IPRANGEFLAG_WHITELIST) === IpAccessControlService::IPRANGEFLAG_WHITELIST) {
                 ?>
-                <p class="text-muted"><?= t('Your IP address:') ?> <a href="#" onclick="$('#ccm-new-range').val($(this).text());return false"><?= h((string) $ip->getRequestIPAddress()) ?></a></p>
+                <p class="text-muted"><?= t('Your IP address:') ?> <a href="#" onclick="$('#ccm-new-range').val($(this).text());return false"><?= h((string) $myIPAddress) ?></a></p>
                 <?php
             }
             ?>
@@ -43,14 +44,14 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
     $(document).ready(function() {
         function submit(range, force) {
             var send = {
-                ccm_token:<?= json_encode($token->generate('add_range/' . $type)) ?>,
+                ccm_token:<?= json_encode($token->generate('add_range/' . $type . '/' . $service->getCategory()->getIpAccessControlCategoryID())) ?>,
                 range: range
             };
             if (force) {
                 send.force = '1';
             }
             new ConcreteAjaxRequest({
-                url: <?= json_encode($view->action('add_range', $type)) ?>,
+                url: <?= json_encode($view->action('add_range', $type, $service->getCategory()->getIpAccessControlCategoryID())) ?>,
                 data: send,
                 success: function(data) {
                     if (data.require_force) {
@@ -88,7 +89,7 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
             <th></th>
             <th><?= t('Range') ?></th>
             <?php
-            if ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+            if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
                 ?>
                 <th><?= t('Expires') ?></th>
                 <th></th>
@@ -99,7 +100,7 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
     </thead>
     <tbody>
         <?php
-        foreach ($ranges as $range) {
+        foreach ($service->getRanges($type) as $range) {
             echo $controller->formatRangeRow($range);
         }
         ?>
@@ -107,15 +108,15 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
 </table>
 
 <?php
-if ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
     ?>
     <div style="display: none" data-dialog="ccm-blacklist-clear-data-dialog" class="ccm-ui">
-        <form data-dialog-form="ccm-blacklist-clear-data-form" method="POST" action="<?= $view->action('clear_data') ?>">
-            <?php $token->output('blacklist-clear-data') ?>
+        <form data-dialog-form="ccm-blacklist-clear-data-form" method="POST" action="<?= $view->action('clear_data', $service->getCategory()->getIpAccessControlCategoryID()) ?>">
+            <?php $token->output('blacklist-clear-data/' . $service->getCategory()->getIpAccessControlCategoryID()) ?>
             <div class="checkbox">
                 <label>
                     <?= $form->checkbox('delete-failed-login-attempts', 'yes', false) ?>
-                    <?= t('Delete failed login attempts older than %s days',  $form->number('delete-failed-login-attempts-min-age', 1, ['style' => 'width: 90px; display: inline-block', 'min' => '0'])) ?>
+                    <?= t('Delete failed login attempts older than %s days', $form->number('delete-failed-login-attempts-min-age', 1, ['style' => 'width: 90px; display: inline-block', 'min' => '0'])) ?>
                 </label>
             </div>
             <div class="radio">
@@ -153,9 +154,9 @@ $(document).ready(function() {
             e.preventDefault();
             var $tr = $(this).closest('tr'), id = $tr.data('range-id');
             new ConcreteAjaxRequest({
-                url: <?= json_encode($view->action('delete_range', $type)) ?>,
+                url: <?= json_encode($view->action('delete_range', $type, $service->getCategory()->getIpAccessControlCategoryID())) ?>,
                 data: {
-                    ccm_token:<?= json_encode($token->generate('delete_range/' . $type)) ?>,
+                    ccm_token:<?= json_encode($token->generate('delete_range/' . $type . '/' . $service->getCategory()->getIpAccessControlCategoryID())) ?>,
                     id: id
                 },
                 success: function(data) {
@@ -172,9 +173,9 @@ $(document).ready(function() {
             e.preventDefault();
             var $tr = $(this).closest('tr'), id = $tr.data('range-id');
             new ConcreteAjaxRequest({
-                url: <?= json_encode($view->action('make_range_permanent', $type)) ?>,
+                url: <?= json_encode($view->action('make_range_permanent', $type, $service->getCategory()->getIpAccessControlCategoryID())) ?>,
                 data: {
-                    ccm_token:<?= json_encode($token->generate('make_range_permanent/' . $type)) ?>,
+                    ccm_token:<?= json_encode($token->generate('make_range_permanent/' . $type . '/' . $service->getCategory()->getIpAccessControlCategoryID())) ?>,
                     id: id
                 },
                 success: function(data) {
@@ -187,7 +188,7 @@ $(document).ready(function() {
         })
     ;
     <?php
-    if ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+    if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
         ?>
         var $dialog = $('div[data-dialog="ccm-blacklist-clear-data-dialog"]');
         $('[data-launch-dialog="ccm-blacklist-clear-data-dialog"]').on('click', function(e) {

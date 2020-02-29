@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Tree\Node\Category;
 
 use Concrete\Controller\Dialog\Tree\Node;
+use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Edit extends Node
@@ -12,6 +13,7 @@ class Edit extends Node
     {
         $node = $this->getNode();
         $np = new \Permissions($node);
+
         return $np->canEditTreeNode();
     }
 
@@ -23,21 +25,24 @@ class Edit extends Node
 
     public function update_category_node()
     {
-        $token = \Core::make('token');
-        $error = \Core::make('error');
+        $app = Facade::getFacadeApplication();
+        $token = $app->make('token');
+        $error = $app->make('error');
+        $vsh = $app->make('helper/validation/strings');
         $node = $this->getNode();
         if (!$token->validate('update_category_node')) {
             $error->add($token->getErrorMessage());
         }
 
         $title = $_POST['treeNodeCategoryName'];
-        if (!$title) {
+        if (!$vsh->notempty($title)) {
             $error->add(t('Invalid title for category'));
         }
 
         if (!$error->has()) {
             $node->setTreeNodeName($title);
             $r = $node->getTreeNodeJSON();
+
             return new JsonResponse($r);
         } else {
             return new JsonResponse($error);

@@ -70,7 +70,7 @@ if (Test-Path -PathType Leaf -Path "$phpInstallPath\php-installed.txt") {
     Set-PhpIniKey -Path $phpInstallPath -Key zend.assertions -Value 1
     Set-PhpIniKey -Path $phpInstallPath -Key assert.exception -Value On
     Set-PhpIniKey -Path $phpInstallPath -Key memory_limit -Value 256M
-    Enable-PhpExtension -Path $phpInstallPath -Extension mbstring,bz2,mysqli,curl,gd,intl,pdo_mysql,xsl,fileinfo,openssl,opcache
+    Enable-PhpExtension -Path $phpInstallPath -Extension mbstring,bz2,mysqli,curl,gd,intl,pdo_mysql,xsl,fileinfo,openssl,opcache,exif
     New-Item -ItemType File -Path "$phpInstallPath\php-installed.txt" | Out-Null
 }
 Write-Host 'Refreshing CA Certificates for PHP'

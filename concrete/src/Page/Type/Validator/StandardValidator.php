@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Validator;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -25,7 +26,7 @@ class StandardValidator implements ValidatorInterface
     {
         $e = Core::make('error');
         $availablePageTemplates = $this->type->getPageTypePageTemplateObjects();
-        $availablePageTemplateIDs = array();
+        $availablePageTemplateIDs = [];
         foreach ($availablePageTemplates as $ppt) {
             $availablePageTemplateIDs[] = $ppt->getPageTemplateID();
         }
@@ -56,6 +57,7 @@ class StandardValidator implements ValidatorInterface
 
         return $e;
     }
+
     public function validatePublishDraftRequest(Page $page = null)
     {
         $e = Core::make('error');

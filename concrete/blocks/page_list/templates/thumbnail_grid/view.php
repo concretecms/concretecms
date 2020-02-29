@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 $th = Loader::helper('text');
 $c = Page::getCurrentPage();
 ?>
@@ -34,7 +34,7 @@ $c = Page::getCurrentPage();
         <?php if (is_object($thumbnail)): ?>
             <div class="ccm-block-page-list-page-entry-grid-thumbnail">
                 <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php
-                $img = Core::make('html/image', array($thumbnail));
+                $img = Core::make('html/image', [$thumbnail]);
                 $tag = $img->getTag();
                 $tag->addClass('img-responsive');
                 echo $tag;
@@ -77,12 +77,12 @@ $c = Page::getCurrentPage();
 
     <?php if (count($pages) == 0): ?>
         <div class="ccm-block-page-list-no-pages"><?=h($noResultsMessage)?></div>
-    <?php endif;?>
+    <?php endif; ?>
 
 </div>
 
 <?php if ($showPagination): ?>
-    <?php echo $pagination;?>
+    <?php echo $pagination; ?>
 <?php endif; ?>
 
 <?php if ($c->isEditMode() && $controller->isBlockEmpty()): ?>

@@ -1,17 +1,16 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Controller\Element\Package\AttributeTypeItemList;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Package;
-use Concrete\Controller\Element\Package\ThemeItemList;
 use Doctrine\ORM\EntityManagerInterface;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class AttributeType extends AbstractCategory
 {
-
     protected $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -23,7 +22,7 @@ class AttributeType extends AbstractCategory
     {
         $keys = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key')
             ->findByType($type);
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             $this->entityManager->remove($key);
             $this->entityManager->flush();
         }
@@ -52,5 +51,4 @@ class AttributeType extends AbstractCategory
     {
         return Type::getListByPackage($package);
     }
-
 }

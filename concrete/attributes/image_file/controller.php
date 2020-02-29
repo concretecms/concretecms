@@ -79,6 +79,16 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
     }
 
+    public function getPlainTextValue()
+    {
+        $url = '';
+        $f = $this->getAttributeValue()->getValue();
+        if (is_object($f)) {
+            $url = $f->getURL();
+        }
+        return $url;
+    }
+    
     public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');

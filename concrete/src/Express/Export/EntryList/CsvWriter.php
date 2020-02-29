@@ -22,10 +22,16 @@ class CsvWriter
      */
     protected $dateFormatter;
 
-    public function __construct(Writer $writer, Date $dateFormatter)
+    /**
+     * @var string
+     */
+    private $datetime_format;
+
+    public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = 'ATOM' )
     {
         $this->writer = $writer;
         $this->dateFormatter = $dateFormatter;
+        $this->datetime_format = $datetime_format;
     }
 
     public function insertHeaders(Entity $entity)
@@ -87,10 +93,11 @@ class CsvWriter
     {
         $date = $entry->getDateCreated();
         if ($date) {
-            yield 'ccm_date_created' => $this->dateFormatter->formatCustom(\DateTime::ATOM, $date);
+            yield 'ccm_date_created' => $this->dateFormatter->formatCustom($this->datetime_format, $date);
         } else {
             yield 'ccm_date_created' => null;
         }
+        yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
         $author = $entry->getAuthor();
         if ($author) {
@@ -103,6 +110,18 @@ class CsvWriter
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKey()->getAttributeKeyHandle() => $attribute->getPlainTextValue();
         }
+
+        $associations = $entry->getAssociations();
+        foreach ($associations as $association) {
+            $output = [];
+            if ($collection = $association->getSelectedEntries()) {
+                foreach($collection as $entry) {
+                    $output[] = $entry->getPublicIdentifier();
+                }
+            }
+            yield $association->getAssociation()->getId() => implode('|', $output);
+        }
+
     }
 
     /**
@@ -112,12 +131,18 @@ class CsvWriter
      */
     private function getHeaders(Entity $entity)
     {
+        yield 'publicIdentifier' => 'publicIdentifier';
         yield 'ccm_date_created' => 'dateCreated';
         yield 'author_name' => 'authorName';
 
         $attributes = $entity->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKeyHandle() => $attribute->getAttributeKeyDisplayName();
+        }
+
+        $associations = $entity->getAssociations();
+        foreach ($associations as $association) {
+            yield $association->getId() => $association->getTargetPropertyName();
         }
     }
 

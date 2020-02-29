@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page;
 
 use Symfony\Component\EventDispatcher\GenericEvent;
-use User;
+use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\Request;
 use Concrete\Core\Http\RequestEventInterface;
 
