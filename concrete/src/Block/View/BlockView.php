@@ -176,6 +176,7 @@ class BlockView extends AbstractView
 
                     $this->setViewTemplate($bvt->getTemplate());
                 }
+                $this->handleRequiredFeatures($this->controller);
                 break;
             case 'add':
                 if ($this->controller->blockViewRenderOverride) {
@@ -270,8 +271,6 @@ class BlockView extends AbstractView
 
         $this->controller->registerViewAssets($this->outputContent);
         
-        $this->handleRequiredFeatures($this->controller);
-
         $this->onBeforeGetContents();
         $this->fireOnBlockOutputEvent();
         echo $this->outputContent;

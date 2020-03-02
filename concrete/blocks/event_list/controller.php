@@ -2,6 +2,8 @@
 namespace Concrete\Block\EventList;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Concrete\Core\Attribute\Key\EventKey;
@@ -13,7 +15,7 @@ use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = array('form');
 
@@ -21,6 +23,12 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 340;
     protected $btTable = 'btEventList';
 
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::CALENDAR
+        ];
+    }
     public function getBlockTypeDescription()
     {
         return t("Displays a list of events from a calendar.");

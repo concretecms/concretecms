@@ -428,6 +428,11 @@ return [
         ],
         
         // Fallback/minimal assets for accessory features
+        'core/feature/calendar/frontend' => [
+            ['javascript', 'js/features/calendar/frontend.js'],
+            ['css', 'css/features/calendar/frontend.css'],
+        ],
+
         'core/feature/navigation/frontend' => [
             ['css', 'css/features/navigation/frontend.css'],
         ],
@@ -474,6 +479,12 @@ return [
         'core/feature/navigation/frontend' => [
             [
                 ['css', 'core/feature/navigation/frontend'],
+            ]
+        ],
+        'core/feature/calendar/frontend' => [
+            [
+                ['javascript', 'core/feature/calendar/frontend'],
+                ['css', 'core/feature/calendar/frontend'],
             ]
         ],
 
