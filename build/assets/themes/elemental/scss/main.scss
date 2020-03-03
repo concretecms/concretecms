@@ -1,9 +1,9 @@
 @import "~concretecms-bedrock/assets/bedrock/scss/frontend";
 
 // Feature support - comes outside div.ccm-page
-@import "./features/navigation/navigation";
+@import "./features/calendar/calendar";
 @import "./features/imagery/imagery";
-
+@import "./features/navigation/navigation";
 
 div.ccm-page {
   
