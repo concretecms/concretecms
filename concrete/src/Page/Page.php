@@ -2166,9 +2166,11 @@ EOT
     /**
      * Get the CSS class to be used to wrap the whole page contents.
      *
+     * @param null|mixed $additionalClasses
+     * 
      * @return string
      */
-    public function getPageWrapperClass()
+    public function getPageWrapperClass($additionalClasses = null)
     {
         $pt = $this->getPageTypeObject();
 
@@ -2187,6 +2189,13 @@ EOT
             $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
         }
 
+        //append additional classes
+        if (is_string($additionalClasses)) {
+            $classes[] = $additionalClasses;
+        } elseif (is_array($additionalClasses)) {
+            $classes = array_merge($classes, $additionalClasses);
+        } 
+        
         return implode(' ', $classes);
     }
 
