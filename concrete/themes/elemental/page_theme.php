@@ -25,6 +25,8 @@ class PageTheme extends Theme implements ThemeProviderInterface
     {
         return [
             Features::CALENDAR,
+            Features::CONVERSATIONS,
+            Features::FAQ,
             Features::NAVIGATION,
             Features::IMAGERY
         ];

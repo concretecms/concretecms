@@ -433,6 +433,15 @@ return [
             ['css', 'css/features/calendar/frontend.css'],
         ],
 
+        'core/feature/conversations/frontend' => [
+            ['javascript', 'js/features/conversations/frontend.js'],
+            ['css', 'css/features/conversations/frontend.css'],
+        ],
+
+        'core/feature/faq/frontend' => [
+            ['css', 'css/features/faq/frontend.css'],
+        ],
+
         'core/feature/navigation/frontend' => [
             ['css', 'css/features/navigation/frontend.css'],
         ],
@@ -481,10 +490,24 @@ return [
                 ['css', 'core/feature/navigation/frontend'],
             ]
         ],
+
+        'core/feature/faq/frontend' => [
+            [
+                ['css', 'core/feature/faq/frontend'],
+            ]
+        ],
+
         'core/feature/calendar/frontend' => [
             [
                 ['javascript', 'core/feature/calendar/frontend'],
                 ['css', 'core/feature/calendar/frontend'],
+            ]
+        ],
+
+        'core/feature/conversations/frontend' => [
+            [
+                ['javascript', 'core/feature/conversations/frontend'],
+                ['css', 'core/feature/conversations/frontend'],
             ]
         ],
 

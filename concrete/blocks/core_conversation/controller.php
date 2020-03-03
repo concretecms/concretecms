@@ -6,6 +6,8 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 
 /**
@@ -18,7 +20,7 @@ use Concrete\Core\Page\Page;
  * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 450;
     protected $btInterfaceHeight = 400;
@@ -39,6 +41,13 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("Conversation");
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::CONVERSATIONS
+        ];
     }
 
     public function getSearchableContent()

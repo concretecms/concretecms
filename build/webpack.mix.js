@@ -55,9 +55,13 @@ mix
 /**
  * Build accessory Features
  */
-// Pages
+// Navigation
 mix
     .sass('node_modules/concretecms-bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css')
+
+// FAQ
+mix
+    .sass('node_modules/concretecms-bedrock/assets/faq/scss/frontend.scss', 'css/features/faq/frontend.css')
 
 // Imagery
 mix
