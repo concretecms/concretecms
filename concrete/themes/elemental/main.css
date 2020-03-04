@@ -12845,6 +12845,16 @@ div.ccm-block-page-list-page-entry-read-more {
   margin-top: 20px;
 }
 
+ul.ccm-block-date-navigation-dates {
+  list-style-type: none;
+  padding-left: 0px;
+  padding-bottom: 0px;
+}
+
+.ccm-block-date-navigation-date-selected {
+  font-weight: bold;
+}
+
 .breadcrumb {
   background-color: transparent;
   padding: 0px;
@@ -13070,9 +13080,19 @@ div.blog-entry-list div.ccm-block-page-list-date {
 }
 div.blog-entry-list div.ccm-block-page-list-title {
   margin: 0px;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #75ca2a;
+}
+div.blog-entry-list div.ccm-block-page-list-title a:hover {
+  text-decoration: none;
+}
+
+div.col-sidebar div.ccm-block-date-navigation-wrapper {
+  margin: 25px 40px 25px 40px;
+  font-size: 0.85em;
+}
+
+ul.ccm-block-date-navigation-dates li {
+  margin-bottom: 0.75em;
+  padding-bottom: 0px;
 }
 
 div.recent-blog-entry div.ccm-block-page-list-title {

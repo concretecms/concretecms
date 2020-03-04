@@ -26,10 +26,13 @@ div.blog-entry-list {
 
   div.ccm-block-page-list-title {
     margin: 0px;
-    @include font-size($h2-font-size);
-    font-family: $headings-font-family;
-    font-weight: 400;
-    color: theme-color("primary");
+    a {
+      color: theme-color("gray-dark");
+      &:hover {
+        text-decoration: none;
+        color: theme-color("gray");
+      }
+    }
     
   }
 }

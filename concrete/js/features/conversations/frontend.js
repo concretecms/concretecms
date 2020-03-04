@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -7129,7 +7129,7 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ 7:
+/***/ 8:
 /*!************************************************************************************!*\
   !*** multi ./node_modules/concretecms-bedrock/assets/conversations/js/frontend.js ***!
   \************************************************************************************/

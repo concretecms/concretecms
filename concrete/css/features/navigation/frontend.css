@@ -42,3 +42,13 @@ div.ccm-block-page-list-page-entry-text div.ccm-block-page-list-title {
 div.ccm-block-page-list-page-entry-read-more {
   margin-top: 20px;
 }
+
+ul.ccm-block-date-navigation-dates {
+  list-style-type: none;
+  padding-left: 0px;
+  padding-bottom: 0px;
+}
+
+.ccm-block-date-navigation-date-selected {
+  font-weight: bold;
+}

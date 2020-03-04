@@ -55,30 +55,32 @@ mix
 /**
  * Build accessory Features
  */
-// Navigation
+mix
+    .sass('node_modules/concretecms-bedrock/assets/boards/scss/frontend.scss', 'css/features/boards/frontend.css')
+    .js('node_modules/concretecms-bedrock/assets/boards/js/frontend.js', 'js/features/boards/frontend.js');
+
 mix
     .sass('node_modules/concretecms-bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css')
 
-// FAQ
 mix
     .sass('node_modules/concretecms-bedrock/assets/faq/scss/frontend.scss', 'css/features/faq/frontend.css')
 
-// Imagery
 mix
     .sass('node_modules/concretecms-bedrock/assets/imagery/scss/frontend.scss', 'css/features/imagery/frontend.css')
     .js('node_modules/concretecms-bedrock/assets/imagery/js/frontend.js', 'js/features/imagery/frontend.js');
 
-// Calendar
 mix
     .sass('node_modules/concretecms-bedrock/assets/calendar/scss/frontend.scss', 'css/features/calendar/frontend.css')
     .js('node_modules/concretecms-bedrock/assets/calendar/js/frontend.js', 'js/features/calendar/frontend.js');
 
-// Conversations
 mix
     .sass('node_modules/concretecms-bedrock/assets/conversations/scss/frontend.scss', 'css/features/conversations/frontend.css')
     .js('node_modules/concretecms-bedrock/assets/conversations/js/frontend.js', 'js/features/conversations/frontend.js');
 
-// Vidieo
+mix
+    .sass('node_modules/concretecms-bedrock/assets/documents/scss/frontend.scss', 'css/features/documents/frontend.css')
+    .js('node_modules/concretecms-bedrock/assets/documents/js/frontend.js', 'js/features/documents/frontend.js');
+
 mix
     .sass('node_modules/concretecms-bedrock/assets/video/scss/frontend.scss', 'css/features/video/frontend.css')
     .js('node_modules/concretecms-bedrock/assets/video/js/frontend.js', 'js/features/video/frontend.js');

@@ -428,6 +428,11 @@ return [
         ],
         
         // Fallback/minimal assets for accessory features
+        'core/feature/boards/frontend' => [
+            ['javascript', 'js/features/boards/frontend.js'],
+            ['css', 'css/features/boards/frontend.css'],
+        ],
+
         'core/feature/calendar/frontend' => [
             ['javascript', 'js/features/calendar/frontend.js'],
             ['css', 'css/features/calendar/frontend.css'],
@@ -436,6 +441,11 @@ return [
         'core/feature/conversations/frontend' => [
             ['javascript', 'js/features/conversations/frontend.js'],
             ['css', 'css/features/conversations/frontend.css'],
+        ],
+
+        'core/feature/documents/frontend' => [
+            ['javascript', 'js/features/documents/frontend.js'],
+            ['css', 'css/features/documents/frontend.css'],
         ],
 
         'core/feature/faq/frontend' => [
@@ -485,18 +495,7 @@ return [
         ],
 
         // Fallback/minimal assets groups
-        'core/feature/navigation/frontend' => [
-            [
-                ['css', 'core/feature/navigation/frontend'],
-            ]
-        ],
-
-        'core/feature/faq/frontend' => [
-            [
-                ['css', 'core/feature/faq/frontend'],
-            ]
-        ],
-
+        
         'core/feature/calendar/frontend' => [
             [
                 ['javascript', 'core/feature/calendar/frontend'],
@@ -511,10 +510,30 @@ return [
             ]
         ],
 
+        'core/feature/documents/frontend' => [
+            [
+                ['javascript', 'core/feature/documents/frontend'],
+                ['javascript-localized', 'core/cms'],
+                ['css', 'core/feature/documents/frontend'],
+            ]
+        ],
+
+        'core/feature/faq/frontend' => [
+            [
+                ['css', 'core/feature/faq/frontend'],
+            ]
+        ],
+
         'core/feature/imagery/frontend' => [
             [
                 ['javascript', 'core/feature/imagery/frontend'],
                 ['css', 'core/feature/imagery/frontend'],
+            ]
+        ],
+
+        'core/feature/navigation/frontend' => [
+            [
+                ['css', 'core/feature/navigation/frontend'],
             ]
         ],
 

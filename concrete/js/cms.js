@@ -5839,7 +5839,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _express__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./express */ "./node_modules/concretecms-bedrock/assets/cms/js/express.js");
 /* harmony import */ var _file_manager_uploader__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./file-manager/uploader */ "./node_modules/concretecms-bedrock/assets/cms/js/file-manager/uploader.js");
 /* harmony import */ var _file_manager_search__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./file-manager/search */ "./node_modules/concretecms-bedrock/assets/cms/js/file-manager/search.js");
-/* harmony import */ var _file_manager_search__WEBPACK_IMPORTED_MODULE_41___default = /*#__PURE__*/__webpack_require__.n(_file_manager_search__WEBPACK_IMPORTED_MODULE_41__);
 /* harmony import */ var _file_manager_selector__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./file-manager/selector */ "./node_modules/concretecms-bedrock/assets/cms/js/file-manager/selector.js");
 /* harmony import */ var _file_manager_selector__WEBPACK_IMPORTED_MODULE_42___default = /*#__PURE__*/__webpack_require__.n(_file_manager_selector__WEBPACK_IMPORTED_MODULE_42__);
 /* harmony import */ var _file_manager_menu__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./file-manager/menu */ "./node_modules/concretecms-bedrock/assets/cms/js/file-manager/menu.js");
@@ -12031,10 +12030,16 @@ global.ConcreteFileMenu = ConcreteFileMenu;
 /*!*******************************************************************************!*\
   !*** ./node_modules/concretecms-bedrock/assets/cms/js/file-manager/search.js ***!
   \*******************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {/* jshint unused:vars, undef:true, browser:true, jquery:true */
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _search_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../search/base */ "./node_modules/concretecms-bedrock/assets/cms/js/search/base.js");
+/* harmony import */ var _search_base__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_search_base__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
 /* global _, ccmi18n, ccmi18n_filemanager, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteAjaxRequest, ConcreteAjaxSearch, ConcreteEvent, ConcreteFileMenu, ConcreteTree */
 
 function ConcreteFileManager($element, options) {

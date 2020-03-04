@@ -41,9 +41,19 @@ class Features
     const CALENDAR = 'calendar';
 
     /**
+     * Fundamental feature: support for Boards
+     */
+    const BOARDS = 'boards';
+
+    /**
      * Accessory feature: support for autonav, page list, etc...
      */
     const NAVIGATION = 'navigation';
+
+    /**
+     * Accessory feature: support for documents (public file manager)
+     */
+    const DOCUMENTS = 'documents';
 
     /**
      * Accessory feature: support for social networking
@@ -72,6 +82,11 @@ class Features
     const MARKETPLACE = 'marketplace';
 
     /**
+     * Accessory feature: support for tags, topics.
+     */
+    const TAXONOMY = 'taxonomy';
+
+    /**
      * Accessory feature: support for testimonials
      */
     const TESTIMONIALS = 'testimonials';
@@ -85,6 +100,11 @@ class Features
      * Accessory feature: support for FAQs
      */
     const FAQ = 'faq';
+
+    /**
+     * Accessory feature: support for search
+     */
+    const SEARCH = 'search';
 
     /**
      * Accessory feature: support for maps

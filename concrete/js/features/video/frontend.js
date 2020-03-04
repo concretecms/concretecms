@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -2438,7 +2438,7 @@ $.magnificPopup.registerModule(RETINA_NS, {
 
 /***/ }),
 
-/***/ 8:
+/***/ 10:
 /*!****************************************************************************!*\
   !*** multi ./node_modules/concretecms-bedrock/assets/video/js/frontend.js ***!
   \****************************************************************************/
