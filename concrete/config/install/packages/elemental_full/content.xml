@@ -860,7 +860,7 @@
         <stack name="Header Navigation" type="global_area">
             <area name="Main">
                 <blocks>
-                    <block type="autonav" name=""
+                    <block type="autonav" name="" custom-template="responsive_header_navigation"
                            cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1"
                            cache-output-lifetime="3600">
                         <data table="btNavigation">

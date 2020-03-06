@@ -461,6 +461,7 @@ return [
         ],
 
         'core/feature/navigation/frontend' => [
+            ['javascript', 'js/features/navigation/frontend.js'],
             ['css', 'css/features/navigation/frontend.css'],
         ],
         
@@ -562,6 +563,7 @@ return [
 
         'core/feature/navigation/frontend' => [
             [
+                ['javascript', 'core/feature/navigation/frontend'],
                 ['css', 'core/feature/navigation/frontend'],
             ]
         ],

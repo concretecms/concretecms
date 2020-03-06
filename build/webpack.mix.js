@@ -60,7 +60,8 @@ mix
     .js('node_modules/concretecms-bedrock/assets/boards/js/frontend.js', 'js/features/boards/frontend.js');
 
 mix
-    .sass('node_modules/concretecms-bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css')
+    .js('node_modules/concretecms-bedrock/assets/navigation/js/frontend.js', 'js/features/navigation/frontend.js')
+    .sass('node_modules/concretecms-bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css');
 
 mix
     .sass('node_modules/concretecms-bedrock/assets/search/scss/frontend.scss', 'css/features/search/frontend.css')

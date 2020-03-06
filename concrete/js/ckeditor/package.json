@@ -1,8 +1,8 @@
 {
   "_from": "ckeditor4@^4.13.1",
-  "_id": "ckeditor4@4.13.1",
+  "_id": "ckeditor4@4.14.0",
   "_inBundle": false,
-  "_integrity": "sha512-Fslq8yT9YtbIWAnexnW8cTl/fK6QiAbSaimq/iZWS/FAqSyVEJk72+fA4BczCUMx7aj/Wari0vZ8nE1L5akYCQ==",
+  "_integrity": "sha512-g5p3bhbxbwB094bE7ss0rOyvG/azYdRjLTyngnPM2+fKZhnPrMVaFDx3SiiWKB+zyvndT3Deu54VTv/z2MQJCA==",
   "_location": "/ckeditor4",
   "_phantomChildren": {},
   "_requested": {
@@ -18,8 +18,8 @@
   "_requiredBy": [
     "/concretecms-bedrock"
   ],
-  "_resolved": "https://registry.npmjs.org/ckeditor4/-/ckeditor4-4.13.1.tgz",
-  "_shasum": "f348f6bce2b2f0b8e89b394fa0a4579333e53469",
+  "_resolved": "https://registry.npmjs.org/ckeditor4/-/ckeditor4-4.14.0.tgz",
+  "_shasum": "bfcbe942599fa0c6f488309ecbfe38b2519f919b",
   "_spec": "ckeditor4@^4.13.1",
   "_where": "/Users/andrewembler/Projects/concrete5/build/node_modules/concretecms-bedrock",
   "author": {
@@ -51,5 +51,5 @@
     "type": "git",
     "url": "git+https://github.com/ckeditor/ckeditor4-releases.git"
   },
-  "version": "4.13.1"
+  "version": "4.14.0"
 }
