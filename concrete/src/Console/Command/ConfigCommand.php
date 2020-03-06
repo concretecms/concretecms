@@ -175,7 +175,7 @@ EOT
 
         $file_loader = new FileLoader($filesystem);
         if ($this->option('generated-overrides')) {
-            $file_saver = new FileSaver($filesystem, $environment == $default_environment ? null : $environment);
+            $file_saver = new FileSaver($filesystem);
         } else {
             $file_saver = new DirectFileSaver($filesystem, $environment == $default_environment ? null : $environment);
         }
