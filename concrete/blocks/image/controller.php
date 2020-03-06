@@ -4,13 +4,15 @@ namespace Concrete\Block\Image;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Error\Error;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 
-class Controller extends BlockController implements FileTrackableInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
@@ -43,7 +45,14 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         return t('Adds images and onstates from the library to pages.');
     }
-    
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::BASICS
+        ];
+    }
+
     /**
      * @return bool|null
      */

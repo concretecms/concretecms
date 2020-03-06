@@ -85,6 +85,9 @@ mix
     .js('node_modules/concretecms-bedrock/assets/documents/js/frontend.js', 'js/features/documents/frontend.js');
 
 mix
+    .sass('node_modules/concretecms-bedrock/assets/basics/scss/frontend.scss', 'css/features/basics/frontend.css')
+
+mix
     .sass('node_modules/concretecms-bedrock/assets/video/scss/frontend.scss', 'css/features/video/frontend.css')
 
 mix

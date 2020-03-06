@@ -456,6 +456,10 @@ return [
             ['css', 'css/features/faq/frontend.css'],
         ],
 
+        'core/feature/basics/frontend' => [
+            ['css', 'css/features/basics/frontend.css'],
+        ],
+
         'core/feature/navigation/frontend' => [
             ['css', 'css/features/navigation/frontend.css'],
         ],
@@ -600,6 +604,13 @@ return [
                 ['css', 'core/feature/testimonials/frontend'],
             ]
         ],
+
+        'core/feature/basics/frontend' => [
+            [
+                ['css', 'core/feature/basics/frontend'],
+            ]
+        ],
+
 
 
 

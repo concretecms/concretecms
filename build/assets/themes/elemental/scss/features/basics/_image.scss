@@ -1,0 +1,12 @@
+.image-right-tilt .ccm-image-block {
+  display: block;
+  margin: 0px auto 0px auto;
+  transform:rotate(3deg);
+  -moz-transform: rotate(3deg);
+  -ms-transform:rotate(3deg); /* IE 9 */
+  -webkit-transform:rotate(3deg);
+}
+
+.image-circle .ccm-image-block {
+  border-radius: 50%;
+}

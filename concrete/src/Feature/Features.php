@@ -36,6 +36,11 @@ class Features
     const PACKAGES = 'packages';
 
     /**
+     * Fundamental feature: support for basics on the front-end: file block, feature block, content, etc...
+     */
+    const BASICS = 'basics';
+
+    /**
      * Accessory feature: support for calendars
      */
     const CALENDAR = 'calendar';
@@ -92,7 +97,7 @@ class Features
     const TAXONOMY = 'taxonomy';
 
     /**
-     * Accessory feature: support for testimonials & feature blocks
+     * Accessory feature: support for testimonials
      */
     const TESTIMONIALS = 'testimonials';
 

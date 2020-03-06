@@ -13,6 +13,7 @@
     "/css/features/calendar/frontend.css": "/css/features/calendar/frontend.css",
     "/css/features/conversations/frontend.css": "/css/features/conversations/frontend.css",
     "/css/features/documents/frontend.css": "/css/features/documents/frontend.css",
+    "/css/features/basics/frontend.css": "/css/features/basics/frontend.css",
     "/css/features/video/frontend.css": "/css/features/video/frontend.css",
     "/css/features/taxonomy/frontend.css": "/css/features/taxonomy/frontend.css",
     "/css/features/express/frontend.css": "/css/features/express/frontend.css",

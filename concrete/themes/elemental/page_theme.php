@@ -24,6 +24,7 @@ class PageTheme extends Theme implements ThemeProviderInterface
     public function getThemeSupportedFeatures()
     {
         return [
+            Features::BASICS,
             Features::CALENDAR,
             Features::CONVERSATIONS,
             Features::FAQ,

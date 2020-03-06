@@ -5,6 +5,8 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Database;
 use Core;
 use Concrete\Core\Localization\Service\Date;
@@ -14,7 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @author Ryan Tyler
  */
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
@@ -48,6 +50,14 @@ class Controller extends BlockController
     {
         $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
     }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::BASICS
+        ];
+    }
+
 
     /**
      * @return mixed AttributeValue
