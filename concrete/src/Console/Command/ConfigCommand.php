@@ -19,7 +19,6 @@ class ConfigCommand extends Command
         {action : Either "get" or "set"} 
         {item : The config item EG: "concrete.debug.detail"} 
         {value? : The value to set}
-        {--e|environment : The environment, if none specified the global configuration will be used}
         {--g|generated-overrides : Save to generated overrides}';
 
     /** @var Repository */
@@ -27,7 +26,9 @@ class ConfigCommand extends Command
 
     protected function configure()
     {
-        $this->setHelp(<<<EOT
+        $this
+            ->addEnvOption()
+            ->setHelp(<<<EOT
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
 concrete5 %command.name% set concrete.test_item 1
@@ -170,7 +171,7 @@ EOT
     {
         $default_environment = $config->getEnvironment();
 
-        $environment = $this->option('environment') ?: $default_environment;
+        $environment = $this->option('env') ?: $default_environment;
 
         $file_loader = new FileLoader($filesystem);
         if ($this->option('generated-overrides')) {
