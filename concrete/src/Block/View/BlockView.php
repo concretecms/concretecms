@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Core\Block\View;
 
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
@@ -291,10 +293,13 @@ class BlockView extends AbstractView
                 /**
                  * @var $theme Theme
                  */
+                $assetList = AssetList::getInstance();
                 foreach ($controller->getRequiredFeatures() as $feature) {
                     if (!in_array($feature, $theme->getThemeSupportedFeatures())) {
                         $assetHandle = "core/feature/{$feature}/frontend";
-                        $this->requireAsset($assetHandle);
+                        if ($assetList->getAssetGroup($assetHandle)) {
+                            $this->requireAsset($assetHandle);
+                        }
                     }
                 }
             }

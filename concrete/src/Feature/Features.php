@@ -39,7 +39,7 @@ class Features
      * Accessory feature: support for calendars
      */
     const CALENDAR = 'calendar';
-
+    
     /**
      * Fundamental feature: support for Boards
      */
@@ -59,7 +59,12 @@ class Features
      * Accessory feature: support for social networking
      */
     const SOCIAL = 'social';
-    
+
+    /**
+     * Accessory UI feature: form/data entry interfaces
+     */
+    const FORMS = 'forms';
+
     /**
      * Accessory feature: support for multilingual. Note, this does not mean the ability to run concrete5 in a language
      * other than English. This is more about running a site with multiple language trees.
@@ -87,7 +92,7 @@ class Features
     const TAXONOMY = 'taxonomy';
 
     /**
-     * Accessory feature: support for testimonials
+     * Accessory feature: support for testimonials & feature blocks
      */
     const TESTIMONIALS = 'testimonials';
 

@@ -2,6 +2,8 @@
 namespace Concrete\Block\Feature;
 
 use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Page;
 use Concrete\Core\Block\BlockController;
 use Less_Parser;
@@ -10,7 +12,7 @@ use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = array('form');
 
@@ -30,6 +32,13 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("Feature");
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::TESTIMONIALS
+        ];
     }
 
     public function getLinkURL()

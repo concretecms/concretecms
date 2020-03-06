@@ -63,6 +63,9 @@ mix
     .sass('node_modules/concretecms-bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css')
 
 mix
+    .sass('node_modules/concretecms-bedrock/assets/search/scss/frontend.scss', 'css/features/search/frontend.css')
+
+mix
     .sass('node_modules/concretecms-bedrock/assets/faq/scss/frontend.scss', 'css/features/faq/frontend.css')
 
 mix
@@ -83,7 +86,30 @@ mix
 
 mix
     .sass('node_modules/concretecms-bedrock/assets/video/scss/frontend.scss', 'css/features/video/frontend.css')
-    .js('node_modules/concretecms-bedrock/assets/video/js/frontend.js', 'js/features/video/frontend.js');
+
+mix
+    .sass('node_modules/concretecms-bedrock/assets/taxonomy/scss/frontend.scss', 'css/features/taxonomy/frontend.css')
+
+mix
+    .sass('node_modules/concretecms-bedrock/assets/express/scss/frontend.scss', 'css/features/express/frontend.css')
+    .js('node_modules/concretecms-bedrock/assets/express/js/frontend.js', 'js/features/express/frontend.js');
+
+mix
+    .js('node_modules/concretecms-bedrock/assets/multilingual/js/frontend.js', 'js/features/multilingual/frontend.js')
+    .sass('node_modules/concretecms-bedrock/assets/multilingual/scss/frontend.scss', 'css/features/multilingual/frontend.css');
+
+mix
+    .sass('node_modules/concretecms-bedrock/assets/maps/scss/frontend.scss', 'css/features/maps/frontend.css')
+    .js('node_modules/concretecms-bedrock/assets/maps/js/frontend.js', 'js/features/maps/frontend.js');
+
+mix
+    .sass('node_modules/concretecms-bedrock/assets/testimonials/scss/frontend.scss', 'css/features/testimonials/frontend.css')
+
+mix
+    .sass('node_modules/concretecms-bedrock/assets/social/scss/frontend.scss', 'css/features/social/frontend.css')
+
+mix
+    .sass('node_modules/concretecms-bedrock/assets/polls/scss/frontend.scss', 'css/features/polls/frontend.css')
 
 
 /**

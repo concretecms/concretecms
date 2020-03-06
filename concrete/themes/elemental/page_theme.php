@@ -28,7 +28,11 @@ class PageTheme extends Theme implements ThemeProviderInterface
             Features::CONVERSATIONS,
             Features::FAQ,
             Features::NAVIGATION,
-            Features::IMAGERY
+            Features::IMAGERY,
+            Features::FORMS,
+            Features::SEARCH,
+            Features::TESTIMONIALS,
+            Features::TAXONOMY,
         ];
     }
 

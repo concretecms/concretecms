@@ -448,6 +448,10 @@ return [
             ['css', 'css/features/documents/frontend.css'],
         ],
 
+        'core/feature/testimonials/frontend' => [
+            ['css', 'css/features/testimonials/frontend.css'],
+        ],
+
         'core/feature/faq/frontend' => [
             ['css', 'css/features/faq/frontend.css'],
         ],
@@ -455,12 +459,33 @@ return [
         'core/feature/navigation/frontend' => [
             ['css', 'css/features/navigation/frontend.css'],
         ],
-
+        
         'core/feature/imagery/frontend' => [
             ['javascript', 'js/features/imagery/frontend.js'],
             ['css', 'css/features/imagery/frontend.css'],
         ],
-        
+
+        'core/feature/express/frontend' => [
+            ['javascript', 'js/features/express/frontend.js'],
+            ['css', 'css/features/express/frontend.css'],
+        ],
+
+        'core/feature/search/frontend' => [
+            ['css', 'css/features/search/frontend.css'],
+        ],
+
+        'core/feature/video/frontend' => [
+            ['css', 'css/features/video/frontend.css'],
+        ],
+
+        'core/feature/taxonomy/frontend' => [
+            ['css', 'css/features/taxonomy/frontend.css'],
+        ],
+
+        'core/feature/maps/frontend' => [
+            ['javascript', 'js/features/maps/frontend.js'],
+            ['css', 'css/features/maps/frontend.css'],
+        ],
     ],
     'asset_groups' => [
 
@@ -536,6 +561,48 @@ return [
                 ['css', 'core/feature/navigation/frontend'],
             ]
         ],
+
+        'core/feature/video/frontend' => [
+            [
+                ['css', 'core/feature/video/frontend'],
+            ]
+        ],
+
+
+        'core/feature/express/frontend' => [
+            [
+                ['javascript', 'core/feature/express/frontend'],
+                ['css', 'core/feature/express/frontend'],
+            ]
+        ],
+
+        'core/feature/maps/frontend' => [
+            [
+                ['javascript', 'core/feature/maps/frontend'],
+                ['css', 'core/feature/maps/frontend'],
+            ]
+        ],
+
+        'core/feature/search/frontend' => [
+            [
+                ['css', 'core/feature/search/frontend'],
+            ]
+        ],
+
+        'core/feature/taxonomy/frontend' => [
+            [
+                ['css', 'core/feature/taxonomy/frontend'],
+            ]
+        ],
+
+        'core/feature/testimonials/frontend' => [
+            [
+                ['css', 'core/feature/testimonials/frontend'],
+            ]
+        ],
+
+
+
 
     ],
     // HTTP Client options
