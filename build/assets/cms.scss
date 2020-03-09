@@ -2,13 +2,13 @@
 @import "~bootstrap/scss/functions";
 
 // 02. Bootstrap overrides, have to be done BEFORE bootstrap. 
-@import "~concretecms-bedrock/assets/cms/scss/bootstrap-overrides";
+@import "~@concretecms/bedrock/assets/cms/scss/bootstrap-overrides";
 
 // 03. Bootstrap Variables
 @import "~bootstrap/scss/variables";
 
 // 04. Theme variables, some of which can now be based on bootstrap variable/constants/
-@import "~concretecms-bedrock/assets/cms/scss/variables";
+@import "~@concretecms/bedrock/assets/cms/scss/variables";
 
 // Import the bootstrap mixins, variables and functions
 @import "~bootstrap/scss/mixins";
@@ -21,9 +21,9 @@
 // Reboot HTML body and reboot tags are basically the bootstrap reboot.scss file split into two parts.
 // The html and body tags are combined into the reboot_html_body.scss file, and the rest of the tags are
 // just copied into reboot_tags.scs
-@import "~concretecms-bedrock/assets/cms/scss/bootstrap/reboot";
+@import "~@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
 div.ccm-ui {
-  @import "~concretecms-bedrock/assets/cms/scss/bootstrap/reboot-tags";
+  @import "~@concretecms/bedrock/assets/cms/scss/bootstrap/reboot-tags";
   
   // Import the bootstrap components we want. Note: I'm including everything in the list, and commenting out 
   // things that are either a) already included, b) not applicable, c) not used in our in-page CMS sub-set.
@@ -67,4 +67,4 @@ div.ccm-ui {
 }
 
 // This is the actual public entry point to the cms.css on the front-end
-@import "~concretecms-bedrock/assets/cms/scss/base";
+@import "~@concretecms/bedrock/assets/cms/scss/base";

@@ -1,14 +1,14 @@
 // Import the frontend foundation for themes.
-import 'concretecms-bedrock/assets/bedrock/js/frontend';
+import '@concretecms/bedrock/assets/bedrock/js/frontend';
 
 // Import the CMS foundation in order to support editing, toolbar, panel functionality
-import 'concretecms-bedrock/assets/cms/js/base';
+import '@concretecms/bedrock/assets/cms/js/base';
 
 // My Account
-import 'concretecms-bedrock/assets/account/js/frontend';
+import '@concretecms/bedrock/assets/account/js/frontend';
 
 // Calendar
-import 'concretecms-bedrock/assets/calendar/js/backend';
+import '@concretecms/bedrock/assets/calendar/js/backend';
 
 // Other
 import './jquery-bootstrap-select-to-button';

@@ -1,5 +1,5 @@
 // Include core libraries for panels, etc...
-import "concretecms-bedrock/assets/cms/js/base";
+import "@concretecms/bedrock/assets/cms/js/base";
 
 // Import only the bootstrap libraries required for the CMS domain.
 import "bootstrap/js/dist/tooltip";

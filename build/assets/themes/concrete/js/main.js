@@ -1,4 +1,4 @@
-import * as FrontendBase from 'concretecms-bedrock/assets/bedrock/js/frontend';
+import * as FrontendBase from '@concretecms/bedrock/assets/bedrock/js/frontend';
 import LoginTabs from './login-tabs';
 import BackgroundImage from './background-image';
 
