@@ -12,19 +12,21 @@ use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Core;
 use Database;
 use Page;
 use URL;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btSupportsInlineAdd = true;
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
     protected $btCacheSettingsInitialized = false;
+    protected $requiredFeatures = [];
 
     public function cacheBlockOutput()
     {
@@ -55,6 +57,12 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t('Area Layout');
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        $this->setupCacheSettings();
+        return $this->requiredFeatures;
     }
 
     public function registerViewAssets($outputContent = '')
@@ -385,11 +393,18 @@ class Controller extends BlockController
         $this->btCacheBlockOutput = $btCacheBlockOutput;
         $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
         $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
-
+        
         foreach ($arrAssetBlocks as $objController) {
             $objController->on_start();
             $objController->outputAutoHeaderItems();
             $objController->registerViewAssets();
+            if ($objController instanceof UsesFeatureInterface) {
+                foreach($objController->getRequiredFeatures() as $feature) {
+                    if (!in_array($feature, $this->requiredFeatures)) {
+                        $this->requiredFeatures[] = $feature;
+                    }
+                }
+            }
         }
     }
 

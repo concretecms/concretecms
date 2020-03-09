@@ -3,12 +3,14 @@
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Page;
 use Concrete\Core\User\User;
 use Core;
 use Database;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $options = [];
     protected $btTable = 'btSurvey';
@@ -47,6 +49,13 @@ class Controller extends BlockController
     public function getPollOptions()
     {
         return $this->options;
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::POLLS
+        ];
     }
 
     public function setPollOptions()

@@ -3,8 +3,10 @@ namespace Concrete\Block\Faq;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 600;
     protected $btInterfaceHeight = 465;
@@ -23,6 +25,13 @@ class Controller extends BlockController
     public function getBlockTypeDescription()
     {
         return t('Frequently Asked Questions Block');
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::FAQ,
+        ];
     }
 
     public function getSearchableContent()

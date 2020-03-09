@@ -3,6 +3,8 @@ namespace Concrete\Block\TopicList;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Type\Topic;
@@ -10,7 +12,7 @@ use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = array('form');
 
@@ -33,6 +35,13 @@ class Controller extends BlockController
     {
         $this->edit();
         $this->set('title', t('Topics'));
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::TAXONOMY
+        ];
     }
 
     public function edit()

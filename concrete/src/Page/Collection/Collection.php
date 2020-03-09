@@ -11,8 +11,6 @@ use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
-use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
@@ -1002,24 +1000,6 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         $res = $db->Execute($q, $v);
 
-        $controller = $nb->getController();
-        $features = $controller->getBlockTypeFeatureObjects();
-        if (count($features) > 0) {
-            foreach ($features as $fe) {
-                $fd = $fe->getFeatureDetailObject($controller);
-                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
-                $db->Execute(
-                   'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                   [
-                       $this->getCollectionID(),
-                       $this->getVersionID(),
-                       $nb->getBlockID(),
-                       $fa->getFeatureAssignmentID(),
-                   ]
-                );
-            }
-        }
-
         return Block::getByID($nb->getBlockID(), $this, $a);
     }
 
@@ -1089,37 +1069,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             $r->free();
         }
     }
-
-    /**
-     * Associate a feature to the currently loaded collection version.
-     *
-     * @param Feature $fe
-     */
-    public function addFeature(Feature $fe)
-    {
-        $db = Loader::db();
-        $db->Replace(
-           'CollectionVersionFeatures',
-           ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()],
-           ['cID', 'cvID', 'feID'],
-           true
-        );
-    }
-
-    /**
-     * Get the list of assigned features.
-     *
-     * @return \Concrete\Core\Feature\Assignment\CollectionVersionAssignment[]
-     */
-    public function getFeatureAssignments()
-    {
-        if (is_object($this->vObj)) {
-            return CollectionVersionFeatureAssignment::getList($this);
-        }
-
-        return [];
-    }
-
+    
     /**
      * Update the last edit date/time.
      */

@@ -2,9 +2,7 @@
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Permission\Category;
 
 class ImportSinglePageContentRoutine extends AbstractPageContentRoutine implements SpecifiableHomePageRoutineInterface
 {

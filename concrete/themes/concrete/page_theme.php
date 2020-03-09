@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Theme\Concrete;
 
+use Concrete\Core\Page\Theme\BedrockThemeTrait;
+
 class PageTheme extends \Concrete\Core\Page\Theme\Theme
 {
-    public function registerAssets()
-    {
-        $this->requireAsset('font-awesome');
-        $this->requireAsset('jquery');
-    }
+
+    use BedrockThemeTrait;
+    
 }

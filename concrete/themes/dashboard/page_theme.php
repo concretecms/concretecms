@@ -2,24 +2,18 @@
 namespace Concrete\Theme\Dashboard;
 
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
+use Concrete\Core\Page\Theme\BedrockThemeTrait;
 
 class PageTheme extends \Concrete\Core\Page\Theme\Theme
 {
 
-    /*
-    protected $pThemeGridFrameworkHandle = 'bootstrap3';
-
-    public function getThemeBlockClasses()
-    {
-        return array(
-            'rss_displayer' => array('concrete5-org-stories')
-        );
-    }*/
-
+    use BedrockThemeTrait {
+        registerAssets as bedrockRegisterAssets;
+    }
+    
     public function registerAssets()
     {
-        $this->requireAsset('jquery');
-        $this->requireAsset('font-awesome');
+        $this->bedrockRegisterAssets();
         $this->providesAsset('core/cms');
     }
 

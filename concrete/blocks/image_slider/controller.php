@@ -4,13 +4,15 @@ namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\Core\Feature\Features;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Core;
 use Database;
 use Page;
 
-class Controller extends BlockController implements FileTrackableInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     protected $btTable = 'btImageSlider';
     protected $btExportTables = ['btImageSlider', 'btImageSliderEntries'];
@@ -39,6 +41,13 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         parent::__construct($obj);
         $this->tracker = $tracker;
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::IMAGERY
+        ];
     }
 
     public function getBlockTypeDescription()

@@ -238,8 +238,6 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeaturesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeatureCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
@@ -429,9 +427,73 @@ return [
             ['css', 'css/cms.css'],
         ],
         
+        // Fallback/minimal assets for accessory features
+        'core/feature/boards/frontend' => [
+            ['javascript', 'js/features/boards/frontend.js'],
+            ['css', 'css/features/boards/frontend.css'],
+        ],
+
+        'core/feature/calendar/frontend' => [
+            ['javascript', 'js/features/calendar/frontend.js'],
+            ['css', 'css/features/calendar/frontend.css'],
+        ],
+
+        'core/feature/conversations/frontend' => [
+            ['javascript', 'js/features/conversations/frontend.js'],
+            ['css', 'css/features/conversations/frontend.css'],
+        ],
+
+        'core/feature/documents/frontend' => [
+            ['javascript', 'js/features/documents/frontend.js'],
+            ['css', 'css/features/documents/frontend.css'],
+        ],
+
+        'core/feature/testimonials/frontend' => [
+            ['css', 'css/features/testimonials/frontend.css'],
+        ],
+
+        'core/feature/faq/frontend' => [
+            ['css', 'css/features/faq/frontend.css'],
+        ],
+
+        'core/feature/basics/frontend' => [
+            ['css', 'css/features/basics/frontend.css'],
+        ],
+
+        'core/feature/navigation/frontend' => [
+            ['javascript', 'js/features/navigation/frontend.js'],
+            ['css', 'css/features/navigation/frontend.css'],
+        ],
+        
+        'core/feature/imagery/frontend' => [
+            ['javascript', 'js/features/imagery/frontend.js'],
+            ['css', 'css/features/imagery/frontend.css'],
+        ],
+
+        'core/feature/express/frontend' => [
+            ['javascript', 'js/features/express/frontend.js'],
+            ['css', 'css/features/express/frontend.css'],
+        ],
+
+        'core/feature/search/frontend' => [
+            ['css', 'css/features/search/frontend.css'],
+        ],
+
+        'core/feature/video/frontend' => [
+            ['css', 'css/features/video/frontend.css'],
+        ],
+
+        'core/feature/taxonomy/frontend' => [
+            ['css', 'css/features/taxonomy/frontend.css'],
+        ],
+
+        'core/feature/maps/frontend' => [
+            ['javascript', 'js/features/maps/frontend.js'],
+            ['css', 'css/features/maps/frontend.css'],
+        ],
     ],
     'asset_groups' => [
-        /* proper groups here */
+
         'jquery' => [
             [
                 ['javascript', 'jquery'],
@@ -461,7 +523,100 @@ return [
                 ['css', 'core/cms'],
             ]
         ],
+
+        // Fallback/minimal assets groups
         
+        'core/feature/calendar/frontend' => [
+            [
+                ['javascript', 'core/feature/calendar/frontend'],
+                ['css', 'core/feature/calendar/frontend'],
+            ]
+        ],
+
+        'core/feature/conversations/frontend' => [
+            [
+                ['javascript', 'core/feature/conversations/frontend'],
+                ['css', 'core/feature/conversations/frontend'],
+            ]
+        ],
+
+        'core/feature/documents/frontend' => [
+            [
+                ['javascript', 'core/feature/documents/frontend'],
+                ['javascript-localized', 'core/cms'],
+                ['css', 'core/feature/documents/frontend'],
+            ]
+        ],
+
+        'core/feature/faq/frontend' => [
+            [
+                ['css', 'core/feature/faq/frontend'],
+            ]
+        ],
+
+        'core/feature/imagery/frontend' => [
+            [
+                ['javascript', 'core/feature/imagery/frontend'],
+                ['css', 'core/feature/imagery/frontend'],
+            ]
+        ],
+
+        'core/feature/navigation/frontend' => [
+            [
+                ['javascript', 'core/feature/navigation/frontend'],
+                ['css', 'core/feature/navigation/frontend'],
+            ]
+        ],
+
+        'core/feature/video/frontend' => [
+            [
+                ['css', 'core/feature/video/frontend'],
+            ]
+        ],
+
+
+        'core/feature/express/frontend' => [
+            [
+                ['javascript', 'core/feature/express/frontend'],
+                ['css', 'core/feature/express/frontend'],
+            ]
+        ],
+
+        'core/feature/maps/frontend' => [
+            [
+                ['javascript', 'core/feature/maps/frontend'],
+                ['css', 'core/feature/maps/frontend'],
+            ]
+        ],
+
+        'core/feature/search/frontend' => [
+            [
+                ['css', 'core/feature/search/frontend'],
+            ]
+        ],
+
+        'core/feature/taxonomy/frontend' => [
+            [
+                ['css', 'core/feature/taxonomy/frontend'],
+            ]
+        ],
+
+        'core/feature/testimonials/frontend' => [
+            [
+                ['css', 'core/feature/testimonials/frontend'],
+            ]
+        ],
+
+        'core/feature/basics/frontend' => [
+            [
+                ['css', 'core/feature/basics/frontend'],
+            ]
+        ],
+
+
+
+
+
     ],
     // HTTP Client options
     'http_client' => [

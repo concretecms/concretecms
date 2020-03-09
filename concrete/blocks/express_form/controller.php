@@ -23,6 +23,8 @@ use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Express\Form\Validator\Routine\CaptchaRoutine;
 use Concrete\Core\Express\Generator\EntityHandleGenerator;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\FileProviderInterface;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
@@ -40,7 +42,7 @@ use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
 
-class Controller extends BlockController implements NotificationProviderInterface
+class Controller extends BlockController implements NotificationProviderInterface, UsesFeatureInterface
 {
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 700;
@@ -68,6 +70,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function getBlockTypeName()
     {
         return t('Form');
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::FORMS
+        ];
     }
 
     public function view()
