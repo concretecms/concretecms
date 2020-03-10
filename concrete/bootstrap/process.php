@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\Events\BlockDelete;
 use Concrete\Core\Page\Stack\Pile\PileContent;
+use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 
 # Filename: _process.php
 # Author: Andrew Embler (andrew@concrete5.org)
@@ -63,7 +64,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
         case 'publish-now':
             if ($cp->canApprovePageVersions()) {
                 $v = CollectionVersion::get($c, "SCHEDULED");
-                $v->approve(false);
+                $v->approve(false, null);
 
                 header('Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME .
                     '?cID=' . $c->getCollectionID());
@@ -71,6 +72,21 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 exit;
             }
             break;
+
+        case 'cancel-schedule':
+            if ($cp->canApprovePageVersions()) {
+                $u = new User();
+                $pkr = new UnapprovePageRequest();
+                $pkr->setRequestedPage($c);
+                $v = CollectionVersion::get($c, "SCHEDULED");
+                $v->setPublishInterval(null, null);
+                $pkr->setRequestedVersionID($v->getVersionID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                header(
+                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+                exit;
+            }
     }
 }
 
