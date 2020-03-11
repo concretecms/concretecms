@@ -29,7 +29,9 @@ class BindingServiceTest extends TestCase
         /** @var BindingService|M\Mock $service */
         $service = new BindingService($fakeDatabaseManager);
 
-        $this->setExpectedException(\RuntimeException::class, 'Unable to delete binding.');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to delete binding.');
+
         $service->clearBinding(1, null, 'test');
     }
 
@@ -141,7 +143,8 @@ class BindingServiceTest extends TestCase
 
         $service = new BindingService($fakeDatabaseManager);
 
-        $this->setExpectedException(\InvalidArgumentException::class, 'Invalid user id provided');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid user id provided');
         $service->bindUserId('foo', 'testing', 'test');
     }
 
