@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Block\GoogleMap;
 
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Page;
 use Concrete\Core\Block\BlockController;
 use Config;
 use Core;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btGoogleMap';
     protected $btInterfaceWidth = 525;
@@ -22,6 +24,13 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("Google Map");
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::MAPS
+        ];
     }
 
     public function validate($args)

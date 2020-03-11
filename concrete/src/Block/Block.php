@@ -10,8 +10,6 @@ use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
-use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
@@ -1642,24 +1640,7 @@ EOT
         } else {
             $bc->duplicate($newBID);
         }
-
-        $features = $bc->getBlockTypeFeatureObjects();
-        if (count($features) > 0) {
-            foreach ($features as $fe) {
-                $fd = $fe->getFeatureDetailObject($bc);
-                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $nc);
-                $db->Execute(
-                    'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                    [
-                        $ncID,
-                        $nvID,
-                        $newBID,
-                        $fa->getFeatureAssignmentID(),
-                    ]
-                    );
-            }
-        }
-
+        
         // finally, we insert into the CollectionVersionBlocks table
         $cbDisplayOrder = $this->getBlockDisplayOrder();
         if ($cbDisplayOrder === null) {
@@ -1757,21 +1738,7 @@ EOT
             $q = 'delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?';
             $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
         }
-
-        // delete any feature assignments that have been attached to this block to the collection version
-        $faIDs = $db->GetCol(
-            'select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?',
-            [
-                $cID,
-                $cvID,
-                $bID,
-            ]
-            );
-        foreach ($faIDs as $faID) {
-            $fa = FeatureAssignment::getByID($faID, $c);
-            $fa->delete();
-        }
-
+        
         //then, we see whether or not this block is aliased to anything else
         $totalBlocks = $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
         $totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);

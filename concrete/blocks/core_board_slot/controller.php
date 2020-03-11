@@ -6,9 +6,11 @@ use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
 use Concrete\Core\Board\Instance\Slot\Menu\Manager;
 use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Entity\Board\SlotTemplate;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Doctrine\ORM\EntityManager;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btCoreBoardSlot';
     protected $btIsInternal = true;
@@ -20,6 +22,13 @@ class Controller extends BlockController
     
     public $instanceSlotID;
     
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::BOARDS
+        ];
+    }
+
     public function getBlockTypeDescription()
     {
         return t("Proxy block for board slots.");

@@ -8,6 +8,8 @@ use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\FrontendViewContext;
 use Concrete\Core\Express\Form\Renderer;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Search\Result\ItemColumn;
@@ -16,7 +18,7 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\SeoCanonical;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
 
     protected $btInterfaceWidth = "640";
@@ -43,6 +45,13 @@ class Controller extends BlockController
     public function getBlockTypeInSetName()
     {
         return t("Details");
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::EXPRESS
+        ];
     }
 
     public function add()

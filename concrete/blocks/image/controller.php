@@ -4,13 +4,15 @@ namespace Concrete\Block\Image;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Error\Error;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 
-class Controller extends BlockController implements FileTrackableInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
@@ -22,9 +24,6 @@ class Controller extends BlockController implements FileTrackableInterface
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
     protected $btExportPageColumns = ['internalLinkCID'];
-    protected $btFeatures = [
-        'image',
-    ];
 
     /**
      * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
@@ -47,15 +46,11 @@ class Controller extends BlockController implements FileTrackableInterface
         return t('Adds images and onstates from the library to pages.');
     }
 
-    /**
-     * @param string $outputContent
-     */
-    public function registerViewAssets($outputContent = '')
+    public function getRequiredFeatures(): array
     {
-        // Ensure we have jQuery if we have an onState image
-        if (is_object($this->getFileOnstateObject())) {
-            $this->requireAsset('javascript', 'jquery');
-        }
+        return [
+            Features::BASICS
+        ];
     }
 
     /**
