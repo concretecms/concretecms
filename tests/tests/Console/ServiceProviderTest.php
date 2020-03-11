@@ -157,6 +157,7 @@ class ServiceProviderTest extends TestCase
             \Concrete\Core\Console\Command\GenerateSitemapCommand::class,
             \Concrete\Core\Console\Command\RefreshEntitiesCommand::class,
             \Concrete\Core\Console\Command\Express\ExportCommand::class,
+            \Concrete\Core\Console\Command\FixDatabaseForeignKeys::class,
             \Doctrine\DBAL\Tools\Console\Command\ImportCommand::class,
             \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand::class,
             \Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand::class,

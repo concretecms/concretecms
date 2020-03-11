@@ -8,7 +8,7 @@ interface UsesFeatureInterface
     /**
      * @return string[] Feature handles
      */
-    public function getRequiredFeatures() : array;
+    public function getRequiredFeatures(): array;
 
     
 }

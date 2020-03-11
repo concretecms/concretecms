@@ -1847,7 +1847,7 @@ EOT
         }
         $treeIDs = implode(',', $treeIDs);
 
-        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID in (' . $treeIDs . ') group by cID order by cID', [$oc->getPageTypeID()]);
+        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where pTemplateID = ? and ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID in (' . $treeIDs . ') group by cID order by cID', [$oc->getPageTemplateID(), $oc->getPageTypeID()]);
 
         // now we have a list of all pages of this type in the site.
         foreach ($rows as $row) {

@@ -44,7 +44,7 @@ class Stacks extends DashboardPageController
                 $result[$section->getLocale()] = $section;
             }
             uasort($result, function (Section $a, Section $b) {
-                $r = strcasecmp($a->getLanguageText(), $a->getLanguageText());
+                $r = strcasecmp($a->getLanguageText(), $b->getLanguageText());
                 if ($r === 0) {
                     $r = strcasecmp($a->getLocale(), $b->getLocale());
                 }
