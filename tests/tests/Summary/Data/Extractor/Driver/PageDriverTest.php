@@ -71,8 +71,4 @@ class PageDriverTest extends TestCase
         $field = $collection->getField(FieldInterface::FIELD_THUMBNAIL);
         $this->assertInstanceOf(DataFieldDataInterface::class, $field);
     }
-    
-
-
-
 }
