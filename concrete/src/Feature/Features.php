@@ -2,6 +2,18 @@
 
 namespace Concrete\Core\Feature;
 
+/**
+ * This is a simple registry class to codify all the core features used by the asset system. Features listed in here
+ * are provided in some capacity by the core. Fundamental features like pages, files and users aren't used by the
+ * block feature system, because it's assumed the core will always have these available. However, they may be used
+ * in the future with a fully modular installation procedure. 
+ * 
+ * Block types reference these features (i.e. the calendar block declares that it requires the Features::CALENDAR
+ * feature), and then themes can specify that they support those features. If they support them, the fallback assets
+ * shipped with the core won't be loaded, which will speed up page render time and allow for more flexible themes. If
+ * a theme doesn't support a given feature that is used on a page, the fallback assets will load, ensuring that
+ * the block still works.
+ */
 class Features
 {
 

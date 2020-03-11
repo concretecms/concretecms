@@ -8,6 +8,8 @@ use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
@@ -284,21 +286,31 @@ class BlockView extends AbstractView
 
         $loc->popActiveContext();
     }
-    
-    protected function handleRequiredFeatures(BlockController $controller)
+
+    /**
+     * Given a block controller that we're rendering, we request all the features required by that block controller
+     * and then add them to the page's header/footer via requireAsset, if they're not already provided by the theme
+     * (which we check via getThemeSupportedFeatures)
+     * 
+     * @param BlockController $controller
+     */
+    protected function handleRequiredFeatures(BlockController $controller): void 
     {
+        $logger = app(LoggerFactory::class)->createLogger(Channels::CHANNEL_CONTENT);
         if ($controller instanceof UsesFeatureInterface) {
             $theme = $controller->getCollectionObject()->getCollectionThemeObject();
-            if ($theme) {
-                /**
-                 * @var $theme Theme
-                 */
+            if ($theme && $theme instanceof Theme) {
                 $assetList = AssetList::getInstance();
                 foreach ($controller->getRequiredFeatures() as $feature) {
                     if (!in_array($feature, $theme->getThemeSupportedFeatures())) {
-                        $assetHandle = "core/feature/{$feature}/frontend";
+                        $assetHandle = "feature/{$feature}/frontend";
                         if ($assetList->getAssetGroup($assetHandle)) {
                             $this->requireAsset($assetHandle);
+                        } else {
+                            $logger->notice(
+                                t("Block type requested required feature '%s' but it was not registered.", 
+                                    $assetHandle)
+                            );
                         }
                     }
                 }

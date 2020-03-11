@@ -428,66 +428,70 @@ return [
         ],
         
         // Fallback/minimal assets for accessory features
-        'core/feature/boards/frontend' => [
+        'feature/boards/frontend' => [
             ['javascript', 'js/features/boards/frontend.js'],
             ['css', 'css/features/boards/frontend.css'],
         ],
 
-        'core/feature/calendar/frontend' => [
+        'feature/calendar/frontend' => [
             ['javascript', 'js/features/calendar/frontend.js'],
             ['css', 'css/features/calendar/frontend.css'],
         ],
 
-        'core/feature/conversations/frontend' => [
+        'feature/conversations/frontend' => [
             ['javascript', 'js/features/conversations/frontend.js'],
             ['css', 'css/features/conversations/frontend.css'],
         ],
 
-        'core/feature/documents/frontend' => [
+        'feature/documents/frontend' => [
             ['javascript', 'js/features/documents/frontend.js'],
             ['css', 'css/features/documents/frontend.css'],
         ],
 
-        'core/feature/testimonials/frontend' => [
+        'feature/testimonials/frontend' => [
             ['css', 'css/features/testimonials/frontend.css'],
         ],
 
-        'core/feature/faq/frontend' => [
+        'feature/faq/frontend' => [
             ['css', 'css/features/faq/frontend.css'],
         ],
 
-        'core/feature/basics/frontend' => [
+        'feature/basics/frontend' => [
             ['css', 'css/features/basics/frontend.css'],
         ],
 
-        'core/feature/navigation/frontend' => [
+        'feature/navigation/frontend' => [
             ['javascript', 'js/features/navigation/frontend.js'],
             ['css', 'css/features/navigation/frontend.css'],
         ],
         
-        'core/feature/imagery/frontend' => [
+        'feature/imagery/frontend' => [
             ['javascript', 'js/features/imagery/frontend.js'],
             ['css', 'css/features/imagery/frontend.css'],
         ],
 
-        'core/feature/express/frontend' => [
+        'feature/express/frontend' => [
             ['javascript', 'js/features/express/frontend.js'],
             ['css', 'css/features/express/frontend.css'],
         ],
 
-        'core/feature/search/frontend' => [
+        'feature/search/frontend' => [
             ['css', 'css/features/search/frontend.css'],
         ],
 
-        'core/feature/video/frontend' => [
+        'feature/social/frontend' => [
+            ['css', 'css/features/social/frontend.css'],
+        ],
+
+        'feature/video/frontend' => [
             ['css', 'css/features/video/frontend.css'],
         ],
 
-        'core/feature/taxonomy/frontend' => [
+        'feature/taxonomy/frontend' => [
             ['css', 'css/features/taxonomy/frontend.css'],
         ],
 
-        'core/feature/maps/frontend' => [
+        'feature/maps/frontend' => [
             ['javascript', 'js/features/maps/frontend.js'],
             ['css', 'css/features/maps/frontend.css'],
         ],
@@ -526,90 +530,95 @@ return [
 
         // Fallback/minimal assets groups
         
-        'core/feature/calendar/frontend' => [
+        'feature/calendar/frontend' => [
             [
-                ['javascript', 'core/feature/calendar/frontend'],
-                ['css', 'core/feature/calendar/frontend'],
+                ['javascript', 'feature/calendar/frontend'],
+                ['css', 'feature/calendar/frontend'],
             ]
         ],
 
-        'core/feature/conversations/frontend' => [
+        'feature/conversations/frontend' => [
             [
-                ['javascript', 'core/feature/conversations/frontend'],
-                ['css', 'core/feature/conversations/frontend'],
+                ['javascript', 'feature/conversations/frontend'],
+                ['css', 'feature/conversations/frontend'],
             ]
         ],
 
-        'core/feature/documents/frontend' => [
+        'feature/documents/frontend' => [
             [
-                ['javascript', 'core/feature/documents/frontend'],
+                ['javascript', 'feature/documents/frontend'],
                 ['javascript-localized', 'core/cms'],
-                ['css', 'core/feature/documents/frontend'],
+                ['css', 'feature/documents/frontend'],
             ]
         ],
 
-        'core/feature/faq/frontend' => [
+        'feature/faq/frontend' => [
             [
-                ['css', 'core/feature/faq/frontend'],
+                ['css', 'feature/faq/frontend'],
             ]
         ],
 
-        'core/feature/imagery/frontend' => [
+        'feature/imagery/frontend' => [
             [
-                ['javascript', 'core/feature/imagery/frontend'],
-                ['css', 'core/feature/imagery/frontend'],
+                ['javascript', 'feature/imagery/frontend'],
+                ['css', 'feature/imagery/frontend'],
             ]
         ],
 
-        'core/feature/navigation/frontend' => [
+        'feature/navigation/frontend' => [
             [
-                ['javascript', 'core/feature/navigation/frontend'],
-                ['css', 'core/feature/navigation/frontend'],
+                ['javascript', 'feature/navigation/frontend'],
+                ['css', 'feature/navigation/frontend'],
             ]
         ],
 
-        'core/feature/video/frontend' => [
+        'feature/video/frontend' => [
             [
-                ['css', 'core/feature/video/frontend'],
+                ['css', 'feature/video/frontend'],
             ]
         ],
 
-
-        'core/feature/express/frontend' => [
+        'feature/social/frontend' => [
             [
-                ['javascript', 'core/feature/express/frontend'],
-                ['css', 'core/feature/express/frontend'],
+                ['css', 'feature/social/frontend'],
             ]
         ],
 
-        'core/feature/maps/frontend' => [
+        'feature/express/frontend' => [
             [
-                ['javascript', 'core/feature/maps/frontend'],
-                ['css', 'core/feature/maps/frontend'],
+                ['javascript', 'feature/express/frontend'],
+                ['css', 'feature/express/frontend'],
             ]
         ],
 
-        'core/feature/search/frontend' => [
+        'feature/maps/frontend' => [
             [
-                ['css', 'core/feature/search/frontend'],
+                ['javascript', 'feature/maps/frontend'],
+                ['css', 'feature/maps/frontend'],
             ]
         ],
 
-        'core/feature/taxonomy/frontend' => [
+        'feature/search/frontend' => [
             [
-                ['css', 'core/feature/taxonomy/frontend'],
+                ['css', 'feature/search/frontend'],
             ]
         ],
 
-        'core/feature/testimonials/frontend' => [
+        'feature/taxonomy/frontend' => [
             [
-                ['css', 'core/feature/testimonials/frontend'],
+                ['css', 'feature/taxonomy/frontend'],
             ]
         ],
 
-        'core/feature/basics/frontend' => [
+        'feature/testimonials/frontend' => [
             [
-                ['css', 'core/feature/basics/frontend'],
+                ['css', 'feature/testimonials/frontend'],
+            ]
+        ],
+
+        'feature/basics/frontend' => [
+            [
+                ['css', 'feature/basics/frontend'],
             ]
         ],
 
