@@ -10,7 +10,6 @@ use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Utility\Service\Validation\Numbers;
-use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Localization;
@@ -193,13 +192,11 @@ class Update
 
         $configuration->registerPreviousMigratedVersions();
         $isRerunning = $configuration->getForcedInitialMigration() !== null;
-        $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
-        $totalMigrations = count($migrations);
+        $migrationVersions = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
+        $totalMigrations = count($migrationVersions);
         $performedMigrations = 0;
-        foreach ($migrations as $migration) {
-            /**
-             * @var $migration AbstractMigration
-             */
+        foreach ($migrationVersions as $migrationVersion) {
+            $migration = $migrationVersion->getMigration();
             if ($defaultTimeLimit !== 0) {
                 // The current execution time is not unlimited
                 $timeLimitSet = $canSetTimeLimit ? @set_time_limit(max((int) $defaultTimeLimit, 300)) : false;
@@ -211,23 +208,23 @@ class Update
                     }
                 }
             }
-            $configuration->getOutputWriter()->write(t('** Executing migration: %s', $migration->getVersion()));
-            if ($isRerunning && $migration->isMigrated()) {
-                $migration->markNotMigrated();
+            $configuration->getOutputWriter()->write(t('** Executing migration: %s', $migrationVersion->getVersion()));
+            if ($isRerunning && $migrationVersion->isMigrated()) {
+                $migrationVersion->markNotMigrated();
                 $migrated = false;
                 try {
-                    $migration->execute('up');
+                    $migrationVersion->execute('up');
                     $migrated = true;
                 } finally {
                     if (!$migrated) {
                         try {
-                            $migration->markMigrated();
+                            $migrationVersion->markMigrated();
                         } catch (Exception $x) {
                         }
                     }
                 }
             } else {
-                $migration->execute('up');
+                $migrationVersion->execute('up');
             }
             ++$performedMigrations;
             if ($defaultTimeLimit !== 0 && !$timeLimitSet && $migration instanceof Migrations\LongRunningMigrationInterface) {

@@ -65,6 +65,9 @@ class Version20190708000000 extends AbstractMigration implements RepeatableMigra
 
     protected function copyLoginControlIpRanges(IpAccessControlCategory $category)
     {
+        if (!$this->connection->tableExists('LoginControlIpRanges')) {
+            return;
+        }
         $site = $this->app->make('site')->getSite();
         $this->connection->executeQuery(
             '
@@ -96,6 +99,9 @@ INSERT INTO IpAccessControlRanges
 
     protected function copyFailedLoginAttempts(IpAccessControlCategory $category)
     {
+        if (!$this->connection->tableExists('FailedLoginAttempts')) {
+            return;
+        }
         $site = $this->app->make('site')->getSite();
         $this->connection->executeQuery(
             '

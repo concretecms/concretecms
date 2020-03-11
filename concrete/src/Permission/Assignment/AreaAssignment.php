@@ -63,7 +63,6 @@ class AreaAssignment extends Assignment
      */
     public function setPermissionObject($a)
     {
-        $this->stackAssignment = null;
         $stack = null;
         if ($a instanceof Area) {
             $areaPage = $a->getAreaCollectionObject();
@@ -81,20 +80,14 @@ class AreaAssignment extends Assignment
             $this->stackAssignment = $app->make(StackAssignment::class);
             $this->stackAssignment->setPermissionObject($stack);
             $this->stackAssignment->setPermissionKeyObject($this->pk);
-            return;
-        }
-        
-        if ($a->isGlobalArea()) {
-            $cx = Stack::getByName($a->getAreaHandle(), 'ACTIVE');
-            $a = Area::get($cx, STACKS_AREA_NAME);
-            if (!$a) {
-                return false;
+            $a = Area::getOrCreate($stack, STACKS_AREA_NAME);
+        } else {
+            $this->stackAssignment = null;
+            if ($a instanceof SubArea && !$a->overrideCollectionPermissions()) {
+                $a = $a->getSubAreaParentPermissionsObject();
             }
         }
 
-        if ($a instanceof SubArea && !$a->overrideCollectionPermissions()) {
-            $a = $a->getSubAreaParentPermissionsObject();
-        }
         $this->permissionObject = $a;
 
         // if the area overrides the collection permissions explicitly (with a one on the override column) we check
@@ -123,6 +116,8 @@ class AreaAssignment extends Assignment
     }
 
     /**
+     * Get the Access object for the Area or, in case of Stacks and Global Areas, the Access object for the Stack/Global Area.
+     *
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionAccessObject()
@@ -132,6 +127,17 @@ class AreaAssignment extends Assignment
         if ($this->stackAssignment !== null) {
             return $this->stackAssignment->getPermissionAccessObject();
         }
+
+        return $this->getAreaPermissionAccessObject();
+    }
+
+    /**
+     * Get the Access object for the Area, even in case of Stacks and Global Areas.
+     *
+     * @return \Concrete\Core\Permission\Access\Access|null
+     */
+    public function getAreaPermissionAccessObject()
+    {
         if ($this->permissionObjectToCheck instanceof Area) {
             $app = Application::getFacadeApplication();
             $db = $app->make(Connection::class);
@@ -164,17 +170,18 @@ class AreaAssignment extends Assignment
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Permission\Assignment\Assignment::setPermissionKeyObject()
      */
     public function setPermissionKeyObject($pk)
     {
         if ($this->stackAssignment !== null) {
-            return $this->stackAssignment->setPermissionKeyObject($pk);
+            $this->stackAssignment->setPermissionKeyObject($pk);
         }
         $this->pk = $pk;
     }
-    
+
     /**
      * {@inheritdoc}
      *
