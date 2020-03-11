@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Form\Service;
 
-use Loader;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Validator\String\EmailValidator;
+use Loader;
 
 /**
  * \@package    Helpers
@@ -26,8 +26,6 @@ use Concrete\Core\Validator\String\EmailValidator;
  */
 class Validation
 {
-    /**
-     */
     const VALID_NOT_EMPTY = 1;
     const VALID_EMAIL = 2;
     const VALID_INTEGER = 3;
@@ -38,10 +36,10 @@ class Validation
     const VALID_UPLOADED_FILE_REQUIRED = 25;
     const VALID_TOKEN = 30;
     const VALID_FIELD_INVALID = 99;
-    protected $fields = array();
-    protected $fieldsInvalid = array();
-    protected $data = array();
-    protected $files = array();
+    protected $fields = [];
+    protected $fieldsInvalid = [];
+    protected $data = [];
+    protected $files = [];
     protected $error;
 
     public function __construct()
@@ -72,7 +70,7 @@ class Validation
      */
     public function addRequired($field, $errorMsg = null, $validate = self::VALID_NOT_EMPTY)
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->message = ($errorMsg == null) ? t('Field "%s" is invalid', $field) : $errorMsg;
         $obj->field = $field;
         $obj->validate = $validate;
@@ -153,9 +151,9 @@ class Validation
 
     /**
      * After the validation error helper has been setup, the test() method ensures that all fields that require validation
-     * pass. Returns the number of invalid fields (0 = success).
+     * pass. Returns true for success and false for failure.
      *
-     * @return int
+     * @return bool
      */
     public function test()
     {
@@ -225,8 +223,6 @@ class Validation
         return count($this->fieldsInvalid) == 0;
     }
 
-    /**
-     */
     protected function setErrorsFromInvalidFields()
     {
         foreach ($this->fieldsInvalid as $f) {
@@ -237,7 +233,6 @@ class Validation
             }
         }
     }
-
 
     public function getError()
     {
