@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Multilingual;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -59,6 +58,11 @@ class SectionTest extends PageTestCase
         $this->assertTrue($enabled);
     }
 
+    /**
+     * This test will check if c5 can duplicate a page on the multilingual site correctly.
+     *
+     * @see https://github.com/concrete5/concrete5/issues/7430
+     */
     public function testRegisterDuplicate()
     {
         $default = Section::getDefaultSection();
@@ -66,10 +70,7 @@ class SectionTest extends PageTestCase
 
         // Create two pages in the same language section
         $oldPage = self::createPage('Old Page', $default);
-        $newPage = self::createPage('New Page', $default);
-
-        Section::registerPage($oldPage);
-        Section::registerDuplicate($newPage, $oldPage);
+        $newPage = $oldPage->duplicate($default);
 
         // When duplicating a page within the same language tree, a new mpRelationID should created for a new page.
         $this->assertNotEquals(
@@ -79,9 +80,7 @@ class SectionTest extends PageTestCase
         );
 
         // Create a page in the second locale
-        $newPageInSecondLocale = self::createPage('New Page in Second Locale', $second);
-
-        Section::registerDuplicate($newPageInSecondLocale, $oldPage);
+        $newPageInSecondLocale = $oldPage->duplicate($second);
 
         // If you duplicate a page into a different language tree, it should get the same mpRelationID.
         $this->assertEquals(
