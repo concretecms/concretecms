@@ -298,7 +298,6 @@ return [
         '/dashboard/*' => 'dashboard',
         '/frontend/install' => [
             VIEW_CORE_THEME,
-            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
         ],
         '/login' => [
             VIEW_CORE_THEME,

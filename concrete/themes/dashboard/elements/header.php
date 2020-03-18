@@ -42,7 +42,10 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 </head>
 <body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>
     <div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) { ?>ccm-dashboard-my-account<?php } ?> ccm-ui">
-        <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard d-none d-sm-block d-md-none" style="height: calc(100vh - 48px);">
+        
+        <?php
+        /*
+        ?><div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard d-none d-sm-block d-md-none" style="height: calc(100vh - 48px);">
             <div class="ccm-mobile-menu-main">
                 <ul class="ccm-mobile-menu-entries">
                     <li>
@@ -57,12 +60,15 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                 </ul>
             </div>
         </div>
+        <?php */ ?>
+        <?=View::element('icons')?>
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
             <ul>
                 <li class="ccm-logo float-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
-                <li class="ccm-toolbar-account float-left">
-                    <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Back to Website') ?>" href="<?=$backLink?>">
-                        <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-return"><?= tc('toolbar', 'Return to Website') ?></span>
+                <li class="float-left ccm-toolbar-button-with-text">
+                    <a href="<?=$backLink?>">
+                        <svg><use xlink:href="#icon-back-to-website" /></svg>
+                        <span><?=t('To My Website')?></span>
                     </a>
                 </li>
                 <?php
@@ -99,18 +105,27 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         data-launch-panel="dashboard"
                         data-panel-url="<?=URL::to('/system/panels/dashboard')?>"
                     >
-                        <i class="fas fa-sliders-h"></i>
+                        <svg><use xlink:href="#icon-dashboard" /></svg>
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                     </a>
                 </li>
                 <li class="float-right d-none d-sm-none d-md-block">
                     <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?>  data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>" title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
-                        <i class="fas fa-sitemap"></i>
+                        <svg><use xlink:href="#icon-sitemap" /></svg>
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
                     </a>
                 </li>
+                <li data-guide-toolbar-action="help" class="float-right hidden-xs">
+                    <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
+                       data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
+                       data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
+                       title="<?= t('View help about the CMS.') ?>" data-launch-panel="help">
+                        <svg><use xlink:href="#icon-help" /></svg><span
+                                class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>
+                    </a>
+                </li>
                 <li class="ccm-toolbar-search float-right d-none d-sm-none d-md-block">
-                    <i class="fa fa-search"></i>
+                    <svg><use xlink:href="#icon-search" /></svg>
                     <input type="search" autocomplete="off" id="ccm-nav-intelligent-search" tabindex="1" />
                 </li>
                 <?php
