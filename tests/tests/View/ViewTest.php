@@ -31,7 +31,7 @@ class ViewTest extends TestCase
         $template = $view->getViewTemplate();
         $this->assertEquals('concrete', $view->getThemeHandle());
         $this->assertEquals($base . '/views/frontend/install.php', $inner);
-        $this->assertEquals($base . '/themes/concrete/background_image.php', $template);
+        $this->assertEquals($base . '/themes/concrete/view.php', $template);
     }
 
     public function testRenderMaintenanceMode()
@@ -53,10 +53,11 @@ class ViewTest extends TestCase
         $view->setupRender();
         $inner = $view->getInnerContentFile();
         $template = $view->getViewTemplate();
+        // the theme paths are overriding.
         $this->assertEquals(DIR_BASE_CORE . '/views/oauth/authorize.php', $inner);
-        $this->assertEquals(DIR_BASE_CORE . '/themes/concrete/background_image.php', $template);
+        $this->assertEquals(DIR_BASE_CORE . '/themes/concrete/view.php', $template);
     }
-    
+
     public function testLegacyToolsUrlDoesNotMatchDashboardTheme()
     {
         $view = new DialogView('/dashboard/get_image_data');

@@ -156,7 +156,7 @@ return [
         'core_attribute' => '\Concrete\Core\Attribute\AttributeServiceProvider',
         'core_express' => '\Concrete\Core\Express\ExpressServiceProvider',
 
-        // 
+        //
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
     ],
@@ -296,17 +296,9 @@ return [
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
-        '/frontend/install' => [
-            VIEW_CORE_THEME,
-        ],
-        '/login' => [
-            VIEW_CORE_THEME,
-            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
-        ],
-        '/oauth/authorize' => [
-            VIEW_CORE_THEME,
-            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
-        ],
+        '/frontend/install' => VIEW_CORE_THEME,
+        '/login' => VIEW_CORE_THEME,
+        '/oauth/authorize' => VIEW_CORE_THEME,
         '/register' => VIEW_CORE_THEME,
         '/frontend/maintenance_mode' => VIEW_CORE_THEME,
         '/upgrade' => VIEW_CORE_THEME,
@@ -405,7 +397,7 @@ return [
                 'js/ckeditor/ckeditor.js'
             ],
         ],
-        
+
         // These are our CKEditor extensions, including custom plugins, and the jQuery adapter.
         'ckeditor/concrete' => [
             ['javascript', 'js/ckeditor/concrete.js'],
@@ -425,7 +417,7 @@ return [
             ['javascript-localized', '/ccm/assets/localization/core/js'],
             ['css', 'css/cms.css'],
         ],
-        
+
         // Fallback/minimal assets for accessory features
         'feature/boards/frontend' => [
             ['javascript', 'js/features/boards/frontend.js'],
@@ -463,7 +455,7 @@ return [
             ['javascript', 'js/features/navigation/frontend.js'],
             ['css', 'css/features/navigation/frontend.css'],
         ],
-        
+
         'feature/imagery/frontend' => [
             ['javascript', 'js/features/imagery/frontend.js'],
             ['css', 'css/features/imagery/frontend.css'],
@@ -516,7 +508,7 @@ return [
                 ['css', 'ckeditor/concrete'],
             ],
         ],
-        
+
         'core/cms' => [
             [
                 ['jquery'],
@@ -528,7 +520,7 @@ return [
         ],
 
         // Fallback/minimal assets groups
-        
+
         'feature/calendar/frontend' => [
             [
                 ['javascript', 'feature/calendar/frontend'],

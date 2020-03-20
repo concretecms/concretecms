@@ -180,7 +180,7 @@ class PageViewTest extends PageTestCase
         $inner = $view->getInnerContentFile();
         $template = $view->getViewTemplate();
         $this->assertEquals($inner, $base . '/single_pages/login.php');
-        $this->assertEquals($base . '/themes/concrete/background_image.php', $template);
+        $this->assertEquals($base . '/themes/concrete/view.php', $template);
         $this->assertEquals('concrete', $view->getThemeHandle());
 
         $collection = $this->app->make(ThemeRouteCollection::class);
