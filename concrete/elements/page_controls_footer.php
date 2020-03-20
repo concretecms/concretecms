@@ -47,6 +47,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     }
 
     ?>
+    <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
             <?php /* <div class="ccm-mobile-menu-overlay" style="height: calc(100vh - 48px)">
@@ -280,7 +281,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
                                 title="<?= t('Exit Edit Mode') ?>"
                             >
-                                <i class="fas fa-pencil-alt"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
+                                <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -293,7 +294,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
-                                <i class="fas fa-pencil-alt"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
+                                <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -322,7 +323,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 }
                                 ?>
 
-                                <i class="fa fa-cog"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings"><?php
+                                <svg><use xlink:href="#icon-cog" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings"><?php
                                     if ($hasComposer) {
                                         ?><?= tc('toolbar', 'Composer') ?> / <?php
                                     }
@@ -338,11 +339,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add float-left hidden-xs">
                         <?php if ($c->isEditMode()) { ?>
                             <a href="#" data-launch-panel="add-block" data-panel-url="<?= URL::to('/ccm/system/panels/add') ?>" title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
                             <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
                     </li>
@@ -371,7 +372,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li data-guide-toolbar-action="dashboard" class="float-right hidden-xs ">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
-                            <i class="fas fa-sliders-h"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
+                            <svg><use xlink:href="#icon-dashboard" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                         </a>
                     </li>
                     <?php
@@ -383,7 +384,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         </a>
                     </li>
                     <?php
-                }
+                } ?>
+                <?php
                 if ($sh->canViewSitemapPanel()) {
                     ?>
                     <li data-guide-toolbar-action="sitemap" class="float-right hidden-xs">
@@ -391,7 +393,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                            data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
                            data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                            title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
-                            <i class="fas fa-sitemap"></i><span
+                            <svg><use xlink:href="#icon-sitemap" /></svg><span
                                     class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
                         </a>
                     </li>
@@ -409,8 +411,17 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     }
                 }
                 ?>
+                <li data-guide-toolbar-action="help" class="float-right hidden-xs">
+                    <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
+                       data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
+                       data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
+                       title="<?= t('View help about the CMS.') ?>" data-launch-panel="help">
+                        <svg><use xlink:href="#icon-help" /></svg><span
+                                class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>
+                    </a>
+                </li>
                 <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search float-right hidden-xs">
-                    <i class="fa fa-search"></i>
+                    <svg><use xlink:href="#icon-search" /></svg>
                     <input type="search" id="ccm-nav-intelligent-search" autocomplete="off" tabindex="1"/>
                 </li>
             </ul>
@@ -523,5 +534,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         }
     ?>
     </div>
+    
     <?php
 }

@@ -66,9 +66,9 @@ div#ccm-page-install {
     bottom: 0px;
     left: 0px;
     width: 100%;
-    padding: 20px;
-    text-align: right;
-    background-color: rgba(40,40,40,0.85);
+    padding: 15px 30px;
+    border-top: 1px solid $gray-500;
+    background-color: $gray-100;
   }
 
   #ccm-test-cookies-enabled-tooltip, 
@@ -88,7 +88,6 @@ div#ccm-page-install {
   div#install-progress-summary {
     font-size: 24px;
     font-weight: 300;
-    color: #fff;
     float: left;
   }
   

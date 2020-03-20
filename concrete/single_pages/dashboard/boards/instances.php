@@ -43,7 +43,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                             <div class="modal-header">
                                                 <h5 class="modal-title"><?=t('Delete Instance')?></h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
+                                                    <svg><use xlink:href="#icon-dialog-close" /></svg>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
@@ -64,7 +64,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                         <div class="modal-header">
                                             <h5 class="modal-title"><?=t('Update')?></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
+                                                <svg><use xlink:href="#icon-dialog-close" /></svg>
                                             </button>
                                         </div>
                                         <div class="modal-body">
