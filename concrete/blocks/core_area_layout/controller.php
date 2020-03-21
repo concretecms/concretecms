@@ -73,7 +73,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $arLayout = $this->getAreaLayoutObject();
-        if (is_object($arLayout)) {            
+        if (is_object($arLayout)) {
             if ($arLayout instanceof CustomLayout) {
                 $asset = new CssAsset();
                 $asset->setAssetURL(URL::to('/ccm/system/css/layout', $arLayout->getAreaLayoutID()));
@@ -281,7 +281,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function edit()
     {
-        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $this->view();
         // since we set a render override in view() we have to explicitly declare edit
         if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
@@ -311,7 +310,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function add()
     {
-        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $maxColumns = 12; // normally
         // now we check our active theme and see if it has other plans
         $c = Page::getCurrentPage();
@@ -393,7 +391,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->btCacheBlockOutput = $btCacheBlockOutput;
         $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
         $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
-        
+
         foreach ($arrAssetBlocks as $objController) {
             $objController->on_start();
             $objController->outputAutoHeaderItems();
