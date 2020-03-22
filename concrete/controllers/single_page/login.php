@@ -226,6 +226,17 @@ class Login extends PageController implements LoggerAwareInterface
             $pll = $this->app->make(PostLoginLocation::class);
             $response = $pll->getPostLoginRedirectResponse(true);
 
+            // Expire the site cache in the logged in user's browser to avoid
+            // their full page cache serving local cached versions of the pages
+            // as they are now logged in and should probably see extra elements
+            // on the pages.
+            //
+            // Unfortunately this does not work in all browsers for insecure
+            // origins by default and you may see an error in the browser
+            // console. To get it to work, see the following e.g. in Chrome:
+            // chrome://flags/#unsafely-treat-insecure-origin-as-secure
+            $response->headers->set('Clear-Site-Data', '"cache"');
+
             return $response;
         } else {
             $session = $this->app->make('session');
