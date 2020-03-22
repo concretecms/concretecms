@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;

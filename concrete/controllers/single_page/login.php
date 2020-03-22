@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
@@ -19,7 +18,6 @@ use UserInfo;
 
 class Login extends PageController implements LoggerAwareInterface
 {
-
     use LoggerAwareTrait;
 
     public function getLoggerChannel()
@@ -149,8 +147,7 @@ class Login extends PageController implements LoggerAwareInterface
     public function finishAuthentication(
         AuthenticationType $type,
         User $u
-    )
-    {
+    ) {
         $this->app->instance(User::class, $u);
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
@@ -290,7 +287,6 @@ class Login extends PageController implements LoggerAwareInterface
 
     /**
      * @deprecated Use the getPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
-     *
      * @see \Concrete\Core\User\PostLoginLocation::getPostLoginUrl()
      *
      * @return string
@@ -305,7 +301,6 @@ class Login extends PageController implements LoggerAwareInterface
 
     /**
      * @deprecated Use the getSessionPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
-     *
      * @see \Concrete\Core\User\PostLoginLocation::getSessionPostLoginUrl()
      *
      * @return string|false
