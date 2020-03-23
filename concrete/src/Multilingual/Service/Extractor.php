@@ -39,6 +39,7 @@ class Extractor
         $configFilesParser->parseDirectory(DIR_BASE, '', $translations);
 
         $processApplication = [
+            DIRNAME_AUTHENTICATION => [$phpParser],
             DIRNAME_BLOCKS => [$phpParser, $blockTemplatesParser],
             DIRNAME_ELEMENTS => [$phpParser],
             DIRNAME_CONTROLLERS => [$phpParser],
