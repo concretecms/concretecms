@@ -10,7 +10,7 @@ $asl = $pk->getMyAssignment();
 $seoSet = AttributeSet::getByHandle('seo');
 ?>
 <section>
-    <header><?= t('Page Settings') ?></header>
+    <header><h4><?= t('Page Settings') ?></h4></header>
     <?php if ($cp->canEditPageContents()
         || $cp->canEditPageTheme()
         || $cp->canEditPageProperties()
@@ -73,7 +73,7 @@ $seoSet = AttributeSet::getByHandle('seo');
     }
     ?>
     </menu>
-    <?php 
+    <?php
 } ?>
 
     <menu>

@@ -1,1 +1,25 @@
-.ccm-block-share-this-page ul.list-inline{display:inline-block;margin:0;padding:0}.ccm-block-share-this-page ul.list-inline li{padding:0;list-style-type:none;margin-right:10px;display:inline-block}.ccm-block-social-links ul.list-inline{display:inline-block;margin:0;padding:0}.ccm-block-social-links ul.list-inline li{padding:0;list-style-type:none;margin-right:10px;display:inline-block}
+.ccm-block-share-this-page ul.list-inline {
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+}
+
+.ccm-block-share-this-page ul.list-inline li {
+  padding: 0px;
+  list-style-type: none;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.ccm-block-social-links ul.list-inline {
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+}
+
+.ccm-block-social-links ul.list-inline li {
+  padding: 0px;
+  list-style-type: none;
+  margin-right: 10px;
+  display: inline-block;
+}
