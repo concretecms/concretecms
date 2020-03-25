@@ -103,7 +103,7 @@
         </g>
     </svg>
 
-    <svg id="icon-back-to-website" width="18px" height="14px" viewBox="0 0 18 14" version="1.1"
+    <svg id="icon-arrow-left" width="18px" height="14px" viewBox="0 0 18 14" version="1.1"
          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
             <g id="Concrete-Header---Dashboard" transform="translate(-81.000000, -18.000000)">

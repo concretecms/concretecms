@@ -42,7 +42,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 </head>
 <body <?php if (isset($bodyClass)) { ?>class="<?=$bodyClass?>"<?php } ?>>
     <div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) { ?>ccm-dashboard-my-account<?php } ?> ccm-ui">
-        
+
         <?php
         /*
         ?><div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard d-none d-sm-block d-md-none" style="height: calc(100vh - 48px);">
@@ -67,7 +67,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                 <li class="ccm-logo float-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
                 <li class="float-left ccm-toolbar-button-with-text">
                     <a href="<?=$backLink?>">
-                        <svg><use xlink:href="#icon-back-to-website" /></svg>
+                        <svg><use xlink:href="#icon-arrow-left" /></svg>
                         <span><?=t('To My Website')?></span>
                     </a>
                 </li>
