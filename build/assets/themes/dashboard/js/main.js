@@ -54,10 +54,10 @@ var setupFavorites = function() {
                 success: function(r) {
                     if (r.action == 'remove') {
                         $link.attr('data-bookmark-action', 'add-favorite');
-                        $link.html('<i class="fa fa-lg fa-bookmark-o"></i>');
+                        $link.find('.icon-bookmark').removeClass('bookmarked');
                     } else {
                         $link.attr('data-bookmark-action', 'remove-favorite');
-                        $link.html('<i class="fa fa-lg fa-bookmark"></i>');
+                        $link.find('.icon-bookmark').addClass('bookmarked');
                     }
                     $link.off('click');
                     setupFavorites();

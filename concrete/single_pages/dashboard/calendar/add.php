@@ -31,6 +31,13 @@ if ($calendar !== null) {
 }
 ?>
 
+<section>
+    <p>
+        <b><?= t('Add a calendar using the form. ') ?></b>
+        <?=t('You may add multiple calendars, but you must add at least one before you can use the Calendar add-on')?>
+    </p>
+</section>
+
 <form method="post" action="<?=$view->action('submit')?>">
     <?=Loader::helper('validation/token')->output('submit')?>
     <fieldset>
@@ -49,8 +56,8 @@ if ($calendar !== null) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions ">
-                <a href="<?=$view->url($preferences->getPreferredViewPath())?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
-                <button type="submit" class="btn btn-primary pull-right"><?=$buttonText?></button>
+                <a href="<?=$view->url($preferences->getPreferredViewPath())?>" class="btn btn-default float-left"><?=t("Cancel")?></a>
+                <button type="submit" class="btn btn-primary float-right"><?=$buttonText?></button>
             </div>
         </div>
     </fieldset>
@@ -99,7 +106,7 @@ if ($calendar !== null) {
 
 <script type="text/javascript">
     $(function () {
-        
+
         $('select[name=enableMoreDetails]').on('change', function() {
             var group = $(this).val();
             $('div[data-more-details-group]').hide();

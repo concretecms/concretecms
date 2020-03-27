@@ -7,7 +7,7 @@ html.ccm-panel-right {
     margin-right: 320px;
 
     div.ccm-dashboard-form-actions-wrapper {
-      padding: 0px 335px 15px 15px;
+      padding: 0 335px 0 15px;
     }
   }
 }
@@ -50,23 +50,31 @@ div#ccm-dashboard-content {
   padding-bottom: 100px;
 
   > header {
-    margin-left: -97px;
-    margin-right: -50px;
-    padding: 39px 80px 39px 97px;
+    padding: 40px 0;
     position: relative;
-
+    .header-icon {
+      .icon-bookmark {
+        height: 40px;
+        width: 40px;
+        margin-top: -10px;
+        --icon-color: #4c4f56;
+        &.bookmarked {
+          --icon-color: #4A90E2;
+        }
+      }
+    }
     h1 {
-      font-weight: 600;
       font-weight: normal;
       font-size: 1.5rem;
       display: inline-block;
-      margin-top: 0px;
-      margin-bottom: 0px;
+      margin-top: 0;
+      margin-bottom: 0;
       line-height: 1.5rem;
-      color: #105192;
+      color: #4C4F56;
     }
 
-    background-color: #f3f3f3;
+    border-bottom: 1px solid #D8D8D8;
+    //background-color: #f3f3f3;
     /**
      * since moving from margin to padding wte dont' need this anymore
 
@@ -74,9 +82,10 @@ div#ccm-dashboard-content {
     */
 
     a.ccm-dashboard-page-header-bookmark {
-      position: absolute;
-      left: 72px;
-      top: 41px;
+      //position: absolute;
+      //left: 72px;
+      //top: 41px;
+      margin-right:15px;
       color: rgba(16,81,146,0.3);
       &:focus {
         outline: none;
@@ -93,16 +102,16 @@ div#ccm-dashboard-content {
     bottom: 0px;
     left: 0px;
     width: 100%;
-    padding: 0px 15px 15px 15px;
+    padding: 0 15px 0 15px;
     z-index: $index-level-dashboard-form-actions-wrapper;
 
     transition: cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s;
 
     div.ccm-dashboard-form-actions {
       @include clearfix();
-      background-color: rgba(40,40,40,0.85);
-      padding: 20px;
-      border-radius: 4px;
+      padding: 20px 35px;
+      margin: 0 -15px;
+      border-top: 1px solid #D8D8D8;
     }
   }
 
@@ -146,11 +155,20 @@ div#ccm-dashboard-content {
   fieldset {
     legend {
       color: #113455;
+      padding:40px 0;
     }
-    padding-left: 97px;
-    padding-right: 50px;
-    margin-left: -97px;
-    margin-right: -50px;
+
+    .form-group {
+      padding-left: 20px;
+      label {
+        font-weight: bold;
+      }
+    }
+
+    //padding-left: 97px;
+    //padding-right: 50px;
+    //margin-left: -97px;
+    //margin-right: -50px;
 
   }
 

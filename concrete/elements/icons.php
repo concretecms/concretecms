@@ -115,6 +115,16 @@
         </g>
     </svg>
 
+    <svg id="icon-bookmark-page" width="40px" height="40px" viewBox="0 0 39.83 39.83" version="1.0"
+         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g id="Symbols">
+            <g id="Icon---Bookmark">
+                <path fill="#dfdfde" d="M36.2,39.83H3.64A3.64,3.64,0,0,1,0,36.2V3.64A3.64,3.64,0,0,1,3.64,0H36.2a3.64,3.64,0,0,1,3.63,3.64V36.2A3.64,3.64,0,0,1,36.2,39.83ZM3.64,1A2.68,2.68,0,0,0,1,3.64V36.2a2.67,2.67,0,0,0,2.67,2.66H36.2a2.66,2.66,0,0,0,2.66-2.66V3.64A2.67,2.67,0,0,0,36.2,1Z"/>
+                <path fill="var(--icon-color)" d="M24.72,10.32h-9.6a1.59,1.59,0,0,0-1.6,1.6v17.6l6.4-5.6,6.4,5.6V11.92A1.6,1.6,0,0,0,24.72,10.32Z"/>
+            </g>
+        </g>
+    </svg>
+
     <?php /* Modal */ ?>
     <svg xmlns="http://www.w3.org/2000/svg" id="icon-dialog-close" width="24" height="24" viewBox="0 0 24 24">
         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
