@@ -9,4 +9,4 @@ travis_retry npm -g install grunt
 
 echo 'Installing Node packages'
 cd "$TRAVIS_BUILD_DIR/build"
-travis_retry npm install
+travis_retry npm ci
