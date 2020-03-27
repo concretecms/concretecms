@@ -78,7 +78,7 @@ EOT
         if ($input->getOption('trash')) {
             $output->write('Moving package to trash... ');
             $r = $pkg->backup();
-            if (get_class($r) === ErrorList::class) {
+            if ($r instanceof ErrorList) {
                 throw new Exception(implode("\n", $r->getList()));
             }
             $output->writeln('<info>done.</info>');
