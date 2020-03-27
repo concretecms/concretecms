@@ -5,11 +5,11 @@ $view->inc('elements/header.php');
 
     <header class="ccm-dashboard-page-header">
         <?php if (isset($_bookmarked)) { ?>
-            <a href="#" class="ccm-dashboard-page-header-bookmark" data-page-id="<?= $c->getCollectionID() ?>"
-               data-token="<?= $token->generate('access_bookmarks') ?>"
-               data-bookmark-action="<?= $_bookmarked ? 'remove-favorite' : 'add-favorite' ?>">
+            <a href="#" class="ccm-dashboard-page-header-bookmark" data-page-id="<?= $c->getCollectionID(); ?>"
+               data-token="<?= $token->generate('access_bookmarks'); ?>"
+               data-bookmark-action="<?= $_bookmarked ? 'remove-favorite' : 'add-favorite'; ?>">
             <span class="header-icon">
-                <svg class="icon-bookmark <?= $_bookmarked ? 'bookmarked' : '' ?>">
+                <svg class="icon-bookmark <?= $_bookmarked ? 'bookmarked' : ''; ?>">
                     <use xlink:href="#icon-bookmark-page"/>
                 </svg>
             </span>
@@ -21,14 +21,14 @@ $view->inc('elements/header.php');
         <div class="ccm-dashboard-header-menu">
 
             <?php if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) { ?>
-                <?= $headerMenu->render() ?>
+                <?= $headerMenu->render(); ?>
             <?php } ?>
 
         </div>
 
         <?php
         // We output the DIV even if it's empty because some pages might add to it via javascript?>
-        <div class="ccm-search-results-breadcrumb <?= (isset($breadcrumbClass)) ? $breadcrumbClass : '' ?>">
+        <div class="ccm-search-results-breadcrumb <?= (isset($breadcrumbClass)) ? $breadcrumbClass : ''; ?>">
 
             <?php if (isset($breadcrumb) && (!empty($breadcrumb))) { ?>
                 <ol class="breadcrumb">
@@ -36,25 +36,25 @@ $view->inc('elements/header.php');
                     foreach ($breadcrumb as $value) {
                         ?>
                         <li
-                        class="<?= $value['active'] ? 'ccm-undroppable-search-item active' : 'ccm-droppable-search-item' ?>"
-                        data-collection-id="<?= isset($value['id']) ? $value['id'] : '' ?>"><?php
+                        class="<?= $value['active'] ? 'ccm-undroppable-search-item active' : 'ccm-droppable-search-item'; ?>"
+                        data-collection-id="<?= isset($value['id']) ? $value['id'] : ''; ?>"><?php
                         if (isset($value['children'])) {
                             ?><span class="dropdown">
                             <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
-                        <?= $value['name'] ?>
+                        <?= $value['name']; ?>
                         <span class="caret"></span>
                     </button>
                         <ul class="dropdown-menu" role="menu">
                             <?php
                             foreach ($value['children'] as $child) {
                                 ?>
-                                <li><a href="<?= h($child['url']) ?>"><?= $child['name'] ?></a></li><?php
+                                <li><a href="<?= h($child['url']); ?>"><?= $child['name']; ?></a></li><?php
                             } ?>
                         </ul>
                             </span><?php
                         } else {
                             if (!$value['active']) {
-                                ?><a href="<?= h($value['url']) ?>"><?php
+                                ?><a href="<?= h($value['url']); ?>"><?php
                             }
                             echo $value['name'];
                             if (!$value['active']) {
@@ -100,7 +100,7 @@ $view->inc('elements/header.php');
             <div class="ccm-ui" id="ccm-dashboard-result-message">
                 <div class="alert alert-info">
                     <button type="button" class="close" data-dismiss="alert">×
-                    </button><?= (isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message)) ?></div>
+                    </button><?= (isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message)); ?></div>
             </div>
             <?php
         } elseif (isset($success)) {
@@ -108,14 +108,14 @@ $view->inc('elements/header.php');
             <div class="ccm-ui" id="ccm-dashboard-result-message">
                 <div class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert">×
-                    </button><?= (isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success)) ?></div>
+                    </button><?= (isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success)); ?></div>
             </div>
             <?php
         }
 
         ?>
 
-        <?php echo $innerContent; ?>
+        <?= $innerContent; ?>
 
     </div>
 
