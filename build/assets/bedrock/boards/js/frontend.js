@@ -1,0 +1,1 @@
+export * from "@concretecms/bedrock/assets/boards/js/frontend";

@@ -1,0 +1,1 @@
+export * from "@concretecms/bedrock/assets/ckeditor/js/concrete";

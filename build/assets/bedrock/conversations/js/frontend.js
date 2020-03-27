@@ -1,0 +1,1 @@
+export * from "@concretecms/bedrock/assets/conversations/js/frontend";
