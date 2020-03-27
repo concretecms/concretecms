@@ -13,7 +13,7 @@ $publishDate = $v->getPublishDate();
 
     ?>
 
-    <div class="pull-right btn-group" data-page-type-composer-form-btns="publish">
+    <div class="float-right btn-group" data-page-type-composer-form-btns="publish">
         <button type="button" style="" data-page-type-composer-form-btn="publish" class="btn btn-primary"><?=$publishTitle?></button>
         <button style="padding-right: 5px; padding-left: 5px;" data-page-type-composer-form-btn="schedule" type="button" class="btn btn-primary <?php if ($publishDate) { ?>active<?php } ?>">
             <i class="far fa-clock"></i>
@@ -34,40 +34,40 @@ $publishDate = $v->getPublishDate();
 
 <?php if (!is_object($page) || $page->isPageDraft()) {
     ?>
-    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success pull-right"><?=t('Edit Mode')?></button>
-<?php 
+    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success float-right"><?=t('Edit Mode')?></button>
+<?php
 } else {
     ?>
-    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success pull-right"><?=t('Save')?></button>
-<?php 
+    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success float-right"><?=t('Save')?></button>
+<?php
 } ?>
 
 <?php if (is_object($page) && $page->isPageDraft()) {
     if ($cp->canDeletePage()) {
         ?>
-        <button type="button" data-page-type-composer-form-btn="discard" class="btn btn-danger pull-left"><?=t('Discard Draft')?></button>
-    <?php 
+        <button type="button" data-page-type-composer-form-btn="discard" class="btn btn-danger float-left"><?=t('Discard Draft')?></button>
+    <?php
     }
     ?>
-    <button type="button" data-page-type-composer-form-btn="exit" class="btn btn-default pull-left"><?=t('Save and Exit')?></button>
-<?php 
+    <button type="button" data-page-type-composer-form-btn="exit" class="btn btn-secondary float-left"><?=t('Save and Exit')?></button>
+<?php
 } ?>
 
 
 <style type="text/css">
-    button[data-page-type-composer-form-btn=save] {
+    div.ccm-ui button[data-page-type-composer-form-btn=save] {
         margin-left: 10px;
     }
-    button[data-page-type-composer-form-btn=permissions] {
+    div.ccm-ui button[data-page-type-composer-form-btn=permissions] {
         margin-left: 10px;
     }
-    button[data-page-type-composer-form-btn=exit] {
+    div.ccm-ui button[data-page-type-composer-form-btn=exit] {
         margin-left: 10px;
     }
-    button[data-page-type-composer-form-btn=preview] {
+    div.ccm-ui button[data-page-type-composer-form-btn=preview] {
         margin-left: 10px;
     }
-    div[data-page-type-composer-form-btns=publish] {
+    div.ccm-ui div[data-page-type-composer-form-btns=publish] {
         margin-left: 10px;
     }
 </style>
