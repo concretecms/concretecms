@@ -38,3 +38,4 @@ $router->all('/page/versions/unapprove', 'Page\Versions::unapprove');
 $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
 $router->get('/sitemap', 'Sitemap::view');
+$router->get('/help', 'Help::view');
