@@ -42,7 +42,7 @@ class Controller extends AuthenticationTypeController
         }
         $hasher = $this->app->make(PasswordHasher::class);
         $db = $this->app->make(Connection::class);
-        foreach ($db->fetchAll('select token from authTypeConcreteCookieMap WHERE uID = ?', [$authCookie->getUserID()]) as $row) {
+        foreach ($db->fetchAll('select token from authTypeConcreteCookieMap WHERE uID = ? ORDER BY validThrough DESC', [$authCookie->getUserID()]) as $row) {
             if ($hasher->checkPassword($authCookie->getToken(), $row['token'])) {
                 $db->delete('authTypeConcreteCookieMap', ['uID' => $authCookie->getUserID(), 'token' => $row['token']]);
             }
@@ -60,7 +60,7 @@ class Controller extends AuthenticationTypeController
         $db = $this->app->make(Connection::class);
         $hasher = $this->app->make(PasswordHasher::class);
         $validRow = null;
-        foreach ($db->fetchAll('select validThrough, token from authTypeConcreteCookieMap WHERE uID = ?', [$uID]) as $row) {
+        foreach ($db->fetchAll('select validThrough, token from authTypeConcreteCookieMap WHERE uID = ? ORDER BY validThrough DESC', [$uID]) as $row) {
             if ($hasher->checkPassword($hash, $row['token'])) {
                 $validRow = $row;
                 break;
