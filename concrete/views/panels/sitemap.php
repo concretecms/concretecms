@@ -1,32 +1,31 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<div class="ccm-panel-content-inner">
 
     <?php if (count($frequentPageTypes) || count($otherPageTypes)) { ?>
-        <h5><?= t('New Page') ?></h5>
-        <hr>
-        <ul class="ccm-panel-sitemap-list">
-            <?php foreach ($frequentPageTypes as $pt) { ?>
-                <li><a href="<?= URL::to('/ccm/system/page/', 'create',
-                        $pt->getPageTypeID()) ?>"><?= $pt->getPageTypeDisplayName() ?></a></li>
-            <?php } ?>
+        <header><h5><?= t('New Page') ?></h5></header>
+        <section>
+            <menu>
+                <?php foreach ($frequentPageTypes as $pt) { ?>
+                    <li><a href="<?= URL::to('/ccm/system/page/', 'create',
+                            $pt->getPageTypeID()) ?>"><?= $pt->getPageTypeDisplayName() ?></a></li>
+                <?php } ?>
 
-            <?php foreach ($otherPageTypes as $pt) { ?>
-                <li data-page-type="other" style="<?= count($frequentPageTypes) ? 'display: none' : '' ?>">
-                    <a href="<?= URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID()) ?>">
-                        <?= $pt->getPageTypeDisplayName() ?>
-                    </a>
-                </li>
-            <?php } ?>
+                <?php foreach ($otherPageTypes as $pt) { ?>
+                    <li data-page-type="other" style="<?= count($frequentPageTypes) ? 'display: none' : '' ?>">
+                        <a href="<?= URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID()) ?>">
+                            <?= $pt->getPageTypeDisplayName() ?>
+                        </a>
+                    </li>
+                <?php } ?>
 
-            <?php if (count($frequentPageTypes) && count($otherPageTypes)) { ?>
-                <li class="ccm-panel-sitemap-more-page-types">
-                    <a href="#" data-sitemap="show-more">
-                        <i class="fa fa-caret-down"></i> <?= t('More') ?>
-                    </a>
-                </li>
-            <?php } ?>
-        </ul>
-
+                <?php if (count($frequentPageTypes) && count($otherPageTypes)) { ?>
+                    <li class="ccm-panel-sitemap-more-page-types">
+                        <a href="#" data-sitemap="show-more">
+                            <i class="fa fa-caret-down"></i> <?= t('More') ?>
+                        </a>
+                    </li>
+                <?php } ?>
+            </menu>
+        </section>
         <script type="text/javascript">
           $(function () {
             $('a[data-sitemap=show-more]').on('click', function (e) {
@@ -40,8 +39,8 @@
     } ?>
 
     <?php if (count($drafts)) { ?>
-        <h5><?= t('Page Drafts') ?></h5>
-        <ul class="ccm-panel-sitemap-list">
+        <header><h5><?= t('Page Drafts') ?></h5></header>
+        <menu>
             <?php foreach ($drafts as $dc) { ?>
                 <li>
                     <a href="<?= Loader::helper('navigation')->getLinkToCollection($dc) ?>">
@@ -56,11 +55,11 @@
                     </a>
                 </li>
             <?php } ?>
-        </ul>
+        </menu>
     <?php } ?>
 
     <?php if ($canViewSitemap) { ?>
-        <h5><?= t('Sitemap') ?></h5>
+        <header><h5><?= t('Sitemap') ?></h5></header>
         <hr>
         <div id="ccm-sitemap-panel-sitemap"></div>
         <script type="text/javascript">
@@ -73,5 +72,4 @@
           });
         </script>
     <?php } ?>
-</div>
 
