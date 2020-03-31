@@ -74,48 +74,55 @@ $view->inc('elements/header.php');
 
     <div id="ccm-dashboard-content-inner">
 
-        <?php
-        $_error = [];
-        if (isset($error)) {
-            if ($error instanceof Exception) {
-                $_error[] = $error->getMessage();
-            } elseif ($error instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
-                if ($error->has()) {
-                    $_error = $error->getList();
+        <div class="row">
+            <div class="col-9">
+                <?php
+                $_error = [];
+                if (isset($error)) {
+                    if ($error instanceof Exception) {
+                        $_error[] = $error->getMessage();
+                    } elseif ($error instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
+                        if ($error->has()) {
+                            $_error = $error->getList();
+                        }
+                    } else {
+                        $_error = $error;
+                    }
                 }
-            } else {
-                $_error = $error;
-            }
-        }
-        if (!empty($_error)) {
-            ?>
-            <div class="ccm-ui" id="ccm-dashboard-result-message">
-                <?php View::element('system_errors', ['format' => 'block', 'error' => $_error]); ?>
-            </div>
-            <?php
-        }
+                if (!empty($_error)) {
+                    ?>
+                    <div class="ccm-ui" id="ccm-dashboard-result-message">
+                        <?php View::element('system_errors', ['format' => 'block', 'error' => $_error]); ?>
+                    </div>
+                    <?php
+                }
 
-        if (isset($message)) {
-            ?>
-            <div class="ccm-ui" id="ccm-dashboard-result-message">
-                <div class="alert alert-info">
-                    <button type="button" class="close" data-dismiss="alert">×
-                    </button><?= (isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message)); ?></div>
-            </div>
-            <?php
-        } elseif (isset($success)) {
-            ?>
-            <div class="ccm-ui" id="ccm-dashboard-result-message">
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert">×
-                    </button><?= (isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success)); ?></div>
-            </div>
-            <?php
-        }
+                if (isset($message)) {
+                    ?>
+                    <div class="ccm-ui" id="ccm-dashboard-result-message">
+                        <div class="alert alert-info">
+                            <button type="button" class="close" data-dismiss="alert">×
+                            </button><?= (isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message)); ?></div>
+                    </div>
+                    <?php
+                } elseif (isset($success)) {
+                    ?>
+                    <div class="ccm-ui" id="ccm-dashboard-result-message">
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">×
+                            </button><?= (isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success)); ?></div>
+                    </div>
+                    <?php
+                }
 
-        ?>
+                ?>
 
-        <?= $innerContent; ?>
+                <?= $innerContent; ?>
+            </div>
+            <div class="col-3">
+
+            </div>
+        </div>
 
     </div>
 
