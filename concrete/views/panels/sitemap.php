@@ -61,6 +61,7 @@
 
     <?php if ($canViewSitemap) { ?>
         <h5><?= t('Sitemap') ?></h5>
+        <hr>
         <div id="ccm-sitemap-panel-sitemap"></div>
         <script type="text/javascript">
           $(function () {
