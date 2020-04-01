@@ -50,7 +50,7 @@ div#ccm-dashboard-content {
   padding-bottom: 100px;
 
   > header {
-    padding: 40px 0;
+    padding: 40px 0 20px 0;
     position: relative;
     .header-icon {
       .icon-bookmark {
@@ -85,7 +85,7 @@ div#ccm-dashboard-content {
       //position: absolute;
       //left: 72px;
       //top: 41px;
-      margin-right:15px;
+      margin-right:8px;
       color: rgba(16,81,146,0.3);
       &:focus {
         outline: none;
@@ -155,7 +155,7 @@ div#ccm-dashboard-content {
   fieldset {
     legend {
       color: #113455;
-      padding:40px 0;
+      padding:35px 0;
     }
 
     .form-group {
@@ -402,3 +402,4 @@ div.ccm-system-errors {
 @import "./update";
 @import "./privacy-policy.scss";
 @import "./translator";
+@import "./helpers";
