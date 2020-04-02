@@ -13,8 +13,9 @@ html.ccm-panel-right {
 }
 
 div#ccm-dashboard-content {
-
-  padding-top: 48px;
+  p {
+    color: $gray-700;
+  }
 
   tr {
     &.ccm-theme-active {
@@ -28,9 +29,11 @@ div#ccm-dashboard-content {
 
   .ccm-dashboard-section-menu {
     padding-bottom: 85px;
+
     li {
       margin-bottom: 4px;
     }
+
     h2 {
       display: block;
       width: 100%;
@@ -39,30 +42,34 @@ div#ccm-dashboard-content {
       font-weight: 200;
       margin-top: 0px;
       line-height: inherit;
-      color: #333;
-      border-bottom: 1px solid #e5e5e5;
+      color: $gray-700;
+      border-bottom: 1px solid $gray-200;
     }
   }
 
   position: relative;
-  padding-right: 50px;
-  padding-left: 97px;
-  padding-bottom: 100px;
+
+  padding: 48px 50px 100px 45px;
 
   > header {
     padding: 40px 0 20px 0;
     position: relative;
+
     .header-icon {
       .icon-bookmark {
         height: 40px;
         width: 40px;
         margin-top: -10px;
-        --icon-color: #4c4f56;
+        //SVG cant render $gray-700 variable
+        --icon-color: #4C4F56;
+
         &.bookmarked {
+          //SVG cant render $blue variable
           --icon-color: #4A90E2;
         }
       }
     }
+
     h1 {
       font-weight: normal;
       font-size: 1.5rem;
@@ -70,10 +77,10 @@ div#ccm-dashboard-content {
       margin-top: 0;
       margin-bottom: 0;
       line-height: 1.5rem;
-      color: #4C4F56;
+      color: $gray-700;
     }
 
-    border-bottom: 1px solid #D8D8D8;
+    border-bottom: 1px solid $gray-200;
     //background-color: #f3f3f3;
     /**
      * since moving from margin to padding wte dont' need this anymore
@@ -82,11 +89,9 @@ div#ccm-dashboard-content {
     */
 
     a.ccm-dashboard-page-header-bookmark {
-      //position: absolute;
-      //left: 72px;
-      //top: 41px;
-      margin-right:8px;
-      color: rgba(16,81,146,0.3);
+      margin-right: 8px;
+      color: rgba(16, 81, 146, 0.3);
+
       &:focus {
         outline: none;
       }
@@ -111,7 +116,7 @@ div#ccm-dashboard-content {
       @include clearfix();
       padding: 20px 35px;
       margin: 0 -15px;
-      border-top: 1px solid #D8D8D8;
+      border-top: 1px solid $gray-200;
     }
   }
 
@@ -137,9 +142,11 @@ div#ccm-dashboard-content {
         border-bottom: 1px solid #efefef;
         margin-bottom: 20px;
         padding-bottom: 10px;
+
         div.ccm-search-main-lookup-field {
           margin-left: 67px;
         }
+
         ul.ccm-search-form-advanced {
           top: 20px;
         }
@@ -154,22 +161,18 @@ div#ccm-dashboard-content {
  */
   fieldset {
     legend {
-      color: #113455;
-      padding:35px 0;
+      color: $gray-500;
+      padding: 35px 0;
     }
 
     .form-group {
       padding-left: 20px;
+
       label {
+        color: $gray-700;
         font-weight: bold;
       }
     }
-
-    //padding-left: 97px;
-    //padding-right: 50px;
-    //margin-left: -97px;
-    //margin-right: -50px;
-
   }
 
 }
@@ -205,6 +208,7 @@ div#ccm-dashboard-content {
     position: absolute;
     top: 31px;
     z-index: $index-level-dashboard-help;
+
     html.ccm-panel-open.ccm-panel-right & {
       transform: translate(0, 0);
     }
@@ -238,6 +242,7 @@ div#ccm-dashboard-content {
     margin-top: 10px;
     padding: 5px 5px 0px 5px;
   }
+
   .media-row:first-child {
     margin-top: 0;
   }
@@ -247,6 +252,7 @@ div#ccm-dashboard-content {
     > .pull-left {
       margin-right: 10px;
     }
+
     > .pull-right {
       margin-left: 10px;
     }
@@ -299,6 +305,7 @@ div#ccm-dashboard-content {
       }
 
     }
+
     div.ccm-dashboard-content-full {
       margin-left: -20px; /* because it's only 20px instead of 97 */
       margin-right: -20px;
@@ -313,6 +320,7 @@ div#ccm-dashboard-content {
       }
 
     }
+
     div.ccm-dashboard-form-actions-wrapper {
       padding-right: 15px !important;
     }
