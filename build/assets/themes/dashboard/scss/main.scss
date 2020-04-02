@@ -60,12 +60,11 @@ div#ccm-dashboard-content {
         height: 40px;
         width: 40px;
         margin-top: -10px;
-        //SVG cant render $gray-700 variable
-        --icon-color: #4C4F56;
+        // SVG cant render $gray-700 variable, you need to use interpolation and works like a charm
+        --icon-color: #{$gray-700};
 
         &.bookmarked {
-          //SVG cant render $blue variable
-          --icon-color: #4A90E2;
+          --icon-color: #{$blue};
         }
       }
     }
