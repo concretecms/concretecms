@@ -254,15 +254,13 @@ var ccmi18n_tree = ' . json_encode([
     'delete' => t('Delete'),
 ]) . ';
 var ccmi18n_tourist = ' . json_encode([
-    'skipButton' => '<button class="btn btn-default btn-xs pull-right tour-next">' . t('Skip →') . '</button>',
-    'nextButton' => '<button class="btn btn-primary btn-xs pull-right tour-next">' . t('Next →') . '</button>',
-    'finalButton' => '<button class="btn btn-primary btn-xs pull-right tour-next">' . t('Done') . '</button>',
-    'closeButton' => '<a class="btn btn-close tour-close" href="#"><i class="fa fa-remove"></i></a>',
-    'okButton' => '<button class="btn btn-xs tour-close btn-primary">' . t('Ok') . '</button>',
-    'doThis' => t('Do this:'),
-    'thenThis' => t('Then this:'),
-    'nextThis' => t('Next this:'),
-    'stepXofY' => t('step %1$d of %2$d'),
+    'buttonTexts' => [
+        'prevButton' => t('Prev'),
+        'nextButton' => t('Next'),
+        'pauseButton' => t('Pause'),
+        'resumeButton' => t('Resume'),
+        'endTourButton' => t('End Tour'),
+    ],
 ]) . ';
 var ccmi18n_helpGuides = ' . json_encode([
     'add-page' => [
