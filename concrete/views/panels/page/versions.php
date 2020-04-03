@@ -12,19 +12,24 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </script>
 
 <script type="text/template" class="version">
-    <tr <% if (cvIsApproved) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>
-    data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
+    <tr <% if (cvIsApproved) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>>
     <td><input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cvID%>"
                data-version-active="<%- cvIsApproved ? true : false %>"/></td>
     <td><span class="ccm-panel-page-versions-version-id"><%-cvID%></span></td>
     <td class="ccm-panel-page-versions-details">
 
-        <a href="#" class="ccm-panel-page-versions-version-info" data-toggle="version-info"><i
-                    class="fa fa-info-circle"></i></a>
+        <div class="ccm-panel-page-versions-actions">
+            <a href="#" class="ccm-hover-icon ccm-panel-page-versions-menu-launcher"
+               data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cvID%>"><svg><use xlink:href="#icon-menu-launcher" /></svg></a>
+            <a href="#" class="ccm-hover-icon ccm-panel-page-versions-version-info" data-toggle="version-info"><svg><use xlink:href="#icon-info" /></svg></a>
+        </div>
 
-        <% if (cvIsApproved) { %>
-        <p><span class="label label-info"><?= t('Live') ?></span></p>
-        <% } %>
+        <div class="ccm-panel-page-versions-status">
+            <% if (cvIsApproved) { %>
+            <p><span class="badge badge-dark"><?= t('Live') ?></span></p>
+            <% } %>
+        </div>
+
         <p><span class="ccm-panel-page-versions-version-timestamp"><?= t('Created on'); ?>
                 <%-cvDateVersionCreated%></span></p>
         <% if (cvComments) { %>
@@ -47,7 +52,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     'ScheduledByFor', ' for ') ?> <%-cvPublishDate%></p>
             <% } %>
         </div>
-        <div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
+        <div class="popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
             <div class="popover-inner">
                 <ul class="dropdown-menu">
                     <li><% if (cvIsApproved) { %><span><?= t('Approve') ?></span><% } else { %><a href="#"
@@ -83,24 +88,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </script>
 
 <script type="text/template" class="footer">
+    <% if (hasPreviousPage == '1' || hasNextPage == '1') { %>
     <tr>
         <td colspan="3">
-            <div class="pager">
-                <% if (hasPreviousPage == '1') { %>
-                <a href="#" class="btn btn-outline float-left" data-version-navigation="<%=previousPageNum%>"><?= t('&larr; Newer') ?></a>
-                <% } else { %>
-                <a href="#" class="btn btn-outline float-left disabled" href="#"><?= t('&larr; Newer') ?></a>
-                <% } %>
-                <% if (hasNextPage == '1') { %>
-
-                <a href="#" class="btn btn-outline float-right" data-version-navigation="<%=nextPageNum%>"><?= t('Older &rarr;') ?></a>
-                <% } else { %>
-                <a href="#" class="btn btn-outline float-right disabled" href="#"><?= t('Older &rarr;') ?></a>
-
-                <% } %>
-            </div>
+            <% if (hasPreviousPage == '1') { %>
+            <a href="#" class="float-left" data-version-navigation="<%=previousPageNum%>"><?= t('&larr; Newer Versions') ?></a>
+            <% } %>
+            <% if (hasNextPage == '1') { %>
+            <a href="#" class="float-right" data-version-navigation="<%=nextPageNum%>"><?= t('Older Versions &rarr;') ?></a>
+            <% } %>
         </td>
     </tr>
+    <% } %>
 </script>
 
 <script type="text/javascript">
@@ -111,14 +110,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
             $.each(data, function (i, dataItem) {
                 _data.push({'name': dataItem.name, 'value': dataItem.value});
             });
+            jQuery.fn.dialog.showLoader();
             $.ajax({
                 type: 'post',
                 dataType: 'json',
                 data: _data,
                 url: url,
-                beforeSubmit: function () {
-                    jQuery.fn.dialog.showLoader();
-                },
                 error: function (r) {
                     ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
                 },
@@ -138,7 +135,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         },
 
         handleVersionRemovalResponse: function (r) {
-            $('button[data-version-action]').addClass('disabled');
+            $('button[data-version-action]').prop('disabled', true);
 
             for (i = 0; i < r.versions.length; i++) {
                 var $row = $('input[type=checkbox][value=' + r.versions[i].cvID + ']').parent().parent();
@@ -195,12 +192,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
             // the click proxy is kinda screwy on this
             $('[data-launch-versions-menu]').each(function () {
                 $(this).concreteMenu({
-                    menuLauncherHoverClass: 'ccm-panel-page-versions-hover',
-                    menuContainerClass: 'ccm-panel-page-versions-container',
                     enableClickProxy: false,
                     menu: 'div[data-menu=' + $(this).attr('data-launch-versions-menu') + ']'
                 });
             });
+
+            $('a[data-toggle=version-info]').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $parent = $(this).parentsUntil('.ccm-panel-page-versions-details').parent();
+                $parent.find('.ccm-panel-page-versions-more-info').css('height', 'auto');
+            });
+
 
             $('a[data-version-menu-task]').unbind('.vmenu').on('click.vmenu', function () {
                 var cvID = $(this).attr('data-version-id');
@@ -332,12 +335,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 checkboxes = allBoxes.filter(':checked'),
                 notChecked = allBoxes.not(checkboxes);
 
-            $('button[data-version-action]').addClass('disabled');
+            $('button[data-version-action]').prop('disabled', true);
             if (checkboxes.length > 1) {
-                $('button[data-version-action=compare]').removeClass('disabled');
+                $('button[data-version-action=compare]').prop('disabled', false);
             }
             if (checkboxes.length > 0 && notChecked.length > 0 && !checkboxes.filter('[data-version-active=true]').length && $('#ccm-panel-page-versions tbody [data-version-menu-task=delete]').length) {
-                $('button[data-version-action=delete]').removeClass('disabled');
+                $('button[data-version-action=delete]').prop('disabled', false);
             }
 
             ConcretePageVersionList.previewSelectedVersions(checkboxes);
@@ -363,29 +366,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
             return false;
         });
 
-        $('a[data-toggle=version-info]').on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $parent = $(this).parent();
-            $parent.find('.ccm-panel-page-versions-more-info').slideToggle();
-        });
-
         $('button[data-version-action=delete]').on('click', function () {
-            if (!$(this).hasClass("disabled")) {
-                var checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox]:checked');
-                var cvIDs = [];
-                $.each(checkboxes, function (i, cb) {
-                    cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
-                });
-                if (cvIDs.length > 0) {
-                    ConcretePageVersionList.sendRequest(<?= json_encode((string)$controller->action("delete")) ?>, cvIDs, function (r) {
-                        ConcretePageVersionList.handleVersionRemovalResponse(r);
-                        ConcreteEvent.publish('PageVersionChanged.deleted', {
-                            cID: <?= (int)$c->getCollectionID() ?>,
-                            cvID: cvIDs
-                        });
+            var checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox]:checked');
+            var cvIDs = [];
+            $.each(checkboxes, function (i, cb) {
+                cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
+            });
+            if (cvIDs.length > 0) {
+                ConcretePageVersionList.sendRequest(<?= json_encode((string)$controller->action("delete")) ?>, cvIDs, function (r) {
+                    ConcretePageVersionList.handleVersionRemovalResponse(r);
+                    ConcreteEvent.publish('PageVersionChanged.deleted', {
+                        cID: <?= (int)$c->getCollectionID() ?>,
+                        cvID: cvIDs
                     });
-                }
+                });
             }
         });
 
@@ -395,18 +389,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 
 <section id="ccm-panel-page-versions" class="ccm-ui">
-    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a>
-        <a href="" data-panel-navigation="back"><?= t('Versions') ?></a></header>
-    <table class="table">
-        <thead>
-        <tr>
-            <th colspan="2"><input type="checkbox"/></th>
-            <th>
-                <button type="button" class="btn btn-link disabled" data-version-action="delete"><?= t('Delete') ?></button>
-            </th>
-        </tr>
+    <header>
+        <a href="" data-panel-navigation="back" class="ccm-panel-back">
+            <svg><use xlink:href="#icon-arrow-left" /></svg>
+            <?=t('Page Settings')?>
+        </a>
+        <h5><?=t('Versions')?></h5>
+    </header>
+    <table>
         </thead>
         <tbody></tbody>
         <tfoot></tfoot>
     </table>
+
+    <hr>
+    <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete"><?= t('Delete') ?></button>
+
 </section>

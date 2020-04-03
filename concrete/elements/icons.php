@@ -137,4 +137,33 @@
             </g>
         </g>
     </svg>
+    <svg id="icon-menu-launcher" width="16px" height="4px" viewBox="0 0 16 4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+            <g id="Panel---Page-Settings---Versions-Specs" transform="translate(-322.000000, -443.000000)">
+                <g id="Group-Copy-3" transform="translate(-1.000000, 49.000000)">
+                    <g id="Group-3-Copy" transform="translate(16.250000, 373.000000)">
+                        <g id="ic_more_horiz" transform="translate(305.750000, 14.000000)">
+                            <g id="Icon-24px">
+                                <path d="M3,7 C1.9,7 1,7.9 1,9 C1,10.1 1.9,11 3,11 C4.1,11 5,10.1 5,9 C5,7.9 4.1,7 3,7 L3,7 Z M15,7 C13.9,7 13,7.9 13,9 C13,10.1 13.9,11 15,11 C16.1,11 17,10.1 17,9 C17,7.9 16.1,7 15,7 L15,7 Z M9,7 C7.9,7 7,7.9 7,9 C7,10.1 7.9,11 9,11 C10.1,11 11,10.1 11,9 C11,7.9 10.1,7 9,7 L9,7 Z" id="Shape"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </svg>
+
+    <svg id="icon-info" width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+            <g id="Panel---Page-Settings---Versions-Specs" transform="translate(-352.000000, -436.000000)" fill-rule="nonzero">
+                <g id="Group-Copy-3" transform="translate(-1.000000, 49.000000)">
+                    <g id="Group-3-Copy" transform="translate(16.250000, 373.000000)">
+                        <g id="icons8-info" transform="translate(336.750000, 14.000000)">
+                            <path d="M9,0 C4.0293,0 0,4.0293 0,9 C0,13.9707 4.0293,18 9,18 C13.9707,18 18,13.9707 18,9 C18,4.0293 13.9707,0 9,0 Z M9.9,13.5 L8.1,13.5 L8.1,8.1 L9.9,8.1 L9.9,13.5 Z M9.9,6.3 L8.1,6.3 L8.1,4.5 L9.9,4.5 L9.9,6.3 Z" id="Shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </svg>
 </svg>
