@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use ORM;
 use PDO;
+use Throwable;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
@@ -526,13 +527,16 @@ class Connection extends \Doctrine\DBAL\Connection
         $table->setPrimaryKey([$column->getName()]);
         try {
             $sm->createTable($table);
-        } catch (Exception $x) {
+
+            return true;
+        } catch (Throwable $x) {
             // SQLSTATE[42000]: Syntax error or access violation: 1071 Specified key was too long; max key length is XYZ bytes
             return false;
-        }
-        try {
-            $sm->dropTable($tableName);
-        } catch (Exception $x) {
+        } finally {
+            try {
+                $sm->dropTable($tableName);
+            } catch (Throwable $x) {
+            }
         }
 
         return true;

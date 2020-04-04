@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\File\Image\BitmapFormat;
@@ -61,7 +60,7 @@ class AssetsLocalization extends Controller
                 'arrangeBlock' => t('Move'),
                 'arrangeBlockMsg' => t('Blocks arranged successfully.'),
                 'copyBlockToScrapbook' => t('Copy to Clipboard'),
-                'changeBlockTemplate' => t('Custom Template'),
+                'changeBlockTemplate' => t('Block Template'),
                 'changeBlockCSS' => t('Design'),
                 'go' => t('Go'),
                 'confirm' => t('Confirm'),
@@ -143,6 +142,7 @@ var ccmi18n_sitemap = ' . json_encode([
                 'pageLocationTitle' => t('Location'),
                 'visitExternalLink' => t('Visit'),
                 'editExternalLink' => t('Edit External Link'),
+                'editAlias' => t('Edit Alias'),
                 'deleteExternalLink' => t('Delete'),
                 'copyProgressTitle' => t('Copy Progress'),
                 'addExternalLink' => t('Add External Link'),
@@ -607,9 +607,6 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
             'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
             'chunkSize' => $this->getDropzoneChunkSize(),
-            'params' => [
-                $token::DEFAULT_TOKEN_NAME => $token->generate(),
-            ],
             'timeout' => 1000 * $timeout,
         ];
         $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
@@ -639,6 +636,28 @@ Dropzone.prototype.defaultOptions.accept = function(file, done) {
 EOT
             ;
         }
+
+        // Add extra parameters to the default params by calling the original
+        // method first which adds the chunked file transfer headers to the
+        // params to be sent to the server.
+        $extraParamsString = json_encode([
+            $token::DEFAULT_TOKEN_NAME => $token->generate(),
+        ]);
+        $content .= 'Dropzone.prototype.defaultOptions.defaultParams = Dropzone.prototype.defaultOptions.params;' . "\n";
+        $content .= <<<EOT
+Dropzone.prototype.defaultOptions.params = function(files, xhr, chunk) {
+    var params = this.options.defaultParams.call(this, files, xhr, chunk);
+    var extraParams = {$extraParamsString};
+
+    var keys = Object.keys(extraParams);
+    for (var i = 0; i < keys.length; i++) {
+        params[keys[i]] = extraParams[keys[i]];
+    }
+
+    return params;
+};
+EOT
+        ;
 
         return $this->createJavascriptResponse($content);
     }

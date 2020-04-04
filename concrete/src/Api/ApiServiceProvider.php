@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -29,7 +30,7 @@ use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use phpseclib\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
-use Zend\Http\Header\Authorization;
+use League\OAuth2\Server\CryptKey;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -127,11 +128,11 @@ class ApiServiceProvider extends ServiceProvider
     protected function registerAuthorizationServer()
     {
         // The ResourceServer deals with authenticating requests, in other words validating tokens
-        $this->app->when(ResourceServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
         $this->app->bind(ResourceServer::class, function() {
+            $cryptKey = new CryptKey($this->getKey(self::KEY_PUBLIC), null, DIRECTORY_SEPARATOR !== '\\');
             return $this->app->build(ResourceServer::class, [
                 $this->app->make(AccessTokenRepositoryInterface::class),
-                $this->getKey(self::KEY_PUBLIC),
+                $cryptKey,
                 $this->app->make(DefaultValidator::class)
             ]);
         });
@@ -160,6 +161,9 @@ class ApiServiceProvider extends ServiceProvider
             }
             if ($config->get('concrete.api.grant_types.authorization_code')) {
                 $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
+            }
+            if ($config->get('concrete.api.grant_types.refresh_token')) {
+                $server->enableGrantType($this->app->make(RefreshTokenGrant::class), $oneHourTTL);
             }
             return $server;
         });

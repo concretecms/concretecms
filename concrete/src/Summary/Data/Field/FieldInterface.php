@@ -12,7 +12,9 @@ interface FieldInterface
     const FIELD_THUMBNAIL = 'thumbnail';
     const FIELD_LINK = 'link';
     const FIELD_DATE = 'date';
-    const FIELD_DATE_COMPLEX = 'date_complex';
+    const FIELD_DATE_START = 'date_start';
+    const FIELD_DATE_END = 'date_end';
+    const FIELD_CATEGORIES = 'categories';
 
     public function getFieldIdentifier();
 

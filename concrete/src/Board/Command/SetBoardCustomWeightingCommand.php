@@ -3,9 +3,12 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
+use Concrete\Core\Foundation\Command\CommandInterface;
 
-class SetBoardCustomWeightingCommand extends BoardCommand
+class SetBoardCustomWeightingCommand implements CommandInterface
 {
+    
+    use BoardTrait;
 
     protected $weightings = [];
     

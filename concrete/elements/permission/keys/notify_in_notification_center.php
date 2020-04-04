@@ -31,7 +31,7 @@ foreach ($included as $assignment) {
     <label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
 
     <div style="padding-right: 30px; position: relative">
-        <a href="javascript:void(0)" class="icon-link" style="position: absolute; top: 5px; right: 0px" onclick="ccm_deleteAccessEntityAssignment(<?=$entity->getAccessEntityID()?>)"><i class="fa fa-trash-o"></i></a>
+        <a href="javascript:void(0)" class="icon-link" style="position: absolute; top: 5px; right: 0px" onclick="ccm_deleteAccessEntityAssignment(<?=$entity->getAccessEntityID()?>)"><i class="fas fa-trash"></i></a>
 
         <?=$form->select('subscriptionsIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Subscriptions'), 'C' => t('Custom')), $assignment->getSubscriptionsAllowedPermission())?>
     </div>
@@ -77,7 +77,7 @@ foreach ($excluded as $assignment) {
 <div class="form-group" data-form-group="notification">
 	<label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
     <div style="padding-right: 30px; position: relative">
-        <a href="javascript:void(0)" class="icon-link" style="position: absolute; top: 5px; right: 0px" onclick="ccm_deleteAccessEntityAssignment(<?=$entity->getAccessEntityID()?>)"><i class="fa fa-trash-o"></i></a>
+        <a href="javascript:void(0)" class="icon-link" style="position: absolute; top: 5px; right: 0px" onclick="ccm_deleteAccessEntityAssignment(<?=$entity->getAccessEntityID()?>)"><i class="fas fa-trash"></i></a>
 
         <?=$form->select('subscriptionsExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Subscriptions'), 'C' => t('Custom')), $assignment->getSubscriptionsAllowedPermission())?>
         <div class="subscription-list" <?php if ($assignment->getSubscriptionsAllowedPermission() != 'C') {

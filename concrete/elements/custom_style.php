@@ -153,6 +153,24 @@ $form = Core::make('helper/form');
 
 <form method="post" action="<?=$saveAction?>" id="ccm-inline-design-form">
     <ul class="ccm-inline-toolbar ccm-ui">
+
+        <?php if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
+            <li class="">
+                <span class="small"><?=t('Block Template')?>:</span>
+                <select id="bFilename" name="bFilename" >
+                    <option value=""><?=t('Default')?></option>
+                    <?php
+                    foreach ($templates as $tpl) {
+                        ?>
+                        <option value="<?=$tpl->getTemplateFileFilename()?>" <?php if ($bFilename == $tpl->getTemplateFileFilename()) {
+                            ?> selected <?php
+                        } ?>><?=$tpl->getTemplateFileDisplayName()?></option>
+                        <?php
+                    } ?>
+                </select>
+            </li>
+        <?php } ?>
+
         <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Text Size and Color')?>"><i class="fa fa-font"></i></a>
 
             <div class="ccm-inline-design-dropdown-menu dropdown-menu">
@@ -241,13 +259,13 @@ $form = Core::make('helper/form');
         <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Margin and Padding')?>"><i class="fa fa-arrows-h"></i></a>
 
             <div class="ccm-inline-design-dropdown-menu <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) {
-    ?>ccm-inline-design-dropdown-menu-doubled<?php 
+    ?>ccm-inline-design-dropdown-menu-doubled<?php
 } ?> dropdown-menu">
                 <div class="row">
                     <div class="<?php if ($style instanceof \Concrete\Core\Block\CustomStyle) {
-    ?>col-sm-6<?php 
+    ?>col-sm-6<?php
 } else {
-    ?>col-sm-12<?php 
+    ?>col-sm-12<?php
 } ?>">
                         <h3><?=t('Padding')?></h3>
                         <div>
@@ -313,7 +331,7 @@ $form = Core::make('helper/form');
                             </span>
                         </div>
                     </div>
-                    <?php 
+                    <?php
 } ?>
 
                 </div>
@@ -386,9 +404,9 @@ $form = Core::make('helper/form');
             $hidden = $set->isHiddenOnDevice($class);
         } ?>
                             <button type="button" data-hide-on-device="<?=$class?>" class="btn btn-default <?php if (!$hidden) {
-            ?>active<?php 
+            ?>active<?php
         } ?>"><i class="<?=$gf->getDeviceHideClassIconClass($class)?>"></i></button>
-                        <?php 
+                        <?php
     } ?>
                         </div>
 
@@ -398,13 +416,13 @@ $form = Core::make('helper/form');
             $hidden = $set->isHiddenOnDevice($class);
         } ?>
                             <input data-hide-on-device-input="<?=$class?>" type="hidden" name="hideOnDevice[<?=$class?>]" value="<?php if ($hidden) {
-            ?>1<?php 
+            ?>1<?php
         } else {
-            ?>0<?php 
+            ?>0<?php
         } ?>" />
-                        <?php 
+                        <?php
     } ?>
-                    <?php 
+                    <?php
 } ?>
 
                     </div>
@@ -412,29 +430,11 @@ $form = Core::make('helper/form');
             </div>
 
         </li>
-        <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Custom CSS Classes, Block Name, Custom Templates and Reset Styles')?>"><i class="fa fa-cog"></i></a>
+        <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Custom CSS Classes, Block Name, Block Templates and Reset Styles')?>"><i class="fa fa-cog"></i></a>
 
             <div class="ccm-inline-design-dropdown-menu dropdown-menu">
                 <h3><?=t('Advanced')?></h3>
-                <?php if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) {
-    ?>
-                    <div class="ccm-inline-select-container">
-                        <?=t('Custom Template')?>
-                        <select id="bFilename" name="bFilename" class="form-control">
-                            <option value="">(<?=t('None selected')?>)</option>
-                            <?php
-                            foreach ($templates as $tpl) {
-                                ?>
-                            <option value="<?=$tpl->getTemplateFileFilename()?>" <?php if ($bFilename == $tpl->getTemplateFileFilename()) {
-                                    ?> selected <?php 
-                                } ?>><?=$tpl->getTemplateFileDisplayName()?></option>
-                            <?php 
-                            } ?>
-                        </select>
-                     </div>
-                    <hr/>
-                <?php 
-} ?>
+
 
                 <div>
                     <?=t('Custom Class')?>
@@ -460,18 +460,18 @@ $form = Core::make('helper/form');
                         <?=t('Block Container Class')?>
                         <select id="enableBlockContainer" name="enableBlockContainer" class="form-control">
                             <option value="-1" <?php if ($enableBlockContainer == -1) {
-        ?>selected<?php 
+        ?>selected<?php
     } ?>><?=t('Default Setting')?></option>
                             <option value="0"<?php if ($enableBlockContainer == 0) {
-        ?>selected<?php 
+        ?>selected<?php
     } ?>><?=t('Disable Grid Container')?></option>
                             <option value="1" <?php if ($enableBlockContainer == 1) {
-        ?>selected<?php 
+        ?>selected<?php
     } ?>><?=t('Enable Grid Container')?></option>
                         </select>
                     </div>
                     <hr/>
-                <?php 
+                <?php
 } ?>
 
                 <div>

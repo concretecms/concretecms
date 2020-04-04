@@ -35,6 +35,9 @@ class PageDriverTest extends TestCase
     
     public function testExtractData()
     {
+        $file = M::mock(File::class);
+        $file->shouldReceive('getFileID')->andReturn(4);
+
         $page = M::mock(Page::class);
         $page->shouldReceive('getCollectionLink')->once()->andReturn('https://www.foo.com/path/to/page');
         $page->shouldReceive('getCollectionName')->once()->andReturn('My Name');
@@ -42,11 +45,12 @@ class PageDriverTest extends TestCase
         $page->shouldReceive('getCollectionDatePublicObject')->once()->andReturn(new \DateTime(
             '2010-01-01 00:00:00', new \DateTimeZone('GMT')
         ));
+        $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
         $driver = new BasicPageDriver();
         $data = $driver->extractData($page);
         $this->assertInstanceOf(Collection::class, $data);
         $fields = $data->getFields();
-        $this->assertCount(3, $fields);
+        $this->assertCount(4, $fields);
         $field = $data->getField(FieldInterface::FIELD_TITLE);
         $this->assertInstanceOf(DataFieldDataInterface::class, $field);
         $this->assertEquals('My Name', $field); 
@@ -60,28 +64,11 @@ class PageDriverTest extends TestCase
         $data = $serializer->serialize($data, 'json');
         $collection = $serializer->deserialize($data, Collection::class, 'json');
         $fields = $collection->getFields();
-        $this->assertCount(3, $fields);
+        $this->assertCount(4, $fields);
         $field = $collection->getField(FieldInterface::FIELD_TITLE);
         $this->assertInstanceOf(DataFieldDataInterface::class, $field);
         $this->assertEquals('My Name', $field);
-    }
-
-    public function testExtractThumbnail()
-    {
-        $page = M::mock(Page::class);
-        $file = M::mock(File::class);
-        $file->shouldReceive('getFileID')->andReturn(4);
-        $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
-        $driver = new PageThumbnailDriver();
-        $data = $driver->extractData($page);
-        $this->assertInstanceOf(Collection::class, $data);
-        $fields = $data->getFields();
-        $this->assertCount(1, $fields);
-        $field = $data->getField(FieldInterface::FIELD_THUMBNAIL);
+        $field = $collection->getField(FieldInterface::FIELD_THUMBNAIL);
         $this->assertInstanceOf(DataFieldDataInterface::class, $field);
     }
-
-
-
-
 }

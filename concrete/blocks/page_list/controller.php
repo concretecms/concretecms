@@ -1,11 +1,12 @@
 <?php
-
 namespace Concrete\Block\PageList;
 
 use BlockType;
 use CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
@@ -16,7 +17,7 @@ use Database;
 use Page;
 use PageList;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btPageList';
     protected $btInterfaceWidth = 700;
@@ -29,6 +30,13 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputLifetime = 300;
     protected $list;
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::NAVIGATION,
+        ];
+    }
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
@@ -461,7 +469,8 @@ class Controller extends BlockController
         if (!$args['filterByRelated']) {
             $args['relatedTopicAttributeKeyHandle'] = '';
         }
-        if (!$args['filterByCustomTopic']) {
+
+        if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
             $args['customTopicAttributeKeyHandle'] = '';
             $args['customTopicTreeNodeID'] = 0;
         }

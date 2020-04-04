@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Summary\Data\Extractor\Driver;
 
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
+use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
@@ -17,6 +18,7 @@ use Concrete\Core\Summary\Data\Extractor\Driver\BasicPageDriver;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverCollection;
 use Concrete\Core\Summary\Data\Field\ImageDataFieldData;
 use Concrete\Tests\TestCase;
+use Doctrine\ORM\EntityManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 class DriverCollectionTest extends TestCase
@@ -30,26 +32,6 @@ class DriverCollectionTest extends TestCase
         $page = M::Mock(Page::class);
         $date = M::mock(\DateTime::class);
         $date->shouldReceive("getTimestamp");
-        $page->shouldReceive('getCollectionName')->andReturn('hi');
-        $page->shouldReceive('getCollectionLink')->andReturn('https://foo.com');
-        $page->shouldReceive('getCollectionDescription')->andReturn('');
-        $page->shouldReceive('getCollectionDatePublicObject')->andReturn($date);
-        $driver = M::mock(BasicPageDriver::class)->makePartial();
-        $driverCollection->addDriver($driver);
-        $driverCollection->addDriver($driver); // let's make sure we don't add multiple fields to the array
-        $collection = $driverCollection->extractData($page);
-        $this->assertCount(3, $collection->getFields());
-        $field = $collection->getField(FieldInterface::FIELD_TITLE);
-        $this->assertInstanceOf(DataFieldData::class, $field);
-        $this->assertEquals('hi', $field);
-    }
-
-    public function testExtractDataWithThumbnail()
-    {
-        $driverCollection = new DriverCollection();
-        $page = M::Mock(Page::class);
-        $date = M::mock(\DateTime::class);
-        $date->shouldReceive("getTimestamp");
         $file = M::Mock(File::class);
         $file->shouldReceive('getFileID')->andReturn(3);
         $page->shouldReceive('getCollectionName')->once()->andReturn('hi');
@@ -58,9 +40,7 @@ class DriverCollectionTest extends TestCase
         $page->shouldReceive('getCollectionDatePublicObject')->andReturn($date);
         $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
         $driver = M::mock(BasicPageDriver::class)->makePartial();
-        $driver2 = M::mock(PageThumbnailDriver::class)->makePartial();
         $driverCollection->addDriver($driver);
-        $driverCollection->addDriver($driver2);
         $collection = $driverCollection->extractData($page);
         $this->assertCount(5, $collection->getFields());
         $field = $collection->getField(FieldInterface::FIELD_DESCRIPTION);
@@ -72,37 +52,44 @@ class DriverCollectionTest extends TestCase
 
     public function testExtractCalendarEventData()
     {
+        $entityManager = M::mock(EntityManager::class);
+        $entityManager->shouldReceive('refresh');
+        
         $driverCollection = new DriverCollection();
         $event = M::Mock(CalendarEvent::class);
         $file = M::Mock(File::class);
         $eventVersion = M::mock(CalendarEventVersion::class);
         $linkFormatter = M::mock(LinkFormatter::class);
         $file->shouldReceive('getFileID')->andReturn(3);
-        
+
+        $calendar = M::mock(Calendar::class);
+        $calendar->shouldReceive('getTimezone')->andReturn(null);
         $occurrence = M::mock(CalendarEventOccurrence::class);
         $occurrence->shouldReceive('getStart')->andReturn(time());
+        $occurrence->shouldReceive('getEnd')->andReturn(time() + 500);
         
         $linkFormatter->shouldReceive('getEventFrontendViewLink')->andReturn('https://foo.com/calendar/123');
         $event->shouldReceive('getApprovedVersion')->andReturn($eventVersion);
+        $event->shouldReceive('getCalendar')->andReturn($calendar);
         $eventVersion->shouldReceive('getName')->andReturn('testtitle');
         $eventVersion->shouldReceive('getDescription')->andReturn('FOOOO');
 
         $event->shouldReceive('getAttribute')->with('event_thumbnail')->once()->andReturn($file);
+        $event->shouldReceive('getAttribute')->with('event_category')->once()->andReturn(null);
         $eventVersion->shouldReceive('getOccurrences')->andReturn([$occurrence]);
         
-        $driver1 = new BasicCalendarEventDriver($linkFormatter);
-        $driver2 = M::mock(CalendarEventThumbnailDriver::class)->makePartial();
+        $driver1 = new BasicCalendarEventDriver($entityManager, $linkFormatter);
         $driverCollection->addDriver($driver1);
-        $driverCollection->addDriver($driver2);
 
         $collection = $driverCollection->extractData($event);
-        $this->assertCount(5, $collection->getFields());
+        $this->assertCount(7, $collection->getFields());
         $fields = $collection->getFields();
         $this->assertArrayHasKey('title', $fields);
         $this->assertArrayHasKey('date', $fields);
         $this->assertArrayHasKey('description', $fields);
         $this->assertArrayHasKey('link', $fields);
         $this->assertArrayHasKey('thumbnail', $fields);
+        $this->assertArrayHasKey(FieldInterface::FIELD_DATE_END, $fields);
         $field = $collection->getField(FieldInterface::FIELD_TITLE);
         $this->assertInstanceOf(DataFieldData::class, $field);
         $this->assertEquals('testtitle', $field);

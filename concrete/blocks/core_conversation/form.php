@@ -32,6 +32,11 @@ if ($controller->getTask() == 'add') {
     $attachmentsEnabled = intval($config->get('conversations.attachments_enabled'));
     $notificationUsers = Conversation::getDefaultSubscribedUsers();
     $subscriptionEnabled = intval($config->get('conversations.subscription_enabled'));
+    $fileAccessFileTypesBlacklist = $config->get('conversations.files.disallowed_types');
+    if ($fileAccessFileTypesBlacklist === null) {
+        $fileAccessFileTypesBlacklist = $config->get('concrete.upload.extensions_blacklist');
+    }
+    $fileAccessFileTypesBlacklist = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesBlacklist);
 }
 
 if (!$dateFormat) {
@@ -240,6 +245,16 @@ if (!$dateFormat) {
         <label class="control-label"><?=t('Allowed File Extensions (Comma separated, no periods).')?></label>
         <div class="controls">
             <?=$form->textarea('fileExtensions', $fileExtensions)?>
+            <?php
+            if ($fileAccessFileTypesBlacklist !== '') {
+                ?>
+                <div class="text-muted small">
+                    <?= t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $fileAccessFileTypesBlacklist) . '</code>') ?><br />
+                    <?= t('If you want to unblock these extensions, you have to manually set the %s configuration key.', '<code>conversations.files.disallowed_types</code>') ?>
+                </div>
+                <?php
+            }
+            ?>
         </div>
     </div>
 </fieldset>

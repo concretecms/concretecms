@@ -28,7 +28,6 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
 
 <?php View::element('footer_required', ['disableTrackingCode' => true]); ?>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="<?=URL::to('/ccm/assets/localization/core/js')?>"></script>
 <script type="text/javascript" src="<?=$view->getThemePath()?>/main.js"></script>
 

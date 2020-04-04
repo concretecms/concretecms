@@ -2,8 +2,10 @@
 
 namespace Concrete\Core\Board\Command;
 
-class ResetBoardCustomWeightingCommand extends BoardCommand
+class ResetBoardCustomWeightingCommand
 {
+    
+    use BoardTrait;
 
     
     

@@ -7,12 +7,14 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Object\HeadLink;
 use Core;
 use Page;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = ['form'];
 
@@ -83,6 +85,13 @@ class Controller extends BlockController
     public function on_start()
     {
         $this->eventAttributes = EventKey::getList();
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::CALENDAR
+        ];
     }
 
     public function loadData()
@@ -369,11 +378,6 @@ class Controller extends BlockController
         $calendar = $this->getCalendar();
         if (is_object($calendar)) {
             $permissions = new \Permissions($calendar);
-            $this->requireAsset('fullcalendar');
-            if ($this->supportsLightbox()) {
-
-            }
-
             if ($permissions->canAccessCalendarRssFeed()) {
                 $link = new HeadLink(\URL::route(['/feed', 'calendar'], $this->getCalendar()->getID()), 'alternate', 'application/rss+xml');
                 $this->addHeaderItem($link);

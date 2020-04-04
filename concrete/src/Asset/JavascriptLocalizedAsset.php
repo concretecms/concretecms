@@ -8,10 +8,6 @@ use URL;
 
 class JavascriptLocalizedAsset extends JavascriptAsset
 {
-    /**
-     * @var bool
-     */
-    protected $assetSupportsMinification = false;
 
     /**
      * @return string

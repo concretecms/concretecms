@@ -2,35 +2,15 @@
 namespace Concrete\Theme\Elemental;
 
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Page\Theme\BedrockThemeTrait;
 use Concrete\Core\Page\Theme\Theme;
 
 class PageTheme extends Theme implements ThemeProviderInterface
 {
-    public function registerAssets()
-    {
-        /*
-        $this->providesAsset('css', 'blocks/social_links');
-        $this->providesAsset('css', 'blocks/share_this_page');
-        $this->providesAsset('css', 'blocks/tags');
-        $this->providesAsset('css', 'core/frontend/*');
-        $this->providesAsset('css', 'blocks/event_list');
-        */
-
-        $this->providesAsset('css', 'blocks/faq');
-        $this->providesAsset('css', 'blocks/testimonial');
-        $this->providesAsset('css', 'blocks/topic_list');
-        $this->providesAsset('css', 'blocks/date_navigation');
-        $this->providesAsset('css', 'blocks/feature');
-        $this->providesAsset('css', 'blocks/image_slider');
-        $this->providesAsset('javascript', 'blocks/image_slider');
-
-        $this->providesAsset('css', 'component/calendar');
-        $this->requireAsset('font-awesome');
-        $this->requireAsset('jquery');
-    }
-
-    protected $pThemeGridFrameworkHandle = 'bootstrap4';
-
+    
+    use BedrockThemeTrait;
+    
     public function getThemeName()
     {
         return t('Elemental++');
@@ -39,6 +19,22 @@ class PageTheme extends Theme implements ThemeProviderInterface
     public function getThemeDescription()
     {
         return t('Elegant, spacious theme built on Bootstrap 4, with support for blogs, portfolios, layouts and more.');
+    }
+
+    public function getThemeSupportedFeatures()
+    {
+        return [
+            Features::BASICS,
+            Features::CALENDAR,
+            Features::CONVERSATIONS,
+            Features::FAQ,
+            Features::NAVIGATION,
+            Features::IMAGERY,
+            Features::FORMS,
+            Features::SEARCH,
+            Features::TESTIMONIALS,
+            Features::TAXONOMY,
+        ];
     }
 
     /**

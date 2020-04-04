@@ -12,19 +12,21 @@ use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Core;
 use Database;
 use Page;
 use URL;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btSupportsInlineAdd = true;
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
     protected $btCacheSettingsInitialized = false;
+    protected $requiredFeatures = [];
 
     public function cacheBlockOutput()
     {
@@ -57,11 +59,26 @@ class Controller extends BlockController
         return t('Area Layout');
     }
 
+    public function getRequiredFeatures(): array
+    {
+        $this->setupCacheSettings();
+        return $this->requiredFeatures;
+    }
+
     public function registerViewAssets($outputContent = '')
     {
         if (is_object($this->block) && $this->block->getBlockFilename() == 'parallax') {
             $this->requireAsset('javascript', 'jquery');
             $this->requireAsset('javascript', 'core/frontend/parallax-image');
+        }
+
+        $arLayout = $this->getAreaLayoutObject();
+        if (is_object($arLayout)) {
+            if ($arLayout instanceof CustomLayout) {
+                $asset = new CssAsset();
+                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $arLayout->getAreaLayoutID()));
+                $this->requireAsset($asset);
+            }
         }
     }
 
@@ -254,13 +271,6 @@ class Controller extends BlockController
                 $pt = $c->getCollectionThemeObject();
                 $gf = $pt->getThemeGridFrameworkObject();
             }
-            if ($this->arLayout instanceof CustomLayout) {
-                $asset = new CssAsset();
-                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->arLayout->getAreaLayoutID()));
-                $asset->setAssetSupportsMinification(false);
-                $asset->setAssetSupportsCombination(false);
-                $this->requireAsset($asset);
-            }
 
             $formatter = $this->arLayout->getFormatter();
             $this->set('formatter', $formatter);
@@ -271,7 +281,6 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $this->view();
         // since we set a render override in view() we have to explicitly declare edit
         if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
@@ -301,7 +310,6 @@ class Controller extends BlockController
 
     public function add()
     {
-        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $maxColumns = 12; // normally
         // now we check our active theme and see if it has other plans
         $c = Page::getCurrentPage();
@@ -388,6 +396,13 @@ class Controller extends BlockController
             $objController->on_start();
             $objController->outputAutoHeaderItems();
             $objController->registerViewAssets();
+            if ($objController instanceof UsesFeatureInterface) {
+                foreach($objController->getRequiredFeatures() as $feature) {
+                    if (!in_array($feature, $this->requiredFeatures)) {
+                        $this->requiredFeatures[] = $feature;
+                    }
+                }
+            }
         }
     }
 

@@ -17,6 +17,7 @@ matrix:
     - name: Test with PHP nightly
     - name: Test with PHP 7.4
     - name: Check PHP coding style
+    - name: Test in Docker
   include:
 
     - name: Test with PHP 7.2 (with code coverage)
@@ -35,14 +36,6 @@ matrix:
         - ./.travis/composer-deps.sh
       script:
         - ./.travis/check-php-coding-style.sh
-
-    - name: Check JS coding style
-      language: node_js
-      node_js: '10'
-      before_script:
-        - ./.travis/setup-build.sh
-      script:
-        - pushd build && grunt js:check && popd
 
     - name: Rebuild JS assets
       language: node_js
@@ -72,6 +65,15 @@ matrix:
         - ./.travis/composer-deps.sh
       script:
         - composer test
+
+    - name: Test in Docker
+      php: '7.2'
+      services:
+        - docker
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test -- --group docker
 
     - name: Test with PHP nightly
       php: nightly

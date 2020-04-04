@@ -11,6 +11,12 @@ $c = Page::getCurrentPage();
         <?=t('Details')?>
     </a>
     <a
+            class="list-group-item <?=($action === 'edit') ? ' active' : ''?>"
+            href="<?=URL::to('/dashboard/boards/edit', $board->getBoardID())?>"
+    >
+        <?=t('Edit Board')?>
+    </a>
+    <a
             class="list-group-item <?=($action === 'data_sources') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/boards/data_sources', $board->getBoardID())?>"
     >
@@ -33,6 +39,12 @@ $c = Page::getCurrentPage();
             href="<?=URL::to('/dashboard/boards/pool', $board->getBoardID())?>"
     >
         <?=t('Data Pool')?>
+    </a>
+    <a
+            class="list-group-item <?=($action === 'permissions') ? ' active' : ''?>"
+            href="<?=URL::to('/dashboard/boards/permissions', $board->getBoardID())?>"
+    >
+        <?=t('Permissions')?>
     </a>
     <a
             class="list-group-item <?=($action === 'instances') ? ' active' : ''?>"

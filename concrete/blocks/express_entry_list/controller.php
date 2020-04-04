@@ -14,13 +14,15 @@ use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Search\Field\AssociationField;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Express\Search\SearchProvider;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = "640";
     protected $btInterfaceHeight = "400";
@@ -49,6 +51,13 @@ class Controller extends BlockController
         return t("List");
     }
 
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::EXPRESS
+        ];
+    }
+    
     public function add()
     {
         $this->loadData();

@@ -50,7 +50,7 @@ class User extends Controller
                 foreach ($users as $ui) {
                     $uo = $ui->getUserObject();
                     if ($task == 'add') {
-                        if (!$uo->inGroup($g)) {
+                        if (!$uo->inExactGroup($g)) {
                             $uo->enterGroup($g);
                             $obj = new stdClass();
                             $obj->gDisplayName = $g->getGroupDisplayName();
@@ -59,7 +59,7 @@ class User extends Controller
                             $r->setAdditionalDataAttribute('groups', array($obj));
                         }
                     } else {
-                        if ($uo->inGroup($g)) {
+                        if ($uo->inExactGroup($g)) {
                             $uo->exitGroup($g);
                             $obj = new stdClass();
                             $obj->gID = $g->getGroupID();

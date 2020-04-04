@@ -570,7 +570,7 @@ abstract class Parser
             case T_LNUMBER:
                 return (int) $token[0][1];
             default:
-                throw Exception::create(Exception::ERRORCODE_UNSUPPORTED_TOKENVALUE, t('Unsupported value %1$s for %2s', token_name($token[0][0]), $associatedName));
+                throw Exception::create(Exception::ERRORCODE_UNSUPPORTED_TOKENVALUE, t('Unsupported value %1$s for %2$s', token_name($token[0][0]), $associatedName));
         }
     }
 

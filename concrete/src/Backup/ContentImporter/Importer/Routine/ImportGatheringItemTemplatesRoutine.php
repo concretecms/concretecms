@@ -2,7 +2,6 @@
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Gathering\Item\Template\Template;
 use Concrete\Core\Gathering\Item\Template\Type;
 use Concrete\Core\Permission\Category;

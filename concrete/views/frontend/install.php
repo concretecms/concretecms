@@ -65,6 +65,8 @@ if ($install_config) {
         <form method="post" id="ccm-install-language-form"
               action="<?= $urlResolver->resolve(['install', 'select_language']) ?>" class="w-100">
             <div class="form-group">
+                <p class="lead"><?=t('Choose the language you want to run your website in.')?></p>
+                
                 <div class="input-group-lg input-group">
                     <?php
                     $selectOptions = $locales;
@@ -101,7 +103,7 @@ if ($install_config) {
     }
     $leftRightPreconditions = array_chunk($preconditions, ceil($numPreconditions / 2));
     ?>
-        <div class="card card-default mt-5 mb-5">
+        <div class="card card-default">
             <div class="card-header"><?= $preconditionsTitle ?></div>
             <div class="card-body">
                 <div class="row">
@@ -273,9 +275,12 @@ if ($install_config) {
             <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>"
                   id="continue-to-installation" style="visibility: hidden" class="pull-right">
                 <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
-                <a class="btn btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()">
+                <a class="float-left btn btn-secondary" href="<?=URL::to('/')?>">
+                    <?= t('Back') ?>
+                </a>
+
+                <a class="float-right btn btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()">
                     <?= t('Continue to Installation') ?>
-                    <i class="fa fa-arrow-right fa-white"></i>
                 </a>
             </form>
         </div>
@@ -354,7 +359,7 @@ if ($install_config) {
             }
             ?>
 
-            <div class="card card-default mt-5 mb-5">
+            <div class="card card-default">
                 <div class="card-header"><?= t('Site') ?></div>
                 <div id="site" class="">
                     <div class="card-body">
@@ -475,7 +480,7 @@ if ($install_config) {
                     </div>
                 </div>
             </div>
-            <div class="card card-default">
+            <div class="card card-default mt-5 mb-5">
                 <div class="card-header" role="tab" id="headingThree">
                     <a class="collapsed" role="button" data-toggle="collapse"
                        href="#advanced"><?= t('Advanced Options') ?>
@@ -569,9 +574,8 @@ if ($install_config) {
             </div>
             <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
             <div class="ccm-install-actions">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-success float-right">
                     <?= t('Install concrete5') ?>
-                    <i class="fa fa-arrow-right fa-white"></i>
                 </button>
             </div>
 
@@ -704,7 +708,7 @@ if ($install_config) {
     </div>
 
     <div id="success-message">
-        <div class="card text-white bg-success">
+        <div class="card">
             <div class="card-header"><?= t('Installation Complete') ?></div>
             <div class="card-body">
                 <?= $successMessage ?>
@@ -721,7 +725,7 @@ if ($install_config) {
     <div class="ccm-install-actions">
         <div id="install-progress-summary"><?= t('Beginning Installation') ?></div>
         <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
-                data-button="installation-complete" class="btn btn-primary">
+                data-button="installation-complete" class="float-right btn btn-primary">
             <?= t('Installing...') ?>
             <i class="fa fa-spinner fa-spin"></i>
         </button>

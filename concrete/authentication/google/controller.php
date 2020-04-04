@@ -5,6 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Authentication\Type\Google\Factory\GoogleServiceFactory;
+use Concrete\Core\Authentication\Type\OAuth\BindingService;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Error\UserMessageException;
 use OAuth\OAuth2\Service\Google;
@@ -164,14 +165,12 @@ class Controller extends GenericOauth2TypeController
             ->getAccessToken();
         $this->getService()->request('https://accounts.google.com/o/oauth2/revoke?token='.$accessToken, 'GET');
         try {
-            /* @var \Concrete\Core\Database\Connection\Connection $database */
-            $database = $this->app->make('database')->connection();
-            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
+            $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
             $this->showSuccess(t('Successfully detached.'));
 
             exit;
         } catch (\Exception $e) {
-            \Log::error(t('Deattach Error %s', $e->getMessage()));
+            \Log::error(t('Detach Error %s', $e->getMessage()));
             $this->showError(t('Unable to detach account.'));
             exit;
         }

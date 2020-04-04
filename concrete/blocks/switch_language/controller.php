@@ -3,6 +3,8 @@
 namespace Concrete\Block\SwitchLanguage;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -13,7 +15,7 @@ use Session;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 150;
@@ -34,6 +36,13 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t('Switch Language');
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::MULTILINGUAL
+        ];
     }
 
     /**

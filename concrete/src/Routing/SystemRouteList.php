@@ -80,6 +80,8 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('site.php');
 
+        $router->buildGroup()->routes('boards.php');
+
         $router->buildGroup()->routes('calendar.php');
 
         $router->buildGroup()->routes('misc.php');

@@ -8,8 +8,8 @@ return [
      */
     'version' => '9.0.0a1',
     'version_installed' => '9.0.0a1',
-    'version_db' => '20191029175713', // the key of the latest database migration
- 
+    'version_db' => '20200203000000', // the key of the latest database migration
+
     /*
      * Installation status
      *
@@ -91,7 +91,12 @@ return [
         'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
-
+        /*
+         * Disallowed file extension list (takes the precedence over the extensions whitelist).
+         *
+         * @var string semi-colon separated.
+         */
+        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.phtml',
         'chunking' => [
             // Enable uploading files in chunks?
             'enabled' => true,
@@ -110,6 +115,7 @@ return [
             // Include the BOM (byte-order mark) in generated CSV files?
             // @var bool
             'include_bom' => false,
+            'datetime_format' => 'ATOM', 
         ],
     ],
 
@@ -179,14 +185,7 @@ return [
          * @var bool
          */
         'blocks' => true,
-
-        /*
-         * Cache Assets
-         *
-         * @var bool
-         */
-        'assets' => false,
-
+        
         /*
          * Cache Theme CSS/JS
          *
@@ -322,7 +321,7 @@ return [
         ],
 
         'clear' => [
-            'thumbnails' => false
+            'thumbnails' => false,
         ],
     ],
 
@@ -417,6 +416,13 @@ return [
          * @var bool
          */
         'spam' => false,
+
+        /*
+         * Whether to log REST API requests headers
+         *
+         * @var bool
+         */
+        'api' => false,
 
         'enable_dashboard_report' => true,
 
@@ -897,7 +903,14 @@ return [
             'database' => 1, // Use different Redis Databases - optional
         ],
         'save_path' => null,
+        // Minimum duration (in seconds) of an "unoutched" session
         'max_lifetime' => 7200,
+        // gc_probability and gc_divisor together define the probability to
+        // cleanup expided sessions ("garbage collection").
+        // Example: if gc_probability is 1 and gc_divisor is 100, on average we'll have 1 GC every 100 requests (1%)
+        // Example: if gc_probability is 5 and gc_divisor is 20, on average we'll have 1 GC every 20 requests (25%)
+        'gc_probability' => 1,
+        'gc_divisor' => 100,
         'cookie' => [
             'cookie_path' => false, // set a specific path here if you know it, otherwise it'll default to relative
             'cookie_lifetime' => 0,
@@ -1065,12 +1078,9 @@ return [
      * ------------------------------------------------------------------------
      */
     'calendar' => [
-
         'colors' => [
-
             'text' => '#ffffff',
             'background' => '#3A87AD',
-
         ],
     ],
 
@@ -1212,6 +1222,7 @@ return [
             'client_credentials' => true,
             'authorization_code' => true,
             'password_credentials' => false,
+            'refresh_token' => true,
         ],
     ],
 

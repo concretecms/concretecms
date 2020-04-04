@@ -265,7 +265,7 @@ class UserInterface
     {
         $tcn = rand(0, getrandmax());
 
-        $html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
+        $html = '<ul class="nav-tabs nav mb-3" id="ccm-tabs-' . $tcn . '">';
         $c = Page::getCurrentPage();
         foreach ($tabs as $t) {
             if (is_array($t)) {
@@ -295,7 +295,7 @@ class UserInterface
      */
     public function tabs($tabs)
     {
-        $html = '<ul class="nav-tabs nav">';
+        $html = '<ul class="nav-tabs nav nav-fill mb-3">';
         foreach ($tabs as $t) {
             $dt = $t[0];
             $href = '#' . $dt;

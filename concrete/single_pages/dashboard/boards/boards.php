@@ -2,18 +2,24 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+$permissions = new Permissions();
+if ($permissions->canAddBoard()) { 
 ?>
 
 <div class="ccm-dashboard-header-buttons">
     <a href="<?=$view->url('/dashboard/boards/add') ?>"
        class="btn btn-primary"><?php echo t("Add Board") ?></a>
 </div>
+<?php } ?>
+
 
 <?php if (count($boards)) {
     ?>
 
     <ul class="item-select-list" id="ccm-stack-list">
         <?php foreach ($boards as $board) {
+            $boardPermissions = new Permissions($board);
+            if ($boardPermissions->canViewBoard()) {
             ?>
 
             <li>
@@ -22,6 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </a>
             </li>
             <?php
+            }
         }
         ?>
     </ul>

@@ -156,7 +156,7 @@ return [
         'core_attribute' => '\Concrete\Core\Attribute\AttributeServiceProvider',
         'core_express' => '\Concrete\Core\Express\ExpressServiceProvider',
 
-        // 
+        //
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
     ],
@@ -238,8 +238,6 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeaturesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeatureCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
@@ -298,18 +296,9 @@ return [
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
-        '/frontend/install' => [
-            VIEW_CORE_THEME,
-            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
-        ],
-        '/login' => [
-            VIEW_CORE_THEME,
-            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
-        ],
-        '/oauth/authorize' => [
-            VIEW_CORE_THEME,
-            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
-        ],
+        '/frontend/install' => VIEW_CORE_THEME,
+        '/login' => VIEW_CORE_THEME,
+        '/oauth/authorize' => VIEW_CORE_THEME,
         '/register' => VIEW_CORE_THEME,
         '/frontend/maintenance_mode' => VIEW_CORE_THEME,
         '/upgrade' => VIEW_CORE_THEME,
@@ -401,6 +390,7 @@ return [
             ],
         ],
 
+        // This is the base CKEditor library from CKEditor
         'ckeditor' => [
             [
                 'javascript',
@@ -408,13 +398,7 @@ return [
             ],
         ],
 
-        'ckeditor/jquery' => [
-            [
-                'javascript',
-                'js/ckeditor/adapters/jquery.js'
-            ],
-        ],
-
+        // These are our CKEditor extensions, including custom plugins, and the jQuery adapter.
         'ckeditor/concrete' => [
             ['javascript', 'js/ckeditor/concrete.js'],
             ['css', 'css/ckeditor/concrete.css'],
@@ -433,10 +417,78 @@ return [
             ['javascript-localized', '/ccm/assets/localization/core/js'],
             ['css', 'css/cms.css'],
         ],
-        
+
+        // Fallback/minimal assets for accessory features
+        'feature/boards/frontend' => [
+            ['javascript', 'js/features/boards/frontend.js'],
+            ['css', 'css/features/boards/frontend.css'],
+        ],
+
+        'feature/calendar/frontend' => [
+            ['javascript', 'js/features/calendar/frontend.js'],
+            ['css', 'css/features/calendar/frontend.css'],
+        ],
+
+        'feature/conversations/frontend' => [
+            ['javascript', 'js/features/conversations/frontend.js'],
+            ['css', 'css/features/conversations/frontend.css'],
+        ],
+
+        'feature/documents/frontend' => [
+            ['javascript', 'js/features/documents/frontend.js'],
+            ['css', 'css/features/documents/frontend.css'],
+        ],
+
+        'feature/testimonials/frontend' => [
+            ['css', 'css/features/testimonials/frontend.css'],
+        ],
+
+        'feature/faq/frontend' => [
+            ['css', 'css/features/faq/frontend.css'],
+        ],
+
+        'feature/basics/frontend' => [
+            ['css', 'css/features/basics/frontend.css'],
+        ],
+
+        'feature/navigation/frontend' => [
+            ['javascript', 'js/features/navigation/frontend.js'],
+            ['css', 'css/features/navigation/frontend.css'],
+        ],
+
+        'feature/imagery/frontend' => [
+            ['javascript', 'js/features/imagery/frontend.js'],
+            ['css', 'css/features/imagery/frontend.css'],
+        ],
+
+        'feature/express/frontend' => [
+            ['javascript', 'js/features/express/frontend.js'],
+            ['css', 'css/features/express/frontend.css'],
+        ],
+
+        'feature/search/frontend' => [
+            ['css', 'css/features/search/frontend.css'],
+        ],
+
+        'feature/social/frontend' => [
+            ['css', 'css/features/social/frontend.css'],
+        ],
+
+        'feature/video/frontend' => [
+            ['css', 'css/features/video/frontend.css'],
+        ],
+
+        'feature/taxonomy/frontend' => [
+            ['css', 'css/features/taxonomy/frontend.css'],
+        ],
+
+        'feature/maps/frontend' => [
+            ['javascript', 'js/features/maps/frontend.js'],
+            ['css', 'css/features/maps/frontend.css'],
+        ],
     ],
     'asset_groups' => [
-        /* proper groups here */
+
         'jquery' => [
             [
                 ['javascript', 'jquery'],
@@ -452,12 +504,6 @@ return [
         'ckeditor' => [
             [
                 ['javascript', 'ckeditor'],
-                ['javascript', 'ckeditor/jquery'],
-            ],
-        ],
-        
-        'ckeditor/concrete' => [
-            [
                 ['javascript', 'ckeditor/concrete'],
                 ['css', 'ckeditor/concrete'],
             ],
@@ -472,7 +518,105 @@ return [
                 ['css', 'core/cms'],
             ]
         ],
-        
+
+        // Fallback/minimal assets groups
+
+        'feature/calendar/frontend' => [
+            [
+                ['javascript', 'feature/calendar/frontend'],
+                ['css', 'feature/calendar/frontend'],
+            ]
+        ],
+
+        'feature/conversations/frontend' => [
+            [
+                ['javascript', 'feature/conversations/frontend'],
+                ['css', 'feature/conversations/frontend'],
+            ]
+        ],
+
+        'feature/documents/frontend' => [
+            [
+                ['javascript', 'feature/documents/frontend'],
+                ['javascript-localized', 'core/cms'],
+                ['css', 'feature/documents/frontend'],
+            ]
+        ],
+
+        'feature/faq/frontend' => [
+            [
+                ['css', 'feature/faq/frontend'],
+            ]
+        ],
+
+        'feature/imagery/frontend' => [
+            [
+                ['javascript', 'feature/imagery/frontend'],
+                ['css', 'feature/imagery/frontend'],
+            ]
+        ],
+
+        'feature/navigation/frontend' => [
+            [
+                ['javascript', 'feature/navigation/frontend'],
+                ['css', 'feature/navigation/frontend'],
+            ]
+        ],
+
+        'feature/video/frontend' => [
+            [
+                ['css', 'feature/video/frontend'],
+            ]
+        ],
+
+        'feature/social/frontend' => [
+            [
+                ['css', 'feature/social/frontend'],
+            ]
+        ],
+
+        'feature/express/frontend' => [
+            [
+                ['javascript', 'feature/express/frontend'],
+                ['css', 'feature/express/frontend'],
+            ]
+        ],
+
+        'feature/maps/frontend' => [
+            [
+                ['javascript', 'feature/maps/frontend'],
+                ['css', 'feature/maps/frontend'],
+            ]
+        ],
+
+        'feature/search/frontend' => [
+            [
+                ['css', 'feature/search/frontend'],
+            ]
+        ],
+
+        'feature/taxonomy/frontend' => [
+            [
+                ['css', 'feature/taxonomy/frontend'],
+            ]
+        ],
+
+        'feature/testimonials/frontend' => [
+            [
+                ['css', 'feature/testimonials/frontend'],
+            ]
+        ],
+
+        'feature/basics/frontend' => [
+            [
+                ['css', 'feature/basics/frontend'],
+            ]
+        ],
+
+
+
+
+
     ],
     // HTTP Client options
     'http_client' => [
@@ -550,6 +694,9 @@ return [
         ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
         ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
 
+        ['Concrete\Core\Board\Command\CreateBoardCommand', 'Concrete\Core\Board\Command\CreateBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\UpdateBoardCommand', 'Concrete\Core\Board\Command\UpdateBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\DeleteBoardCommand', 'Concrete\Core\Board\Command\DeleteBoardCommandHandler'],
         ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
         ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
         ['Concrete\Core\Board\Command\ClearBoardDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardDataPoolCommandHandler'],
@@ -559,6 +706,7 @@ return [
         ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
         ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
         ['Concrete\Core\Board\Command\RefreshBoardInstanceCommand', 'Concrete\Core\Board\Command\RefreshBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\RegenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\RegenerateBoardInstanceCommandHandler'],
     ],
 
 ];

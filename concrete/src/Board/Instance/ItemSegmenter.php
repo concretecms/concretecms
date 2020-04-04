@@ -2,11 +2,21 @@
 namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\InstanceSlot;
-use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Entity\Board\Item;
+use Doctrine\ORM\EntityManager;
 
 class ItemSegmenter
 {
+
+    /**
+     * @var EntityManager 
+     */
+    protected $entityManager;
+    
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Responsible for Getting board data items and returning them. This may involve taking a sub-set of all
@@ -20,7 +30,16 @@ class ItemSegmenter
      */
     public function getBoardItemsForInstance(Instance $instance)
     {
-        $items = $instance->getBoard()->getItems()->toArray();
+        $r = $this->entityManager->getRepository(Item::class);
+        $board = $instance->getBoard();
+        switch($board->getSortBy()) {
+            case $board::ORDER_BY_RELEVANT_DATE_ASC:
+                $items = $r->findByBoard($board, ['relevantDate' => 'asc']);
+                break;
+            default:
+                $items = $r->findByBoard($board, ['relevantDate' => 'desc']);
+                break;
+        }
         return $items;
     }
     

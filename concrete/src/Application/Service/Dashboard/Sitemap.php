@@ -235,11 +235,11 @@ class Sitemap
             $cIcon = $c->getCollectionIcon();
             if (!$cIcon) {
                 if ($c->isHomePage()) {
-                    $cIconClass = 'fas fa-home';
+                    $cIconClass = 'icon-home';
                 } elseif ($numSubpages > 0) {
-                    $cIconClass = 'fas fa-folder';
+                    $cIconClass = 'icon-folder';
                 } else {
-                    $cIconClass = 'fas fa-file-alt';
+                    $cIconClass = 'icon-page';
                 }
             }
         }

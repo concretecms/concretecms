@@ -2,13 +2,15 @@
 namespace Concrete\Block\SocialLinks;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Database;
 use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = ['form'];
 
@@ -27,6 +29,13 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("Social Links");
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::SOCIAL
+        ];
     }
 
     public function edit()

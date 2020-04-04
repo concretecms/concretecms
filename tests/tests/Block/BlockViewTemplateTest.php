@@ -38,18 +38,7 @@ class BlockViewTemplateTest extends TestCase
         $this->assertEquals(DIR_BASE_CORE . '/blocks/autonav', $bv->getBasePath());
         $this->assertEquals(DIR_BASE_CORE . '/blocks/autonav/templates/breadcrumb.php', $bv->getTemplate());
     }
-
-    public function testCoreBlockWithCustomTemplateDirectoryInCore()
-    {
-        $block = $this->getMockBlock('autonav', 'responsive_header_navigation');
-        $packageList = $this->getMockPackageList();
-        $bv = new BlockViewTemplate($block, $packageList);
-
-        $this->assertEquals('/path/to/server/concrete/blocks/autonav/templates/responsive_header_navigation', $bv->getBaseURL());
-        $this->assertEquals(DIR_BASE_CORE . '/blocks/autonav/templates/responsive_header_navigation', $bv->getBasePath());
-        $this->assertEquals(DIR_BASE_CORE . '/blocks/autonav/templates/responsive_header_navigation/view.php', $bv->getTemplate());
-    }
-
+    
     public function testApplicationBlockView()
     {
         $this->markTestIncomplete('Not implemented');

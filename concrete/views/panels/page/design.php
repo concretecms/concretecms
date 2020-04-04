@@ -7,7 +7,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <input type="hidden" name="processCollection" value="1">
     <input type="hidden" name="ptID" value="<?=$c->getPageTypeID()?>" />
 
-    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Design')?></a></header>
+    <header>
+        <a href="" data-panel-navigation="back" class="ccm-panel-back">
+            <svg><use xlink:href="#icon-arrow-left" /></svg>
+            <?=t('Page Settings')?>
+        </a>
+
+        <h4><?=t('Design')?></h4>
+    </header>
 
 
     <div class="ccm-panel-content-inner">
@@ -24,7 +31,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 }
                 ?>
                 <label class="list-group-item clearfix"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <?php if ($selected) {
-    ?>checked<?php 
+    ?>checked<?php
 }
                 ?> /> <?=$tmp->getPageTemplateDisplayName()?>
                     <?=$tmp->getPageTemplateIconImage()?>
@@ -32,22 +39,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?php if ($selected) {
     ?>
                     <div class="list-group-item-collapse-wrapper">
-                <?php 
+                <?php
 }
                 ?>
-            <?php 
+            <?php
             }
     ?>
 
             <?php if ($selectedTemplate) {
     ?>
                 </div>
-            <?php 
+            <?php
 }
     ?>
             <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
         </div>
-    <?php 
+    <?php
 } ?>
 
     <?php if ($cp->canEditPageTheme()) {
@@ -64,7 +71,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 }
                 ?>
                 <div data-theme-id="<?=$th->getThemeID()?>" class="list-group-item ccm-page-design-theme-thumbnail <?php if ($selected) {
-    ?>ccm-page-design-theme-thumbnail-selected<?php 
+    ?>ccm-page-design-theme-thumbnail-selected<?php
 }
                 ?> ">
                     <span><i><?=$th->getThemeThumbnail()?>
@@ -76,7 +83,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                 <i class="fa fa-share"></i>
                             </a>
                         </span>
-                        <?php 
+                        <?php
 }
                 ?>
                     </i>
@@ -87,17 +94,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?php if ($selected) {
     ?>
                     <div class="list-group-item-collapse-wrapper">
-                <?php 
+                <?php
 }
                 ?>
-            <?php 
+            <?php
             }
     ?>
 
             <?php if ($selectedTheme) {
     ?>
                 </div>
-            <?php 
+            <?php
 }
     ?>
             <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
@@ -108,11 +115,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="ccm-marketplace-btn-wrapper">
             <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/themes')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Themes")?></button>
             </div>
-        <?php 
+        <?php
 }
     ?>
 
-    <?php 
+    <?php
 } ?>
 
     </div>
