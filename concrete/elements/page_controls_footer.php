@@ -36,16 +36,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         echo $app->make('helper/concrete/ui/help')->displayHelpDialogLauncher();
     }
 
-
-    if ($cih->showHelpOverlay()) {
-        echo '<div style="display: none">';
-        View::element('help/dialog/introduction');
-        echo '</div>';
-        $v = View::getInstance();
-        $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteHelpDialog().open(); });</script>');
-        $cih->trackHelpOverlayDisplayed();
-    }
-
     ?>
     <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
