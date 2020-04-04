@@ -10,16 +10,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
 * @var Concrete\Core\User\User $u
 * @var Concrete\Core\Config\Repository\Repository $config
 * @var Concrete\Core\Application\Service\UserInterface\Help\MessageInterface|null $message
-* @var bool $showIntroduction
 */
 ?>
 <div class="ccm-panel-content-inner" id="ccm-panel-help">
     <?php
-    if ($message !== null) {
+    if ($message === null) {
+        View::element('help/introduction');
+    } else {
         View::element('help/message', compact('message'));
     }
-    if ($showIntroduction) {
-        View::element('help/introduction', compact('config'));
-    }
+    ?>
+    <hr />
+    <?php
+    View::element('help/more_help', compact('config'));
     ?>
 </div>
