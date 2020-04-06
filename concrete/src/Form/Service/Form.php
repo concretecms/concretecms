@@ -461,7 +461,7 @@ class Form
                 if ((string) $k === (string) $selectedValue) {
                     $str .= ' selected="selected"';
                 }
-                $str .= '>' . $text . '</option>';
+                $str .= '>' . h($text) . '</option>';
             }
         }
         $str .= '</select>';
