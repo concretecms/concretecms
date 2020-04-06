@@ -784,13 +784,6 @@ return [
         'toolbar_large_font' => false,
 
         /*
-         * Show help system
-         *
-         * @var bool
-         */
-        'display_help_system' => true,
-
-        /*
          * Show tooltips in the concrete5 toolbars
          *
          * @var bool
