@@ -32,10 +32,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         }
     }
 
-    if (!$c->isEditMode()) {
-        echo $app->make('helper/concrete/ui/help')->displayHelpDialogLauncher();
-    }
-
     ?>
     <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
