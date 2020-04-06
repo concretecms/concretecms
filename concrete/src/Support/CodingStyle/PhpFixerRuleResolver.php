@@ -504,6 +504,9 @@ class PhpFixerRuleResolver
             // Class names should match the file name.
             'psr4' => $hasFlag(PhpFixer::FLAG_PSR4CLASS) ? true : false,
 
+            // Instructions must be terminated with a semicolon.
+            'semicolon_after_instruction' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
+
             // Use `null` coalescing operator `??` where possible. Requires PHP >= 7.0.
             'ternary_to_null_coalescing' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '7.0') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
 
