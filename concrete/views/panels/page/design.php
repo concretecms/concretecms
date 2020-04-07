@@ -2,134 +2,117 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section id="ccm-panel-page-design">
-<form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="design">
-    <input type="hidden" name="update_theme" value="1" class="accept">
-    <input type="hidden" name="processCollection" value="1">
-    <input type="hidden" name="ptID" value="<?=$c->getPageTypeID()?>" />
+    <form method="post" action="<?= $controller->action('submit') ?>" data-panel-detail-form="design">
+        <input type="hidden" name="update_theme" value="1" class="accept">
+        <input type="hidden" name="processCollection" value="1">
+        <input type="hidden" name="ptID" value="<?= $c->getPageTypeID() ?>" />
 
-    <header>
-        <a href="" data-panel-navigation="back" class="ccm-panel-back">
-            <svg><use xlink:href="#icon-arrow-left" /></svg>
-            <?=t('Page Settings')?>
-        </a>
+        <header>
+            <a href="" data-panel-navigation="back" class="ccm-panel-back">
+                <svg><use xlink:href="#icon-arrow-left" /></svg>
+                <?= t('Page Settings') ?>
+            </a>
 
-        <h4><?=t('Design')?></h4>
-    </header>
+            <h5><?= t('Design') ?></h5>
+        </header>
 
 
-    <div class="ccm-panel-content-inner">
+        <div class="ccm-panel-content-inner">
 
-    <?php if ($cp->canEditPageTemplate() && !$c->isGeneratedCollection()) {
-    ?>
-        <div class="list-group" id="ccm-panel-page-design-page-templates" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
-            <div class="list-group-item list-group-item-header"><?=t('Page Template')?></div>
-            <?php
-            foreach ($templates as $tmp) {
-                $selected = false;
-                if (is_object($selectedTemplate) && $tmp->getPageTemplateID() == $selectedTemplate->getPageTemplateID()) {
-                    $selected = true;
-                }
-                ?>
-                <label class="list-group-item clearfix"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <?php if ($selected) {
-    ?>checked<?php
-}
-                ?> /> <?=$tmp->getPageTemplateDisplayName()?>
-                    <?=$tmp->getPageTemplateIconImage()?>
-                </label>
-                <?php if ($selected) {
-    ?>
-                    <div class="list-group-item-collapse-wrapper">
-                <?php
-}
-                ?>
-            <?php
-            }
-    ?>
-
-            <?php if ($selectedTemplate) {
-    ?>
-                </div>
-            <?php
-}
-    ?>
-            <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
-        </div>
-    <?php
-} ?>
-
-    <?php if ($cp->canEditPageTheme()) {
-    ?>
-        <div id="ccm-panel-page-design-themes" class="list-group" data-panel-menu-id="themes" data-panel-menu="collapsible-list-group">
-            <input type="hidden" name="pThemeID" value="<?=$selectedTheme->getThemeID()?>" />
-
-            <div class="list-group-item list-group-item-header"><?=t('Theme')?></div>
-            <?php
-            foreach ($themes as $th) {
-                $selected = false;
-                if (is_object($selectedTheme) && $th->getThemeID() == $selectedTheme->getThemeID()) {
-                    $selected = true;
-                }
-                ?>
-                <div data-theme-id="<?=$th->getThemeID()?>" class="list-group-item ccm-page-design-theme-thumbnail <?php if ($selected) {
-    ?>ccm-page-design-theme-thumbnail-selected<?php
-}
-                ?> ">
-                    <span><i><?=$th->getThemeThumbnail()?>
-                        <?php if ($th->isThemeCustomizable()) {
-    ?>
-                        <span class="ccm-page-design-theme-customize">
-                            <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>">
-                                <?=t('Customize')?>
-                                <i class="fa fa-share"></i>
-                            </a>
-                        </span>
-                        <?php
-}
-                ?>
-                    </i>
-                    <div class="ccm-panel-page-design-theme-description"><h4><?=$th->getThemeName()?></h4></div>
-
-                    </span>
-                </div>
-                <?php if ($selected) {
-    ?>
-                    <div class="list-group-item-collapse-wrapper">
-                <?php
-}
-                ?>
-            <?php
-            }
-    ?>
-
-            <?php if ($selectedTheme) {
-    ?>
-                </div>
-            <?php
-}
-    ?>
-            <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
-        </div>
-
-        <?php if (Config::get('concrete.marketplace.enabled')) {
-    ?>
-            <div class="ccm-marketplace-btn-wrapper">
-            <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/themes')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Themes")?></button>
-            </div>
         <?php
-}
-    ?>
+        if ($cp->canEditPageTemplate() && !$c->isGeneratedCollection()) {
+            ?>
+            <div class="" id="ccm-panel-page-design-page-templates" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
+                <div class="ccm-panel-page-design-title">
+                    <?= t('Page Template') ?>
+                </div>
+                <?php
+                foreach ($templates as $tmp) {
+                    $selected = false;
+                    if (is_object($selectedTemplate) && $tmp->getPageTemplateID() === $selectedTemplate->getPageTemplateID()) {
+                        $selected = true;
+                    }
+                    ?>
+                    <div class="form-check">
+                        <input type="radio" class="ccm-flat-radio form-check-input" id="<?= $tmp->getPageTemplateID() ?>" value="<?= $tmp->getPageTemplateID() ?>" name="pTemplateID" <?= $selected ? 'checked' : '' ?>/>
+                        <label class="form-check-label" for="<?= $tmp->getPageTemplateID() ?>">
+                            <?= $tmp->getPageTemplateDisplayName() ?>
+                            <?= $tmp->getPageTemplateIconImage() ?>
+                        </label>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+            <?php
+        }
+        ?>
 
-    <?php
-} ?>
+        <?php
+        if ($cp->canEditPageTheme()) {
+            ?>
+            <hr>
+            <div id="ccm-panel-page-design-themes" class="" data-panel-menu-id="themes" data-panel-menu="collapsible-list-group">
+                <input type="hidden" name="pThemeID" value="<?= $selectedTheme->getThemeID() ?>" />
 
-    </div>
-</form>
+                <div class="ccm-panel-page-design-title">
+                    <?= t('Theme') ?>
+                </div>
+                <?php
+                foreach ($themes as $th) {
+                    $selected = false;
+                    if (is_object($selectedTheme) && $th->getThemeID() === $selectedTheme->getThemeID()) {
+                        $selected = true;
+                    }
+                    ?>
+                    <div data-theme-id="<?= $th->getThemeID() ?>" class="ccm-page-design-theme-thumbnail <?= $selected ? 'ccm-page-design-theme-thumbnail-selected' : '' ?>">
+                        <span>
+                            <i>
+                                <?= $th->getThemeThumbnail() ?>
+                                <?php
+                                if ($th->isThemeCustomizable()) {
+                                    ?>
+                                    <span class="ccm-page-design-theme-customize">
+                                        <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/preview') ?>" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID()) ?>">
+                                            <?=t('Customize')?>
+                                            <i class="fa fa-share"></i>
+                                        </a>
+                                    </span>
+                                    <?php
+                                }
+                                ?>
+                            </i>
+                            <div class="ccm-panel-page-design-theme-description">
+                                <h5><?= $th->getThemeName() ?></h5>
+                            </div>
+                        </span>
+                    </div>
+                    <?php
+                }
+                ?>
 
+            </div>
+
+            <?php
+            if (Config::get('concrete.marketplace.enabled')) {
+                ?>
+                <div class="ccm-marketplace-btn-wrapper">
+                <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/themes')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Themes")?></button>
+                </div>
+                <?php
+            }
+            ?>
+            <?php
+        }
+        ?>
+
+        </div>
+    </form>
 </section>
 
-    <div class="ccm-panel-detail-form-actions">
-        <button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
-    </div>
+<div class="ccm-panel-detail-form-actions">
+    <button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+</div>
 
 <script type="text/javascript">
 $(function() {
