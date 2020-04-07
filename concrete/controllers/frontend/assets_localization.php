@@ -254,12 +254,33 @@ var ccmi18n_tree = ' . json_encode([
     'delete' => t('Delete'),
 ]) . ';
 var ccmi18n_tourist = ' . json_encode([
-    'buttonTexts' => [
-        'prevButton' => t('Prev'),
-        'nextButton' => t('Next'),
-        'pauseButton' => t('Pause'),
-        'resumeButton' => t('Resume'),
-        'endTourButton' => t('End Tour'),
+    'template' => implode('', [
+        '<div class="popover ccm-help-tour" role="tooltip">',
+            '<div class="arrow"></div>',
+            '<a class="ccm-help-tour-close fas fa-times" href="#" data-role="end"></a>',
+            '<div class="popover-body"></div>',
+            '<div class="ccm-help-tour-footer d-flex justify-content-between">',
+                '<div class="ccm-help-tour-position">',
+                    t(/*i18n: %1$s and %2$s are two numbers*/'%1$s of %2$s', '<span class="ccm-help-tour-position-index"></span>', '<span class="ccm-help-tour-position-count"></span>'),
+                '</div>',
+                '<div class="popover-navigation text-right">',
+                    '<div class="btn-group">',
+                        '<a href="#" data-role="prev">&lt; ' . t('Prev') . '</a>',
+                        '<a href="#" data-role="next">' . t('Next') . ' &gt;</a>',
+                        '<a href="#" data-role="pause-resume" data-pause-text="' . t('Pause') . '" data-resume-text="' . t('Resume') . '">' . t('Pause') . '</a>',
+                    '</div>',
+                '</div>',
+            '</div>',
+        '<div>',
+    ]),
+    'localization' => [
+        'buttonTexts' => [
+            'prevButton' => t('Prev'),
+            'nextButton' => t('Next'),
+            'pauseButton' => t('Pause'),
+            'resumeButton' => t('Resume'),
+            'endTourButton' => t('End Tour'),
+        ],
     ],
 ]) . ';
 var ccmi18n_helpGuides = ' . json_encode([
