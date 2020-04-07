@@ -751,7 +751,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $pages = $this->getResults();
         $startPossibleNextPageSearch = false;
         if (is_array($pages)) {
-            for ($i = 0; $i < sizeof($pages); ++$i) {
+            $pageCount = sizeof($pages);
+            for ($i = 0; $i < $pageCount; ++$i) {
                 if (is_object($pages[$i]) && !$pages[$i]->isError()) {
                     if ($pages[$i]->getCollectionID() === $cID) {
                         $startPossibleNextPageSearch = true;
