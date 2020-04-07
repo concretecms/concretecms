@@ -3,8 +3,8 @@
 namespace Concrete\Block\NextPrevious;
 
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
 use Concrete\Core\Permission\Checker as Permissions;
 
 class Controller extends BlockController
@@ -166,134 +166,47 @@ class Controller extends BlockController
         if ($previous) {
             $orderBy = $reverseMap[$orderBy];
         }
-        $db = $this->app->make(Connection::class);
-        $now = $this->app->make('date')->getOverridableNow();
-        for ($page = Page::getCurrentPage(); $page && !$page->isError();) {
+        $pageList = new PageList();
+        $currentPage = Page::getCurrentPage();
+
+        if (is_object($currentPage) && !$currentPage->isError()) {
+            $pageList->filterByParentID($currentPage->getCollectionParentID());
             switch ($orderBy) {
                 case 'chrono_desc':
-                    $cID = $db->fetchColumn(
-                        <<<'EOT'
-select
-    Pages.cID
-from
-    Pages
-    inner join CollectionVersions cv
-        on Pages.cID = cv.cID
-where
-    Pages.cID <> ?
-    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
-    and ((cvDatePublic = ? and cDisplayOrder > ?) or cvDatePublic > ?)
-    and cParentID = ?
-order by
-    cvDatePublic asc,
-    cDisplayOrder asc
-EOT
-                        ,
-                        [$page->getCollectionID(), $now, $now, $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]
-                    );
+                    $pageList->sortBy('cvDatePublic', 'asc');
+                    $pageList->sortBy('cDisplayOrder', 'asc');
                     break;
                 case 'chrono_asc':
-                    $cID = $db->fetchColumn(
-                        <<<'EOT'
-select
-    Pages.cID
-from
-    Pages
-    inner join CollectionVersions cv
-        on Pages.cID = cv.cID
-where
-    Pages.cID <> ?
-    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
-    and ((cvDatePublic = ? and cDisplayOrder < ?) or cvDatePublic < ?)
-    and cParentID = ?
-order by
-    cvDatePublic desc,
-    cDisplayOrder desc
-EOT
-                        ,
-                        [$page->getCollectionID(), $now, $now, $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]
-                    );
+                    $pageList->sortBy('cvDatePublic', 'desc');
+                    $pageList->sortBy('cDisplayOrder', 'desc');
                     break;
                 case 'display_desc':
-                    $cID = $db->fetchColumn(
-                        <<<'EOT'
-select
-    Pages.cID
-from
-    Pages
-    inner join CollectionVersions cv
-        on Pages.cID = cv.cID
-where
-    Pages.cID <> ?
-    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
-    and cDisplayOrder < ?
-    and cParentID = ?
-order by
-    cDisplayOrder desc
-EOT
-                        ,
-                        [$page->getCollectionID(), $now, $now, $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]
-                    );
+                    $pageList->sortByDisplayOrderDescending();
                     break;
                 case 'display_asc':
-                    $cID = $db->fetchColumn(
-                        <<<'EOT'
-select
-    Pages.cID
-from
-    Pages
-    inner join CollectionVersions cv
-        on Pages.cID = cv.cID
-where
-    Pages.cID <> ?
-    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
-    and cDisplayOrder > ?
-    and cParentID = ?
-order by
-    cDisplayOrder asc
-EOT
-                        ,
-                        [$page->getCollectionID(), $now, $now, $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]
-                    );
+                    $pageList->sortByDisplayOrder();
                     break;
             }
-            if ($cID !== false) {
-                $page = Page::getByID($cID, 'ACTIVE');
-                if (!$page->getAttribute('exclude_nav')) {
-                    $cp = new Permissions($page);
-                    if ($cp->canRead()) {
-                        $result = $page;
-                        break;
-                    }
-                }
-            } else {
-                if ($this->loopSequence) {
-                    $c = Page::getCurrentPage();
-                    $parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
-                    switch ($orderBy) {
-                        case 'chrono_desc':
-                            $sibling = $parent->getFirstChild('cvDatePublic asc, cDisplayOrder asc');
-                            break;
-                        case 'chrono_asc':
-                            $sibling = $parent->getFirstChild('cvDatePublic desc, cDisplayOrder desc');
-                            break;
-                        case 'display_desc':
-                            $sibling = $parent->getFirstChild('cDisplayOrder desc');
-                            break;
-                        case 'display_asc':
-                            $sibling = $parent->getFirstChild('cDisplayOrder asc');
-                            break;
-                    }
-                    if ($sibling && !$sibling->isError()) {
-                        if (!$sibling->getAttribute('exclude_nav')) {
-                            $cp = new Permissions($sibling);
-                            if ($cp->canRead()) {
-                                $result = $sibling;
-                            }
+
+            $result = $pageList->getAfter($currentPage->getCollectionID());
+        }
+
+        if (!$result) {
+            if ($this->loopSequence) {
+                $pages = $pageList->getResults();
+                $firstPage = $pages[0];
+                if (is_object($firstPage) && !$firstPage->isError()) {
+                    if (!$firstPage->getAttribute('exclude_nav')) {
+                        $cp = new Permissions($firstPage);
+                        if ($cp->canRead()) {
+                            $result = $firstPage;
+                        } else {
+                            $result = $pageList->getAfter($firstPage->getCollectionID());
                         }
+                    } else {
+                        $result = $pageList->getAfter($firstPage->getCollectionID());
                     }
                 }
-                break;
             }
         }
 

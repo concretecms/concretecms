@@ -4,6 +4,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\PageListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
@@ -738,6 +739,36 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $selects[0] = 'distinct p.cID';
             $this->query->select($selects);
         }
+    }
+
+    /**
+     * filter and sort a page list and then return the page immediately after the specified ID.
+     * @param $cID
+     * @return bool|mixed
+     */
+    public function getAfter($cID)
+    {
+        $pages = $this->getResults();
+        $startPossibleNextPageSearch = false;
+        if (is_array($pages)) {
+            for ($i = 0; $i < sizeof($pages); ++$i) {
+                if (is_object($pages[$i]) && !$pages[$i]->isError()) {
+                    if ($pages[$i]->getCollectionID() === $cID) {
+                        $startPossibleNextPageSearch = true;
+                    }
+                    if ($startPossibleNextPageSearch) {
+                        $nextPage = $pages[$i + 1];
+                        if (is_object($nextPage) && !$nextPage->getAttribute('exclude_nav')) {
+                            $cp = new Permissions($nextPage);
+                            if ($cp->canRead()) {
+                                return $nextPage;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
