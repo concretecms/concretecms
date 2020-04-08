@@ -74,7 +74,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                     ?>
                                     <span class="ccm-page-design-theme-customize">
                                         <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/preview') ?>" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID()) ?>">
-                                            <?=t('Customize')?>
+                                            <?= t('Customize') ?>
                                             <i class="fa fa-share"></i>
                                         </a>
                                     </span>
@@ -97,7 +97,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             if (Config::get('concrete.marketplace.enabled')) {
                 ?>
                 <div class="ccm-marketplace-btn-wrapper">
-                <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/themes')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Themes")?></button>
+                <button type="button" onclick="window.location.href='<?= URL::to('/dashboard/extend/themes') ?>'" class="btn-info btn-block btn btn-large"><?= t("Get More Themes") ?></button>
                 </div>
                 <?php
             }
@@ -110,8 +110,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </form>
 </section>
 
-<div class="ccm-panel-detail-form-actions">
-    <button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+<div class="ccm-panel-detail-form-actions side-panel">
+    <button class="float-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 </div>
 
 <script type="text/javascript">
@@ -149,7 +149,7 @@ $(function() {
             case 'themes':
                 var $topitem = $('#ccm-panel-page-design-themes > div.list-group-item[data-theme-id]');
                 var $checkeditem = $('#ccm-panel-page-design-themes .ccm-page-design-theme-thumbnail-selected');
-                if ($topitem.attr('data-theme-id') != $checkeditem.attr('data-theme-id')) {
+                if ($topitem.attr('data-theme-id') !== $checkeditem.attr('data-theme-id')) {
                     swapElements($checkeditem[0], $topitem[0]);
                 }
                 break;
@@ -159,7 +159,7 @@ $(function() {
     $('#ccm-panel-page-design input[name=pThemeID], #ccm-panel-page-design input[name=pTemplateID]').on('change', function() {
         var pThemeID = $('#ccm-panel-page-design input[name=pThemeID]').val();
         var pTemplateID = $('#ccm-panel-page-design input[name=pTemplateID]:checked').val();
-        var src = '<?=$controller->action("preview_contents")?>&pThemeID=' + pThemeID + '&pTemplateID=' + pTemplateID;
+        var src = '<?= $controller->action("preview_contents") ?>&pThemeID=' + pThemeID + '&pTemplateID=' + pTemplateID;
         $('#ccm-page-preview-frame').get(0).src = src;
     });
 
