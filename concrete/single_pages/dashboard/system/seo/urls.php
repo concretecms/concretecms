@@ -107,9 +107,6 @@ $(function () {
         steps: steps,
         storage: false,
         framework: 'bootstrap4',
-        onStart: function() {
-            ConcreteHelpLauncher.close();
-        },
         'onEnd': function() {
             $(document).scrollTop(0);
         }
