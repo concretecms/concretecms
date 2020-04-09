@@ -50,16 +50,20 @@ To create it:
     exit 0
 fi
 
-printf '%s: checking out %s\n' "$AUTO_COMMIT_NAME_BASE" "$TRAVIS_BRANCH"
-cd "$TRAVIS_BUILD_DIR"
-git checkout -qf "$TRAVIS_BRANCH"
-
 printf '%s: building assets\n' "$AUTO_COMMIT_NAME_BASE"
 cd "$TRAVIS_BUILD_DIR/build"
 npm run prod
 
 printf '%s: checking changes\n' "$AUTO_COMMIT_NAME_BASE"
 CHANGES_DETECTED=0
+cd "$TRAVIS_BUILD_DIR/build"
+if test -n "$(git status --porcelain ./package-lock.json)"; then
+    printf -- '- changes detected in package-lock.json file\n'
+    git add --all .
+    CHANGES_DETECTED=1
+else
+    printf -- '- no changes in package-lock.json file\n'
+fi
 cd "$TRAVIS_BUILD_DIR/concrete/css"
 if test -n "$(git status --porcelain .)"; then
     printf -- '- changes detected in CSS assets\n'
