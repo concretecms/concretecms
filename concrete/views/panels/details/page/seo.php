@@ -46,9 +46,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 } ?>
 
 	</form>
-	<div class="ccm-panel-detail-form-actions dialog-buttons">
-		<button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="float-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+	<div class="ccm-panel-detail-form-actions dialog-buttons d-flex justify-content-end">
+		<button class="btn btn-secondary mr-2" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+		<button class="btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 </section>
 
@@ -66,8 +66,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			max: -1,
 			countSpaces: true,
 			stopInputAtMaximum: false,
-			counterText: '<?php echo t('Characters'); ?>: ',
-			countContainerClass: 'help-block'
+			counterText: '<?php echo t('Characters'); ?>: %d',
+			countContainerClass: 'form-text text-muted'
 		});
     });
 </script>
