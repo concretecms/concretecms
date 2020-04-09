@@ -52,7 +52,7 @@ class Permissions extends \Concrete\Core\Controller\Controller
 
     public function processCalendar()
     {
-        $calendar = Calendar::getByID($this->request->request->get('caID'));
+        $calendar = Calendar::getByID($this->request->get('caID'));
         $cp = new \Permissions($calendar);
         if ($cp->canEditCalendarPermissions()) {
             if ($_REQUEST['task'] == 'add_access_entity' && \Loader::helper("validation/token")->validate('add_access_entity')) {
