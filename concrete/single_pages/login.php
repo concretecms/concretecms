@@ -66,7 +66,7 @@ if ($imagePath) {
 }?>
 </style>
 
-<div class="login-page shadow-sm">
+<div class="login-page">
     <div class="container">
         <div class="login-page-header">
             <?php
