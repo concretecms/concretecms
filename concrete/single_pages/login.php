@@ -1,7 +1,6 @@
 <?php
 
 use Concrete\Core\Attribute\Key\Key;
-use Concrete\Core\Http\ResponseAssetGroup;
 
 defined('C5_EXECUTE') or die('Access denied.');
 
@@ -9,7 +8,7 @@ $form = Loader::helper('form');
 
 if (isset($authType) && $authType) {
     $active = $authType;
-    $activeAuths = array($authType);
+    $activeAuths = [$authType];
 } else {
     $active = null;
     $activeAuths = AuthenticationType::getList(true, true);
@@ -43,9 +42,9 @@ if ($loggedIn) {
 // Check for custom background image
 if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) {
     //Uncomment below two lines if you want picture of the day to load
-    //$image = date('Ymd') . '.jpg'; 
+    //$image = date('Ymd') . '.jpg';
     //$imagePath = Config::get('concrete.urls.background_feed') . '/' . $image;
-} else if (Config::get('concrete.white_label.background_url')) {
+} elseif (Config::get('concrete.white_label.background_url')) {
     $imagePath = Config::get('concrete.white_label.background_url');
 }
 ?>
@@ -58,12 +57,13 @@ html,body {
 if ($imagePath) {
     ?>
     body {
-        background-image: url('<?=$imagePath?>');
+        background-image: url('<?=$imagePath; ?>');
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
     }
-<?php }?>
+<?php
+}?>
 </style>
 
 <div class="login-page shadow-sm">
@@ -71,77 +71,82 @@ if ($imagePath) {
         <div class="login-page-header">
             <?php
             $disclaimer = new Area('Disclaimer');
-            if ($disclaimer->getTotalBlocksInArea($c) || $c->isEditMode()) { ?>
+            if ($disclaimer->getTotalBlocksInArea($c) || $c->isEditMode()) {
+                ?>
                 <div class="row login-page-disclaimer-area">
                     <div class="col-12">
                         <?= $disclaimer->display($c); ?>
                     </div>
                 </div>
-            <?php } ?>
+            <?php
+            } ?>
             <div class="row">
                 <div class="col-12">
                     <h2 class="login-page-title">
-                        <?php if (!$attribute_mode) {?>
-                            <?=t('Welcome back!')?><br>
-                        <?php }?>
-                        <?= $title ?>
+                        <?php if (!$attribute_mode) {
+                ?>
+                            <?=t('Welcome back!'); ?><br>
+                        <?php
+            }?>
+                        <?= $title; ?>
                     </h2>
                 </div>
             </div>
         </div>
 
         <?php if ($attribute_mode) {
-            $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute();
-            ?>
+                $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute(); ?>
             <div class="row login-page-content attribute-mode">
-                <form action="<?= View::action('fill_attributes') ?>" method="POST">
+                <form action="<?= View::action('fill_attributes'); ?>" method="POST">
                     <div data-handle="required_attributes"
                     class="authentication-type authentication-type-required-attributes">
                     <div class="ccm-required-attribute-form">
                         <?php
                         foreach ($required_attributes as $key) {
                             echo $attribute_helper->display($key, true);
-                        }
-                        ?>
+                        } ?>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary pull-right"><?= t('Submit') ?></button>
+                        <button class="btn btn-primary pull-right"><?= t('Submit'); ?></button>
                     </div>
 
                 </div>
             </form>
         </div>
-        <?php 
-    } else {
-        ?>
+        <?php
+            } else {
+                ?>
         <div class="row login-page-content">
             <div class="col-12">
-                <?php if ($loggedIn) { ?>
+                <?php if ($loggedIn) {
+                    ?>
                     <div class="text-center">
-                        <h3><?=$alreadyLoggedInMessage?></h3>
-                        <?= Core::make('helper/navigation')->getLogInOutLink() ?>
+                        <h3><?=$alreadyLoggedInMessage; ?></h3>
+                        <?= Core::make('helper/navigation')->getLogInOutLink(); ?>
                     </div>
-                <?php } else {
+                <?php
+                } else {
                     $i = 0;
-                    foreach ($activeAuths as $auth) { ?>
-                        <div data-handle="<?= $auth->getAuthenticationTypeHandle() ?>" class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle() ?>">
-                            <?php $auth->renderForm($authTypeElement ?: 'form', $authTypeParams ?: array()) ?>
+                    foreach ($activeAuths as $auth) {
+                        ?>
+                        <div data-handle="<?= $auth->getAuthenticationTypeHandle(); ?>" class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle(); ?>">
+                            <?php $auth->renderForm($authTypeElement ?: 'form', $authTypeParams ?: []); ?>
                         </div>
                         <?php
                         if ($i == 0 && count($activeAuths) > 1 && Config::get('concrete.user.registration.enabled')) {
                             echo '<div class="text-center" style="margin-bottom: 5px;">';
                             echo t('or');
                             echo '</div>';
-                        } else if ($i == 0 && count($activeAuths) > 1 ) {
+                        } elseif ($i == 0 && count($activeAuths) > 1) {
                             echo '<hr>';
                         }
-                        $i++;
+                        ++$i;
                     }
                 } ?>
             </div>
         </div>
         <?php
-    } // END OPENING IF STATEMENT
+            } // END OPENING IF STATEMENT
     ?>
     </div>
 </div>
