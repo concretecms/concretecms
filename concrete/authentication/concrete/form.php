@@ -4,11 +4,11 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 /* @var Concrete\Core\Form\Service\Form $form */
 ?>
 
-<form class="concrete-login-form" method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
+<form class="concrete-login-form" method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()); ?>">
 
     <div class="form-group row">
         <label class="col-sm-3 col-form-label-lg" for="uName">
-            <?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('User Name')?>
+            <?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('User Name'); ?>
         </label>
         <div class="col-sm-9">
             <input name="uName" id="uName" class="form-control" autofocus="autofocus" />
@@ -16,7 +16,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
     </div>
     <div class="form-group row">
         <label class="col-sm-3 col-form-label-lg" for="uPassword">
-            <?=t('Password')?>
+            <?=t('Password'); ?>
         </label>
         <div class="col-sm-9">
             <input name="uPassword" id="uPassword" class="form-control" type="password" />
@@ -26,12 +26,13 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
         <label class="col-sm-3 col-form-label-lg" for="uPassword">
         </label>
         <div class="col-sm-9 text-right">
-            <a href="<?= URL::to('/login', 'concrete', 'forgot_password')?>" class="btn-link"><?= t('Forgot Password') ?></a>
+            <a href="<?= URL::to('/login', 'concrete', 'forgot_password'); ?>" class="btn-link"><?= t('Forgot Password'); ?></a>
         </div>
     </div>
-    <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) { ?>
+    <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) {
+    ?>
     <div class="form-group row">
-        <div class="col-sm-3 remember-me"><?=t('Remember Me')?></div>
+        <div class="col-sm-3 remember-me"><?=t('Remember Me'); ?></div>
         <div class="col-sm-9">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="uMaintainLogin" value="1">
@@ -41,21 +42,22 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
             </div>
         </div>
     </div>
-    <?php } ?>
+    <?php
+} ?>
     <?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
         ?>
         <div class="form-group">
-            <label for="USER_LOCALE" class="control-label"><?= t('Language') ?></label>
-            <?= $form->select('USER_LOCALE', $locales) ?>
+            <label for="USER_LOCALE" class="control-label"><?= t('Language'); ?></label>
+            <?= $form->select('USER_LOCALE', $locales); ?>
         </div>
-    <?php 
-} ?>
+    <?php
+    } ?>
     <div class="form-group row">
         <div class="col-sm-3">
         </div>
         <div class="col-sm-9 text-right">
-            <a href="<?= \URL::to('/') ?>" class="btn btn-light"> <?= t('Cancel')?> </a>
-            <button class="btn btn-primary"><?= t('Sign In') ?></button>
+            <a href="<?= \URL::to('/'); ?>" class="btn btn-light"> <?= t('Cancel'); ?> </a>
+            <button class="btn btn-primary"><?= t('Sign In'); ?></button>
             <?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
         </div>
     </div>
@@ -64,9 +66,9 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
         ?>
         <hr/>
         <div class="text-center sign-up-container">
-            <?=t("Don't have an account?")?>
-            <a href="<?=URL::to('/register')?>" class="btn-link"><?=t('Sign up')?></a>
+            <?=t("Don't have an account?"); ?>
+            <a href="<?=URL::to('/register'); ?>" class="btn-link"><?=t('Sign up'); ?></a>
         </div>
-    <?php 
-} ?>
+    <?php
+    } ?>
 </form>
