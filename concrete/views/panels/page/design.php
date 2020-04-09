@@ -110,9 +110,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </form>
 </section>
 
-<div class="ccm-panel-detail-form-actions side-panel">
-    <button class="float-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
-</div>
+
 
 <script type="text/javascript">
 $(function() {
