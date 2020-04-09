@@ -13,13 +13,7 @@ if (isset($message)) {
 }
 ?>
 
-<div class="form-group">
-    <span>
-        <?= t('Sign in with your %s account', h($name)) ?>
-    </span>
-    <hr class="ccm-authentication-type-external-concrete5">
-</div>
-<div class="form-group">
+<div class="form-group external-auth-option">
     <a href="<?= $authUrl ?>" class="btn btn-success btn-login btn-block">
         <img src="<?= $assetBase ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
         <?= t('Log in with %s', h($name)) ?>
