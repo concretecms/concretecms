@@ -2,6 +2,7 @@
 namespace Concrete\Block\Faq;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -78,22 +79,15 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function duplicate($newBID)
     {
-        $db = $this->app->make('database')->connection();
-        $v = [$this->bID];
-        $q = 'SELECT * FROM btFaqEntries WHERE bID = ?';
-        $r = $db->executeQuery($q, $v);
-        foreach ($r as $row) {
-            $db->executeQuery(
-                'INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) VALUES(?,?,?,?,?)',
-                [
-                    $newBID,
-                    $row['title'],
-                    $row['linkTitle'],
-                    $row['description'],
-                    $row['sortOrder'],
-                ]
-            );
-        }
+        $db = $this->app->make(Connection::class);
+        $copyFields = 'title, linkTitle, description, sortOrder';
+        $db->executeUpdate(
+            "INSERT INTO btFaqEntries (bID, {$copyFields}) SELECT ?, {$copyFields} FROM btFaqEntries WHERE bID = ?",
+            [
+                $newBID,
+                $this->bID,
+            ]
+        );
     }
 
     public function delete()
