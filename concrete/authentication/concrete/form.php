@@ -7,33 +7,33 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 <form class="concrete-login-form" method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()); ?>">
 
     <div class="form-group row">
-        <label class="col-sm-3 col-form-label" for="uName">
+        <label class="col-sm-2 col-form-label" for="uName">
             <?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('User Name'); ?>
         </label>
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             <input name="uName" id="uName" class="form-control" autofocus="autofocus" />
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-3 col-form-label" for="uPassword">
+        <label class="col-sm-2 col-form-label" for="uPassword">
             <?=t('Password'); ?>
         </label>
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             <input name="uPassword" id="uPassword" class="form-control" type="password" />
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-3 col-form-label" for="uPassword">
+        <label class="col-sm-2 col-form-label" for="uPassword">
         </label>
-        <div class="col-sm-9 text-right">
+        <div class="col-sm-10 text-right">
             <a href="<?= URL::to('/login', 'concrete', 'forgot_password'); ?>" class="btn-link"><?= t('Forgot Password'); ?></a>
         </div>
     </div>
     <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) {
     ?>
     <div class="form-group row">
-        <div class="col-sm-3"><?=t('Remember Me'); ?></div>
-        <div class="col-sm-9">
+        <div class="col-sm-2"><?=t('Remember Me'); ?></div>
+        <div class="col-sm-10">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="uMaintainLogin" value="1">
                 <label class="form-check-label" for="uMaintainLogin">
@@ -53,9 +53,9 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
     <?php
     } ?>
     <div class="form-group row">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
         </div>
-        <div class="col-sm-9 text-right">
+        <div class="col-sm-10 text-right">
             <a href="<?= \URL::to('/'); ?>" class="btn btn-default"> <?= t('Cancel'); ?> </a>
             <button class="btn btn-primary"><?= t('Sign In'); ?></button>
             <?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
