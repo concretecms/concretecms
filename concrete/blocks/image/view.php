@@ -40,12 +40,10 @@ if (is_object($f) && $f->getFileID()) {
     }
 
     // add data attributes for hover effect
-    if (is_object($f) && is_object($foS)) {
-        if (($maxWidth > 0 || $maxHeight > 0) && !$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
-            $tag->addClass('ccm-image-block-hover');
-            $tag->setAttribute('data-default-src', $imgPaths['default']);
-            $tag->setAttribute('data-hover-src', $imgPaths['hover']);
-        }
+    if (is_object($foS) && !$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
+        $tag->addClass('ccm-image-block-hover');
+        $tag->setAttribute('data-default-src', $imgPaths['default']);
+        $tag->setAttribute('data-hover-src', $imgPaths['hover']);
     }
 
     echo $tag;

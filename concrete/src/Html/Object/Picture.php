@@ -218,4 +218,19 @@ class Picture extends Element
             }
         }
     }
+
+    /**
+     * Set an attribute.
+     *
+     * @param string $attribute
+     * @param string|null $value
+     */
+    public function setAttribute($attribute, $value = null)
+    {
+        foreach ($this->getChildren() as $child) {
+            if ($child instanceof Image) {
+                $child->setAttribute($attribute, $value);
+            }
+        }
+    }
 }
