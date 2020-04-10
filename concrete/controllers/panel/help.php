@@ -20,6 +20,7 @@ class Help extends UserInterface
     public function view()
     {
         $this->set('config', $this->app->make('config'));
+        $this->set('page', $this->getPage());
         $this->set('message', $this->getHelpMessage());
     }
 

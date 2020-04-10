@@ -9,18 +9,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
 * @var Concrete\Core\View\DialogView $view
 * @var Concrete\Core\User\User $u
 * @var Concrete\Core\Config\Repository\Repository $config
+* @var Concrete\Core\Page\Page|null $page
 * @var Concrete\Core\Application\Service\UserInterface\Help\MessageInterface|null $message
 */
 ?>
 <?php
 if ($message === null) {
-    View::element('help/introduction');
+    if ($page === null || !$page->isSystemPage()) {
+        View::element('help/introduction');
+        echo '<hr />';
+    }
 } else {
     View::element('help/message', compact('message'));
+    echo '<hr />';
 }
-?>
-<hr />
-<?php
 View::element('help/resources', compact('config'));
 ?>
 
