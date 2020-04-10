@@ -29,7 +29,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 }
 ?>
 <section class="ccm-ui">
-    <header><?= t('Page Caching') ?></header>
+    <header><h3><?= t('Page Caching') ?></h3></header>
     <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="caching"
           data-panel-detail-form="caching">
         <h3 class="font-weight-light"><?= t('Enable Cache') ?></h3>

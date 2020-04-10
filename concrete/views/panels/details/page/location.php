@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section class="ccm-ui">
-	<header><?=t('Location')?></header>
+	<header><h3><?=t('Location')?></h3></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
         <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 

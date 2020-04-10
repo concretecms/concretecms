@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section class="ccm-ui">
-    <header><?= t('Summary Templates') ?></header>
+    <header><h3><?= t('Summary Templates') ?></h3></header>
     <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="summary-templates"
           data-panel-detail-form="summary-templates">
 
@@ -30,7 +30,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </div>
         <?php } ?>
         </div>
-        
+
     </form>
     <div class="ccm-panel-detail-form-actions dialog-buttons">
         <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel"

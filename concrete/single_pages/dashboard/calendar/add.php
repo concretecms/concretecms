@@ -56,7 +56,7 @@ if ($calendar !== null) {
 
                 <div class="form-group">
                     <?= $form->label('calendarName', t('Calendar Name')) ?>
-                    <?= $form->text('calendarName', $calendarName) ?>
+                    <?= $form->text('calendarName', $calendarName, ['placeholder' => t('Choose a descriptive name for your calendar.')]) ?>
 
                     <div class="help-block">
                         <?= t('Each separate calendar gets a complete separate list of events. Each front-end block can display content from one or multiple calendars.') ?>
@@ -66,7 +66,7 @@ if ($calendar !== null) {
                 <div class="ccm-dashboard-form-actions-wrapper">
                     <div class="ccm-dashboard-form-actions ">
                         <a href="<?= $view->url($preferences->getPreferredViewPath()) ?>"
-                           class="btn btn-default float-left"><?= t("Cancel") ?></a>
+                           class="btn btn-secondary float-left"><?= t("Cancel") ?></a>
                         <button type="submit" class="btn btn-primary float-right"><?= $buttonText ?></button>
                     </div>
                 </div>
