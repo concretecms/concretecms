@@ -4,10 +4,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="row">
     <section class="ccm-ui col-sm-9">
+        <header><h3><?=t('SEO')?></h3></header>
         <form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-dialog-form="seo" data-panel-detail-form="seo" data-action-after-save="reload">
             <fieldset>
-                <legend class="pt-0"><?=t('SEO')?></legend>
-
                 <?php if ($allowEditName) {
                 ?>
                 <div class="form-group">

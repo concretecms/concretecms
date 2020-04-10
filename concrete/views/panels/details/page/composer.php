@@ -17,8 +17,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 ?>
 
-<section class="ccm-ui">
-    <header><?= t('Composer - %s', $pagetype->getPageTypeDisplayName()); ?></header>
+<section class="ccm-ui col-sm-9">
+    <header><h3><?= t('Composer - %s', $pagetype->getPageTypeDisplayName()); ?></h3></header>
     <form method="post" data-panel-detail-form="compose">
         <?= $ui->display('panel', '/page/composer'); ?>
 
