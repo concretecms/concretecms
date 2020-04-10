@@ -28,14 +28,16 @@ View::element('help/resources', compact('config'));
 
 <script>
 $(document).ready(function() {
-    $('#ccm-panel-help a[data-lightbox=iframe]').magnificPopup({
-        disableOn: 700,
-        type: 'iframe',
-        mainClass: 'mfp-fade',
-        removalDelay: 160,
-        preloader: false,
-        fixedContentPos: false
-    });
+    if ($.fn.magnificPopup) {
+        $('#ccm-panel-help a[data-lightbox=iframe]').magnificPopup({
+            disableOn: 700,
+            type: 'iframe',
+            mainClass: 'mfp-fade',
+            removalDelay: 160,
+            preloader: false,
+            fixedContentPos: false
+        });
+    }
     $('#ccm-panel-help a[data-launch-guide]').on('click', function(e) {
         e.preventDefault();
         var guide = $(this).data('launch-guide'),
