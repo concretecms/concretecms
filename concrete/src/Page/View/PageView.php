@@ -155,7 +155,7 @@ class PageView extends View
             }
         }
         if(!file_exists($this->template)) {
-            throw new UserMessageException('No file found to render template with handle "' . $this->c->getPageTemplateHandle() . '"');
+            throw new UserMessageException(t('No file found to render template with handle "%s"', $this->c && $this->c->getPageTemplateHandle() ? $this->c->getPageTemplateHandle() : '<UNKNOWN TEMPLATE>'));
         }
     }
 
