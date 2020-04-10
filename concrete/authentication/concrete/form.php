@@ -4,49 +4,71 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 /* @var Concrete\Core\Form\Service\Form $form */
 ?>
 
-<form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
+<form class="concrete-login-form" method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()); ?>">
 
-	<div class="form-group">
-		<label class="control-label" for="uName"><?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?></label>
-		<input name="uName" id="uName" class="form-control" autofocus="autofocus" />
-	</div>
-
-	<div class="form-group">
-		<label class="control-label" for="uPassword"><?=t('Password')?></label>
-		<input name="uPassword" id="uPassword" class="form-control" type="password" />
-	</div>
-
-    <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) { ?>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="uMaintainLogin" value="1">
-                <?php echo t('Stay signed in for %s', $dh->describeInterval(Config::get('concrete.session.remember_me.lifetime'))); ?>
-            </label>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="uName">
+            <?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('User Name'); ?>
+        </label>
+        <div class="col-sm-10">
+            <input name="uName" id="uName" class="form-control" autofocus="autofocus" />
         </div>
-    <?php } ?>
-
-	<?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="uPassword">
+            <?=t('Password'); ?>
+        </label>
+        <div class="col-sm-10">
+            <input name="uPassword" id="uPassword" class="form-control" type="password" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="uPassword">
+        </label>
+        <div class="col-sm-10 text-right">
+            <a href="<?= URL::to('/login', 'concrete', 'forgot_password'); ?>" class="btn-link"><?= t('Forgot Password'); ?></a>
+        </div>
+    </div>
+    <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) {
     ?>
-		<div class="form-group">
-			<label for="USER_LOCALE" class="control-label"><?= t('Language') ?></label>
-			<?= $form->select('USER_LOCALE', $locales) ?>
-		</div>
-	<?php 
+    <div class="form-group row">
+        <div class="col-sm-2"><?=t('Remember Me'); ?></div>
+        <div class="col-sm-10">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="uMaintainLogin" value="1">
+                <label class="form-check-label" for="uMaintainLogin">
+                    <?php echo t('Stay signed in for %s', $dh->describeInterval(Config::get('concrete.session.remember_me.lifetime'))); ?>
+                </label>
+            </div>
+        </div>
+    </div>
+    <?php
 } ?>
+    <?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
+        ?>
+        <div class="form-group">
+            <label for="USER_LOCALE" class="control-label"><?= t('Language'); ?></label>
+            <?= $form->select('USER_LOCALE', $locales); ?>
+        </div>
+    <?php
+    } ?>
+    <div class="form-group row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-10 text-right">
+            <a href="<?= \URL::to('/'); ?>" class="btn btn-default"> <?= t('Cancel'); ?> </a>
+            <button class="btn btn-primary"><?= t('Sign In'); ?></button>
+            <?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
+        </div>
+    </div>
 
-	<div class="form-group">
-		<button class="btn btn-primary"><?= t('Log in') ?></button>
-		<a href="<?= URL::to('/login', 'concrete', 'forgot_password')?>" class="btn pull-right"><?= t('Forgot Password') ?></a>
-	</div>
-
-	<?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
-
-	<?php if (Config::get('concrete.user.registration.enabled')) {
-    ?>
-		<br/>
-		<hr/>
-		<a href="<?=URL::to('/register')?>" class="btn btn-block btn-success"><?=t('Not a member? Register')?></a>
-	<?php 
-} ?>
-
+    <?php if (Config::get('concrete.user.registration.enabled')) {
+        ?>
+        <hr/>
+        <div class="text-center sign-up-container">
+            <?=t("Don't have an account?"); ?>
+            <a href="<?=URL::to('/register'); ?>" class="btn-link"><?=t('Sign up'); ?></a>
+        </div>
+    <?php
+    } ?>
 </form>
