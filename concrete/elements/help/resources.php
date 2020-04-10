@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 */
 ?>
 
-<h4><?= t('More Help') ?></h4>
+<h4><?= t('More Resources') ?></h4>
 
 <section class="ccm-panel-help-item">
     <p><?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with concrete5.', $config->get('concrete.urls.help.user')) ?></p>

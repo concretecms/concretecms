@@ -21,7 +21,7 @@ if ($message === null) {
 ?>
 <hr />
 <?php
-View::element('help/more_help', compact('config'));
+View::element('help/resources', compact('config'));
 ?>
 
 <script>
