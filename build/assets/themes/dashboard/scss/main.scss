@@ -151,27 +151,6 @@ div#ccm-dashboard-content {
     }
 
   }
-
-  /**
- * Form updates for dashboard. Note, you have to opt into
- * the negative margin updates by placing them into a fieldset
- */
-  fieldset {
-    legend {
-      color: $gray-500;
-      padding: 35px 0;
-    }
-
-    .form-group {
-      padding-left: 20px;
-
-      label {
-        color: $gray-700;
-        font-weight: bold;
-      }
-    }
-  }
-
 }
 
 
@@ -407,4 +386,3 @@ div.ccm-system-errors {
 @import "./update";
 @import "./privacy-policy.scss";
 @import "./translator";
-@import "./helpers";
