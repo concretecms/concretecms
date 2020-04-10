@@ -51,11 +51,7 @@ if (isset($show_email) && $show_email) {
       border: 1px solid #D6D9DE !important;
       background-color: #FFF;
     }
-    .ccm-ui .btn-google:focus {
-    }
     .ccm-ui .btn-google:hover {
       background-color: #FAFAFB;
-    }
-    .ccm-ui .btn-google:active {
     }
 </style>
