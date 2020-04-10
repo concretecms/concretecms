@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Html\Object;
 
 use HtmlObject\Element;
@@ -31,7 +32,7 @@ class Picture extends Element
     //////////////////////////// CORE METHODS //////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    public function __construct(array $sources = array(), $fallbackSrc, $attributes = array(), $lazyLoadNative = false, $lazyLoadJavaScript = false)
+    public function __construct(array $sources = [], $fallbackSrc, $attributes = [], $lazyLoadNative = false, $lazyLoadJavaScript = false)
     {
         $this->sources($sources, $lazyLoadJavaScript);
 
@@ -53,7 +54,7 @@ class Picture extends Element
      *
      * @return \Concrete\Core\Html\Object\Picture
      */
-    public static function create($sources = array(), $fallbackSrc = false, $attributes = array(), $lazyLoadNative = false, $lazyLoadJavaScript = false)
+    public static function create($sources = [], $fallbackSrc = false, $attributes = [], $lazyLoadNative = false, $lazyLoadJavaScript = false)
     {
         return new static($sources, $fallbackSrc, $attributes, $lazyLoadNative, $lazyLoadJavaScript);
     }
@@ -78,8 +79,8 @@ class Picture extends Element
      * <source data-srcset="...">
      * <!--[if IE 9]></video><![endif]-->
      *
-     * @param array $sources An array of image thumbnail file paths.
-     * @param bool $lazyLoadJavaScript If true, the source image thumbnail file path is set to a "data-srcset" attribute instead of "srcset".
+     * @param array $sources an array of image thumbnail file paths
+     * @param bool $lazyLoadJavaScript if true, the source image thumbnail file path is set to a "data-srcset" attribute instead of "srcset"
      *
      * @return \Concrete\Core\Html\Object\Picture
      */
@@ -104,7 +105,7 @@ class Picture extends Element
             $this->setChild($source);
         }
 
-        $this->nest("<!--[if IE 9]></video><![endif]-->");
+        $this->nest('<!--[if IE 9]></video><![endif]-->');
 
         return $this;
     }
@@ -121,8 +122,8 @@ class Picture extends Element
      *     <img src="..." loading="lazy">
      * </noscript>
      *
-     * @param string $src The file path of an image.
-     * @param bool $lazyLoadNative If true, the image "loading" attribute is set to "lazy".
+     * @param string $src the file path of an image
+     * @param bool $lazyLoadNative if true, the image "loading" attribute is set to "lazy"
      *
      * @return \Concrete\Core\Html\Object\Picture
      */
@@ -156,9 +157,9 @@ class Picture extends Element
      * or
      * <img data-src="...">
      *
-     * @param string $src The file path of an image.
-     * @param bool $lazyLoadNative If true, the image "loading" attribute is set to "lazy".
-     * @param bool $lazyLoadJavaScript If true, the image path is set to a "data-src" attribute.
+     * @param string $src the file path of an image
+     * @param bool $lazyLoadNative if true, the image "loading" attribute is set to "lazy"
+     * @param bool $lazyLoadJavaScript if true, the image path is set to a "data-src" attribute
      */
     public function fallback($src, $lazyLoadNative = false, $lazyLoadJavaScript = false)
     {
@@ -208,7 +209,7 @@ class Picture extends Element
     /**
      * Add one or more CSS classes to the image and noscript image fallback.
      *
-     * @param string $classes A string of space separated CSS classes.
+     * @param string $classes a string of space separated CSS classes
      */
     public function addClass($classes)
     {
