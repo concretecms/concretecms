@@ -134,7 +134,7 @@ class AddressFormat
         if (!empty($line2)) {
             $address = $address->withAddressLine2($line2);
         }
-        if (!empty($addressData['state_province'])) {
+        if (!empty($addressData['state_province']) && $addressData['country']!=='JP') {
             $address = $address->withAdministrativeArea(
                 $addressData['state_province']
             );
