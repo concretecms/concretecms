@@ -172,10 +172,6 @@
                 }
                 me.$stateprovinceSelect.empty();
 
-                if (me.config.clearStateProvinceOnChange) {
-                    me.$stateprovince.val('');
-                }
-
                 if (me.config.hideUnusedStateProvinceField) {
                     if (countryData.addressUsedFields.indexOf('state_province') > -1) {
                         me.$stateprovinceWrapper.show();
@@ -189,7 +185,7 @@
                     me.replacer.setEnabled(false);
                 } else {
                     var selectedStateprovince = $.trim(me.$stateprovince.val());
-                    me.$stateprovinceSelect.append($('<option value="" selected="selected" />').text(''));
+                    me.$stateprovinceSelect.append($('<option value="" />').text(''));
                     $.each(countryData.statesProvices, function(spCode, name) {
                         var $o = $('<option />')
                             .val(spCode)
