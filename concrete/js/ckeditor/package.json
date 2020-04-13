@@ -2,7 +2,7 @@
   "_args": [
     [
       "ckeditor4@4.14.0",
-      "/Users/mesparza/Sites/cv9/build"
+      "C:\\Dev\\Projects\\concrete5\\concrete5\\build"
     ]
   ],
   "_development": true,
@@ -27,7 +27,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/ckeditor4/-/ckeditor4-4.14.0.tgz",
   "_spec": "4.14.0",
-  "_where": "/Users/mesparza/Sites/cv9/build",
+  "_where": "C:\\Dev\\Projects\\concrete5\\concrete5\\build",
   "author": {
     "name": "CKSource",
     "url": "https://cksource.com/"
