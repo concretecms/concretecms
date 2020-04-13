@@ -3,7 +3,8 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
-* @var Concrete\Core\Application\Service\UserInterface\Help\MessageInterface $message
+* @var Concrete\Core\Application\Service\UserInterface\Help\Message $message
+* @var Concrete\Core\Application\Service\UserInterface\Help\MessageFormatterInterface $messageFormatter
 */
 
-echo (string) $message->getContent();
+echo (string) $messageFormatter->format($message);

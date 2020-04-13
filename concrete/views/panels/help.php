@@ -10,7 +10,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 * @var Concrete\Core\User\User $u
 * @var Concrete\Core\Config\Repository\Repository $config
 * @var Concrete\Core\Page\Page|null $page
-* @var Concrete\Core\Application\Service\UserInterface\Help\MessageInterface|null $message
+* @var Concrete\Core\Application\Service\UserInterface\Help\Message|null $message
+* @var Concrete\Core\Application\Service\UserInterface\Help\MessageFormatterInterface $messageFormatter
 */
 ?>
 <?php
@@ -20,7 +21,7 @@ if ($message === null) {
         echo '<hr />';
     }
 } else {
-    View::element('help/message', compact('message'));
+    View::element('help/message', compact('message', 'messageFormatter'));
     echo '<hr />';
 }
 View::element('help/resources', compact('config'));

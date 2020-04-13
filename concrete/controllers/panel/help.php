@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface;
-use Concrete\Core\Application\Service\UserInterface\Help\MessageInterface;
+use Concrete\Core\Application\Service\UserInterface\Help\HelpPanelMessageFormatter;
+use Concrete\Core\Application\Service\UserInterface\Help\Message;
 use Concrete\Core\Page\Page;
 
 class Help extends UserInterface
@@ -22,6 +23,7 @@ class Help extends UserInterface
         $this->set('config', $this->app->make('config'));
         $this->set('page', $this->getPage());
         $this->set('message', $this->getHelpMessage());
+        $this->set('messageFormatter', $this->app->make(HelpPanelMessageFormatter::class));
     }
 
     /**
@@ -34,7 +36,7 @@ class Help extends UserInterface
         return true;
     }
 
-    protected function getHelpMessage(): ?MessageInterface
+    protected function getHelpMessage(): ?Message
     {
         $helpMessageIdentifier = $this->getHelpMessageIdentifier();
 
