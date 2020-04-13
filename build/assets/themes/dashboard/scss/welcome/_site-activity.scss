@@ -1,23 +1,30 @@
+div.ccm-block-desktop-site-activity {
+  background: $gray-100;
+  border-radius: .25rem;
+  box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+  overflow: hidden;
 
-div#ccm-block-desktop-site-activity-chart {
-  position: relative;
-}
-
-div#ccm-block-desktop-site-activity-legend {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  white-space: nowrap;
-  width: auto;
-  display: none;
-  z-index: 500;
-
-  h6 {
-    color: #999;
-    text-transform: uppercase;
+  div#ccm-block-desktop-site-activity-chart {
+    position: relative;
   }
 
-  div.ccm-block-desktop-site-activity-legend-row {
-    margin-bottom: 4px;
+  div#ccm-block-desktop-site-activity-legend {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    white-space: nowrap;
+    width: auto;
+    display: none;
+    z-index: 500;
+
+    h6 {
+      text-transform: none;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    div.ccm-block-desktop-site-activity-legend-row {
+      margin-bottom: 4px;
+    }
   }
 }

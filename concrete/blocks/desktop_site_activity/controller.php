@@ -5,6 +5,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Category;
 use Core;
+use Page;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -172,5 +173,17 @@ class Controller extends BlockController
     public function edit()
     {
         $this->loadTypes();
+    }
+
+    public function registerViewAssets($outputContent = '')
+    {
+        $this->requireAsset('javascript', 'jquery');
+
+        $c = Page::getCurrentPage();
+        if (!$c->isEditMode()) {
+            $this->addFooterItem(
+                '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>'
+            );
+        }
     }
 }
