@@ -28,74 +28,57 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
 
 ?>
 
-<div class="ccm-dashboard-welcome">
-    <h1><div class="ccm-dashboard-welcome-inner"><?=t('Welcome Back')?>
-            <?php if (isset($imageData)) { ?>
-                <a href="#" class="launch-tooltip" title="<?=t('View Original Image')?>"><i class="fa fa-image"></i></a>
+<nav class="ccm-dashboard-desktop-navbar navbar navbar-dark navbar-expand-md">
+    <span class="navbar-text"><?=$app->make('date')->formatDate('now', 'full')?></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarWelcomeBack" aria-controls="navbarWelcomeBack" aria-expanded="false" aria-label="<?=h(t('Toggle navigation'))?>">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarWelcomeBack">
+        <ul class="nav navbar-nav">
+            <li <?php if ($c->getCollectionPath() == '/dashboard/welcome') {?>class="active"<?php } ?>><a href="<?=URL::to('/dashboard/welcome')?>" class="nav-link"><?=t('Welcome')?></a></li>
+            <?php foreach($nav as $page) { ?>
+                <li <?php if ($page->getCollectionID() == $c->getCollectionID()) {?>class="active"<?php } ?>>
+                    <a href="<?=$page->getCollectionLink()?>" class="nav-link"><?=t($page->getCollectionName())?></a>
+                </li>
             <?php } ?>
-        </div>
-    </h1>
-</div>
-
-<nav class="ccm-dashboard-desktop-navbar navbar navbar-default">
-    <div class="container-fluid">
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <?php if ($canEdit) { ?>
-                <form method="post" data-form="check-in" action="<?=$approveAction?>">
-                    <input type="hidden" name="comments" value="<?= h(t('Welcome page updated')) ?>" />
-            <?php } ?>
-                <ul class="nav navbar-nav">
-                    <li><p class="navbar-text"><?=$app->make('date')->formatDateTime('now', true, true)?></p></li>
-                    <?php if ($canEdit) { ?>
-                        <li>
-                            <?php if ($c->isEditMode()) { ?>
-                                <a href="#" id="ccm-dashboard-welcome-check-in"><?= t('Save Changes'); ?></a>
-                            <?php } ?>
-                            <?php if (!$c->isEditMode()) { ?>
-                                <a href="<?= DIR_REL; ?>/<?= DISPATCHER_FILENAME; ?>?cID=<?= $c->getCollectionID(); ?>&ctask=check-out&<?= $token->getParameter(); ?>" id="ccm-nav-check-out"><?= t('Customize'); ?></a>
-                            <?php } ?>
-                        </li>
-                    <?php } ?>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li <?php if ($c->getCollectionPath() == '/dashboard/welcome') {?>class="active"<?php } ?>><a href="<?=URL::to('/dashboard/welcome')?>"><?=t('Welcome')?></a></li>
-                    <?php foreach($nav as $page) { ?>
-                        <li <?php if ($page->getCollectionID() == $c->getCollectionID()) {?>class="active"<?php } ?>>
-                            <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
-                        </li>
-                    <?php } ?>
-                    <li><a href="<?=URL::to('/account')?>"><?=t('My Account')?></a></li>
-                </ul>
-            <?php if ($canEdit) { ?>
-                    <input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
-                    <input type="hidden" name="action" value="publish">
-                </form>
-            <?php } ?>
-        </div>
+            <li><a href="<?=URL::to('/account')?>" class="nav-link"><?=t('My Account')?></a></li>
+        </ul>
     </div>
 </nav>
 
+<div class="ccm-dashboard-welcome-customize">
+    <form method="post" data-form="check-in" action="<?=$approveAction?>">
+        <?php if ($canEdit) { ?>
+            <input type="hidden" name="comments" value="<?= h(t('Welcome page updated')) ?>" />
+        <?php } ?>
+            <?php if ($canEdit) { ?>
+                <?php if ($c->isEditMode()) { ?>
+                    <a href="#" id="ccm-dashboard-welcome-check-in" class="btn btn-secondary"><?= t('Save Changes'); ?></a>
+                <?php } ?>
+                <?php if (!$c->isEditMode()) { ?>
+                    <a href="<?= DIR_REL; ?>/<?= DISPATCHER_FILENAME; ?>?cID=<?= $c->getCollectionID(); ?>&ctask=check-out&<?= $token->getParameter(); ?>" id="ccm-nav-check-out" class="btn btn-secondary"><?= t('Customize'); ?></a>
+                <?php } ?>
+            <?php } ?>
+        <?php if ($canEdit) { ?>
+            <input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
+            <input type="hidden" name="action" value="publish">
+        <?php } ?>
+    </form>
+</div>
+
 <?php if (isset($imagePath)) { ?>
     <style type="text/css">
-        div.ccm-dashboard-welcome {
+        body.ccm-dashboard-desktop div#ccm-dashboard-content {
             background-image: url(<?=$imagePath?>);
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
+        }
+        body.ccm-dashboard-desktop div#ccm-dashboard-content::before {
+            display: block;
         }
     </style>
 <?php } ?>
 
 <script type="text/javascript">
     $(function() {
-
-        <?php if (isset($imageData)) { ?>
-            $.getJSON('<?=$imageData?>', { image: '<?= $image ?>' }, function (data) {
-                $('.ccm-dashboard-welcome-inner a').attr('href', data.link);
-            });
-        <?php } ?>
 
         <?php if ($canEdit) { ?>
             $('#ccm-dashboard-welcome-check-in').on('click', function(e) {

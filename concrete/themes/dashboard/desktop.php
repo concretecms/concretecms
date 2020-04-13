@@ -3,19 +3,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $view->inc('elements/header.php', array('bodyClass' => 'ccm-dashboard-desktop'));
 ?>
 
-<?php
+<div class="ccm-dashboard-desktop-content">
 
-View::element('dashboard/welcome');
-
-?>
+    <?php View::element('dashboard/welcome'); ?>
 
     <div class="ccm-dashboard-desktop-grid <?php if (!$c->isEditMode()) { ?>ccm-dashboard-desktop-flex<?php }  ?>">
-
-
-    <?php
-    $a = new Area('Main');
-    $a->setAreaGridMaximumColumns(12);
-    $a->display($c); ?>
+        <?php
+        $a = new Area('Main');
+        $a->setAreaGridMaximumColumns(12);
+        $a->display($c);
+        ?>
+    </div>
 
 </div>
 
