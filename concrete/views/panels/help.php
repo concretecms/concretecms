@@ -14,6 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 * @var Concrete\Core\Application\Service\UserInterface\Help\MessageFormatterInterface $messageFormatter
 */
 ?>
+<div class="ccm-panel-close"><a href="#">&times;</a></div>
 <?php
 if ($message === null) {
     if ($page === null || !$page->isSystemPage()) {
