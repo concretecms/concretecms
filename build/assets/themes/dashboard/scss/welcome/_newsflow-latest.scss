@@ -1,0 +1,24 @@
+div.ccm-block-dashboard-newsflow-latest-wrapper {
+  background: $gray-100;
+  border-radius: .25rem;
+  box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+
+  div.ccm-block-dashboard-newsflow-latest {
+    padding: 20px;
+
+    h3 {
+      font-weight: 700;
+    }
+
+    h6 {
+      text-transform: none;
+      font-size: .9rem;
+      font-weight: 700;
+      margin-bottom: .75rem;
+    }
+
+    a {
+      font-weight: 700;
+    }
+  }
+}
