@@ -29,32 +29,22 @@ body.ccm-dashboard-desktop {
 }
 
 div.ccm-dashboard-desktop-flex {
-  .row, .row > div[class*='col-'] {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    flex:1 1 auto;
-    color: #4c4f56;
-  }
-
-  .row > div[class*='col-'] > div {
-    width: 100%;
-  }
-
   .row {
     margin-bottom: 30px;
-  }
 
-  .row > div[class*='col-'] {
-    margin: -1px; /* hack adjust for wrapping */
-  }
+    & > div[class*='col-'] {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      flex: 1 1 auto;
+      color: #4c4f56;
 
-  .row {
-    -webkit-flex-flow: row wrap;
-    align-content: flex-start;
-    flex:0;
+      & > div {
+        width: 100%;
+      }
+    }
   }
 }
 
@@ -82,9 +72,7 @@ div.ccm-dashboard-desktop-flex {
         font-weight: 700;
       }
     }
-
   }
-
 }
 
 div.ccm-dashboard-welcome-customize {
