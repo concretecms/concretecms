@@ -4,7 +4,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$view->getThemePath()?>/main.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
 <?php
 $showLogo = true;
 if (isset($c) && is_object($c)) {
@@ -39,7 +39,6 @@ $config = $site->getConfigRepository();
         }
     }
 }
-$showAccount = true;
 ?>
 </head>
 <body>
@@ -73,10 +72,10 @@ $showAccount = true;
                 </span>
             </a>
         </li>
-        <?php 
+        <?php
 }
     ?>
     </ul>
 </div>
-<?php 
+<?php
 } ?>
