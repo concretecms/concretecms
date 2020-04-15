@@ -35,6 +35,7 @@ EOT
 
     public function handle(PhpFixer $fixer, EventDispatcherInterface $eventDispatcher)
     {
+        class_alias('Symfony\Component\EventDispatcher\Event', 'PhpCsFixer\Event\Event');
         $action = $this->input->getArgument('action');
         switch ($action) {
             case 'fix':

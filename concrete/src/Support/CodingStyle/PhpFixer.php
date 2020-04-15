@@ -98,7 +98,7 @@ class PhpFixer
             $this->runner->addStep($this->options, $paths, $flags);
         }
 
-        $progressOutput = new ProcessOutput($output, $this->runner->getEventDispatcher(), $this->runner->calculateNumberOfFiles());
+        $progressOutput = new ProcessOutput($output, $this->runner->getEventDispatcher(), null, $this->runner->calculateNumberOfFiles());
         $counters = [];
         $counter = function (FixerFileProcessedEvent $e) use (&$counters) {
             $status = $e->getStatus();
