@@ -35,6 +35,7 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
 (function() {
     ConcretePanelManager.register({'overlay': false, 'identifier': 'dashboard', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/dashboard')?>'});
     ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/sitemap')?>'});
+    ConcretePanelManager.register({'identifier': 'help', 'position': 'right', url: '<?=URL::to('/ccm/system/panels/help')?>'});
     var panel = ConcretePanelManager.getByIdentifier('dashboard');
     <?php
     if (!(isset($hideDashboardPanel) && $hideDashboardPanel)) {
