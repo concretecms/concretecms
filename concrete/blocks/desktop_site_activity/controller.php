@@ -174,16 +174,4 @@ class Controller extends BlockController
     {
         $this->loadTypes();
     }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('javascript', 'jquery');
-
-        $c = Page::getCurrentPage();
-        if (!$c->isEditMode()) {
-            $this->addFooterItem(
-                '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>'
-            );
-        }
-    }
 }

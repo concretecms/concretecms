@@ -486,6 +486,14 @@ return [
             ['javascript', 'js/features/maps/frontend.js'],
             ['css', 'css/features/maps/frontend.css'],
         ],
+
+        'google-charts' => [
+            [
+                'javascript',
+                'https://www.gstatic.com/charts/loader.js',
+                ['local' => false],
+            ],
+        ],
     ],
     'asset_groups' => [
 
