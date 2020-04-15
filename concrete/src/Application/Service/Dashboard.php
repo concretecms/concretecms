@@ -166,13 +166,6 @@ class Dashboard
         }
         */
         $html .= '<ul class="ccm-pane-header-icons">';
-        if (!$help) {
-            $ih = Core::make('helper/concrete/ui/help');
-            $pageHelp = $ih->getPages();
-            if (isset($pageHelp[$c->getCollectionPath()])) {
-                $help = $pageHelp[$c->getCollectionPath()];
-            }
-        }
 
         if (is_array($help)) {
             $help = $help[0] . '<br/><br/><a href="' . $help[1] . '" class="btn small" target="_blank">' . t('Learn More') . '</a>';

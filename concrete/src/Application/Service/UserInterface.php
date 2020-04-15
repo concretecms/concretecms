@@ -206,30 +206,20 @@ class UserInterface
     }
 
     /**
-     * Shall we show the introductive help overlay?
+     * @deprecated There's no more an "Introduction" dialog: we now have a Help panel.
      *
-     * @return bool
+     * @return false
      */
     public function showHelpOverlay()
     {
-        $result = false;
-        if (Config::get('concrete.misc.help_overlay')) {
-            $app = Application::getFacadeApplication();
-            $u = $app->make(ConcreteUser::class);
-            $timestamp = $u->config('MAIN_HELP_LAST_VIEWED');
-            if (!$timestamp) {
-                $result = true;
-            }
-        }
-
-        return $result;
+        return false;
     }
 
+    /**
+     * @deprecated There's no more an "Introduction" dialog: we now have a Help panel.
+     */
     public function trackHelpOverlayDisplayed()
     {
-        $app = Application::getFacadeApplication();
-        $u = $app->make(ConcreteUser::class);
-        $u->saveConfig('MAIN_HELP_LAST_VIEWED', time());
     }
 
     /**

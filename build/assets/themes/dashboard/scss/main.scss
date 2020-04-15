@@ -163,36 +163,6 @@ div#ccm-dashboard-content {
 }
 
 /**
- * Header Help
- */
-
-div#ccm-dashboard-content {
-  div.ccm-notification-help-launcher {
-
-    top: 31px;
-
-    html.ccm-panel-open.ccm-panel-right & {
-      transform: translate(0, 0);
-    }
-
-    position: absolute;
-    z-index: $index-level-dashboard-help;
-
-  }
-
-  div.ccm-notification-help {
-    position: absolute;
-    top: 31px;
-    z-index: $index-level-dashboard-help;
-
-    html.ccm-panel-open.ccm-panel-right & {
-      transform: translate(0, 0);
-    }
-  }
-}
-
-
-/**
  * Connect to community
  */
 div#ccm-dashboard-content {
