@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Controller;
+namespace Concrete\Tests\Console;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
@@ -152,6 +152,7 @@ class ServiceProviderTest extends TestCase
             ConcreteCommand\InstallThemeCommand::class,
             ConcreteCommand\BlacklistClear::class,
             ConcreteCommand\SetDatabaseCharacterSetCommand::class,
+            ConcreteCommand\QueueProcessCommand::class,
             ConcreteCommand\JobCommand::class,
             ConcreteCommand\UpdateCommand::class,
             ConcreteCommand\RescanFilesCommand::class,
@@ -162,8 +163,12 @@ class ServiceProviderTest extends TestCase
             ConcreteCommand\FixDatabaseForeignKeys::class,
             DBALCommand\ImportCommand::class,
             DBALCommand\RunSqlCommand::class,
+            DBALCommand\ReservedWordsCommand::class,
+            ORMCommand\ClearCache\CollectionRegionCommand::class,
+            ORMCommand\ClearCache\EntityRegionCommand::class,
             ORMCommand\ClearCache\MetadataCommand::class,
             ORMCommand\ClearCache\QueryCommand::class,
+            ORMCommand\ClearCache\QueryRegionCommand::class,
             ORMCommand\ClearCache\ResultCommand::class,
             ORMCommand\SchemaTool\CreateCommand::class,
             ORMCommand\SchemaTool\UpdateCommand::class,
