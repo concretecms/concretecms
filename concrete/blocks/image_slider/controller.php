@@ -3,6 +3,7 @@
 namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
@@ -114,23 +115,15 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function duplicate($newBID)
     {
         parent::duplicate($newBID);
-        $db = Database::get();
-        $v = [$this->bID];
-        $q = 'select * from btImageSliderEntries where bID = ?';
-        $r = $db->query($q, $v);
-        while ($row = $r->FetchRow()) {
-            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder, internalLinkCID) values(?,?,?,?,?,?,?)',
-                [
-                    $newBID,
-                    $row['fID'],
-                    $row['linkURL'],
-                    $row['title'],
-                    $row['description'],
-                    $row['sortOrder'],
-                    $row['internalLinkCID'],
-                ]
-            );
-        }
+        $db = $this->app->make(Connection::class);
+        $copyFields = 'fID, linkURL, title, description, sortOrder, internalLinkCID';
+        $db->executeUpdate(
+            "INSERT INTO btImageSliderEntries (bID, {$copyFields}) SELECT ?, {$copyFields} FROM btImageSliderEntries WHERE bID = ?",
+            [
+                $newBID,
+                $this->bID
+            ]
+        );
     }
 
     public function delete()

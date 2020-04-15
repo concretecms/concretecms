@@ -133,7 +133,7 @@ class ForeignKeyFixer
         }
         $tableIndex = array_search(strtolower($foreignTableName), array_map('strtolower', $actualTableNames));
         if ($tableIndex === false) {
-            $this->tick(t('- the foreign key \'%1$s\' references an unknown table (\'$2$s\')', $foreignKey->getName(), $foreignTableName));
+            $this->tick(t('- the foreign key \'%1$s\' references an unknown table (\'%2$s\')', $foreignKey->getName(), $foreignTableName));
 
             return;
         }
@@ -148,7 +148,7 @@ class ForeignKeyFixer
         $newForeignKey->setLocalTable($foreignKey->getLocalTable());
         try {
             $this->schemaManager->dropForeignKey($foreignKey, $foreignKey->getLocalTable());
-            $this->tick(t('- the foreign key \'%1$s\' referencing \'$2$s\' has been dropped', $foreignKey->getName(), $foreignTableName));
+            $this->tick(t('- the foreign key \'%1$s\' referencing \'%2$s\' has been dropped', $foreignKey->getName(), $foreignTableName));
         } catch (Exception $x) {
             $errors[] = $x;
             $this->tick($x);
@@ -162,7 +162,7 @@ class ForeignKeyFixer
         }
         try {
             $this->schemaManager->createForeignKey($newForeignKey, $newForeignKey->getLocalTable());
-            $this->tick(t('- the foreign key \'%1$s\' referencing \'$2$s\' has been created', $newForeignKey->getName(), $newForeignTableName));
+            $this->tick(t('- the foreign key \'%1$s\' referencing \'%2$s\' has been created', $newForeignKey->getName(), $newForeignTableName));
         } catch (Exception $x) {
             $errors[] = $x;
             $this->tick($x);
