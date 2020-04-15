@@ -644,7 +644,7 @@ EOT
         $content .= 'Dropzone.prototype.defaultOptions.defaultParams = Dropzone.prototype.defaultOptions.params;' . "\n";
         $content .= <<<EOT
 Dropzone.prototype.defaultOptions.params = function(files, xhr, chunk) {
-    var params = this.options.defaultParams.call(this, files, xhr, chunk);
+    var params = this.options.defaultParams.call(this, files, xhr, chunk) || {};
     var extraParams = {$extraParamsString};
 
     var keys = Object.keys(extraParams);

@@ -58,6 +58,7 @@ class ServiceProvider extends Provider
         Command\UpdateCommand::class,
         Command\SetDatabaseCharacterSetCommand::class,
         Command\Express\ExportCommand::class,
+        Command\FixDatabaseForeignKeys::class,
     ];
 
     /**
