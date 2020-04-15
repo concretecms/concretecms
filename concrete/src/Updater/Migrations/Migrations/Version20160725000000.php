@@ -32,6 +32,11 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
 {
     use AddPageDraftsBooleanTrait;
 
+    /**
+     * @var string[]
+     */
+    private $delayedQueries = [];
+
     public function addNotifications()
     {
         $this->output(t('Adding notifications...'));
@@ -52,7 +57,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
      */
     public function upgradeDatabase()
     {
-        $this->connection->Execute('set foreign_key_checks = 0');
+        $this->delayedQueries = [];
         $this->prepareInvalidForeignKeys();
         $this->fixMultilingualPageRelations();
         $this->renameProblematicTables();
@@ -82,8 +87,8 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         $this->installLocales();
         $this->fixStacks();
         $this->nullifyInvalidForeignKeys();
-        $this->connection->Execute('set foreign_key_checks = 1');
         $this->migrateDrafts();
+        $this->executeDelayedQueries();
     }
 
     protected function output($message)
@@ -369,7 +374,18 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             }
         }
 
-        $sm->installDatabaseFor($metadatas);
+        $sm->installDatabaseFor(
+            $metadatas,
+            function ($sql) {
+                if (!preg_match('/^\s*ALTER\s+TABLE\s+\S+\s+ADD\s+CONSTRAINT/i', $sql)) {
+                    return true;
+                }
+                if (!in_array($sql, $this->delayedQueries, true)) {
+                    $this->delayedQueries[] = $sql;
+                }
+                return false;
+            }
+        );
     }
 
     protected function importAttributeKeys()
@@ -1090,6 +1106,9 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     protected function updateFileManager()
     {
         $this->output(t('Migrating to new file manager...'));
+        $this->refreshDatabaseTables([
+            'TreeFileFolderNodes',
+        ]);
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
         if (!is_object($folder)) {
@@ -1369,5 +1388,15 @@ EOT
         }
 
         return $result;
+    }
+
+    private function executeDelayedQueries()
+    {
+        if ($this->delayedQueries !== []) {
+            $this->output(t('Executing delayed queries...'));
+            while (($sql = array_shift($this->delayedQueries)) !== null) {
+                $this->connection->executeUpdate($sql);
+            }
+        }
     }
 }

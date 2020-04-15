@@ -28,8 +28,16 @@ class DateTimeCorePageProperty extends CorePageProperty
     public function validate()
     {
         $e = Loader::helper('validation/error');
-        $date = $this->getPageTypeComposerControlDraftValue();
-        if (!strtotime($date)) {
+        
+        $val = $this->getRequestValue();
+        
+        if ($val['date_time_dt'] && $val['date_time_h'] && $val['date_time_m']) {
+            $datetime = $val['date_time_dt'] . ' ' . $val['date_time_h'] . ':' . $val['date_time_m'] . ':00';
+        } else {
+            $datetime = $this->getPageTypeComposerControlDraftValue();
+        }
+        
+        if (!strtotime($datetime)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
 
