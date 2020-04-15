@@ -8,7 +8,6 @@ $router->all('/ccm/system/captcha/picture', '\Concrete\Core\Captcha\CaptchaWithP
 $router->all('/ccm/system/dialogs/language/update/details', '\Concrete\Controller\Dialog\Language\Update\Details::view');
 $router->all('/dashboard/blocks/stacks/list', '\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page');
 $router->all('/ccm/system/notification/alert/archive/', '\Concrete\Controller\Backend\Notification\Alert::archive');
-$router->all('/ccm/system/dialogs/help/introduction/', '\Concrete\Controller\Dialog\Help\Introduction::view');
 $router->all('/ccm/system/accept_privacy_policy/', '\Concrete\Controller\Backend\PrivacyPolicy::acceptPrivacyPolicy');
 $router->all('/ccm/system/account/remove_inbox_new_message_status', '\Concrete\Controller\Backend\Account::removeInboxNewMessageStatus');
 
