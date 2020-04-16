@@ -72,3 +72,6 @@ __IDE_SYMBOLS__.php
 
 # ignore Visual Code project files
 .vscode
+
+# Ignore stuff copied in from node dependencies
+concrete/js/ckeditor/package.json
