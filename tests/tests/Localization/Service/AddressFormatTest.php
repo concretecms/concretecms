@@ -236,7 +236,7 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
             [
                 'address1' => '１丁目１３番地',
                 'city' => '千代田区',
-                'state_province' => '東京都',
+                'state_province' => '13',
                 'country' => 'JP',
                 'postal_code' => '101-0054',
             ],
@@ -245,7 +245,7 @@ class AddressFormatTest extends PHPUnit_Framework_TestCase
         );
         $expected = '日本' . "\n" .
             '〒101-0054' . "\n" .
-            '東京都千代田区' . "\n" .
+            '千代田区' . "\n" .
             '１丁目１３番地'
         ;
 
