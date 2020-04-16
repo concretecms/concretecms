@@ -41,9 +41,9 @@ $config = $site->getConfigRepository();
 }
 ?>
 </head>
-<body>
+<body class="min-vh-100">
 
-<div class="ccm-ui">
+<div class="ccm-ui min-vh-100">
 
 <?php if ($showLogo) {
     ?>
