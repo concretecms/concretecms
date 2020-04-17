@@ -66,7 +66,7 @@ if ($install_config) {
               action="<?= $urlResolver->resolve(['install', 'select_language']) ?>" class="w-100">
             <div class="form-group">
                 <p class="lead"><?=t('Choose the language you want to run your website in.')?></p>
-                
+
                 <div class="input-group-lg input-group">
                     <?php
                     $selectOptions = $locales;
@@ -93,6 +93,7 @@ if ($install_config) {
     $requiredPreconditionFailed = false;
     $pendingPreconditions = [];
     list($requiredPreconditions, $optionalPreconditions) = $controller->getPreconditions();
+    $i = 0;
     foreach ([
         t('Required Items') => $requiredPreconditions,
         t('Optional Items') => $optionalPreconditions,
@@ -103,7 +104,7 @@ if ($install_config) {
     }
     $leftRightPreconditions = array_chunk($preconditions, ceil($numPreconditions / 2));
     ?>
-        <div class="card card-default">
+        <div class="card card-default <?php if ($i == 0) { ?>mb-4<?php } ?>">
             <div class="card-header"><?= $preconditionsTitle ?></div>
             <div class="card-body">
                 <div class="row">
@@ -186,6 +187,7 @@ if ($install_config) {
             </div>
         </div>
     <?php
+        $i++;
     }
     ?>
         <script>
@@ -275,13 +277,13 @@ if ($install_config) {
             <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>"
                   id="continue-to-installation" style="visibility: hidden" class="pull-right">
                 <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
-                <a class="float-left btn btn-secondary" href="<?=URL::to('/')?>">
+                <a class="float-left btn btn-secondary btn-sm" href="<?=URL::to('/')?>">
                     <?= t('Back') ?>
                 </a>
 
-                <a class="float-right btn btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()">
+                <button class="float-right btn btn-primary btn-sm" onclick="$(this).parent().submit()">
                     <?= t('Continue to Installation') ?>
-                </a>
+                </button>
             </form>
         </div>
 
@@ -359,7 +361,7 @@ if ($install_config) {
             }
             ?>
 
-            <div class="card card-default">
+            <div class="card card-default mb-4">
                 <div class="card-header"><?= t('Site') ?></div>
                 <div id="site" class="">
                     <div class="card-body">
@@ -396,31 +398,33 @@ if ($install_config) {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card card-default mb-4">
                 <div class="card-header"><?= t('Starting Point') ?></div>
-                <div id="starting-point" class="">
-                    <div class="card-body">
-                        <div class="row">
-                            <?php
-                            $availableSampleContent = StartingPointPackage::getAvailableList();
-                            foreach ($availableSampleContent as $spl) {
-                                $pkgHandle = $spl->getPackageHandle();
-                                ?>
-                                <div class="col-md-6">
-                                    <div class="radio">
-                                        <label>
-                                            <?= $form->radio('SAMPLE_CONTENT', $pkgHandle,
-                                                ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1)) ?>
-                                            <strong><?= $spl->getPackageName() ?></strong><br/>
-                                            <?= $spl->getPackageDescription() ?>
-                                        </label>
-                                    </div>
-                                </div>
-                                <?php
-                            }
+                <div id="starting-point" class="container">
+                    <div class="card-body row">
+                        <?php
+                        $availableSampleContent = StartingPointPackage::getAvailableList();
+                        foreach ($availableSampleContent as $spl) {
+                            $pkgHandle = $spl->getPackageHandle();
                             ?>
-                        </div>
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    <label>
+                                        <?= $form->radio('SAMPLE_CONTENT', $pkgHandle,
+                                            ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1)) ?>
+                                        <strong><?= $spl->getPackageName() ?></strong><br/>
+                                        <?= $spl->getPackageDescription() ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        ?>
                     </div>
                 </div>
+            </div>
+            <div class="card card-default mb-4">
                 <div class="card-header">
                     <?= t('Database') ?>
                 </div>
@@ -457,30 +461,23 @@ if ($install_config) {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card card-default mb-4">
                 <div class="card-header">
                     <?= t('Privacy Policy') ?>
                 </div>
-                <div id="privacy" class="card-collapse collapse show">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <p class="text-muted"><?= t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
-                                        <label>
-
-                                            <?= $form->checkbox('privacy', 1, false, ['required' => 'required']) ?>
-                                            <?= t('Yes, I understand and agree to the <a target="_blank" href="%s">Privacy Policy</a>.',
-                                                Config::get('concrete.urls.privacy_policy')) ?>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="card-body">
+                    <p class="text-muted"><?= t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
+                    <div class="form-check">
+                        <?= $form->checkbox('privacy', 1, false, ['required' => 'required']) ?>
+                        <label class="form-check-label" for="privacy">
+                            <?= t('Yes, I understand and agree to the <a target="_blank" href="%s">Privacy Policy</a>.',
+                                Config::get('concrete.urls.privacy_policy')) ?>
+                        </label>
                     </div>
                 </div>
             </div>
-            <div class="card card-default mt-5 mb-5">
+            <div class="card card-default">
                 <div class="card-header" role="tab" id="headingThree">
                     <a class="collapsed" role="button" data-toggle="collapse"
                        href="#advanced"><?= t('Advanced Options') ?>
@@ -488,7 +485,7 @@ if ($install_config) {
                 </div>
 
                 <div id="advanced" class="card-collapse collapse">
-                    <div class="card-body">
+                    <div class="card-body container">
 
                         <div class="row">
 
@@ -497,8 +494,12 @@ if ($install_config) {
 
                                 <div class="form-group">
                                     <label class="control-label">
-                                        <?= $form->checkbox('canonicalUrlChecked', '1') ?>
-                                        <?= t('Set main canonical URL') ?>:
+                                        <div class="form-check">
+                                            <?= $form->checkbox('canonicalUrlChecked', '1') ?>
+                                            <label class="form-check-label" for="canonicalUrlChecked">
+                                                <?= t('Set main canonical URL') ?>:
+                                            </label>
+                                        </div>
                                     </label>
                                     <?= $form->url('canonicalUrl', h($canonicalUrl), [
                                         'pattern' => 'https?:.+',
@@ -508,8 +509,12 @@ if ($install_config) {
 
                                 <div class="form-group">
                                     <label class="control-label">
-                                        <?= $form->checkbox('canonicalUrlAlternativeChecked', '1') ?>
-                                        <?= t('Set alternative canonical URL') ?>:
+                                        <div class="form-check">
+                                            <?= $form->checkbox('canonicalUrlAlternativeChecked', '1') ?>
+                                            <label class="form-check-label" for="canonicalUrlAlternativeChecked">
+                                                <?= t('Set alternative canonical URL') ?>:
+                                            </label>
+                                        </div>
                                     </label>
                                     <?= $form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), [
                                         'pattern' => 'https?:.+',
@@ -574,9 +579,11 @@ if ($install_config) {
             </div>
             <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
             <div class="ccm-install-actions">
-                <button type="submit" class="btn btn-success float-right">
-                    <?= t('Install concrete5') ?>
-                </button>
+                <div class="w-100">
+                    <button type="submit" class="btn btn-primary btn-sm float-right">
+                        <?= t('Install concrete5') ?>
+                    </button>
+                </div>
             </div>
 
         </form>
@@ -672,37 +679,36 @@ if ($install_config) {
         <div class="card card-info">
             <div class="card-header"><?= t('While You Wait') ?></div>
             <div class="card-body">
-
-                <p>
                 <h4 class=""><?= t('Forums') ?></h4>
+                <p>
                 <?= t('<a href="%s" target="_blank">The forum</a> on concrete5.org is full of helpful community members that make concrete5 so great.',
                     Config::get('concrete.urls.help.forum')) ?>
                 </p>
 
-                <p>
                 <h4 class=""><?= t('Slack') ?></h4>
+                <p>
                 <?= t('In the <a href="%s" target="_blank">concrete5 Slack channels</a> you can get in touch with a lot of concrete5 lovers and developers.',
                     Config::get('concrete.urls.help.slack')) ?>
                 </p>
 
-                <p>
                 <h4 class=""><?= t('User Documentation') ?></h4>
+                <p>
                 <?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with concrete5.',
                     Config::get('concrete.urls.help.user')) ?>
                 </p>
 
-                <p>
                 <h4 class=""><?= t('Screencasts') ?></h4>
+                <p>
                 <?= t('The concrete5 <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use concrete5.',
                     Config::get('concrete.urls.videos')) ?>
                 </p>
 
-                <p>
                 <h4 class=""><?= t('Developer Documentation') ?></h4>
+                <p>
                 <?= t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom concrete5 development.',
                     Config::get('concrete.urls.help.developer')) ?>
                 </p>
-                
+
             </div>
         </div>
     </div>
@@ -717,18 +723,19 @@ if ($install_config) {
     </div>
 
     <div id="install-progress-error-wrapper">
-        <div class="spacer-row-6"></div>
         <div id="install-progress-errors">
         </div>
     </div>
 
     <div class="ccm-install-actions">
-        <div id="install-progress-summary"><?= t('Beginning Installation') ?></div>
-        <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
-                data-button="installation-complete" class="float-right btn btn-primary">
-            <?= t('Installing...') ?>
-            <i class="fa fa-spinner fa-spin"></i>
-        </button>
+        <div class="w-100">
+            <div id="install-progress-summary"><?= t('Beginning Installation') ?></div>
+            <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
+                    data-button="installation-complete" class="float-right btn btn-sm btn-primary">
+                <?= t('Installing...') ?>
+                <i class="fa fa-spinner fa-spin"></i>
+            </button>
+        </div>
     </div>
 
 <?php } ?>

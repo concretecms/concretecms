@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <h1><?= t('Learn the basics') ?></h1>
 
 <section>
-    <h2><?= t('Use the toolbar') ?></h2>
+    <h5><?= t('Use the toolbar') ?></h5>
     <p><?= t('Learn to use the toolbar in under three minutes.') ?></p>
     <div class="ccm-panel-help-media">
         <div>
@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </section>
 
 <section class="ccm-panel-help-item">
-    <h2><?= h(t('Add & Change Content')) ?></h2>
+    <h5><?= h(t('Add & Change Content')) ?></h5>
     <p><?= t('Quickly add and change content on the fly with our inline editors.') ?></p>
     <div class="ccm-panel-help-media">
         <div>
@@ -31,17 +31,17 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <i class="fas fa-play-circle"></i>
                 <?= t('Watch Video') ?>
             </a>
+            <br />
+            <a href="#" data-launch-guide="change-content"><?= t(' Change Content') ?></a>
         </div>
         <div>
             <a href="#" data-launch-guide="add-content"><?= t('Add Content') ?></a>
-            <br />
-            <a href="#" data-launch-guide="change-content"><?= t(' Change Content') ?></a>
         </div>
     </div>
 </section>
 
 <section class="ccm-panel-help-item">
-    <h2><?= t('Add a page') ?></h2>
+    <h5><?= t('Add a page') ?></h5>
     <p><?= t('Quickly add and change content on the fly with our inline editors.') ?></p>
     <div class="ccm-panel-help-media">
         <div>
@@ -57,7 +57,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </section>
 
 <section class="ccm-panel-help-item">
-    <h2><?= t('Personalize your site') ?></h2>
+    <h5><?= t('Personalize your site') ?></h5>
     <div class="ccm-panel-help-media">
         <div>
             <a href="https://www.youtube.com/watch?v=xI8dUNAc6fU" data-lightbox="iframe">
@@ -72,7 +72,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </section>
 
 <section class="ccm-panel-help-item">
-    <h2><?= t('Cleanup and organize your site') ?></h2>
+    <h5><?= t('Organize your site') ?></h5>
     <div class="ccm-panel-help-media">
         <div>
             <a href="https://www.youtube.com/watch?v=_NhlWLU_L6E" data-lightbox="iframe">
