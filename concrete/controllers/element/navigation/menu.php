@@ -76,7 +76,7 @@ class Menu extends ElementController
         if (in_array($page->getCollectionID(), $this->trail)) {
             $classes[] = 'nav-path-selected';
         }
-        return implode($classes, ' ');
+        return implode(' ', $classes);
     }
 
     public function displayDivider(Page $page, Page $next = null)
