@@ -16,21 +16,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SlotTemplate
 {
-    
     use PackageTrait;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $id;
-    
+
     /**
      * @ORM\Column(type="string")
      */
     protected $icon = '';
-    
+
     /**
      * @ORM\Column(type="string")
      */
@@ -40,85 +39,86 @@ class SlotTemplate
      * @ORM\Column(type="string")
      */
     protected $name = '';
-    
+
     /**
      * @ORM\Column(type="string")
      */
-    protected $handle;
+    protected $handle = '';
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
-    
-    /**
-     * @return mixed
-     */
-    public function getHandle()
+
+    public function getHandle(): string
     {
         return $this->handle;
     }
 
     /**
-     * @param mixed $handle
+     * @return $this
      */
-    public function setHandle($handle): void
+    public function setHandle(string $handle): self
     {
         $this->handle = $handle;
+
+        return $this;
     }
-    
-    /**
-     * @return mixed
-     */
-    public function getIcon()
+
+    public function getIcon(): string
     {
         return $this->icon;
     }
 
     /**
-     * @param mixed $icon
+     * @return $this
      */
-    public function setIcon($icon): void
+    public function setIcon(string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFormFactor()
+    public function getDisplayName(): string
+    {
+        return tc('BoardSlotTemplateName', $this->getName());
+    }
+    
+    public function getFormFactor(): string
     {
         return $this->formFactor;
     }
 
     /**
-     * @param mixed $formFactor
+     * @return $this
      */
-    public function setFormFactor($formFactor): void
+    public function setFormFactor(string $formFactor): self
     {
         $this->formFactor = $formFactor;
+
+        return $this;
     }
 
     /**
-     * @param mixed $name
+     * @return $this
      */
-    public function setName($name): void
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
-    
-    public function getTemplateIconImage($asTag = true)
+
+    /**
+     * @return \HtmlObject\Image|string|null
+     */
+    public function getTemplateIconImage(bool $asTag = true)
     {
         if ($this->getIcon()) {
             $image = ASSETS_URL_IMAGES . '/icons/board_slot_templates/' . $this->getIcon();
@@ -136,7 +136,7 @@ class SlotTemplate
         return $manager->driver($this->getHandle());
     }
 
-    public function export(\SimpleXMLElement $node)
+    public function export(\SimpleXMLElement $node): void
     {
         $template = $node->addChild('template');
         $template->addAttribute('handle', $this->getHandle());
