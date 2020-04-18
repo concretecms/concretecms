@@ -14,16 +14,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Template
 {
-    
     use PackageTrait;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $id;
-    
+
     /**
      * @ORM\Column(type="string")
      */
@@ -33,11 +32,11 @@ class Template
      * @ORM\Column(type="string")
      */
     protected $name = '';
-    
+
     /**
      * @ORM\Column(type="string")
      */
-    protected $handle;
+    protected $handle = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="Category", inversedBy="templates")
@@ -59,61 +58,60 @@ class Template
         $this->categories = new ArrayCollection();
         $this->fields = new ArrayCollection();
     }
-    
-    /**
-     * @return mixed
-     */
-    public function getId()
+
+    public function getId(): ?int
     {
         return $this->id;
     }
-    
-    /**
-     * @return mixed
-     */
-    public function getHandle()
+
+    public function getHandle(): string
     {
         return $this->handle;
     }
 
     /**
-     * @param mixed $handle
+     * @return $this
      */
-    public function setHandle($handle): void
+    public function setHandle(string $handle): self
     {
         $this->handle = $handle;
+
+        return $this;
     }
-    
-    /**
-     * @return mixed
-     */
-    public function getIcon()
+
+    public function getIcon(): string
     {
         return $this->icon;
     }
 
     /**
-     * @param mixed $icon
+     * @return $this
      */
-    public function setIcon($icon): void
+    public function setIcon(string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
+    public function getDisplayName(): string
+    {
+        return tc('SummaryTemplateName', $this->getName());
+    }
+
     /**
-     * @param mixed $name
+     * @return $this
      */
-    public function setName($name): void
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -147,8 +145,11 @@ class Template
     {
         $this->fields = $fields;
     }
-    
-    public function getTemplateIconImage($asTag = true)
+
+    /**
+     * @return \HtmlObject\Image|string|null
+     */
+    public function getTemplateIconImage(bool $asTag = true)
     {
         if ($this->getIcon()) {
             $image = ASSETS_URL_IMAGES . '/icons/summary_templates/' . $this->getIcon();
@@ -159,14 +160,14 @@ class Template
         }
     }
 
-    public function export(\SimpleXMLElement $node)
+    public function export(\SimpleXMLElement $node): void
     {
         $template = $node->addChild('template');
         $template->addAttribute('handle', $this->getHandle());
         $template->addAttribute('name', h($this->getName()));
         $template->addAttribute('icon', h($this->getIcon()));
         $template->addAttribute('package', $this->getPackageHandle());
-        
+
         $categories = $template->addChild('categories');
         foreach($this->getCategories() as $category) {
             $categoryNode = $categories->addChild('category');
