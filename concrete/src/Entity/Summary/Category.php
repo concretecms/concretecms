@@ -16,69 +16,68 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Category
 {
-    
     use PackageTrait;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $id;
-    
+
     /**
      * @ORM\Column(type="string")
      */
     protected $name = '';
-    
+
     /**
      * @ORM\Column(type="string")
      */
-    protected $handle;
+    protected $handle = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="Template", mappedBy="categories")
      */
     protected $templates;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     */
-    public function setName($name): void
+    public function getDisplayName(): string
     {
-        $this->name = $name;
+        return tc('SummaryCategoryName', $this->getName());
     }
 
     /**
-     * @return mixed
+     * @return $this
      */
-    public function getHandle()
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getHandle(): string
     {
         return $this->handle;
     }
 
     /**
-     * @param mixed $handle
+     * @return $this
      */
-    public function setHandle($handle): void
+    public function setHandle(string $handle): self
     {
         $this->handle = $handle;
+
+        return $this;
     }
 
     /**
@@ -97,7 +96,7 @@ class Category
         $this->templates = $templates;
     }
 
-    public function export(\SimpleXMLElement $node)
+    public function export(\SimpleXMLElement $node): void
     {
         $container = $node->addChild('category');
         $container->addAttribute('handle', $this->getHandle());
@@ -111,9 +110,4 @@ class Category
         $manager = $app->make(Manager::class);
         return $manager->driver($this->getHandle());
     }
-
-
-
-
-
 }
