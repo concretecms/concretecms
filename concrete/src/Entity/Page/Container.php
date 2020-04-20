@@ -13,16 +13,15 @@ use HtmlObject\Image;
  */
 class Container
 {
-    
     use PackageTrait;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $containerID;
-    
+
     /**
      * @ORM\Column(type="string")
      */
@@ -37,64 +36,66 @@ class Container
      * @ORM\Column(type="string")
      */
     protected $containerName = '';
-    
-    /**
-     * @return mixed
-     */
-    public function getContainerID()
+
+    public function getContainerID(): ?int
     {
         return $this->containerID;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContainerHandle()
+    public function getContainerHandle(): string
     {
         return $this->containerHandle;
     }
 
     /**
-     * @param mixed $containerHandle
+     * @return $this
      */
-    public function setContainerHandle($containerHandle): void
+    public function setContainerHandle(string $containerHandle): self
     {
         $this->containerHandle = $containerHandle;
+
+        return $this;
     }
-    
-    /**
-     * @return mixed
-     */
-    public function getContainerName()
+
+    public function getContainerName(): string
     {
         return $this->containerName;
     }
 
-    /**
-     * @param mixed $containerName
-     */
-    public function setContainerName($containerName): void
+    public function getContainerDisplayName(): string
     {
-        $this->containerName = $containerName;
+        return tc('PageContainerName', $this->getContainerName());
     }
 
     /**
-     * @return mixed
+     * @return $this
      */
-    public function getContainerIcon()
+    public function setContainerName(string $containerName): self
+    {
+        $this->containerName = $containerName;
+
+        return $this;
+    }
+
+    public function getContainerIcon(): string
     {
         return $this->containerIcon;
     }
 
     /**
-     * @param mixed $containerIcon
+     * @return $this
      */
-    public function setContainerIcon($containerIcon): void
+    public function setContainerIcon(string $containerIcon): self
     {
         $this->containerIcon = $containerIcon;
+
+        return $this;
     }
-   
-    public function getContainerIconImage($asTag = true)
+
+    /**
+     * @return \HtmlObject\Image|string|null
+     */
+    public function getContainerIconImage(bool $asTag = true)
     {
         if ($this->getContainerIcon()) {
             $image = ASSETS_URL_IMAGES . '/icons/containers/' . $this->getContainerIcon();
@@ -104,9 +105,8 @@ class Container
             return $image;
         }
     }
-    
-   
-    public function export(\SimpleXMLElement $node)
+
+    public function export(\SimpleXMLElement $node): void
     {
         $container = $node->addChild('container');
         $container->addAttribute('handle', $this->getContainerHandle());
@@ -114,6 +114,4 @@ class Container
         $container->addAttribute('icon', $this->getContainerIcon());
         $container->addAttribute('package', $this->getPackageHandle());
     }
-
-    
 }

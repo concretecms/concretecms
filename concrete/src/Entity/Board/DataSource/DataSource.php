@@ -15,73 +15,69 @@ use Concrete\Core\Board\DataSource\Driver\Manager;
  */
 class DataSource
 {
-    
     use PackageTrait;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $dataSourceID;
-    
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $handle;
 
     /**
      * @ORM\Column(type="string")
      */
-    protected $name;
+    protected $handle = '';
 
     /**
-     * @return mixed
+     * @ORM\Column(type="string")
      */
-    public function getId()
+    protected $name = '';
+
+    public function getId(): ?int
     {
         return $this->dataSourceID;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getHandle()
+    public function getHandle(): string
     {
         return $this->handle;
     }
 
     /**
-     * @param mixed $handle
+     * @return $this
      */
-    public function setHandle($handle): void
+    public function setHandle(string $handle): self
     {
         $this->handle = $handle;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @return $this
      */
-    public function setName($name): void
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
-    
-    public function getDriver() : DriverInterface
+
+    public function getDisplayName(): string
+    {
+        return tc('BoardDataSourceName', $this->getName());
+    }
+
+    public function getDriver(): DriverInterface
     {
         $app = Facade::getFacadeApplication();
         $manager = $app->make(Manager::class);
         return $manager->driver($this->getHandle());
     }
-    
-
-
 }
