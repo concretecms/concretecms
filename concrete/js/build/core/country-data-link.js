@@ -154,7 +154,6 @@
             .on('change', function() {
                 me.countryChanged();
             })
-            .trigger('change')
         ;
         me.$stateprovinceSelect.on('change', function() {
             me.$stateprovince
@@ -162,9 +161,10 @@
                 .trigger('change')
             ;
         });
+        me.countryChanged(true);
     }
     Link.prototype = {
-        countryChanged: function() {
+        countryChanged: function(initializing) {
             var me = this;
             loadDataForCountry(me.$country.val(), function(countryCode, countryData) {
                 if (me.$country.val() !== countryCode) {
@@ -172,7 +172,7 @@
                 }
                 me.$stateprovinceSelect.empty();
 
-                if (me.config.clearStateProvinceOnChange) {
+                if (!initializing && me.config.clearStateProvinceOnChange) {
                     me.$stateprovince.val('');
                 }
 
