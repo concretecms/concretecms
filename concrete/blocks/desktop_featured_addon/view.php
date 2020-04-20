@@ -9,7 +9,7 @@
 	<img src="<?=$remoteItem->getRemoteIconURL()?>" width="80" height="80" />
 	<h3><?=$remoteItem->getName()?></h3>
 	<p><?=$remoteItem->getDescription()?></p>
-	<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-default btn-lg"><?=t('Learn More')?></a>
+	<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-primary"><?=t('Learn More')?></a>
 
 	</div>
 </div>

@@ -1,9 +1,12 @@
 div.ccm-block-desktop-latest-form {
-  background-color: #127db4;
+  background-color: #313237;
   display: flex;
   align-items: center;
   color: #47bbf6;
   transition: background-color linear 0.1s;
+  border-radius: .25rem;
+  box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+
   div.ccm-block-desktop-latest-form-inner {
     padding-top: 40px;
     padding-bottom: 40px;
@@ -13,7 +16,6 @@ div.ccm-block-desktop-latest-form {
     span {
       display: block;
     }
-
   }
 
   h3 {
@@ -22,13 +24,12 @@ div.ccm-block-desktop-latest-form {
 
   div.ccm-block-desktop-latest-form-icon {
     border-radius: 50%;
-
     width: 80px;
     height: 80px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
     padding: 20px;
-
     background: #5ea7cc;
     text-align: center;
     position: relative;
@@ -40,7 +41,6 @@ div.ccm-block-desktop-latest-form {
       margin-left: auto;
       margin-right: auto;
     }
-
   }
 
   &.ccm-block-desktop-latest-form-linked:hover {

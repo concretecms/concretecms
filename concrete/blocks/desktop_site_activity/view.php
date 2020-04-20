@@ -49,13 +49,14 @@
                             pieHole: 0.9,
                             pieSliceText: 'none',
                             chartArea: {
-                                left: 'auto',
-                                backgroundColor: '#f8fafb',
-                                width: '100%',
-                                height: '100%'
+                                left: '5%',
+                                top: '5%',
+                                backgroundColor: '#fafafa',
+                                width: '90%',
+                                height: '90%'
                             },
                             backgroundColor: {
-                                fill: '#f8fafb'
+                                fill: '#fafafa'
                             },
                             legend: 'none',
                             tooltip: { trigger: 'none' },

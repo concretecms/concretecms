@@ -15,6 +15,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme
     {
         $this->bedrockRegisterAssets();
         $this->providesAsset('core/cms');
+        $this->requireAsset('javascript', 'google-charts');
     }
 
 }
