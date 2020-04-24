@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<?php if ($assignment->allowEditDateTime()) {
     ?>
 		<div class="form-group">
-			<label for="cName" class="control-label"><?=t('Created Time')?></label>
+			<label for="cDatePublic" class="control-label"><?=t('Created Time')?></label>
 			<div>
 				<?php echo $dt->datetime('cDatePublic', $c->getCollectionDatePublic());
     ?>
@@ -52,7 +52,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<?php if ($assignment->allowEditUserID()) {
     ?>
 		<div class="form-group">
-			<label for="cName" class="control-label"><?=t('Author')?></label>
+			<label for="uID" class="control-label"><?=t('Author')?></label>
 			<div>
 			<?php
             echo $uh->selectUser('uID', $c->getCollectionUserID());
