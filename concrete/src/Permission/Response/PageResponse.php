@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Permission\Key\Key;
 use Loader;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
@@ -107,6 +108,13 @@ class PageResponse extends Response
 
     public function canAddBlockType($bt)
     {
+        // Check can add the block to any area on the site.
+        $key = Key::getByHandle('add_block');
+        if (!$key || !$key->validate($bt)) {
+            return false;
+        }
+
+        // Check can add blocks to this area.
         $list = Area::getListOnPage($this->object);
         foreach ($list as $la) {
             $lap = new Permissions($la);
