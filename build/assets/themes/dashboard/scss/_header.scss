@@ -1,6 +1,55 @@
-/**
- * Handles positioning header menus, header buttons, header search forms, etc...
- */
+/* Page header title, bookmark icon: */
+div#ccm-dashboard-content {
+
+  header.ccm-dashboard-page-header {
+    padding: 20px $dashboard-content-padding-r 20px $dashboard-content-padding-l;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .header-icon {
+      .icon-bookmark {
+        height: 40px;
+        width: 40px;
+        margin-right: 3px;
+        // SVG cant render $gray-700 variable, you need to use interpolation and works like a charm
+        --icon-color: #{$gray-700};
+
+        &.bookmarked {
+          --icon-color: #{$blue};
+        }
+      }
+    }
+
+    h1 {
+      font-weight: normal;
+      font-size: 1.5rem;
+      display: inline-block;
+      margin-top: auto;
+      margin-bottom: auto;
+      line-height: 1.5rem;
+      color: $gray-700;
+    }
+
+    //background-color: #f3f3f3;
+    /**
+     * since moving from margin to padding wte dont' need this anymore
+
+    margin-bottom: 30px;
+    */
+
+    a.ccm-dashboard-page-header-bookmark {
+      margin-right: 8px;
+      color: rgba(16, 81, 146, 0.3);
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+/* Positioning header buttons: */
 
 /**
  * Case 1; header buttons in page
@@ -8,19 +57,17 @@
 
 div#ccm-dashboard-content {
 
-  div#ccm-dashboard-content-inner {
-
-    div.ccm-dashboard-header-buttons {
-      position: absolute;
-      top: 79px;
-      right: 50px;
-    }
+  div.ccm-dashboard-header-buttons {
+    position: absolute;
+    top: 66px;
+    right: 340px;
   }
 }
 
 /**
  * Case 2, header menu in header
  */
+/*
 div#ccm-dashboard-content {
   header {
     div.ccm-dashboard-header-menu {
@@ -30,3 +77,4 @@ div#ccm-dashboard-content {
     }
   }
 }
+*/

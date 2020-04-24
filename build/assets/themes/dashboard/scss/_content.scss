@@ -1,0 +1,31 @@
+/**
+ * #ccm-dashboard-content is the outer element that wraps the entire content of the Dashboard. It comes immediately
+ * after the toolbar, and ends immediately before the footer/body/panels.
+ * It is the full width of the content space.
+ */
+div#ccm-dashboard-content {
+
+  margin: 47px 0 98px 0;
+
+  p {
+    color: $gray-700;
+  }
+
+
+  /* This is the content element used on pages that are not full width */
+  div#ccm-dashboard-content-regular {
+    margin-left: $dashboard-content-padding-l;
+    margin-right: $dashboard-content-padding-r;
+    padding-top: 1rem;
+    border-top: 1px solid $gray-200;
+  }
+
+  /* full width pages (like stacks & blocks, search pages) */
+  div#ccm-dashboard-content-full {
+    // Note: currently there are no options here, because these pages handle their own
+    // borders, margins, messages, etc... Just putting this here to make that explicit
+  }
+
+}
+
+

@@ -10,13 +10,8 @@ $th = $app->make('helper/text');
 if ($isReportEnabled) {
     ?>
 
-<div class="ccm-dashboard-header-buttons">
+<div class="ccm-dashboard-header-buttons btn-group">
     <?php
-    if ($settingsPage !== null) {
-        ?>
-        <a href="<?= h($settingsPage) ?>" class="btn btn-default"><?= t('Settings') ?></a>
-        <?php
-    }
     if (!isset($selectedChannel)) {
         ?>
         <a href="javascript:void(0)" class="btn btn-danger" onclick="clearAllChannelLogs()" ><?=t('Delete all'); ?></a>
@@ -33,8 +28,14 @@ if ($isReportEnabled) {
             };
         </script>
     <?php
-    } ?>
-    <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('csv', $valt->generate()); ?>?<?=$query; ?>">
+    }
+    if ($settingsPage !== null) {
+        ?>
+        <a href="<?= h($settingsPage) ?>" class="btn btn-secondary"><?= t('Settings') ?></a>
+        <?php
+    }
+    ?>
+    <a id="ccm-export-results" class="btn btn-secondary" href="<?= $view->action('csv', $valt->generate()); ?>?<?=$query; ?>">
         <i class='fa fa-download'></i> <?= t('Export to CSV'); ?>
     </a>
 </div>

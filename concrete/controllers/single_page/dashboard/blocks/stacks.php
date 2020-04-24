@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Stacks extends DashboardPageController
 {
+    protected $themeViewTemplate = 'full.php';
+
     public function view_global_areas()
     {
         $stm = new StackList();
