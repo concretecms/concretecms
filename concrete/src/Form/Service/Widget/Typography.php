@@ -1,32 +1,37 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
-use View;
+use Concrete\Core\Http\ResponseAssetGroup;
 
 class Typography
 {
     /**
      * Creates form fields and JavaScript includes to add a font picker widget.
-     * <code>
-     *     $dh->output('background-color', '#f00');
-     * </code>.
      *
      * @param string $inputName
-     * @param array  $value
-     * @param array  $options
+     * @param array $value
+     * @param array $options
+     *
+     * @example <code>$dh->output('background-color', '#f00');</code>
      */
-    public function output($inputName, $value = array(), $options = array())
+    public function output($inputName, $value = [], $options = [])
     {
-        $view = View::getInstance();
-        $view->requireAsset('core/style-customizer');
+        $r = ResponseAssetGroup::get();
+        $r->requireAsset('core/style-customizer');
 
         $options['inputName'] = $inputName;
         $options = array_merge($options, $value);
         $strOptions = json_encode($options);
 
-        echo '<span class="ccm-style-customizer-display-swatch-wrapper" data-font-selector="' . $inputName . '"></span>';
-        echo "<script type=\"text/javascript\">";
-        echo "$(function () { $('span[data-font-selector={$inputName}]').concreteTypographySelector({$strOptions}); })";
-        echo "</script>";
+        echo <<<EOT
+<span class="ccm-style-customizer-display-swatch-wrapper" data-font-selector="{$inputName}"></span>
+<script>
+$(function () {
+    $('span[data-font-selector={$inputName}]').concreteTypographySelector({$strOptions});
+})
+</script>
+EOT
+        ;
     }
 }

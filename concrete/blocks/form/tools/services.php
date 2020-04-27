@@ -1,7 +1,7 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Block\Form\MiniSurvey;
+defined('C5_EXECUTE') or die('Access Denied.');
+use Concrete\Block\Form\MiniSurvey;
 
 $miniSurvey = new MiniSurvey();
 $bID = $_GET['bID'];
@@ -12,7 +12,7 @@ if ($_GET['cID'] && $_GET['arHandle']) {
     $badPermissions = false;
     $c = Page::getByID($_GET['cID'], 'RECENT');
     $a = Area::get($c, $_GET['arHandle']);
-    if (intval($_GET['bID']) == 0) {
+    if ((int) ($_GET['bID']) == 0) {
         //add survey mode
         $ap = new Permissions($a);
         $bt = BlockType::getByID($_GET['btID']);
@@ -55,19 +55,19 @@ switch ($_GET['mode']) {
         break;
 
     case 'getQuestion':
-        $miniSurvey->getQuestionInfo(intval($_GET['qsID']), intval($_GET['qID']));
+        $miniSurvey->getQuestionInfo((int) ($_GET['qsID']), (int) ($_GET['qID']));
         break;
 
     case 'delQuestion':
-        $miniSurvey->deleteQuestion(intval($_GET['qsID']), intval($_GET['msqID']));
+        $miniSurvey->deleteQuestion((int) ($_GET['qsID']), (int) ($_GET['msqID']));
         break;
 
     case 'reorderQuestions':
-        $miniSurvey->reorderQuestions(intval($_POST['qsID']), $_POST['qIDs']);
+        $miniSurvey->reorderQuestions((int) ($_POST['qsID']), $_POST['qIDs']);
         break;
 
     case 'refreshSurvey':
     default:
-        $showEdit = (isset($_REQUEST['showEdit']) && intval($_REQUEST['showEdit']) == 1) ? true : false;
-        $miniSurvey->loadSurvey(intval($_GET['qsID']), $showEdit, intval($bID), explode(',', $_GET['hide']), 1, 1);
+        $showEdit = (isset($_REQUEST['showEdit']) && (int) ($_REQUEST['showEdit']) == 1) ? true : false;
+        $miniSurvey->loadSurvey((int) ($_GET['qsID']), $showEdit, (int) $bID, explode(',', $_GET['hide']), 1, 1);
 }

@@ -1,8 +1,8 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var $router \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/system/dialogs/page
  * Namespace: Concrete\Controller\Dialog\Page\
  */
@@ -27,6 +27,8 @@ $router->all('/delete_from_sitemap', 'Delete::viewFromSitemap');
 $router->all('/design', 'Design::view');
 $router->all('/design/submit', 'Design::submit');
 $router->all('/design/css', 'Design\Css::view');
+$router->all('/design/css/get', 'Design\Css::getCss');
+$router->all('/design/css/set', 'Design\Css::setCss');
 $router->all('/design/css/submit', 'Design\Css::submit');
 $router->all('/edit_external', 'EditExternal::view');
 $router->all('/edit_external/submit', 'EditExternal::submit');

@@ -1,9 +1,12 @@
 <?php
 namespace Concrete\Core\User\Group;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\User;
 use Loader;
 use Config;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
@@ -70,6 +73,30 @@ class GroupList extends DatabaseItemList
                 $this->query->expr()->notIn('g.gId', array_map([$db, 'quote'], $excludeGroupIDs))
             );
         }
+    }
+
+    /**
+     * Only return groups the user is actually a member of
+     */
+    public function filterByHavingMembership()
+    {
+        $inGroupIDs = [];
+        $app = Facade::getFacadeApplication();
+        $u = $app->make(User::class);
+        $db = $app->make(Connection::class);
+        if ($u->isRegistered()) {
+            $groups = $u->getUserGroups(); // returns an array of IDs
+            $this->query->andWhere(
+                $this->query->expr()->in('g.gId', array_map([$db, 'quote'], $groups))
+            );
+        }
+
+    }
+
+    public function filterByParentGroup(Group $parent)
+    {
+        $this->query->andWhere($this->query->expr()->like('g.gPath', ':gPath'));
+        $this->query->setParameter('gPath', $parent->getGroupPath() . '/%');
     }
 
     public function filterByUserID($uID)

@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use FileSet;
 
 class FileFolderResponse extends TreeNodeResponse
@@ -77,8 +78,9 @@ class FileFolderResponse extends TreeNodeResponse
 
     public function canDeleteFileSet()
     {
+        $app = Application::getFacadeApplication();
         $fs = $this->getPermissionObject();
-        $u = new User();
+        $u = $app->make(User::class);
         if ($fs->getFileSetType() == FileSet::TYPE_PRIVATE && $fs->getFileSetUserID() == $u->getUserID()) {
             return true;
         }

@@ -11,6 +11,12 @@ use View;
 
 class Limit
 {
+
+    /**
+     * @var bool Tracks whether limiting is enabled
+     */
+    protected static $enabled = true;
+
     /**
      * checks to see if a user has exceeded their limit for sending private messages.
      *
@@ -76,5 +82,15 @@ class Limit
         $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
         $mh->load('private_message_admin_warning');
         $mh->sendMail();
+    }
+
+    /**
+     * Enable or disable Limits
+     *
+     * @param bool $enabled
+     */
+    public static function setEnabled($enabled = true)
+    {
+        static::$enabled = (bool) $enabled;
     }
 }

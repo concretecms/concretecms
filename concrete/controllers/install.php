@@ -17,6 +17,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\View\View;
 use Exception;
 use Punic\Comparer as PunicComparer;
@@ -201,13 +202,13 @@ class Install extends Controller
         if (preg_match('/^(https?)(:.+?)(?:\/' . preg_quote(DISPATCHER_FILENAME, '%') . ')?\/install(?:$|\/|\?)/i', $uri, $m)) {
             switch (strtolower($m[1])) {
                 case 'http':
-                    $canonicalUrl = 'http' . rtrim($m[2], '/');
-                    $canonicalUrlAlternative = 'https' . rtrim($m[2], '/');
+                    $canonicalUrl = (string) UrlImmutable::createFromUrl('http' . $m[2]);
+                    $canonicalUrlAlternative = (string) UrlImmutable::createFromUrl('https' . $m[2]);
                     //$canonicalUrlChecked = true;
                     break;
                 case 'https':
-                    $canonicalUrl = 'https' . rtrim($m[2], '/');
-                    $canonicalUrlAlternative = 'http' . rtrim($m[2], '/');
+                    $canonicalUrl = (string) UrlImmutable::createFromUrl('https' . $m[2]);
+                    $canonicalUrlAlternative = (string) UrlImmutable::createFromUrl('http' . $m[2]);
                     //$canonicalUrlChecked = true;
                     break;
             }

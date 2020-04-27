@@ -37,61 +37,21 @@ if (isset($show_email) && $show_email) {
     <?php
 
 } else {
-
-    if ($user->isLoggedIn()) {
-        ?>
-
-        <?php if ($authenticationType->isHooked($user)):
-            ?>
-            <div class="form-group">
-        <span>
-            <?= t('Detach your %s account', t('google')) ?>
-        </span>
-                <hr>
-            </div>
-            <div class="form-group">
-                <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_detach');
-                ?>" class="btn btn-primary btn-google btn-block">
-                    <i class="fa fa-google"></i>
-                    <?= t('Detach your %s account', t('google')) ?>
-                </a>
-            </div>
-
-        <?php else: ?>
-        <div class="form-group">
-        <span>
-            <?= t('Attach a %s account', t('Google')) ?>
-        </span>
-            <hr>
-        </div>
-        <div class="form-group">
-            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_attach');
-            ?>" class="btn btn-primary btn-google btn-block">
-                <i class="fa fa-google"></i>
-                <?= t('Attach a %s account', t('Google')) ?>
-            </a>
-        </div>
-        <?php endif;
-
-    } else {
-        ?>
-        <div class="form-group">
-        <span>
-            <?= t('Sign in with %s', t('Google')) ?>
-        </span>
-            <hr>
-        </div>
-        <div class="form-group">
-            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_auth');
-            ?>" class="btn btn-primary btn-google btn-block">
-                <i class="fa fa-google"></i>
-                <?= t('Log in with %s', 'Google') ?>
-            </a>
-        </div>
-        <?php
-
-    }
     ?>
+    <div class="form-group">
+    <span>
+        <?= t('Sign in with %s', t('Google')) ?>
+    </span>
+        <hr>
+    </div>
+    <div class="form-group">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_auth');
+        ?>" class="btn btn-primary btn-google btn-block">
+            <i class="fa fa-google"></i>
+            <?= t('Log in with %s', 'Google') ?>
+        </a>
+    </div>
+
     <div class="form-group">
         <a href="<?= \URL::to('/') ?>" class="btn btn-success btn-block">
             <?= t('Return to Home Page')?>

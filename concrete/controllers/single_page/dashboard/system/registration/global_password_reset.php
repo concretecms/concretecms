@@ -59,7 +59,7 @@ class GlobalPasswordReset extends DashboardPageController
             ));
         }
 
-        $user = new User();
+        $user = $this->app->make(User::class);
         if (!$user->isSuperUser()) {
             $this->error->add('Only the Super User is allowed to reset all passwords.');
         }
@@ -75,7 +75,7 @@ class GlobalPasswordReset extends DashboardPageController
         $this->set('resetText', $this->getResetText());
         $this->set('resetMessage', $resetMessage);
 
-        $user = new User();
+        $user = $this->app->make(User::class);
         $this->set('disableForm', !$user->isSuperUser());
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Youtube;
 
 use Concrete\Core\Block\BlockController;
@@ -37,14 +38,13 @@ class Controller extends BlockController
     {
         $url = parse_url($this->videoURL);
         $pathParts = explode('/', rtrim($url['path'], '/'));
-        parse_str($url['query'], $params);
         $videoID = end($pathParts);
         $playListID = '';
 
-        if (isset($url['query'])) {
+        if (isset($url['query']) === true) {
             parse_str($url['query'], $query);
-
-            if (isset($query['list'])) {
+            
+            if (isset($query['list']) === true) {
                 $playListID = $query['list'];
                 $videoID = '';
             } else {
@@ -65,8 +65,8 @@ class Controller extends BlockController
 
         if ($this->startTimeEnabled == 1 && ($this->startTime === '0' || $this->startTime)) {
             $this->set('startSeconds', $this->convertStringToSeconds($this->startTime));
-        } elseif (!empty($params['t'])) {
-            $this->set('startSeconds', $this->convertStringToSeconds($params['t']));
+        } elseif (isset($query['t']) === true && empty($query['t']) === false) {
+            $this->set('startSeconds', $this->convertStringToSeconds($query['t']));
         }
 
         $this->set('videoID', $videoID);
@@ -122,6 +122,8 @@ class Controller extends BlockController
             'startTime' => '',
 
             'noCookie' => false,
+
+            'lazyLoad' => false
         ];
 
         $args = [
@@ -146,6 +148,8 @@ class Controller extends BlockController
             'startTime' => trim($data['startTime']),
 
             'noCookie' => $data['noCookie'] ? 1 : 0,
+
+            'lazyLoad' => $data['lazyLoad'] ? 1 : 0
         ];
         if ($args['sizing'] === 'fixed') {
             $args += [

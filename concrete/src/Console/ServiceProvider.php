@@ -7,12 +7,11 @@ use Concrete\Core\Tools\Console\Doctrine\ConsoleRunner as DeprecatedConsoleRunne
 use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
 use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ServiceProvider extends Provider
 {
-
     /** @var \Concrete\Core\Console\Application */
     protected $cli;
 
@@ -20,7 +19,7 @@ class ServiceProvider extends Provider
     protected $installed;
 
     /**
-     * Commands that are always available
+     * Commands that are always available.
      *
      * @var string[]
      */
@@ -35,10 +34,11 @@ class ServiceProvider extends Provider
         Command\ExecCommand::class,
         Command\ServiceCommand::class,
         Command\ResetCommand::class,
+        Command\PhpCodingStyleCommand::class,
     ];
 
     /**
-     * Commands that only get added when concrete5 is installed
+     * Commands that only get added when concrete5 is installed.
      *
      * @var string[]
      */
@@ -57,10 +57,12 @@ class ServiceProvider extends Provider
         Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
         Command\SetDatabaseCharacterSetCommand::class,
+        Command\Express\ExportCommand::class,
+        Command\FixDatabaseForeignKeys::class,
     ];
 
     /**
-     * The commands used for migration. These get an extra MigrationConfiguration object
+     * The commands used for migration. These get an extra MigrationConfiguration object.
      *
      * @var string[]
      */
@@ -78,7 +80,7 @@ class ServiceProvider extends Provider
      */
     public function register()
     {
-        /**
+        /*
          * @deprecated Use the final ConsoleRunner class directly
          * @todo Remove in v9
          */
@@ -93,15 +95,6 @@ class ServiceProvider extends Provider
 
             return $cli;
         });
-    }
-
-    protected function setupDefaultCommands()
-    {
-        // Add commands that always work
-        $this->add($this->commands);
-
-        // Add commands that require install to work
-        $this->add($this->installedCommands, true);
     }
 
     public function setupDoctrineCommands()
@@ -131,9 +124,22 @@ class ServiceProvider extends Provider
         }
     }
 
+    protected function setupDefaultCommands()
+    {
+        // Add commands that always work
+        $this->add($this->commands);
+
+        // Add commands that require install to work
+        $this->add($this->installedCommands, true);
+    }
+
     /**
-     * Add a class to the CLI application
-     * @param $param
+     * Add a class to the CLI application.
+     *
+     * @param array|string|\Symfony\Component\Console\Command\Command $param
+     * @param bool $requireInstall
+     * @param callable|null $callback
+     *
      * @return null|\Symfony\Component\Console\Command\Command
      */
     private function add($param, $requireInstall = false, callable $callback = null)
@@ -174,7 +180,7 @@ class ServiceProvider extends Provider
     }
 
     /**
-     * Determine if the app is currently installed
+     * Determine if the app is currently installed.
      *
      * @return bool
      */
@@ -197,6 +203,7 @@ class ServiceProvider extends Provider
         $migrationsConfiguration->setOutputWriter(new OutputWriter(function ($message) use ($output) {
             $output->writeln($message);
         }));
+
         return $migrationsConfiguration;
     }
 }

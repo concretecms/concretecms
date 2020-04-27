@@ -1,6 +1,6 @@
 <?php
 /* @var Concrete\Authentication\Community\Controller $controller */
-$url = $controller->getConcrete5ProfileURL(new User())
+$url = $controller->getConcrete5ProfileURL(Core::make(Concrete\Core\User\User::class));
 ?>
 <div class="form-group">
     <a href="<?= h($url) ?>" class="btn btn-primary btn-community">

@@ -1,5 +1,5 @@
 <?php
-    defined('C5_EXECUTE') or die("Access Denied.");
+    defined('C5_EXECUTE') or die('Access Denied.');
     $a = $b->getBlockAreaObject();
 
     $rootContainer = $formatter->getLayoutContainerHtmlObject();
@@ -12,10 +12,10 @@
 
     foreach ($columns as $column) {
         $html = $column->getColumnHtmlObject();
-        if (! empty($container)) {
+        if (!empty($container)) {
             $container->appendChild($html);
         } else {
-            print $html;
+            echo $html;
         }
     }
 

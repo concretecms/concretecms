@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Concrete\Core\Localization\Service\AddressFormat;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,6 +13,7 @@ class AddressValue extends AbstractValue
 {
     /**
      * Note: It's the public portion of this property that is deprecated.
+     *
      * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
@@ -18,6 +21,7 @@ class AddressValue extends AbstractValue
 
     /**
      * Note: It's the public portion of this property that is deprecated.
+     *
      * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
@@ -25,6 +29,7 @@ class AddressValue extends AbstractValue
 
     /**
      * Note: It's the public portion of this property that is deprecated.
+     *
      * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
@@ -32,6 +37,7 @@ class AddressValue extends AbstractValue
 
     /**
      * Note: It's the public portion of this property that is deprecated.
+     *
      * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
@@ -39,6 +45,7 @@ class AddressValue extends AbstractValue
 
     /**
      * Note: It's the public portion of this property that is deprecated.
+     *
      * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
@@ -46,6 +53,7 @@ class AddressValue extends AbstractValue
 
     /**
      * Note: It's the public portion of this property that is deprecated.
+     *
      * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
@@ -53,6 +61,7 @@ class AddressValue extends AbstractValue
 
     /**
      * Note: It's the public portion of this property that is deprecated.
+     *
      * @deprecated
      * @ORM\Column(type="string", nullable=true)
      */
@@ -173,6 +182,7 @@ class AddressValue extends AbstractValue
     public function getFullCountry()
     {
         $h = \Core::make('helper/lists/countries');
+
         return $h->getCountryName($this->country);
     }
 
@@ -189,32 +199,18 @@ class AddressValue extends AbstractValue
 
     public function __toString()
     {
-        $ret = '';
-        if ($this->address1) {
-            $ret .= $this->address1 . "\n";
-        }
-        if ($this->address2) {
-            $ret .= $this->address2 . "\n";
-        }
-        if ($this->city) {
-            $ret .= $this->city;
-        }
-        if ($this->city && $this->state_province) {
-            $ret .= ", ";
-        }
-        if ($this->state_province) {
-            $ret .= $this->getFullStateProvince();
-        }
-        if ($this->postal_code) {
-            $ret .= " " . $this->postal_code;
-        }
-        if ($this->city || $this->state_province || $this->postal_code) {
-            $ret .= "\n";
-        }
-        if ($this->country) {
-            $ret .= $this->getFullCountry();
-        }
-        return $ret;
-    }
+        $valueData = [
+            'address1' => $this->address1,
+            'address2' => $this->address2,
+            'city' => $this->city,
+            'state_province' => $this->state_province,
+            'country' => $this->country,
+            'postal_code' => $this->postal_code,
+        ];
 
+        $app = Application::getFacadeApplication();
+        $af = $app->make(AddressFormat::class);
+
+        return $af->format($valueData, 'text');
+    }
 }

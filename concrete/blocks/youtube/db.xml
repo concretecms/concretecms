@@ -35,6 +35,10 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="lazyLoad" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="rel" type="boolean">
       <default value="0"/>
       <notnull/>

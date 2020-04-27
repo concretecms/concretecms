@@ -14,6 +14,12 @@
     <field name="requiresRegistration" type="integer">
       <default value="0"/>
     </field>
+    <field name="showResults" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="customMessage" type="string" size="255">
+      <default value=""/>
+    </field>
   </table>
 
   <table name="btSurveyOptions">

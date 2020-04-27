@@ -594,6 +594,8 @@ EOT
                 ->findOneByValue($value);
         }
 
+        $optionValue = is_object($option) ? $option->getSelectAttributeOptionValue(false) : $value;
+
         $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
         $qb = $list->getQueryObject();
         $qb->andWhere(
@@ -601,12 +603,9 @@ EOT
                 ? $qb->expr()->notLike($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
                 : $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
         );
-        if (is_object($option)) {
-            $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue(false) . "\n%");
-        }else{
-            // null out the actual value somehow - probably a better way to do this.
-            $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . "\n%");
-        }
+
+        $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $optionValue . "\n%");
+
     }
 
     /**

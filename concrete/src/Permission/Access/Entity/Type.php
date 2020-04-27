@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\Category;
+use Concrete\Core\Support\Facade\Facade;
 use Gettext\Translations;
 use Loader;
 use Core;
@@ -30,14 +31,9 @@ class Type extends ConcreteObject
      */
     public function getAccessEntityTypeClass()
     {
-        $class = overrideable_core_class('Core\\Permission\\Access\\Entity\\'
-            . Loader::helper('text')->camelcase($this->petHandle) . 'Entity',
-            DIRNAME_CLASSES . '/Permission/Access/Entity/'
-            . Loader::helper('text')->camelcase($this->petHandle) . 'Entity.php',
-            $this->getPackageHandle()
-        );
-
-        return $class;
+        $app = Facade::getFacadeApplication();
+        $entity = $app->make('permission/access/entity/factory')->createEntity($this);
+        return get_class($entity);
     }
 
     /** Returns the display name for this access entity type (localized and escaped accordingly to $format)
@@ -77,19 +73,6 @@ class Type extends ConcreteObject
         $obj = Core::make($this->getAccessEntityTypeClass());
 
         return call_user_func_array(array($obj, $method), $args);
-    }
-
-    public function getAccessEntityTypeToolsURL($task = false)
-    {
-        if (!$task) {
-            $task = 'process';
-        }
-        $uh = Loader::helper('concrete/urls');
-        $url = $uh->getToolsURL('permissions/access/entity/types/' . $this->petHandle, $this->getPackageHandle());
-        $token = Loader::helper('validation/token')->getParameter($task);
-        $url .= '?' . $token . '&task=' . $task;
-
-        return $url;
     }
 
     public static function getList($category = false)
@@ -197,4 +180,37 @@ class Type extends ConcreteObject
 
         return $translations;
     }
+
+    public function getControllerUrl($action = 'get_or_create')
+    {
+        $app = Facade::getFacadeApplication();
+        $url = $app->make('url/manager')->resolve([
+            '/ccm/system/permissions/access/entity/types',
+            $this->petHandle,
+            $action
+        ]);
+        $token = $app->make('token');
+        $url .= '?' . $token->getParameter($action);
+        return $url;
+    }
+
+    /**
+     * @deprecated
+     * This will be removed in version 9 and you will need to use getControllerUrL instead.
+     * @param bool $task
+     * @return string
+     */
+    public function getAccessEntityTypeToolsURL($task = false)
+    {
+        if (!$task) {
+            $task = 'process';
+        }
+        $uh = Loader::helper('concrete/urls');
+        $url = $uh->getToolsURL('permissions/access/entity/types/' . $this->petHandle, $this->getPackageHandle());
+        $token = Loader::helper('validation/token')->getParameter($task);
+        $url .= '?' . $token . '&task=' . $task;
+
+        return $url;
+    }
+
 }
