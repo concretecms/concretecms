@@ -19,7 +19,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
     ?>
 <div class="ccm-panel-check-in-publish">
     <?php $publishAction = (is_object($publishErrors) && $publishErrors->has()) ? false : true ?>
-    <div class="btn-group">
+    <div class="btn-group d-flex" role="group">
         <button id="ccm-check-in-publish" type="submit" name="action" value="publish"
                 class="btn btn-primary" <?=$publishAction ?: 'disabled' ?>>
             <?=$publishTitle?>
@@ -28,7 +28,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
             <i class="far fa-clock"></i>
         </button>
     </div>
-    <div id="ccm-check-in-schedule-wrapper">
+    <div id="ccm-check-in-schedule-wrapper" style="display:none;">
         <?php $composer->displayPublishScheduleSettings($c); ?>
     </div>
     <br/><br/>
