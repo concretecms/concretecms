@@ -148,6 +148,18 @@ var setupPrivacyPolicy = function() {
     });
 };
 
+var setupHeaderMenu = function() {
+    var $buttons = $('.ccm-dashboard-header-buttons'),
+        $menu = $('header div.ccm-dashboard-header-menu');
+    if ($buttons.length) {
+        if ($buttons.parent().get(0).nodeName.toLowerCase() == 'form') {
+            $menu.append($buttons.parent());
+        } else {
+            $menu.append($buttons);
+        }
+    }
+};
+
 var setupSiteListMenuItem = function() {
     $('select[data-select=ccm-header-site-list]').show().selectize({
         'onItemAdd': function(option) {
@@ -167,4 +179,5 @@ setupDialogs();
 setupSelects();
 setupDetailsURLs();
 setupFavorites();
+setupHeaderMenu();
 setupPrivacyPolicy();

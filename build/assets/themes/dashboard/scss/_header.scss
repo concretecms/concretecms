@@ -1,6 +1,22 @@
 /* Page header title, bookmark icon: */
 div#ccm-dashboard-content {
 
+  div.ccm-dashboard-breadcrumb {
+    padding: 0 $dashboard-content-padding-r 0 $dashboard-content-padding-l;
+
+    .breadcrumb {
+      margin-bottom: 0;
+
+
+    }
+  }
+
+
+  div.ccm-dashboard-breadcrumb + header.ccm-dashboard-page-header {
+    padding-top: 0;
+  }
+
+
   header.ccm-dashboard-page-header {
     padding: 20px $dashboard-content-padding-r 20px $dashboard-content-padding-l;
     position: relative;
@@ -9,8 +25,8 @@ div#ccm-dashboard-content {
 
     .header-icon {
       .icon-bookmark {
-        height: 40px;
-        width: 40px;
+        height: 41px;
+        width: 41px;
         margin-right: 3px;
         // SVG cant render $gray-700 variable, you need to use interpolation and works like a charm
         --icon-color: #{$gray-700};
@@ -47,23 +63,43 @@ div#ccm-dashboard-content {
       }
     }
   }
+
+  div.ccm-dashboard-header-menu {
+    margin-left: auto;
+
+    div.ccm-dashboard-header-buttons {
+      /*
+       * If buttons have been moved via JS from the content to the header, let's show them here
+       */
+      display: block;
+    }
+  }
+
+  /*
+   * If users have defined ccm-dashboard-header-buttons within the page content, then we need to
+   * hide that DIV until it gets moved, so let's display none down here
+   */
+  div.ccm-dashboard-header-buttons {
+    display: none;
+  }
 }
+
 
 /* Positioning header buttons: */
 
 /**
  * Case 1; header buttons in page
  */
-
+/*
 div#ccm-dashboard-content {
 
   div.ccm-dashboard-header-buttons {
     position: absolute;
-    top: 66px;
+    top: 96px;
     right: 340px;
   }
 }
-
+*/
 /**
  * Case 2, header menu in header
  */

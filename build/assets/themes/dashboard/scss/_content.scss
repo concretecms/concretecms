@@ -26,6 +26,14 @@ div#ccm-dashboard-content {
     // borders, margins, messages, etc... Just putting this here to make that explicit
   }
 
+  /* Need the standard padding on a full width page? Use this class below */
+
+  div.ccm-dashboard-content-container {
+    margin-left: $dashboard-content-padding-l;
+    margin-right: $dashboard-content-padding-r;
+    padding-top: 1rem;
+  }
+
 }
 
 

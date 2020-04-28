@@ -24,9 +24,10 @@ if (isset($neutralStack)) {
         <?php if ($isGlobalArea) { ?>
             <a href="<?=URL::to('/dashboard/blocks/stacks', 'view_global_areas')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
         <?php } else { ?>
-            <a href="<?=$view->action('view_details', $neutralStack->getCollectionParentID())?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
+            <a href="<?=$view->action('view_details', $neutralStack->getCollectionParentID())?>" class="btn btn-secondary"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
         <?php } ?>
     </div>
+    <div id="ccm-dashboard-content-regular">
     <p class="lead"><?=h($neutralStack->getCollectionName())?></p>
     <?php
     if ($stackToEdit === null) {
@@ -79,62 +80,62 @@ if (isset($neutralStack)) {
         }
         $deleteLabels = null;
         ?>
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <ul class="nav navbar-nav small">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
                     <?php
                     if ($areaPermissions->canAddBlocks()) {
                         ?>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
-                                <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
+                                <li><a class="dropdown-item dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
+                                <li><a class="dropdown-item dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
                             </ul>
                         </li>
                         <?php
                     }
                     if ($cpc->canViewPageVersions()) {
                         ?>
-                        <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stackToEdit->getCollectionID()?>"><?=t('Version History')?></a></li>
+                        <li class="nav-item"><a dialog-width="640" dialog-height="340" class="nav-link dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stackToEdit->getCollectionID()?>"><?=t('Version History')?></a></li>
                         <?php
                     }
                     if (!$isGlobalArea && $cpcNeutral->canEditPageProperties()) {
                         ?>
-                        <li><a href="<?=$view->action('rename', $neutralStack->getCollectionID())?>"><?=t('Rename')?></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?=$view->action('rename', $neutralStack->getCollectionID())?>"><?=t('Rename')?></a></li>
                         <?php
                     }
                     if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') {
                         ?>
-                        <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=URL::to('/ccm/system/panels/details/page/permissions?cID=' . $stackToEdit->getCollectionID())?>"><?=t('Permissions')?></a></li>
+                        <li class="nav-item"><a dialog-width="580" class="nav-link dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=URL::to('/ccm/system/panels/details/page/permissions?cID=' . $stackToEdit->getCollectionID())?>"><?=t('Permissions')?></a></li>
                         <?php
                     }
                     if (!$isGlobalArea && $cpc->canMoveOrCopyPage()) {
                         ?>
-                        <li><a href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate')?></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate')?></a></li>
                         <?php
                     }
                     if (!$isGlobalArea) {
                         ?>
-                        <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackUsage" dialog-title="<?=t('Usage')?>" href="<?= $view->action('usage', $stackToEdit->getCollectionID()) ?>"><?=t('Stack Usage')?></a></li>
+                        <li class="nav-item"><a dialog-width="640" dialog-height="340" class="nav-link dialog-launch" id="stackUsage" dialog-title="<?=t('Usage')?>" href="<?= $view->action('usage', $stackToEdit->getCollectionID()) ?>"><?=t('Stack Usage')?></a></li>
                         <?php
                     }
                     if ($cpc->canDeletePage()) {
                         if ($isGlobalArea) {
                             if ($stackToEdit !== $neutralStack) {
                                 $deleteLabels = ['title' => t('Delete Localized Version'), 'button' => t('Delete')];
-                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
+                                ?><li class="nav-item"><a href="javascript:void(0)" data-dialog="delete-stack" class="nav-link"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
                             } else {
                                 $deleteLabels = ['title' => t('Clear Global Area Contents'), 'button' => t('Clear area'), 'canUndo' => true];
-                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
+                                ?><li class="nav-item"><a href="javascript:void(0)" data-dialog="delete-stack" class="nav-link"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
                             }
                         } else {
                             if ($stackToEdit !== $neutralStack) {
                                 $deleteLabels = ['title' => t('Delete Localized Version'), 'button' => t('Delete')];
-                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete')?></span></a></li><?php
+                                ?><li class="nav-item"><a href="javascript:void(0)" data-dialog="delete-stack" class="nav-link"><span class="text-danger"><?=t('Delete')?></span></a></li><?php
                             } else {
                                 $deleteLabels = ['title' => t('Delete Stack'), 'button' => t('Delete')];
-                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete')?></span></a></li><?php
+                                ?><li class="nav-item"><a href="javascript:void(0)" data-dialog="delete-stack" class="nav-link"><span class="text-danger"><?=t('Delete')?></span></a></li><?php
                             }
                         }
                     }
@@ -142,7 +143,7 @@ if (isset($neutralStack)) {
                 </ul>
                 <?php if ($showApprovalButton) { ?>
                     <ul class="nav navbar-nav navbar-right">
-                        <li id="ccm-stack-list-approve-button" class="navbar-form"<?= $vo->isApprovedNow() ? ' style="display: none;"' : '' ?>>
+                        <li id="ccm-stack-list-approve-button nav-item" class="navbar-form"<?= $vo->isApprovedNow() ? ' style="display: none;"' : '' ?>>
                             <button class="btn btn-success" onclick="window.location.href='<?=URL::to('/dashboard/blocks/stacks', 'approve_stack', $stackToEdit->getCollectionID(), $token->generate('approve_stack'))?>'"><?=$publishTitle?></button>
                         </li>
                     </ul>
@@ -186,8 +187,8 @@ if (isset($neutralStack)) {
                         ?></p>
                     </form>
                     <div class="dialog-buttons">
-                        <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                        <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-stack form').submit()"><?=$deleteLabels['button']?></button>
+                        <button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                        <button class="btn btn-danger ml-auto" onclick="$('#ccm-dialog-delete-stack form').submit()"><?=$deleteLabels['button']?></button>
                     </div>
                 </div>
             </div>
@@ -265,6 +266,9 @@ $(function() {
         </script>
         <?php
     }
+    ?>
+    </div>
+    <?php
 } elseif (isset($duplicateStack)) {
     /* @var Stack $duplicateStack */
     $sv = CollectionVersion::get($duplicateStack, 'ACTIVE');
@@ -290,20 +294,24 @@ $(function() {
     /* @var string $oldName */
     $sv = CollectionVersion::get($renamePage, 'ACTIVE');
     ?>
-    <form action="<?=$view->action('rename', $renamePage->getCollectionID())?>" method="POST">
-        <legend><?=$isFolder ? t('Rename Stack Folder') : t('Rename Stack')?></legend>
-        <?=$token->output('rename_stack')?>
-        <div class="form-group">
-            <?=$form->label('newName', t("Name"))?>
-            <?=$form->text('newName', $oldName)?>
-        </div>
-        <div class="ccm-dashboard-form-actions-wrapper">
-            <div class="ccm-dashboard-form-actions">
-                <a href="<?=$view->action('view_details', $renamePage->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
-                <button type="submit" class="btn float-right btn-primary"><?=t('Rename')?></button>
+    <div id="ccm-dashboard-content-regular">
+        <form action="<?=$view->action('rename', $renamePage->getCollectionID())?>" method="POST">
+            <fieldset class="mt-0">
+                <legend><?=$isFolder ? t('Rename Stack Folder') : t('Rename Stack')?></legend>
+                <?=$token->output('rename_stack')?>
+                <div class="form-group">
+                    <?=$form->label('newName', t("Name"))?>
+                    <?=$form->text('newName', $oldName)?>
+                </div>
+            </fieldset>
+            <div class="ccm-dashboard-form-actions-wrapper">
+                <div class="ccm-dashboard-form-actions">
+                    <a href="<?=$view->action('view_details', $renamePage->getCollectionID())?>" class="btn btn-secondary"><?=t('Cancel')?></a>
+                    <button type="submit" class="btn float-right btn-primary"><?=t('Rename')?></button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
     <?php
 } else {
     if (!isset($showGlobalAreasFolder)) {
@@ -372,17 +380,16 @@ $(function() {
 $(function() {
     var $tbody = $('table.ccm-search-results-table tbody');
     $('.ccm-search-results-menu-launcher a[data-action=delete]').on('click', function() {
-        var folderID = $(this).data('folder-id');
-        $('#ccm-dialog-delete-stackfolder')
-            .find('input[name=stackfolderID]').val(folderID)
-            .dialog({
-                modal: true,
-                width: 320,
-                height: 'auto',
-                resizable: false
-            })
-        ;
-        return false;
+        var folderID = $(this).data('folder-id'),
+            $dialog = $('#ccm-dialog-delete-stackfolder');
+        $dialog.find('input[name=stackfolderID]').val(folderID);
+        jQuery.fn.dialog.open({
+            element: '#ccm-dialog-delete-stackfolder',
+            modal: true,
+            width: 'auto',
+            title: <?=json_encode(t("Delete Folder"))?>,
+            height: 200
+        });
     });
     $tbody.find('>tr').each(function() {
         var $this = $(this), className = $this.attr('class');
@@ -471,23 +478,26 @@ $(function() {
     				<p><?=t('Are you sure? This action cannot be undone.');?></p>
     			</form>
     			<div class="dialog-buttons">
-    				<button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-    				<button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-stackfolder form').submit()"><?=t('Delete Folder')?></button>
+    				<button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+    				<button class="btn btn-danger ml-auto" onclick="$('#ccm-dialog-delete-stackfolder form').submit()"><?=t('Delete Folder')?></button>
     			</div>
     		</div>
     	</div>
 
         <?php
     } else {
-        ?><div class="alert alert-info"><?php
-            if ($controller->getTask() == 'view_global_areas') {
-                echo t('No global areas have been added.');
-            } else {
-                echo t('No stacks found in this folder.');
-            }
-        ?></div><?php
-    }
+        ?>
+        <div id="ccm-dashboard-content-regular">
+            <div class="alert alert-info"><?php
+                if ($controller->getTask() == 'view_global_areas') {
+                    echo t('No global areas have been added.');
+                } else {
+                    echo t('No stacks found in this folder.');
+                }
+            ?></div><?php
+        }
     ?>
+        </div>
     <div class="ccm-dashboard-header-buttons">
         <?php
         if ($controller->getTask() != 'view_global_areas') {
@@ -539,7 +549,7 @@ $(function() {
         jQuery.fn.dialog.open({
             element: '#ccm-dialog-add-stack',
             modal: true,
-            width: 320,
+            width: 900,
             title: <?=json_encode(t("Add Stack"))?>,
             height: 200
         });

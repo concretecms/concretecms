@@ -4,6 +4,9 @@ namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Application\Service\DashboardMenu;
 use Concrete\Core\Cookie\CookieJar;
+use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\Navigation\Breadcrumb\BreadcrumbInterface;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumbFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Mobile_Detect;
 
@@ -48,6 +51,18 @@ class DashboardPageController extends PageController
     protected $helpers = ['form'];
 
     /**
+     * Useful for traversing the site for elements and their associated controls, while allowing for overriding.
+     *
+     * @var ElementManager
+     */
+    protected $elementManager;
+
+    /**
+     * @var BreadcrumbInterface
+     */
+    protected $breadcrumb;
+
+    /**
      * Check if the current user is using a mobile device: if so, configure the dashboard page accordingly.
      */
     public function enableNativeMobile()
@@ -69,9 +84,11 @@ class DashboardPageController extends PageController
         $this->token = $this->app->make('token');
         $this->error = $this->app->make('error');
         $this->entityManager = $this->app->make(EntityManagerInterface::class);
+        $this->elementManager = $this->app->make(ElementManager::class);
         $this->set('interface', $this->app->make('helper/concrete/ui'));
         $this->set('dashboard', $this->app->make('helper/concrete/dashboard'));
         $this->set('hideDashboardPanel', $cookieJar->get('dashboardPanelStatus') === 'closed');
+
         // @todo fix this approach
         $this->app->make('helper/concrete/dashboard');
         $dh = DashboardMenu::getMine();
@@ -80,6 +97,38 @@ class DashboardPageController extends PageController
         } else {
             $this->set('_bookmarked', false);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function createBreadcrumbFactory()
+    {
+        return $this->app->make(DashboardBreadcrumbFactory::class);
+    }
+
+    protected function createBreadcrumb() : BreadcrumbInterface
+    {
+        $factory = $this->createBreadcrumbFactory();
+        return $factory->getBreadcrumb($this->getPageObject());
+    }
+
+    /**
+     * @return BreadcrumbInterface
+     */
+    public function getBreadcrumb(): ?BreadcrumbInterface
+    {
+        return $this->breadcrumb;
+    }
+
+    public function setBreadcrumb(BreadcrumbInterface $breadcrumb)
+    {
+        $this->breadcrumb = $breadcrumb;
+    }
+
+    protected function getBreadcrumbElement()
+    {
+        return 'dashboard/navigation/breadcrumb';
     }
 
     /**
@@ -93,10 +142,19 @@ class DashboardPageController extends PageController
         if (!$pageTitle) {
             $this->set('pageTitle', t($this->c->getCollectionName()));
         }
+        $breadcrumb = $this->getBreadcrumb();
+        if (!$breadcrumb) {
+            $breadcrumb = $this->createBreadcrumb();
+        }
+        $_breadcrumb = $this->elementManager->get($this->getBreadcrumbElement(), [
+            'breadcrumb' => $breadcrumb
+        ]);
+
         $dbConfig = $this->app->make('config/database');
         $this->set('showPrivacyPolicyNotice', !$dbConfig->get('app.privacy_policy_accepted'));
         $this->set('token', $this->token);
         $this->set('error', $this->error);
+        $this->set('_breadcrumb', $_breadcrumb);
     }
 
     /**

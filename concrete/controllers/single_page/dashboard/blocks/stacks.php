@@ -1,26 +1,28 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
 use Concrete\Core\Entity\Statistics\UsageTracker\StackUsageRecord;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardStacksBreadcrumbFactory;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\StackFolder;
-use Config;
-use Concrete\Core\Page\Stack\StackList;
-use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Core\Page\Stack\Stack;
-use Page;
 use Concrete\Core\User\User;
-use Concrete\Core\Workflow\Request\DeletePageRequest;
-use Concrete\Core\Workflow\Request\ApproveStackRequest;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
-use View;
+use Concrete\Core\Workflow\Request\ApproveStackRequest;
+use Concrete\Core\Workflow\Request\DeletePageRequest;
+use Config;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Page;
 use Redirect;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use View;
 
 class Stacks extends DashboardPageController
 {
@@ -31,7 +33,18 @@ class Stacks extends DashboardPageController
         $stm = new StackList();
         $stm->filterByGlobalAreas();
         $this->deliverStackList($stm);
-        $this->set('breadcrumb', $this->getBreadcrumb());
+
+        /**
+         * @var $factory DashboardStacksBreadcrumbFactory
+         */
+        $factory = $this->createBreadcrumbFactory();
+        $factory->setDisplayGlobalAreasLandingPage(true);
+        $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject()));
+    }
+
+    protected function createBreadcrumbFactory()
+    {
+        return $this->app->make(DashboardStacksBreadcrumbFactory::class);
     }
 
     /**
@@ -60,6 +73,10 @@ class Stacks extends DashboardPageController
 
     public function view_details($cID, $msg = false)
     {
+        /**
+         * @var $factory DashboardStacksBreadcrumbFactory
+         */
+        $factory = $this->createBreadcrumbFactory();
         if (strpos($cID, '@') !== false) {
             list($cID, $locale) = explode('@', $cID, 2);
         } else {
@@ -68,6 +85,7 @@ class Stacks extends DashboardPageController
         $s = Stack::getByID($cID);
         if (is_object($s)) {
             $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
+            $factory->setDisplayGlobalAreasLandingPage($isGlobalArea);
             if ($s->isNeutralStack()) {
                 $neutralStack = $s;
                 $stackToEdit = $s;
@@ -76,7 +94,7 @@ class Stacks extends DashboardPageController
                 $stackToEdit = $s;
             }
             $sections = $this->getMultilingualSections();
-            $breadcrumb = $this->getBreadcrumb($neutralStack);
+            $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $s, $sections, $locale));
             if (!empty($sections)) {
                 if ($stackToEdit !== $neutralStack) {
                     $section = $stackToEdit->getMultilingualSection();
@@ -91,37 +109,6 @@ class Stacks extends DashboardPageController
                     $this->set('localeCode', $locale);
                     $this->set('localeName', $sections[$locale]->getLanguageText());
                     $stackToEdit = $neutralStack->getLocalizedStack($sections[$locale]);
-                }
-                $localeCrumbs = [];
-                $localeCrumbs[] = [
-                    'id' => $neutralStack->getCollectionID(),
-                    'active' => $locale === '',
-                    'name' => '<strong>' . h(tc('Locale', 'default')) . '</strong>',
-                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID()),
-                ];
-                $mif = $this->app->make('multilingual/interface/flag');
-                /* @var \Concrete\Core\Multilingual\Service\UserInterface\Flag $mif */
-                foreach ($sections as $sectionLocale => $section) {
-                    /* @var Section $section */
-                    $localizedStackName = $mif->getSectionFlagIcon($section) . ' ' . h($section->getLanguageText());
-                    if ($neutralStack->getLocalizedStack($section) !== null) {
-                        $localizedStackName = '<strong>' . $localizedStackName . '</strong>';
-                    }
-                    $localeCrumbs[] = [
-                        'id' => $neutralStack->getCollectionID() . '@' . $sectionLocale,
-                        'active' => $locale === $sectionLocale,
-                        'name' => $localizedStackName . ' <span class="text-muted">' . h($sectionLocale) . '</span>',
-                        'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID() . rawurlencode('@' . $sectionLocale)),
-                    ];
-                }
-                foreach ($localeCrumbs as $localeCrumb) {
-                    if ($localeCrumb['active']) {
-                        $localeCrumb['children'] = array_filter($localeCrumbs, function ($child) {
-                            return !$child['active'];
-                        });
-                        $breadcrumb[] = $localeCrumb;
-                        break;
-                    }
                 }
             }
             if ($stackToEdit !== null) {
@@ -140,7 +127,6 @@ class Stacks extends DashboardPageController
             }
             $this->set('neutralStack', $neutralStack);
             $this->set('stackToEdit', $stackToEdit);
-            $this->set('breadcrumb', $breadcrumb);
             $this->set('isGlobalArea', $isGlobalArea);
         } else {
             $folder = StackFolder::getByID($cID);
@@ -148,9 +134,9 @@ class Stacks extends DashboardPageController
                 $stm = new StackList();
                 $stm->filterByFolder($folder);
                 $this->set('currentStackFolderID', $folder->getPage()->getCollectionID());
-                $this->set('breadcrumb', $this->getBreadcrumb($folder->getPage()));
                 $this->deliverStackList($stm);
                 $this->set('canMoveStacks', $this->canMoveStacks($folder));
+                $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $folder));
             } else {
                 $root = Page::getByPath(STACKS_PAGE_PATH);
                 if ($root->getCollectionID() != $cID) {
@@ -232,41 +218,9 @@ class Stacks extends DashboardPageController
         $page = ($parent instanceof \Concrete\Core\Page\Page) ? $parent : $parent->getPage();
         $cpc = new Checker($page);
 
-        return (bool) $cpc->canMoveOrCopyPage();
+        return (bool)$cpc->canMoveOrCopyPage();
     }
 
-    protected function getBreadcrumb(\Concrete\Core\Page\Page $page = null)
-    {
-        $breadcrumb = [[
-            'active' => false,
-            'name' => t('Stacks & Global Areas'),
-            'url' => \URL::to('/dashboard/blocks/stacks'),
-        ]];
-        if ($this->getAction() == 'view_global_areas' || ($page instanceof Stack && $page->getStackType() == Stack::ST_TYPE_GLOBAL_AREA)) {
-            $breadcrumb[] = [
-                'id' => '',
-                'active' => $this->getTask() == 'view_global_areas',
-                'name' => t('Global Areas'),
-                'url' => \URL::to('/dashboard/blocks/stacks', 'view_global_areas'),
-            ];
-        }
-        if ($page !== null) {
-            $nav = $this->app->make('helper/navigation');
-            $pages = array_reverse($nav->getTrailToCollection($page));
-            $pages[] = $page;
-            for ($i = 1; $i < count($pages); ++$i) {
-                $item = $pages[$i];
-                $breadcrumb[] = [
-                    'id' => $item->getCollectionID(),
-                    'active' => $item->getCollectionID() == $page->getCollectionID(),
-                    'name' => $item->getCollectionName(),
-                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $item->getCollectionID()),
-                ];
-            }
-        }
-
-        return $breadcrumb;
-    }
 
     protected function deliverStackList(StackList $list)
     {
@@ -330,9 +284,11 @@ class Stacks extends DashboardPageController
                 $this->error->add(t('Unable to find the specified language'));
             } elseif ($neutralStack && $neutralStack->getLocalizedStack($section) !== null) {
                 if ($isGlobalArea) {
-                    $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this global area in %s", $section->getLanguageText()) . ' (' . $section->getLocale() . ')');
+                    $this->error->add(t(/*i18n %s is a language name*/
+                            "There's already a version of this global area in %s", $section->getLanguageText()) . ' (' . $section->getLocale() . ')');
                 } else {
-                    $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this stack in %s", $section->getLanguageText()) . ' (' . $section->getLocale() . ')');
+                    $this->error->add(t(/*i18n %s is a language name*/
+                            "There's already a version of this stack in %s", $section->getLanguageText()) . ' (' . $section->getLocale() . ')');
                 }
             }
             if ($neutralStack) {
@@ -567,7 +523,7 @@ class Stacks extends DashboardPageController
             if (!$valn->integer($receivedSourceID)) {
                 throw new Exception(t('Bad parameter: %s', 'sourceIDs'));
             }
-            $receivedSourceID = (int) $receivedSourceID;
+            $receivedSourceID = (int)$receivedSourceID;
             if (!in_array($receivedSourceID, $sourceIDs, true)) {
                 $sourceIDs[] = $receivedSourceID;
             }
@@ -719,7 +675,7 @@ class Stacks extends DashboardPageController
         $repository = $entityManager->getRepository(StackUsageRecord::class);
 
         $records = $repository->findBy([
-                'stack_id' => $stackId,
+            'stack_id' => $stackId,
         ]);
 
         $view = new \Concrete\Core\View\DialogView('dialogs/stack/usage');
