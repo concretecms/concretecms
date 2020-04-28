@@ -116,12 +116,12 @@ class DashboardPageController extends PageController
     /**
      * @return BreadcrumbInterface
      */
-    public function getBreadcrumb(): ?BreadcrumbInterface
+    protected function getBreadcrumb(): ?BreadcrumbInterface
     {
         return $this->breadcrumb;
     }
 
-    public function setBreadcrumb(BreadcrumbInterface $breadcrumb)
+    protected function setBreadcrumb(BreadcrumbInterface $breadcrumb)
     {
         $this->breadcrumb = $breadcrumb;
     }
