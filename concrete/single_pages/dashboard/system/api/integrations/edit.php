@@ -44,7 +44,7 @@ $consentType = $client->getConsentType();
                 <label for="consent-type-none" class="form-check-label"><?= t('None') ?></label>
             </div>
 
-            <div class="consent-warning alert alert-danger mt-3 <?= $consentType !== Client::CONSENT_NONE ? 'hidden' : '' ?>" >
+            <div class="consent-warning alert alert-danger mt-3 <?= $consentType !== Client::CONSENT_NONE ? 'd-none' : '' ?>" >
                 <?= t("Only disable user consent if you trust this integration fully. By disabling user consent, you remove the user's ability to deny access.") ?>
             </div>
         </div>
@@ -61,7 +61,7 @@ $consentType = $client->getConsentType();
 
 <script>
     (function() {
-        var consentWarning = $('.consent-warning').removeClass('hidden').hide()
+        var consentWarning = $('.consent-warning').removeClass('d-none').hide()
 
         $('[name="consentType"]').change(function() {
             if ($(this).val() === "<?= Client::CONSENT_NONE ?>") {
