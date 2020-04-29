@@ -249,7 +249,13 @@ class Form
             $value = $requestValue;
         }
 
-        return '<textarea id="' . $key . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>' . $value . '</textarea>';
+        $result = '<textarea';
+        if ((string) $key !== '') {
+            $result .= ' id="' . $key . '" name="' . $key . '"';
+        }
+        $result .= $this->parseMiscFields('form-control', $miscFields) . '>' . $value . '</textarea>';
+
+        return $result;
     }
 
     /**
@@ -723,7 +729,13 @@ EOT;
         }
         $value = h($value);
 
-        return "<input type=\"$type\" id=\"$key\" name=\"$key\" value=\"$value\"" . $this->parseMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
+        $result = "<input type=\"$type\"";
+        if ((string) $key !== '') {
+            $result .= " id=\"$key\" name=\"$key\"";
+        }
+        $result .= " value=\"$value\"" . $this->parseMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
+
+        return $result;
     }
 
     /**
