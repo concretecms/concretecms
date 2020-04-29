@@ -14,39 +14,37 @@ $consentType = $client->getConsentType();
     <fieldset>
         <legend><?=t('Update OAuth2 Integration')?></legend>
         <div class="form-group">
-            <label for="name" class="control-label"><?php echo t('Name'); ?></label>
+            <label for="name" ><?php echo t('Name'); ?></label>
             <div class="input-group">
                 <?php echo $form->text('name', $client->getName(), array('autofocus' => 'autofocus', 'autocomplete' => 'off', 'required' => 'required')); ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="redirect" class="control-label"><?php echo t('Redirect'); ?></label>
+            <label for="redirect"><?php echo t('Redirect'); ?></label>
             <div class="input-group">
                 <?php echo $form->url('redirect', $client->getRedirectUri(), array('autocomplete' => 'off')); ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                </div>
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label"><?=t('User Consent Level')?></label>
-            <div class="checkbox">
-                <div class="form-check">
-                    <label class="radio">
-                        <input type="radio" name="consentType" value="<?= Client::CONSENT_SIMPLE ?>" <?= $consentType === Client::CONSENT_SIMPLE ? 'checked' : '' ?> />
-                        <?= t('Standard') ?>
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="radio">
-                        <input type="radio" name="consentType" value="<?= Client::CONSENT_NONE ?>" <?= $consentType === Client::CONSENT_NONE ? 'checked' : '' ?> />
-                        <?= t('None') ?>
-                    </label>
-                </div>
+            <div class="form-check">
+                <input id="consent-type-standard" class="form-check-input" type="radio" name="consentType" value="<?= Client::CONSENT_SIMPLE ?>" <?= $consentType === Client::CONSENT_SIMPLE ? 'checked' : '' ?> />
+                <label for="consent-type-standard" class="form-check-label"><?= t('Standard') ?></label>
+            </div>
+            <div class="form-check">
+                <input id="consent-type-none" class="form-check-input" type="radio" name="consentType" value="<?= Client::CONSENT_NONE ?>" <?= $consentType === Client::CONSENT_NONE ? 'checked' : '' ?> />
+                <label for="consent-type-none" class="form-check-label"><?= t('None') ?></label>
             </div>
 
-            <div class="consent-warning alert alert-danger <?= $consentType !== Client::CONSENT_NONE ? 'hidden' : '' ?>" >
+            <div class="consent-warning alert alert-danger mt-3 <?= $consentType !== Client::CONSENT_NONE ? 'hidden' : '' ?>" >
                 <?= t("Only disable user consent if you trust this integration fully. By disabling user consent, you remove the user's ability to deny access.") ?>
             </div>
         </div>
@@ -54,8 +52,8 @@ $consentType = $client->getConsentType();
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/users/oauth2/view_client', $client->getIdentifier())?>" class="pull-left btn btn-default"><?=t('Cancel')?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Update')?></button>
+            <a href="<?=URL::to('/dashboard/users/oauth2/view_client', $client->getIdentifier())?>" class="float-left btn btn-secondary"><?=t('Cancel')?></a>
+            <button class="float-right btn btn-primary" type="submit" ><?=t('Update')?></button>
         </div>
     </div>
 
