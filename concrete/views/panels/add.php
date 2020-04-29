@@ -107,7 +107,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-sID="<?= (int) $stack->getCollectionID() ?>"
                         data-block-type-handle="stack"
                         data-has-add-template="no"
-                        data-supports-inline-add="no",
+                        data-supports-inline-add="no"
                         data-token="<?=Core::make('token')->generate('load_stack')?>"
                         data-btID="0"
                         data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
@@ -192,7 +192,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
-
                         <div class="block-content">
                             <div class="block-name float-left">
                                 <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
