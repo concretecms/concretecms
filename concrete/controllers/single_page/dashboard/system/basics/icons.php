@@ -57,12 +57,12 @@ class Icons extends DashboardSitePageController
 
             $s = $security->sanitizeString($post->get('browserToolbarColor'));
             $config->save('misc.browser_toolbar_color', $s === '' ? null : $s);
-            
+
             $this->flash('success', t('Icons updated successfully.'));
 
             return $this->app->make(ResponseFactoryInterface::class)->redirect($this->action(), 302);
         } else {
-            $this->set('error', [$this->token->getErrorMessage()]);
+            $this->error->add($this->token->getErrorMessage());
         }
     }
 }
