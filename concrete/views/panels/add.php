@@ -11,8 +11,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Application\Service\Urls $ci */
 ?>
 <section>
-    <div data-panel-menu="accordion" class="ccm-panel-header-accordion">
+    <div data-panel-menu="accordion" class="ccm-panel-header-accordion ccm-accordion-as-dropdown">
         <nav>
+        <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
+
             <span></span>
             <ul class="ccm-panel-header-accordion-dropdown">
                 <li><a data-panel-accordion-tab="blocks"<?= $tab === 'blocks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Blocks') ?></a></li>
@@ -58,7 +60,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         </script>
     <?php
-    break;   
+    break;
 
         case 'stacks':
             /* @var Concrete\Core\Page\Stack\Stack[] $stacks */
@@ -84,7 +86,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
                         data-block-id="<?= (int) $stack->getCollectionID() ?>"                    >
                         <div class="stack-name">
-                            <div class="ccm-panel-add-block-stack-item-handle"> 
+                            <div class="ccm-panel-add-block-stack-item-handle">
                                 <img src="<?=DIR_REL?>/concrete/images/stack.png" />
                                 <span class="stack-name-inner"><?= h($stack->getStackName()) ?></span>
                             </div>
@@ -212,16 +214,26 @@ defined('C5_EXECUTE') or die('Access Denied.');
             /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
             ?>
             <div class="ccm-panel-header-search">
-                <i class="fa fa-search"></i>
+                <svg><use xlink:href="#icon-search" /></svg>
                 <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
             </div>
             <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
                 <?php
+                $i = 0;
                 foreach ($blockTypesForSets as $setName => $blockTypes) {
+                    $i++;
                     ?>
                     <div class="ccm-panel-add-block-set">
-                        <header><?= $setName ?></header>
-                        <ul>
+                        <header
+                            data-toggle="collapse"
+                            data-target="#ccm-block-set-<?= $i ?>"
+                            aria-expanded="true"
+                            aria-controls="ccm-block-set-<?= $i ?>"
+                        >
+                            <?= $setName ?><i class="fa fa-chevron-up float-right"></i>
+                        </header>
+                        <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
+                        <ul class="d-flex flex-wrap">
                             <?php
                             foreach ($blockTypes as $bt) {
                                 $btIcon = $ci->getBlockTypeIconURL($bt);
@@ -238,17 +250,19 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                         data-has-add-template="<?= $bt->hasAddTemplate() ?>"
                                         data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
                                         data-btID="<?= $bt->getBlockTypeID() ?>"
-                                        data-dragging-avatar="<?= h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeInSetName()) . '</span></p>') ?>"
+                                        data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $btIcon . '" /></div><p><span>' . t($bt->getBlockTypeInSetName()) . '</span></p>') ?>"
                                         title="<?= t($bt->getBlockTypeName()) ?>"
                                         href="javascript:void(0)"
                                     >
-                                        <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
+                                        <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="<?= $btIcon ?>"/></div>
+                                        <p><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
                                     </a>
                                 </li>
                                 <?php
                             }
                             ?>
                         </ul>
+                        </div>
                     </div>
                     <?php
                 }
@@ -270,3 +284,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         break;
 }
+?>
+
+<script type="text/javascript">
+    $(function() {
+        // switching the up/down arrows for collapsing block sets
+        $('#ccm-panel-add-block').find('div[id^="ccm-block-set-"]').on('hidden.bs.collapse shown.bs.collapse', function () {
+            $(this).prev('header[data-toggle="collapse"]').find('i.fa').toggleClass('fa-chevron-up fa-chevron-down');
+        });
+        // switching between grid and stacked view for blocks
+        $('.ccm-panel-header-list-grid-view-switcher').on('click', function () {
+            $('#ccm-panel-add-blocktypes-list').toggleClass('ccm-stacked-list');
+            $(this).find('i.fa').toggleClass('fa-list fa-th');
+        });
+    });
+</script>
