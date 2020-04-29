@@ -84,7 +84,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-token="<?=Core::make('token')->generate('load_stack')?>"
                         data-btID="0"
                         data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
-                        data-block-id="<?= (int) $stack->getCollectionID() ?>"                    >
+                        data-block-id="<?= (int) $stack->getCollectionID() ?>"
+                    >
                         <div class="stack-name">
                             <div class="ccm-panel-add-block-stack-item-handle">
                                 <img src="<?=DIR_REL?>/concrete/images/stack.png" />
@@ -164,6 +165,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
+                        <div class="delete">
+                            <button class="ccm-delete-clipboard-item float-right btn btn-sm btn-link"><?= t('Delete') ?></button>
+                        </div>
                         <div class="block-content">
                             <div class="block-name">
                                 <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
@@ -180,9 +184,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 </div>
                             </div>
                         </div>
-                        <div class="delete">
-                            <button class="ccm-delete-clipboard-item pull-right btn btn-sm btn-link"><?= t('Delete') ?></button>
-                        </div>
+
                     </div>
                     <?php
                 }
