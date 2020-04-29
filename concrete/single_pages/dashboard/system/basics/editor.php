@@ -67,7 +67,7 @@
             </div>
         </div>
     </div>
-            
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="pull-left btn btn-default" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
@@ -127,7 +127,7 @@ function updatePreview() {
         url: <?= json_encode((string) URL::to('/ccm/system/dialogs/editor/settings/preview')) ?>,
         data: data
     })
-    .success(function (data) {
+    .done(function (data, textStatus, jqXHR) {
         $preview.show();
         $previewContent.html(data);
     })
@@ -152,7 +152,7 @@ updatePreviewView();
 $window.on('scroll resize', function() {
     updatePreviewView();
 });
-    
+
 $togglePreview.on('click', function(e) {
     e.preventDefault();
     showPreview(!previewEnabled);
