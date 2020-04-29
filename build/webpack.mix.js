@@ -118,6 +118,10 @@ mix
 mix
     .sass('node_modules/@concretecms/bedrock/assets/polls/scss/frontend.scss', 'css/features/polls/frontend.css')
 
+/**
+ * Copy bedrock SVGs into our repository
+ */
+mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concrete/images/icons/bedrock/sprites.svg');
 
 /**
  * Turn off notifications
@@ -126,4 +130,8 @@ mix
     .disableNotifications()
     .options({
         clearConsole: false,
+        // Disable extracting licenses from comments
+        terser: {
+            extractComments: false,
+        }
     })

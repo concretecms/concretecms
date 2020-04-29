@@ -1,14 +1,18 @@
 <?php
 
-namespace Concrete\Tests\Controller;
+namespace Concrete\Tests\Console;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
 use Concrete\Core\Console\ServiceProvider;
 use Concrete\Core\Database\Connection\Connection;
 use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
+use Concrete\Core\Console\Command as ConcreteCommand;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Tools\Console\Command as DBALCommand;
+use Doctrine\DBAL\Migrations\Tools\Console\Command as DBALMigrationCommand;
+use Doctrine\ORM\Tools\Console\Command as ORMCommand;
 use Mockery;
 use Concrete\Tests\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -45,7 +49,7 @@ class ServiceProviderTest extends TestCase
         });
 
         // Setup the extend method
-        $app->shouldReceive('extend')->zeroOrMoreTimes()->andReturnUsing(function ($class, callable $binding) {
+        $app->shouldReceive('extend')->with(ConsoleApplication::class, Mockery::type('callable'))->zeroOrMoreTimes()->andReturnUsing(function ($class, callable $binding) {
             $this->consoleFactory = $binding;
         });
 
@@ -92,19 +96,18 @@ class ServiceProviderTest extends TestCase
         $factory = $this->consoleFactory;
         $factory($this->console);
 
-
         $subset = [
-            \Concrete\Core\Console\Command\InfoCommand::class,
-            \Concrete\Core\Console\Command\InstallCommand::class,
-            \Concrete\Core\Console\Command\InstallLanguageCommand::class,
-            \Concrete\Core\Console\Command\TranslatePackageCommand::class,
-            \Concrete\Core\Console\Command\GenerateIDESymbolsCommand::class,
-            \Concrete\Core\Console\Command\ConfigCommand::class,
-            \Concrete\Core\Console\Command\PackPackageCommand::class,
-            \Concrete\Core\Console\Command\ExecCommand::class,
-            \Concrete\Core\Console\Command\ServiceCommand::class,
-            \Concrete\Core\Console\Command\ResetCommand::class,
-            \Concrete\Core\Console\Command\PhpCodingStyleCommand::class,
+            ConcreteCommand\InfoCommand::class,
+            ConcreteCommand\InstallCommand::class,
+            ConcreteCommand\InstallLanguageCommand::class,
+            ConcreteCommand\TranslatePackageCommand::class,
+            ConcreteCommand\GenerateIDESymbolsCommand::class,
+            ConcreteCommand\ConfigCommand::class,
+            ConcreteCommand\PackPackageCommand::class,
+            ConcreteCommand\ExecCommand::class,
+            ConcreteCommand\ServiceCommand::class,
+            ConcreteCommand\ResetCommand::class,
+            ConcreteCommand\PhpCodingStyleCommand::class,
         ];
 
         sort($subset);
@@ -130,67 +133,70 @@ class ServiceProviderTest extends TestCase
 
         // Check that the classes we expect have been added
         $subset = [
-            \Concrete\Core\Console\Command\InfoCommand::class,
-            \Concrete\Core\Console\Command\InstallCommand::class,
-            \Concrete\Core\Console\Command\InstallLanguageCommand::class,
-            \Concrete\Core\Console\Command\TranslatePackageCommand::class,
-            \Concrete\Core\Console\Command\GenerateIDESymbolsCommand::class,
-            \Concrete\Core\Console\Command\ConfigCommand::class,
-            \Concrete\Core\Console\Command\PackPackageCommand::class,
-            \Concrete\Core\Console\Command\ExecCommand::class,
-            \Concrete\Core\Console\Command\ServiceCommand::class,
-            \Concrete\Core\Console\Command\ResetCommand::class,
-            \Concrete\Core\Console\Command\PhpCodingStyleCommand::class,
-            \Concrete\Core\Console\Command\CompareSchemaCommand::class,
-            \Concrete\Core\Console\Command\ClearCacheCommand::class,
-            \Concrete\Core\Console\Command\InstallPackageCommand::class,
-            \Concrete\Core\Console\Command\UninstallPackageCommand::class,
-            \Concrete\Core\Console\Command\UpdatePackageCommand::class,
-            \Concrete\Core\Console\Command\InstallThemeCommand::class,
-            \Concrete\Core\Console\Command\BlacklistClear::class,
-            \Concrete\Core\Console\Command\SetDatabaseCharacterSetCommand::class,
-            \Concrete\Core\Console\Command\QueueProcessCommand::class,
-            \Concrete\Core\Console\Command\JobCommand::class,
-            \Concrete\Core\Console\Command\UpdateCommand::class,
-            \Concrete\Core\Console\Command\RescanFilesCommand::class,
-            \Concrete\Core\Console\Command\FillThumbnailsTableCommand::class,
-            \Concrete\Core\Console\Command\GenerateSitemapCommand::class,
-            \Concrete\Core\Console\Command\RefreshEntitiesCommand::class,
-            \Concrete\Core\Console\Command\Express\ExportCommand::class,
-            \Concrete\Core\Console\Command\FixDatabaseForeignKeys::class,
-            \Doctrine\DBAL\Tools\Console\Command\ImportCommand::class,
-            \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand::class,
-            \Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\EntityRegionCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryRegionCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ConvertDoctrine1SchemaCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\RunDqlCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\InfoCommand::class,
-            \Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class,
+            ConcreteCommand\InfoCommand::class,
+            ConcreteCommand\InstallCommand::class,
+            ConcreteCommand\InstallLanguageCommand::class,
+            ConcreteCommand\TranslatePackageCommand::class,
+            ConcreteCommand\GenerateIDESymbolsCommand::class,
+            ConcreteCommand\ConfigCommand::class,
+            ConcreteCommand\PackPackageCommand::class,
+            ConcreteCommand\ExecCommand::class,
+            ConcreteCommand\ServiceCommand::class,
+            ConcreteCommand\ResetCommand::class,
+            ConcreteCommand\PhpCodingStyleCommand::class,
+            ConcreteCommand\CompareSchemaCommand::class,
+            ConcreteCommand\ClearCacheCommand::class,
+            ConcreteCommand\InstallPackageCommand::class,
+            ConcreteCommand\UninstallPackageCommand::class,
+            ConcreteCommand\UpdatePackageCommand::class,
+            ConcreteCommand\InstallThemeCommand::class,
+            ConcreteCommand\BlacklistClear::class,
+            ConcreteCommand\SetDatabaseCharacterSetCommand::class,
+            ConcreteCommand\QueueProcessCommand::class,
+            ConcreteCommand\JobCommand::class,
+            ConcreteCommand\UpdateCommand::class,
+            ConcreteCommand\RescanFilesCommand::class,
+            ConcreteCommand\FillThumbnailsTableCommand::class,
+            ConcreteCommand\GenerateSitemapCommand::class,
+            ConcreteCommand\RefreshEntitiesCommand::class,
+            ConcreteCommand\Express\ExportCommand::class,
+            ConcreteCommand\FixDatabaseForeignKeys::class,
+            DBALCommand\ImportCommand::class,
+            DBALCommand\RunSqlCommand::class,
+            DBALCommand\ReservedWordsCommand::class,
+            ORMCommand\ClearCache\CollectionRegionCommand::class,
+            ORMCommand\ClearCache\EntityRegionCommand::class,
+            ORMCommand\ClearCache\MetadataCommand::class,
+            ORMCommand\ClearCache\QueryCommand::class,
+            ORMCommand\ClearCache\QueryRegionCommand::class,
+            ORMCommand\ClearCache\ResultCommand::class,
+            ORMCommand\SchemaTool\CreateCommand::class,
+            ORMCommand\SchemaTool\UpdateCommand::class,
+            ORMCommand\SchemaTool\DropCommand::class,
+            ORMCommand\EnsureProductionSettingsCommand::class,
+            ORMCommand\ConvertDoctrine1SchemaCommand::class,
+            ORMCommand\GenerateRepositoriesCommand::class,
+            ORMCommand\GenerateEntitiesCommand::class,
+            ORMCommand\GenerateProxiesCommand::class,
+            ORMCommand\ConvertMappingCommand::class,
+            ORMCommand\RunDqlCommand::class,
+            ORMCommand\ValidateSchemaCommand::class,
+            ORMCommand\InfoCommand::class,
+            ORMCommand\MappingDescribeCommand::class,
+            DBALMigrationCommand\DiffCommand::class,
+            DBALMigrationCommand\ExecuteCommand::class,
+            DBALMigrationCommand\GenerateCommand::class,
+            DBALMigrationCommand\MigrateCommand::class,
+            DBALMigrationCommand\StatusCommand::class,
+            DBALMigrationCommand\VersionCommand::class,
         ];
 
         sort($subset);
         sort($this->addedClasses);
 
-        $this->assertArraySubset($subset, $this->addedClasses);
+        $added = $this->addedClasses;
+        $discrepency = implode(', ', array_diff($this->addedClasses, array_replace_recursive($added, $subset)));
+
+        $this->assertEquals('', $discrepency, 'Command subset doesn\'t match.');
     }
 }

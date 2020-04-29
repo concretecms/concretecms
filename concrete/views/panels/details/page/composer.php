@@ -5,7 +5,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\View\DialogView $view */
 /* @var Concrete\Core\User\User $u */
 
-/* @var Concrete\Core\Application\Service\UserInterface\Help $ui */
 /* @var Concrete\Core\Application\Service\Composer $composer */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
 /* @var Concrete\Core\Page\Type\Type $pagetype */
@@ -22,8 +21,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="row">
         <div class="col-sm-9">
             <form method="post" data-panel-detail-form="compose">
-                <?= $ui->display('panel', '/page/composer'); ?>
-
                 <?php $composer->display($pagetype, $c); ?>
             </form>
         </div>

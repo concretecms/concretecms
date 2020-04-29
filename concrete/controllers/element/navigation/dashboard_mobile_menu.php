@@ -24,6 +24,7 @@ class DashboardMobileMenu extends ApplicationMenu
     {
         $list = parent::getPageList($parent);
         $list->includeSystemPages();
+        $list->includeAliases();
         return $list;
     }
 

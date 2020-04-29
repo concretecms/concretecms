@@ -1,7 +1,5 @@
 div#ccm-page-install {
 
-  margin-bottom: 160px;
-  
   div.ccm-install-title {
     position: fixed;
     z-index: 1200;
@@ -23,13 +21,12 @@ div#ccm-page-install {
     right: 10px;
     z-index: 1200;
   }
-  
+
 
   // Language form
-  
+
   form#ccm-install-language-form {
-  
-    margin-top: 120px;
+
     div.form-group {
       margin-bottom: 0px;
     }
@@ -37,7 +34,7 @@ div#ccm-page-install {
   }
 
   // Preconditions page
-  
+
   table.table {
     tr {
       td {
@@ -54,24 +51,31 @@ div#ccm-page-install {
     &.fa-warning {
       color: $warning;
     }
-    
+
     &.fa-check {
       color: $success;
     }
-      
+
   }
 
   div.ccm-install-actions {
     position: fixed;
     bottom: 0px;
+    align-items: center;
+    display: flex;
     left: 0px;
     width: 100%;
-    padding: 15px 30px;
-    border-top: 1px solid $gray-500;
+    padding: 0px 1rem;
+    height: 48px;
     background-color: $gray-100;
+    border-top: 1px solid $gray-200;
+
+    form {
+      width: 100%;
+    }
   }
 
-  #ccm-test-cookies-enabled-tooltip, 
+  #ccm-test-cookies-enabled-tooltip,
   #ccm-test-request-tooltip {
     display: none;
   }
@@ -90,6 +94,6 @@ div#ccm-page-install {
     font-weight: 300;
     float: left;
   }
-  
+
 
 }

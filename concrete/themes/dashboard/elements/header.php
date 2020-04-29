@@ -118,7 +118,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                 <li data-guide-toolbar-action="help" class="float-right hidden-xs">
                     <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
                        data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
-                       data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
+                       data-panel-url="<?= URL::to('/ccm/system/panels/help') ?>"
                        title="<?= t('View help about the CMS.') ?>" data-launch-panel="help">
                         <svg><use xlink:href="#icon-help" /></svg><span
                                 class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>

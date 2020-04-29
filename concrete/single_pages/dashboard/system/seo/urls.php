@@ -72,46 +72,43 @@
 <script>
 $(function () {
     var steps = [{
-        content: <?= json_encode('<p><span class="h5">' . t('Pretty URLs') . '</span><br/>' . t('Check this checkbox to remove index.php from your URLs.<br/>You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.') . '</p>') ?>,
-        next: 1,
         element: 'input[name=URL_REWRITING]',
+        content: <?= json_encode('<h3>' . t('Pretty URLs') . '</h3>' . t('Check this checkbox to remove index.php from your URLs.<br/>You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.')) ?>,
+        placement: 'bottom',
     },{
-        content: <?= json_encode('<p><span class="h5">' . t('Canonical URL') . '</span><br/>' . t('If you are running a site at multiple domains, enter the canonical domain here. This will be used for sitemap generation, any other purposes that require a specific domain. You can usually leave this blank.') . '</p>') ?>,
-        highlightTarget: false,
-        nextButton: true,
-        target: $('input[name=canonical_url]'),
-        my: 'bottom center',
-        at: 'top center',
-        setup: function() {
-            var $url = $('input[name=canonical_url]');
-            $(document).scrollTop($url.offset().top);
-        }
+        element: 'input[name=canonical_url]',
+        content: <?= json_encode('<h3>' . t('Canonical URL') . '</h3>' . t('If you are running a site at multiple domains, enter the canonical domain here. This will be used for sitemap generation, any other purposes that require a specific domain. You can usually leave this blank.')) ?>,
+        placement: 'bottom',
     },{
-        content: <?= json_encode('<p><span class="h5">' . t('Alternative URL') . '</span><br/>' . t('Certain add-ons require a secure SSL URL. Enter that URL here.') . '</p>') ?>,
-        highlightTarget: false,
-        nextButton: true,
-        target: $('input[name=canonical_url_alternative]'),
-        my: 'bottom center',
-        at: 'top center'
+        element: 'input[name=canonical_url_alternative]',
+        content: <?= json_encode('<h3>' . t('Alternative URL') . '</h3>' . t('Certain add-ons require a secure SSL URL. Enter that URL here.')) ?>,
+        placement: 'bottom',
     },{
-        content: <?= json_encode('<p><span class="h5">' . t('Alternative URL') . '</span><br/>' . t('Ensure that your site ONLY renders at the canonical URL or the alternative URL.') . '</p>') ?>,
-        highlightTarget: false,
-        nextButton: true,
-        target: $('input[name=redirect_to_canonical_url]'),
-        my: 'bottom left',
-        at: 'top left'
+        element: 'input[name=redirect_to_canonical_url]',
+        content: <?= json_encode('<h3>' . t('Alternative URL') . '</h3>' . t('Ensure that your site ONLY renders at the canonical URL or the alternative URL.')) ?>,
+        placement: 'bottom',
     }];
 
     var tour = new Tour({
         name: 'dashboard-system-urls',
         steps: steps,
-        storage: false,
         framework: 'bootstrap4',
-        onStart: function() {
-            ConcreteHelpLauncher.close();
+        template: ccmi18n_tourist.template,
+        localization: ccmi18n_tourist.localization,
+        storage: false,
+        showProgressBar: false,
+        sanitizeWhitelist: {
+            a: [/^data-/, 'href']
         },
-        'onEnd': function() {
-            $(document).scrollTop(0);
+        onPreviouslyEnded: function(tour) {
+            tour.restart()
+        },
+        onStart: function() {
+            window.ConcretePanelManager.getByIdentifier('help').hide();
+        },
+        onShown: ConcreteHelpGuideManager.updateStepFooter,
+        onEnd: function() {
+            window.ConcretePanelManager.getByIdentifier('help').show();
         }
     });
     ConcreteHelpGuideManager.register('dashboard-system-urls', tour);

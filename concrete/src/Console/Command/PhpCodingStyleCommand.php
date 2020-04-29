@@ -35,6 +35,7 @@ EOT
 
     public function handle(PhpFixer $fixer, EventDispatcherInterface $eventDispatcher)
     {
+        class_alias('Symfony\Component\EventDispatcher\Event', 'PhpCsFixer\Event\Event');
         $action = $this->input->getArgument('action');
         switch ($action) {
             case 'fix':
@@ -218,13 +219,13 @@ EOT
         }
         $startingPoint = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $startingPoint), '/');
         if (strpos($startingPoint, '/') === false) {
-            throw new UserMessageException('Ubable to detect the webroot');
+            throw new UserMessageException('Unable to detect the webroot');
         }
         if (is_file("{$startingPoint}/index.php") && is_file("{$startingPoint}/concrete/dispatcher.php")) {
             return $startingPoint;
         }
         if (preg_match('_^/+$_', $startingPoint) || preg_match('_^\w:/*$_', $startingPoint)) {
-            throw new UserMessageException('Ubable to detect the webroot');
+            throw new UserMessageException('Unable to detect the webroot');
         }
 
         return $this->detectWebRoot(dirname($startingPoint));
