@@ -119,7 +119,7 @@ class PageViewTest extends PageTestCase
     public function testRenderingEditProfilePageThemePathOverride()
     {
         $collection = $this->app->make(ThemeRouteCollection::class);
-        $collection->setThemeByRoute('/account/*', 'elemental', 'full.php');
+        $collection->setThemeByRoute('/account/*', 'elemental', 'profile_full.php'); // should be ignored because dashboard doesn't have this.
 
         $edit_profile = Single::add('/account/edit_profile');
         $controller = $edit_profile->getPageController();
