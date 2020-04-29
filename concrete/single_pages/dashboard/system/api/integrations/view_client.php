@@ -12,7 +12,7 @@ if ($clientSecret && !password_verify($clientSecret, $client->getClientSecret())
     $clientSecret = null;
 }
 
-// Get the consent type from the cclient
+// Get the consent type from the client
 $consentType = $client->getConsentType();
 ?>
 
@@ -84,7 +84,7 @@ $consentType = $client->getConsentType();
         <form method="post" action="<?php echo $view->action('delete'); ?>">
             <?php echo Loader::helper('validation/token')->output('delete'); ?>
             <input type="hidden" name="clientID" value="<?php echo $client->getIdentifier(); ?>">
-            <p><?=t('Are you sure you want to delete this credentials set? This cannot be undone.')?></p>
+            <p><?=t('Are you sure you want to delete this credentials set ? This cannot be undone.')?></p>
             <div class="dialog-buttons">
                 <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                 <button class="btn btn-danger float-right" onclick="$('div[data-dialog-wrapper=delete-client] form').submit()"><?=t('Delete')?></button>
