@@ -1,19 +1,33 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 
-<form method="post" id="clear-cache-form" action="<?php echo $view->url('/dashboard/system/optimization/clearcache', 'do_clear')?>">
-	<?php echo $this->controller->token->output('clear_cache')?>
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Optimization\Cache $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var bool $clearThumbnails
+ */
+
+?>
+<form method="post" action="<?= $controller->action('do_clear') ?>">
+    <?php $token->output('clear_cache') ?>
+
+    <p><?= t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.') ?></p>
+
     <div class="form-group">
-        <p><?php echo t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.')?></p>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('thumbnails', '1', $clearThumbnails) ?>
+                <?= t('Clear cached thumbnails') ?>
+            </label>
+        </div>
     </div>
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" name="thumbnails" value="1" <?= \Config::get('concrete.cache.clear.thumbnails', true) ? 'checked' : '' ?> />
-            <?= t('Clear cached thumbnails') ?>
-        </label>
+
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <button class="float-right btn btn-primary" type="submit" ><?= t('Clear Cache') ?></button>
+        </div>
     </div>
-    <div class="form-group">
-        <?= $interface->submit(t('Clear Cache'), 'clear-cache-form', '', 'btn-primary'); ?>
-    </div>
+
 </form>
-
-
