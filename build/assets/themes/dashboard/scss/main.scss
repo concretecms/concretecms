@@ -108,6 +108,7 @@ div#ccm-dashboard-content {
     width: 100%;
     padding: 0 15px 0 15px;
     z-index: $index-level-dashboard-form-actions-wrapper;
+    background-color: $body-bg;
 
     transition: cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s;
 
