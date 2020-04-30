@@ -13,82 +13,76 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Field implements FieldInterface
 {
-    
     use PackageTrait;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $id;
-    
+
     /**
      * @ORM\Column(type="string")
      */
     protected $name = '';
-    
+
     /**
      * @ORM\Column(type="string")
      */
-    protected $handle;
+    protected $handle = '';
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     */
-    public function setName($name): void
+    public function getDisplayName(): string
     {
-        $this->name = $name;
+        return tc('SummaryFieldName', $this->getName());
     }
 
     /**
-     * @return mixed
+     * @return $this
      */
-    public function getHandle()
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getHandle(): string
     {
         return $this->handle;
     }
 
     /**
-     * @param mixed $handle
+     * @return $this
      */
-    public function setHandle($handle): void
+    public function setHandle(string $handle): self
     {
         $this->handle = $handle;
+
+        return $this;
     }
-    
-    public function getFieldIdentifier()
+
+    public function getFieldIdentifier(): string
     {
         $handle = $this->getHandle();
         return $handle;
     }
 
-    public function export(\SimpleXMLElement $node)
+    public function export(\SimpleXMLElement $node): void
     {
         $container = $node->addChild('field');
         $container->addAttribute('handle', $this->getHandle());
         $container->addAttribute('name', h($this->getName()));
         $container->addAttribute('package', $this->getPackageHandle());
     }
-
-
-
-
-
 }
