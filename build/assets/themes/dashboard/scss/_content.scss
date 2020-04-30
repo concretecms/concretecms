@@ -22,8 +22,7 @@ div#ccm-dashboard-content {
 
   /* full width pages (like stacks & blocks, search pages) */
   div#ccm-dashboard-content-full {
-    // Note: currently there are no options here, because these pages handle their own
-    // borders, margins, messages, etc... Just putting this here to make that explicit
+    border-top: 1px solid $gray-200;
   }
 
   /* Need the standard padding on a full width page? Use this class below */

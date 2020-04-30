@@ -194,38 +194,35 @@ $dh = Core::make('helper/date');
 
     <?php if (count($fileSets) > 0) { ?>
 
-        <div class="ccm-dashboard-content-full">
-            <div class="table-responsive">
-                <table class="ccm-search-results-table">
-                    <thead>
-                    <tr>
-                        <th class="ccm-results-list-active-sort-asc"><a><?= t('Set Name') ?></a></th>
+        <div class="table-responsive">
+            <table class="ccm-search-results-table">
+                <thead>
+                <tr>
+                    <th class="ccm-results-list-active-sort-asc"><a><?= t('Set Name') ?></a></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($fileSets as $fs) { ?>
+
+                    <tr data-details-url="<?= $view->url('/dashboard/files/sets/', 'view_detail',
+                        $fs->getFileSetID()) ?>">
+                        <td>
+                            <?= $fs->getFileSetDisplayName() ?>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($fileSets as $fs) { ?>
 
-                        <tr data-details-url="<?= $view->url('/dashboard/files/sets/', 'view_detail',
-                            $fs->getFileSetID()) ?>">
-                            <td>
-                                <?= $fs->getFileSetDisplayName() ?>
-                            </td>
-                        </tr>
-
-                        <?php
-                    }
-                    ?>
-
-                    </tbody>
-                </table>
-            </div>
-            <?php if ($fsl->requiresPaging()) {
+                    <?php
+                }
                 ?>
-                <?php $fsl->displayPagingV2();
-                ?>
-            <?php } ?>
 
+                </tbody>
+            </table>
         </div>
+        <?php if ($fsl->requiresPaging()) {
+            ?>
+            <?php $fsl->displayPagingV2();
+            ?>
+        <?php } ?>
 
         <?php
     } else { ?>
