@@ -17,7 +17,7 @@ class Jobs extends DashboardPageController
         $this->app->make(OverridesCache::class)->flush();
         $this->set('dh', $this->app->make('date'));
         $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
-        $this->set('availableJobs', Job::getAvailableList(true));
+        $this->set('availableJobs', Job::getAvailableList($this->canInstallCoreJobs()));
         $this->set('installedJobs', Job::getList());
         $this->set('defaultJobSet', JobSet::getDefault());
         $this->set('jobSets', JobSet::getList());
@@ -248,5 +248,10 @@ EOT
         }
 
         return $js === null ? $this->view_sets() : $this->edit_set($js->getJobSetID());
+    }
+
+    protected function canInstallCoreJobs(): bool
+    {
+        return false;
     }
 }
