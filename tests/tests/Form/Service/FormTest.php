@@ -74,22 +74,22 @@ class FormTest extends TestCase
             [
                 'label',
                 ['ForKey', '<b>label</b>'],
-                '<label for="ForKey" class="control-label"><b>label</b></label>',
+                '<label for="ForKey"><b>label</b></label>',
             ],
             [
                 'label',
                 ['ForKey[]', 'text'],
-                '<label for="ForKey[]" class="control-label">text</label>',
+                '<label for="ForKey[]">text</label>',
             ],
             [
                 'label',
                 ['ForKey', 'text', []],
-                '<label for="ForKey" class="control-label">text</label>',
+                '<label for="ForKey">text</label>',
             ],
             [
                 'label',
                 ['ForKey', 'text', ['class' => 'MY-CLASS']],
-                '<label for="ForKey" class="MY-CLASS control-label">text</label>',
+                '<label for="ForKey" class="MY-CLASS">text</label>',
             ],
             // file
             [
