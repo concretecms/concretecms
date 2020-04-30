@@ -42,9 +42,9 @@ class UserInterface
     public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' pull-right';
+            $innerClass .= ' float-right';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' pull-left';
+            $innerClass .= ' float-left';
         }
 
         if (!$formID) {
@@ -72,9 +72,9 @@ class UserInterface
     public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' pull-right';
+            $innerClass .= ' float-right';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' pull-left';
+            $innerClass .= ' float-left';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {
@@ -98,9 +98,9 @@ class UserInterface
     public function buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' pull-right';
+            $innerClass .= ' float-right';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' pull-left';
+            $innerClass .= ' float-left';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {
