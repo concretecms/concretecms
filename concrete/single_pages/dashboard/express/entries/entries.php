@@ -1,25 +1,20 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-dashboard-content-full">
 
-    <?php if ($list->getTotalResults()) {
-        $result = $searchController->getSearchResultObject()->getJSONObject();
-        $result = json_encode($result);
-        ?>
+<?php if ($list->getTotalResults()) {
+    $result = $searchController->getSearchResultObject()->getJSONObject();
+    $result = json_encode($result);
+    ?>
 
-        <div class="table-responsive">
-            <?php View::element('express/entries/search');?>
-        </div>
+    <div class="table-responsive">
+        <?php View::element('express/entries/search');?>
+    </div>
 
-    <?php } else { ?>
+<?php } else { ?>
 
-        <div class="ccm-dashboard-content-full-inner">
-            <p><?= t('None created yet.') ?></p>
-        </div>
+    <p><?= t('None created yet.') ?></p>
 
-    <?php } ?>
-
-</div>
+<?php } ?>
 
 
 <script type="text/javascript">

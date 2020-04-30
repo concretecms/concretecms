@@ -1,0 +1,14 @@
+div.ccm-ui {
+  .breadcrumb {
+    min-height: 60px;
+  }
+
+  /*
+   * Handle the special multilingual folder dropdown states
+   */
+  .breadcrumb {
+    a.dropdown-toggle {
+      color: $breadcrumb-active-color;
+    }
+  }
+}

@@ -8,9 +8,7 @@ $fp = FilePermissions::getGlobal();
 
 if ($fp->canAddFile() || $fp->canSearchFiles()) {
     ?>
-    <div class="ccm-dashboard-content-full">
-        <?php View::element('files/search', ['result' => $result]) ?>
-    </div>
+    <?php View::element('files/search', ['result' => $result]) ?>
     <?php
 } else {
     ?>

@@ -13,7 +13,6 @@ import '@concretecms/bedrock/assets/calendar/js/backend';
 // Other
 import './jquery-bootstrap-select-to-button';
 import './translator';
-import './stacks/menu';
 import './remote-marketplace';
 
 var setupResultMessages = function() {
@@ -68,7 +67,7 @@ var setupFavorites = function() {
 };
 
 var setupDetailsURLs = function() {
-    $('table.ccm-search-results-table tr[data-details-url]').each(function() {
+    $('tr[data-details-url]').each(function() {
         $(this).hover(
             function() {
                 $(this).addClass('ccm-search-select-hover');
@@ -77,8 +76,10 @@ var setupDetailsURLs = function() {
                 $(this).removeClass('ccm-search-select-hover');
             }
         )
-            .on('click', function() {
-                window.location.href = $(this).data('details-url');
+            .on('click', function(e) {
+                if ($(e.target).is('td')) {
+                    window.location.href = $(this).data('details-url');
+                }
             });
     });
     $('div.ccm-details-panel[data-details-url]').each(function() {
@@ -147,6 +148,18 @@ var setupPrivacyPolicy = function() {
     });
 };
 
+var setupHeaderMenu = function() {
+    var $buttons = $('.ccm-dashboard-header-buttons'),
+        $menu = $('header div.ccm-dashboard-header-menu');
+    if ($buttons.length) {
+        if ($buttons.parent().get(0).nodeName.toLowerCase() == 'form') {
+            $menu.append($buttons.parent());
+        } else {
+            $menu.append($buttons);
+        }
+    }
+};
+
 var setupSiteListMenuItem = function() {
     $('select[data-select=ccm-header-site-list]').show().selectize({
         'onItemAdd': function(option) {
@@ -166,4 +179,5 @@ setupDialogs();
 setupSelects();
 setupDetailsURLs();
 setupFavorites();
+setupHeaderMenu();
 setupPrivacyPolicy();

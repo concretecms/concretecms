@@ -10,13 +10,8 @@ $th = $app->make('helper/text');
 if ($isReportEnabled) {
     ?>
 
-<div class="ccm-dashboard-header-buttons">
+<div class="ccm-dashboard-header-buttons btn-group">
     <?php
-    if ($settingsPage !== null) {
-        ?>
-        <a href="<?= h($settingsPage) ?>" class="btn btn-default"><?= t('Settings') ?></a>
-        <?php
-    }
     if (!isset($selectedChannel)) {
         ?>
         <a href="javascript:void(0)" class="btn btn-danger" onclick="clearAllChannelLogs()" ><?=t('Delete all'); ?></a>
@@ -33,8 +28,14 @@ if ($isReportEnabled) {
             };
         </script>
     <?php
-    } ?>
-    <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('csv', $valt->generate()); ?>?<?=$query; ?>">
+    }
+    if ($settingsPage !== null) {
+        ?>
+        <a href="<?= h($settingsPage) ?>" class="btn btn-secondary"><?= t('Settings') ?></a>
+        <?php
+    }
+    ?>
+    <a id="ccm-export-results" class="btn btn-secondary" href="<?= $view->action('csv', $valt->generate()); ?>?<?=$query; ?>">
         <i class='fa fa-download'></i> <?= t('Export to CSV'); ?>
     </a>
 </div>
@@ -103,50 +104,48 @@ if ($isReportEnabled) {
     </div>
 </form>
 
-<div class="ccm-dashboard-content-full">
-    <div class="table-responsive">
-        <table class="ccm-search-results-table selectable">
-            <thead>
-                <tr>
-                    <th class="<?=$list->getSearchResultsClass('logID'); ?>"><a href="<?=$list->getSortByURL('logID', 'desc'); ?>"><?=t('Date/Time'); ?></a></th>
-                    <th class="<?=$list->getSearchResultsClass('level'); ?>"><a href="<?=$list->getSortByURL('level', 'desc'); ?>"><?=t('Level'); ?></a></th>
-                    <th><span><?=t('Channel'); ?></span></th>
-                    <th><span><?=t('User'); ?></span></th>
-                    <th><span><?=t('Message'); ?></span></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($entries as $ent) {
-        ?>
-                <tr>
-                    <td valign="top" style="white-space: nowrap" class="active"><?php echo $ent->getDisplayTimestamp(); ?></td>
-                    <td valign="top" style="text-align: center"><?=$ent->getLevelIcon(); ?></td>
-                    <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplayName(); ?></td>
-                    <td valign="top"><strong><?php
-                    $uID = $ent->getUserID();
-        if (empty($uID)) {
-            echo t('Guest');
+<div class="table-responsive">
+    <table class="ccm-search-results-table selectable">
+        <thead>
+            <tr>
+                <th class="<?=$list->getSearchResultsClass('logID'); ?>"><a href="<?=$list->getSortByURL('logID', 'desc'); ?>"><?=t('Date/Time'); ?></a></th>
+                <th class="<?=$list->getSearchResultsClass('level'); ?>"><a href="<?=$list->getSortByURL('level', 'desc'); ?>"><?=t('Level'); ?></a></th>
+                <th><span><?=t('Channel'); ?></span></th>
+                <th><span><?=t('User'); ?></span></th>
+                <th><span><?=t('Message'); ?></span></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($entries as $ent) {
+    ?>
+            <tr>
+                <td valign="top" style="white-space: nowrap" class="active"><?php echo $ent->getDisplayTimestamp(); ?></td>
+                <td valign="top" style="text-align: center"><?=$ent->getLevelIcon(); ?></td>
+                <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplayName(); ?></td>
+                <td valign="top"><strong><?php
+                $uID = $ent->getUserID();
+    if (empty($uID)) {
+        echo t('Guest');
+    } else {
+        $u = User::getByUserID($uID);
+        if (is_object($u)) {
+            echo $u->getUserName();
         } else {
-            $u = User::getByUserID($uID);
-            if (is_object($u)) {
-                echo $u->getUserName();
-            } else {
-                echo tc('Deleted user', 'Deleted (id: %s)', $uID);
-            }
-        } ?></strong></td>
-                    <td style="width: 100%"><?=$th->makenice($ent->getMessage()); ?></td>
-                    <td valign="top" style="text-align: center; padding: 15px;"><a href="javascript:void(0)" class="btn btn-default btn-xs btn-danger" onclick="deleteLog(<?=$ent->getID(); ?>)"><?=t('Delete'); ?></a></td>
-                </tr>
-            <?php
-    } ?>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- END Body Pane -->
-    <?=$list->displayPagingV2(); ?>
+            echo tc('Deleted user', 'Deleted (id: %s)', $uID);
+        }
+    } ?></strong></td>
+                <td style="width: 100%"><?=$th->makenice($ent->getMessage()); ?></td>
+                <td valign="top" style="text-align: center; padding: 15px;"><a href="javascript:void(0)" class="btn btn-default btn-xs btn-danger" onclick="deleteLog(<?=$ent->getID(); ?>)"><?=t('Delete'); ?></a></td>
+            </tr>
+        <?php
+} ?>
+        </tbody>
+    </table>
 </div>
+
+<!-- END Body Pane -->
+<?=$list->displayPagingV2(); ?>
 
 <script>
     $(function() {
