@@ -4,9 +4,7 @@ $dh = Loader::helper('concrete/dashboard/sitemap');
 if ($dh->canRead()) {
     ?>
 
-	<div class="ccm-dashboard-content-full">
-		<?php Loader::element('pages/search', array('result' => $result))?>
-	</div>
+    <?php Loader::element('pages/search', array('result' => $result))?>
 
 <?php
 } else {

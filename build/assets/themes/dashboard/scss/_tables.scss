@@ -1,0 +1,17 @@
+div#ccm-dashboard-content {
+
+  div#ccm-dashboard-content-full {
+
+    .ccm-search-results-table {
+
+      tbody {
+        td {
+          &:first-child {
+            padding-left: $dashboard-content-padding-l;
+          }
+        }
+
+      }
+    }
+  }
+}

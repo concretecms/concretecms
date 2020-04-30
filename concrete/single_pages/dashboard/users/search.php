@@ -366,9 +366,7 @@ if (isset($user) && is_object($user)) {
     if ($tp->canAccessUserSearchInterface()) {
         ?>
 
-        <div class="ccm-dashboard-content-full">
-            <?php View::element('users/search', ['result' => $result])?>
-        </div>
+        <?php View::element('users/search', ['result' => $result])?>
 
         <script type="text/javascript">
             $(function() {

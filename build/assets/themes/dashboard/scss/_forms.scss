@@ -1,0 +1,10 @@
+select[data-select=bootstrap] {
+  display: none;
+}
+
+select[data-select=bootstrap] + div.btn-group {
+  span.caret {
+    margin-left: 2px !important;
+  }
+}
+

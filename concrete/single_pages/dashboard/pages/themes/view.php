@@ -41,7 +41,7 @@ if (isset($activate_confirm)) {
             foreach ($tArray as $t) {
                 ?>
                 <tr <?php if ($siteThemeID == $t->getThemeID()) {
-    ?> class="ccm-theme-active" <?php 
+    ?> class="ccm-theme-active" <?php
 }
                 ?>>
                     <td>
@@ -121,7 +121,7 @@ if (isset($activate_confirm)) {
     ?></div>
                     </td>
                 </tr>
-            <?php 
+            <?php
 }
         ?>
             </tbody>

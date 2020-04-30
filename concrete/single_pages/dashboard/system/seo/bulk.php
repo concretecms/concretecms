@@ -111,7 +111,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     </div>
 </form>
 
-<div class="ccm-dashboard-content-full">
     <div data-search-element="results">
     <?php if (count($pages) > 0) { ?>
         <div class="ccm-search-results-table container-fluid">
@@ -219,7 +218,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <?=$pagination?>
     </div>
     <?php } ?>
-</div>
 
 <script>
 $(document).ready(function() {

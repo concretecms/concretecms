@@ -58,8 +58,9 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
     {
         $parent = $this->getParentNode($treeNodeParentID);
 
+        /*
         $this->set('breadcrumb', $this->getBreadcrumb($parent));
-
+        */
         if (isset($parent) && $parent instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
             $entity = $this->getEntity($parent);
             $permissions = new \Permissions($entity);
@@ -128,6 +129,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             ->findOneByResultsNode($parent);
     }
 
+    /*
     protected function getBreadcrumb(Node $node = null)
     {
         $c = $this->getPageObject();
@@ -159,6 +161,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         return $breadcrumb;
     }
+    */
 
     public function delete_entry()
     {
