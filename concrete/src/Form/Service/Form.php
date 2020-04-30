@@ -152,7 +152,7 @@ class Form
      */
     public function label($forFieldID, $innerHTML, $miscFields = [])
     {
-        return '<label for="' . $forFieldID . '"' . $this->parseMiscFields('control-label ', $miscFields) . '>' . $innerHTML . '</label>';
+        return '<label for="' . $forFieldID . '"' . $this->parseMiscFields('', $miscFields) . '>' . $innerHTML . '</label>';
     }
 
     /**
