@@ -75,83 +75,81 @@ if ($this->controller->getTask() == 'translate_po') {
     $dh = $app->make('helper/date');
     if (count($pages) > 0) {
         ?>
-        <div class="ccm-dashboard-content-full">
-            <div class="table-responsive">
-                <table class="ccm-search-results-table">
-                    <thead>
-                    <tr>
-                        <th>&nbsp;</th>
-                        <th><span><?php echo t('Name'); ?></span></th>
-                        <th><span><?php echo t('Locale'); ?></span></th>
-                        <th colspan="2"><span><?php echo t('Completion'); ?></span></th>
-                        <th><span><?php echo t('Last Updated'); ?></span></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody><?php
-                        foreach ($pages as $pc) {
-                            $pcl = \Concrete\Core\Multilingual\Page\Section\Section::getByID($pc->getCollectionID()); ?><tr>
-                                <td><?php echo $ch->getSectionFlagIcon($pc); ?></td>
-                                <td><a href="<?php echo $nav->getLinkToCollection($pc); ?>"><?php echo $pc->getCollectionName(); ?></a></td>
-                                <td style="white-space: nowrap">
-                                    <?php
-                                    echo $pc->getLocale();
-                                    if ($pc->getLocale() != $defaultSourceLocale) {
-                                        ?><a href="#" class="icon-link launch-tooltip" title="<?php echo REL_DIR_LANGUAGES_SITE_INTERFACE; ?>/<?php echo $pc->getLocale(); ?>.mo"><i class="fa fa-question-circle"></i></a><?php
-                                    }
-                                    ?>
-                                </td>
-                                <td style="width: 40%">
-                                    <?php
-                                    if ($pc->getLocale() != $defaultSourceLocale) {
-                                        $data = $extractor->getSectionSiteInterfaceCompletionData($pc);
-                                        ?>
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: <?php echo $data['completionPercentage']; ?>%">&nbsp;</div>
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                </td>
-                                <td style="white-space: nowrap">
-                                    <?php
-                                    if ($pc->getLocale() != $defaultSourceLocale) {
-                                        ?>
-                                        <span class="percent"><?php echo $data['completionPercentage']; ?>%</span>
-                                        -
-                                        <?php echo t(/*i18n: %1$s is the partial number, %2$s is the total number. Example: 2 of 3 */'%1$s of %2$s', '<span class="translated">'.$data['translatedCount'].'</span>', '<span class="total">'.$data['messageCount'].'</span>'); ?>
-                                        <?php
-                                    }
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    if ($pc->getLocale() != $defaultSourceLocale) {
-                                        if (file_exists(DIR_LANGUAGES_SITE_INTERFACE.'/'.$pc->getLocale().'.mo')) {
-                                            echo $dh->formatDateTime(filemtime(DIR_LANGUAGES_SITE_INTERFACE.'/'.$pc->getLocale().'.mo'), true);
-                                        } else {
-                                            echo t('File not found.');
-                                        }
-                                    } else {
-                                        echo t('N/A');
-                                    }
-                                    ?>
-                                </td>
+        <div class="table-responsive">
+            <table class="ccm-search-results-table">
+                <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th><span><?php echo t('Name'); ?></span></th>
+                    <th><span><?php echo t('Locale'); ?></span></th>
+                    <th colspan="2"><span><?php echo t('Completion'); ?></span></th>
+                    <th><span><?php echo t('Last Updated'); ?></span></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody><?php
+                    foreach ($pages as $pc) {
+                        $pcl = \Concrete\Core\Multilingual\Page\Section\Section::getByID($pc->getCollectionID()); ?><tr>
+                            <td><?php echo $ch->getSectionFlagIcon($pc); ?></td>
+                            <td><a href="<?php echo $nav->getLinkToCollection($pc); ?>"><?php echo $pc->getCollectionName(); ?></a></td>
+                            <td style="white-space: nowrap">
                                 <?php
-                                if ($pc->getLocale() == $defaultSourceLocale) {
+                                echo $pc->getLocale();
+                                if ($pc->getLocale() != $defaultSourceLocale) {
+                                    ?><a href="#" class="icon-link launch-tooltip" title="<?php echo REL_DIR_LANGUAGES_SITE_INTERFACE; ?>/<?php echo $pc->getLocale(); ?>.mo"><i class="fa fa-question-circle"></i></a><?php
+                                }
+                                ?>
+                            </td>
+                            <td style="width: 40%">
+                                <?php
+                                if ($pc->getLocale() != $defaultSourceLocale) {
+                                    $data = $extractor->getSectionSiteInterfaceCompletionData($pc);
                                     ?>
-                                    <td></td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: <?php echo $data['completionPercentage']; ?>%">&nbsp;</div>
+                                    </div>
                                     <?php
+                                }
+                                ?>
+                            </td>
+                            <td style="white-space: nowrap">
+                                <?php
+                                if ($pc->getLocale() != $defaultSourceLocale) {
+                                    ?>
+                                    <span class="percent"><?php echo $data['completionPercentage']; ?>%</span>
+                                    -
+                                    <?php echo t(/*i18n: %1$s is the partial number, %2$s is the total number. Example: 2 of 3 */'%1$s of %2$s', '<span class="translated">'.$data['translatedCount'].'</span>', '<span class="total">'.$data['messageCount'].'</span>'); ?>
+                                    <?php
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                if ($pc->getLocale() != $defaultSourceLocale) {
+                                    if (file_exists(DIR_LANGUAGES_SITE_INTERFACE.'/'.$pc->getLocale().'.mo')) {
+                                        echo $dh->formatDateTime(filemtime(DIR_LANGUAGES_SITE_INTERFACE.'/'.$pc->getLocale().'.mo'), true);
+                                    } else {
+                                        echo t('File not found.');
+                                    }
                                 } else {
-                                    ?><td><a href="<?php echo $this->action('translate_po', $pc->getCollectionID()); ?>" class="icon-link"><i class="fa fa-pencil"></i></a></td><?php
-                                } ?>
-                            </tr>
+                                    echo t('N/A');
+                                }
+                                ?>
+                            </td>
                             <?php
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+                            if ($pc->getLocale() == $defaultSourceLocale) {
+                                ?>
+                                <td></td>
+                                <?php
+                            } else {
+                                ?><td><a href="<?php echo $this->action('translate_po', $pc->getCollectionID()); ?>" class="icon-link"><i class="fa fa-pencil"></i></a></td><?php
+                            } ?>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
 
         <?php
