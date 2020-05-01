@@ -6,8 +6,9 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * This migration updates topic category names imported from 5.x.
+ * That werent fixed in the 5.7 -> 8.x migration previously
  */
-class Version20191015060417 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20200501000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
@@ -15,7 +16,7 @@ class Version20191015060417 extends AbstractMigration implements RepeatableMigra
     public function upgradeDatabase()
     {
         $sm = $this->connection->getSchemaManager();
-        if ($sm->tablesExist(['TreeCategoryNodes'])) {
+        if ($sm->tablesExist(['TreeCategoryNodes']) && !$sm->tablesExist(['_TreeCategoryNodes'])) {
             $sm->renameTable('TreeCategoryNodes', '_TreeCategoryNodes');
             $this->output(t('Updating Category Names...'));
             $categories = $this->connection->fetchAll('select * from _TreeCategoryNodes');
