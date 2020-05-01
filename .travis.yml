@@ -107,7 +107,7 @@ matrix:
       script:
         - composer test
       env:
-        - REDIS_VERSION=redis-5.1.0RC2
+        - REDIS_VERSION=redis-5.1.0
 
     - name: Test with PHP 7.4
       php: 7.4snapshot
