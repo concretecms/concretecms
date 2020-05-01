@@ -519,8 +519,8 @@ return [
 
         'core/cms' => [
             [
-                ['jquery'],
-                ['font-awesome'],
+                ['javascript', 'jquery'],
+                ['css', 'font-awesome'],
                 ['javascript', 'core/cms'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'core/cms'],
