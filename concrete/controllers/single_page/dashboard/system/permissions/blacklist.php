@@ -1,58 +1,86 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
+use Concrete\Core\Entity\Permission\IpAccessControlCategory;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\IpAccessControlService;
+use Punic\Comparer;
 
 class Blacklist extends DashboardPageController
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository|null
+     */
+    private $categoryRepository;
+
     public function view()
     {
-        $config = $this->app->make('config');
-        $this->set('banEnabled', $config->get('concrete.security.ban.ip.enabled') ? true : false);
-        $this->set('allowedAttempts', (int) $config->get('concrete.security.ban.ip.attempts'));
-        $this->set('attemptsTimeWindow', (int) $config->get('concrete.security.ban.ip.time'));
-        $this->set('banDuration', (int) $config->get('concrete.security.ban.ip.length'));
+        if ($this->getCategory() !== null) {
+            return $this->app->make(ResponseFactoryInterface::class)->redirect(
+                $this->action('configure'),
+                302
+            );
+        }
+        $this->addHeaderItem(<<<'EOT'
+<style>
+tr.ccm_ip-access-control-category {
+    cursor: pointer;
+}
+</style>
+EOT
+        );
+        $categories = $this->getCategoryRepository()->findAll();
+        $cmp = new Comparer();
+        usort($categories, function (IpAccessControlCategory $a, IpAccessControlCategory $b) use ($cmp) {
+            $cmp->compare($a->getDisplayName(), $b->getDisplayName());
+        });
+        $this->set('categories', $categories);
     }
 
-    public function update_ipblacklist()
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
+    protected function getCategoryRepository()
     {
-        if ($this->token->validate('update_ipblacklist')) {
-            $post = $this->request->request;
-            $valn = $this->app->make('helper/validation/numbers');
-            /* @var \Concrete\Core\Utility\Service\Validation\Numbers $valn */
-
-            $enabled = $post->get('banEnabled') ? true : false;
-
-            $allowedAttempts = $post->get('allowedAttempts');
-            if (!$valn->integer($allowedAttempts) || ($allowedAttempts = (int) $allowedAttempts) < 1) {
-                $this->error->add(t('Please specify a number greater than zero for the maximum number of failed login attempts'));
-            }
-
-            $attemptsTimeWindow = $post->get('attemptsTimeWindow');
-            if (!$valn->integer($attemptsTimeWindow) || ($attemptsTimeWindow = (int) $attemptsTimeWindow) < 1) {
-                $this->error->add(t('Please specify a number greater than zero for the failed login attempts time window'));
-            }
-
-            if ($post->get('banDurationUnlimited')) {
-                $banDuration = 0;
-            } else {
-                $banDuration = $post->get('banDuration');
-                if (!$valn->integer($banDuration) || ($banDuration = (int) $banDuration) < 1) {
-                    $this->error->add(t('Please specify a number greater than zero for the ban duration'));
-                }
-            }
-
-            if (!$this->error->has()) {
-                $config = $this->app->make('config');
-                $config->save('concrete.security.ban.ip.enabled', $enabled);
-                $config->save('concrete.security.ban.ip.attempts', $allowedAttempts);
-                $config->save('concrete.security.ban.ip.time', $attemptsTimeWindow);
-                $config->save('concrete.security.ban.ip.length', $banDuration);
-                $this->flash('success', t('IP Blacklist settings saved.'));
-                $this->redirect($this->action(''));
-            }
-        } else {
-            $this->error->add($this->token->getErrorMessage());
+        if ($this->categoryRepository === null) {
+            $this->categoryRepository = $this->entityManager->getRepository(IpAccessControlCategory::class);
         }
+
+        return $this->categoryRepository;
+    }
+
+    /**
+     * @param mixed $id
+     *
+     * @return \Concrete\Core\Entity\Permission\IpAccessControlCategory|null
+     */
+    protected function getCategory($id = null)
+    {
+        if ((string) $id !== '') {
+            return $this->entityManager->find(IpAccessControlCategory::class, $id);
+        }
+        $categories = $this->getCategoryRepository()->findBy([], null, 2);
+        if (count($categories) === 1) {
+            return $categories[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param mixed $id
+     *
+     * @return \Concrete\Core\Permission\IpAccessControlService|null
+     */
+    protected function getService($id = null)
+    {
+        $category = $this->getCategory($id);
+        if ($category === null) {
+            return null;
+        }
+
+        return $this->app->make(IpAccessControlService::class, ['category' => $category]);
     }
 }

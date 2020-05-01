@@ -7,6 +7,7 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Assignment\AreaAssignment;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
@@ -20,7 +21,7 @@ class AddBlockToAreaAreaKey extends AreaKey
      * @var string
      */
     const OPERATION_NEWBLOCK = 'new-block';
-    
+
     /**
      * Operation identifier: moving an existing block from another area.
      *
@@ -90,7 +91,8 @@ class AddBlockToAreaAreaKey extends AreaKey
      */
     public function validate($blockTypeOrBlock = false)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }
@@ -124,17 +126,18 @@ class AddBlockToAreaAreaKey extends AreaKey
      */
     protected function getAllowedBlockTypeIDsFor($operation)
     {
-        $u = new User();
-        $pae = $this->getPermissionAccessObject();
+        $pae = $this->getAreaPermissionAccessObject();
         if (!is_object($pae)) {
             return [];
         }
         if (!in_array($operation, [static::OPERATION_NEWBLOCK, static::OPERATION_EXISTINGBLOCK], true)) {
             $operation = static::OPERATION_NEWBLOCK;
         }
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $accessEntities = $u->getUserAccessEntityObjects();
         $accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
-        $list = $this->getAccessListItems(AreaKey::ACCESS_TYPE_ALL, $accessEntities);
+        $list = $this->getAreaAccessListItems(AreaKey::ACCESS_TYPE_ALL, $accessEntities);
         $list = PermissionDuration::filterByActive($list);
         $btIDs = [];
         if (count($list) > 0) {
@@ -168,23 +171,7 @@ class AddBlockToAreaAreaKey extends AreaKey
             } else {
                 $allBTIDs = $item->get();
             }
-            
-            $a = $this->getPermissionObject();
-            $stack = null;
-            if ($a instanceof Area) {
-                $areaPage = $a->getAreaCollectionObject();
-                if ($areaPage instanceof Page && $areaPage->getPageTypeHandle() === STACKS_PAGE_TYPE) {
-                    $stack = $areaPage;
-                } elseif ($a->isGlobalArea()) {
-                    $stack = Stack::getByName($a->getAreaHandle());
-                    if (!$stack || $stack->isError()) {
-                        $stack = null;
-                    }
-                }
-            }
-            if ($stack !== null) {
-                return $allBTIDs;
-            }
+
             foreach ($list as $l) {
                 switch ($l->getBlockTypesAllowedPermission()) {
                     case 'N':

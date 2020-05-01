@@ -1,10 +1,11 @@
 <?php
+
 namespace Concrete\Tests\Cache\Page;
 
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Http\Request;
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Localization\Locale\Service as LocaleService;
+use Concrete\Core\Support\Facade\Facade;
 use Core;
 use PHPUnit_Framework_TestCase;
 

@@ -122,6 +122,7 @@ return [
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
+        'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
@@ -196,6 +197,7 @@ return [
         'geolocator_library',
         'group',
         'group_set',
+        'ip_access_control_category',
         'job',
         'mail_importer',
         'permission_access_entity_type',
@@ -259,6 +261,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypeSkeletonsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageContentRoutine',
@@ -267,6 +270,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
     ],
 
     /*
@@ -353,6 +357,18 @@ return [
     ],
 
     /*
+     * Importer processors
+     */
+    'import_processors' => [
+        'ccm.file.exists' => Concrete\Core\File\Import\Processor\FileExistingValidator::class,
+        'ccm.file.extension' => Concrete\Core\File\Import\Processor\FileExtensionValidator::class,
+        'ccm.image.autorotate' => Concrete\Core\File\Import\Processor\ImageAutorotator::class,
+        'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
+        'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
+        'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
+    ],
+
+    /*
      * Assets
      */
     'assets' => [
@@ -426,7 +442,7 @@ return [
         'fullcalendar/print' => [
             ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
         ],
-        'vue'=> [
+        'vue' => [
             ['javascript', 'js/vue.js', ['minify' => false, 'combine' => false]],
         ],
         'html5-shiv' => [
@@ -638,7 +654,7 @@ return [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
         'core/avatar' => [
-            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]]
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
         ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
@@ -684,6 +700,9 @@ return [
         ],
         'core/country-stateprovince-link' => [
             ['javascript', 'js/country-stateprovince-link.js', ['minify' => false]],
+        ],
+        'core/country-data-link' => [
+            ['javascript', 'js/country-data-link.js', ['minify' => false]],
         ],
     ],
     'asset_groups' => [
@@ -747,7 +766,7 @@ return [
             [
                 ['javascript', 'dropzone'],
                 ['javascript-localized', 'dropzone'],
-                ['javascript','vue'],
+                ['javascript', 'vue'],
                 ['javascript', 'core/avatar'],
             ],
         ],
@@ -896,6 +915,7 @@ return [
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'jquery/touch-punch'],
+                ['javascript', 'selectize'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'dashboard'],
@@ -911,6 +931,7 @@ return [
                 ['javascript', 'core/app'],
                 ['javascript-conditional', 'respond'],
                 ['javascript-conditional', 'html5-shiv'],
+                ['css', 'selectize'],
                 ['css', 'core/app'],
                 ['css', 'jquery/ui'],
                 ['css', 'font-awesome'],
@@ -1150,6 +1171,12 @@ return [
                 ['javascript', 'core/country-stateprovince-link'],
             ],
         ],
+        'core/country-data-link' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'core/country-data-link'],
+            ],
+        ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
         'core/legacy' => [
             [
@@ -1201,7 +1228,7 @@ return [
         // The name of a class that implements Psr\Log\LoggerInterface
         'logger' => null,
     ],
-    
+
     // HTTP middleware for processing http requests
     'middleware' => [
         [

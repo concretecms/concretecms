@@ -18,6 +18,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Session\SessionValidator;
+use Concrete\Core\Site\Menu\Item\SiteListItem;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -352,6 +353,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         // Core menu items
         $item = new RelationListItem();
         $menu = $this->app->make('helper/concrete/ui/menu');
+        $menu->addMenuItem($item);
+
+        // Multisite item
+        $item = new SiteListItem();
         $menu->addMenuItem($item);
 
         $controller = $collection->getPageController();

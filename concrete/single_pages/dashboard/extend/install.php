@@ -33,7 +33,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             <h4><?=t('Clear this Site?')?></h4>
             <p><?=t('%s can fully clear your website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', t($pkg->getPackageName())) ?></p>
             <?php
-            $u = new User();
+            $u = $app->make(Concrete\Core\User\User::class);
             if ($u->isSuperUser()) {
                 $disabled = '';
                 ?>

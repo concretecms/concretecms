@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 
@@ -38,9 +38,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
 
     if ($cih->showHelpOverlay()) {
-        print '<div style="display: none">';
+        echo '<div style="display: none">';
         View::element('help/dialog/introduction');
-        print '</div>';
+        echo '</div>';
         $v = View::getInstance();
         $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteHelpDialog().open(); });</script>');
         $cih->trackHelpOverlayDisplayed();
@@ -400,7 +400,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     </li>
                     <?php
                 }
-                
+
                 $items = $ihm->getPageHeaderMenuItems('right');
                 foreach ($items as $ih) {
                     $cnt = $ih->getController();
@@ -423,33 +423,33 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         echo $dh->getIntelligentSearchMenu();
 
         if ($pageInUseBySomeoneElse) {
-            $buttons = array();
+            $buttons = [];
             if ($canApprovePageVersions) {
                 $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-xs btn-default">' . t('Force Exit Edit Mode') . '</a>';
             }
 
-            echo $cih->notify(array(
+            echo $cih->notify([
                 'title' => t('Editing Unavailable.'),
-                'text' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
+                'text' => t('%s is currently editing this page.', $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
                 'icon' => 'fa fa-exclamation-circle',
-                'buttons' => $buttons
-            ));
+                'buttons' => $buttons,
+            ]);
         } else {
             if ($c->getCollectionPointerID() > 0) {
-                $buttons = array();
+                $buttons = [];
                 $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-default btn-xs">' . t('View/Edit Original') . '</a>';
                 if ($canApprovePageVersions) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
                     $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
                 }
-                echo $cih->notify(array(
+                echo $cih->notify([
                     'title' => t('Page Alias.'),
-                    'text' => t("This page is an alias of one that actually appears elsewhere."),
+                    'text' => t('This page is an alias of one that actually appears elsewhere.'),
                     'type' => 'info',
                     'icon' => 'fa fa-info-circle',
                     'buttons' => $buttons,
-                ));
+                ]);
             }
             $hasPendingPageApproval = false;
 
@@ -463,19 +463,19 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 if (is_object($vo)) {
                     if (!$vo->isApproved() && !$c->isEditMode()) {
                         if ($c->isPageDraft()) {
-                            echo $cih->notify(array(
+                            echo $cih->notify([
                                 'title' => t('Page Draft.'),
-                                'text' => t("This is an un-published draft."),
+                                'text' => t('This is an un-published draft.'),
                                 'type' => 'info',
                                 'icon' => 'fa fa-exclamation-circle',
-                            ));
+                            ]);
                         } else {
-                            $buttons = array();
+                            $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
                                 $pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
                                 $pk->setPermissionObject($c);
                                 $pa = $pk->getPermissionAccessObject();
-                                $workflows = array();
+                                $workflows = [];
                                 if (is_object($pa)) {
                                     $workflows = $pa->getWorkflows();
                                 }
@@ -493,13 +493,13 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 }
                                 $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
                             }
-                            echo $cih->notify(array(
+                            echo $cih->notify([
                                 'title' => t('Page is Pending Approval.'),
-                                'text' => t("This page is newer than what appears to visitors on your live site."),
+                                'text' => t('This page is newer than what appears to visitors on your live site.'),
                                 'type' => 'info',
                                 'icon' => 'fa fa-cog',
                                 'buttons' => $buttons,
-                            ));
+                            ]);
                         }
                     } else {
                         $publishDate = $vo->getPublishDate();
@@ -507,18 +507,18 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $date = $dateHelper->formatDate($publishDate);
                             $time = $dateHelper->formatTime($publishDate);
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
+                            $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                                $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">' . t('Publish Now') . '</a>';
-                            } else {
-                                $button = '';
+                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '"> ' . t('Publish Now') . '</a>';
+                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=cancel-schedule' . $token . '"> ' . t('Cancel Scheduled Publish') . '</a>';
                             }
-                            echo $cih->notify(array(
+                            echo $cih->notify([
                                 'title' => t('Publish Pending.'),
                                 'text' => $message,
                                 'type' => 'info',
                                 'icon' => 'fa fa-cog',
-                                'buttons' => array($button),
-                            ));
+                                'buttons' => $buttons,
+                            ]);
                         }
                     }
                 }

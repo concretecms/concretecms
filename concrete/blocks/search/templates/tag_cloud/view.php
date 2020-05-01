@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <?php
 
@@ -7,19 +7,19 @@
     $akc = $ak->getController();
     $pp = false;
 
-    $tagCounts = array();
+    $tagCounts = [];
 
     if ($baseSearchPath != '') {
         $pp = Page::getByPath($baseSearchPath);
     }
     $ttags = $akc->getOptionUsageArray($pp);
-    $tags = array();
+    $tags = [];
     foreach ($ttags as $t) {
         $tagCounts[] = $t->getSelectAttributeOptionUsageCount();
         $tags[] = $t;
     }
     shuffle($tags);
-    $tagSizes = array();
+    $tagSizes = [];
     $count = count($tagCounts);
     foreach ($tagCounts as $tagCount => $pos) {
         $tagSizes[$pos] = setFontPx(($pos + 1) / $count);

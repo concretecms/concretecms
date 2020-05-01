@@ -18,6 +18,7 @@ matrix:
   allow_failures:
     - name: Test with PHP nightly
     - name: Test with PHP 7.4
+    - name: Check PHP coding style
   include:
 
     - name: Test with PHP 7.1 (with code coverage)
@@ -36,7 +37,7 @@ matrix:
       before_script:
         - ./.travis/composer-deps.sh
       script:
-        - composer phpcs
+        - ./.travis/check-php-coding-style.sh
 
     - name: Check JS coding style
       language: node_js
@@ -115,6 +116,15 @@ matrix:
         - ./.travis/setup-redis.sh
       script:
         - composer test
+
+    - name: Test in Docker
+      php: '7.2'
+      services:
+        - docker
+      before_script:
+        - ./.travis/composer-deps.sh
+      script:
+        - composer test -- --group docker
 
     - name: Test with PHP nightly
       php: nightly

@@ -57,7 +57,7 @@ class CalendarFeed extends Controller
                     } else {
                         $link = $calendarLink;
                     }
-                    $entry->setLink($link);
+                    $entry->setLink((string) $link);
                     $writer->addEntry($entry);
                 }
 

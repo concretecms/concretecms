@@ -74,10 +74,8 @@ class Controller extends GenericOauth2TypeController
         if ($data !== null) {
                 $userID = $data['user_id'];
                 if ($userID !== null && $userID !== '') {
-                    /* @var \Concrete\Core\Database\Connection\Connection $database */
-                    $database = $this->app->make(Connection::class);
                     try {
-                        $database->delete('OauthUserMap', ['namespace' => 'facebook', 'binding' => $userID]);
+                        $this->getBindingService()->clearBinding(null, $userID, 'facebook');
                     } catch (\Exception $e) {
                         \Log::Error(t('Error detaching account : %s', $e->getMessage()));
                             $this->showError(t('Error detaching account'));
@@ -118,13 +116,12 @@ class Controller extends GenericOauth2TypeController
 
     public function handle_detach_attempt()
     {
-
-        if (!User::isLoggedIn()) {
+        $user = $this->app->make(User::class);
+        if (!$user->isRegistered()) {
             $response = new RedirectResponse(\URL::to('/login'), 302);
             $response->send();
             exit;
         }
-        $user = new User();
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
 
@@ -133,13 +130,12 @@ class Controller extends GenericOauth2TypeController
 
         $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
         try {
-            /* @var \Concrete\Core\Database\Connection\Connection $database */
-            $database = $this->app->make(Connection::class);
-            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
+            $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
+
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {
-            \Log::error(t('Deattach Error %s', $e->getMessage()));
+            \Log::error(t('Detach Error %s', $e->getMessage()));
             $this->showError(t('Unable to detach account.'));
             exit;
         }

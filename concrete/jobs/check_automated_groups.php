@@ -5,7 +5,7 @@ use Concrete\Core\User\Group\GroupList;
 use Loader;
 use QueueableJob;
 use Group;
-use User;
+use Concrete\Core\User\User;
 use ZendQueue\Queue as ZendQueue;
 use ZendQueue\Message as ZendQueueMessage;
 

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Legacy;
 
 use Page as ConcretePage;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use PermissionKey;
 use Permissions;
