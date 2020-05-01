@@ -165,13 +165,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
-                        <div class="delete">
-                            <button class="ccm-delete-clipboard-item float-right btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
-                        </div>
+
                         <div class="block-content">
-                            <div class="block-name">
+                            <div class="block-name float-left">
                                 <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
                             </div>
+                            <div class="delete float-right">
+                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
+                            </div>
+                            
                             <div class="blocks">
                                 <div class="block ccm-panel-add-block-draggable-block-type" title="<?= t($type->getBlockTypeName()) ?>">
                                     <div class="block-content">
