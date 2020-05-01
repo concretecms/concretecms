@@ -28,7 +28,6 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
 
 <?php View::element('footer_required', ['disableTrackingCode' => true]); ?>
 
-<script type="text/javascript" src="<?=URL::to('/ccm/assets/localization/core/js')?>"></script>
 <script type="text/javascript" src="<?=$view->getThemePath()?>/main.js"></script>
 
 <script type="text/javascript">
@@ -42,7 +41,7 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
         ?>
         panel.isOpen = true;
         panel.onPanelLoad();
-        <?php 
+        <?php
     }
     ?>
     var savePanelStatus = false;

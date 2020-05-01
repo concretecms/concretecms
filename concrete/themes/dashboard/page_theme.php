@@ -10,11 +10,12 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme
     use BedrockThemeTrait {
         registerAssets as bedrockRegisterAssets;
     }
-    
+
     public function registerAssets()
     {
         $this->bedrockRegisterAssets();
-        $this->providesAsset('core/cms');
+        $this->providesAsset('javascript', 'core/cms');
+        $this->providesAsset('css', 'core/cms');
         $this->requireAsset('javascript', 'google-charts');
     }
 
