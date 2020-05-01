@@ -148,14 +148,14 @@ if (is_object($category)) {
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
-	<a href="<?=$back?>" class="btn pull-left btn-default"><?=t('Back')?></a>
+	<a href="<?=$back?>" class="btn float-left btn-secondary"><?=t('Back')?></a>
 <?php if (is_object($key)) {
     ?>
-	<button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+	<button type="submit" class="btn btn-primary float-right"><?=t('Save')?></button>
 <?php 
 } else {
     ?>
-	<button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
+	<button type="submit" class="btn btn-primary float-right"><?=t('Add')?></button>
 <?php 
 } ?>
 </div>
