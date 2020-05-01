@@ -1,14 +1,22 @@
 <?php
-    defined('C5_EXECUTE') or die("Access Denied.");
+    defined('C5_EXECUTE') or die('Access Denied.');
     $a = $b->getBlockAreaObject();
 
-    $container = $formatter->getLayoutContainerHtmlObject();
-    foreach ($columns as $column) {
-        $html = $column->getColumnHtmlObject();
-        if (! empty($container)) {
-            $container->appendChild($html);
-        } else {
-            print $html;
+    $rootContainer = $formatter->getLayoutContainerHtmlObject();
+    if (!empty($rootContainer)) {
+        $container = $rootContainer;
+        while ($container->hasChildren()) {
+            $container = $container->getChildren()[0];
         }
     }
-    echo $container;
+
+    foreach ($columns as $column) {
+        $html = $column->getColumnHtmlObject();
+        if (!empty($container)) {
+            $container->appendChild($html);
+        } else {
+            echo $html;
+        }
+    }
+
+    echo $rootContainer;

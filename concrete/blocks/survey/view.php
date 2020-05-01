@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 // basically a stub that includes some other files
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $uID = $u->getUserID();
 $c = Page::getCurrentPage();
 
@@ -52,84 +52,92 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
 <div class="poll">
     <?php
     if ($controller->hasVoted()) {
-        ?>
-        <h3><?= t("You've voted on this survey.") ?></h3>
-
-        <div class="row">
-            <div<?= $show_graph ? ' class="col-sm-9"' : '' ?>>
-                <div id="surveyQuestion">
-                    <strong><?= t("Question") ?>:</strong> <span><?= $controller->getQuestion() ?></span>
-                </div>
-
-                <div id="surveyResults">
-                    <table class="table">
-                        <?php
-                        $i = 1;
-        foreach ($options as $opt) {
-            ?>
-                            <tr>
-
-                                <td class="col-sm-2" style="white-space: nowrap">
-                                    <div class="surveySwatch" style="background:#<?= $graphColors[$i - 1] ?>"></div>
-                                    &nbsp;<?= ($totalVotes > 0) ? round($opt->getResults() / $totalVotes * 100) : 0 ?>%
-                                </td>
-                                <td>
-                                    <strong>
-                                        <?= $opt->getOptionName() ?>
-                                    </strong>
-                                </td>
-                            </tr>
-                            <?php
-                            ++$i;
-            ?>
-                        <?php
-
+        if ($controller->getShowResults()) { ?>
+            <h2><?= $controller->getCustomMessage() ?></h2>
+            <h5><?= t("You've voted on this survey.") ?></h5>
+        <?php
         }
-        ?>
-                    </table>
-                    <div class="help-block">
-                        <?= t2('%d Vote', '%d Votes', intval($totalVotes), intval($totalVotes)) ?>
+        else {
+            ?>
+            <h3><?= t("You've voted on this survey.") ?></h3>
+
+            <div class="row">
+                <div<?= $show_graph ? ' class="col-sm-9"' : '' ?>>
+                    <div id="surveyQuestion">
+                        <strong><?= t("Question") ?>:</strong> <span><?= $controller->getQuestion() ?></span>
+                    </div>
+
+                    <div id="surveyResults">
+                        <table class="table">
+                            <?php
+                            $i = 1;
+                            foreach ($options as $opt) {
+                                ?>
+                                <tr>
+
+                                    <td class="col-sm-2" style="white-space: nowrap">
+                                        <div class="surveySwatch" style="background:#<?= $graphColors[$i - 1] ?>"></div>
+                                        &nbsp;<?= ($totalVotes > 0) ? round($opt->getResults() / $totalVotes * 100) : 0 ?>
+                                        %
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <?= $opt->getOptionName() ?>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <?php
+                                ++$i;
+                                ?>
+                                <?php
+
+                            }
+                            ?>
+                        </table>
+                        <div class="help-block">
+                            <?= t2('%d Vote', '%d Votes', intval($totalVotes), intval($totalVotes)) ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <?php
-            if ($show_graph) {
+                <?php
+                if ($show_graph) {
+                    ?>
+                    <div class="col-sm-3">
+                        <img
+                                border=""
+                                src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= implode(
+                                    ',',
+                                    $optionResults) ?>&chs=180x180&chco=<?= implode(
+                                    ',',
+                                    $graphColors) ?>"
+                                alt="<?php echo t('survey results');
+                                ?>"/>
+                    </div>
+                    <?php
+
+                }
+
                 ?>
-                <div class="col-sm-3">
-                    <img
-                        border=""
-                        src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= implode(
-                            ',',
-                            $optionResults) ?>&chs=180x180&chco=<?= implode(
-                            ',',
-                            $graphColors) ?>"
-                        alt="<?php echo t('survey results');
-                ?>"/>
-                </div>
+            </div>
+            <div class="spacer">&nbsp;</div>
+
             <?php
+            if ($_GET['dontGraphPoll']) {
+                ?>
+                <div class="small right" style="margin-top:8px">
+                    <a class="arrow" href="<?= DIR_REL ?>/?cID=<?= $b->getBlockCollectionID() ?>">
+                        <?= t('View Full Results') ?>
+                    </a>
+                </div>
+                <?php
 
             }
-        ?>
-        </div>
-        <div class="spacer">&nbsp;</div>
-
-        <?php
-        if ($_GET['dontGraphPoll']) {
             ?>
-            <div class="small right" style="margin-top:8px">
-                <a class="arrow" href="<?= DIR_REL ?>/?cID=<?= $b->getBlockCollectionID() ?>">
-                    <?= t('View Full Results') ?>
-                </a>
-            </div>
-        <?php
 
+            <div class="spacer">&nbsp;</div>
+
+            <?php
         }
-        ?>
-
-        <div class="spacer">&nbsp;</div>
-
-    <?php
-
     } else {
         ?>
 

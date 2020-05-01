@@ -1,15 +1,18 @@
 <?php
-
 namespace Concrete\Core\Tree\Menu\Item\File;
 
-use Concrete\Core\Tree\Menu\Item\Category\EditCategoryItem;
+use Concrete\Core\Support\Facade\Url as URL;
 
-class EditFolderItem extends EditCategoryItem
+class EditFolderItem extends FolderItem
 {
-
     public function getDialogTitle()
     {
         return t('Edit Folder');
+    }
+
+    public function getAction()
+    {
+        return 'edit-node';
     }
 
     public function getItemName()
@@ -17,5 +20,8 @@ class EditFolderItem extends EditCategoryItem
         return t('Edit Folder');
     }
 
-
+    public function getActionURL()
+    {
+        return URL::to('/ccm/system/dialogs/tree/node/edit/file_folder?treeNodeID=' . $this->folder->getTreeNodeID());
+    }
 }

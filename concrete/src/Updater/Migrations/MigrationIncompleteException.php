@@ -30,7 +30,7 @@ class MigrationIncompleteException extends RuntimeException
     {
         $this->performedMigrations = (int) $performedMigrations;
         $this->remainingMigrations = (int) $remainingMigrations;
-        parent::__construct(t(/*i18n: %1$s and %2$s are numbers */'The upgrade process is incomplete (migrations performed: %1$s, migrations remaining: %2$s). Please execute the upgrade process again.'), $this->performedMigrations, $this->remainingMigrations);
+        parent::__construct(t(/*i18n: %1$s and %2$s are numbers */'The upgrade process is incomplete (migrations performed: %1$s, migrations remaining: %2$s). Please execute the upgrade process again.'));
     }
 
     /**

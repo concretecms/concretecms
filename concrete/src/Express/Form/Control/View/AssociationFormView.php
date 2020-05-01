@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Express\Form\Control\View;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
@@ -19,6 +20,24 @@ class AssociationFormView extends AssociationView
         // @deprecated – use allEntries and selectedEntries instead
         $this->addScopeItem('entities', $this->allEntries);
         $this->addScopeItem('selectedEntities', $this->selectedEntries);
+        $this->setIsRequired($control->isRequired());
+    }
+
+    public function createTemplateLocator()
+    {
+        // Is this an owning entity with display order? If so, we render a separate reordering control
+        $element = $this->getFormFieldElement($this->control);
+        $association = $this->association;
+        if ($association->isOwningAssociation()) {
+            if ($this->entry) {
+                $element = 'view';
+            } else {
+                $element = 'view_entry_missing';
+            }
+        }
+        $locator = new TemplateLocator('association/' . $element);
+
+        return $locator;
     }
 
     /**
@@ -34,28 +53,14 @@ class AssociationFormView extends AssociationView
         if ('many' == substr($class, -4)) {
             if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
                 return 'entry_selector_multiple';
-            } else {
-                return 'select_multiple';
             }
-        } else {
-            if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
-                return 'entry_selector';
-            } else {
-                return 'select';
-            }
-        }
-    }
 
-    public function createTemplateLocator()
-    {
-        // Is this an owning entity with display order? If so, we render a separate reordering control
-        $element = $this->getFormFieldElement($this->control);
-        $association = $this->association;
-        if ($association->isOwningAssociation()) {
-            $element = 'view';
+            return 'select_multiple';
         }
-        $locator = new TemplateLocator('association/' . $element);
+        if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
+            return 'entry_selector';
+        }
 
-        return $locator;
+        return 'select';
     }
 }

@@ -23,9 +23,17 @@ class ConfigServiceProvider extends Provider
      */
     private function registerFileConfig()
     {
+        $this->app->bindIf(LoaderInterface::class, static function($app) {
+            return $app->make(CompositeLoader::class, [$app, [
+                CoreFileLoader::class,
+                FileLoader::class,
+            ]]);
+        });
+        $this->app->bindIf(SaverInterface::class, FileSaver::class);
+
         $this->app->singleton('config', function ($app) {
-            $loader = $app->make('Concrete\Core\Config\FileLoader');
-            $saver = $app->make('Concrete\Core\Config\FileSaver');
+            $loader = $app->make(LoaderInterface::class);
+            $saver = $app->make(SaverInterface::class);
 
             return $app->build('Concrete\Core\Config\Repository\Repository', array($loader, $saver, $app->environment()));
         });

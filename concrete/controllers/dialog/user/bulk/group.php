@@ -97,10 +97,10 @@ class Group extends BackendInterfaceController
 
                 $uo = $ui->getUserObject();
 
-                if ('add' == $function && $uo->inGroup($group)) {
+                if ('add' == $function && $uo->inExactGroup($group)) {
                     continue;
                 }
-                if ('remove' == $function && !$uo->inGroup($group)) {
+                if ('remove' == $function && !$uo->inExactGroup($group)) {
                     continue;
                 }
 

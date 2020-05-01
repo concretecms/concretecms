@@ -9,7 +9,7 @@ use Block;
 use Page;
 use PageType;
 use Permissions;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
@@ -275,6 +275,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         if ($row !== false) {
             $cv->setPropertiesFromArray($row);
+        } else {
+            $cv->loadError(VERSION_NOT_FOUND);
         }
 
         $cv->cID = $c->getCollectionID();

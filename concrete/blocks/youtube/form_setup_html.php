@@ -1,8 +1,9 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
-<?php
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
 if (empty($vWidth)) {
     $vWidth = 640;
 }
+
 if (empty($vHeight)) {
     $vHeight = 360;
 }
@@ -10,9 +11,7 @@ if (empty($vHeight)) {
 if (empty($sizing)) {
     $sizing = '16:9';
 }
-?>
 
-<?php
 echo Core::make('helper/concrete/ui')->tabs([
     ['video', t('Video'), true],
     ['settings', t('Settings')],
@@ -70,12 +69,6 @@ echo Core::make('helper/concrete/ui')->tabs([
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <?php echo $form->checkbox('showinfo', 1, (isset($showinfo) ? $showinfo : true)); ?>
-                            <?php echo t('Show video information'); ?>
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
                             <?php echo $form->checkbox('controls', 1, (isset($controls) ? $controls : true)); ?>
                             <?php echo t('Show controls'); ?>
                         </label>
@@ -108,7 +101,7 @@ echo Core::make('helper/concrete/ui')->tabs([
             <div class="checkbox">
                 <label>
                     <?php echo $form->checkbox('rel', 1, !empty($rel)); ?>
-                    <?php echo t('Show related videos when playback ends'); ?>
+                    <?php echo t('Show related videos from different channels when playback ends'); ?>
                 </label>
             </div>
             <div class="checkbox">
@@ -144,7 +137,6 @@ echo Core::make('helper/concrete/ui')->tabs([
             <div class="form-group">
                 <?php echo $form->text('startTime', isset($startTime) ? $startTime : null); ?>
             </div>
-
         </div>
     </fieldset>
     <fieldset>
@@ -152,8 +144,19 @@ echo Core::make('helper/concrete/ui')->tabs([
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                    <?php echo $form->checkbox('noCookie', 1, $noCookie); ?>
-                    <?php echo t('No Cookie'); ?>
+                    <?php echo $form->checkbox('noCookie', 1, (isset($noCookie) ? $noCookie : false)); ?>
+                    <?php echo t('No cookie') ?>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend><?php echo t('Loading Options'); ?></legend>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('lazyLoad', 1, (isset($lazyLoad) ? $lazyLoad : false)); ?>
+                    <?php echo t('Lazy load video')?>
                 </label>
             </div>
         </div>
@@ -161,8 +164,8 @@ echo Core::make('helper/concrete/ui')->tabs([
 </div>
 
 <script>
-    $(document).ready(function() {
-        $('#sizing1, #sizing2, #sizing3').change(function(){
+    $(document).ready(function () {
+        $('#sizing1, #sizing2, #sizing3').change(function () {
             if ($('#sizing3').is(':checked')) {
                 $('#fixedsizes').removeClass('hidden');
             } else {
@@ -170,7 +173,7 @@ echo Core::make('helper/concrete/ui')->tabs([
             }
         });
 
-        $('#controls').change(function(){
+        $('#controls').change(function () {
             if ($('#controls').is(':checked')) {
                 $('.controls-only').removeClass('hidden');
             } else {
@@ -178,7 +181,7 @@ echo Core::make('helper/concrete/ui')->tabs([
             }
         });
 
-        $('#color').change(function(){
+        $('#color').change(function () {
             if ($(this).val() == 'white') {
                 $('#modestbranding').prop('disabled','disabled').prop('checked',false);
             } else {
@@ -186,7 +189,7 @@ echo Core::make('helper/concrete/ui')->tabs([
             }
         });
 
-        $('#ccm-form-submit-button').click(function(){
+        $('#ccm-form-submit-button').click(function () {
             if (!$('#videoURL').val()) {
                 $('[data-tab="video"').click();
             }

@@ -38,6 +38,9 @@ class CollectionAttributeType extends Type
     public function configureFromImportHandle($handle)
     {
         $ak = CollectionAttributeKey::getByHandle($handle);
+        if (!$ak) {
+            throw new \Exception(t('Import error: Unable to locate attribute for handle: %s', $handle));
+        }
 
         return static::getPageTypeComposerControlByIdentifier($ak->getAttributeKeyID());
     }

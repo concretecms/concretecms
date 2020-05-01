@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Editor;
 
 use Concrete\Core\Cache\CacheLocal;

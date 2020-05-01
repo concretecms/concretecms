@@ -1,37 +1,38 @@
 <?php
+
 namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\XEditableConfigurableAttributeInterface;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
-use Database;
 
-class Controller extends DefaultController
+class Controller extends DefaultController implements XEditableConfigurableAttributeInterface
 {
+    public $helpers = ['form'];
+
+    protected $akTextareaDisplayMode;
+    protected $akTextareaDisplayModeCustomOptions;
 
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('font');
     }
 
-    protected $akTextareaDisplayMode;
-    protected $akTextareaDisplayModeCustomOptions;
-    public $helpers = array('form');
-
     public function saveKey($data)
     {
         $type = $this->getAttributeKeySettings();
-        $data += array(
+        $data += [
             'akTextareaDisplayMode' => null,
-        );
+        ];
         $akTextareaDisplayMode = $data['akTextareaDisplayMode'];
         if (!$akTextareaDisplayMode) {
             $akTextareaDisplayMode = 'text';
         }
-        $options = array();
+        $options = [];
         if ($akTextareaDisplayMode == 'rich_text_custom') {
             $options = $data['akTextareaDisplayModeCustomOptions'];
         }
@@ -46,7 +47,8 @@ class Controller extends DefaultController
         $this->load();
         if ($this->akTextareaDisplayMode == 'text') {
             $value = $this->getAttributeValue()->getValueObject();
-            return (string)$value;
+
+            return (string) $value;
         }
 
         $value = null;
@@ -61,6 +63,7 @@ class Controller extends DefaultController
                 }
             }
         }
+
         return $value;
     }
 
@@ -68,13 +71,11 @@ class Controller extends DefaultController
     {
         $value = $this->getValue();
         if ($this->akTextareaDisplayMode == 'rich_text') {
-            return htmLawed($value, array('safe' => 1));
+            return htmLawed($value, ['safe' => 1]);
         }
 
-        return htmLawed($value, array('safe' => 1, 'deny_attribute' => 'style'));
+        return nl2br(h($value));
     }
-
-
 
     public function form()
     {
@@ -113,24 +114,8 @@ class Controller extends DefaultController
 
     public function type_form()
     {
-        $this->set('akTextareaDisplayModeCustomOptions', array());
+        $this->set('akTextareaDisplayModeCustomOptions', []);
         $this->load();
-    }
-
-    protected function load()
-    {
-        $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
-        }
-
-        $type = $ak->getAttributeKeySettings();
-        /**
-         * @var $type TextareaSettings
-         */
-
-        $this->akTextareaDisplayMode = $type->getMode();
-        $this->set('akTextareaDisplayMode', $type->getMode());
     }
 
     public function getAttributeValueClass()
@@ -175,4 +160,37 @@ class Controller extends DefaultController
         return TextareaSettings::class;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\XEditableConfigurableAttributeInterface::getXEditableOptions()
+     */
+    public function getXEditableOptions()
+    {
+        $this->load();
+        if ($this->akTextareaDisplayMode === 'rich_text') {
+            return [
+                'editableMode' => 'inline',
+                'onblur' => 'ignore',
+                'showbuttons' => 'bottom',
+            ];
+        }
+
+        return [];
+    }
+  
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $type = $ak->getAttributeKeySettings();
+        /**
+         * @var TextareaSettings
+         */
+        $this->akTextareaDisplayMode = $type->getMode();
+        $this->set('akTextareaDisplayMode', $type->getMode());
+    }
 }

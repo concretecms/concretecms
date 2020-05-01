@@ -122,7 +122,8 @@ class Authentication extends DashboardPageController
             $this->redirect('dashboard/system/registration/authentication/');
             exit;
         }
-        $this->view();
+
+        return $this->error->has() ? $this->edit($atid) : $this->view();
     }
 
     public function edit($atid)

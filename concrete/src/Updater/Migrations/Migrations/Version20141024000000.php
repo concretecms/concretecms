@@ -49,9 +49,6 @@ class Version20141024000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        /* Add query log single pages */
-        $this->createSinglePage('/dashboard/system/optimization/query_log', 'Database Query Log', ['meta_keywords' => 'queries, database, mysql']);
-
         /* Refresh image block */
         $this->refreshBlockType('image');
     }

@@ -11,6 +11,7 @@ $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 $conversation = $blockObj->getController()->getConversationObject();
+$config = app('config');
 
 if (!(is_object($conversation))) {
     $error[] = t('Invalid Conversation.');
@@ -25,7 +26,7 @@ if ($conversation->getConversationAttachmentOverridesEnabled() > 0) { // check i
         echo Loader::helper('json')->encode($file);
         exit;
     }
-} elseif (!Config::get('conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
+} elseif (!$config->get('conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
     $error[] = t('This conversation does not allow file attachments.');
     $file->error = $error;
     echo Loader::helper('json')->encode($file);
@@ -68,7 +69,7 @@ if (!$p->canRead()) {    // block read permissions check
 
 // check for registered or guest user file size overrides / limits
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $blockRegisteredSizeOverride = $conversation->getConversationMaxFileSizeRegistered();
 $blockGuestSizeOverride = $conversation->getConversationMaxFilesGuest();
 $blockRegisteredQuantityOverride = $conversation->getConversationMaxFilesRegistered();
@@ -80,16 +81,16 @@ if ($u->isRegistered()) {
         $maxFileSize = $blockRegisteredSizeOverride;
         $maxQuantity = $blockRegisteredQuantityOverride;
     } else {
-        $maxFileSize = Config::get('conversations.files.registered.max_size');
-        $maxQuantity = Config::get('conversations.files.registered.max');
+        $maxFileSize = $config->get('conversations.files.registered.max_size');
+        $maxQuantity = $config->get('conversations.files.registered.max');
     }
 } else {
     if ($conversation->getConversationAttachmentOverridesEnabled()) {
         $maxFileSize = $blockGuestSizeOverride;
         $maxQuantity = $blockGuestQuantityOverride;
     } else {
-        $maxFileSize = Config::get('conversations.files.guest.max_size');
-        $maxQuantity = Config::get('conversations.files.guest.max');
+        $maxFileSize = $config->get('conversations.files.guest.max_size');
+        $maxQuantity = $config->get('conversations.files.guest.max');
     }
 }
 
@@ -104,23 +105,26 @@ if ($maxQuantity > 0 && ($_POST['fileCount']) > $maxQuantity) {
 
 // check filetype extension and overrides
 
-if ($conversation->getConversationAttachmentOverridesEnabled()) {
-    $extensionList = $blockExtensionsOverride;
-} else {
-    $extensionList = Config::get('conversations.files.allowed_types');
-}
-
-$extensionList = $helperFile->unserializeUploadFileExtensions($extensionList);
-
-$incomingExtension = end(explode('.', $_FILES["file"]["name"]));
-if ($incomingExtension && count($extensionList)) {  // check against block file extensions override
-    foreach ($extensionList as $extension) {
-        if (strtolower($extension) == strtolower($incomingExtension)) {
+$incomingExtension = strtolower((string) end(explode('.', $_FILES["file"]["name"])));
+if ($incomingExtension !== '') {
+    $extensionBlackList = $config->get('conversations.files.disallowed_types');
+    if ($extensionBlackList === null) {
+        $extensionBlackList = $config->get('concrete.upload.extensions_blacklist');
+    }
+    $validExtension = false;
+    $extensionBlackList = array_map('strtolower', $helperFile->unserializeUploadFileExtensions($extensionBlackList));
+    if (!in_array($incomingExtension, $extensionBlackList, true)) {
+        if ($conversation->getConversationAttachmentOverridesEnabled()) {
+            $extensionList = $blockExtensionsOverride;
+        } else {
+            $extensionList = $config->get('conversations.files.allowed_types');
+        }
+        $extensionList = array_map('strtolower', $helperFile->unserializeUploadFileExtensions($extensionList));
+        if ($extensionList === [] || in_array($incomingExtension, $extensionList, true)) {
             $validExtension = true;
-            break;
         }
     }
-    if (!$validExtension) {
+    if ($validExtension !== true) {
         $error[] = t('Invalid File Extension');
     }
 }
@@ -142,7 +146,7 @@ if (!($fv instanceof \Concrete\Core\Entity\File\Version)) {
     $file->error = $fi->getErrorMessage($fv);
     $file->timestamp = $_POST['timestamp'];
 } else {
-    $file_set = Config::get('conversations.attachments_pending_file_set');
+    $file_set = $config->get('conversations.attachments_pending_file_set');
     $fs = FileSet::getByName($file_set);
     if (!is_object($fs)) {
         $fs = FileSet::createAndGetSet($file_set, FileSet::TYPE_PUBLIC, USER_SUPER_ID);
