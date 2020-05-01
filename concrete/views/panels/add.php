@@ -166,7 +166,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
                         <div class="delete">
-                            <button class="ccm-delete-clipboard-item float-right btn btn-sm btn-link"><?= t('Delete') ?></button>
+                            <button class="ccm-delete-clipboard-item float-right btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
                         </div>
                         <div class="block-content">
                             <div class="block-name">
