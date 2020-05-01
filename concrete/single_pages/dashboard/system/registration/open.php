@@ -46,42 +46,44 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <?= $form->label('register_notification', t('Notification')); ?>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="register_notification" value="1"<?= ($register_notification) ? ' checked="checked"' : ''; ?>/>
-                    <span><?= t('Send admin an email when new user registers.'); ?></span>
-                </label>
-            </div>
-        </div>
-        <div class="form-group notify_email">
-            <?= $form->label('register_notification_email', t('Email addresses')); ?>
-            <?= $form->text('register_notification_email', h($register_notification_email)); ?>
-            <p class="help-block"><?= t('(Separate multiple emails with a comma)'); ?></p>
-        </div>
+       <div id="registration-settings">
+           <div class="form-group">
+               <?= $form->label('register_notification', t('Notification')); ?>
+               <div class="checkbox">
+                   <label>
+                       <input type="checkbox" name="register_notification" value="1"<?= ($register_notification) ? ' checked="checked"' : ''; ?>/>
+                       <span><?= t('Send admin an email when new user registers.'); ?></span>
+                   </label>
+               </div>
+           </div>
+           <div class="form-group notify_email">
+               <?= $form->label('register_notification_email', t('Email addresses')); ?>
+               <?= $form->text('register_notification_email', h($register_notification_email)); ?>
+               <p class="help-block"><?= t('(Separate multiple emails with a comma)'); ?></p>
+           </div>
 
-        <div class="form-group">
-            <?= $form->label('display_username_field', t('Registration form')); ?>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="display_username_field" value="1" <?= ($display_username_field) ? 'checked' : ''; ?> />
-                    <span><?= t('Username required'); ?></span>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="display_confirm_password_field" value="1" <?= ($display_confirm_password_field) ? 'checked' : ''; ?> />
-                    <span><?= t('Confirm Password required'); ?></span>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="enable_registration_captcha" value="1" <?= ($enable_registration_captcha) ? 'checked' : ''; ?> />
-                    <span><?= t('CAPTCHA required'); ?></span>
-                </label>
-            </div>
-        </div>
+           <div class="form-group">
+               <?= $form->label('display_username_field', t('Registration form')); ?>
+               <div class="checkbox">
+                   <label>
+                       <input type="checkbox" name="display_username_field" value="1" <?= ($display_username_field) ? 'checked' : ''; ?> />
+                       <span><?= t('Username required'); ?></span>
+                   </label>
+               </div>
+               <div class="checkbox">
+                   <label>
+                       <input type="checkbox" name="display_confirm_password_field" value="1" <?= ($display_confirm_password_field) ? 'checked' : ''; ?> />
+                       <span><?= t('Confirm Password required'); ?></span>
+                   </label>
+               </div>
+               <div class="checkbox">
+                   <label>
+                       <input type="checkbox" name="enable_registration_captcha" value="1" <?= ($enable_registration_captcha) ? 'checked' : ''; ?> />
+                       <span><?= t('CAPTCHA required'); ?></span>
+                   </label>
+               </div>
+           </div>
+       </div>
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
@@ -107,7 +109,11 @@
         $("input[name=register_notification]").prop('checked', false);
         $('.notify_email').hide();
         $("input[name=register_notification]").prop('disabled', true);
+        $('#registration-settings').hide();
+    } else {
+        $('#registration-settings').show();
     }
+
     if ($('input[name=register_notification]').prop('checked')) {
         $('.notify_email').show();
     } else {
@@ -118,9 +124,11 @@
             $("input[name=enable_registration_captcha]").prop('disabled', true).prop('checked', false);
             $("input[name=register_notification]").prop('checked', false).prop('disabled', true);
             $('.notify_email').hide();
+            $('#registration-settings').hide();
         } else {
             $("input[name=enable_registration_captcha]").prop('disabled', false);
             $("input[name=register_notification]").prop('disabled', false);
+            $('#registration-settings').show();
         }
     });
 
