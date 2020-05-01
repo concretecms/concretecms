@@ -3,78 +3,87 @@
 <form method="post" id="registration-type-form" action="<?= $view->action('update_registration_type'); ?>">
     <?= $token->output('update_registration_type'); ?>
 
-    <div class="form-group">
-        <?= $form->label('registration_type', t('Allow visitors to signup as site members?')); ?>
-        <div class="radio">
-            <label>
-                <input type="radio" name="registration_type" value="disabled" <?= ($registration_type == 'disabled' || !strlen($registration_type)) ? 'checked' : ''; ?> />
-                <span><?= t('Off - only admins can create accounts from Dashboard'); ?></span>
-            </label>
+    <fieldset>
+        <legend><?= t('Login Options') ?></legend>
+        <div class="form-group">
+            <?= $form->label('email_as_username', t('Login form')); ?>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="email_as_username" value="0" id="display_username_on_login" <?= (!$email_as_username) ? 'checked' : ''; ?> />
+                    <span><?= t('Ask for username & password'); ?></span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="email_as_username" value="1" <?= ($email_as_username) ? 'checked' : ''; ?> />
+                    <span><?= t('Ask for email & password'); ?></span>
+                </label>
+            </div>
         </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="registration_type" value="enabled" <?= ($registration_type == 'enabled') ? 'checked' : ''; ?> />
-                <span><?= t('On - anyone can create an account from Login page'); ?></span>
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="registration_type" value="validate_email" <?= ($registration_type == 'validate_email') ? 'checked' : ''; ?> />
-                <span><?= t('Validate - anyone can create an account from Login page, once validated by email'); ?></span>
-            </label>
-        </div>
-    </div>
+    </fieldset>
 
-    <div class="form-group">
-        <?= $form->label('register_notification', t('Notification')); ?>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="register_notification" value="1"<?= ($register_notification) ? ' checked="checked"' : ''; ?>/>
-                <span><?= t('Send admin an email when new user registers.'); ?></span>
-            </label>
+    <fieldset>
+        <legend><?= t('Registration Options') ?></legend>
+        <div class="form-group">
+            <?= $form->label('registration_type', t('Allow visitors to signup as site members?')); ?>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="registration_type" value="disabled" <?= ($registration_type == 'disabled' || !strlen($registration_type)) ? 'checked' : ''; ?> />
+                    <span><?= t('Off - only admins can create accounts from Dashboard'); ?></span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="registration_type" value="enabled" <?= ($registration_type == 'enabled') ? 'checked' : ''; ?> />
+                    <span><?= t('On - anyone can create an account from Login page'); ?></span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="registration_type" value="validate_email" <?= ($registration_type == 'validate_email') ? 'checked' : ''; ?> />
+                    <span><?= t('Validate - anyone can create an account from Login page, once validated by email'); ?></span>
+                </label>
+            </div>
         </div>
-    </div>
-    <div class="form-group notify_email">
-        <?= $form->label('register_notification_email', t('Email addresses')); ?>
-        <?= $form->text('register_notification_email', h($register_notification_email)); ?>
-        <p class="help-block"><?= t('(Separate multiple emails with a comma)'); ?></p>
-    </div>
-    <div class="form-group">
-        <?= $form->label('email_as_username', t('Login form')); ?>
-        <div class="radio">
-            <label>
-                <input type="radio" name="email_as_username" value="0" id="display_username_on_login" <?= (!$email_as_username) ? 'checked' : ''; ?> />
-                <span><?= t('Ask for username & password'); ?></span>
-            </label>
+
+        <div class="form-group">
+            <?= $form->label('register_notification', t('Notification')); ?>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="register_notification" value="1"<?= ($register_notification) ? ' checked="checked"' : ''; ?>/>
+                    <span><?= t('Send admin an email when new user registers.'); ?></span>
+                </label>
+            </div>
         </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="email_as_username" value="1" <?= ($email_as_username) ? 'checked' : ''; ?> />
-                <span><?= t('Ask for email & password'); ?></span>
-            </label>
+        <div class="form-group notify_email">
+            <?= $form->label('register_notification_email', t('Email addresses')); ?>
+            <?= $form->text('register_notification_email', h($register_notification_email)); ?>
+            <p class="help-block"><?= t('(Separate multiple emails with a comma)'); ?></p>
         </div>
-    </div>
-    <div class="form-group">
-        <?= $form->label('display_username_field', t('Registration form')); ?>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="display_username_field" value="1" <?= ($display_username_field) ? 'checked' : ''; ?> />
-                <span><?= t('Username required'); ?></span>
-            </label>
+
+        <div class="form-group">
+            <?= $form->label('display_username_field', t('Registration form')); ?>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="display_username_field" value="1" <?= ($display_username_field) ? 'checked' : ''; ?> />
+                    <span><?= t('Username required'); ?></span>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="display_confirm_password_field" value="1" <?= ($display_confirm_password_field) ? 'checked' : ''; ?> />
+                    <span><?= t('Confirm Password required'); ?></span>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="enable_registration_captcha" value="1" <?= ($enable_registration_captcha) ? 'checked' : ''; ?> />
+                    <span><?= t('CAPTCHA required'); ?></span>
+                </label>
+            </div>
         </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="display_confirm_password_field" value="1" <?= ($display_confirm_password_field) ? 'checked' : ''; ?> />
-                <span><?= t('Confirm Password required'); ?></span>
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="enable_registration_captcha" value="1" <?= ($enable_registration_captcha) ? 'checked' : ''; ?> />
-                <span><?= t('CAPTCHA required'); ?></span>
-            </label>
-        </div>
-    </div>
+    </fieldset>
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <?= $concrete_ui->submit(t('Save'), 'registration-type-form', 'right', 'btn-primary'); ?>
