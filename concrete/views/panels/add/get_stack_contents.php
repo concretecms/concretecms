@@ -28,9 +28,8 @@ $blockPreviewUrl = URL::to('/ccm/system/block/preview');
             <div class="block-name">
                 <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
             </div>
-            <div class="embed-responsive embed-responsive-4by3 block-content">
-                <iframe src="<?= $blockPreviewUrl->setQuery(['bID' => $block->getBlockID(), 'sID' => $stack->getCollectionID(), 'cID' => $c->getCollectionID()]); ?>"
-                        scrolling="no" frameborder="0" allowfullscreen></iframe>
+            <div class="block-content">
+                <iframe src="<?= $blockPreviewUrl->setQuery(['bID' => $block->getBlockID(), 'sID' => $stack->getCollectionID(), 'cID' => $c->getCollectionID()]); ?>" scrolling="no"></iframe>
             </div>
             <div class="block-handle"></div>
         </div>
