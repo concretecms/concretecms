@@ -1,8 +1,8 @@
 <?php
 
-use Concrete\Core\Block\View\BlockView;
-
 defined('C5_EXECUTE') or die('Access Denied.');
+
+$blockPreviewUrl = URL::to('/ccm/system/block/preview');
 ?>
 <div class="blocks">
     <?php
@@ -28,11 +28,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div class="block-name">
                 <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
             </div>
-            <div class="block-content">
-                <?php
-                $bv = new BlockView($block);
-                $bv->render('scrapbook');
-                ?>
+            <div class="embed-responsive embed-responsive-4by3 block-content">
+                <iframe src="<?= $blockPreviewUrl->setQuery(['bID' => $block->getBlockID(), 'sID' => $stack->getCollectionID(), 'cID' => 1]); ?>"
+                        scrolling="no" frameborder="0" allowfullscreen></iframe>
             </div>
             <div class="block-handle"></div>
         </div>
