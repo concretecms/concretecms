@@ -84,7 +84,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-token="<?=Core::make('token')->generate('load_stack')?>"
                         data-btID="0"
                         data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
-                        data-block-id="<?= (int) $stack->getCollectionID() ?>"                    >
+                        data-block-id="<?= (int) $stack->getCollectionID() ?>"
+                    >
                         <div class="stack-name">
                             <div class="ccm-panel-add-block-stack-item-handle">
                                 <img src="<?=DIR_REL?>/concrete/images/stack.png" />
@@ -161,13 +162,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
                         data-btID="<?= $type->getBlockTypeID() ?>"
                         data-pcID="<?= $pile_content->getPileContentID() ?>"
-                        data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
+                        data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
+
                         <div class="block-content">
-                            <div class="block-name">
+                            <div class="block-name float-left">
                                 <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
                             </div>
+                            <div class="delete float-right">
+                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
+                            </div>
+
                             <div class="blocks">
                                 <div class="block ccm-panel-add-block-draggable-block-type" title="<?= t($type->getBlockTypeName()) ?>">
                                     <div class="block-content">
@@ -180,9 +186,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 </div>
                             </div>
                         </div>
-                        <div class="delete">
-                            <button class="ccm-delete-clipboard-item pull-right btn btn-sm btn-link"><?= t('Delete') ?></button>
-                        </div>
+
                     </div>
                     <?php
                 }
