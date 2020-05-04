@@ -4,11 +4,6 @@
         src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') . '?&cID=' . h(Request::request('cID')) ?>"
         data-src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') ?>">></iframe>
     <div class="cover"></div>
-    <div class="loader">
-        <div class="icon">
-            <i class="fa fa-cog fa-spin"></i>
-        </div>
-    </div>
 </div>
 <script type="application/javascript">
     (function (window, $, _) {
@@ -16,11 +11,12 @@
 
         var container = $('div.preview-frame-container'),
             frame = container.children('iframe'),
-            loader = container.children('div.loader'),
             form;
 
         Concrete.event.bind('PanelOpenDetail', function(e) {
             Concrete.event.unsubscribe(e);
+
+            jQuery.fn.dialog.showLoader();
 
             var bind = _.once(function() {
                 form = $('form.preview-panel-form');
@@ -35,14 +31,14 @@
                 }, 1000));
             });
 
-            frame.load(function() {
+            frame.on('load', function() {
                 _.defer(function() {
                     var frame_elem = frame.get(0),
                         frame_window = frame_elem.contentWindow;
                     frame.height($(frame_window.document).height()).width('100%');
                 });
                 frame.fadeIn();
-                loader.fadeOut();
+                jQuery.fn.dialog.hideLoader()
                 bind();
             });
 
@@ -65,9 +61,8 @@
 
             var src = frame.data('src') + "?" + $.param(query);
 
-            loader.fadeIn(250, function() {
-                frame.attr('src', src);
-            });
+            jQuery.fn.dialog.showLoader();
+            frame.attr('src', src);
         }
 
     }(window, jQuery, _));
