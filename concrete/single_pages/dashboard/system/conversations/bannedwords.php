@@ -10,10 +10,9 @@ $token = Core::make('token');
         <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
     </div>
 
-    <div class="checkbox">
-        <label>
-		    <input value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> <?=t('Disallow posts that include banned words?')?>
-        </label>
+    <div class="form-check">
+		<input id="banned-word-list-enabled" value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> 
+        <label for="banned-word-list-enabled"><?=t('Disallow posts that include banned words?')?></label>
     </div>
 
 	<script class='word_template' type="text/template" charset="utf-8">
@@ -45,7 +44,7 @@ $token = Core::make('token');
 						<td class='word'><span><?=h($word->getWord())?></span><input style='display:none' name='banned_word[]' value='<?=h($word->getWord())?>'></td>
 						<td style='text-align:right'>
                             <div class="btn-group">
-                                <a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a>
+                                <a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a>
                                 <a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a>
                             </div>
 						 </td>
@@ -68,7 +67,7 @@ $token = Core::make('token');
 var ctx = $('table.banned_word_list'), template = $('script.word_template'),
 	getTemplate = function(){return $(template.text());},
 	save = $("<a href='#' class='save_word btn btn-primary'><?=t('Save')?></a>"),
-	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a><a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a></div>"),
+	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a><a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a></div>"),
 	totalheight = ctx.parent().height();
 
 if (!$('input[name=banned_list_enabled]').get(0).checked) {
