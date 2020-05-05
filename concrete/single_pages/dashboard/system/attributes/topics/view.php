@@ -5,15 +5,19 @@
     <div class="container-fluid">
         <ul class="nav navbar-nav">
             <li class="navbar-form" style="padding-left: 0px">
-                <select  name="topicTreeIDSelect" id="topicTreeIDSelect" class="form-control input-sm">
-                    <?php foreach ($trees as $stree) {
-    ?>
-                        <option value="<?=$stree->getTreeID(); ?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {
-        ?>selected<?php
-    } ?>><?=$stree->getTreeDisplayName(); ?></option>
-                    <?php
-} ?>
-                </select>
+                <?php if($trees){ 
+                    ?>
+                    <select  name="topicTreeIDSelect" id="topicTreeIDSelect" class="form-control input-sm">
+                        <?php foreach ($trees as $stree) {
+        ?>
+                            <option value="<?=$stree->getTreeID(); ?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {
+            ?>selected<?php
+        } ?>><?=$stree->getTreeDisplayName(); ?></option>
+                        <?php
+    } ?>
+                    </select>
+                    <?php 
+                } ?>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -25,7 +29,7 @@
     } ?>
                 <?php if (PermissionKey::getByHandle('edit_topic_tree')->validate() && is_object($tree)) {
         ?>
-                    <button type="button" data-dialog="edit-topic-tree" class="btn btn-default btn-sm"><?=t('Edit Topic Tree'); ?></button>
+                    <button type="button" data-dialog="edit-topic-tree" class="btn btn-secondary btn-sm"><?=t('Edit Topic Tree'); ?></button>
                     <?php
     }
                 ?>
@@ -58,7 +62,7 @@
             jQuery.fn.dialog.open({
                 element: '#ccm-dialog-delete-topic-tree',
                 modal: true,
-                width: 320,
+                width: 380,
                 title: <?=json_encode(t("Delete Topic Tree")); ?>,
                 height: 'auto'
             });
@@ -68,7 +72,7 @@
             jQuery.fn.dialog.open({
                 element: '#ccm-dialog-edit-topic-tree',
                 modal: true,
-                width: 320,
+                width: 380,
                 title: <?=json_encode(t("Edit Topic Tree")); ?>,
                 height: 'auto'
             });
@@ -85,9 +89,11 @@
                 <input type="hidden" name="treeID" value="<?=$tree->getTreeID(); ?>" />
                 <p><?=t('Are you sure? This action cannot be undone.'); ?></p>
             </form>
-            <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-topic-tree form').submit()"><?=t('Delete Topic Tree'); ?></button>
+            <div class="ccm-dashboard-form-actions-wrapper">
+                <div class="ccm-dashboard-form-actions">
+                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                    <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-topic-tree form').submit()"><?=t('Delete Topic Tree'); ?></button>
+                </div>
             </div>
         </div>
     </div>
@@ -104,9 +110,11 @@
 
 
             </form>
-            <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-edit-topic-tree form').submit()"><?=t('Update Topic Tree'); ?></button>
+            <div class="ccm-dashboard-form-actions-wrapper">
+                <div class="ccm-dashboard-form-actions ">
+                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                    <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-edit-topic-tree form').submit()"><?=t('Update Topic Tree'); ?></button>
+                </div>
             </div>
         </div>
     </div>

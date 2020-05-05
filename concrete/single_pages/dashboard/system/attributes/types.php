@@ -71,9 +71,9 @@ $types = PendingAttributeType::getList(); ?>
                             echo $form->hidden("atHandle", $at->getAttributeTypeHandle());
 							print $formatter->getListIconElement();
     ?>
-                        <?=$at->getAttributeTypeDisplayName()?>
+							<?=$at->getAttributeTypeDisplayName()?>
 
-                        <?=$ch->submit(t("Install"), 'submit', 'right', 'btn-default btn-xs')?>
+							<?=$ch->submit(t("Install"), 'submit', 'right', 'btn-secondary btn-xs')?>
                         </form>
 
                     </span>

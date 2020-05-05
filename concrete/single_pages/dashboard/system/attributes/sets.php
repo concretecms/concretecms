@@ -17,7 +17,7 @@ $txt = Loader::helper('text'); ?>
                     <?php if ($set->isAttributeSetLocked()) {
     ?>
                         <div class="alert alert-warning">
-                            <p><?php echo t('This attribute set is locked. It cannot be deleted, and its handle cannot be changed.')?></p>
+                            <?php echo t('This attribute set is locked. It cannot be deleted, and its handle cannot be changed.')?>
                         </div>
                         <script type="text/javascript">
                             $(function() {
@@ -63,11 +63,11 @@ $txt = Loader::helper('text'); ?>
 
                     <fieldset>
                         <legend><?=t('Delete Set')?></legend>
-                        <span class="help-block"><?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?></span>
-
-                        <div class="form-group">
-                            <?php echo $form->submit('submit', t('Delete Set'), ['class' => 'btn btn-danger'])?>
+                        <div class="alert alert-secondary">
+                            <?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?>
                         </div>
+
+                        <?php echo $form->submit('submit', t('Delete Set'), ['class' => 'btn btn-danger'])?>
                     </fieldset>
                 </form>
             <?php
@@ -101,9 +101,9 @@ $txt = Loader::helper('text'); ?>
         $disabled = ['disabled' => 'disabled'];
     }
     ?>
-                                <div class="checkbox">
-                                    <label>
-                                        <?php echo $form->checkbox('akID[]', $key->getAttributeKeyID(), $key->inAttributeSet($set), $disabled)?>
+                                <div class="form-check">
+                                    <?php echo $form->checkbox('akID[]', $key->getAttributeKeyID(), $key->inAttributeSet($set), $disabled)?>
+                                    <label for="akID_<?= $key->getAttributeKeyID() ?>">
                                         <span><?php echo $key->getAttributeKeyDisplayName()?></span>
                                         <span class="text-muted small"><?php echo $key->getAttributeKeyHandle()?></span>
                                     </label>
@@ -180,7 +180,7 @@ $txt = Loader::helper('text'); ?>
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <?php echo $form->submit('submit', t('Add Set'), ['class' => 'btn btn-primary pull-right'])?>
+                    <?php echo $form->submit('submit', t('Add Set'), ['class' => 'btn btn-primary float-right'])?>
                 </div>
             </div>
         </fieldset>
@@ -193,7 +193,7 @@ $txt = Loader::helper('text'); ?>
 
         <h3><?=t('Attribute Categories')?></h3>
 		<span class="help-block"><?php echo t('Attribute Categories are used to group different types of sets.')?></span>
-		<ul class="item-select-list">
+		<ul class="item-select-list mt-2">
 			<?php
             if (count($categories) > 0) {
                 foreach ($categories as $cat) {
