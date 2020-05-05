@@ -21,7 +21,7 @@ $blockPreviewUrl = URL::to('/ccm/system/block/preview');
             data-has-add-template="<?= $type->hasAddTemplate() ?>"
             data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
             data-btID="<?= $type->getBlockTypeID() ?>"
-            data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
+            data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeInSetName()) . '</span></p>') ?>"
             title="<?= t($type->getBlockTypeName()) ?>"
             data-block-id="<?= (int) $block->getBlockID() ?>"
         >

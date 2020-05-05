@@ -35,7 +35,7 @@ foreach ($stacks as $stack):
             data-supports-inline-add="no"
             data-token="<?= app('token')->generate('load_stack') ?>"
             data-btID="0"
-            data-dragging-avatar="<?= h('<p><svg><use xlink:href="#icon-panel-stack" /></svg><span>' . t('Stack') . '</span></p>') ?>"
+            data-dragging-avatar="<?= h('<p class="ccm-stack-dragging-wrapper"><svg><use xlink:href="#icon-panel-stack" /></svg></p>') ?>"
             data-block-id="<?= (int)$stack->getCollectionID() ?>">
             <div class="stack-name">
                 <div class="ccm-panel-add-block-stack-item-handle">
