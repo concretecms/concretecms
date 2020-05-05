@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div id="ccm-detail-page-attributes">
 
-<section class="ccm-ui">
+<section class="ccm-ui col-xl-9">
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="attributes" data-panel-detail-form="attributes"  data-action-after-save="reload">
 
         <?php if (isset($sitemap) && $sitemap) {
@@ -24,7 +24,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php
 } ?>
 
-		<span class="ccm-detail-page-attributes-id"><?=t('Page ID: %s', $c->getCollectionID())?></span>
+		<span class="ccm-detail-page-attributes-id text-muted"><?=t('Page ID: %s', $c->getCollectionID())?></span>
+        <h3>Attributes</h3>
 
 		<?php if ($assignment->allowEditName()) {
     ?>
