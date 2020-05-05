@@ -45,7 +45,7 @@ if (is_object($key)) {
 	<button type="button" class="btn btn-danger" onclick="deleteAttribute()"><?=t('Delete Attribute')?></button>
 </div>
 
-<?php 
+<?php
 } ?>
 
 
@@ -84,7 +84,7 @@ if (is_object($key)) {
     ?>
 </div>
 </div>
-<?php 
+<?php
 } ?>
 
 <div class="form-group">
@@ -135,7 +135,7 @@ if (is_object($category)) {
     }
     ?>
 
-<?php 
+<?php
 } ?>
 
 <?=$valt->output('add_or_update_attribute')?>
@@ -148,16 +148,15 @@ if (is_object($category)) {
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
-	<a href="<?=$back?>" class="btn float-left btn-secondary"><?=t('Back')?></a>
+	<a href="<?=$back?>" class="btn float-left btn-default"><?=t('Back')?></a>
 <?php if (is_object($key)) {
     ?>
 	<button type="submit" class="btn btn-primary float-right"><?=t('Save')?></button>
-<?php 
+<?php
 } else {
     ?>
 	<button type="submit" class="btn btn-primary float-right"><?=t('Add')?></button>
-<?php 
+<?php
 } ?>
 </div>
 </div>
-
