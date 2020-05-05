@@ -2,20 +2,29 @@ div.ccm-attribute-list-wrapper {
   padding-bottom: 20px;
 }
 
-.dropdown-menu {
+ul.dropdown-menu {
+  >li {
+    width: 100%;
+
+    >a {
+      color: $gray-700;
+      display: block;
+      padding: 5px;
+      width: 100%;
+
+      &:hover,
+      &:active {
+        text-decoration: none;
+        background-color: $gray-100;
+      }
+    }
+  }
   .ccm-attribute-icon {
     width: 16px;
     text-align: center;
     height: 16px;
     line-height: 16px;
+    margin-right: 5px;
     vertical-align: middle;
   }
-
-  img.ccm-attribute-icon {
-
-    width: 16px;
-    height: 16px;
-
-  }
 }
-
