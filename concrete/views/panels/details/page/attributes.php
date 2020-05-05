@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/template" class="attribute">
     <div class="form-group <% if (pending) { %>ccm-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
         <a href="javascript:void(0)" data-remove-attribute-key="<%=akID%>"><i class="fa fa-minus-circle"></i></a>
-        <label class="control-label" for="<%=controlID%>"><%=label%></label>
+        <label class="col-form-label" for="<%=controlID%>"><%=label%></label>
         <div>
             <%=content%>
         </div>
@@ -16,8 +16,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div id="ccm-detail-page-attributes">
 
     <section class="ccm-ui col-xl-9">
-        <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="attributes"
-              data-panel-detail-form="attributes" data-action-after-save="reload">
+        <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="attributes" data-panel-detail-form="attributes" data-action-after-save="reload">
 
             <?php if (isset($sitemap) && $sitemap) {
                 ?>
@@ -31,10 +30,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($assignment->allowEditName()) {
                 ?>
                 <div class="form-group">
-                    <label for="cName" class="control-label"><?= t('Name') ?></label>
+                    <label for="cName" class="col-form-label"><?= t('Name') ?></label>
                     <div>
-                        <input type="text" class="form-control" id="cName" name="cName"
-                               value="<?= htmlentities($c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>"/>
+                        <input type="text" class="form-control" id="cName" name="cName" value="<?= htmlentities($c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>"/>
                     </div>
                 </div>
                 <?php
@@ -43,7 +41,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($assignment->allowEditDateTime()) {
                 ?>
                 <div class="form-group">
-                    <label for="cDatePublic" class="control-label"><?= t('Created Time') ?></label>
+                    <label for="cDatePublic" class="col-form-label"><?= t('Created Time') ?></label>
                     <div>
                         <?= $dt->datetime('cDatePublic', $c->getCollectionDatePublic()) ?>
                     </div>
@@ -54,7 +52,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($assignment->allowEditUserID()) {
                 ?>
                 <div class="form-group">
-                    <label for="uID" class="control-label"><?= t('Author') ?></label>
+                    <label for="uID" class="col-form-label"><?= t('Author') ?></label>
                     <div>
                         <?= $uh->selectUser('uID', $c->getCollectionUserID()) ?>
                     </div>
@@ -66,10 +64,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($assignment->allowEditDescription()) {
                 ?>
                 <div class="form-group">
-                    <label for="cDescription" class="control-label"><?= t('Description') ?></label>
+                    <label for="cDescription" class="col-form-label"><?= t('Description') ?></label>
                     <div>
-                        <textarea id="cDescription" name="cDescription" class="form-control"
-                                  rows="8"><?= htmlentities($c->getCollectionDescription(), ENT_QUOTES, APP_CHARSET) ?></textarea>
+                        <textarea id="cDescription" name="cDescription" class="form-control" rows="8"><?= htmlentities($c->getCollectionDescription(), ENT_QUOTES, APP_CHARSET) ?></textarea>
                     </div>
                 </div>
                 <?php
@@ -77,10 +74,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         </form>
         <div class="ccm-panel-detail-form-actions dialog-buttons">
-            <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel"
-                    data-panel-detail-action="cancel"><?= t('Cancel') ?></button>
-            <button class="float-right btn btn-primary" type="button" data-dialog-action="submit"
-                    data-panel-detail-action="submit"><?= t('Save Changes') ?></button>
+            <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?= t('Cancel') ?></button>
+            <button class="float-right btn btn-primary" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?= t('Save Changes') ?></button>
         </div>
 
     </section>
