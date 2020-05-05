@@ -42,9 +42,9 @@ class UserInterface
     public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' pull-right';
+            $innerClass .= ' float-right';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' pull-left';
+            $innerClass .= ' float-left';
         }
 
         if (!$formID) {
