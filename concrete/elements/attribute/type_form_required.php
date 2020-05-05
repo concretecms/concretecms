@@ -45,7 +45,7 @@ if (is_object($key)) {
 	<button type="button" class="btn btn-danger" onclick="deleteAttribute()"><?=t('Delete Attribute')?></button>
 </div>
 
-<?php 
+<?php
 } ?>
 
 
@@ -84,7 +84,7 @@ if (is_object($key)) {
     ?>
 </div>
 </div>
-<?php 
+<?php
 } ?>
 
 <div class="form-group">
@@ -135,7 +135,7 @@ if (is_object($category)) {
     }
     ?>
 
-<?php 
+<?php
 } ?>
 
 <?=$valt->output('add_or_update_attribute')?>
@@ -152,12 +152,11 @@ if (is_object($category)) {
 <?php if (is_object($key)) {
     ?>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
-<?php 
+<?php
 } else {
     ?>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
-<?php 
+<?php
 } ?>
 </div>
 </div>
-

@@ -157,7 +157,7 @@ if ($key !== null) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= $back ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
+            <a href="<?= $back ?>" class="btn pull-left btn-secondary"><?= t('Back') ?></a>
             <button type="submit" class="btn btn-primary pull-right"><?= $key === null ? t('Add') : t('Save') ?></button>
         </div>
     </div>
