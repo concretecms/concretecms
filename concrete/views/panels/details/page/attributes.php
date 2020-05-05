@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <script type="text/template" class="attribute">
@@ -16,7 +16,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div id="ccm-detail-page-attributes">
 
     <section class="ccm-ui col-xl-9">
-        <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="attributes" data-panel-detail-form="attributes" data-action-after-save="reload">
+        <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="attributes"
+              data-panel-detail-form="attributes" data-action-after-save="reload">
 
             <?php if (isset($sitemap) && $sitemap) {
                 ?>
@@ -32,7 +33,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <div class="form-group">
                     <label for="cName" class="col-form-label"><?= t('Name') ?></label>
                     <div>
-                        <input type="text" class="form-control" id="cName" name="cName" value="<?= htmlentities($c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>"/>
+                        <input type="text" class="form-control" id="cName" name="cName"
+                               value="<?= htmlentities($c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>"/>
                     </div>
                 </div>
                 <?php
@@ -66,7 +68,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <div class="form-group">
                     <label for="cDescription" class="col-form-label"><?= t('Description') ?></label>
                     <div>
-                        <textarea id="cDescription" name="cDescription" class="form-control" rows="8"><?= htmlentities($c->getCollectionDescription(), ENT_QUOTES, APP_CHARSET) ?></textarea>
+                        <textarea id="cDescription" name="cDescription" class="form-control"
+                                  rows="8"><?= htmlentities($c->getCollectionDescription(), ENT_QUOTES, APP_CHARSET) ?></textarea>
                     </div>
                 </div>
                 <?php
@@ -74,8 +77,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         </form>
         <div class="ccm-panel-detail-form-actions dialog-buttons">
-            <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?= t('Cancel') ?></button>
-            <button class="float-right btn btn-primary" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?= t('Save Changes') ?></button>
+            <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel"
+                    data-panel-detail-action="cancel"><?= t('Cancel') ?></button>
+            <button class="float-right btn btn-primary" type="button" data-dialog-action="submit"
+                    data-panel-detail-action="submit"><?= t('Save Changes') ?></button>
         </div>
 
     </section>
