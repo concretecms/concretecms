@@ -36,7 +36,7 @@ $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url
                     <?php
                     if ($packageUrl) {
                         ?>
-                        <a target="_blank" class="pull-right" href="<?= h("{$packageUrl}/{$handle}") ?>"><span class="label label-default" style="font-weight: normal"><?= t('more details') ?></span></a>
+                        <a target="_blank" class="float-right" href="<?= h("{$packageUrl}/{$handle}") ?>"><span class="label label-default" style="font-weight: normal"><?= t('more details') ?></span></a>
                         <?php
                     }
                     ?>
