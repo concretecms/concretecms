@@ -105,7 +105,7 @@ if ($someUpdateAvailable) {
         <?php $token->output('update-all-outdated') ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <input type="submit" class="btn btn-primary pull-right" value="<?= h(t('Update all outdated languages')) ?>" />
+                <input type="submit" class="btn btn-primary float-right" value="<?= h(t('Update all outdated languages')) ?>" />
             </div>
         </div>
     </form>

@@ -81,8 +81,8 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-left btn btn-secondary" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
-            <button class="pull-right btn btn-primary" type="submit"><?= t('Save') ?></button>
+            <button class="float-left btn btn-secondary" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
+            <button class="float-right btn btn-primary" type="submit"><?= t('Save') ?></button>
         </div>
     </div>
 </form>
@@ -103,8 +103,8 @@ function showPreview(show) {
     }
     previewEnabled = show;
     $togglePreview
-        .removeClass(previewEnabled ? 'btn-default' : 'btn-success')
-        .addClass(previewEnabled ? 'btn-success' : 'btn-default')
+        .removeClass(previewEnabled ? 'btn-secondary' : 'btn-success')
+        .addClass(previewEnabled ? 'btn-success' : 'btn-secondary')
     ;
     if (previewEnabled) {
         updatePreview();
@@ -171,8 +171,12 @@ $togglePreview.on('click', function(e) {
     e.preventDefault();
     showPreview(!previewEnabled);
 });
+
+var debounced_updatePreview = _.debounce(updatePreview, 1500);
+
 $('#ccm-editor-config input').on('change', function() {
-    updatePreview();
+    debounced_updatePreview.cancel();
+    debounced_updatePreview();
 });
 
 });
