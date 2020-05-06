@@ -2,8 +2,6 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Request;
-use Config;
 
 class Accessibility extends DashboardPageController
 {

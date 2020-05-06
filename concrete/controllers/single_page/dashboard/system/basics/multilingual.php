@@ -34,6 +34,7 @@ class Multilingual extends DashboardPageController
 
     public function on_start()
     {
+        parent::on_start();
         $this->token = Loader::helper('validation/token');
     }
 
