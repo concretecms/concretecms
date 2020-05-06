@@ -40,7 +40,7 @@ $(function() {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+            <button type="submit" class="btn btn-primary float-right"><?=t('Save')?></button>
         </div>
     </div>
 
