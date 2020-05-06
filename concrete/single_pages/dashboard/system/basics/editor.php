@@ -19,58 +19,69 @@
 }
 </style>
 <form id="ccm-editor-config" method="post" class="ccm-dashboard-content-form" action="<?= $view->action('submit') ?>">
-    <?php $token->output('submit') ?>
+<?php $token->output('submit') ?>
     <div class="row">
         <div class="col-md-6">
-            <?= $form->label('', t('concrete5 Extensions')) ?>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('enable_filemanager', 1, $filemanager) ?>
-                    <?= t('Enable file selection from file manager.') ?>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('enable_sitemap', 1, $sitemap) ?>
-                    <?= t('Enable page selection from sitemap.') ?>
-                </label>
-            </div>
-            <?= $form->label('', t('Editor Plugins')) ?>
-            <?php
-            foreach ($plugins as $key => $plugin) {
-                if (!in_array($key, $selected_hidden)) {
-                    $description = $plugin->getDescription();
-                    ?>
+            <fieldset>
+                <legend><?= t('concrete5 Extensions') ?></legend>
+                <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <?php
-                            echo $form->checkbox('plugin[]', $key, $manager->isSelected($key));
-                            if ($description !== '') {
-                                echo '<span class="launch-tooltip" title="', h($description), '">';
-                            }
-                            echo h($plugin->getName());
-                            if ($description !== '') {
-                                echo '</span>';
-                            }
-                            ?>
+                            <?= $form->checkbox('enable_filemanager', 1, $filemanager) ?>
+                            <?= t('Enable file selection from file manager.') ?>
                         </label>
                     </div>
+                    <div class="checkbox">
+                        <label>
+                            <?= $form->checkbox('enable_sitemap', 1, $sitemap) ?>
+                            <?= t('Enable page selection from sitemap.') ?>
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><?= t('Editor Plugins') ?></legend>
+                <div class="form-group">
                     <?php
-                }
-            }
-            ?>
+                    foreach ($plugins as $key => $plugin) {
+                        if (!in_array($key, $selected_hidden)) {
+                            $description = $plugin->getDescription();
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <?php
+                                    echo $form->checkbox('plugin[]', $key, $manager->isSelected($key));
+                                    if ($description !== '') {
+                                        echo '<span class="launch-tooltip" title="', h($description), '">';
+                                    }
+                                    echo h($plugin->getName());
+                                    if ($description !== '') {
+                                        echo '</span>';
+                                    }
+                                    ?>
+                                </label>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+            </fieldset>
         </div>
+
         <div class="col-md-6">
             <div id="ccm-editor-preview" style="display: none">
-                <?= $form->label('', t('Editor Preview')) ?>
-                <div id="ccm-editor-preview-content"></div>
+                <fieldset>
+                    <legend><?= t('Editor Preview') ?></legend>
+                    <div id="ccm-editor-preview-content"></div>
+                </fieldset>
             </div>
         </div>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-left btn btn-default" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
+            <button class="pull-left btn btn-secondary" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
             <button class="pull-right btn btn-primary" type="submit"><?= t('Save') ?></button>
         </div>
     </div>
@@ -125,10 +136,13 @@ function updatePreview() {
     $.ajax({
         method: 'POST',
         url: <?= json_encode((string) URL::to('/ccm/system/dialogs/editor/settings/preview')) ?>,
-        data: data
+        data: data,
+        beforeSend: function() {
+            $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fa fa-circle-notch fa-spin fa-sm"></i></p>');
+            $preview.show();
+        }
     })
     .done(function (data, textStatus, jqXHR) {
-        $preview.show();
         $previewContent.html(data);
     })
 }

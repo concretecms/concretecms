@@ -2,40 +2,44 @@
     <?php
     Core::make('token')->output('accessibility');
     ?>
-    <div class="checkbox">
-        <label>
-            <input name="show_titles" value="1" type="checkbox" <?= $show_titles ? 'checked' : '' ?> />
-            <?= t('Enable Toolbar Titles') ?>
-        </label>
-    </div>
-    <div class="checkbox">
-        <label>
-            <input name="show_tooltips" value="1" type="checkbox" <?= $show_tooltips ? 'checked' : '' ?> />
-            <?= t('Enable Prominent Toolbar Tooltips') ?>
-        </label>
-    </div>
-    <div class="checkbox">
-        <label>
-            <input name="increase_font_size" value="1" type="checkbox" <?= $increase_font_size ? 'checked' : '' ?> />
-            <?= t('Increase Toolbar Font Size') ?>
-        </label>
-    </div>
-
-    <hr/>
+    <fieldset>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input class="form-check-input" name="show_titles" value="1" type="checkbox" <?= $show_titles ? 'checked' : '' ?> />
+                    <?= t('Enable Toolbar Titles') ?>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input class="form-check-input" name="show_tooltips" value="1" type="checkbox" <?= $show_tooltips ? 'checked' : '' ?> />
+                    <?= t('Enable Prominent Toolbar Tooltips') ?>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input class="form-check-input" name="increase_font_size" value="1" type="checkbox" <?= $increase_font_size ? 'checked' : '' ?> />
+                    <?= t('Increase Toolbar Font Size') ?>
+                </label>
+            </div>
+        </div>
+    </fieldset>
 
     <fieldset>
-        <label class="control-label"><?=t('File Manager')?></label>
-        <div class="checkbox">
-            <label>
-                <input name="full_lisiting_thumbnails" value="1" type="checkbox" <?= $full_lisiting_thumbnails ? 'checked' : '' ?> />
-                <?= t('Enable Full Size Image Thumbnails') ?>
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input name="preview_popover" value="1" type="checkbox" <?= $preview_popover ? 'checked' : '' ?> />
-                <?= t('Enable Preview Image Popover') ?>
-            </label>
+        <legend><?=t('File Manager')?></legend>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input class="form-check-input" name="full_lisiting_thumbnails" value="1" type="checkbox" <?= $full_lisiting_thumbnails ? 'checked' : '' ?> />
+                    <?= t('Enable Full Size Image Thumbnails') ?>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input class="form-check-input" name="preview_popover" value="1" type="checkbox" <?= $preview_popover ? 'checked' : '' ?> />
+                    <?= t('Enable Preview Image Popover') ?>
+                </label>
+            </div>
         </div>
     </fieldset>
     <h2></h2>

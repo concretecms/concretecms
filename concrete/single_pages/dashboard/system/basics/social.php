@@ -77,8 +77,8 @@
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=URL::to('/dashboard/system/basics/social'); ?>" class="btn btn-default pull-left"><?=t("Cancel"); ?></a>
-                <button class="pull-right btn btn-success" type="submit" ><?=$buttonText; ?></button>
+                <a href="<?=URL::to('/dashboard/system/basics/social'); ?>" class="btn btn-secondary pull-left"><?=t("Cancel"); ?></a>
+                <button class="pull-right btn btn-primary" type="submit" ><?=$buttonText; ?></button>
             </div>
         </div>
 
