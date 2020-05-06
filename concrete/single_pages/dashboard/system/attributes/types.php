@@ -18,7 +18,7 @@ $valt = Core::make('token');
 			<th><?=t('Name')?></th>
 			<?php foreach ($categories as $cat) {
     ?>
-				<th><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></th>
+				<th style="width: 95px; text-align: center" ><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></th>
 			<?php 
 } ?>
 		</tr>
