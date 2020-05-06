@@ -12,7 +12,7 @@
     <div class="radio"><label><?=$form->radio('DASHBOARD_BACKGROUND_IMAGE', 'none', $DASHBOARD_BACKGROUND_IMAGE)?> <span><?=t('None')?></span></label></div>
     <div class="radio"><label><?=$form->radio('DASHBOARD_BACKGROUND_IMAGE', 'custom', $DASHBOARD_BACKGROUND_IMAGE)?> <span><?=t('Specify Custom Image')?></span></div>
     <div id="custom-background-image" <?php if ($DASHBOARD_BACKGROUND_IMAGE != 'custom') {
-    ?>style="display: none" <?php 
+    ?>style="display: none" <?php
 }
     ?>>
         <br/>
@@ -33,16 +33,16 @@ $(function() {
 });
 </script>
 
-<?php 
+<?php
 } else {
     ?>
     <?=t('Options disabled, interface settings are specified in config/site.php.')?>
-<?php 
+<?php
 } ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+            <button type="submit" class="btn btn-primary float-right"><?=t('Save')?></button>
         </div>
     </div>
 
