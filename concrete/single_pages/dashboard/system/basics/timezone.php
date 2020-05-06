@@ -30,7 +30,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </label>
             <div>
                 <?php if (!$dbTimezoneOk) { ?>
-                    <p class="text-warning"><i class="fa fa-warning"></i>
+                    <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
                         <?= $dbDeltaDescription ?>
                     </p>
                     <p>
