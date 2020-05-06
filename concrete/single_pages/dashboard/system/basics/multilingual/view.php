@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 ?>
 <div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?= $view->action('update') ?>" class="btn btn-default"><?= t('Install/Update Languages') ?></a>
+    <a href="<?= $view->action('update') ?>" class="btn btn-secondary"><?= t('Install/Update Languages') ?></a>
 </div>
 <?php
 
@@ -12,7 +12,7 @@ if (empty($interfacelocales)) {
     <fieldset>
 	   <?= t("You don't have any interface languages installed. You must run concrete5 in English.") ?>
     </fieldset>
-    <?php 
+    <?php
 } else {
     ?>
     <form method="post" action="<?= $view->action('save_interface_language') ?>">
@@ -37,7 +37,7 @@ if (empty($interfacelocales)) {
             </div>
         </div>
     </form>
-    <?php 
+    <?php
 }
 
 if (isset($mlLink)) {
