@@ -10,7 +10,7 @@ $token = Core::make('token');
         <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
     </div>
 
-    <div class="form-check">
+    <div class="mb-2">
 		<input id="banned-word-list-enabled" value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> 
         <label for="banned-word-list-enabled"><?=t('Disallow posts that include banned words?')?></label>
     </div>
