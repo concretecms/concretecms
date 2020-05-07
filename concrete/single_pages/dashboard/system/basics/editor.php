@@ -175,6 +175,7 @@ $togglePreview.on('click', function(e) {
 var debounced_updatePreview = _.debounce(updatePreview, 1500);
 
 $('#ccm-editor-config input').on('change', function() {
+    $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fa fa-circle-notch fa-spin fa-sm"></i></p>');
     debounced_updatePreview.cancel();
     debounced_updatePreview();
 });
