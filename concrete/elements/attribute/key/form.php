@@ -62,7 +62,11 @@ if ($key !== null) {
             <?= $form->label('akHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-append">
+                    <div class="input-group-text">
+                        <i class="fa fa-asterisk"></i>
+                    </div>
+                </span>
             </div>
         </div>
 
@@ -70,7 +74,11 @@ if ($key !== null) {
             <?= $form->label('akName', t('Name')) ?>
             <div class="input-group">
                 <?= $form->text('akName', $key === null ? '' : $key->getAttributeKeyName()) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-append">
+                    <div class="input-group-text">
+                        <i class="fa fa-asterisk"></i>
+                    </div>
+                </span>
             </div>
         </div>
 
@@ -96,39 +104,35 @@ if ($key !== null) {
 
         <div class="form-group">
             <label class="control-label"><?= t('Searchable') ?></label>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed()) ?>
-                    <?= t('Content included in search index.') ?>
-                </label>
+            <div class="form-check">
+                <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ["class" => "form-check-input"]) ?>
+                <?= $form->label('akIsSearchableIndexed', t('Content included in search index.'), ["class" => "form-check-label"] ) ?>
             </div>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable()) ?>
-                    <?= t('Field available in advanced search.') ?>
-                    <?php
-                    if ($key && $key->isAttributeKeySearchable()) {
-                        ?>
-                        <div class="alert alert-danger small hide" id="akIsSearchable-warning">
-                            <?= t(
-                                'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
-                                '<strong>' . t('Index Search Engine - All') . '</strong>'
-                            ) ?>
-                        </div>
-                        <script>
-                        $(document).ready(function() {
-                            $('#akIsSearchable')
-                                .on('change', function() {
-                                    $('#akIsSearchable-warning').toggleClass('hide', $(this).is(':checked'))
-                                })
-                                .trigger('change')
-                            ;
-                        });
-                        </script>
-                        <?php
-                    }
+            <div class="form-check">
+                <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable(), ["class" => "form-check-input"]) ?>
+                <?= $form->label('akIsSearchable', t('Field available in advanced search.'), ["class" => "form-check-label"] ) ?>
+                <?php
+                if ($key && $key->isAttributeKeySearchable()) {
                     ?>
-                </label>
+                    <div class="alert alert-danger small hide" id="akIsSearchable-warning">
+                        <?= t(
+                            'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
+                            '<strong>' . t('Index Search Engine - All') . '</strong>'
+                        ) ?>
+                    </div>
+                    <script>
+                    $(document).ready(function() {
+                        $('#akIsSearchable')
+                            .on('change', function() {
+                                $('#akIsSearchable-warning').toggleClass('hide', $(this).is(':checked'))
+                            })
+                            .trigger('change')
+                        ;
+                    });
+                    </script>
+                    <?php
+                }
+                ?>
             </div>
         </div>
 
@@ -157,8 +161,8 @@ if ($key !== null) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= $back ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
-            <button type="submit" class="btn btn-primary pull-right"><?= $key === null ? t('Add') : t('Save') ?></button>
+            <a href="<?= $back ?>" class="btn float-left btn-secondary"><?= t('Back') ?></a>
+            <button type="submit" class="btn btn-primary float-right"><?= $key === null ? t('Add') : t('Save') ?></button>
         </div>
     </div>
 

@@ -9,7 +9,7 @@ if ($listView->getMenu() instanceof \Concrete\Core\Application\UserInterface\Con
 
 ?>
 
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
         <i class="fa fa-chevron-down"></i>
     </button>
 
@@ -18,7 +18,7 @@ if ($listView->getMenu() instanceof \Concrete\Core\Application\UserInterface\Con
 
 <?php } else { ?>
 
-    <button type="button" data-notification-action="archive" class="btn btn-default btn-waiting-for-me-archive">
+    <button type="button" data-notification-action="archive" class="btn btn-secondary btn-waiting-for-me-archive">
         <i></i>
     </button>
 

@@ -13,7 +13,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 <div class="ccm-dashboard-header-buttons">
 	<?php if (count($sets) > 0) {
     ?>
-		<button type="button" class="btn btn-default" data-toggle="dropdown">
+		<button type="button" class="btn btn-secondary" data-toggle="dropdown">
 		<?=t('View')?> <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">
@@ -22,7 +22,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 		</ul>
 	<?php 
 } ?>
-	<a href="<?=URL::to('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" class="btn btn-default"><?=t('Manage Sets')?></a>
+	<a href="<?=URL::to('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" class="btn btn-secondary"><?=t('Manage Sets')?></a>
 </div>
 
 <?php
@@ -176,7 +176,7 @@ $(function() {
 	<div class="form-group">
 		<?=$form->select('atID', $types)?>
 	</div>
-	<button type="submit" class="btn btn-default"><?=t('Go')?></button>
+	<button type="submit" class="btn btn-secondary"><?=t('Go')?></button>
 	</div>
 </form>
 <?php 

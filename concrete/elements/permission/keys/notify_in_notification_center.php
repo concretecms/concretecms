@@ -7,7 +7,7 @@
 
 
 <h4><?=t('Users/Groups Receiving Notifications')?>
-    <a style="float: right" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?disableDuration=1&accessType=<?=PermissionKey::ACCESS_TYPE_INCLUDE?>&pkCategoryHandle=notification" dialog-width="500" dialog-height="350" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch btn btn-sm btn-default"><?=t('Add')?></a>
+    <a style="float: right" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?disableDuration=1&accessType=<?=PermissionKey::ACCESS_TYPE_INCLUDE?>&pkCategoryHandle=notification" dialog-width="500" dialog-height="350" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch btn btn-sm btn-secondary"><?=t('Add')?></a>
 
 </h4>
 
@@ -58,7 +58,7 @@ foreach ($included as $assignment) {
 
 <h4><?=t('Users/Groups Excluded from Notifications')?>
 
-    <a style="float: right" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?disableDuration=1&accessType=<?=PermissionKey::ACCESS_TYPE_EXCLUDE?>&pkCategoryHandle=notification" dialog-width="500" dialog-height="350" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch btn btn-sm btn-default"><?=t('Add')?></a>
+    <a style="float: right" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?disableDuration=1&accessType=<?=PermissionKey::ACCESS_TYPE_EXCLUDE?>&pkCategoryHandle=notification" dialog-width="500" dialog-height="350" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch btn btn-sm btn-secondary"><?=t('Add')?></a>
 
 </h4>
 
