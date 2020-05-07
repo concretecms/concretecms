@@ -1,3 +1,7 @@
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
 /**
  * #ccm-dashboard-content is the outer element that wraps the entire content of the Dashboard. It comes immediately
  * after the toolbar, and ends immediately before the footer/body/panels.

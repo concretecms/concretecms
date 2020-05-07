@@ -2,6 +2,7 @@
 namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Http\ResponseAssetGroup;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 abstract class AbstractField implements FieldInterface
 {
@@ -70,6 +71,11 @@ abstract class AbstractField implements FieldInterface
             'data' => $this->data,
             'assets' => $assetsResponse,
         ];
+    }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
+    {
+        $this->data = $data['data'];
     }
 
     /**

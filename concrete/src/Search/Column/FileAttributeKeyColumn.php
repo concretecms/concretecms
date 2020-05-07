@@ -6,6 +6,24 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 class FileAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
 
+    public function getColumnValue($node)
+    {
+        if (is_object($this->attributeKey)) {
+            if ($node->getTreeNodeTypeHandle() == 'file_folder') {
+                return '';
+            }
+            if ($node->getTreeNodeTypeHandle() == 'file') {
+                $file = $node->getTreeNodeFileObject();
+                if (is_object($file)) {
+                    $vo = $file->getAttributeValueObject($this->attributeKey);
+                    if (is_object($vo)) {
+                        return $vo->getDisplayValue();
+                    }
+                }
+            }
+        }
+    }
+
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $db = \Database::connection();

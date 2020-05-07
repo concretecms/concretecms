@@ -42,6 +42,20 @@
             </g>
         </symbol>
 
+        <symbol id="icon-minus-circle" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Dialog---Advanced-Search-01" transform="translate(-1006.000000, -370.000000)">
+                    <g id="Group" transform="translate(383.000000, 225.000000)">
+                        <g id="ic_remove_circle_outline" transform="translate(621.000000, 143.000000)">
+                            <g id="Icon-24px">
+                                <path d="M7,11 L7,13 L17,13 L17,11 L7,11 L7,11 Z M12,2 C6.48,2 2,6.48 2,12 C2,17.52 6.48,22 12,22 C17.52,22 22,17.52 22,12 C22,6.48 17.52,2 12,2 L12,2 Z M12,20 C7.59,20 4,16.41 4,12 C4,7.59 7.59,4 12,4 C16.41,4 20,7.59 20,12 C20,16.41 16.41,20 12,20 L12,20 Z" id="Shape"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
         <symbol id="icon-help" width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -211,6 +225,55 @@
                         <g id="icons8-folder-copy" transform="translate(39.000000, 326.000000)">
                             <path d="M1.56521739,0 C0.706972278,0 0,0.706972278 0,1.56521739 L0,6.26086957 L0,7.30434783 L0,20.3478261 C0,21.2060713 0.706972278,21.9130435 1.56521739,21.9130435 L22.4347826,21.9130435 C23.2930278,21.9130435 24,21.2060713 24,20.3478261 L24,7.82608696 L24,6.26086957 L24,3.65217391 C24,2.7939288 23.2930278,2.08695652 22.4347826,2.08695652 L8.34782609,2.08695652 C8.39299304,2.08695652 8.33164696,2.08714643 8.20414383,1.94021739 C8.07664017,1.79328835 7.91969687,1.54953454 7.75577426,1.28804348 C7.59185217,1.02655242 7.42005757,0.747542557 7.20346487,0.502377704 C6.98687165,0.257212904 6.68804557,0 6.26086957,0 L1.56521739,0 Z M1.56521739,1.04347826 L6.26086957,1.04347826 C6.22917391,1.04347826 6.2927687,1.04713565 6.42187513,1.19327447 C6.55098313,1.33941397 6.70812052,1.58214323 6.87126365,1.8423913 C7.03440678,2.10263937 7.20335426,2.3806247 7.41542139,2.625 C7.627488,2.8693753 7.91944017,3.13043478 8.34782609,3.13043478 L22.4347826,3.13043478 C22.7295809,3.13043478 22.9565217,3.35737565 22.9565217,3.65217391 L22.9565217,4.79347826 C22.7922303,4.73422957 22.6183529,4.69565217 22.4347826,4.69565217 L1.56521739,4.69565217 C1.38164739,4.69565217 1.20776948,4.73422957 1.04347826,4.79347826 L1.04347826,1.56521739 C1.04347826,1.27041903 1.27041903,1.04347826 1.56521739,1.04347826 Z M1.56521739,5.73913043 L22.4347826,5.73913043 C22.7295809,5.73913043 22.9565217,5.9660713 22.9565217,6.26086957 L22.9565217,7.82608696 L22.9565217,20.3478261 C22.9565217,20.6426243 22.7295809,20.8695652 22.4347826,20.8695652 L1.56521739,20.8695652 C1.27041903,20.8695652 1.04347826,20.6426243 1.04347826,20.3478261 L1.04347826,7.30434783 L1.04347826,6.26086957 C1.04347826,5.9660713 1.27041903,5.73913043 1.56521739,5.73913043 Z"
                                   id="Shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-navigate-to-folder" width="21px" height="9px" viewBox="0 0 21 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Main-Header-with-Bookmark-Copy" transform="translate(-961.000000, -86.000000)">
+                    <g id="Main-Header-with-Bookmark">
+                        <g id="Group-4" transform="translate(960.000000, 79.000000)">
+                            <g id="ic_undo">
+                                <g id="Icon-24px">
+                                    <path d="M11.5,8 C8.85,8 6.45,8.99 4.6,10.6 L1,7 L1,16 L10,16 L6.38,12.38 C7.77,11.22 9.54,10.5 11.5,10.5 C15.04,10.5 18.05,12.81 19.1,16 L21.47,15.22 C20.08,11.03 16.15,8 11.5,8 L11.5,8 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-create-folder" width="20px" height="16px" viewBox="0 0 20 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" fill-rule="evenodd">
+                <g id="Main-Header-with-Bookmark-Copy" transform="translate(-1017.000000, -83.000000)">
+                    <g id="Main-Header-with-Bookmark">
+                        <g id="Group-4" transform="translate(960.000000, 79.000000)">
+                            <g id="ic_create_new_folder" transform="translate(54.000000, 0.000000)">
+                                <g id="Icon-24px">
+                                    <path d="M21,6 L13,6 L11,4 L5,4 C3.89,4 3.01,4.89 3.01,6 L3,18 C3,19.11 3.89,20 5,20 L21,20 C22.11,20 23,19.11 23,18 L23,8 C23,6.89 22.11,6 21,6 L21,6 Z M20,14 L17,14 L17,17 L15,17 L15,14 L12,14 L12,12 L15,12 L15,9 L17,9 L17,12 L20,12 L20,14 L20,14 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+
+        <symbol id="icon-add-files" width="14px" height="17px" viewBox="0 0 14 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" fill-rule="evenodd">
+                <g id="Main-Header-with-Bookmark-Copy" transform="translate(-1073.000000, -82.000000)">
+                    <g id="Main-Header-with-Bookmark">
+                        <g id="Group-4" transform="translate(960.000000, 79.000000)">
+                            <g id="ic_file_upload" transform="translate(108.000000, 0.000000)">
+                                <g id="Icon-24px">
+                                    <path d="M9,16 L15,16 L15,10 L19,10 L12,3 L5,10 L9,10 L9,16 Z M5,18 L19,18 L19,20 L5,20 L5,18 Z" id="Shape"></path>
+                                </g>
+                            </g>
                         </g>
                     </g>
                 </g>

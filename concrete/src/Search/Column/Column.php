@@ -8,16 +8,16 @@ class Column implements ColumnInterface
     /** These properties are to be treated as protected. Use the set and get methods instead */
     /** @deprecated */
     public $columnKey;
-    
+
     /** @deprecated */
     public $columnName;
-    
+
     /** @deprecated */
     public $sortDirection = 'asc';
-    
+
     /** @deprecated */
     public $isSortable;
-    
+
     /** @deprecated */
     public $callback;
 
@@ -97,5 +97,14 @@ class Column implements ColumnInterface
         $this->isSortable = $isSortable;
         $this->callback = $callback;
         $this->sortDirection = $sort;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'columnKey' => $this->getColumnKey(),
+            'isSortable' => $this->isColumnSortable(),
+            'sortDirection' => $this->getColumnSortDirection(),
+        ];
     }
 }

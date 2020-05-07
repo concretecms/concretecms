@@ -31,9 +31,5 @@ class Search extends BackendInterfaceController
         if (is_object($result)) {
             $this->set('result', $result);
         }
-
-        $header = $this->app->build(Header::class);
-        $header->setIncludeBreadcrumb(true);
-        $this->set('header', $header);
     }
 }

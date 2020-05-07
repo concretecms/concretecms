@@ -35,6 +35,14 @@ abstract class ItemList
     abstract public function debugStart();
     abstract public function debugStop();
 
+    /**
+     * @return array
+     */
+    public function getAutoSortColumns(): array
+    {
+        return $this->autoSortColumns;
+    }
+
     public function debug()
     {
         $this->debug = true;
@@ -237,7 +245,7 @@ abstract class ItemList
 
     /**
      * Allow to modify the auto-pagination parameters and the auto-sorting parameters
-     * 
+     *
      * @param mixed $nameSpace Content that will be added to the parameters
      */
     public function setNameSpace($nameSpace)

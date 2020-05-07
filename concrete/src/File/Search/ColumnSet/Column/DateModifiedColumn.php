@@ -6,32 +6,35 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class FileVersionDateAddedColumn extends Column implements PagerColumnInterface
+class DateModifiedColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'fv.fvDateAdded';
+        return 'dateModified';
     }
 
     public function getColumnName()
     {
-        return t('Modified');
+        return t('Date Modified');
     }
 
     public function getColumnCallback()
     {
-        return array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateActivated');
+        return ['\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getDateModified'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(fv.fvDateAdded, f.fID) %s (:sortDate, :sortID)', $sort);
-        $fv = $mixed->getApprovedVersion();
-        $query->setParameter('sortDate', $fv->getDateAdded()->format('Y-m-d H:i:s'));
-        $query->setParameter('sortID', $mixed->getFileID());
+        $where = sprintf('(if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified), n.treeNodeID) %s (:sortDate, :sortID)', $sort);
+        $date = $mixed->getDateLastModified();
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d H:i:s');
+        }
+        $query->setParameter('sortDate', $date);
+        $query->setParameter('sortID', $mixed->getTreeNodeID());
         $query->andWhere($where);
     }
 

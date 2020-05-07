@@ -4,24 +4,37 @@ namespace Concrete\Core\File\Search;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\File\FileList;
+use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Search\AbstractSearchProvider;
-use Concrete\Core\Search\QueryableInterface;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class SearchProvider extends AbstractSearchProvider implements QueryableInterface
+class SearchProvider extends AbstractSearchProvider
 {
+
+    public function getFieldManager()
+    {
+        return ManagerFactory::get('file');
+    }
+
     /**
      * @var \Concrete\Core\Attribute\Category\FileCategory
      */
     protected $category;
+
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
 
     /**
      * @return string
@@ -31,9 +44,10 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         return 'file';
     }
 
-    public function __construct(FileCategory $category, Session $session)
+    public function __construct(Filesystem $filesystem, FileCategory $category, Session $session)
     {
         $this->category = $category;
+        $this->filesystem = $filesystem;
         parent::__construct($session);
     }
 
@@ -84,13 +98,9 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
      */
     public function getItemList()
     {
-        $list = new FileList();
-        $list->setPermissionsChecker(function ($file) {
-            $fp = new \Permissions($file);
-
-            return $fp->canViewFileInFileManager();
-        });
-
+        $folder = $this->filesystem->getRootFolder();
+        $list = new FolderItemList();
+        $list->filterByParentFolder($folder);
         return $list;
     }
 

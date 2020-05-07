@@ -156,6 +156,14 @@ class Result
         return $this->getItemListObject()->getSortURL($column, $dir, $this->getBaseURL());
     }
 
+    /**
+     * @return \Concrete\Core\Search\Pagination\Pagination
+     */
+    public function getPagination(): \Concrete\Core\Search\Pagination\Pagination
+    {
+        return $this->pagination;
+    }
+
     public function getJSONObject()
     {
         $obj = new stdClass();

@@ -36,19 +36,19 @@ class AdvancedSearch extends AdvancedSearchController
         return null;
     }
 
+    public function getSubmitMethod()
+    {
+        return 'get';
+    }
+
+    public function getSubmitAction()
+    {
+        return $this->app->make('url')->to('/dashboard/files/search', 'advanced_search');
+    }
+
     public function getFieldManager()
     {
         return ManagerFactory::get('file');
-    }
-
-    public function getRequestDefaultSort()
-    {
-        return $this->request->request->get('fSearchDefaultSort');
-    }
-
-    public function getRequestDefaultSortDirection()
-    {
-        return $this->request->request->get('fSearchDefaultSortDirection');
     }
 
     public function onAfterSavePreset(SavedSearch $search)

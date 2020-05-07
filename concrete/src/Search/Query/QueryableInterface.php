@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Search;
+namespace Concrete\Core\Search\Query;
 
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Entity\Search\Query;

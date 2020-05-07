@@ -6,34 +6,37 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class FolderItemModifiedColumn extends Column implements PagerColumnInterface
+class SizeColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'folderItemModified';
+        return 'size';
     }
 
     public function getColumnName()
     {
-        return t('Date Modified');
+        return t('Size');
     }
 
     public function getColumnCallback()
     {
-        return ['\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getDateModified'];
+        return ['\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getSize'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified), n.treeNodeID) %s (:sortDate, :sortID)', $sort);
-        $date = $mixed->getDateLastModified();
-        if ($date instanceof \DateTime) {
-            $date = $date->format('Y-m-d H:i:s');
+        $where = sprintf('(fv.fvSize, n.treeNodeID) %s (:sortSize, :sortID)', $sort);
+        $size = 0;
+        if ($mixed->getTreeNodeTypeHandle() == 'file') {
+            $file = $mixed->getTreeNodeFileObject();
+            if (is_object($file)) {
+                $size = $file->getFullSize();
+            }
         }
-        $query->setParameter('sortDate', $date);
+        $query->setParameter('sortSize', $size);
         $query->setParameter('sortID', $mixed->getTreeNodeID());
         $query->andWhere($where);
     }

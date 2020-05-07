@@ -6,6 +6,8 @@ use Concrete\Core\Search\Result\Item as SearchResultItem;
 use Concrete\Core\Search\Result\Result as SearchResult;
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\Tree\Node\Type\SearchPreset;
 
 class Item extends SearchResultItem
 {
@@ -13,6 +15,17 @@ class Item extends SearchResultItem
     {
         parent::__construct($result, $columns, $item);
         $this->populateDetails($item);
+    }
+
+    public function getListingThumbnailImage()
+    {
+        $item = $this->getItem();
+        if ($item instanceof SearchPreset || $item instanceof FileFolder) {
+            $icon = $item->getListFormatter()->getIconElement();
+        } else if ($item instanceof \Concrete\Core\Tree\Node\Type\File) {
+            $icon = $item->getTreeNodeFileObject()->getListingThumbnailImage();
+        }
+        return $icon;
     }
 
     protected function populateDetails($item)

@@ -6,6 +6,7 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Page\Search\Result\Result;
 use Concrete\Core\Search\AbstractSearchProvider;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\ProviderInterface;
 use Concrete\Core\Page\Search\ColumnSet\Available;
 use Concrete\Core\Page\Search\ColumnSet\ColumnSet;
@@ -16,6 +17,11 @@ class SearchProvider extends AbstractSearchProvider
 {
 
     protected $category;
+
+    public function getFieldManager()
+    {
+        return ManagerFactory::get('page');
+    }
 
     public function getSessionNamespace()
     {
@@ -66,7 +72,7 @@ class SearchProvider extends AbstractSearchProvider
     {
         return new DefaultSet();
     }
-    
+
     public function getSavedSearch()
     {
         return new SavedPageSearch();

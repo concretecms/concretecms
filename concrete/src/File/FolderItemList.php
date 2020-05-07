@@ -3,6 +3,7 @@
 namespace Concrete\Core\File;
 
 use Closure;
+use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Permission\Access\Entity\FileUploaderEntity;
 use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\FileFolderKey;
@@ -25,19 +26,21 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     protected $permissionsChecker;
 
     protected $autoSortColumns = [
-        'folderItemName',
-        'folderItemModified',
-        'folderItemType',
-        'folderItemSize',
+        'name',
+        'dateModified',
+        'type',
+        'size',
+        'f.fID',
+        'fv.fvFilename',
     ];
 
-    public function __construct(StickyRequest $req = null)
+    public function __construct()
     {
         $u = Application::getFacadeApplication()->make(User::class);
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }
-        parent::__construct($req);
+        parent::__construct();
     }
 
     public function enableSubFolderSearch()
@@ -81,14 +84,17 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     public function createQuery()
     {
         $this->query->select('distinct n.treeNodeID')
-            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as folderItemName')
-            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as folderItemModified')
-            ->addSelect('case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end as folderItemType')
-            ->addSelect('fv.fvSize as folderItemSize')
+            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as name')
+            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as dateModified')
+            ->addSelect('case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end as type')
+            ->addSelect('fv.fvSize as size')
             ->from('TreeNodes', 'n')
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
             ->leftJoin('n', 'TreeFileNodes', 'tf', 'tf.treeNodeID = n.treeNodeID')
-            ->leftJoin('tf', 'FileVersions', 'fv', 'tf.fID = fv.fID and fv.fvIsApproved = 1');
+            ->leftJoin('tf', 'FileVersions', 'fv', 'tf.fID = fv.fID and fv.fvIsApproved = 1')
+            ->leftJoin('fv', 'Files', 'f', 'fv.fID = f.fID')
+            ->leftJoin('f', 'Users', 'u', 'f.uID = u.uID')
+            ->leftJoin('f', 'FileSearchIndexAttributes', 'fsi', 'f.fID = fsi.fID');
     }
 
     public function getTotalResults()
@@ -141,7 +147,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function filterByType($type)
     {
-        $this->query->andWhere('fv.fvType = :fvType or fvType is null');
+        $this->query->andWhere('fv.fvType = :fvType');
         $this->query->setParameter('fvType', $type);
     }
 
@@ -165,6 +171,53 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
             }
             $this->query->andWhere($or);
         }
+    }
+
+    /**
+     * Filters the file list by file size (in kilobytes).
+     *
+     * @param int|float $from
+     * @param int|float $to
+     */
+    public function filterBySize($from, $to)
+    {
+        if ($from > 0) {
+            $this->query->andWhere('fv.fvSize >= :fvSizeFrom');
+            $this->query->setParameter('fvSizeFrom', $from * 1024);
+        }
+        if ($to > 0) {
+            $this->query->andWhere('fv.fvSize <= :fvSizeTo');
+            $this->query->setParameter('fvSizeTo', $to * 1024);
+        }
+    }
+
+
+    /**
+     * Filters by "keywords" (which searches everything including filenames,
+     * title, folder names, etc....
+     *
+     * @param string $keywords
+     */
+
+    public function filterByKeywords($keywords)
+    {
+        $expressions = [
+            $this->query->expr()->like('fv.fvFilename', ':keywords'),
+            $this->query->expr()->like('fv.fvDescription', ':keywords'),
+            $this->query->expr()->like('treeNodeName', ':keywords'),
+            $this->query->expr()->like('fv.fvTags', ':keywords'),
+            $this->query->expr()->eq('uName', ':keywords'),
+        ];
+        $keys = FileKey::getSearchableIndexedList();
+        foreach ($keys as $ak) {
+            $cnt = $ak->getController();
+            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+        }
+
+        $expr = $this->query->expr();
+        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
+        $this->query->setParameter('keywords', '%' . $keywords . '%');
+
     }
 
     public function deliverQueryObject()
