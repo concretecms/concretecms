@@ -114,7 +114,7 @@ if ($key !== null) {
                 <?php
                 if ($key && $key->isAttributeKeySearchable()) {
                     ?>
-                    <div class="alert alert-danger small hide" id="akIsSearchable-warning">
+                    <div class="alert alert-danger small d-none" id="akIsSearchable-warning">
                         <?= t(
                             'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
                             '<strong>' . t('Index Search Engine - All') . '</strong>'
@@ -124,7 +124,7 @@ if ($key !== null) {
                     $(document).ready(function() {
                         $('#akIsSearchable')
                             .on('change', function() {
-                                $('#akIsSearchable-warning').toggleClass('hide', $(this).is(':checked'))
+                                $('#akIsSearchable-warning').toggleClass('d-none', $(this).is(':checked'))
                             })
                             .trigger('change')
                         ;
