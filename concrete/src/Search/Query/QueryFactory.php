@@ -1,7 +1,10 @@
 <?php
+
 namespace Concrete\Core\Search\Query;
 
 use Concrete\Core\Entity\Search\Query;
+use Concrete\Core\Entity\Search\SavedSearch;
+use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,6 +20,46 @@ class QueryFactory
 {
 
     /**
+     * @param $method
+     * @return array
+     */
+    private function getRequestData($request, $method): array
+    {
+        $vars = $method == Request::METHOD_POST ? $request->request->all() : $request->query->all();
+        return $vars;
+    }
+
+    /**
+     * Creates the default query object for a particular search provider.
+     *
+     * @param ProviderInterface $searchProvider
+     * @param Request $request
+     * @param FieldInterface[]
+     * @param string $method
+     * @return Query
+     */
+    public function createDefaultQuery(
+        ProviderInterface $searchProvider,
+        Request $request,
+        $method = Request::METHOD_GET,
+        $fields = []
+    )
+    {
+        $vars = $this->getRequestData($request, $method);
+        $query = new Query();
+        foreach($fields as $field) {
+            $field->loadDataFromRequest($vars);
+        }
+
+        $set = $searchProvider->getDefaultColumnSet();
+        $query->setFields($fields);
+        $query->setColumns($set);
+        $query->setItemsPerPage($searchProvider->getItemsPerPage());
+
+        return $query;
+    }
+
+    /**
      * Creates a Query object from the request of the standard Advanced Search dialog. This is the dialog that includes
      * the stackable filters, customizable columns, items per page, etc...
      *
@@ -28,7 +71,7 @@ class QueryFactory
     public function createFromAdvancedSearchRequest(ProviderInterface $searchProvider, Request $request, $method = Request::METHOD_POST)
     {
         $query = new Query();
-        $vars = $method == Request::METHOD_POST ? $request->request->all() : $request->query->all();
+        $vars = $this->getRequestData($request, $method);
         $fields = $searchProvider->getFieldManager()->getFieldsFromRequest($vars);
 
         $set = $searchProvider->getBaseColumnSet();
@@ -50,6 +93,18 @@ class QueryFactory
         $query->setItemsPerPage($itemsPerPage);
 
         return $query;
+    }
+
+    /**
+     * Creates a query object from a saved search. You could easily just call `getQuery` on the
+     * preset directly; this is mainly here for code purity.
+     *
+     * @param SavedSearch $preset
+     * @return mixed
+     */
+    public function createFromSavedSearch(SavedSearch $preset)
+    {
+        return $preset->getQuery();
     }
 
 

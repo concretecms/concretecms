@@ -31,6 +31,8 @@ interface ProviderInterface
     function getCustomAttributeKeys();
     function getSearchResultFromQuery(Query $query);
 
+    function getItemsPerPage();
+
     /**
      * @return array
      */

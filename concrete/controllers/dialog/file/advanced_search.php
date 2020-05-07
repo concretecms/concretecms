@@ -51,16 +51,9 @@ class AdvancedSearch extends AdvancedSearchController
         return ManagerFactory::get('file');
     }
 
-    public function onAfterSavePreset(SavedSearch $search)
-    {
-        $filesystem = new Filesystem();
-        $folder = $filesystem->getRootFolder();
-        \Concrete\Core\Tree\Node\Type\SearchPreset::addSearchPreset($search, $folder);
-    }
-
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return (string) URL::to('/ccm/system/search/files/preset', $search->getID());
+        return $this->app->make('url')->to('/dashboard/files/search', 'search_preset', $search->getID());
     }
 
     public function getCurrentSearchBaseURL()

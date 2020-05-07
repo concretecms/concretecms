@@ -16,6 +16,8 @@ import './jquery-bootstrap-select-to-button';
 // Advanced search and search bars
 import './search/advanced-search-launcher';
 import './search/field-selector';
+import './search/preset-selector';
+import './search/results-table';
 
 // Custom UI for Pages
 import './translator';
@@ -38,6 +40,10 @@ var setupResultMessages = function() {
 
 var setupAdvancedSearchLinks = function() {
     $('a[data-launch-dialog=advanced-search]').concreteAdvancedSearchLauncher();
+}
+
+var setupAdvancedSearchResults = function() {
+    $('table[data-search-results=files]').concreteSearchResultsTable();
 }
 
 var setupFavorites = function() {
@@ -191,6 +197,7 @@ setupDialogs();
 setupSelects();
 setupDetailsURLs();
 setupFavorites();
+setupAdvancedSearchResults();
 setupAdvancedSearchLinks();
 setupHeaderMenu();
 setupPrivacyPolicy();

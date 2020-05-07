@@ -214,7 +214,7 @@ abstract class ItemList
     /**
      * @param StickyRequest $request
      */
-    public function setupAutomaticSorting(StickyRequest $request = null)
+    public function performAutomaticSorting(StickyRequest $request = null)
     {
         if ($this->enableAutomaticSorting) {
             if ($request) {
@@ -233,6 +233,12 @@ abstract class ItemList
                 }
             }
         }
+    }
+
+    protected function setupAutomaticSorting()
+    {
+        // Empty, meant to be extended. This separates the logic of making columns available for automatic sorting
+        // vs. actually automatically applying it by default within the list.
     }
 
     /**

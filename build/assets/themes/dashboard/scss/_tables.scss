@@ -4,6 +4,13 @@ div#ccm-dashboard-content {
 
     .ccm-search-results-table {
 
+      thead {
+        th {
+          &:first-child {
+            padding-left: $dashboard-content-padding-l;
+          }
+        }
+      }
       tbody {
         td {
           &:first-child {

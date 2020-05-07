@@ -25,6 +25,16 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     protected $searchSubFolders = false;
     protected $permissionsChecker;
 
+    /**
+     * Determines whether the list should automatically always sort by a column that's in the automatic sort.
+     * This is the default, but it's better to be able to use the AutoSortColumnRequestModifier on a search
+     * result class instead. In order to do that we disable the auto sort here, while still providing the array
+     * of possible auto sort columns.
+     *
+     * @var bool
+     */
+    protected $enableAutomaticSorting = false;
+
     protected $autoSortColumns = [
         'name',
         'dateModified',

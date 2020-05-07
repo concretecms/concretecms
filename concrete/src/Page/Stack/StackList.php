@@ -24,9 +24,9 @@ class StackList extends PageList
         $this->sortByName();
     }
 
-    public function setupAutomaticSorting(StickyRequest $request = null)
+    public function performAutomaticSorting(StickyRequest $request = null)
     {
-        parent::setupAutomaticSorting($request);
+        parent::performAutomaticSorting($request);
         if ($this->foldersFirst) {
             $previousOrderBy = $this->query->getQueryPart('orderBy');
             $this->query->orderBy('pt.ptHandle', 'desc');

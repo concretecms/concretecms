@@ -36,8 +36,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
             window.location.reload();
         });
-        ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
-            window.location.reload();
+        ConcreteEvent.subscribe('SavedPresetSubmit', function(e, url) {
+            window.location.href = url;
         });
     });
 </script>

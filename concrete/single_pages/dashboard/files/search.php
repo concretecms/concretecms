@@ -9,10 +9,18 @@ $fp = FilePermissions::getGlobal();
 if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
     <div class="table-responsive">
-        <table class="ccm-search-results-table">
+        <table class="ccm-search-results-table" data-search-results="files">
             <thead>
             <tr>
-                <th></th>
+                <th colspan="2">
+                    <span style="white-space: nowrap">
+                        <input type="checkbox" data-search-checkbox="select-all" />
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Dropdown</a>
+                        </div>
+                    </span>
+                </th>
                 <?php foreach ($result->getColumns() as $column) { ?>
                     <th class="<?=$column->getColumnStyleClass()?>">
                         <?php if ($column->isColumnSortable()) { ?>
@@ -28,6 +36,10 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             <?php
             foreach ($result->getItems() as $item) { ?>
                 <tr>
+                    <td class="ccm-search-results-checkbox">
+                        <input data-search-checkbox="individual" type="checkbox"
+                               data-node-id="<?=$item->getItem()->getTreeNodeID()?>" />
+                    </td>
                     <td class="ccm-search-results-icon">
                         <?=$item->getListingThumbnailImage()?>
                     </td>
