@@ -403,7 +403,7 @@ $form = Core::make('helper/form');
         if (is_object($set)) {
             $hidden = $set->isHiddenOnDevice($class);
         } ?>
-                            <button type="button" data-hide-on-device="<?=$class?>" class="btn btn-default <?php if (!$hidden) {
+                            <button type="button" data-hide-on-device="<?=$class?>" class="btn btn-secondary <?php if (!$hidden) {
             ?>active<?php
         } ?>"><i class="<?=$gf->getDeviceHideClassIconClass($class)?>"></i></button>
                         <?php

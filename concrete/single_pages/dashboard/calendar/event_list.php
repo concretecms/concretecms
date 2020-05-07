@@ -14,9 +14,9 @@ $topic_id = Request::getInstance()->get('topic_id');
     <div class="form-group">
         <label class="control-label" for="query"><?= t('Search') ?></label>
         <div class="input-group">
-            <?= $form->text('query', array('placeholder' => t('Keywords'))) ?>
+            <?= $form->text('query', array('placeholder' => t('Keywords'), 'class' => 'form-control')) ?>
 
-            <div class="input-group-btn" style="z-index: 501;">
+            <div class="btn-group" role="group" style="z-index: 501;">
 
                 <?php if (isset($topics) && is_array($topics)) { ?>
 
@@ -30,8 +30,9 @@ $topic_id = Request::getInstance()->get('topic_id');
 
                 <?php } ?>
 
-                <button type="submit" class="btn btn-default"><?= t('Search') ?></button>
-
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-outline-secondary"><?= t('Search') ?></button>
+                </div>
             </div>
 
         </div><!-- /input-group -->
@@ -42,42 +43,39 @@ $topic_id = Request::getInstance()->get('topic_id');
 
 <?php if (count($events)) { ?>
 
-    <div class="table-responsive">
-        <table class="ccm-search-results-table" data-table="event-list">
-            <thead>
+    <table class="ccm-search-results-table" data-table="event-list">
+        <thead>
+        <tr>
+            <th></th>
+            <th><span><?= t('Name') ?></span></th>
+            <th><span><?= t('Date/Time') ?></span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($events as $occurrence) {
+            $menu = new \Concrete\Core\Calendar\Event\Menu\EventOccurrenceMenu($occurrence);
+            $event = $occurrence->getEvent();
+            $color = $linkFormatter->getEventOccurrenceBackgroundColor($occurrence);
+            $date = $dateFormatter->getOccurrenceDateString($occurrence);
+            ?>
             <tr>
-                <th></th>
-                <th><span><?= t('Name') ?></span></th>
-                <th><span><?= t('Date/Time') ?></span></th>
-                <th></th>
+                <td><span class="event-swatch" style="background-color: <?= $color ?>"></span></td>
+                <td class="ccm-search-results-name">
+                    <?php
+                    print $menu->getMenuElement();
+                    print h($event->getName());
+
+                    if (!$occurrence->getVersion()->isApproved()) {
+                        print ' <i class="fa fa-exclamation-circle"></i>';
+                    }
+                    ?>
+
+                </td>
+                <td class="ccm-search-results-date"><?= $date ?></td>
             </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($events as $occurrence) {
-                $menu = new \Concrete\Core\Calendar\Event\Menu\EventOccurrenceMenu($occurrence);
-                $event = $occurrence->getEvent();
-                $color = $linkFormatter->getEventOccurrenceBackgroundColor($occurrence);
-                $date = $dateFormatter->getOccurrenceDateString($occurrence);
-                ?>
-                <tr>
-                    <td><span class="event-swatch" style="background-color: <?= $color ?>"></span></td>
-                    <td class="ccm-search-results-name">
-                        <?php
-                        print $menu->getMenuElement();
-                        print h($event->getName());
-
-                        if (!$occurrence->getVersion()->isApproved()) {
-                            print ' <i class="fa fa-exclamation-circle"></i>';
-                        }
-                        ?>
-
-                    </td>
-                    <td class="ccm-search-results-date"><?= $date ?></td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
-    </div>
+        <?php } ?>
+        </tbody>
+    </table>
 
     <?php if (is_object($pagination) && $pagination->haveToPaginate()) { ?>
         <div class="ccm-search-results-pagination"><?= $pagination->renderDefaultView() ?></div>

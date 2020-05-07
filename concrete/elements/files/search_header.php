@@ -33,7 +33,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php
         if (!empty($itemsPerPageOptions)) { ?>
             <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="selected-option"><?= $itemsPerPage; ?></span> <span class="caret"></span></button>
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="selected-option"><?= $itemsPerPage; ?></span> <span class="caret"></span></button>
                 <ul class="dropdown-menu" data-action="<?= URL::to('/ccm/system/file/folder/contents'); ?>">
                     <li class="dropdown-header"><?=t('Items per page')?></li>
                     <?php foreach ($itemsPerPageOptions as $itemsPerPageOption) { ?>
@@ -71,8 +71,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </div>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-            <button class="btn btn-primary pull-right" data-dialog-action="submit"><?=t('Add Folder')?></button>
+            <button class="btn btn-secondary float-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+            <button class="btn btn-primary float-right" data-dialog-action="submit"><?=t('Add Folder')?></button>
         </div>
     </div>
 

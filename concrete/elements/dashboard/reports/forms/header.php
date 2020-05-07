@@ -39,7 +39,7 @@
  <?php } else { ?>
 
     <?php if (!empty($supportsLegacy)): ?>
-        <a href="<?=URL::to('/dashboard/reports/forms/legacy')?>" class="btn btn-default"><?=t('Legacy Forms')?></a>
+        <a href="<?=URL::to('/dashboard/reports/forms/legacy')?>" class="btn btn-secondary"><?=t('Legacy Forms')?></a>
     <?php endif ?>
 
 <?php } ?>

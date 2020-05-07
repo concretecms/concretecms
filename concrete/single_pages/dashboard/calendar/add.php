@@ -56,9 +56,9 @@ if ($calendar !== null) {
 
                 <div class="form-group">
                     <?= $form->label('calendarName', t('Calendar Name')) ?>
-                    <?= $form->text('calendarName', $calendarName, ['placeholder' => t('Choose a descriptive name for your calendar.')]) ?>
+                    <?= $form->text('calendarName', $calendarName, ['placeholder' => t('Choose a descriptive name for your calendar.'), ["class" => "form-control"]]) ?>
 
-                    <div class="help-block">
+                    <div class="form-text text-muted">
                         <?= t('Each separate calendar gets a complete separate list of events. Each front-end block can display content from one or multiple calendars.') ?>
                     </div>
                 </div>
@@ -79,7 +79,7 @@ if ($calendar !== null) {
                         '' => t('Do not link to a "More Details" page.'),
                         'create' => t('Create and link to a new "More Details" page.'),
                         'associate' => t('Link to an existing page')
-                    ], $enableMoreDetails)
+                    ], $enableMoreDetails, ["class" => "form-control"])
                     ?>
                 </div>
 
@@ -92,13 +92,13 @@ if ($calendar !== null) {
 
                     <div class="form-group">
                         <?= $form->label('eventPageTypeID', t('Page Type')) ?>
-                        <?= $form->select('eventPageTypeID', $types, $eventPageTypeID) ?>
+                        <?= $form->select('eventPageTypeID', $types, $eventPageTypeID, ["class" => "form-control"]) ?>
                     </div>
 
                     <div class="form-group">
                         <?= $form->label('eventPageAttributeKeyHandle', t('Calendar Event Attribute')) ?>
                         <?= $form->select('eventPageAttributeKeyHandle', $attributeKeys,
-                            $eventPageAttributeKeyHandle) ?>
+                            $eventPageAttributeKeyHandle, ["class" => "form-control"]) ?>
                     </div>
 
                 </div>
@@ -108,9 +108,9 @@ if ($calendar !== null) {
                         <?= $form->label('eventPageAssociatedID', t('Link to Page')) ?>
                         <?= Core::make('helper/form/page_selector')->selectPage('eventPageAssociatedID',
                             isset($eventPageAssociatedID) ? $eventPageAssociatedID : null) ?>
-                    </div>
-                    <div class="help-block">
-                        <?= t('<strong>Important</strong>: The page that you link to should contain a Calendar Event block or custom code that can render a specific calendar occurrence.') ?>
+                        <div class="form-text text-muted">
+                            <?= t('<strong>Important</strong>: The page that you link to should contain a Calendar Event block or custom code that can render a specific calendar occurrence.') ?>
+                        </div>
                     </div>
                 </div>
 
