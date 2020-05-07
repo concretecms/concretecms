@@ -8,7 +8,7 @@ $current = isset($query) ? $query->getColumns() : $provider->getDefaultColumnSet
 $all = $provider->getAllColumnSet();
 $list = $provider->getCustomAttributeKeys();
 $itemsPerPageOptions = $provider->getItemsPerPageOptions();
-$itemsPerPage = $provider->getItemsPerPage();
+$itemsPerPage = isset($query) ? $query->getItemsPerPage() : $provider->getItemsPerPage();
 $form = Core::make('helper/form');
 
 if (!isset($type)) {

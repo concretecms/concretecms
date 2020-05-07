@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Entity\Search\SavedFileSearch;
+use Concrete\Core\File\Search\Menu\MenuFactory;
 use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -53,6 +54,8 @@ class Search extends DashboardPageController
         $result = $resultFactory->createFromQuery($provider, $query);
         $headerMenu->getElementController()->setQuery($query);
         $headerSearch->getElementController()->setQuery($query);
+
+        $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
 
         $this->set('result', $result);
         $this->set('headerMenu', $headerMenu);

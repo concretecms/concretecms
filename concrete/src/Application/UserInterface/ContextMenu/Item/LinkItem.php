@@ -27,9 +27,8 @@ class LinkItem extends AbstractItem
 
     public function getItemElement()
     {
-        $element = new Element('li');
-        $link = new Link($this->link, $this->value, $this->attributes);
-        $element->appendChild($link);
+        $this->attributes['class'] = 'dropdown-item';
+        $element = new Link($this->link, $this->value, $this->attributes);
         return $element;
     }
 

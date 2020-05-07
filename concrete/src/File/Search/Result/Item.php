@@ -8,6 +8,7 @@ use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
+use Concrete\Core\Tree\Node\Type\File as FileNode;
 
 class Item extends SearchResultItem
 {
@@ -26,6 +27,18 @@ class Item extends SearchResultItem
             $icon = $item->getTreeNodeFileObject()->getListingThumbnailImage();
         }
         return $icon;
+    }
+
+    /**
+     * Returns an integer for a file ID if the result is a file, otherwise returns null.
+     * @return int
+     */
+    public function getResultFileID()
+    {
+        if ($this->getItem() instanceof FileNode) {
+            return $this->getItem()->getTreeNodeFileID();
+        }
+        return null;
     }
 
     protected function populateDetails($item)

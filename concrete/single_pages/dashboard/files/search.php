@@ -1,6 +1,8 @@
 <?php
 
-use Concrete\Core\View\View;
+/**
+ * @var $resultsBulkMenu \Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu
+ */
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -12,14 +14,25 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
         <table class="ccm-search-results-table" data-search-results="files">
             <thead>
             <tr>
-                <th colspan="2">
-                    <span style="white-space: nowrap">
-                        <input type="checkbox" data-search-checkbox="select-all" />
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Dropdown</a>
+
+                <th colspan="2" class="ccm-search-results-bulk-selector">
+
+                    <div class="btn-group">
+                        <span class="btn btn-secondary" data-search-checkbox-button="select-all">
+                            <input type="checkbox" data-search-checkbox="select-all" />
+                        </span>
+                        <button type="button" disabled="disabled" data-search-checkbox-button="dropdown"
+                                class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" data-reference="parent">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div data-search-menu="dropdown">
+                            <?php
+                            echo $resultsBulkMenu->getMenuElement();
+                            ?>
                         </div>
-                    </span>
+                    </div>
+
+
                 </th>
                 <?php foreach ($result->getColumns() as $column) { ?>
                     <th class="<?=$column->getColumnStyleClass()?>">
@@ -38,7 +51,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                 <tr>
                     <td class="ccm-search-results-checkbox">
                         <input data-search-checkbox="individual" type="checkbox"
-                               data-node-id="<?=$item->getItem()->getTreeNodeID()?>" />
+                               data-node-type="<?=$item->getItem()->getTreeNodeTypeHandle()?>"
+                               data-item-id="<?=$item->getResultFileID()?>" />
                     </td>
                     <td class="ccm-search-results-icon">
                         <?=$item->getListingThumbnailImage()?>

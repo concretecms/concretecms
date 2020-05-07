@@ -18,6 +18,7 @@ import './search/advanced-search-launcher';
 import './search/field-selector';
 import './search/preset-selector';
 import './search/results-table';
+import './file-manager/file-manager';
 
 // Custom UI for Pages
 import './translator';
@@ -43,7 +44,16 @@ var setupAdvancedSearchLinks = function() {
 }
 
 var setupAdvancedSearchResults = function() {
-    $('table[data-search-results=files]').concreteSearchResultsTable();
+    $('table[data-search-results]').each(function() {
+        switch($(this).attr('data-search-results')) {
+            case "files":
+                $(this).concreteFileManagerTable();
+                break;
+            default:
+                $(this).concreteSearchResultsTable();
+                break;
+        }
+    })
 }
 
 var setupFavorites = function() {
