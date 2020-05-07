@@ -51,7 +51,7 @@ class Name extends DashboardSitePageController
                 $this->redirect('/dashboard/system/basics/name', 'sitename_saved');
             }
         } else {
-            $this->set('error', array($this->token->getErrorMessage()));
+            $this->error->add($this->token->getErrorMessage());
         }
         $this->view();
     }
