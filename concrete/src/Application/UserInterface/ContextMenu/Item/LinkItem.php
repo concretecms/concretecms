@@ -27,7 +27,11 @@ class LinkItem extends AbstractItem
 
     public function getItemElement()
     {
-        $this->attributes['class'] = 'dropdown-item';
+        $class = 'dropdown-item';
+        if (!empty($this->attributes['class'])) {
+            $class .= ' ' . $this->attributes['class'];
+        }
+        $this->attributes['class'] = $class;
         $element = new Link($this->link, $this->value, $this->attributes);
         return $element;
     }

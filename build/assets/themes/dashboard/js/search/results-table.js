@@ -12,11 +12,13 @@
         my.$selectAll = my.$element.find('input[data-search-checkbox=select-all]')
         my.$selectAllDropdownButton = my.$element.find('[data-search-checkbox-button=dropdown]');
         my.$selectAllDropdownMenu = my.$element.find('[data-search-menu=dropdown]');
+        my.$searchResultMenu = my.$element.find('[data-menu=search-result]');
         my.checkedCheckboxes = '[data-search-checkbox=individual]:checked';
         my.options = options
 
         my.activateSelectAllCheckbox();
         my.activateIndividualCheckboxes();
+        my.activateSearchResultMenus();
     }
 
     ConcreteSearchResultsTable.prototype.activateSelectAllCheckbox = function() {
@@ -57,6 +59,10 @@
             var type = $(this).attr('data-bulk-action-type')
             my.handleSelectedBulkAction(value, type, $(this), my.getSelectedResultIDs())
         })
+    }
+
+    ConcreteSearchResultsTable.prototype.activateSearchResultMenus = function() {
+        return;
     }
 
     ConcreteSearchResultsTable.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {

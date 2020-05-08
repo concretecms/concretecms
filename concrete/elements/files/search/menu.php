@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </svg>
             </a>
         </li>
-        <li><a class="ccm-hover-icon" title="<?= t('New Folder') ?>" href="#" data-dialog="add-file-manager-folder">
+        <li><a class="ccm-hover-icon" title="<?= t('New Folder') ?>" href="#" data-launch-dialog="add-file-manager-folder">
                 <svg width="20" height="16">
                     <use xlink:href="#icon-create-folder"/>
                 </svg>
@@ -73,3 +73,39 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
 
 </div>
+
+<script type="text/javascript">
+    $(function() {
+        $('a[data-launch-dialog=add-file-manager-folder]').on('click', function (e) {
+            e.preventDefault()
+            $.fn.dialog.open({
+                width: 550,
+                height: 'auto',
+                modal: true,
+                title: '<?=t('Add Folder')?>',
+                href: '<?=URL::to('/ccm/system/dialogs/tree/node/add/file_folder')?>'
+            })
+        })
+        $('a[data-launch-dialog=navigate-file-manager]').on('click', function(e) {
+            e.preventDefault()
+            $.fn.dialog.open({
+                width: '560',
+                height: '500',
+                modal: true,
+                title: '<?=t('Jump to Folder')?>',
+                href: '<?=URL::to('/ccm/system/dialogs/file/jump_to_folder')?>'
+            })
+        })
+        $('a[data-dialog=add-files]').on('click', function(e) {
+            e.preventDefault()
+            $.fn.dialog.open({
+                width: 620,
+                height: 400,
+                modal: true,
+                title: '<?=t('Add Files')?>',
+                href: '<?=URL::to('/ccm/system/dialogs/file/import')?>'
+            })
+        })
+    });
+
+</script>

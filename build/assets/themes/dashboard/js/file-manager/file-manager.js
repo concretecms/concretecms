@@ -42,6 +42,28 @@
         })
     }
 
+    ConcreteFileManagerTable.prototype.activateSearchResultMenus = function() {
+        var my = this;
+        my.$searchResultMenu.find('a[data-file-manager-action=download]').on('click', function(e) {
+            var fID = $(this).data('file-id');
+            e.preventDefault()
+            window.frames['ccm-file-manager-download-target'].location =
+                CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fID
+        })
+        my.$searchResultMenu.find('a[data-file-manager-action=duplicate]').on('click', function() {
+            var fID = $(this).data('file-id');
+            $.concreteAjax({
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
+                data: { fID: fID },
+                success: function(r) {
+                    window.location.reload();
+                }
+            })
+            return false
+        })
+    }
+
+
     ConcreteFileManagerTable.prototype.setupFileDownloads = function() {
         var my = this
         if (!$('#ccm-file-manager-download-target').length) {

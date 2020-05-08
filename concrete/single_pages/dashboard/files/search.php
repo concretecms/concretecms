@@ -17,7 +17,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
                 <th colspan="2" class="ccm-search-results-bulk-selector">
 
-                    <div class="btn-group">
+                    <div class="btn-group dropdown">
                         <span class="btn btn-secondary" data-search-checkbox-button="select-all">
                             <input type="checkbox" data-search-checkbox="select-all" />
                         </span>
@@ -47,8 +47,13 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             </thead>
             <tbody>
             <?php
-            foreach ($result->getItems() as $item) { ?>
-                <tr>
+            foreach ($result->getItems() as $item) {
+                $detailsURL = '#';
+                if ($item->getItem() instanceof \Concrete\Core\Tree\Node\Type\File) {
+                    $detailsURL = URL::to('/dashboard/files/details', 'view', $item->getItem()->getTreeNodeFileID());
+                }
+                ?>
+                <tr data-details-url="<?=$detailsURL?>">
                     <td class="ccm-search-results-checkbox">
                         <input data-search-checkbox="individual" type="checkbox"
                                data-node-type="<?=$item->getItem()->getTreeNodeTypeHandle()?>"
@@ -67,6 +72,17 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                         $i++;
                     }
                     ?>
+                    <td class="ccm-search-results-menu-launcher">
+                        <div class="dropdown" data-menu="search-result">
+                            <button class="btn btn-icon" data-boundary="viewport" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg width="16" height="4"><use xlink:href="#icon-menu-launcher" /></svg>
+                            </button>
+                            <?php
+                            $menu = $item->getItem()->getTreeNodeMenu();
+                            echo $menu->getMenuElement();
+                            ?>
+                        </div>
+                    </td>
                 </tr>
             <?php } ?>
             </tbody>
