@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Entity\Search\SavedFileSearch;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Search\Field\Field\FolderField;
 use Concrete\Core\File\Search\Menu\MenuFactory;
 use Concrete\Core\File\Search\SearchProvider;
@@ -15,6 +16,7 @@ use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
 use Concrete\Core\Search\Query\Modifier\ItemsPerPageRequestModifier;
 use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
+use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -74,26 +76,14 @@ class Search extends DashboardPageController
     }
 
     /**
-     * @param Query $query
-     * @void
+     * @param Result $result
      */
-    protected function renderSearchQuery(Query $query)
+    protected function renderSearchResult(Result $result)
     {
-        $provider = $this->app->make(SearchProvider::class);
-
         $headerMenu = $this->getHeaderMenu();
         $headerSearch = $this->getHeaderSearch();
-
-        $resultFactory = $this->app->make(ResultFactory::class);
-        $queryModifier = $this->app->make(QueryModifier::class);
-
-        $queryModifier->addModifier(new AutoSortColumnRequestModifier($provider, $this->request, Request::METHOD_GET));
-        $queryModifier->addModifier(new ItemsPerPageRequestModifier($provider, $this->request, Request::METHOD_GET));
-        $query = $queryModifier->process($query);
-
-        $result = $resultFactory->createFromQuery($provider, $query);
-        $headerMenu->getElementController()->setQuery($query);
-        $headerSearch->getElementController()->setQuery($query);
+        $headerMenu->getElementController()->setQuery($result->getQuery());
+        $headerSearch->getElementController()->setQuery($result->getQuery());
 
         $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
 
@@ -101,6 +91,23 @@ class Search extends DashboardPageController
         $this->set('headerMenu', $headerMenu);
         $this->set('headerSearch', $headerSearch);
         $this->setThemeViewTemplate('full.php');
+    }
+
+    /**
+     * @param Query $query
+     * @return Result
+     */
+    protected function createSearchResult(Query $query)
+    {
+        $provider = $this->app->make(SearchProvider::class);
+        $resultFactory = $this->app->make(ResultFactory::class);
+        $queryModifier = $this->app->make(QueryModifier::class);
+
+        $queryModifier->addModifier(new AutoSortColumnRequestModifier($provider, $this->request, Request::METHOD_GET));
+        $queryModifier->addModifier(new ItemsPerPageRequestModifier($provider, $this->request, Request::METHOD_GET));
+        $query = $queryModifier->process($query);
+
+        return $resultFactory->createFromQuery($provider, $query);
     }
 
     protected function getSearchKeywordsField()
@@ -112,10 +119,31 @@ class Search extends DashboardPageController
         return new KeywordsField($keywords);
     }
 
+    protected function getSearchFolderField(FileFolder $folder)
+    {
+        // This method is called in two spots: 1. the basic search, 2. when you browser to a sub folder.
+        // In both cases, if keywords are present to further filter the search, we want to not only search
+        // the folder you're specifying, but ALSO the sub-folders.
+        // Note, this is separate from any folders specified within advanced search.
+        if ($this->request->query->has('keywords')) {
+            $field = new FolderField($folder, true);
+        } else {
+            $field = new FolderField($folder);
+        }
+        return $field;
+    }
+
     public function view()
     {
-        $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [$this->getSearchKeywordsField()]);
-        $this->renderSearchQuery($query);
+        $filesystem = $this->app->make(Filesystem::class);
+        $rootFolder = $filesystem->getRootFolder();
+
+        $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
+            $this->getSearchKeywordsField(),
+            $this->getSearchFolderField($rootFolder)
+        ]);
+        $result = $this->createSearchResult($query);
+        $this->renderSearchResult($result);
     }
 
     public function advanced_search()
@@ -132,7 +160,8 @@ class Search extends DashboardPageController
             $preset = $this->entityManager->find(SavedFileSearch::class, $presetID);
             if ($preset) {
                 $query = $this->getQueryFactory()->createFromSavedSearch($preset);
-                $this->renderSearchQuery($query);
+                $result = $this->createSearchResult($query);
+                $this->renderSearchResult($result);
 
                 $factory = $this->createBreadcrumbFactory();
                 $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $preset));
@@ -150,11 +179,12 @@ class Search extends DashboardPageController
             if ($folder && $folder instanceof FileFolder) {
                 $query = $this->getQueryFactory()->createQuery(
                     $this->getSearchProvider(), [
-                        new FolderField($folder),
                         $this->getSearchKeywordsField(),
+                        $this->getSearchFolderField($folder),
                     ]
                 );
-                $this->renderSearchQuery($query);
+                $result = $this->createSearchResult($query);
+                $this->renderSearchResult($result);
 
                 $factory = $this->createBreadcrumbFactory();
                 $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $folder));

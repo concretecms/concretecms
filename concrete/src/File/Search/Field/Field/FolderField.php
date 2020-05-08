@@ -16,10 +16,11 @@ use Concrete\Core\User\User;
 class FolderField extends AbstractField
 {
 
-    public function __construct(FileFolder $folder = null)
+    public function __construct(FileFolder $folder = null, $searchSubFolders = false)
     {
         if ($folder) {
             $this->data['folderID'] = $folder->getTreeNodeID();
+            $this->data['searchSubFolder'] = $searchSubFolders;
             $this->isLoaded = true;
         }
     }
@@ -49,6 +50,9 @@ class FolderField extends AbstractField
             $folder = Node::getByID($folderID);
             if ($folder && $folder instanceof FileFolder) {
                 $list->filterByParentFolder($folder);
+                if ($this->data['searchSubFolder']) {
+                    $list->enableSubFolderSearch();
+                }
             }
         }
     }

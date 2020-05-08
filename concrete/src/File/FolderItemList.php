@@ -96,7 +96,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $this->query->select('distinct n.treeNodeID')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as name')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as dateModified')
-            ->addSelect('case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end as type')
+            ->addSelect('case when nt.treeNodeTypeHandle=\'file_folder\' then 1 else (10 + fvType) end as type')
             ->addSelect('fv.fvSize as size')
             ->from('TreeNodes', 'n')
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
@@ -232,10 +232,31 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function deliverQueryObject()
     {
+        $filesystem = new Filesystem();
+        $rootFolder = $filesystem->getRootFolder();
+
         if (!isset($this->parent)) {
-            $filesystem = new Filesystem();
-            $this->parent = $filesystem->getRootFolder();
+            $this->parent = $rootFolder;
         }
+
+        // If there is no parent set, OR if we are set to search the root of the site and all sub-folders (which
+        // effectively means that there SHOULD be no parents set, then we simply return the deliveryQueryObject
+        // of the parent, because there is no need for any further filtering.
+        if (isset($this->parent) &&
+            $this->parent->getTreeNodeID() == $rootFolder->getTreeNodeID() && $this->searchSubFolders) {
+
+            // Before we can simply return, however, we need to ensure we're only returning nodes that the
+            // file manager cares about.
+            $this->query->andWhere(
+                $this->query->expr()->in('nt.treeNodeTypeHandle', array_map([$this->query->getConnection(), 'quote'], ['file', 'file_folder']))
+            );
+            // if we don't add this we're gonna see the File Manager node.
+            $this->query->andWhere('n.treeNodeParentID > 0');
+
+            return parent::deliverQueryObject();
+        }
+
+        // If we've gotten down here, we have a parent object.
 
         if ($this->searchSubFolders) {
             // determine how many subfolders are within the parent folder.

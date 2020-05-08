@@ -110,29 +110,8 @@ class SearchProvider extends AbstractSearchProvider
      */
     public function getItemsPerPage()
     {
-        $searchRequest = new StickyRequest('file_manager_folder');
-        $searchParams = $searchRequest->getSearchRequest();
-        $node = empty($searchParams['folder']) ? null : Node::getByID($searchParams['folder']);
-
-        if (($node instanceof SearchPreset)) {
-            $searchObj = $node->getSavedSearchObject();
-
-            return $searchObj->getQuery()->getItemsPerPage();
-        }
-
-        $sessionQuery = $this->getSessionCurrentQuery();
-        if ($sessionQuery instanceof \Concrete\Core\Entity\Search\Query) {
-            return (int) $sessionQuery->getItemsPerPage();
-        }
-
-        $itemsPerPageSession = $this->getItemsPerPageSession();
-        if (!empty($itemsPerPageSession)) {
-            return $itemsPerPageSession;
-        }
-
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-
         return $config->get('concrete.file_manager.results');
     }
 
@@ -149,41 +128,7 @@ class SearchProvider extends AbstractSearchProvider
         if (!empty($options)) {
             return $options;
         }
-
         return parent::getItemsPerPageOptions();
-    }
-
-    /**
-     * Set items per page option in session.
-     *
-     * @param int $itemsPerPage
-     */
-    public function setItemsPerPageSession($itemsPerPage)
-    {
-        $this->session->set('search/' . $this->getSessionNamespace() . '/items_per_page', $itemsPerPage);
-    }
-
-    /**
-     * Retrieve the items per page option from the session.
-     *
-     * @return int|null
-     */
-    public function getItemsPerPageSession()
-    {
-        $variable = 'search/' . $this->getSessionNamespace() . '/items_per_page';
-        if ($this->session->has($variable)) {
-            return (int) $this->session->get($variable);
-        }
-
-        return null;
-    }
-
-    /**
-     * Clear the item per page option from the session.
-     */
-    public function clearItemsPerPageSession()
-    {
-        $this->session->remove('search/' . $this->getSessionNamespace() . '/items_per_page');
     }
 
     /**
