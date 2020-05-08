@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\File\Search\Result;
 
-use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
 use Concrete\Core\Search\Result\Result as SearchResult;
 
 class Result extends SearchResult

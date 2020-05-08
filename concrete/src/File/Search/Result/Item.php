@@ -29,6 +29,22 @@ class Item extends SearchResultItem
         return $icon;
     }
 
+    public function getDetailsURL()
+    {
+        if ($this->getItem() instanceof FileNode) {
+            return app('url/resolver/path')->resolve(['/dashboard/files/details', 'view',
+                $this->getItem()->getTreeNodeFileID()]
+            );
+        }
+        if ($this->getItem() instanceof FileFolder) {
+            return app('url/resolver/path')->resolve(['/dashboard/files/search', 'folder',
+                    $this->getItem()->getTreeNodeID()]
+            );
+        }
+
+        return '#';
+    }
+
     /**
      * Returns an integer for a file ID if the result is a file, otherwise returns null.
      * @return int

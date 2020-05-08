@@ -21,7 +21,7 @@ class SizeColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return ['\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getSize'];
+        return ['\Concrete\Core\File\Search\ColumnSet\Available', 'getSize'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)

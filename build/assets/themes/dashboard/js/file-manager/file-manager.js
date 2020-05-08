@@ -61,6 +61,7 @@
             })
             return false
         })
+        ConcreteTree.activateMenu(my.$searchResultMenu);
     }
 
 

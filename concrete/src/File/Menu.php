@@ -7,13 +7,11 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Entity\File\File as FileEntity;
-use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
 class Menu extends DropdownMenu
 {
 
     protected $menuAttributes = ['class' => 'ccm-popover-file-menu'];
-    protected $minItemThreshold = 2; // because we already have clear and the divider, we just hide them with JS
 
     public function __construct(FileEntity $file)
     {

@@ -4,14 +4,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-header-search-form ccm-ui" data-header="file-manager">
 
-    <form method="get" class="form-inline" action="<?=$view->action('view')?>">
+    <form method="get" class="form-inline" action="<?=$headerSearchAction?>">
 
         <a href="#" data-launch-dialog="advanced-search" class="ccm-header-launch-advanced-search"
            <?php if (isset($query)) { ?>
-               data-advanced-search-query='<?=$query?>'
-           <?php } ?>
+                data-advanced-search-query="advanced-search-query"
+            <?php } ?>
            data-advanced-search-dialog-url="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search') ?>">
             <?= t('Advanced') ?>
+
+
+            <?php if (isset($query)) { ?>
+                <script type="text/concrete-query" data-query="advanced-search-query">
+                    <?=$query?>
+                </script>
+            <?php } ?>
+
         </a>
 
         <div class="ccm-header-search-form-input input-group">
@@ -40,4 +48,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
             window.location.href = url;
         });
     });
+
+
 </script>

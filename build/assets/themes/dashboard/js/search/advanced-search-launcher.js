@@ -11,8 +11,8 @@
         my.$element.on('click', function() {
             var url = $(this).data('advanced-search-dialog-url')
             if (my.$element.data('advanced-search-query')) {
-                var query = $element.attr('data-advanced-search-query')
-                url = url + '?query=' + query;
+                var query = my.$element.find('script[data-query=' +
+                    my.$element.data('advanced-search-query') + ']').html();
             }
             jQuery.fn.dialog.open({
                 href: url,
@@ -20,6 +20,9 @@
                 title: ccmi18n.advancedSearch,
                 width: 500,
                 height: 500,
+                data: {
+                    'query': query
+                },
                 onOpen: function() {
                     $('div[data-component=search-field-selector]').concreteSearchFieldSelector()
                 }

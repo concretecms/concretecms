@@ -21,7 +21,7 @@ class NameColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return ['\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getName'];
+        return ['\Concrete\Core\File\Search\ColumnSet\Available', 'getName'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)

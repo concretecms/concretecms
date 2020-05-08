@@ -3,12 +3,11 @@ namespace Concrete\Core\File\Search\Menu;
 
 use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
 
 class MenuFactory
 {
 
-    public function createBulkMenu(): Menu
+    public function createBulkMenu(): DropdownMenu
     {
         $menu = new DropdownMenu();
         $menu->addItem(new LinkItem('#', t('Download'), [

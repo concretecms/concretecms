@@ -21,7 +21,7 @@ class DateModifiedColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return ['\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getDateModified'];
+        return ['\Concrete\Core\File\Search\ColumnSet\Available', 'getDateModified'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)

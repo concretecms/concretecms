@@ -217,35 +217,6 @@ class FileFolder extends TreeNode
         return parent::getTreeNodeName();
     }
 
-    public function getFolderItemList(User $u = null, Request $request)
-    {
-        $available = new FolderSet();
-        $sort = false;
-        $list = new FolderItemList();
-        $list->filterByParentFolder($this);
-        if ($u !== null) {
-            if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
-                if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
-                    $sort = [$column, $direction];
-                    $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
-                }
-            } else {
-                $sort = $u->config(sprintf('file_manager.sort.%s', $this->getTreeNodeID()));
-                if ($sort) {
-                    $sort = json_decode($sort);
-                }
-            }
-            if (is_array($sort)) {
-                if ($sortColumn = $available->getColumnByKey($sort[0])) {
-                    $sortColumn->setColumnSortDirection($sort[1]);
-                    $list->sortBySearchColumn($sortColumn);
-                }
-            }
-        }
-
-        return $list;
-    }
-
     /**
      * Get the first child folder this folder that has a specific name.
      *

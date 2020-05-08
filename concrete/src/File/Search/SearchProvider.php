@@ -98,9 +98,7 @@ class SearchProvider extends AbstractSearchProvider
      */
     public function getItemList()
     {
-        $folder = $this->filesystem->getRootFolder();
         $list = new FolderItemList();
-        $list->filterByParentFolder($folder);
         $list->setupAutomaticSorting();
         return $list;
     }

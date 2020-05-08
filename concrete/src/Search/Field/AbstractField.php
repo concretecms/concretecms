@@ -21,6 +21,14 @@ abstract class AbstractField implements FieldInterface
     protected $requestVariables = [];
 
     /**
+     * Determines whether the data is loaded into the field. If this is true, loadFromRequest will not
+     * repopulate from request.
+     *
+     * @var bool
+     */
+    protected $isLoaded = false;
+
+    /**
      * {@inheritdoc}
      *
      * @see FieldInterface::renderSearchField()
@@ -28,18 +36,6 @@ abstract class AbstractField implements FieldInterface
     public function renderSearchField()
     {
         return '';
-    }
-
-    /**
-     * Initialize the instance.
-     *
-     * @param array|mixed $data the current search data
-     */
-    public function __construct($data = null)
-    {
-        if (is_array($data)) {
-            $this->data = $data;
-        }
     }
 
     /**
@@ -85,10 +81,13 @@ abstract class AbstractField implements FieldInterface
      */
     public function loadDataFromRequest(array $request)
     {
-        foreach ($request as $key => $value) {
-            if (in_array($key, $this->requestVariables)) {
-                $this->data[$key] = $value;
+        if (!$this->isLoaded) {
+            foreach ($request as $key => $value) {
+                if (in_array($key, $this->requestVariables)) {
+                    $this->data[$key] = $value;
+                }
             }
+            $this->isLoaded = true;
         }
     }
 }

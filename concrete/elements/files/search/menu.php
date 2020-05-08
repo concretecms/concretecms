@@ -55,25 +55,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </div>
 
 
-<div style="display: none">
-    <div class="dialog-buttons"></div>
-    <div data-dialog="add-file-manager-folder" class="ccm-ui">
-        <form data-dialog-form="add-folder" method="post" action="<?= $addFolderAction ?>">
-            <?= $token->output('add_folder') ?>
-            <?= $form->hidden('currentFolder', $currentFolder); ?>
-            <div class="form-group">
-                <?= $form->label('folderName', t('Folder Name')) ?>
-                <?= $form->text('folderName', '', array('autofocus' => true)) ?>
-            </div>
-        </form>
-        <div class="dialog-buttons">
-            <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-            <button class="btn btn-primary pull-right" data-dialog-action="submit"><?= t('Add Folder') ?></button>
-        </div>
-    </div>
-
-</div>
-
+<?php
+$addFolderAction = URL::to('/ccm/system/dialogs/tree/node/add/file_folder');
+if (isset($currentFolder)) {
+    $addFolderAction .= '?treeNodeID=' . $currentFolder->getTreeNodeID();
+}
+?>
 <script type="text/javascript">
     $(function() {
         $('a[data-launch-dialog=add-file-manager-folder]').on('click', function (e) {
@@ -83,7 +70,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 height: 'auto',
                 modal: true,
                 title: '<?=t('Add Folder')?>',
-                href: '<?=URL::to('/ccm/system/dialogs/tree/node/add/file_folder')?>'
+                href: '<?=$addFolderAction?>'
             })
         })
         $('a[data-launch-dialog=navigate-file-manager]').on('click', function(e) {

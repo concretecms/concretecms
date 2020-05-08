@@ -21,7 +21,7 @@ class TypeColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return ['\Concrete\Core\File\Search\ColumnSet\FolderSet', 'getType'];
+        return ['\Concrete\Core\File\Search\ColumnSet\Available', 'getType'];
     }
 
     protected function getTypeValue($mixed)

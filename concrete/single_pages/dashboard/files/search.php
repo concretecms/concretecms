@@ -48,12 +48,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             <tbody>
             <?php
             foreach ($result->getItems() as $item) {
-                $detailsURL = '#';
-                if ($item->getItem() instanceof \Concrete\Core\Tree\Node\Type\File) {
-                    $detailsURL = URL::to('/dashboard/files/details', 'view', $item->getItem()->getTreeNodeFileID());
-                }
                 ?>
-                <tr data-details-url="<?=$detailsURL?>">
+                <tr data-details-url="javascript:void(0)">
                     <td class="ccm-search-results-checkbox">
                         <input data-search-checkbox="individual" type="checkbox"
                                data-node-type="<?=$item->getItem()->getTreeNodeTypeHandle()?>"
@@ -64,13 +60,22 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                     </td>
                     <?php
                     $i = 0;
-                    foreach ($item->getColumns() as $column) { ?>
-                        <td <?php if ($i == 0) { ?>class="ccm-search-results-name<?php } ?>">
-                            <?=$column->getColumnValue($item);?>
-                        </td>
+                    foreach ($item->getColumns() as $column) {
+                        $class = '';
+                        if ($column->getColumn() instanceof \Concrete\Core\File\Search\ColumnSet\Column\NameColumn) {
+                            $class = 'ccm-search-results-name';
+                            $value = '<a href="' . $item->getDetailsURL() . '">' . $column->getColumnValue($item) . '</a>';
+                        } else {
+                            $value = $column->getColumnValue($item);
+                        }
+                        ?>
+                        <td class="<?=$class?>"><?=$value?></td>
                         <?php
                         $i++;
                     }
+
+                    $menu = $item->getItem()->getTreeNodeMenu();
+                    if ($menu) {
                     ?>
                     <td class="ccm-search-results-menu-launcher">
                         <div class="dropdown" data-menu="search-result">
@@ -78,11 +83,11 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                                 <svg width="16" height="4"><use xlink:href="#icon-menu-launcher" /></svg>
                             </button>
                             <?php
-                            $menu = $item->getItem()->getTreeNodeMenu();
                             echo $menu->getMenuElement();
                             ?>
                         </div>
                     </td>
+                    <?php } ?>
                 </tr>
             <?php } ?>
             </tbody>

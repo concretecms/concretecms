@@ -53,7 +53,7 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return $this->app->make('url')->to('/dashboard/files/search', 'search_preset', $search->getID());
+        return $this->app->make('url')->to('/dashboard/files/search', 'preset', $search->getID());
     }
 
     public function getCurrentSearchBaseURL()

@@ -30,7 +30,8 @@ class QueryFactory
     }
 
     /**
-     * Creates the default query object for a particular search provider.
+     * Creates the default query object for a particular search provider. Pre-loaded search fields can be added to
+     * filter the query.
      *
      * @param ProviderInterface $searchProvider
      * @param Request $request
@@ -38,20 +39,14 @@ class QueryFactory
      * @param string $method
      * @return Query
      */
-    public function createDefaultQuery(
+    public function createQuery(
         ProviderInterface $searchProvider,
-        Request $request,
-        $method = Request::METHOD_GET,
         $fields = []
     )
     {
-        $vars = $this->getRequestData($request, $method);
         $query = new Query();
-        foreach($fields as $field) {
-            $field->loadDataFromRequest($vars);
-        }
-
         $set = $searchProvider->getDefaultColumnSet();
+
         $query->setFields($fields);
         $query->setColumns($set);
         $query->setItemsPerPage($searchProvider->getItemsPerPage());
