@@ -44,7 +44,7 @@ class Thumbnailer extends \Concrete\Core\Controller\Controller
             $built = true;
         }
 
-        return $this->factory->json(['built' => $built, 'path' => $item['path']]);
+        return $this->factory->json(['built' => $built, 'path' => $item ? $item['path'] : null]);
     }
 
     private function buildThumbnail(array $item)
