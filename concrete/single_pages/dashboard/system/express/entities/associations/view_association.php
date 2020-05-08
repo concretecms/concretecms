@@ -13,8 +13,8 @@
             <input type="hidden" name="association_id" value="<?=$association->getID()?>">
             <p><?=t('Are you sure you want to delete this association? This cannot be undone.')?></p>
             <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-association form').submit()"><?=t('Delete Association')?></button>
+                <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-association form').submit()"><?=t('Delete Association')?></button>
             </div>
         </form>
     </div>

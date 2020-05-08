@@ -5,7 +5,7 @@
     <?php if (isset($expressForm)) {
     ?>
         <input type="hidden" name="form_id" value="<?=$expressForm->getID()?>">
-    <?php 
+    <?php
 } ?>
 
     <?=$token->output()?>
@@ -19,7 +19,7 @@
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?=URL::to('/dashboard/system/express/entities/forms', $entity->getID())?>" class="pull-left btn btn-default" type="button" ><?=t('Back to Forms')?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 </form>

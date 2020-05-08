@@ -18,8 +18,8 @@
             <input type="hidden" name="form_id" value="<?=$expressForm->getID()?>">
             <p><?=t('Are you sure you want to delete this form? This cannot be undone.')?></p>
             <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-form form').submit()"><?=t('Delete Form')?></button>
+                <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-form form').submit()"><?=t('Delete Form')?></button>
             </div>
         </form>
     </div>
@@ -33,8 +33,8 @@
             </div>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-            <button class="btn btn-primary pull-right" onclick="$('#ccm-dialog-add-set form').submit()"><?=t('Add Set')?></button>
+            <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+            <button class="btn btn-primary float-right" onclick="$('#ccm-dialog-add-set form').submit()"><?=t('Add Set')?></button>
         </div>
     </div>
 
@@ -55,8 +55,8 @@
                     <input type="hidden" name="field_set_id" value="<?=$set->getID()?>">
                     <p><?=t('Are you sure you want to delete this field set? This cannot be undone.')?></p>
                     <div class="dialog-buttons">
-                        <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                        <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-set-<?=$set->getId()?> form').submit()"><?=t('Delete Set')?></button>
+                        <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                        <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-set-<?=$set->getId()?> form').submit()"><?=t('Delete Set')?></button>
                     </div>
                 </form>
             </div>
@@ -71,8 +71,8 @@
                     </div>
                 </form>
                 <div class="dialog-buttons">
-                    <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                    <button class="btn btn-primary pull-right" onclick="$('#ccm-dialog-update-set-<?=$set->getID()?> form').submit()"><?=t('Update Set')?></button>
+                    <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button class="btn btn-primary float-right" onclick="$('#ccm-dialog-update-set-<?=$set->getID()?> form').submit()"><?=t('Update Set')?></button>
                 </div>
             </div>
 
@@ -109,7 +109,7 @@
 
         </div>
 
-    <?php 
+    <?php
 }
     ?>
 
