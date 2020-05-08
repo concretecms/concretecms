@@ -1,46 +1,48 @@
 <?php
+
 namespace Concrete\Core\Site\Type;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Entity\Site\SkeletonLocale;
 use Concrete\Core\Entity\Site\Type;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Site\Type\Controller\ControllerInterface;
+use Concrete\Core\Site\Type\Controller\Manager as ControllerManager;
 use Concrete\Core\Site\Type\Skeleton\Service as SkeletonService;
 use Concrete\Core\Site\User\Group\Service as GroupService;
-use Concrete\Core\Site\Type\Controller\Manager as ControllerManager;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Service
 {
-
     /**
-     * @var EntityManagerInterface
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     protected $entityManager;
 
     /**
-     * @var Application
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
     /**
-     * @var SkeletonService
+     * @var \Concrete\Core\Site\Type\Skeleton\Service
      */
     protected $skeletonService;
 
     /**
-     * @var GroupService
+     * @var \Concrete\Core\Site\User\Group\Service
      */
     protected $groupService;
 
     /**
-     * @var Factory
+     * @var \Concrete\Core\Site\Type\Factory
      */
     protected $siteTypeFactory;
 
     /**
-     * @var ControllerManager
+     * @var \Concrete\Core\Site\Type\Controller\Manager
      */
     protected $siteTypeControllerManager;
 
@@ -51,8 +53,7 @@ class Service
         GroupService $groupService,
         Factory $siteTypeFactory,
         ControllerManager $siteTypeControllerManager
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->groupService = $groupService;
         $this->skeletonService = $skeletonService;
@@ -61,85 +62,78 @@ class Service
         $this->siteTypeControllerManager = $siteTypeControllerManager;
     }
 
-    /**
-     * @return SkeletonService
-     */
-    public function getSkeletonService()
+    public function getSkeletonService(): SkeletonService
     {
         return $this->skeletonService;
     }
 
-    /**
-     * @return GroupService
-     */
-    public function getGroupService()
+    public function getGroupService(): GroupService
     {
         return $this->groupService;
     }
 
-    /**
-     * @return Type
-     */
-    public function getDefault()
+    public function getDefault(): ?Type
     {
         return $this->getByID(1);
     }
 
     /**
-     * @return Type
+     * @param int|mixed $typeID
      */
-    public function getByID($typeID)
+    public function getByID($typeID): ?Type
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
-            ->findOneBy(array('siteTypeID' => $typeID));
+        $typeID = (int) $typeID;
+
+        return $typeID === 0 ? null : $this->entityManager->getRepository(Type::class)->findOneBy(['siteTypeID' => $typeID]);
     }
 
     /**
-     * @return Type
+     * @param string|mixed $typeHandle
      */
-    public function getByHandle($typeHandle)
+    public function getByHandle($typeHandle): ?Type
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
-            ->findOneBy(array('siteTypeHandle' => $typeHandle));
+        $typeHandle = (string) $typeHandle;
+
+        return $typeHandle === '' ? null : $this->entityManager->getRepository(Type::class)->findOneBy(['siteTypeHandle' => $typeHandle]);
     }
 
     /**
-     * @return Type[]
+     * @return \Concrete\Core\Entity\Site\Type[]
      */
-    public function getByPackage(Package $package)
+    public function getByPackage(Package $package): array
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
-            ->findByPackage($package);
+        return $this->entityManager->getRepository(Type::class)->findByPackage($package);
     }
 
     /**
-     * @return Type[]
+     * @return \Concrete\Core\Entity\Site\Type[]
      */
-    public function getList()
+    public function getList(): array
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
-            ->findAll();
+        return $this->entityManager->getRepository(Type::class)->findAll();
     }
 
     /**
-     * @return Type[]
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Site\Type[]
      */
-    public function getUserAddedList()
+    public function getUserAddedList(): Collection
     {
-        $criteria = new Criteria();
-        $criteria->where(Criteria::expr()->neq('siteTypeHandle', 'default'));
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Type')
-            ->matching($criteria);
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('siteTypeHandle', 'default'))
+        ;
+
+        return $this->entityManager->getRepository(Type::class)->matching($criteria)
+        ;
     }
 
-    public function delete(Type $type)
+    public function delete(Type $type): void
     {
         $skeleton = $this->skeletonService->getSkeleton($type);
-        if (is_object($skeleton)) {
+        if ($skeleton !== null) {
             $this->skeletonService->delete($skeleton);
         }
 
-        foreach($this->groupService->getSiteTypeGroups($type) as $group) {
+        foreach ($this->groupService->getSiteTypeGroups($type) as $group) {
             $this->entityManager->remove($group);
         }
 
@@ -149,12 +143,38 @@ class Service
         $this->entityManager->flush();
     }
 
-    public function import($handle, $name, Package $pkg = null)
+    public function import(string $handle, string $name, ?Package $pkg = null): Type
     {
         return $this->createAndPersistType($handle, $name, $pkg);
     }
 
-    protected function createAndPersistType($handle, $name, Package $pkg = null)
+    public function getController(Type $type): ControllerInterface
+    {
+        return $this->siteTypeControllerManager->driver($type->getSiteTypeHandle());
+    }
+
+    public function add(string $handle, string $name, ?Package $pkg = null): Type
+    {
+        $type = $this->createAndPersistType($handle, $name, $pkg);
+        $locale = new SkeletonLocale();
+        $locale->setLanguage('en');
+        $locale->setCountry('US');
+        $this->skeletonService->createSkeleton($type, $locale);
+        $controller = $this->getController($type);
+
+        return $controller->addType($type);
+    }
+
+    public function installDefault(): Type
+    {
+        $type = $this->siteTypeFactory->createDefaultEntity();
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
+
+        return $type;
+    }
+
+    protected function createAndPersistType(string $handle, string $name, ?Package $pkg = null): Type
     {
         $type = $this->siteTypeFactory->createEntity();
         $type->setSiteTypeHandle($handle);
@@ -166,32 +186,4 @@ class Service
 
         return $type;
     }
-
-    public function getController(Type $type)
-    {
-        return $this->siteTypeControllerManager->driver($type->getSiteTypeHandle());
-    }
-
-    public function add($handle, $name, Package $pkg = null)
-    {
-        $type = $this->createAndPersistType($handle, $name, $pkg);
-        $locale = new SkeletonLocale();
-        $locale->setLanguage('en');
-        $locale->setCountry('US');
-        $this->skeletonService->createSkeleton($type, $locale);
-        $controller = $this->getController($type);
-        $type = $controller->addType($type);
-        return $type;
-    }
-
-    public function installDefault()
-    {
-        $type = $this->siteTypeFactory->createDefaultEntity();
-        $this->entityManager->persist($type);
-        $this->entityManager->flush();
-
-        return $type;
-    }
-
-
 }
