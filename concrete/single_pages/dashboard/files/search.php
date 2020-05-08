@@ -51,9 +51,11 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                 ?>
                 <tr data-details-url="javascript:void(0)">
                     <td class="ccm-search-results-checkbox">
-                        <input data-search-checkbox="individual" type="checkbox"
-                               data-node-type="<?=$item->getItem()->getTreeNodeTypeHandle()?>"
-                               data-item-id="<?=$item->getResultFileID()?>" />
+                        <?php if ($item->getResultFileID() > 0) { ?>
+                            <input data-search-checkbox="individual" type="checkbox"
+                                   data-node-type="<?=$item->getItem()->getTreeNodeTypeHandle()?>"
+                                   data-item-id="<?=$item->getResultFileID()?>" />
+                        <?php } ?>
                     </td>
                     <td class="ccm-search-results-icon">
                         <?=$item->getListingThumbnailImage()?>

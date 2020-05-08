@@ -157,15 +157,34 @@ abstract class AdvancedSearch extends BackendInterfaceController
         throw new Exception(t('An error occurred while saving the search preset.'));
     }
 
+    /**
+     * @deprecated. Remove when all advanced search controllers use the files method.
+     * @return Query
+     */
+    public function getSearchQuery()
+    {
+        $query = new Query();
+        $query->setFields([new KeywordsField()]);
 
-    /*
+        return $query;
+    }
+
+
+    /**
+     * @deprecated. Remove when all advanced search controllers that extend this one no longer need the submit() method
+     * @return mixed
+     */
     protected function getQueryFromRequest()
     {
         $queryFactory = $this->app->make(QueryFactory::class);
         return $queryFactory->createFromAdvancedSearchRequest($this->getSearchProvider(), $this->request);
     }
 
-
+    /**
+     * @deprecated. Remove when all advanced search controllers that extend this one no longer need the submit() method
+     * Files already doesn't use this.
+     * @return mixed
+     */
     public function submit()
     {
         if ($this->validateAction()) {
@@ -180,6 +199,5 @@ abstract class AdvancedSearch extends BackendInterfaceController
             return new JsonResponse($result->getJSONObject());
         }
     }
-    */
 
 }
