@@ -345,7 +345,7 @@ class SitemapGenerator
                     $relatedPageID = $relatedSection->getTranslatedPageID($page);
                     if ($relatedPageID) {
                         $relatedPage = Page::getByID($relatedPageID);
-                        if ($relatedPage || $pageListGenerator->canIncludePageInSitemap($relatedPage)) {
+                        if ($relatedPage && $pageListGenerator->canIncludePageInSitemap($relatedPage)) {
                             $relatedUrl = $this->getPageUrl($relatedPage);
                             $sitemapPage->addAlternativeLanguage(new SitemapPageAlternativeLanguage($relatedSection, $relatedPage, $relatedUrl));
                             $addThisPage = true;
