@@ -294,7 +294,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $permissions->canEditPagePermissions()
                         )
                     ) {
-                        $hasComposer = is_object($pagetype) && $cp->canEditPageContents();
+                        $hasComposer = isset($pagetype) && is_object($pagetype) && $cp->canEditPageContents();
                         ?>
                         <li data-guide-toolbar-action="page-settings" class="float-left hidden-xs">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
