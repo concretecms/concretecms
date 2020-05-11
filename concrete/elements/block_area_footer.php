@@ -28,30 +28,30 @@ $class = 'ccm-area-footer';
         <div class="popover fade" data-area-menu="area-menu-a<?=$a->getAreaID()?>">
             <div class="arrow"></div>
             <div class="popover-inner">
-                <ul class="dropdown-menu">
+                <div class="dropdown-menu">
                     <?php
                     $showAreaDesign = ($ap->canEditAreaDesign() && Config::get('concrete.design.enable_custom') == true);
                     $showAreaLayouts = ($ap->canAddLayoutToArea() && Config::get('concrete.design.enable_layouts') == true && (!$a->isGlobalArea()));
                     $canEditAreaPermissions = ($ap->canEditAreaPermissions() && Config::get('concrete.permissions.model') != 'simple' && (!$a->isGlobalArea()));
                     $showAddBlock = (bool) $ap->canAddBlocks();
                     if ($showAddBlock) {
-                       ?><li><a href='#' data-menu-action="area-add-block"><?= t('Add Block') ?></a></li><?php
+                       ?><a href='#' class="dropdown-item" data-menu-action="area-add-block"><?= t('Add Block') ?></a><?php
                     }
                     if ($showAreaDesign || $showAreaLayouts) {
                         if ($showAreaDesign) {
-                            ?><li><a data-menu-action="edit-area-design" href="#"><?=t("Edit Area Design")?></a></li><?php
+                            ?><a class="dropdown-item"  data-menu-action="edit-area-design" href="#"><?=t("Edit Area Design")?></a><?php
                         }
                         if ($showAreaLayouts) {
                             $areabt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
                             $areaLayoutBT = BlockType::getByHandle('core_area_layout');
-                            ?><li><a dialog-title="<?=t('Add Layout')?>" data-block-type-handle="<?= $areabt->getBlockTypeHandle() ?>" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a></li><?php
+                            ?><a class="dropdown-item" dialog-title="<?=t('Add Layout')?>" data-block-type-handle="<?= $areabt->getBlockTypeHandle() ?>" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a><?php
                         }
                         if ($canEditAreaPermissions) {
-                            ?><li><hr/></li><?php
+                            ?><li><div class="dropdown-divider"></div></li><?php
                         }
                     }
                     if ($canEditAreaPermissions) {
-                        ?><li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?= URL::to('/ccm/system/dialogs/area/edit/permissions') ?>?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>"><?=t("Permissions")?></a></li><?php
+                        ?><a dialog-title="<?=t('Area Permissions')?>" class="dropdown-item dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?= URL::to('/ccm/system/dialogs/area/edit/permissions') ?>?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>"><?=t("Permissions")?></a><?php
                     }
                     if ($a instanceof SubArea) {
                         $bx = $a->getSubAreaBlockObject();
@@ -62,33 +62,31 @@ $class = 'ccm-area-footer';
                             if ($axp->canAddLayout()) {
                                 if (is_object($bx) && !$bx->isError()) {
                                     ?>
-                                    <li><hr/></li>
-                                    <li><a href="javascript:void(0)"
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="javascript:void(0)"
                                            data-container-layout-block-id="<?= $bx->getBlockID() ?>"
                                            data-menu-action="edit-container-layout"
                                            data-area-grid-maximum-columns="<?= $a->getAreaGridMaximumColumns() ?>"><?= t("Edit Container Layout") ?></a>
-                                    </li>
                                     <?php if ($showAreaDesign) { ?>
-                                        <li><a href="javascript:void(0)"
+                                        <a class="dropdown-item" href="javascript:void(0)"
                                                data-container-layout-block-id="<?= $bx->getBlockID() ?>"
                                                data-menu-action="edit-container-layout-style"><?= t("Edit Layout Design") ?></a>
-                                        </li>
                                     <?php } ?>
                                     <?php
                                     if ($pk->validate()) {
                                         $btc = $bx->getController();
                                         $arLayout = $btc->getAreaLayoutObject();
                                         ?>
-                                        <li><a class="dialog-launch"
+                                        <a class="dropdown-item dialog-launch"
                                                href="<?= URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID()) ?>"
                                                dialog-title="<?= t('Save Layout as Preset') ?>" dialog-width="360"
                                                dialog-height="300"
-                                               dialog-modal="true"><?= t("Save Layout as Preset") ?></a></li>
-                                        <li><a class="dialog-launch"
+                                               dialog-modal="true"><?= t("Save Layout as Preset") ?></a>
+                                        <a class="dropdown-item dialog-launch"
                                                href="<?= URL::to('/ccm/system/dialogs/area/layout/presets/manage') ?>"
                                                dialog-title="<?= t('Manage Presets') ?>" dialog-width="360"
                                                dialog-height="240" dialog-modal="true"><?= t("Manage Presets") ?></a>
-                                        </li>
+
                                         <?php
                                     }
                                 }
@@ -96,7 +94,7 @@ $class = 'ccm-area-footer';
                         }
                     }
                     ?>
-                </ul>
+                </div>
             </div>
         </div>
     </div>
