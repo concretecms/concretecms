@@ -68,7 +68,7 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= URL::to('/dashboard/system/express/entities') ?>" class="flaot-left btn btn-default"
+            <a href="<?= URL::to('/dashboard/system/express/entities') ?>" class="float-left btn btn-secondary"
                type="button"><?= t('Back to List') ?></a>
             <button class="float-right btn btn-primary" type="submit"><?= t('Save') ?></button>
         </div>

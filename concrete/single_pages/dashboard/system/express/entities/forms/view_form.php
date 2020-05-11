@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?=URL::to('/dashboard/system/express/entities/forms', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>
-    <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'edit', $expressForm->getID())?>" class="btn btn-default"><?=t("Edit Details")?></a>
-    <button type="button" class="btn btn-default" data-dialog="add-set"><?= t('Add Field Set') ?></button>
+    <a href="<?=URL::to('/dashboard/system/express/entities/forms', $entity->getID())?>" class="btn btn-secondary"><?=t("Back to Object")?></a>
+    <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'edit', $expressForm->getID())?>" class="btn btn-secondary"><?=t("Edit Details")?></a>
+    <button type="button" class="btn btn-secondary" data-dialog="add-set"><?= t('Add Field Set') ?></button>
     <?php if ($canDeleteForm) { ?>
         <button type="button" class="btn btn-danger" data-dialog="delete-form"><?= t('Delete Form') ?></button>
     <?php } else { ?>
@@ -18,7 +18,7 @@
             <input type="hidden" name="form_id" value="<?=$expressForm->getID()?>">
             <p><?=t('Are you sure you want to delete this form? This cannot be undone.')?></p>
             <div class="dialog-buttons">
-                <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                 <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-form form').submit()"><?=t('Delete Form')?></button>
             </div>
         </form>
@@ -33,7 +33,7 @@
             </div>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+            <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
             <button class="btn btn-primary float-right" onclick="$('#ccm-dialog-add-set form').submit()"><?=t('Add Set')?></button>
         </div>
     </div>
@@ -55,7 +55,7 @@
                     <input type="hidden" name="field_set_id" value="<?=$set->getID()?>">
                     <p><?=t('Are you sure you want to delete this field set? This cannot be undone.')?></p>
                     <div class="dialog-buttons">
-                        <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                        <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                         <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-set-<?=$set->getId()?> form').submit()"><?=t('Delete Set')?></button>
                     </div>
                 </form>
@@ -71,7 +71,7 @@
                     </div>
                 </form>
                 <div class="dialog-buttons">
-                    <button class="btn btn-default float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                     <button class="btn btn-primary float-right" onclick="$('#ccm-dialog-update-set-<?=$set->getID()?> form').submit()"><?=t('Update Set')?></button>
                 </div>
             </div>

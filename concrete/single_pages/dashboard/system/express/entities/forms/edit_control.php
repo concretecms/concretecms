@@ -28,7 +28,7 @@
     <?=Loader::helper('validation/token')->output('save_control')?>
 </form>
 <div class="dialog-buttons">
-    <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+    <button class="btn btn-secondary pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
     <button type="button" data-action="submit-edit-control" class="btn btn-primary float-right"><?=t('Save')?></button>
 </div>
 

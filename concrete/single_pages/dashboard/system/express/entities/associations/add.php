@@ -43,7 +43,7 @@
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?=URL::to('/dashboard/system/express/entities/associations', $entity->getId())?>"
-               class="float-left btn btn-default" type="button" ><?=t('Back to Associations')?></a>
+               class="float-left btn btn-secondary" type="button" ><?=t('Back to Associations')?></a>
             <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
