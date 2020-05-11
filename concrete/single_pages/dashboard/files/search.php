@@ -97,6 +97,13 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
     </div>
 
     <?=$result->getPagination()->renderView('dashboard')?>
+    <script type="text/javascript">
+    $(function() {
+        $('table[data-search-results=files]').concreteFileManagerTable({
+            'folderID': '<?=$folderID?>'
+        });
+    });
+    </script>
 
     <?php
 } else {

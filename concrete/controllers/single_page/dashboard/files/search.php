@@ -133,17 +133,34 @@ class Search extends DashboardPageController
         return $field;
     }
 
-    public function view()
+    protected function getRootFolder()
     {
         $filesystem = $this->app->make(Filesystem::class);
         $rootFolder = $filesystem->getRootFolder();
+        return $rootFolder;
+    }
 
+    public function view()
+    {
+        $rootFolder = $this->getRootFolder();
         $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
             $this->getSearchKeywordsField(),
             $this->getSearchFolderField($rootFolder)
         ]);
         $result = $this->createSearchResult($query);
         $this->renderSearchResult($result);
+        $this->setCurrentFolder($rootFolder);
+    }
+
+    /**
+     * Responsible for setting the current folder in the header menu, and in the JavaScript that powers the search table.
+     *
+     * @param FileFolder $folder
+     */
+    protected function setCurrentFolder(FileFolder $folder)
+    {
+        $this->set('folderID', $folder->getTreeNodeID());
+        $this->headerMenu->getElementController()->setCurrentFolder($folder);
     }
 
     public function advanced_search()
@@ -191,7 +208,7 @@ class Search extends DashboardPageController
                 $this->headerSearch->getElementController()->setHeaderSearchAction(
                     $this->app->make('url')->to('/dashboard/files/search', 'folder', $folder->getTreeNodeID())
                 );
-                $this->headerMenu->getElementController()->setCurrentFolder($folder);
+                $this->setCurrentFolder($folder);
                 return;
             }
         }

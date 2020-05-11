@@ -6,6 +6,7 @@
         options = options || {}
         options = $.extend({
             bulkParameterName: 'fID',
+            folderID: 0,
         }, options)
 
         my.$element = $element
@@ -17,6 +18,7 @@
         my.activateSelectAllCheckbox()
         my.activateIndividualCheckboxes()
         my.disableSelectAllOnInvalidNodeTypeSelection()
+        my.setupFileUploads()
         my.setupBulkActions()
     }
 
@@ -41,6 +43,23 @@
             }
         })
     }
+
+    ConcreteFileManagerTable.prototype.setupFileUploads = function() {
+        var my = this
+        my.fileUploaderOptions = {
+            folderID: function() {
+                return my.options.folderID
+            }
+        }
+        window.concreteFileUploader.start(my.fileUploaderOptions)
+        var $dialog = this.$element.closest('.ui-dialog-content')
+        if ($dialog.length !== 0) {
+            $dialog.on('dialogclose', function() {
+                window.concreteFileUploader.stop(my.fileUploaderOptions)
+            })
+        }
+    };
+
 
     ConcreteFileManagerTable.prototype.activateSearchResultMenus = function() {
         var my = this;

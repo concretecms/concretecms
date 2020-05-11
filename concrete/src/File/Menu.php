@@ -7,6 +7,7 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
 class Menu extends DropdownMenu
 {
@@ -56,6 +57,10 @@ class Menu extends DropdownMenu
                 'data-file-manager-action' => 'duplicate',
                 'data-file-id' => $file->getFileID()
             ]));
+        }
+        if ($fp->canDeleteFile()) {
+            $this->addItem(new DividerItem());
+            $this->addItem(new DeleteItem($file->getFileNodeObject()));
         }
     }
 }

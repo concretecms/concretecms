@@ -43,19 +43,6 @@ var setupAdvancedSearchLinks = function() {
     $('a[data-launch-dialog=advanced-search]').concreteAdvancedSearchLauncher();
 }
 
-var setupAdvancedSearchResults = function() {
-    $('table[data-search-results]').each(function() {
-        switch($(this).attr('data-search-results')) {
-            case "files":
-                $(this).concreteFileManagerTable();
-                break;
-            default:
-                $(this).concreteSearchResultsTable();
-                break;
-        }
-    })
-}
-
 var setupFavorites = function() {
     var $addFavorite = $('a[data-bookmark-action=add-favorite]'),
         $removeFavorite = $('a[data-bookmark-action=remove-favorite]'),
@@ -207,7 +194,6 @@ setupDialogs();
 setupSelects();
 setupDetailsURLs();
 setupFavorites();
-setupAdvancedSearchResults();
 setupAdvancedSearchLinks();
 setupHeaderMenu();
 setupPrivacyPolicy();
