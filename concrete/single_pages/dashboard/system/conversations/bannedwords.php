@@ -7,7 +7,7 @@ $token = Core::make('token');
     $token->output('update_banned_words');
     ?>
     <div class="ccm-dashboard-header-buttons">
-        <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
+        <a class='add_word btn btn-primary <?= (!$bannedListEnabled) ? 'd-none': '' ?>' href='#'><?=t('Add Word')?></a>
     </div>
 
     <div class="mb-2">
@@ -137,5 +137,14 @@ ctx.on('click','a.edit_word',function(e){
 }).on('click','a.delete_word',function(e){
 	if (confirm("<?=t('Are you sure you want to delete this word?')?>"))
 		$(this).closest('tr').remove();
+});
+$('#banned-word-list-enabled').change(function(){
+	if(this.checked && $('.add_word').hasClass('d-none')) {
+        $('.add_word').removeClass('d-none')
+    }
+
+	if(!this.checked && !$('.add_word').hasClass('d-none')){
+		$('.add_word').addClass('d-none')
+	}
 });
 </script>
