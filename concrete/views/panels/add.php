@@ -11,6 +11,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Application\Service\Urls $ci */
 ?>
 <section>
+<<<<<<< HEAD
     <header class="pl-0 pr-0">
         <div class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
@@ -50,6 +51,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </ul>
     </nav>
  */ ?>
+=======
+    <div data-panel-menu="accordion" class="ccm-panel-header-accordion ccm-accordion-as-dropdown">
+        <nav>
+            <div class="ccm-panel-header-list-grid-view-switcher">
+                <i class="fa fa-list fa-xs fa-fw"></i>
+            </div>
+>>>>>>> Fixing delete button and updating styling on block
 
     <?php
     switch ($tab) {
@@ -193,14 +201,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
 
-                        <div class="block-content">
-                            <div class="block-name float-left">
-                                <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
-                            </div>
-                            <div class="delete float-right">
-                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
-                            </div>
+                        <div class="block-name float-left">
+                            <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
+                        </div>
+                        <div class="delete float-right">
+                            <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
+                        </div>
 
+                        <div class="block-content">
                             <div class="blocks">
                                 <div class="block ccm-panel-add-block-draggable-block-type" title="<?= t($type->getBlockTypeName()) ?>">
                                     <div class="block-content">
@@ -219,6 +227,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 }
                 ?>
                 <script>
+                //Hides grid view switcher
+                $('.ccm-panel-header-list-grid-view-switcher').hide();
+
                 $('button.ccm-delete-clipboard-item').unbind().click(function (e) {
                     e.preventDefault();
                     var me = $(this),
