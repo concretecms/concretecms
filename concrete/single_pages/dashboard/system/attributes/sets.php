@@ -6,7 +6,7 @@ $txt = Loader::helper('text'); ?>
 <?php if (in_array($this->controller->getTask(), ['update_set', 'update_set_attributes', 'edit', 'delete_set'])) {
     ?>
     <div class="row">
-		<div class="col-md-8">
+		<div class="col-md-<?= (!$set->isAttributeSetLocked())? '8' : '12' ?>">
             <form class="" method="post" action="<?php echo $view->action('update_set')?>">
                 <input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
                 <?php echo Loader::helper('validation/token')->output('update_set')?>
@@ -54,26 +54,26 @@ $txt = Loader::helper('text'); ?>
             </form>
 
 		</div>
-        <div class="col-md-4">
-            <?php if (!$set->isAttributeSetLocked()) {
-    ?>
-                <form method="post" action="<?php echo $view->action('delete_set')?>" class="">
-                    <input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
-                    <?php echo Loader::helper('validation/token')->output('delete_set')?>
+        <?php if (!$set->isAttributeSetLocked()) {
+        ?>
+            <div class="col-md-4">
+                    <form method="post" action="<?php echo $view->action('delete_set')?>" class="">
+                        <input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
+                        <?php echo Loader::helper('validation/token')->output('delete_set')?>
 
-                    <fieldset>
-                        <legend><?=t('Delete Set')?></legend>
-                        <div class="alert alert-secondary">
-                            <?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?>
-                        </div>
+                        <fieldset>
+                            <legend><?=t('Delete Set')?></legend>
+                            <div class="alert alert-secondary">
+                                <?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?>
+                            </div>
 
-                        <?php echo $form->submit('submit', t('Delete Set'), ['class' => 'btn btn-danger'])?>
-                    </fieldset>
-                </form>
-            <?php
-}
-    ?>
-        </div>
+                            <?php echo $form->submit('submit', t('Delete Set'), ['class' => 'btn btn-danger'])?>
+                        </fieldset>
+                    </form>
+            </div>
+        <?php
+            }
+        ?>
     </div>
     <div class="row">
 		<div class="col-md-12">
