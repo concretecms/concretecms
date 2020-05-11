@@ -74,10 +74,10 @@ class SearchFieldManagerTest extends TestCase
         $this->assertEquals('Custom Attributes', $groups[1]->getName());
         $this->assertInstanceOf('Concrete\Core\Search\Field\GroupInterface', $groups[0]);
         $this->assertInstanceOf('Concrete\Core\Search\Field\GroupInterface', $groups[1]);
-        $this->assertEquals(8, count($groups[0]->getFields()));
+        $this->assertEquals(9, count($groups[0]->getFields()));
         $this->assertEquals(2, count($groups[1]->getFields()));
 
-        $field1 = $groups[0]->getFields()[5];
+        $field1 = $groups[0]->getFields()[6];
         $this->assertEquals('Date Added', $field1->getDisplayName());
         $this->assertEquals('date_added', $field1->getKey());
 

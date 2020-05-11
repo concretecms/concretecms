@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @var $listView \Concrete\Core\Notification\View\StandardListViewInterface
  */
 
-if ($listView->getMenu() instanceof \Concrete\Core\Application\UserInterface\ContextMenu\Menu) {
+if ($listView->getMenu() instanceof \Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu) {
 
 ?>
 

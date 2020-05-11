@@ -6,12 +6,12 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class FileVersionSizeColumn extends Column implements PagerColumnInterface
+class SizeColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'fv.fvSize';
+        return 'size';
     }
 
     public function getColumnName()
@@ -21,16 +21,23 @@ class FileVersionSizeColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return 'getSize';
+        return ['\Concrete\Core\File\Search\ColumnSet\Available', 'getSize'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(fv.fvSize, f.fID) %s (:sortSize, :sortID)', $sort);
-        $query->setParameter('sortSize', $mixed->getFullSize());
-        $query->setParameter('sortID', $mixed->getFileID());
+        $where = sprintf('(fv.fvSize, n.treeNodeID) %s (:sortSize, :sortID)', $sort);
+        $size = 0;
+        if ($mixed->getTreeNodeTypeHandle() == 'file') {
+            $file = $mixed->getTreeNodeFileObject();
+            if (is_object($file)) {
+                $size = $file->getFullSize();
+            }
+        }
+        $query->setParameter('sortSize', $size);
+        $query->setParameter('sortID', $mixed->getTreeNodeID());
         $query->andWhere($where);
     }
 

@@ -21,7 +21,20 @@ class FileVersionFilenameColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return 'getFilename';
+        return [self::class, 'getFilename'];
+    }
+
+    public function getFilename($node)
+    {
+        if ($node->getTreeNodeTypeHandle() == 'file_folder') {
+            return '';
+        }
+        if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+            if (is_object($file)) {
+                return $file->getFilename();
+            }
+        }
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)

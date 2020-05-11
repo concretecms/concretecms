@@ -238,10 +238,14 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterBySize($from, $to)
     {
-        $this->query->andWhere('fv.fvSize >= :fvSizeFrom');
-        $this->query->andWhere('fv.fvSize <= :fvSizeTo');
-        $this->query->setParameter('fvSizeFrom', $from * 1024);
-        $this->query->setParameter('fvSizeTo', $to * 1024);
+        if ($from > 0) {
+            $this->query->andWhere('fv.fvSize >= :fvSizeFrom');
+            $this->query->setParameter('fvSizeFrom', $from * 1024);
+        }
+        if ($to > 0) {
+            $this->query->andWhere('fv.fvSize <= :fvSizeTo');
+            $this->query->setParameter('fvSizeTo', $to * 1024);
+        }
     }
 
     /**

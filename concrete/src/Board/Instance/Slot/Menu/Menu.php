@@ -2,17 +2,17 @@
 namespace Concrete\Core\Board\Instance\Slot\Menu;
 
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu as ContextMenu;
+use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Permission\Checker;
 
-class Menu extends ContextMenu
+class Menu extends PopoverMenu
 {
-    
+
     protected $menuAttributes = [
         'class' => 'ccm-edit-mode-block-menu',
     ];
-    
+
     public function __construct(InstanceSlot $slot)
     {
         $board = $slot->getInstance()->getBoard();

@@ -2,10 +2,10 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Controller\Element\Search\Files\Header;
 use Concrete\Controller\Search\FileFolder;
-use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\File\Search\SearchProvider;
+use Concrete\Core\Search\Query\QueryFactory;
+use Concrete\Core\Search\Result\ResultFactory;
 use FilePermissions;
 
 class Search extends BackendInterfaceController
@@ -24,16 +24,11 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
-        $search = $this->app->build(FileFolder::class);
-        $search->search();
-        $result = $search->getSearchResultObject();
-
-        if (is_object($result)) {
-            $this->set('result', $result);
-        }
-
-        $header = $this->app->build(Header::class);
-        $header->setIncludeBreadcrumb(true);
-        $this->set('header', $header);
+        $provider = $this->app->make(SearchProvider::class);
+        $queryFactory = $this->app->make(QueryFactory::class);
+        $resultFactory = $this->app->make(ResultFactory::class);
+        $query = $queryFactory->createQuery($provider);
+        $result = $resultFactory->createFromQuery($provider, $query);
+        $this->set('result', $result);
     }
 }

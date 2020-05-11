@@ -520,6 +520,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         }
     ?>
     </div>
-    
+
     <?php
 }
