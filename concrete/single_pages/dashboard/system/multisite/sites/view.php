@@ -1,26 +1,36 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 
+defined('C5_EXECUTE') or die('Access Denied.');
 
-<div class="ccm-dashboard-header-buttons">
-    <a class="btn btn-primary" href="<?=URL::to('/dashboard/system/multisite/sites', 'add')?>"><?=t('Add Site')?></a>
-</div>
+/**
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Multisite\Sites $controller
+ * @var Concrete\Core\Entity\Site\Site[] $sites
+ */
+?>
 
-<div class="table-responsive">
-    <table class="ccm-search-results-table">
-        <thead>
+<table class="ccm-search-results-table">
+    <thead>
         <tr>
-            <th><span><?=t('Name')?></span></th>
+            <th><?= t('Name') ?></th>
         </tr>
-        </thead>
-        <tbody>
-
-        <?php foreach($sites as $site) {
+    </thead>
+    <tbody>
+        <?php
+        foreach($sites as $site) {
             ?>
-            <tr data-details-url="<?=URL::to('/dashboard/system/multisite/sites', 'view_site', $site->getSiteID())?>">
-                <td class="ccm-search-results-name"><?=$site->getSiteName()?></td>
+            <tr data-details-url="<?= $controller->action('view_site', $site->getSiteID()) ?>">
+                <td class="ccm-search-results-name"><?= h($site->getSiteName()) ?></td>
             </tr>
-        <?php } ?>
+            <?php
+        }
+        ?>
+    </tbody>
+</table>
 
-        </tbody>
-    </table>
+<div class="ccm-dashboard-form-actions-wrapper">
+    <div class="ccm-dashboard-form-actions">
+        <div class="float-right">
+            <a class="btn btn-primary" href="<?= $controller->action('add') ?>"><?= t('Add Site') ?></a>
+        </div>
+    </div>
 </div>

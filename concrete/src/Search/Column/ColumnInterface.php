@@ -4,7 +4,7 @@ namespace Concrete\Core\Search\Column;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\Result\Result;
 
-interface ColumnInterface
+interface ColumnInterface extends \JsonSerializable
 {
 
     function getColumnValue($mixed);

@@ -4,11 +4,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @var $provider \Concrete\Core\User\Search\SearchProvider
  */
 $available = $provider->getAvailableColumnSet();
-$current = $provider->getCurrentColumnSet();
+$current = isset($query) ? $query->getColumns() : $provider->getDefaultColumnSet();
 $all = $provider->getAllColumnSet();
 $list = $provider->getCustomAttributeKeys();
 $itemsPerPageOptions = $provider->getItemsPerPageOptions();
-$itemsPerPage = $provider->getItemsPerPage();
+$itemsPerPage = isset($query) ? $query->getItemsPerPage() : $provider->getItemsPerPage();
 $form = Core::make('helper/form');
 
 if (!isset($type)) {
@@ -19,7 +19,7 @@ if (!isset($type)) {
 <section data-section="customize-results">
 
     <fieldset>
-        <legend><?= t('Choose Columns') ?></legend>
+        <legend class="mb-3"><?= t('Choose Columns') ?></legend>
 
         <?php
         if (count($available->getColumns())) {
@@ -30,8 +30,11 @@ if (!isset($type)) {
                 $columns = $available->getColumns();
                 foreach ($columns as $col) {
                     ?>
-                    <div class="checkbox"><label><?= $form->checkbox($col->getColumnKey(), 1,
-                                $current->contains($col)) ?> <span><?= $col->getColumnName() ?></span></label></div>
+                    <div class="form-check">
+                        <?= $form->checkbox($col->getColumnKey(), 1,
+                            $current->contains($col)) ?>
+                        <label for="<?=$col->getColumnKey()?>" class="form-check-label"><?= $col->getColumnName() ?></label>
+                    </div>
                     <?php
                 }
                 ?>
@@ -48,9 +51,11 @@ if (!isset($type)) {
                 <?php
                 foreach ($list as $ak) {
                     ?>
-                    <div class="checkbox"><label><?= $form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1,
-                                $current->contains($ak)) ?>
-                            <span><?= $ak->getAttributeKeyDisplayName() ?></span></label></div>
+                    <div class="form-check">
+                        <?= $form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1,
+                            $current->contains($ak)) ?>
+                        <label for="ak_<?=$ak->getAttributeKeyHandle()?>" class="form-check-label"><?= $ak->getAttributeKeyDisplayName() ?></label>
+                    </div>
                     <?php
                 }
                 ?>
@@ -59,7 +64,7 @@ if (!isset($type)) {
         }
         ?>
     </fieldset>
-
+    <hr>
     <fieldset>
         <legend><?= t('Column Order') ?></legend>
 
@@ -78,7 +83,7 @@ if (!isset($type)) {
             ?>
         </ul>
     </fieldset>
-
+    <hr>
     <fieldset>
         <legend><?= t('Sort By') ?></legend>
 
@@ -93,7 +98,7 @@ if (!isset($type)) {
                 foreach ($all->getSortableColumns() as $col) {
                     ?>
                     <option id="<?= $col->getColumnKey() ?>"
-                            value="<?= $col->getColumnKey() ?>" <?php if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="selected" <?php } ?>><?= $col->getColumnName() ?></option>
+                            value="<?= $col->getColumnKey() ?>" <?php if ($ds && $col->getColumnKey() == $ds->getColumnKey()) { ?> selected="selected" <?php } ?>><?= $col->getColumnName() ?></option>
                     <?php
                 }
                 ?>
@@ -115,6 +120,7 @@ if (!isset($type)) {
     </fieldset>
 
     <?php if ($includeNumberOfResults) { ?>
+        <hr>
 
         <fieldset>
             <legend><?= t('Number of Results') ?></legend>
@@ -146,7 +152,7 @@ if (!isset($type)) {
             opacity: 0.5
         });
         $form.on('click', 'input[type=checkbox]', function () {
-            var label = $(this).parent().find('span').html(),
+            var label = $(this).parent().find('label').html(),
                 id = $(this).attr('id');
 
             if ($(this).prop('checked')) {

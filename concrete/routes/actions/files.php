@@ -20,5 +20,4 @@ $router->all('/upload', 'File::upload');
 $router->all('/download', 'File::download');
 $router->all('/import_incoming', 'File::importIncoming');
 $router->all('/import_remote', 'File::importRemote');
-$router->all('/folder/contents', '\Concrete\Controller\Search\FileFolder::submit');
 $router->all('/thumbnailer', 'File\Thumbnailer::generate');

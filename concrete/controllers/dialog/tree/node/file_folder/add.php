@@ -91,7 +91,7 @@ class Add extends Node
 
         if (!$this->error->has()) {
             $filesystem = new Filesystem();
-            $folder = $filesystem->addFolder($this->node, $folderName, $fslID);
+            $folder = $filesystem->addFolder($this->getNode(), $folderName, $fslID);
             $response->setMessage(t('Folder added.'));
             $response->setAdditionalDataAttribute('folder', $folder);
 

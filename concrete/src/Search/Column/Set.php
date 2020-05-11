@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Search\Column;
 
-class Set
+class Set implements \JsonSerializable
 {
     protected $columns = array();
     protected $defaultSortColumn;
@@ -33,7 +33,7 @@ class Set
             if (!$col) {
                 unset($this->columns[$i]); // Somehow a null column was saved in the result set.
             }
-            
+
             if ($col instanceof AttributeKeyColumn) {
                 $ak = $this->getAttributeKeyColumn(substr($col->getColumnKey(), 3));
                 if (!is_object($ak)) {
@@ -96,6 +96,17 @@ class Set
                 }
             }
         }
+    }
+
+    public function jsonSerialize()
+    {
+        $data = [
+            'columns' => $this->columns,
+        ];
+        if ($this->getDefaultSortColumn()) {
+            $data['sortColumn'] = $this->getDefaultSortColumn()->getColumnKey();
+        }
+        return $data;
     }
 
     public function getColumns()

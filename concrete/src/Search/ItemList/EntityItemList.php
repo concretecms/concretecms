@@ -33,7 +33,7 @@ abstract class EntityItemList extends ItemList
 
     public function deliverQueryObject()
     {
-        $this->setupAutomaticSorting();
+        $this->performAutomaticSorting();
         $query = clone $this->query;
         $query = $this->finalizeQuery($query);
         return $query;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Site\Type\Controller;
 
 use Concrete\Core\Entity\Site\Site;
@@ -8,20 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface ControllerInterface
 {
-    /**
-     * @param Site $site
-     * @param Request $request
-     * @return Site
-     */
+    public function add(Site $site, Request $request): Site;
 
-    public function add(Site $site, Request $request);
-    public function update(Site $site, Request $request);
-    public function delete(Site $site);
-    public function addType(Type $type);
+    public function update(Site $site, Request $request): Site;
 
-    /**
-     * @return FormatterInterface
-     */
-    public function getFormatter(Type $type);
+    public function delete(Site $site): bool;
 
+    public function addType(Type $type): Type;
+
+    public function getFormatter(Type $type): FormatterInterface;
 }

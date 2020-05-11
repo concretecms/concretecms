@@ -9,7 +9,7 @@ class DividerItem extends AbstractItem
 
     public function getItemElement()
     {
-        return (new Element('li'))->addClass('dropdown-divider');
+        return (new Element('div'))->addClass('dropdown-divider');
     }
 
 }

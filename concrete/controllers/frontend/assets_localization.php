@@ -92,6 +92,7 @@ var ccmi18n = ' . json_encode([
     'deleteAttributeValue' => t('Are you sure you want to remove this value?'),
     'search' => t('Search'),
     'advanced' => t('Advanced'),
+    'advancedSearch' => t('Advanced Search'),
     'customizeSearch' => t('Customize Search'),
     'properties' => t('Page Saved'),
     'savePropertiesMsg' => t('Page Properties saved.'),

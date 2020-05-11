@@ -30,6 +30,8 @@ body.ccm-dashboard-desktop {
     }
 
     div.ccm-dashboard-desktop-content {
+      margin-left: $dashboard-content-padding-l;
+      margin-right: $dashboard-content-padding-r;
       position: relative;
       z-index: 1;
     }
