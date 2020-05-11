@@ -192,7 +192,7 @@ $txt = Loader::helper('text'); ?>
 } else { // Attribute Category List?>
 
         <h3><?=t('Attribute Categories')?></h3>
-		<span class="help-block"><?php echo t('Attribute Categories are used to group different types of sets.')?></span>
+		<div class="help-block"><?php echo t('Attribute Categories are used to group different types of sets.')?></div>
 		<ul class="item-select-list mt-2">
 			<?php
             if (count($categories) > 0) {
