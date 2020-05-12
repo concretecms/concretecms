@@ -46,6 +46,16 @@ class Query implements \JsonSerializable, DenormalizableInterface
     }
 
     /**
+     * Adds a field to the query object.
+     *
+     * @param FieldInterface $field
+     */
+    public function addField(FieldInterface $field)
+    {
+        $this->fields[] = $field;
+    }
+
+    /**
      * @return mixed
      */
     public function getColumns()
