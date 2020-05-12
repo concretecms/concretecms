@@ -4,6 +4,7 @@ namespace Concrete\Core\User\Search;
 use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\AbstractSearchProvider;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\ProviderInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\GroupList;
@@ -20,6 +21,11 @@ class SearchProvider extends AbstractSearchProvider
 {
 
     protected $userCategory;
+
+    public function getFieldManager()
+    {
+        return ManagerFactory::get('user');
+    }
 
     public function __construct(UserCategory $userCategory, Session $session)
     {
@@ -100,7 +106,7 @@ class SearchProvider extends AbstractSearchProvider
 
         return $result;
     }
-    
+
     public function getSavedSearch()
     {
         return new SavedUserSearch();

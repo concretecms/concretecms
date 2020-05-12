@@ -237,23 +237,33 @@ $dh = Core::make('helper/date');
     <div class="ccm-dashboard-header-buttons">
 
         <form class="form-inline" method="get" action="#">
-            <input type="text" class="form-control" autocomplete="off" name="fsKeywords"
-                   value="<?= isset($_REQUEST['fsKeywords']) ? h($_REQUEST['fsKeywords']) : '' ?>" placeholder="<?= t('Search') ?>">
-            <select data-select="bootstrap" name="fsType">
+
+            <?=$form->search('fsKeywords', [
+                'placeholder' => t('Search'),
+                'class' => 'form-control-sm',
+                'autocomplete' => 'off']);
+            ?>
+            <select name="fsType" class="ml-2 custom-select-sm custom-select">
                 <option
-                    value="<?= FileSet::TYPE_PUBLIC ?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?= t('Public Sets') ?></option>
+                        value="<?= FileSet::TYPE_PUBLIC ?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?= t('Public Sets') ?></option>
                 <option
-                    value="<?= FileSet::TYPE_PRIVATE ?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?= t('My Sets') ?></option>
+                        value="<?= FileSet::TYPE_PRIVATE ?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?= t('My Sets') ?></option>
             </select>
-            <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
+
+            <button type="submit" class="btn-secondary ml-2 btn-sm">
+                <svg width="16" height="16"><use xlink:href="#icon-search"/></svg>
+            </button>
 
 
-            <ul class="ccm-header-search-navigation">
-                <li><a href="<?= View::url('/dashboard/files/add_set') ?>" class="link-primary"><i
-                            class="fa fa-plus"></i> <?= t('Add File Set') ?></a></li>
-            </ul>
+            <a class="btn btn-secondary btn-sm ml-2" href="<?= View::url('/dashboard/files/add_set') ?>" title="<?= t('Add File Set') ?>">
+                <?=t('Add File Set')?> <i class="fa fa-plus-circle"></i>
+            </a>
 
         </form>
+
+
+
+
     </div>
 
 

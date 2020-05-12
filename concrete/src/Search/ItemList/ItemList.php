@@ -35,6 +35,14 @@ abstract class ItemList
     abstract public function debugStart();
     abstract public function debugStop();
 
+    /**
+     * @return array
+     */
+    public function getAutoSortColumns(): array
+    {
+        return $this->autoSortColumns;
+    }
+
     public function debug()
     {
         $this->debug = true;
@@ -206,7 +214,7 @@ abstract class ItemList
     /**
      * @param StickyRequest $request
      */
-    public function setupAutomaticSorting(StickyRequest $request = null)
+    public function performAutomaticSorting(StickyRequest $request = null)
     {
         if ($this->enableAutomaticSorting) {
             if ($request) {
@@ -227,6 +235,12 @@ abstract class ItemList
         }
     }
 
+    protected function setupAutomaticSorting()
+    {
+        // Empty, meant to be extended. This separates the logic of making columns available for automatic sorting
+        // vs. actually automatically applying it by default within the list.
+    }
+
     /**
      * @deprecated
      */
@@ -237,7 +251,7 @@ abstract class ItemList
 
     /**
      * Allow to modify the auto-pagination parameters and the auto-sorting parameters
-     * 
+     *
      * @param mixed $nameSpace Content that will be added to the parameters
      */
     public function setNameSpace($nameSpace)

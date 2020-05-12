@@ -4,10 +4,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div data-search="files" class="ccm-ui">
 
-	<?php
-	$header->render();
-	?>
-
 	<?php Loader::element('files/search', array('result' => $result))?>
 
 </div>

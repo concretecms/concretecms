@@ -15,6 +15,7 @@ class KeywordsField extends AbstractField
     {
         if ($keywords) {
             $this->data['keywords'] = $keywords;
+            $this->isLoaded = true;
         }
     }
 

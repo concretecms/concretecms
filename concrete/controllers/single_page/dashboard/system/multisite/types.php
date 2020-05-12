@@ -1,152 +1,61 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multisite;
 
-use Concrete\Controller\Element\Dashboard\SiteType\Menu;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Application\UserInterface\Sitemap\JsonFormatter;
 use Concrete\Core\Application\UserInterface\Sitemap\SkeletonSitemapProvider;
 use Concrete\Core\Attribute\Category\CategoryService;
-use Concrete\Core\Attribute\Key\SiteTypeKey;
+use Concrete\Core\Attribute\Category\SiteTypeCategory;
 use Concrete\Core\Controller\Traits\MultisiteRequiredTrait;
 use Concrete\Core\Entity\Site\Group\Group;
+use Concrete\Core\Entity\Site\Skeleton;
 use Concrete\Core\Entity\Site\SkeletonLocale;
+use Concrete\Core\Entity\Site\Type;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Filesystem\Element;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumbFactory;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Type\Skeleton\Service as SkeletonService;
 use Concrete\Core\Site\User\Group\Service;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class Types extends DashboardPageController
 {
-
     use MultisiteRequiredTrait;
-
-    protected $siteType;
-    protected $skeleton;
 
     public function view()
     {
         $this->set('types', $this->app->make('site/type')->getList());
     }
 
-    protected function setupSiteType($id)
+    public function view_type($id = null)
     {
-        $service = $this->app->make('site/type');
-        $this->siteType = $service->getByID($id);
-        if (is_object($this->siteType)) {
-            $this->set('type', $this->siteType);
-            $this->skeleton = $this->app->make(SkeletonService::class)->getSkeleton($this->siteType);
-            return $this->siteType;
-        } else {
-            $this->redirect('/dashboard/system/multisite/types');
-        }
-    }
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
 
-    public function view_type($id)
-    {
-        $type = $this->app->make('site/type')->getByID($id);
-        if (!is_object($type)) {
-            throw new \Exception(t('Invalid site type.'));
+            return $this->buildRedirect($this->action());
         }
         $sites = $this->app->make('site')->getByType($type);
         $this->set('pageTitle', t('View Site Type'));
-        $this->set('type', $type);
-        $this->set('type_menu', new Menu($type));
+        $this->setCurrentSiteType($type);
         $this->set('sites', $sites);
+        $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
         $this->render('/dashboard/system/multisite/types/view_type');
 
         return $type;
     }
 
-    public function edit($id)
+    public function add()
     {
-        /**
-         * @var $type Type
-         */
-        $type = $this->view_type($id);
-        $templates = array('-1' => t('** Choose Template'));
-        $themes = array('-1' => t('** Choose Theme'));
-        foreach(Template::getList() as $template) {
-            $templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
-        }
-        foreach(Theme::getList() as $theme) {
-            $themes[$theme->getThemeID()] = $theme->getThemeDisplayName();
-        }
-        $this->set('templates', $templates);
-        $this->set('themes', $themes);
-        $this->set('handle', $type->getSiteTypeHandle());
-        $this->set('name', $type->getSiteTypeName());
-        $this->set('themeID', $type->getSiteTypeThemeID());
-        $this->set('templateID', $type->getSiteTypeHomePageTemplateID());
-        $this->set('pageTitle', t('Edit Site Type'));
-        $this->set('buttonLabel', t('Save'));
-        $this->set('action', 'update');
-        $this->set('backURL', \URL::to('/dashboard/system/multisite/types', 'view_type', $type->getSiteTypeID()));
-        $this->render('/dashboard/system/multisite/types/form');
+        return $this->prepareAddOrEdit(new Type());
     }
-
-    protected function validateSave()
-    {
-        if (!$this->token->validate('submit')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-        $vs = $this->app->make('helper/validation/strings');
-        if (!$this->token->validate('submit')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-        $handle = $this->request->request->get('handle');
-        $name = $this->request->request->get('name');
-
-        if (!$name) {
-            $this->error->add(t('Name required.'));
-        }
-
-        if (!$handle) {
-            $this->error->add(t('Handle required.'));
-        } else if (!$vs->handle($handle)) {
-            $this->error->add(t('Handles must contain only letters, numbers or the underscore symbol.'));
-        }
-
-        $template = $this->request->request->get('template');
-        $theme = $this->request->request->get('theme');
-        if ($template) {
-            $pt = Template::getByID($template);
-        }
-        if ($theme) {
-            $pageTheme = Theme::getByID($theme);
-        }
-        if (!isset($pt) && !is_object($pt)) {
-            $this->error->add(t('A valid page template for the home page of the site is required.'));
-        }
-        if (!isset($pageTheme) && !is_object($pageTheme)) {
-            $this->error->add(t('A valid site theme is required.'));
-        }
-
-        return [$name, $handle, $pageTheme, $pt];
-    }
-
-    public function delete_type()
-    {
-        $service = $this->app->make('site/type');
-        $type = $service->getByID($this->request->request->get('id'));
-        if (!$this->token->validate('delete_type')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-        if (!is_object($type)) {
-            $this->error->add(t('Invalid site type.'));
-        }
-        if (is_object($type) && $type->isDefault()) {
-            $this->error->add(t('You may not delete the default site type.'));
-        }
-        if (!$this->error->has()) {
-            $service->delete($type);
-            $this->flash('success', t('Site type removed successfully.'));
-            $this->redirect('/dashboard/system/multisite/types');
-        }
-        $this->view();
-    }
-
 
     public function create()
     {
@@ -160,18 +69,33 @@ class Types extends DashboardPageController
             $this->entityManager->flush();
 
             $this->flash('success', t('Site type created successfully.'));
-            $this->redirect('/dashboard/system/multisite/types', 'view_type', $type->getSiteTypeID());
+
+            return $this->buildRedirect($this->action('view_type', $type->getSiteTypeID()));
         }
-        $this->add($this->request->request->get('id'));
+
+        return $this->add();
     }
 
+    public function edit($id)
+    {
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
 
+            return $this->buildRedirect($this->action());
+        }
+
+        return $this->prepareAddOrEdit($type);
+    }
 
     public function update()
     {
-        $type = $this->app->make('site/type')->getByID($this->request->request->get('id'));
-        if (!is_object($type)) {
-            $this->error->add(t('Invalid site type.'));
+        $type = $this->app->make('site/type')->getByID((int) $this->request->request->get('id'));
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
         }
         list($name, $handle, $pageTheme, $pt) = $this->validateSave();
         if (!$this->error->has()) {
@@ -183,215 +107,338 @@ class Types extends DashboardPageController
             $this->entityManager->flush();
 
             $this->flash('success', t('Site type updated successfully.'));
-            $this->redirect('/dashboard/system/multisite/types', 'view_type', $type->getSiteTypeID());
+
+            return $this->buildRedirect($this->action('view_type', $type->getSiteTypeID()));
         }
-        $this->edit($this->request->request->get('id'));
+
+        return $this->edit($type->getSiteTypeID());
     }
 
-    public function add()
+    public function delete_type()
     {
-        $templates = array('-1' => t('** Choose Template'));
-        $themes = array('-1' => t('** Choose Theme'));
-        foreach(Template::getList() as $template) {
-            $templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
+        $id = (int) $this->request->request->get('id');
+        $service = $this->app->make('site/type');
+        $type = $id === 0 ? null : $service->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
         }
-        foreach(Theme::getList() as $theme) {
-            $themes[$theme->getThemeID()] = $theme->getThemeDisplayName();
-        }
-        $this->set('templates', $templates);
-        $this->set('themes', $themes);
-        $this->set('buttonLabel', t('Add Site Type'));
-        $this->set('backURL', \URL::to('/dashboard/system/multisite/types'));
-        $this->set('action', 'create');
-        $this->render('/dashboard/system/multisite/types/form');
-    }
-
-
-    public function view_attributes($id = null)
-    {
-        $this->setupSiteType($id);
-        $this->set('type', $this->siteType);
-        $this->set('skeleton', $this->skeleton);
-        $this->set('category', $this->app->make(CategoryService::class)->getByHandle('site_type'));
-        $this->set('type_menu', new Menu($this->siteType));
-        $this->render('/dashboard/system/multisite/types/view_attributes');
-    }
-
-    public function update_attribute($id = false)
-    {
-        $this->setupSiteType($id);
-        $sr = new EditResponse();
-        if ($this->token->validate()) {
-            $ak = SiteTypeKey::getByID(intval($_REQUEST['name']));
-            if (is_object($ak)) {
-                $controller = $ak->getController();
-                $val = $controller->createAttributeValueFromRequest();
-                $val = $this->skeleton->setAttribute($ak, $val);
-            }
-        } else {
+        if (!$this->token->validate('delete_type')) {
             $this->error->add($this->token->getErrorMessage());
         }
-
-        if ($this->error->has()) {
-            $sr->setError($this->error);
-        } else {
-            $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
+        if ($type->isDefault()) {
+            $this->error->add(t('You may not delete the default site type.'));
         }
-        $sr->outputJSON();
-    }
-
-    public function clear_attribute($id = false)
-    {
-        $this->setupSiteType($id);
-        $sr = new EditResponse();
-        if ($this->token->validate()) {
-            $ak = SiteTypeKey::getByID(intval($_REQUEST['akID']));
-            if (is_object($ak)) {
-                $this->skeleton->clearAttribute($ak);
-            }
-        } else {
-            $this->error->add($this->token->getErrorMessage());
-        }
-        if ($this->error->has()) {
-            $sr->setError($this->error);
-        } else {
-            $sr->setMessage(t('Attribute cleared successfully.'));
-        }
-        $sr->outputJSON();
-    }
-
-
-    public function view_groups($siteTypeID = null)
-    {
-        $type = $this->setupSiteType($siteTypeID);
-        $groups = $this->entityManager->getRepository(Group::class)
-            ->findByType($type);
-        $this->set('type_menu', new Menu($this->siteType));
-        $this->set('groups', $groups);
-        $this->render('/dashboard/system/multisite/types/view_groups');
-    }
-
-    protected function getGroup($siteGID)
-    {
-        $group = $this->entityManager->getRepository(Group::class)
-            ->findOneByID($siteGID);
-        if (!is_object($group)) {
-            $this->error->add(t('Invalid group ID.'));
-        }
-
-        return $group;
-    }
-
-    public function add_group($id = null)
-    {
-        $this->setupSiteType($id);
-        $this->set('type_menu', new Menu($this->siteType));
-        $this->render('/dashboard/system/multisite/types/view_groups');
-    }
-
-    public function create_group($id = null)
-    {
-        $type = $this->setupSiteType($id);
-        if (!$this->token->validate('create_group')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-
         if (!$this->error->has()) {
-            $service = $this->app->make(Service::class);
-            $service->addGroup($type, $this->request->request->get('groupName'));
-            $this->flash('success', t('Group added successfully.'));
-            $this->redirect('/dashboard/system/multisite/types/', 'view_groups', $type->getSiteTypeID());
-        } else {
-            $this->add_group();
-        }
-    }
+            $service->delete($type);
+            $this->flash('success', t('Site type removed successfully.'));
 
-    public function edit_group($siteGID = null)
-    {
-        $group = $this->getGroup($siteGID);
-        $this->set('group', $group);
-        $this->view_type($group->getSiteType()->getSiteTypeID());
-        $this->render('/dashboard/system/multisite/types/view_groups');
-    }
-
-    public function update_group($siteGID = null)
-    {
-        if (!$this->token->validate('update_group')) {
-            $this->error->add($this->token->getErrorMessage());
+            return $this->buildRedirect($this->action());
         }
 
-        $group = $this->getGroup($siteGID);
-
-        if (!$this->error->has()) {
-            $group->setSiteGroupName($this->request->request->get('groupName'));
-            $this->entityManager->persist($group);
-            $this->entityManager->flush();
-            $type = $group->getSiteType();
-            $this->flash('success', t('Group updated successfully.'));
-            $this->redirect('/dashboard/system/multisite/types', 'view_groups', $type->getSiteTypeID());
-        } else {
-            $this->edit_group();
-        }
-    }
-
-    public function delete_group()
-    {
-        $group = $this->getGroup($this->request->request->get('siteGID'));
-
-        if (!$this->token->validate('delete_group')) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-
-        if (!$this->error->has()) {
-            $type = $group->getSiteType();
-            $this->entityManager->remove($group);
-            $this->entityManager->flush();
-
-            $this->flash('success', t('Group deleted successfully.'));
-            $this->redirect('/dashboard/system/multisite/types', 'view_groups', $type->getSiteTypeID());
-        }
+        return $this->view_type($type->getSiteTypeID());
     }
 
     public function view_skeleton($id = null)
     {
-        /**
-         * @var $service Service
-         */
+        $id = (int) $id;
         $service = $this->app->make('site/type');
-        $type = $service->getByID($id);
-        if (is_object($type)) {
-            $this->set('type', $type);
-            /**
-             * @var $skeletonService SkeletonService
-             */
-            $skeletonService = $this->app->make(SkeletonService::class);
-            $skeleton = $skeletonService->getSkeleton($type);
-            if (!$skeleton) {
-                $locale = new SkeletonLocale();
-                $locale->setLanguage('en');
-                $locale->setCountry('US');
-                $skeleton = $skeletonService->createSkeleton($type, $locale);
-            }
-            $this->set('skeleton', $skeleton);
-            $this->set('type_menu', new Menu($type));
-        } else {
-            $this->redirect('/dashboard/system/multisite/types');
+        $type = $id === 0 ? null : $service->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
         }
+        $this->setCurrentSiteType($type);
+        $this->prepareSkelpeton($type, true);
         $this->render('/dashboard/system/multisite/types/view_skeleton');
     }
 
     public function get_sitemap($id = null)
     {
+        $id = (int) $id;
         $service = $this->app->make('site/type');
-        $type = $service->getByID($id);
-        if ($type) {
-            $provider = $this->app->make(SkeletonSitemapProvider::class, ['siteType' => $type]);
-            $formatter = new JsonFormatter($provider);
-            return new JsonResponse($formatter);
+        $type = $id === 0 ? null : $service->getByID($id);
+        if ($type === null) {
+            throw new UserMessageException(t('The site type specified does not exist.'));
         }
-        $this->redirect('/dashboard/system/multisite/types');
+        $provider = $this->app->make(SkeletonSitemapProvider::class, ['siteType' => $type]);
+        $formatter = new JsonFormatter($provider);
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($formatter);
     }
 
+    public function view_groups($id = null)
+    {
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
 
+            return $this->buildRedirect($this->action());
+        }
+        $this->setCurrentSiteType($type);
+        $this->set('groups', $this->entityManager->getRepository(Group::class)->findByType($type));
+        $this->set('group', null);
+        $this->render('/dashboard/system/multisite/types/view_groups');
+    }
+
+    public function add_group($id = null)
+    {
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        $this->setCurrentSiteType($type);
+        $this->set('group', new Group());
+        $this->render('/dashboard/system/multisite/types/view_groups');
+    }
+
+    public function create_group($id = null)
+    {
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        if (!$this->token->validate('create_group')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $name = trim((string) $this->request->request->get('groupName'));
+        if ($name === '') {
+            $this->error->add(t('Please specify the group name.'));
+        }
+        if (!$this->error->has()) {
+            $service = $this->app->make(Service::class);
+            $service->addGroup($type, $name);
+            $this->flash('success', t('Group added successfully.'));
+
+            return $this->buildRedirect($this->action('view_groups', $type->getSiteTypeID()));
+        }
+
+        return $this->add_group($type->getSiteTypeID());
+    }
+
+    public function edit_group($siteGID = null)
+    {
+        $siteGID = (int) $siteGID;
+        $group = $siteGID === 0 ? null : $this->entityManager->getRepository(Group::class)->findOneByID($siteGID);
+        if ($group === null) {
+            $this->flash('error', t('The group specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        $type = $group->getSiteType();
+        $this->setCurrentSiteType($type);
+        $this->set('group', $group);
+        $this->render('/dashboard/system/multisite/types/view_groups');
+    }
+
+    public function update_group($siteGID = null)
+    {
+        $siteGID = (int) $siteGID;
+        $group = $siteGID === 0 ? null : $this->entityManager->getRepository(Group::class)->findOneByID($siteGID);
+        if ($group === null) {
+            $this->flash('error', t('The group specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        if (!$this->token->validate('update_group')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $name = trim((string) $this->request->request->get('groupName'));
+        if ($name === '') {
+            $this->error->add(t('Please specify the group name.'));
+        }
+        if (!$this->error->has()) {
+            $group->setSiteGroupName($name);
+            $this->entityManager->flush($group);
+            $this->flash('success', t('Group updated successfully.'));
+
+            return $this->buildRedirect($this->action('view_groups', $group->getSiteType()->getSiteTypeID()));
+        }
+
+        return $this->edit_group($group->getSiteGroupID());
+    }
+
+    public function delete_group()
+    {
+        $siteGID = (int) $this->request->request->get('siteGID', 0);
+        $group = $siteGID === 0 ? null : $this->entityManager->getRepository(Group::class)->findOneByID($siteGID);
+        if ($group === null) {
+            $this->flash('error', t('The group specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        if (!$this->token->validate('delete_group')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $type = $group->getSiteType();
+            $this->entityManager->remove($group);
+            $this->entityManager->flush();
+            $this->flash('success', t('Group deleted successfully.'));
+
+            return $this->buildRedirect($this->action('view_groups', $type->getSiteTypeID()));
+        }
+
+        return $this->edit_group($group->getSiteGroupID());
+    }
+
+    public function view_attributes($id = null)
+    {
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            $this->flash('error', t('The site type specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        $this->setCurrentSiteType($type);
+        $this->prepareSkelpeton($type, false);
+        $this->set('category', $this->app->make(CategoryService::class)->getByHandle('site_type'));
+        $this->render('/dashboard/system/multisite/types/view_attributes');
+    }
+
+    public function update_attribute($id = null)
+    {
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            throw new UserMessageException(t('The site type specified does not exist.'));
+        }
+        $sr = new EditResponse();
+        if (!$this->token->validate()) {
+            $sr->getError()->add($this->token->getErrorMessage());
+        }
+        $akID = (int) $this->request->request->get('name', $this->request->query->get('name'));
+        $ak = $akID === 0 ? null : $this->app->make(SiteTypeCategory::class)->getAttributeKeyByID($akID);
+        if ($ak === null) {
+            $sr->getError()->add(t('Invalid attribute key'));
+        }
+        if (!$sr->getError()->has()) {
+            $controller = $ak->getController();
+            $val = $controller->createAttributeValueFromRequest();
+            $val = $this->getTypeSkeleton($type)->setAttribute($ak, $val);
+            $sr->setMessage(t('Attribute saved successfully.'));
+            $sr->setAdditionalDataAttribute('value', $val->getDisplayValue());
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($sr);
+    }
+
+    public function clear_attribute($id = null)
+    {
+        $id = (int) $id;
+        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
+        if ($type === null) {
+            throw new UserMessageException(t('The site type specified does not exist.'));
+        }
+        $sr = new EditResponse();
+        if (!$this->token->validate()) {
+            $sr->getError()->add($this->token->getErrorMessage());
+        }
+        $akID = (int) $this->request->request->get('name', $this->request->query->get('akID'));
+        $ak = $akID === 0 ? null : $this->app->make(SiteTypeCategory::class)->getAttributeKeyByID($akID);
+        if (!$sr->getError()->has()) {
+            if ($ak !== null) {
+                $this->getTypeSkeleton($type)->clearAttribute($ak);
+            }
+            $sr->setMessage(t('Attribute cleared successfully.'));
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($sr);
+    }
+
+    protected function prepareAddOrEdit(Type $type): void
+    {
+        $this->set('pageTitle', $type->getSiteTypeID() === null ? t('Add Site Type') : t('Edit Site Type'));
+        $this->setCurrentSiteType($type);
+        $templates = ['' => t('** Choose Template')];
+        foreach (Template::getList() as $template) {
+            $templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
+        }
+        $this->set('templates', $templates);
+        $themes = ['' => t('** Choose Theme')];
+        foreach (Theme::getList() as $theme) {
+            $themes[$theme->getThemeID()] = $theme->getThemeDisplayName();
+        }
+        $this->set('themes', $themes);
+        $this->render('/dashboard/system/multisite/types/form');
+    }
+
+    protected function validateSave(): array
+    {
+        if (!$this->token->validate('submit')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $vs = $this->app->make('helper/validation/strings');
+        if (!$this->token->validate('submit')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $handle = (string) $this->request->request->get('handle');
+        if ($handle === '') {
+            $this->error->add(t('Handle required.'));
+        } elseif (!$vs->handle($handle)) {
+            $this->error->add(t('Handles must contain only letters, numbers or the underscore symbol.'));
+        }
+        $name = (string) $this->request->request->get('name');
+        if ($name === '') {
+            $this->error->add(t('Name required.'));
+        }
+        $pageThemeID = (int) $this->request->request->get('theme');
+        $pageTheme = $pageThemeID < 1 ? null : Theme::getByID($pageThemeID);
+        if ($pageTheme === null || $pageTheme->isError()) {
+            $this->error->add(t('A valid site theme is required.'));
+        }
+        $pageTemplateID = (int) $this->request->request->get('template');
+        $pageTemplate = $pageTemplateID < 1 ? null : Template::getByID($pageTemplateID);
+        if ($pageTemplate === null) {
+            $this->error->add(t('A valid page template for the home page of the site is required.'));
+        }
+
+        return [$name, $handle, $pageTheme, $pageTemplate];
+    }
+
+    protected function setCurrentSiteType(?Type $type): void
+    {
+        $this->set('type', $type);
+        if ($type === null || $type->getSiteTypeID() === null) {
+            $menu = null;
+        } else {
+            $breadcrumb = $this->app->make(DashboardBreadcrumbFactory::class)->getBreadcrumb($this->getPageObject());
+            $breadcrumb->add(new Item('', $type->getSiteTypeName()));
+            $this->setBreadcrumb($breadcrumb);
+            $menu = new Element('dashboard/system/multisite/site_type/menu', '', $this->getPageObject(), [$type]);
+        }
+        $this->set('typeMenu', $menu);
+    }
+
+    protected function getTypeSkeleton(?Type $type, bool $createIfNotFound = false): ?Skeleton
+    {
+        if ($type === null || $type->getSiteTypeID() === null) {
+            return null;
+        }
+        $skeletonService = $this->app->make(SkeletonService::class);
+        $skeleton = $skeletonService->getSkeleton($type);
+        if ($skeleton !== null || $createIfNotFound === false) {
+            return $skeleton;
+        }
+        $locale = new SkeletonLocale();
+        $locale->setLanguage('en');
+        $locale->setCountry('US');
+
+        return $skeletonService->createSkeleton($type, $locale);
+    }
+
+    protected function prepareSkelpeton(?Type $type, bool $createIfNotFound): void
+    {
+        $this->set('skeleton', $this->getTypeSkeleton($type, $createIfNotFound));
+    }
 }

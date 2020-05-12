@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Entity\PackageTrait;
@@ -11,94 +12,52 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Type
 {
-
-    const DEFAULT_TYPE_HANDLE = 'default';
-
     use PackageTrait;
+
+    public const DEFAULT_TYPE_HANDLE = 'default';
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int|null
      */
     protected $siteTypeID;
 
     /**
      * @ORM\Column(type="string", unique=true)
+     *
+     * @var string
      */
-    protected $siteTypeHandle;
+    protected $siteTypeHandle = '';
 
     /**
      * @ORM\Column(type="string", unique=true)
+     *
+     * @var string
      */
-    protected $siteTypeName;
+    protected $siteTypeName = '';
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $siteTypeThemeID = 0;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $siteTypeHomePageTemplateID = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="Site", cascade={"remove"}, mappedBy="type")
+     *
+     * @var \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Site\Site[]
      */
     protected $sites;
-
-    public function isDefault()
-    {
-        return $this->getSiteTypeHandle() == self::DEFAULT_TYPE_HANDLE;
-    }
-
-    /**
-     * @param mixed $siteTypeID
-     */
-    public function getSiteTypeID()
-    {
-        return $this->siteTypeID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSiteTypeHandle()
-    {
-        return $this->siteTypeHandle;
-    }
-
-    /**
-     * @param mixed $siteTypeHandle
-     */
-    public function setSiteTypeHandle($siteTypeHandle)
-    {
-        $this->siteTypeHandle = $siteTypeHandle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSiteTypeName()
-    {
-        return $this->siteTypeName;
-    }
-
-    /**
-     * @param mixed $siteTypeName
-     */
-    public function setSiteTypeName($siteTypeName)
-    {
-        $this->siteTypeName = $siteTypeName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSites()
-    {
-        return $this->sites;
-    }
 
     public function __construct()
     {
@@ -106,7 +65,63 @@ class Type
     }
 
     /**
-     * @return mixed
+     * @return bool
+     */
+    public function isDefault()
+    {
+        return $this->getSiteTypeHandle() === self::DEFAULT_TYPE_HANDLE;
+    }
+
+    /**
+     * @return int|null NULL if not yet persisted
+     */
+    public function getSiteTypeID()
+    {
+        return $this->siteTypeID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteTypeHandle()
+    {
+        return $this->siteTypeHandle;
+    }
+
+    /**
+     * @param string $siteTypeHandle
+     */
+    public function setSiteTypeHandle($siteTypeHandle)
+    {
+        $this->siteTypeHandle = (string) $siteTypeHandle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteTypeName()
+    {
+        return $this->siteTypeName;
+    }
+
+    /**
+     * @param string $siteTypeName
+     */
+    public function setSiteTypeName($siteTypeName)
+    {
+        $this->siteTypeName = (string) $siteTypeName;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Site\Site[]
+     */
+    public function getSites()
+    {
+        return $this->sites;
+    }
+
+    /**
+     * @return int
      */
     public function getSiteTypeThemeID()
     {
@@ -114,15 +129,15 @@ class Type
     }
 
     /**
-     * @param mixed $siteTypeThemeID
+     * @param int $siteTypeThemeID
      */
     public function setSiteTypeThemeID($siteTypeThemeID)
     {
-        $this->siteTypeThemeID = $siteTypeThemeID;
+        $this->siteTypeThemeID = (int) $siteTypeThemeID;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getSiteTypeHomePageTemplateID()
     {
@@ -130,13 +145,10 @@ class Type
     }
 
     /**
-     * @param mixed $siteTypeHomePageTemplate
+     * @param int $siteTypeHomePageTemplateID
      */
     public function setSiteTypeHomePageTemplateID($siteTypeHomePageTemplateID)
     {
-        $this->siteTypeHomePageTemplateID = $siteTypeHomePageTemplateID;
+        $this->siteTypeHomePageTemplateID = (int) $siteTypeHomePageTemplateID;
     }
-
-
-
 }

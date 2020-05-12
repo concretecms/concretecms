@@ -115,7 +115,7 @@ if ($downloadUrl !== $url) {
                     <?= t('Invalid file dimensions, please rescan this file.') ?>
                     <?php if ($mode != 'preview' && $fp->canEditFileContents()) {
     ?>
-                        <a href="#" class="btn pull-right btn-default btn-xs"
+                        <a href="#" class="btn float-right btn-secondary btn-xs"
                            data-action="rescan"><?= t('Rescan') ?></a>
                     <?php
 }
@@ -135,7 +135,7 @@ if ($downloadUrl !== $url) {
                     <?= t('Unknown error retrieving thumbnails, please rescan this file.') ?>
                     <?php if ($mode != 'preview' && $fp->canEditFileContents()) {
     ?>
-                        <a href="#" class="btn pull-right btn-default btn-xs"
+                        <a href="#" class="btn float-right btn-secondary btn-xs"
                            data-action="rescan"><?= t('Rescan') ?></a>
                     <?php
 }

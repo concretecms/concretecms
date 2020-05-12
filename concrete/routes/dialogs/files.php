@@ -29,7 +29,6 @@ $router->all('/folder/submit', 'Folder::submit');
 $router->all('/properties', 'Properties::view');
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
-$router->all('/advanced_search/submit', 'AdvancedSearch::submit');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
 $router->all('/properties/clear_attribute', 'Properties::clear_attribute');
 $router->all('/properties/save', 'Properties::save');

@@ -2,8 +2,9 @@
 namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Search\ItemList\ItemList;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 
-interface FieldInterface extends \JsonSerializable
+interface FieldInterface extends \JsonSerializable, DenormalizableInterface
 {
     /**
      * Get the field key.

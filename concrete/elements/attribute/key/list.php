@@ -74,21 +74,21 @@ if (isset($types) && is_array($types) && count($types) > 0) {
     ?>
     <h3><?=t('Add Attribute')?></h3>
     <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-button="attribute-type" data-toggle="dropdown">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-button="attribute-type" data-toggle="dropdown">
             <?=t('Choose Type')?> <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <div class="dropdown-menu">
             <?php
             foreach ($types as $type) {
                 $controller = $type->getController();
                 $formatter = $controller->getIconFormatter();
                 /* @var \Concrete\Core\Attribute\IconFormatterInterface $formatter */
                 ?>
-                <li><a href="<?=$view->controller->getAddAttributeTypeURL($type)?>"><?=$formatter->getListIconElement()?> <?=$type->getAttributeTypeDisplayName()?></a></li>
+                <a class="dropdown-item" href="<?=$view->controller->getAddAttributeTypeURL($type)?>"><?=$formatter->getListIconElement()?> <?=$type->getAttributeTypeDisplayName()?></a>
                 <?php
             }
             ?>
-        </ul>
+        </div>
     </div>
 
     <script type="text/javascript">

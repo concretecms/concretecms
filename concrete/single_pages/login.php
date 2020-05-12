@@ -54,7 +54,7 @@ html,body {
     background-color: #94959A;
 }
 <?php
-if ($imagePath) {
+if (!empty($imagePath)) {
     ?>
     body {
         background-image: url('<?=$imagePath; ?>');

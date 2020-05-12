@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?=URL::to('/dashboard/system/express/entities/associations', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>
-    <a href="<?=URL::to('/dashboard/system/express/entities/associations', 'edit', $association->getID())?>" class="btn btn-default"><?=t("Edit Details")?></a>
+    <a href="<?=URL::to('/dashboard/system/express/entities/associations', $entity->getID())?>" class="btn btn-secondary"><?=t("Back to Object")?></a>
+    <a href="<?=URL::to('/dashboard/system/express/entities/associations', 'edit', $association->getID())?>" class="btn btn-secondary"><?=t("Edit Details")?></a>
     <button type="button" class="btn btn-danger" data-action="delete-association"><?= t('Delete Association') ?></button>
 </div>
 
@@ -13,8 +13,8 @@
             <input type="hidden" name="association_id" value="<?=$association->getID()?>">
             <p><?=t('Are you sure you want to delete this association? This cannot be undone.')?></p>
             <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-association form').submit()"><?=t('Delete Association')?></button>
+                <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-association form').submit()"><?=t('Delete Association')?></button>
             </div>
         </form>
     </div>

@@ -2,16 +2,14 @@
 namespace Concrete\Core\Search;
 
 use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Set;
-use Concrete\Core\Search\ItemList\Pager\Manager\PagerManagerInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
-use Concrete\Core\Tree\Node\Node;
-use Concrete\Core\Tree\Node\Type\SearchPreset;
+use Concrete\Core\Search\Result\ResultFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Concrete\Core\Search\Query\QueryableInterface;
 
-abstract class AbstractSearchProvider implements ProviderInterface, SessionQueryProviderInterface
+abstract class AbstractSearchProvider implements ProviderInterface, SessionQueryProviderInterface, QueryableInterface
 {
     protected $session;
 
@@ -32,7 +30,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
 
     public function getAllColumnSet()
     {
-        $columnSet = new Set();
+        $columnSet = $this->getBaseColumnSet();
         foreach ($this->getAvailableColumnSet()->getColumns() as $column) {
             $columnSet->addColumn($column);
         }
@@ -53,54 +51,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
 
     public function getSearchResultFromQuery(Query $query)
     {
-        $list = $this->getItemList();
-        foreach ($query->getFields() as $field) {
-            $field->filterList($list);
-        }
-
-        $list->disableAutomaticSorting(); // We don't need the automatic sorting found in the item list. it fires too late.
-
-        $columns = $query->getColumns();
-        if (is_object($columns)) {
-            $column = $columns->getDefaultSortColumn();
-            $list->sortBySearchColumn($column);
-        } else {
-            $columns = $this->getDefaultColumnSet();
-        }
-
-        $request = $list->getSearchRequest();
-        if ($request) {
-            $data = $request->getSearchRequest();
-        } else {
-            $data = \Request::getInstance()->query->all();
-        }
-
-        if (isset($data[$list->getQuerySortColumnParameter()])) {
-            $value = $data[$list->getQuerySortColumnParameter()];
-            $sortColumn = $columns->getColumnByKey($value);
-
-            if (is_object($sortColumn)) {
-                if (isset($data[$list->getQuerySortDirectionParameter()]) && !empty($data[$list->getQuerySortDirectionParameter()])) {
-                    $direction = $data[$list->getQuerySortDirectionParameter()];
-                } else {
-                    $direction = $sortColumn->getColumnDefaultSortDirection();
-                }
-
-                $sortColumn->setColumnSortDirection($direction);
-                $list->sortBySearchColumn($sortColumn, $direction);
-            }
-        }
-
-        if ($list instanceof PagerProviderInterface) {
-            $manager = $list->getPagerManager();
-            $manager->sortListByCursor($list, $list->getActiveSortDirection());
-        }
-
-        $list->setItemsPerPage($query->getItemsPerPage());
-        $result = $this->createSearchResultObject($columns, $list);
-        $result->setQuery($query);
-
-        return $result;
+        return app(ResultFactory::class)->createFromQuery($this, $query);
     }
 
     /**

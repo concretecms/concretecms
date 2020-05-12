@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php if (Config::get('concrete.user.registration.validate_email') == true && $canActivateUser) : ?>
             <?php if ($user->isValidated() < 1) : ?>
                 <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="bstb-undefined">
+                    <button type="button" class="btn dropdown-toggle btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="bstb-undefined">
                         <span><?php echo t('Validate') ?></span> <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         if ($user->getAttribute('profile_private_messages_enabled')) {
             $u = Core::make(Concrete\Core\User\User::class);
             if ($u->getUserID() != $user->getUserID()) { ?>
-                <a href="<?php echo View::url('/account/messages', 'write', $user->getUserID())?>" class="btn btn-default"><?php echo t("Send Private Message")?></a>
+                <a href="<?php echo View::url('/account/messages', 'write', $user->getUserID())?>" class="btn btn-secondary"><?php echo t("Send Private Message")?></a>
             <?php } ?>
         <?php } ?>
 
@@ -37,12 +37,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($user->isActive()) { ?>
                 <?php if (!in_array("deactivate", $workflowRequestActions)) { ?>
                     <button type="submit" name="task" value="deactivate"
-                            class="btn btn-default"><?= t('Deactivate User') ?></button>
+                            class="btn btn-secondary"><?= t('Deactivate User') ?></button>
                 <?php } ?>
             <?php } else { ?>
                 <?php if ((!in_array("activate", $workflowRequestActions) && !in_array("register_activate", $workflowRequestActions))) { ?>
                     <button type="submit" name="task" value="activate"
-                            class="btn btn-default"><?= t('Activate User') ?></button>
+                            class="btn btn-secondary"><?= t('Activate User') ?></button>
                 <?php } ?>
             <?php } ?>
         <?php } ?>
@@ -50,7 +50,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php if ($canSignInAsUser) {
             ?>
             <button type="submit" name="task" value="sudo"
-                    class="btn btn-default"><?= t('Sign in As User') ?></button>
+                    class="btn btn-secondary"><?= t('Sign in As User') ?></button>
             <?php
         }
         ?>

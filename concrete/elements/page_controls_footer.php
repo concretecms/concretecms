@@ -294,7 +294,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $permissions->canEditPagePermissions()
                         )
                     ) {
-                        $hasComposer = is_object($pagetype) && $cp->canEditPageContents();
+                        $hasComposer = isset($pagetype) && is_object($pagetype) && $cp->canEditPageContents();
                         ?>
                         <li data-guide-toolbar-action="page-settings" class="float-left hidden-xs">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
@@ -419,7 +419,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         if ($pageInUseBySomeoneElse) {
             $buttons = [];
             if ($canApprovePageVersions) {
-                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-xs btn-default">' . t('Force Exit Edit Mode') . '</a>';
+                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-xs btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
             }
 
             echo $cih->notify([
@@ -432,7 +432,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         } else {
             if ($c->getCollectionPointerID() > 0) {
                 $buttons = [];
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-default btn-xs">' . t('View/Edit Original') . '</a>';
+                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-secondary btn-xs">' . t('View/Edit Original') . '</a>';
                 if ($canApprovePageVersions) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
                     $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
@@ -520,6 +520,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         }
     ?>
     </div>
-    
+
     <?php
 }

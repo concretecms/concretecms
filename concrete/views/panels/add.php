@@ -11,19 +11,46 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Application\Service\Urls $ci */
 ?>
 <section>
-    <div data-panel-menu="accordion" class="ccm-panel-header-accordion ccm-accordion-as-dropdown">
-        <nav>
-        <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
+    <header class="pl-0 pr-0">
+        <div class="dropdown" data-panel-menu="dropdown">
+            <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
+            <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
+                <?php
+                switch($tab) {
+                    case 'containers':
+                        print t('Containers');
+                        break;
+                    case 'stacks':
+                        print t('Stacks');
+                        break;
+                    case 'clipboard':
+                        print t('Clipboard');
+                        break;
+                    case 'blocks':
+                        print t('Blocks');
+                        break;
+                }
+                ?>
+            </h4>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="blocks">Blocks</a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="clipboard">Clipboard</a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="stacks">Stacks</a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="containers">Containers</a>
+            </div>
+        </div>
+    </header>
+    <?php /*
+    <nav>
+        <ul class="ccm-panel-header-accordion-dropdown">
+            <li><a data-panel-accordion-tab="blocks"<?= $tab === 'blocks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Blocks') ?></a></li>
+            <li><a data-panel-accordion-tab="clipboard"<?= $tab === 'clipboard' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Clipboard') ?></a></li>
+            <li><a data-panel-accordion-tab="stacks"<?= $tab === 'stacks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Stacks') ?></a></li>
+            <li><a data-panel-accordion-tab="containers"<?= $tab === 'containers' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Containers') ?></a></li>
+        </ul>
+    </nav>
+ */ ?>
 
-            <span></span>
-            <ul class="ccm-panel-header-accordion-dropdown">
-                <li><a data-panel-accordion-tab="blocks"<?= $tab === 'blocks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Blocks') ?></a></li>
-                <li><a data-panel-accordion-tab="clipboard"<?= $tab === 'clipboard' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Clipboard') ?></a></li>
-                <li><a data-panel-accordion-tab="stacks"<?= $tab === 'stacks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Stacks') ?></a></li>
-                <li><a data-panel-accordion-tab="containers"<?= $tab === 'containers' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Containers') ?></a></li>
-            </ul>
-        </nav>
-    </div>
     <?php
     switch ($tab) {
     case 'containers':
@@ -164,13 +191,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
                         data-btID="<?= $type->getBlockTypeID() ?>"
                         data-pcID="<?= $pile_content->getPileContentID() ?>"
-                        data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
+                        data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
+
                         <div class="block-content">
-                            <div class="block-name">
+                            <div class="block-name float-left">
                                 <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
                             </div>
+                            <div class="delete float-right">
+                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
+                            </div>
+
                             <div class="blocks">
                                 <div class="block ccm-panel-add-block-draggable-block-type" title="<?= t($type->getBlockTypeName()) ?>">
                                     <div class="block-content">
@@ -183,9 +215,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 </div>
                             </div>
                         </div>
-                        <div class="delete">
-                            <button class="ccm-delete-clipboard-item pull-right btn btn-sm btn-link"><?= t('Delete') ?></button>
-                        </div>
+
                     </div>
                     <?php
                 }
