@@ -11,7 +11,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Application\Service\Urls $ci */
 ?>
 <section>
-<<<<<<< HEAD
     <header class="pl-0 pr-0">
         <div class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
@@ -51,13 +50,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </ul>
     </nav>
  */ ?>
-=======
-    <div data-panel-menu="accordion" class="ccm-panel-header-accordion ccm-accordion-as-dropdown">
-        <nav>
-            <div class="ccm-panel-header-list-grid-view-switcher">
-                <i class="fa fa-list fa-xs fa-fw"></i>
-            </div>
->>>>>>> Fixing delete button and updating styling on block
 
     <?php
     switch ($tab) {
