@@ -11,33 +11,25 @@ $topic_id = Request::getInstance()->get('topic_id');
 ?>
 
 <form method="get" action="<?= $view->action('search') ?>">
-    <div class="form-group">
-        <label class="control-label" for="query"><?= t('Search') ?></label>
-        <div class="input-group">
-            <?= $form->text('query', array('placeholder' => t('Keywords'), 'class' => 'form-control')) ?>
+    <label class="control-label" for="query"><?= t('Search') ?></label>
+    <div class="input-group">
+        <?= $form->text('query', array('placeholder' => t('Keywords'))) ?>
+        <?php if (isset($topics) && is_array($topics)) { ?>
 
-            <div class="btn-group" role="group" style="z-index: 501;">
-
-                <?php if (isset($topics) && is_array($topics)) { ?>
-
-                    <select data-select="bootstrap" name="topic_id">
-                        <option value=""><?= t('All Categories') ?></option>
-                        <?php foreach ($topics as $topic_node) { ?>
-                            <option <?php if ($topic_id == $topic_node->getTreeNodeID()) { ?>selected<?php } ?>
-                                    value="<?= $topic_node->getTreeNodeID() ?>"><?= h($topic_node->getTreeNodeDisplayName('html')) ?></option>
-                        <?php } ?>
-                    </select>
-
+            <select name="topic_id" class="custom-select">
+                <option value=""><?= t('All Categories') ?></option>
+                <?php foreach ($topics as $topic_node) { ?>
+                    <option <?php if ($topic_id == $topic_node->getTreeNodeID()) { ?>selected<?php } ?>
+                            value="<?= $topic_node->getTreeNodeID() ?>"><?= h($topic_node->getTreeNodeDisplayName('html')) ?></option>
                 <?php } ?>
+            </select>
 
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-outline-secondary"><?= t('Search') ?></button>
-                </div>
-            </div>
+        <?php } ?>
 
-        </div><!-- /input-group -->
-
-        <div class="spacer-row-2"></div>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-secondary"><?= t('Search') ?></button>
+        </div>
+    </div>
 </form>
 
 

@@ -119,17 +119,15 @@ $ip = Loader::helper('validation/ip');
 </div>
 
 <div class="ccm-dashboard-header-buttons">
-    <div class="ccm-header-search-form ccm-ui">
-        <form class="form-inline" role="form" action="<?=$controller->action('view')?>">
-            <input type="text" class="form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
-            <select data-select="bootstrap" name="cmpMessageFilter">
-                <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
-                    <option value="<?php echo $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?php echo $optionText; ?></option>
-                <?php } ?>
-            </select>
-            <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
-        </form>
-    </div>
+    <form class="form-inline" role="form" action="<?=$controller->action('view')?>">
+        <input type="text" class="ml-2 form-control-sm form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
+        <select class="ml-2 custom-select custom-select-sm" name="cmpMessageFilter">
+            <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
+                <option value="<?php echo $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?php echo $optionText; ?></option>
+            <?php } ?>
+        </select>
+        <button class="ml-2 btn btn-secondary btn-sm" type="submit"><i class="fa fa-search"></i></button>
+    </form>
 </div>
 
 
