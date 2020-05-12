@@ -140,18 +140,6 @@ class Search extends DashboardPageController
         return $rootFolder;
     }
 
-    public function view()
-    {
-        $rootFolder = $this->getRootFolder();
-        $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
-            $this->getSearchKeywordsField(),
-            $this->getSearchFolderField($rootFolder)
-        ]);
-        $result = $this->createSearchResult($query);
-        $this->renderSearchResult($result);
-        $this->setCurrentFolder($rootFolder);
-    }
-
     /**
      * Responsible for setting the current folder in the header menu, and in the JavaScript that powers the search table.
      *
@@ -163,12 +151,46 @@ class Search extends DashboardPageController
         $this->headerMenu->getElementController()->setCurrentFolder($folder);
     }
 
+
+    public function view()
+    {
+        $rootFolder = $this->getRootFolder();
+        $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
+            $this->getSearchKeywordsField(),
+            $this->getSearchFolderField($rootFolder)
+        ]);
+        $result = $this->createSearchResult($query);
+        $this->renderSearchResult($result);
+        $this->setCurrentFolder($rootFolder);
+
+        // special logic - if we're just viewing the file manager with no query let's get rid of the default
+        // query we have in our query factory, because we don't want to see those empty fields when we open the
+        // advanced search dialog.
+        $this->headerSearch->getElementController()->setQuery(null);
+
+    }
+
     public function advanced_search()
     {
         $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
             $this->getSearchProvider(), $this->request, Request::METHOD_GET
         );
-        $this->renderSearchQuery($query);
+
+        // special logic - if we're doing an advanced search, and we have NOT specified a folder in the advanced
+        // search, then let's search all sub folders by default. In order to do that we have to add a folder field
+        // into the advanced search (but again, only if the user hasn't done so themselves)
+        $containsFolderField = false;
+        foreach($query->getFields() as $field) {
+            if ($field instanceof FolderField) {
+                $containsFolderField = true;
+            }
+        }
+        if (!$containsFolderField) {
+            $query->addField(new FolderField($this->getRootFolder(), true));
+        }
+
+        $result = $this->createSearchResult($query);
+        $this->renderSearchResult($result);
     }
 
     public function preset($presetID = null)

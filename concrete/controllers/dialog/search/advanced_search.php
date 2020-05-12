@@ -78,7 +78,6 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $query = $this->deserializeQuery($this->request->query->get('query'));
         } else {
             $query = new Query();
-            $query->setFields([new KeywordsField()]);
         }
 
         $element = new SearchFieldSelector($this->getFieldManager(), $this->getAddFieldAction(), $query);

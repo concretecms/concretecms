@@ -100,7 +100,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 $(this).addClass('ccm-page-attribute-removing');
                 ConcreteMenuPageAttributes.deselectAttributeKey(akID);
                 $(this).dequeue();
-            }).delay(400).queue(function () {
+            }).delay(150).queue(function () {
                 if (typeof CKEDITOR != 'undefined') {
                     for (name in CKEDITOR.instances) {
                         var instance = CKEDITOR.instances[name];
