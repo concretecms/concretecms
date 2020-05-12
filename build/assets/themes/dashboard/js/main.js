@@ -10,9 +10,6 @@ import '@concretecms/bedrock/assets/account/js/frontend';
 // Calendar
 import '@concretecms/bedrock/assets/calendar/js/backend';
 
-// UI Components
-import './jquery-bootstrap-select-to-button';
-
 // Advanced search and search bars
 import './search/advanced-search-launcher';
 import './search/field-selector';
@@ -183,15 +180,10 @@ var setupSiteListMenuItem = function() {
     });
 };
 
-var setupSelects = function() {
-    $('select[data-select=bootstrap]').bootstrapSelectToButton();
-};
-
 setupTooltips();
 setupResultMessages();
 setupSiteListMenuItem();
 setupDialogs();
-setupSelects();
 setupDetailsURLs();
 setupFavorites();
 setupAdvancedSearchLinks();
