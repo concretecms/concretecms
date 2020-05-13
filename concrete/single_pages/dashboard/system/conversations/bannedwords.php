@@ -6,14 +6,16 @@ $token = Core::make('token');
 	<?php
     $token->output('update_banned_words');
     ?>
-    <div class="ccm-dashboard-header-buttons">
-        <a class='add_word btn btn-primary <?= (!$bannedListEnabled) ? 'd-none': '' ?>' href='#'><?=t('Add Word')?></a>
+    <div class="ccm-dashboard-header-buttons d-flex align-items-baseline mb-2 ">
+		<div class="mr-2">
+			<input id="banned-word-list-enabled" value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> 
+        	<label for="banned-word-list-enabled"><?=t('Disallow posts that include banned words?')?></label>
+		</div>
+		<div>
+        	<a class='add_word btn btn-primary <?= (!$bannedListEnabled) ? 'd-none': '' ?>' href='#'><?=t('Add Word')?></a>
+		</div>
     </div>
 
-    <div class="mb-2">
-		<input id="banned-word-list-enabled" value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> 
-        <label for="banned-word-list-enabled"><?=t('Disallow posts that include banned words?')?></label>
-    </div>
 
 	<script class='word_template' type="text/template" charset="utf-8">
 		<tr class='editing'>
@@ -23,39 +25,6 @@ $token = Core::make('token');
 		</tr>
 	</script>
 
-	<div class='banned_words_table' style='overflow:hidden'>
-		<table class='banned_word_list table'>
-			<thead>
-				<tr>
-					<th style='width:20px'>ID</th>
-					<th><?=t('Word')?></th>
-					<th style='width:200px;text-align:right'></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-                foreach ($bannedWords as $word) {
-                    if (!is_object($word)) {
-                        continue;
-                    }
-                    ?>
-					<tr>
-						<th class='id'><?=$word->getID()?></th>
-						<td class='word'><span><?=h($word->getWord())?></span><input style='display:none' name='banned_word[]' value='<?=h($word->getWord())?>'></td>
-						<td style='text-align:right'>
-                            <div class="btn-group">
-                                <a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a>
-                                <a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a>
-                            </div>
-						 </td>
-					</tr>
-					<?php
-
-                }
-                ?>
-			</tbody>
-		</table>
-	</div>
 
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
@@ -63,6 +32,40 @@ $token = Core::make('token');
         </div>
     </div>
 </form>
+
+<div class='banned_words_table' style='overflow:hidden'>
+	<table class='banned_word_list table'>
+		<thead>
+			<tr>
+				<th style='width:20px'>ID</th>
+				<th><?=t('Word')?></th>
+				<th style='width:200px;text-align:right'></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+            foreach ($bannedWords as $word) {
+                if (!is_object($word)) {
+                    continue;
+                }
+                ?>
+				<tr>
+					<th class='id'><?=$word->getID()?></th>
+					<td class='word'><span><?=h($word->getWord())?></span><input style='display:none' name='banned_word[]' value='<?=h($word->getWord())?>'></td>
+					<td style='text-align:right'>
+                        <div class="btn-group">
+                            <a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a>
+                            <a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a>
+                       </div>
+					</td>
+				</tr>
+				<?php
+
+            }
+             ?>
+		</tbody>
+	</table>
+</div>
 <script>
 var ctx = $('table.banned_word_list'), template = $('script.word_template'),
 	getTemplate = function(){return $(template.text());},
