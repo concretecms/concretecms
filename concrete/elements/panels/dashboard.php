@@ -1,23 +1,46 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+//use Concrete\Core\Support\Facade\Application;
+use Concrete\Controller\Panel\Dashboard as DashboardPanel;
+
+//this file is the main dashboard panel element which is generated every page load and anytime panel is reopened
+// this is the view:element dashboard
 $parents = Loader::helper('navigation')->getTrailToCollection($c);
 $pageIDs = array();
 foreach ($parents as $pc) {
     $pageIDs[] = $pc->getCollectionID();
 }
+//$cID = $c->getCollectionID();
+$dashboard = new DashboardPanel;
+$checkForMenu = $dashboard->checkForMenu($c);
+if ($checkForMenu == 1) {
+  if ($tab == 'favorites') {
+    $wrapperClass = 'ccm-panel-content-visible';
+  } else {
+    $wrapperClass = 'ccm-panel-slide-left';
+  }
+} else {
+  $wrapperClass = 'ccm-panel-content-visible';
+}
+//echo $view->controller->testThis();
+//$cnt = $app->make(DashboardPanel::class);
 ?>
+<!--<div class="ccm-panel-content ccm-panel-content-visible">-->
+<div class="ccm-panel-content <?=$wrapperClass ? $wrapperClass : 'ccm-panel-content-visible'?>">
 <section>
 	<div data-panel-menu="accordion" class="ccm-panel-header-accordion">
-	<nav>
-	<span><?php if (!in_array($tab, array('favorites'))) {
-    ?><?=t('Dashboard')?><?php 
-} else {
-    ?><?=t('Favorites')?><?php 
-} ?></span>
-	<ul class="ccm-panel-header-accordion-dropdown">
-		<li><a data-panel-accordion-tab="dashboard" <?php if (!in_array($tab, array('favorites'))) {
+	<nav class="menu-group-selector">
+  <span class="active-top-menu-title"><?php if (!in_array($tab, array('favorites'))) {
+    ?><?=t('Dashboard')?><?php
+  } else {
+    ?><?=t('Favorites')?><?php
+  } ?></span>
+	<ul class="ccm-panel-header-accordion-dropdown list-group">
+		<li 
+    class="list-group-item <?php if (!in_array($tab, array('favorites'))) {?> active<?php }?>"
+    ><a data-panel-accordion-tab="dashboard" <?php if (!in_array($tab, array('favorites'))) {
     ?>data-panel-accordion-tab-selected="true" <?php 
 } ?>><?=t('Dashboard')?></a></li>
-		<li><a data-panel-accordion-tab="favorites" <?php if ($tab == 'favorites') {
+		<li class="list-group-item <?php if ($tab == 'favorites') {?> active<?php }?>"><a data-panel-accordion-tab="favorites" <?php if ($tab == 'favorites') {
     ?>data-panel-accordion-tab-selected="true" <?php 
 } ?>><?=t('Favorites')?></a></li>
 	</ul>
@@ -64,3 +87,11 @@ foreach ($parents as $pc) {
 		<a href="<?=URL::to('/login', 'do_logout', Loader::helper('validation/token')->generate('do_logout'))?>"><?=t('Sign Out.')?></a>
 	</div>
 </section>
+
+</div>
+
+<?php
+if ($tab !== 'favorites') {
+  echo DashboardPanel::renderActiveSubPanels($c);
+}
+?>
