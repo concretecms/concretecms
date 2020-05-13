@@ -13,6 +13,7 @@ use Concrete\Core\User\User;
 use UserInfo;
 use URL;
 use Core;
+use PageList;
 
 class Dashboard extends BackendInterfacePageController
 {
