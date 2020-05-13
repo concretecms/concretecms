@@ -1872,6 +1872,7 @@ class Version implements ObjectInterface
         $r->url = $this->getURL();
         $r->urlInline = (string) $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
         $r->urlDownload = (string) $urlResolver->resolve(['/download_file', 'view', $this->getFileID()]);
+        $r->urlDetail = (string) $urlResolver->resolve(['/dashboard/files/details', 'view', $this->getFileID()]);
         $r->title = $this->getTitle();
         $r->genericTypeText = $this->getGenericTypeText();
         $r->description = $this->getDescription();

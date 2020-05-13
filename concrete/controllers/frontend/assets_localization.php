@@ -214,6 +214,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'properties' => t('Properties'),
     'deleteFile' => t('Delete'),
     'title' => t('File Manager'),
+    'chooseFile' => t('Choose File'),
     'uploadErrorChooseFile' => t('You must choose a file.'),
     'addFiles' => t('Add Files'),
     'rescan' => t('Rescan'),
