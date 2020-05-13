@@ -149,25 +149,23 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
             ?>
             <div id="ccm-panel-dashboard" class="hidden-xs hidden-sm ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
                 <div class="ccm-panel-content-wrapper ccm-ui">
-                    <div class="ccm-panel-content ccm-panel-content-visible">
-                        <?php
-                        $cnt = $app->make(DashboardPanel::class);
-                        $cnt->setPageObject($c);
-                        $cnt->view();
-                        $nav = $cnt->get('nav');
-                        $tab = $cnt->get('tab');
-                        $ui = $cnt->get('ui');
-                        View::element(
-                            'panels/dashboard',
-                            [
-                                'nav' => $nav,
-                                'tab' => $tab,
-                                'ui' => $ui,
-                                'c' => $c,
-                            ]
-                        );
-                        ?>
-                    </div>
+                      <?php
+                      $cnt = $app->make(DashboardPanel::class);
+                      $cnt->setPageObject($c);
+                      $cnt->view();
+                      $nav = $cnt->get('nav');
+                      $tab = $cnt->get('tab');
+                      $ui = $cnt->get('ui');
+                      View::element(
+                          'panels/dashboard',
+                          [
+                              'nav' => $nav,
+                              'tab' => $tab,
+                              'ui' => $ui,
+                              'c' => $c,
+                          ]
+                      );
+                      ?>
                 </div>
             </div>
             <script>
