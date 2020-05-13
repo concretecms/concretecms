@@ -9,7 +9,6 @@ $pageIDs = array();
 foreach ($parents as $pc) {
     $pageIDs[] = $pc->getCollectionID();
 }
-//$cID = $c->getCollectionID();
 $dashboard = new DashboardPanel;
 $checkForMenu = $dashboard->checkForMenu($c);
 if ($checkForMenu == 1) {
@@ -21,10 +20,7 @@ if ($checkForMenu == 1) {
 } else {
   $wrapperClass = 'ccm-panel-content-visible';
 }
-//echo $view->controller->testThis();
-//$cnt = $app->make(DashboardPanel::class);
 ?>
-<!--<div class="ccm-panel-content ccm-panel-content-visible">-->
 <div class="ccm-panel-content <?=$wrapperClass ? $wrapperClass : 'ccm-panel-content-visible'?>">
 <section>
 	<div data-panel-menu="accordion" class="ccm-panel-header-accordion">
