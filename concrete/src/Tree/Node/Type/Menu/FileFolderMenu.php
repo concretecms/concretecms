@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Core\Tree\Node\Type\Menu;
 
+use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
 use Concrete\Core\Tree\Menu\Item\File\EditFolderItem;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 use Concrete\Core\Tree\Menu\Item\EditPermissionsItem;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
-class FileFolderMenu extends Menu
+class FileFolderMenu extends DropdownMenu
 {
 
     public function __construct(FileFolder $folder)

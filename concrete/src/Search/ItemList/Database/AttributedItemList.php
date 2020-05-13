@@ -53,17 +53,13 @@ abstract class  AttributedItemList extends ItemList
      */
     public function setupAutomaticSorting(StickyRequest $request = null)
     {
-        if ($this->enableAutomaticSorting) {
-            // First, we check to see if there are any sortable attributes we can add to the
-            // auto sort columns.
-            if (is_callable(array($this->getAttributeKeyClassName(), 'getList'))) {
-                $l = call_user_func(array($this->getAttributeKeyClassName(), 'getList'));
-                foreach($l as $ak) {
-                    $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
-                }
+        // First, we check to see if there are any sortable attributes we can add to the
+        // auto sort columns.
+        if (is_callable(array($this->getAttributeKeyClassName(), 'getList'))) {
+            $l = call_user_func(array($this->getAttributeKeyClassName(), 'getList'));
+            foreach($l as $ak) {
+                $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
             }
-
-            parent::setupAutomaticSorting();
         }
     }
 

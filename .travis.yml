@@ -17,7 +17,6 @@ matrix:
     - name: Test with PHP nightly
     - name: Test with PHP 7.4
     - name: Check PHP coding style
-    - name: Test in Docker
   include:
 
     - name: Test with PHP 7.2 (with code coverage)

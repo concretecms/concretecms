@@ -62,7 +62,11 @@ if ($key !== null) {
             <?= $form->label('akHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-append">
+                    <div class="input-group-text">
+                        <i class="fa fa-asterisk"></i>
+                    </div>
+                </span>
             </div>
         </div>
 
@@ -70,7 +74,11 @@ if ($key !== null) {
             <?= $form->label('akName', t('Name')) ?>
             <div class="input-group">
                 <?= $form->text('akName', $key === null ? '' : $key->getAttributeKeyName()) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-append">
+                    <div class="input-group-text">
+                        <i class="fa fa-asterisk"></i>
+                    </div>
+                </span>
             </div>
         </div>
 
@@ -96,12 +104,11 @@ if ($key !== null) {
 
         <div class="form-group">
             <label class="control-label"><?= t('Searchable') ?></label>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed()) ?>
-                    <?= t('Content included in search index.') ?>
-                </label>
+            <div class="form-check">
+                <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ["class" => "form-check-input"]) ?>
+                <?= $form->label('akIsSearchableIndexed', t('Content included in search index.'), ["class" => "form-check-label"] ) ?>
             </div>
+          
             <div class="checkbox">
                 <label>
                     <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable()) ?>
@@ -127,8 +134,6 @@ if ($key !== null) {
                         </script>
                         <?php
                     }
-                    ?>
-                </label>
             </div>
         </div>
 

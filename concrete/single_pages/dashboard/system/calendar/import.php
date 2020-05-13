@@ -11,7 +11,7 @@
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button class="pull-right btn btn-success" type="submit" ><?=t('Import')?></button>
+                <button class="float-right btn btn-success" type="submit" ><?=t('Import')?></button>
             </div>
         </div>
     </form>

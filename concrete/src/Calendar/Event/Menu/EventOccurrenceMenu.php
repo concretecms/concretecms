@@ -4,11 +4,11 @@ namespace Concrete\Core\Calendar\Event\Menu;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
+use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 
-class EventOccurrenceMenu extends Menu
+class EventOccurrenceMenu extends PopoverMenu
 {
 
     public function __construct(CalendarEventVersionOccurrence $occurrence)

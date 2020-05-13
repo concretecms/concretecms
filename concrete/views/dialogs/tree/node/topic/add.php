@@ -13,8 +13,8 @@ $form = Core::make("helper/form");
 			</div>
 
 			<div class="dialog-buttons">
-				<button class="btn btn-default" data-dialog-action="cancel"><?=t('Cancel')?></button>
-				<button class="btn btn-primary pull-right" data-dialog-action="submit" type="submit"><?=t('Add')?></button>
+				<button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+				<button class="btn btn-primary float-right" data-dialog-action="submit" type="submit"><?=t('Add')?></button>
 			</div>
 
 		</form>

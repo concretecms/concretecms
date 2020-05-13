@@ -52,7 +52,7 @@ abstract class ItemList extends AbstractItemList
     public function deliverQueryObject()
     {
         // setup the default sorting based on the request.
-        $this->setupAutomaticSorting($this->searchRequest);
+        $this->performAutomaticSorting($this->searchRequest);
         $query = clone $this->query;
         $query = $this->finalizeQuery($query);
         return $query;

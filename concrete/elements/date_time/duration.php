@@ -137,7 +137,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                     <% } %>
                 </div>
                 <div class="col-sm-6">
-                    <div class="pull-right text-muted">
+                    <div class="float-right text-muted">
                         <%=repetition.timezone.timezone%>
                     </div>
                 </div>

@@ -4,7 +4,7 @@
 <div class="ccm-ui">
 
     <div id="ccm-calendar-event-version-reload" class="alert alert-info" style="display: none">
-        <button class="pull-right btn btn-xs btn-default" onclick="window.location.reload()" type="button"><?=t('Reload')?></button>
+        <button class="float-right btn btn-xs btn-secondary" onclick="window.location.reload()" type="button"><?=t('Reload')?></button>
         <?=t('Reload the page to refresh the events.')?>
     </div>
 
@@ -34,8 +34,10 @@
             <tr <?php if ($version->isApproved()) { ?> class="success" <?php } ?>
                 data-calendar-event-version-id="<?= $version->getID() ?>">
                 <td style="text-align: center">
-                    <input type="radio" name="eventVersionID" data-token="<?= Core::make('token')->generate('calendar/event/version/approve/' . $version->getID()) ?>" value="<?= $version->getID() ?>"
+                    <div class="form-check">
+                        <input type="radio" name="eventVersionID" class="form-check-input" data-token="<?= Core::make('token')->generate('calendar/event/version/approve/' . $version->getID()) ?>" value="<?= $version->getID() ?>"
                            <?php if ($version->isApproved()) { ?>checked<?php } ?> />
+                    </div>
                 </td>
                 <td>
                     <div>
@@ -72,8 +74,10 @@
 
         <tr>
             <td style="text-align: center">
-                <input type="radio" name="eventVersionID" data-event-id="<?=$event->getID()?>" data-token="<?= Core::make('token')->generate('unapprove_event') ?>" value="-1"
+                <div class="form-check">
+                <input type="radio" name="eventVersionID" class="form-check-input" data-event-id="<?=$event->getID()?>" data-token="<?= Core::make('token')->generate('unapprove_event') ?>" value="-1"
                        <?php if ($unapprovedChecked) { ?>checked<?php } ?>
+                </div>
             </td>
             <td colspan="6" class="text-muted"><?=t('No approved version.')?></td>
         </tr>
