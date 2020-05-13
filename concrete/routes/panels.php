@@ -11,6 +11,7 @@ $router->all('/add/get_stack_contents', 'Add::getStackContents');
 $router->all('/dashboard', 'Dashboard::view');
 $router->all('/dashboard/add_favorite', 'Dashboard::addFavorite');
 $router->all('/dashboard/remove_favorite', 'Dashboard::removeFavorite');
+$router->all('/dashboard/load_menu', 'Dashboard\LoadMenu::view');
 $router->all('/page/relations', 'PageRelations::view');
 $router->all('/page', 'Page::view');
 $router->all('/page/attributes', 'Page\Attributes::view');
