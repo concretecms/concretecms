@@ -33,6 +33,15 @@ class DashboardMenu extends ApplicationMenu
         }
     }
 
+    public function displayTopLevelMenu(Page $page) {
+      $pagePath = $page->getCollectionPath();
+      if ($pagePath == '/dashboard/welcome' || $pagePath == '/dashboard/system') {
+        return true;
+      }
+      $result = $pagePath;
+      return $result;
+    }
+
     protected function getPageList($parent)
     {
         $list = parent::getPageList($parent);
