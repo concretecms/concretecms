@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
-/**
+/*
  * @var \Concrete\Core\Routing\Router
  * Base path: /ccm/system/panels
  * Namespace: Concrete\Controller\Panel\

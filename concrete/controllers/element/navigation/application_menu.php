@@ -2,20 +2,17 @@
 namespace Concrete\Controller\Element\Navigation;
 
 use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 
 /**
  * Note: this is an internal class with weird internal behaviors. If you want to use an actually maintained,
  * simpler version of this class styled explicitly for bootstrap 4, use the menu class instead.
- * 
+ *
  * Class ApplicationMenu
- * @package Concrete\Controller\Element\Navigation
  */
 class ApplicationMenu extends ElementController
 {
-
     protected $currentPage;
     protected $startingParentPage;
     protected $trail = [];
@@ -43,9 +40,9 @@ class ApplicationMenu extends ElementController
         parent::__construct();
         $this->startingParentPage = $startingParentPage;
         if (is_object($currentPage)) {
-            $this->trail = array($currentPage->getCollectionID());
+            $this->trail = [$currentPage->getCollectionID()];
             $cParentID = Page::getCollectionParentIDFromChildID($currentPage->getCollectionID());
-            while($cParentID > 0) {
+            while ($cParentID > 0) {
                 $this->trail[] = $cParentID;
                 $cParentID = Page::getCollectionParentIDFromChildID($cParentID);
             }
@@ -84,6 +81,7 @@ class ApplicationMenu extends ElementController
         if (in_array($page->getCollectionID(), $this->trail)) {
             $classes[] = 'nav-path-selected';
         }
+
         return implode(' ', $classes);
     }
 
@@ -98,6 +96,7 @@ class ApplicationMenu extends ElementController
         $list->filterByExcludeNav(false);
         $list->sortByDisplayOrder();
         $list->filterByParentID($parent->getCollectionID());
+
         return $list;
     }
 
@@ -105,6 +104,7 @@ class ApplicationMenu extends ElementController
     {
         $list = $this->getPageList($parent);
         $pages = $list->getResults();
+
         return $pages;
     }
 

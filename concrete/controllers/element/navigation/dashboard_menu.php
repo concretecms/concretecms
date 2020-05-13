@@ -1,14 +1,10 @@
 <?php
 namespace Concrete\Controller\Element\Navigation;
 
-use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Page\PageList;
 
 class DashboardMenu extends ApplicationMenu
 {
-
     public function __construct(Page $currentPage)
     {
         $dashboard = \Page::getByPath('/dashboard');
@@ -33,13 +29,15 @@ class DashboardMenu extends ApplicationMenu
         }
     }
 
-    public function displayTopLevelMenu(Page $page) {
-      $pagePath = $page->getCollectionPath();
-      if ($pagePath == '/dashboard/welcome' || $pagePath == '/dashboard/system') {
-        return true;
-      }
-      $result = $pagePath;
-      return $result;
+    public function displayTopLevelMenu(Page $page)
+    {
+        $pagePath = $page->getCollectionPath();
+        if ($pagePath == '/dashboard/welcome' || $pagePath == '/dashboard/system') {
+            return true;
+        }
+        $result = $pagePath;
+
+        return $result;
     }
 
     protected function getPageList($parent)
@@ -47,6 +45,7 @@ class DashboardMenu extends ApplicationMenu
         $list = parent::getPageList($parent);
         $list->includeSystemPages();
         $list->includeAliases();
+
         return $list;
     }
 
@@ -63,7 +62,8 @@ class DashboardMenu extends ApplicationMenu
         ) {
             $classes[] = 'nav-path-selected';
         }
-        return implode(' ' , $classes);
+
+        return implode(' ', $classes);
     }
 
     public function getChildPages($parent)
@@ -72,12 +72,13 @@ class DashboardMenu extends ApplicationMenu
         if ($parent->getCollectionPath() == '/dashboard/welcome') {
             // Add My Account to the List
             $pages[] = Page::getByPath('/account');
-            $site = \Core::make("site")->getSite();
+            $site = \Core::make('site')->getSite();
             $config = $site->getConfigRepository();
             if (is_object($site) && $config->get('user.profiles_enabled')) {
                 $pages[] = Page::getByPath('/members/profile');
             }
         }
+
         return $pages;
     }
 }
