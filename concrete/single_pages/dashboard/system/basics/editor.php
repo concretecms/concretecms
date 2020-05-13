@@ -54,7 +54,7 @@
                                     if ($description !== '') {
                                         echo '<span class="launch-tooltip" title="', h($description), '">';
                                     }
-                                    echo h($plugin->getName());
+                                    echo '&nbsp;' . h($plugin->getName());
                                     if ($description !== '') {
                                         echo '</span>';
                                     }
