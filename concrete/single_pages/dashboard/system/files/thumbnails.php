@@ -36,28 +36,36 @@ if (isset($type)) {
             <?= $form->label('ftTypeHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : []) ) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                </div>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeName', t('Name')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeName', $type->getName(), ['required' => 'required', 'maxlength' => '255']) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                </div>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeWidth', t('Width')) ?>
             <div class="input-group">
                 <?= $form->number('ftTypeWidth', $type->getWidth() ?: '', ['min' => '1']) ?>
-                <span class="input-group-addon"><?= t('px') ?></span>
+                <div class="input-group-append">
+                    <span class="input-group-text"><?= t('px') ?></span>
+                </div>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeHeight', t('Height')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeHeight', $type->getHeight() ?: '', ['min' => '1']) ?>
-                <span class="input-group-addon"><?= t('px') ?></span>
+                <div class="input-group-append">
+                    <span class="input-group-text"><?= t('px') ?></span>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -67,15 +75,15 @@ if (isset($type)) {
         </div>
         <div class="form-group">
             <?= $form->label('', t('Options')) ?>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('ftUpscalingEnabled', '1', $type->isUpscalingEnabled()) ?>
+            <div class="form-check">
+                <?= $form->checkbox('ftUpscalingEnabled', '1', $type->isUpscalingEnabled()) ?>
+                <label for="ftUpscalingEnabled" class="form-check-label">
                     <?= t('Allow upscaling images smaller than the thumbnail size') ?>
                 </label>
             </div>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('ftKeepAnimations', '1', $type->isKeepAnimations()) ?>
+            <div class="form-check">
+                <?= $form->checkbox('ftKeepAnimations', '1', $type->isKeepAnimations()) ?>
+                <label for="ftKeepAnimations" class="form-check-label">
                     <?= t('Create animated thumbnails for animated images') ?>
                     <span class="small text-muted" id="ftKeepAnimations-warning" <?= $type->isKeepAnimations() ? '' : ' style="display: none"' ?>>
                         <br />
@@ -146,7 +154,7 @@ if (isset($type)) {
                 <?= $form->label('fileSetOption', t('Conditional Thumbnails')) ?>
                 <?= $form->select('fileSetOption', $fileSetOptions, $fileSetOption, ['required' => 'required']) ?>
             </div>
-            <div class="form-group">
+            <div>
                 <?= $form->label('fileSets', 'File Sets') ?>
                 <div class="ccm-search-field-content">
                     <?= $form->selectMultiple('fileSets', $fileSets, $selectedFileSets, $fileSetAttributes) ?>
@@ -157,15 +165,15 @@ if (isset($type)) {
         ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= $view->action('') ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
+                <a href="<?= $view->action('') ?>" class="btn float-left btn-secondary"><?= t('Back') ?></a>
                 <?php
                 if ($type->getID() !== null) {
                     ?>
-                    <button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button>
+                    <button type="submit" class="btn btn-primary float-right"><?= t('Save') ?></button>
                     <?php
                 } else {
                     ?>
-                    <button type="submit" class="btn btn-primary pull-right"><?= t('Add') ?></button>
+                    <button type="submit" class="btn btn-primary float-right"><?= t('Add') ?></button>
                     <?php
                 }
                 ?>
@@ -189,6 +197,7 @@ if (isset($type)) {
             .trigger('change')
         ;
         <?php
+        
         if ($allowConditionalThumbnails) {
             ?>
             var $fileSets = $('#fileSets');
@@ -207,6 +216,7 @@ if (isset($type)) {
             ;
             <?php
         }
+        
         ?>
     });
     </script>
@@ -215,7 +225,7 @@ if (isset($type)) {
     /* @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[] $types */
     ?>
     <div class="ccm-dashboard-header-buttons btn-group">
-        <a href="<?= $view->action('options')?>" class="btn btn-default"><?= t('Options') ?></a>
+        <a href="<?= $view->action('options')?>" class="btn btn-secondary"><?= t('Options') ?></a>
         <a href="<?= $view->action('edit', 'new')?>" class="btn btn-primary"><?= t('Add Type') ?></a>
     </div>
     <table class="table">
