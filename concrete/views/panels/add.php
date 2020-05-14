@@ -94,39 +94,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
             ?>
             <div id="ccm-panel-add-block-stack-list">
                 <?php
-                foreach ($stacks as $stack) {
-                    if (!$stack) {
-                        continue;
-                    }
-                    //$blocks = $stack->getBlocks();
-                    ?>
-                    <div
-                        class="ccm-panel-add-block-stack-item"
-                        data-panel-add-block-drag-item="stack-item"
-                        data-cID="<?= (int) $c->getCollectionID() ?>"
-                        data-sID="<?= (int) $stack->getCollectionID() ?>"
-                        data-block-type-handle="stack"
-                        data-has-add-template="no"
-                        data-supports-inline-add="no",
-                        data-token="<?=Core::make('token')->generate('load_stack')?>"
-                        data-btID="0"
-                        data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
-                        data-block-id="<?= (int) $stack->getCollectionID() ?>"
-                    >
-                        <div class="stack-name">
-                            <div class="ccm-panel-add-block-stack-item-handle">
-                                <img src="<?=DIR_REL?>/concrete/images/stack.png" />
-                                <span class="stack-name-inner"><?= h($stack->getStackName()) ?></span>
-                            </div>
-                            <a  class="ccm-stack-expander" href="javascript:void(0);"><i class="fa fa-arrow-down"></i></a>
-                        </div>
-                    </div>
-                    <?php
-                }
+                    View::element('panels/add/stack_list', ['stacks' => $stacks, 'c' => $c]);
                 ?>
             </div>
             <script>
-            $('div.ccm-panel-add-block-stack-item').on('click', function () {
+            $('#ccm-panel-add-block-stack-list').on('click', 'div.ccm-panel-add-block-stack-item', function () {
                 var $stack = $(this);
                 if ($stack.data('ccm-stack-content-loaded')) {
                 	$stack.toggleClass('ccm-panel-add-block-stack-item-expanded');
@@ -152,6 +124,36 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             block = new Concrete.StackBlock($(this), stack, stack, dragger);
 
                             block.setPeper(dragger);
+                        });
+                    }
+                })
+            });
+
+            $('#ccm-panel-add-block-stack-list').on('click', 'div.ccm-panel-add-folder-stack-item', function () {
+                var $stackFolder = $(this);
+                if ($stackFolder.data('ccm-folder-stack-content-loaded')) {
+                    $stackFolder.toggleClass('ccm-panel-add-folder-stack-item-expanded');
+                    $stackFolder.data('ccm-folder-stack-content-loaded').toggle($stackFolder.hasClass('ccm-panel-add-folder-stack-item-expanded'));
+                    return;
+                }
+                if ($stackFolder.hasClass('ccm-panel-add-folder-stack-item-expanded')) {
+                    return;
+                }
+                $.concreteAjax({
+                    dataType: 'html',
+                    type: 'POST',
+                    data: {'cID': $(this).attr('data-cID'), 'stackFolderID': $(this).attr('data-sfID')},
+                    url: '<?=URL::to('/ccm/system/panels/add/get_stack_folder_contents')?>',
+                    success: function (r) {
+                        var $content = $(r);
+                        $stackFolder.after($content);
+                        $stackFolder.data('ccm-folder-stack-content-loaded', $content);
+                        $stackFolder.addClass('ccm-panel-add-folder-stack-item-expanded');
+                        $content.find('div.ccm-panel-add-block-stack-item').each(function () {
+                            var stack; var me = $(this); var dragger = me.find('div.ccm-panel-add-block-stack-item-handle');
+                            stack = new Concrete.Stack($(this), Concrete.getEditMode(), dragger);
+
+                            stack.setPeper(dragger)
                         });
                     }
                 })
