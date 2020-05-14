@@ -116,14 +116,15 @@ class Form
      *
      * @param string $key the name/id of the element
      * @param string $value The value of the element
-     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      * @param string $additionalClasses list of additional space-separated CSS class names
      *
      * @return string
      */
     public function submit($key, $value, $miscFields = [], $additionalClasses = '')
     {
-        return '<input type="submit"' . $this->parseMiscFields('btn ccm-input-submit ' . $additionalClasses, $miscFields) . ' id="' . $key . '" name="' . $key . '" value="' . $value . '" />';
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
+        return '<input type="submit"' . $this->serializeMiscFields('btn ccm-input-submit ' . $additionalClasses, $miscFields) . $nameAndID . ' value="' . $value . '" />';
     }
 
     /**
@@ -131,14 +132,15 @@ class Form
      *
      * @param string $key the name/id of the element
      * @param string $value The value of the element
-     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      * @param string $additionalClasses list of additional space-separated CSS class names
      *
      * @return string
      */
     public function button($key, $value, $miscFields = [], $additionalClasses = '')
     {
-        return '<input type="button"' . $this->parseMiscFields('btn ccm-input-button ' . $additionalClasses, $miscFields) . ' id="' . $key . '" name="' . $key . '" value="' . $value . '" />';
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
+        return '<input type="button"' . $this->serializeMiscFields('btn ccm-input-button ' . $additionalClasses, $miscFields) . $nameAndID . ' value="' . $value . '" />';
     }
 
     /**
@@ -146,26 +148,27 @@ class Form
      *
      * @param string $forFieldID the id of the associated element
      * @param string $innerHTML the inner html of the label
-     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
     public function label($forFieldID, $innerHTML, $miscFields = [])
     {
-        return '<label for="' . $forFieldID . '"' . $this->parseMiscFields('', $miscFields) . '>' . $innerHTML . '</label>';
+        return '<label for="' . $forFieldID . '"' . $this->serializeMiscFields('', $miscFields, []) . '>' . $innerHTML . '</label>';
     }
 
     /**
      * Creates a file input element.
      *
      * @param string $key the name/id of the element
-     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
     public function file($key, $miscFields = [])
     {
-        return '<input type="file" id="' . $key . '" name="' . $key . '" value=""' . $this->parseMiscFields('form-control', $miscFields) . ' />';
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
+        return '<input type="file"' . $nameAndID . ' value=""' . $this->serializeMiscFields('form-control', $miscFields) . ' />';
     }
 
     /**
@@ -173,18 +176,22 @@ class Form
      *
      * @param string $key the name/id of the element
      * @param string $value the value of the element (overriden if we received some data in POST or GET)
-     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
     public function hidden($key, $value = null, $miscFields = [])
     {
-        $requestValue = $this->getRequestValue($key);
-        if ($requestValue !== false && (!is_array($requestValue))) {
-            $value = $requestValue;
+        $name = (string) ($miscFields['name'] ?? $key);
+        if ($name !== '') {
+            $requestValue = $this->getRequestValue($name);
+            if ($requestValue !== false && !is_array($requestValue)) {
+                $value = $requestValue;
+            }
         }
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
 
-        return '<input type="hidden" id="' . $key . '" name="' . $key . '"' . $this->parseMiscFields('', $miscFields) . ' value="' . $value . '" />';
+        return '<input type="hidden"' . $nameAndID . $this->serializeMiscFields('', $miscFields) . ' value="' . $value . '" />';
     }
 
     /**
@@ -193,25 +200,26 @@ class Form
      * @param string $key The name/id of the element. It should end with '[]' if it's to return an array on submit.
      * @param string $value String value sent to server, if checkbox is checked, on submit
      * @param string $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
-     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
     public function checkbox($key, $value, $isChecked = false, $miscFields = [])
     {
-        if (substr($key, -2) == '[]') {
-            $_field = substr($key, 0, -2);
-            $id = $_field . '_' . $value;
-        } else {
-            $_field = $key;
-            $id = $key;
+        $name = (string) ($miscFields['name'] ?? $key);
+        $_field = $name;
+        if (substr($_field, -2) == '[]') {
+            $_field = substr($_field, 0, -2);
         }
-
+        if (!array_key_exists('id', $miscFields) && substr($key, -2) === '[]') {
+            $miscFields['id'] = substr($key, 0, -2) . '_' . $value;
+        }
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
         $checked = false;
         if ($isChecked && $this->getRequest()->get($_field) === null && $this->getRequest()->getMethod() !== 'POST') {
             $checked = true;
         } else {
-            $requestValue = $this->getRequestValue($key);
+            $requestValue = $this->getRequestValue($name);
             if ($requestValue !== false) {
                 if (is_array($requestValue)) {
                     if (in_array($value, $requestValue)) {
@@ -224,15 +232,15 @@ class Form
         }
         $checked = $checked ? ' checked="checked"' : '';
 
-        return '<input type="checkbox" id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-check-input', $miscFields) . ' value="' . $value . '"' . $checked . ' />';
+        return '<input type="checkbox"' . $nameAndID . $this->serializeMiscFields('form-check-input', $miscFields) . ' value="' . $value . '"' . $checked . ' />';
     }
 
     /**
      * Creates a textarea field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -244,18 +252,13 @@ class Form
         } else {
             $value = $valueOrMiscFields;
         }
-        $requestValue = $this->getRequestValue($key);
+        $requestValue = $this->getRequestValue($miscFields['name'] ?? $key);
         if (is_string($requestValue)) {
             $value = $requestValue;
         }
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
 
-        $result = '<textarea';
-        if ((string) $key !== '') {
-            $result .= ' id="' . $key . '" name="' . $key . '"';
-        }
-        $result .= $this->parseMiscFields('form-control', $miscFields) . '>' . $value . '</textarea>';
-
-        return $result;
+        return '<textarea' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>' . $value . '</textarea>';
     }
 
     /**
@@ -263,8 +266,8 @@ class Form
      *
      * @param string $key the name of the element (its id will start with $key but will have a progressive unique number added)
      * @param string $value the value of the radio button
-     * @param string|array $checkedValueOrMiscFields the value of the element (if it should be initially checked) or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $checkedValueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $checkedValueOrMiscFields the value of the element (if it should be initially checked) or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $checkedValueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -278,7 +281,7 @@ class Form
         }
         $checked = false;
 
-        $requestValue = $this->getRequestValue($key);
+        $requestValue = $this->getRequestValue($miscFields['name'] ?? $key);
 
         if ($requestValue !== false) {
             if ($requestValue == $value) {
@@ -289,19 +292,17 @@ class Form
                 $checked = true;
             }
         }
-        $id = null;
-        if (isset($miscFields['id'])) {
-            $id = $miscFields['id'];
-            unset($miscFields['id']);
+        if (!array_key_exists('id', $miscFields)) {
+            $miscFields['id'] = $key . $this->radioIndex;
+            ++$this->radioIndex;
         }
-        $id = $id ?: $key . $this->radioIndex;
-        $str = '<input type="radio" id="' . $id . '" name="' . $key . '" value="' . $value . '"';
-        $str .= $this->parseMiscFields('form-check-input', $miscFields);
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
+
+        $str = '<input type="radio"' . $nameAndID . ' value="' . $value . '"' . $this->serializeMiscFields('form-check-input', $miscFields);
         if ($checked) {
             $str .= ' checked="checked"';
         }
         $str .= ' />';
-        ++$this->radioIndex;
 
         return $str;
     }
@@ -330,8 +331,8 @@ class Form
      * Renders a text input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -344,8 +345,8 @@ class Form
      * Renders a number input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -358,8 +359,8 @@ class Form
      * Renders an email input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -372,8 +373,8 @@ class Form
      * Renders a telephone input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -386,8 +387,8 @@ class Form
      * Renders a URL input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -400,8 +401,8 @@ class Form
      * Renders a search input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -415,8 +416,8 @@ class Form
      *
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
      * @param array $optionValues an associative array of key => display
-     * @param string|array $valueOrMiscFields the value of the field to be selected or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the field to be selected or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return $html
      */
@@ -434,24 +435,25 @@ class Form
         if ($selectedValue !== '') {
             $miscFields['ccm-passed-value'] = h($selectedValue);
         }
-        $requestValue = $this->getRequestValue($key);
-        if (is_array($requestValue) && isset($requestValue[0]) && is_string($requestValue[0])) {
-            $selectedValue = (string) $requestValue[0];
-        } elseif ($requestValue !== false) {
-            if (!is_array($requestValue)) {
-                $selectedValue = (string) $requestValue;
-            } else {
-                $selectedValue = '';
+        $name = (string) ($miscFields['name'] ?? $key);
+        if ($name !== '') {
+            $requestValue = $this->getRequestValue($name);
+            if (is_array($requestValue) && isset($requestValue[0]) && is_string($requestValue[0])) {
+                $selectedValue = (string) $requestValue[0];
+            } elseif ($requestValue !== false) {
+                if (!is_array($requestValue)) {
+                    $selectedValue = (string) $requestValue;
+                } else {
+                    $selectedValue = '';
+                }
             }
         }
-        if (substr($key, -2) == '[]') {
-            $_key = substr($key, 0, -2);
-            $id = $_key . $this->selectIndex;
-            ++$this->selectIndex;
-        } else {
-            $id = $key;
+        if (!array_key_exists('id', $miscFields) && substr($key, -2) === '[]') {
+            $miscFields['id'] = substr($key, 0, -2) . $this->selectIndex;
+            $this->selectIndex++;
         }
-        $str = '<select id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>';
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 $str .= '<optgroup label="' . h($k) . '">';
@@ -486,7 +488,7 @@ class Form
      * - 'required': do users must choose a Country?
      * - 'allowedCountries': an array containing a list of acceptable Country codes. If not set, all the countries will be selectable.
      * - 'linkStateProvinceField': set to true to look for text fields that have a "data-countryfield" attribute with the same value as this Country field name (updating the Country select will automatically update the State/Province list).
-     * @param array $miscFields Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      */
     public function selectCountry($key, $selectedCountryCode = '', array $configuration = [], array $miscFields = [])
     {
@@ -512,14 +514,19 @@ class Form
             }
         }
         // Fix the Country code received via the current request
-        $requestValue = $this->getRequestValue($key);
-        if (is_array($requestValue)) {
-            $requestValue = (string) $requestValue[0];
-        } elseif ($requestValue !== false && !is_string($requestValue)) {
-            $requestValue = '';
-        }
-        if ($requestValue !== false && !isset($allCountries[$requestValue])) {
-            $requestValue = '';
+        $name = (string) ($miscFields['name'] ?? $key);
+        if ($name !== '') {
+            $requestValue = $this->getRequestValue($name);
+            if (is_array($requestValue)) {
+                $requestValue = (string) $requestValue[0];
+            } elseif ($requestValue !== false && !is_string($requestValue)) {
+                $requestValue = '';
+            }
+            if ($requestValue !== false && !isset($allCountries[$requestValue])) {
+                $requestValue = '';
+            }
+        } else {
+            $requestValue = false;
         }
 
         if ($requestValue !== false) {
@@ -527,11 +534,9 @@ class Form
         } else {
             $selectedOption = $selectedCountryCode;
         }
-        if (substr($key, -2) === '[]') {
-            $id = substr($key, 0, -2) . $this->selectIndex;
+        if (!array_key_exist('id', $miscFields) && ubstr($key, -2) === '[]') {
+            $miscFields['id'] = substr($key, 0, -2) . $this->selectIndex;
             ++$this->selectIndex;
-        } else {
-            $id = $key;
         }
         if ($selectedCountryCode === '' || !$configuration['required']) {
             $optionValues = ['' => (string) $configuration['noCountryText']];
@@ -542,7 +547,8 @@ class Form
         if ($selectedCountryCode !== '') {
             $miscFields['ccm-passed-value'] = $selectedCountryCode;
         }
-        $str = '<select id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>';
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             $str .= '<option value="' . h($k) . '"';
             if ((string) $k === (string) $selectedOption) {
@@ -552,7 +558,7 @@ class Form
         }
         $str .= '</select>';
         if ($configuration['linkStateProvinceField']) {
-            $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $id);
+            $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $miscFields['id'] ?? $key);
             $config = [
                 'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
                 'clearStateProvinceOnChange' => (bool) $configuration['clearStateProvinceOnChange'],
@@ -575,20 +581,30 @@ class Form
      * @param string $key The ID of the element. The name attribute will be $key followed by '[].
      * @param array $optionValues Hash array with name/value as the select's option value/text
      * @param array|string $defaultValues Default value(s) which match with the option values; overridden by $_REQUEST
-     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return $html
      */
     public function selectMultiple($key, $optionValues, $defaultValues = false, $miscFields = [])
     {
-        $requestValue = $this->getRequestValue($key . '[]');
-        if ($requestValue !== false) {
-            $selectedValues = $requestValue;
+        if (array_key_exists('name', $miscFields)) {
+            $name = (string) $miscFields['name'];
+            if ($name !== '' && substr($name, -2) === '[]') {
+                $name = substr($name, 0, -2);
+            }
         } else {
-            $selectedValues = $defaultValues;
+            $name = $key;
+            $miscFields['name'] = $name . '[]';
+        }
+        $selectedValues = $defaultValues;
+        if ($name !== '') {
+            $requestValue = $this->getRequestValue($name . '[]');
+            if ($requestValue !== false) {
+                $selectedValues = $requestValue;
+            }
         }
         if (!is_array($selectedValues)) {
-            if (isset($selectedValues) && ($selectedValues !== false)) {
+            if ($selectedValues !== null && $selectedValues !== false) {
                 $selectedValues = (array) $selectedValues;
             } else {
                 $selectedValues = [];
@@ -597,7 +613,8 @@ class Form
         if (!is_array($optionValues)) {
             $optionValues = [];
         }
-        $str = "<select id=\"$key\" name=\"{$key}[]\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . '>';
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
+        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-control', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 if (count($text) > 0) {
@@ -628,8 +645,8 @@ class Form
      * Renders a password input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -710,8 +727,8 @@ EOT;
      *
      * @param string $key the name/id of the element
      * @param string $type Accepted value for HTML attribute "type"
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -723,40 +740,92 @@ EOT;
         } else {
             $value = $valueOrMiscFields;
         }
-        $requestValue = $this->getRequestValue($key);
+        $name = (string) ($miscFields['name'] ?? $key);
+        $requestValue = $this->getRequestValue($name);
         if (is_string($requestValue)) {
             $value = $requestValue;
         }
         $value = h($value);
+        $nameAndID = $this->buildNameAndID($key, $miscFields);
 
-        $result = "<input type=\"$type\"";
-        if ((string) $key !== '') {
-            $result .= " id=\"$key\" name=\"$key\"";
-        }
-        $result .= " value=\"$value\"" . $this->parseMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
-
-        return $result;
+        return "<input type=\"$type\"{$nameAndID} value=\"$value\"" . $this->serializeMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
     }
 
     /**
-     * Create an HTML fragment of attribute values, merging any CSS class names as necessary.
+     * @deprecated Use serializeMiscFields
      *
-     * @param string $defaultClass Default CSS class name
-     * @param array $attributes a hash array of attributes (name => value), possibly including 'class'
+     * @param string $defaultClass 
+     * @param array $attributes 
      *
-     * @return string A fragment of attributes suitable to put inside of an HTML tag
+     * @return string
      */
     protected function parseMiscFields($defaultClass, $attributes)
     {
+        return $this->serializeMiscFields((string) $defaultClass, (array) $attributes, []);
+    }
+    
+    /**
+     * @param string $defaultClass Default CSS class name
+     * @param array $attributes a key/value array of attributes (name => value), possibly including 'class'
+     * @param array $skipFields names of fields not to be serialized
+     *
+     * @return string
+     */
+    protected function serializeMiscFields($defaultClass, $attributes, array $skipFields = ['name', 'id']): string
+    {
         $attributes = (array) $attributes;
-        if ($defaultClass) {
-            $attributes['class'] = trim((isset($attributes['class']) ? $attributes['class'] : '') . ' ' . $defaultClass);
+        $defaultClass = trim((string) $defaultClass);
+        if ($defaultClass !== '') {
+            $attributes['class'] = trim(($attributes['class'] ?? '') . ' ' . $defaultClass);
         }
         $attr = '';
         foreach ($attributes as $k => $v) {
-            $attr .= " $k=\"$v\"";
+            if (!in_array($k, $skipFields, true)) {
+                $attr .= " $k=\"$v\"";
+            }
         }
-
+        
         return $attr;
+        
+    }
+
+    /**
+     * Extract the value of the name and the id attributes.
+     * @param string $key to be used if $miscFields does not contain the 'name' or the 'id' attribute. 
+     * @param array $miscFields an array with the element attributes (key/value pair).
+     *
+     * @return array first element is the value of the name attributes, second element is the value of the id attribute.
+     */
+    protected function extractNameAndID(string $key, array $miscFields): array
+    {
+        return [
+            array_key_exists('name', $miscFields) ? (string) $miscFields['name'] : $key,
+            array_key_exists('id', $miscFields) ? (string) $miscFields['id'] : $key,
+        ];
+    }
+
+    /**
+     * Generate the HTML code containing the name and the id attributes (if any).
+     *
+     * @param string $key to be used if $miscFields does not contain the 'id' or the 'name' attribute.
+     * @param array $miscFields an array with the element attributes (key/value pair).
+     *
+     * @return string If not empty, the result will start with a space
+     */
+    protected function buildNameAndID(string $key, array $miscFields): string
+    {
+        $chunks = [];
+        [$name, $id] = $this->extractNameAndID($key, $miscFields);
+        if ($id !== '') {
+            $chunks[] = 'id="' . h($id) . '"';
+        }
+        if ($name !== '') {
+            $chunks[] = 'name="' . h($name) . '"';
+        }
+        if ($chunks === []) {
+            return '';
+        }
+        
+        return ' ' . implode(' ', $chunks);
     }
 }
