@@ -39,16 +39,16 @@ class Renderer implements LoggerAwareInterface
     protected $serializer;
 
     /**
-     * @var RendererFilterer 
+     * @var RendererFilterer
      */
     protected $rendererFilterer;
-    
+
     public function __construct(
-        JsonSerializer $serializer, 
+        JsonSerializer $serializer,
         RendererFilterer $rendererFilterer,
-        EntityManager $entityManager, 
-        TemplateLocator $templateLocator, 
-        Page $currentPage)
+        EntityManager $entityManager,
+        TemplateLocator $templateLocator,
+        Page $currentPage = null)
     {
         $this->serializer = $serializer;
         $this->rendererFilterer = $rendererFilterer;
@@ -71,12 +71,18 @@ class Renderer implements LoggerAwareInterface
             extract($fields, EXTR_OVERWRITE);
             include $file;
         } else if ($template->getHandle()) {
-            $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s',
-                    $this->currentPage->getCollectionID(), $template->getHandle())
-            );
+            if ($this->currentPage) {
+                $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s',
+                        $this->currentPage->getCollectionID(), $template->getHandle())
+                );
+            } else {
+                $this->logger->notice(t('Error rendering summary template - Unable to locate file for summary template: %s',
+                        $this->currentPage->getCollectionID(), $template->getHandle())
+                );
+            }
         }
     }
-    
+
     public function renderSummaryForObject(CategoryMemberInterface $object, string $templateHandle = null)
     {
         $categoryTemplate = null;
@@ -89,9 +95,9 @@ class Renderer implements LoggerAwareInterface
             $template = $categoryTemplate->getTemplate();
             if ($template) {
                 $collection = $categoryTemplate->getData();
-                
+
                 $object = new SummaryObject(
-                    $object->getSummaryCategoryHandle(), 
+                    $object->getSummaryCategoryHandle(),
                     $object->getSummaryIdentifier(),
                     $template,
                     $collection

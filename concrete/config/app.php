@@ -701,6 +701,8 @@ return [
         ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
         ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
         ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Calendar\Event\Summary\Template\Command\EnableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Calendar\Event\Summary\Template\Command\DisableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
 
         ['Concrete\Core\Board\Command\CreateBoardCommand', 'Concrete\Core\Board\Command\CreateBoardCommandHandler'],
         ['Concrete\Core\Board\Command\UpdateBoardCommand', 'Concrete\Core\Board\Command\UpdateBoardCommandHandler'],

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\Panel\Detail\Page;
+namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\EditResponse;
@@ -8,7 +8,7 @@ use Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplates
 
 class SummaryTemplates extends BackendInterfacePageController
 {
-    protected $viewPath = '/panels/details/page/summary_templates';
+    protected $viewPath = '/dialogs/summary_templates/choose';
 
     protected function canAccess()
     {
@@ -28,10 +28,13 @@ class SummaryTemplates extends BackendInterfacePageController
         }
         if ($pageTemplates) {
             foreach($pageTemplates as $pageTemplate) {
-                $templates[] = $pageTemplate->getTemplate();
+                $templates[] = $pageTemplate;
             }
         }
-        $this->set('templates', $templates); 
+        $this->set('memberIdentifier', $this->page->getCollectionID());
+        $this->set('categoryHandle', 'page');
+        $this->set('object', $this->page);
+        $this->set('templates', $templates);
         $this->set('selectedTemplateIDs', $selectedTemplateIDs);
     }
 
@@ -48,7 +51,7 @@ class SummaryTemplates extends BackendInterfacePageController
                 $command = new DisableCustomPageSummaryTemplatesCommand($this->page->getCollectionID());
             }
             $this->app->executeCommand($command);
-            
+
             $r = new EditResponse();
             $r->setPage($this->page);
             $r->setTitle(t('Page Updated'));

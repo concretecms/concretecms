@@ -62,6 +62,8 @@ class FileManager
         $fileSelectorArguments = [
             'inputName' => (string) $inputName,
             'fID' => null,
+
+
             'filters' => [],
         ];
         if ($vh->integer($request->request->get($inputName))) {

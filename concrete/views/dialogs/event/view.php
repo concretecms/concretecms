@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-ui">
+<div class="ccm-ui" vue-enabled>
 
 <?php
 /**
