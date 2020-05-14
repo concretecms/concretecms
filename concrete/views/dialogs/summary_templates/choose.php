@@ -11,34 +11,68 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <div class="col-8 pl-0">
                     <p class="text-muted"><small><?=t('Review your summary templates to make sure they look good at different breakpoints.')?></small></p>
                 </div>
-                <div class="col-4 text-right">
-                    <toggle-switch class="pr-2 mb-0" name="hasCustomSummaryTemplates"></toggle-switch>
+                <div class="col-4 text-right" vue-enabled>
+                    <?php
+                    $checked = "false";
+                    if ($object->hasCustomSummaryTemplates()) {
+                        $checked = "true";
+                    }
+                    ?>
+                    <toggle-switch class="pr-2 mb-0" :value="<?=$checked?>" name="hasCustomSummaryTemplates"></toggle-switch>
                     <span class="text-muted"><small><?= t('Use only specific templates.') ?></small></span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
-                    <ul class="nav nav-tabs nav-fill border-bottom">
-                        <li class="nav-item"><a class="nav-link active" href="#"><?=t('Extra Large')?></a></li>
-                        <li class="nav-item"><a class="nav-link" href="#"><?=t('Large')?></a></li>
-                        <li class="nav-item"><a class="nav-link" href="#"><?=t('Medium')?></a></li>
-                        <li class="nav-item"><a class="nav-link" href="#"><?=t('Small')?></a></li>
-                        <li class="nav-item"><a class="nav-link" href="#"><?=t('Extra Small')?></a></li>
+                <div class="col-12 pl-0">
+                    <ul class="nav nav-tabs nav-fill border-bottom mb-3" data-nav="summary-template-form-factors">
+                        <li class="nav-item"><a data-width="1140" class="nav-link active" href="#"><?=t('Extra Large')?></a></li>
+                        <li class="nav-item"><a data-width="992" class="nav-link" href="#"><?=t('Large')?></a></li>
+                        <li class="nav-item"><a data-width="768" class="nav-link" href="#"><?=t('Medium')?></a></li>
+                        <li class="nav-item"><a data-width="576" class="nav-link" href="#"><?=t('Small')?></a></li>
+                        <li class="nav-item"><a data-width="480" class="nav-link" href="#"><?=t('Extra Small')?></a></li>
                     </ul>
                 </div>
             </div>
 
-            <?php
-            foreach ($templates as $instanceTemplate) {
-                $template = $instanceTemplate->getTemplate();
-                ?>
+            <div data-list="summary-templates">
+                <?php
+                foreach ($templates as $instanceTemplate) {
+                    $template = $instanceTemplate->getTemplate();
+                    $checked = "false";
+                    if (!$object->hasCustomSummaryTemplates() || in_array($template->getID(), $selectedTemplateIDs)) {
+                        $checked = "true";
+                    }
 
-                <?= URL::to('/ccm/system/summary_template/render', $categoryHandle, $memberIdentifier, $instanceTemplate->getId())?>
+                    ?>
+                    <div class="row">
+                        <div class="col-6 pl-0">
+                            <p class="text-muted"><?=$template->getName()?></p>
+                        </div>
+                        <div class="col-6 text-right" data-wrapper="toggle-switch" vue-enabled>
+                            <toggle-switch name="template_<?=$template->getID()?>" :value="<?=$checked?>"></toggle-switch>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 pl-0 text-center">
 
-                <br>
-            <?php }
+                            <div data-text="loading" class="text-left"><?=t('Loading...')?></div>
 
-            ?>
+                            <iframe width="1140" class="ccm-summary-templates-preview" src="<?=
+                            URL::to('/ccm/system/summary_template/render',
+                                $categoryHandle,
+                                $memberIdentifier,
+                                $instanceTemplate->getId()
+                            )?>"></iframe>
+
+                            <hr>
+
+
+
+
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
         </div>
 
 
@@ -93,10 +127,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
     $(function() {
         $('input[name=hasCustomSummaryTemplates]').on('change', function() {
             if ($(this).is(':checked')) {
-                $('div[data-list=summary-templates] input[type=checkbox]').prop('disabled', false);
+                $('div[data-list=summary-templates] [data-wrapper=toggle-switch]').show();
             } else {
-                $('div[data-list=summary-templates] input[type=checkbox]').prop('disabled', true).prop('checked', true);
+                $('div[data-list=summary-templates] [data-wrapper=toggle-switch]').hide();
             }
         }).trigger('change');
+
+        $('[data-list=summary-templates] iframe').on('load', function() {
+            var offsetHeight = this.contentWindow.document.body.offsetHeight,
+                frameHeight = offsetHeight > 480 ? 480 : offsetHeight;
+
+            $(this).css('width', $('[data-nav=summary-template-form-factors] a.active').attr('data-width'));
+            $(this).css('height', frameHeight);
+
+            $(this).parent().find('div[data-text=loading]').remove();
+        });
+        $('[data-nav=summary-template-form-factors]').on('click', 'a', function() {
+            $(this).closest('ul').find('a').removeClass('active');
+            $(this).addClass('active');
+            $('[data-list=summary-templates] iframe').css('width', $(this).attr('data-width'));
+        });
     });
 </script>

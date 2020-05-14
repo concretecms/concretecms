@@ -107,6 +107,7 @@ const DIRNAME_PAGE_THEME = 'page_theme';
 const DIRNAME_PAGE_THEME_CUSTOM = 'custom';
 const DIRNAME_ELEMENTS = 'elements';
 const DIRNAME_SUMMARY = 'summary';
+const DIRNAME_SUMMARY_TEMPLATES = 'templates';
 const DIRNAME_BOARDS = 'boards';
 const DIRNAME_BOARD_SLOTS = 'slots';
 const DIRNAME_CONTAINERS = 'containers';

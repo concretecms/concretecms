@@ -83,7 +83,12 @@ class SummaryTemplates extends BackendInterfaceController
             }
             if ($this->request->request->get('hasCustomSummaryTemplates')) {
                 $command = new EnableCustomCalendarEventSummaryTemplatesCommand($event->getID());
-                $templateIDs = $this->request->request->get('templateIDs');
+                $keys = array_keys($this->request->request->all());
+                foreach($keys as $key) {
+                    if (substr($key, 0, 8) === 'template') {
+                        $templateIDs[] = substr($key, 9);
+                    }
+                }
                 if ($templateIDs) {
                     $command->setTemplateIDs($templateIDs);
                 }

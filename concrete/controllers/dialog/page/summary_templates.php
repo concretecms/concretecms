@@ -43,7 +43,12 @@ class SummaryTemplates extends BackendInterfacePageController
         if ($this->validateAction()) {
             if ($this->request->request->get('hasCustomSummaryTemplates')) {
                 $command = new EnableCustomPageSummaryTemplatesCommand($this->page->getCollectionID());
-                $templateIDs = $this->request->request->get('templateIDs');
+                $keys = array_keys($this->request->request->all());
+                foreach($keys as $key) {
+                    if (substr($key, 0, 8) === 'template') {
+                        $templateIDs[] = substr($key, 9);
+                    }
+                }
                 if ($templateIDs) {
                     $command->setTemplateIDs($templateIDs);
                 }
