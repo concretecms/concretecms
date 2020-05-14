@@ -69,8 +69,8 @@ foreach ($locales as $locale) {
                     <input type="hidden" name="siteLocaleID" value="<?= $locale->getLocaleID() ?>">
                     <p><?= t('Delete this multilingual section? This will remove the entire site tree and its content from your website.') ?></p>
                     <div class="dialog-buttons">
-                        <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                        <button class="btn btn-danger pull-right" onclick="$('form[data-form=delete-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Delete') ?></button>
+                        <button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+                        <button class="btn btn-danger float-right" onclick="$('form[data-form=delete-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Delete') ?></button>
                     </div>
                 </form>
                 <?php
@@ -94,8 +94,8 @@ foreach ($locales as $locale) {
                     <div id="ccm-multilingual-language-icon-change<?= $locale->getLocaleID() ?>"><?= t('None') ?></div>
                 </div>
                 <div class="dialog-buttons">
-                    <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                    <button class="btn btn-primary pull-right" onclick="$('form[data-form=change-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Update') ?></button>
+                    <button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+                    <button class="btn btn-primary float-right" onclick="$('form[data-form=change-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Update') ?></button>
                 </div>
             </form>
         </div>
@@ -119,23 +119,23 @@ foreach ($locales as $locale) {
         <?= $form->select('defaultLocale', $defaultLocales, $defaultLocaleID, ['required' => 'required']) ?>
     </div>
     <div class="form-group">
-        <div class="checkbox">
+        <div class="form-check">
+            <?= $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale) ?>
             <label>
-                <?= $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale) ?>
                 <span><?= t('Redirect home page to default locale.') ?></span>
             </label>
         </div>
         <div style="margin-left: 20px">
-            <div class="checkbox<?= $redirectHomeToDefaultLocale ? '' : ' disabled' ?>">
+            <div class="form-check <?= $redirectHomeToDefaultLocale ? '' : ' disabled' ?>">
+                <?= $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale, $redirectHomeToDefaultLocale ? [] : ['disabled' => 'disabled']) ?>
                 <label>
-                    <?= $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale, $redirectHomeToDefaultLocale ? [] : ['disabled' => 'disabled']) ?>
                     <span><?= t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
                 </label>
             </div>
         </div>
-        <div class="checkbox">
+        <div class="form-check">
+            <?= $form->checkbox('alwaysTrackUserLocale', 1, $alwaysTrackUserLocale) ?>
             <label>
-                <?= $form->checkbox('alwaysTrackUserLocale', 1, $alwaysTrackUserLocale) ?>
                 <span><?= t('Always track user locale.') ?> <i class="launch-tooltip control-label fa fa-question-circle" title="<?= h(t('Tracking user locales requires the creation of session cookies. Disable this option to avoid tracking user locale in case the session cookie is not yet set.')) ?>"></i></span>
             </label>
         </div>
@@ -160,7 +160,7 @@ foreach ($locales as $locale) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <?php $token->output('set_default') ?>
-            <button class="pull-right btn btn-primary" type="submit" name="save"><?= t('Save Settings') ?></button>
+            <button class="float-right btn btn-primary" type="submit" name="save"><?= t('Save Settings') ?></button>
         </div>
     </div>
 </form>
@@ -200,8 +200,8 @@ foreach ($locales as $locale) {
                 </div>
             </fieldset>
             <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                <button class="btn btn-primary pull-right" data-dialog-action="submit"><?= t('Add Locale') ?></button>
+                <button class="btn btn-secondary float-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+                <button class="btn btn-primary float-right" data-dialog-action="submit"><?= t('Add Locale') ?></button>
             </div>
             <?php $token->output('add_content_section') ?>
         </form>

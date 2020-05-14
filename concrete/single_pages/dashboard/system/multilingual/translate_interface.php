@@ -57,7 +57,7 @@ if ($this->controller->getTask() == 'translate_po') {
     <div id="ccm-translator-interface" class="ccm-translator"></div>
 
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?php echo $controller->action('view'); ?>" class="btn btn-default"><?php echo t('Back to List'); ?></a>
+        <a href="<?php echo $controller->action('view'); ?>" class="btn btn-secondary"><?php echo t('Back to List'); ?></a>
         <a href="javascript:void(0)" class="btn btn-primary ccm-save-to-file"><?php echo t('Save to file'); ?></a>
     </div>
     <?php
@@ -157,8 +157,8 @@ if ($this->controller->getTask() == 'translate_po') {
             ?>
             <form method="post" action="<?php echo $controller->action('submit'); ?>">
                 <div class="ccm-dashboard-header-buttons btn-group">
-                    <button class="btn btn-default" type="submit" name="action" value="reload"><?php echo t('Reload Strings'); ?></button>
-                    <button class="btn btn-default" type="submit" name="action" value="export"><?php echo t('Save to file'); ?></button>
+                    <button class="btn btn-secondary" type="submit" name="action" value="reload"><?php echo t('Reload Strings'); ?></button>
+                    <button class="btn btn-secondary" type="submit" name="action" value="export"><?php echo t('Save to file'); ?></button>
                     <?php echo $valt->output(); ?>
                     <button class="btn btn-danger" type="button" data-dialog="reset" value="reset"><?php echo t('Reset All'); ?></button>
                 </div>
@@ -175,8 +175,8 @@ if ($this->controller->getTask() == 'translate_po') {
                             <p><?php echo t('Are you sure? This will remove all translations from all languages, in the database and in your site PO files. This cannot be undone.'); ?></p>
                         </form>
                         <div class="dialog-buttons">
-                            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?php echo t('Cancel'); ?></button>
-                            <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-reset-languages form').submit()"><?php echo t('Confirm Reset'); ?></button>
+                            <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?php echo t('Cancel'); ?></button>
+                            <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-reset-languages form').submit()"><?php echo t('Confirm Reset'); ?></button>
                         </div>
                         <?php
                     } else {
