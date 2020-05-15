@@ -199,7 +199,9 @@ $(document).ready(function() {
                     success: function(newPage) {
                         my.pages.splice(pageIndex, 1, newPage);
                         if (callback) {
-                            callback();
+                            my.$nextTick(function() {
+                                callback();
+                            });
                         }
                     },
                     complete: function() {
@@ -221,10 +223,7 @@ $(document).ready(function() {
                         my.savePage(
                             my.pages[nextPageIndex],
                             function() {
-                                setTimeout(function() {
-                                    saveNext(nextPageIndex + 1);
-                                }, 0);
-                                
+                                saveNext(nextPageIndex + 1);
                             }
                         );
                         return;
