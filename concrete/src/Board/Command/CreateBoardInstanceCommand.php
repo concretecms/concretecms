@@ -22,7 +22,7 @@ class CreateBoardInstanceCommand
     /**
      * @return string
      */
-    public function getBoardInstanceName(): string
+    public function getBoardInstanceName():? string
     {
         return $this->boardInstanceName;
     }

@@ -49,7 +49,7 @@ class CreateBoardInstanceCommandHandler
         $instance->setDateCreated($this->createInstanceDateTime($board)->getTimestamp());
         $this->entityManager->persist($instance);
         $this->entityManager->flush();
-
+        return $instance;
     }
 
 
