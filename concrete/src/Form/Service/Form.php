@@ -154,7 +154,12 @@ class Form
      */
     public function label($forFieldID, $innerHTML, $miscFields = [])
     {
-        return '<label for="' . $forFieldID . '"' . $this->serializeMiscFields('', $miscFields, []) . '>' . $innerHTML . '</label>';
+        $result = '<label';
+        if ((string) $forFieldID !== '') {
+            $result .= ' for="' . $forFieldID . '"';
+        }
+
+        return $result . $this->serializeMiscFields('', $miscFields, []) . '>' . $innerHTML . '</label>';
     }
 
     /**
