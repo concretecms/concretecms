@@ -534,7 +534,7 @@ class Form
         } else {
             $selectedOption = $selectedCountryCode;
         }
-        if (!array_key_exist('id', $miscFields) && ubstr($key, -2) === '[]') {
+        if (!array_key_exists('id', $miscFields) && substr($key, -2) === '[]') {
             $miscFields['id'] = substr($key, 0, -2) . $this->selectIndex;
             ++$this->selectIndex;
         }
