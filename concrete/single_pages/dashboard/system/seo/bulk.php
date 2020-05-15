@@ -153,7 +153,7 @@ if(empty($pages)) {
     ?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="btn btn-primary float-right" v-on:click.prevent="saveAll" v-bind:class="{disabled: !isSaveAllEnabled}"><?= t('Save All') ?></button>
+            <button class="btn float-right" v-on:click.prevent="saveAll" v-bind:class="saveAllClass"><?= t('Save All') ?></button>
         </div>
     </div>
 </div>
@@ -246,6 +246,9 @@ $(document).ready(function() {
                     }
                 });
                 return result;
+            },
+            saveAllClass: function() {
+                return this.isSaveAllEnabled ? 'btn-primary' : 'btn-secondary disabled';
             },
         },
     });
