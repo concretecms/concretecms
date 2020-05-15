@@ -36,8 +36,12 @@ class Bulk extends DashboardPageController
         } else {
             $pageList = $this->getRequestedSearchResults($searchRequest);
             $pagination = $pageList->getPagination();
-            $this->set('pages', $this->serializePages($pagination->getCurrentPageResults()));
+            $pages = $this->serializePages($pagination->getCurrentPageResults());
+            $this->set('pages', $pages);
             $this->set('pagination', $pagination->haveToPaginate() ? $pagination->renderView('dashboard') : '');
+            if ($pages === []) {
+                $this->error->add(t('No pages found.'));
+            }
         }
     }
 

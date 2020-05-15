@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die('Access Denied');
  * @var Concrete\Core\Page\Page[]|null $pages
  * @var string $pagination
  */
-if ($pages !== null) {
+if (!empty($pages)) {
     echo $interface->tabs([
         ['ccm-seobulk-search', t('Search'), false],
         ['ccm-seobulk-results', t('Results'), true],
@@ -22,7 +22,7 @@ if ($pages !== null) {
     <?php
 }
 
-if ($pages !== null) {
+if (!empty($pages)) {
     ?>
     <div class="tab-pane" id="ccm-seobulk-search" role="tabpanel">
     <?php
@@ -84,81 +84,78 @@ if ($pages !== null) {
     </div>
 </form>
 <?php
-if ($pages !== null) {
+if (!empty($pages)) {
     ?>
     </div>
     <?php
 }
 
-if($pages === null) {
+if(empty($pages)) {
     return;
 }
 ?>
 <div class="tab-pane show active d-none" id="ccm-seobulk-results" role="tabpanel">
-    <div v-if="pages.length">
-        <table v-if="pages.length" class="ccm-search-results-table table table-sm">
-            <tbody>
-                <tr v-for="(page, pageIndex) in pages" v-bind:key="pageIndex">
-                    <td>
-                        <h2 class="text-center">{{ page.name }}</h2>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col">
-                                    <dl class="alert alert-secondary">
-                                        <dt><?= t('Page Name') ?></dt>
-                                        <dd>{{ page.name }}</dd>
-                                        <dt><?= t('Page Type') ?></dt>
-                                        <dd>{{ page.type }}</dd>
-                                        <dt><?= t('Modified') ?></dt>
-                                        <dd>{{ page.modified }}</dd>
-                                        <dt><?= t('Page ID') ?></dt>
-                                        <dd>{{ page.cID }}</dd>
-                                    </dl>
+    <table class="ccm-search-results-table table table-sm">
+        <tbody>
+            <tr v-for="(page, pageIndex) in pages" v-bind:key="pageIndex">
+                <td>
+                    <h2 class="text-center">{{ page.name }}</h2>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <dl class="alert alert-secondary">
+                                    <dt><?= t('Page Name') ?></dt>
+                                    <dd>{{ page.name }}</dd>
+                                    <dt><?= t('Page Type') ?></dt>
+                                    <dd>{{ page.type }}</dd>
+                                    <dt><?= t('Modified') ?></dt>
+                                    <dd>{{ page.modified }}</dd>
+                                    <dt><?= t('Page ID') ?></dt>
+                                    <dd>{{ page.cID }}</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <span class="float-right"><?= t('Characters: %s', '{{ page.input.metaTitle.length }}') ?></span>
+                                    <?= $form->label('', t('Meta Title'), ['v-bind:for' => "'meta_title' + pageIndex"]) ?>
+                                    <?= $form->text('', '', ['v-model.trim' => 'page.input.metaTitle', 'v-bind:placeholder' => 'page.autoTitle', 'v-bind:id' => "'meta_title' + pageIndex"]) ?>
+                                    <span v-bind:class="{invisible: page.input.metaTitle !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <span class="float-right"><?= t('Characters: %s', '{{ page.input.metaTitle.length }}') ?></span>
-                                        <?= $form->label('', t('Meta Title'), ['v-bind:for' => "'meta_title' + pageIndex"]) ?>
-                                        <?= $form->text('', '', ['v-model.trim' => 'page.input.metaTitle', 'v-bind:placeholder' => 'page.autoTitle', 'v-bind:id' => "'meta_title' + pageIndex"]) ?>
-                                        <span v-bind:class="{invisible: page.input.metaTitle !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <span class="float-right"><?= t('Characters: %s', '{{ page.input.metaDescription.length }}') ?></span>
-                                        <?= $form->label('', t('Meta Description'), ['v-bind:for' => "'meta_description' + pageIndex"]) ?>
-                                        <?= $form->textarea('meta_description', '', ['v-model.trim' => 'page.input.metaDescription', 'v-bind:placeholder' => 'page.autoDescription', 'v-bind:id' => "'meta_description' + pageIndex"]) ?>
-                                        <span v-bind:class="{invisible: page.input.metaDescription !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
-                                    </div>
-                                    <div v-if="!page.isHomePage" class="form-group">
-                                        <?= $form->label('', t('Slug'), ['v-bind:for' => "'collection_handle' + pageIndex"]) ?>
-                                        <?= $form->text('', '', ['v-model.trim' => 'page.input.handle', 'maxlength' => '255', 'v-bind:id' => "'collection_handle' + pageIndex"]) ?>
-                                        <a class="help-inline url-path" v-bind:href="page.url" target="_blank" v-html="page.htmlPath"></a>
-                                    </div>
-                                    <div class="form-group form-group-last submit-changes">
-                                        <a class="btn float-right" v-on:click.prevent="savePage(page)" v-bind:class="getSavePageClass(page)"><?= t('Save') ?></a>
-                                    </div>
+                                <div class="form-group">
+                                    <span class="float-right"><?= t('Characters: %s', '{{ page.input.metaDescription.length }}') ?></span>
+                                    <?= $form->label('', t('Meta Description'), ['v-bind:for' => "'meta_description' + pageIndex"]) ?>
+                                    <?= $form->textarea('meta_description', '', ['v-model.trim' => 'page.input.metaDescription', 'v-bind:placeholder' => 'page.autoDescription', 'v-bind:id' => "'meta_description' + pageIndex"]) ?>
+                                    <span v-bind:class="{invisible: page.input.metaDescription !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
+                                </div>
+                                <div v-if="!page.isHomePage" class="form-group">
+                                    <?= $form->label('', t('Slug'), ['v-bind:for' => "'collection_handle' + pageIndex"]) ?>
+                                    <?= $form->text('', '', ['v-model.trim' => 'page.input.handle', 'maxlength' => '255', 'v-bind:id' => "'collection_handle' + pageIndex"]) ?>
+                                    <a class="help-inline url-path" v-bind:href="page.url" target="_blank" v-html="page.htmlPath"></a>
+                                </div>
+                                <div class="form-group form-group-last submit-changes">
+                                    <a class="btn float-right" v-on:click.prevent="savePage(page)" v-bind:class="getSavePageClass(page)"><?= t('Save') ?></a>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <?php
-        if ($pagination !== '') {
-            ?>
-            <div style="text-align: center">
-                <?= $pagination ?>
-            </div>
-            <?php
-        }
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <?php
+    if ($pagination !== '') {
         ?>
-        <div class="ccm-dashboard-form-actions-wrapper">
-            <div class="ccm-dashboard-form-actions">
-                <button class="btn btn-primary float-right" v-on:click.prevent="saveAll" v-bind:class="{disabled: !isSaveAllEnabled}"><?= t('Save All') ?></button>
-            </div>
+        <div style="text-align: center">
+            <?= $pagination ?>
+        </div>
+        <?php
+    }
+    ?>
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <button class="btn btn-primary float-right" v-on:click.prevent="saveAll" v-bind:class="{disabled: !isSaveAllEnabled}"><?= t('Save All') ?></button>
         </div>
     </div>
-    <div v-else class="alert alert-info"><?= t('No pages found.') ?></div>
 </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
