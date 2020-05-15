@@ -85,9 +85,13 @@ class Dashboard extends BackendInterfacePageController
         $this->set('tab', $tab);
     }
 
+    //public function checkForMenu($c) 
+    //{ 
+    //}
     public function checkForMenu($c) 
     { 
-        return (string) $this->renderActiveSubPanels($c) !== '';
+      //return (string) $this->renderActiveSubPanels($c) !== ''; // fails to pass triple equal sign checking on element where this function is called.
+      return !($result = $this->renderActiveSubPanels($c)) || $result == '' ? null : 1; 
     }
 
     public function renderActiveSubPanels($c)
