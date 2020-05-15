@@ -390,6 +390,15 @@ return [
             ],
         ],
 
+        // Vue
+        'vue' => [
+            [
+                'javascript',
+                'js/vue.js',
+                ['position' => Asset::ASSET_POSITION_FOOTER],
+            ],
+        ],
+
         // This is the base CKEditor library from CKEditor
         'ckeditor' => [
             [

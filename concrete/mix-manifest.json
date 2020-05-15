@@ -32,6 +32,7 @@
     "/js/features/maps/frontend.js": "/js/features/maps/frontend.js",
     "/js/features/multilingual/frontend.js": "/js/features/multilingual/frontend.js",
     "/js/features/navigation/frontend.js": "/js/features/navigation/frontend.js",
+    "/js/vue.js": "/js/vue.js",
     "/themes/concrete/main.js": "/themes/concrete/main.js",
     "/themes/dashboard/main.js": "/themes/dashboard/main.js",
     "/themes/elemental/main.js": "/themes/elemental/main.js",

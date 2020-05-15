@@ -36,6 +36,9 @@ mix
     .sass('assets/cms.scss', 'css/cms.css')
     .js('assets/cms.js', 'js/cms.js');
 
+// Vue entry point
+mix.js('assets/vue.js', 'js/vue.js');
+
 /**
  * Build core themes
  */
