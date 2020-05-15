@@ -98,7 +98,7 @@ if($pages === null) {
     <div v-if="pages.length">
         <table v-if="pages.length" class="ccm-search-results-table table table-sm">
             <tbody>
-                <tr v-for="page in pages" v-bind:key="page.cID">
+                <tr v-for="(page, pageIndex) in pages" v-bind:key="pageIndex">
                     <td>
                         <h2 class="text-center">{{ page.name }}</h2>
                         <div class="container-fluid">
@@ -118,19 +118,19 @@ if($pages === null) {
                                 <div class="col-md-8">
                                     <div class="form-group">
                                         <span class="float-right"><?= t('Characters: %s', '{{ page.input.metaTitle.length }}') ?></span>
-                                        <?= $form->label('meta_title', t('Meta Title')) ?>
-                                        <?= $form->text('meta_title', '', ['v-model.trim' => 'page.input.metaTitle', 'v-bind:placeholder' => 'page.autoTitle']) ?>
+                                        <?= $form->label('', t('Meta Title'), ['v-bind:for' => "'meta_title' + pageIndex"]) ?>
+                                        <?= $form->text('', '', ['v-model.trim' => 'page.input.metaTitle', 'v-bind:placeholder' => 'page.autoTitle', 'v-bind:id' => "'meta_title' + pageIndex"]) ?>
                                         <span v-bind:class="{invisible: page.input.metaTitle !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
                                     </div>
                                     <div class="form-group">
                                         <span class="float-right"><?= t('Characters: %s', '{{ page.input.metaDescription.length }}') ?></span>
-                                        <?= $form->label('meta_title', t('Meta Description')) ?>
-                                        <?= $form->textarea('meta_description', '', ['v-model.trim' => 'page.input.metaDescription', 'v-bind:placeholder' => 'page.autoDescription']) ?>
+                                        <?= $form->label('', t('Meta Description'), ['v-bind:for' => "'meta_description' + pageIndex"]) ?>
+                                        <?= $form->textarea('meta_description', '', ['v-model.trim' => 'page.input.metaDescription', 'v-bind:placeholder' => 'page.autoDescription', 'v-bind:id' => "'meta_description' + pageIndex"]) ?>
                                         <span v-bind:class="{invisible: page.input.metaDescription !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
                                     </div>
                                     <div v-if="!page.isHomePage" class="form-group">
-                                        <?= $form->label('collection_handle', t('Slug')) ?>
-                                        <?= $form->text('collection_handle', '', ['v-model.trim' => 'page.input.handle', 'maxlength' => '255']) ?>
+                                        <?= $form->label('', t('Slug'), ['v-bind:for' => "'collection_handle' + pageIndex"]) ?>
+                                        <?= $form->text('', '', ['v-model.trim' => 'page.input.handle', 'maxlength' => '255', 'v-bind:id' => "'collection_handle' + pageIndex"]) ?>
                                         <a class="help-inline url-path" v-bind:href="page.url" target="_blank" v-html="page.htmlPath"></a>
                                     </div>
                                     <div class="form-group form-group-last submit-changes">
