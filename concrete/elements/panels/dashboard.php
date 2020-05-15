@@ -11,15 +11,8 @@ foreach ($parents as $pc) {
 }
 $dashboard = new DashboardPanel();
 $checkForMenu = $dashboard->checkForMenu($c);
-if ($checkForMenu == 1) {
-    if ($tab == 'favorites') {
-        $wrapperClass = 'ccm-panel-content-visible';
-    } else {
-        $wrapperClass = 'ccm-panel-slide-left';
-    }
-} else {
-    $wrapperClass = 'ccm-panel-content-visible';
-}
+//$wrapperClass = $checkForMenu == 1 && $tab !== 'favorites' ? 'ccm-panel-slide-left' : 'ccm-panel-content-visible'; // this way works with mlocatis suggestion to ramons on checkForMenu function
+$wrapperClass = $checkForMenu === 1 && $tab !== 'favorites' ? 'ccm-panel-slide-left' : 'ccm-panel-content-visible'; // this way works with ramons suggestion of using strict checking...
 ?>
 <div class="ccm-panel-content <?=$wrapperClass ? $wrapperClass : 'ccm-panel-content-visible'; ?>">
 <section>
