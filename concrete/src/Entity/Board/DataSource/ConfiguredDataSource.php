@@ -35,7 +35,7 @@ class ConfiguredDataSource
     protected $data_source;
 
     /**
-     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Board\Item", cascade={"remove"}, mappedBy="data_source", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Board\InstanceItem", cascade={"remove"}, mappedBy="data_source", fetch="EXTRA_LAZY")
      */
     protected $items;
 
@@ -50,7 +50,7 @@ class ConfiguredDataSource
     protected $customWeight = 0;
 
     /**
-     * @ORM\OneToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\Configuration\Configuration", 
+     * @ORM\OneToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\Configuration\Configuration",
      *     mappedBy="data_source",  cascade={"persist","remove"})
      **/
     protected $configuration;
@@ -91,7 +91,7 @@ class ConfiguredDataSource
     {
         $this->data_source = $data_source;
     }
-    
+
     /**
      * @return mixed
      */
@@ -144,7 +144,7 @@ class ConfiguredDataSource
     {
         return $this->items->count();
     }
-    
-    
-    
+
+
+
 }

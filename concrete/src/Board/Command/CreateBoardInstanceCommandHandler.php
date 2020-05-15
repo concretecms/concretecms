@@ -16,12 +16,12 @@ class CreateBoardInstanceCommandHandler
     protected $entityManager;
 
     /**
-     * @var CollectionFactory 
+     * @var CollectionFactory
      */
     protected $collectionFactory;
-    
+
     public function __construct(
-        EntityManager $entityManager, 
+        EntityManager $entityManager,
         CollectionFactory $collectionFactory)
     {
         $this->collectionFactory = $collectionFactory;
@@ -38,22 +38,19 @@ class CreateBoardInstanceCommandHandler
         return $dateTime;
     }
 
-    
+
     public function handle(CreateBoardInstanceCommand $command)
     {
         $board = $command->getBoard();
         $instance = new Instance();
         $instance->setBoard($board);
+        $instance->setBoardInstanceName($command->getBoardInstanceName());
+        $instance->setSite($command->getSite());
         $instance->setDateCreated($this->createInstanceDateTime($board)->getTimestamp());
         $this->entityManager->persist($instance);
-
-        $collection = $this->collectionFactory->createSlotCollection($instance);
-
-        // Now save the board instance.
-        $instance->setSlots($collection);
         $this->entityManager->flush();
-        
+
     }
 
-    
+
 }

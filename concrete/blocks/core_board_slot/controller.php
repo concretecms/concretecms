@@ -15,13 +15,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btCoreBoardSlot';
     protected $btIsInternal = true;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
-    
+
     public $contentObjectCollection;
-    
+
     public $slotTemplateID;
-    
+
     public $instanceSlotID;
-    
+
     public function getRequiredFeatures(): array
     {
         return [
@@ -38,13 +38,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         return t("Board Slot");
     }
-    
+
     public function getInstanceSlotID()
     {
         return $this->instanceSlotID;
     }
-    
-    
+
+
     public function view()
     {
         $template = null;
@@ -64,5 +64,5 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
     }
-    
+
 }

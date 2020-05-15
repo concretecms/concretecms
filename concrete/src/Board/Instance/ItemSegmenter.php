@@ -2,17 +2,17 @@
 namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Entity\Board\InstanceItem;
 use Doctrine\ORM\EntityManager;
 
 class ItemSegmenter
 {
 
     /**
-     * @var EntityManager 
+     * @var EntityManager
      */
     protected $entityManager;
-    
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -26,22 +26,22 @@ class ItemSegmenter
      * @TODO - implement complex weighting and subset building ;-)
      *
      * @param $instance Instance
-     * @return Item[]
+     * @return InstanceItem[]
      */
     public function getBoardItemsForInstance(Instance $instance)
     {
-        $r = $this->entityManager->getRepository(Item::class);
+        $r = $this->entityManager->getRepository(InstanceItem::class);
         $board = $instance->getBoard();
         switch($board->getSortBy()) {
             case $board::ORDER_BY_RELEVANT_DATE_ASC:
-                $items = $r->findByBoard($board, ['relevantDate' => 'asc']);
+                $items = $r->findByInstance($instance, ['relevantDate' => 'asc']);
                 break;
             default:
-                $items = $r->findByBoard($board, ['relevantDate' => 'desc']);
+                $items = $r->findByInstance($instance, ['relevantDate' => 'desc']);
                 break;
         }
         return $items;
     }
-    
+
 
 }

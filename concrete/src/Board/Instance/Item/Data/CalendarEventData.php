@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Board\Item\Data;
+namespace Concrete\Core\Board\Instance\Item\Data;
 
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;

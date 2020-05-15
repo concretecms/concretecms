@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Board\Item\Data;
+namespace Concrete\Core\Board\Instance\Item\Data;
 
 use Concrete\Core\Page\Page;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -10,10 +10,10 @@ class PageData implements DataInterface
 {
 
     /**
-     * @var int 
+     * @var int
      */
     protected $cID = 0;
-    
+
     public function __construct(Page $c = null)
     {
         if ($c) {
@@ -36,13 +36,13 @@ class PageData implements DataInterface
     {
         $this->cID = $cID;
     }
-        
-    
+
+
     public function jsonSerialize()
     {
         return ['cID' => $this->cID];
     }
-    
+
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
         $this->cID = $data['cID'];

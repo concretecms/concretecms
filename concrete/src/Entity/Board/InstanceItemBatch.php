@@ -6,27 +6,27 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="BoardItemBatches")
+ * @ORM\Table(name="BoardInstanceItemBatches")
  */
-class ItemBatch
+class InstanceItemBatch
 {
-    
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $boardItemBatchID;
+    protected $boardInstanceItemBatchID;
 
     /**
-     * @ORM\OneToMany(targetEntity="Item", cascade={"remove"}, mappedBy="batch", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="InstanceItem", cascade={"remove"}, mappedBy="batch", fetch="EXTRA_LAZY")
      */
     protected $items;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Board",  inversedBy="batches")
-     * @ORM\JoinColumn(name="boardID", referencedColumnName="boardID")
-     **/
-    protected $board;
+     * @ORM\ManyToOne(targetEntity="Instance", inversedBy="batches")
+     * @ORM\JoinColumn(name="boardInstanceID", referencedColumnName="boardInstanceID")
+     */
+    protected $instance;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
@@ -102,6 +102,6 @@ class ItemBatch
         $this->dateCreated = $dateCreated;
     }
 
-    
+
 
 }

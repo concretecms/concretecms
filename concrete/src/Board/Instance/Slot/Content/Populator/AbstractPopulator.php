@@ -11,6 +11,6 @@ abstract class AbstractPopulator implements PopulatorInterface, ApplicationAware
 {
 
     use ApplicationAwareTrait;
-    
+
 
 }

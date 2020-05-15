@@ -7,26 +7,26 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="BoardItems")
+ * @ORM\Table(name="BoardInstanceItems")
  */
-class Item
+class InstanceItem
 {
-    
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $boardItemID;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Board", inversedBy="items")
-     * @ORM\JoinColumn(name="boardID", referencedColumnName="boardID")
-     */
-    protected $board;
+    protected $boardInstanceItemID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ItemBatch", inversedBy="items")
-     * @ORM\JoinColumn(name="boardItemBatchID", referencedColumnName="boardItemBatchID")
+     * @ORM\ManyToOne(targetEntity="Instance", inversedBy="items")
+     * @ORM\JoinColumn(name="boardInstanceID", referencedColumnName="boardInstanceID")
+     */
+    protected $instance;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InstanceItemBatch", inversedBy="items")
+     * @ORM\JoinColumn(name="boardInstanceItemBatchID", referencedColumnName="boardInstanceItemBatchID")
      */
     protected $batch;
 
@@ -58,7 +58,7 @@ class Item
 
     /**
      * @ORM\OneToMany(targetEntity="ItemCategory", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
-     * 
+     *
      */
     protected $categories;
 
@@ -80,22 +80,23 @@ class Item
     {
         return $this->boardItemID;
     }
-    
+
     /**
      * @return mixed
      */
-    public function getBoard()
+    public function getInstance()
     {
-        return $this->board;
+        return $this->instance;
     }
 
     /**
-     * @param mixed $board
+     * @param mixed $instance
      */
-    public function setBoard($board): void
+    public function setInstance($instance): void
     {
-        $this->board = $board;
+        $this->instance = $instance;
     }
+
 
     /**
      * @return mixed
@@ -144,7 +145,7 @@ class Item
     {
         $this->relevantDate = $relevantDate;
     }
-    
+
     /**
      * @return mixed
      */
@@ -208,9 +209,9 @@ class Item
     {
         $this->data = $data;
     }
-    
-    
-    
+
+
+
 
 
 

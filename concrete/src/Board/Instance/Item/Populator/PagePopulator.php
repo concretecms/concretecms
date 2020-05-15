@@ -1,10 +1,10 @@
 <?php
-namespace Concrete\Core\Board\Item\Populator;
+namespace Concrete\Core\Board\Instance\Item\Populator;
 
-use Concrete\Core\Board\Item\Data\DataInterface;
-use Concrete\Core\Board\Item\Data\PageData;
-use Concrete\Core\Entity\Board\Board;
+use Concrete\Core\Board\Instance\Item\Data\DataInterface;
+use Concrete\Core\Board\Instance\Item\Data\PageData;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
+use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Search\Field\Field\SiteField;
@@ -13,9 +13,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class PagePopulator extends AbstractPopulator
 {
-    
-    public function getDataObjects(Board $board, Configuration $configuration) : array 
+
+    public function getDataObjects(Instance $instance, Configuration $configuration) : array
     {
+        $board = $instance->getBoard();
         $list = new PageList();
         $query = $configuration->getQuery();
         $list->ignorePermissions();
@@ -23,18 +24,30 @@ class PagePopulator extends AbstractPopulator
         if ($query) {
             foreach($query->getFields() as $field) {
                 if ($field instanceof SiteField) {
+                    // If we have a site field we handle it manually here, because we have to use the instance's
+                    // site.
                     $containsSitefield = true;
+                    if ($field->isSetToCurrent()) {
+                        // we filter by the instance's site
+                        $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
+                    } else if ($field->isSetToAll()) {
+                        $list->setSiteTreeToAll();
+                    }
+                } else {
+                    $field->filterList($list);
                 }
-                $field->filterList($list);
             }
         }
+
         if (!$containsSitefield) {
             if ($board->getSite()) {
-                $list->setSiteTreeObject($board->getSite()->getSiteTreeObject());
+                // The board is not a shared board, so we filter by the instance's current site.
+                $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
             } else {
                 $list->setSiteTreeToAll();
             }
         }
+
         if ($board->getDateLastRefreshed()) {
             $filterDate = date('Y-m-d H:i:s', $board->getDateLastRefreshed());
             $list->filterByPublicDate($filterDate, '>');
@@ -43,7 +56,7 @@ class PagePopulator extends AbstractPopulator
         $list->setItemsPerPage(100);
         return $list->getResults();
     }
-    
+
     /**
      * @param Page $mixed
      * @return int
@@ -90,7 +103,7 @@ class PagePopulator extends AbstractPopulator
         }
         return $categories;
     }
-    
+
     public function getObjectTags($mixed): array
     {
         return [];

@@ -2,37 +2,36 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Entity\Board\Item;
-use Concrete\Core\Entity\Board\ItemBatch;
+use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Doctrine\ORM\EntityManager;
 
-class ClearBoardDataPoolCommandHandler
+class ClearBoardInstanceDataPoolCommandHandler
 {
-    
+
     /**
-     * @var EntityManager 
+     * @var EntityManager
      */
     protected $entityManager;
-    
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    public function handle(ClearBoardDataPoolCommand $command)
+    public function handle(ClearBoardInstanceDataPoolCommand $command)
     {
-        $board = $command->getBoard();
-        foreach($board->getItems() as $item) {
+        $instance = $command->getInstance();
+        foreach($instance->getItems() as $item) {
             $this->entityManager->remove($item);
         }
         $this->entityManager->flush();
 
         $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->delete(ItemBatch::class, 'ib')
-            ->where('ib.board = :board');
-        $queryBuilder->setParameter('board', $board);
+        $queryBuilder->delete(InstanceItemBatch::class, 'ib')
+            ->where('ib.instance = :instance');
+        $queryBuilder->setParameter('instance', $instance);
         $queryBuilder->getQuery()->execute();
     }
 
-    
+
 }

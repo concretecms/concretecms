@@ -27,13 +27,7 @@ class Board implements ObjectInterface, AssignableObjectInterface
     const ORDER_BY_RELEVANT_DATE_ASC = 'relevant_date_asc';
 
     use PackageTrait;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Site\Site")
-     * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
-     */
-    protected $site;
-    
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -46,24 +40,20 @@ class Board implements ObjectInterface, AssignableObjectInterface
     protected $boardName;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Site\Site")
+     * @ORM\JoinColumn(name="siteID", referencedColumnName="siteID")
+     */
+    protected $site;
+
+    /**
      * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource", cascade={"remove"}, mappedBy="board")
      */
     protected $data_sources;
 
     /**
-     * @ORM\OneToMany(targetEntity="Item", cascade={"remove"}, mappedBy="board", fetch="EXTRA_LAZY")
-     */
-    protected $items;
-
-    /**
      * @ORM\OneToMany(targetEntity="Instance", cascade={"remove"}, mappedBy="board", fetch="EXTRA_LAZY")
      */
     protected $instances;
-
-    /**
-     * @ORM\OneToMany(targetEntity="ItemBatch", cascade={"remove"}, mappedBy="board", fetch="EXTRA_LAZY")
-     */
-    protected $batches;
 
     /**
      * @ORM\OneToMany(targetEntity="BoardPermissionAssignment", mappedBy="board", cascade={"remove"})
@@ -80,7 +70,7 @@ class Board implements ObjectInterface, AssignableObjectInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $sortBy = self::ORDER_BY_RELEVANT_DATE_ASC;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Board\SlotTemplate")
      * @ORM\JoinTable(name="BoardCustomSlotTemplates",
@@ -122,7 +112,7 @@ class Board implements ObjectInterface, AssignableObjectInterface
     /**
      * @return mixed
      */
-    public function getSite(): ?Site
+    public function getSite()
     {
         return $this->site;
     }
@@ -142,7 +132,7 @@ class Board implements ObjectInterface, AssignableObjectInterface
     {
         return $this->boardID;
     }
-    
+
     /**
      * @return mixed
      */
@@ -173,38 +163,6 @@ class Board implements ObjectInterface, AssignableObjectInterface
     public function setDataSources($data_sources): void
     {
         $this->data_sources = $data_sources;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItems()
-    {
-        return $this->items;
-    }
-
-    /**
-     * @param mixed $items
-     */
-    public function setItems($items): void
-    {
-        $this->items = $items;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBatches()
-    {
-        return $this->batches;
-    }
-
-    /**
-     * @param mixed $batches
-     */
-    public function setBatches($batches): void
-    {
-        $this->batches = $batches;
     }
 
     /**
@@ -270,7 +228,7 @@ class Board implements ObjectInterface, AssignableObjectInterface
     {
         $this->hasCustomSlotTemplates = $hasCustomSlotTemplates;
     }
-    
+
     /**
      * @return mixed
      */

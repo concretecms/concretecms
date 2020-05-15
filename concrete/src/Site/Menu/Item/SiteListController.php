@@ -59,7 +59,7 @@ class SiteListController extends Controller
             $icon->addClass('fa fa-globe');
             $element->appendChild($icon);
 
-            $select = new Element('select', null, ['style' => 'width: 240px; display: none', 'data-select' => 'ccm-header-site-list']);
+            $select = new Element('select', null, ['style' => 'width: 240px; display: none', 'class' => 'form-control selectize-control', 'data-select' => 'ccm-header-site-list']);
             foreach($this->service->getList() as $site) {
                 $permissions = new \Permissions($site);
                 if ($permissions->canViewSiteInSelector()) {

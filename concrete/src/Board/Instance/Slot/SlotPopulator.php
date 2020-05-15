@@ -30,10 +30,10 @@ class SlotPopulator
      */
     public function populateSlotCollectionWithContent(array $contentObjectGroups, ArrayCollection $instanceSlots)
     {
-        
+
 
         $type = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
-        
+
         foreach($instanceSlots as $instanceSlot) {
 
             $templateDriver = $instanceSlot->getTemplate()->getDriver();
@@ -56,8 +56,10 @@ class SlotPopulator
                     $objects = $contentObjects;
                 }
 
-                $content = $objects[array_rand($objects, 1)];
-                $contentObjectCollection->addContentObject($i, $content);
+                if (count($objects)) {
+                    $content = $objects[array_rand($objects, 1)];
+                    $contentObjectCollection->addContentObject($i, $content);
+                }
             }
 
 

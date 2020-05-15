@@ -2,11 +2,11 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
-use Concrete\Core\Summary\Template\RendererFilterer;
 use Concrete\Core\Summary\SummaryObject as BaseSummaryObject;
+
 trait SummaryObjectCreatorTrait
 {
-    
+
     public function createSummaryContentObjects(CategoryMemberInterface $mixed) : array
     {
         $objects = [];
@@ -18,16 +18,16 @@ trait SummaryObjectCreatorTrait
         foreach($templates as $template) {
             $objects[] = new SummaryObject(
                 new BaseSummaryObject(
-                    $mixed->getSummaryCategoryHandle(), 
+                    $mixed->getSummaryCategoryHandle(),
                     $mixed->getSummaryIdentifier(),
                     $template->getTemplate(),
                     $template->getData()
                 )
             );
         }
-        return $objects;        
+        return $objects;
     }
 
-    
+
 
 }

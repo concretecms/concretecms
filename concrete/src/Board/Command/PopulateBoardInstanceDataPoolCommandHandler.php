@@ -2,35 +2,35 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Entity\Board\ItemBatch;
+use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Doctrine\ORM\EntityManager;
 
-class PopulateBoardDataPoolCommandHandler
+class PopulateBoardInstanceDataPoolCommandHandler
 {
-    
+
     /**
-     * @var EntityManager 
+     * @var EntityManager
      */
     protected $entityManager;
-    
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    public function handle(PopulateBoardDataPoolCommand $command)
+    public function handle(PopulateBoardInstanceDataPoolCommand $command)
     {
-        $board = $command->getBoard();
+        $instance = $command->getInstance();
+        $board = $instance->getBoard();
         $configuredDataSources = $board->getDataSources();
-        $batch = new ItemBatch();
+        $batch = new InstanceItemBatch();
         $batch->setBoard($board);
         $this->entityManager->persist($batch);
         foreach($configuredDataSources as $configuredDataSource) {
-            $configuration = $configuredDataSource->getConfiguration();
             $dataSource = $configuredDataSource->getDataSource();
             $dataSourceDriver = $dataSource->getDriver();
             $populator = $dataSourceDriver->getItemPopulator();
-            $objects = $populator->createBoardItems($board, $batch, $configuredDataSource);
+            $objects = $populator->createBoardInstanceItems($instance, $batch, $configuredDataSource);
             foreach($objects as $object) {
                 $this->entityManager->persist($object);
             }
@@ -38,5 +38,5 @@ class PopulateBoardDataPoolCommandHandler
         $this->entityManager->flush();
     }
 
-    
+
 }

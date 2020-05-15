@@ -24,6 +24,22 @@ class SiteField extends AbstractField
     }
 
     /**
+     * @return bool
+     */
+    public function isSetToCurrent(): bool
+    {
+        return $this->data['siteID'] === 'current';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSetToAll(): bool
+    {
+        return $this->data['siteID'] === 'all';
+    }
+
+    /**
      * @param PageList $list
      */
     public function filterList(ItemList $list)

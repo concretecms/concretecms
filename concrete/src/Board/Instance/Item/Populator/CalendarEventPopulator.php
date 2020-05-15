@@ -1,14 +1,13 @@
 <?php
-namespace Concrete\Core\Board\Item\Populator;
+namespace Concrete\Core\Board\Instance\Item\Populator;
 
-use Concrete\Core\Board\Item\Data\CalendarEventData;
-use Concrete\Core\Board\Item\Data\DataInterface;
+use Concrete\Core\Board\Instance\Item\Data\CalendarEventData;
+use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
-use Concrete\Core\Entity\Calendar\CalendarEvent;
-use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
+use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -21,8 +20,9 @@ class CalendarEventPopulator extends AbstractPopulator
      * @param CalendarEventConfiguration $configuration
      * @return array
      */
-    public function getDataObjects(Board $board, Configuration $configuration): array
+    public function getDataObjects(Instance $instance, Configuration $configuration): array
     {
+        $board = $instance->getBoard();
         $list = new EventOccurrenceList();
         $list->filterByCalendar($configuration->getCalendar());
         $list->setItemsPerPage(100);
