@@ -64,6 +64,11 @@ div.ccm-ui {
   //@import "spinners";
   @import "~bootstrap/scss/utilities";
   //@import "print";
+
+  // Hide cloaked vue objects
+  [v-cloak] {
+    display: none;
+  }
 }
 
 // This is the actual public entry point to the cms.css on the front-end

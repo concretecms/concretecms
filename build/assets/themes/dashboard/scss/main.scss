@@ -25,3 +25,8 @@
 @import "update";
 @import "privacy-policy.scss";
 @import "translator";
+
+// Hide cloaked vue objects
+[v-cloak] {
+  display: none;
+}
