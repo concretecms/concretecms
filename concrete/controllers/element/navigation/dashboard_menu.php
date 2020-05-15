@@ -32,12 +32,8 @@ class DashboardMenu extends ApplicationMenu
     public function displayTopLevelMenu(Page $page)
     {
         $pagePath = $page->getCollectionPath();
-        if ($pagePath == '/dashboard/welcome' || $pagePath == '/dashboard/system') {
-            return true;
-        }
-        $result = $pagePath;
-
-        return $result;
+        
+        return in_array($pagePath, ['/dashboard/welcome', '/dashboard/system']) ? true : $pagePath;
     }
 
     protected function getPageList($parent)

@@ -85,48 +85,32 @@ class Dashboard extends BackendInterfacePageController
         $this->set('tab', $tab);
     }
 
-    public function checkForMenu($c)
-    {
-        $result = $this->renderActiveSubPanels($c);
-        if (!$result || $result == '') {
-            return null;
-        } else {
-            return 1;
-        }
+    public function checkForMenu($c) 
+    { 
+        return (string) $this->renderActiveSubPanels($c) !== '';
     }
 
     public function renderActiveSubPanels($c)
     {
         $nh = Core::make('helper/navigation');
         $trail = $nh->getTrailToCollection($c);
-        $systemSettings = 79;
-        $dashboard = 2;
-        $systemSettingsPageID = 80;
-        $accountID = 192;
-        $messages = 195;
-        $waiting = 186;
-        if ($c->getCollectionPath() == '/dashboard') {
-            $emulatPageID = $systemPageID;
-        }
-        if ($c->getCollectionPath() == '/dashboard/system') {
-            $emulatePageID = $systemSettings;
-        }
-        if ($c->getCollectionPath() == '/account/edit_profile') {
-            $emulatePageID = $accountID;
-        }
-        if ($c->getCollectionPath() == '/account/messages') {
-            $emulatePageID = $accountID;
+        if (
+            $c->getCollectionPath() == '/dashboard' ||
+            $c->getCollectionPath() == '/dashboard/system'
+           ) {
+            $emulatePageID = $c->getCollectionID();
+            $emulate = true;
         }
         if (
-        $c->getCollectionPath() == '/dashboard/system' ||
-        $c->getCollectionPath() == '/account/edit_profile' ||
-        $c->getCollectionPath() == '/account/messages'
-      ) {
+            $c->getCollectionPath() == '/account/edit_profile' ||
+            $c->getCollectionPath() == '/account/messages'
+           ) {
+            $emulatePageID = $c->getCollectionParentID();
+            $emulate = true;
+        }
+        if ($emulate === true) {
             $emulatePage = Page::getByID($emulatePageID);
             $trail = [$emulatePage, 0];
-        //$javascript = "<script type='text/javascript'>$('.ccm-panel-content-visible').scrollTop(0);</scrit>";
-        } else {
-            //$filterByParent = true;
         }
         if (is_array($trail)) {
             array_pop($trail);
