@@ -213,7 +213,6 @@ $(document).ready(function() {
                 if (!my.isSaveAllEnabled) {
                     return;
                 }
-                var nextPageIndex = 0;
                 function saveNext(nextPageIndex) {
                     for (; nextPageIndex < my.pages.length; nextPageIndex++) {
                         if (!my.isPageDirty(my.pages[nextPageIndex])) {
@@ -223,7 +222,7 @@ $(document).ready(function() {
                             my.pages[nextPageIndex],
                             function() {
                                 setTimeout(function() {
-                                    saveNext(nextPageIndex+1);
+                                    saveNext(nextPageIndex + 1);
                                 }, 0);
                                 
                             }
