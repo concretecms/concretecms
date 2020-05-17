@@ -1,10 +1,18 @@
-// Import the frontend foundation for themes.
-import '@concretecms/bedrock/assets/bedrock/js/frontend';
-
 // Import the CMS foundation in order to support editing, toolbar, panel functionality
 import '@concretecms/bedrock/assets/cms/js/base';
 
-// My Account
+// Import the frontend foundation for themes.
+// Has to come after cms base because cms base registers the Vue Manager
+import '@concretecms/bedrock/assets/bedrock/js/frontend';
+
+// Import the CMS components and the backend components
+Concrete.Vue.createContext('backend', [], 'cms')
+Concrete.Vue.activateContext('backend', '[vue-enabled]', document)
+
+// Desktops and waiting for me
+import '@concretecms/bedrock/assets/desktop/js/frontend';
+
+// Avatar picker
 import '@concretecms/bedrock/assets/account/js/frontend';
 
 // Calendar
@@ -22,6 +30,7 @@ import './translator';
 
 // Marketplace support
 import './remote-marketplace';
+import components from "@concretecms/bedrock/assets/cms/components/index";
 
 var setupResultMessages = function() {
     if ($('#ccm-dashboard-result-message').length > 0) {

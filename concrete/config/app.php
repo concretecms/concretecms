@@ -390,6 +390,13 @@ return [
             ],
         ],
 
+        'vue' => [
+            [
+                'javascript',
+                'js/vue.js',
+            ],
+        ],
+
         // This is the base CKEditor library from CKEditor
         'ckeditor' => [
             [
@@ -419,6 +426,16 @@ return [
         ],
 
         // Fallback/minimal assets for accessory features
+        'feature/account/frontend' => [
+            ['javascript', 'js/features/account/frontend.js'],
+            ['css', 'css/features/account/frontend.css'],
+        ],
+
+        'feature/desktop/frontend' => [
+            ['javascript', 'js/features/desktop/frontend.js'],
+            ['css', 'css/features/desktop/frontend.css'],
+        ],
+
         'feature/boards/frontend' => [
             ['javascript', 'js/features/boards/frontend.js'],
             ['css', 'css/features/boards/frontend.css'],
@@ -503,6 +520,12 @@ return [
             ],
         ],
 
+        'vue' => [
+            [
+                ['javascript', 'vue'],
+            ],
+        ],
+
         'font-awesome' => [
             [
                 ['css', 'font-awesome'],
@@ -520,6 +543,7 @@ return [
         'core/cms' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'vue'],
                 ['css', 'font-awesome'],
                 ['javascript', 'core/cms'],
                 ['javascript-localized', 'core/cms'],
@@ -528,6 +552,20 @@ return [
         ],
 
         // Fallback/minimal assets groups
+
+        'feature/account/frontend' => [
+            [
+                ['javascript', 'feature/account/frontend'],
+                ['css', 'feature/account/frontend'],
+            ]
+        ],
+
+        'feature/desktop/frontend' => [
+            [
+                ['javascript', 'feature/desktop/frontend'],
+                ['css', 'feature/desktop/frontend'],
+            ]
+        ],
 
         'feature/calendar/frontend' => [
             [
