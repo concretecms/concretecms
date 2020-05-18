@@ -8,16 +8,16 @@ class Column implements ColumnInterface
     /** These properties are to be treated as protected. Use the set and get methods instead */
     /** @deprecated */
     public $columnKey;
-    
+
     /** @deprecated */
     public $columnName;
-    
+
     /** @deprecated */
     public $sortDirection = 'asc';
-    
+
     /** @deprecated */
     public $isSortable;
-    
+
     /** @deprecated */
     public $callback;
 
@@ -27,7 +27,7 @@ class Column implements ColumnInterface
             return call_user_func($this->getColumnCallback(), $obj);
         }
 
-        return call_user_func(array($obj, $this->getColumnCallback()));
+        return call_user_func([$obj, $this->getColumnCallback()]);
     }
 
     public function getColumnKey()
@@ -63,7 +63,7 @@ class Column implements ColumnInterface
      */
     public function setColumnDefaultSortDirection($dir)
     {
-        $this->sortDirection = $dir;
+        $this->setColumnSortDirection($dir);
     }
 
     public function getSortClassName(Result $result)
@@ -75,18 +75,31 @@ class Column implements ColumnInterface
 
     public function getColumnSortDirection()
     {
-        return $this->sortDirection;
+        return $this->sanitizeSortDirection($this->sortDirection);
     }
 
     public function setColumnSortDirection($sortDirection)
     {
-        return $this->sortDirection = $sortDirection;
+        return $this->sortDirection = $this->sanitizeSortDirection($sortDirection);
+    }
+
+    /**
+     * Normalize a sort direction to "asc" or "desc".
+     *
+     * @param $direction
+     *
+     * @return string
+     */
+    private function sanitizeSortDirection($direction)
+    {
+        return strtolower(trim($direction)) === 'asc' ? 'asc' : 'desc';
     }
 
     public function getSortURL(Result $result)
     {
         $il = $result->getItemListObject();
         $dir = $this->getColumnSortDirection();
+
         return $il->getSortURL($this->getColumnKey(), $dir, $result->getBaseURL());
     }
 
@@ -96,6 +109,6 @@ class Column implements ColumnInterface
         $this->columnName = $name;
         $this->isSortable = $isSortable;
         $this->callback = $callback;
-        $this->sortDirection = $sort;
+        $this->sortDirection = $this->sanitizeSortDirection($sort);
     }
 }
