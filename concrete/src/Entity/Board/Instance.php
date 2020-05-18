@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="BoardInstances")
  */
-class Instance
+class Instance implements \JsonSerializable
 {
 
     /**
@@ -199,9 +199,14 @@ class Instance
         return $dateTime;
     }
 
-
-
-
+    public function jsonSerialize()
+    {
+        return [
+            'boardInstanceID' => $this->getBoardInstanceID(),
+            'name' => $this->getBoardInstanceName(),
+            'dateCreated' => $this->getDateCreated()
+        ];
+    }
 
 
 }

@@ -9,6 +9,7 @@ use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
+use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 use Concrete\Theme\Concrete\PageTheme;
@@ -153,6 +154,7 @@ class Details extends DashboardPageController
         if (is_object($instance)) {
             $configuredSources = $this->entityManager->getRepository(ConfiguredDataSource::class)
                 ->findByBoard($instance->getBoard());
+            $this->set('itemRepository', $this->entityManager->getRepository(InstanceItem::class));
             $this->set('configuredSources', $configuredSources);
             $this->set('instance', $instance);
         } else {

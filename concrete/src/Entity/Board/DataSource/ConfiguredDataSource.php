@@ -140,11 +140,5 @@ class ConfiguredDataSource
         $this->customWeight = $customWeight;
     }
 
-    public function getItemCount()
-    {
-        return $this->items->count();
-    }
-
-
 
 }

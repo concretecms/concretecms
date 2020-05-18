@@ -9,6 +9,8 @@ use Concrete\Core\Board\Template\TemplateLocator;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Board\Template\TemplateInstance;
 use Concrete\Core\Entity\Board\Instance;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Permission\Checker;
 use Cookie;
 use Doctrine\ORM\EntityManager;
 use Session;
@@ -18,7 +20,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends BlockController
 {
     protected $btInterfaceWidth = 500;
-    protected $btInterfaceHeight = 150;
+    protected $btInterfaceHeight = 500;
     protected $btTable = 'btBoard';
 
     public $helpers = ['form'];
@@ -38,19 +40,40 @@ class Controller extends BlockController
     public function add()
     {
         $em = $this->app->make(EntityManager::class);
-        $boardSelect = ['' => t('** Choose a Board')];
+        $boardSelect = ['0' => t('** Choose a Board')];
         $boards = [];
         foreach($em->getRepository(Board::class)->findAll() as $board) {
-            $boards[] = $board;
-            $boardSelect[$board->getBoardID()] = $board->getBoardName();
+            $checker = new Checker($board);
+            if ($checker->canViewBoard()) {
+                $boards[] = $board;
+                $boardSelect[$board->getBoardID()] = $board->getBoardName();
+            }
         }
+        $this->set('boardID', 0);
         $this->set('boardSelect', $boardSelect);
         $this->set('boards', $boards);
     }
 
+    public function action_get_instances()
+    {
+        $boardID = (int) $this->request->request->get('boardID');
+        $instances = [];
+        if ($boardID) {
+            $board = $this->app->make(EntityManager::class)->find(Board::class, $boardID);
+            if ($board) {
+                $checker = new Checker($board);
+                if ($checker->canViewBoard()) {
+                    $instances = $board->getInstances();
+                }
+            }
+        }
+        $serializer = $this->app->make(JsonSerializer::class);
+        return $serializer->serialize($instances, 'json');
+    }
+
     public function save($args)
     {
-        if (!$this->boardInstanceID) {
+        if ($args['newInstance']) {
             // Create a new instance for this board
             $board = $this->app->make(EntityManager::class)
                 ->find(Board::class, $args['boardID']);
@@ -68,6 +91,11 @@ class Controller extends BlockController
     public function edit()
     {
         $this->add();
+        $instance = $this->app->make(EntityManager::class)
+            ->find(Instance::class, $this->boardInstanceID);
+        if ($instance) {
+            $this->set('boardID', $instance->getBoard()->getBoardID());
+        }
     }
 
     public function view()
