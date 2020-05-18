@@ -45,6 +45,17 @@ class Instance implements \JsonSerializable
     protected $dateCreated;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
+     */
+    protected $dateDataPoolLastUpdated;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
+     */
+    protected $dateContentLastAddedToInstance;
+
+
+    /**
      * Not to be confused with the site that is set at the board level, a shared board (e.g. a board with a site
      *  = null, can have instances across multiple sites)
      *
@@ -197,6 +208,38 @@ class Instance implements \JsonSerializable
             $dateTime->setTimezone(new \DateTimeZone($site->getTimezone()));
         }
         return $dateTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateDataPoolLastUpdated()
+    {
+        return $this->dateDataPoolLastUpdated;
+    }
+
+    /**
+     * @param mixed $dateDataPoolLastUpdated
+     */
+    public function setDateDataPoolLastUpdated($dateDataPoolLastUpdated): void
+    {
+        $this->dateDataPoolLastUpdated = $dateDataPoolLastUpdated;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateContentLastAddedToInstance()
+    {
+        return $this->dateContentLastAddedToInstance;
+    }
+
+    /**
+     * @param mixed $dateContentLastAddedToInstance
+     */
+    public function setDateContentLastAddedToInstance($dateContentLastAddedToInstance): void
+    {
+        $this->dateContentLastAddedToInstance = $dateContentLastAddedToInstance;
     }
 
     public function jsonSerialize()

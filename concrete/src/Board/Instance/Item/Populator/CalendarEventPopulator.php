@@ -15,17 +15,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class CalendarEventPopulator extends AbstractPopulator
 {
 
-    /**
-     * @param Board $board
-     * @param CalendarEventConfiguration $configuration
-     * @return array
-     */
-    public function getDataObjects(Instance $instance, Configuration $configuration): array
+    public function getDataObjects(Instance $instance, Configuration $configuration, int $since = 0): array
     {
         $board = $instance->getBoard();
         $list = new EventOccurrenceList();
         $list->filterByCalendar($configuration->getCalendar());
         $list->setItemsPerPage(100);
+
+        if ($since) {
+            $list->filterByStartTimeAfter($since);
+        }
+
         return $list->getResults();
     }
 

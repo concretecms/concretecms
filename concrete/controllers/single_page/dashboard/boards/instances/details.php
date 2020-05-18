@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards\Instances;
 
+use Concrete\Core\Board\Command\AddContentToBoardInstanceCommand;
 use Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand;
 use Concrete\Core\Board\Command\DeleteBoardInstanceCommand;
 use Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand;
@@ -98,6 +99,27 @@ class Details extends DashboardPageController
             return $this->redirect('/dashboard/boards/boards');
         }
     }
+
+    public function add_content($id = null)
+    {
+        $instance = $this->entityManager->find(Instance::class, $id);
+        if (is_object($instance)) {
+            if (!$this->token->validate('add_content')) {
+                $this->error->add(t($this->token->getErrorMessage()));
+            }
+            if (!$this->error->has()) {
+                $command = new AddContentToBoardInstanceCommand();
+                $command->setInstance($instance);
+                $this->executeCommand($command);
+                $this->flash('success', t('Content added to instance.'));
+                return $this->redirect('/dashboard/boards/instances/details', 'view', $instance->getBoardInstanceID());
+            }
+            $this->view($id);
+        } else {
+            return $this->redirect('/dashboard/boards/boards');
+        }
+    }
+
 
     public function view_instance($id = null)
     {

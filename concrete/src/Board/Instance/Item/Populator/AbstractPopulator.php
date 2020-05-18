@@ -17,7 +17,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class AbstractPopulator implements PopulatorInterface
 {
 
-    abstract public function getDataObjects(Instance $instance, Configuration $configuration) : array;
+    abstract public function getDataObjects(
+        Instance $instance,
+        Configuration $configuration,
+        int $since = 0
+    ) : array;
 
     abstract public function getObjectRelevantDate($mixed) : int;
 
@@ -37,9 +41,13 @@ abstract class AbstractPopulator implements PopulatorInterface
      */
     abstract public function getObjectCategories($mixed) : array;
 
-    public function createBoardInstanceItems(Instance $instance, InstanceItemBatch $batch, ConfiguredDataSource $configuredDataSource): array
+    public function createBoardInstanceItems(
+        Instance $instance,
+        InstanceItemBatch $batch,
+        ConfiguredDataSource $configuredDataSource,
+        int $since = 0): array
     {
-        $objects = $this->getDataObjects($instance, $configuredDataSource->getConfiguration());
+        $objects = $this->getDataObjects($instance, $configuredDataSource->getConfiguration(), $since);
         $items = [];
         foreach ($objects as $object) {
             $item = new InstanceItem();

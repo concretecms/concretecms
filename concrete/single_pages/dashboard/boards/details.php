@@ -12,14 +12,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
         ?>
     </div>
     <div class="col-8">
-        <?php
-            if (!$board->getDateLastRefreshed()) { ?>
-
-                <div class="alert alert-info"><?=t('This board has not been published. Once you have added data sources, make sure you publish your board.')?></div>
-
-            <?php }
-        ?>
-
         <div>
             <h3><?=t('Name')?></h3>
             <p><?=$board->getBoardName()?></p>

@@ -19,7 +19,10 @@ interface PopulatorInterface
      * @return InstanceItem[]
      */
     public function createBoardInstanceItems(
-        Instance $instance, InstanceItemBatch $batch,
-        ConfiguredDataSource $configuredDataSource): array;
+        Instance $instance,
+        InstanceItemBatch $batch,
+        ConfiguredDataSource $configuredDataSource,
+        int $since = 0
+    ): array;
 
 }

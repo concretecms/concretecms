@@ -86,11 +86,6 @@ class Board implements ObjectInterface, AssignableObjectInterface
     protected $hasCustomSlotTemplates = false;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
-     */
-    protected $dateLastRefreshed;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     protected $hasCustomWeightingRules = false;
@@ -163,22 +158,6 @@ class Board implements ObjectInterface, AssignableObjectInterface
     public function setDataSources($data_sources): void
     {
         $this->data_sources = $data_sources;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDateLastRefreshed()
-    {
-        return $this->dateLastRefreshed;
-    }
-
-    /**
-     * @param mixed $dateLastRefreshed
-     */
-    public function setDateLastRefreshed($dateLastRefreshed): void
-    {
-        $this->dateLastRefreshed = $dateLastRefreshed;
     }
 
     /**

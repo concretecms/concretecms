@@ -13,12 +13,12 @@ class RegenerateBoardInstanceCommandHandler
 {
 
     /**
-     * @var EntityManager 
+     * @var EntityManager
      */
     protected $entityManager;
 
     /**
-     * @var CollectionFactory 
+     * @var CollectionFactory
      */
     protected $collectionFactory;
 
@@ -39,10 +39,11 @@ class RegenerateBoardInstanceCommandHandler
 
         $collection = $this->collectionFactory->createSlotCollection($instance);
         $instance->setSlots($collection);
+        $instance->setDateContentLastAddedToInstance(time());
         $this->entityManager->persist($instance);
         $this->entityManager->flush();
-        
+
     }
 
-    
+
 }

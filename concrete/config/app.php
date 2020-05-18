@@ -748,6 +748,7 @@ return [
         ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
         ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
         ['Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommandHandler'],
         ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],

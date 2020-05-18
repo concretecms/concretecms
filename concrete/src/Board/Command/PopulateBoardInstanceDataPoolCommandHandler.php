@@ -30,11 +30,14 @@ class PopulateBoardInstanceDataPoolCommandHandler
             $dataSource = $configuredDataSource->getDataSource();
             $dataSourceDriver = $dataSource->getDriver();
             $populator = $dataSourceDriver->getItemPopulator();
-            $objects = $populator->createBoardInstanceItems($instance, $batch, $configuredDataSource);
+            $objects = $populator->createBoardInstanceItems(
+                $instance, $batch, $configuredDataSource, $command->getRetrieveDataObjectsAfter()
+            );
             foreach($objects as $object) {
                 $this->entityManager->persist($object);
             }
         }
+        $instance->setDateDataPoolLastUpdated(time());
         $this->entityManager->flush();
     }
 

@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class PagePopulator extends AbstractPopulator
 {
 
-    public function getDataObjects(Instance $instance, Configuration $configuration) : array
+    public function getDataObjects(Instance $instance, Configuration $configuration, int $since = 0) : array
     {
         $board = $instance->getBoard();
         $list = new PageList();
@@ -48,8 +48,8 @@ class PagePopulator extends AbstractPopulator
             }
         }
 
-        if ($board->getDateLastRefreshed()) {
-            $filterDate = date('Y-m-d H:i:s', $board->getDateLastRefreshed());
+        if ($since) {
+            $filterDate = date('Y-m-d H:i:s', $since);
             $list->filterByPublicDate($filterDate, '>');
         }
 

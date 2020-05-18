@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
+use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 
 class ContentPopulator
@@ -30,8 +31,11 @@ class ContentPopulator
         foreach($items as $item) {
             $dataSourceDriver = $item->getDataSource()->getDataSource()->getDriver();
             $contentPopulator = $dataSourceDriver->getContentPopulator();
-            $data = $this->serializer->denormalize($item->getData(), $contentPopulator->getDataClass(), 'json');
-            $contentObjects = $contentPopulator->createContentObjects($data);
+            $itemData = $item->getData();
+            if (!($itemData instanceof DataInterface)) {
+                $itemData = $this->serializer->denormalize($item->getData(), $contentPopulator->getDataClass(), 'json');
+            }
+            $contentObjects = $contentPopulator->createContentObjects($itemData);
             $groups[] = new ItemObjectGroup($item, $contentObjects);
         }
         return $groups;
