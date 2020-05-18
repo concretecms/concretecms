@@ -8,4 +8,11 @@ import "bootstrap/js/dist/tab";
 import "bootstrap/js/dist/toast";
 
 // Activate our CMS components for use
-Concrete.Vue.activateContext('cms', '[vue-enabled]', document)
+if (document.querySelectorAll('[vue-enabled]').length) {
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: '[vue-enabled]',
+            components: config.components
+        })
+    })
+}
