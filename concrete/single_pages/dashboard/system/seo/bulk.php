@@ -94,7 +94,7 @@ if(empty($pages)) {
     return;
 }
 ?>
-<div class="tab-pane show active d-none" id="ccm-seobulk-results" role="tabpanel">
+<div class="tab-pane show active" id="ccm-seobulk-results" role="tabpanel" v-cloak>
     <table class="ccm-search-results-table table table-sm">
         <tbody>
             <tr v-for="(page, pageIndex) in pages" v-bind:key="pageIndex">
@@ -158,99 +158,99 @@ if(empty($pages)) {
     </div>
 </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#ccm-seobulk-results').removeClass('d-none');
-    new Vue({
-        el: '#ccm-seobulk-results',
-        data: function() {
-            return {
-                busy: false,
-                pages: <?= json_encode($pages) ?>,
-            };
-        },
-        methods: {
-            isPageDirty: function(page) {
-                if (page.input.metaTitle !== page.metaTitle || page.input.metaDescription !== page.metaDescription) {
-                    return true;
-                }
-                if (!page.isHomePage && page.input.handle !== page.handle) {
-                    return true;
-                }
-                return false;
+    Concrete.Vue.activateContext('backend', function (Vue, config) {
+        new Vue({
+            el: '#ccm-seobulk-results',
+            data: function() {
+                return {
+                    busy: false,
+                    pages: <?= json_encode($pages) ?>,
+                };
             },
-            isSavePageEnabled: function(page) {
-                return this.busy ? false : this.isPageDirty(page);
-            },
-            getSavePageClass: function(page) {
-                return this.isSavePageEnabled(page) ? 'btn-primary' : 'btn-secondary disabled';
-            },
-            savePage: function(page, callback) {
-                var my = this;
-                if (!my.isSavePageEnabled(page)) {
-                    return;
-                }
-                var pageIndex = my.pages.indexOf(page);
-                my.busy = true;
-                $.concreteAjax({
-                    url: page.saveAction,
-                    data: $.extend(true, {}, page.savePayload, page.input),
-                    success: function(newPage) {
-                        my.pages.splice(pageIndex, 1, newPage);
-                        if (callback) {
-                            my.$nextTick(function() {
-                                callback();
-                            });
-                        }
-                    },
-                    complete: function() {
-                        my.busy = false;
-                        $.fn.dialog.hideLoader();
-                    },
-                })
-            },
-            saveAll: function() {
-                var my = this;
-                if (!my.isSaveAllEnabled) {
-                    return;
-                }
-                function saveNext(nextPageIndex) {
-                    for (; nextPageIndex < my.pages.length; nextPageIndex++) {
-                        if (!my.isPageDirty(my.pages[nextPageIndex])) {
-                            continue;
-                        }
-                        my.savePage(
-                            my.pages[nextPageIndex],
-                            function() {
-                                saveNext(nextPageIndex + 1);
-                            }
-                        );
-                        return;
-                    }
-                }
-                saveNext(0);
-            },
-        },
-        computed: {
-            isSaveAllEnabled: function() {
-                var my = this;
-                if (my.busy) {
-                    return false;
-                }
-                var result = false;
-                my.pages.some(function(page) {
-                    if (my.isPageDirty(page)) {
-                        result = true;
+            methods: {
+                isPageDirty: function(page) {
+                    if (page.input.metaTitle !== page.metaTitle || page.input.metaDescription !== page.metaDescription) {
                         return true;
                     }
-                });
-                return result;
+                    if (!page.isHomePage && page.input.handle !== page.handle) {
+                        return true;
+                    }
+                    return false;
+                },
+                isSavePageEnabled: function(page) {
+                    return this.busy ? false : this.isPageDirty(page);
+                },
+                getSavePageClass: function(page) {
+                    return this.isSavePageEnabled(page) ? 'btn-primary' : 'btn-secondary disabled';
+                },
+                savePage: function(page, callback) {
+                    var my = this;
+                    if (!my.isSavePageEnabled(page)) {
+                        return;
+                    }
+                    var pageIndex = my.pages.indexOf(page);
+                    my.busy = true;
+                    $.concreteAjax({
+                        url: page.saveAction,
+                        data: $.extend(true, {}, page.savePayload, page.input),
+                        success: function(newPage) {
+                            my.pages.splice(pageIndex, 1, newPage);
+                            if (callback) {
+                                my.$nextTick(function() {
+                                    callback();
+                                });
+                            }
+                        },
+                        complete: function() {
+                            my.busy = false;
+                            $.fn.dialog.hideLoader();
+                        },
+                    })
+                },
+                saveAll: function() {
+                    var my = this;
+                    if (!my.isSaveAllEnabled) {
+                        return;
+                    }
+                    function saveNext(nextPageIndex) {
+                        for (; nextPageIndex < my.pages.length; nextPageIndex++) {
+                            if (!my.isPageDirty(my.pages[nextPageIndex])) {
+                                continue;
+                            }
+                            my.savePage(
+                                my.pages[nextPageIndex],
+                                function() {
+                                    saveNext(nextPageIndex + 1);
+                                }
+                            );
+                            return;
+                        }
+                    }
+                    saveNext(0);
+                },
             },
-            saveAllClass: function() {
-                return this.isSaveAllEnabled ? 'btn-primary' : 'btn-secondary disabled';
+            computed: {
+                isSaveAllEnabled: function() {
+                    var my = this;
+                    if (my.busy) {
+                        return false;
+                    }
+                    var result = false;
+                    my.pages.some(function(page) {
+                        if (my.isPageDirty(page)) {
+                            result = true;
+                            return true;
+                        }
+                    });
+                    return result;
+                },
+                saveAllClass: function() {
+                    return this.isSaveAllEnabled ? 'btn-primary' : 'btn-secondary disabled';
+                },
             },
-        },
+        });
     });
 });
 </script>
