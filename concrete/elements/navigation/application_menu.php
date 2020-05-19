@@ -17,7 +17,6 @@ if (!empty($top)) {
             $page = $top[$i];
             $next = ($i + 1 < $n) ? $top[$i + 1] : null;
             $renderTopLevelMenu = $view->controller->displayTopLevelMenu($page);
-            $welcomeID = 185;
             $c = Page::getCurrentPage(); ?>
                 <li class="<?=$view->controller->getMenuItemClass($page); ?>">
                   <?php if ($renderTopLevelMenu == 1) {
@@ -33,24 +32,12 @@ if (!empty($top)) {
                   <?php
             } ?>
                   <?php
-                    $myAccount = 192;
-            $editAccount = 193;
-            $waitingForMe = 186;
-            $waitingForMe = 186;
-            $messages = 195;
             if (
-                      $c->getCollectionID() === $welcomeID ||
-                      $c->getCollectionID() === $myAccount ||
-                      $c->getCollectionID() === $waitingForMe ||
-                      $c->getCollectionID() === $editAccount ||
-                      $c->getCollectionID() === $messages
-                      ) {
-                if (
-                        $page->getCollectionID() === $welcomeID ||
-                        $page->getCollectionID() === $myAccount ||
-                        $page->getCollectionID() === $waitingForMe ||
-                        $page->getCollectionID() === $editAccount ||
-                        $page->getCollectionID() === $messages
+                      $c->getCollectionPath() == '/dashboard/welcome' && $page->getCollectionPath() == '/dashboard/welcome' ||
+                      $c->getCollectionPath() == '/account' && $page->getCollectionPath() == '/account' ||
+                      $c->getCollectionPath() == '/dashboard/welcome/me' && $page->getCollectionPath() == '/dashboard/welcome/me' ||
+                      $c->getCollectionPath() == '/account/edit_profile' && $page->getCollectionPath() == '/account/edit_profile' ||
+                      $c->getCollectionPath() == '/account/messages' && $page->getCollectionPath() == '/account/messages'
                       ) {
                     echo '<ul class="welcome-menu">'; ?>
                         <li>
@@ -61,14 +48,13 @@ if (!empty($top)) {
                         </li>
                         <li>
                           <a href="#" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/dashboard/load_menu'); ?>"
-                          data-load-menu="<?=$myAccount; ?>">
+                          data-load-menu="192">
                           <?=t('My Account'); ?>
                           </a>
                         </li>
                         </ul>
 
                         <?php
-                }
             } ?>
                 </li>
                 <?php
