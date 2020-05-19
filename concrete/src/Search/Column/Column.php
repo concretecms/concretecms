@@ -120,4 +120,13 @@ class Column implements ColumnInterface
             'sortDirection' => $this->getColumnSortDirection(),
         ];
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'columnKey' => $this->getColumnKey(),
+            'isSortable' => $this->isColumnSortable(),
+            'sortDirection' => $this->getColumnSortDirection(),
+        ];
+    }
 }
