@@ -4,19 +4,19 @@
     ?>
     <fieldset>
         <div class="form-group">
-            <div class="checkbox">
+            <div class="form-check">
                 <label>
                     <input class="form-check-input" name="show_titles" value="1" type="checkbox" <?= $show_titles ? 'checked' : '' ?> />
                     <?= t('Enable Toolbar Titles') ?>
                 </label>
             </div>
-            <div class="checkbox">
+            <div class="form-check">
                 <label>
                     <input class="form-check-input" name="show_tooltips" value="1" type="checkbox" <?= $show_tooltips ? 'checked' : '' ?> />
                     <?= t('Enable Prominent Toolbar Tooltips') ?>
                 </label>
             </div>
-            <div class="checkbox">
+            <div class="form-check">
                 <label>
                     <input class="form-check-input" name="increase_font_size" value="1" type="checkbox" <?= $increase_font_size ? 'checked' : '' ?> />
                     <?= t('Increase Toolbar Font Size') ?>
@@ -28,13 +28,13 @@
     <fieldset>
         <legend><?=t('File Manager')?></legend>
         <div class="form-group">
-            <div class="checkbox">
+            <div class="form-check">
                 <label>
                     <input class="form-check-input" name="full_lisiting_thumbnails" value="1" type="checkbox" <?= $full_lisiting_thumbnails ? 'checked' : '' ?> />
                     <?= t('Enable Full Size Image Thumbnails') ?>
                 </label>
             </div>
-            <div class="checkbox">
+            <div class="form-check">
                 <label>
                     <input class="form-check-input" name="preview_popover" value="1" type="checkbox" <?= $preview_popover ? 'checked' : '' ?> />
                     <?= t('Enable Preview Image Popover') ?>

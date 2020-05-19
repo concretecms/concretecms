@@ -96,13 +96,13 @@ if ($key !== null) {
 
         <div class="form-group">
             <label class="control-label"><?= t('Searchable') ?></label>
-            <div class="checkbox">
+            <div class="form-check">
                 <label>
                     <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed()) ?>
                     <?= t('Content included in search index.') ?>
                 </label>
             </div>
-            <div class="checkbox">
+            <div class="form-check">
                 <label>
                     <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable()) ?>
                     <?= t('Field available in advanced search.') ?>
