@@ -5,31 +5,36 @@ namespace Concrete\Authentication\ExternalConcrete5;
 use Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\User;
 use InvalidArgumentException;
 use League\Url\Url;
-use Concrete\Core\Form\Service\Widget\GroupSelector;
 
 class Controller extends GenericOauth2TypeController
 {
-
-    /** @var \Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceFactory */
+    /**
+     * @var \Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceFactory
+     */
     protected $factory;
 
-    /** @var \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface */
+    /**
+     * @var \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface
+     */
     protected $urlResolver;
 
-    /** @var \Concrete\Core\Config\Repository\Repository */
+    /**
+     * @var \Concrete\Core\Config\Repository\Repository
+     */
     protected $config;
 
     public function __construct(
-        \Concrete\Core\Authentication\AuthenticationType $type = null,
+        ?\Concrete\Core\Authentication\AuthenticationType $type = null,
         ServiceFactory $factory,
         ResolverManagerInterface $urlResolver,
-        Repository $config)
-    {
+        Repository $config
+    ) {
         parent::__construct($type);
         $this->factory = $factory;
         $this->urlResolver = $urlResolver;
@@ -38,7 +43,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Get the ID of the group to enter upon registration
-     * This method grabs the registration group ID out of the auth config group
+     * This method grabs the registration group ID out of the auth config group.
      *
      * @return int
      */
@@ -49,7 +54,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Determine whether this type supports automatically registering users
-     * This method grabs this configuration from the auth config group
+     * This method grabs this configuration from the auth config group.
      *
      * @return bool
      */
@@ -59,7 +64,7 @@ class Controller extends GenericOauth2TypeController
     }
 
     /**
-     * Build and return this authentication type's icon HTML
+     * Build and return this authentication type's icon HTML.
      *
      * @return string
      */
@@ -78,7 +83,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Get the service object associated with this authentication type
-     * This method uses the oauth/factory/service object to create our service if one is not set
+     * This method uses the oauth/factory/service object to create our service if one is not set.
      *
      * @return \Concrete\Core\Authentication\Type\ExternalConcrete5\ExternalConcrete5Service
      */
@@ -95,7 +100,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Save data for this authentication type
-     * This method is called when the type_form.php submits. It stores client details and configuration for connecting
+     * This method is called when the type_form.php submits. It stores client details and configuration for connecting.
      *
      * @param array|\Traversable $args
      */
@@ -106,10 +111,9 @@ class Controller extends GenericOauth2TypeController
             try {
                 $url = Url::createFromUrl($passedUrl);
 
-                if (!(string)$url->getScheme() || !(string)$url->getHost()) {
+                if (!(string) $url->getScheme() || !(string) $url->getHost()) {
                     throw new InvalidArgumentException('No scheme or host provided.');
                 }
-
             } catch (\Exception $e) {
                 throw new InvalidArgumentException('Invalid URL.');
             }
@@ -130,7 +134,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Controller method for type_form
-     * This method is called just before rendering type_form.php, use it to set data for that template
+     * This method is called just before rendering type_form.php, use it to set data for that template.
      */
     public function edit()
     {
@@ -145,7 +149,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Controller method for form
-     * This method is called just before form.php is rendered, use it to set data for that template
+     * This method is called just before form.php is rendered, use it to set data for that template.
      */
     public function form()
     {
@@ -154,7 +158,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Controller method for the hook template
-     * This method is called before hook.php is rendered, use it to set data for that template
+     * This method is called before hook.php is rendered, use it to set data for that template.
      */
     public function hook()
     {
@@ -163,7 +167,7 @@ class Controller extends GenericOauth2TypeController
 
     /**
      * Controller method for the hooked template
-     * This method gets called before hooked.php is rendered, use it to set data for that template
+     * This method gets called before hooked.php is rendered, use it to set data for that template.
      */
     public function hooked()
     {
@@ -171,7 +175,7 @@ class Controller extends GenericOauth2TypeController
     }
 
     /**
-     * Method for setting general data for all views
+     * Method for setting general data for all views.
      */
     private function setData()
     {

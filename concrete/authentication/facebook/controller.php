@@ -1,17 +1,17 @@
 <?php
+
 namespace Concrete\Authentication\Facebook;
 
 defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\Type\Facebook\Factory\FacebookServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
-use Concrete\Core\Routing\RedirectResponse;
-use OAuth\OAuth2\Service\Facebook;
-use Concrete\Core\User\User;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Form\Service\Widget\GroupSelector;
-use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\User\User;
+use OAuth\OAuth2\Service\Facebook;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -80,19 +80,44 @@ class Controller extends GenericOauth2TypeController
     {
         $data = $this->parseSignedRequest($this->get('signed_request'));
         if ($data !== null) {
-                $userID = $data['user_id'];
-                if ($userID !== null && $userID !== '') {
-                    try {
-                        $this->getBindingService()->clearBinding(null, $userID, 'facebook');
-                    } catch (\Exception $e) {
-                        \Log::Error(t('Error detaching account : %s', $e->getMessage()));
-                            $this->showError(t('Error detaching account'));
-                    }
-                    $this->showSuccess(t('Successfully detached.'));
-                    exit();
-                } else {
-                    $this->showError(t('No user id found'));
+            $userID = $data['user_id'];
+            if ($userID !== null && $userID !== '') {
+                try {
+                    $this->getBindingService()->clearBinding(null, $userID, 'facebook');
+                } catch (\Exception $e) {
+                    \Log::Error(t('Error detaching account : %s', $e->getMessage()));
+                    $this->showError(t('Error detaching account'));
                 }
+                $this->showSuccess(t('Successfully detached.'));
+                exit();
+            }
+            $this->showError(t('No user id found'));
+        }
+    }
+
+    public function handle_detach_attempt()
+    {
+        $user = $this->app->make(User::class);
+        if (!$user->isRegistered()) {
+            $response = new RedirectResponse(\URL::to('/login'), 302);
+            $response->send();
+            exit;
+        }
+        $uID = $user->getUserID();
+        $namespace = $this->getHandle();
+
+        $binding = $this->getBindingForUser($user);
+
+        $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
+        try {
+            $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
+
+            $this->showSuccess(t('Successfully detached.'));
+            exit;
+        } catch (\Exception $e) {
+            \Log::error(t('Detach Error %s', $e->getMessage()));
+            $this->showError(t('Unable to detach account.'));
+            exit;
         }
     }
 
@@ -110,6 +135,7 @@ class Controller extends GenericOauth2TypeController
         $expectedSignature = hash_hmac('sha256', $payload, $secret, $raw = true);
         if ($signature !== $expectedSignature) {
             $this->showError(t('Bad Signed JSON signature!'));
+
             return null;
         }
 
@@ -119,33 +145,5 @@ class Controller extends GenericOauth2TypeController
     protected function base64_url_decode($input)
     {
         return base64_decode(strtr($input, '-_', '+/'));
-    }
-
-
-    public function handle_detach_attempt()
-    {
-        $user = $this->app->make(User::class);
-        if (!$user->isRegistered()) {
-            $response = new RedirectResponse(\URL::to('/login'), 302);
-            $response->send();
-            exit;
-        }
-        $uID = $user->getUserID();
-        $namespace = $this->getHandle();
-
-
-        $binding = $this->getBindingForUser($user);
-
-        $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
-        try {
-            $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
-
-            $this->showSuccess(t('Successfully detached.'));
-            exit;
-        } catch (\Exception $e) {
-            \Log::error(t('Detach Error %s', $e->getMessage()));
-            $this->showError(t('Unable to detach account.'));
-            exit;
-        }
     }
 }

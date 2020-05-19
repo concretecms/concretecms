@@ -1,20 +1,19 @@
 <?php
+
 namespace Concrete\Authentication\Google;
 
 defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Authentication\Type\Google\Factory\GoogleServiceFactory;
-use Concrete\Core\Authentication\Type\OAuth\BindingService;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Form\Service\Widget\GroupSelector;
-use OAuth\OAuth2\Service\Google;
-use Concrete\Core\User\User;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\User\Group\GroupList;
-use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Validation\Strings;
+use OAuth\OAuth2\Service\Google;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -114,7 +113,7 @@ class Controller extends GenericOauth2TypeController
                 $image = \Image::open($this->getExtractor()->getImageURL());
                 $ui->updateUserAvatar($image);
             } catch (\Imagine\Exception\InvalidArgumentException $e) {
-                $this->logger->notice("Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?");
+                $this->logger->notice('Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?');
             } catch (\Exception $e) {
             }
         }
@@ -158,15 +157,15 @@ class Controller extends GenericOauth2TypeController
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
 
-
         $binding = $this->getBindingForUser($user);
         $accessToken = $this->getService()
             ->getStorage()
             ->retrieveAccessToken(
                 $this->getService()->service()
             )
-            ->getAccessToken();
-        $this->getService()->request('https://accounts.google.com/o/oauth2/revoke?token='.$accessToken, 'GET');
+            ->getAccessToken()
+        ;
+        $this->getService()->request('https://accounts.google.com/o/oauth2/revoke?token=' . $accessToken, 'GET');
         try {
             $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
             $this->showSuccess(t('Successfully detached.'));

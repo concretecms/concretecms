@@ -1,21 +1,21 @@
 <?php
+
 namespace Concrete\Authentication\Twitter;
 
 defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\Type\OAuth\OAuth1a\GenericOauth1aTypeController;
 use Concrete\Core\Authentication\Type\Twitter\Factory\TwitterServiceFactory;
-use OAuth\OAuth1\Service\Twitter;
-use Concrete\Core\User\User;
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Form\Service\Widget\GroupSelector;
-use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\User\User;
+use OAuth\OAuth1\Service\Twitter;
 
 class Controller extends GenericOauth1aTypeController
 {
-    public $apiMethods = array('handle_error', 'handle_success', 'handle_register');
+    public $apiMethods = ['handle_error', 'handle_success', 'handle_register'];
 
     /**
      * @var string
@@ -110,7 +110,6 @@ class Controller extends GenericOauth1aTypeController
         }
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
-
 
         $binding = $this->getBindingForUser($user);
 
