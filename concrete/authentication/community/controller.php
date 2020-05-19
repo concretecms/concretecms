@@ -8,6 +8,9 @@ use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Support\Facade\Application;
 use Core;
 use OAuth\ServiceFactory;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -54,20 +57,26 @@ class Controller extends GenericOauth2TypeController
 
     public function saveAuthenticationType($args)
     {
-        \Config::save('auth.community.appid', $args['apikey']);
-        \Config::save('auth.community.secret', $args['apisecret']);
-        \Config::save('auth.community.registration.enabled', (bool) $args['registration_enabled']);
-        \Config::save('auth.community.registration.group', intval($args['registration_group'], 10));
+        $config = $this->app->make('config');
+        $config->save('auth.community.appid', (string) ($args['apikey'] ?? ''));
+        $config->save('auth.community.secret', (string) ($args['apisecret'] ?? ''));
+        $config->save('auth.community.registration.enabled', !empty($args['registration_enabled']));
+        $config->save('auth.community.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
     }
 
     public function edit()
     {
-        $this->set('form', Core::make('helper/form'));
-        $this->set('apikey', \Config::get('auth.community.appid', ''));
-        $this->set('apisecret', \Config::get('auth.community.secret', ''));
-
-        $list = new \GroupList();
-        $this->set('groups', $list->getResults());
+        $config = $this->app->make('config');
+        $this->set('groupSelector', $this->app->make(GroupSelector::class));
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('concrete5SecurePrefix', (string) $config->get('concrete.urls.concrete5_secure'));
+        $this->set('callbackURI', $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/authentication/oauth2/community/callback']));
+        $this->set('apikey', (string) $config->get('auth.community.appid', ''));
+        $this->set('apisecret', (string) $config->get('auth.community.secret', ''));
+        $this->set('registrationEnabled', (bool) $config->get('auth.community.registration.enabled'));
+        $registrationGroupID = (int) $config->get('auth.community.registration.group');
+        $registrationGroup = $registrationGroupID === 0 ? null : $this->app->make(GroupRepository::class)->getGroupById($registrationGroupID);
+        $this->set('registrationGroup', $registrationGroup === null ? null : (int) $registrationGroup->getGroupID());
     }
 
     /**

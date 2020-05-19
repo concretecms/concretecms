@@ -10,6 +10,7 @@ use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\User;
 use InvalidArgumentException;
 use League\Url\Url;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -100,9 +101,8 @@ class Controller extends GenericOauth2TypeController
      */
     public function saveAuthenticationType($args)
     {
-        $passedUrl = trim($args['url']);
-
-        if ($passedUrl) {
+        $passedUrl = trim($args['url'] ?? '');
+        if ($passedUrl !== '') {
             try {
                 $url = Url::createFromUrl($passedUrl);
 
@@ -115,18 +115,17 @@ class Controller extends GenericOauth2TypeController
             }
         }
 
-        $passedName = trim($args['displayName']);
-        if (!$passedName) {
+        $passedName = trim($args['displayName'] ?? '');
+        if ($passedName === '') {
             throw new InvalidArgumentException('Invalid display name');
         }
         $this->authenticationType->setAuthenticationTypeName($passedName);
 
-        $config = $this->app->make(Repository::class);
-        $config->save('auth.external_concrete5.url', $args['url']);
-        $config->save('auth.external_concrete5.appid', $args['apikey']);
-        $config->save('auth.external_concrete5.secret', $args['apisecret']);
-        $config->save('auth.external_concrete5.registration.enabled', (bool) $args['registration_enabled']);
-        $config->save('auth.external_concrete5.registration.group', intval($args['registration_group'], 10));
+        $this->config->save('auth.external_concrete5.url', $passedUrl);
+        $this->config->save('auth.external_concrete5.appid', (string) ($args['apikey'] ?? ''));
+        $this->config->save('auth.external_concrete5.secret', (string) ($args['apisecret'] ?? ''));
+        $this->config->save('auth.external_concrete5.registration.enabled', !empty($args['registration_enabled']));
+        $this->config->save('auth.external_concrete5.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
     }
 
     /**
@@ -135,9 +134,9 @@ class Controller extends GenericOauth2TypeController
      */
     public function edit()
     {
-        $config = $this->app->make(Repository::class);
+        $this->set('groupSelector', $this->app->make(GroupSelector::class));
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('data', $config->get('auth.external_concrete5', []));
+        $this->set('data', (array) $this->config->get('auth.external_concrete5', []));
         $this->set('redirectUri', $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/callback']));
 
         $list = $this->app->make(GroupList::class);

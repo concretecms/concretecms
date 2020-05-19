@@ -9,6 +9,9 @@ use Concrete\Core\Routing\RedirectResponse;
 use OAuth\OAuth2\Service\Facebook;
 use Concrete\Core\User\User;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -26,7 +29,7 @@ class Controller extends GenericOauth2TypeController
 
     public function getAuthenticationTypeIconHTML()
     {
-        return '<i class="fa fa-facebook"></i>';
+        return '<i class="fab fa-facebook-f"></i>';
     }
 
     public function getHandle()
@@ -51,21 +54,26 @@ class Controller extends GenericOauth2TypeController
     public function saveAuthenticationType($args)
     {
         $config = $this->app->make('config');
-        $config->save('auth.facebook.appid', $args['apikey']);
-        $config->save('auth.facebook.secret', $args['apisecret']);
-        $config->save('auth.facebook.registration.enabled', (bool)$args['registration_enabled']);
-        $config->save('auth.facebook.registration.group', intval($args['registration_group'], 10));
+        $config->save('auth.facebook.appid', (string) ($args['apikey'] ?? ''));
+        $config->save('auth.facebook.secret', (string) ($args['apisecret'] ?? ''));
+        $config->save('auth.facebook.registration.enabled', !empty($args['registration_enabled']));
+        $config->save('auth.facebook.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
     }
 
     public function edit()
     {
+        $rm = $this->app->make(ResolverManagerInterface::class);
         $config = $this->app->make('config');
+        $this->set('groupSelector', $this->app->make(GroupSelector::class));
         $this->set('form', $this->app->make('helper/form'));
+        $this->set('oauthRedirectUri', $rm->resolve(['/ccm/system/authentication/oauth2/facebook/callback']));
+        $this->set('oauthDeauthorizeUri', $rm->resolve(['/login/callback/facebook/revoke']));
         $this->set('apikey', $config->get('auth.facebook.appid', ''));
         $this->set('apisecret', $config->get('auth.facebook.secret', ''));
-
-        $list = new \GroupList();
-        $this->set('groups', $list->getResults());
+        $this->set('registrationEnabled', (bool) $config->get('auth.facebook.registration.enabled'));
+        $registrationGroupID = (int) $config->get('auth.facebook.registration.group');
+        $registrationGroup = $registrationGroupID === 0 ? null : $this->app->make(GroupRepository::class)->getGroupById($registrationGroupID);
+        $this->set('registrationGroup', $registrationGroup === null ? null : (int) $registrationGroup->getGroupID());
     }
 
     public function revoke()

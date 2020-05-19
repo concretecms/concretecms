@@ -8,10 +8,13 @@ use Concrete\Core\Authentication\Type\Google\Factory\GoogleServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\BindingService;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
 use OAuth\OAuth2\Service\Google;
 use Concrete\Core\User\User;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Utility\Service\Validation\Strings;
+use Concrete\Core\User\Group\GroupRepository;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -27,7 +30,7 @@ class Controller extends GenericOauth2TypeController
 
     public function getAuthenticationTypeIconHTML()
     {
-        return '<i class="fa fa-google"></i>';
+        return '<i class="fab fa-google"></i>';
     }
 
     public function getHandle()
@@ -77,29 +80,29 @@ class Controller extends GenericOauth2TypeController
             $blacklist[] = $decoded;
         }
 
-        $config->save('auth.google.appid', $args['apikey']);
-        $config->save('auth.google.secret', $args['apisecret']);
-        $config->save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
-        $config->save('auth.google.registration.group', (int) $args['registration_group']);
+        $config->save('auth.google.appid', (string) ($args['apikey'] ?? ''));
+        $config->save('auth.google.secret', (string) ($args['apisecret'] ?? ''));
+        $config->save('auth.google.registration.enabled', !empty($args['registration_enabled']));
+        $config->save('auth.google.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
         $config->save('auth.google.email_filters.whitelist', $whitelist);
         $config->save('auth.google.email_filters.blacklist', $blacklist);
     }
 
     public function edit()
     {
-        $config=$this->app->make('config');
+        $config = $this->app->make('config');
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('apikey', $config->get('auth.google.appid', ''));
-        $this->set('apisecret', $config->get('auth.google.secret', ''));
-
-        $list = new \GroupList();
-        $this->set('groups', $list->getResults());
-
-        $this->set('whitelist', $config->get('auth.google.email_filters.whitelist', []));
+        $this->set('groupSelector', $this->app->make(GroupSelector::class));
+        $this->set('apikey', (string) $config->get('auth.google.appid', ''));
+        $this->set('apisecret', (string) $config->get('auth.google.secret', ''));
+        $this->set('registrationEnabled', (bool) $config->get('auth.google.registration.enabled'));
+        $registrationGroupID = (int) $config->get('auth.google.registration.group');
+        $registrationGroup = $registrationGroupID === 0 ? null : $this->app->make(GroupRepository::class)->getGroupById($registrationGroupID);
+        $this->set('registrationGroup', $registrationGroup === null ? null : (int) $registrationGroup->getGroupID());
+        $this->set('whitelist', (array) $config->get('auth.google.email_filters.whitelist', []));
         $blacklist = array_map(function ($entry) {
             return json_encode($entry);
-        }, $config->get('auth.google.email_filters.blacklist', []));
-
+        }, (array) $config->get('auth.google.email_filters.blacklist', []));
         $this->set('blacklist', $blacklist);
     }
 
