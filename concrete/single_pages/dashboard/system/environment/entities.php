@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Page\View\PageView $view
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var Doctrine\ORM\Mapping\Driver\AnnotationDriver[] $drivers
- * @var bool $doctrine_dev_mode
+ * @var string $doctrine_dev_mode
  */
 
 ?>
@@ -23,12 +23,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </label>
 
             <div class="form-check">
-                <?= $form->radio('DOCTRINE_DEV_MODE', 1, $doctrine_dev_mode); ?>
+                <?= $form->radio('DOCTRINE_DEV_MODE', 'yes', $doctrine_dev_mode); ?>
                 <?= $form->label('DOCTRINE_DEV_MODE1', t('On - Proxy classes will be generated on the fly. Good for development.'), ['class' => 'form-check-label']); ?>
             </div>
 
             <div class="form-check">
-                <?= $form->radio('DOCTRINE_DEV_MODE', 0, $doctrine_dev_mode); ?>
+                <?= $form->radio('DOCTRINE_DEV_MODE', 'no', $doctrine_dev_mode); ?>
                 <?= $form->label('DOCTRINE_DEV_MODE2', t('Off - Proxy classes need to be manually generated. Helps speed up a live site.'), ['class' => 'form-check-label']); ?>
             </div>
         </div>

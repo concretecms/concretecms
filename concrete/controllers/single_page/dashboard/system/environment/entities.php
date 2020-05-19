@@ -27,7 +27,8 @@ class Entities extends DashboardPageController
             }
         }
 
-        $this->set('doctrine_dev_mode', (bool) $this->app->make('config')->get('concrete.cache.doctrine_dev_mode'));
+        $config = $this->app->make('config');
+        $this->set('doctrine_dev_mode', $config->get('concrete.cache.doctrine_dev_mode') ? 'yes' : 'no');
         $this->set('drivers', $drivers);
     }
 
@@ -54,7 +55,7 @@ class Entities extends DashboardPageController
                 return $this->buildRedirect($this->action());
             }
 
-            $ddm = (bool) $this->request->request->get('DOCTRINE_DEV_MODE', false);
+            $ddm = $this->request->request->get('DOCTRINE_DEV_MODE') === 'yes';
             $this->app->make('config')->save('concrete.cache.doctrine_dev_mode', $ddm);
 
             $this->flash('success', t('Doctrine development settings updated.'));
