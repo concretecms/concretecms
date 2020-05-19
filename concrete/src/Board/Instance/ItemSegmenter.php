@@ -3,6 +3,7 @@ namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceItem;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 
 class ItemSegmenter
@@ -30,16 +31,23 @@ class ItemSegmenter
      */
     public function getBoardItemsForInstance(Instance $instance)
     {
-        $r = $this->entityManager->getRepository(InstanceItem::class);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('i')
+            ->from(InstanceItem::class, 'i')
+            ->where($qb->expr()->eq('i.instance', $instance))
+            ->andWhere($qb->expr()->eq('i.dateAddedToBoard', 0));
+
         $board = $instance->getBoard();
         switch($board->getSortBy()) {
             case $board::ORDER_BY_RELEVANT_DATE_ASC:
-                $items = $r->findByInstance($instance, ['relevantDate' => 'asc']);
+                $qb->orderBy('i.relevantDate', 'asc');
                 break;
             default:
-                $items = $r->findByInstance($instance, ['relevantDate' => 'desc']);
+                $qb->orderBy('i.relevantDate', 'desc');
                 break;
         }
+
+        $items = $qb->getQuery()->execute();
         return $items;
     }
 

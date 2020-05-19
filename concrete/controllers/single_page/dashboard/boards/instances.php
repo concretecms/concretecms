@@ -2,18 +2,10 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
 use Concrete\Core\Board\Command\CreateBoardInstanceCommand;
-use Concrete\Core\Board\Command\DeleteBoardInstanceCommand;
-use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
-use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
-use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\View\View;
-use Concrete\Theme\Concrete\PageTheme;
-use Symfony\Component\HttpFoundation\Response;
 
 class Instances extends DashboardSitePageController
 {

@@ -31,6 +31,10 @@ class ClearBoardInstanceDataPoolCommandHandler
             ->where('ib.instance = :instance');
         $queryBuilder->setParameter('instance', $instance);
         $queryBuilder->getQuery()->execute();
+
+        $instance->setDateDataPoolLastUpdated(time());
+        $this->entityManager->persist($instance);
+        $this->entityManager->flush();
     }
 
 

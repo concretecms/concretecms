@@ -2,11 +2,12 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Boards\Instances;
 
 use Concrete\Core\Board\Command\AddContentToBoardInstanceCommand;
+use Concrete\Core\Board\Command\ClearBoardInstanceCommand;
 use Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand;
 use Concrete\Core\Board\Command\DeleteBoardInstanceCommand;
+use Concrete\Core\Board\Command\GenerateBoardInstanceCommand;
 use Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand;
 use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
-use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
@@ -88,9 +89,14 @@ class Details extends DashboardPageController
                 $this->error->add(t($this->token->getErrorMessage()));
             }
             if (!$this->error->has()) {
-                $command = new RegenerateBoardInstanceCommand();
+                $command = new ClearBoardInstanceCommand();
                 $command->setInstance($instance);
                 $this->executeCommand($command);
+
+                $command = new GenerateBoardInstanceCommand();
+                $command->setInstance($instance);
+                $this->executeCommand($command);
+
                 $this->flash('success', t('Board instance regenerated.'));
                 return $this->redirect('/dashboard/boards/instances/details', 'view', $instance->getBoardInstanceID());
             }

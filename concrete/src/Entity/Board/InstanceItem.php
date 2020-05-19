@@ -40,6 +40,10 @@ class InstanceItem
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $dateCreated;
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $dateAddedToBoard = 0;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
@@ -209,6 +213,24 @@ class InstanceItem
     {
         $this->data = $data;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDateAddedToBoard()
+    {
+        return $this->dateAddedToBoard;
+    }
+
+    /**
+     * @param mixed $dateAddedToBoard
+     */
+    public function setDateAddedToBoard($dateAddedToBoard): void
+    {
+        $this->dateAddedToBoard = $dateAddedToBoard;
+    }
+
+
 
 
 

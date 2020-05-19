@@ -54,7 +54,7 @@ class CreateBoardInstanceCommandHandler
         $populate->setInstance($instance);
         $this->app->executeCommand($populate);
 
-        $regenerate = new RegenerateBoardInstanceCommand();
+        $regenerate = new GenerateBoardInstanceCommand();
         $regenerate->setInstance($instance);
         $this->app->executeCommand($regenerate);
 

@@ -34,8 +34,9 @@ class AddContentToBoardInstanceCommandHandler
         $populate->setRetrieveDataObjectsAfter($instance->getDateDataPoolLastUpdated());
         $this->app->executeCommand($populate);
 
-
-
+        $generate = new GenerateBoardInstanceCommand();
+        $generate->setInstance($instance);
+        $this->app->executeCommand($generate);
     }
 
 

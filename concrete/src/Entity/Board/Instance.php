@@ -50,12 +50,6 @@ class Instance implements \JsonSerializable
     protected $dateDataPoolLastUpdated;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
-     */
-    protected $dateContentLastAddedToInstance;
-
-
-    /**
      * Not to be confused with the site that is set at the board level, a shared board (e.g. a board with a site
      *  = null, can have instances across multiple sites)
      *
@@ -226,22 +220,6 @@ class Instance implements \JsonSerializable
         $this->dateDataPoolLastUpdated = $dateDataPoolLastUpdated;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDateContentLastAddedToInstance()
-    {
-        return $this->dateContentLastAddedToInstance;
-    }
-
-    /**
-     * @param mixed $dateContentLastAddedToInstance
-     */
-    public function setDateContentLastAddedToInstance($dateContentLastAddedToInstance): void
-    {
-        $this->dateContentLastAddedToInstance = $dateContentLastAddedToInstance;
-    }
-
     public function jsonSerialize()
     {
         return [
@@ -251,5 +229,9 @@ class Instance implements \JsonSerializable
         ];
     }
 
+    public function __toString()
+    {
+        return (string) $this->getBoardInstanceID();
+    }
 
 }

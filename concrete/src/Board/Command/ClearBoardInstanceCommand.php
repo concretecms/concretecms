@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Board\Command;
 
-class RegenerateBoardInstanceCommand
+class ClearBoardInstanceCommand
 {
 
     use BoardInstanceTrait;
