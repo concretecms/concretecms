@@ -10,9 +10,17 @@ import '@concretecms/bedrock/assets/account/js/frontend';
 // Calendar
 import '@concretecms/bedrock/assets/calendar/js/backend';
 
-// Other
-import './jquery-bootstrap-select-to-button';
+// Advanced search and search bars
+import './search/advanced-search-launcher';
+import './search/field-selector';
+import './search/preset-selector';
+import './search/results-table';
+import './file-manager/file-manager';
+
+// Custom UI for Pages
 import './translator';
+
+// Marketplace support
 import './remote-marketplace';
 
 var setupResultMessages = function() {
@@ -27,6 +35,10 @@ var setupResultMessages = function() {
         $("#ccm-dashboard-result-message").fadeIn(200);
     }
 };
+
+var setupAdvancedSearchLinks = function() {
+    $('a[data-launch-dialog=advanced-search]').concreteAdvancedSearchLauncher();
+}
 
 var setupFavorites = function() {
     var $addFavorite = $('a[data-bookmark-action=add-favorite]'),
@@ -168,16 +180,12 @@ var setupSiteListMenuItem = function() {
     });
 };
 
-var setupSelects = function() {
-    $('select[data-select=bootstrap]').bootstrapSelectToButton();
-};
-
 setupTooltips();
 setupResultMessages();
 setupSiteListMenuItem();
 setupDialogs();
-setupSelects();
 setupDetailsURLs();
 setupFavorites();
+setupAdvancedSearchLinks();
 setupHeaderMenu();
 setupPrivacyPolicy();

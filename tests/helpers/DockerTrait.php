@@ -9,7 +9,7 @@ trait DockerTrait
      *
      * @param string $imageName
      *
-     * @throws \PHPUnit_Framework_SkippedTestError
+     * @throws \PHPUnit\Framework\SkippedTestError
      */
     protected static function ensureDockerImage($imageName)
     {
@@ -26,7 +26,7 @@ trait DockerTrait
         if (trim(implode("\n", $output)) !== '') {
             return;
         }
-        exec('docker pull ' . escapeshellarg($imageName) . ' 2>&1', $output, $rc);
+        exec('docker pull --quiet ' . escapeshellarg($imageName) . ' 2>&1', $output, $rc);
         if ($rc !== 0) {
             self::markTestSkipped("Failed to fetch Docker image \"{$imageName}\": " . trim(implode("\n", $output)));
         }
@@ -37,11 +37,12 @@ trait DockerTrait
      *
      * @param string $imageName
      * @param string $script
+     * @param string $phpVersion
      *
-     * @throws \PHPUnit_Framework_SkippedTestError
-     * @throws \PHPUnit_Framework_AssertionFailedError
+     * @throws \PHPUnit\Framework\SkippedTestError
+     * @throws \PHPUnit\Framework\AssertionFailedError
      */
-    protected function runScriptInDocker($imageName, $script)
+    protected function runScriptInDocker($imageName, $script, $phpVersion = '7.2')
     {
         self::ensureDockerImage($imageName);
         $cmd = implode(' ', [
@@ -53,6 +54,8 @@ trait DockerTrait
             '-v ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, DIR_BASE . '/concrete') . ':/app/concrete'),
             // Mount the test directory
             '-v ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, DIR_BASE . '/tests/assets/Docker') . ':/app-test'),
+            // Set the CCM_TEST_PHPVERSION environment variable
+            '-e ' . escapeshellarg("CCM_TEST_PHPVERSION={$phpVersion}"),
             // Override the defaul entry point
             '--entrypoint ""',
             // The base container image

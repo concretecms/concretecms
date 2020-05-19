@@ -38,8 +38,8 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/system/express/entities/associations', 'view_association_details', $association->getID())?>" class="pull-left btn btn-default" type="button" ><?=t('Back to Association')?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <a href="<?=URL::to('/dashboard/system/express/entities/associations', 'view_association_details', $association->getID())?>" class="float-left btn btn-secondary" type="button" ><?=t('Back to Association')?></a>
+            <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 </form>

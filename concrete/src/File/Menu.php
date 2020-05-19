@@ -2,26 +2,24 @@
 
 namespace Concrete\Core\File;
 
+use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
-class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
+class Menu extends DropdownMenu
 {
 
     protected $menuAttributes = ['class' => 'ccm-popover-file-menu'];
-    protected $minItemThreshold = 2; // because we already have clear and the divider, we just hide them with JS
 
     public function __construct(FileEntity $file)
     {
         parent::__construct();
 
         $this->setAttribute('data-search-file-menu', $file->getFileID());
-        $this->addItem(new LinkItem('#', t('Clear'), ['data-file-manager-action' => 'clear']));
-        $this->addItem(new LinkItem('#', t('Choose New File'), ['data-file-manager-action' => 'choose-new-file']));
-        $this->addItem(new DividerItem());
+
 
         $fp = new \Permissions($file);
         if ($fp->canViewFile()) {
@@ -40,68 +38,29 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
 
         }
 
+        $this->addItem(new DividerItem());
+
+
         if ($file->canEdit() && $fp->canEditFileContents()) {
-            $this->addItem(new DialogLinkItem(
-                    REL_DIR_FILES_TOOLS_REQUIRED . '/files/edit?fID=' . $file->getFileID(),
-                    t('Edit'), t('Edit'), '90%', '75%')
-            );
-            $this->addItem(new DialogLinkItem(
-                    \URL::to('/ccm/system/dialogs/file/thumbnails?fID=' . $file->getFileID()),
-                    t('Thumbnails'), t('Thumbnails'), '90%', '75%')
-            );
+            $this->addItem(new LinkItem(
+                \URL::to('/dashboard/files/details', $file->getFileID()),
+                    t('Details')
+            ));
         }
-        if ($fp->canViewFileInFileManager()) {
-            $this->addItem(new DialogLinkItem(
-                    \URL::to('/ccm/system/dialogs/file/properties?fID=' . $file->getFileID()),
-                    t('Properties'), t('Properties'), '850', '450')
-            );
-        }
-        if ($fp->canEditFileContents()) {
-            $this->addItem(new DialogLinkItem(
-                    \URL::to('/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()),
-                    t('Replace'), t('Replace'), '620', 400)
-            );
-        }
+
         $this->addItem(new DialogLinkItem(
                 \URL::to('/ccm/system/dialogs/file/folder?fID=' . $file->getFileID()),
                 t('Move to Folder'), t('Move to Folder'), '500', '450')
         );
-        if ($fp->canEditFilePermissions()) {
-            $this->addItem(new DialogLinkItem(
-                    \URL::to('/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()),
-                    t('Storage Location'), t('Storage Location'), '500', '400')
-            );
-        }
         if ($fp->canCopyFile()) {
             $this->addItem(new LinkItem('#', t('Duplicate'), [
                 'data-file-manager-action' => 'duplicate',
                 'data-file-id' => $file->getFileID()
             ]));
         }
-        if ($fp->canViewFileInFileManager()) {
-            $this->addItem(new DialogLinkItem(
-                    \URL::to('/ccm/system/dialogs/file/sets?fID=' . $file->getFileID()),
-                    t('Sets'), t('File Sets'), '500', '400')
-            );
-        }
-
-        if ($fp->canEditFilePermissions() || $fp->canDeleteFile()) {
-            $this->addItem(new DividerItem());
-
-        }
-        if ($fp->canEditFilePermissions()) {
-            $this->addItem(new DialogLinkItem(
-                    REL_DIR_FILES_TOOLS_REQUIRED . '/files/permissions?fID=' . $file->getFileID(),
-                    t('Permissions'), t('Permissions & Access'), '520', '450')
-            );
-        }
-        $this->addItem(new DialogLinkItem(
-                \URL::to('/ccm/system/dialogs/file/usage', $file->getFileID()),
-                t('File Usage'), t('File Usage'), '90%', '75%')
-        );
         if ($fp->canDeleteFile()) {
+            $this->addItem(new DividerItem());
             $this->addItem(new DeleteItem($file->getFileNodeObject()));
         }
-
     }
 }

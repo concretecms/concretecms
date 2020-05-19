@@ -160,7 +160,6 @@ class ClassloaderTest extends ClassLoaderTestCase
             ['Concrete\Controller\Frontend\Jobs'],
             ['Concrete\Controller\PageType\CoreStack'],
             ['Concrete\Controller\Panel\Add'],
-            ['Concrete\Controller\Search\FileFolder'],
             ['Concrete\Controller\SinglePage\Account\Avatar'],
             ['Concrete\Controller\SinglePage\Dashboard\System\Basics\Name'],
             ['Concrete\Authentication\Concrete\Controller'],

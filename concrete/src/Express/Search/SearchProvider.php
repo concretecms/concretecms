@@ -10,6 +10,7 @@ use Concrete\Core\Search\AbstractSearchProvider;
 use Concrete\Core\Express\Search\ColumnSet\Available;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Entity\Search\SavedExpressSearch;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class SearchProvider extends AbstractSearchProvider
@@ -17,6 +18,11 @@ class SearchProvider extends AbstractSearchProvider
     protected $category;
     protected $entity;
     protected $columnSet;
+
+    public function getFieldManager()
+    {
+        return ManagerFactory::get('express');
+    }
 
     /**
      * @param mixed $columnSet

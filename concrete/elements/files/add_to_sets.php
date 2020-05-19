@@ -34,7 +34,7 @@ $sets = FileSet::getMySets();
 } ?>
 </div>
 
-<button type="button" class="btn-sm btn btn-default" data-action="add-file-set"><?=t('Add Set')?> <i class="fa fa-plus-circle"></i></button>
+<button type="button" class="btn-sm btn btn-secondary" data-action="add-file-set"><?=t('Add Set')?> <i class="fa fa-plus-circle"></i></button>
 
 <script type="text/template" class="ccm-template-file-set-checkbox">
 	<div class="input-group">

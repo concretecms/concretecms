@@ -7,11 +7,17 @@ class Manager extends CoreManager
 {
     protected function createApplicationDriver()
     {
-        return new ConcreteBootstrap3View();
+        return new ConcreteBootstrap4View();
     }
 
     protected function createDashboardDriver()
     {
-        return new ConcreteBootstrap3View();
+        return new ConcreteCMSView();
     }
+
+    protected function createCmsDriver()
+    {
+        return new ConcreteCMSView();
+    }
+
 }

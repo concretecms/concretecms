@@ -348,17 +348,6 @@ class FileListTest extends FileStorageTestCase
         $this->assertTrue(!isset($results[2]));
     }
 
-    public function testFileSearchDefaultColumnSet()
-    {
-        $set = \Concrete\Core\File\Search\ColumnSet\ColumnSet::getCurrent();
-
-        $this->assertInstanceOf('\Concrete\Core\File\Search\ColumnSet\DefaultSet', $set);
-
-        $columns = $set->getColumns();
-
-        $this->assertEquals(4, count($columns));
-    }
-
     protected function cleanup()
     {
         parent::cleanup();
