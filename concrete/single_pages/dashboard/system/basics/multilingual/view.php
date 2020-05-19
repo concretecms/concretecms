@@ -16,12 +16,15 @@ if (empty($interfacelocales)) {
 } else {
     ?>
     <form method="post" action="<?= $view->action('save_interface_language') ?>">
-        <fieldset>
+        <fieldset vue-enabled>
             <div class="form-group">
-                <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Login')) ?>
-                <div class="form-check">
-                    <label><?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?>&nbsp;<?= t('Offer choice of language on login.') ?></label>
+                <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Offer choice of language on login.')) ?>
+                <toggle :value="<?=$LANGUAGE_CHOOSE_ON_LOGIN ? 'true' : 'false'?>"></toggle>
+                <!--
+                <div class="checkbox">
+                    <label><?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?></label>
                 </div>
+                //-->
             </div>
             <div class="form-group">
                 <?= $form->label('SITE_LOCALE', t('Default Language')) ?>

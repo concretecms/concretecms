@@ -35,6 +35,7 @@
     "/themes/concrete/main.js": "/themes/concrete/main.js",
     "/themes/dashboard/main.js": "/themes/dashboard/main.js",
     "/themes/elemental/main.js": "/themes/elemental/main.js",
+    "/js/vue.js": "/js/vue.js",
     "/js/jquery.js": "/js/jquery.js",
     "/css/fontawesome/all.css": "/css/fontawesome/all.css",
     "/images/icons/bedrock/sprites.svg": "/images/icons/bedrock/sprites.svg"
