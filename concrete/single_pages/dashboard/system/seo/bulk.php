@@ -49,32 +49,24 @@ if (!empty($pages)) {
     </div>
     <div class="form-group">
         <?= $form->label('cParentAll', t('How Many Levels Below Parent?')) ?>
-        <div class="radio">
-            <label>
-                <?= $form->radio('cParentAll', '0', $searchRequest['cParentAll'] ? '1' : '0') ?>
-                <?= t('First Level') ?>
-            </label>
+        <div class="form-check">
+            <?= $form->radio('cParentAll', '0', $searchRequest['cParentAll'] ? '1' : '0', ['id' => 'cParentAll0']) ?>
+            <label class="form-check-label" for="cParentAll0"><?= t('First Level') ?></label>
         </div>
-        <div class="radio">
-            <label>
-                <?= $form->radio('cParentAll', '1', $searchRequest['cParentAll'] ? '1' : '0') ?>
-                <?= t('All Levels') ?>
-            </label>
+        <div class="form-check">
+            <?= $form->radio('cParentAll', '1', $searchRequest['cParentAll'] ? '1' : '0', ['id' => 'cParentAll1']) ?>
+            <label class="form-check-label" for="cParentAll1"><?= t('All Levels') ?></label>
         </div>
     </div>
     <div class="form-group">
         <?= $form->label('', t('Filter By:')) ?>
-        <div class="checkbox">
-            <label>
-                <?= $form->checkbox('noDefaultDescription', '1', $searchRequest['noDefaultDescription']) ?>
-                <?= t('No Default Description') ?>
-            </label>
+        <div class="form-check">
+            <?= $form->checkbox('noDefaultDescription', '1', $searchRequest['noDefaultDescription']) ?>
+            <label class="form-check-label" for="noDefaultDescription"><?= t('No Default Description') ?></label>
         </div>
-        <div class="checkbox">
-            <label>
-                <?= $form->checkbox('noMetaDescription', '1', $searchRequest['noMetaDescription']) ?>
-                <?= t('No Meta Description') ?>
-            </label>
+        <div class="form-check">
+            <?= $form->checkbox('noMetaDescription', '1', $searchRequest['noMetaDescription']) ?>
+            <label class="form-check-label" for="noMetaDescription"><?= t('No Meta Description') ?></label>
         </div>
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">

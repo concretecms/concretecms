@@ -28,13 +28,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('save_urls') ?>
     <fieldset>
         <legend><?= t('Pretty URLs') ?></legend>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('url_rewriting', '1', $urlRewriting) ?>
-                    <?= t('Remove index.php from URLs') ?>
-                </label>
-            </div>
+        <div class="form-check">
+            <?= $form->checkbox('url_rewriting', '1', $urlRewriting) ?>
+            <label class="form-check-label" for="url_rewriting"><?= t('Remove index.php from URLs') ?></label>
         </div>
     </fieldset>
     <fieldset>
@@ -50,25 +46,19 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </fieldset>
     <fieldset>
         <legend><?= t('Options') ?></legend>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('redirect_to_canonical_url', '1', $redirectToCanonicalUrl) ?>
-                    <?= t('Only render at canonical URLs.') ?>
-                </label>
-            </div>
+        <div class="form-check">
+            <?= $form->checkbox('redirect_to_canonical_url', '1', $redirectToCanonicalUrl) ?>
+            <label class="form-check-label" for="redirect_to_canonical_url"><?= t('Only render at canonical URLs.') ?></label>
             <div class="alert alert-warning">
                 <?= t('If checked, this site will only be available at the host, port and SSL combination chosen above.') ?><br />
                 <?= t('Ensure that your site is viewable at the URL(s) above before you check this checkbox. If not, doing so may render your site unviewable until you can manually undo this change.') ?>
             </div>
         </div>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('canonical_tag', '1', $canonicalTag) ?>
-                    <?= t('Add a %s tag to the site pages.', '<code>' . h('<meta rel="canonical" href="...">') . '</code>') ?>
-                </label>
-            </div>
+        <div class="form-check">
+            <?= $form->checkbox('canonical_tag', '1', $canonicalTag) ?>
+            <label class="form-check-label" for="canonical_tag">
+                <?= t('Add a %s tag to the site pages.', '<code>' . h('<meta rel="canonical" href="...">') . '</code>') ?>
+            </label>
         </div>
     </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">

@@ -38,12 +38,11 @@ defined('C5_EXECUTE') or die('Access Denied');
         <?= $form->label('', t('Areas')) ?>
         <?php
         foreach ($availableAreas as $arHandle) {
+            $elementID = preg_replace('/\W/', '-', "ccm-index-area{$arHandle}");
             ?>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('arHandle[]', h($arHandle), in_array($arHandle, $selectedAreas, true)) ?>
-                    <?= h($arHandle) ?>
-                </label>
+            <div class="form-check">
+                <?= $form->checkbox('arHandle[]', h($arHandle), in_array($arHandle, $selectedAreas, true), ['id' => $elementID]) ?>
+                <label class="form-check-label" for="<?= $elementID ?>"><?= h($arHandle) ?></label>
             </div>
             <?php
         }
