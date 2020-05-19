@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Exception;
 
@@ -18,14 +19,16 @@ class Debug extends DashboardPageController
     public function update_debug()
     {
         if ($this->token->validate('update_debug')) {
-            if ($this->request->isPost()) {
+            if ($this->request->isMethod(Request::METHOD_POST)) {
                 $post = $this->request->request;
                 $config = $this->app->make('config');
                 $config->save('concrete.debug.display_errors', (bool) $post->get('debug_enabled'));
                 $config->save('concrete.debug.detail', $post->get('debug_detail'));
                 $config->save('concrete.debug.error_reporting', $post->get('warnings_as_errors') ? -1 : null);
+
                 $this->flash('success', t('Debug configuration saved.'));
-                $this->redirect($this->action(''));
+
+                return $this->buildRedirect($this->action());
             }
         } else {
             $this->error->add($this->token->getErrorMessage());

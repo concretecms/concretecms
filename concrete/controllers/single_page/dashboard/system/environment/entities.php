@@ -3,6 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Package\Event\PackageEntities;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +26,7 @@ class Entities extends DashboardPageController
                 }
             }
         }
+
         $this->set('doctrine_dev_mode', (bool) $this->app->make('config')->get('concrete.cache.doctrine_dev_mode'));
         $this->set('drivers', $drivers);
     }
@@ -33,28 +35,31 @@ class Entities extends DashboardPageController
     {
         if (!$this->token->validate('update_entity_settings')) {
             $this->error->add($this->token->getErrorMessage());
+
+            return $this->view();
         }
-        if (!$this->error->has()) {
-            if ($this->isPost()) {
-                $ddm = $this->post('DOCTRINE_DEV_MODE') === 'yes';
 
-                if ($this->request->request->get('refresh')) {
-                    $pev = new PackageEntities();
-                    $this->app->make('director')->dispatch('on_refresh_package_entities', $pev);
-                    $entityManagers = array_merge([$this->app->make(EntityManagerInterface::class)], $pev->getEntityManagers());
-                    foreach ($entityManagers as $em) {
-                        $manager = new DatabaseStructureManager($em);
-                        $manager->refreshEntities();
-                    }
-
-                    $this->flash('success', t('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.'));
-                    $this->redirect('/dashboard/system/environment/entities', 'view');
+        if ($this->request->isMethod(Request::METHOD_POST)) {
+            if ($this->request->request->get('refresh')) {
+                $pev = new PackageEntities();
+                $this->app->make('director')->dispatch('on_refresh_package_entities', $pev);
+                $entityManagers = array_merge([$this->app->make(EntityManagerInterface::class)], $pev->getEntityManagers());
+                foreach ($entityManagers as $em) {
+                    $manager = new DatabaseStructureManager($em);
+                    $manager->refreshEntities();
                 }
-                $this->app->make('config')->save('concrete.cache.doctrine_dev_mode', $ddm);
-                $this->flash('success', t('Doctrine development settings updated.'));
-                $this->redirect('/dashboard/system/environment/entities', 'view');
+
+                $this->flash('success', t('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.'));
+
+                return $this->buildRedirect($this->action());
             }
+
+            $ddm = (bool) $this->request->request->get('DOCTRINE_DEV_MODE', false);
+            $this->app->make('config')->save('concrete.cache.doctrine_dev_mode', $ddm);
+
+            $this->flash('success', t('Doctrine development settings updated.'));
+
+            return $this->buildRedirect($this->action());
         }
-        $this->view();
     }
 }

@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Geolocator\GeolocatorService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Exception;
+use IPLib\Address\AddressInterface;
 use IPLib\Factory as IPFactory;
 
 class Geolocation extends DashboardPageController
@@ -13,7 +14,9 @@ class Geolocation extends DashboardPageController
     public function on_start()
     {
         parent::on_start();
-        $this->addHeaderItem(<<<EOT
+
+        $this->addHeaderItem(
+            <<<'EOT'
 <style>
 table.geolocation-libraries tr[data-editurl] {
     cursor: pointer;
@@ -26,7 +29,7 @@ EOT
     public function view()
     {
         $this->set('geolocators', $this->app->make(GeolocatorService::class)->getList());
-        $this->set('ip', $this->app->make('ip')->getRequestIPAddress());
+        $this->set('ip', $this->app->make(AddressInterface::class));
     }
 
     public function details($id)
@@ -67,9 +70,11 @@ EOT
                     } elseif ($geolocator->isActive()) {
                         $service->setCurrent(null);
                     }
+
                     $service->getEntityManager()->flush($geolocator);
                     $this->flash('success', t('Geolocator library updated successfully'));
-                    $this->redirect($this->action(''));
+
+                    return $this->buildRedirect($this->action(''));
                 }
             }
         }
@@ -80,17 +85,19 @@ EOT
         if (!$this->token->validate('ccm-geolocator-test')) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
+
         $post = $this->request->request;
         $ip = IPFactory::addressFromString($post->get('ip'));
         if ($ip === null) {
             throw new UserMessageException(t('The specified IP address is not valid.'));
         }
+
         $service = $this->app->make(GeolocatorService::class);
-        /* @var GeolocatorService $service */
         $geolocator = $service->getByID($post->get('geolocatorId'));
         if ($geolocator === null) {
             throw new UserMessageException(t('Unable to find the geolocator library specified.'));
         }
+
         $geolocatorController = $service->getController($geolocator);
         $geolocated = $geolocatorController->geolocateIPAddress($ip);
         $rf = $this->app->make(ResponseFactoryInterface::class);
