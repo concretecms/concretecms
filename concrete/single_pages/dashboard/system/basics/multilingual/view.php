@@ -19,7 +19,7 @@ if (empty($interfacelocales)) {
         <fieldset>
             <div class="form-group">
                 <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Login')) ?>
-                <div class="checkbox">
+                <div class="form-check">
                     <label><?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?>&nbsp;<?= t('Offer choice of language on login.') ?></label>
                 </div>
             </div>

@@ -25,13 +25,13 @@
             <fieldset>
                 <legend><?= t('concrete5 Extensions') ?></legend>
                 <div class="form-group">
-                    <div class="checkbox">
+                    <div class="form-check">
                         <label>
                             <?= $form->checkbox('enable_filemanager', 1, $filemanager) ?>
                             <?= t('Enable file selection from file manager.') ?>
                         </label>
                     </div>
-                    <div class="checkbox">
+                    <div class="form-check">
                         <label>
                             <?= $form->checkbox('enable_sitemap', 1, $sitemap) ?>
                             <?= t('Enable page selection from sitemap.') ?>
@@ -47,7 +47,7 @@
                         if (!in_array($key, $selected_hidden)) {
                             $description = $plugin->getDescription();
                             ?>
-                            <div class="checkbox">
+                            <div class="form-check">
                                 <label>
                                     <?php
                                     echo $form->checkbox('plugin[]', $key, $manager->isSelected($key));
