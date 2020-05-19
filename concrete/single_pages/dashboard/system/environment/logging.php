@@ -65,9 +65,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     '<code>concrete.log.configuration.advanced.configuration</code>',
                     'https://github.com/theorchard/monolog-cascade/blob/master/README.md',
                     '<code>loggers</code>'
-                ) ?>
-            </div>
-
+                ); ?>
+            </p>
         </div>
     </fieldset>
 

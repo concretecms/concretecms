@@ -3,9 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
 use Illuminate\Filesystem\Filesystem;
-use Loader;
 
 class Logging extends DashboardPageController
 {
@@ -57,31 +55,37 @@ class Logging extends DashboardPageController
         if (!$this->token->validate('update_logging')) {
             $this->error->add($this->token->getErrorMessage());
         }
-        if ($this->request->request->get('handler') == 'file' && $this->request->request->get('logging_mode')) {
-            $logFile = $this->request->request->get('logFile');
+
+        $post = $this->request->request;
+        if ($post->get('handler') == 'file' && $post->get('logging_mode')) {
+            $logFile = $post->get('logFile');
             $filesystem = new Filesystem();
             $directory = dirname($logFile);
             if ($filesystem->isFile($logFile) && !$filesystem->isWritable($logFile)) {
                 $this->error->add(t('Log file exists but is not writable by the web server.'));
             }
+
             if (!$filesystem->isFile($logFile) && (!$filesystem->isDirectory($directory) || !$filesystem->isWritable($directory))) {
                 $this->error->add(t('Log file does not exist on the server. The directory of the file provided must exist and be writable on the web server.'));
             }
+
             $filename = basename($logFile);
             if (!$filename || substr($filename, -4) != '.log') {
                 $this->error->add(t('The filename provided must be a valid filename and end with .log'));
             }
         }
-        if (!$this->error->has()) {
-            $intLogErrorsPost = $this->post('ENABLE_LOG_ERRORS') == 1 ? 1 : 0;
-            $intLogEmailsPost = $this->post('ENABLE_LOG_EMAILS') == 1 ? 1 : 0;
-            $intLogApiPost = $this->post('ENABLE_LOG_API') == 1 ? 1 : 0;
 
+        if (!$this->error->has()) {
+            $intLogErrorsPost = (bool) $post->get('ENABLE_LOG_ERRORS', false);
+            $intLogEmailsPost = (bool) $post->get('ENABLE_LOG_EMAILS', false);
+            $intLogApiPost = (bool) $post->get('ENABLE_LOG_API', false);
+
+            $config = $this->app->make('config');
             $config->save('concrete.log.errors', $intLogErrorsPost);
             $config->save('concrete.log.emails', $intLogEmailsPost);
             $config->save('concrete.log.api', $intLogApiPost);
 
-            $mode = $this->request->request->get('logging_mode');
+            $mode = $post->get('logging_mode');
             if ($mode != 'advanced') {
                 $mode = 'simple';
                 $config->save('concrete.log.configuration.simple.core_logging_level', $post->get('logging_level'));
@@ -92,8 +96,9 @@ class Logging extends DashboardPageController
             $config->save('concrete.log.enable_dashboard_report', $post->get('enable_dashboard_report') ? true : false);
             $config->save('concrete.log.configuration.mode', $mode);
 
-            $this->redirect('/dashboard/system/environment/logging', 'logging_saved');
+            return $this->buildRedirect($this->action('logging_saved'));
         }
+
         $this->view();
     }
 }
