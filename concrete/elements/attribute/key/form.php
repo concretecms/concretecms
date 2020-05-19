@@ -105,15 +105,18 @@ if ($key !== null) {
         <div class="form-group">
             <label class="control-label"><?= t('Searchable') ?></label>
             <div class="form-check">
-                <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ["class" => "form-check-input"]) ?>
-                <?= $form->label('akIsSearchableIndexed', t('Content included in search index.'), ["class" => "form-check-label"] ) ?>
+                <label>
+                    <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed()) ?>
+                    <?= t('Content included in search index.') ?>
+                </label>
             </div>
             <div class="form-check">
-                <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable(), ["class" => "form-check-input"]) ?>
-                <?= $form->label('akIsSearchable', t('Field available in advanced search.'), ["class" => "form-check-label"] ) ?>
-                <?php
-                if ($key && $key->isAttributeKeySearchable()) {
-                    ?>
+                <label>
+                    <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable()) ?>
+                    <?= t('Field available in advanced search.') ?>
+                    <?php
+                    if ($key && $key->isAttributeKeySearchable()) {
+                        ?>
                     <div class="alert alert-danger small d-none" id="akIsSearchable-warning">
                         <?= t(
                             'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
