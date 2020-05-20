@@ -32,7 +32,7 @@ if (!empty($top)) {
                   <?php
             } ?>
                   <?php
-                      $accountPage = Page::getByPath('/account/edit_profile');
+                      $accountPage = Page::getByPath('/account');
                       $accountID = $accountPage->getCollectionID();
             if (
                       $c->getCollectionPath() == '/dashboard/welcome' && $page->getCollectionPath() == '/dashboard/welcome' ||
