@@ -12,7 +12,6 @@ use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\RemoteApplicationUpdate;
 use Concrete\Core\Updater\UpdateArchive;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
-use Config;
 use Exception;
 use Loader;
 
@@ -63,9 +62,10 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-        Config::clear('concrete.misc.latest_version');
+        $this->app->make('config')->clear('concrete.misc.latest_version');
         \Concrete\Core\Updater\Update::getLatestAvailableVersionNumber();
-        $this->redirect('/dashboard/system/update/update');
+
+        return $this->buildRedirect($this->action());
     }
 
     public function get_update_diagnostic_information()
