@@ -3,6 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 
 use Concrete\Controller\Upgrade;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Updater\ApplicationUpdate;
@@ -22,38 +23,43 @@ class Update extends DashboardPageController
 
     public function view()
     {
-        if ($this->userHasUpgradePermission()) {
-            $upd = new \Concrete\Core\Updater\Update();
-            $updates = $upd->getLocalAvailableUpdates();
-            $remote = $upd->getApplicationUpdateInformation();
-            $this->set('updates', $updates);
-            if (is_object($remote) && version_compare($remote->getVersion(), APP_VERSION, '>')) {
-                // loop through local updates
-                $downloadableUpgradeAvailable = true;
-                foreach ($updates as $upd) {
-                    if ($upd->getUpdateVersion() == $remote->getVersion()) {
-                        // we have a LOCAL version ready to install that is the same, so we abort
-                        $downloadableUpgradeAvailable = false;
-                        $this->set('showDownloadBox', false);
-                        break;
-                    }
+        if (!$this->userHasUpgradePermission()) {
+            $this->render('/dashboard/system/update/update/no_access');
+
+            return null;
+        }
+        $upd = new \Concrete\Core\Updater\Update();
+        $updates = $upd->getLocalAvailableUpdates();
+        $remote = $upd->getApplicationUpdateInformation();
+        $this->set('updates', $updates);
+        if (is_object($remote) && version_compare($remote->getVersion(), APP_VERSION, '>')) {
+            // loop through local updates
+            $downloadableUpgradeAvailable = true;
+            foreach ($updates as $upd) {
+                if ($upd->getUpdateVersion() == $remote->getVersion()) {
+                    // we have a LOCAL version ready to install that is the same, so we abort
+                    $downloadableUpgradeAvailable = false;
+                    $this->set('showDownloadBox', false);
+                    break;
                 }
-
-                $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
-                $this->set('remoteUpdate', $remote);
-            } else {
-                $this->set('downloadableUpgradeAvailable', false);
             }
 
-            if (count($updates) == 1) {
-                $this->set('update', $updates[0]);
-            }
-            $this->set('canUpgrade', true);
+            $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
+            $this->set('remoteUpdate', $remote);
+        } else {
+            $this->set('downloadableUpgradeAvailable', false);
+        }
+
+        if (count($updates) == 1) {
+            $this->set('update', $updates[0]);
         }
     }
 
     public function check_for_updates()
     {
+        if (!$this->userHasUpgradePermission()) {
+            return $this->buildRedirect($this->action());
+        }
         Config::clear('concrete.misc.latest_version');
         \Concrete\Core\Updater\Update::getLatestAvailableVersionNumber();
         $this->redirect('/dashboard/system/update/update');
@@ -61,14 +67,15 @@ class Update extends DashboardPageController
 
     public function get_update_diagnostic_information()
     {
-        if ($this->userHasUpgradePermission()) {
-            $updateVersion = trim($this->post('version'));
-            if ($updateVersion) {
-                $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
-                if (is_object($upd)) {
-                    $diagnostic = $upd->getDiagnosticObject();
-                    echo json_encode($diagnostic->getJSONObject());
-                }
+        if (!$this->userHasUpgradePermission()) {
+            throw new UserMessageException(t('You do not have permission to upgrade this installation of concrete5.'));
+        }
+        $updateVersion = trim($this->post('version'));
+        if ($updateVersion) {
+            $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
+            if (is_object($upd)) {
+                $diagnostic = $upd->getDiagnosticObject();
+                echo json_encode($diagnostic->getJSONObject());
             }
         }
         exit;
@@ -77,7 +84,7 @@ class Update extends DashboardPageController
     public function download_update()
     {
         if (!$this->userHasUpgradePermission()) {
-            return false;
+            return $this->buildRedirect($this->action());
         }
 
         $vt = Loader::helper('validation/token');
@@ -122,7 +129,7 @@ class Update extends DashboardPageController
     public function do_update()
     {
         if (!$this->userHasUpgradePermission()) {
-            return false;
+            return $this->buildRedirect($this->action());
         }
         $updateVersion = $this->post('version');
         if (!$updateVersion) {
@@ -163,7 +170,7 @@ class Update extends DashboardPageController
     public function start()
     {
         if (!$this->userHasUpgradePermission()) {
-            return false;
+            return $this->buildRedirect($this->action());
         }
         $updateVersion = $this->post('updateVersion');
         if (!$updateVersion) {
@@ -208,6 +215,7 @@ class Update extends DashboardPageController
 
     protected function userHasUpgradePermission(): bool
     {
+        return false;
         $p = new Checker();
 
         return (bool) $p->canUpgrade();
