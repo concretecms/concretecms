@@ -32,16 +32,13 @@ if (!empty($top)) {
                   <?php
             } ?>
                   <?php
+                  $welcomeMenuPages = [ '/dashboard/welcome', '/account', '/dashboard/welcome/me', '/account/edit_profile', '/account/messages' ];
+            if (
+                      in_array( $c->getCollectionPath(), $welcomeMenuPages ) && in_array( $page->getCollectionPath(), $welcomeMenuPages)
+                      ) {
                       $accountPage = Page::getByPath('/account');
                       $accountID = $accountPage->getCollectionID();
-            if (
-                      $c->getCollectionPath() == '/dashboard/welcome' && $page->getCollectionPath() == '/dashboard/welcome' ||
-                      $c->getCollectionPath() == '/account' && $page->getCollectionPath() == '/account' ||
-                      $c->getCollectionPath() == '/dashboard/welcome/me' && $page->getCollectionPath() == '/dashboard/welcome/me' ||
-                      $c->getCollectionPath() == '/account/edit_profile' && $page->getCollectionPath() == '/account/edit_profile' ||
-                      $c->getCollectionPath() == '/account/messages' && $page->getCollectionPath() == '/account/messages'
-                      ) {
-                    echo '<ul class="welcome-menu">'; ?>
+                      echo '<ul class="welcome-menu">'; ?>
                         <li>
                           <a href="<?=URL::to('/dashboard/welcome/me'); ?>"
                           >
@@ -56,8 +53,7 @@ if (!empty($top)) {
                         </li>
                         </ul>
 
-                        <?php
-            } ?>
+            <?php }?>
                 </li>
                 <?php
                 if ($page->getAttribute('is_desktop')) {
