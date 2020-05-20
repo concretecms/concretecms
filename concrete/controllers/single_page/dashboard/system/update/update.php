@@ -17,8 +17,7 @@ class Update extends DashboardPageController
     public function on_start()
     {
         parent::on_start();
-        $this->error = Loader::helper('validation/error');
-        id(new Upgrade())->checkSecurity();
+        $this->app->make(Upgrade::class)->checkSecurity();
     }
 
     public function view()
