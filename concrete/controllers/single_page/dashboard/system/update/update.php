@@ -11,6 +11,46 @@ use Loader;
 
 class Update extends DashboardPageController
 {
+    public function on_start()
+    {
+        parent::on_start();
+        $this->error = Loader::helper('validation/error');
+        id(new Upgrade())->checkSecurity();
+    }
+
+    public function view()
+    {
+        $p = new \Permissions();
+        if ($p->canUpgrade()) {
+            $upd = new \Concrete\Core\Updater\Update();
+            $updates = $upd->getLocalAvailableUpdates();
+            $remote = $upd->getApplicationUpdateInformation();
+            $this->set('updates', $updates);
+            if (is_object($remote) && version_compare($remote->getVersion(), APP_VERSION, '>')) {
+                // loop through local updates
+                $downloadableUpgradeAvailable = true;
+                foreach ($updates as $upd) {
+                    if ($upd->getUpdateVersion() == $remote->getVersion()) {
+                        // we have a LOCAL version ready to install that is the same, so we abort
+                        $downloadableUpgradeAvailable = false;
+                        $this->set('showDownloadBox', false);
+                        break;
+                    }
+                }
+                
+                $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
+                $this->set('remoteUpdate', $remote);
+            } else {
+                $this->set('downloadableUpgradeAvailable', false);
+            }
+            
+            if (count($updates) == 1) {
+                $this->set('update', $updates[0]);
+            }
+            $this->set('canUpgrade', true);
+        }
+    }
+
     public function check_for_updates()
     {
         Config::clear('concrete.misc.latest_version');
@@ -18,11 +58,20 @@ class Update extends DashboardPageController
         $this->redirect('/dashboard/system/update/update');
     }
 
-    public function on_start()
+    public function get_update_diagnostic_information()
     {
-        parent::on_start();
-        $this->error = Loader::helper('validation/error');
-        id(new Upgrade())->checkSecurity();
+        $p = new \Permissions();
+        if ($p->canUpgrade()) {
+            $updateVersion = trim($this->post('version'));
+            if ($updateVersion) {
+                $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
+                if (is_object($upd)) {
+                    $diagnostic = $upd->getDiagnosticObject();
+                    echo json_encode($diagnostic->getJSONObject());
+                }
+            }
+        }
+        exit;
     }
 
     public function download_update()
@@ -71,55 +120,6 @@ class Update extends DashboardPageController
         $this->view();
     }
     
-    public function view()
-    {
-        $p = new \Permissions();
-        if ($p->canUpgrade()) {
-            $upd = new \Concrete\Core\Updater\Update();
-            $updates = $upd->getLocalAvailableUpdates();
-            $remote = $upd->getApplicationUpdateInformation();
-            $this->set('updates', $updates);
-            if (is_object($remote) && version_compare($remote->getVersion(), APP_VERSION, '>')) {
-                // loop through local updates
-                $downloadableUpgradeAvailable = true;
-                foreach ($updates as $upd) {
-                    if ($upd->getUpdateVersion() == $remote->getVersion()) {
-                        // we have a LOCAL version ready to install that is the same, so we abort
-                        $downloadableUpgradeAvailable = false;
-                        $this->set('showDownloadBox', false);
-                        break;
-                    }
-                }
-
-                $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
-                $this->set('remoteUpdate', $remote);
-            } else {
-                $this->set('downloadableUpgradeAvailable', false);
-            }
-
-            if (count($updates) == 1) {
-                $this->set('update', $updates[0]);
-            }
-            $this->set('canUpgrade', true);
-        }
-    }
-
-    public function get_update_diagnostic_information()
-    {
-        $p = new \Permissions();
-        if ($p->canUpgrade()) {
-            $updateVersion = trim($this->post('version'));
-            if ($updateVersion) {
-                $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
-                if (is_object($upd)) {
-                    $diagnostic = $upd->getDiagnosticObject();
-                    echo json_encode($diagnostic->getJSONObject());
-                }
-            }
-        }
-        exit;
-    }
-
     public function do_update()
     {
         $p = new \Permissions();
