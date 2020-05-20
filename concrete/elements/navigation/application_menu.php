@@ -32,6 +32,8 @@ if (!empty($top)) {
                   <?php
             } ?>
                   <?php
+                      $accountPage = Page::getByPath('/account/edit_profile');
+                      $accountID = $accountPage->getCollectionID();
             if (
                       $c->getCollectionPath() == '/dashboard/welcome' && $page->getCollectionPath() == '/dashboard/welcome' ||
                       $c->getCollectionPath() == '/account' && $page->getCollectionPath() == '/account' ||
@@ -48,7 +50,7 @@ if (!empty($top)) {
                         </li>
                         <li>
                           <a href="#" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/dashboard/load_menu'); ?>"
-                          data-load-menu="192">
+                          data-load-menu="<?=$accountID?>">
                           <?=t('My Account'); ?>
                           </a>
                         </li>
