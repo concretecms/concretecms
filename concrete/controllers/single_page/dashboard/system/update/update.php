@@ -9,11 +9,6 @@ use Config;
 use Exception;
 use Loader;
 
-if (!ini_get('safe_mode')) {
-    @set_time_limit(0);
-    ini_set('max_execution_time', 0);
-}
-
 class Update extends DashboardPageController
 {
     public function check_for_updates()
@@ -52,6 +47,7 @@ class Update extends DashboardPageController
         if (!$this->error->has()) {
             $remote = \Concrete\Core\Updater\Update::getApplicationUpdateInformation();
             if (is_object($remote)) {
+                $this->setCanExecuteForever();
                 // try to download
                 $r = \Marketplace::downloadRemoteFile($remote->getDirectDownloadURL());
                 if (is_object($r)) {
@@ -74,7 +70,7 @@ class Update extends DashboardPageController
         }
         $this->view();
     }
-
+    
     public function view()
     {
         $p = new \Permissions();
@@ -148,6 +144,7 @@ class Update extends DashboardPageController
         }
 
         if (!$this->error->has()) {
+            $this->setCanExecuteForever();
             $resp = $upd->apply();
             if ($resp !== true) {
                 switch ($resp) {
@@ -213,5 +210,26 @@ class Update extends DashboardPageController
         }
 
         $this->view();
+    }
+
+    protected function setCanExecuteForever(): bool
+    {
+        if (ini_get('safe_mode')) {
+            return false;
+        }
+        set_error_handler(function() {}, -1);
+        $result = true;
+        try {
+            if (!@set_time_limit(0)) {
+                $result = false;
+            }
+            if (@ini_set('max_execution_time', 0) === false) {
+                $result = false;
+            }
+        } finally {
+            restore_error_handler();
+        }
+
+        return $result;
     }
 }
