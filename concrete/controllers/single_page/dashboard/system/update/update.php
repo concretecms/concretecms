@@ -4,24 +4,10 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Updater\ApplicationUpdate;
-use Concrete\Core\Updater\Archive;
+use Concrete\Core\Updater\UpdateArchive;
 use Config;
 use Exception;
 use Loader;
-
-class UpdateArchive extends Archive
-{
-    public function __construct()
-    {
-        parent::__construct();
-        $this->targetDirectory = DIR_CORE_UPDATES;
-    }
-
-    public function install($file, $inplace = true)
-    {
-        parent::install($file, $inplace);
-    }
-}
 
 if (!ini_get('safe_mode')) {
     @set_time_limit(0);
