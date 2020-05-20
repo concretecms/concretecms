@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 
 use Concrete\Controller\Upgrade;
@@ -37,13 +38,13 @@ class Update extends DashboardPageController
                         break;
                     }
                 }
-                
+
                 $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
                 $this->set('remoteUpdate', $remote);
             } else {
                 $this->set('downloadableUpgradeAvailable', false);
             }
-            
+
             if (count($updates) == 1) {
                 $this->set('update', $updates[0]);
             }
@@ -119,7 +120,7 @@ class Update extends DashboardPageController
         }
         $this->view();
     }
-    
+
     public function do_update()
     {
         $p = new \Permissions();
@@ -138,8 +139,8 @@ class Update extends DashboardPageController
         } else {
             if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
                 $this->error->add(
-                    t(
-                        'You may only apply updates with a greater version number than the version you are currently running.'));
+                    t('You may only apply updates with a greater version number than the version you are currently running.')
+                );
             }
         }
 
@@ -150,15 +151,12 @@ class Update extends DashboardPageController
                 switch ($resp) {
                     case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
                         $this->error->add(
-                            t(
-                                'Unable to write to %1$s. You must make %1$s writable in order to upgrade in this manner.',
-                                'application/config/update.php'
-                            )
+                            t('Unable to write to %1$s. You must make %1$s writable in order to upgrade in this manner.', 'application/config/update.php')
                         );
                         break;
                 }
             } else {
-                $token = Loader::helper("validation/token");
+                $token = Loader::helper('validation/token');
                 \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
                 exit;
             }
@@ -183,8 +181,8 @@ class Update extends DashboardPageController
         } else {
             if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
                 $this->error->add(
-                    t(
-                        'You may only apply updates with a greater version number than the version you are currently running.'));
+                    t('You may only apply updates with a greater version number than the version you are currently running.')
+                );
             }
         }
 
@@ -195,8 +193,8 @@ class Update extends DashboardPageController
                 switch ($resp) {
                     case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
                         $this->error->add(
-                            t(
-                                'Unable to write to config/site.php. You must make config/site.php writable in order to upgrade in this manner.'));
+                            t('Unable to write to config/site.php. You must make config/site.php writable in order to upgrade in this manner.')
+                        );
                         break;
                 }
             } else {
@@ -204,7 +202,7 @@ class Update extends DashboardPageController
                 \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
                 exit;
             }
-            */
+             */
 
             $this->set('update', $upd);
         }
@@ -217,7 +215,7 @@ class Update extends DashboardPageController
         if (ini_get('safe_mode')) {
             return false;
         }
-        set_error_handler(function() {}, -1);
+        set_error_handler(function () {}, -1);
         $result = true;
         try {
             if (!@set_time_limit(0)) {
