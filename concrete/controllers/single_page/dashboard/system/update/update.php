@@ -5,15 +5,16 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\RemoteApplicationUpdate;
+use Concrete\Core\Updater\Update as UpdateService;
 use Concrete\Core\Updater\UpdateArchive;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
-use Exception;
-use Loader;
+use Throwable;
 
 class Update extends DashboardPageController
 {
@@ -30,7 +31,7 @@ class Update extends DashboardPageController
 
             return null;
         }
-        $upd = new \Concrete\Core\Updater\Update();
+        $upd = $this->app->make(UpdateService::class);
         $updates = $upd->getLocalAvailableUpdates();
         if (count($updates) === 1) {
             $this->setLocalAvailableUpdateView($updates[0]);
@@ -63,7 +64,7 @@ class Update extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
         $this->app->make('config')->clear('concrete.misc.latest_version');
-        \Concrete\Core\Updater\Update::getLatestAvailableVersionNumber();
+        $this->app->make(UpdateService::class)->getLatestAvailableVersionNumber();
 
         return $this->buildRedirect($this->action());
     }
@@ -93,9 +94,8 @@ class Update extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
 
-        $vt = Loader::helper('validation/token');
-        if (!$vt->validate('download_update')) {
-            $this->error->add($vt->getErrorMessage());
+        if (!$this->token->validate('download_update')) {
+            $this->error->add($this->token->getErrorMessage());
         }
         if (!is_dir(DIR_CORE_UPDATES)) {
             $this->error->add(t('The directory %s does not exist.', DIR_CORE_UPDATES));
@@ -106,11 +106,11 @@ class Update extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $remote = \Concrete\Core\Updater\Update::getApplicationUpdateInformation();
-            if (is_object($remote)) {
+            $remote = $this->app->make(UpdateService::class)->getApplicationUpdateInformation();
+            if ($remote instanceof RemoteApplicationUpdate) {
                 $this->setCanExecuteForever();
                 // try to download
-                $r = \Marketplace::downloadRemoteFile($remote->getDirectDownloadURL());
+                $r = $this->app->make(Marketplace::class)->downloadRemoteFile($remote->getDirectDownloadURL());
                 if (is_object($r)) {
                     // error object
                     $this->error->add($r);
@@ -121,7 +121,7 @@ class Update extends DashboardPageController
                     $ar = new UpdateArchive();
                     try {
                         $ar->install($r);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $this->error->add($e->getMessage());
                     }
                 }
@@ -129,7 +129,13 @@ class Update extends DashboardPageController
                 $this->error->add(t('Unable to retrieve software from update server.'));
             }
         }
-        $this->view();
+        if ($this->error->has()) {
+            return $this->view();
+        }
+
+        $this->flash('success', t('Version %s has been succesfully downloaded.', $remote->getVersion()));
+
+        return $this->buildRedirect($this->action());
     }
 
     public function do_update()
@@ -137,40 +143,41 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-        $updateVersion = $this->post('version');
-        if (!$updateVersion) {
+        $updateVersion = (string) $this->request->request->get('version', '');
+        if ($updateVersion === '') {
             $this->error->add(t('Invalid version'));
         } else {
             $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
-        }
-
-        if (!is_object($upd)) {
-            $this->error->add(t('Invalid version'));
-        } else {
-            if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
-                $this->error->add(
-                    t('You may only apply updates with a greater version number than the version you are currently running.')
-                );
+            if ($upd == null) {
+                $this->error->add(t('Invalid version'));
+            } else {
+                if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
+                    $this->error->add(
+                        t('You may only apply updates with a greater version number than the version you are currently running.')
+                    );
+                }
             }
         }
-
         if (!$this->error->has()) {
             $this->setCanExecuteForever();
             $resp = $upd->apply();
-            if ($resp !== true) {
-                switch ($resp) {
-                    case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
-                        $this->error->add(
-                            t('Unable to write to %1$s. You must make %1$s writable in order to upgrade in this manner.', 'application/config/update.php')
-                        );
-                        break;
-                }
-            } else {
-                $token = Loader::helper('validation/token');
-                \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
-                exit;
+            if ($resp === true) {
+                return $this->buildRedirect(
+                    $this->app->make(ResolverManagerInterface::class)->resolve([
+                        '/ccm/system/upgrade/submit?ccm_token=' . $this->token->generate('Concrete\Controller\Upgrade'),
+                    ])
+                );
+            }
+            switch ($resp) {
+                case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
+                    $this->error->add(
+                        t('Unable to write to %1$s. You must make %1$s writable in order to upgrade in this manner.', 'application/config/update.php')
+                    );
+                    break;
             }
         }
+
+        return $this->view();
     }
 
     public function start()
@@ -178,38 +185,38 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-        $updateVersion = $this->post('updateVersion');
-        if (!$updateVersion) {
+        $updateVersion = (string) $this->request->request->get('updateVersion', '');
+        if ($updateVersion === '') {
             $this->error->add(t('Invalid version'));
         } else {
             $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
-        }
-
-        if (!is_object($upd)) {
-            $this->error->add(t('Invalid version'));
-        } else {
-            if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
-                $this->error->add(
-                    t('You may only apply updates with a greater version number than the version you are currently running.')
-                );
+            if ($upd == null) {
+                $this->error->add(t('Invalid version'));
+            } else {
+                if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
+                    $this->error->add(
+                        t('You may only apply updates with a greater version number than the version you are currently running.')
+                    );
+                }
             }
         }
 
         if (!$this->error->has()) {
             /*
             $resp = $upd->apply();
-            if ($resp !== true) {
-                switch ($resp) {
-                    case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
-                        $this->error->add(
-                            t('Unable to write to config/site.php. You must make config/site.php writable in order to upgrade in this manner.')
-                        );
-                        break;
-                }
-            } else {
-                $token = Loader::helper("validation/token");
-                \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
-                exit;
+            if ($resp === true) {
+                return $this->buildRedirect(
+                    $this->app->make(ResolverManagerInterface::class)->resolve([
+                        '/ccm/system/upgrade/submit?ccm_token=' . $this->token->generate('Concrete\Controller\Upgrade'),
+                    ])
+                );
+            }
+            switch ($resp) {
+                case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
+                    $this->error->add(
+                        t('Unable to write to config/site.php. You must make config/site.php writable in order to upgrade in this manner.')
+                    );
+                    break;
             }
              */
             $this->setLocalAvailableUpdateView($upd);
