@@ -2,17 +2,28 @@
 namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Entity\Board\InstanceItem;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 
-class ItemSegmenter
+class ItemSegmenter implements LoggerAwareInterface
 {
 
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        Channels::CHANNEL_CONTENT;
+    }
+
     /**
-     * @var EntityManager 
+     * @var EntityManager
      */
     protected $entityManager;
-    
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -26,22 +37,30 @@ class ItemSegmenter
      * @TODO - implement complex weighting and subset building ;-)
      *
      * @param $instance Instance
-     * @return Item[]
+     * @return InstanceItem[]
      */
     public function getBoardItemsForInstance(Instance $instance)
     {
-        $r = $this->entityManager->getRepository(Item::class);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('i')
+            ->from(InstanceItem::class, 'i')
+            ->where($qb->expr()->eq('i.instance', $instance))
+            ->andWhere($qb->expr()->eq('i.dateAddedToBoard', 0));
+
         $board = $instance->getBoard();
         switch($board->getSortBy()) {
             case $board::ORDER_BY_RELEVANT_DATE_ASC:
-                $items = $r->findByBoard($board, ['relevantDate' => 'asc']);
+                $qb->orderBy('i.relevantDate', 'asc');
                 break;
             default:
-                $items = $r->findByBoard($board, ['relevantDate' => 'desc']);
+                $qb->orderBy('i.relevantDate', 'desc');
                 break;
         }
+
+        $items = $qb->getQuery()->execute();
+        $this->logger->debug(t('%s items returned from item segmenter', count($items)));
         return $items;
     }
-    
+
 
 }

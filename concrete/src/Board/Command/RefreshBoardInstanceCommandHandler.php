@@ -11,12 +11,12 @@ class RefreshBoardInstanceCommandHandler
 {
 
     /**
-     * @var Application 
+     * @var Application
      */
     protected $app;
-    
+
     /**
-     * @var JsonSerializer 
+     * @var JsonSerializer
      */
     protected $serializer;
 
@@ -36,7 +36,7 @@ class RefreshBoardInstanceCommandHandler
                 if ($block && $block->getBlockTypeHandle() == BLOCK_HANDLE_BOARD_SLOT_PROXY) {
                     $blockController = $block->getController();
                     $contentObjectCollection = $this->serializer->deserialize(
-                        $blockController->contentObjectCollection, ObjectCollection::class, 'json', 
+                        $blockController->contentObjectCollection, ObjectCollection::class, 'json',
                         [
                             'app' => $this->app
                         ]
@@ -44,7 +44,7 @@ class RefreshBoardInstanceCommandHandler
                     if ($contentObjectCollection) {
                         $updatedObjectCollection = new ObjectCollection();
                         /**
-                         * @var ObjectCollection $contentObjectCollection 
+                         * @var ObjectCollection $contentObjectCollection
                          */
                         $objects = $contentObjectCollection->getContentObjects();
                         foreach($objects as $contentSlot => $object) {
@@ -60,10 +60,10 @@ class RefreshBoardInstanceCommandHandler
                         ]);
                     }
                 }
-            }            
+            }
         }
 
     }
 
-    
+
 }

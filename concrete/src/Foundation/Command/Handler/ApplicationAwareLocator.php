@@ -3,6 +3,7 @@
 namespace Concrete\Core\Foundation\Command\Handler;
 
 use Concrete\Core\Application\Application;
+use League\Tactician\Exception\MissingHandlerException;
 use League\Tactician\Handler\Locator\InMemoryLocator;
 
 class ApplicationAwareLocator extends InMemoryLocator

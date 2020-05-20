@@ -22,7 +22,7 @@ if (is_object($c)) {
 }
 ?>
 
-<title><?= htmlspecialchars($c->getCollectionName(), ENT_COMPAT, APP_CHARSET); ?></title>
+<title><?=t('Preview')?></title>
 <script type="text/javascript">
     var CCM_DISPATCHER_FILENAME = "<?= DIR_REL . '/' . DISPATCHER_FILENAME; ?>";
     var CCM_CID = <?= $cID ?? 0; ?>;

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Summary\Template;
 
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Summary\SummaryObjectInterface;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
@@ -39,21 +40,28 @@ class Renderer implements LoggerAwareInterface
     protected $serializer;
 
     /**
-     * @var RendererFilterer 
+     * @var RendererFilterer
      */
     protected $rendererFilterer;
-    
+
+    /**
+     * @var FileLocator
+     */
+    protected $fileLocator;
+
     public function __construct(
-        JsonSerializer $serializer, 
+        JsonSerializer $serializer,
         RendererFilterer $rendererFilterer,
-        EntityManager $entityManager, 
-        TemplateLocator $templateLocator, 
-        Page $currentPage)
+        EntityManager $entityManager,
+        TemplateLocator $templateLocator,
+        FileLocator $fileLocator,
+        Page $currentPage = null)
     {
         $this->serializer = $serializer;
         $this->rendererFilterer = $rendererFilterer;
         $this->entityManager = $entityManager;
         $this->templateLocator = $templateLocator;
+        $this->fileLocator = $fileLocator;
         $this->currentPage = $currentPage;
     }
 
@@ -67,16 +75,27 @@ class Renderer implements LoggerAwareInterface
         $template = $summaryObject->getTemplate();
         $file = $this->templateLocator->getFileToRender($template);
         if ($file) {
+            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_header.php')
+                ->getFile();
             $fields = $summaryObject->getData()->getFields();
             extract($fields, EXTR_OVERWRITE);
             include $file;
+            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_footer.php')
+                ->getFile();
+
         } else if ($template->getHandle()) {
-            $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s',
-                    $this->currentPage->getCollectionID(), $template->getHandle())
-            );
+            if ($this->currentPage) {
+                $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s',
+                        $this->currentPage->getCollectionID(), $template->getHandle())
+                );
+            } else {
+                $this->logger->notice(t('Error rendering summary template - Unable to locate file for summary template: %s',
+                        $template->getHandle())
+                );
+            }
         }
     }
-    
+
     public function renderSummaryForObject(CategoryMemberInterface $object, string $templateHandle = null)
     {
         $categoryTemplate = null;
@@ -89,9 +108,9 @@ class Renderer implements LoggerAwareInterface
             $template = $categoryTemplate->getTemplate();
             if ($template) {
                 $collection = $categoryTemplate->getData();
-                
+
                 $object = new SummaryObject(
-                    $object->getSummaryCategoryHandle(), 
+                    $object->getSummaryCategoryHandle(),
                     $object->getSummaryIdentifier(),
                     $template,
                     $collection

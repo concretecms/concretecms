@@ -245,7 +245,16 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
         }
         return false;
     }
-    
+
+    /**
+     * @param mixed $hasCustomSummaryTemplates
+     */
+    public function setHasCustomSummaryTemplates($hasCustomSummaryTemplates): void
+    {
+        $this->hasCustomSummaryTemplates = $hasCustomSummaryTemplates;
+    }
+
+
     public function getSummaryIdentifier()
     {
         return $this->getID();
@@ -254,6 +263,16 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     public function getSummaryCategoryHandle(): string
     {
         return 'calendar_event';
+    }
+
+    public function clearCustomSummaryTemplates()
+    {
+        $this->custom_summary_templates = new ArrayCollection();
+    }
+
+    public function getSummaryTemplatesCollection()
+    {
+        return $this->custom_summary_templates;
     }
 
     public function getSummaryTemplates(): array

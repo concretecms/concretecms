@@ -35,12 +35,6 @@ $c = Page::getCurrentPage();
         <?=t('Weighting')?>
     </a>
     <a
-            class="list-group-item <?=($action === 'pool') ? ' active' : ''?>"
-            href="<?=URL::to('/dashboard/boards/pool', $board->getBoardID())?>"
-    >
-        <?=t('Data Pool')?>
-    </a>
-    <a
             class="list-group-item <?=($action === 'permissions') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/boards/permissions', $board->getBoardID())?>"
     >

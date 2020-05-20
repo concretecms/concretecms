@@ -52,3 +52,6 @@ $router->all('/advanced_search/preset/edit', 'Preset\Edit::view');
 $router->all('/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::edit_search_preset');
 $router->all('/advanced_search/preset/delete', 'Preset\Delete::view');
 $router->all('/advanced_search/preset/delete/remove_search_preset', 'Preset\Delete::remove_search_preset');
+
+$router->all('/summary_templates', 'SummaryTemplates::view');
+$router->all('/summary_templates/submit', 'SummaryTemplates::submit');

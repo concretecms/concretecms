@@ -18,7 +18,7 @@ class ContentSlotRenderer
     protected $data;
 
     /**
-     * @var Application 
+     * @var Application
      */
     protected $app;
 

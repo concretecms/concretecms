@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Board\Instance\Slot\CollectionFactory;
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
 use Doctrine\ORM\EntityManager;
@@ -16,16 +16,16 @@ class CreateBoardInstanceCommandHandler
     protected $entityManager;
 
     /**
-     * @var CollectionFactory 
+     * @var Application
      */
-    protected $collectionFactory;
-    
+    protected $app;
+
     public function __construct(
-        EntityManager $entityManager, 
-        CollectionFactory $collectionFactory)
+        EntityManager $entityManager,
+        Application $app)
     {
-        $this->collectionFactory = $collectionFactory;
         $this->entityManager = $entityManager;
+        $this->app = $app;
     }
 
     protected function createInstanceDateTime(Board $board)
@@ -38,22 +38,28 @@ class CreateBoardInstanceCommandHandler
         return $dateTime;
     }
 
-    
+
     public function handle(CreateBoardInstanceCommand $command)
     {
         $board = $command->getBoard();
         $instance = new Instance();
         $instance->setBoard($board);
+        $instance->setBoardInstanceName($command->getBoardInstanceName());
+        $instance->setSite($command->getSite());
         $instance->setDateCreated($this->createInstanceDateTime($board)->getTimestamp());
         $this->entityManager->persist($instance);
-
-        $collection = $this->collectionFactory->createSlotCollection($instance);
-
-        // Now save the board instance.
-        $instance->setSlots($collection);
         $this->entityManager->flush();
-        
+
+        $populate = new PopulateBoardInstanceDataPoolCommand();
+        $populate->setInstance($instance);
+        $this->app->executeCommand($populate);
+
+        $regenerate = new GenerateBoardInstanceCommand();
+        $regenerate->setInstance($instance);
+        $this->app->executeCommand($regenerate);
+
+        return $instance;
     }
 
-    
+
 }

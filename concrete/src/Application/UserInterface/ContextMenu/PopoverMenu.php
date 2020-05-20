@@ -4,12 +4,17 @@ namespace Concrete\Core\Application\UserInterface\ContextMenu;
 
 use HtmlObject\Element;
 
-class PopoverMenu extends DropdownMenu
+class PopoverMenu extends AbstractMenu
 {
 
     public function getMenuElement()
     {
-        $dropdown = parent::getMenuElement();
+        $dropdown = new Element('div');
+        $dropdown->addClass('dropdown-menu');
+        foreach($this->items as $item) {
+            $dropdown->appendChild($item->getItemElement());
+        }
+
         $menu = new Element('div', null, $this->menuAttributes);
         $menu->addClass('popover')
             ->addClass('fade');

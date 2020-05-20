@@ -16,7 +16,7 @@ class RendererFilterer
             }
         }
     }
-    
+
     protected function getTemplatesToCheck(CategoryMemberInterface $object)
     {
         $allTemplates = $object->getSummaryTemplates();
@@ -39,10 +39,10 @@ class RendererFilterer
         } else {
             $templatesToCheck = $allTemplates;
         }
-        
+
         return $templatesToCheck;
     }
-    
+
     public function getRandomTemplate(CategoryMemberInterface $object): ?RenderableTemplateInterface
     {
         $templatesToCheck = $this->getTemplatesToCheck($object);

@@ -28,6 +28,9 @@ $router->all('/ccm/calendar/dialogs/choose_event/get_events', '\Concrete\Control
 $router->all('/ccm/calendar/event/get_json', '\Concrete\Controller\Event\Event::getJSON');
 $router->all('/ccm/calendar/dialogs/permissions/{pkCategoryHandle}', '\Concrete\Controller\Dialog\Calendar\Permissions::view');
 
+$router->all('/ccm/calendar/dialogs/event/summary_templates', '\Concrete\Controller\Dialog\Event\SummaryTemplates::view');
+$router->all('/ccm/calendar/dialogs/event/summary_templates/submit', '\Concrete\Controller\Dialog\Event\SummaryTemplates::submit');
+
 /* Permissions Tools Hack */
 $router->all('/tools/required/permissions/categories/calendar_admin', '\Concrete\Controller\Event\Permissions::process');
 $router->all('/tools/required/permissions/categories/calendar', '\Concrete\Controller\Event\Permissions::processCalendar');

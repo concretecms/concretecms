@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ItemCategory
 {
-    
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -18,8 +18,8 @@ class ItemCategory
     protected $boardItemCategoryID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Item",  inversedBy="categories")
-     * @ORM\JoinColumn(name="boardItemID", referencedColumnName="boardItemID")
+     * @ORM\ManyToOne(targetEntity="InstanceItem",  inversedBy="categories")
+     * @ORM\JoinColumn(name="boardInstanceItemID", referencedColumnName="boardInstanceItemID")
      **/
     protected $item;
 
@@ -28,7 +28,7 @@ class ItemCategory
      */
     protected $treeNodeID;
 
-    public function __construct(Item $item, Node $category)
+    public function __construct(InstanceItem $item, Node $category)
     {
         $this->item = $item;
         $this->treeNodeID = $category->getTreeNodeID();
@@ -41,7 +41,7 @@ class ItemCategory
     {
         return $this->boardItemCategoryID;
     }
-    
+
     /**
      * @return mixed
      */
@@ -74,7 +74,7 @@ class ItemCategory
         $this->treeNodeID = $treeNodeID;
     }
 
-    
+
 
 
 

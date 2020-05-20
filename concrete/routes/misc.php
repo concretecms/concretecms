@@ -20,6 +20,9 @@ $router->all('/ccm/system/backend/intelligent_search/', '\Concrete\Controller\Ba
 $router->all('/ccm/system/jobs', '\Concrete\Controller\Frontend\Jobs::view');
 $router->all('/ccm/system/jobs/run_single', '\Concrete\Controller\Frontend\Jobs::run_single');
 $router->all('/ccm/system/jobs/check_queue', '\Concrete\Controller\Frontend\Jobs::check_queue');
+
+$router->all('/ccm/system/summary_template/render/{categoryHandle}/{memberIdentifier}/{templateID}', '\Concrete\Controller\Backend\SummaryTemplate::render');
+
 // @TODO remove the line below
 $router->all('/tools/required/jobs', '\Concrete\Controller\Frontend\Jobs::view');
 $router->all('/tools/required/jobs/check_queue', '\Concrete\Controller\Frontend\Jobs::check_queue');

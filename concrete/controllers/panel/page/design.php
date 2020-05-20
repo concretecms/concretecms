@@ -90,6 +90,7 @@ class Design extends BackendUIPageController
             }
         }
 
+        $this->set('availableSummaryTemplatesCount', count($this->page->getSummaryTemplates()));
         $this->set('templatesSelect', $templatesSelect);
         $this->set('themesSelect', $themesSelect);
         $this->set('themes', $themes);

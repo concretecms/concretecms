@@ -8,9 +8,8 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="boardID" type="integer">
+    <field name="boardInstanceID" type="integer">
       <unsigned/>
-      <key/>
     </field>
   </table>
 
