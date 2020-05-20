@@ -4,10 +4,19 @@ namespace Concrete\Core\Board\Instance\Slot\Content;
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 
-class ContentPopulator
+class ContentPopulator implements LoggerAwareInterface
 {
 
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        Channels::CHANNEL_CONTENT;
+    }
 
     /**
      * @var JsonSerializer
@@ -36,6 +45,9 @@ class ContentPopulator
             if (!($itemData instanceof DataInterface)) {
                 $itemData = $this->serializer->denormalize($item->getData(), $contentPopulator->getDataClass(), 'json');
             }
+            $this->logger->debug(t('Item ID %s was transformed into content data %s',
+                $item->getBoardInstanceItemID(), json_encode($itemData)
+            ));
             $contentObjects = $contentPopulator->createContentObjects($itemData);
             $groups[] = new ItemObjectGroup($item, $contentObjects);
         }

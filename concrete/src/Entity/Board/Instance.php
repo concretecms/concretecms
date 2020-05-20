@@ -30,6 +30,11 @@ class Instance implements \JsonSerializable
     protected $items;
 
     /**
+     * @ORM\OneToMany(targetEntity="InstanceSlotRule", cascade={"remove"}, mappedBy="instance", fetch="EXTRA_LAZY")
+     */
+    protected $rules;
+
+    /**
      * @ORM\OneToMany(targetEntity="InstanceItemBatch", cascade={"remove"}, mappedBy="instance", fetch="EXTRA_LAZY")
      */
     protected $batches;
@@ -61,6 +66,7 @@ class Instance implements \JsonSerializable
 
     /**
      * @ORM\OneToMany(targetEntity="InstanceSlot", cascade={"persist", "remove"}, mappedBy="instance")
+     * @ORM\OrderBy({"slot" = "ASC"})
      */
     protected $slots;
 
@@ -69,6 +75,7 @@ class Instance implements \JsonSerializable
         $this->slots = new ArrayCollection();
         $this->items = new ArrayCollection();
         $this->batches = new ArrayCollection();
+        $this->rules = new ArrayCollection();
     }
 
     /**
@@ -228,6 +235,15 @@ class Instance implements \JsonSerializable
             'dateCreated' => $this->getDateCreated()
         ];
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRules()
+    {
+        return $this->rules;
+    }
+
 
     public function __toString()
     {

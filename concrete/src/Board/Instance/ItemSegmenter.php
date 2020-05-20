@@ -3,11 +3,21 @@ namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceItem;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 
-class ItemSegmenter
+class ItemSegmenter implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        Channels::CHANNEL_CONTENT;
+    }
 
     /**
      * @var EntityManager
@@ -48,6 +58,7 @@ class ItemSegmenter
         }
 
         $items = $qb->getQuery()->execute();
+        $this->logger->debug(t('%s items returned from item segmenter', count($items)));
         return $items;
     }
 

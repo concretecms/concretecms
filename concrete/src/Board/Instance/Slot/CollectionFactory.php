@@ -5,11 +5,21 @@ use Concrete\Core\Board\Instance\Slot\Content\ObjectInterface;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Entity\Board\SlotTemplate;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
-class CollectionFactory
+class CollectionFactory implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        Channels::CHANNEL_CONTENT;
+    }
 
     /**
      * @var EntityManager
@@ -83,6 +93,11 @@ class CollectionFactory
 
                 $templateContentSlots = $template->getDriver()->getTotalContentSlots();
                 $totalItemsRemaining -= $templateContentSlots;
+
+                $this->logger->debug(t('Instance slot added to slot %s with template %s - items remaining %s',
+                    $currentSlot, $template->getName(), $totalItemsRemaining
+                ));
+
             }
             $currentSlot++;
         }

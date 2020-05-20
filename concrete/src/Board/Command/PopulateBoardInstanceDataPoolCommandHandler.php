@@ -3,10 +3,20 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\InstanceItemBatch;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Doctrine\ORM\EntityManager;
 
-class PopulateBoardInstanceDataPoolCommandHandler
+class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_CONTENT;
+    }
 
     /**
      * @var EntityManager
@@ -33,6 +43,11 @@ class PopulateBoardInstanceDataPoolCommandHandler
             $objects = $populator->createBoardInstanceItems(
                 $instance, $batch, $configuredDataSource, $command->getRetrieveDataObjectsAfter()
             );
+            $this->logger->debug(
+                t('Retrieved %s objects from %s data source after timestamp %s',
+            count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
+                ));
+
             foreach($objects as $object) {
                 $this->entityManager->persist($object);
             }

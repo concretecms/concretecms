@@ -80,9 +80,9 @@ class InstanceItem
     /**
      * @return mixed
      */
-    public function getBoardItemID()
+    public function getBoardInstanceItemID()
     {
-        return $this->boardItemID;
+        return $this->boardInstanceItemID;
     }
 
     /**

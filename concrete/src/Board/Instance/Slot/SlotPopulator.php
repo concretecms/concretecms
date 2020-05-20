@@ -8,11 +8,21 @@ use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
 use Concrete\Core\Board\Instance\Slot\Content\ObjectInterface;
 use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Illuminate\Support\Debug\Dumper;
 
-class SlotPopulator
+class SlotPopulator implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        Channels::CHANNEL_CONTENT;
+    }
 
     /**
      * @var JsonSerializer
@@ -34,12 +44,20 @@ class SlotPopulator
 
         $type = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
 
+        $this->logger->debug(t('Passed %s instance slots and %s content groups passed to populate function',
+            count($instanceSlots), count($contentObjectGroups)));
+
         foreach($instanceSlots as $instanceSlot) {
 
             $templateDriver = $instanceSlot->getTemplate()->getDriver();
             $contentSlots = $templateDriver->getTotalContentSlots();
 
             $objectGroups = array_splice($contentObjectGroups, 0, $contentSlots);
+
+            $this->logger->debug(t('%s content slots retrieved from template %s',
+                $contentSlots, $instanceSlot->getTemplate()->getName()));
+
+            $this->logger->debug(t('Content object groups decreased to %s', count($contentObjectGroups)));
 
             // object groups contains all the groups for our slot.
             $contentObjectCollection = new ObjectCollection();
@@ -48,6 +66,11 @@ class SlotPopulator
 
                 $contentSlotObjectGroups = $objectGroups[$i - 1];
                 $contentObjects = $contentSlotObjectGroups->getContentObjects();
+
+                $this->logger->debug(t(
+                    '%s content objects retrieved from content object group for slot %s',
+                    count($contentObjects), $i
+                ));
 
                 $filterer = $templateDriver->getSlotFilterer();
                 if ($filterer) {
@@ -59,6 +82,13 @@ class SlotPopulator
                 if (count($objects)) {
                     $content = $objects[array_rand($objects, 1)];
                     $contentObjectCollection->addContentObject($i, $content);
+                    $this->logger->debug(t(
+                        'Post slot filterer, populating content slot %s with content object %s', $i,
+                        json_encode($content)
+                    ));
+                } else {
+                    $this->logger->debug(t('No content objects found when attempting to populate slot %s',
+                        $i));
                 }
             }
 
@@ -66,7 +96,6 @@ class SlotPopulator
             $json = $this->serializer->serialize($contentObjectCollection, 'json');
 
             $data = [
-                'instanceSlotID' => $instanceSlot->getBoardInstanceSlotID(),
                 'contentObjectCollection' => $json,
                 'slotTemplateID' => $instanceSlot->getTemplate()->getId(),
             ];
