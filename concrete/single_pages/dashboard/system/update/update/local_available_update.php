@@ -9,212 +9,265 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Application\Service\UserInterface $interface
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var Concrete\Controller\SinglePage\Dashboard\System\Update\Update $controller
+ * @var Concrete\Core\Application\Service\Urls $ci
  * @var Concrete\Core\Updater\ApplicationUpdate $update
+ * @var Concrete\Core\Url\UrlImmutable $updatePackagesUrl
+ * @var Concrete\Core\Entity\Package[] $installedPackages
  */
 
 ?>
-<div class="alert alert-warning">
-    <?= t('Before updating, it is highly recommended to make a full site backup. A full site backup consists of site files and site database export. Please consult your hosting provider for guidance on backup processes.') ?>
-</div>
-<div class="ccm-dashboard-update-details-wrapper">
+
+<form id="ccm-dashboard-update-form" method="POST" action="<?= $controller->action('do_update') ?>" v-cloak v-on:submit="handleSubmit">
+    <?php $token->output('do_update') ?>
+    <input type="hidden" name="version" value="<?= h($update->getVersion()) ?>" />
+
+    <div class="alert alert-warning">
+        <?= t('Before updating, it is highly recommended to make a full site backup. A full site backup consists of site files and site database export. Please consult your hosting provider for guidance on backup processes.') ?>
+    </div>
+
     <div class="ccm-dashboard-update-details">
         <div class="ccm-dashboard-update-thumbnail"><img src="<?= ASSETS_URL_IMAGES ?>/logo.svg" /></div>
-        <h2><?=t('Version %s', $update->getVersion()) ?></h2>
-        <div><i class="fas fa-cog"></i> <span class="ccm-dashboard-update-details-testing-text"><?= t('Testing System...') ?></span></div>
+        <h2><?= t('Version %s', $update->getVersion()) ?></h2>
+        <i v-bind:class="stateData.iconClass"></i> <span v-bind:class="stateData.textClass">{{ stateData.text }} </span>
     </div>
-    <div class="ccm-dashboard-update-nav">
-        <form method="post" action="<?= $controller->action('do_update') ?>">
-            <?php $token->output('do_update') ?>
-            <input type="hidden" name="version" value="<?= $update->getVersion() ?>" />
-            <div class="ccm-dashboard-update-apply">
-                <button class="btn btn-primary" disabled="disabled" type="submit" name="update" value="1"><?= t('Checking...') ?></button>
+
+    <div class="ccm-dashboard-update-detail-columns container-fluid" v-if="state !== STATE.LOADING">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="#notes"><?= t('Release Notes') ?></a></li>
+                    <li class="list-group-item"><a href="#addons"><?= t('Add-On Compatibility') ?></a></li>
+                    <li class="list-group-item"><a href="#notices"><?= t('Important Notices') ?></a></li>
+                </ul>
             </div>
-        </form>
-    </div>
-</div>
-<div class="ccm-dashboard-update-detail-columns">
-    <div class="row">
-        <div class="col-md-4">
-            <ul class="list-group">
-                <li class="list-group-item"><span data-href="#notes" class="text-muted"><?= t('Release Notes') ?></span></li>
-                <li class="list-group-item"><span data-href="#addons" class="text-muted"><?= t('Add-On Compatibility') ?></span></li>
-                <li class="list-group-item"><span data-href="#notices" class="text-muted"><?= t('Important Notices') ?></span></li>
-            </ul>
-        </div>
-        <div class="col-md-7 col-md-offset-1 ccm-dashboard-update-detail-main">
-            <a name="notes"></a>
-            <a href="#" target="_blank" data-url="info" style="display: none" class="btn btn-default pull-right btn-xs "><?= t('View Full Release Notes') ?></a>
-            <h3><?= t('Release Notes') ?></h3>
-            <div class="ccm-dashboard-update-detail-release-notes"><?= t('Retrieving Release Notes...') ?></div>
-            <div class="spacer-row-5"></div>
-            <a name="addons"></a>
-            <a href="<?= URL::to('/dashboard/extend/update') ?>" class="btn btn-default pull-right btn-xs "><?= t('Update Add-Ons') ?></a>
-            <h3><?= t('Add-On Compatibility') ?></h3>
-            <?php
-            $list = Package::getInstalledList();
-            $ci = Core::make('helper/concrete/urls');
-            if (count($list) == 0) {
-                ?>
-                <p><?= t('No add-ons installed.') ?></p>
+            <div class="col ccm-dashboard-update-detail-main">
+                <a v-if="details.releaseNotesUrl" v-bind:href="details.releaseNotesUrl" target="_blank" class="btn btn-secondary btn-sm float-right"><?= t('View Full Release Notes') ?></a>
+                <h3 id="notes"><?= t('Release Notes') ?></h3>
+                <div class="ccm-dashboard-update-detail-release-notes" v-html="releaseNotes"></div>
+
+                <div class="my-5"></div>
+
+                <a href="<?= $updatePackagesUrl ?>" class="btn btn-secondary btn-sm float-right"><?= t('Update Add-Ons') ?></a>
+                <h3 id="addons"><?= t('Add-On Compatibility') ?></h3>
                 <?php
-            }
-            foreach ($list as $pkg) {
+                if ($installedPackages === []) {
+                    ?>
+                    <div><i><?= t('No add-ons installed.') ?></i></div>
+                    <?php
+                } else {
+                    foreach ($installedPackages as $installedPackage) {
+                        $packageData = h('getAddonData(' . json_encode($installedPackage->getPackageHandle()) . ')');
+                        ?>
+                        <div class="media">
+                            <img src="<?= $ci->getPackageIconURL($installedPackage) ?>" class="mr-3" style="width: 49px" />
+                            <div class="media-body">
+                                <i class="float-right" v-bind:class="<?= $packageData?>.iconClass"></i>
+                                <h5 class="my-0">
+                                    <?= h($installedPackage->getPackageName()) ?>
+                                    <span class="badge badge-pill badge-secondary"><?= tc('AddonVersion', 'v.%s', $installedPackage->getPackageVersion()) ?></span>
+                                </h5>
+                                <div v-bind:class="<?= $packageData . '.stateClass' ?>" v-html="<?= $packageData ?>.stateHtml"></div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                }
                 ?>
-                <div class="media" data-addon="<?= $pkg->getPackageHandle() ?>">
-                    <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($pkg) ?>" class"media-object" /></div>
-                    <div class="media-body">
-                        <i class="fa fa-question-circle text-muted pull-right"></i>
-                        <h4 class="media-heading"><?= $pkg->getPackageName() ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()) ?></span></h4>
-                        <div class="ccm-dashboard-update-detail-status-text"></div>
-                    </div>
+
+                <div class="my-5"></div>
+
+                <h3 id="notices"><?= t('Upgrade Notices') ?></h3>
+                <div>
+                    <i v-if="state === STATE.FAILED"><?= t('Unable to retrieve upgrade notices from concrete5.org.') ?></i>
+                    <i v-else-if="!details.notices || !details.notices.length"><?= t('No upgrade notices found.') ?></i>
+                    <ul v-else class="fa-ul">
+                        <li v-for="(notice, noticeIndex) in details.notices" v-bind:key="noticeIndex" class="my-3">
+                            <span class="fa-li"><i v-bind:class="getNoticeData(notice).iconClass"></i></span>
+                            <span v-bind:class="getNoticeData(notice).textClass" v-html="notice.status"></span>
+                        </li>
+                    </ul>
                 </div>
-                <?php
-            }
-            ?>
-            <div class="spacer-row-5"></div>
-            <h3><?= t('Upgrade Notices') ?></h3>
-            <a name="notices"></a>
-            <div class="ccm-dashboard-update-detail-notices"><?= t('Loading...') ?></div>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <div class="float-right">
+                <a href="<?= $controller->action('check_for_updates') ?>" class="btn btn-primary" v-bind:class="this.state === this.STATE.LOADING ? 'disabled' : ''">
+                    <?= t('Check For Updates') ?>
+                </a>
+                <button class="btn btn-primary" v-bind:disabled="this.state === this.STATE.LOADING" type="submit">{{ submitText }}</button>
+            </div>
+        </div>
+    </div>
+</form>
 
 <script>
-$(function() {
+$(document).ready(function() {
 
-    handleError = function(r) {
-        var $statusIcon = $('.ccm-dashboard-update-details i'),
-            $statusText = $('.ccm-dashboard-update-details-testing-text');
-        $statusIcon.removeClass().addClass('fa fa-warning text-info');
-        $statusText.removeClass().addClass('text-info').text(<?= json_encode(t('Unable to retrieve information about this update from concrete5.org. You may upgrade but do so with caution.')) ?>);
-        $('.ccm-dashboard-update-detail-release-notes').html(<?= json_encode(t('Unable to retrieve release notes from concrete5.org.')) ?>);
-        $('.ccm-dashboard-update-detail-notices').html(<?= json_encode(t('Unable to retrieve upgrade notices from concrete5.org.')) ?>);
-    }
-
-    $.ajax({
-        dataType: 'json',
-        type: 'post',
-        data: {
-            'version': '<?= $update->getVersion() ?>'
-        },
-        complete: function() {
-            $('.ccm-dashboard-update-apply button').prop('disabled', false).text(<?= json_encode(t('Install Update')) ?>);
-        },
-        url: '<?= $controller->action('get_update_diagnostic_information') ?>',
-        error: function(r) {
-            handleError(r);
-        },
-        success: function(r) {
-            if (!r.requestedVersion) {
-                handleError(r);
-                return false;
-            }
-
-            $('a[data-url=info]').attr('href', r.releaseNotesUrl).show();
-            $('.ccm-dashboard-update-detail-release-notes').html(r.releaseNotes);
-            $('span[data-href]').each(function() {
-                var $tag = $('<a />', {'href': $(this).attr('data-href'), text: $(this).text()});
-                $(this).replaceWith($tag);
-            });
-            var $wrapper = $('.ccm-dashboard-update-detail-notices');
-            $wrapper.html('');
-            if (r.notices && r.notices.length) {
-                $.each(r.notices, function(i, notice) {
-                    var className = '';
-                    var textClassName = '';
-                    switch(notice.safety) {
-                        case 'info':
-                            className = 'fa fa-question-circle text-info';
-                            textClassName = '';
+    Concrete.Vue.activateContext('backend', function (Vue, config) {
+        new Vue({ 
+            el: '#ccm-dashboard-update-form',
+            data: function() {
+                return {
+                    STATE: {
+                        LOADING: 0,
+                        FAILED: 1,
+                        SUCCESS: 2,
+                    },
+                    state: 0,
+                    details: null,
+                }
+            },
+            computed: {
+                stateData: function() {
+                    switch (this.state) {
+                        case this.STATE.LOADING:
+                            return {
+                                iconClass: 'fas fa-cog fa-spin',
+                                textClass: '',
+                                text: <?= json_encode(t('Testing System...')) ?>,
+                            };
+                        case this.STATE.FAILED:
+                            return {
+                                iconClass: 'fas fa-exclamation-triangle text-info',
+                                textClass: 'text-info',
+                                text: <?= json_encode(t('Unable to retrieve information about this update from concrete5.org. You may upgrade but do so with caution.')) ?>,
+                            };
+                        case this.STATE.SUCCESS:
+                            var data = {
+                                iconClass: 'fas fa-arrow-circle-right',
+                                textClass: '',
+                                text: <?= json_encode(t('Update Ready')) ?>,
+                            };
+                            if (this.details.status) {
+                                data.text = this.details.status.status || data.text;;
+                                switch (this.details.status.safety) {
+                                    case 'success':
+                                        data.iconClass = 'fas fa-check text-success';
+                                        data.textClass = 'text-success';
+                                        break;
+                                    case 'warning':
+                                        data.iconClass = 'fas fa-exclamation-triangle text-warning';
+                                        data.textClass = 'text-warning';
+                                        break;
+                                    case 'danger':
+                                        data.iconClass = 'fas fa-exclamation-circle text-danger';
+                                        data.textClass = 'text-danger';
+                                        break;
+                                }
+                            }
+                            return data;
+                    }
+                },
+                releaseNotes: function() {
+                    if (this.state === this.STATE.FAILED) {
+                        return '<i><?= t('Unable to retrieve release notes from concrete5.org.') ?></i>';
+                    }
+                    return this.details && this.details.releaseNotes ? this.details.releaseNotes : '<i><?= t('Release notes not available.') ?></i>';
+                },
+                submitText: function() {
+                    return this.state === this.STATE.LOADING ? <?= json_encode(t('Checking...')) ?> : <?= json_encode(t('Install Update')) ?>;
+                },
+            },
+            methods: {
+                getAddonData: function(mpHandle) {
+                    if (this.state === this.STATE.LOADING) {
+                        return {
+                            iconClass: 'fa fa-question-circle text-muted',
+                            stateClass: '',
+                            stateHtml: '<i><?= t('Loading... ') ?></i>',
+                        }
+                    }
+                    var item = null;
+                    if (this.details && this.details.marketplaceItemStatuses) {
+                        this.details.marketplaceItemStatuses.some(function(i) {
+                            if (i.mpHandle === mpHandle) {
+                                item = i;
+                                return true;
+                            }
+                        });
+                    }
+                    var result = {
+                        iconClass: 'fa fa-question-circle text-muted',
+                        stateClass: '',
+                        stateHtml: '<i><?= t('No information about this add-on available.') ?></i>',
+                    }
+                    if (item === null) {
+                        return result;
+                    }
+                    result.stateHtml = item.status || '';
+                    switch(item.safety) {
+                        case 'success':
+                            result.iconClass = 'fas fa-check text-success';
+                            result.stateClass = 'text-success';
                             break;
                         case 'warning':
-                            className = 'fa fa-warning text-warning';
-                            textClassName = 'text-warning';
+                            result.className = 'fas fa-exclamation-triangle text-warning';
+                            result.stateClass  = 'text-warning';
                             break;
                         case 'danger':
-                            className = 'fa fa-exclamation-circle text-danger';
-                            textClassName = 'text-danger';
+                            result.className = 'fas fa-exclamation-circle text-danger';
+                            result.stateClass = 'text-danger';
                             break;
                     }
-                    $wrapper.append('<div class="media"><div class="pull-left"><i class="' + className + '"></i></div><div class="media-body ' + textClassName + '">' + notice.status + '</div></div>');
-                });
-            } else {
-                $wrapper.append(<?= json_encode(t('No upgrade notices found.')) ?>);
-            }
-            var $statusIcon = $('.ccm-dashboard-update-details i'),
-                $statusText = $('.ccm-dashboard-update-details-testing-text');
-            if (r.status) {
-                var className = '';
-                var textClassName = '';
-                switch(r.status.safety) {
-                    case 'success':
-                        className = 'fa fa-check text-success';
-                        textClassName = 'text-success';
-                        break;
-                    case 'warning':
-                        className = 'fa fa-warning text-warning';
-                        textClassName = 'text-warning';
-                        break;
-                    case 'danger':
-                        className = 'fa fa-exclamation-circle text-danger';
-                        textClassName = 'text-danger';
-                        break;
-                    default:
-                        className = 'fa fa-arrow-circle-right';
-                        textClassName = '';
-                }
-                $statusIcon.removeClass().addClass(className);
-                $statusText.removeClass().addClass(textClassName).text(r.status.status);
-            } else {
-                $statusIcon.removeClass().addClass('fa fa-arrow-circle-right');
-                $statusText.removeClass().addClass(textClassName).text(<?= json_encode(t('Update Ready')) ?>);
-            }
-            $('[data-addon]').each(function() {
-                var $addon = $(this);
-                var item = false;
-                var textClassName = '';
-                var mpHandle = $addon.attr('data-addon');
-                if (r.marketplaceItemStatuses) {
-                    var item = _.find(r.marketplaceItemStatuses, function(item) {
-                        return item.mpHandle == mpHandle;
-                    });
-                    if (item) {
-                        var className = '';
-                        switch(item.safety) {
-                            case 'success':
-                                className = 'fa fa-check text-success pull-right';
-                                textClassName = 'text-success';
-                                break;
-                            case 'warning':
-                                className = 'fa fa-warning text-warning pull-right';
-                                textClassName = 'text-warning';
-                                break;
-                            case 'danger':
-                                className = 'fa fa-exclamation-circle text-danger pull-right';
-                                textClassName = 'text-danger';
-                                break;
-                        }
-
-                        if (className) {
-                            $addon.find('i').removeClass().addClass(className);
-                        }
+                    return result;
+                },
+                getNoticeData: function(notice) {
+                    var result = {
+                        iconClass: '',
+                        textClass: '',
+                    };
+                    switch(notice.safety) {
+                        case 'info':
+                            result.iconClass = 'fa fa-question-circle text-info';
+                            result.textClass = '';
+                            break;
+                        case 'warning':
+                            result.iconClass  = 'fa fa-warning text-warning';
+                            result.textClass = 'text-warning';
+                            break;
+                        case 'danger':
+                            result.iconClass  = 'fa fa-exclamation-circle text-danger';
+                            result.textClass = 'text-danger';
+                            break;
+                    }
+                    return result;
+                },
+                handleSubmit: function(e) {
+                    if (this.state === my.STATE.LOADING) {
+                        e.preventDefault();
+                        return false;
                     }
                 }
-                if (item) {
-                    $addon.find('.ccm-dashboard-update-detail-status-text').addClass(textClassName).html(item.status);
-                } else {
-                    $addon.find('.ccm-dashboard-update-detail-status-text').html(<?= json_encode(t('No information about this add-on available.')) ?>);
-                }
-            });
-        }
+            },
+            mounted: function() {
+                var my = this;
+                $.ajax({
+                    data: {
+                        version: <?= json_encode((string) $update->getVersion()) ?>,
+                    },
+                    dataType: 'json',
+                    method: 'POST',
+                    url: <?= json_encode((string) $controller->action('get_update_diagnostic_information')) ?>,
+                })
+                .done(function(data, status, xhr) {
+                    ConcreteAjaxRequest.validateResponse(data, function(ok, details) {
+                        if (ok) {
+                            my.details = details;
+                            my.state = my.STATE.SUCCESS;
+                        } else {
+                            my.state = my.STATE.FAILED;
+                        }
+                    });
+                })
+                .fail(function(xhr, status, error) {
+                    my.state = my.STATE.FAILED;
+                    ConcreteAlert.dialog(ccmi18n.error, ConcreteAjaxRequest.renderErrorResponse(xhr, true));
+                });
+            }
+        });
     });
 });
 </script>
-
-<div class="ccm-dashboard-form-actions-wrapper">
-    <div class="ccm-dashboard-form-actions">
-        <a href="<?= $controller->action('check_for_updates') ?>" class="btn btn-primary">
-            <?= t('Check For Updates') ?>
-        </a>
-    </div>
-</div>

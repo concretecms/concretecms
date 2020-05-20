@@ -4,11 +4,14 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\RemoteApplicationUpdate;
 use Concrete\Core\Updater\UpdateArchive;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Config;
 use Exception;
 use Loader;
@@ -32,6 +35,7 @@ class Update extends DashboardPageController
         $updates = $upd->getLocalAvailableUpdates();
         if (count($updates) === 1) {
             $this->setLocalAvailableUpdateView($updates[0]);
+
             return;
         }
         $remote = $upd->getApplicationUpdateInformation();
@@ -69,15 +73,18 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             throw new UserMessageException(t('You do not have permission to upgrade this installation of concrete5.'));
         }
-        $updateVersion = trim($this->post('version'));
-        if ($updateVersion) {
-            $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
-            if (is_object($upd)) {
-                $diagnostic = $upd->getDiagnosticObject();
-                echo json_encode($diagnostic->getJSONObject());
-            }
+        $updateVersion = trim($this->request->request->get('version', ''));
+        if ($updateVersion === '') {
+            throw new UserMessageException(t('Invalid parameters received.'));
         }
-        exit;
+        $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
+        if ($upd === null) {
+            throw new UserMessageException(t('Unable to find the requested version.'));
+        }
+
+        $diagnostic = $upd->getDiagnosticObject();
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($diagnostic->getJSONObject());
     }
 
     public function download_update()
@@ -206,6 +213,7 @@ class Update extends DashboardPageController
             }
              */
             $this->setLocalAvailableUpdateView($upd);
+
             return;
         }
 
@@ -242,7 +250,10 @@ class Update extends DashboardPageController
 
     protected function setLocalAvailableUpdateView(ApplicationUpdate $update): void
     {
+        $this->set('ci', $this->app->make('helper/concrete/urls'));
         $this->set('update', $update);
+        $this->set('updatePackagesUrl', $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/extend/update']));
+        $this->set('installedPackages', $this->app->make(PackageService::class)->getInstalledList());
         $this->render('/dashboard/system/update/update/local_available_update');
     }
 }
