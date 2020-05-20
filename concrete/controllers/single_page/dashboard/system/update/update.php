@@ -7,6 +7,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Updater\ApplicationUpdate;
+use Concrete\Core\Updater\RemoteApplicationUpdate;
 use Concrete\Core\Updater\UpdateArchive;
 use Config;
 use Exception;
@@ -29,16 +30,19 @@ class Update extends DashboardPageController
         }
         $upd = new \Concrete\Core\Updater\Update();
         $updates = $upd->getLocalAvailableUpdates();
+        if (count($updates) === 1) {
+            $this->setLocalAvailableUpdateView($updates[0]);
+            return;
+        }
         $remote = $upd->getApplicationUpdateInformation();
         $this->set('updates', $updates);
-        if (is_object($remote) && version_compare($remote->getVersion(), APP_VERSION, '>')) {
+        if ($remote instanceof RemoteApplicationUpdate && version_compare($remote->getVersion(), APP_VERSION, '>')) {
             // loop through local updates
             $downloadableUpgradeAvailable = true;
             foreach ($updates as $upd) {
                 if ($upd->getUpdateVersion() == $remote->getVersion()) {
                     // we have a LOCAL version ready to install that is the same, so we abort
                     $downloadableUpgradeAvailable = false;
-                    $this->set('showDownloadBox', false);
                     break;
                 }
             }
@@ -47,10 +51,6 @@ class Update extends DashboardPageController
             $this->set('remoteUpdate', $remote);
         } else {
             $this->set('downloadableUpgradeAvailable', false);
-        }
-
-        if (count($updates) == 1) {
-            $this->set('update', $updates[0]);
         }
     }
 
@@ -205,16 +205,15 @@ class Update extends DashboardPageController
                 exit;
             }
              */
-
-            $this->set('update', $upd);
+            $this->setLocalAvailableUpdateView($upd);
+            return;
         }
 
-        $this->view();
+        return $this->view();
     }
 
     protected function userHasUpgradePermission(): bool
     {
-        return false;
         $p = new Checker();
 
         return (bool) $p->canUpgrade();
@@ -239,5 +238,11 @@ class Update extends DashboardPageController
         }
 
         return $result;
+    }
+
+    protected function setLocalAvailableUpdateView(ApplicationUpdate $update): void
+    {
+        $this->set('update', $update);
+        $this->render('/dashboard/system/update/update/local_available_update');
     }
 }
