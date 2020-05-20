@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\UpdateArchive;
 use Config;
@@ -21,8 +22,7 @@ class Update extends DashboardPageController
 
     public function view()
     {
-        $p = new \Permissions();
-        if ($p->canUpgrade()) {
+        if ($this->userHasUpgradePermission()) {
             $upd = new \Concrete\Core\Updater\Update();
             $updates = $upd->getLocalAvailableUpdates();
             $remote = $upd->getApplicationUpdateInformation();
@@ -61,8 +61,7 @@ class Update extends DashboardPageController
 
     public function get_update_diagnostic_information()
     {
-        $p = new \Permissions();
-        if ($p->canUpgrade()) {
+        if ($this->userHasUpgradePermission()) {
             $updateVersion = trim($this->post('version'));
             if ($updateVersion) {
                 $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
@@ -77,8 +76,7 @@ class Update extends DashboardPageController
 
     public function download_update()
     {
-        $p = new \Permissions();
-        if (!$p->canUpgrade()) {
+        if (!$this->userHasUpgradePermission()) {
             return false;
         }
 
@@ -123,8 +121,7 @@ class Update extends DashboardPageController
 
     public function do_update()
     {
-        $p = new \Permissions();
-        if (!$p->canUpgrade()) {
+        if (!$this->userHasUpgradePermission()) {
             return false;
         }
         $updateVersion = $this->post('version');
@@ -165,8 +162,7 @@ class Update extends DashboardPageController
 
     public function start()
     {
-        $p = new \Permissions();
-        if (!$p->canUpgrade()) {
+        if (!$this->userHasUpgradePermission()) {
             return false;
         }
         $updateVersion = $this->post('updateVersion');
@@ -208,6 +204,13 @@ class Update extends DashboardPageController
         }
 
         $this->view();
+    }
+
+    protected function userHasUpgradePermission(): bool
+    {
+        $p = new Checker();
+
+        return (bool) $p->canUpgrade();
     }
 
     protected function setCanExecuteForever(): bool
