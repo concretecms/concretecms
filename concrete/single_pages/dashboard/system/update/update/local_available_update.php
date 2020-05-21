@@ -31,7 +31,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <i v-bind:class="stateData.iconClass"></i> <span v-bind:class="stateData.textClass">{{ stateData.text }} </span>
     </div>
 
-    <div class="ccm-dashboard-update-detail-columns container-fluid" v-if="state !== STATE.LOADING">
+    <div class="ccm-dashboard-update-detail-columns container-fluid" v-if="state === STATE.SUCCESS">
         <div class="row">
             <div class="col-lg-4 mb-4">
                 <ul class="list-group">
