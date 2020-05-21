@@ -2,11 +2,10 @@
 
 /**
  * @var $menu \Concrete\Core\Board\Instance\Slot\Menu\Menu
- * @var $slot \Concrete\Core\Entity\Board\InstanceSlot
- * @var $slotData \Concrete\Core\Board\Instance\Slot\RenderedSlot
+ * @var $slot \Concrete\Core\Board\Instance\Slot\RenderedSlot
  */
 ?>
 
 <div class="ccm-ui"><?=$menu->getMenuElement()?></div>
 
-<board-slot :slot='<?=json_encode($slot)?>'>
+<board-slot :slot-data='<?=json_encode($slot)?>'>

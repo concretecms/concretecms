@@ -22,35 +22,54 @@ class Renderer implements ApplicationAwareInterface
     protected $templateLocator;
 
     /**
-     * @var Theme
-     */
-    protected $theme;
-
-    /**
      * @var FileLocator
      */
     protected $fileLocator;
 
-    public function __construct(FileLocator $fileLocator, TemplateLocator $templateLocator, Theme $theme)
+    /**
+     * @var bool
+     */
+    protected $enableEditing = false;
+
+    public function __construct(FileLocator $fileLocator, TemplateLocator $templateLocator)
     {
         $this->fileLocator = $fileLocator;
         $this->templateLocator = $templateLocator;
-        $this->theme = $theme;
+    }
+
+    /**
+     * @param bool $enableEditing
+     */
+    public function setEnableEditing($enableEditing)
+    {
+        $this->enableEditing = $enableEditing;
     }
 
     public function render(Instance $instance)
     {
-        $file = $this->templateLocator->getFileToRender($this->theme, $instance->getBoard()->getTemplate());
+        $site = $instance->getsite();
+        $home = $site->getSiteHomePageObject();
+        $theme = $home->getCollectionThemeObject();
+
+        $file = $this->templateLocator->getFileToRender($theme, $instance->getBoard()->getTemplate());
         if ($file) {
-            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_header.php')
-                ->getFile();
+            if ($this->enableEditing) {
+                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_header.php')
+                    ->getFile();
+            }
             $slotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
             $slotCollection = $slotCollectionFactory->createCollection($instance);
             $slot = $this->app->make(SlotRenderer::class, ['renderedSlotCollection' => $slotCollection]);
+            $slot->setEnableEditing($this->enableEditing);
+
             include $file;
-            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_footer.php')
-                ->getFile();
+
+            if ($this->enableEditing) {
+                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_footer.php')
+                    ->getFile();
+            }
         }
+
     }
 
 
