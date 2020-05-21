@@ -93,7 +93,8 @@
     "league/pipeline": "^1.0",
     "symfony/property-access": "3.*",
     "theorchard/monolog-cascade": "0.5.*",
-    "commerceguys/addressing": "^1.0"
+    "commerceguys/addressing": "^1.0",
+    "predis/predis": "^1.1"
   },
   "extra": {
     "branch-alias": {
