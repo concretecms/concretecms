@@ -163,9 +163,9 @@ $(document).ready(function() {
                 },
                 releaseNotes: function() {
                     if (this.state === this.STATE.FAILED) {
-                        return '<i><?= t('Unable to retrieve release notes from concrete5.org.') ?></i>';
+                        return <?= json_encode('<i>' . t('Unable to retrieve release notes from concrete5.org.') . '</i>') ?>;
                     }
-                    return this.details && this.details.releaseNotes ? this.details.releaseNotes : '<i><?= t('Release notes not available.') ?></i>';
+                    return this.details && this.details.releaseNotes ? this.details.releaseNotes : <?= json_encode('<i>' . t('Release notes not available.') . '</i>') ?>;
                 },
                 submitText: function() {
                     return this.state === this.STATE.LOADING ? <?= json_encode(t('Checking...')) ?> : <?= json_encode(t('Install Update')) ?>;
@@ -177,7 +177,7 @@ $(document).ready(function() {
                         return {
                             iconClass: 'fa fa-question-circle text-muted',
                             stateClass: '',
-                            stateHtml: '<i><?= t('Loading... ') ?></i>',
+                            stateHtml: <?= json_encode('<i>' . t('Loading... ') . '</i>') ?>,
                         }
                     }
                     var item = null;
@@ -192,7 +192,7 @@ $(document).ready(function() {
                     var result = {
                         iconClass: 'fa fa-question-circle text-muted',
                         stateClass: '',
-                        stateHtml: '<i><?= t('No information about this add-on available.') ?></i>',
+                        stateHtml: <?= json_encode('<i>' . t('No information about this add-on available.') . '</i>') ?>,
                     }
                     if (item === null) {
                         return result;
