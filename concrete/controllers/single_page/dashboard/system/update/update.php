@@ -38,24 +38,22 @@ class Update extends DashboardPageController
 
             return;
         }
-        $remote = $upd->getApplicationUpdateInformation();
+        $this->set('dh', $this->app->make('date'));
+        $this->set('currentVersion', $this->app->make('config')->get('concrete.version'));
         $this->set('updates', $updates);
+        $remote = $upd->getApplicationUpdateInformation();
         if ($remote instanceof RemoteApplicationUpdate && version_compare($remote->getVersion(), APP_VERSION, '>')) {
-            // loop through local updates
-            $downloadableUpgradeAvailable = true;
             foreach ($updates as $upd) {
                 if ($upd->getUpdateVersion() == $remote->getVersion()) {
                     // we have a LOCAL version ready to install that is the same, so we abort
-                    $downloadableUpgradeAvailable = false;
+                    $remote = null;
                     break;
                 }
             }
-
-            $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
-            $this->set('remoteUpdate', $remote);
         } else {
-            $this->set('downloadableUpgradeAvailable', false);
+            $remote = null;
         }
+        $this->set('remoteUpdate', $remote);
     }
 
     public function check_for_updates()
