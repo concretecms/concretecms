@@ -82,7 +82,7 @@ class RedisSessionHandler extends NativeSessionHandler
      */
     protected function doWrite($sessionId, $data)
     {
-        $result = $this->redis->setEx($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
+        $result = $this->redis->setex($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
 
         return $result;
     }
