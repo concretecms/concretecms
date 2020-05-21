@@ -41,7 +41,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </ul>
             </div>
             <div class="col ccm-dashboard-update-detail-main">
-                <a v-if="details.releaseNotesUrl" v-bind:href="details.releaseNotesUrl" target="_blank" class="btn btn-secondary btn-sm float-right"><?= t('View Full Release Notes') ?></a>
+                <a v-if="details &amp;&amp; details.releaseNotesUrl" v-bind:href="details.releaseNotesUrl" target="_blank" class="btn btn-secondary btn-sm float-right"><?= t('View Full Release Notes') ?></a>
                 <h3 id="notes"><?= t('Release Notes') ?></h3>
                 <div class="ccm-dashboard-update-detail-release-notes" v-html="releaseNotes"></div>
 
