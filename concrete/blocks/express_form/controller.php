@@ -690,7 +690,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
-        $this->requireAsset('core/tree');
         $this->clearSessionControls();
         $list = Type::getList();
 
