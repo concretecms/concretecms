@@ -50,8 +50,11 @@ class CalendarEventPopulator extends AbstractPopulator
         }
 
         if ($mode == PopulatorInterface::RETRIEVE_FIRST_RUN) {
+
             // the first time we run we start today and go into the past.
             $list->getQueryObject()->orderBy('eo.startTime', 'desc');
+            $list->getQueryObject()->andWhere('eo.startTime < :now');
+            $list->getQueryObject()->setParameter('now', time());
         } else {
             $since = $instance->getDateDataPoolLastUpdated();
             $list->filterByStartTimeAfter($since);
