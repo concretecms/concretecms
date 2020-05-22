@@ -14,6 +14,7 @@ class Settings extends DashboardPageController
         if (!$this->error->has()) {
             $config = $this->app->make('config');
             $config->save('concrete.calendar.topic_attribute', $this->request->request->get('topicAttribute'));
+            $config->save('concrete.calendar.summary_thumbnail_attribute', $this->request->request->get('summaryThumbnailAttribute'));
             $this->flash('success', t('Settings saved successfully.'));
             $this->redirect('/dashboard/system/calendar/settings');
         }
@@ -21,12 +22,27 @@ class Settings extends DashboardPageController
     public function view()
     {
         $config = $this->app->make('config');
-        $keys = EventKey::getList(array('atHandle' => 'topics'));
+        $keys = EventKey::getList();
+        $keys = array_filter($keys, function ($ak) {
+            return $ak->getAttributeTypeHandle() == 'image_file';
+        });
+
+        $summaryThumbnailAttributes = array('' => t('** Select Thumbnail Attribute'));
+        foreach($keys as $key) {
+            $summaryThumbnailAttributes[$key->getAttributeKeyHandle()] = $key->getAttributeKeyDisplayName();
+        }
+
+        $summaryThumbnailAttribute = $config->get('concrete.calendar.summary_thumbnail_attribute');
+        if (!$summaryThumbnailAttribute) {
+            $summaryThumbnailAttribute = 'event_thumbnail';
+        }
+
+        $keys = EventKey::getList();
         $keys = array_filter($keys, function ($ak) {
             return $ak->getAttributeTypeHandle() == 'topics';
         });
 
-        $topicAttributes = array();
+        $topicAttributes = array('' => t('** Select Topic Attribute'));
         foreach($keys as $key) {
             $topicAttributes[$key->getAttributeKeyHandle()] = $key->getAttributeKeyDisplayName();
         }
@@ -38,5 +54,7 @@ class Settings extends DashboardPageController
 
         $this->set('topicAttributes', $topicAttributes);
         $this->set('topicAttribute', $topicAttribute);
+        $this->set('summaryThumbnailAttributes', $summaryThumbnailAttributes);
+        $this->set('summaryThumbnailAttribute', $summaryThumbnailAttribute);
     }
 }

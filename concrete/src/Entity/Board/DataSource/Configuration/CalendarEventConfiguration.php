@@ -18,6 +18,12 @@ class CalendarEventConfiguration extends Configuration
     protected $calendar;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $topicTreeNodeID = 0;
+
+
+    /**
      * @return mixed
      */
     public function getCalendar()
@@ -32,8 +38,26 @@ class CalendarEventConfiguration extends Configuration
     {
         $this->calendar = $calendar;
     }
-    
-    
+
+    /**
+     * @return mixed
+     */
+    public function getTopicTreeNodeID()
+    {
+        return $this->topicTreeNodeID;
+    }
+
+    /**
+     * @param mixed $topicTreeNodeID
+     */
+    public function setTopicTreeNodeID($topicTreeNodeID)
+    {
+        $this->topicTreeNodeID = $topicTreeNodeID;
+    }
+
+
+
+
 
 
 

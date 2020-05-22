@@ -20,7 +20,7 @@ abstract class AbstractPopulator implements PopulatorInterface
     abstract public function getDataObjects(
         Instance $instance,
         Configuration $configuration,
-        int $since = 0
+        int $mode
     ) : array;
 
     abstract public function getObjectRelevantDate($mixed) : int;
@@ -45,9 +45,9 @@ abstract class AbstractPopulator implements PopulatorInterface
         Instance $instance,
         InstanceItemBatch $batch,
         ConfiguredDataSource $configuredDataSource,
-        int $since = 0): array
+        $mode = PopulatorInterface::RETRIEVE_FIRST_RUN): array
     {
-        $objects = $this->getDataObjects($instance, $configuredDataSource->getConfiguration(), $since);
+        $objects = $this->getDataObjects($instance, $configuredDataSource->getConfiguration(), $mode);
         $items = [];
         foreach ($objects as $object) {
             $item = new InstanceItem();

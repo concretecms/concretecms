@@ -74,6 +74,11 @@ abstract class AbstractField implements FieldInterface
         $this->data = $data['data'];
     }
 
+    public function setData($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+
     /**
      * {@inheritdoc}
      *

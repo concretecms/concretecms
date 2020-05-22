@@ -35,7 +35,7 @@ class SlotPopulator implements LoggerAwareInterface
     }
 
     /**
-     * @param ItemObjectGroup[] $contentObjects
+     * @param ItemObjectGroup[] $contentObjectGroups
      * @param InstanceSlot[] $instanceSlots
      */
     public function populateSlotCollectionWithContent(array $contentObjectGroups, ArrayCollection $instanceSlots)
@@ -87,6 +87,7 @@ class SlotPopulator implements LoggerAwareInterface
                         json_encode($content)
                     ));
                 } else {
+
                     $this->logger->debug(t('No content objects found when attempting to populate slot %s',
                         $i));
                 }

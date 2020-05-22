@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Board\Command;
 
+use Concrete\Core\Board\Instance\Item\Populator\PopulatorInterface;
 use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
@@ -10,6 +11,8 @@ use Doctrine\ORM\EntityManager;
 
 class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterface
 {
+
+    const MAX_POPULATION_DAY_INTERVAL = 720; // we go 60 days into the past.
 
     use LoggerAwareTrait;
 
@@ -33,22 +36,33 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
         $instance = $command->getInstance();
         $board = $instance->getBoard();
         $configuredDataSources = $board->getDataSources();
+
         $batch = new InstanceItemBatch();
-        $batch->setBoard($board);
+        $batch->setInstance($instance);
         $this->entityManager->persist($batch);
-        foreach($configuredDataSources as $configuredDataSource) {
+
+        foreach ($configuredDataSources as $configuredDataSource) {
             $dataSource = $configuredDataSource->getDataSource();
             $dataSourceDriver = $dataSource->getDriver();
             $populator = $dataSourceDriver->getItemPopulator();
-            $objects = $populator->createBoardInstanceItems(
-                $instance, $batch, $configuredDataSource, $command->getRetrieveDataObjectsAfter()
-            );
+
+            $since = $command->getRetrieveDataObjectsAfter();
+            if ($since === -1) {
+                // That means this is the first time we're populating the board. So we run the new
+                // population routine.
+                $mode = PopulatorInterface::RETRIEVE_FIRST_RUN;
+            } else {
+                $mode = PopulatorInterface::RETRIEVE_NEW_ITEMS;
+            }
+
+            $objects = $populator->createBoardInstanceItems($instance, $batch, $configuredDataSource, $mode);
+
             $this->logger->debug(
                 t('Retrieved %s objects from %s data source after timestamp %s',
-            count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
+                    count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
                 ));
 
-            foreach($objects as $object) {
+            foreach ($objects as $object) {
                 $this->entityManager->persist($object);
             }
         }

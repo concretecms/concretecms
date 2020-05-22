@@ -12,17 +12,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 interface PopulatorInterface
 {
 
+    const RETRIEVE_FIRST_RUN = 1;
+    const RETRIEVE_NEW_ITEMS = 2;
+
     /**
      * @param Instance $instance
      * @param InstanceItemBatch $batch
      * @param ConfiguredDataSource $configuredDataSource
-     * @return InstanceItem[]
+     * @param int $mode
+     * @return array
      */
     public function createBoardInstanceItems(
         Instance $instance,
         InstanceItemBatch $batch,
         ConfiguredDataSource $configuredDataSource,
-        int $since = 0
+        $mode = PopulatorInterface::RETRIEVE_FIRST_RUN
     ): array;
 
 }

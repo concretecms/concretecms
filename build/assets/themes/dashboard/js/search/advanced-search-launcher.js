@@ -17,6 +17,7 @@
             jQuery.fn.dialog.open({
                 href: url,
                 modal: true,
+                type: 'POST',
                 title: ccmi18n.advancedSearch,
                 width: 500,
                 height: 500,

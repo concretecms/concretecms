@@ -11,7 +11,7 @@ use Concrete\Core\Page\Page;
 
 class ContentRenderer implements LoggerAwareInterface
 {
-    
+
     use LoggerAwareTrait;
 
     /**
@@ -20,20 +20,20 @@ class ContentRenderer implements LoggerAwareInterface
     protected $serializer;
 
     /**
-     * @var Application 
+     * @var Application
      */
     protected $app;
 
     /**
-     * @var Page 
+     * @var Page
      */
     protected $currentPage;
 
     /**
-     * @var TemplateLocator 
+     * @var TemplateLocator
      */
     protected $templateLocator;
-    
+
     public function getLoggerChannel()
     {
         return Channels::CHANNEL_CONTENT;
@@ -53,7 +53,7 @@ class ContentRenderer implements LoggerAwareInterface
 
     public function denormalizeIntoCollection($data) : ?ObjectCollection
     {
-        return $this->serializer->denormalize($data, ObjectCollection::class, 'json', 
+        return $this->serializer->denormalize($data, ObjectCollection::class, 'json',
             ['app' => $this->app]);
     }
 

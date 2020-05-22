@@ -73,18 +73,19 @@ class InstanceItemBatch
     /**
      * @return mixed
      */
-    public function getBoard()
+    public function getInstance()
     {
-        return $this->board;
+        return $this->instance;
     }
 
     /**
-     * @param mixed $board
+     * @param mixed $instance
      */
-    public function setBoard($board): void
+    public function setInstance($instance)
     {
-        $this->board = $board;
+        $this->instance = $instance;
     }
+
 
     /**
      * @return mixed
