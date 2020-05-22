@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
 class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterface
 {
 
-    const MAX_POPULATION_DAY_INTERVAL = 720; // we go 60 days into the past.
+    const MAX_POPULATION_DAY_INTERVAL = 60; // we go 60 days into the past.
 
     use LoggerAwareTrait;
 
