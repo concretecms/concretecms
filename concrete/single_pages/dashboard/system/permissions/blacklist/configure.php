@@ -58,7 +58,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <input type="submit" class="btn btn-primary pull-right" value="<?= t('Save') ?>" />
+            <input type="submit" class="btn btn-primary float-right" value="<?= t('Save') ?>" />
         </div>
     </div>
 </form>

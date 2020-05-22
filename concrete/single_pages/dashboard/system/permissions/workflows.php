@@ -16,8 +16,8 @@
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
-	<a href="<?=URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-secondary pull-left"><?=t("Cancel")?></a>
-	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
+	<a href="<?=URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-secondary float-left"><?=t("Cancel")?></a>
+	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary float-right" />
 </div>
 </div>
 </form>
@@ -79,8 +79,8 @@
 		
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
-			<a href="<?=URL::page($c)?>" class="btn btn-secondary pull-left"><?=t('Cancel')?></a>
-			<button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
+			<a href="<?=URL::page($c)?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
+			<button type="submit" class="btn btn-primary float-right"><?=t('Add')?></button>
 		</div>
 		</div>
 			
