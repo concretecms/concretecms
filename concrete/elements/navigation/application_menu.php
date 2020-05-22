@@ -33,19 +33,20 @@ if (!empty($top)) {
             } ?>
                   <?php
                   $welcomeMenuPages = [ '/dashboard/welcome', '/account', '/dashboard/welcome/me', '/account/edit_profile', '/account/messages' ];
+                  //$accountPages = [ '/account', '/account/edit_profile', '/account/messages' ];
             if (
                       in_array( $c->getCollectionPath(), $welcomeMenuPages ) && in_array( $page->getCollectionPath(), $welcomeMenuPages)
                       ) {
                       $accountPage = Page::getByPath('/account');
                       $accountID = $accountPage->getCollectionID();
                       echo '<ul class="welcome-menu">'; ?>
-                        <li>
+                        <li class="<?=$c->getCollectionPath() == '/dashboard/welcome/me' ? 'active' : ''?>">
                           <a href="<?=URL::to('/dashboard/welcome/me'); ?>"
                           >
                           <?=t('Waiting For Me'); ?>
                           </a>
                         </li>
-                        <li>
+                        <li class="<?=preg_match('/\/account/', $c->getCollectionPath()) ? 'active' : ''?>">
                           <a href="#" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/dashboard/load_menu'); ?>"
                           data-load-menu="<?=$accountID?>">
                           <?=t('My Account'); ?>
