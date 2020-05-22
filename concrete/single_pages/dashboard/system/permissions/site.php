@@ -18,6 +18,7 @@ $form = Loader::helper('form');
     
     <fieldset>
 	<legend style="margin-bottom: 0px"><?=t('Viewing Permissions')?></legend>
+        <?=$c->getCollectionID()?>
 	<div class="form-group">
         <div class="radio">
             <label>
