@@ -29,7 +29,7 @@ if (($type & IpAccessControlService::IPRANGEFLAG_MANUAL) === IpAccessControlServ
                 )) ?>"><?= t('IP Range') ?></label>
                 <input type="text" class="form-control" id="ccm-new-range" required="required" />
             </div>
-            <button type="submit" class="btn btn-default"><?= t('Add') ?></button>
+            <button type="submit" class="btn btn-secondary"><?= t('Add') ?></button>
             <br />
             <?php
             if (($type & IpAccessControlService::IPRANGEFLAG_WHITELIST) === IpAccessControlService::IPRANGEFLAG_WHITELIST) {
@@ -135,7 +135,7 @@ if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
             </div>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+            <button class="btn btn-secondary pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
             <button class="btn btn-danger pull-right" data-dialog-action="submit"><?= t('Delete') ?></button>
         </div>
     </div>
