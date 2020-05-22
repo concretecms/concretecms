@@ -41,9 +41,12 @@ if (!isset($type)) {
                 <?php
                 foreach ($coreProperties as $col) {
                     ?>
-                    <div class="checkbox"><label><?= $form->checkbox($col->getColumnKey(), 1,
-                                $current->contains($col)) ?> <span><?= $col->getColumnName() ?></span></label></div>
-                    <?php
+                    <div class="form-check">
+                        <?= $form->checkbox($col->getColumnKey(), 1,
+                            $current->contains($col)) ?>
+                        <label for="<?=$col->getColumnKey()?>" class="form-check-label"><?= $col->getColumnName() ?></label>
+                    </div>
+                    Z<?php
                 }
                 ?>
             </div>

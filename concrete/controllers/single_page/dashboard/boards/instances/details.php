@@ -134,15 +134,13 @@ class Details extends DashboardPageController
             /**
              * @var $instance Instance
              */
-            $site = $instance->getBoard()->getSite();
-            if ($site) {
-                $home = $site->getSiteHomePageObject();
-                $theme = $home->getCollectionThemeObject();
-            } else {
-                $theme = PageTheme::getSiteTheme();
-            }
+            $site = $instance->getsite();
+            $home = $site->getSiteHomePageObject();
+            $theme = $home->getCollectionThemeObject();
 
-            $this->set('renderer',$this->app->make(Renderer::class, ['theme' => $theme]));
+            $renderer = $this->app->make(Renderer::class);
+            $renderer->setEnableEditing(true);
+            $this->set('renderer', $renderer);
             $this->set('instance', $instance);
 
             $this->setTheme($theme);

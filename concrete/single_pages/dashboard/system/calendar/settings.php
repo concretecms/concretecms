@@ -3,10 +3,16 @@
 <form method="post" action="<?=$view->action('save')?>">
     <?=$token->output('save')?>
 
-    <div class="control-group">
+    <div class="form-group">
         <label class="control-label" for="topicAttribute"><?=t('Calendar Topics Attribute')?></label>
         <?=$form->select('topicAttribute', $topicAttributes, $topicAttribute)?>
     </div>
+
+    <div class="form-group">
+        <label class="control-label" for="topicAttribute"><?=t('Calendar Summary Thumbnail Attribute')?></label>
+        <?=$form->select('summaryThumbnailAttribute', $summaryThumbnailAttributes, $summaryThumbnailAttribute)?>
+    </div>
+
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">

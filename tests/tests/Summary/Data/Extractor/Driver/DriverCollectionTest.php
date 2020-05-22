@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Summary\Data\Extractor\Driver;
 
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
@@ -23,9 +24,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 class DriverCollectionTest extends TestCase
 {
-    
+
     use MockeryPHPUnitIntegration;
-    
+
     public function testExtractData()
     {
         $driverCollection = new DriverCollection();
@@ -54,10 +55,12 @@ class DriverCollectionTest extends TestCase
     {
         $entityManager = M::mock(EntityManager::class);
         $entityManager->shouldReceive('refresh');
-        
+
         $driverCollection = new DriverCollection();
         $event = M::Mock(CalendarEvent::class);
         $file = M::Mock(File::class);
+        $repository = M::Mock(Repository::class);
+
         $eventVersion = M::mock(CalendarEventVersion::class);
         $linkFormatter = M::mock(LinkFormatter::class);
         $file->shouldReceive('getFileID')->andReturn(3);
@@ -67,7 +70,7 @@ class DriverCollectionTest extends TestCase
         $occurrence = M::mock(CalendarEventOccurrence::class);
         $occurrence->shouldReceive('getStart')->andReturn(time());
         $occurrence->shouldReceive('getEnd')->andReturn(time() + 500);
-        
+
         $linkFormatter->shouldReceive('getEventFrontendViewLink')->andReturn('https://foo.com/calendar/123');
         $event->shouldReceive('getApprovedVersion')->andReturn($eventVersion);
         $event->shouldReceive('getCalendar')->andReturn($calendar);
@@ -77,8 +80,10 @@ class DriverCollectionTest extends TestCase
         $event->shouldReceive('getAttribute')->with('event_thumbnail')->once()->andReturn($file);
         $event->shouldReceive('getAttribute')->with('event_category')->once()->andReturn(null);
         $eventVersion->shouldReceive('getOccurrences')->andReturn([$occurrence]);
-        
-        $driver1 = new BasicCalendarEventDriver($entityManager, $linkFormatter);
+
+        $repository->shouldReceive('get');
+
+        $driver1 = new BasicCalendarEventDriver($entityManager, $linkFormatter, $repository);
         $driverCollection->addDriver($driver1);
 
         $collection = $driverCollection->extractData($event);
@@ -94,5 +99,5 @@ class DriverCollectionTest extends TestCase
         $this->assertInstanceOf(DataFieldData::class, $field);
         $this->assertEquals('testtitle', $field);
     }
-    
+
 }

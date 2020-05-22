@@ -14,9 +14,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class PagePopulator extends AbstractPopulator
 {
 
-    public function getDataObjects(Instance $instance, Configuration $configuration, int $since = 0) : array
+    public function getDataObjects(Instance $instance, Configuration $configuration, int $mode) : array
     {
-        $board = $instance->getBoard();
         $list = new PageList();
         $query = $configuration->getQuery();
         $list->ignorePermissions();
@@ -40,21 +39,21 @@ class PagePopulator extends AbstractPopulator
         }
 
         if (!$containsSitefield) {
-            if ($board->getSite()) {
-                // The board is not a shared board, so we filter by the instance's current site.
-                $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
-            } else {
-                $list->setSiteTreeToAll();
-            }
+            // We filter by the instance's current site.
+            $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
         }
 
-        if ($since) {
-            $filterDate = date('Y-m-d H:i:s', $since);
-            $list->filterByPublicDate($filterDate, '>');
+        if ($mode == PopulatorInterface::RETRIEVE_FIRST_RUN) {
+            // the first time we run we start today and go into the past.
+            $list->sortByPublicDateDescending();
+        } else {
+            $list->sortByPublicDate();
+            $list->filterByPublicDate(date('Y-m-d H:i:s', $instance->getDateDataPoolLastUpdated()), '>');
         }
 
-        $list->setItemsPerPage(100);
-        return $list->getResults();
+        $pagination = $list->getPagination();
+        $pagination->setMaxPerPage(100);
+        return $pagination->getCurrentPageResults();
     }
 
     /**

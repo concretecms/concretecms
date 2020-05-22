@@ -56,6 +56,7 @@ class GenerateBoardInstanceCommandHandler
         $items = $this->itemSegmenter->getBoardItemsForInstance($instance);
         if (count($items)) {
             $contentObjectGroups = $this->contentPopulator->createContentObjects($items);
+
             $collection = $this->collectionFactory->createSlotCollection($instance, $contentObjectGroups);
 
             // Now, however large our collection is, we need to move any existing content within our

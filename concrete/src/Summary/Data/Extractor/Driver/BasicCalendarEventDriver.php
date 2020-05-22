@@ -3,6 +3,7 @@ namespace Concrete\Core\Summary\Data\Extractor\Driver;
 
 use Carbon\Carbon;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
@@ -18,9 +19,9 @@ class BasicCalendarEventDriver implements DriverInterface
 
     use GetThumbnailTrait;
     use GetCategoriesTrait;
-    
+
     /**
-     * @var LinkFormatter 
+     * @var LinkFormatter
      */
     protected $linkFormatter;
 
@@ -28,11 +29,17 @@ class BasicCalendarEventDriver implements DriverInterface
      * @var EntityManager
      */
     protected $entityManager;
-    
-    public function __construct(EntityManager $entityManager, LinkFormatter $linkFormatter)
+
+    /**
+     * @var Repository
+     */
+    protected $repository;
+
+    public function __construct(EntityManager $entityManager, LinkFormatter $linkFormatter, Repository $repository)
     {
         $this->entityManager = $entityManager;
         $this->linkFormatter = $linkFormatter;
+        $this->repository = $repository;
     }
 
     public function getCategory()
@@ -47,7 +54,11 @@ class BasicCalendarEventDriver implements DriverInterface
 
     public function getThumbnailAttributeKeyHandle()
     {
-        return 'event_thumbnail';
+        $handle = $this->repository->get('concrete.calendar.summary_thumbnail_attribute');
+        if (!$handle) {
+            $handle = 'event_thumbnail';
+        }
+        return $handle;
     }
 
     public function getCategoriesAttributeKeyHandle()

@@ -28,19 +28,21 @@ class ObjectCollection implements \JsonSerializable, DenormalizableInterface
     {
         return $this->contentObjects->toArray();
     }
-    
+
     public function jsonSerialize()
     {
         return [
             'objects' => $this->getContentObjects()
         ];
     }
-    
+
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        foreach($data['objects'] as $slot => $object) {
-            $object = $denormalizer->denormalize($object, $object['class'], 'json', $context);
-            $this->addContentObject($slot, $object);
+        if (isset($data['objects'])) {
+            foreach ($data['objects'] as $slot => $object) {
+                $object = $denormalizer->denormalize($object, $object['class'], 'json', $context);
+                $this->addContentObject($slot, $object);
+            }
         }
     }
 

@@ -22,6 +22,7 @@ class Controller extends BlockController
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 500;
     protected $btTable = 'btBoard';
+    protected $btIgnorePageThemeGridFrameworkContainer = true;
 
     public $helpers = ['form'];
 
