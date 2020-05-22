@@ -56,16 +56,20 @@ if ($editingJobSet !== null) {
                     <legend><?= t('Jobs') ?></legend>
                     <?php
                     if ($installedJobs !== []) {
-                        foreach ($installedJobs as $g) {
-                            ?>
-                            <div class="checkbox">
-                                <label>
-                                    <?= $form->checkbox('jID[]', $g->getJobID(), $editingJobSet === true ? false : $editingJobSet->contains($g)) ?>
-                                    <?= h($g->getJobName()) ?>
-                                </label>
-                            </div>
+                        ?>
+                        <div class="form-group">
                             <?php
-                        }
+                            foreach ($installedJobs as $g) {
+                                ?>
+                                <div class="form-check">
+                                    <?= $form->checkbox('jID[]', $g->getJobID(), $editingJobSet === true ? false : $editingJobSet->contains($g), ['id' => "job-{$g->getJobID()}-for-set"]) ?>
+                                    <label class="form-check-label" for="job-<?= $g->getJobID() ?>-for-set"><?= h($g->getJobName()) ?></label>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                        <?php
                     } else {
                         ?>
                         <p><?= t('No Jobs found.') ?></p>
