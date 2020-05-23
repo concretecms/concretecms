@@ -3,6 +3,7 @@ namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Application\Service\DashboardMenu;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory;
 use Cookie;
 use Loader;
 use Page;
@@ -23,6 +24,18 @@ class Dashboard extends BackendInterfacePageController
 
         return $dh->canRead();
     }
+
+    public function view()
+    {
+        $factory = $this->app->make(NavigationFactory::class);
+        $navigation = $factory->createNavigation();
+        $u = new User();
+        $ui = UserInfo::getByID($u->getUserID());
+        $this->set('navigation', $navigation);
+        $this->set('ui', $ui);
+    }
+    /*
+
 
     protected function toggleFavorite($action)
     {
@@ -85,13 +98,13 @@ class Dashboard extends BackendInterfacePageController
         $this->set('tab', $tab);
     }
 
-    //public function checkForMenu($c) 
-    //{ 
+    //public function checkForMenu($c)
+    //{
     //}
-    public function checkForMenu($c) 
-    { 
+    public function checkForMenu($c)
+    {
       //return (string) $this->renderActiveSubPanels($c) !== ''; // fails to pass triple equal sign checking on element where this function is called.
-      return !($result = $this->renderActiveSubPanels($c)) || $result == '' ? null : 1; 
+      return !($result = $this->renderActiveSubPanels($c)) || $result == '' ? null : 1;
     }
 
     public function renderActiveSubPanels($c)
@@ -158,7 +171,7 @@ class Dashboard extends BackendInterfacePageController
                 echo        '<h4>' . $label . '</h4>';
                 echo      '</header>';
                 echo      '<div class="ccm-panel-content-inner">';
-                echo        '<ul class="nav flex-column">';
+                echo        '$ui';
                 foreach ($menuItems as $menuItem) {
                     $menuItemID = $menuItem->getCollectionID();
                     $class = '';
@@ -198,5 +211,5 @@ class Dashboard extends BackendInterfacePageController
         } else {
             //return 'trail is not an array';
         }
-    }
+    }*/
 }

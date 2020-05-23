@@ -414,8 +414,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         </div>
         <?php
 
-        echo $dh->getIntelligentSearchMenu();
-
         if ($pageInUseBySomeoneElse) {
             $buttons = [];
             if ($canApprovePageVersions) {

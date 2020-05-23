@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory;
 use Concrete\Core\Http\Response;
 use HtmlObject\Traits\Tag;
 use PermissionKey;
@@ -242,7 +244,12 @@ class UserInterface
         $app = Application::getFacadeApplication();
         $u = $app->make(ConcreteUser::class);
         if ($u->isRegistered()) {
-            Core::make('helper/concrete/dashboard')->getIntelligentSearchMenu();
+            if ($app->make(Dashboard::class)->canRead()) {
+                $navigationFactory = $app->make(NavigationFactory::class);
+                $navigation = $navigationFactory->createNavigation();
+                $cache = $app->make(NavigationCache::class);
+                $cache->store($navigation);
+            }
         }
     }
 

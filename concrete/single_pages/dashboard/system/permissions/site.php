@@ -4,10 +4,10 @@ $h = Loader::helper('concrete/dashboard');
 $ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 ?>
-<?=$h->getDashboardPaneHeaderWrapper(t('Site Access'), false, false, false);?>
+
 <form id="site-permissions-form" action="<?=$view->action('')?>" method="post" role="form">
 	<?php echo $this->controller->token->output('site_permissions_code')?>
-	
+
     <?php if (Config::get('concrete.permissions.model') != 'simple'):?>
     <div>
         <p>
@@ -15,7 +15,7 @@ $form = Loader::helper('form');
         </p>
     </div>
     <?php else:?>
-    
+
     <fieldset>
 	<legend style="margin-bottom: 0px"><?=t('Viewing Permissions')?></legend>
 	<div class="form-group">
@@ -25,7 +25,7 @@ $form = Loader::helper('form');
 		    <span><?=t('Public')?> - <?=t('Anyone may view the website.')?></span>
                 </label>
         </div>
-		 
+
         <div class="radio">
             <label>
             <?=$form->radio('view', 'USERS', $registeredCanRead)?>
@@ -41,7 +41,7 @@ $form = Loader::helper('form');
 		</div>
     </div>
     </fieldset>
-    
+
     <fieldset>
     <legend style="margin-bottom: 0px"><?=t('Edit Access')?></legend>
         <span class="help-block"><?=t('Choose which users and groups may edit your site. Note: These settings can be overridden on specific pages.')?></span>
@@ -54,7 +54,7 @@ $form = Loader::helper('form');
             </div>
         <?php endforeach ?>
     </fieldset>
-    
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
@@ -63,4 +63,3 @@ $form = Loader::helper('form');
 
 <?php endif ?>
 </form>
-<?=$h->getDashboardPaneFooterWrapper(false);?>

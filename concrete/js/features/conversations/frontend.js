@@ -1,1 +1,7565 @@
-!function(e){var t={};function n(r){if(t[r])return t[r].exports;var i=t[r]={i:r,l:!1,exports:{}};return e[r].call(i.exports,i,i.exports,n),i.l=!0,i.exports}n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var i in e)n.d(r,i,function(t){return e[t]}.bind(null,i));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="/",n(n.s=329)}({16:function(e,t){e.exports=function(e){return e.webpackPolyfill||(e.deprecate=function(){},e.paths=[],e.children||(e.children=[]),Object.defineProperty(e,"loaded",{enumerable:!0,get:function(){return e.l}}),Object.defineProperty(e,"id",{enumerable:!0,get:function(){return e.i}}),e.webpackPolyfill=1),e}},169:function(e,t){!function(e,t){"use strict";e.Concrete=e.Concrete||{},e.console=e.console||{},e.ConcreteEvent=function(n){var r=t("<span />"),i=!1,o="function"==typeof e.console.group&&"function"==typeof e.console.groupEnd,a="function"==typeof e.console.log;function s(t,n,r){o?(e.console.groupCollapsed(t),r||"function"!=typeof n?e.console.log(n):n(),e.console.groupEnd()):a&&(r||"function"!=typeof n?e.console.log(t,n):(e.console.log('Group: "'+t+'"'),n(),e.console.log('GroupEnd: "'+t+'"')))}function l(e){return e||(e=r),e instanceof t||(e=t(e)),e.length||(e=r),e}var u={debug:function(e){return void 0===e?i:i=!!e},subscribe:function(t,n,r){var o=n,a=new Error("EventStack").stack;return n=function(){i&&s("Handler Fired.",(function(){s("Type",t,!0),s("Handler",o,!0),s("Target",r,!0),s("Bound Stack",a,!0),"function"==typeof e.console.trace?e.console.trace():s("Stack",new Error("EventStack").stack)})),o.apply(this,_(arguments).toArray())},i&&s("Event Subscribed",(function(){s("Type",t,!0),s("Handler",o,!0),s("Target",r,!0),"function"==typeof e.console.trace?e.console.trace():s("Stack",new Error("EventStack").stack)})),t instanceof Array?_(t).each((function(e){u.subscribe(e,n,r)})):(l(r).bind(t.toLowerCase(),n),u)},publish:function(t,n,r){return i&&s("Event Published",(function(){s("Type",t,!0),s("Data",n,!0),s("Target",r,!0),"function"==typeof e.console.trace?e.console.trace():s("Stack",new Error("EventStack").stack)})),t instanceof Array?_(t).each((function(e){u.publish(e,n,r)})):(l(r).trigger(t.toLowerCase(),n),u)},unsubscribe:function(n,r,o){var a;return i&&s("Event Unsubscribed",(function(){s("Type",n,!0),s("Secondary Argument",r,!0),s("Target",o,!0),"function"==typeof e.console.trace?e.console.trace():s("Stack",new Error("EventStack").stack)})),a=["function"==typeof n.toLowerCase?n.toLowerCase():n],void 0!==r&&a.push(r),t.fn.unbind.apply(l(o),a),u}};return u.sub=u.bind=u.watch=u.on=u.subscribe,u.pub=u.fire=u.trigger=u.publish,u.unsub=u.unbind=u.unwatch=u.off=u.unsubscribe,n.event=u,u}(e.Concrete)}(window,jQuery)},2:function(e,t){var n;n=function(){return this}();try{n=n||new Function("return this")()}catch(e){"object"==typeof window&&(n=window)}e.exports=n},286:function(e,t,n){"use strict";n.r(t);n(169);var r=n(3);window._=r.a,function(e,t){t.extend(t.fn,{concreteConversation:function(e){return this.each((function(){var n=t(this),i=n.data("concreteConversation");i||n.data("concreteConversation",i=new r(n,e))}))}});var n={Confirm_remove_message:"Remove this message? Replies to it will not be removed.",Confirm_mark_as_spam:"Are you sure you want to flag this message as spam?",Warn_currently_editing:"Please complete or cancel the current message editing session before editing this message.",Unspecified_error_occurred:"An unspecified error occurred.",Error_deleting_message:"Something went wrong while deleting this message, please refresh and try again.",Error_flagging_message:"Something went wrong while flagging this message, please refresh and try again."};t.fn.concreteConversation.localize=function(e){t.extend(!0,n,e)};var r=function(e,t){this.publish("beforeInitializeConversation",{element:e,options:t}),this.init(e,t),this.publish("initializeConversation",{element:e,options:t})};r.fn=r.prototype={publish:function(e,t){(t=t||{}).ConcreteConversation=this,window.ConcreteEvent.publish(e,t)},init:function(e,n){var r=this;r.$element=e,r.options=t.extend({method:"ajax",paginate:!1,displayMode:"threaded",itemsPerPage:-1,activeUsers:[],uninitialized:!0,deleteMessageToken:null,addMessageToken:null,editMessageToken:null,flagMessageToken:null},n);var i=""!=r.options.addMessageToken?1:0,o=r.options.paginate?1:0,a=r.options.orderBy,s=r.options.enableOrdering,l=r.options.displayPostingForm,u=r.options.enableCommentRating,c=r.options.enableTopCommentReviews,d=r.options.displaySocialLinks,p=r.options.addMessageLabel?r.options.addMessageLabel:"",f=r.options.dateFormat,h=r.options.customDateFormat,m=r.options.blockAreaHandle,v=r.options.attachmentsEnabled,g=r.options.attachmentOverridesEnabled;"ajax"==r.options.method?t.post(CCM_TOOLS_PATH+"/conversations/view_ajax",{cnvID:r.options.cnvID,cID:r.options.cID,blockID:r.options.blockID,enablePosting:i,itemsPerPage:r.options.itemsPerPage,addMessageLabel:p,paginate:o,displayMode:r.options.displayMode,orderBy:a,enableOrdering:s,displayPostingForm:l,enableCommentRating:u,enableTopCommentReviews:c,displaySocialLinks:d,dateFormat:f,customDateFormat:h,blockAreaHandle:m,attachmentsEnabled:v,attachmentOverridesEnabled:g},(function(e){var n=window.obj;window.obj=r,r.$element.empty().append(e);var i=window.location.hash.match(/^#cnv([0-9]+)Message[0-9]+$/);if(null!==i&&i[1]==r.options.cnvID){var o=t("a"+window.location.hash).offset();t("html, body").animate({scrollTop:o.top},800,"linear")}window.obj=n,r.attachBindings(),r.publish("conversationLoaded")})):(r.attachBindings(),r.finishSetup(),r.publish("conversationLoaded"))},mentionList:function(e,n,r){var i=this;if(n){if(i.dropdown.parent.css({top:n.y,left:n.x}),0==e.length)return i.dropdown.handle.dropdown("toggle"),i.dropdown.parent.remove(),i.dropdown.active=!1,void(i.dropdown.activeItem=-1);i.dropdown.list.empty(),e.slice(0,20).map((function(e){var n=t("<li/>");t("<a/>").appendTo(n).text(e.getName()).click((function(){ConcreteEvent.fire("ConversationMentionSelect",{obj:i,item:e},r)})),n.appendTo(i.dropdown.list)})),i.dropdown.active||(i.dropdown.active=!0,i.dropdown.activeItem=-1,i.dropdown.parent.appendTo(i.$element),i.dropdown.handle.dropdown("toggle")),i.dropdown.activeItem>=0&&i.dropdown.list.children().eq(i.dropdown.activeItem).addClass("active")}},attachSubscriptionBindings:function(){t("a[data-conversation-subscribe]").magnificPopup({type:"ajax",callbacks:{updateStatus:function(e){if("ready"==e.status){var n=t("form[data-conversation-form=subscribe]");t("button").on("click",n,(function(e){e.preventDefault(),e.stopPropagation(),t.ajax({url:n.attr("action"),dataType:"json",success:function(e){e.subscribed?(t("[data-conversation-subscribe=subscribe]").hide(),t("[data-conversation-subscribe=unsubscribe]").show()):(t("[data-conversation-subscribe=unsubscribe]").hide(),t("[data-conversation-subscribe=subscribe]").show()),t.magnificPopup.close()}})}))}},beforeOpen:function(){this.st.mainClass="mfp-zoom-in"}},closeOnContentClick:!0,midClick:!0})},attachBindings:function(){var e=this;e.$element.unbind(".cnv"),e.options.uninitialized&&(e.options.uninitialized=!1,ConcreteEvent.bind("ConversationMention",(function(t,n){e.mentionList(n.items,n.coordinates||!1,n.bindTo||e.$element.get(0))}),e.$element.get(0)),e.dropdown={},e.dropdown.parent=t("<div/>").css({position:"absolute",height:0,width:0}),e.dropdown.active=!1,e.dropdown.handle=t("<a/>").appendTo(e.dropdown.parent),e.dropdown.list=t("<ul/>").addClass("dropdown-menu").appendTo(e.dropdown.parent),e.dropdown.handle.dropdown(),ConcreteEvent.bind("ConversationTextareaKeydownUp",(function(t){-1==e.dropdown.activeItem&&(e.dropdown.activeItem=e.dropdown.list.children().length),e.dropdown.activeItem-=1,e.dropdown.activeItem+=e.dropdown.list.children().length,e.dropdown.activeItem%=e.dropdown.list.children().length,e.dropdown.list.children().filter(".active").removeClass("active").end().eq(e.dropdown.activeItem).addClass("active")}),e.$element.get(0)),ConcreteEvent.bind("ConversationTextareaKeydownDown",(function(t){e.dropdown.activeItem+=1,e.dropdown.activeItem+=e.dropdown.list.children().length,e.dropdown.activeItem%=e.dropdown.list.children().length,e.dropdown.list.children().filter(".active").removeClass("active").end().eq(e.dropdown.activeItem).addClass("active")}),e.$element.get(0)),ConcreteEvent.bind("ConversationTextareaKeydownEnter",(function(t){e.dropdown.list.children().filter(".active").children("a").click()}),e.$element.get(0)),ConcreteEvent.bind("ConversationPostError",(function(e,n){var r=n.form,i=n.messages,o="";t.each(i,(function(e,t){o+=t+"<br>"})),r.find("div.ccm-conversation-errors").html(o).show()})),ConcreteEvent.bind("ConversationSubmitForm",(function(e,t){t.form.find("div.ccm-conversation-errors").hide()})));var r=e.options.paginate?1:0,i=""!=e.options.addMessageToken?1:0,o=e.options.addMessageLabel?e.options.addMessageLabel:"";e.$replyholder=e.$element.find("div.ccm-conversation-add-reply"),e.$newmessageform=e.$element.find("div.ccm-conversation-add-new-message form"),e.$deleteholder=e.$element.find("div.ccm-conversation-delete-message"),e.$attachmentdeleteholder=e.$element.find("div.ccm-conversation-delete-attachment"),e.$permalinkholder=e.$element.find("div.ccm-conversation-message-permalink"),e.$messagelist=e.$element.find("div.ccm-conversation-message-list"),e.$messagecnt=e.$element.find(".ccm-conversation-message-count"),e.$postbuttons=e.$element.find("[data-submit=conversation-message]"),e.$sortselect=e.$element.find("select[data-sort=conversation-message-list]"),e.$loadmore=e.$element.find("[data-load-page=conversation-message-list]"),e.$messages=e.$element.find(".ccm-conversation-messages"),e.$messagerating=e.$element.find("span.ccm-conversation-message-rating"),e.$element.on("click.cnv","[data-submit=conversation-message]",(function(n){n.preventDefault(),e.submitForm(t(this))})),e.$element.on("click.cnv","[data-submit=update-conversation-message]",(function(){return e.submitUpdateForm(t(this)),!1})),this.attachSubscriptionBindings();var a=1;e.$element.on("click.cnv","a[data-toggle=conversation-reply]",(function(n){n.preventDefault(),t(".ccm-conversation-attachment-container").each((function(){t(this).is(":visible")&&t(this).toggle()}));var r=e.$replyholder.appendTo(t(this).closest("[data-conversation-message-id]"));return r.attr("data-form","conversation-reply").show(),r.find("[data-submit=conversation-message]").attr("data-post-parent-id",t(this).attr("data-post-parent-id")),r.attr("rel","new-reply"+a),a++,!1})),t(".ccm-conversation-attachment-container").hide(),t(".ccm-conversation-add-new-message .ccm-conversation-attachment-toggle").off("click.cnv").on("click.cnv",(function(e){e.preventDefault(),t(".ccm-conversation-add-reply .ccm-conversation-attachment-container").is(":visible")&&t(".ccm-conversation-add-reply .ccm-conversation-attachment-container").toggle(),t(".ccm-conversation-add-new-message .ccm-conversation-attachment-container").toggle()})),t(".ccm-conversation-add-reply .ccm-conversation-attachment-toggle").off("click.cnv").on("click.cnv",(function(e){e.preventDefault(),t(".ccm-conversation-add-new-message .ccm-conversation-attachment-container").is(":visible")&&t(".ccm-conversation-add-new-message .ccm-conversation-attachment-container").toggle(),t(".ccm-conversation-add-reply .ccm-conversation-attachment-container").toggle()})),e.$element.on("click.cnv","a[data-submit=delete-conversation-message]",(function(){var r=t(this);return e.$deletedialog=e.$deleteholder.clone(),e.$deletedialog.dialog?e.$deletedialog.dialog({modal:!0,dialogClass:"ccm-conversation-dialog",title:e.$deleteholder.attr("data-dialog-title"),buttons:[{text:e.$deleteholder.attr("data-cancel-button-title"),class:"btn pull-left",click:function(){e.$deletedialog.dialog("close")}},{text:e.$deleteholder.attr("data-confirm-button-title"),class:"btn pull-right btn-danger",click:function(){e.deleteMessage(r.attr("data-conversation-message-id"))}}]}):window.confirm(n.Confirm_remove_message)&&e.deleteMessage(r.attr("data-conversation-message-id")),!1})),e.$element.on("click.cnv","a[data-submit=flag-conversation-message]",(function(){var r=t(this);return window.confirm(n.Confirm_mark_as_spam)&&e.flagMessage(r.attr("data-conversation-message-id")),!1})),e.$element.on("click.cnv","a[data-load=edit-conversation-message]",(function(){if(t(".ccm-conversation-edit-message").is(":visible"))return window.alert(n.Warn_currently_editing),!1;var r=t(this);e.editMessage(r.attr("data-conversation-message-id"))})),e.$element.on("change.cnv","select[data-sort=conversation-message-list]",(function(){e.$messagelist.load(CCM_TOOLS_PATH+"/conversations/view_ajax",{cnvID:e.options.cnvID,task:"get_messages",cID:e.options.cID,blockID:e.options.blockID,enablePosting:i,displayMode:e.options.displayMode,itemsPerPage:e.options.itemsPerPage,paginate:r,addMessageLabel:o,orderBy:t(this).val(),enableOrdering:e.options.enableOrdering,displayPostingForm:e.options.displayPostingForm,enableCommentRating:e.options.enableCommentRating,enableTopCommentReviews:e.options.enableTopCommentReviews,displaySocialLinks:e.options.displaySocialLinks,dateFormat:e.options.dateFormat,customDateFormat:e.options.customDateFormat,blockAreaHandle:e.options.blockAreaHandle,attachmentsEnabled:e.options.attachmentsEnabled,attachmentOverridesEnabled:e.options.attachmentOverridesEnabled},(function(n){e.$replyholder.appendTo(e.$element),t(".ccm-conversation-messages .dropdown-toggle").dropdown(),e.attachBindings()}))})),e.$element.on("click.cnv",".image-popover-hover",(function(){t.magnificPopup.open({items:{src:t(this).attr("data-full-image"),type:"image",verticalFit:!0}})})),e.$element.on("click.cnv","[data-load-page=conversation-message-list]",(function(){var n=parseInt(e.$loadmore.attr("data-next-page")),r=parseInt(e.$loadmore.attr("data-total-pages")),a=e.$sortselect.length?e.$sortselect.val():e.options.orderBy,s={cnvID:e.options.cnvID,cID:e.options.cID,blockID:e.options.blockID,itemsPerPage:e.options.itemsPerPage,displayMode:e.options.displayMode,blockAreaHandle:e.options.blockAreaHandle,enablePosting:i,addMessageLabel:o,page:n,orderBy:a,enableCommentRating:e.options.enableCommentRating,enableTopCommentReviews:e.options.enableTopCommentReviews,displaySocialLinks:e.options.displaySocialLinks,dateFormat:e.options.dateFormat,customDateFormat:e.options.customDateFormat,attachmentsEnabled:e.options.attachmentsEnabled,attachmentOverridesEnabled:e.options.attachmentOverridesEnabled};t.ajax({type:"post",data:s,url:CCM_TOOLS_PATH+"/conversations/message_page",success:function(i){e.$messages.append(i),t(".ccm-conversation-messages .dropdown-toggle").dropdown(),n+1>r?e.$loadmore.hide():e.$loadmore.attr("data-next-page",n+1)}})})),e.$element.on("click.cnv",".conversation-rate-message",(function(){var n=t(this).closest("[data-conversation-message-id]").attr("data-conversation-message-id"),r=t(this).attr("data-conversation-rating-type");e.$messagerating.load(CCM_TOOLS_PATH+"/conversations/rate");var i={cnvID:e.options.cnvID,cID:e.options.cID,blockID:e.options.blockID,cnvMessageID:n,cnvRatingTypeHandle:r};t.ajax({type:"post",data:i,url:CCM_TOOLS_PATH+"/conversations/rate",success:function(e){t('span[data-message-rating="'+n+'"]').load(CCM_TOOLS_PATH+"/conversations/get_rating",{cnvMessageID:n})}})})),e.$element.on("click.cnv","a.share-popup",(function(){var e=null!=window.screenLeft?window.screenLeft:window.screen.left,n=null!=window.screenTop?window.screenTop:window.screen.top,r=(window.innerWidth?window.innerWidth:document.documentElement.clientWidth?document.documentElement.clientWidth:window.screen.width)/2-300+e,i=(window.innerHeight?window.innerHeight:document.documentElement.clientHeight?document.documentElement.clientHeight:window.screen.height)/2-125+n;return window.open(t(this).attr("href"),"cnvSocialShare","left:"+r+",top:"+i+",height=250,width=600,toolbar=no,status=no"),!1})),e.$element.on("click.cnv","a.share-permalink",(function(){var n=t(this).attr("rel");e.$permalinkdialog=e.$permalinkholder.clone();var r=t("<textarea readonly>").text(decodeURIComponent(n));return e.$permalinkdialog.append(r),r.click((function(){var e=t(this);e.select(),window.setTimeout((function(){e.select()}),1),e.mouseup((function(){return e.unbind("mouseup"),!1}))})),e.$permalinkdialog.dialog&&e.$permalinkdialog.dialog({modal:!0,dialogClass:"ccm-conversation-dialog",title:e.$permalinkholder.attr("data-dialog-title"),buttons:[{text:e.$permalinkholder.attr("data-cancel-button-title"),class:"btn pull-left",click:function(){e.$permalinkdialog.dialog("close")}}]}),!1})),e.options.attachmentsEnabled>0&&e.$element.concreteConversationAttachments(e),t(".dropdown-toggle").dropdown()},handlePostError:function(e,t){t||(t=[n.Unspecified_error_occurred]),this.publish("conversationPostError",{form:e,messages:t})},deleteMessage:function(e){var r=this;r.publish("conversationBeforeDeleteMessage",{msgID:e});var i=[{name:"cnvMessageID",value:e},{name:"token",value:r.options.deleteMessageToken}];t.ajax({type:"post",data:i,dataType:"json",url:CCM_TOOLS_PATH+"/conversations/delete_message",success:function(i){if(i.error)window.alert(n.Error_deleting_message+"\n\n"+i.errors.join("\n"));else{var o=t("[data-conversation-message-id="+e+"]");o.length&&o.remove(),r.updateCount(),r.$deletedialog.dialog&&r.$deletedialog.dialog("close"),r.publish("conversationDeleteMessage",{msgID:e})}},error:function(t){r.publish("conversationDeleteMessageError",{msgID:e,error:arguments}),window.alert(n.Error_deleting_message)}})},editMessage:function(e){var n=this,r=[{name:"cnvMessageID",value:e},{name:"cID",value:this.options.cID},{name:"blockAreaHandle",value:this.options.blockAreaHandle},{name:"bID",value:this.options.blockID}];t.ajax({type:"post",data:r,url:CCM_TOOLS_PATH+"/conversations/edit_message",success:function(r){var i=t(".ccm-conversation-message[data-conversation-message-id="+e+"]"),o=i;i.after(r).remove(),t(".ccm-conversation-attachment-container").hide(),t(".ccm-conversation-edit-message .ccm-conversation-attachment-toggle").off("click.cnv").on("click.cnv",(function(e){e.preventDefault(),t(".ccm-conversation-edit-message .ccm-conversation-attachment-container").toggle()})),n.$editMessageHolder=n.$element.find("div.ccm-conversation-edit-message"),n.$element.concreteConversationAttachments(n),t("button.cancel-update").on("click.cnv",(function(){t(".ccm-conversation-edit-message").replaceWith(o)}))},error:function(t){n.publish("conversationEditMessageError",{msgID:e,error:arguments})}})},flagMessage:function(e){var r=this;r.publish("conversationBeforeFlagMessage",{msgID:e});var i=[{name:"token",value:r.options.flagMessageToken},{name:"cnvMessageID",value:e}];t.ajax({type:"post",data:i,url:CCM_TOOLS_PATH+"/conversations/flag_message",success:function(n){var i=t(".ccm-conversation-message[data-conversation-message-id="+e+"]");i.length&&i.after(n).remove(),r.updateCount(),r.publish("conversationFlagMessage",{msgID:e})},error:function(t){r.publish("conversationFlagMessageError",{msgID:e,error:arguments}),window.alert(n.Error_flagging_message)}})},addMessageFromJSON:function(e,n){var r=this;r.publish("conversationBeforeAddMessageFromJSON",{json:n,form:e});var i=""!=r.options.addMessageToken?1:0,o=[{name:"cnvMessageID",value:n.cnvMessageID},{name:"enablePosting",value:i},{name:"displayMode",value:r.options.displayMode},{name:"enableCommentRating",value:r.options.enableCommentRating},{name:"displaySocialLinks",value:r.options.displaySocialLinks}];t.ajax({type:"post",data:o,url:CCM_TOOLS_PATH+"/conversations/message_detail",success:function(i){var o=t(".ccm-conversation-message[data-conversation-message-id="+n.cnvMessageParentID+"]");if(o.length){o.after(i),r.$replyholder.appendTo(r.$element),r.$replyholder.hide(),r.$replyholder.find(".conversation-editor").val("");try{r.$replyholder.find(".redactor_conversation_editor_"+r.options.cnvID).redactor("set","")}catch(e){}}else{"date_desc"==r.options.orderBy?r.$messages.prepend(i):r.$messages.append(i),r.$element.find(".ccm-conversation-no-messages").hide(),r.$newmessageform.find(".conversation-editor").val("");try{r.$newmessageform.find(".redactor_conversation_editor_"+r.options.cnvID).redactor("set","")}catch(e){}}r.publish("conversationAddMessageFromJSON",{json:n,form:e}),r.updateCount();var a=t("a#cnv"+r.options.cnvID+"Message"+n.cnvMessageID).offset();t(".dropdown-toggle").dropdown(),t("html, body").animate({scrollTop:a.top},800,"linear")}})},updateMessageFromJSON:function(e,n){var r=""!=this.options.addMessageToken?1:0,i=[{name:"cnvMessageID",value:n.cnvMessageID},{name:"enablePosting",value:r},{name:"displayMode",value:this.options.displayMode},{name:"enableCommentRating",value:this.options.enableCommentRating},{name:"displaySocialLinks",value:this.options.displaySocialLinks}];t.ajax({type:"post",data:i,url:CCM_TOOLS_PATH+"/conversations/message_detail",success:function(e){t("[data-conversation-message-id="+n.cnvMessageID+"]").after(e).remove(),t(".dropdown-toggle").dropdown()}})},updateCount:function(){var e=this;e.publish("conversationBeforeUpdateCount"),e.$messagecnt.load(CCM_TOOLS_PATH+"/conversations/count_header",{cnvID:e.options.cnvID},(function(){e.publish("conversationUpdateCount")}))},submitForm:function(e){var n=this;n.publish("conversationBeforeSubmitForm");var r=e.closest("form");e.prop("disabled",!0),r.parent().addClass("ccm-conversation-form-submitted");var i=r.serializeArray(),o=e.attr("data-post-parent-id");i.push({name:"token",value:n.options.addMessageToken},{name:"cnvID",value:n.options.cnvID},{name:"cnvMessageParentID",value:o},{name:"enableRating",value:o}),t.ajax({dataType:"json",type:"post",data:i,url:CCM_TOOLS_PATH+"/conversations/add_message",success:function(e){return e?e.error?(n.handlePostError(r,e.errors),!1):(t(".preview.processing").each((function(){t('input[rel="'+t(this).attr("rel")+'"]').remove()})),t("form.dropzone").each((function(){var e=t(this).data("dropzone");t.each(e.files,(function(t,n){e.removeFile(n)}))})),n.addMessageFromJSON(r,e),void n.publish("conversationSubmitForm",{form:r,response:e})):(n.handlePostError(r),!1)},error:function(e){return n.handlePostError(r),!1},complete:function(t){e.prop("disabled",!1),r.parent().closest(".ccm-conversation-form-submitted").removeClass("ccm-conversation-form-submitted")}})},submitUpdateForm:function(e){var n=this;n.publish("conversationBeforeSubmitForm");var r=e.closest("form");e.prop("disabled",!0),r.parent().addClass("ccm-conversation-form-submitted");var i=r.serializeArray(),o=e.attr("data-post-message-id");i.push({name:"token",value:n.options.editMessageToken},{name:"cnvMessageID",value:o}),t.ajax({dataType:"json",type:"post",data:i,url:CCM_TOOLS_PATH+"/conversations/update_message",success:function(e){return e?e.error?(n.handlePostError(r,e.errors),!1):(t(".preview.processing").each((function(){t('input[rel="'+t(this).attr("rel")+'"]').remove()})),n.updateMessageFromJSON(r,e),void n.publish("conversationSubmitForm",{form:r,response:e})):(n.handlePostError(r),!1)},error:function(e){return n.handlePostError(r),!1},complete:function(t){e.prop("disabled",!1),r.parent().closest(".ccm-conversation-form-submitted").removeClass("ccm-conversation-form-submitted")}})},tool:{setCaretPosition:function(e,t){if(null!=e)if(e.createTextRange){var n=e.createTextRange();n.move("character",t),n.select()}else e.selectionStart?(e.focus(),e.setSelectionRange(t,t)):e.focus()},getCaretPosition:function(e){if(e.selectionStart)return e.selectionStart;if(document.selection){e.focus();var t=document.selection.createRange();if(null==t)return 0;var n=e.createTextRange(),r=n.duplicate();return n.moveToBookmark(t.getBookmark()),r.setEndPoint("EndToStart",n),r.text.length}return 0},testMentionString:function(e){return/^@[a-z0-9]+$/.test(e)},getMentionMatches:function(e,t){return t.filter((function(t){return t.indexOf(e)>=0}))},isSameConversation:function(e,t){return e.options.blockID===t.options.blockID&&e.options.cnvID===t.options.cnvID},MentionUser:function(e){this.getName=function(){return e}}}}}(window,jQuery);var i,o,a;n(8);window,i=jQuery,o={Too_many_files:"Too many files",Invalid_file_extension:"Invalid file extension",Max_file_size_exceeded:"Max file size exceeded",Error_deleting_attachment:"Something went wrong while deleting this attachment, please refresh and try again.",Confirm_remove_attachment:"Remove this attachment?"},a={init:function(e){var t=e;return t.$element.on("click.cnv","a[data-toggle=conversation-reply]",(function(){i(".ccm-conversation-wrapper").concreteConversationAttachments("clearDropzoneQueues")})),t.$element.on("click.cnv","a.attachment-delete",(function(e){e.preventDefault(),i(this).concreteConversationAttachments("attachmentDeleteTrigger",t)})),t.$editMessageHolder&&!t.$editMessageHolder.find(".dropzone").attr("data-dropzone-applied")&&t.$editMessageHolder.find(".dropzone").not('[data-drozpone-applied="true"]').dropzone({url:CCM_TOOLS_PATH+"/conversations/add_file",success:function(e,n){var r=this;i(e.previewTemplate).click((function(){r.removeFile(e),i('input[rel="'+i(this).attr("rel")+'"]').remove()}));var o=JSON.parse(n);if(o.error){var a=i('.preview.processing[rel="'+o.timestamp+'"]').closest("form");t.handlePostError(a,[o.error]),i('.preview.processing[rel="'+o.timestamp+'"]').remove(),a.children(".ccm-conversation-errors").delay(3e3).fadeOut("slow",(function(){i(this).html("")}))}else i(this.element).closest("div.ccm-conversation-edit-message").find("form.aux-reply-form").append('<input rel="'+o.timestamp+'" type="hidden" name="attachments[]" value="'+o.id+'" />')},accept:function(e,n){var r=[],a=this.files.length;t.options.maxFiles>0&&a>t.options.maxFiles&&r.push(o.Too_many_files);var s=t.options.fileExtensions.split(",");if(e.name.split(".").pop().toLowerCase()&&-1==s.indexOf(e.name.split(".").pop().toLowerCase())&&""!=s&&r.push(o.Invalid_file_extension),t.options.maxFileSize>0&&e.size>1e6*t.options.maxFileSize&&r.push(o.Max_file_size_exceeded),r.length>0){i('input[rel="'+i(e.previewTemplate).attr("rel")+'"]').remove();var l=i(e.previewTemplate).parent(".dropzone");this.removeFile(e),t.handlePostError(l,r),l.children(".ccm-conversation-errors").delay(3e3).fadeOut("slow",(function(){i(this).html("")})),a=-1,n("error")}else n()},sending:function(e,n,r){i(e.previewTemplate).attr("rel",(new Date).getTime()),r.append("timestamp",i(e.previewTemplate).attr("rel")),r.append("tag",i(t.$editMessageHOlder).parent("div").attr("rel")),r.append("fileCount",i(t.$editMessageHolder).find('[name="attachments[]"]').length)},init:function(){i(this.element).data("dropzone",this)}}),t.$newmessageform.dropzone&&!i(t.$newmessageform).attr("data-dropzone-applied")&&(t.$newmessageform.dropzone({accept:function(e,n){var r=[],a=this.files.length;t.options.maxFiles>0&&a>t.options.maxFiles&&r.push(o.Too_many_files);var s=t.options.fileExtensions.split(",");if(e.name.split(".").pop().toLowerCase()&&-1==s.indexOf(e.name.split(".").pop().toLowerCase())&&""!=s&&r.push(o.Invalid_file_extension),t.options.maxFileSize>0&&e.size>1e6*t.options.maxFileSize&&r.push(o.Max_file_size_exceeded),r.length>0){i('input[rel="'+i(e.previewTemplate).attr("rel")+'"]').remove();var l=i(e.previewTemplate).parent(".dropzone");this.removeFile(e),t.handlePostError(l,r),l.children(".ccm-conversation-errors").delay(3e3).fadeOut("slow",(function(){i(this).html("")})),a=-1,n("error")}else n()},url:CCM_TOOLS_PATH+"/conversations/add_file",success:function(e,n){var r=this;i(e.previewTemplate).click((function(){i('input[rel="'+i(this).attr("rel")+'"]').remove(),r.removeFile(e)}));var o=JSON.parse(n);if(o.error){var a=i('.preview.processing[rel="'+o.timestamp+'"]').closest("form");t.handlePostError(a,[o.error]),i('.preview.processing[rel="'+o.timestamp+'"]').remove(),a.children(".ccm-conversation-errors").delay(3e3).fadeOut("slow",(function(){i(this).html("")}))}else i('div[rel="'+o.tag+'"] form.main-reply-form').append('<input rel="'+o.timestamp+'" type="hidden" name="attachments[]" value="'+o.id+'" />')},sending:function(e,n,r){i(e.previewTemplate).attr("rel",(new Date).getTime()),r.append("timestamp",i(e.previewTemplate).attr("rel")),r.append("tag",i(t.$newmessageform).parent("div").attr("rel")),r.append("fileCount",this.files.length)},init:function(){i(this.element).data("dropzone",this)}}),i(t.$newmessageform).attr("data-dropzone-applied","true")),i(t.$replyholder.find(".dropzone")).attr("data-dropzone-applied")||t.$replyholder.find(".dropzone").not('[data-drozpone-applied="true"]').dropzone({url:CCM_TOOLS_PATH+"/conversations/add_file",success:function(e,n){var r=this;i(e.previewTemplate).click((function(){r.removeFile(e),i('input[rel="'+i(this).attr("rel")+'"]').remove()}));var o=JSON.parse(n);if(o.error){var a=i('.preview.processing[rel="'+o.timestamp+'"]').closest("form");t.handlePostError(a,[o.error]),i('.preview.processing[rel="'+o.timestamp+'"]').remove(),a.children(".ccm-conversation-errors").delay(3e3).fadeOut("slow",(function(){i(this).html("")}))}else i(this.element).closest("div.ccm-conversation-add-reply").find("form.aux-reply-form").append('<input rel="'+o.timestamp+'" type="hidden" name="attachments[]" value="'+o.id+'" />')},accept:function(e,n){var r=[],a=this.files.length;t.options.maxFiles>0&&a>t.options.maxFiles&&r.push(o.Too_many_files);var s=t.options.fileExtensions.split(",");if(e.name.split(".").pop().toLowerCase()&&-1==s.indexOf(e.name.split(".").pop().toLowerCase())&&""!=s&&r.push(o.Invalid_file_extension),t.options.maxFileSize>0&&e.size>1e6*t.options.maxFileSize&&r.push(o.Max_file_size_exceeded),r.length>0){i('input[rel="'+i(e.previewTemplate).attr("rel")+'"]').remove();var l=i(e.previewTemplate).parent(".dropzone");this.removeFile(e),t.handlePostError(l,r),l.children(".ccm-conversation-errors").delay(3e3).fadeOut("slow",(function(){i(this).html("")})),a=-1,n("error")}else n()},sending:function(e,n,r){i(e.previewTemplate).attr("rel",(new Date).getTime()),r.append("timestamp",i(e.previewTemplate).attr("rel")),r.append("tag",i(t.$newmessageform).parent("div").attr("rel")),r.append("fileCount",i(t.$replyHolder).find('[name="attachments[]"]').length)},init:function(){i(this.element).data("dropzone",this)}}),i(t.$replyholder.find(".dropzone")).attr("data-dropzone-applied","true"),i.each(i(this),(function(e,t){i(this).find(".ccm-conversation-attachment-container").each((function(){i(this).is(":visible")&&i(this).toggle()}))}))},attachmentDeleteTrigger:function(e){var t=e,n=i(this);return t.$attachmentdeletetdialog=t.$attachmentdeleteholder.clone(),t.$attachmentdeletetdialog.dialog?t.$attachmentdeletetdialog.dialog({modal:!0,dialogClass:"ccm-conversation-dialog",title:t.$attachmentdeletetdialog.attr("data-dialog-title"),buttons:[{text:t.$attachmentdeleteholder.attr("data-cancel-button-title"),class:"btn pull-left",click:function(){t.$attachmentdeletetdialog.dialog("close")}},{text:t.$attachmentdeleteholder.attr("data-confirm-button-title"),class:"btn pull-right btn-danger",click:function(){i(this).concreteConversationAttachments("deleteAttachment",{cnvMessageAttachmentID:n.attr("rel"),cnvObj:t,dialogObj:t.$attachmentdeletetdialog})}}]}):window.confirm(o.Confirm_remove_attachment)&&i(this).concreteConversationAttachments("deleteAttachment",{cnvMessageAttachmentID:n.attr("rel"),cnvObj:t,dialogObj:t.$attachmentdeletetdialog}),!1},clearDropzoneQueues:function(){i(".preview.processing").each((function(){i('input[rel="'+i(this).attr("rel")+'"]').remove()})),i("form.dropzone").each((function(){var e=i(this).data("dropzone");i.each(e.files,(function(t,n){e.removeFile(n)}))}))},deleteAttachment:function(e){var t=e.cnvMessageAttachmentID,n=e.cnvObj,r=e.dialogObj,a=[{name:"cnvMessageAttachmentID",value:t}];i.ajax({type:"post",data:a,url:CCM_TOOLS_PATH+"/conversations/delete_file",success:function(e){var o=JSON.parse(e);i('p[rel="'+o.attachmentID+'"]').parent(".attachment-container").fadeOut(300,(function(){i(this).remove()})),r.dialog&&(r.dialog("close"),n.publish("conversationDeleteAttachment",{cnvMessageAttachmentID:t}))},error:function(e){n.publish("conversationDeleteAttachmentError",{cnvMessageAttachmentID:t,error:arguments}),window.alert(o.Error_deleting_attachment)}})}},i.fn.concreteConversationAttachments=function(e){return a[e]?a[e].apply(this,Array.prototype.slice.call(arguments,1)):"object"!=typeof e&&e?void i.error("Method "+e+" does not exist on concreteConversationAttachments"):a.init.apply(this,arguments)},i.fn.concreteConversationAttachments.localize=function(e){i.extend(!0,o,e)}},3:function(e,t,n){"use strict";var r=n(7),i=Object(r.mixin)(r);i._=i;var o=i;n.d(t,"a",(function(){return o}))},329:function(e,t,n){e.exports=n(286)},7:function(e,t,n){"use strict";n.r(t),function(e){n.d(t,"default",(function(){return g})),n.d(t,"VERSION",(function(){return y})),n.d(t,"iteratee",(function(){return k})),n.d(t,"restArguments",(function(){return C})),n.d(t,"each",(function(){return D})),n.d(t,"forEach",(function(){return D})),n.d(t,"map",(function(){return I})),n.d(t,"collect",(function(){return I})),n.d(t,"reduce",(function(){return O})),n.d(t,"foldl",(function(){return O})),n.d(t,"inject",(function(){return O})),n.d(t,"reduceRight",(function(){return L})),n.d(t,"foldr",(function(){return L})),n.d(t,"find",(function(){return P})),n.d(t,"detect",(function(){return P})),n.d(t,"filter",(function(){return $})),n.d(t,"select",(function(){return $})),n.d(t,"reject",(function(){return j})),n.d(t,"every",(function(){return R})),n.d(t,"all",(function(){return R})),n.d(t,"some",(function(){return U})),n.d(t,"any",(function(){return U})),n.d(t,"contains",(function(){return N})),n.d(t,"includes",(function(){return N})),n.d(t,"include",(function(){return N})),n.d(t,"invoke",(function(){return H})),n.d(t,"pluck",(function(){return B})),n.d(t,"where",(function(){return q})),n.d(t,"findWhere",(function(){return W})),n.d(t,"max",(function(){return Q})),n.d(t,"min",(function(){return Y})),n.d(t,"shuffle",(function(){return G})),n.d(t,"sample",(function(){return K})),n.d(t,"sortBy",(function(){return X})),n.d(t,"groupBy",(function(){return Z})),n.d(t,"indexBy",(function(){return V})),n.d(t,"countBy",(function(){return ee})),n.d(t,"toArray",(function(){return ne})),n.d(t,"size",(function(){return re})),n.d(t,"partition",(function(){return ie})),n.d(t,"first",(function(){return oe})),n.d(t,"head",(function(){return oe})),n.d(t,"take",(function(){return oe})),n.d(t,"initial",(function(){return ae})),n.d(t,"last",(function(){return se})),n.d(t,"rest",(function(){return le})),n.d(t,"tail",(function(){return le})),n.d(t,"drop",(function(){return le})),n.d(t,"compact",(function(){return ue})),n.d(t,"flatten",(function(){return de})),n.d(t,"without",(function(){return pe})),n.d(t,"uniq",(function(){return fe})),n.d(t,"unique",(function(){return fe})),n.d(t,"union",(function(){return he})),n.d(t,"intersection",(function(){return me})),n.d(t,"difference",(function(){return ve})),n.d(t,"unzip",(function(){return ge})),n.d(t,"zip",(function(){return ye})),n.d(t,"object",(function(){return be})),n.d(t,"findIndex",(function(){return ke})),n.d(t,"findLastIndex",(function(){return xe})),n.d(t,"sortedIndex",(function(){return Ce})),n.d(t,"indexOf",(function(){return Ee})),n.d(t,"lastIndexOf",(function(){return _e})),n.d(t,"range",(function(){return Se})),n.d(t,"chunk",(function(){return Te})),n.d(t,"bind",(function(){return ze})),n.d(t,"partial",(function(){return De})),n.d(t,"bindAll",(function(){return Ie})),n.d(t,"memoize",(function(){return Ae})),n.d(t,"delay",(function(){return Oe})),n.d(t,"defer",(function(){return Le})),n.d(t,"throttle",(function(){return Pe})),n.d(t,"debounce",(function(){return $e})),n.d(t,"wrap",(function(){return je})),n.d(t,"negate",(function(){return Re})),n.d(t,"compose",(function(){return Ue})),n.d(t,"after",(function(){return Ne})),n.d(t,"before",(function(){return He})),n.d(t,"once",(function(){return Be})),n.d(t,"keys",(function(){return Ye})),n.d(t,"allKeys",(function(){return Ge})),n.d(t,"values",(function(){return Ke})),n.d(t,"mapObject",(function(){return Xe})),n.d(t,"pairs",(function(){return Je})),n.d(t,"invert",(function(){return Ze})),n.d(t,"functions",(function(){return Ve})),n.d(t,"methods",(function(){return Ve})),n.d(t,"extend",(function(){return tt})),n.d(t,"extendOwn",(function(){return nt})),n.d(t,"assign",(function(){return nt})),n.d(t,"findKey",(function(){return rt})),n.d(t,"pick",(function(){return ot})),n.d(t,"omit",(function(){return at})),n.d(t,"defaults",(function(){return st})),n.d(t,"create",(function(){return lt})),n.d(t,"clone",(function(){return ut})),n.d(t,"tap",(function(){return ct})),n.d(t,"isMatch",(function(){return dt})),n.d(t,"isEqual",(function(){return ft})),n.d(t,"isEmpty",(function(){return ht})),n.d(t,"isElement",(function(){return mt})),n.d(t,"isArray",(function(){return gt})),n.d(t,"isObject",(function(){return yt})),n.d(t,"isArguments",(function(){return bt})),n.d(t,"isFunction",(function(){return wt})),n.d(t,"isString",(function(){return kt})),n.d(t,"isNumber",(function(){return xt})),n.d(t,"isDate",(function(){return Ct})),n.d(t,"isRegExp",(function(){return Ft})),n.d(t,"isError",(function(){return Et})),n.d(t,"isSymbol",(function(){return _t})),n.d(t,"isMap",(function(){return St})),n.d(t,"isWeakMap",(function(){return Tt})),n.d(t,"isSet",(function(){return Mt})),n.d(t,"isWeakSet",(function(){return zt})),n.d(t,"isFinite",(function(){return It})),n.d(t,"isNaN",(function(){return At})),n.d(t,"isBoolean",(function(){return Ot})),n.d(t,"isNull",(function(){return Lt})),n.d(t,"isUndefined",(function(){return Pt})),n.d(t,"has",(function(){return $t})),n.d(t,"identity",(function(){return jt})),n.d(t,"constant",(function(){return Rt})),n.d(t,"noop",(function(){return Ut})),n.d(t,"property",(function(){return Nt})),n.d(t,"propertyOf",(function(){return Ht})),n.d(t,"matcher",(function(){return Bt})),n.d(t,"matches",(function(){return Bt})),n.d(t,"times",(function(){return qt})),n.d(t,"random",(function(){return Wt})),n.d(t,"now",(function(){return Qt})),n.d(t,"escape",(function(){return Xt})),n.d(t,"unescape",(function(){return Jt})),n.d(t,"result",(function(){return Zt})),n.d(t,"uniqueId",(function(){return en})),n.d(t,"templateSettings",(function(){return tn})),n.d(t,"template",(function(){return sn})),n.d(t,"chain",(function(){return ln})),n.d(t,"mixin",(function(){return cn}));var r="object"==typeof self&&self.self===self&&self||"object"==typeof e&&e.global===e&&e||Function("return this")()||{},i=Array.prototype,o=Object.prototype,a="undefined"!=typeof Symbol?Symbol.prototype:null,s=i.push,l=i.slice,u=o.toString,c=o.hasOwnProperty,d=Array.isArray,p=Object.keys,f=Object.create,h=r.isNaN,m=r.isFinite,v=function(){};function g(e){return e instanceof g?e:this instanceof g?void(this._wrapped=e):new g(e)}var y=g.VERSION="1.10.2";function b(e,t,n){if(void 0===t)return e;switch(null==n?3:n){case 1:return function(n){return e.call(t,n)};case 3:return function(n,r,i){return e.call(t,n,r,i)};case 4:return function(n,r,i,o){return e.call(t,n,r,i,o)}}return function(){return e.apply(t,arguments)}}function w(e,t,n){return null==e?jt:wt(e)?b(e,t,n):yt(e)&&!gt(e)?Bt(e):Nt(e)}function k(e,t){return w(e,t,1/0)}function x(e,t,n){return g.iteratee!==k?g.iteratee(e,t):w(e,t,n)}function C(e,t){return t=null==t?e.length-1:+t,function(){for(var n=Math.max(arguments.length-t,0),r=Array(n),i=0;i<n;i++)r[i]=arguments[i+t];switch(t){case 0:return e.call(this,r);case 1:return e.call(this,arguments[0],r);case 2:return e.call(this,arguments[0],arguments[1],r)}var o=Array(t+1);for(i=0;i<t;i++)o[i]=arguments[i];return o[t]=r,e.apply(this,o)}}function F(e){if(!yt(e))return{};if(f)return f(e);v.prototype=e;var t=new v;return v.prototype=null,t}function E(e){return function(t){return null==t?void 0:t[e]}}function _(e,t){return null!=e&&c.call(e,t)}function S(e,t){for(var n=t.length,r=0;r<n;r++){if(null==e)return;e=e[t[r]]}return n?e:void 0}g.iteratee=k;var T=Math.pow(2,53)-1,M=E("length");function z(e){var t=M(e);return"number"==typeof t&&t>=0&&t<=T}function D(e,t,n){var r,i;if(t=b(t,n),z(e))for(r=0,i=e.length;r<i;r++)t(e[r],r,e);else{var o=Ye(e);for(r=0,i=o.length;r<i;r++)t(e[o[r]],o[r],e)}return e}function I(e,t,n){t=x(t,n);for(var r=!z(e)&&Ye(e),i=(r||e).length,o=Array(i),a=0;a<i;a++){var s=r?r[a]:a;o[a]=t(e[s],s,e)}return o}function A(e){var t=function(t,n,r,i){var o=!z(t)&&Ye(t),a=(o||t).length,s=e>0?0:a-1;for(i||(r=t[o?o[s]:s],s+=e);s>=0&&s<a;s+=e){var l=o?o[s]:s;r=n(r,t[l],l,t)}return r};return function(e,n,r,i){var o=arguments.length>=3;return t(e,b(n,i,4),r,o)}}var O=A(1),L=A(-1);function P(e,t,n){var r=(z(e)?ke:rt)(e,t,n);if(void 0!==r&&-1!==r)return e[r]}function $(e,t,n){var r=[];return t=x(t,n),D(e,(function(e,n,i){t(e,n,i)&&r.push(e)})),r}function j(e,t,n){return $(e,Re(x(t)),n)}function R(e,t,n){t=x(t,n);for(var r=!z(e)&&Ye(e),i=(r||e).length,o=0;o<i;o++){var a=r?r[o]:o;if(!t(e[a],a,e))return!1}return!0}function U(e,t,n){t=x(t,n);for(var r=!z(e)&&Ye(e),i=(r||e).length,o=0;o<i;o++){var a=r?r[o]:o;if(t(e[a],a,e))return!0}return!1}function N(e,t,n,r){return z(e)||(e=Ke(e)),("number"!=typeof n||r)&&(n=0),Ee(e,t,n)>=0}var H=C((function(e,t,n){var r,i;return wt(t)?i=t:gt(t)&&(r=t.slice(0,-1),t=t[t.length-1]),I(e,(function(e){var o=i;if(!o){if(r&&r.length&&(e=S(e,r)),null==e)return;o=e[t]}return null==o?o:o.apply(e,n)}))}));function B(e,t){return I(e,Nt(t))}function q(e,t){return $(e,Bt(t))}function W(e,t){return P(e,Bt(t))}function Q(e,t,n){var r,i,o=-1/0,a=-1/0;if(null==t||"number"==typeof t&&"object"!=typeof e[0]&&null!=e)for(var s=0,l=(e=z(e)?e:Ke(e)).length;s<l;s++)null!=(r=e[s])&&r>o&&(o=r);else t=x(t,n),D(e,(function(e,n,r){((i=t(e,n,r))>a||i===-1/0&&o===-1/0)&&(o=e,a=i)}));return o}function Y(e,t,n){var r,i,o=1/0,a=1/0;if(null==t||"number"==typeof t&&"object"!=typeof e[0]&&null!=e)for(var s=0,l=(e=z(e)?e:Ke(e)).length;s<l;s++)null!=(r=e[s])&&r<o&&(o=r);else t=x(t,n),D(e,(function(e,n,r){((i=t(e,n,r))<a||i===1/0&&o===1/0)&&(o=e,a=i)}));return o}function G(e){return K(e,1/0)}function K(e,t,n){if(null==t||n)return z(e)||(e=Ke(e)),e[Wt(e.length-1)];var r=z(e)?ut(e):Ke(e),i=M(r);t=Math.max(Math.min(t,i),0);for(var o=i-1,a=0;a<t;a++){var s=Wt(a,o),l=r[a];r[a]=r[s],r[s]=l}return r.slice(0,t)}function X(e,t,n){var r=0;return t=x(t,n),B(I(e,(function(e,n,i){return{value:e,index:r++,criteria:t(e,n,i)}})).sort((function(e,t){var n=e.criteria,r=t.criteria;if(n!==r){if(n>r||void 0===n)return 1;if(n<r||void 0===r)return-1}return e.index-t.index})),"value")}function J(e,t){return function(n,r,i){var o=t?[[],[]]:{};return r=x(r,i),D(n,(function(t,i){var a=r(t,i,n);e(o,t,a)})),o}}var Z=J((function(e,t,n){_(e,n)?e[n].push(t):e[n]=[t]})),V=J((function(e,t,n){e[n]=t})),ee=J((function(e,t,n){_(e,n)?e[n]++:e[n]=1})),te=/[^\ud800-\udfff]|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]/g;function ne(e){return e?gt(e)?l.call(e):kt(e)?e.match(te):z(e)?I(e,jt):Ke(e):[]}function re(e){return null==e?0:z(e)?e.length:Ye(e).length}var ie=J((function(e,t,n){e[n?0:1].push(t)}),!0);function oe(e,t,n){return null==e||e.length<1?null==t?void 0:[]:null==t||n?e[0]:ae(e,e.length-t)}function ae(e,t,n){return l.call(e,0,Math.max(0,e.length-(null==t||n?1:t)))}function se(e,t,n){return null==e||e.length<1?null==t?void 0:[]:null==t||n?e[e.length-1]:le(e,Math.max(0,e.length-t))}function le(e,t,n){return l.call(e,null==t||n?1:t)}function ue(e){return $(e,Boolean)}function ce(e,t,n,r){for(var i=(r=r||[]).length,o=0,a=M(e);o<a;o++){var s=e[o];if(z(s)&&(gt(s)||bt(s)))if(t)for(var l=0,u=s.length;l<u;)r[i++]=s[l++];else ce(s,t,n,r),i=r.length;else n||(r[i++]=s)}return r}function de(e,t){return ce(e,t,!1)}var pe=C((function(e,t){return ve(e,t)}));function fe(e,t,n,r){Ot(t)||(r=n,n=t,t=!1),null!=n&&(n=x(n,r));for(var i=[],o=[],a=0,s=M(e);a<s;a++){var l=e[a],u=n?n(l,a,e):l;t&&!n?(a&&o===u||i.push(l),o=u):n?N(o,u)||(o.push(u),i.push(l)):N(i,l)||i.push(l)}return i}var he=C((function(e){return fe(ce(e,!0,!0))}));function me(e){for(var t=[],n=arguments.length,r=0,i=M(e);r<i;r++){var o=e[r];if(!N(t,o)){var a;for(a=1;a<n&&N(arguments[a],o);a++);a===n&&t.push(o)}}return t}var ve=C((function(e,t){return t=ce(t,!0,!0),$(e,(function(e){return!N(t,e)}))}));function ge(e){for(var t=e&&Q(e,M).length||0,n=Array(t),r=0;r<t;r++)n[r]=B(e,r);return n}var ye=C(ge);function be(e,t){for(var n={},r=0,i=M(e);r<i;r++)t?n[e[r]]=t[r]:n[e[r][0]]=e[r][1];return n}function we(e){return function(t,n,r){n=x(n,r);for(var i=M(t),o=e>0?0:i-1;o>=0&&o<i;o+=e)if(n(t[o],o,t))return o;return-1}}var ke=we(1),xe=we(-1);function Ce(e,t,n,r){for(var i=(n=x(n,r,1))(t),o=0,a=M(e);o<a;){var s=Math.floor((o+a)/2);n(e[s])<i?o=s+1:a=s}return o}function Fe(e,t,n){return function(r,i,o){var a=0,s=M(r);if("number"==typeof o)e>0?a=o>=0?o:Math.max(o+s,a):s=o>=0?Math.min(o+1,s):o+s+1;else if(n&&o&&s)return r[o=n(r,i)]===i?o:-1;if(i!=i)return(o=t(l.call(r,a,s),At))>=0?o+a:-1;for(o=e>0?a:s-1;o>=0&&o<s;o+=e)if(r[o]===i)return o;return-1}}var Ee=Fe(1,ke,Ce),_e=Fe(-1,xe);function Se(e,t,n){null==t&&(t=e||0,e=0),n||(n=t<e?-1:1);for(var r=Math.max(Math.ceil((t-e)/n),0),i=Array(r),o=0;o<r;o++,e+=n)i[o]=e;return i}function Te(e,t){if(null==t||t<1)return[];for(var n=[],r=0,i=e.length;r<i;)n.push(l.call(e,r,r+=t));return n}function Me(e,t,n,r,i){if(!(r instanceof t))return e.apply(n,i);var o=F(e.prototype),a=e.apply(o,i);return yt(a)?a:o}var ze=C((function(e,t,n){if(!wt(e))throw new TypeError("Bind must be called on a function");var r=C((function(i){return Me(e,r,t,this,n.concat(i))}));return r})),De=C((function(e,t){var n=De.placeholder,r=function(){for(var i=0,o=t.length,a=Array(o),s=0;s<o;s++)a[s]=t[s]===n?arguments[i++]:t[s];for(;i<arguments.length;)a.push(arguments[i++]);return Me(e,r,this,this,a)};return r}));De.placeholder=g;var Ie=C((function(e,t){var n=(t=ce(t,!1,!1)).length;if(n<1)throw new Error("bindAll must be passed function names");for(;n--;){var r=t[n];e[r]=ze(e[r],e)}}));function Ae(e,t){var n=function(r){var i=n.cache,o=""+(t?t.apply(this,arguments):r);return _(i,o)||(i[o]=e.apply(this,arguments)),i[o]};return n.cache={},n}var Oe=C((function(e,t,n){return setTimeout((function(){return e.apply(null,n)}),t)})),Le=De(Oe,g,1);function Pe(e,t,n){var r,i,o,a,s=0;n||(n={});var l=function(){s=!1===n.leading?0:Qt(),r=null,a=e.apply(i,o),r||(i=o=null)},u=function(){var u=Qt();s||!1!==n.leading||(s=u);var c=t-(u-s);return i=this,o=arguments,c<=0||c>t?(r&&(clearTimeout(r),r=null),s=u,a=e.apply(i,o),r||(i=o=null)):r||!1===n.trailing||(r=setTimeout(l,c)),a};return u.cancel=function(){clearTimeout(r),s=0,r=i=o=null},u}function $e(e,t,n){var r,i,o=function(t,n){r=null,n&&(i=e.apply(t,n))},a=C((function(a){if(r&&clearTimeout(r),n){var s=!r;r=setTimeout(o,t),s&&(i=e.apply(this,a))}else r=Oe(o,t,this,a);return i}));return a.cancel=function(){clearTimeout(r),r=null},a}function je(e,t){return De(t,e)}function Re(e){return function(){return!e.apply(this,arguments)}}function Ue(){var e=arguments,t=e.length-1;return function(){for(var n=t,r=e[t].apply(this,arguments);n--;)r=e[n].call(this,r);return r}}function Ne(e,t){return function(){if(--e<1)return t.apply(this,arguments)}}function He(e,t){var n;return function(){return--e>0&&(n=t.apply(this,arguments)),e<=1&&(t=null),n}}var Be=De(He,2),qe=!{toString:null}.propertyIsEnumerable("toString"),We=["valueOf","isPrototypeOf","toString","propertyIsEnumerable","hasOwnProperty","toLocaleString"];function Qe(e,t){var n=We.length,r=e.constructor,i=wt(r)&&r.prototype||o,a="constructor";for(_(e,a)&&!N(t,a)&&t.push(a);n--;)(a=We[n])in e&&e[a]!==i[a]&&!N(t,a)&&t.push(a)}function Ye(e){if(!yt(e))return[];if(p)return p(e);var t=[];for(var n in e)_(e,n)&&t.push(n);return qe&&Qe(e,t),t}function Ge(e){if(!yt(e))return[];var t=[];for(var n in e)t.push(n);return qe&&Qe(e,t),t}function Ke(e){for(var t=Ye(e),n=t.length,r=Array(n),i=0;i<n;i++)r[i]=e[t[i]];return r}function Xe(e,t,n){t=x(t,n);for(var r=Ye(e),i=r.length,o={},a=0;a<i;a++){var s=r[a];o[s]=t(e[s],s,e)}return o}function Je(e){for(var t=Ye(e),n=t.length,r=Array(n),i=0;i<n;i++)r[i]=[t[i],e[t[i]]];return r}function Ze(e){for(var t={},n=Ye(e),r=0,i=n.length;r<i;r++)t[e[n[r]]]=n[r];return t}function Ve(e){var t=[];for(var n in e)wt(e[n])&&t.push(n);return t.sort()}function et(e,t){return function(n){var r=arguments.length;if(t&&(n=Object(n)),r<2||null==n)return n;for(var i=1;i<r;i++)for(var o=arguments[i],a=e(o),s=a.length,l=0;l<s;l++){var u=a[l];t&&void 0!==n[u]||(n[u]=o[u])}return n}}var tt=et(Ge),nt=et(Ye);function rt(e,t,n){t=x(t,n);for(var r,i=Ye(e),o=0,a=i.length;o<a;o++)if(t(e[r=i[o]],r,e))return r}function it(e,t,n){return t in n}var ot=C((function(e,t){var n={},r=t[0];if(null==e)return n;wt(r)?(t.length>1&&(r=b(r,t[1])),t=Ge(e)):(r=it,t=ce(t,!1,!1),e=Object(e));for(var i=0,o=t.length;i<o;i++){var a=t[i],s=e[a];r(s,a,e)&&(n[a]=s)}return n})),at=C((function(e,t){var n,r=t[0];return wt(r)?(r=Re(r),t.length>1&&(n=t[1])):(t=I(ce(t,!1,!1),String),r=function(e,n){return!N(t,n)}),ot(e,r,n)})),st=et(Ge,!0);function lt(e,t){var n=F(e);return t&&nt(n,t),n}function ut(e){return yt(e)?gt(e)?e.slice():tt({},e):e}function ct(e,t){return t(e),e}function dt(e,t){var n=Ye(t),r=n.length;if(null==e)return!r;for(var i=Object(e),o=0;o<r;o++){var a=n[o];if(t[a]!==i[a]||!(a in i))return!1}return!0}function pt(e,t,n,r){if(e===t)return 0!==e||1/e==1/t;if(null==e||null==t)return!1;if(e!=e)return t!=t;var i=typeof e;return("function"===i||"object"===i||"object"==typeof t)&&function(e,t,n,r){e instanceof g&&(e=e._wrapped);t instanceof g&&(t=t._wrapped);var i=u.call(e);if(i!==u.call(t))return!1;switch(i){case"[object RegExp]":case"[object String]":return""+e==""+t;case"[object Number]":return+e!=+e?+t!=+t:0==+e?1/+e==1/t:+e==+t;case"[object Date]":case"[object Boolean]":return+e==+t;case"[object Symbol]":return a.valueOf.call(e)===a.valueOf.call(t)}var o="[object Array]"===i;if(!o){if("object"!=typeof e||"object"!=typeof t)return!1;var s=e.constructor,l=t.constructor;if(s!==l&&!(wt(s)&&s instanceof s&&wt(l)&&l instanceof l)&&"constructor"in e&&"constructor"in t)return!1}r=r||[];var c=(n=n||[]).length;for(;c--;)if(n[c]===e)return r[c]===t;if(n.push(e),r.push(t),o){if((c=e.length)!==t.length)return!1;for(;c--;)if(!pt(e[c],t[c],n,r))return!1}else{var d,p=Ye(e);if(c=p.length,Ye(t).length!==c)return!1;for(;c--;)if(d=p[c],!_(t,d)||!pt(e[d],t[d],n,r))return!1}return n.pop(),r.pop(),!0}(e,t,n,r)}function ft(e,t){return pt(e,t)}function ht(e){return null==e||(z(e)&&(gt(e)||kt(e)||bt(e))?0===e.length:0===Ye(e).length)}function mt(e){return!(!e||1!==e.nodeType)}function vt(e){return function(t){return u.call(t)==="[object "+e+"]"}}var gt=d||vt("Array");function yt(e){var t=typeof e;return"function"===t||"object"===t&&!!e}var bt=vt("Arguments"),wt=vt("Function"),kt=vt("String"),xt=vt("Number"),Ct=vt("Date"),Ft=vt("RegExp"),Et=vt("Error"),_t=vt("Symbol"),St=vt("Map"),Tt=vt("WeakMap"),Mt=vt("Set"),zt=vt("WeakSet");!function(){bt(arguments)||(bt=function(e){return _(e,"callee")})}();var Dt=r.document&&r.document.childNodes;function It(e){return!_t(e)&&m(e)&&!h(parseFloat(e))}function At(e){return xt(e)&&h(e)}function Ot(e){return!0===e||!1===e||"[object Boolean]"===u.call(e)}function Lt(e){return null===e}function Pt(e){return void 0===e}function $t(e,t){if(!gt(t))return _(e,t);for(var n=t.length,r=0;r<n;r++){var i=t[r];if(null==e||!c.call(e,i))return!1;e=e[i]}return!!n}function jt(e){return e}function Rt(e){return function(){return e}}function Ut(){}function Nt(e){return gt(e)?function(t){return S(t,e)}:E(e)}function Ht(e){return null==e?function(){}:function(t){return gt(t)?S(e,t):e[t]}}function Bt(e){return e=nt({},e),function(t){return dt(t,e)}}function qt(e,t,n){var r=Array(Math.max(0,e));t=b(t,n,1);for(var i=0;i<e;i++)r[i]=t(i);return r}function Wt(e,t){return null==t&&(t=e,e=0),e+Math.floor(Math.random()*(t-e+1))}"object"!=typeof Int8Array&&"function"!=typeof Dt&&(wt=function(e){return"function"==typeof e||!1});var Qt=Date.now||function(){return(new Date).getTime()},Yt={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},Gt=Ze(Yt);function Kt(e){var t=function(t){return e[t]},n="(?:"+Ye(e).join("|")+")",r=RegExp(n),i=RegExp(n,"g");return function(e){return e=null==e?"":""+e,r.test(e)?e.replace(i,t):e}}var Xt=Kt(Yt),Jt=Kt(Gt);function Zt(e,t,n){gt(t)||(t=[t]);var r=t.length;if(!r)return wt(n)?n.call(e):n;for(var i=0;i<r;i++){var o=null==e?void 0:e[t[i]];void 0===o&&(o=n,i=r),e=wt(o)?o.call(e):o}return e}var Vt=0;function en(e){var t=++Vt+"";return e?e+t:t}var tn=g.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g},nn=/(.)^/,rn={"'":"'","\\":"\\","\r":"r","\n":"n","\u2028":"u2028","\u2029":"u2029"},on=/\\|'|\r|\n|\u2028|\u2029/g,an=function(e){return"\\"+rn[e]};function sn(e,t,n){!t&&n&&(t=n),t=st({},t,g.templateSettings);var r,i=RegExp([(t.escape||nn).source,(t.interpolate||nn).source,(t.evaluate||nn).source].join("|")+"|$","g"),o=0,a="__p+='";e.replace(i,(function(t,n,r,i,s){return a+=e.slice(o,s).replace(on,an),o=s+t.length,n?a+="'+\n((__t=("+n+"))==null?'':_.escape(__t))+\n'":r?a+="'+\n((__t=("+r+"))==null?'':__t)+\n'":i&&(a+="';\n"+i+"\n__p+='"),t})),a+="';\n",t.variable||(a="with(obj||{}){\n"+a+"}\n"),a="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+a+"return __p;\n";try{r=new Function(t.variable||"obj","_",a)}catch(e){throw e.source=a,e}var s=function(e){return r.call(this,e,g)},l=t.variable||"obj";return s.source="function("+l+"){\n"+a+"}",s}function ln(e){var t=g(e);return t._chain=!0,t}function un(e,t){return e._chain?g(t).chain():t}function cn(e){return D(Ve(e),(function(t){var n=g[t]=e[t];g.prototype[t]=function(){var e=[this._wrapped];return s.apply(e,arguments),un(this,n.apply(g,e))}})),g}D(["pop","push","reverse","shift","sort","splice","unshift"],(function(e){var t=i[e];g.prototype[e]=function(){var n=this._wrapped;return t.apply(n,arguments),"shift"!==e&&"splice"!==e||0!==n.length||delete n[0],un(this,n)}})),D(["concat","join","slice"],(function(e){var t=i[e];g.prototype[e]=function(){return un(this,t.apply(this._wrapped,arguments))}})),g.prototype.value=function(){return this._wrapped},g.prototype.valueOf=g.prototype.toJSON=g.prototype.value,g.prototype.toString=function(){return String(this._wrapped)}}.call(this,n(2))},8:function(e,t,n){"use strict";(function(e){function t(e){return(t="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function n(e,n){return!n||"object"!==t(n)&&"function"!=typeof n?i(e):n}function r(e){return(r=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}function i(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function o(e,t){return(o=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function a(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function s(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}function l(e,t,n){return t&&s(e.prototype,t),n&&s(e,n),e}var u=function(){function e(){a(this,e)}return l(e,[{key:"on",value:function(e,t){return this._callbacks=this._callbacks||{},this._callbacks[e]||(this._callbacks[e]=[]),this._callbacks[e].push(t),this}},{key:"emit",value:function(e){this._callbacks=this._callbacks||{};var t=this._callbacks[e];if(t){for(var n=arguments.length,r=new Array(n>1?n-1:0),i=1;i<n;i++)r[i-1]=arguments[i];var o=!0,a=!1,s=void 0;try{for(var l,u=t[Symbol.iterator]();!(o=(l=u.next()).done);o=!0){var c=l.value;c.apply(this,r)}}catch(e){a=!0,s=e}finally{try{o||null==u.return||u.return()}finally{if(a)throw s}}}return this}},{key:"off",value:function(e,t){if(!this._callbacks||0===arguments.length)return this._callbacks={},this;var n=this._callbacks[e];if(!n)return this;if(1===arguments.length)return delete this._callbacks[e],this;for(var r=0;r<n.length;r++){var i=n[r];if(i===t){n.splice(r,1);break}}return this}}]),e}(),c=function(e){function t(e,o){var s,l,u;if(a(this,t),(s=n(this,r(t).call(this))).element=e,s.version=t.version,s.defaultOptions.previewTemplate=s.defaultOptions.previewTemplate.replace(/\n*/g,""),s.clickableElements=[],s.listeners=[],s.files=[],"string"==typeof s.element&&(s.element=document.querySelector(s.element)),!s.element||null==s.element.nodeType)throw new Error("Invalid dropzone element.");if(s.element.dropzone)throw new Error("Dropzone already attached.");t.instances.push(i(s)),s.element.dropzone=i(s);var c=null!=(u=t.optionsForElement(s.element))?u:{};if(s.options=t.extend({},s.defaultOptions,c,null!=o?o:{}),s.options.forceFallback||!t.isBrowserSupported())return n(s,s.options.fallback.call(i(s)));if(null==s.options.url&&(s.options.url=s.element.getAttribute("action")),!s.options.url)throw new Error("No URL provided.");if(s.options.acceptedFiles&&s.options.acceptedMimeTypes)throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");if(s.options.uploadMultiple&&s.options.chunking)throw new Error("You cannot set both: uploadMultiple and chunking.");return s.options.acceptedMimeTypes&&(s.options.acceptedFiles=s.options.acceptedMimeTypes,delete s.options.acceptedMimeTypes),null!=s.options.renameFilename&&(s.options.renameFile=function(e){return s.options.renameFilename.call(i(s),e.name,e)}),s.options.method=s.options.method.toUpperCase(),(l=s.getExistingFallback())&&l.parentNode&&l.parentNode.removeChild(l),!1!==s.options.previewsContainer&&(s.options.previewsContainer?s.previewsContainer=t.getElement(s.options.previewsContainer,"previewsContainer"):s.previewsContainer=s.element),s.options.clickable&&(!0===s.options.clickable?s.clickableElements=[s.element]:s.clickableElements=t.getElements(s.options.clickable,"clickable")),s.init(),s}return function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&o(e,t)}(t,e),l(t,null,[{key:"initClass",value:function(){this.prototype.Emitter=u,this.prototype.events=["drop","dragstart","dragend","dragenter","dragover","dragleave","addedfile","addedfiles","removedfile","thumbnail","error","errormultiple","processing","processingmultiple","uploadprogress","totaluploadprogress","sending","sendingmultiple","success","successmultiple","canceled","canceledmultiple","complete","completemultiple","reset","maxfilesexceeded","maxfilesreached","queuecomplete"],this.prototype.defaultOptions={url:null,method:"post",withCredentials:!1,timeout:3e4,parallelUploads:2,uploadMultiple:!1,chunking:!1,forceChunking:!1,chunkSize:2e6,parallelChunkUploads:!1,retryChunks:!1,retryChunksLimit:3,maxFilesize:256,paramName:"file",createImageThumbnails:!0,maxThumbnailFilesize:10,thumbnailWidth:120,thumbnailHeight:120,thumbnailMethod:"crop",resizeWidth:null,resizeHeight:null,resizeMimeType:null,resizeQuality:.8,resizeMethod:"contain",filesizeBase:1e3,maxFiles:null,headers:null,clickable:!0,ignoreHiddenFiles:!0,acceptedFiles:null,acceptedMimeTypes:null,autoProcessQueue:!0,autoQueue:!0,addRemoveLinks:!1,previewsContainer:null,hiddenInputContainer:"body",capture:null,renameFilename:null,renameFile:null,forceFallback:!1,dictDefaultMessage:"Drop files here to upload",dictFallbackMessage:"Your browser does not support drag'n'drop file uploads.",dictFallbackText:"Please use the fallback form below to upload your files like in the olden days.",dictFileTooBig:"File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",dictInvalidFileType:"You can't upload files of this type.",dictResponseError:"Server responded with {{statusCode}} code.",dictCancelUpload:"Cancel upload",dictUploadCanceled:"Upload canceled.",dictCancelUploadConfirmation:"Are you sure you want to cancel this upload?",dictRemoveFile:"Remove file",dictRemoveFileConfirmation:null,dictMaxFilesExceeded:"You can not upload any more files.",dictFileSizeUnits:{tb:"TB",gb:"GB",mb:"MB",kb:"KB",b:"b"},init:function(){},params:function(e,t,n){if(n)return{dzuuid:n.file.upload.uuid,dzchunkindex:n.index,dztotalfilesize:n.file.size,dzchunksize:this.options.chunkSize,dztotalchunkcount:n.file.upload.totalChunkCount,dzchunkbyteoffset:n.index*this.options.chunkSize}},accept:function(e,t){return t()},chunksUploaded:function(e,t){t()},fallback:function(){var e;this.element.className="".concat(this.element.className," dz-browser-not-supported");var n=!0,r=!1,i=void 0;try{for(var o,a=this.element.getElementsByTagName("div")[Symbol.iterator]();!(n=(o=a.next()).done);n=!0){var s=o.value;if(/(^| )dz-message($| )/.test(s.className)){e=s,s.className="dz-message";break}}}catch(e){r=!0,i=e}finally{try{n||null==a.return||a.return()}finally{if(r)throw i}}e||(e=t.createElement('<div class="dz-message"><span></span></div>'),this.element.appendChild(e));var l=e.getElementsByTagName("span")[0];return l&&(null!=l.textContent?l.textContent=this.options.dictFallbackMessage:null!=l.innerText&&(l.innerText=this.options.dictFallbackMessage)),this.element.appendChild(this.getFallbackForm())},resize:function(e,t,n,r){var i={srcX:0,srcY:0,srcWidth:e.width,srcHeight:e.height},o=e.width/e.height;null==t&&null==n?(t=i.srcWidth,n=i.srcHeight):null==t?t=n*o:null==n&&(n=t/o);var a=(t=Math.min(t,i.srcWidth))/(n=Math.min(n,i.srcHeight));if(i.srcWidth>t||i.srcHeight>n)if("crop"===r)o>a?(i.srcHeight=e.height,i.srcWidth=i.srcHeight*a):(i.srcWidth=e.width,i.srcHeight=i.srcWidth/a);else{if("contain"!==r)throw new Error("Unknown resizeMethod '".concat(r,"'"));o>a?n=t/o:t=n*o}return i.srcX=(e.width-i.srcWidth)/2,i.srcY=(e.height-i.srcHeight)/2,i.trgWidth=t,i.trgHeight=n,i},transformFile:function(e,t){return(this.options.resizeWidth||this.options.resizeHeight)&&e.type.match(/image.*/)?this.resizeImage(e,this.options.resizeWidth,this.options.resizeHeight,this.options.resizeMethod,t):t(e)},previewTemplate:'<div class="dz-preview dz-file-preview">\n  <div class="dz-image"><img data-dz-thumbnail /></div>\n  <div class="dz-details">\n    <div class="dz-size"><span data-dz-size></span></div>\n    <div class="dz-filename"><span data-dz-name></span></div>\n  </div>\n  <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>\n  <div class="dz-error-message"><span data-dz-errormessage></span></div>\n  <div class="dz-success-mark">\n    <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n      <title>Check</title>\n      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\n        <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#FFFFFF"></path>\n      </g>\n    </svg>\n  </div>\n  <div class="dz-error-mark">\n    <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n      <title>Error</title>\n      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\n        <g stroke="#747474" stroke-opacity="0.198794158" fill="#FFFFFF" fill-opacity="0.816519475">\n          <path d="M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>',drop:function(e){return this.element.classList.remove("dz-drag-hover")},dragstart:function(e){},dragend:function(e){return this.element.classList.remove("dz-drag-hover")},dragenter:function(e){return this.element.classList.add("dz-drag-hover")},dragover:function(e){return this.element.classList.add("dz-drag-hover")},dragleave:function(e){return this.element.classList.remove("dz-drag-hover")},paste:function(e){},reset:function(){return this.element.classList.remove("dz-started")},addedfile:function(e){var n=this;if(this.element===this.previewsContainer&&this.element.classList.add("dz-started"),this.previewsContainer){e.previewElement=t.createElement(this.options.previewTemplate.trim()),e.previewTemplate=e.previewElement,this.previewsContainer.appendChild(e.previewElement);var r=!0,i=!1,o=void 0;try{for(var a,s=e.previewElement.querySelectorAll("[data-dz-name]")[Symbol.iterator]();!(r=(a=s.next()).done);r=!0){var l=a.value;l.textContent=e.name}}catch(e){i=!0,o=e}finally{try{r||null==s.return||s.return()}finally{if(i)throw o}}var u=!0,c=!1,d=void 0;try{for(var p,f=e.previewElement.querySelectorAll("[data-dz-size]")[Symbol.iterator]();!(u=(p=f.next()).done);u=!0)(l=p.value).innerHTML=this.filesize(e.size)}catch(e){c=!0,d=e}finally{try{u||null==f.return||f.return()}finally{if(c)throw d}}this.options.addRemoveLinks&&(e._removeLink=t.createElement('<a class="dz-remove" href="javascript:undefined;" data-dz-remove>'.concat(this.options.dictRemoveFile,"</a>")),e.previewElement.appendChild(e._removeLink));var h=function(r){return r.preventDefault(),r.stopPropagation(),e.status===t.UPLOADING?t.confirm(n.options.dictCancelUploadConfirmation,(function(){return n.removeFile(e)})):n.options.dictRemoveFileConfirmation?t.confirm(n.options.dictRemoveFileConfirmation,(function(){return n.removeFile(e)})):n.removeFile(e)},m=!0,v=!1,g=void 0;try{for(var y,b=e.previewElement.querySelectorAll("[data-dz-remove]")[Symbol.iterator]();!(m=(y=b.next()).done);m=!0){y.value.addEventListener("click",h)}}catch(e){v=!0,g=e}finally{try{m||null==b.return||b.return()}finally{if(v)throw g}}}},removedfile:function(e){return null!=e.previewElement&&null!=e.previewElement.parentNode&&e.previewElement.parentNode.removeChild(e.previewElement),this._updateMaxFilesReachedClass()},thumbnail:function(e,t){if(e.previewElement){e.previewElement.classList.remove("dz-file-preview");var n=!0,r=!1,i=void 0;try{for(var o,a=e.previewElement.querySelectorAll("[data-dz-thumbnail]")[Symbol.iterator]();!(n=(o=a.next()).done);n=!0){var s=o.value;s.alt=e.name,s.src=t}}catch(e){r=!0,i=e}finally{try{n||null==a.return||a.return()}finally{if(r)throw i}}return setTimeout((function(){return e.previewElement.classList.add("dz-image-preview")}),1)}},error:function(e,t){if(e.previewElement){e.previewElement.classList.add("dz-error"),"String"!=typeof t&&t.error&&(t=t.error);var n=!0,r=!1,i=void 0;try{for(var o,a=e.previewElement.querySelectorAll("[data-dz-errormessage]")[Symbol.iterator]();!(n=(o=a.next()).done);n=!0){o.value.textContent=t}}catch(e){r=!0,i=e}finally{try{n||null==a.return||a.return()}finally{if(r)throw i}}}},errormultiple:function(){},processing:function(e){if(e.previewElement&&(e.previewElement.classList.add("dz-processing"),e._removeLink))return e._removeLink.innerHTML=this.options.dictCancelUpload},processingmultiple:function(){},uploadprogress:function(e,t,n){if(e.previewElement){var r=!0,i=!1,o=void 0;try{for(var a,s=e.previewElement.querySelectorAll("[data-dz-uploadprogress]")[Symbol.iterator]();!(r=(a=s.next()).done);r=!0){var l=a.value;"PROGRESS"===l.nodeName?l.value=t:l.style.width="".concat(t,"%")}}catch(e){i=!0,o=e}finally{try{r||null==s.return||s.return()}finally{if(i)throw o}}}},totaluploadprogress:function(){},sending:function(){},sendingmultiple:function(){},success:function(e){if(e.previewElement)return e.previewElement.classList.add("dz-success")},successmultiple:function(){},canceled:function(e){return this.emit("error",e,this.options.dictUploadCanceled)},canceledmultiple:function(){},complete:function(e){if(e._removeLink&&(e._removeLink.innerHTML=this.options.dictRemoveFile),e.previewElement)return e.previewElement.classList.add("dz-complete")},completemultiple:function(){},maxfilesexceeded:function(){},maxfilesreached:function(){},queuecomplete:function(){},addedfiles:function(){}},this.prototype._thumbnailQueue=[],this.prototype._processingThumbnail=!1}},{key:"extend",value:function(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];for(var i=0,o=n;i<o.length;i++){var a=o[i];for(var s in a){var l=a[s];e[s]=l}}return e}}]),l(t,[{key:"getAcceptedFiles",value:function(){return this.files.filter((function(e){return e.accepted})).map((function(e){return e}))}},{key:"getRejectedFiles",value:function(){return this.files.filter((function(e){return!e.accepted})).map((function(e){return e}))}},{key:"getFilesWithStatus",value:function(e){return this.files.filter((function(t){return t.status===e})).map((function(e){return e}))}},{key:"getQueuedFiles",value:function(){return this.getFilesWithStatus(t.QUEUED)}},{key:"getUploadingFiles",value:function(){return this.getFilesWithStatus(t.UPLOADING)}},{key:"getAddedFiles",value:function(){return this.getFilesWithStatus(t.ADDED)}},{key:"getActiveFiles",value:function(){return this.files.filter((function(e){return e.status===t.UPLOADING||e.status===t.QUEUED})).map((function(e){return e}))}},{key:"init",value:function(){var e=this;if("form"===this.element.tagName&&this.element.setAttribute("enctype","multipart/form-data"),this.element.classList.contains("dropzone")&&!this.element.querySelector(".dz-message")&&this.element.appendChild(t.createElement('<div class="dz-default dz-message"><button class="dz-button" type="button">'.concat(this.options.dictDefaultMessage,"</button></div>"))),this.clickableElements.length){!function n(){return e.hiddenFileInput&&e.hiddenFileInput.parentNode.removeChild(e.hiddenFileInput),e.hiddenFileInput=document.createElement("input"),e.hiddenFileInput.setAttribute("type","file"),(null===e.options.maxFiles||e.options.maxFiles>1)&&e.hiddenFileInput.setAttribute("multiple","multiple"),e.hiddenFileInput.className="dz-hidden-input",null!==e.options.acceptedFiles&&e.hiddenFileInput.setAttribute("accept",e.options.acceptedFiles),null!==e.options.capture&&e.hiddenFileInput.setAttribute("capture",e.options.capture),e.hiddenFileInput.style.visibility="hidden",e.hiddenFileInput.style.position="absolute",e.hiddenFileInput.style.top="0",e.hiddenFileInput.style.left="0",e.hiddenFileInput.style.height="0",e.hiddenFileInput.style.width="0",t.getElement(e.options.hiddenInputContainer,"hiddenInputContainer").appendChild(e.hiddenFileInput),e.hiddenFileInput.addEventListener("change",(function(){var t=e.hiddenFileInput.files;if(t.length){var r=!0,i=!1,o=void 0;try{for(var a,s=t[Symbol.iterator]();!(r=(a=s.next()).done);r=!0){var l=a.value;e.addFile(l)}}catch(e){i=!0,o=e}finally{try{r||null==s.return||s.return()}finally{if(i)throw o}}}return e.emit("addedfiles",t),n()}))}()}this.URL=null!==window.URL?window.URL:window.webkitURL;var n=!0,r=!1,i=void 0;try{for(var o,a=this.events[Symbol.iterator]();!(n=(o=a.next()).done);n=!0){var s=o.value;this.on(s,this.options[s])}}catch(e){r=!0,i=e}finally{try{n||null==a.return||a.return()}finally{if(r)throw i}}this.on("uploadprogress",(function(){return e.updateTotalUploadProgress()})),this.on("removedfile",(function(){return e.updateTotalUploadProgress()})),this.on("canceled",(function(t){return e.emit("complete",t)})),this.on("complete",(function(t){if(0===e.getAddedFiles().length&&0===e.getUploadingFiles().length&&0===e.getQueuedFiles().length)return setTimeout((function(){return e.emit("queuecomplete")}),0)}));var l=function(e){if(function(e){return e.dataTransfer.types&&e.dataTransfer.types.some((function(e){return"Files"==e}))}(e))return e.stopPropagation(),e.preventDefault?e.preventDefault():e.returnValue=!1};return this.listeners=[{element:this.element,events:{dragstart:function(t){return e.emit("dragstart",t)},dragenter:function(t){return l(t),e.emit("dragenter",t)},dragover:function(t){var n;try{n=t.dataTransfer.effectAllowed}catch(e){}return t.dataTransfer.dropEffect="move"===n||"linkMove"===n?"move":"copy",l(t),e.emit("dragover",t)},dragleave:function(t){return e.emit("dragleave",t)},drop:function(t){return l(t),e.drop(t)},dragend:function(t){return e.emit("dragend",t)}}}],this.clickableElements.forEach((function(n){return e.listeners.push({element:n,events:{click:function(r){return(n!==e.element||r.target===e.element||t.elementInside(r.target,e.element.querySelector(".dz-message")))&&e.hiddenFileInput.click(),!0}}})})),this.enable(),this.options.init.call(this)}},{key:"destroy",value:function(){return this.disable(),this.removeAllFiles(!0),(null!=this.hiddenFileInput?this.hiddenFileInput.parentNode:void 0)&&(this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput),this.hiddenFileInput=null),delete this.element.dropzone,t.instances.splice(t.instances.indexOf(this),1)}},{key:"updateTotalUploadProgress",value:function(){var e,t=0,n=0;if(this.getActiveFiles().length){var r=!0,i=!1,o=void 0;try{for(var a,s=this.getActiveFiles()[Symbol.iterator]();!(r=(a=s.next()).done);r=!0){var l=a.value;t+=l.upload.bytesSent,n+=l.upload.total}}catch(e){i=!0,o=e}finally{try{r||null==s.return||s.return()}finally{if(i)throw o}}e=100*t/n}else e=100;return this.emit("totaluploadprogress",e,n,t)}},{key:"_getParamName",value:function(e){return"function"==typeof this.options.paramName?this.options.paramName(e):"".concat(this.options.paramName).concat(this.options.uploadMultiple?"[".concat(e,"]"):"")}},{key:"_renameFile",value:function(e){return"function"!=typeof this.options.renameFile?e.name:this.options.renameFile(e)}},{key:"getFallbackForm",value:function(){var e,n;if(e=this.getExistingFallback())return e;var r='<div class="dz-fallback">';this.options.dictFallbackText&&(r+="<p>".concat(this.options.dictFallbackText,"</p>")),r+='<input type="file" name="'.concat(this._getParamName(0),'" ').concat(this.options.uploadMultiple?'multiple="multiple"':void 0,' /><input type="submit" value="Upload!"></div>');var i=t.createElement(r);return"FORM"!==this.element.tagName?(n=t.createElement('<form action="'.concat(this.options.url,'" enctype="multipart/form-data" method="').concat(this.options.method,'"></form>'))).appendChild(i):(this.element.setAttribute("enctype","multipart/form-data"),this.element.setAttribute("method",this.options.method)),null!=n?n:i}},{key:"getExistingFallback",value:function(){for(var e=function(e){var t=!0,n=!1,r=void 0;try{for(var i,o=e[Symbol.iterator]();!(t=(i=o.next()).done);t=!0){var a=i.value;if(/(^| )fallback($| )/.test(a.className))return a}}catch(e){n=!0,r=e}finally{try{t||null==o.return||o.return()}finally{if(n)throw r}}},t=0,n=["div","form"];t<n.length;t++){var r,i=n[t];if(r=e(this.element.getElementsByTagName(i)))return r}}},{key:"setupEventListeners",value:function(){return this.listeners.map((function(e){return function(){var t=[];for(var n in e.events){var r=e.events[n];t.push(e.element.addEventListener(n,r,!1))}return t}()}))}},{key:"removeEventListeners",value:function(){return this.listeners.map((function(e){return function(){var t=[];for(var n in e.events){var r=e.events[n];t.push(e.element.removeEventListener(n,r,!1))}return t}()}))}},{key:"disable",value:function(){var e=this;return this.clickableElements.forEach((function(e){return e.classList.remove("dz-clickable")})),this.removeEventListeners(),this.disabled=!0,this.files.map((function(t){return e.cancelUpload(t)}))}},{key:"enable",value:function(){return delete this.disabled,this.clickableElements.forEach((function(e){return e.classList.add("dz-clickable")})),this.setupEventListeners()}},{key:"filesize",value:function(e){var t=0,n="b";if(e>0){for(var r=["tb","gb","mb","kb","b"],i=0;i<r.length;i++){var o=r[i];if(e>=Math.pow(this.options.filesizeBase,4-i)/10){t=e/Math.pow(this.options.filesizeBase,4-i),n=o;break}}t=Math.round(10*t)/10}return"<strong>".concat(t,"</strong> ").concat(this.options.dictFileSizeUnits[n])}},{key:"_updateMaxFilesReachedClass",value:function(){return null!=this.options.maxFiles&&this.getAcceptedFiles().length>=this.options.maxFiles?(this.getAcceptedFiles().length===this.options.maxFiles&&this.emit("maxfilesreached",this.files),this.element.classList.add("dz-max-files-reached")):this.element.classList.remove("dz-max-files-reached")}},{key:"drop",value:function(e){if(e.dataTransfer){this.emit("drop",e);for(var t=[],n=0;n<e.dataTransfer.files.length;n++)t[n]=e.dataTransfer.files[n];if(t.length){var r=e.dataTransfer.items;r&&r.length&&null!=r[0].webkitGetAsEntry?this._addFilesFromItems(r):this.handleFiles(t)}this.emit("addedfiles",t)}}},{key:"paste",value:function(e){if(null!=(t=null!=e?e.clipboardData:void 0,n=function(e){return e.items},null!=t?n(t):void 0)){var t,n;this.emit("paste",e);var r=e.clipboardData.items;return r.length?this._addFilesFromItems(r):void 0}}},{key:"handleFiles",value:function(e){var t=!0,n=!1,r=void 0;try{for(var i,o=e[Symbol.iterator]();!(t=(i=o.next()).done);t=!0){var a=i.value;this.addFile(a)}}catch(e){n=!0,r=e}finally{try{t||null==o.return||o.return()}finally{if(n)throw r}}}},{key:"_addFilesFromItems",value:function(e){var t=this;return function(){var n=[],r=!0,i=!1,o=void 0;try{for(var a,s=e[Symbol.iterator]();!(r=(a=s.next()).done);r=!0){var l,u=a.value;null!=u.webkitGetAsEntry&&(l=u.webkitGetAsEntry())?l.isFile?n.push(t.addFile(u.getAsFile())):l.isDirectory?n.push(t._addFilesFromDirectory(l,l.name)):n.push(void 0):null!=u.getAsFile&&(null==u.kind||"file"===u.kind)?n.push(t.addFile(u.getAsFile())):n.push(void 0)}}catch(e){i=!0,o=e}finally{try{r||null==s.return||s.return()}finally{if(i)throw o}}return n}()}},{key:"_addFilesFromDirectory",value:function(e,t){var n=this,r=e.createReader(),i=function(e){return t=console,n="log",r=function(t){return t.log(e)},null!=t&&"function"==typeof t[n]?r(t,n):void 0;var t,n,r};return function e(){return r.readEntries((function(r){if(r.length>0){var i=!0,o=!1,a=void 0;try{for(var s,l=r[Symbol.iterator]();!(i=(s=l.next()).done);i=!0){var u=s.value;u.isFile?u.file((function(e){if(!n.options.ignoreHiddenFiles||"."!==e.name.substring(0,1))return e.fullPath="".concat(t,"/").concat(e.name),n.addFile(e)})):u.isDirectory&&n._addFilesFromDirectory(u,"".concat(t,"/").concat(u.name))}}catch(e){o=!0,a=e}finally{try{i||null==l.return||l.return()}finally{if(o)throw a}}e()}return null}),i)}()}},{key:"accept",value:function(e,n){this.options.maxFilesize&&e.size>1024*this.options.maxFilesize*1024?n(this.options.dictFileTooBig.replace("{{filesize}}",Math.round(e.size/1024/10.24)/100).replace("{{maxFilesize}}",this.options.maxFilesize)):t.isValidFile(e,this.options.acceptedFiles)?null!=this.options.maxFiles&&this.getAcceptedFiles().length>=this.options.maxFiles?(n(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}",this.options.maxFiles)),this.emit("maxfilesexceeded",e)):this.options.accept.call(this,e,n):n(this.options.dictInvalidFileType)}},{key:"addFile",value:function(e){var n=this;e.upload={uuid:t.uuidv4(),progress:0,total:e.size,bytesSent:0,filename:this._renameFile(e)},this.files.push(e),e.status=t.ADDED,this.emit("addedfile",e),this._enqueueThumbnail(e),this.accept(e,(function(t){t?(e.accepted=!1,n._errorProcessing([e],t)):(e.accepted=!0,n.options.autoQueue&&n.enqueueFile(e)),n._updateMaxFilesReachedClass()}))}},{key:"enqueueFiles",value:function(e){var t=!0,n=!1,r=void 0;try{for(var i,o=e[Symbol.iterator]();!(t=(i=o.next()).done);t=!0){var a=i.value;this.enqueueFile(a)}}catch(e){n=!0,r=e}finally{try{t||null==o.return||o.return()}finally{if(n)throw r}}return null}},{key:"enqueueFile",value:function(e){var n=this;if(e.status!==t.ADDED||!0!==e.accepted)throw new Error("This file can't be queued because it has already been processed or was rejected.");if(e.status=t.QUEUED,this.options.autoProcessQueue)return setTimeout((function(){return n.processQueue()}),0)}},{key:"_enqueueThumbnail",value:function(e){var t=this;if(this.options.createImageThumbnails&&e.type.match(/image.*/)&&e.size<=1024*this.options.maxThumbnailFilesize*1024)return this._thumbnailQueue.push(e),setTimeout((function(){return t._processThumbnailQueue()}),0)}},{key:"_processThumbnailQueue",value:function(){var e=this;if(!this._processingThumbnail&&0!==this._thumbnailQueue.length){this._processingThumbnail=!0;var t=this._thumbnailQueue.shift();return this.createThumbnail(t,this.options.thumbnailWidth,this.options.thumbnailHeight,this.options.thumbnailMethod,!0,(function(n){return e.emit("thumbnail",t,n),e._processingThumbnail=!1,e._processThumbnailQueue()}))}}},{key:"removeFile",value:function(e){if(e.status===t.UPLOADING&&this.cancelUpload(e),this.files=d(this.files,e),this.emit("removedfile",e),0===this.files.length)return this.emit("reset")}},{key:"removeAllFiles",value:function(e){null==e&&(e=!1);var n=!0,r=!1,i=void 0;try{for(var o,a=this.files.slice()[Symbol.iterator]();!(n=(o=a.next()).done);n=!0){var s=o.value;(s.status!==t.UPLOADING||e)&&this.removeFile(s)}}catch(e){r=!0,i=e}finally{try{n||null==a.return||a.return()}finally{if(r)throw i}}return null}},{key:"resizeImage",value:function(e,n,r,i,o){var a=this;return this.createThumbnail(e,n,r,i,!0,(function(n,r){if(null==r)return o(e);var i=a.options.resizeMimeType;null==i&&(i=e.type);var s=r.toDataURL(i,a.options.resizeQuality);return"image/jpeg"!==i&&"image/jpg"!==i||(s=h.restore(e.dataURL,s)),o(t.dataURItoBlob(s))}))}},{key:"createThumbnail",value:function(e,t,n,r,i,o){var a=this,s=new FileReader;s.onload=function(){e.dataURL=s.result,"image/svg+xml"!==e.type?a.createThumbnailFromUrl(e,t,n,r,i,o):null!=o&&o(s.result)},s.readAsDataURL(e)}},{key:"displayExistingFile",value:function(e,t,n,r){var i=this,o=!(arguments.length>4&&void 0!==arguments[4])||arguments[4];if(this.emit("addedfile",e),this.emit("complete",e),o){var a=function(t){i.emit("thumbnail",e,t),n&&n()};e.dataURL=t,this.createThumbnailFromUrl(e,this.options.thumbnailWidth,this.options.thumbnailHeight,this.options.resizeMethod,this.options.fixOrientation,a,r)}else this.emit("thumbnail",e,t),n&&n()}},{key:"createThumbnailFromUrl",value:function(e,t,n,r,i,o,a){var s=this,l=document.createElement("img");return a&&(l.crossOrigin=a),l.onload=function(){var a=function(e){return e(1)};return"undefined"!=typeof EXIF&&null!==EXIF&&i&&(a=function(e){return EXIF.getData(l,(function(){return e(EXIF.getTag(this,"Orientation"))}))}),a((function(i){e.width=l.width,e.height=l.height;var a=s.options.resize.call(s,e,t,n,r),u=document.createElement("canvas"),c=u.getContext("2d");switch(u.width=a.trgWidth,u.height=a.trgHeight,i>4&&(u.width=a.trgHeight,u.height=a.trgWidth),i){case 2:c.translate(u.width,0),c.scale(-1,1);break;case 3:c.translate(u.width,u.height),c.rotate(Math.PI);break;case 4:c.translate(0,u.height),c.scale(1,-1);break;case 5:c.rotate(.5*Math.PI),c.scale(1,-1);break;case 6:c.rotate(.5*Math.PI),c.translate(0,-u.width);break;case 7:c.rotate(.5*Math.PI),c.translate(u.height,-u.width),c.scale(-1,1);break;case 8:c.rotate(-.5*Math.PI),c.translate(-u.height,0)}f(c,l,null!=a.srcX?a.srcX:0,null!=a.srcY?a.srcY:0,a.srcWidth,a.srcHeight,null!=a.trgX?a.trgX:0,null!=a.trgY?a.trgY:0,a.trgWidth,a.trgHeight);var d=u.toDataURL("image/png");if(null!=o)return o(d,u)}))},null!=o&&(l.onerror=o),l.src=e.dataURL}},{key:"processQueue",value:function(){var e=this.options.parallelUploads,t=this.getUploadingFiles().length,n=t;if(!(t>=e)){var r=this.getQueuedFiles();if(r.length>0){if(this.options.uploadMultiple)return this.processFiles(r.slice(0,e-t));for(;n<e;){if(!r.length)return;this.processFile(r.shift()),n++}}}}},{key:"processFile",value:function(e){return this.processFiles([e])}},{key:"processFiles",value:function(e){var n=!0,r=!1,i=void 0;try{for(var o,a=e[Symbol.iterator]();!(n=(o=a.next()).done);n=!0){var s=o.value;s.processing=!0,s.status=t.UPLOADING,this.emit("processing",s)}}catch(e){r=!0,i=e}finally{try{n||null==a.return||a.return()}finally{if(r)throw i}}return this.options.uploadMultiple&&this.emit("processingmultiple",e),this.uploadFiles(e)}},{key:"_getFilesWithXhr",value:function(e){return this.files.filter((function(t){return t.xhr===e})).map((function(e){return e}))}},{key:"cancelUpload",value:function(e){if(e.status===t.UPLOADING){var n=this._getFilesWithXhr(e.xhr),r=!0,i=!1,o=void 0;try{for(var a,s=n[Symbol.iterator]();!(r=(a=s.next()).done);r=!0){a.value.status=t.CANCELED}}catch(e){i=!0,o=e}finally{try{r||null==s.return||s.return()}finally{if(i)throw o}}void 0!==e.xhr&&e.xhr.abort();var l=!0,u=!1,c=void 0;try{for(var d,p=n[Symbol.iterator]();!(l=(d=p.next()).done);l=!0){var f=d.value;this.emit("canceled",f)}}catch(e){u=!0,c=e}finally{try{l||null==p.return||p.return()}finally{if(u)throw c}}this.options.uploadMultiple&&this.emit("canceledmultiple",n)}else e.status!==t.ADDED&&e.status!==t.QUEUED||(e.status=t.CANCELED,this.emit("canceled",e),this.options.uploadMultiple&&this.emit("canceledmultiple",[e]));if(this.options.autoProcessQueue)return this.processQueue()}},{key:"resolveOption",value:function(e){if("function"==typeof e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];return e.apply(this,n)}return e}},{key:"uploadFile",value:function(e){return this.uploadFiles([e])}},{key:"uploadFiles",value:function(e){var n=this;this._transformFiles(e,(function(r){if(n.options.chunking){var i=r[0];e[0].upload.chunked=n.options.chunking&&(n.options.forceChunking||i.size>n.options.chunkSize),e[0].upload.totalChunkCount=Math.ceil(i.size/n.options.chunkSize)}if(e[0].upload.chunked){var o=e[0],a=r[0];o.upload.chunks=[];var s=function(){for(var r=0;void 0!==o.upload.chunks[r];)r++;if(!(r>=o.upload.totalChunkCount)){0;var i=r*n.options.chunkSize,s=Math.min(i+n.options.chunkSize,o.size),l={name:n._getParamName(0),data:a.webkitSlice?a.webkitSlice(i,s):a.slice(i,s),filename:o.upload.filename,chunkIndex:r};o.upload.chunks[r]={file:o,index:r,dataBlock:l,status:t.UPLOADING,progress:0,retries:0},n._uploadData(e,[l])}};if(o.upload.finishedChunkUpload=function(r){var i=!0;r.status=t.SUCCESS,r.dataBlock=null,r.xhr=null;for(var a=0;a<o.upload.totalChunkCount;a++){if(void 0===o.upload.chunks[a])return s();o.upload.chunks[a].status!==t.SUCCESS&&(i=!1)}i&&n.options.chunksUploaded(o,(function(){n._finished(e,"",null)}))},n.options.parallelChunkUploads)for(var l=0;l<o.upload.totalChunkCount;l++)s();else s()}else{for(var u=[],c=0;c<e.length;c++)u[c]={name:n._getParamName(c),data:r[c],filename:e[c].upload.filename};n._uploadData(e,u)}}))}},{key:"_getChunk",value:function(e,t){for(var n=0;n<e.upload.totalChunkCount;n++)if(void 0!==e.upload.chunks[n]&&e.upload.chunks[n].xhr===t)return e.upload.chunks[n]}},{key:"_uploadData",value:function(e,n){var r=this,i=new XMLHttpRequest,o=!0,a=!1,s=void 0;try{for(var l,u=e[Symbol.iterator]();!(o=(l=u.next()).done);o=!0){l.value.xhr=i}}catch(e){a=!0,s=e}finally{try{o||null==u.return||u.return()}finally{if(a)throw s}}e[0].upload.chunked&&(e[0].upload.chunks[n[0].chunkIndex].xhr=i);var c=this.resolveOption(this.options.method,e),d=this.resolveOption(this.options.url,e);i.open(c,d,!0),i.timeout=this.resolveOption(this.options.timeout,e),i.withCredentials=!!this.options.withCredentials,i.onload=function(t){r._finishedUploading(e,i,t)},i.ontimeout=function(){r._handleUploadError(e,i,"Request timedout after ".concat(r.options.timeout," seconds"))},i.onerror=function(){r._handleUploadError(e,i)},(null!=i.upload?i.upload:i).onprogress=function(t){return r._updateFilesUploadProgress(e,i,t)};var p={Accept:"application/json","Cache-Control":"no-cache","X-Requested-With":"XMLHttpRequest"};for(var f in this.options.headers&&t.extend(p,this.options.headers),p){var h=p[f];h&&i.setRequestHeader(f,h)}var m=new FormData;if(this.options.params){var v=this.options.params;for(var g in"function"==typeof v&&(v=v.call(this,e,i,e[0].upload.chunked?this._getChunk(e[0],i):null)),v){var y=v[g];m.append(g,y)}}var b=!0,w=!1,k=void 0;try{for(var x,C=e[Symbol.iterator]();!(b=(x=C.next()).done);b=!0){var F=x.value;this.emit("sending",F,i,m)}}catch(e){w=!0,k=e}finally{try{b||null==C.return||C.return()}finally{if(w)throw k}}this.options.uploadMultiple&&this.emit("sendingmultiple",e,i,m),this._addFormElementData(m);for(var E=0;E<n.length;E++){var _=n[E];m.append(_.name,_.data,_.filename)}this.submitRequest(i,m,e)}},{key:"_transformFiles",value:function(e,t){for(var n=this,r=[],i=0,o=function(o){n.options.transformFile.call(n,e[o],(function(n){r[o]=n,++i===e.length&&t(r)}))},a=0;a<e.length;a++)o(a)}},{key:"_addFormElementData",value:function(e){if("FORM"===this.element.tagName){var t=!0,n=!1,r=void 0;try{for(var i,o=this.element.querySelectorAll("input, textarea, select, button")[Symbol.iterator]();!(t=(i=o.next()).done);t=!0){var a=i.value,s=a.getAttribute("name"),l=a.getAttribute("type");if(l&&(l=l.toLowerCase()),null!=s)if("SELECT"===a.tagName&&a.hasAttribute("multiple")){var u=!0,c=!1,d=void 0;try{for(var p,f=a.options[Symbol.iterator]();!(u=(p=f.next()).done);u=!0){var h=p.value;h.selected&&e.append(s,h.value)}}catch(e){c=!0,d=e}finally{try{u||null==f.return||f.return()}finally{if(c)throw d}}}else(!l||"checkbox"!==l&&"radio"!==l||a.checked)&&e.append(s,a.value)}}catch(e){n=!0,r=e}finally{try{t||null==o.return||o.return()}finally{if(n)throw r}}}}},{key:"_updateFilesUploadProgress",value:function(e,t,n){var r;if(void 0!==n){if(r=100*n.loaded/n.total,e[0].upload.chunked){var i=e[0],o=this._getChunk(i,t);o.progress=r,o.total=n.total,o.bytesSent=n.loaded;i.upload.progress=0,i.upload.total=0,i.upload.bytesSent=0;for(var a=0;a<i.upload.totalChunkCount;a++)void 0!==i.upload.chunks[a]&&void 0!==i.upload.chunks[a].progress&&(i.upload.progress+=i.upload.chunks[a].progress,i.upload.total+=i.upload.chunks[a].total,i.upload.bytesSent+=i.upload.chunks[a].bytesSent);i.upload.progress=i.upload.progress/i.upload.totalChunkCount}else{var s=!0,l=!1,u=void 0;try{for(var c,d=e[Symbol.iterator]();!(s=(c=d.next()).done);s=!0){var p=c.value;p.upload.progress=r,p.upload.total=n.total,p.upload.bytesSent=n.loaded}}catch(e){l=!0,u=e}finally{try{s||null==d.return||d.return()}finally{if(l)throw u}}}var f=!0,h=!1,m=void 0;try{for(var v,g=e[Symbol.iterator]();!(f=(v=g.next()).done);f=!0){var y=v.value;this.emit("uploadprogress",y,y.upload.progress,y.upload.bytesSent)}}catch(e){h=!0,m=e}finally{try{f||null==g.return||g.return()}finally{if(h)throw m}}}else{var b=!0;r=100;var w=!0,k=!1,x=void 0;try{for(var C,F=e[Symbol.iterator]();!(w=(C=F.next()).done);w=!0){var E=C.value;100===E.upload.progress&&E.upload.bytesSent===E.upload.total||(b=!1),E.upload.progress=r,E.upload.bytesSent=E.upload.total}}catch(e){k=!0,x=e}finally{try{w||null==F.return||F.return()}finally{if(k)throw x}}if(b)return;var _=!0,S=!1,T=void 0;try{for(var M,z=e[Symbol.iterator]();!(_=(M=z.next()).done);_=!0){var D=M.value;this.emit("uploadprogress",D,r,D.upload.bytesSent)}}catch(e){S=!0,T=e}finally{try{_||null==z.return||z.return()}finally{if(S)throw T}}}}},{key:"_finishedUploading",value:function(e,n,r){var i;if(e[0].status!==t.CANCELED&&4===n.readyState){if("arraybuffer"!==n.responseType&&"blob"!==n.responseType&&(i=n.responseText,n.getResponseHeader("content-type")&&~n.getResponseHeader("content-type").indexOf("application/json")))try{i=JSON.parse(i)}catch(e){r=e,i="Invalid JSON response from server."}this._updateFilesUploadProgress(e),200<=n.status&&n.status<300?e[0].upload.chunked?e[0].upload.finishedChunkUpload(this._getChunk(e[0],n)):this._finished(e,i,r):this._handleUploadError(e,n,i)}}},{key:"_handleUploadError",value:function(e,n,r){if(e[0].status!==t.CANCELED){if(e[0].upload.chunked&&this.options.retryChunks){var i=this._getChunk(e[0],n);if(i.retries++<this.options.retryChunksLimit)return void this._uploadData(e,[i.dataBlock]);console.warn("Retried this chunk too often. Giving up.")}this._errorProcessing(e,r||this.options.dictResponseError.replace("{{statusCode}}",n.status),n)}}},{key:"submitRequest",value:function(e,t,n){e.send(t)}},{key:"_finished",value:function(e,n,r){var i=!0,o=!1,a=void 0;try{for(var s,l=e[Symbol.iterator]();!(i=(s=l.next()).done);i=!0){var u=s.value;u.status=t.SUCCESS,this.emit("success",u,n,r),this.emit("complete",u)}}catch(e){o=!0,a=e}finally{try{i||null==l.return||l.return()}finally{if(o)throw a}}if(this.options.uploadMultiple&&(this.emit("successmultiple",e,n,r),this.emit("completemultiple",e)),this.options.autoProcessQueue)return this.processQueue()}},{key:"_errorProcessing",value:function(e,n,r){var i=!0,o=!1,a=void 0;try{for(var s,l=e[Symbol.iterator]();!(i=(s=l.next()).done);i=!0){var u=s.value;u.status=t.ERROR,this.emit("error",u,n,r),this.emit("complete",u)}}catch(e){o=!0,a=e}finally{try{i||null==l.return||l.return()}finally{if(o)throw a}}if(this.options.uploadMultiple&&(this.emit("errormultiple",e,n,r),this.emit("completemultiple",e)),this.options.autoProcessQueue)return this.processQueue()}}],[{key:"uuidv4",value:function(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,(function(e){var t=16*Math.random()|0;return("x"===e?t:3&t|8).toString(16)}))}}]),t}(u);c.initClass(),c.version="5.7.0",c.options={},c.optionsForElement=function(e){return e.getAttribute("id")?c.options[p(e.getAttribute("id"))]:void 0},c.instances=[],c.forElement=function(e){if("string"==typeof e&&(e=document.querySelector(e)),null==(null!=e?e.dropzone:void 0))throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");return e.dropzone},c.autoDiscover=!0,c.discover=function(){var e;if(document.querySelectorAll)e=document.querySelectorAll(".dropzone");else{e=[];var t=function(t){return function(){var n=[],r=!0,i=!1,o=void 0;try{for(var a,s=t[Symbol.iterator]();!(r=(a=s.next()).done);r=!0){var l=a.value;/(^| )dropzone($| )/.test(l.className)?n.push(e.push(l)):n.push(void 0)}}catch(e){i=!0,o=e}finally{try{r||null==s.return||s.return()}finally{if(i)throw o}}return n}()};t(document.getElementsByTagName("div")),t(document.getElementsByTagName("form"))}return function(){var t=[],n=!0,r=!1,i=void 0;try{for(var o,a=e[Symbol.iterator]();!(n=(o=a.next()).done);n=!0){var s=o.value;!1!==c.optionsForElement(s)?t.push(new c(s)):t.push(void 0)}}catch(e){r=!0,i=e}finally{try{n||null==a.return||a.return()}finally{if(r)throw i}}return t}()},c.blacklistedBrowsers=[/opera.*(Macintosh|Windows Phone).*version\/12/i],c.isBrowserSupported=function(){var e=!0;if(window.File&&window.FileReader&&window.FileList&&window.Blob&&window.FormData&&document.querySelector)if("classList"in document.createElement("a")){var t=!0,n=!1,r=void 0;try{for(var i,o=c.blacklistedBrowsers[Symbol.iterator]();!(t=(i=o.next()).done);t=!0){i.value.test(navigator.userAgent)&&(e=!1)}}catch(e){n=!0,r=e}finally{try{t||null==o.return||o.return()}finally{if(n)throw r}}}else e=!1;else e=!1;return e},c.dataURItoBlob=function(e){for(var t=atob(e.split(",")[1]),n=e.split(",")[0].split(":")[1].split(";")[0],r=new ArrayBuffer(t.length),i=new Uint8Array(r),o=0,a=t.length,s=0<=a;s?o<=a:o>=a;s?o++:o--)i[o]=t.charCodeAt(o);return new Blob([r],{type:n})};var d=function(e,t){return e.filter((function(e){return e!==t})).map((function(e){return e}))},p=function(e){return e.replace(/[\-_](\w)/g,(function(e){return e.charAt(1).toUpperCase()}))};c.createElement=function(e){var t=document.createElement("div");return t.innerHTML=e,t.childNodes[0]},c.elementInside=function(e,t){if(e===t)return!0;for(;e=e.parentNode;)if(e===t)return!0;return!1},c.getElement=function(e,t){var n;if("string"==typeof e?n=document.querySelector(e):null!=e.nodeType&&(n=e),null==n)throw new Error("Invalid `".concat(t,"` option provided. Please provide a CSS selector or a plain HTML element."));return n},c.getElements=function(e,t){var n,r;if(e instanceof Array){r=[];try{var i=!0,o=!1,a=void 0;try{for(var s,l=e[Symbol.iterator]();!(i=(s=l.next()).done);i=!0)n=s.value,r.push(this.getElement(n,t))}catch(e){o=!0,a=e}finally{try{i||null==l.return||l.return()}finally{if(o)throw a}}}catch(e){r=null}}else if("string"==typeof e){r=[];var u=!0,c=!1,d=void 0;try{for(var p,f=document.querySelectorAll(e)[Symbol.iterator]();!(u=(p=f.next()).done);u=!0)n=p.value,r.push(n)}catch(e){c=!0,d=e}finally{try{u||null==f.return||f.return()}finally{if(c)throw d}}}else null!=e.nodeType&&(r=[e]);if(null==r||!r.length)throw new Error("Invalid `".concat(t,"` option provided. Please provide a CSS selector, a plain HTML element or a list of those."));return r},c.confirm=function(e,t,n){return window.confirm(e)?t():null!=n?n():void 0},c.isValidFile=function(e,t){if(!t)return!0;t=t.split(",");var n=e.type,r=n.replace(/\/.*$/,""),i=!0,o=!1,a=void 0;try{for(var s,l=t[Symbol.iterator]();!(i=(s=l.next()).done);i=!0){var u=s.value;if("."===(u=u.trim()).charAt(0)){if(-1!==e.name.toLowerCase().indexOf(u.toLowerCase(),e.name.length-u.length))return!0}else if(/\/\*$/.test(u)){if(r===u.replace(/\/.*$/,""))return!0}else if(n===u)return!0}}catch(e){o=!0,a=e}finally{try{i||null==l.return||l.return()}finally{if(o)throw a}}return!1},"undefined"!=typeof jQuery&&null!==jQuery&&(jQuery.fn.dropzone=function(e){return this.each((function(){return new c(this,e)}))}),null!==e?e.exports=c:window.Dropzone=c,c.ADDED="added",c.QUEUED="queued",c.ACCEPTED=c.QUEUED,c.UPLOADING="uploading",c.PROCESSING=c.UPLOADING,c.CANCELED="canceled",c.ERROR="error",c.SUCCESS="success";var f=function(e,t,n,r,i,o,a,s,l,u){var c=function(e){e.naturalWidth;var t=e.naturalHeight,n=document.createElement("canvas");n.width=1,n.height=t;var r=n.getContext("2d");r.drawImage(e,0,0);for(var i=r.getImageData(1,0,1,t).data,o=0,a=t,s=t;s>o;){0===i[4*(s-1)+3]?a=s:o=s,s=a+o>>1}var l=s/t;return 0===l?1:l}(t);return e.drawImage(t,n,r,i,o,a,s,l,u/c)},h=function(){function e(){a(this,e)}return l(e,null,[{key:"initClass",value:function(){this.KEY_STR="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="}},{key:"encode64",value:function(e){for(var t="",n=void 0,r=void 0,i="",o=void 0,a=void 0,s=void 0,l="",u=0;o=(n=e[u++])>>2,a=(3&n)<<4|(r=e[u++])>>4,s=(15&r)<<2|(i=e[u++])>>6,l=63&i,isNaN(r)?s=l=64:isNaN(i)&&(l=64),t=t+this.KEY_STR.charAt(o)+this.KEY_STR.charAt(a)+this.KEY_STR.charAt(s)+this.KEY_STR.charAt(l),n=r=i="",o=a=s=l="",u<e.length;);return t}},{key:"restore",value:function(e,t){if(!e.match("data:image/jpeg;base64,"))return t;var n=this.decode64(e.replace("data:image/jpeg;base64,","")),r=this.slice2Segments(n),i=this.exifManipulation(t,r);return"data:image/jpeg;base64,".concat(this.encode64(i))}},{key:"exifManipulation",value:function(e,t){var n=this.getExifArray(t),r=this.insertExif(e,n);return new Uint8Array(r)}},{key:"getExifArray",value:function(e){for(var t=void 0,n=0;n<e.length;){if(255===(t=e[n])[0]&225===t[1])return t;n++}return[]}},{key:"insertExif",value:function(e,t){var n=e.replace("data:image/jpeg;base64,",""),r=this.decode64(n),i=r.indexOf(255,3),o=r.slice(0,i),a=r.slice(i),s=o;return s=(s=s.concat(t)).concat(a)}},{key:"slice2Segments",value:function(e){for(var t=0,n=[];;){if(255===e[t]&218===e[t+1])break;if(255===e[t]&216===e[t+1])t+=2;else{var r=t+(256*e[t+2]+e[t+3])+2,i=e.slice(t,r);n.push(i),t=r}if(t>e.length)break}return n}},{key:"decode64",value:function(e){var t=void 0,n=void 0,r="",i=void 0,o=void 0,a="",s=0,l=[];for(/[^A-Za-z0-9\+\/\=]/g.exec(e)&&console.warn("There were invalid base64 characters in the input text.\nValid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\nExpect errors in decoding."),e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");t=this.KEY_STR.indexOf(e.charAt(s++))<<2|(i=this.KEY_STR.indexOf(e.charAt(s++)))>>4,n=(15&i)<<4|(o=this.KEY_STR.indexOf(e.charAt(s++)))>>2,r=(3&o)<<6|(a=this.KEY_STR.indexOf(e.charAt(s++))),l.push(t),64!==o&&l.push(n),64!==a&&l.push(r),t=n=r="",i=o=a="",s<e.length;);return l}}]),e}();h.initClass();c._autoDiscoverFunction=function(){if(c.autoDiscover)return c.discover()},function(e,t){var n=!1,r=!0,i=e.document,o=i.documentElement,a=i.addEventListener?"addEventListener":"attachEvent",s=i.addEventListener?"removeEventListener":"detachEvent",l=i.addEventListener?"":"on",u=function r(o){if("readystatechange"!==o.type||"complete"===i.readyState)return("load"===o.type?e:i)[s](l+o.type,r,!1),!n&&(n=!0)?t.call(e,o.type||o):void 0};if("complete"!==i.readyState){if(i.createEventObject&&o.doScroll){try{r=!e.frameElement}catch(e){}r&&function e(){try{o.doScroll("left")}catch(t){return void setTimeout(e,50)}return u("poll")}()}i[a](l+"DOMContentLoaded",u,!1),i[a](l+"readystatechange",u,!1),e[a](l+"load",u,!1)}}(window,c._autoDiscoverFunction)}).call(this,n(16)(e))}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./node_modules/@concretecms/bedrock/assets/cms/js/events.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/assets/cms/js/events.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* eslint-disable no-new, no-unused-vars, camelcase */
+/* global _ */
+
+;(function(global, $) {
+    'use strict'
+
+    global.Concrete = global.Concrete || {}
+    global.console = global.console || {}
+
+    global.ConcreteEvent = (function (ns) {
+        var target = $('<span />'); var debug = false
+
+        var hasGroup = typeof global.console.group === 'function' && typeof global.console.groupEnd === 'function'
+        var hasLog = typeof global.console.log === 'function'
+
+        function groupLog(group, value, dontcall) {
+            if (hasGroup) {
+                global.console.groupCollapsed(group)
+
+                if (!dontcall && typeof value === 'function') {
+                    value()
+                } else {
+                    global.console.log(value)
+                }
+                global.console.groupEnd()
+            } else if (hasLog) {
+                if (!dontcall && typeof value === 'function') {
+                    global.console.log('Group: "' + group + '"')
+                    value()
+                    global.console.log('GroupEnd: "' + group + '"')
+                } else {
+                    global.console.log(group, value)
+                }
+            }
+        }
+
+        function getTarget(given_target) {
+            if (!given_target) given_target = target
+            if (!(given_target instanceof $)) given_target = $(given_target)
+            if (!given_target.length) given_target = target
+            return given_target
+        }
+
+        var ConcreteEvent = {
+
+            debug: function (enabled) {
+                if (typeof enabled === 'undefined') {
+                    return debug
+                }
+                return (debug = !!enabled)
+            },
+
+            subscribe: function (type, handler, target) {
+                var old_handler = handler; var bound_stack = (new Error('EventStack')).stack
+                handler = function() {
+                    if (debug) {
+                        groupLog('Handler Fired.', function () {
+                            groupLog('Type', type, true)
+                            groupLog('Handler', old_handler, true)
+                            groupLog('Target', target, true)
+                            groupLog('Bound Stack', bound_stack, true)
+                            if (typeof global.console.trace === 'function') {
+                                global.console.trace()
+                            } else {
+                                groupLog('Stack', (new Error('EventStack')).stack)
+                            }
+                        })
+                    }
+
+                    old_handler.apply(this, _(arguments).toArray())
+                }
+                if (debug) {
+                    groupLog('Event Subscribed', function () {
+                        groupLog('Type', type, true)
+                        groupLog('Handler', old_handler, true)
+                        groupLog('Target', target, true)
+                        if (typeof global.console.trace === 'function') {
+                            global.console.trace()
+                        } else {
+                            groupLog('Stack', (new Error('EventStack')).stack)
+                        }
+                    })
+                }
+                if (type instanceof Array) {
+                    return _(type).each(function (v) {
+                        ConcreteEvent.subscribe(v, handler, target)
+                    })
+                }
+                getTarget(target).bind(type.toLowerCase(), handler)
+                return ConcreteEvent
+            },
+
+            publish: function (type, data, target) {
+                if (debug) {
+                    groupLog('Event Published', function () {
+                        groupLog('Type', type, true)
+                        groupLog('Data', data, true)
+                        groupLog('Target', target, true)
+                        if (typeof global.console.trace === 'function') {
+                            global.console.trace()
+                        } else {
+                            groupLog('Stack', (new Error('EventStack')).stack)
+                        }
+                    })
+                }
+                if (type instanceof Array) {
+                    return _(type).each(function (v) {
+                        ConcreteEvent.publish(v, data, target)
+                    })
+                }
+                getTarget(target).trigger(type.toLowerCase(), data)
+                return ConcreteEvent
+            },
+
+            unsubscribe: function (type, secondary_argument, target) {
+                var args
+                if (debug) {
+                    groupLog('Event Unsubscribed', function () {
+                        groupLog('Type', type, true)
+                        groupLog('Secondary Argument', secondary_argument, true)
+                        groupLog('Target', target, true)
+                        if (typeof global.console.trace === 'function') {
+                            global.console.trace()
+                        } else {
+                            groupLog('Stack', (new Error('EventStack')).stack)
+                        }
+                    })
+                }
+
+                args = [(typeof type.toLowerCase === 'function' ? type.toLowerCase() : type)]
+
+                if (typeof secondary_argument !== 'undefined') args.push(secondary_argument)
+                $.fn.unbind.apply(getTarget(target), args)
+                return ConcreteEvent
+            }
+        }
+
+        ConcreteEvent.sub = ConcreteEvent.bind = ConcreteEvent.watch = ConcreteEvent.on = ConcreteEvent.subscribe
+        ConcreteEvent.pub = ConcreteEvent.fire = ConcreteEvent.trigger = ConcreteEvent.publish
+        ConcreteEvent.unsub = ConcreteEvent.unbind = ConcreteEvent.unwatch = ConcreteEvent.off = ConcreteEvent.unsubscribe
+
+        ns.event = ConcreteEvent
+        return ConcreteEvent
+    }(global.Concrete))
+})(window, jQuery); // eslint-disable-line semi
+
+
+/***/ }),
+
+/***/ "./node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js ***!
+  \*******************************************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _frontend_conversations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./frontend/conversations */ "./node_modules/@concretecms/bedrock/assets/conversations/js/frontend/conversations.js");
+/* harmony import */ var _frontend_attachments__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./frontend/attachments */ "./node_modules/@concretecms/bedrock/assets/conversations/js/frontend/attachments.js");
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@concretecms/bedrock/assets/conversations/js/frontend/attachments.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/assets/conversations/js/frontend/attachments.js ***!
+  \*******************************************************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var dropzone_dist_dropzone__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dropzone/dist/dropzone */ "./node_modules/@concretecms/bedrock/node_modules/dropzone/dist/dropzone.js");
+/* harmony import */ var dropzone_dist_dropzone__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dropzone_dist_dropzone__WEBPACK_IMPORTED_MODULE_0__);
+/* eslint no-unused-vars: 0 */
+(function(global, $) {
+    'use strict'
+
+    var i18n = {
+        Too_many_files: 'Too many files',
+        Invalid_file_extension: 'Invalid file extension',
+        Max_file_size_exceeded: 'Max file size exceeded',
+        Error_deleting_attachment: 'Something went wrong while deleting this attachment, please refresh and try again.',
+        Confirm_remove_attachment: 'Remove this attachment?'
+    // Please add new translatable strings to the getConversationsJavascript of /concrete/controllers/frontend/assets_localization.php
+    }
+
+    var methods = {
+
+        init: function(options) {
+            var obj = options
+            obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function() {
+                $('.ccm-conversation-wrapper').concreteConversationAttachments('clearDropzoneQueues')
+            })
+            obj.$element.on('click.cnv', 'a.attachment-delete', function(event) {
+                event.preventDefault()
+                $(this).concreteConversationAttachments('attachmentDeleteTrigger', obj)
+            })
+            if ((obj.$editMessageHolder) && (!(obj.$editMessageHolder.find('.dropzone').attr('data-dropzone-applied')))) {
+                obj.$editMessageHolder.find('.dropzone').not('[data-drozpone-applied="true"]').dropzone({ // dropzone reply form
+                    url: CCM_TOOLS_PATH + '/conversations/add_file',
+                    success: function(file, raw) {
+                        var self = this
+                        $(file.previewTemplate).click(function() {
+                            self.removeFile(file)
+                            $('input[rel="' + $(this).attr('rel') + '"]').remove()
+                        })
+                        var response = JSON.parse(raw)
+                        if (!response.error) {
+                            $(this.element).closest('div.ccm-conversation-edit-message').find('form.aux-reply-form').append('<input rel="' + response.timestamp + '" type="hidden" name="attachments[]" value="' + response.id + '" />')
+                        } else {
+                            var $form = $('.preview.processing[rel="' + response.timestamp + '"]').closest('form')
+                            obj.handlePostError($form, [response.error])
+                            $('.preview.processing[rel="' + response.timestamp + '"]').remove()
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('')
+                            })
+                        }
+                    },
+                    accept: function(file, done) {
+                        var errors = []
+                        var attachmentCount = this.files.length
+                        if ((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
+                            errors.push(i18n.Too_many_files)
+                        }
+                        var requiredExtensions = obj.options.fileExtensions.split(',')
+                        if (file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions != '') {
+                            errors.push(i18n.Invalid_file_extension)
+                        }
+                        if ((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
+                            errors.push(i18n.Max_file_size_exceeded)
+                        }
+
+                        if (errors.length > 0) {
+                            var self = this
+                            $('input[rel="' + $(file.previewTemplate).attr('rel') + '"]').remove()
+                            var $form = $(file.previewTemplate).parent('.dropzone')
+                            self.removeFile(file)
+                            obj.handlePostError($form, errors)
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('')
+                            })
+                            attachmentCount = -1
+                            done('error') // not displayed, just needs to have argument to trigger.
+                        } else {
+                            done()
+                        }
+                    },
+                    sending: function(file, xhr, formData) {
+                        $(file.previewTemplate).attr('rel', new Date().getTime())
+                        formData.append('timestamp', $(file.previewTemplate).attr('rel'))
+                        formData.append('tag', $(obj.$editMessageHOlder).parent('div').attr('rel'))
+                        formData.append('fileCount', $(obj.$editMessageHolder).find('[name="attachments[]"]').length)
+                    },
+                    init: function() {
+                        $(this.element).data('dropzone', this)
+                    }
+                })
+            }
+            if (obj.$newmessageform.dropzone && !($(obj.$newmessageform).attr('data-dropzone-applied'))) { // dropzone new message form
+                obj.$newmessageform.dropzone({
+                    accept: function(file, done) {
+                        var errors = []
+                        var attachmentCount = this.files.length
+                        if ((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
+                            errors.push(i18n.Too_many_files)
+                        }
+                        var requiredExtensions = obj.options.fileExtensions.split(',')
+                        if (file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions != '') {
+                            errors.push(i18n.Invalid_file_extension)
+                        }
+                        if ((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
+                            errors.push(i18n.Max_file_size_exceeded)
+                        }
+
+                        if (errors.length > 0) {
+                            var self = this
+                            $('input[rel="' + $(file.previewTemplate).attr('rel') + '"]').remove()
+                            var $form = $(file.previewTemplate).parent('.dropzone')
+                            self.removeFile(file)
+                            obj.handlePostError($form, errors)
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('')
+                            })
+                            attachmentCount = -1
+                            done('error') // not displayed, just needs to have argument to trigger.
+                        } else {
+                            done()
+                        }
+                    },
+                    url: CCM_TOOLS_PATH + '/conversations/add_file',
+                    success: function(file, raw) {
+                        var self = this
+                        $(file.previewTemplate).click(function() {
+                            $('input[rel="' + $(this).attr('rel') + '"]').remove()
+                            self.removeFile(file)
+                        })
+                        var response = JSON.parse(raw)
+                        if (!response.error) {
+                            $('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="' + response.timestamp + '" type="hidden" name="attachments[]" value="' + response.id + '" />')
+                        } else {
+                            var $form = $('.preview.processing[rel="' + response.timestamp + '"]').closest('form')
+                            obj.handlePostError($form, [response.error])
+                            $('.preview.processing[rel="' + response.timestamp + '"]').remove()
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('')
+                            })
+                        }
+                    },
+                    sending: function(file, xhr, formData) {
+                        $(file.previewTemplate).attr('rel', new Date().getTime())
+                        formData.append('timestamp', $(file.previewTemplate).attr('rel'))
+                        formData.append('tag', $(obj.$newmessageform).parent('div').attr('rel'))
+                        formData.append('fileCount', this.files.length)
+                    },
+                    init: function() {
+                        $(this.element).data('dropzone', this)
+                    }
+                })
+                $(obj.$newmessageform).attr('data-dropzone-applied', 'true')
+            }
+
+            if (!($(obj.$replyholder.find('.dropzone')).attr('data-dropzone-applied'))) {
+                obj.$replyholder.find('.dropzone').not('[data-drozpone-applied="true"]').dropzone({ // dropzone reply form
+                    url: CCM_TOOLS_PATH + '/conversations/add_file',
+                    success: function(file, raw) {
+                        var self = this
+                        $(file.previewTemplate).click(function() {
+                            self.removeFile(file)
+                            $('input[rel="' + $(this).attr('rel') + '"]').remove()
+                        })
+                        var response = JSON.parse(raw)
+                        if (!response.error) {
+                            $(this.element).closest('div.ccm-conversation-add-reply').find('form.aux-reply-form').append('<input rel="' + response.timestamp + '" type="hidden" name="attachments[]" value="' + response.id + '" />')
+                        } else {
+                            var $form = $('.preview.processing[rel="' + response.timestamp + '"]').closest('form')
+                            obj.handlePostError($form, [response.error])
+                            $('.preview.processing[rel="' + response.timestamp + '"]').remove()
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('')
+                            })
+                        }
+                    },
+                    accept: function(file, done) {
+                        var errors = []
+                        var attachmentCount = this.files.length
+                        if ((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
+                            errors.push(i18n.Too_many_files)
+                        }
+                        var requiredExtensions = obj.options.fileExtensions.split(',')
+                        if (file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions != '') {
+                            errors.push(i18n.Invalid_file_extension)
+                        }
+                        if ((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
+                            errors.push(i18n.Max_file_size_exceeded)
+                        }
+
+                        if (errors.length > 0) {
+                            var self = this
+                            $('input[rel="' + $(file.previewTemplate).attr('rel') + '"]').remove()
+                            var $form = $(file.previewTemplate).parent('.dropzone')
+                            self.removeFile(file)
+                            obj.handlePostError($form, errors)
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('')
+                            })
+                            attachmentCount = -1
+                            done('error') // not displayed, just needs to have argument to trigger.
+                        } else {
+                            done()
+                        }
+                    },
+                    sending: function(file, xhr, formData) {
+                        $(file.previewTemplate).attr('rel', new Date().getTime())
+                        formData.append('timestamp', $(file.previewTemplate).attr('rel'))
+                        formData.append('tag', $(obj.$newmessageform).parent('div').attr('rel'))
+                        formData.append('fileCount', $(obj.$replyHolder).find('[name="attachments[]"]').length)
+                    },
+                    init: function() {
+                        $(this.element).data('dropzone', this)
+                    }
+                })
+            }
+            $(obj.$replyholder.find('.dropzone')).attr('data-dropzone-applied', 'true')
+            return $.each($(this), function(i, obj) {
+                $(this).find('.ccm-conversation-attachment-container').each(function() {
+                    if ($(this).is(':visible')) {
+                        $(this).toggle()
+                    }
+                })
+            })
+        },
+
+        attachmentDeleteTrigger: function(options) {
+            var obj = options
+            var link = $(this)
+            obj.$attachmentdeletetdialog = obj.$attachmentdeleteholder.clone()
+            if (obj.$attachmentdeletetdialog.dialog) {
+                obj.$attachmentdeletetdialog.dialog({
+                    modal: true,
+                    dialogClass: 'ccm-conversation-dialog',
+                    title: obj.$attachmentdeletetdialog.attr('data-dialog-title'),
+                    buttons: [
+                        {
+                            text: obj.$attachmentdeleteholder.attr('data-cancel-button-title'),
+                            class: 'btn pull-left',
+                            click: function() {
+                                obj.$attachmentdeletetdialog.dialog('close')
+                            }
+                        },
+                        {
+                            text: obj.$attachmentdeleteholder.attr('data-confirm-button-title'),
+                            class: 'btn pull-right btn-danger',
+                            click: function() {
+                                $(this).concreteConversationAttachments('deleteAttachment', { cnvMessageAttachmentID: link.attr('rel'), cnvObj: obj, dialogObj: obj.$attachmentdeletetdialog })
+                            }
+                        }
+                    ]
+                })
+            } else {
+                if (window.confirm(i18n.Confirm_remove_attachment)) {
+                    $(this).concreteConversationAttachments('deleteAttachment', { cnvMessageAttachmentID: link.attr('rel'), cnvObj: obj, dialogObj: obj.$attachmentdeletetdialog })
+                }
+            }
+            return false
+        },
+
+        clearDropzoneQueues: function() {
+            $('.preview.processing').each(function() { // first remove any previous attachments and hide dropzone if it was open.
+                $('input[rel="' + $(this).attr('rel') + '"]').remove()
+            })
+            $('form.dropzone').each(function() {
+                var d = $(this).data('dropzone')
+                $.each(d.files, function(k, v) {
+                    d.removeFile(v)
+                })
+            })
+        },
+
+        deleteAttachment: function(options) {
+            var cnvMessageAttachmentID = options.cnvMessageAttachmentID
+            var obj = options.cnvObj
+            var attachmentsDialog = options.dialogObj
+            /* var obj = this;
+      obj.publish('conversationBeforeDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID}); */
+            var formArray = [{
+                name: 'cnvMessageAttachmentID',
+                value: cnvMessageAttachmentID
+            }]
+
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/delete_file',
+                success: function(response) {
+                    var parsedData = JSON.parse(response)
+                    $('p[rel="' + parsedData.attachmentID + '"]').parent('.attachment-container').fadeOut(300, function() { $(this).remove() })
+                    if (attachmentsDialog.dialog) {
+                        attachmentsDialog.dialog('close')
+                        obj.publish('conversationDeleteAttachment', { cnvMessageAttachmentID: cnvMessageAttachmentID })
+                    }
+                },
+                error: function(e) {
+                    obj.publish('conversationDeleteAttachmentError', { cnvMessageAttachmentID: cnvMessageAttachmentID, error: arguments })
+                    window.alert(i18n.Error_deleting_attachment)
+                }
+            })
+        }
+    }
+
+    $.fn.concreteConversationAttachments = function(method) {
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1))
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments)
+        } else {
+            $.error('Method ' + method + ' does not exist on concreteConversationAttachments')
+        }
+    }
+
+    $.fn.concreteConversationAttachments.localize = function(dictionary) {
+        $.extend(true, i18n, dictionary)
+    }
+})(window, jQuery); // eslint-disable-line semi
+
+
+/***/ }),
+
+/***/ "./node_modules/@concretecms/bedrock/assets/conversations/js/frontend/conversations.js":
+/*!*********************************************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/assets/conversations/js/frontend/conversations.js ***!
+  \*********************************************************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _cms_js_events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../cms/js/events */ "./node_modules/@concretecms/bedrock/assets/cms/js/events.js");
+/* harmony import */ var _cms_js_events__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_cms_js_events__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var underscore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! underscore */ "./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index-all.js");
+
+
+
+window._ = underscore__WEBPACK_IMPORTED_MODULE_1__["default"]
+
+/* eslint-disable no-new, no-unused-vars, camelcase, eqeqeq */
+/* global ConcreteEvent, CCM_TOOLS_PATH */
+
+/*
+ * $.fn.concreteConversation
+ * Functions for conversation handling
+ *
+ * Events:
+ *    beforeInitializeConversation         : Before Conversation Initialized
+ *    initializeConversation               : Conversation Initialized
+ *    conversationLoaded                   : Conversation Loaded
+ *    conversationPostError                : Error posting message
+ *    conversationBeforeDeleteMessage      : Before deleting message
+ *    conversationDeleteMessage            : Deleting message
+ *    conversationDeleteMessageError       : Error deleting message
+ *    conversationBeforeAddMessageFromJSON : Before adding message from json
+ *    conversationAddMessageFromJSON       : After adding message from json
+ *    conversationBeforeUpdateCount        : Before updating message count
+ *    conversationUpdateCount              : After updating message count
+ *    conversationBeforeSubmitForm         : Before submitting form
+ *    conversationSubmitForm               : After submitting form
+ */
+;(function(global, $) {
+    'use strict'
+
+    $.extend($.fn, {
+        concreteConversation: function(options) {
+            return this.each(function() {
+                var $obj = $(this)
+                var data = $obj.data('concreteConversation')
+                if (!data) {
+                    $obj.data('concreteConversation', (data = new ConcreteConversation($obj, options)))
+                }
+            })
+        }
+    })
+
+    var i18n = {
+        Confirm_remove_message: 'Remove this message? Replies to it will not be removed.',
+        Confirm_mark_as_spam: 'Are you sure you want to flag this message as spam?',
+        Warn_currently_editing: 'Please complete or cancel the current message editing session before editing this message.',
+        Unspecified_error_occurred: 'An unspecified error occurred.',
+        Error_deleting_message: 'Something went wrong while deleting this message, please refresh and try again.',
+        Error_flagging_message: 'Something went wrong while flagging this message, please refresh and try again.'
+        // Please add new translatable strings to the getConversationsJavascript of /concrete/controllers/frontend/assets_localization.php
+    }
+    $.fn.concreteConversation.localize = function(dictionary) {
+        $.extend(true, i18n, dictionary)
+    }
+
+    var ConcreteConversation = function(element, options) {
+        this.publish('beforeInitializeConversation', { element: element, options: options })
+        this.init(element, options)
+        this.publish('initializeConversation', { element: element, options: options })
+    }
+    ConcreteConversation.fn = ConcreteConversation.prototype = {
+        publish: function(t, f) {
+            f = f || {}
+            f.ConcreteConversation = this
+            window.ConcreteEvent.publish(t, f)
+        },
+        init: function(element, options) {
+            var obj = this
+
+            obj.$element = element
+            obj.options = $.extend({
+                method: 'ajax',
+                paginate: false,
+                displayMode: 'threaded',
+                itemsPerPage: -1,
+                activeUsers: [],
+                uninitialized: true,
+                deleteMessageToken: null,
+                addMessageToken: null,
+                editMessageToken: null,
+                flagMessageToken: null
+            }, options)
+
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0
+            var paginate = (obj.options.paginate) ? 1 : 0
+            var orderBy = (obj.options.orderBy)
+            var enableOrdering = (obj.options.enableOrdering)
+            var displayPostingForm = (obj.options.displayPostingForm)
+            var enableCommentRating = (obj.options.enableCommentRating)
+            var enableTopCommentReviews = (obj.options.enableTopCommentReviews)
+            var displaySocialLinks = (obj.options.displaySocialLinks)
+            var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : ''
+            var dateFormat = (obj.options.dateFormat)
+            var customDateFormat = (obj.options.customDateFormat)
+            var blockAreaHandle = (obj.options.blockAreaHandle)
+            // var maxFiles = (obj.options.maxFiles); unused
+            // var maxFileSize = (obj.options.maxFileSize); unused
+            // var fileExtensions = (obj.options.fileExtensions); unused
+            var attachmentsEnabled = (obj.options.attachmentsEnabled)
+            var attachmentOverridesEnabled = (obj.options.attachmentOverridesEnabled)
+
+            if (obj.options.method == 'ajax') {
+                $.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
+                    cnvID: obj.options.cnvID,
+                    cID: obj.options.cID,
+                    blockID: obj.options.blockID,
+                    enablePosting: enablePosting,
+                    itemsPerPage: obj.options.itemsPerPage,
+                    addMessageLabel: addMessageLabel,
+                    paginate: paginate,
+                    displayMode: obj.options.displayMode,
+                    orderBy: orderBy,
+                    enableOrdering: enableOrdering,
+                    displayPostingForm: displayPostingForm,
+                    enableCommentRating: enableCommentRating,
+                    enableTopCommentReviews: enableTopCommentReviews,
+                    displaySocialLinks: displaySocialLinks,
+                    dateFormat: dateFormat,
+                    customDateFormat: customDateFormat,
+                    blockAreaHandle: blockAreaHandle,
+                    attachmentsEnabled: attachmentsEnabled,
+                    attachmentOverridesEnabled: attachmentOverridesEnabled
+
+                }, function(r) {
+                    var oldobj = window.obj
+                    window.obj = obj
+                    obj.$element.empty().append(r)
+                    var hash = window.location.hash.match(/^#cnv([0-9]+)Message[0-9]+$/)
+                    if (hash !== null && hash[1] == obj.options.cnvID) {
+                        var target = $('a' + window.location.hash).offset()
+                        $('html, body').animate({ scrollTop: target.top }, 800, 'linear')
+                    }
+                    window.obj = oldobj
+                    obj.attachBindings()
+                    obj.publish('conversationLoaded')
+                })
+            } else {
+                obj.attachBindings()
+                obj.finishSetup()
+                obj.publish('conversationLoaded')
+            }
+        },
+        mentionList: function(items, coordinates, bindTo) {
+            var obj = this
+            if (!coordinates) return
+            obj.dropdown.parent.css({ top: coordinates.y, left: coordinates.x })
+            if (items.length == 0) {
+                obj.dropdown.handle.dropdown('toggle')
+                obj.dropdown.parent.remove()
+                obj.dropdown.active = false
+                obj.dropdown.activeItem = -1
+                return
+            }
+
+            obj.dropdown.list.empty()
+            items.slice(0, 20).map(function(item) {
+                var listitem = $('<li/>')
+                var anchor = $('<a/>').appendTo(listitem).text(item.getName())
+                anchor.click(function() { ConcreteEvent.fire('ConversationMentionSelect', { obj: obj, item: item }, bindTo) })
+                listitem.appendTo(obj.dropdown.list)
+            })
+            if (!obj.dropdown.active) {
+                obj.dropdown.active = true
+                obj.dropdown.activeItem = -1
+                obj.dropdown.parent.appendTo(obj.$element)
+                obj.dropdown.handle.dropdown('toggle')
+            }
+            if (obj.dropdown.activeItem >= 0) { obj.dropdown.list.children().eq(obj.dropdown.activeItem).addClass('active') }
+        },
+        attachSubscriptionBindings: function() {
+            $('a[data-conversation-subscribe]').magnificPopup({
+                type: 'ajax',
+                callbacks: {
+                    updateStatus: function(data) {
+                        if (data.status == 'ready') {
+                            var $form = $('form[data-conversation-form=subscribe]')
+                            $('button').on('click', $form, function(e) {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                $.ajax({
+                                    url: $form.attr('action'),
+                                    dataType: 'json',
+                                    success: function(r) {
+                                        if (r.subscribed) {
+                                            $('[data-conversation-subscribe=subscribe]').hide()
+                                            $('[data-conversation-subscribe=unsubscribe]').show()
+                                        } else {
+                                            $('[data-conversation-subscribe=unsubscribe]').hide()
+                                            $('[data-conversation-subscribe=subscribe]').show()
+                                        }
+                                        $.magnificPopup.close()
+                                    }
+                                })
+                            })
+                        }
+                    },
+
+                    beforeOpen: function() {
+                        // just a hack that adds mfp-anim class to markup
+                        this.st.mainClass = 'mfp-zoom-in'
+                    }
+                },
+                closeOnContentClick: true,
+                midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
+            })
+        },
+
+        attachBindings: function() {
+            var obj = this
+            obj.$element.unbind('.cnv')
+            if (obj.options.uninitialized) {
+                obj.options.uninitialized = false
+                ConcreteEvent.bind('ConversationMention', function(e, data) {
+                    obj.mentionList(data.items, data.coordinates || false, data.bindTo || obj.$element.get(0))
+                },
+                obj.$element.get(0) // Bind to this conversation only.
+                )
+                obj.dropdown = {}
+                obj.dropdown.parent = $('<div/>').css({
+                    position: 'absolute',
+                    height: 0,
+                    width: 0
+                })
+                obj.dropdown.active = false
+                obj.dropdown.handle = $('<a/>').appendTo(obj.dropdown.parent)
+                obj.dropdown.list = $('<ul/>').addClass('dropdown-menu').appendTo(obj.dropdown.parent)
+                obj.dropdown.handle.dropdown()
+                ConcreteEvent.bind('ConversationTextareaKeydownUp', function(e) {
+                    if (obj.dropdown.activeItem == -1) obj.dropdown.activeItem = obj.dropdown.list.children().length
+                    obj.dropdown.activeItem -= 1
+                    obj.dropdown.activeItem += obj.dropdown.list.children().length
+                    obj.dropdown.activeItem %= obj.dropdown.list.children().length
+                    obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active')
+                }, obj.$element.get(0))
+                ConcreteEvent.bind('ConversationTextareaKeydownDown', function(e) {
+                    obj.dropdown.activeItem += 1
+                    obj.dropdown.activeItem += obj.dropdown.list.children().length
+                    obj.dropdown.activeItem %= obj.dropdown.list.children().length
+                    obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active')
+                }, obj.$element.get(0))
+                ConcreteEvent.bind('ConversationTextareaKeydownEnter', function(e) {
+                    obj.dropdown.list.children().filter('.active').children('a').click()
+                }, obj.$element.get(0))
+                ConcreteEvent.bind('ConversationPostError', function(e, data) {
+                    var $form = data.form
+                    var messages = data.messages
+                    var s = ''
+                    $.each(messages, function(i, m) {
+                        s += m + '<br>'
+                    })
+                    $form.find('div.ccm-conversation-errors').html(s).show()
+                })
+                ConcreteEvent.bind('ConversationSubmitForm', function(e, data) {
+                    data.form.find('div.ccm-conversation-errors').hide()
+                })
+            }
+            var paginate = (obj.options.paginate) ? 1 : 0
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0
+            var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : ''
+
+            obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply')
+            obj.$newmessageform = obj.$element.find('div.ccm-conversation-add-new-message form')
+            obj.$deleteholder = obj.$element.find('div.ccm-conversation-delete-message')
+            obj.$attachmentdeleteholder = obj.$element.find('div.ccm-conversation-delete-attachment')
+            obj.$permalinkholder = obj.$element.find('div.ccm-conversation-message-permalink')
+            obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list')
+            obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count')
+            obj.$postbuttons = obj.$element.find('[data-submit=conversation-message]')
+            obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]')
+            obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]')
+            obj.$messages = obj.$element.find('.ccm-conversation-messages')
+            obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating')
+
+            obj.$element.on('click.cnv', '[data-submit=conversation-message]', function(e) {
+                e.preventDefault()
+                obj.submitForm($(this))
+            })
+            obj.$element.on('click.cnv', '[data-submit=update-conversation-message]', function() {
+                obj.submitUpdateForm($(this))
+                return false
+            })
+            this.attachSubscriptionBindings()
+            var replyIterator = 1
+            obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function(event) {
+                event.preventDefault()
+                $('.ccm-conversation-attachment-container').each(function() {
+                    if ($(this).is(':visible')) {
+                        $(this).toggle()
+                    }
+                })
+                var $replyform = obj.$replyholder.appendTo($(this).closest('[data-conversation-message-id]'))
+                $replyform.attr('data-form', 'conversation-reply').show()
+                $replyform.find('[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'))
+
+                $replyform.attr('rel', 'new-reply' + replyIterator)
+                replyIterator++ // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered.
+                return false
+            })
+
+            $('.ccm-conversation-attachment-container').hide()
+            $('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event) {
+                event.preventDefault()
+                if ($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
+                    $('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle()
+                }
+                $('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle()
+            })
+            $('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event) {
+                event.preventDefault()
+                if ($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
+                    $('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle()
+                }
+                $('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle()
+            })
+
+            obj.$element.on('click.cnv', 'a[data-submit=delete-conversation-message]', function() {
+                var $link = $(this)
+                obj.$deletedialog = obj.$deleteholder.clone()
+                if (obj.$deletedialog.dialog) {
+                    obj.$deletedialog.dialog({
+                        modal: true,
+                        dialogClass: 'ccm-conversation-dialog',
+                        title: obj.$deleteholder.attr('data-dialog-title'),
+                        buttons: [{
+                            text: obj.$deleteholder.attr('data-cancel-button-title'),
+                            class: 'btn pull-left',
+                            click: function() {
+                                obj.$deletedialog.dialog('close')
+                            }
+                        },
+                        {
+                            text: obj.$deleteholder.attr('data-confirm-button-title'),
+                            class: 'btn pull-right btn-danger',
+                            click: function() {
+                                obj.deleteMessage($link.attr('data-conversation-message-id'))
+                            }
+                        }
+                        ]
+                    })
+                } else {
+                    if (window.confirm(i18n.Confirm_remove_message)) {
+                        obj.deleteMessage($link.attr('data-conversation-message-id'))
+                    }
+                }
+                return false
+            })
+            obj.$element.on('click.cnv', 'a[data-submit=flag-conversation-message]', function() {
+                var $link = $(this)
+                if (window.confirm(i18n.Confirm_mark_as_spam)) {
+                    obj.flagMessage($link.attr('data-conversation-message-id'))
+                }
+                return false
+            })
+            obj.$element.on('click.cnv', 'a[data-load=edit-conversation-message]', function() {
+                if ($('.ccm-conversation-edit-message').is(':visible')) {
+                    window.alert(i18n.Warn_currently_editing)
+                    return false
+                }
+                var $link = $(this)
+                obj.editMessage($link.attr('data-conversation-message-id'))
+            })
+            obj.$element.on('change.cnv', 'select[data-sort=conversation-message-list]', function() {
+                obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
+                    cnvID: obj.options.cnvID,
+                    task: 'get_messages',
+                    cID: obj.options.cID,
+                    blockID: obj.options.blockID,
+                    enablePosting: enablePosting,
+                    displayMode: obj.options.displayMode,
+                    itemsPerPage: obj.options.itemsPerPage,
+                    paginate: paginate,
+                    addMessageLabel: addMessageLabel,
+                    orderBy: $(this).val(),
+                    enableOrdering: obj.options.enableOrdering,
+                    displayPostingForm: obj.options.displayPostingForm,
+                    enableCommentRating: obj.options.enableCommentRating,
+                    enableTopCommentReviews: obj.options.enableTopCommentReviews,
+                    displaySocialLinks: obj.options.displaySocialLinks,
+                    dateFormat: obj.options.dateFormat,
+                    customDateFormat: obj.options.customDateFormat,
+                    blockAreaHandle: obj.options.blockAreaHandle,
+                    attachmentsEnabled: obj.options.attachmentsEnabled,
+                    attachmentOverridesEnabled: obj.options.attachmentOverridesEnabled
+
+                }, function(r) {
+                    obj.$replyholder.appendTo(obj.$element)
+                    $('.ccm-conversation-messages .dropdown-toggle').dropdown()
+                    obj.attachBindings()
+                })
+            })
+
+            obj.$element.on('click.cnv', '.image-popover-hover', function() {
+                $.magnificPopup.open({
+                    items: {
+                        src: $(this).attr('data-full-image'), // can be a HTML string, jQuery object, or CSS selector
+                        type: 'image',
+                        verticalFit: true
+                    }
+                })
+            })
+
+            obj.$element.on('click.cnv', '[data-load-page=conversation-message-list]', function() {
+                var nextPage = parseInt(obj.$loadmore.attr('data-next-page'))
+                var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'))
+                var orderBy = obj.$sortselect.length ? obj.$sortselect.val() : obj.options.orderBy
+                var data = {
+                    cnvID: obj.options.cnvID,
+                    cID: obj.options.cID,
+                    blockID: obj.options.blockID,
+                    itemsPerPage: obj.options.itemsPerPage,
+                    displayMode: obj.options.displayMode,
+                    blockAreaHandle: obj.options.blockAreaHandle,
+                    enablePosting: enablePosting,
+                    addMessageLabel: addMessageLabel,
+                    page: nextPage,
+                    orderBy: orderBy,
+                    enableCommentRating: obj.options.enableCommentRating,
+                    enableTopCommentReviews: obj.options.enableTopCommentReviews,
+                    displaySocialLinks: obj.options.displaySocialLinks,
+                    dateFormat: obj.options.dateFormat,
+                    customDateFormat: obj.options.customDateFormat,
+                    attachmentsEnabled: obj.options.attachmentsEnabled,
+                    attachmentOverridesEnabled: obj.options.attachmentOverridesEnabled
+                }
+
+                $.ajax({
+                    type: 'post',
+                    data: data,
+                    url: CCM_TOOLS_PATH + '/conversations/message_page',
+                    success: function(html) {
+                        obj.$messages.append(html)
+                        $('.ccm-conversation-messages .dropdown-toggle').dropdown()
+                        if ((nextPage + 1) > totalPages) {
+                            obj.$loadmore.hide()
+                        } else {
+                            obj.$loadmore.attr('data-next-page', nextPage + 1)
+                        }
+                    }
+                })
+            })
+
+            obj.$element.on('click.cnv', '.conversation-rate-message', function() {
+                var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id')
+                var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type')
+                obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate')
+                var data = {
+                    cnvID: obj.options.cnvID,
+                    cID: obj.options.cID,
+                    blockID: obj.options.blockID,
+                    cnvMessageID: cnvMessageID,
+                    cnvRatingTypeHandle: cnvRatingTypeHandle
+                }
+                $.ajax({
+                    type: 'post',
+                    data: data,
+                    url: CCM_TOOLS_PATH + '/conversations/rate',
+                    success: function(html) {
+                        $('span[data-message-rating="' + cnvMessageID + '"]').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
+                            cnvMessageID: cnvMessageID
+                        })
+                    }
+                })
+            })
+            obj.$element.on('click.cnv', 'a.share-popup', function() {
+                var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screen.left
+                var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screen.top
+                var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : window.screen.width
+                var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : window.screen.height
+                var left = ((width / 2) - (300)) + dualScreenLeft
+                var top = ((height / 2) - (125)) + dualScreenTop
+                window.open($(this).attr('href'), 'cnvSocialShare', 'left:' + left + ',top:' + top + ',height=250,width=600,toolbar=no,status=no')
+
+                return false
+            })
+            obj.$element.on('click.cnv', 'a.share-permalink', function() {
+                var $link = $(this)
+                var permalink = $link.attr('rel')
+                obj.$permalinkdialog = obj.$permalinkholder.clone()
+                var $textarea = $('<textarea readonly>').text(decodeURIComponent(permalink))
+                obj.$permalinkdialog.append($textarea)
+                $textarea.click(function() {
+                    var $this = $(this)
+                    $this.select()
+                    window.setTimeout(function() {
+                        $this.select()
+                    }, 1)
+                    $this.mouseup(function() {
+                        $this.unbind('mouseup')
+                        return false
+                    })
+                })
+                if (obj.$permalinkdialog.dialog) {
+                    obj.$permalinkdialog.dialog({
+                        modal: true,
+                        dialogClass: 'ccm-conversation-dialog',
+                        title: obj.$permalinkholder.attr('data-dialog-title'),
+                        buttons: [{
+                            text: obj.$permalinkholder.attr('data-cancel-button-title'),
+                            class: 'btn pull-left',
+                            click: function() {
+                                obj.$permalinkdialog.dialog('close')
+                            }
+                        }]
+                    })
+                }
+                return false
+            })
+            if (obj.options.attachmentsEnabled > 0) {
+                obj.$element.concreteConversationAttachments(obj)
+            }
+            $('.dropdown-toggle').dropdown()
+        },
+        handlePostError: function($form, messages) {
+            if (!messages) {
+                messages = [i18n.Unspecified_error_occurred]
+            }
+            this.publish('conversationPostError', { form: $form, messages: messages })
+        },
+        deleteMessage: function(msgID) {
+            var obj = this
+            obj.publish('conversationBeforeDeleteMessage', { msgID: msgID })
+            var formArray = [{
+                name: 'cnvMessageID',
+                value: msgID
+            }, {
+                name: 'token',
+                value: obj.options.deleteMessageToken
+            }]
+
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                dataType: 'json',
+                url: CCM_TOOLS_PATH + '/conversations/delete_message',
+                success: function(r) {
+                    if (!r.error) {
+                        var $parent = $('[data-conversation-message-id=' + msgID + ']')
+
+                        if ($parent.length) {
+                            $parent.remove()
+                        }
+                        obj.updateCount()
+                        if (obj.$deletedialog.dialog) { obj.$deletedialog.dialog('close') }
+                        obj.publish('conversationDeleteMessage', { msgID: msgID })
+                    } else {
+                        window.alert(i18n.Error_deleting_message + '\n\n' + r.errors.join('\n'))
+                    }
+                },
+                error: function(e) {
+                    obj.publish('conversationDeleteMessageError', { msgID: msgID, error: arguments })
+                    window.alert(i18n.Error_deleting_message)
+                }
+            })
+        },
+        editMessage: function(msgID) {
+            var obj = this
+            var formArray = [{
+                name: 'cnvMessageID',
+                value: msgID
+            },
+            {
+                name: 'cID',
+                value: this.options.cID
+            },
+            {
+                name: 'blockAreaHandle',
+                value: this.options.blockAreaHandle
+            },
+            {
+                name: 'bID',
+                value: this.options.blockID
+            }
+            ]
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/edit_message',
+                success: function(html) {
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + msgID + ']')
+                    var $previousContents = $parent
+                    $parent.after(html).remove()
+                    $('.ccm-conversation-attachment-container').hide()
+                    $('.ccm-conversation-edit-message .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event) {
+                        event.preventDefault()
+                        $('.ccm-conversation-edit-message .ccm-conversation-attachment-container').toggle()
+                    })
+                    obj.$editMessageHolder = obj.$element.find('div.ccm-conversation-edit-message')
+                    obj.$element.concreteConversationAttachments(obj)
+                    $('button.cancel-update').on('click.cnv', function() {
+                        $('.ccm-conversation-edit-message').replaceWith($previousContents)
+                    })
+                },
+                error: function(e) {
+                    obj.publish('conversationEditMessageError', { msgID: msgID, error: arguments })
+                }
+            })
+        },
+        flagMessage: function(msgID) {
+            var obj = this
+            obj.publish('conversationBeforeFlagMessage', { msgID: msgID })
+            var formArray = [{
+                name: 'token',
+                value: obj.options.flagMessageToken
+            }, {
+                name: 'cnvMessageID',
+                value: msgID
+            }]
+
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/flag_message',
+                success: function(html) {
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + msgID + ']')
+
+                    if ($parent.length) {
+                        $parent.after(html).remove()
+                    }
+                    obj.updateCount()
+                    obj.publish('conversationFlagMessage', { msgID: msgID })
+                },
+                error: function(e) {
+                    obj.publish('conversationFlagMessageError', { msgID: msgID, error: arguments })
+                    window.alert(i18n.Error_flagging_message)
+                }
+            })
+        },
+        addMessageFromJSON: function($form, json) {
+            var obj = this
+            obj.publish('conversationBeforeAddMessageFromJSON', { json: json, form: $form })
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0
+            var formArray = [{
+                name: 'cnvMessageID',
+                value: json.cnvMessageID
+            }, {
+                name: 'enablePosting',
+                value: enablePosting
+            }, {
+                name: 'displayMode',
+                value: obj.options.displayMode
+            }, {
+                name: 'enableCommentRating',
+                value: obj.options.enableCommentRating
+            }, {
+                name: 'displaySocialLinks',
+                value: obj.options.displaySocialLinks
+            }]
+
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/message_detail',
+                success: function(html) {
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + json.cnvMessageParentID + ']')
+
+                    if ($parent.length) {
+                        $parent.after(html)
+                        obj.$replyholder.appendTo(obj.$element)
+                        obj.$replyholder.hide()
+                        obj.$replyholder.find('.conversation-editor').val('')
+                        try {
+                            obj.$replyholder.find('.redactor_conversation_editor_' + obj.options.cnvID).redactor('set', '')
+                        } catch (e) {}
+                    } else {
+                        if (obj.options.orderBy == 'date_desc') {
+                            obj.$messages.prepend(html)
+                        } else {
+                            obj.$messages.append(html)
+                        }
+                        obj.$element.find('.ccm-conversation-no-messages').hide()
+                        obj.$newmessageform.find('.conversation-editor').val('')
+                        try {
+                            obj.$newmessageform.find('.redactor_conversation_editor_' + obj.options.cnvID).redactor('set', '')
+                        } catch (e) {}
+                    }
+                    obj.publish('conversationAddMessageFromJSON', { json: json, form: $form })
+                    obj.updateCount()
+                    var target = $('a#cnv' + obj.options.cnvID + 'Message' + json.cnvMessageID).offset()
+                    $('.dropdown-toggle').dropdown()
+                    $('html, body').animate({ scrollTop: target.top }, 800, 'linear')
+                }
+            })
+        },
+        updateMessageFromJSON: function($form, json) {
+            var obj = this
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0
+            var formArray = [{
+                name: 'cnvMessageID',
+                value: json.cnvMessageID
+            }, {
+                name: 'enablePosting',
+                value: enablePosting
+            }, {
+                name: 'displayMode',
+                value: obj.options.displayMode
+            }, {
+                name: 'enableCommentRating',
+                value: obj.options.enableCommentRating
+            }, {
+                name: 'displaySocialLinks',
+                value: obj.options.displaySocialLinks
+            }]
+
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/message_detail',
+                success: function(html) {
+                    var $parent = $('[data-conversation-message-id=' + json.cnvMessageID + ']')
+                    $parent.after(html).remove()
+                    $('.dropdown-toggle').dropdown()
+                }
+            })
+        },
+        updateCount: function() {
+            var obj = this
+            obj.publish('conversationBeforeUpdateCount')
+            obj.$messagecnt.load(CCM_TOOLS_PATH + '/conversations/count_header', {
+                cnvID: obj.options.cnvID
+            }, function() {
+                obj.publish('conversationUpdateCount')
+            })
+        },
+        submitForm: function($btn) {
+            var obj = this
+            obj.publish('conversationBeforeSubmitForm')
+            var $form = $btn.closest('form')
+
+            $btn.prop('disabled', true)
+            $form.parent().addClass('ccm-conversation-form-submitted')
+            var formArray = $form.serializeArray()
+            var parentID = $btn.attr('data-post-parent-id')
+
+            formArray.push({
+                name: 'token',
+                value: obj.options.addMessageToken
+            }, {
+                name: 'cnvID',
+                value: obj.options.cnvID
+            }, {
+                name: 'cnvMessageParentID',
+                value: parentID
+            }, {
+                name: 'enableRating',
+                value: parentID
+            })
+            $.ajax({
+                dataType: 'json',
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/add_message',
+                success: function(r) {
+                    if (!r) {
+                        obj.handlePostError($form)
+                        return false
+                    }
+                    if (r.error) {
+                        obj.handlePostError($form, r.errors)
+                        return false
+                    }
+                    $('.preview.processing').each(function() {
+                        $('input[rel="' + $(this).attr('rel') + '"]').remove()
+                    })
+                    $('form.dropzone').each(function() {
+                        var d = $(this).data('dropzone')
+                        $.each(d.files, function(k, v) {
+                            d.removeFile(v)
+                        })
+                    })
+                    obj.addMessageFromJSON($form, r)
+                    obj.publish('conversationSubmitForm', { form: $form, response: r })
+                },
+                error: function(r) {
+                    obj.handlePostError($form)
+                    return false
+                },
+                complete: function(r) {
+                    $btn.prop('disabled', false)
+                    $form.parent().closest('.ccm-conversation-form-submitted').removeClass('ccm-conversation-form-submitted')
+                }
+            })
+        },
+        submitUpdateForm: function($btn) {
+            var obj = this
+            obj.publish('conversationBeforeSubmitForm')
+            var $form = $btn.closest('form')
+
+            $btn.prop('disabled', true)
+            $form.parent().addClass('ccm-conversation-form-submitted')
+            var formArray = $form.serializeArray()
+            var cnvMessageID = $btn.attr('data-post-message-id')
+
+            formArray.push({
+                name: 'token',
+                value: obj.options.editMessageToken
+            }, {
+                name: 'cnvMessageID',
+                value: cnvMessageID
+            })
+            $.ajax({
+                dataType: 'json',
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/update_message',
+                success: function(r) {
+                    if (!r) {
+                        obj.handlePostError($form)
+                        return false
+                    }
+                    if (r.error) {
+                        obj.handlePostError($form, r.errors)
+                        return false
+                    }
+                    $('.preview.processing').each(function() {
+                        $('input[rel="' + $(this).attr('rel') + '"]').remove()
+                    })
+                    /*
+                     $('form.dropzone').each(function(){
+                     var d = $(this).data('dropzone');
+                     $.each(d.files,function(k,v){
+                     d.removeFile(v);
+                     });
+                     });
+                     */
+                    obj.updateMessageFromJSON($form, r)
+                    obj.publish('conversationSubmitForm', { form: $form, response: r })
+                },
+                error: function(r) {
+                    obj.handlePostError($form)
+                    return false
+                },
+                complete: function(r) {
+                    $btn.prop('disabled', false)
+                    $form.parent().closest('.ccm-conversation-form-submitted').removeClass('ccm-conversation-form-submitted')
+                }
+            })
+        },
+        tool: {
+            setCaretPosition: function(elem, caretPos) {
+                // http://stackoverflow.com/a/512542/950669
+                if (elem != null) {
+                    if (elem.createTextRange) {
+                        var range = elem.createTextRange()
+                        range.move('character', caretPos)
+                        range.select()
+                    } else {
+                        if (elem.selectionStart) {
+                            elem.focus()
+                            elem.setSelectionRange(caretPos, caretPos)
+                        } else { elem.focus() }
+                    }
+                }
+            },
+            getCaretPosition: function(elem) {
+                // http://stackoverflow.com/a/263796/950669
+                if (elem.selectionStart) {
+                    return elem.selectionStart
+                } else if (document.selection) {
+                    elem.focus()
+
+                    var r = document.selection.createRange()
+                    if (r == null) {
+                        return 0
+                    }
+
+                    var re = elem.createTextRange()
+                    var rc = re.duplicate()
+                    re.moveToBookmark(r.getBookmark())
+                    rc.setEndPoint('EndToStart', re)
+
+                    return rc.text.length
+                }
+                return 0
+            },
+            testMentionString: function(s) {
+                return /^@[a-z0-9]+$/.test(s)
+            },
+            getMentionMatches: function(s, u) {
+                return u.filter(function(d) { return (d.indexOf(s) >= 0) })
+            },
+            isSameConversation: function(o, n) {
+                return (o.options.blockID === n.options.blockID && o.options.cnvID === n.options.cnvID)
+            },
+
+            // MentionUser class, use this to pass around data with your @mention names.
+            MentionUser: function(name) {
+                this.getName = function() { return name }
+            }
+        }
+    }
+})(window, jQuery); // eslint-disable-line semi
+
+
+/***/ }),
+
+/***/ "./node_modules/@concretecms/bedrock/node_modules/dropzone/dist/dropzone.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/node_modules/dropzone/dist/dropzone.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/*
+ *
+ * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
+ *
+ * Copyright (c) 2012, Matias Meno
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+// The Emitter class provides the ability to call `.on()` on Dropzone to listen
+// to events.
+// It is strongly based on component's emitter class, and I removed the
+// functionality because of the dependency hell with different frameworks.
+var Emitter =
+/*#__PURE__*/
+function () {
+  function Emitter() {
+    _classCallCheck(this, Emitter);
+  }
+
+  _createClass(Emitter, [{
+    key: "on",
+    // Add an event listener for given event
+    value: function on(event, fn) {
+      this._callbacks = this._callbacks || {}; // Create namespace for this event
+
+      if (!this._callbacks[event]) {
+        this._callbacks[event] = [];
+      }
+
+      this._callbacks[event].push(fn);
+
+      return this;
+    }
+  }, {
+    key: "emit",
+    value: function emit(event) {
+      this._callbacks = this._callbacks || {};
+      var callbacks = this._callbacks[event];
+
+      if (callbacks) {
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = callbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var callback = _step.value;
+            callback.apply(this, args);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      }
+
+      return this;
+    } // Remove event listener for given event. If fn is not provided, all event
+    // listeners for that event will be removed. If neither is provided, all
+    // event listeners will be removed.
+
+  }, {
+    key: "off",
+    value: function off(event, fn) {
+      if (!this._callbacks || arguments.length === 0) {
+        this._callbacks = {};
+        return this;
+      } // specific event
+
+
+      var callbacks = this._callbacks[event];
+
+      if (!callbacks) {
+        return this;
+      } // remove all handlers
+
+
+      if (arguments.length === 1) {
+        delete this._callbacks[event];
+        return this;
+      } // remove specific handler
+
+
+      for (var i = 0; i < callbacks.length; i++) {
+        var callback = callbacks[i];
+
+        if (callback === fn) {
+          callbacks.splice(i, 1);
+          break;
+        }
+      }
+
+      return this;
+    }
+  }]);
+
+  return Emitter;
+}();
+
+var Dropzone =
+/*#__PURE__*/
+function (_Emitter) {
+  _inherits(Dropzone, _Emitter);
+
+  _createClass(Dropzone, null, [{
+    key: "initClass",
+    value: function initClass() {
+      // Exposing the emitter class, mainly for tests
+      this.prototype.Emitter = Emitter;
+      /*
+       This is a list of all available events you can register on a dropzone object.
+        You can register an event handler like this:
+        dropzone.on("dragEnter", function() { });
+        */
+
+      this.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
+      this.prototype.defaultOptions = {
+        /**
+         * Has to be specified on elements other than form (or when the form
+         * doesn't have an `action` attribute). You can also
+         * provide a function that will be called with `files` and
+         * must return the url (since `v3.12.0`)
+         */
+        url: null,
+
+        /**
+         * Can be changed to `"put"` if necessary. You can also provide a function
+         * that will be called with `files` and must return the method (since `v3.12.0`).
+         */
+        method: "post",
+
+        /**
+         * Will be set on the XHRequest.
+         */
+        withCredentials: false,
+
+        /**
+         * The timeout for the XHR requests in milliseconds (since `v4.4.0`).
+         */
+        timeout: 30000,
+
+        /**
+         * How many file uploads to process in parallel (See the
+         * Enqueuing file uploads documentation section for more info)
+         */
+        parallelUploads: 2,
+
+        /**
+         * Whether to send multiple files in one request. If
+         * this it set to true, then the fallback file input element will
+         * have the `multiple` attribute as well. This option will
+         * also trigger additional events (like `processingmultiple`). See the events
+         * documentation section for more information.
+         */
+        uploadMultiple: false,
+
+        /**
+         * Whether you want files to be uploaded in chunks to your server. This can't be
+         * used in combination with `uploadMultiple`.
+         *
+         * See [chunksUploaded](#config-chunksUploaded) for the callback to finalise an upload.
+         */
+        chunking: false,
+
+        /**
+         * If `chunking` is enabled, this defines whether **every** file should be chunked,
+         * even if the file size is below chunkSize. This means, that the additional chunk
+         * form data will be submitted and the `chunksUploaded` callback will be invoked.
+         */
+        forceChunking: false,
+
+        /**
+         * If `chunking` is `true`, then this defines the chunk size in bytes.
+         */
+        chunkSize: 2000000,
+
+        /**
+         * If `true`, the individual chunks of a file are being uploaded simultaneously.
+         */
+        parallelChunkUploads: false,
+
+        /**
+         * Whether a chunk should be retried if it fails.
+         */
+        retryChunks: false,
+
+        /**
+         * If `retryChunks` is true, how many times should it be retried.
+         */
+        retryChunksLimit: 3,
+
+        /**
+         * If not `null` defines how many files this Dropzone handles. If it exceeds,
+         * the event `maxfilesexceeded` will be called. The dropzone element gets the
+         * class `dz-max-files-reached` accordingly so you can provide visual feedback.
+         */
+        maxFilesize: 256,
+
+        /**
+         * The name of the file param that gets transferred.
+         * **NOTE**: If you have the option  `uploadMultiple` set to `true`, then
+         * Dropzone will append `[]` to the name.
+         */
+        paramName: "file",
+
+        /**
+         * Whether thumbnails for images should be generated
+         */
+        createImageThumbnails: true,
+
+        /**
+         * In MB. When the filename exceeds this limit, the thumbnail will not be generated.
+         */
+        maxThumbnailFilesize: 10,
+
+        /**
+         * If `null`, the ratio of the image will be used to calculate it.
+         */
+        thumbnailWidth: 120,
+
+        /**
+         * The same as `thumbnailWidth`. If both are null, images will not be resized.
+         */
+        thumbnailHeight: 120,
+
+        /**
+         * How the images should be scaled down in case both, `thumbnailWidth` and `thumbnailHeight` are provided.
+         * Can be either `contain` or `crop`.
+         */
+        thumbnailMethod: 'crop',
+
+        /**
+         * If set, images will be resized to these dimensions before being **uploaded**.
+         * If only one, `resizeWidth` **or** `resizeHeight` is provided, the original aspect
+         * ratio of the file will be preserved.
+         *
+         * The `options.transformFile` function uses these options, so if the `transformFile` function
+         * is overridden, these options don't do anything.
+         */
+        resizeWidth: null,
+
+        /**
+         * See `resizeWidth`.
+         */
+        resizeHeight: null,
+
+        /**
+         * The mime type of the resized image (before it gets uploaded to the server).
+         * If `null` the original mime type will be used. To force jpeg, for example, use `image/jpeg`.
+         * See `resizeWidth` for more information.
+         */
+        resizeMimeType: null,
+
+        /**
+         * The quality of the resized images. See `resizeWidth`.
+         */
+        resizeQuality: 0.8,
+
+        /**
+         * How the images should be scaled down in case both, `resizeWidth` and `resizeHeight` are provided.
+         * Can be either `contain` or `crop`.
+         */
+        resizeMethod: 'contain',
+
+        /**
+         * The base that is used to calculate the filesize. You can change this to
+         * 1024 if you would rather display kibibytes, mebibytes, etc...
+         * 1024 is technically incorrect, because `1024 bytes` are `1 kibibyte` not `1 kilobyte`.
+         * You can change this to `1024` if you don't care about validity.
+         */
+        filesizeBase: 1000,
+
+        /**
+         * Can be used to limit the maximum number of files that will be handled by this Dropzone
+         */
+        maxFiles: null,
+
+        /**
+         * An optional object to send additional headers to the server. Eg:
+         * `{ "My-Awesome-Header": "header value" }`
+         */
+        headers: null,
+
+        /**
+         * If `true`, the dropzone element itself will be clickable, if `false`
+         * nothing will be clickable.
+         *
+         * You can also pass an HTML element, a CSS selector (for multiple elements)
+         * or an array of those. In that case, all of those elements will trigger an
+         * upload when clicked.
+         */
+        clickable: true,
+
+        /**
+         * Whether hidden files in directories should be ignored.
+         */
+        ignoreHiddenFiles: true,
+
+        /**
+         * The default implementation of `accept` checks the file's mime type or
+         * extension against this list. This is a comma separated list of mime
+         * types or file extensions.
+         *
+         * Eg.: `image/*,application/pdf,.psd`
+         *
+         * If the Dropzone is `clickable` this option will also be used as
+         * [`accept`](https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept)
+         * parameter on the hidden file input as well.
+         */
+        acceptedFiles: null,
+
+        /**
+         * **Deprecated!**
+         * Use acceptedFiles instead.
+         */
+        acceptedMimeTypes: null,
+
+        /**
+         * If false, files will be added to the queue but the queue will not be
+         * processed automatically.
+         * This can be useful if you need some additional user input before sending
+         * files (or if you want want all files sent at once).
+         * If you're ready to send the file simply call `myDropzone.processQueue()`.
+         *
+         * See the [enqueuing file uploads](#enqueuing-file-uploads) documentation
+         * section for more information.
+         */
+        autoProcessQueue: true,
+
+        /**
+         * If false, files added to the dropzone will not be queued by default.
+         * You'll have to call `enqueueFile(file)` manually.
+         */
+        autoQueue: true,
+
+        /**
+         * If `true`, this will add a link to every file preview to remove or cancel (if
+         * already uploading) the file. The `dictCancelUpload`, `dictCancelUploadConfirmation`
+         * and `dictRemoveFile` options are used for the wording.
+         */
+        addRemoveLinks: false,
+
+        /**
+         * Defines where to display the file previews – if `null` the
+         * Dropzone element itself is used. Can be a plain `HTMLElement` or a CSS
+         * selector. The element should have the `dropzone-previews` class so
+         * the previews are displayed properly.
+         */
+        previewsContainer: null,
+
+        /**
+         * This is the element the hidden input field (which is used when clicking on the
+         * dropzone to trigger file selection) will be appended to. This might
+         * be important in case you use frameworks to switch the content of your page.
+         *
+         * Can be a selector string, or an element directly.
+         */
+        hiddenInputContainer: "body",
+
+        /**
+         * If null, no capture type will be specified
+         * If camera, mobile devices will skip the file selection and choose camera
+         * If microphone, mobile devices will skip the file selection and choose the microphone
+         * If camcorder, mobile devices will skip the file selection and choose the camera in video mode
+         * On apple devices multiple must be set to false.  AcceptedFiles may need to
+         * be set to an appropriate mime type (e.g. "image/*", "audio/*", or "video/*").
+         */
+        capture: null,
+
+        /**
+         * **Deprecated**. Use `renameFile` instead.
+         */
+        renameFilename: null,
+
+        /**
+         * A function that is invoked before the file is uploaded to the server and renames the file.
+         * This function gets the `File` as argument and can use the `file.name`. The actual name of the
+         * file that gets used during the upload can be accessed through `file.upload.filename`.
+         */
+        renameFile: null,
+
+        /**
+         * If `true` the fallback will be forced. This is very useful to test your server
+         * implementations first and make sure that everything works as
+         * expected without dropzone if you experience problems, and to test
+         * how your fallbacks will look.
+         */
+        forceFallback: false,
+
+        /**
+         * The text used before any files are dropped.
+         */
+        dictDefaultMessage: "Drop files here to upload",
+
+        /**
+         * The text that replaces the default message text it the browser is not supported.
+         */
+        dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+
+        /**
+         * The text that will be added before the fallback form.
+         * If you provide a  fallback element yourself, or if this option is `null` this will
+         * be ignored.
+         */
+        dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+
+        /**
+         * If the filesize is too big.
+         * `{{filesize}}` and `{{maxFilesize}}` will be replaced with the respective configuration values.
+         */
+        dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+
+        /**
+         * If the file doesn't match the file type.
+         */
+        dictInvalidFileType: "You can't upload files of this type.",
+
+        /**
+         * If the server response was invalid.
+         * `{{statusCode}}` will be replaced with the servers status code.
+         */
+        dictResponseError: "Server responded with {{statusCode}} code.",
+
+        /**
+         * If `addRemoveLinks` is true, the text to be used for the cancel upload link.
+         */
+        dictCancelUpload: "Cancel upload",
+
+        /**
+         * The text that is displayed if an upload was manually canceled
+         */
+        dictUploadCanceled: "Upload canceled.",
+
+        /**
+         * If `addRemoveLinks` is true, the text to be used for confirmation when cancelling upload.
+         */
+        dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+
+        /**
+         * If `addRemoveLinks` is true, the text to be used to remove a file.
+         */
+        dictRemoveFile: "Remove file",
+
+        /**
+         * If this is not null, then the user will be prompted before removing a file.
+         */
+        dictRemoveFileConfirmation: null,
+
+        /**
+         * Displayed if `maxFiles` is st and exceeded.
+         * The string `{{maxFiles}}` will be replaced by the configuration value.
+         */
+        dictMaxFilesExceeded: "You can not upload any more files.",
+
+        /**
+         * Allows you to translate the different units. Starting with `tb` for terabytes and going down to
+         * `b` for bytes.
+         */
+        dictFileSizeUnits: {
+          tb: "TB",
+          gb: "GB",
+          mb: "MB",
+          kb: "KB",
+          b: "b"
+        },
+
+        /**
+         * Called when dropzone initialized
+         * You can add event listeners here
+         */
+        init: function init() {},
+
+        /**
+         * Can be an **object** of additional parameters to transfer to the server, **or** a `Function`
+         * that gets invoked with the `files`, `xhr` and, if it's a chunked upload, `chunk` arguments. In case
+         * of a function, this needs to return a map.
+         *
+         * The default implementation does nothing for normal uploads, but adds relevant information for
+         * chunked uploads.
+         *
+         * This is the same as adding hidden input fields in the form element.
+         */
+        params: function params(files, xhr, chunk) {
+          if (chunk) {
+            return {
+              dzuuid: chunk.file.upload.uuid,
+              dzchunkindex: chunk.index,
+              dztotalfilesize: chunk.file.size,
+              dzchunksize: this.options.chunkSize,
+              dztotalchunkcount: chunk.file.upload.totalChunkCount,
+              dzchunkbyteoffset: chunk.index * this.options.chunkSize
+            };
+          }
+        },
+
+        /**
+         * A function that gets a [file](https://developer.mozilla.org/en-US/docs/DOM/File)
+         * and a `done` function as parameters.
+         *
+         * If the done function is invoked without arguments, the file is "accepted" and will
+         * be processed. If you pass an error message, the file is rejected, and the error
+         * message will be displayed.
+         * This function will not be called if the file is too big or doesn't match the mime types.
+         */
+        accept: function accept(file, done) {
+          return done();
+        },
+
+        /**
+         * The callback that will be invoked when all chunks have been uploaded for a file.
+         * It gets the file for which the chunks have been uploaded as the first parameter,
+         * and the `done` function as second. `done()` needs to be invoked when everything
+         * needed to finish the upload process is done.
+         */
+        chunksUploaded: function chunksUploaded(file, done) {
+          done();
+        },
+
+        /**
+         * Gets called when the browser is not supported.
+         * The default implementation shows the fallback input field and adds
+         * a text.
+         */
+        fallback: function fallback() {
+          // This code should pass in IE7... :(
+          var messageElement;
+          this.element.className = "".concat(this.element.className, " dz-browser-not-supported");
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = this.element.getElementsByTagName("div")[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var child = _step2.value;
+
+              if (/(^| )dz-message($| )/.test(child.className)) {
+                messageElement = child;
+                child.className = "dz-message"; // Removes the 'dz-default' class
+
+                break;
+              }
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+                _iterator2["return"]();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+
+          if (!messageElement) {
+            messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
+            this.element.appendChild(messageElement);
+          }
+
+          var span = messageElement.getElementsByTagName("span")[0];
+
+          if (span) {
+            if (span.textContent != null) {
+              span.textContent = this.options.dictFallbackMessage;
+            } else if (span.innerText != null) {
+              span.innerText = this.options.dictFallbackMessage;
+            }
+          }
+
+          return this.element.appendChild(this.getFallbackForm());
+        },
+
+        /**
+         * Gets called to calculate the thumbnail dimensions.
+         *
+         * It gets `file`, `width` and `height` (both may be `null`) as parameters and must return an object containing:
+         *
+         *  - `srcWidth` & `srcHeight` (required)
+         *  - `trgWidth` & `trgHeight` (required)
+         *  - `srcX` & `srcY` (optional, default `0`)
+         *  - `trgX` & `trgY` (optional, default `0`)
+         *
+         * Those values are going to be used by `ctx.drawImage()`.
+         */
+        resize: function resize(file, width, height, resizeMethod) {
+          var info = {
+            srcX: 0,
+            srcY: 0,
+            srcWidth: file.width,
+            srcHeight: file.height
+          };
+          var srcRatio = file.width / file.height; // Automatically calculate dimensions if not specified
+
+          if (width == null && height == null) {
+            width = info.srcWidth;
+            height = info.srcHeight;
+          } else if (width == null) {
+            width = height * srcRatio;
+          } else if (height == null) {
+            height = width / srcRatio;
+          } // Make sure images aren't upscaled
+
+
+          width = Math.min(width, info.srcWidth);
+          height = Math.min(height, info.srcHeight);
+          var trgRatio = width / height;
+
+          if (info.srcWidth > width || info.srcHeight > height) {
+            // Image is bigger and needs rescaling
+            if (resizeMethod === 'crop') {
+              if (srcRatio > trgRatio) {
+                info.srcHeight = file.height;
+                info.srcWidth = info.srcHeight * trgRatio;
+              } else {
+                info.srcWidth = file.width;
+                info.srcHeight = info.srcWidth / trgRatio;
+              }
+            } else if (resizeMethod === 'contain') {
+              // Method 'contain'
+              if (srcRatio > trgRatio) {
+                height = width / srcRatio;
+              } else {
+                width = height * srcRatio;
+              }
+            } else {
+              throw new Error("Unknown resizeMethod '".concat(resizeMethod, "'"));
+            }
+          }
+
+          info.srcX = (file.width - info.srcWidth) / 2;
+          info.srcY = (file.height - info.srcHeight) / 2;
+          info.trgWidth = width;
+          info.trgHeight = height;
+          return info;
+        },
+
+        /**
+         * Can be used to transform the file (for example, resize an image if necessary).
+         *
+         * The default implementation uses `resizeWidth` and `resizeHeight` (if provided) and resizes
+         * images according to those dimensions.
+         *
+         * Gets the `file` as the first parameter, and a `done()` function as the second, that needs
+         * to be invoked with the file when the transformation is done.
+         */
+        transformFile: function transformFile(file, done) {
+          if ((this.options.resizeWidth || this.options.resizeHeight) && file.type.match(/image.*/)) {
+            return this.resizeImage(file, this.options.resizeWidth, this.options.resizeHeight, this.options.resizeMethod, done);
+          } else {
+            return done(file);
+          }
+        },
+
+        /**
+         * A string that contains the template used for each dropped
+         * file. Change it to fulfill your needs but make sure to properly
+         * provide all elements.
+         *
+         * If you want to use an actual HTML element instead of providing a String
+         * as a config option, you could create a div with the id `tpl`,
+         * put the template inside it and provide the element like this:
+         *
+         *     document
+         *       .querySelector('#tpl')
+         *       .innerHTML
+         *
+         */
+        previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n      <title>Check</title>\n      <g stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n      <title>Error</title>\n      <g stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n        <g stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>",
+        // END OPTIONS
+        // (Required by the dropzone documentation parser)
+
+        /*
+         Those functions register themselves to the events on init and handle all
+         the user interface specific stuff. Overwriting them won't break the upload
+         but can break the way it's displayed.
+         You can overwrite them if you don't like the default behavior. If you just
+         want to add an additional event handler, register it on the dropzone object
+         and don't overwrite those options.
+         */
+        // Those are self explanatory and simply concern the DragnDrop.
+        drop: function drop(e) {
+          return this.element.classList.remove("dz-drag-hover");
+        },
+        dragstart: function dragstart(e) {},
+        dragend: function dragend(e) {
+          return this.element.classList.remove("dz-drag-hover");
+        },
+        dragenter: function dragenter(e) {
+          return this.element.classList.add("dz-drag-hover");
+        },
+        dragover: function dragover(e) {
+          return this.element.classList.add("dz-drag-hover");
+        },
+        dragleave: function dragleave(e) {
+          return this.element.classList.remove("dz-drag-hover");
+        },
+        paste: function paste(e) {},
+        // Called whenever there are no files left in the dropzone anymore, and the
+        // dropzone should be displayed as if in the initial state.
+        reset: function reset() {
+          return this.element.classList.remove("dz-started");
+        },
+        // Called when a file is added to the queue
+        // Receives `file`
+        addedfile: function addedfile(file) {
+          var _this2 = this;
+
+          if (this.element === this.previewsContainer) {
+            this.element.classList.add("dz-started");
+          }
+
+          if (this.previewsContainer) {
+            file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+            file.previewTemplate = file.previewElement; // Backwards compatibility
+
+            this.previewsContainer.appendChild(file.previewElement);
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+              for (var _iterator3 = file.previewElement.querySelectorAll("[data-dz-name]")[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var node = _step3.value;
+                node.textContent = file.name;
+              }
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+                  _iterator3["return"]();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
+                }
+              }
+            }
+
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+              for (var _iterator4 = file.previewElement.querySelectorAll("[data-dz-size]")[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                node = _step4.value;
+                node.innerHTML = this.filesize(file.size);
+              }
+            } catch (err) {
+              _didIteratorError4 = true;
+              _iteratorError4 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+                  _iterator4["return"]();
+                }
+              } finally {
+                if (_didIteratorError4) {
+                  throw _iteratorError4;
+                }
+              }
+            }
+
+            if (this.options.addRemoveLinks) {
+              file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>".concat(this.options.dictRemoveFile, "</a>"));
+              file.previewElement.appendChild(file._removeLink);
+            }
+
+            var removeFileEvent = function removeFileEvent(e) {
+              e.preventDefault();
+              e.stopPropagation();
+
+              if (file.status === Dropzone.UPLOADING) {
+                return Dropzone.confirm(_this2.options.dictCancelUploadConfirmation, function () {
+                  return _this2.removeFile(file);
+                });
+              } else {
+                if (_this2.options.dictRemoveFileConfirmation) {
+                  return Dropzone.confirm(_this2.options.dictRemoveFileConfirmation, function () {
+                    return _this2.removeFile(file);
+                  });
+                } else {
+                  return _this2.removeFile(file);
+                }
+              }
+            };
+
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+              for (var _iterator5 = file.previewElement.querySelectorAll("[data-dz-remove]")[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                var removeLink = _step5.value;
+                removeLink.addEventListener("click", removeFileEvent);
+              }
+            } catch (err) {
+              _didIteratorError5 = true;
+              _iteratorError5 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+                  _iterator5["return"]();
+                }
+              } finally {
+                if (_didIteratorError5) {
+                  throw _iteratorError5;
+                }
+              }
+            }
+          }
+        },
+        // Called whenever a file is removed.
+        removedfile: function removedfile(file) {
+          if (file.previewElement != null && file.previewElement.parentNode != null) {
+            file.previewElement.parentNode.removeChild(file.previewElement);
+          }
+
+          return this._updateMaxFilesReachedClass();
+        },
+        // Called when a thumbnail has been generated
+        // Receives `file` and `dataUrl`
+        thumbnail: function thumbnail(file, dataUrl) {
+          if (file.previewElement) {
+            file.previewElement.classList.remove("dz-file-preview");
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+              for (var _iterator6 = file.previewElement.querySelectorAll("[data-dz-thumbnail]")[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                var thumbnailElement = _step6.value;
+                thumbnailElement.alt = file.name;
+                thumbnailElement.src = dataUrl;
+              }
+            } catch (err) {
+              _didIteratorError6 = true;
+              _iteratorError6 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+                  _iterator6["return"]();
+                }
+              } finally {
+                if (_didIteratorError6) {
+                  throw _iteratorError6;
+                }
+              }
+            }
+
+            return setTimeout(function () {
+              return file.previewElement.classList.add("dz-image-preview");
+            }, 1);
+          }
+        },
+        // Called whenever an error occurs
+        // Receives `file` and `message`
+        error: function error(file, message) {
+          if (file.previewElement) {
+            file.previewElement.classList.add("dz-error");
+
+            if (typeof message !== "String" && message.error) {
+              message = message.error;
+            }
+
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
+
+            try {
+              for (var _iterator7 = file.previewElement.querySelectorAll("[data-dz-errormessage]")[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                var node = _step7.value;
+                node.textContent = message;
+              }
+            } catch (err) {
+              _didIteratorError7 = true;
+              _iteratorError7 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+                  _iterator7["return"]();
+                }
+              } finally {
+                if (_didIteratorError7) {
+                  throw _iteratorError7;
+                }
+              }
+            }
+          }
+        },
+        errormultiple: function errormultiple() {},
+        // Called when a file gets processed. Since there is a cue, not all added
+        // files are processed immediately.
+        // Receives `file`
+        processing: function processing(file) {
+          if (file.previewElement) {
+            file.previewElement.classList.add("dz-processing");
+
+            if (file._removeLink) {
+              return file._removeLink.innerHTML = this.options.dictCancelUpload;
+            }
+          }
+        },
+        processingmultiple: function processingmultiple() {},
+        // Called whenever the upload progress gets updated.
+        // Receives `file`, `progress` (percentage 0-100) and `bytesSent`.
+        // To get the total number of bytes of the file, use `file.size`
+        uploadprogress: function uploadprogress(file, progress, bytesSent) {
+          if (file.previewElement) {
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
+
+            try {
+              for (var _iterator8 = file.previewElement.querySelectorAll("[data-dz-uploadprogress]")[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                var node = _step8.value;
+                node.nodeName === 'PROGRESS' ? node.value = progress : node.style.width = "".concat(progress, "%");
+              }
+            } catch (err) {
+              _didIteratorError8 = true;
+              _iteratorError8 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+                  _iterator8["return"]();
+                }
+              } finally {
+                if (_didIteratorError8) {
+                  throw _iteratorError8;
+                }
+              }
+            }
+          }
+        },
+        // Called whenever the total upload progress gets updated.
+        // Called with totalUploadProgress (0-100), totalBytes and totalBytesSent
+        totaluploadprogress: function totaluploadprogress() {},
+        // Called just before the file is sent. Gets the `xhr` object as second
+        // parameter, so you can modify it (for example to add a CSRF token) and a
+        // `formData` object to add additional information.
+        sending: function sending() {},
+        sendingmultiple: function sendingmultiple() {},
+        // When the complete upload is finished and successful
+        // Receives `file`
+        success: function success(file) {
+          if (file.previewElement) {
+            return file.previewElement.classList.add("dz-success");
+          }
+        },
+        successmultiple: function successmultiple() {},
+        // When the upload is canceled.
+        canceled: function canceled(file) {
+          return this.emit("error", file, this.options.dictUploadCanceled);
+        },
+        canceledmultiple: function canceledmultiple() {},
+        // When the upload is finished, either with success or an error.
+        // Receives `file`
+        complete: function complete(file) {
+          if (file._removeLink) {
+            file._removeLink.innerHTML = this.options.dictRemoveFile;
+          }
+
+          if (file.previewElement) {
+            return file.previewElement.classList.add("dz-complete");
+          }
+        },
+        completemultiple: function completemultiple() {},
+        maxfilesexceeded: function maxfilesexceeded() {},
+        maxfilesreached: function maxfilesreached() {},
+        queuecomplete: function queuecomplete() {},
+        addedfiles: function addedfiles() {}
+      };
+      this.prototype._thumbnailQueue = [];
+      this.prototype._processingThumbnail = false;
+    } // global utility
+
+  }, {
+    key: "extend",
+    value: function extend(target) {
+      for (var _len2 = arguments.length, objects = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        objects[_key2 - 1] = arguments[_key2];
+      }
+
+      for (var _i = 0, _objects = objects; _i < _objects.length; _i++) {
+        var object = _objects[_i];
+
+        for (var key in object) {
+          var val = object[key];
+          target[key] = val;
+        }
+      }
+
+      return target;
+    }
+  }]);
+
+  function Dropzone(el, options) {
+    var _this;
+
+    _classCallCheck(this, Dropzone);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Dropzone).call(this));
+    var fallback, left;
+    _this.element = el; // For backwards compatibility since the version was in the prototype previously
+
+    _this.version = Dropzone.version;
+    _this.defaultOptions.previewTemplate = _this.defaultOptions.previewTemplate.replace(/\n*/g, "");
+    _this.clickableElements = [];
+    _this.listeners = [];
+    _this.files = []; // All files
+
+    if (typeof _this.element === "string") {
+      _this.element = document.querySelector(_this.element);
+    } // Not checking if instance of HTMLElement or Element since IE9 is extremely weird.
+
+
+    if (!_this.element || _this.element.nodeType == null) {
+      throw new Error("Invalid dropzone element.");
+    }
+
+    if (_this.element.dropzone) {
+      throw new Error("Dropzone already attached.");
+    } // Now add this dropzone to the instances.
+
+
+    Dropzone.instances.push(_assertThisInitialized(_this)); // Put the dropzone inside the element itself.
+
+    _this.element.dropzone = _assertThisInitialized(_this);
+    var elementOptions = (left = Dropzone.optionsForElement(_this.element)) != null ? left : {};
+    _this.options = Dropzone.extend({}, _this.defaultOptions, elementOptions, options != null ? options : {}); // If the browser failed, just call the fallback and leave
+
+    if (_this.options.forceFallback || !Dropzone.isBrowserSupported()) {
+      return _possibleConstructorReturn(_this, _this.options.fallback.call(_assertThisInitialized(_this)));
+    } // @options.url = @element.getAttribute "action" unless @options.url?
+
+
+    if (_this.options.url == null) {
+      _this.options.url = _this.element.getAttribute("action");
+    }
+
+    if (!_this.options.url) {
+      throw new Error("No URL provided.");
+    }
+
+    if (_this.options.acceptedFiles && _this.options.acceptedMimeTypes) {
+      throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+    }
+
+    if (_this.options.uploadMultiple && _this.options.chunking) {
+      throw new Error('You cannot set both: uploadMultiple and chunking.');
+    } // Backwards compatibility
+
+
+    if (_this.options.acceptedMimeTypes) {
+      _this.options.acceptedFiles = _this.options.acceptedMimeTypes;
+      delete _this.options.acceptedMimeTypes;
+    } // Backwards compatibility
+
+
+    if (_this.options.renameFilename != null) {
+      _this.options.renameFile = function (file) {
+        return _this.options.renameFilename.call(_assertThisInitialized(_this), file.name, file);
+      };
+    }
+
+    _this.options.method = _this.options.method.toUpperCase();
+
+    if ((fallback = _this.getExistingFallback()) && fallback.parentNode) {
+      // Remove the fallback
+      fallback.parentNode.removeChild(fallback);
+    } // Display previews in the previewsContainer element or the Dropzone element unless explicitly set to false
+
+
+    if (_this.options.previewsContainer !== false) {
+      if (_this.options.previewsContainer) {
+        _this.previewsContainer = Dropzone.getElement(_this.options.previewsContainer, "previewsContainer");
+      } else {
+        _this.previewsContainer = _this.element;
+      }
+    }
+
+    if (_this.options.clickable) {
+      if (_this.options.clickable === true) {
+        _this.clickableElements = [_this.element];
+      } else {
+        _this.clickableElements = Dropzone.getElements(_this.options.clickable, "clickable");
+      }
+    }
+
+    _this.init();
+
+    return _this;
+  } // Returns all files that have been accepted
+
+
+  _createClass(Dropzone, [{
+    key: "getAcceptedFiles",
+    value: function getAcceptedFiles() {
+      return this.files.filter(function (file) {
+        return file.accepted;
+      }).map(function (file) {
+        return file;
+      });
+    } // Returns all files that have been rejected
+    // Not sure when that's going to be useful, but added for completeness.
+
+  }, {
+    key: "getRejectedFiles",
+    value: function getRejectedFiles() {
+      return this.files.filter(function (file) {
+        return !file.accepted;
+      }).map(function (file) {
+        return file;
+      });
+    }
+  }, {
+    key: "getFilesWithStatus",
+    value: function getFilesWithStatus(status) {
+      return this.files.filter(function (file) {
+        return file.status === status;
+      }).map(function (file) {
+        return file;
+      });
+    } // Returns all files that are in the queue
+
+  }, {
+    key: "getQueuedFiles",
+    value: function getQueuedFiles() {
+      return this.getFilesWithStatus(Dropzone.QUEUED);
+    }
+  }, {
+    key: "getUploadingFiles",
+    value: function getUploadingFiles() {
+      return this.getFilesWithStatus(Dropzone.UPLOADING);
+    }
+  }, {
+    key: "getAddedFiles",
+    value: function getAddedFiles() {
+      return this.getFilesWithStatus(Dropzone.ADDED);
+    } // Files that are either queued or uploading
+
+  }, {
+    key: "getActiveFiles",
+    value: function getActiveFiles() {
+      return this.files.filter(function (file) {
+        return file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED;
+      }).map(function (file) {
+        return file;
+      });
+    } // The function that gets called when Dropzone is initialized. You
+    // can (and should) setup event listeners inside this function.
+
+  }, {
+    key: "init",
+    value: function init() {
+      var _this3 = this;
+
+      // In case it isn't set already
+      if (this.element.tagName === "form") {
+        this.element.setAttribute("enctype", "multipart/form-data");
+      }
+
+      if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
+        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><button class=\"dz-button\" type=\"button\">".concat(this.options.dictDefaultMessage, "</button></div>")));
+      }
+
+      if (this.clickableElements.length) {
+        var setupHiddenFileInput = function setupHiddenFileInput() {
+          if (_this3.hiddenFileInput) {
+            _this3.hiddenFileInput.parentNode.removeChild(_this3.hiddenFileInput);
+          }
+
+          _this3.hiddenFileInput = document.createElement("input");
+
+          _this3.hiddenFileInput.setAttribute("type", "file");
+
+          if (_this3.options.maxFiles === null || _this3.options.maxFiles > 1) {
+            _this3.hiddenFileInput.setAttribute("multiple", "multiple");
+          }
+
+          _this3.hiddenFileInput.className = "dz-hidden-input";
+
+          if (_this3.options.acceptedFiles !== null) {
+            _this3.hiddenFileInput.setAttribute("accept", _this3.options.acceptedFiles);
+          }
+
+          if (_this3.options.capture !== null) {
+            _this3.hiddenFileInput.setAttribute("capture", _this3.options.capture);
+          } // Not setting `display="none"` because some browsers don't accept clicks
+          // on elements that aren't displayed.
+
+
+          _this3.hiddenFileInput.style.visibility = "hidden";
+          _this3.hiddenFileInput.style.position = "absolute";
+          _this3.hiddenFileInput.style.top = "0";
+          _this3.hiddenFileInput.style.left = "0";
+          _this3.hiddenFileInput.style.height = "0";
+          _this3.hiddenFileInput.style.width = "0";
+          Dropzone.getElement(_this3.options.hiddenInputContainer, 'hiddenInputContainer').appendChild(_this3.hiddenFileInput);
+          return _this3.hiddenFileInput.addEventListener("change", function () {
+            var files = _this3.hiddenFileInput.files;
+
+            if (files.length) {
+              var _iteratorNormalCompletion9 = true;
+              var _didIteratorError9 = false;
+              var _iteratorError9 = undefined;
+
+              try {
+                for (var _iterator9 = files[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                  var file = _step9.value;
+
+                  _this3.addFile(file);
+                }
+              } catch (err) {
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
+                    _iterator9["return"]();
+                  }
+                } finally {
+                  if (_didIteratorError9) {
+                    throw _iteratorError9;
+                  }
+                }
+              }
+            }
+
+            _this3.emit("addedfiles", files);
+
+            return setupHiddenFileInput();
+          });
+        };
+
+        setupHiddenFileInput();
+      }
+
+      this.URL = window.URL !== null ? window.URL : window.webkitURL; // Setup all event listeners on the Dropzone object itself.
+      // They're not in @setupEventListeners() because they shouldn't be removed
+      // again when the dropzone gets disabled.
+
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
+
+      try {
+        for (var _iterator10 = this.events[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var eventName = _step10.value;
+          this.on(eventName, this.options[eventName]);
+        }
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
+            _iterator10["return"]();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
+          }
+        }
+      }
+
+      this.on("uploadprogress", function () {
+        return _this3.updateTotalUploadProgress();
+      });
+      this.on("removedfile", function () {
+        return _this3.updateTotalUploadProgress();
+      });
+      this.on("canceled", function (file) {
+        return _this3.emit("complete", file);
+      }); // Emit a `queuecomplete` event if all files finished uploading.
+
+      this.on("complete", function (file) {
+        if (_this3.getAddedFiles().length === 0 && _this3.getUploadingFiles().length === 0 && _this3.getQueuedFiles().length === 0) {
+          // This needs to be deferred so that `queuecomplete` really triggers after `complete`
+          return setTimeout(function () {
+            return _this3.emit("queuecomplete");
+          }, 0);
+        }
+      });
+
+      var containsFiles = function containsFiles(e) {
+        return e.dataTransfer.types && e.dataTransfer.types.some(function (type) {
+          return type == "Files";
+        });
+      };
+
+      var noPropagation = function noPropagation(e) {
+        // If there are no files, we don't want to stop
+        // propagation so we don't interfere with other
+        // drag and drop behaviour.
+        if (!containsFiles(e)) return;
+        e.stopPropagation();
+
+        if (e.preventDefault) {
+          return e.preventDefault();
+        } else {
+          return e.returnValue = false;
+        }
+      }; // Create the listeners
+
+
+      this.listeners = [{
+        element: this.element,
+        events: {
+          "dragstart": function dragstart(e) {
+            return _this3.emit("dragstart", e);
+          },
+          "dragenter": function dragenter(e) {
+            noPropagation(e);
+            return _this3.emit("dragenter", e);
+          },
+          "dragover": function dragover(e) {
+            // Makes it possible to drag files from chrome's download bar
+            // http://stackoverflow.com/questions/19526430/drag-and-drop-file-uploads-from-chrome-downloads-bar
+            // Try is required to prevent bug in Internet Explorer 11 (SCRIPT65535 exception)
+            var efct;
+
+            try {
+              efct = e.dataTransfer.effectAllowed;
+            } catch (error) {}
+
+            e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
+            noPropagation(e);
+            return _this3.emit("dragover", e);
+          },
+          "dragleave": function dragleave(e) {
+            return _this3.emit("dragleave", e);
+          },
+          "drop": function drop(e) {
+            noPropagation(e);
+            return _this3.drop(e);
+          },
+          "dragend": function dragend(e) {
+            return _this3.emit("dragend", e);
+          }
+        } // This is disabled right now, because the browsers don't implement it properly.
+        // "paste": (e) =>
+        //   noPropagation e
+        //   @paste e
+
+      }];
+      this.clickableElements.forEach(function (clickableElement) {
+        return _this3.listeners.push({
+          element: clickableElement,
+          events: {
+            "click": function click(evt) {
+              // Only the actual dropzone or the message element should trigger file selection
+              if (clickableElement !== _this3.element || evt.target === _this3.element || Dropzone.elementInside(evt.target, _this3.element.querySelector(".dz-message"))) {
+                _this3.hiddenFileInput.click(); // Forward the click
+
+              }
+
+              return true;
+            }
+          }
+        });
+      });
+      this.enable();
+      return this.options.init.call(this);
+    } // Not fully tested yet
+
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.disable();
+      this.removeAllFiles(true);
+
+      if (this.hiddenFileInput != null ? this.hiddenFileInput.parentNode : undefined) {
+        this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
+        this.hiddenFileInput = null;
+      }
+
+      delete this.element.dropzone;
+      return Dropzone.instances.splice(Dropzone.instances.indexOf(this), 1);
+    }
+  }, {
+    key: "updateTotalUploadProgress",
+    value: function updateTotalUploadProgress() {
+      var totalUploadProgress;
+      var totalBytesSent = 0;
+      var totalBytes = 0;
+      var activeFiles = this.getActiveFiles();
+
+      if (activeFiles.length) {
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
+
+        try {
+          for (var _iterator11 = this.getActiveFiles()[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var file = _step11.value;
+            totalBytesSent += file.upload.bytesSent;
+            totalBytes += file.upload.total;
+          }
+        } catch (err) {
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
+              _iterator11["return"]();
+            }
+          } finally {
+            if (_didIteratorError11) {
+              throw _iteratorError11;
+            }
+          }
+        }
+
+        totalUploadProgress = 100 * totalBytesSent / totalBytes;
+      } else {
+        totalUploadProgress = 100;
+      }
+
+      return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
+    } // @options.paramName can be a function taking one parameter rather than a string.
+    // A parameter name for a file is obtained simply by calling this with an index number.
+
+  }, {
+    key: "_getParamName",
+    value: function _getParamName(n) {
+      if (typeof this.options.paramName === "function") {
+        return this.options.paramName(n);
+      } else {
+        return "".concat(this.options.paramName).concat(this.options.uploadMultiple ? "[".concat(n, "]") : "");
+      }
+    } // If @options.renameFile is a function,
+    // the function will be used to rename the file.name before appending it to the formData
+
+  }, {
+    key: "_renameFile",
+    value: function _renameFile(file) {
+      if (typeof this.options.renameFile !== "function") {
+        return file.name;
+      }
+
+      return this.options.renameFile(file);
+    } // Returns a form that can be used as fallback if the browser does not support DragnDrop
+    //
+    // If the dropzone is already a form, only the input field and button are returned. Otherwise a complete form element is provided.
+    // This code has to pass in IE7 :(
+
+  }, {
+    key: "getFallbackForm",
+    value: function getFallbackForm() {
+      var existingFallback, form;
+
+      if (existingFallback = this.getExistingFallback()) {
+        return existingFallback;
+      }
+
+      var fieldsString = "<div class=\"dz-fallback\">";
+
+      if (this.options.dictFallbackText) {
+        fieldsString += "<p>".concat(this.options.dictFallbackText, "</p>");
+      }
+
+      fieldsString += "<input type=\"file\" name=\"".concat(this._getParamName(0), "\" ").concat(this.options.uploadMultiple ? 'multiple="multiple"' : undefined, " /><input type=\"submit\" value=\"Upload!\"></div>");
+      var fields = Dropzone.createElement(fieldsString);
+
+      if (this.element.tagName !== "FORM") {
+        form = Dropzone.createElement("<form action=\"".concat(this.options.url, "\" enctype=\"multipart/form-data\" method=\"").concat(this.options.method, "\"></form>"));
+        form.appendChild(fields);
+      } else {
+        // Make sure that the enctype and method attributes are set properly
+        this.element.setAttribute("enctype", "multipart/form-data");
+        this.element.setAttribute("method", this.options.method);
+      }
+
+      return form != null ? form : fields;
+    } // Returns the fallback elements if they exist already
+    //
+    // This code has to pass in IE7 :(
+
+  }, {
+    key: "getExistingFallback",
+    value: function getExistingFallback() {
+      var getFallback = function getFallback(elements) {
+        var _iteratorNormalCompletion12 = true;
+        var _didIteratorError12 = false;
+        var _iteratorError12 = undefined;
+
+        try {
+          for (var _iterator12 = elements[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var el = _step12.value;
+
+            if (/(^| )fallback($| )/.test(el.className)) {
+              return el;
+            }
+          }
+        } catch (err) {
+          _didIteratorError12 = true;
+          _iteratorError12 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
+              _iterator12["return"]();
+            }
+          } finally {
+            if (_didIteratorError12) {
+              throw _iteratorError12;
+            }
+          }
+        }
+      };
+
+      for (var _i2 = 0, _arr = ["div", "form"]; _i2 < _arr.length; _i2++) {
+        var tagName = _arr[_i2];
+        var fallback;
+
+        if (fallback = getFallback(this.element.getElementsByTagName(tagName))) {
+          return fallback;
+        }
+      }
+    } // Activates all listeners stored in @listeners
+
+  }, {
+    key: "setupEventListeners",
+    value: function setupEventListeners() {
+      return this.listeners.map(function (elementListeners) {
+        return function () {
+          var result = [];
+
+          for (var event in elementListeners.events) {
+            var listener = elementListeners.events[event];
+            result.push(elementListeners.element.addEventListener(event, listener, false));
+          }
+
+          return result;
+        }();
+      });
+    } // Deactivates all listeners stored in @listeners
+
+  }, {
+    key: "removeEventListeners",
+    value: function removeEventListeners() {
+      return this.listeners.map(function (elementListeners) {
+        return function () {
+          var result = [];
+
+          for (var event in elementListeners.events) {
+            var listener = elementListeners.events[event];
+            result.push(elementListeners.element.removeEventListener(event, listener, false));
+          }
+
+          return result;
+        }();
+      });
+    } // Removes all event listeners and cancels all files in the queue or being processed.
+
+  }, {
+    key: "disable",
+    value: function disable() {
+      var _this4 = this;
+
+      this.clickableElements.forEach(function (element) {
+        return element.classList.remove("dz-clickable");
+      });
+      this.removeEventListeners();
+      this.disabled = true;
+      return this.files.map(function (file) {
+        return _this4.cancelUpload(file);
+      });
+    }
+  }, {
+    key: "enable",
+    value: function enable() {
+      delete this.disabled;
+      this.clickableElements.forEach(function (element) {
+        return element.classList.add("dz-clickable");
+      });
+      return this.setupEventListeners();
+    } // Returns a nicely formatted filesize
+
+  }, {
+    key: "filesize",
+    value: function filesize(size) {
+      var selectedSize = 0;
+      var selectedUnit = "b";
+
+      if (size > 0) {
+        var units = ['tb', 'gb', 'mb', 'kb', 'b'];
+
+        for (var i = 0; i < units.length; i++) {
+          var unit = units[i];
+          var cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
+
+          if (size >= cutoff) {
+            selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
+            selectedUnit = unit;
+            break;
+          }
+        }
+
+        selectedSize = Math.round(10 * selectedSize) / 10; // Cutting of digits
+      }
+
+      return "<strong>".concat(selectedSize, "</strong> ").concat(this.options.dictFileSizeUnits[selectedUnit]);
+    } // Adds or removes the `dz-max-files-reached` class from the form.
+
+  }, {
+    key: "_updateMaxFilesReachedClass",
+    value: function _updateMaxFilesReachedClass() {
+      if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        if (this.getAcceptedFiles().length === this.options.maxFiles) {
+          this.emit('maxfilesreached', this.files);
+        }
+
+        return this.element.classList.add("dz-max-files-reached");
+      } else {
+        return this.element.classList.remove("dz-max-files-reached");
+      }
+    }
+  }, {
+    key: "drop",
+    value: function drop(e) {
+      if (!e.dataTransfer) {
+        return;
+      }
+
+      this.emit("drop", e); // Convert the FileList to an Array
+      // This is necessary for IE11
+
+      var files = [];
+
+      for (var i = 0; i < e.dataTransfer.files.length; i++) {
+        files[i] = e.dataTransfer.files[i];
+      } // Even if it's a folder, files.length will contain the folders.
+
+
+      if (files.length) {
+        var items = e.dataTransfer.items;
+
+        if (items && items.length && items[0].webkitGetAsEntry != null) {
+          // The browser supports dropping of folders, so handle items instead of files
+          this._addFilesFromItems(items);
+        } else {
+          this.handleFiles(files);
+        }
+      }
+
+      this.emit("addedfiles", files);
+    }
+  }, {
+    key: "paste",
+    value: function paste(e) {
+      if (__guard__(e != null ? e.clipboardData : undefined, function (x) {
+        return x.items;
+      }) == null) {
+        return;
+      }
+
+      this.emit("paste", e);
+      var items = e.clipboardData.items;
+
+      if (items.length) {
+        return this._addFilesFromItems(items);
+      }
+    }
+  }, {
+    key: "handleFiles",
+    value: function handleFiles(files) {
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
+
+      try {
+        for (var _iterator13 = files[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var file = _step13.value;
+          this.addFile(file);
+        }
+      } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
+            _iterator13["return"]();
+          }
+        } finally {
+          if (_didIteratorError13) {
+            throw _iteratorError13;
+          }
+        }
+      }
+    } // When a folder is dropped (or files are pasted), items must be handled
+    // instead of files.
+
+  }, {
+    key: "_addFilesFromItems",
+    value: function _addFilesFromItems(items) {
+      var _this5 = this;
+
+      return function () {
+        var result = [];
+        var _iteratorNormalCompletion14 = true;
+        var _didIteratorError14 = false;
+        var _iteratorError14 = undefined;
+
+        try {
+          for (var _iterator14 = items[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+            var item = _step14.value;
+            var entry;
+
+            if (item.webkitGetAsEntry != null && (entry = item.webkitGetAsEntry())) {
+              if (entry.isFile) {
+                result.push(_this5.addFile(item.getAsFile()));
+              } else if (entry.isDirectory) {
+                // Append all files from that directory to files
+                result.push(_this5._addFilesFromDirectory(entry, entry.name));
+              } else {
+                result.push(undefined);
+              }
+            } else if (item.getAsFile != null) {
+              if (item.kind == null || item.kind === "file") {
+                result.push(_this5.addFile(item.getAsFile()));
+              } else {
+                result.push(undefined);
+              }
+            } else {
+              result.push(undefined);
+            }
+          }
+        } catch (err) {
+          _didIteratorError14 = true;
+          _iteratorError14 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
+              _iterator14["return"]();
+            }
+          } finally {
+            if (_didIteratorError14) {
+              throw _iteratorError14;
+            }
+          }
+        }
+
+        return result;
+      }();
+    } // Goes through the directory, and adds each file it finds recursively
+
+  }, {
+    key: "_addFilesFromDirectory",
+    value: function _addFilesFromDirectory(directory, path) {
+      var _this6 = this;
+
+      var dirReader = directory.createReader();
+
+      var errorHandler = function errorHandler(error) {
+        return __guardMethod__(console, 'log', function (o) {
+          return o.log(error);
+        });
+      };
+
+      var readEntries = function readEntries() {
+        return dirReader.readEntries(function (entries) {
+          if (entries.length > 0) {
+            var _iteratorNormalCompletion15 = true;
+            var _didIteratorError15 = false;
+            var _iteratorError15 = undefined;
+
+            try {
+              for (var _iterator15 = entries[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+                var entry = _step15.value;
+
+                if (entry.isFile) {
+                  entry.file(function (file) {
+                    if (_this6.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+                      return;
+                    }
+
+                    file.fullPath = "".concat(path, "/").concat(file.name);
+                    return _this6.addFile(file);
+                  });
+                } else if (entry.isDirectory) {
+                  _this6._addFilesFromDirectory(entry, "".concat(path, "/").concat(entry.name));
+                }
+              } // Recursively call readEntries() again, since browser only handle
+              // the first 100 entries.
+              // See: https://developer.mozilla.org/en-US/docs/Web/API/DirectoryReader#readEntries
+
+            } catch (err) {
+              _didIteratorError15 = true;
+              _iteratorError15 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion15 && _iterator15["return"] != null) {
+                  _iterator15["return"]();
+                }
+              } finally {
+                if (_didIteratorError15) {
+                  throw _iteratorError15;
+                }
+              }
+            }
+
+            readEntries();
+          }
+
+          return null;
+        }, errorHandler);
+      };
+
+      return readEntries();
+    } // If `done()` is called without argument the file is accepted
+    // If you call it with an error message, the file is rejected
+    // (This allows for asynchronous validation)
+    //
+    // This function checks the filesize, and if the file.type passes the
+    // `acceptedFiles` check.
+
+  }, {
+    key: "accept",
+    value: function accept(file, done) {
+      if (this.options.maxFilesize && file.size > this.options.maxFilesize * 1024 * 1024) {
+        done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
+      } else if (!Dropzone.isValidFile(file, this.options.acceptedFiles)) {
+        done(this.options.dictInvalidFileType);
+      } else if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
+        this.emit("maxfilesexceeded", file);
+      } else {
+        this.options.accept.call(this, file, done);
+      }
+    }
+  }, {
+    key: "addFile",
+    value: function addFile(file) {
+      var _this7 = this;
+
+      file.upload = {
+        uuid: Dropzone.uuidv4(),
+        progress: 0,
+        // Setting the total upload size to file.size for the beginning
+        // It's actual different than the size to be transmitted.
+        total: file.size,
+        bytesSent: 0,
+        filename: this._renameFile(file) // Not setting chunking information here, because the acutal data — and
+        // thus the chunks — might change if `options.transformFile` is set
+        // and does something to the data.
+
+      };
+      this.files.push(file);
+      file.status = Dropzone.ADDED;
+      this.emit("addedfile", file);
+
+      this._enqueueThumbnail(file);
+
+      this.accept(file, function (error) {
+        if (error) {
+          file.accepted = false;
+
+          _this7._errorProcessing([file], error); // Will set the file.status
+
+        } else {
+          file.accepted = true;
+
+          if (_this7.options.autoQueue) {
+            _this7.enqueueFile(file);
+          } // Will set .accepted = true
+
+        }
+
+        _this7._updateMaxFilesReachedClass();
+      });
+    } // Wrapper for enqueueFile
+
+  }, {
+    key: "enqueueFiles",
+    value: function enqueueFiles(files) {
+      var _iteratorNormalCompletion16 = true;
+      var _didIteratorError16 = false;
+      var _iteratorError16 = undefined;
+
+      try {
+        for (var _iterator16 = files[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+          var file = _step16.value;
+          this.enqueueFile(file);
+        }
+      } catch (err) {
+        _didIteratorError16 = true;
+        _iteratorError16 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion16 && _iterator16["return"] != null) {
+            _iterator16["return"]();
+          }
+        } finally {
+          if (_didIteratorError16) {
+            throw _iteratorError16;
+          }
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: "enqueueFile",
+    value: function enqueueFile(file) {
+      var _this8 = this;
+
+      if (file.status === Dropzone.ADDED && file.accepted === true) {
+        file.status = Dropzone.QUEUED;
+
+        if (this.options.autoProcessQueue) {
+          return setTimeout(function () {
+            return _this8.processQueue();
+          }, 0); // Deferring the call
+        }
+      } else {
+        throw new Error("This file can't be queued because it has already been processed or was rejected.");
+      }
+    }
+  }, {
+    key: "_enqueueThumbnail",
+    value: function _enqueueThumbnail(file) {
+      var _this9 = this;
+
+      if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
+        this._thumbnailQueue.push(file);
+
+        return setTimeout(function () {
+          return _this9._processThumbnailQueue();
+        }, 0); // Deferring the call
+      }
+    }
+  }, {
+    key: "_processThumbnailQueue",
+    value: function _processThumbnailQueue() {
+      var _this10 = this;
+
+      if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
+        return;
+      }
+
+      this._processingThumbnail = true;
+
+      var file = this._thumbnailQueue.shift();
+
+      return this.createThumbnail(file, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.thumbnailMethod, true, function (dataUrl) {
+        _this10.emit("thumbnail", file, dataUrl);
+
+        _this10._processingThumbnail = false;
+        return _this10._processThumbnailQueue();
+      });
+    } // Can be called by the user to remove a file
+
+  }, {
+    key: "removeFile",
+    value: function removeFile(file) {
+      if (file.status === Dropzone.UPLOADING) {
+        this.cancelUpload(file);
+      }
+
+      this.files = without(this.files, file);
+      this.emit("removedfile", file);
+
+      if (this.files.length === 0) {
+        return this.emit("reset");
+      }
+    } // Removes all files that aren't currently processed from the list
+
+  }, {
+    key: "removeAllFiles",
+    value: function removeAllFiles(cancelIfNecessary) {
+      // Create a copy of files since removeFile() changes the @files array.
+      if (cancelIfNecessary == null) {
+        cancelIfNecessary = false;
+      }
+
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
+
+      try {
+        for (var _iterator17 = this.files.slice()[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var file = _step17.value;
+
+          if (file.status !== Dropzone.UPLOADING || cancelIfNecessary) {
+            this.removeFile(file);
+          }
+        }
+      } catch (err) {
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion17 && _iterator17["return"] != null) {
+            _iterator17["return"]();
+          }
+        } finally {
+          if (_didIteratorError17) {
+            throw _iteratorError17;
+          }
+        }
+      }
+
+      return null;
+    } // Resizes an image before it gets sent to the server. This function is the default behavior of
+    // `options.transformFile` if `resizeWidth` or `resizeHeight` are set. The callback is invoked with
+    // the resized blob.
+
+  }, {
+    key: "resizeImage",
+    value: function resizeImage(file, width, height, resizeMethod, callback) {
+      var _this11 = this;
+
+      return this.createThumbnail(file, width, height, resizeMethod, true, function (dataUrl, canvas) {
+        if (canvas == null) {
+          // The image has not been resized
+          return callback(file);
+        } else {
+          var resizeMimeType = _this11.options.resizeMimeType;
+
+          if (resizeMimeType == null) {
+            resizeMimeType = file.type;
+          }
+
+          var resizedDataURL = canvas.toDataURL(resizeMimeType, _this11.options.resizeQuality);
+
+          if (resizeMimeType === 'image/jpeg' || resizeMimeType === 'image/jpg') {
+            // Now add the original EXIF information
+            resizedDataURL = ExifRestore.restore(file.dataURL, resizedDataURL);
+          }
+
+          return callback(Dropzone.dataURItoBlob(resizedDataURL));
+        }
+      });
+    }
+  }, {
+    key: "createThumbnail",
+    value: function createThumbnail(file, width, height, resizeMethod, fixOrientation, callback) {
+      var _this12 = this;
+
+      var fileReader = new FileReader();
+
+      fileReader.onload = function () {
+        file.dataURL = fileReader.result; // Don't bother creating a thumbnail for SVG images since they're vector
+
+        if (file.type === "image/svg+xml") {
+          if (callback != null) {
+            callback(fileReader.result);
+          }
+
+          return;
+        }
+
+        _this12.createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback);
+      };
+
+      fileReader.readAsDataURL(file);
+    } // `mockFile` needs to have these attributes:
+    // 
+    //     { name: 'name', size: 12345, imageUrl: '' }
+    //
+    // `callback` will be invoked when the image has been downloaded and displayed.
+    // `crossOrigin` will be added to the `img` tag when accessing the file.
+
+  }, {
+    key: "displayExistingFile",
+    value: function displayExistingFile(mockFile, imageUrl, callback, crossOrigin) {
+      var _this13 = this;
+
+      var resizeThumbnail = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+      this.emit("addedfile", mockFile);
+      this.emit("complete", mockFile);
+
+      if (!resizeThumbnail) {
+        this.emit("thumbnail", mockFile, imageUrl);
+        if (callback) callback();
+      } else {
+        var onDone = function onDone(thumbnail) {
+          _this13.emit('thumbnail', mockFile, thumbnail);
+
+          if (callback) callback();
+        };
+
+        mockFile.dataURL = imageUrl;
+        this.createThumbnailFromUrl(mockFile, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.resizeMethod, this.options.fixOrientation, onDone, crossOrigin);
+      }
+    }
+  }, {
+    key: "createThumbnailFromUrl",
+    value: function createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback, crossOrigin) {
+      var _this14 = this;
+
+      // Not using `new Image` here because of a bug in latest Chrome versions.
+      // See https://github.com/enyo/dropzone/pull/226
+      var img = document.createElement("img");
+
+      if (crossOrigin) {
+        img.crossOrigin = crossOrigin;
+      }
+
+      img.onload = function () {
+        var loadExif = function loadExif(callback) {
+          return callback(1);
+        };
+
+        if (typeof EXIF !== 'undefined' && EXIF !== null && fixOrientation) {
+          loadExif = function loadExif(callback) {
+            return EXIF.getData(img, function () {
+              return callback(EXIF.getTag(this, 'Orientation'));
+            });
+          };
+        }
+
+        return loadExif(function (orientation) {
+          file.width = img.width;
+          file.height = img.height;
+
+          var resizeInfo = _this14.options.resize.call(_this14, file, width, height, resizeMethod);
+
+          var canvas = document.createElement("canvas");
+          var ctx = canvas.getContext("2d");
+          canvas.width = resizeInfo.trgWidth;
+          canvas.height = resizeInfo.trgHeight;
+
+          if (orientation > 4) {
+            canvas.width = resizeInfo.trgHeight;
+            canvas.height = resizeInfo.trgWidth;
+          }
+
+          switch (orientation) {
+            case 2:
+              // horizontal flip
+              ctx.translate(canvas.width, 0);
+              ctx.scale(-1, 1);
+              break;
+
+            case 3:
+              // 180° rotate left
+              ctx.translate(canvas.width, canvas.height);
+              ctx.rotate(Math.PI);
+              break;
+
+            case 4:
+              // vertical flip
+              ctx.translate(0, canvas.height);
+              ctx.scale(1, -1);
+              break;
+
+            case 5:
+              // vertical flip + 90 rotate right
+              ctx.rotate(0.5 * Math.PI);
+              ctx.scale(1, -1);
+              break;
+
+            case 6:
+              // 90° rotate right
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(0, -canvas.width);
+              break;
+
+            case 7:
+              // horizontal flip + 90 rotate right
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(canvas.height, -canvas.width);
+              ctx.scale(-1, 1);
+              break;
+
+            case 8:
+              // 90° rotate left
+              ctx.rotate(-0.5 * Math.PI);
+              ctx.translate(-canvas.height, 0);
+              break;
+          } // This is a bugfix for iOS' scaling bug.
+
+
+          drawImageIOSFix(ctx, img, resizeInfo.srcX != null ? resizeInfo.srcX : 0, resizeInfo.srcY != null ? resizeInfo.srcY : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, resizeInfo.trgX != null ? resizeInfo.trgX : 0, resizeInfo.trgY != null ? resizeInfo.trgY : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+          var thumbnail = canvas.toDataURL("image/png");
+
+          if (callback != null) {
+            return callback(thumbnail, canvas);
+          }
+        });
+      };
+
+      if (callback != null) {
+        img.onerror = callback;
+      }
+
+      return img.src = file.dataURL;
+    } // Goes through the queue and processes files if there aren't too many already.
+
+  }, {
+    key: "processQueue",
+    value: function processQueue() {
+      var parallelUploads = this.options.parallelUploads;
+      var processingLength = this.getUploadingFiles().length;
+      var i = processingLength; // There are already at least as many files uploading than should be
+
+      if (processingLength >= parallelUploads) {
+        return;
+      }
+
+      var queuedFiles = this.getQueuedFiles();
+
+      if (!(queuedFiles.length > 0)) {
+        return;
+      }
+
+      if (this.options.uploadMultiple) {
+        // The files should be uploaded in one request
+        return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
+      } else {
+        while (i < parallelUploads) {
+          if (!queuedFiles.length) {
+            return;
+          } // Nothing left to process
+
+
+          this.processFile(queuedFiles.shift());
+          i++;
+        }
+      }
+    } // Wrapper for `processFiles`
+
+  }, {
+    key: "processFile",
+    value: function processFile(file) {
+      return this.processFiles([file]);
+    } // Loads the file, then calls finishedLoading()
+
+  }, {
+    key: "processFiles",
+    value: function processFiles(files) {
+      var _iteratorNormalCompletion18 = true;
+      var _didIteratorError18 = false;
+      var _iteratorError18 = undefined;
+
+      try {
+        for (var _iterator18 = files[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+          var file = _step18.value;
+          file.processing = true; // Backwards compatibility
+
+          file.status = Dropzone.UPLOADING;
+          this.emit("processing", file);
+        }
+      } catch (err) {
+        _didIteratorError18 = true;
+        _iteratorError18 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion18 && _iterator18["return"] != null) {
+            _iterator18["return"]();
+          }
+        } finally {
+          if (_didIteratorError18) {
+            throw _iteratorError18;
+          }
+        }
+      }
+
+      if (this.options.uploadMultiple) {
+        this.emit("processingmultiple", files);
+      }
+
+      return this.uploadFiles(files);
+    }
+  }, {
+    key: "_getFilesWithXhr",
+    value: function _getFilesWithXhr(xhr) {
+      var files;
+      return files = this.files.filter(function (file) {
+        return file.xhr === xhr;
+      }).map(function (file) {
+        return file;
+      });
+    } // Cancels the file upload and sets the status to CANCELED
+    // **if** the file is actually being uploaded.
+    // If it's still in the queue, the file is being removed from it and the status
+    // set to CANCELED.
+
+  }, {
+    key: "cancelUpload",
+    value: function cancelUpload(file) {
+      if (file.status === Dropzone.UPLOADING) {
+        var groupedFiles = this._getFilesWithXhr(file.xhr);
+
+        var _iteratorNormalCompletion19 = true;
+        var _didIteratorError19 = false;
+        var _iteratorError19 = undefined;
+
+        try {
+          for (var _iterator19 = groupedFiles[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+            var groupedFile = _step19.value;
+            groupedFile.status = Dropzone.CANCELED;
+          }
+        } catch (err) {
+          _didIteratorError19 = true;
+          _iteratorError19 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion19 && _iterator19["return"] != null) {
+              _iterator19["return"]();
+            }
+          } finally {
+            if (_didIteratorError19) {
+              throw _iteratorError19;
+            }
+          }
+        }
+
+        if (typeof file.xhr !== 'undefined') {
+          file.xhr.abort();
+        }
+
+        var _iteratorNormalCompletion20 = true;
+        var _didIteratorError20 = false;
+        var _iteratorError20 = undefined;
+
+        try {
+          for (var _iterator20 = groupedFiles[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+            var _groupedFile = _step20.value;
+            this.emit("canceled", _groupedFile);
+          }
+        } catch (err) {
+          _didIteratorError20 = true;
+          _iteratorError20 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion20 && _iterator20["return"] != null) {
+              _iterator20["return"]();
+            }
+          } finally {
+            if (_didIteratorError20) {
+              throw _iteratorError20;
+            }
+          }
+        }
+
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", groupedFiles);
+        }
+      } else if (file.status === Dropzone.ADDED || file.status === Dropzone.QUEUED) {
+        file.status = Dropzone.CANCELED;
+        this.emit("canceled", file);
+
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", [file]);
+        }
+      }
+
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    }
+  }, {
+    key: "resolveOption",
+    value: function resolveOption(option) {
+      if (typeof option === 'function') {
+        for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+          args[_key3 - 1] = arguments[_key3];
+        }
+
+        return option.apply(this, args);
+      }
+
+      return option;
+    }
+  }, {
+    key: "uploadFile",
+    value: function uploadFile(file) {
+      return this.uploadFiles([file]);
+    }
+  }, {
+    key: "uploadFiles",
+    value: function uploadFiles(files) {
+      var _this15 = this;
+
+      this._transformFiles(files, function (transformedFiles) {
+        if (_this15.options.chunking) {
+          // Chunking is not allowed to be used with `uploadMultiple` so we know
+          // that there is only __one__file.
+          var transformedFile = transformedFiles[0];
+          files[0].upload.chunked = _this15.options.chunking && (_this15.options.forceChunking || transformedFile.size > _this15.options.chunkSize);
+          files[0].upload.totalChunkCount = Math.ceil(transformedFile.size / _this15.options.chunkSize);
+        }
+
+        if (files[0].upload.chunked) {
+          // This file should be sent in chunks!
+          // If the chunking option is set, we **know** that there can only be **one** file, since
+          // uploadMultiple is not allowed with this option.
+          var file = files[0];
+          var _transformedFile = transformedFiles[0];
+          var startedChunkCount = 0;
+          file.upload.chunks = [];
+
+          var handleNextChunk = function handleNextChunk() {
+            var chunkIndex = 0; // Find the next item in file.upload.chunks that is not defined yet.
+
+            while (file.upload.chunks[chunkIndex] !== undefined) {
+              chunkIndex++;
+            } // This means, that all chunks have already been started.
+
+
+            if (chunkIndex >= file.upload.totalChunkCount) return;
+            startedChunkCount++;
+            var start = chunkIndex * _this15.options.chunkSize;
+            var end = Math.min(start + _this15.options.chunkSize, file.size);
+            var dataBlock = {
+              name: _this15._getParamName(0),
+              data: _transformedFile.webkitSlice ? _transformedFile.webkitSlice(start, end) : _transformedFile.slice(start, end),
+              filename: file.upload.filename,
+              chunkIndex: chunkIndex
+            };
+            file.upload.chunks[chunkIndex] = {
+              file: file,
+              index: chunkIndex,
+              dataBlock: dataBlock,
+              // In case we want to retry.
+              status: Dropzone.UPLOADING,
+              progress: 0,
+              retries: 0 // The number of times this block has been retried.
+
+            };
+
+            _this15._uploadData(files, [dataBlock]);
+          };
+
+          file.upload.finishedChunkUpload = function (chunk) {
+            var allFinished = true;
+            chunk.status = Dropzone.SUCCESS; // Clear the data from the chunk
+
+            chunk.dataBlock = null; // Leaving this reference to xhr intact here will cause memory leaks in some browsers
+
+            chunk.xhr = null;
+
+            for (var i = 0; i < file.upload.totalChunkCount; i++) {
+              if (file.upload.chunks[i] === undefined) {
+                return handleNextChunk();
+              }
+
+              if (file.upload.chunks[i].status !== Dropzone.SUCCESS) {
+                allFinished = false;
+              }
+            }
+
+            if (allFinished) {
+              _this15.options.chunksUploaded(file, function () {
+                _this15._finished(files, '', null);
+              });
+            }
+          };
+
+          if (_this15.options.parallelChunkUploads) {
+            for (var i = 0; i < file.upload.totalChunkCount; i++) {
+              handleNextChunk();
+            }
+          } else {
+            handleNextChunk();
+          }
+        } else {
+          var dataBlocks = [];
+
+          for (var _i3 = 0; _i3 < files.length; _i3++) {
+            dataBlocks[_i3] = {
+              name: _this15._getParamName(_i3),
+              data: transformedFiles[_i3],
+              filename: files[_i3].upload.filename
+            };
+          }
+
+          _this15._uploadData(files, dataBlocks);
+        }
+      });
+    } /// Returns the right chunk for given file and xhr
+
+  }, {
+    key: "_getChunk",
+    value: function _getChunk(file, xhr) {
+      for (var i = 0; i < file.upload.totalChunkCount; i++) {
+        if (file.upload.chunks[i] !== undefined && file.upload.chunks[i].xhr === xhr) {
+          return file.upload.chunks[i];
+        }
+      }
+    } // This function actually uploads the file(s) to the server.
+    // If dataBlocks contains the actual data to upload (meaning, that this could either be transformed
+    // files, or individual chunks for chunked upload).
+
+  }, {
+    key: "_uploadData",
+    value: function _uploadData(files, dataBlocks) {
+      var _this16 = this;
+
+      var xhr = new XMLHttpRequest(); // Put the xhr object in the file objects to be able to reference it later.
+
+      var _iteratorNormalCompletion21 = true;
+      var _didIteratorError21 = false;
+      var _iteratorError21 = undefined;
+
+      try {
+        for (var _iterator21 = files[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+          var file = _step21.value;
+          file.xhr = xhr;
+        }
+      } catch (err) {
+        _didIteratorError21 = true;
+        _iteratorError21 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion21 && _iterator21["return"] != null) {
+            _iterator21["return"]();
+          }
+        } finally {
+          if (_didIteratorError21) {
+            throw _iteratorError21;
+          }
+        }
+      }
+
+      if (files[0].upload.chunked) {
+        // Put the xhr object in the right chunk object, so it can be associated later, and found with _getChunk
+        files[0].upload.chunks[dataBlocks[0].chunkIndex].xhr = xhr;
+      }
+
+      var method = this.resolveOption(this.options.method, files);
+      var url = this.resolveOption(this.options.url, files);
+      xhr.open(method, url, true); // Setting the timeout after open because of IE11 issue: https://gitlab.com/meno/dropzone/issues/8
+
+      xhr.timeout = this.resolveOption(this.options.timeout, files); // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
+
+      xhr.withCredentials = !!this.options.withCredentials;
+
+      xhr.onload = function (e) {
+        _this16._finishedUploading(files, xhr, e);
+      };
+
+      xhr.ontimeout = function () {
+        _this16._handleUploadError(files, xhr, "Request timedout after ".concat(_this16.options.timeout, " seconds"));
+      };
+
+      xhr.onerror = function () {
+        _this16._handleUploadError(files, xhr);
+      }; // Some browsers do not have the .upload property
+
+
+      var progressObj = xhr.upload != null ? xhr.upload : xhr;
+
+      progressObj.onprogress = function (e) {
+        return _this16._updateFilesUploadProgress(files, xhr, e);
+      };
+
+      var headers = {
+        "Accept": "application/json",
+        "Cache-Control": "no-cache",
+        "X-Requested-With": "XMLHttpRequest"
+      };
+
+      if (this.options.headers) {
+        Dropzone.extend(headers, this.options.headers);
+      }
+
+      for (var headerName in headers) {
+        var headerValue = headers[headerName];
+
+        if (headerValue) {
+          xhr.setRequestHeader(headerName, headerValue);
+        }
+      }
+
+      var formData = new FormData(); // Adding all @options parameters
+
+      if (this.options.params) {
+        var additionalParams = this.options.params;
+
+        if (typeof additionalParams === 'function') {
+          additionalParams = additionalParams.call(this, files, xhr, files[0].upload.chunked ? this._getChunk(files[0], xhr) : null);
+        }
+
+        for (var key in additionalParams) {
+          var value = additionalParams[key];
+          formData.append(key, value);
+        }
+      } // Let the user add additional data if necessary
+
+
+      var _iteratorNormalCompletion22 = true;
+      var _didIteratorError22 = false;
+      var _iteratorError22 = undefined;
+
+      try {
+        for (var _iterator22 = files[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+          var _file = _step22.value;
+          this.emit("sending", _file, xhr, formData);
+        }
+      } catch (err) {
+        _didIteratorError22 = true;
+        _iteratorError22 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion22 && _iterator22["return"] != null) {
+            _iterator22["return"]();
+          }
+        } finally {
+          if (_didIteratorError22) {
+            throw _iteratorError22;
+          }
+        }
+      }
+
+      if (this.options.uploadMultiple) {
+        this.emit("sendingmultiple", files, xhr, formData);
+      }
+
+      this._addFormElementData(formData); // Finally add the files
+      // Has to be last because some servers (eg: S3) expect the file to be the last parameter
+
+
+      for (var i = 0; i < dataBlocks.length; i++) {
+        var dataBlock = dataBlocks[i];
+        formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
+      }
+
+      this.submitRequest(xhr, formData, files);
+    } // Transforms all files with this.options.transformFile and invokes done with the transformed files when done.
+
+  }, {
+    key: "_transformFiles",
+    value: function _transformFiles(files, done) {
+      var _this17 = this;
+
+      var transformedFiles = []; // Clumsy way of handling asynchronous calls, until I get to add a proper Future library.
+
+      var doneCounter = 0;
+
+      var _loop = function _loop(i) {
+        _this17.options.transformFile.call(_this17, files[i], function (transformedFile) {
+          transformedFiles[i] = transformedFile;
+
+          if (++doneCounter === files.length) {
+            done(transformedFiles);
+          }
+        });
+      };
+
+      for (var i = 0; i < files.length; i++) {
+        _loop(i);
+      }
+    } // Takes care of adding other input elements of the form to the AJAX request
+
+  }, {
+    key: "_addFormElementData",
+    value: function _addFormElementData(formData) {
+      // Take care of other input elements
+      if (this.element.tagName === "FORM") {
+        var _iteratorNormalCompletion23 = true;
+        var _didIteratorError23 = false;
+        var _iteratorError23 = undefined;
+
+        try {
+          for (var _iterator23 = this.element.querySelectorAll("input, textarea, select, button")[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+            var input = _step23.value;
+            var inputName = input.getAttribute("name");
+            var inputType = input.getAttribute("type");
+            if (inputType) inputType = inputType.toLowerCase(); // If the input doesn't have a name, we can't use it.
+
+            if (typeof inputName === 'undefined' || inputName === null) continue;
+
+            if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
+              // Possibly multiple values
+              var _iteratorNormalCompletion24 = true;
+              var _didIteratorError24 = false;
+              var _iteratorError24 = undefined;
+
+              try {
+                for (var _iterator24 = input.options[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+                  var option = _step24.value;
+
+                  if (option.selected) {
+                    formData.append(inputName, option.value);
+                  }
+                }
+              } catch (err) {
+                _didIteratorError24 = true;
+                _iteratorError24 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion24 && _iterator24["return"] != null) {
+                    _iterator24["return"]();
+                  }
+                } finally {
+                  if (_didIteratorError24) {
+                    throw _iteratorError24;
+                  }
+                }
+              }
+            } else if (!inputType || inputType !== "checkbox" && inputType !== "radio" || input.checked) {
+              formData.append(inputName, input.value);
+            }
+          }
+        } catch (err) {
+          _didIteratorError23 = true;
+          _iteratorError23 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion23 && _iterator23["return"] != null) {
+              _iterator23["return"]();
+            }
+          } finally {
+            if (_didIteratorError23) {
+              throw _iteratorError23;
+            }
+          }
+        }
+      }
+    } // Invoked when there is new progress information about given files.
+    // If e is not provided, it is assumed that the upload is finished.
+
+  }, {
+    key: "_updateFilesUploadProgress",
+    value: function _updateFilesUploadProgress(files, xhr, e) {
+      var progress;
+
+      if (typeof e !== 'undefined') {
+        progress = 100 * e.loaded / e.total;
+
+        if (files[0].upload.chunked) {
+          var file = files[0]; // Since this is a chunked upload, we need to update the appropriate chunk progress.
+
+          var chunk = this._getChunk(file, xhr);
+
+          chunk.progress = progress;
+          chunk.total = e.total;
+          chunk.bytesSent = e.loaded;
+          var fileProgress = 0,
+              fileTotal,
+              fileBytesSent;
+          file.upload.progress = 0;
+          file.upload.total = 0;
+          file.upload.bytesSent = 0;
+
+          for (var i = 0; i < file.upload.totalChunkCount; i++) {
+            if (file.upload.chunks[i] !== undefined && file.upload.chunks[i].progress !== undefined) {
+              file.upload.progress += file.upload.chunks[i].progress;
+              file.upload.total += file.upload.chunks[i].total;
+              file.upload.bytesSent += file.upload.chunks[i].bytesSent;
+            }
+          }
+
+          file.upload.progress = file.upload.progress / file.upload.totalChunkCount;
+        } else {
+          var _iteratorNormalCompletion25 = true;
+          var _didIteratorError25 = false;
+          var _iteratorError25 = undefined;
+
+          try {
+            for (var _iterator25 = files[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+              var _file2 = _step25.value;
+              _file2.upload.progress = progress;
+              _file2.upload.total = e.total;
+              _file2.upload.bytesSent = e.loaded;
+            }
+          } catch (err) {
+            _didIteratorError25 = true;
+            _iteratorError25 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion25 && _iterator25["return"] != null) {
+                _iterator25["return"]();
+              }
+            } finally {
+              if (_didIteratorError25) {
+                throw _iteratorError25;
+              }
+            }
+          }
+        }
+
+        var _iteratorNormalCompletion26 = true;
+        var _didIteratorError26 = false;
+        var _iteratorError26 = undefined;
+
+        try {
+          for (var _iterator26 = files[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+            var _file3 = _step26.value;
+            this.emit("uploadprogress", _file3, _file3.upload.progress, _file3.upload.bytesSent);
+          }
+        } catch (err) {
+          _didIteratorError26 = true;
+          _iteratorError26 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion26 && _iterator26["return"] != null) {
+              _iterator26["return"]();
+            }
+          } finally {
+            if (_didIteratorError26) {
+              throw _iteratorError26;
+            }
+          }
+        }
+      } else {
+        // Called when the file finished uploading
+        var allFilesFinished = true;
+        progress = 100;
+        var _iteratorNormalCompletion27 = true;
+        var _didIteratorError27 = false;
+        var _iteratorError27 = undefined;
+
+        try {
+          for (var _iterator27 = files[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+            var _file4 = _step27.value;
+
+            if (_file4.upload.progress !== 100 || _file4.upload.bytesSent !== _file4.upload.total) {
+              allFilesFinished = false;
+            }
+
+            _file4.upload.progress = progress;
+            _file4.upload.bytesSent = _file4.upload.total;
+          } // Nothing to do, all files already at 100%
+
+        } catch (err) {
+          _didIteratorError27 = true;
+          _iteratorError27 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion27 && _iterator27["return"] != null) {
+              _iterator27["return"]();
+            }
+          } finally {
+            if (_didIteratorError27) {
+              throw _iteratorError27;
+            }
+          }
+        }
+
+        if (allFilesFinished) {
+          return;
+        }
+
+        var _iteratorNormalCompletion28 = true;
+        var _didIteratorError28 = false;
+        var _iteratorError28 = undefined;
+
+        try {
+          for (var _iterator28 = files[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+            var _file5 = _step28.value;
+            this.emit("uploadprogress", _file5, progress, _file5.upload.bytesSent);
+          }
+        } catch (err) {
+          _didIteratorError28 = true;
+          _iteratorError28 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion28 && _iterator28["return"] != null) {
+              _iterator28["return"]();
+            }
+          } finally {
+            if (_didIteratorError28) {
+              throw _iteratorError28;
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: "_finishedUploading",
+    value: function _finishedUploading(files, xhr, e) {
+      var response;
+
+      if (files[0].status === Dropzone.CANCELED) {
+        return;
+      }
+
+      if (xhr.readyState !== 4) {
+        return;
+      }
+
+      if (xhr.responseType !== 'arraybuffer' && xhr.responseType !== 'blob') {
+        response = xhr.responseText;
+
+        if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
+          try {
+            response = JSON.parse(response);
+          } catch (error) {
+            e = error;
+            response = "Invalid JSON response from server.";
+          }
+        }
+      }
+
+      this._updateFilesUploadProgress(files);
+
+      if (!(200 <= xhr.status && xhr.status < 300)) {
+        this._handleUploadError(files, xhr, response);
+      } else {
+        if (files[0].upload.chunked) {
+          files[0].upload.finishedChunkUpload(this._getChunk(files[0], xhr));
+        } else {
+          this._finished(files, response, e);
+        }
+      }
+    }
+  }, {
+    key: "_handleUploadError",
+    value: function _handleUploadError(files, xhr, response) {
+      if (files[0].status === Dropzone.CANCELED) {
+        return;
+      }
+
+      if (files[0].upload.chunked && this.options.retryChunks) {
+        var chunk = this._getChunk(files[0], xhr);
+
+        if (chunk.retries++ < this.options.retryChunksLimit) {
+          this._uploadData(files, [chunk.dataBlock]);
+
+          return;
+        } else {
+          console.warn('Retried this chunk too often. Giving up.');
+        }
+      }
+
+      this._errorProcessing(files, response || this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr);
+    }
+  }, {
+    key: "submitRequest",
+    value: function submitRequest(xhr, formData, files) {
+      xhr.send(formData);
+    } // Called internally when processing is finished.
+    // Individual callbacks have to be called in the appropriate sections.
+
+  }, {
+    key: "_finished",
+    value: function _finished(files, responseText, e) {
+      var _iteratorNormalCompletion29 = true;
+      var _didIteratorError29 = false;
+      var _iteratorError29 = undefined;
+
+      try {
+        for (var _iterator29 = files[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+          var file = _step29.value;
+          file.status = Dropzone.SUCCESS;
+          this.emit("success", file, responseText, e);
+          this.emit("complete", file);
+        }
+      } catch (err) {
+        _didIteratorError29 = true;
+        _iteratorError29 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion29 && _iterator29["return"] != null) {
+            _iterator29["return"]();
+          }
+        } finally {
+          if (_didIteratorError29) {
+            throw _iteratorError29;
+          }
+        }
+      }
+
+      if (this.options.uploadMultiple) {
+        this.emit("successmultiple", files, responseText, e);
+        this.emit("completemultiple", files);
+      }
+
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    } // Called internally when processing is finished.
+    // Individual callbacks have to be called in the appropriate sections.
+
+  }, {
+    key: "_errorProcessing",
+    value: function _errorProcessing(files, message, xhr) {
+      var _iteratorNormalCompletion30 = true;
+      var _didIteratorError30 = false;
+      var _iteratorError30 = undefined;
+
+      try {
+        for (var _iterator30 = files[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+          var file = _step30.value;
+          file.status = Dropzone.ERROR;
+          this.emit("error", file, message, xhr);
+          this.emit("complete", file);
+        }
+      } catch (err) {
+        _didIteratorError30 = true;
+        _iteratorError30 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion30 && _iterator30["return"] != null) {
+            _iterator30["return"]();
+          }
+        } finally {
+          if (_didIteratorError30) {
+            throw _iteratorError30;
+          }
+        }
+      }
+
+      if (this.options.uploadMultiple) {
+        this.emit("errormultiple", files, message, xhr);
+        this.emit("completemultiple", files);
+      }
+
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    }
+  }], [{
+    key: "uuidv4",
+    value: function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : r & 0x3 | 0x8;
+        return v.toString(16);
+      });
+    }
+  }]);
+
+  return Dropzone;
+}(Emitter);
+
+Dropzone.initClass();
+Dropzone.version = "5.7.0"; // This is a map of options for your different dropzones. Add configurations
+// to this object for your different dropzone elemens.
+//
+// Example:
+//
+//     Dropzone.options.myDropzoneElementId = { maxFilesize: 1 };
+//
+// To disable autoDiscover for a specific element, you can set `false` as an option:
+//
+//     Dropzone.options.myDisabledElementId = false;
+//
+// And in html:
+//
+//     <form action="/upload" id="my-dropzone-element-id" class="dropzone"></form>
+
+Dropzone.options = {}; // Returns the options for an element or undefined if none available.
+
+Dropzone.optionsForElement = function (element) {
+  // Get the `Dropzone.options.elementId` for this element if it exists
+  if (element.getAttribute("id")) {
+    return Dropzone.options[camelize(element.getAttribute("id"))];
+  } else {
+    return undefined;
+  }
+}; // Holds a list of all dropzone instances
+
+
+Dropzone.instances = []; // Returns the dropzone for given element if any
+
+Dropzone.forElement = function (element) {
+  if (typeof element === "string") {
+    element = document.querySelector(element);
+  }
+
+  if ((element != null ? element.dropzone : undefined) == null) {
+    throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
+  }
+
+  return element.dropzone;
+}; // Set to false if you don't want Dropzone to automatically find and attach to .dropzone elements.
+
+
+Dropzone.autoDiscover = true; // Looks for all .dropzone elements and creates a dropzone for them
+
+Dropzone.discover = function () {
+  var dropzones;
+
+  if (document.querySelectorAll) {
+    dropzones = document.querySelectorAll(".dropzone");
+  } else {
+    dropzones = []; // IE :(
+
+    var checkElements = function checkElements(elements) {
+      return function () {
+        var result = [];
+        var _iteratorNormalCompletion31 = true;
+        var _didIteratorError31 = false;
+        var _iteratorError31 = undefined;
+
+        try {
+          for (var _iterator31 = elements[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+            var el = _step31.value;
+
+            if (/(^| )dropzone($| )/.test(el.className)) {
+              result.push(dropzones.push(el));
+            } else {
+              result.push(undefined);
+            }
+          }
+        } catch (err) {
+          _didIteratorError31 = true;
+          _iteratorError31 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion31 && _iterator31["return"] != null) {
+              _iterator31["return"]();
+            }
+          } finally {
+            if (_didIteratorError31) {
+              throw _iteratorError31;
+            }
+          }
+        }
+
+        return result;
+      }();
+    };
+
+    checkElements(document.getElementsByTagName("div"));
+    checkElements(document.getElementsByTagName("form"));
+  }
+
+  return function () {
+    var result = [];
+    var _iteratorNormalCompletion32 = true;
+    var _didIteratorError32 = false;
+    var _iteratorError32 = undefined;
+
+    try {
+      for (var _iterator32 = dropzones[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+        var dropzone = _step32.value;
+
+        // Create a dropzone unless auto discover has been disabled for specific element
+        if (Dropzone.optionsForElement(dropzone) !== false) {
+          result.push(new Dropzone(dropzone));
+        } else {
+          result.push(undefined);
+        }
+      }
+    } catch (err) {
+      _didIteratorError32 = true;
+      _iteratorError32 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion32 && _iterator32["return"] != null) {
+          _iterator32["return"]();
+        }
+      } finally {
+        if (_didIteratorError32) {
+          throw _iteratorError32;
+        }
+      }
+    }
+
+    return result;
+  }();
+}; // Since the whole Drag'n'Drop API is pretty new, some browsers implement it,
+// but not correctly.
+// So I created a blacklist of userAgents. Yes, yes. Browser sniffing, I know.
+// But what to do when browsers *theoretically* support an API, but crash
+// when using it.
+//
+// This is a list of regular expressions tested against navigator.userAgent
+//
+// ** It should only be used on browser that *do* support the API, but
+// incorrectly **
+//
+
+
+Dropzone.blacklistedBrowsers = [// The mac os and windows phone version of opera 12 seems to have a problem with the File drag'n'drop API.
+/opera.*(Macintosh|Windows Phone).*version\/12/i]; // Checks if the browser is supported
+
+Dropzone.isBrowserSupported = function () {
+  var capableBrowser = true;
+
+  if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
+    if (!("classList" in document.createElement("a"))) {
+      capableBrowser = false;
+    } else {
+      // The browser supports the API, but may be blacklisted.
+      var _iteratorNormalCompletion33 = true;
+      var _didIteratorError33 = false;
+      var _iteratorError33 = undefined;
+
+      try {
+        for (var _iterator33 = Dropzone.blacklistedBrowsers[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+          var regex = _step33.value;
+
+          if (regex.test(navigator.userAgent)) {
+            capableBrowser = false;
+            continue;
+          }
+        }
+      } catch (err) {
+        _didIteratorError33 = true;
+        _iteratorError33 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion33 && _iterator33["return"] != null) {
+            _iterator33["return"]();
+          }
+        } finally {
+          if (_didIteratorError33) {
+            throw _iteratorError33;
+          }
+        }
+      }
+    }
+  } else {
+    capableBrowser = false;
+  }
+
+  return capableBrowser;
+};
+
+Dropzone.dataURItoBlob = function (dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]); // separate out the mime component
+
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]; // write the bytes of the string to an ArrayBuffer
+
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+
+  for (var i = 0, end = byteString.length, asc = 0 <= end; asc ? i <= end : i >= end; asc ? i++ : i--) {
+    ia[i] = byteString.charCodeAt(i);
+  } // write the ArrayBuffer to a blob
+
+
+  return new Blob([ab], {
+    type: mimeString
+  });
+}; // Returns an array without the rejected item
+
+
+var without = function without(list, rejectedItem) {
+  return list.filter(function (item) {
+    return item !== rejectedItem;
+  }).map(function (item) {
+    return item;
+  });
+}; // abc-def_ghi -> abcDefGhi
+
+
+var camelize = function camelize(str) {
+  return str.replace(/[\-_](\w)/g, function (match) {
+    return match.charAt(1).toUpperCase();
+  });
+}; // Creates an element from string
+
+
+Dropzone.createElement = function (string) {
+  var div = document.createElement("div");
+  div.innerHTML = string;
+  return div.childNodes[0];
+}; // Tests if given element is inside (or simply is) the container
+
+
+Dropzone.elementInside = function (element, container) {
+  if (element === container) {
+    return true;
+  } // Coffeescript doesn't support do/while loops
+
+
+  while (element = element.parentNode) {
+    if (element === container) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+Dropzone.getElement = function (el, name) {
+  var element;
+
+  if (typeof el === "string") {
+    element = document.querySelector(el);
+  } else if (el.nodeType != null) {
+    element = el;
+  }
+
+  if (element == null) {
+    throw new Error("Invalid `".concat(name, "` option provided. Please provide a CSS selector or a plain HTML element."));
+  }
+
+  return element;
+};
+
+Dropzone.getElements = function (els, name) {
+  var el, elements;
+
+  if (els instanceof Array) {
+    elements = [];
+
+    try {
+      var _iteratorNormalCompletion34 = true;
+      var _didIteratorError34 = false;
+      var _iteratorError34 = undefined;
+
+      try {
+        for (var _iterator34 = els[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+          el = _step34.value;
+          elements.push(this.getElement(el, name));
+        }
+      } catch (err) {
+        _didIteratorError34 = true;
+        _iteratorError34 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion34 && _iterator34["return"] != null) {
+            _iterator34["return"]();
+          }
+        } finally {
+          if (_didIteratorError34) {
+            throw _iteratorError34;
+          }
+        }
+      }
+    } catch (e) {
+      elements = null;
+    }
+  } else if (typeof els === "string") {
+    elements = [];
+    var _iteratorNormalCompletion35 = true;
+    var _didIteratorError35 = false;
+    var _iteratorError35 = undefined;
+
+    try {
+      for (var _iterator35 = document.querySelectorAll(els)[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+        el = _step35.value;
+        elements.push(el);
+      }
+    } catch (err) {
+      _didIteratorError35 = true;
+      _iteratorError35 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion35 && _iterator35["return"] != null) {
+          _iterator35["return"]();
+        }
+      } finally {
+        if (_didIteratorError35) {
+          throw _iteratorError35;
+        }
+      }
+    }
+  } else if (els.nodeType != null) {
+    elements = [els];
+  }
+
+  if (elements == null || !elements.length) {
+    throw new Error("Invalid `".concat(name, "` option provided. Please provide a CSS selector, a plain HTML element or a list of those."));
+  }
+
+  return elements;
+}; // Asks the user the question and calls accepted or rejected accordingly
+//
+// The default implementation just uses `window.confirm` and then calls the
+// appropriate callback.
+
+
+Dropzone.confirm = function (question, accepted, rejected) {
+  if (window.confirm(question)) {
+    return accepted();
+  } else if (rejected != null) {
+    return rejected();
+  }
+}; // Validates the mime type like this:
+//
+// https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept
+
+
+Dropzone.isValidFile = function (file, acceptedFiles) {
+  if (!acceptedFiles) {
+    return true;
+  } // If there are no accepted mime types, it's OK
+
+
+  acceptedFiles = acceptedFiles.split(",");
+  var mimeType = file.type;
+  var baseMimeType = mimeType.replace(/\/.*$/, "");
+  var _iteratorNormalCompletion36 = true;
+  var _didIteratorError36 = false;
+  var _iteratorError36 = undefined;
+
+  try {
+    for (var _iterator36 = acceptedFiles[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+      var validType = _step36.value;
+      validType = validType.trim();
+
+      if (validType.charAt(0) === ".") {
+        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+          return true;
+        }
+      } else if (/\/\*$/.test(validType)) {
+        // This is something like a image/* mime type
+        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+          return true;
+        }
+      } else {
+        if (mimeType === validType) {
+          return true;
+        }
+      }
+    }
+  } catch (err) {
+    _didIteratorError36 = true;
+    _iteratorError36 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion36 && _iterator36["return"] != null) {
+        _iterator36["return"]();
+      }
+    } finally {
+      if (_didIteratorError36) {
+        throw _iteratorError36;
+      }
+    }
+  }
+
+  return false;
+}; // Augment jQuery
+
+
+if (typeof jQuery !== 'undefined' && jQuery !== null) {
+  jQuery.fn.dropzone = function (options) {
+    return this.each(function () {
+      return new Dropzone(this, options);
+    });
+  };
+}
+
+if ( true && module !== null) {
+  module.exports = Dropzone;
+} else {
+  window.Dropzone = Dropzone;
+} // Dropzone file status codes
+
+
+Dropzone.ADDED = "added";
+Dropzone.QUEUED = "queued"; // For backwards compatibility. Now, if a file is accepted, it's either queued
+// or uploading.
+
+Dropzone.ACCEPTED = Dropzone.QUEUED;
+Dropzone.UPLOADING = "uploading";
+Dropzone.PROCESSING = Dropzone.UPLOADING; // alias
+
+Dropzone.CANCELED = "canceled";
+Dropzone.ERROR = "error";
+Dropzone.SUCCESS = "success";
+/*
+
+ Bugfix for iOS 6 and 7
+ Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
+ based on the work of https://github.com/stomita/ios-imagefile-megapixel
+
+ */
+// Detecting vertical squash in loaded image.
+// Fixes a bug which squash image vertically while drawing into canvas for some images.
+// This is a bug in iOS6 devices. This function from https://github.com/stomita/ios-imagefile-megapixel
+
+var detectVerticalSquash = function detectVerticalSquash(img) {
+  var iw = img.naturalWidth;
+  var ih = img.naturalHeight;
+  var canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = ih;
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  var _ctx$getImageData = ctx.getImageData(1, 0, 1, ih),
+      data = _ctx$getImageData.data; // search image edge pixel position in case it is squashed vertically.
+
+
+  var sy = 0;
+  var ey = ih;
+  var py = ih;
+
+  while (py > sy) {
+    var alpha = data[(py - 1) * 4 + 3];
+
+    if (alpha === 0) {
+      ey = py;
+    } else {
+      sy = py;
+    }
+
+    py = ey + sy >> 1;
+  }
+
+  var ratio = py / ih;
+
+  if (ratio === 0) {
+    return 1;
+  } else {
+    return ratio;
+  }
+}; // A replacement for context.drawImage
+// (args are for source and destination).
+
+
+var drawImageIOSFix = function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+  var vertSquashRatio = detectVerticalSquash(img);
+  return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+}; // Based on MinifyJpeg
+// Source: http://www.perry.cz/files/ExifRestorer.js
+// http://elicon.blog57.fc2.com/blog-entry-206.html
+
+
+var ExifRestore =
+/*#__PURE__*/
+function () {
+  function ExifRestore() {
+    _classCallCheck(this, ExifRestore);
+  }
+
+  _createClass(ExifRestore, null, [{
+    key: "initClass",
+    value: function initClass() {
+      this.KEY_STR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    }
+  }, {
+    key: "encode64",
+    value: function encode64(input) {
+      var output = '';
+      var chr1 = undefined;
+      var chr2 = undefined;
+      var chr3 = '';
+      var enc1 = undefined;
+      var enc2 = undefined;
+      var enc3 = undefined;
+      var enc4 = '';
+      var i = 0;
+
+      while (true) {
+        chr1 = input[i++];
+        chr2 = input[i++];
+        chr3 = input[i++];
+        enc1 = chr1 >> 2;
+        enc2 = (chr1 & 3) << 4 | chr2 >> 4;
+        enc3 = (chr2 & 15) << 2 | chr3 >> 6;
+        enc4 = chr3 & 63;
+
+        if (isNaN(chr2)) {
+          enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+          enc4 = 64;
+        }
+
+        output = output + this.KEY_STR.charAt(enc1) + this.KEY_STR.charAt(enc2) + this.KEY_STR.charAt(enc3) + this.KEY_STR.charAt(enc4);
+        chr1 = chr2 = chr3 = '';
+        enc1 = enc2 = enc3 = enc4 = '';
+
+        if (!(i < input.length)) {
+          break;
+        }
+      }
+
+      return output;
+    }
+  }, {
+    key: "restore",
+    value: function restore(origFileBase64, resizedFileBase64) {
+      if (!origFileBase64.match('data:image/jpeg;base64,')) {
+        return resizedFileBase64;
+      }
+
+      var rawImage = this.decode64(origFileBase64.replace('data:image/jpeg;base64,', ''));
+      var segments = this.slice2Segments(rawImage);
+      var image = this.exifManipulation(resizedFileBase64, segments);
+      return "data:image/jpeg;base64,".concat(this.encode64(image));
+    }
+  }, {
+    key: "exifManipulation",
+    value: function exifManipulation(resizedFileBase64, segments) {
+      var exifArray = this.getExifArray(segments);
+      var newImageArray = this.insertExif(resizedFileBase64, exifArray);
+      var aBuffer = new Uint8Array(newImageArray);
+      return aBuffer;
+    }
+  }, {
+    key: "getExifArray",
+    value: function getExifArray(segments) {
+      var seg = undefined;
+      var x = 0;
+
+      while (x < segments.length) {
+        seg = segments[x];
+
+        if (seg[0] === 255 & seg[1] === 225) {
+          return seg;
+        }
+
+        x++;
+      }
+
+      return [];
+    }
+  }, {
+    key: "insertExif",
+    value: function insertExif(resizedFileBase64, exifArray) {
+      var imageData = resizedFileBase64.replace('data:image/jpeg;base64,', '');
+      var buf = this.decode64(imageData);
+      var separatePoint = buf.indexOf(255, 3);
+      var mae = buf.slice(0, separatePoint);
+      var ato = buf.slice(separatePoint);
+      var array = mae;
+      array = array.concat(exifArray);
+      array = array.concat(ato);
+      return array;
+    }
+  }, {
+    key: "slice2Segments",
+    value: function slice2Segments(rawImageArray) {
+      var head = 0;
+      var segments = [];
+
+      while (true) {
+        var length;
+
+        if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 218) {
+          break;
+        }
+
+        if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 216) {
+          head += 2;
+        } else {
+          length = rawImageArray[head + 2] * 256 + rawImageArray[head + 3];
+          var endPoint = head + length + 2;
+          var seg = rawImageArray.slice(head, endPoint);
+          segments.push(seg);
+          head = endPoint;
+        }
+
+        if (head > rawImageArray.length) {
+          break;
+        }
+      }
+
+      return segments;
+    }
+  }, {
+    key: "decode64",
+    value: function decode64(input) {
+      var output = '';
+      var chr1 = undefined;
+      var chr2 = undefined;
+      var chr3 = '';
+      var enc1 = undefined;
+      var enc2 = undefined;
+      var enc3 = undefined;
+      var enc4 = '';
+      var i = 0;
+      var buf = []; // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+
+      var base64test = /[^A-Za-z0-9\+\/\=]/g;
+
+      if (base64test.exec(input)) {
+        console.warn('There were invalid base64 characters in the input text.\nValid base64 characters are A-Z, a-z, 0-9, \'+\', \'/\',and \'=\'\nExpect errors in decoding.');
+      }
+
+      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+
+      while (true) {
+        enc1 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc2 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc3 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc4 = this.KEY_STR.indexOf(input.charAt(i++));
+        chr1 = enc1 << 2 | enc2 >> 4;
+        chr2 = (enc2 & 15) << 4 | enc3 >> 2;
+        chr3 = (enc3 & 3) << 6 | enc4;
+        buf.push(chr1);
+
+        if (enc3 !== 64) {
+          buf.push(chr2);
+        }
+
+        if (enc4 !== 64) {
+          buf.push(chr3);
+        }
+
+        chr1 = chr2 = chr3 = '';
+        enc1 = enc2 = enc3 = enc4 = '';
+
+        if (!(i < input.length)) {
+          break;
+        }
+      }
+
+      return buf;
+    }
+  }]);
+
+  return ExifRestore;
+}();
+
+ExifRestore.initClass();
+/*
+ * contentloaded.js
+ *
+ * Author: Diego Perini (diego.perini at gmail.com)
+ * Summary: cross-browser wrapper for DOMContentLoaded
+ * Updated: 20101020
+ * License: MIT
+ * Version: 1.2
+ *
+ * URL:
+ * http://javascript.nwbox.com/ContentLoaded/
+ * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+ */
+// @win window reference
+// @fn function reference
+
+var contentLoaded = function contentLoaded(win, fn) {
+  var done = false;
+  var top = true;
+  var doc = win.document;
+  var root = doc.documentElement;
+  var add = doc.addEventListener ? "addEventListener" : "attachEvent";
+  var rem = doc.addEventListener ? "removeEventListener" : "detachEvent";
+  var pre = doc.addEventListener ? "" : "on";
+
+  var init = function init(e) {
+    if (e.type === "readystatechange" && doc.readyState !== "complete") {
+      return;
+    }
+
+    (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+
+    if (!done && (done = true)) {
+      return fn.call(win, e.type || e);
+    }
+  };
+
+  var poll = function poll() {
+    try {
+      root.doScroll("left");
+    } catch (e) {
+      setTimeout(poll, 50);
+      return;
+    }
+
+    return init("poll");
+  };
+
+  if (doc.readyState !== "complete") {
+    if (doc.createEventObject && root.doScroll) {
+      try {
+        top = !win.frameElement;
+      } catch (error) {}
+
+      if (top) {
+        poll();
+      }
+    }
+
+    doc[add](pre + "DOMContentLoaded", init, false);
+    doc[add](pre + "readystatechange", init, false);
+    return win[add](pre + "load", init, false);
+  }
+}; // As a single function to be able to write tests.
+
+
+Dropzone._autoDiscoverFunction = function () {
+  if (Dropzone.autoDiscover) {
+    return Dropzone.discover();
+  }
+};
+
+contentLoaded(window, Dropzone._autoDiscoverFunction);
+
+function __guard__(value, transform) {
+  return typeof value !== 'undefined' && value !== null ? transform(value) : undefined;
+}
+
+function __guardMethod__(obj, methodName, transform) {
+  if (typeof obj !== 'undefined' && obj !== null && typeof obj[methodName] === 'function') {
+    return transform(obj, methodName);
+  } else {
+    return undefined;
+  }
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+
+/***/ }),
+
+/***/ "./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index-all.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index-all.js ***!
+  \****************************************************************************************/
+/*! exports provided: default, VERSION, iteratee, restArguments, each, forEach, map, collect, reduce, foldl, inject, reduceRight, foldr, find, detect, filter, select, reject, every, all, some, any, contains, includes, include, invoke, pluck, where, findWhere, max, min, shuffle, sample, sortBy, groupBy, indexBy, countBy, toArray, size, partition, first, head, take, initial, last, rest, tail, drop, compact, flatten, without, uniq, unique, union, intersection, difference, unzip, zip, object, findIndex, findLastIndex, sortedIndex, indexOf, lastIndexOf, range, chunk, bind, partial, bindAll, memoize, delay, defer, throttle, debounce, wrap, negate, compose, after, before, once, keys, allKeys, values, mapObject, pairs, invert, functions, methods, extend, extendOwn, assign, findKey, pick, omit, defaults, create, clone, tap, isMatch, isEqual, isEmpty, isElement, isArray, isObject, isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError, isSymbol, isMap, isWeakMap, isSet, isWeakSet, isFinite, isNaN, isBoolean, isNull, isUndefined, has, identity, constant, noop, property, propertyOf, matcher, matches, times, random, now, escape, unescape, result, uniqueId, templateSettings, template, chain, mixin */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index_default_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index-default.js */ "./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index-default.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _index_default_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.js */ "./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VERSION", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["VERSION"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "iteratee", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["iteratee"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "restArguments", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["restArguments"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "each", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["each"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "forEach", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["forEach"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "map", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["map"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "collect", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["collect"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reduce", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["reduce"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "foldl", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["foldl"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "inject", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["inject"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reduceRight", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["reduceRight"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "foldr", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["foldr"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "find", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["find"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "detect", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["detect"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "filter", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["filter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "select", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["select"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reject", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["reject"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "every", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["every"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "all", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["all"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "some", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["some"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "any", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["any"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "contains", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["contains"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "includes", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["includes"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "include", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["include"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "invoke", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["invoke"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pluck", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["pluck"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "where", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["where"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "findWhere", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["findWhere"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "max", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["max"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "min", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["min"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "shuffle", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["shuffle"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "sample", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["sample"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "sortBy", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["sortBy"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "groupBy", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["groupBy"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "indexBy", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["indexBy"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "countBy", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["countBy"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "toArray", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["toArray"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "size", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["size"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "partition", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["partition"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "first", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["first"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "head", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["head"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "take", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["take"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "initial", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["initial"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "last", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["last"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "rest", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["rest"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tail", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["tail"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "drop", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["drop"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "compact", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["compact"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "flatten", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["flatten"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "without", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["without"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "uniq", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["uniq"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "unique", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["unique"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "union", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["union"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "intersection", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["intersection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "difference", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["difference"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "unzip", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["unzip"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "zip", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["zip"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "object", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["object"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "findIndex", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["findIndex"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "findLastIndex", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["findLastIndex"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "sortedIndex", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["sortedIndex"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "indexOf", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["indexOf"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "lastIndexOf", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["lastIndexOf"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "range", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["range"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "chunk", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["chunk"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "bind", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["bind"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "partial", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["partial"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "bindAll", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["bindAll"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "memoize", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["memoize"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "delay", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["delay"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defer", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["defer"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "throttle", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["throttle"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "debounce", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["debounce"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "wrap", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["wrap"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "negate", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["negate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "compose", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["compose"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "after", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["after"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "before", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["before"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "once", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["once"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "keys", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["keys"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "allKeys", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["allKeys"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "values", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["values"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mapObject", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["mapObject"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pairs", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["pairs"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "invert", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["invert"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "functions", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["functions"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "methods", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["methods"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "extend", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["extend"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "extendOwn", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["extendOwn"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "assign", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["assign"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "findKey", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["findKey"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pick", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["pick"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "omit", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["omit"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaults", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["defaults"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "create", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["create"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "clone", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["clone"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tap", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["tap"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isMatch", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isMatch"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isEqual", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isEqual"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isEmpty", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isEmpty"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isElement", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isElement"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isArray"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isObject", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isObject"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isArguments", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isArguments"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isFunction", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isFunction"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isString", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isString"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isNumber", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isNumber"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDate", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isDate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRegExp", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isRegExp"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isError", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isError"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isSymbol", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isSymbol"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isMap", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isMap"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isWeakMap", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isWeakMap"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isSet", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isSet"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isWeakSet", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isWeakSet"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isFinite", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isFinite"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isNaN", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isNaN"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isBoolean", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isBoolean"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isNull", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isNull"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isUndefined", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["isUndefined"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["has"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "identity", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["identity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "constant", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["constant"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "noop", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["noop"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "property", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["property"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "propertyOf", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["propertyOf"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "matcher", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["matcher"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "matches", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["matches"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "times", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["times"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "random", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["random"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "now", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["now"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "escape", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["escape"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "unescape", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["unescape"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "result", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["result"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "uniqueId", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["uniqueId"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "templateSettings", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["templateSettings"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "template", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["template"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "chain", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["chain"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mixin", function() { return _index_js__WEBPACK_IMPORTED_MODULE_1__["mixin"]; });
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index-default.js":
+/*!********************************************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index-default.js ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.js */ "./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index.js");
+
+
+
+// Add all of the Underscore functions to the wrapper object.
+var _ = Object(_index_js__WEBPACK_IMPORTED_MODULE_0__["mixin"])(_index_js__WEBPACK_IMPORTED_MODULE_0__);
+// Legacy Node.js API
+_._ = _;
+// Export the Underscore API.
+/* harmony default export */ __webpack_exports__["default"] = (_);
+
+
+/***/ }),
+
+/***/ "./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/@concretecms/bedrock/node_modules/underscore/modules/index.js ***!
+  \************************************************************************************/
+/*! exports provided: default, VERSION, iteratee, restArguments, each, forEach, map, collect, reduce, foldl, inject, reduceRight, foldr, find, detect, filter, select, reject, every, all, some, any, contains, includes, include, invoke, pluck, where, findWhere, max, min, shuffle, sample, sortBy, groupBy, indexBy, countBy, toArray, size, partition, first, head, take, initial, last, rest, tail, drop, compact, flatten, without, uniq, unique, union, intersection, difference, unzip, zip, object, findIndex, findLastIndex, sortedIndex, indexOf, lastIndexOf, range, chunk, bind, partial, bindAll, memoize, delay, defer, throttle, debounce, wrap, negate, compose, after, before, once, keys, allKeys, values, mapObject, pairs, invert, functions, methods, extend, extendOwn, assign, findKey, pick, omit, defaults, create, clone, tap, isMatch, isEqual, isEmpty, isElement, isArray, isObject, isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError, isSymbol, isMap, isWeakMap, isSet, isWeakSet, isFinite, isNaN, isBoolean, isNull, isUndefined, has, identity, constant, noop, property, propertyOf, matcher, matches, times, random, now, escape, unescape, result, uniqueId, templateSettings, template, chain, mixin */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VERSION", function() { return VERSION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iteratee", function() { return iteratee; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restArguments", function() { return restArguments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "each", function() { return each; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forEach", function() { return each; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "map", function() { return map; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "collect", function() { return map; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reduce", function() { return reduce; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "foldl", function() { return reduce; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inject", function() { return reduce; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reduceRight", function() { return reduceRight; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "foldr", function() { return reduceRight; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "find", function() { return find; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "detect", function() { return find; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filter", function() { return filter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "select", function() { return filter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reject", function() { return reject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "every", function() { return every; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "all", function() { return every; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "some", function() { return some; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "any", function() { return some; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contains", function() { return contains; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "includes", function() { return contains; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "include", function() { return contains; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "invoke", function() { return invoke; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pluck", function() { return pluck; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "where", function() { return where; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findWhere", function() { return findWhere; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "max", function() { return max; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "min", function() { return min; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shuffle", function() { return shuffle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sample", function() { return sample; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sortBy", function() { return sortBy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "groupBy", function() { return groupBy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "indexBy", function() { return indexBy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "countBy", function() { return countBy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toArray", function() { return toArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "size", function() { return size; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "partition", function() { return partition; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "first", function() { return first; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "head", function() { return first; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "take", function() { return first; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initial", function() { return initial; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "last", function() { return last; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rest", function() { return rest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tail", function() { return rest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drop", function() { return rest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compact", function() { return compact; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flatten", function() { return flatten; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "without", function() { return without; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uniq", function() { return uniq; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unique", function() { return uniq; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "union", function() { return union; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "intersection", function() { return intersection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "difference", function() { return difference; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unzip", function() { return unzip; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "zip", function() { return zip; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "object", function() { return object; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findIndex", function() { return findIndex; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findLastIndex", function() { return findLastIndex; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sortedIndex", function() { return sortedIndex; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "indexOf", function() { return indexOf; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "lastIndexOf", function() { return lastIndexOf; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "range", function() { return range; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chunk", function() { return chunk; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bind", function() { return bind; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "partial", function() { return partial; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bindAll", function() { return bindAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "memoize", function() { return memoize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delay", function() { return delay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defer", function() { return defer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throttle", function() { return throttle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "debounce", function() { return debounce; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "wrap", function() { return wrap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "negate", function() { return negate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compose", function() { return compose; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "after", function() { return after; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "before", function() { return before; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "once", function() { return once; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "keys", function() { return keys; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "allKeys", function() { return allKeys; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "values", function() { return values; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapObject", function() { return mapObject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pairs", function() { return pairs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "invert", function() { return invert; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "functions", function() { return functions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "methods", function() { return functions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "extend", function() { return extend; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "extendOwn", function() { return extendOwn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "assign", function() { return extendOwn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findKey", function() { return findKey; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pick", function() { return pick; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "omit", function() { return omit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaults", function() { return defaults; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clone", function() { return clone; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tap", function() { return tap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMatch", function() { return isMatch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEqual", function() { return isEqual; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEmpty", function() { return isEmpty; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isElement", function() { return isElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return isArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isObject", function() { return isObject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArguments", function() { return isArguments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFunction", function() { return isFunction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isString", function() { return isString; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNumber", function() { return isNumber; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDate", function() { return isDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRegExp", function() { return isRegExp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isError", function() { return isError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSymbol", function() { return isSymbol; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMap", function() { return isMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isWeakMap", function() { return isWeakMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSet", function() { return isSet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isWeakSet", function() { return isWeakSet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFinite", function() { return isFinite; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNaN", function() { return isNaN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isBoolean", function() { return isBoolean; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNull", function() { return isNull; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isUndefined", function() { return isUndefined; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "has", function() { return has; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "identity", function() { return identity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constant", function() { return constant; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noop", function() { return noop; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "property", function() { return property; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "propertyOf", function() { return propertyOf; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "matcher", function() { return matcher; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "matches", function() { return matcher; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "times", function() { return times; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "random", function() { return random; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "now", function() { return now; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "escape", function() { return escape; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unescape", function() { return unescape; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "result", function() { return result; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uniqueId", function() { return uniqueId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "templateSettings", function() { return templateSettings; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "template", function() { return template; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chain", function() { return chain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mixin", function() { return mixin; });
+//     Underscore.js 1.10.2
+//     https://underscorejs.org
+//     (c) 2009-2020 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+//     Underscore may be freely distributed under the MIT license.
+
+// Baseline setup
+// --------------
+
+// Establish the root object, `window` (`self`) in the browser, `global`
+// on the server, or `this` in some virtual machines. We use `self`
+// instead of `window` for `WebWorker` support.
+var root = typeof self == 'object' && self.self === self && self ||
+          typeof global == 'object' && global.global === global && global ||
+          Function('return this')() ||
+          {};
+
+// Save bytes in the minified (but not gzipped) version:
+var ArrayProto = Array.prototype, ObjProto = Object.prototype;
+var SymbolProto = typeof Symbol !== 'undefined' ? Symbol.prototype : null;
+
+// Create quick reference variables for speed access to core prototypes.
+var push = ArrayProto.push,
+    slice = ArrayProto.slice,
+    toString = ObjProto.toString,
+    hasOwnProperty = ObjProto.hasOwnProperty;
+
+// All **ECMAScript 5** native function implementations that we hope to use
+// are declared here.
+var nativeIsArray = Array.isArray,
+    nativeKeys = Object.keys,
+    nativeCreate = Object.create;
+
+// Create references to these builtin functions because we override them.
+var _isNaN = root.isNaN,
+    _isFinite = root.isFinite;
+
+// Naked function reference for surrogate-prototype-swapping.
+var Ctor = function(){};
+
+// The Underscore object. All exported functions below are added to it in the
+// modules/index-all.js using the mixin function.
+function _(obj) {
+  if (obj instanceof _) return obj;
+  if (!(this instanceof _)) return new _(obj);
+  this._wrapped = obj;
+}
+
+// Current version.
+var VERSION = _.VERSION = '1.10.2';
+
+// Internal function that returns an efficient (for current engines) version
+// of the passed-in callback, to be repeatedly applied in other Underscore
+// functions.
+function optimizeCb(func, context, argCount) {
+  if (context === void 0) return func;
+  switch (argCount == null ? 3 : argCount) {
+    case 1: return function(value) {
+      return func.call(context, value);
+    };
+    // The 2-argument case is omitted because we’re not using it.
+    case 3: return function(value, index, collection) {
+      return func.call(context, value, index, collection);
+    };
+    case 4: return function(accumulator, value, index, collection) {
+      return func.call(context, accumulator, value, index, collection);
+    };
+  }
+  return function() {
+    return func.apply(context, arguments);
+  };
+}
+
+// An internal function to generate callbacks that can be applied to each
+// element in a collection, returning the desired result — either `identity`,
+// an arbitrary callback, a property matcher, or a property accessor.
+function baseIteratee(value, context, argCount) {
+  if (value == null) return identity;
+  if (isFunction(value)) return optimizeCb(value, context, argCount);
+  if (isObject(value) && !isArray(value)) return matcher(value);
+  return property(value);
+}
+
+// External wrapper for our callback generator. Users may customize
+// `_.iteratee` if they want additional predicate/iteratee shorthand styles.
+// This abstraction hides the internal-only argCount argument.
+_.iteratee = iteratee;
+function iteratee(value, context) {
+  return baseIteratee(value, context, Infinity);
+}
+
+// The function we actually call internally. It invokes _.iteratee if
+// overridden, otherwise baseIteratee.
+function cb(value, context, argCount) {
+  if (_.iteratee !== iteratee) return _.iteratee(value, context);
+  return baseIteratee(value, context, argCount);
+}
+
+// Some functions take a variable number of arguments, or a few expected
+// arguments at the beginning and then a variable number of values to operate
+// on. This helper accumulates all remaining arguments past the function’s
+// argument length (or an explicit `startIndex`), into an array that becomes
+// the last argument. Similar to ES6’s "rest parameter".
+function restArguments(func, startIndex) {
+  startIndex = startIndex == null ? func.length - 1 : +startIndex;
+  return function() {
+    var length = Math.max(arguments.length - startIndex, 0),
+        rest = Array(length),
+        index = 0;
+    for (; index < length; index++) {
+      rest[index] = arguments[index + startIndex];
+    }
+    switch (startIndex) {
+      case 0: return func.call(this, rest);
+      case 1: return func.call(this, arguments[0], rest);
+      case 2: return func.call(this, arguments[0], arguments[1], rest);
+    }
+    var args = Array(startIndex + 1);
+    for (index = 0; index < startIndex; index++) {
+      args[index] = arguments[index];
+    }
+    args[startIndex] = rest;
+    return func.apply(this, args);
+  };
+}
+
+// An internal function for creating a new object that inherits from another.
+function baseCreate(prototype) {
+  if (!isObject(prototype)) return {};
+  if (nativeCreate) return nativeCreate(prototype);
+  Ctor.prototype = prototype;
+  var result = new Ctor;
+  Ctor.prototype = null;
+  return result;
+}
+
+function shallowProperty(key) {
+  return function(obj) {
+    return obj == null ? void 0 : obj[key];
+  };
+}
+
+function _has(obj, path) {
+  return obj != null && hasOwnProperty.call(obj, path);
+}
+
+function deepGet(obj, path) {
+  var length = path.length;
+  for (var i = 0; i < length; i++) {
+    if (obj == null) return void 0;
+    obj = obj[path[i]];
+  }
+  return length ? obj : void 0;
+}
+
+// Helper for collection methods to determine whether a collection
+// should be iterated as an array or as an object.
+// Related: https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength
+// Avoids a very nasty iOS 8 JIT bug on ARM-64. #2094
+var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+var getLength = shallowProperty('length');
+function isArrayLike(collection) {
+  var length = getLength(collection);
+  return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+}
+
+// Collection Functions
+// --------------------
+
+// The cornerstone, an `each` implementation, aka `forEach`.
+// Handles raw objects in addition to array-likes. Treats all
+// sparse array-likes as if they were dense.
+function each(obj, iteratee, context) {
+  iteratee = optimizeCb(iteratee, context);
+  var i, length;
+  if (isArrayLike(obj)) {
+    for (i = 0, length = obj.length; i < length; i++) {
+      iteratee(obj[i], i, obj);
+    }
+  } else {
+    var _keys = keys(obj);
+    for (i = 0, length = _keys.length; i < length; i++) {
+      iteratee(obj[_keys[i]], _keys[i], obj);
+    }
+  }
+  return obj;
+}
+
+
+// Return the results of applying the iteratee to each element.
+function map(obj, iteratee, context) {
+  iteratee = cb(iteratee, context);
+  var _keys = !isArrayLike(obj) && keys(obj),
+      length = (_keys || obj).length,
+      results = Array(length);
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys ? _keys[index] : index;
+    results[index] = iteratee(obj[currentKey], currentKey, obj);
+  }
+  return results;
+}
+
+
+// Create a reducing function iterating left or right.
+function createReduce(dir) {
+  // Wrap code that reassigns argument variables in a separate function than
+  // the one that accesses `arguments.length` to avoid a perf hit. (#1991)
+  var reducer = function(obj, iteratee, memo, initial) {
+    var _keys = !isArrayLike(obj) && keys(obj),
+        length = (_keys || obj).length,
+        index = dir > 0 ? 0 : length - 1;
+    if (!initial) {
+      memo = obj[_keys ? _keys[index] : index];
+      index += dir;
+    }
+    for (; index >= 0 && index < length; index += dir) {
+      var currentKey = _keys ? _keys[index] : index;
+      memo = iteratee(memo, obj[currentKey], currentKey, obj);
+    }
+    return memo;
+  };
+
+  return function(obj, iteratee, memo, context) {
+    var initial = arguments.length >= 3;
+    return reducer(obj, optimizeCb(iteratee, context, 4), memo, initial);
+  };
+}
+
+// **Reduce** builds up a single result from a list of values, aka `inject`,
+// or `foldl`.
+var reduce = createReduce(1);
+
+
+// The right-associative version of reduce, also known as `foldr`.
+var reduceRight = createReduce(-1);
+
+
+// Return the first value which passes a truth test.
+function find(obj, predicate, context) {
+  var keyFinder = isArrayLike(obj) ? findIndex : findKey;
+  var key = keyFinder(obj, predicate, context);
+  if (key !== void 0 && key !== -1) return obj[key];
+}
+
+
+// Return all the elements that pass a truth test.
+function filter(obj, predicate, context) {
+  var results = [];
+  predicate = cb(predicate, context);
+  each(obj, function(value, index, list) {
+    if (predicate(value, index, list)) results.push(value);
+  });
+  return results;
+}
+
+
+// Return all the elements for which a truth test fails.
+function reject(obj, predicate, context) {
+  return filter(obj, negate(cb(predicate)), context);
+}
+
+// Determine whether all of the elements match a truth test.
+function every(obj, predicate, context) {
+  predicate = cb(predicate, context);
+  var _keys = !isArrayLike(obj) && keys(obj),
+      length = (_keys || obj).length;
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys ? _keys[index] : index;
+    if (!predicate(obj[currentKey], currentKey, obj)) return false;
+  }
+  return true;
+}
+
+
+// Determine if at least one element in the object matches a truth test.
+function some(obj, predicate, context) {
+  predicate = cb(predicate, context);
+  var _keys = !isArrayLike(obj) && keys(obj),
+      length = (_keys || obj).length;
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys ? _keys[index] : index;
+    if (predicate(obj[currentKey], currentKey, obj)) return true;
+  }
+  return false;
+}
+
+
+// Determine if the array or object contains a given item (using `===`).
+function contains(obj, item, fromIndex, guard) {
+  if (!isArrayLike(obj)) obj = values(obj);
+  if (typeof fromIndex != 'number' || guard) fromIndex = 0;
+  return indexOf(obj, item, fromIndex) >= 0;
+}
+
+
+// Invoke a method (with arguments) on every item in a collection.
+var invoke = restArguments(function(obj, path, args) {
+  var contextPath, func;
+  if (isFunction(path)) {
+    func = path;
+  } else if (isArray(path)) {
+    contextPath = path.slice(0, -1);
+    path = path[path.length - 1];
+  }
+  return map(obj, function(context) {
+    var method = func;
+    if (!method) {
+      if (contextPath && contextPath.length) {
+        context = deepGet(context, contextPath);
+      }
+      if (context == null) return void 0;
+      method = context[path];
+    }
+    return method == null ? method : method.apply(context, args);
+  });
+});
+
+// Convenience version of a common use case of `map`: fetching a property.
+function pluck(obj, key) {
+  return map(obj, property(key));
+}
+
+// Convenience version of a common use case of `filter`: selecting only objects
+// containing specific `key:value` pairs.
+function where(obj, attrs) {
+  return filter(obj, matcher(attrs));
+}
+
+// Convenience version of a common use case of `find`: getting the first object
+// containing specific `key:value` pairs.
+function findWhere(obj, attrs) {
+  return find(obj, matcher(attrs));
+}
+
+// Return the maximum element (or element-based computation).
+function max(obj, iteratee, context) {
+  var result = -Infinity, lastComputed = -Infinity,
+      value, computed;
+  if (iteratee == null || typeof iteratee == 'number' && typeof obj[0] != 'object' && obj != null) {
+    obj = isArrayLike(obj) ? obj : values(obj);
+    for (var i = 0, length = obj.length; i < length; i++) {
+      value = obj[i];
+      if (value != null && value > result) {
+        result = value;
+      }
+    }
+  } else {
+    iteratee = cb(iteratee, context);
+    each(obj, function(v, index, list) {
+      computed = iteratee(v, index, list);
+      if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
+        result = v;
+        lastComputed = computed;
+      }
+    });
+  }
+  return result;
+}
+
+// Return the minimum element (or element-based computation).
+function min(obj, iteratee, context) {
+  var result = Infinity, lastComputed = Infinity,
+      value, computed;
+  if (iteratee == null || typeof iteratee == 'number' && typeof obj[0] != 'object' && obj != null) {
+    obj = isArrayLike(obj) ? obj : values(obj);
+    for (var i = 0, length = obj.length; i < length; i++) {
+      value = obj[i];
+      if (value != null && value < result) {
+        result = value;
+      }
+    }
+  } else {
+    iteratee = cb(iteratee, context);
+    each(obj, function(v, index, list) {
+      computed = iteratee(v, index, list);
+      if (computed < lastComputed || computed === Infinity && result === Infinity) {
+        result = v;
+        lastComputed = computed;
+      }
+    });
+  }
+  return result;
+}
+
+// Shuffle a collection.
+function shuffle(obj) {
+  return sample(obj, Infinity);
+}
+
+// Sample **n** random values from a collection using the modern version of the
+// [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
+// If **n** is not specified, returns a single random element.
+// The internal `guard` argument allows it to work with `map`.
+function sample(obj, n, guard) {
+  if (n == null || guard) {
+    if (!isArrayLike(obj)) obj = values(obj);
+    return obj[random(obj.length - 1)];
+  }
+  var sample = isArrayLike(obj) ? clone(obj) : values(obj);
+  var length = getLength(sample);
+  n = Math.max(Math.min(n, length), 0);
+  var last = length - 1;
+  for (var index = 0; index < n; index++) {
+    var rand = random(index, last);
+    var temp = sample[index];
+    sample[index] = sample[rand];
+    sample[rand] = temp;
+  }
+  return sample.slice(0, n);
+}
+
+// Sort the object's values by a criterion produced by an iteratee.
+function sortBy(obj, iteratee, context) {
+  var index = 0;
+  iteratee = cb(iteratee, context);
+  return pluck(map(obj, function(value, key, list) {
+    return {
+      value: value,
+      index: index++,
+      criteria: iteratee(value, key, list)
+    };
+  }).sort(function(left, right) {
+    var a = left.criteria;
+    var b = right.criteria;
+    if (a !== b) {
+      if (a > b || a === void 0) return 1;
+      if (a < b || b === void 0) return -1;
+    }
+    return left.index - right.index;
+  }), 'value');
+}
+
+// An internal function used for aggregate "group by" operations.
+function group(behavior, partition) {
+  return function(obj, iteratee, context) {
+    var result = partition ? [[], []] : {};
+    iteratee = cb(iteratee, context);
+    each(obj, function(value, index) {
+      var key = iteratee(value, index, obj);
+      behavior(result, value, key);
+    });
+    return result;
+  };
+}
+
+// Groups the object's values by a criterion. Pass either a string attribute
+// to group by, or a function that returns the criterion.
+var groupBy = group(function(result, value, key) {
+  if (_has(result, key)) result[key].push(value); else result[key] = [value];
+});
+
+// Indexes the object's values by a criterion, similar to `groupBy`, but for
+// when you know that your index values will be unique.
+var indexBy = group(function(result, value, key) {
+  result[key] = value;
+});
+
+// Counts instances of an object that group by a certain criterion. Pass
+// either a string attribute to count by, or a function that returns the
+// criterion.
+var countBy = group(function(result, value, key) {
+  if (_has(result, key)) result[key]++; else result[key] = 1;
+});
+
+var reStrSymbol = /[^\ud800-\udfff]|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]/g;
+// Safely create a real, live array from anything iterable.
+function toArray(obj) {
+  if (!obj) return [];
+  if (isArray(obj)) return slice.call(obj);
+  if (isString(obj)) {
+    // Keep surrogate pair characters together
+    return obj.match(reStrSymbol);
+  }
+  if (isArrayLike(obj)) return map(obj, identity);
+  return values(obj);
+}
+
+// Return the number of elements in an object.
+function size(obj) {
+  if (obj == null) return 0;
+  return isArrayLike(obj) ? obj.length : keys(obj).length;
+}
+
+// Split a collection into two arrays: one whose elements all satisfy the given
+// predicate, and one whose elements all do not satisfy the predicate.
+var partition = group(function(result, value, pass) {
+  result[pass ? 0 : 1].push(value);
+}, true);
+
+// Array Functions
+// ---------------
+
+// Get the first element of an array. Passing **n** will return the first N
+// values in the array. The **guard** check allows it to work with `map`.
+function first(array, n, guard) {
+  if (array == null || array.length < 1) return n == null ? void 0 : [];
+  if (n == null || guard) return array[0];
+  return initial(array, array.length - n);
+}
+
+
+// Returns everything but the last entry of the array. Especially useful on
+// the arguments object. Passing **n** will return all the values in
+// the array, excluding the last N.
+function initial(array, n, guard) {
+  return slice.call(array, 0, Math.max(0, array.length - (n == null || guard ? 1 : n)));
+}
+
+// Get the last element of an array. Passing **n** will return the last N
+// values in the array.
+function last(array, n, guard) {
+  if (array == null || array.length < 1) return n == null ? void 0 : [];
+  if (n == null || guard) return array[array.length - 1];
+  return rest(array, Math.max(0, array.length - n));
+}
+
+// Returns everything but the first entry of the array. Especially useful on
+// the arguments object. Passing an **n** will return the rest N values in the
+// array.
+function rest(array, n, guard) {
+  return slice.call(array, n == null || guard ? 1 : n);
+}
+
+
+// Trim out all falsy values from an array.
+function compact(array) {
+  return filter(array, Boolean);
+}
+
+// Internal implementation of a recursive `flatten` function.
+function _flatten(input, shallow, strict, output) {
+  output = output || [];
+  var idx = output.length;
+  for (var i = 0, length = getLength(input); i < length; i++) {
+    var value = input[i];
+    if (isArrayLike(value) && (isArray(value) || isArguments(value))) {
+      // Flatten current level of array or arguments object.
+      if (shallow) {
+        var j = 0, len = value.length;
+        while (j < len) output[idx++] = value[j++];
+      } else {
+        _flatten(value, shallow, strict, output);
+        idx = output.length;
+      }
+    } else if (!strict) {
+      output[idx++] = value;
+    }
+  }
+  return output;
+}
+
+// Flatten out an array, either recursively (by default), or just one level.
+function flatten(array, shallow) {
+  return _flatten(array, shallow, false);
+}
+
+// Return a version of the array that does not contain the specified value(s).
+var without = restArguments(function(array, otherArrays) {
+  return difference(array, otherArrays);
+});
+
+// Produce a duplicate-free version of the array. If the array has already
+// been sorted, you have the option of using a faster algorithm.
+// The faster algorithm will not work with an iteratee if the iteratee
+// is not a one-to-one function, so providing an iteratee will disable
+// the faster algorithm.
+function uniq(array, isSorted, iteratee, context) {
+  if (!isBoolean(isSorted)) {
+    context = iteratee;
+    iteratee = isSorted;
+    isSorted = false;
+  }
+  if (iteratee != null) iteratee = cb(iteratee, context);
+  var result = [];
+  var seen = [];
+  for (var i = 0, length = getLength(array); i < length; i++) {
+    var value = array[i],
+        computed = iteratee ? iteratee(value, i, array) : value;
+    if (isSorted && !iteratee) {
+      if (!i || seen !== computed) result.push(value);
+      seen = computed;
+    } else if (iteratee) {
+      if (!contains(seen, computed)) {
+        seen.push(computed);
+        result.push(value);
+      }
+    } else if (!contains(result, value)) {
+      result.push(value);
+    }
+  }
+  return result;
+}
+
+
+// Produce an array that contains the union: each distinct element from all of
+// the passed-in arrays.
+var union = restArguments(function(arrays) {
+  return uniq(_flatten(arrays, true, true));
+});
+
+// Produce an array that contains every item shared between all the
+// passed-in arrays.
+function intersection(array) {
+  var result = [];
+  var argsLength = arguments.length;
+  for (var i = 0, length = getLength(array); i < length; i++) {
+    var item = array[i];
+    if (contains(result, item)) continue;
+    var j;
+    for (j = 1; j < argsLength; j++) {
+      if (!contains(arguments[j], item)) break;
+    }
+    if (j === argsLength) result.push(item);
+  }
+  return result;
+}
+
+// Take the difference between one array and a number of other arrays.
+// Only the elements present in just the first array will remain.
+var difference = restArguments(function(array, rest) {
+  rest = _flatten(rest, true, true);
+  return filter(array, function(value){
+    return !contains(rest, value);
+  });
+});
+
+// Complement of zip. Unzip accepts an array of arrays and groups
+// each array's elements on shared indices.
+function unzip(array) {
+  var length = array && max(array, getLength).length || 0;
+  var result = Array(length);
+
+  for (var index = 0; index < length; index++) {
+    result[index] = pluck(array, index);
+  }
+  return result;
+}
+
+// Zip together multiple lists into a single array -- elements that share
+// an index go together.
+var zip = restArguments(unzip);
+
+// Converts lists into objects. Pass either a single array of `[key, value]`
+// pairs, or two parallel arrays of the same length -- one of keys, and one of
+// the corresponding values. Passing by pairs is the reverse of pairs.
+function object(list, values) {
+  var result = {};
+  for (var i = 0, length = getLength(list); i < length; i++) {
+    if (values) {
+      result[list[i]] = values[i];
+    } else {
+      result[list[i][0]] = list[i][1];
+    }
+  }
+  return result;
+}
+
+// Generator function to create the findIndex and findLastIndex functions.
+function createPredicateIndexFinder(dir) {
+  return function(array, predicate, context) {
+    predicate = cb(predicate, context);
+    var length = getLength(array);
+    var index = dir > 0 ? 0 : length - 1;
+    for (; index >= 0 && index < length; index += dir) {
+      if (predicate(array[index], index, array)) return index;
+    }
+    return -1;
+  };
+}
+
+// Returns the first index on an array-like that passes a predicate test.
+var findIndex = createPredicateIndexFinder(1);
+var findLastIndex = createPredicateIndexFinder(-1);
+
+// Use a comparator function to figure out the smallest index at which
+// an object should be inserted so as to maintain order. Uses binary search.
+function sortedIndex(array, obj, iteratee, context) {
+  iteratee = cb(iteratee, context, 1);
+  var value = iteratee(obj);
+  var low = 0, high = getLength(array);
+  while (low < high) {
+    var mid = Math.floor((low + high) / 2);
+    if (iteratee(array[mid]) < value) low = mid + 1; else high = mid;
+  }
+  return low;
+}
+
+// Generator function to create the indexOf and lastIndexOf functions.
+function createIndexFinder(dir, predicateFind, sortedIndex) {
+  return function(array, item, idx) {
+    var i = 0, length = getLength(array);
+    if (typeof idx == 'number') {
+      if (dir > 0) {
+        i = idx >= 0 ? idx : Math.max(idx + length, i);
+      } else {
+        length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
+      }
+    } else if (sortedIndex && idx && length) {
+      idx = sortedIndex(array, item);
+      return array[idx] === item ? idx : -1;
+    }
+    if (item !== item) {
+      idx = predicateFind(slice.call(array, i, length), isNaN);
+      return idx >= 0 ? idx + i : -1;
+    }
+    for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
+      if (array[idx] === item) return idx;
+    }
+    return -1;
+  };
+}
+
+// Return the position of the first occurrence of an item in an array,
+// or -1 if the item is not included in the array.
+// If the array is large and already in sort order, pass `true`
+// for **isSorted** to use binary search.
+var indexOf = createIndexFinder(1, findIndex, sortedIndex);
+var lastIndexOf = createIndexFinder(-1, findLastIndex);
+
+// Generate an integer Array containing an arithmetic progression. A port of
+// the native Python `range()` function. See
+// [the Python documentation](https://docs.python.org/library/functions.html#range).
+function range(start, stop, step) {
+  if (stop == null) {
+    stop = start || 0;
+    start = 0;
+  }
+  if (!step) {
+    step = stop < start ? -1 : 1;
+  }
+
+  var length = Math.max(Math.ceil((stop - start) / step), 0);
+  var range = Array(length);
+
+  for (var idx = 0; idx < length; idx++, start += step) {
+    range[idx] = start;
+  }
+
+  return range;
+}
+
+// Chunk a single array into multiple arrays, each containing `count` or fewer
+// items.
+function chunk(array, count) {
+  if (count == null || count < 1) return [];
+  var result = [];
+  var i = 0, length = array.length;
+  while (i < length) {
+    result.push(slice.call(array, i, i += count));
+  }
+  return result;
+}
+
+// Function (ahem) Functions
+// ------------------
+
+// Determines whether to execute a function as a constructor
+// or a normal function with the provided arguments.
+function executeBound(sourceFunc, boundFunc, context, callingContext, args) {
+  if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
+  var self = baseCreate(sourceFunc.prototype);
+  var result = sourceFunc.apply(self, args);
+  if (isObject(result)) return result;
+  return self;
+}
+
+// Create a function bound to a given object (assigning `this`, and arguments,
+// optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
+// available.
+var bind = restArguments(function(func, context, args) {
+  if (!isFunction(func)) throw new TypeError('Bind must be called on a function');
+  var bound = restArguments(function(callArgs) {
+    return executeBound(func, bound, context, this, args.concat(callArgs));
+  });
+  return bound;
+});
+
+// Partially apply a function by creating a version that has had some of its
+// arguments pre-filled, without changing its dynamic `this` context. _ acts
+// as a placeholder by default, allowing any combination of arguments to be
+// pre-filled. Set `partial.placeholder` for a custom placeholder argument.
+var partial = restArguments(function(func, boundArgs) {
+  var placeholder = partial.placeholder;
+  var bound = function() {
+    var position = 0, length = boundArgs.length;
+    var args = Array(length);
+    for (var i = 0; i < length; i++) {
+      args[i] = boundArgs[i] === placeholder ? arguments[position++] : boundArgs[i];
+    }
+    while (position < arguments.length) args.push(arguments[position++]);
+    return executeBound(func, bound, this, this, args);
+  };
+  return bound;
+});
+
+partial.placeholder = _;
+
+// Bind a number of an object's methods to that object. Remaining arguments
+// are the method names to be bound. Useful for ensuring that all callbacks
+// defined on an object belong to it.
+var bindAll = restArguments(function(obj, _keys) {
+  _keys = _flatten(_keys, false, false);
+  var index = _keys.length;
+  if (index < 1) throw new Error('bindAll must be passed function names');
+  while (index--) {
+    var key = _keys[index];
+    obj[key] = bind(obj[key], obj);
+  }
+});
+
+// Memoize an expensive function by storing its results.
+function memoize(func, hasher) {
+  var memoize = function(key) {
+    var cache = memoize.cache;
+    var address = '' + (hasher ? hasher.apply(this, arguments) : key);
+    if (!_has(cache, address)) cache[address] = func.apply(this, arguments);
+    return cache[address];
+  };
+  memoize.cache = {};
+  return memoize;
+}
+
+// Delays a function for the given number of milliseconds, and then calls
+// it with the arguments supplied.
+var delay = restArguments(function(func, wait, args) {
+  return setTimeout(function() {
+    return func.apply(null, args);
+  }, wait);
+});
+
+// Defers a function, scheduling it to run after the current call stack has
+// cleared.
+var defer = partial(delay, _, 1);
+
+// Returns a function, that, when invoked, will only be triggered at most once
+// during a given window of time. Normally, the throttled function will run
+// as much as it can, without ever going more than once per `wait` duration;
+// but if you'd like to disable the execution on the leading edge, pass
+// `{leading: false}`. To disable execution on the trailing edge, ditto.
+function throttle(func, wait, options) {
+  var timeout, context, args, result;
+  var previous = 0;
+  if (!options) options = {};
+
+  var later = function() {
+    previous = options.leading === false ? 0 : now();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+
+  var throttled = function() {
+    var _now = now();
+    if (!previous && options.leading === false) previous = _now;
+    var remaining = wait - (_now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = _now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+
+  throttled.cancel = function() {
+    clearTimeout(timeout);
+    previous = 0;
+    timeout = context = args = null;
+  };
+
+  return throttled;
+}
+
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce(func, wait, immediate) {
+  var timeout, result;
+
+  var later = function(context, args) {
+    timeout = null;
+    if (args) result = func.apply(context, args);
+  };
+
+  var debounced = restArguments(function(args) {
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      var callNow = !timeout;
+      timeout = setTimeout(later, wait);
+      if (callNow) result = func.apply(this, args);
+    } else {
+      timeout = delay(later, wait, this, args);
+    }
+
+    return result;
+  });
+
+  debounced.cancel = function() {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
+}
+
+// Returns the first function passed as an argument to the second,
+// allowing you to adjust arguments, run code before and after, and
+// conditionally execute the original function.
+function wrap(func, wrapper) {
+  return partial(wrapper, func);
+}
+
+// Returns a negated version of the passed-in predicate.
+function negate(predicate) {
+  return function() {
+    return !predicate.apply(this, arguments);
+  };
+}
+
+// Returns a function that is the composition of a list of functions, each
+// consuming the return value of the function that follows.
+function compose() {
+  var args = arguments;
+  var start = args.length - 1;
+  return function() {
+    var i = start;
+    var result = args[start].apply(this, arguments);
+    while (i--) result = args[i].call(this, result);
+    return result;
+  };
+}
+
+// Returns a function that will only be executed on and after the Nth call.
+function after(times, func) {
+  return function() {
+    if (--times < 1) {
+      return func.apply(this, arguments);
+    }
+  };
+}
+
+// Returns a function that will only be executed up to (but not including) the Nth call.
+function before(times, func) {
+  var memo;
+  return function() {
+    if (--times > 0) {
+      memo = func.apply(this, arguments);
+    }
+    if (times <= 1) func = null;
+    return memo;
+  };
+}
+
+// Returns a function that will be executed at most one time, no matter how
+// often you call it. Useful for lazy initialization.
+var once = partial(before, 2);
+
+// Object Functions
+// ----------------
+
+// Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
+var hasEnumBug = !{toString: null}.propertyIsEnumerable('toString');
+var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString',
+  'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+
+function collectNonEnumProps(obj, _keys) {
+  var nonEnumIdx = nonEnumerableProps.length;
+  var constructor = obj.constructor;
+  var proto = isFunction(constructor) && constructor.prototype || ObjProto;
+
+  // Constructor is a special case.
+  var prop = 'constructor';
+  if (_has(obj, prop) && !contains(_keys, prop)) _keys.push(prop);
+
+  while (nonEnumIdx--) {
+    prop = nonEnumerableProps[nonEnumIdx];
+    if (prop in obj && obj[prop] !== proto[prop] && !contains(_keys, prop)) {
+      _keys.push(prop);
+    }
+  }
+}
+
+// Retrieve the names of an object's own properties.
+// Delegates to **ECMAScript 5**'s native `Object.keys`.
+function keys(obj) {
+  if (!isObject(obj)) return [];
+  if (nativeKeys) return nativeKeys(obj);
+  var _keys = [];
+  for (var key in obj) if (_has(obj, key)) _keys.push(key);
+  // Ahem, IE < 9.
+  if (hasEnumBug) collectNonEnumProps(obj, _keys);
+  return _keys;
+}
+
+// Retrieve all the property names of an object.
+function allKeys(obj) {
+  if (!isObject(obj)) return [];
+  var _keys = [];
+  for (var key in obj) _keys.push(key);
+  // Ahem, IE < 9.
+  if (hasEnumBug) collectNonEnumProps(obj, _keys);
+  return _keys;
+}
+
+// Retrieve the values of an object's properties.
+function values(obj) {
+  var _keys = keys(obj);
+  var length = _keys.length;
+  var values = Array(length);
+  for (var i = 0; i < length; i++) {
+    values[i] = obj[_keys[i]];
+  }
+  return values;
+}
+
+// Returns the results of applying the iteratee to each element of the object.
+// In contrast to map it returns an object.
+function mapObject(obj, iteratee, context) {
+  iteratee = cb(iteratee, context);
+  var _keys = keys(obj),
+      length = _keys.length,
+      results = {};
+  for (var index = 0; index < length; index++) {
+    var currentKey = _keys[index];
+    results[currentKey] = iteratee(obj[currentKey], currentKey, obj);
+  }
+  return results;
+}
+
+// Convert an object into a list of `[key, value]` pairs.
+// The opposite of object.
+function pairs(obj) {
+  var _keys = keys(obj);
+  var length = _keys.length;
+  var pairs = Array(length);
+  for (var i = 0; i < length; i++) {
+    pairs[i] = [_keys[i], obj[_keys[i]]];
+  }
+  return pairs;
+}
+
+// Invert the keys and values of an object. The values must be serializable.
+function invert(obj) {
+  var result = {};
+  var _keys = keys(obj);
+  for (var i = 0, length = _keys.length; i < length; i++) {
+    result[obj[_keys[i]]] = _keys[i];
+  }
+  return result;
+}
+
+// Return a sorted list of the function names available on the object.
+function functions(obj) {
+  var names = [];
+  for (var key in obj) {
+    if (isFunction(obj[key])) names.push(key);
+  }
+  return names.sort();
+}
+
+
+// An internal function for creating assigner functions.
+function createAssigner(keysFunc, defaults) {
+  return function(obj) {
+    var length = arguments.length;
+    if (defaults) obj = Object(obj);
+    if (length < 2 || obj == null) return obj;
+    for (var index = 1; index < length; index++) {
+      var source = arguments[index],
+          _keys = keysFunc(source),
+          l = _keys.length;
+      for (var i = 0; i < l; i++) {
+        var key = _keys[i];
+        if (!defaults || obj[key] === void 0) obj[key] = source[key];
+      }
+    }
+    return obj;
+  };
+}
+
+// Extend a given object with all the properties in passed-in object(s).
+var extend = createAssigner(allKeys);
+
+// Assigns a given object with all the own properties in the passed-in object(s).
+// (https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+var extendOwn = createAssigner(keys);
+
+
+// Returns the first key on an object that passes a predicate test.
+function findKey(obj, predicate, context) {
+  predicate = cb(predicate, context);
+  var _keys = keys(obj), key;
+  for (var i = 0, length = _keys.length; i < length; i++) {
+    key = _keys[i];
+    if (predicate(obj[key], key, obj)) return key;
+  }
+}
+
+// Internal pick helper function to determine if `obj` has key `key`.
+function keyInObj(value, key, obj) {
+  return key in obj;
+}
+
+// Return a copy of the object only containing the whitelisted properties.
+var pick = restArguments(function(obj, _keys) {
+  var result = {}, iteratee = _keys[0];
+  if (obj == null) return result;
+  if (isFunction(iteratee)) {
+    if (_keys.length > 1) iteratee = optimizeCb(iteratee, _keys[1]);
+    _keys = allKeys(obj);
+  } else {
+    iteratee = keyInObj;
+    _keys = _flatten(_keys, false, false);
+    obj = Object(obj);
+  }
+  for (var i = 0, length = _keys.length; i < length; i++) {
+    var key = _keys[i];
+    var value = obj[key];
+    if (iteratee(value, key, obj)) result[key] = value;
+  }
+  return result;
+});
+
+// Return a copy of the object without the blacklisted properties.
+var omit = restArguments(function(obj, _keys) {
+  var iteratee = _keys[0], context;
+  if (isFunction(iteratee)) {
+    iteratee = negate(iteratee);
+    if (_keys.length > 1) context = _keys[1];
+  } else {
+    _keys = map(_flatten(_keys, false, false), String);
+    iteratee = function(value, key) {
+      return !contains(_keys, key);
+    };
+  }
+  return pick(obj, iteratee, context);
+});
+
+// Fill in a given object with default properties.
+var defaults = createAssigner(allKeys, true);
+
+// Creates an object that inherits from the given prototype object.
+// If additional properties are provided then they will be added to the
+// created object.
+function create(prototype, props) {
+  var result = baseCreate(prototype);
+  if (props) extendOwn(result, props);
+  return result;
+}
+
+// Create a (shallow-cloned) duplicate of an object.
+function clone(obj) {
+  if (!isObject(obj)) return obj;
+  return isArray(obj) ? obj.slice() : extend({}, obj);
+}
+
+// Invokes interceptor with the obj, and then returns obj.
+// The primary purpose of this method is to "tap into" a method chain, in
+// order to perform operations on intermediate results within the chain.
+function tap(obj, interceptor) {
+  interceptor(obj);
+  return obj;
+}
+
+// Returns whether an object has a given set of `key:value` pairs.
+function isMatch(object, attrs) {
+  var _keys = keys(attrs), length = _keys.length;
+  if (object == null) return !length;
+  var obj = Object(object);
+  for (var i = 0; i < length; i++) {
+    var key = _keys[i];
+    if (attrs[key] !== obj[key] || !(key in obj)) return false;
+  }
+  return true;
+}
+
+
+// Internal recursive comparison function for `isEqual`.
+function eq(a, b, aStack, bStack) {
+  // Identical objects are equal. `0 === -0`, but they aren't identical.
+  // See the [Harmony `egal` proposal](https://wiki.ecmascript.org/doku.php?id=harmony:egal).
+  if (a === b) return a !== 0 || 1 / a === 1 / b;
+  // `null` or `undefined` only equal to itself (strict comparison).
+  if (a == null || b == null) return false;
+  // `NaN`s are equivalent, but non-reflexive.
+  if (a !== a) return b !== b;
+  // Exhaust primitive checks
+  var type = typeof a;
+  if (type !== 'function' && type !== 'object' && typeof b != 'object') return false;
+  return deepEq(a, b, aStack, bStack);
+}
+
+// Internal recursive comparison function for `isEqual`.
+function deepEq(a, b, aStack, bStack) {
+  // Unwrap any wrapped objects.
+  if (a instanceof _) a = a._wrapped;
+  if (b instanceof _) b = b._wrapped;
+  // Compare `[[Class]]` names.
+  var className = toString.call(a);
+  if (className !== toString.call(b)) return false;
+  switch (className) {
+    // Strings, numbers, regular expressions, dates, and booleans are compared by value.
+    case '[object RegExp]':
+    // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
+    case '[object String]':
+      // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+      // equivalent to `new String("5")`.
+      return '' + a === '' + b;
+    case '[object Number]':
+      // `NaN`s are equivalent, but non-reflexive.
+      // Object(NaN) is equivalent to NaN.
+      if (+a !== +a) return +b !== +b;
+      // An `egal` comparison is performed for other numeric values.
+      return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+    case '[object Date]':
+    case '[object Boolean]':
+      // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+      // millisecond representations. Note that invalid dates with millisecond representations
+      // of `NaN` are not equivalent.
+      return +a === +b;
+    case '[object Symbol]':
+      return SymbolProto.valueOf.call(a) === SymbolProto.valueOf.call(b);
+  }
+
+  var areArrays = className === '[object Array]';
+  if (!areArrays) {
+    if (typeof a != 'object' || typeof b != 'object') return false;
+
+    // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+    // from different frames are.
+    var aCtor = a.constructor, bCtor = b.constructor;
+    if (aCtor !== bCtor && !(isFunction(aCtor) && aCtor instanceof aCtor &&
+                             isFunction(bCtor) && bCtor instanceof bCtor)
+                        && ('constructor' in a && 'constructor' in b)) {
+      return false;
+    }
+  }
+  // Assume equality for cyclic structures. The algorithm for detecting cyclic
+  // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+
+  // Initializing stack of traversed objects.
+  // It's done here since we only need them for objects and arrays comparison.
+  aStack = aStack || [];
+  bStack = bStack || [];
+  var length = aStack.length;
+  while (length--) {
+    // Linear search. Performance is inversely proportional to the number of
+    // unique nested structures.
+    if (aStack[length] === a) return bStack[length] === b;
+  }
+
+  // Add the first object to the stack of traversed objects.
+  aStack.push(a);
+  bStack.push(b);
+
+  // Recursively compare objects and arrays.
+  if (areArrays) {
+    // Compare array lengths to determine if a deep comparison is necessary.
+    length = a.length;
+    if (length !== b.length) return false;
+    // Deep compare the contents, ignoring non-numeric properties.
+    while (length--) {
+      if (!eq(a[length], b[length], aStack, bStack)) return false;
+    }
+  } else {
+    // Deep compare objects.
+    var _keys = keys(a), key;
+    length = _keys.length;
+    // Ensure that both objects contain the same number of properties before comparing deep equality.
+    if (keys(b).length !== length) return false;
+    while (length--) {
+      // Deep compare each member
+      key = _keys[length];
+      if (!(_has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
+    }
+  }
+  // Remove the first object from the stack of traversed objects.
+  aStack.pop();
+  bStack.pop();
+  return true;
+}
+
+// Perform a deep comparison to check if two objects are equal.
+function isEqual(a, b) {
+  return eq(a, b);
+}
+
+// Is a given array, string, or object empty?
+// An "empty" object has no enumerable own-properties.
+function isEmpty(obj) {
+  if (obj == null) return true;
+  if (isArrayLike(obj) && (isArray(obj) || isString(obj) || isArguments(obj))) return obj.length === 0;
+  return keys(obj).length === 0;
+}
+
+// Is a given value a DOM element?
+function isElement(obj) {
+  return !!(obj && obj.nodeType === 1);
+}
+
+// Internal function for creating a toString-based type tester.
+function tagTester(name) {
+  return function(obj) {
+    return toString.call(obj) === '[object ' + name + ']';
+  };
+}
+
+// Is a given value an array?
+// Delegates to ECMA5's native Array.isArray
+var isArray = nativeIsArray || tagTester('Array');
+
+// Is a given variable an object?
+function isObject(obj) {
+  var type = typeof obj;
+  return type === 'function' || type === 'object' && !!obj;
+}
+
+// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError, isMap, isWeakMap, isSet, isWeakSet.
+var isArguments = tagTester('Arguments');
+var isFunction = tagTester('Function');
+var isString = tagTester('String');
+var isNumber = tagTester('Number');
+var isDate = tagTester('Date');
+var isRegExp = tagTester('RegExp');
+var isError = tagTester('Error');
+var isSymbol = tagTester('Symbol');
+var isMap = tagTester('Map');
+var isWeakMap = tagTester('WeakMap');
+var isSet = tagTester('Set');
+var isWeakSet = tagTester('WeakSet');
+
+// Define a fallback version of the method in browsers (ahem, IE < 9), where
+// there isn't any inspectable "Arguments" type.
+(function() {
+  if (!isArguments(arguments)) {
+    isArguments = function(obj) {
+      return _has(obj, 'callee');
+    };
+  }
+}());
+
+// Optimize `isFunction` if appropriate. Work around some typeof bugs in old v8,
+// IE 11 (#1621), Safari 8 (#1929), and PhantomJS (#2236).
+var nodelist = root.document && root.document.childNodes;
+if ( true && typeof Int8Array != 'object' && typeof nodelist != 'function') {
+  isFunction = function(obj) {
+    return typeof obj == 'function' || false;
+  };
+}
+
+// Is a given object a finite number?
+function isFinite(obj) {
+  return !isSymbol(obj) && _isFinite(obj) && !_isNaN(parseFloat(obj));
+}
+
+// Is the given value `NaN`?
+function isNaN(obj) {
+  return isNumber(obj) && _isNaN(obj);
+}
+
+// Is a given value a boolean?
+function isBoolean(obj) {
+  return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
+}
+
+// Is a given value equal to null?
+function isNull(obj) {
+  return obj === null;
+}
+
+// Is a given variable undefined?
+function isUndefined(obj) {
+  return obj === void 0;
+}
+
+// Shortcut function for checking if an object has a given property directly
+// on itself (in other words, not on a prototype).
+function has(obj, path) {
+  if (!isArray(path)) {
+    return _has(obj, path);
+  }
+  var length = path.length;
+  for (var i = 0; i < length; i++) {
+    var key = path[i];
+    if (obj == null || !hasOwnProperty.call(obj, key)) {
+      return false;
+    }
+    obj = obj[key];
+  }
+  return !!length;
+}
+
+// Utility Functions
+// -----------------
+
+// Keep the identity function around for default iteratees.
+function identity(value) {
+  return value;
+}
+
+// Predicate-generating functions. Often useful outside of Underscore.
+function constant(value) {
+  return function() {
+    return value;
+  };
+}
+
+function noop(){}
+
+// Creates a function that, when passed an object, will traverse that object’s
+// properties down the given `path`, specified as an array of keys or indexes.
+function property(path) {
+  if (!isArray(path)) {
+    return shallowProperty(path);
+  }
+  return function(obj) {
+    return deepGet(obj, path);
+  };
+}
+
+// Generates a function for a given object that returns a given property.
+function propertyOf(obj) {
+  if (obj == null) {
+    return function(){};
+  }
+  return function(path) {
+    return !isArray(path) ? obj[path] : deepGet(obj, path);
+  };
+}
+
+// Returns a predicate for checking whether an object has a given set of
+// `key:value` pairs.
+function matcher(attrs) {
+  attrs = extendOwn({}, attrs);
+  return function(obj) {
+    return isMatch(obj, attrs);
+  };
+}
+
+
+// Run a function **n** times.
+function times(n, iteratee, context) {
+  var accum = Array(Math.max(0, n));
+  iteratee = optimizeCb(iteratee, context, 1);
+  for (var i = 0; i < n; i++) accum[i] = iteratee(i);
+  return accum;
+}
+
+// Return a random integer between min and max (inclusive).
+function random(min, max) {
+  if (max == null) {
+    max = min;
+    min = 0;
+  }
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
+
+// A (possibly faster) way to get the current timestamp as an integer.
+var now = Date.now || function() {
+  return new Date().getTime();
+};
+
+// List of HTML entities for escaping.
+var escapeMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#x27;',
+  '`': '&#x60;'
+};
+var unescapeMap = invert(escapeMap);
+
+// Functions for escaping and unescaping strings to/from HTML interpolation.
+function createEscaper(map) {
+  var escaper = function(match) {
+    return map[match];
+  };
+  // Regexes for identifying a key that needs to be escaped.
+  var source = '(?:' + keys(map).join('|') + ')';
+  var testRegexp = RegExp(source);
+  var replaceRegexp = RegExp(source, 'g');
+  return function(string) {
+    string = string == null ? '' : '' + string;
+    return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+  };
+}
+var escape = createEscaper(escapeMap);
+var unescape = createEscaper(unescapeMap);
+
+// Traverses the children of `obj` along `path`. If a child is a function, it
+// is invoked with its parent as context. Returns the value of the final
+// child, or `fallback` if any child is undefined.
+function result(obj, path, fallback) {
+  if (!isArray(path)) path = [path];
+  var length = path.length;
+  if (!length) {
+    return isFunction(fallback) ? fallback.call(obj) : fallback;
+  }
+  for (var i = 0; i < length; i++) {
+    var prop = obj == null ? void 0 : obj[path[i]];
+    if (prop === void 0) {
+      prop = fallback;
+      i = length; // Ensure we don't continue iterating.
+    }
+    obj = isFunction(prop) ? prop.call(obj) : prop;
+  }
+  return obj;
+}
+
+// Generate a unique integer id (unique within the entire client session).
+// Useful for temporary DOM ids.
+var idCounter = 0;
+function uniqueId(prefix) {
+  var id = ++idCounter + '';
+  return prefix ? prefix + id : id;
+}
+
+// By default, Underscore uses ERB-style template delimiters, change the
+// following template settings to use alternative delimiters.
+var templateSettings = _.templateSettings = {
+  evaluate: /<%([\s\S]+?)%>/g,
+  interpolate: /<%=([\s\S]+?)%>/g,
+  escape: /<%-([\s\S]+?)%>/g
+};
+
+// When customizing `templateSettings`, if you don't want to define an
+// interpolation, evaluation or escaping regex, we need one that is
+// guaranteed not to match.
+var noMatch = /(.)^/;
+
+// Certain characters need to be escaped so that they can be put into a
+// string literal.
+var escapes = {
+  "'": "'",
+  '\\': '\\',
+  '\r': 'r',
+  '\n': 'n',
+  '\u2028': 'u2028',
+  '\u2029': 'u2029'
+};
+
+var escapeRegExp = /\\|'|\r|\n|\u2028|\u2029/g;
+
+var escapeChar = function(match) {
+  return '\\' + escapes[match];
+};
+
+// JavaScript micro-templating, similar to John Resig's implementation.
+// Underscore templating handles arbitrary delimiters, preserves whitespace,
+// and correctly escapes quotes within interpolated code.
+// NB: `oldSettings` only exists for backwards compatibility.
+function template(text, settings, oldSettings) {
+  if (!settings && oldSettings) settings = oldSettings;
+  settings = defaults({}, settings, _.templateSettings);
+
+  // Combine delimiters into one regular expression via alternation.
+  var matcher = RegExp([
+    (settings.escape || noMatch).source,
+    (settings.interpolate || noMatch).source,
+    (settings.evaluate || noMatch).source
+  ].join('|') + '|$', 'g');
+
+  // Compile the template source, escaping string literals appropriately.
+  var index = 0;
+  var source = "__p+='";
+  text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+    source += text.slice(index, offset).replace(escapeRegExp, escapeChar);
+    index = offset + match.length;
+
+    if (escape) {
+      source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+    } else if (interpolate) {
+      source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+    } else if (evaluate) {
+      source += "';\n" + evaluate + "\n__p+='";
+    }
+
+    // Adobe VMs need the match returned to produce the correct offset.
+    return match;
+  });
+  source += "';\n";
+
+  // If a variable is not specified, place data values in local scope.
+  if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+
+  source = "var __t,__p='',__j=Array.prototype.join," +
+    "print=function(){__p+=__j.call(arguments,'');};\n" +
+    source + 'return __p;\n';
+
+  var render;
+  try {
+    render = new Function(settings.variable || 'obj', '_', source);
+  } catch (e) {
+    e.source = source;
+    throw e;
+  }
+
+  var template = function(data) {
+    return render.call(this, data, _);
+  };
+
+  // Provide the compiled source as a convenience for precompilation.
+  var argument = settings.variable || 'obj';
+  template.source = 'function(' + argument + '){\n' + source + '}';
+
+  return template;
+}
+
+// Add a "chain" function. Start chaining a wrapped Underscore object.
+function chain(obj) {
+  var instance = _(obj);
+  instance._chain = true;
+  return instance;
+}
+
+// OOP
+// ---------------
+// If Underscore is called as a function, it returns a wrapped object that
+// can be used OO-style. This wrapper holds altered versions of all the
+// underscore functions. Wrapped objects may be chained.
+
+// Helper function to continue chaining intermediate results.
+function chainResult(instance, obj) {
+  return instance._chain ? _(obj).chain() : obj;
+}
+
+// Add your own custom functions to the Underscore object.
+function mixin(obj) {
+  each(functions(obj), function(name) {
+    var func = _[name] = obj[name];
+    _.prototype[name] = function() {
+      var args = [this._wrapped];
+      push.apply(args, arguments);
+      return chainResult(this, func.apply(_, args));
+    };
+  });
+  return _;
+}
+
+// Add all mutator Array functions to the wrapper.
+each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
+  var method = ArrayProto[name];
+  _.prototype[name] = function() {
+    var obj = this._wrapped;
+    method.apply(obj, arguments);
+    if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
+    return chainResult(this, obj);
+  };
+});
+
+// Add all accessor Array functions to the wrapper.
+each(['concat', 'join', 'slice'], function(name) {
+  var method = ArrayProto[name];
+  _.prototype[name] = function() {
+    return chainResult(this, method.apply(this._wrapped, arguments));
+  };
+});
+
+// Extracts the result from a wrapped and chained object.
+_.prototype.value = function() {
+  return this._wrapped;
+};
+
+// Provide unwrapping proxy for some methods used in engine operations
+// such as arithmetic and JSON stringification.
+_.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
+
+_.prototype.toString = function() {
+  return String(this._wrapped);
+};
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/global.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/module.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/module.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+
+/***/ 9:
+/*!*************************************************************************************!*\
+  !*** multi ./node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! /Users/andrewembler/Projects/concrete5/build/node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js */"./node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js");
+
+
+/***/ })
+
+/******/ });

@@ -17,7 +17,7 @@ interface ItemInterface
     /**
      * @return string
      */
-    public function getURL(): string;
+    public function getUrl(): string;
 
     /**
      * @return Item[]
