@@ -14,10 +14,7 @@ class Edit extends PresetEdit
         $entity = null;
         $em = $this->app->make(EntityManager::class);
         if (is_object($em)) {
-            $entityID = $this->request->query->get('objectID'); 
-            if (empty($entityID) && !empty($this->request->request->get('objectID'))) {
-                $entityID = $this->request->request->get('objectID');
-            }
+            $entityID = $this->request->query->get('exEntityID');
             $entity = $em->getRepository('Concrete\Core\Entity\Express\Entity')->findOneById($entityID);
             if (is_object($entity)) {
                 $this->objectID = $entityID;

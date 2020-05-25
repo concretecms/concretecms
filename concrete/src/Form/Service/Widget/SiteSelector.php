@@ -48,7 +48,7 @@ class SiteSelector
 
         if (!$includeAll && !$includeCurrent) {
             $html = <<<EOL
-        <select name="siteID" data-select="search-sites">
+        <select name="siteID" data-select="search-sites" class="form-control">
             {$sites}
         </select>
 EOL;
@@ -56,7 +56,7 @@ EOL;
         } else {
 
         $html = <<<EOL
-        <select name="siteID" data-select="search-sites">
+        <select name="siteID" data-select="search-sites" class="form-control">
             <optgroup label="{$defaults}">
             {$currentLine}
             {$allLine}

@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
@@ -16,6 +17,16 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
 
     protected $category;
     protected $entity;
+
+    /**
+     * Columns in this array can be sorted via the request.
+     *
+     * @var array
+     */
+    protected $autoSortColumns = [
+        'e.exEntryDateCreated',
+        'e.exEntryDateModified',
+    ];
 
     public function __construct(Entity $entity)
     {
@@ -52,6 +63,20 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     {
         $query = $this->deliverQueryObject();
         return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct e.exEntryID)')->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    public function filterBySite(Site $site)
+    {
+        if (!$this->entity->usesSeparateSiteResultsBuckets()) {
+            // This entity doesn't have site-specific entries, so we this filter by site does not apply.
+            return false;
+        }
+
+        // This entity does use site specific buckets. So let's figure out which results node we're going to be using for
+        // this site.
+        $node = $this->entity->getEntityResultsNodeObject($site);
+        $this->query->andWhere('resultsNodeID = :resultsNodeID');
+        $this->query->setParameter('resultsNodeID', $node->getTreeNodeID());
     }
 
     public function sortByDisplayOrderAscending()

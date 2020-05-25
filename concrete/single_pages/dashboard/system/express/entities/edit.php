@@ -74,52 +74,70 @@
 
             </fieldset>
             <fieldset>
-                <legend><?=t('Results Folder Location')?></legend>
-                <input type="hidden" name="entity_results_node_id" value="<?=$folder->getTreeNodeID()?>">
+                <legend><?=t('Results')?></legend>
+                <input type="hidden" name="entity_results_parent_node_id" value="<?=$resultsParentFolder->getTreeNodeID()?>">
 
-                <div data-tree="<?=$tree->getTreeID()?>">
-                </div>
+                <?php if ($isMultisiteEnabled) { ?>
+                    <div class="form-group">
+                        <label class="control-label"><?=t('Share results across all sites')?></label>
+                        <div class="form-check">
+                            <?= $form->radio('use_separate_site_result_buckets', false, $entity->usesSeparateSiteResultsBuckets(), ["class" => "form-check-input", "id" => "use_separate_site_result_buckets1"]) ?>
+                            <?= $form->label('use_separate_site_result_buckets1', t('Disabled - results are shared across all sites.'), ["form-check-label"]);?>
+                        </div>
+                        <div class="form-check">
+                            <?= $form->radio('use_separate_site_result_buckets', true, $entity->usesSeparateSiteResultsBuckets(), ["class" => "form-check-input", "id" => "use_separate_site_result_buckets2"]) ?>
+                            <?= $form->label('use_separate_site_result_buckets2', t('Enabled - results are split and not shared between sites.'), ["form-check-label"]);?>
+                        </div>
 
-                <script type="text/javascript">
-                    $(function() {
+                    </div>
+                <?php } ?>
 
-                        $('[data-tree]').concreteTree({
-                            treeID: '<?=$tree->getTreeID()?>',
-                            ajaxData: {
-                                displayOnly: 'express_entry_category'
-                            },
-                            <?php if (is_object($folder)) { ?>
-                                selectNodesByKey: [<?=$folder->getTreeNodeID()?>],
-                                onSelect : function(nodes) {
-                                    if (nodes.length) {
-                                        $('input[name=entity_results_node_id]').val(nodes[0]);
-                                    } else {
-                                        $('input[name=entity_results_node_id]').val('');
-                                    }
+                <div class="form-group">
+                    <label class="control-label"><?=t('Folder Location')?></label>
+                    <div data-tree="<?=$tree->getTreeID()?>">
+                    </div>
+
+                    <script type="text/javascript">
+                        $(function() {
+
+                            $('[data-tree]').concreteTree({
+                                treeID: '<?=$tree->getTreeID()?>',
+                                ajaxData: {
+                                    displayOnly: 'express_entry_category'
                                 },
-                            <?php } ?>
-                            'chooseNodeInForm': 'single'
-                        });
-
-                        $('[data-dialog]').on('click', function() {
-                            var $element = $('#ccm-dialog-' + $(this).attr('data-dialog'));
-                            if ($(this).attr('data-dialog-title')) {
-                                var title = $(this).attr('data-dialog-title');
-                            } else {
-                                var title = $(this).text();
-                            }
-                            jQuery.fn.dialog.open({
-                                element: $element,
-                                modal: true,
-                                width: 320,
-                                title: title,
-                                height: 'auto'
+                                <?php if (is_object($resultsParentFolder)) { ?>
+                                    selectNodesByKey: [<?=$resultsParentFolder->getTreeNodeID()?>],
+                                    onSelect : function(nodes) {
+                                        if (nodes.length) {
+                                            $('input[name=entity_results_parent_node_id]').val(nodes[0]);
+                                        } else {
+                                            $('input[name=entity_results_parent_node_id]').val('');
+                                        }
+                                    },
+                                <?php } ?>
+                                'chooseNodeInForm': 'single'
                             });
+
+                            $('[data-dialog]').on('click', function() {
+                                var $element = $('#ccm-dialog-' + $(this).attr('data-dialog'));
+                                if ($(this).attr('data-dialog-title')) {
+                                    var title = $(this).attr('data-dialog-title');
+                                } else {
+                                    var title = $(this).text();
+                                }
+                                jQuery.fn.dialog.open({
+                                    element: $element,
+                                    modal: true,
+                                    width: 320,
+                                    title: title,
+                                    height: 'auto'
+                                });
+                            });
+
+
                         });
-
-
-                    });
-                </script>
+                    </script>
+                </div>
 
             </fieldset>
             <div class="ccm-dashboard-form-actions-wrapper">

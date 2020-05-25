@@ -55,7 +55,8 @@ class Manager extends FieldManager
     protected function populateGroups()
     {
         $this->addGroup(t('Core Properties'), [
-            new KeywordsField()
+            new KeywordsField(),
+            new SiteField(),
         ]);
 
         $associations = $this->expressCategory->getExpressEntity()->getAssociations();
