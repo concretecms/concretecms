@@ -37,6 +37,7 @@ use RuntimeException;
 use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
+use Concrete\Core\File\DownloadStatistics;
 
 class File extends Controller
 {
@@ -338,6 +339,7 @@ class File extends Controller
     public function download()
     {
         $files = $this->getRequestFiles('canViewFileInFileManager');
+        $downloadStatistics = $this->app->make(DownloadStatistics::class);
         if (count($files) > 1) {
             $fh = $this->app->make('helper/file');
             $vh = $this->app->make('helper/validation/identifier');
@@ -358,7 +360,7 @@ class File extends Controller
                         $filename = str_replace('.' . $extension, '', $filename) . '_' . $key . '.' . $extension;
                     }
                     $zip->addFromString($filename, $f->getFileContents());
-                    $f->trackDownload();
+                    $downloadStatistics->trackDownload($f->getApprovedVersion());
                 }
                 $zip->close();
                 $fh->forceDownload($zipFile);
@@ -373,7 +375,7 @@ class File extends Controller
             } else {
                 $fv = $f->getApprovedVersion();
             }
-            $f->trackDownload();
+            $downloadStatistics->trackDownload($f->getApprovedVersion());
             $f->forceDownload();
         }
     }

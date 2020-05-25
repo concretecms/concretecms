@@ -7,6 +7,7 @@ use Page;
 use Permissions;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\File\File;
+use Concrete\Core\File\DownloadStatistics;
 
 class DownloadFile extends PageController
 {
@@ -121,7 +122,7 @@ class DownloadFile extends PageController
     protected function download(\Concrete\Core\Entity\File\File $file, $rcID = null)
     {
         $filename = $file->getFilename();
-        $file->trackDownload($rcID);
+        $this->app->make(DownloadStatistics::class)->trackDownload($file->getApprovedVersion(), $rcID ? (int) $rcID : null);
         $fsl = $file->getFileStorageLocationObject();
         $configuration = $fsl->getConfigurationObject();
         $fv = $file->getVersion();
@@ -141,8 +142,8 @@ class DownloadFile extends PageController
      */
     protected function force_download($file, $rcID = null)
     {
-        $file->trackDownload($rcID);
-
+        $this->app->make(DownloadStatistics::class)->trackDownload($file->getApprovedVersion(), $rcID ? (int) $rcID : null);
+        
         // Magic call to approved FileVersion
         return $file->forceDownload();
     }

@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\File\DownloadStatistics;
 use Concrete\Core\File\Event\FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Importer;
@@ -667,7 +668,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function delete($removeNode = true)
     {
         // first, we remove all files from the drive
-        $db = Core::make(Connection::class);
+        $app = app();
+        $db = $app->make(Connection::class);
         $em = $db->getEntityManager();
         $em->beginTransaction();
         try {
@@ -694,7 +696,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
             $db->Execute('delete from FileSetFiles where fID = ?', [$this->fID]);
             $db->Execute('delete from FileSearchIndexAttributes where fID = ?', [$this->fID]);
-            $db->Execute('delete from DownloadStatistics where fID = ?', [$this->fID]);
+            $app->make(DownloadStatistics::class)->deleteDownloadsForFile((int) $this->fID);
             $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
             $db->Execute('delete from FileImageThumbnailPaths where fileID = ?', [$this->fID]);
             $db->Execute('delete from Files where fID = ?', [$this->fID]);
@@ -755,68 +757,48 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Total number of downloads for a file.
+     * @deprecated Use $app->make(\Concrete\Core\File\DownloadStatistics::class)->getDownloadCount($file->getFileID())
      *
      * @return int
      */
     public function getTotalDownloads()
     {
-        $db = Loader::db();
-
-        return $db->GetOne('select count(*) from DownloadStatistics where fID = ?', [$this->getFileID()]);
+        return app(DownloadStatistics::class)->getDownloadCount($this->getFileID());
     }
 
     /**
-     * Get the download statistics for the current file.
+     * @deprecated Use $app->make(\Concrete\Core\File\DownloadStatistics::class)->getDownloads($file->getFileID(), null, $limit)
      *
-     * @param int $limit max number of stats to retrieve
+     * @param int $limit
      *
      * @return array
      */
     public function getDownloadStatistics($limit = 20)
     {
-        $db = Loader::db();
-        $limitString = '';
-        if ($limit != false) {
-            $limitString = 'limit ' . intval($limit);
+        $list = app(DownloadStatistics::class)->getDownloads($this->getFileID(), null, $limit ? (int) $limit : null)->getList();
+        $result = [];
+        foreach ($list as $download) {
+            $result[] = [
+                'dsID' => $download->getDownloadID(),
+                'fID' => $download->getFileID(),
+                'fvID' => $download->getFileVersionID(),
+                'uID' => $download->getUserID(),
+                'rcID' => $download->getPageID(),
+                'timestamp' => $download->getTimestamp()->format('Y-M-D H:i:s'),
+            ];
         }
 
-        if (is_object($this) && $this instanceof self) {
-            return $db->getAll(
-                "SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc {$limitString}",
-                [$this->getFileID()]
-            );
-        } else {
-            return $db->getAll("SELECT * FROM DownloadStatistics ORDER BY timestamp desc {$limitString}");
-        }
+        return $result;
     }
 
     /**
-     * Tracks File Download, takes the cID of the page that the file was downloaded from.
+     * @deprecated use $app->make(\Concrete\Core\File\DownloadStatistics::class)->getDownloads($file->getApprovedVersion(), $rcID)
      *
-     * @param int $rcID
+     * @param int|null $rcID
      */
     public function trackDownload($rcID = null)
     {
-        $u = Core::make(User::class);
-        $uID = intval($u->getUserID());
-        $fv = $this->getApprovedVersion();
-        $fvID = $fv->getFileVersionID();
-        if (!isset($rcID) || !is_numeric($rcID)) {
-            $rcID = 0;
-        }
-
-        $fve = new \Concrete\Core\File\Event\FileAccess($fv);
-        Events::dispatch('on_file_download', $fve);
-
-        $config = Core::make('config');
-        if ($config->get('concrete.statistics.track_downloads')) {
-            $db = Loader::db();
-            $db->Execute(
-                'insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',
-                [$this->fID, intval($fvID), $uID, $rcID]
-            );
-        }
+        app(DownloadStatistics::class)->trackDownload($this->getApprovedVersion(), $rcID ? (int) $rcID : null);
     }
 
     /**

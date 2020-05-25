@@ -48,6 +48,7 @@ use League\Flysystem\AdapterInterface;
 use League\URL\URLInterface;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\File\DownloadStatistics;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
@@ -260,7 +261,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
         $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
-        $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->application->make(DownloadStatistics::class)->resetDownloadsForUser((int) $this->getUserID());
 
         // We need to clear out the doctrine proxies for userSignups or we will get a Doctrine Error
         /** @var UserSignup[] $userSignups */
