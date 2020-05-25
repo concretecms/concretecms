@@ -59,41 +59,38 @@ class FileManager
         $request = $app->make(Request::class);
         $vh = $app->make('helper/validation/numbers');
 
-        $fileSelectorArguments = [
-            'inputName' => (string) $inputName,
-            'fID' => null,
+        $fID = 0;
+        $chooseText = t('Choose File');
+        $inputName = (string) $inputName;
 
-
-            'filters' => [],
-        ];
+        if ($chooseText !== '') {
+            $chooseText = (string) $chooseText;
+        }
         if ($vh->integer($request->request->get($inputName))) {
             $file = $app->make(EntityManagerInterface::class)->find(FileEntity::class, $request->request->get($inputName));
             if ($file !== null) {
-                $fileSelectorArguments['fID'] = $file->getFileID();
+                $fID = $file->getFileID();
             }
         } elseif ($vh->integer($preselectedFile)) {
-            $fileSelectorArguments['fID'] = (int) $preselectedFile;
+            $fID = (int) $preselectedFile;
         } elseif (is_object($preselectedFile)) {
-            $fileSelectorArguments['fID'] = (int) $preselectedFile->getFileID();
-        }
-        if ($fileSelectorArguments['fID'] === null && (string) $chooseText !== '') {
-            $fileSelectorArguments['chooseText'] = (string) $chooseText;
+            $fID = (int) $preselectedFile->getFileID();
         }
 
+        /*
+         *later
+        */
+        /*
         if (isset($args['filters']) && is_array($args['filters'])) {
             $fileSelectorArguments['filters'] = $args['filters'];
         }
+        */
 
-        $fileSelectorArgumentsJson = json_encode($fileSelectorArguments);
         $html = <<<EOL
-<div class="ccm-file-selector" data-file-selector="{$inputID}"></div>
-<script type="text/javascript">
-$(function() {
-    $('[data-file-selector="{$inputID}"]').concreteFileSelector({$fileSelectorArgumentsJson});
-});
-</script>
+<div vue-enabled>
+    <concrete-file-input :file-id="{$fID}" choose-text="{$chooseText}" input-name="{$inputName}"></concrete-file-input>
+</div>
 EOL;
-
         return $html;
     }
 
