@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a1',
     'version_installed' => '9.0.0a1',
-    'version_db' => '20200203000000', // the key of the latest database migration
+    'version_db' => '20200523051311', // the key of the latest database migration
 
     /*
      * Installation status
@@ -115,7 +115,7 @@ return [
             // Include the BOM (byte-order mark) in generated CSV files?
             // @var bool
             'include_bom' => false,
-            'datetime_format' => 'ATOM', 
+            'datetime_format' => 'ATOM',
         ],
     ],
 
@@ -185,7 +185,7 @@ return [
          * @var bool
          */
         'blocks' => true,
-        
+
         /*
          * Cache Theme CSS/JS
          *
@@ -873,7 +873,7 @@ return [
         'name' => false,
 
         /*
-         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed = 
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed =
          * standard behavior, "custom" = custom image.
          *
          * @var string "none"|"feed"|"custom"
@@ -886,7 +886,7 @@ return [
          * @var null|string Custom URL for background image.
          */
         'background_url' => null,
-        
+
     ],
     'session' => [
         'name' => 'CONCRETE5',

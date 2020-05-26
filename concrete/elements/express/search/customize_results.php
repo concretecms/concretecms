@@ -15,12 +15,11 @@ foreach($available->getColumns() as $column) {
         }
     }
 }
-
-$current = $provider->getCurrentColumnSet();
+$current = isset($query) ? $query->getColumns() : $provider->getDefaultColumnSet();
 $all = $provider->getAllColumnSet();
 $list = $provider->getCustomAttributeKeys();
 $itemsPerPageOptions = $provider->getItemsPerPageOptions();
-$itemsPerPage = $provider->getItemsPerPage();
+$itemsPerPage = isset($query) ? $query->getItemsPerPage() : $provider->getItemsPerPage();
 $form = Core::make('helper/form');
 
 if (!isset($type)) {
@@ -31,7 +30,7 @@ if (!isset($type)) {
 <section data-section="customize-results">
 
     <fieldset>
-        <legend><?= t('Choose Columns') ?></legend>
+        <legend class="mb-3"><?= t('Choose Columns') ?></legend>
 
         <?php
         if (count($coreProperties)) {
@@ -42,11 +41,16 @@ if (!isset($type)) {
                 foreach ($coreProperties as $col) {
                     ?>
                     <div class="form-check">
-                        <?= $form->checkbox($col->getColumnKey(), 1,
-                            $current->contains($col)) ?>
-                        <label for="<?=$col->getColumnKey()?>" class="form-check-label"><?= $col->getColumnName() ?></label>
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="<?= $col->getColumnKey() ?>"
+                               id="<?= $col->getColumnKey() ?>"
+                               value="1"
+                               <?php if ($current->contains($col)) { ?>checked<?php } ?>>
+                        <label class="form-check-label"
+                               for="<?= $col->getColumnKey() ?>"><?= $col->getColumnName() ?></label>
                     </div>
-                    Z<?php
+                    <?php
                 }
                 ?>
             </div>
@@ -58,12 +62,20 @@ if (!isset($type)) {
         if (count($associations)) {
             ?>
             <div class="form-group">
-                <label class="control-label"><?= t('Associations') ?></label>
+                <label class="control-label"><?= t('Standard Properties') ?></label>
                 <?php
                 foreach ($associations as $col) {
                     ?>
-                    <div class="checkbox"><label><?= $form->checkbox($col->getColumnKey(), 1,
-                                $current->contains($col)) ?> <span><?= $col->getColumnName() ?></span></label></div>
+                    <div class="form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="<?= $col->getColumnKey() ?>"
+                               id="<?= $col->getColumnKey() ?>"
+                               value="1"
+                               <?php if ($current->contains($col)) { ?>checked<?php } ?>>
+                        <label class="form-check-label"
+                               for="<?= $col->getColumnKey() ?>"><?= $col->getColumnName() ?></label>
+                    </div>
                     <?php
                 }
                 ?>
@@ -71,7 +83,6 @@ if (!isset($type)) {
             <?php
         }
         ?>
-
 
         <?php
         if (count($list)) {
@@ -81,9 +92,16 @@ if (!isset($type)) {
                 <?php
                 foreach ($list as $ak) {
                     ?>
-                    <div class="checkbox"><label><?= $form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1,
-                                $current->contains($ak)) ?>
-                            <span><?= $ak->getAttributeKeyDisplayName() ?></span></label></div>
+                    <div class="form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
+                               id="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
+                               value="1"
+                               <?php if ($current->contains($ak)) { ?>checked<?php } ?>>
+                        <label class="form-check-label"
+                               for="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"><?= $ak->getAttributeKeyDisplayName() ?></label>
+                    </div>
                     <?php
                 }
                 ?>
@@ -92,7 +110,7 @@ if (!isset($type)) {
         }
         ?>
     </fieldset>
-
+    <hr>
     <fieldset>
         <legend><?= t('Column Order') ?></legend>
 
@@ -111,7 +129,7 @@ if (!isset($type)) {
             ?>
         </ul>
     </fieldset>
-
+    <hr>
     <fieldset>
         <legend><?= t('Sort By') ?></legend>
 
@@ -120,13 +138,13 @@ if (!isset($type)) {
         <div class="form-group">
             <label class="control-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
-                name="fSearchDefaultSort">
+                    class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
+                    name="fSearchDefaultSort">
                 <?php
                 foreach ($all->getSortableColumns() as $col) {
                     ?>
                     <option id="<?= $col->getColumnKey() ?>"
-                            value="<?= $col->getColumnKey() ?>" <?php if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="selected" <?php } ?>><?= $col->getColumnName() ?></option>
+                            value="<?= $col->getColumnKey() ?>" <?php if ($ds && $col->getColumnKey() == $ds->getColumnKey()) { ?> selected="selected" <?php } ?>><?= $col->getColumnName() ?></option>
                     <?php
                 }
                 ?>
@@ -136,18 +154,19 @@ if (!isset($type)) {
         <div class="form-group">
             <label class="control-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                class="form-control" data-search-select-default-column-direction="<?= $type ?>"
-                name="fSearchDefaultSortDirection">
+                    class="form-control" data-search-select-default-column-direction="<?= $type ?>"
+                    name="fSearchDefaultSortDirection">
                 <option
-                    value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
+                        value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
                 <option
-                    value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="selected"<?php } ?>><?= t('Descending') ?></option>
+                        value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="selected"<?php } ?>><?= t('Descending') ?></option>
             </select>
         </div>
 
     </fieldset>
 
     <?php if ($includeNumberOfResults) { ?>
+        <hr>
 
         <fieldset>
             <legend><?= t('Number of Results') ?></legend>
@@ -156,7 +175,7 @@ if (!isset($type)) {
                 foreach ($itemsPerPageOptions as $option) {
                     ?>
                     <option <?php if ($itemsPerPage == $option) { ?> selected="selected"<?php } ?>
-                        value="<?= $option ?>">
+                            value="<?= $option ?>">
                         <?= $option ?>
                     </option>
                     <?php
@@ -179,7 +198,7 @@ if (!isset($type)) {
             opacity: 0.5
         });
         $form.on('click', 'input[type=checkbox]', function () {
-            var label = $(this).parent().find('span').html(),
+            var label = $(this).parent().find('label').html(),
                 id = $(this).attr('id');
 
             if ($(this).prop('checked')) {
