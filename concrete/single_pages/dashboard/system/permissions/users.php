@@ -23,7 +23,7 @@
 
 	<div class="ccm-dashboard-form-actions-wrapper">
 	    <div class="ccm-dashboard-form-actions">
-            <a href="<?=$view->url('/dashboard/system/permissions/users')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+            <a href="<?=$view->url('/dashboard/system/permissions/users')?>" class="btn btn-secondary pull-left"><?=t('Cancel')?></a>
             <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
 	    </div>
 	</div>
