@@ -204,6 +204,7 @@ class StartingPointPackage extends Package
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
         \Concrete\Core\Tree\TreeType::add('express_entry_results');
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_results');
+        \Concrete\Core\Tree\Node\NodeType::add('express_entry_site_results');
 
         $tree = ExpressEntryResults::add();
         $node = $tree->getRootTreeNodeObject();

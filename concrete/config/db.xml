@@ -4231,6 +4231,21 @@
     </index>
   </table>
 
+  <table name="TreeExpressEntrySiteResultNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="siteID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <index name="siteID">
+      <col>siteID</col>
+    </index>
+  </table>
+
+
   <table name="TreeFileFolderNodes">
     <field name="treeNodeID" type="integer" size="11">
       <unsigned/>

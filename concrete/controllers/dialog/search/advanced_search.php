@@ -21,20 +21,10 @@ abstract class AdvancedSearch extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/search/advanced_search';
     protected $supportsSavedSearch = true;
-    public $objectID = null;
-
-    public function getObjectID()
-    {
-        return (string) $this->objectID;
-    }
 
     abstract public function getFieldManager();
 
     abstract public function getSavedSearchBaseURL(SavedSearch $search);
-
-    abstract public function getBasicSearchBaseURL();
-
-    abstract public function getCurrentSearchBaseURL();
 
     abstract public function getSavedSearchEntity();
 
@@ -46,6 +36,11 @@ abstract class AdvancedSearch extends BackendInterfaceController
     public function getSubmitAction()
     {
         return $this->action('submit');
+    }
+
+    public function getSavePresetAction()
+    {
+        return $this->action('save_preset');
     }
 
     public function getSubmitMethod()
