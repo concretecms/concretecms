@@ -57,7 +57,7 @@ $form = Loader::helper('form');
     
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 

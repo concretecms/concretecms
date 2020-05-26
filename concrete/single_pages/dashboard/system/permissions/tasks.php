@@ -23,8 +23,8 @@
 
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=$view->url('/dashboard/system/permissions/tasks')?>" class="btn btn-secondary pull-left"><?=t('Cancel')?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <a href="<?=$view->url('/dashboard/system/permissions/tasks')?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
+            <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 	</form>
