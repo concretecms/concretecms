@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Core\User;
 
-use Concrete\Core\Antispam\Service;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Key\UserKey;
@@ -16,6 +16,7 @@ use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Export\Item\User as UserExporter;
+use Concrete\Core\File\DownloadStatistics;
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
@@ -35,7 +36,6 @@ use Concrete\Core\User\Event\UserInfoWithPassword as UserInfoWithPasswordEvent;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Concrete\Core\User\PrivateMessage\PrivateMessage;
-use Concrete\Core\User\User as ConcreteUser;
 use Concrete\Core\Utility\IPAddress;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRequest;
@@ -48,7 +48,6 @@ use League\Flysystem\AdapterInterface;
 use League\URL\URLInterface;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Concrete\Core\File\DownloadStatistics;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
@@ -87,7 +86,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     /**
      * @var EventDispatcher|null
      */
-    protected $director = null;
+    protected $director;
 
     /**
      * @param EntityManagerInterface $entityManager
@@ -110,6 +109,26 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function __toString()
     {
         return 'UserInfo: ' . $this->getUserID();
+    }
+
+    /**
+     * Magic method for user attributes. This is db expensive but pretty damn cool
+     * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();.
+     *
+     * @param string $nm
+     * @param array $a
+     *
+     * @return mixed|null
+     */
+    public function __call($nm, $a)
+    {
+        if (substr($nm, 0, 7) == 'getUser') {
+            $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
+            $nm = strtolower($nm);
+            $nm = str_replace('get_user_', '', $nm);
+
+            return $this->getAttribute($nm);
+        }
     }
 
     /**
@@ -354,9 +373,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      * @param PrivateMessage $inReplyTo
      *
      * @return ErrorList|false|null Returns:
-     * - an error if the send limit has been reached
-     * - false if the message is detected as spam
-     * - null if no errors occurred
+     *                              - an error if the send limit has been reached
+     *                              - false if the message is detected as spam
+     *                              - null if no errors occurred
      */
     public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = null)
     {
@@ -364,7 +383,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             return Limit::getErrorObject();
         }
         $antispam = $this->application->make('helper/validation/antispam');
-        /* @var Service $antispam */
         $messageText = t('Subject: %s', $subject);
         $messageText .= "\n";
         $messageText .= t('Message: %s', $text);
@@ -457,9 +475,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function getUserObject()
     {
         // returns a full user object - groups and everything - for this userinfo object
-        $nu = User::getByUserID($this->getUserID());
-
-        return $nu;
+        return User::getByUserID($this->getUserID());
     }
 
     /**
@@ -594,7 +610,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             if (!empty($groupObjects)) {
                 $inStr = implode(',', array_keys($groupObjects));
                 $this->connection->executeQuery(
-                    "delete from UserGroups where uID = ? and gID in ($inStr)",
+                    "delete from UserGroups where uID = ? and gID in ({$inStr})",
                     [$this->getUserID()]
                 );
                 $userObject = $this->getUserObject();
@@ -926,7 +942,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @param UserAttributeKey[] $attributes
+     * @param \UserAttributeKey[] $attributes
      */
     public function saveUserAttributesForm($attributes)
     {
@@ -999,20 +1015,75 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * Magic method for user attributes. This is db expensive but pretty damn cool
-     * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();.
+     * @deprecated Use \Core::make('user/registration')->create()
      *
-     * @return mixed|null
+     * @param array $data
      */
-    public function __call($nm, $a)
+    public static function add($data)
     {
-        if (substr($nm, 0, 7) == 'getUser') {
-            $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
-            $nm = strtolower($nm);
-            $nm = str_replace('get_user_', '', $nm);
+        return Core::make('user/registration')->create($data);
+    }
 
-            return $this->getAttribute($nm);
-        }
+    /**
+     * @deprecated Use \Core::make('user/registration')->createSuperUser()
+     *
+     * @param string $uPasswordEncrypted
+     * @param string $uEmail
+     */
+    public static function addSuperUser($uPasswordEncrypted, $uEmail)
+    {
+        return Core::make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+    }
+
+    /**
+     * @deprecated Use \Core::make('user/registration')->createFromPublicRegistration()
+     *
+     * @param array $data
+     */
+    public static function register($data)
+    {
+        return Core::make('user/registration')->createFromPublicRegistration($data);
+    }
+
+    /**
+     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByID()
+     *
+     * @param int $uID
+     */
+    public static function getByID($uID)
+    {
+        return Core::make(UserInfoRepository::class)->getByID($uID);
+    }
+
+    /**
+     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByName()
+     *
+     * @param string $uName
+     */
+    public static function getByUserName($uName)
+    {
+        return Core::make(UserInfoRepository::class)->getByName($uName);
+    }
+
+    /**
+     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByEmail()
+     *
+     * @param string $uEmail
+     */
+    public static function getByEmail($uEmail)
+    {
+        return Core::make(UserInfoRepository::class)->getByEmail($uEmail);
+    }
+
+    /**
+     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByValidationHash()
+     *
+     * @param string $uHash
+     * @param bool $unredeemedHashesOnly
+     */
+    public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
+    {
+        return Core::make(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
 
     /**
@@ -1025,61 +1096,5 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         }
 
         return $this->director;
-    }
-
-    /**
-     * @deprecated Use \Core::make('user/registration')->create()
-     */
-    public static function add($data)
-    {
-        return Core::make('user/registration')->create($data);
-    }
-
-    /**
-     * @deprecated Use \Core::make('user/registration')->createSuperUser()
-     */
-    public static function addSuperUser($uPasswordEncrypted, $uEmail)
-    {
-        return Core::make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
-    }
-
-    /**
-     * @deprecated Use \Core::make('user/registration')->createFromPublicRegistration()
-     */
-    public static function register($data)
-    {
-        return Core::make('user/registration')->createFromPublicRegistration($data);
-    }
-
-    /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByID()
-     */
-    public static function getByID($uID)
-    {
-        return Core::make(UserInfoRepository::class)->getByID($uID);
-    }
-
-    /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByName()
-     */
-    public static function getByUserName($uName)
-    {
-        return Core::make(UserInfoRepository::class)->getByName($uName);
-    }
-
-    /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByEmail()
-     */
-    public static function getByEmail($uEmail)
-    {
-        return Core::make(UserInfoRepository::class)->getByEmail($uEmail);
-    }
-
-    /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByValidationHash()
-     */
-    public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
-    {
-        return Core::make(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
 }

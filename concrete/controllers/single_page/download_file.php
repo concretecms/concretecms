@@ -1,13 +1,13 @@
 <?php
+
 namespace Concrete\Controller\SinglePage;
 
-use PageController;
-use Core;
-use Page;
-use Permissions;
 use Concrete\Core\Entity\File\File as FileEntity;
-use Concrete\Core\File\File;
 use Concrete\Core\File\DownloadStatistics;
+use Concrete\Core\File\File;
+use Page;
+use PageController;
+use Permissions;
 
 class DownloadFile extends PageController
 {
@@ -15,7 +15,7 @@ class DownloadFile extends PageController
 
     /**
      * @param int $fID File ID
-     * @param null|int $rcID
+     * @param int|null $rcID
      */
     public function view($fID = 0, $rcID = null)
     {
@@ -42,9 +42,9 @@ class DownloadFile extends PageController
                 if (!$file->getPassword()) {
                     if ($this->force) {
                         return $this->force_download($file, $rcID);
-                    } else {
-                        return $this->download($file, $rcID);
                     }
+
+                    return $this->download($file, $rcID);
                 }
                 // otherwise show the form
                 $this->set('force', $this->force);
@@ -59,7 +59,7 @@ class DownloadFile extends PageController
 
     /**
      * @param int $fID File ID
-     * @param null|int $rcID
+     * @param int|null $rcID
      */
     public function force($fID = 0, $rcID = null)
     {
@@ -83,7 +83,7 @@ class DownloadFile extends PageController
             $fre = $file->getFileResource();
             $fsl = $file->getFileStorageLocationObject()->getFileSystemObject();
             $mimeType = $file->getMimeType();
-            header("Content-type: $mimeType");
+            header("Content-type: {$mimeType}");
             echo $file->getFileContents();
             $this->app->shutdown();
         }
@@ -103,12 +103,12 @@ class DownloadFile extends PageController
             if ($f->getPassword() == $this->post('password')) {
                 if ($this->post('force')) {
                     return $this->force_download($f);
-                } else {
-                    return $this->download($f);
                 }
+
+                return $this->download($f);
             }
 
-            $this->set('error', t("Password incorrect. Please try again."));
+            $this->set('error', t('Password incorrect. Please try again.'));
             $this->set('force', ($this->post('force') ? 1 : 0));
 
             $this->view($fID, $rcID);
@@ -117,7 +117,7 @@ class DownloadFile extends PageController
 
     /**
      * @param \Concrete\Core\Entity\File\File $file
-     * @param null|int $rcID
+     * @param int|null $rcID
      */
     protected function download(\Concrete\Core\Entity\File\File $file, $rcID = null)
     {
@@ -127,10 +127,10 @@ class DownloadFile extends PageController
         $configuration = $fsl->getConfigurationObject();
         $fv = $file->getVersion();
         if ($configuration->hasPublicURL()) {
-            return \Redirect::url($fv->getURL(),'303')->send();
-        } else {
-            return $fv->forceDownload();
+            return \Redirect::url($fv->getURL(), '303')->send();
         }
+
+        return $fv->forceDownload();
     }
 
     /**
@@ -138,12 +138,12 @@ class DownloadFile extends PageController
      * Returns null if approved version wasn't found.
      *
      * @param File $file
-     * @param null|int $rcID
+     * @param int|null $rcID
      */
     protected function force_download($file, $rcID = null)
     {
         $this->app->make(DownloadStatistics::class)->trackDownload($file->getApprovedVersion(), $rcID ? (int) $rcID : null);
-        
+
         // Magic call to approved FileVersion
         return $file->forceDownload();
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
@@ -7,7 +8,7 @@ use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
-use Concrete\Core\File\Command\RescanFileCommand;
+use Concrete\Core\File\DownloadStatistics;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
@@ -15,17 +16,13 @@ use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Service\VolatileDirectory;
-use Concrete\Core\Foundation\Queue\Batch\BatchDispatcher;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Url;
-use Concrete\Core\View\View;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -34,17 +31,15 @@ use IPLib\Factory as IPFactory;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
-use Concrete\Core\File\DownloadStatistics;
 
 class File extends Controller
 {
     /**
      * The file to be replaced (if any).
      *
-     * @var \Concrete\Core\Entity\File\File|null|false FALSE when uninitialized, NULL when none
+     * @var \Concrete\Core\Entity\File\File|false|null FALSE when uninitialized, NULL when none
      */
     private $fileToBeReplaced = false;
 
@@ -58,7 +53,7 @@ class File extends Controller
     /**
      * The original page to be used when importing files (if any).
      *
-     * @var \Concrete\Core\Page\Page|null|false FALSE when uninitialized, NULL when none
+     * @var \Concrete\Core\Page\Page|false|null FALSE when uninitialized, NULL when none
      */
     private $importOriginalPage = false;
 
@@ -104,6 +99,7 @@ class File extends Controller
         $files = $this->getRequestFiles('canEditFileContents');
         $factory = new RescanFileBatchProcessFactory();
         $processor = $this->app->make(Processor::class);
+
         return $processor->process($factory, $files);
     }
 
@@ -434,7 +430,7 @@ class File extends Controller
             $f = $fID ? $em->find(FileEntity::class, $fID) : null;
             if ($f !== null) {
                 $fp = new ConcretePermissions($f);
-                if ($fp->$permission()) {
+                if ($fp->{$permission}()) {
                     $files[] = $f;
                 }
             }
@@ -732,11 +728,10 @@ class File extends Controller
         switch ($this->request->request->get('responseFormat')) {
             case 'dropzone':
                 if ($errors->has()) {
-                    return $responseFactory->create(json_encode($errors->toText()), 422, ['Content-Type' => 'application/json; charset='.APP_CHARSET]);
+                    return $responseFactory->create(json_encode($errors->toText()), 422, ['Content-Type' => 'application/json; charset=' . APP_CHARSET]);
                 }
                 break;
             default:
-
         }
         $editResponse = new FileEditResponse();
         $editResponse->setError($errors);
@@ -771,12 +766,12 @@ class File extends Controller
                 $deleteFile = true;
 
                 return $this->combineFileChunks($dzuuid, $file->getPath(), $dzTotalChunks, $file);
-            } else {
-                return null;
             }
-        } else {
-            return $file;
+
+            return null;
         }
+
+        return $file;
     }
 
     /**
@@ -788,7 +783,7 @@ class File extends Controller
      */
     private function isFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
     {
-        for ($i = 0; $i < $totalChunks; ++$i) {
+        for ($i = 0; $i < $totalChunks; $i++) {
             if (!file_exists($tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i)) {
                 return false;
             }
@@ -809,7 +804,7 @@ class File extends Controller
     {
         $finalFilePath = $tempPath . DIRECTORY_SEPARATOR . $fileUuid;
         $finalFile = fopen($finalFilePath, 'wb');
-        for ($i = 0; $i < $totalChunks; ++$i) {
+        for ($i = 0; $i < $totalChunks; $i++) {
             $chunkFile = $tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i;
             $addition = fopen($chunkFile, 'rb');
             stream_copy_to_stream($addition, $finalFile);
