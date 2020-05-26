@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Http\Middleware\FractalNegotiatorMiddleware;
+
 class SystemRouteList implements RouteListInterface
 {
     public function loadRoutes(Router $router)
@@ -71,7 +73,9 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('attributes.php');
 
-        $router->buildGroup()->routes('search.php');
+        $router->buildGroup()
+            ->addMiddleware(FractalNegotiatorMiddleware::class)
+            ->routes('search.php');
 
         $router->buildGroup()->routes('express.php');
 

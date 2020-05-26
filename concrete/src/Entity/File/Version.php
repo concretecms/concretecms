@@ -1691,7 +1691,7 @@ class Version implements ObjectInterface
                 $type = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
                 $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
                 if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
-                    $result .= ' data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
+                    $result .= ' srcset="' . $this->getThumbnailURL($type->getDoubledVersion()) . ' 2x"';
                 }
                 $result .= ' />';
             } else {
@@ -1723,7 +1723,7 @@ class Version implements ObjectInterface
             if ($this->fvHasListingThumbnail) {
                 $result = '<img class="ccm-file-manager-list-thumbnail ccm-thumbnail-' . $config->get('concrete.file_manager.images.preview_image_size') . '" src="' . $this->getThumbnailURL($listingType->getBaseVersion()) . '"';
                 if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
-                    $result .= ' data-at2x="' . $this->getThumbnailURL($listingType->getDoubledVersion()) . '"';
+                    $result .= ' srcset="' . $this->getThumbnailURL($listingType->getDoubledVersion()) . ' 2x"';
                 }
                 if ($config->get('concrete.file_manager.images.preview_image_popover')) {
                     $result .= ' data-hover-image="' . $this->getThumbnailURL($detailType->getBaseVersion()) . '"';
@@ -1879,6 +1879,7 @@ class Version implements ObjectInterface
         $r->fileName = $this->getFileName();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
+        $r->fvDateAdded = $this->getDateAdded()->format('F d, Y g:i a');
         $r->treeNodeMenu = new Menu($this->getfile());
 
         return $r;
