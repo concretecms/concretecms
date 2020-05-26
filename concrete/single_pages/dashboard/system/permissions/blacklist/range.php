@@ -135,7 +135,7 @@ if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
             </div>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-secondary pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+            <button class="btn btn-secondary float-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
             <button class="btn btn-danger pull-right" data-dialog-action="submit"><?= t('Delete') ?></button>
         </div>
     </div>
