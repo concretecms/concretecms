@@ -153,6 +153,7 @@ class Entries extends DashboardSitePageController
                 new SiteField(),
             ]);
             $result = $this->createSearchResult($entity, $query);
+            $this->set('pageTitle', t('%s Entries', $entity->getName()));
             $this->renderSearchResult($result);
         } else {
             $this->set('pageTitle', t('View Express Entities'));
