@@ -303,7 +303,7 @@ class Form
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
 
-        $str = '<input type="radio"' . $nameAndID . ' value="' . $value . '"' . $this->serializeMiscFields('form-check-input', $miscFields);
+        $str = '<input type="radio"' . $nameAndID . ' value="' . $value . '"' . $this->serializeMiscFields('custom-control-input', $miscFields);
         if ($checked) {
             $str .= ' checked="checked"';
         }
