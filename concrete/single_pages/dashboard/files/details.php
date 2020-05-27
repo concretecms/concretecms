@@ -247,3 +247,11 @@ $file = $fileVersion->getFile();
         </dd>
     </dl>
 </section>
+
+<script>
+$(document).ready(function() {
+    ConcreteEvent.subscribe('FileManagerReplaceFileComplete', function(e, data) {
+        location.reload();
+    });
+});
+</script>
