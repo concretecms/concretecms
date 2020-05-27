@@ -66,7 +66,7 @@ $.fn.ajaxSubmit = function(options) {
 	}
 
 	// Instead of using javascript:false always, let's only apply it for IE.
-	isMsie = /(MSIE|trident)/.test(navigator.userAgent || '');
+	isMsie = /(MSIE|Trident)/.test(navigator.userAgent || '');
 	iframeSrc = (isMsie && /^https/i.test(window.location.href || '')) ? 'javascript:false' : 'about:blank';
 
 	options = $.extend(true, {
