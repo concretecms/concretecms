@@ -7,6 +7,7 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Rescanner;
 use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
@@ -36,6 +37,28 @@ class Details extends DashboardPageController
         $this->set('thumbnail', $fileVersion->getDetailThumbnailImage());
         $this->set('attributeKeys', $this->app->make(FileCategory::class)->getList());
         $this->set('usageRecords', $this->getUsageRecorrds($fileVersion->getFile()));
+    }
+
+    public function rescan($fID = '')
+    {
+        try {
+            $fileVersion = $this->getFileVersion($fID ? (int) $fID : null);
+        } catch (UserMessageException $x) {
+            $this->flash('error', $x->getMessage());
+
+            return $this->buildRedirect('/dashboard/files/search');
+        }
+        if (!$this->token->validate("ccm-filedetails-rescan-{$fID}")) {
+            $this->flash('error', $this->token->getErrorMessage());
+
+            return $this->buildRedirect($this->action());
+        }
+
+        $this->app->make(Rescanner::class)->rescanFileVersion($fileVersion);
+
+        $this->flash('success', t('The file has been rescanned.'));
+
+        return $this->buildRedirect($this->action($fID));
     }
 
     /**

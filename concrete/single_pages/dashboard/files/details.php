@@ -34,14 +34,17 @@ $file = $fileVersion->getFile();
             <div class="mb-4">
                 <a
                     class="btn btn-secondary dialog-launch"
-                    dialog-title="<?= t('Swap') ?>"
-                    dialog-width="620" dialog-height="400"
+                    data-dialog-title="<?= t('Swap') ?>"
+                    data-dialog-width="620" data-dialog-height="400"
                     href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
                 ><?= t('Swap') ?></a>
                 <div class="text-muted"><i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i></div>
             </div>
             <div class="mb-4">
-                <button class="btn btn-secondary" onclick="alert('@todo');return false"><?= t('Rescan')?></button>
+                <form method="POST" action="<?= h($controller->action('rescan', $file->getFileID())) ?>">
+                    <?php $token->output("ccm-filedetails-rescan-{$file->getFileID()}") ?>
+                    <button type="submit" class="btn btn-secondary"><?= t('Rescan')?></button>
+                </form>
                 <div class="text-muted"><i><?= t('Automatically regenerate thumbnails for all sizes of this image.') ?></i></div>
             </div>
             <div>
