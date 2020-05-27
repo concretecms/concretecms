@@ -14,9 +14,8 @@ use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
-use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
-use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\Incoming;
+use Concrete\Core\File\Rescanner;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\File\ValidationService;
@@ -395,38 +394,8 @@ class File extends Controller
     protected function doRescan($f)
     {
         $fv = $f->getApprovedVersion();
-        $resp = $fv->refreshAttributes(false);
-        switch ($resp) {
-            case Importer::E_FILE_INVALID:
-                $errorMessage = t('File %s could not be found.', $fv->getFilename()) . '<br/>';
-                throw new UserMessageException($errorMessage, 404);
-        }
-        $config = $this->app->make('config');
-        $newFileVersion = null;
-        if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-            $processor = new AutorotateImageProcessor();
-            if ($processor->shouldProcess($fv)) {
-                if ($newFileVersion === null) {
-                    $fv = $newFileVersion = $f->createNewVersion(true);
-                }
-                $processor->setRescanThumbnails(false);
-                $processor->process($newFileVersion);
-            }
-        }
-        $width = (int)$config->get('concrete.file_manager.restrict_max_width');
-        $height = (int)$config->get('concrete.file_manager.restrict_max_height');
-        if ($width > 0 || $height > 0) {
-            $processor = new ConstrainImageProcessor($width, $height);
-            if ($processor->shouldProcess($fv)) {
-                if ($newFileVersion === null) {
-                    $fv = $newFileVersion = $f->createNewVersion(true);
-                }
-                $processor->setRescanThumbnails(false);
-                $processor->process($newFileVersion);
-            }
-        }
-        $fv->rescanThumbnails();
-        $fv->releaseImagineImage();
+        $rescanner = $this->app->make(Rescanner::class);
+        $rescanner->rescanFileVersion($fv);
     }
 
     protected function getRequestFiles($permission = 'canViewFileInFileManager')
