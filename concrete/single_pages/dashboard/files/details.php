@@ -22,6 +22,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord[] $usageRecords
  */
 //output_vars(get_defined_vars(), isset($this) ? $this : null);
+$file = $fileVersion->getFile();
 ?>
 <section>
     <h3><?= t('Preview') ?></h3>
@@ -31,7 +32,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
         <div class="ccm-file-manager-details-preview-actions">
             <div class="mb-4">
-                <button class="btn btn-secondary" onclick="alert('@todo');return false"><?= t('Swap')?></button>
+                <a
+                    class="btn btn-secondary dialog-launch"
+                    dialog-title="<?= t('Swap') ?>"
+                    dialog-width="620" dialog-height="400"
+                    href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
+                ><?= t('Swap') ?></a>
                 <div class="text-muted"><i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i></div>
             </div>
             <div class="mb-4">
@@ -73,7 +79,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <dt class="col-md-3"><?= t('Sets') ?></dt>
         <dd class="col-md-9">
             <?php
-            $fileSets = $fileVersion->getFile()->getFileSets();
+            $fileSets = $file->getFileSets();
             if ($fileSets === []) {
                 ?>
                 <i><?= t('No file set') ?></i>
@@ -127,11 +133,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?= t(/*%1$s is a user name, %2$s is a date/time*/'Added by %1$s on %2$s', h($fileVersion->getAuthorName()), h($date->formatPrettyDateTime($fileVersion->getDateAdded(), true))) ?>
         </dd>
         <dt><?= t('Total Downloads') ?></dt>
-        <dd><?= $number->format($fileVersion->getFile()->getTotalDownloads(), 0) ?></dd>
+        <dd><?= $number->format($file->getTotalDownloads(), 0) ?></dd>
         <dt><?= t('Most Recent Downloads') ?></dt>
         <dd>
             <?php
-            $downloads = $fileVersion->getFile()->getDownloadStatistics(3);
+            $downloads = $file->getDownloadStatistics(3);
             if ($downloads === []) {
                 ?><i><?= t('No downloads') ?></i><?php
             } else {
@@ -233,7 +239,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </dd>
         <dt><?= t('Storage Locations') ?></dt>
         <dd>
-            <?= $fileVersion->getFile()->getFileStorageLocationObject()->getDisplayName() ?>
+            <?= $file->getFileStorageLocationObject()->getDisplayName() ?>
             <div class="text-muted"><?= t('You can use S3 or other cloud storage solutions to distribute your content.') ?></div>
         </dd>
     </dl>
