@@ -37,6 +37,12 @@ abstract class AbstractSaver implements SaverInterface
         $configuredDataSource = new ConfiguredDataSource();
         $configuredDataSource->setName($datSourceName);
 
+        $configuredDataSource->setPopulationDayIntervalFuture(
+            (int) $request->request->get('populationDayIntervalFuture')
+        );
+        $configuredDataSource->setPopulationDayIntervalPast(
+            (int) $request->request->get('populationDayIntervalPast')
+        );
         $configuration = $this->createConfiguration($request);
         $configuration->setDataSource($configuredDataSource);
 
@@ -54,6 +60,12 @@ abstract class AbstractSaver implements SaverInterface
         ConfiguredDataSource $configuredDataSource,
         Request $request) : ConfiguredDataSource
     {
+        $configuredDataSource->setPopulationDayIntervalFuture(
+            (int) $request->request->get('populationDayIntervalFuture')
+        );
+        $configuredDataSource->setPopulationDayIntervalPast(
+            (int) $request->request->get('populationDayIntervalPast')
+        );
         $board = $configuredDataSource->getBoard();
         $dataSource = $configuredDataSource->getDataSource();
         $this->entityManager->remove($configuredDataSource);

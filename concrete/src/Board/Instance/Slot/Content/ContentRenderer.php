@@ -43,7 +43,7 @@ class ContentRenderer implements LoggerAwareInterface
      * ContentRenderer constructor.
      * @param JsonSerializer $serializer
      */
-    public function __construct(Application $app, JsonSerializer $serializer, TemplateLocator $templateLocator, Page $currentPage)
+    public function __construct(Application $app, JsonSerializer $serializer, TemplateLocator $templateLocator, Page $currentPage = null)
     {
         $this->templateLocator = $templateLocator;
         $this->currentPage = $currentPage;
@@ -62,7 +62,11 @@ class ContentRenderer implements LoggerAwareInterface
         $file = $this->templateLocator->getFileToRender($template);
         if ($file) {
             $slot = $this->app->make(ContentSlotRenderer::class, ['data' => $collection]);
+            ob_start();
             include $file;
+            $content = ob_get_contents();
+            ob_end_clean();
+            return $content;
         } else if ($template->getHandle()) {
             $this->logger->notice(t('Error rendering board slot template on page %s - Unable to locate file for template: %s',
                     $this->currentPage->getCollectionID(), $template->getHandle())

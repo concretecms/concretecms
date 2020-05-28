@@ -3,8 +3,9 @@ namespace Concrete\Core\Board\Instance\Item\Populator;
 
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Board\Instance\Item\Data\PageData;
-use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
+use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Search\Field\Field\SiteField;
@@ -14,8 +15,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class PagePopulator extends AbstractPopulator
 {
 
-    public function getDataObjects(Instance $instance, Configuration $configuration, int $mode) : array
+    public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource, int $mode) : array
     {
+        $configuration = $dataSource->getConfiguration();
         $list = new PageList();
         $query = $configuration->getQuery();
         $list->ignorePermissions();
@@ -43,6 +45,13 @@ class PagePopulator extends AbstractPopulator
             $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
         }
 
+        $future = $this->getPopulationDayIntervalFutureDatetime($dataSource, $instance);
+        $past = $this->getPopulationDayIntervalPastDatetime($dataSource, $instance);
+        $list->filterByPublicDate($future->format('Y-m-d- H:i:s'), '<=');
+        $list->filterByPublicDate($past->format('Y-m-d- H:i:s'), '>=');
+        return $list->getResults();
+
+        /* this is old logic, remove once we're sure this works
         if ($mode == PopulatorInterface::RETRIEVE_FIRST_RUN) {
             // the first time we run we start today and go into the past.
             $list->sortByPublicDateDescending();
@@ -54,6 +63,9 @@ class PagePopulator extends AbstractPopulator
         $pagination = $list->getPagination();
         $pagination->setMaxPerPage(100);
         return $pagination->getCurrentPageResults();
+        */
+
+
     }
 
     /**
@@ -63,6 +75,11 @@ class PagePopulator extends AbstractPopulator
     public function getObjectRelevantDate($mixed): int
     {
         return $mixed->getCollectionDatePublicObject()->getTimestamp();
+    }
+
+    public function getObjectUniqueItemId($mixed): ?string
+    {
+        return $mixed->getCollectionID();
     }
 
     /**
@@ -81,6 +98,12 @@ class PagePopulator extends AbstractPopulator
     public function getObjectData($mixed): DataInterface
     {
         return new PageData($mixed);
+    }
+
+    public function getObjectRelevantThumbnail($mixed): ?File
+    {
+        $thumbnail = $mixed->getAttribute('thumbnail');
+        return $thumbnail;
     }
 
     /**

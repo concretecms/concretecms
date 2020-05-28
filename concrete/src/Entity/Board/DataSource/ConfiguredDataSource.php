@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="BoardConfiguredDataSources")
  */
-class ConfiguredDataSource
+class ConfiguredDataSource implements \JsonSerializable
 {
 
     /**
@@ -26,6 +26,16 @@ class ConfiguredDataSource
      * @var Board
      */
     protected $board;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $populationDayIntervalFuture = 0;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $populationDayIntervalPast = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataSource")
@@ -140,5 +150,73 @@ class ConfiguredDataSource
         $this->customWeight = $customWeight;
     }
 
+    /**
+     * @return int
+     */
+    public function getPopulationIntervalFuture(): int
+    {
+        return $this->populationIntervalFuture;
+    }
+
+    /**
+     * @param int $populationIntervalFuture
+     */
+    public function setPopulationIntervalFuture(int $populationIntervalFuture): void
+    {
+        $this->populationIntervalFuture = $populationIntervalFuture;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopulationDayIntervalFuture(): int
+    {
+        return $this->populationDayIntervalFuture;
+    }
+
+    /**
+     * @param int $populationDayIntervalFuture
+     */
+    public function setPopulationDayIntervalFuture(int $populationDayIntervalFuture): void
+    {
+        $this->populationDayIntervalFuture = $populationDayIntervalFuture;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopulationDayIntervalPast(): int
+    {
+        return $this->populationDayIntervalPast;
+    }
+
+    /**
+     * @param int $populationDayIntervalPast
+     */
+    public function setPopulationDayIntervalPast(int $populationDayIntervalPast): void
+    {
+        $this->populationDayIntervalPast = $populationDayIntervalPast;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    public function jsonSerialize()
+    {
+        $data = [
+            'id' => $this->getConfiguredDataSourceID(),
+            'name' => $this->getName(),
+            'items' => [],
+        ];
+        foreach($this->getItems() as $item) {
+            $data['items'][] = $item->jsonSerialize();
+        }
+        return $data;
+    }
 
 }

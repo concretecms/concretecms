@@ -41,7 +41,6 @@ class SlotPopulator implements LoggerAwareInterface
     public function populateSlotCollectionWithContent(array $contentObjectGroups, ArrayCollection $instanceSlots)
     {
 
-
         $type = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
 
         $this->logger->debug(t('Passed %s instance slots and %s content groups passed to populate function',

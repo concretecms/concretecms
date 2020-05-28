@@ -21,3 +21,5 @@ $router->all('/download', 'File::download');
 $router->all('/import_incoming', 'File::importIncoming');
 $router->all('/import_remote', 'File::importRemote');
 $router->all('/thumbnailer', 'File\Thumbnailer::generate');
+
+$router->all('/chooser/recent', 'File\Chooser::getRecent');

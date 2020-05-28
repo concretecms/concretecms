@@ -12,8 +12,6 @@ use Doctrine\ORM\EntityManager;
 class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterface
 {
 
-    const MAX_POPULATION_DAY_INTERVAL = 60; // we go 60 days into the past.
-
     use LoggerAwareTrait;
 
     public function getLoggerChannel()
@@ -62,8 +60,15 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
                     count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
                 ));
 
+            $db = $this->entityManager->getConnection();
             foreach ($objects as $object) {
-                $this->entityManager->persist($object);
+                $existing = $db->executeQuery('select count(boardInstanceItemID) from BoardInstanceItems
+                where uniqueItemId = ? and configuredDataSourceID = ?', [
+                    $object->getUniqueItemId(), $object->getDataSource()->getConfiguredDataSourceID()
+                ]);
+                if ($existing->fetchColumn() !== 0) {
+                    $this->entityManager->persist($object);
+                }
             }
         }
         $instance->setDateDataPoolLastUpdated(time());

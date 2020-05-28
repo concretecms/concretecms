@@ -1,49 +1,45 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Tree\Node\Node;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="BoardItemTags")
+ * @ORM\Table(name="BoardInstanceItemCategories")
  */
-class ItemTag
+class InstanceItemCategory
 {
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $boardItemTagID;
+    protected $boardInstanceItemCategoryID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InstanceItem",  inversedBy="tags")
+     * @ORM\ManyToOne(targetEntity="InstanceItem",  inversedBy="categories")
      * @ORM\JoinColumn(name="boardInstanceItemID", referencedColumnName="boardInstanceItemID")
      **/
     protected $item;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="integer", options={"unsigned":true})
      */
-    protected $tag;
+    protected $treeNodeID;
 
-    /**
-     * ItemTag constructor.
-     * @param $tag
-     */
-    public function __construct(InstanceItem $item, $tag)
+    public function __construct(InstanceItem $item, Node $category)
     {
         $this->item = $item;
-        $this->tag = $tag;
+        $this->treeNodeID = $category->getTreeNodeID();
     }
 
     /**
      * @return mixed
      */
-    public function getBoardItemTagID()
+    public function getBoardInstanceItemCategoryID()
     {
-        return $this->boardItemTagID;
+        return $this->boardInstanceItemCategoryID;
     }
 
     /**
@@ -65,18 +61,21 @@ class ItemTag
     /**
      * @return mixed
      */
-    public function getTag()
+    public function getTreeNodeID()
     {
-        return $this->tag;
+        return $this->treeNodeID;
     }
 
     /**
-     * @param mixed $tag
+     * @param mixed $treeNodeID
      */
-    public function setTag($tag): void
+    public function setTreeNodeID($treeNodeID): void
     {
-        $this->tag = $tag;
+        $this->treeNodeID = $treeNodeID;
     }
+
+
+
 
 
 

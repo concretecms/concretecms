@@ -9,7 +9,6 @@ $router->all('/ccm/system/search/files/current', '\Concrete\Controller\Search\Fi
 $router->all('/ccm/system/search/files/preset/{presetID}', '\Concrete\Controller\Search\Files::searchPreset');
 $router->all('/ccm/system/search/files/clear', '\Concrete\Controller\Search\Files::clearSearch');
 */
-$router->all('/ccm/system/files/mine', '\Concrete\Controller\Backend\Files::getMine');
 $router->all('/ccm/system/search/pages/basic', '\Concrete\Controller\Search\Pages::searchBasic');
 $router->all('/ccm/system/search/pages/current', '\Concrete\Controller\Search\Pages::searchCurrent');
 $router->all('/ccm/system/search/pages/preset/{presetID}', '\Concrete\Controller\Search\Pages::searchPreset');

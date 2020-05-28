@@ -74,7 +74,6 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->routes('attributes.php');
 
         $router->buildGroup()
-            ->addMiddleware(FractalNegotiatorMiddleware::class)
             ->routes('search.php');
 
         $router->buildGroup()->routes('express.php');
