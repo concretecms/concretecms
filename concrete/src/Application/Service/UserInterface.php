@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application\Service;
 
 use Concrete\Core\Http\Response;
+use HtmlObject\Element;
 use HtmlObject\Traits\Tag;
 use PermissionKey;
 use Concrete\Core\User\User as ConcreteUser;
@@ -281,19 +282,43 @@ class UserInterface
     /**
      * @param $tabs
      *
+     * @param null|string $id
      * @return string
      */
-    public function tabs($tabs)
+    public function tabs($tabs, $id = null)
     {
-        $html = '<ul class="nav-tabs nav nav-fill mb-3">';
-        foreach ($tabs as $t) {
-            $dt = $t[0];
-            $href = '#' . $dt;
-            $html .= '<li class="nav-item"><a class="nav-link ' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '" href="' . $href . '" data-toggle="tab">' . $t[1] . '</a></li>';
-        }
-        $html .= '</ul>';
+        $ul = new Element("ul");
+        $ul->addClass("nav");
+        $ul->addClass("nav-tabs");
+        $ul->setAttribute("role", "tablist");
 
-        return $html;
+        if ($id !== null) {
+            $ul->setAttribute("id", $id);
+        }
+
+        foreach ($tabs as $tab) {
+            $a = new Element("a");
+            $a->addClass("nav-link");
+
+            if ((isset($tab[2]) && $tab[2])) {
+                $a->addClass("active");
+            }
+
+            $a->setAttribute("href", "#" . $tab[0]);
+            $a->setAttribute("id", $tab[0] . "-tab");
+            $a->setAttribute("data-toggle", "tab");
+            $a->setAttribute("aria-controls", $tab[0]);
+            $a->setAttribute("role", "tab");
+            $a->setAttribute("aria-selected", (isset($tab[2]) && $tab[2]) ? "true" : "false");
+            $a->setValue($tab[1]);
+
+            $li = new Element("li");
+            $li->addClass("nav-item");
+            $li->appendChild($a);
+            $ul->appendChild($li);
+        }
+
+        return (string)$ul;
     }
 
     /**

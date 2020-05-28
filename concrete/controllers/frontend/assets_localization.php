@@ -198,6 +198,34 @@ var ccmi18n_groups = ' . json_encode([
     'editGroup' => t('Edit Group'),
     'editPermissions' => t('Edit Permissions'),
 ]) . ';
+
+var ccmi18n_fileuploader = ' . json_encode([
+    "dialogTitle" => t("Import Files"),
+    "yourComputer" => t("Your Computer"),
+    "incomingDirectory" => t("Incoming Directory"),
+    "remoteFiles" => t("Remote Files"),
+    "dropFilesHere" => t("Drop files here or click to upload"),
+    "uploadFilesTo" => t("Upload files to"),
+    "createNewDirectoryButton" => t("Create New Folder"),
+    "directoryName" => t("Name"),
+    "directoryPlaceholder" => t("Please enter a name..."),
+    "uploadSuccessfulTitle" => t("Complete"),
+    "uploadSuccessfulMessage" => t("The upload was successfully."),
+    "cancelButton" => t("Cancel"),
+    "continueButton" => t("Continue"),
+    "loading" => t("Loading..."),
+    "confirmMessage" => t("Are you sure that you want to close this dialog? All pending files will be removed."),
+    "confirmButton" => t("Remove pending files"),
+    "filename" => t("Filename"),
+    "size" => t("Size"),
+    "removeFilesAfterPost" => t("Remove files from {0} directory of {1} storage location."),
+    "invalidFileExtension" => t("Invalid file extension"),
+    "enterSingleUrl" => t("Enter URL to valid file"),
+    "errorNotificationTitle" => t("Error"),
+    "enterMultipleUrls" => t("Enter URL to valid file(s), one URL per line"),
+    "noFilesFound" => t('No files found in {0} for the storage location "{1}".')
+]) . ';
+
 var ccmi18n_filemanager = ' . json_encode([
     'view' => t('View'),
     'download' => t('Download'),
@@ -472,7 +500,7 @@ var ccmi18n_helpGuides = ' . json_encode([
                 'alignment' => t('Alignment'),
                 'filename' => t('Name (optional)'),
                 'edit' => t('Edit'),
-                'upload_label' => t('Drop file here or '),
+                'upload_label' => t('Drop file here or ')
             ]) . ';
 jQuery.Redactor.opts.lang = ' . json_encode($locale) . ';
 jQuery.each(jQuery.Redactor.opts.langs.en, function(key, value) {

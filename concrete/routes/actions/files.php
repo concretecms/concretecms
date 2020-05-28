@@ -21,3 +21,6 @@ $router->all('/download', 'File::download');
 $router->all('/import_incoming', 'File::importIncoming');
 $router->all('/import_remote', 'File::importRemote');
 $router->all('/thumbnailer', 'File\Thumbnailer::generate');
+$router->all('/fetch_incoming_files', 'File::fetchIncomingFiles');
+$router->all('/fetch_directories', 'File::fetchDirectories');
+$router->all('/create_directory', 'File::createDirectory');
