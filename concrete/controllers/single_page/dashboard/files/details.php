@@ -78,7 +78,7 @@ class Details extends DashboardPageController
         if (!$permissionChecker->canViewFileInFileManager()) {
             throw new UserMessageException(t('Access denied to the requested file.'));
         }
-        $fileVersion = $file->getRecentVersion() ?: $file->getApprovedVersion();
+        $fileVersion = $file->getApprovedVersion() ?: $file->getRecentVersion();
         if ($fileVersion === null) {
             throw new UserMessageException(t('The file does not have any version.'));
         }
