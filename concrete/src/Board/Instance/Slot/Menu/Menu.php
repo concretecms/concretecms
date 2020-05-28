@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Board\Instance\Slot\Menu;
 
+use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
+use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Board\Instance\Slot\RenderedSlot;
@@ -25,6 +27,10 @@ class Menu extends PopoverMenu
             ]));
             $this->addItem(new LinkItem('javascript:void(0)', t('Un-Pin From Board'), [
                 'data-menu-action' => 'unpin-item',
+            ]));
+            $this->addItem(new DividerItem());
+            $this->addItem(new LinkItem('javascript:void(0)', t('Replace Slot'), [
+                'data-menu-action' => 'replace-slot',
             ]));
         }
     }

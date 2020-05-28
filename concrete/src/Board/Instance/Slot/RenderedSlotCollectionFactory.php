@@ -30,9 +30,11 @@ class RenderedSlotCollectionFactory
         // First, let's fill the slots that are pinned.
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('r')->from(InstanceSlotRule::class, 'r')
-            ->where('r.instance = :instance')
-            ->andWhere('r.ruleType = :ruleType');
-        $qb->setParameter('ruleType', InstanceSlotRule::RULE_TYPE_PINNED);
+            ->where('r.instance = :instance');
+        // commenting this out because we want to grab pinned OR custom blocks. We may need more control
+        //    ->andWhere('r.ruleType = :ruleType');
+        // so I'm keeping this here.
+        //$qb->setParameter('ruleType', InstanceSlotRule::RULE_TYPE_PINNED);
         $qb->setParameter('instance', $instance);
         $rules = $qb->getQuery()->execute();
 
@@ -78,8 +80,6 @@ class RenderedSlotCollectionFactory
             $collectionArray[$currentSlot] = $renderedSlot;
             $currentSlot++;
         }
-
-        // Now we look for any override rules.
 
         $collection = new RenderedSlotCollection($instance, $collectionArray);
         return $collection;

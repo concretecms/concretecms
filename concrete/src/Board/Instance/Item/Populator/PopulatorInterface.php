@@ -20,7 +20,7 @@ interface PopulatorInterface
      * @param InstanceItemBatch $batch
      * @param ConfiguredDataSource $configuredDataSource
      * @param int $mode
-     * @return array
+     * @return InstanceItem[]
      */
     public function createBoardInstanceItems(
         Instance $instance,
