@@ -34,8 +34,8 @@ $file = $fileVersion->getFile();
             <div class="mb-4">
                 <a
                     class="btn btn-secondary dialog-launch"
-                    data-dialog-title="<?= t('Swap') ?>"
-                    data-dialog-width="620" data-dialog-height="400"
+                    dialog-title="<?= t('Swap') ?>"
+                    dialog-width="620" dialog-height="400"
                     href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
                 ><?= t('Swap') ?></a>
                 <div class="text-muted"><i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i></div>
@@ -58,7 +58,12 @@ $file = $fileVersion->getFile();
 <hr class="mt-5 mb-4" />
 
 <section>
-    <button class="btn btn-secondary float-right" onclick="alert('@todo');return false"><?= t('Edit') ?></button>
+    <a
+        class="btn btn-secondary float-right dialog-launch"
+        dialog-title="<?= t('Attributes') ?>"
+        dialog-width="680" dialog-height="450"
+        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/properties?fID=' . $file->getFileID()])) ?>"
+    ><?= t('Edit') ?></a>
     <h3><?= t('Attributes') ?></h3>
     <dl class="row">
         <dt class="col-md-3"><?= t('Title') ?></dt>
@@ -227,7 +232,12 @@ $file = $fileVersion->getFile();
 <hr class="mt-5 mb-4" />
 
 <section>
-    <button class="btn btn-secondary float-right" onclick="alert('@todo');return false"><?= t('Edit') ?></button>
+    <a
+        class="btn btn-secondary float-right dialog-launch"
+        dialog-title="<?= t('Storage Location') ?>"
+        dialog-width="500" dialog-height="400"
+        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()])) ?>"
+    ><?= t('Edit') ?></a>
     <h3><?= t('Storage') ?></h3>
     <dl>
         <dt><?= t('Tracked URL') ?></dt>
