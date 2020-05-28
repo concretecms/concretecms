@@ -53,12 +53,14 @@ class Rescanner
      */
     public function rescanFileVersion(Version $fileVersion): Version
     {
-        $fileVersion = $this->applyPreProcessors($fileVersion);
-        $this->refreshAttributes($fileVersion);
-        $this->rescanThumbnails($fileVersion);
-        $fileVersion->releaseImagineImage();
+        $newFileVersion = $this->applyPreProcessors($fileVersion);
+        if ($newFileVersion === $fileVersion) {
+            $this->refreshAttributes($fileVersion);
+            $this->rescanThumbnails($fileVersion);
+        }
+        $newFileVersion->releaseImagineImage();
 
-        return $fileVersion;
+        return $newFileVersion;
     }
 
     /**
@@ -89,8 +91,9 @@ class Rescanner
         }
         $changed = $sha1 !== sha1_file($file->getLocalFilename());
         if ($changed) {
-            $fileVersion = $fileVersion->getFile()->createNewVersion(false);
-            $fileVersion->updateContents(file_get_contents($file->getLocalFilename()));
+            $fileVersion->releaseImagineImage();
+            $fileVersion = $fileVersion->getFile()->createNewVersion(true);
+            $fileVersion->updateContents(file_get_contents($file->getLocalFilename()), true);
         }
 
         return $fileVersion;
@@ -98,17 +101,25 @@ class Rescanner
 
     protected function createImportingFile(VolatileDirectory $volatileDirectory, Version $fileVersion): ImportingFile
     {
-        $localFilename = tempnam($volatileDirectory->getPath(), 'rescan');
-        $writeHandle = fopen($localFilename, 'w');
+        $readHandle = $fileVersion->getFileResource()->readStream();
+        if ($readHandle === false) {
+            throw new UserMessageException(t('Failed to read the file contents'));
+        }
         try {
-            $readHandle = $fileVersion->getFileResource()->readStream();
+            $localFilename = tempnam($volatileDirectory->getPath(), 'rescan');
+            $writeHandle = fopen($localFilename, 'w');
+            if ($writeHandle === false) {
+                throw new UserMessageException(t('Failed to open a local file'));
+            }
             try {
-                stream_copy_to_stream($readHandle, $writeHandle);
+                if (stream_copy_to_stream($readHandle, $writeHandle) === false) {
+                    throw new UserMessageException(t('Failed to write to a local file'));
+                }
             } finally {
-                fclose($readHandle);
+                fclose($writeHandle);
             }
         } finally {
-            fclose($writeHandle);
+            fclose($readHandle);
         }
 
         return $this->app->make(ImportingFile::class, ['localFilename' => $localFilename, 'concreteFilename' => $fileVersion->getFileName()]);
