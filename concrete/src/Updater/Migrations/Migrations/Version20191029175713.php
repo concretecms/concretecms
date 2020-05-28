@@ -15,11 +15,11 @@ use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Entity\Board\Instance as BoardInstance;
 use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Entity\Board\InstanceItemBatch;
+use Concrete\Core\Entity\Board\InstanceItemCategory;
+use Concrete\Core\Entity\Board\InstanceItemTag;
 use Concrete\Core\Entity\Board\Template as BoardTemplate;
 use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
-use Concrete\Core\Entity\Board\ItemCategory;
-use Concrete\Core\Entity\Board\ItemTag;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\Summary\CalendarEventTemplate;
@@ -45,8 +45,8 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
             BoardInstance::class,
             InstanceItem::class,
             InstanceItemBatch::class,
-            ItemCategory::class,
-            ItemTag::class,
+            InstanceItemCategory::class,
+            InstanceItemTag::class,
             InstanceSlot::class,
             InstanceSlotRule::class,
             BoardTemplate::class,

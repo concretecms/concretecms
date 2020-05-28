@@ -42,8 +42,9 @@ class CalendarEventPopulator extends AbstractPopulator
             }
         }
         if (!$calendar) {
-            throw new \Exception(t('No calendar found for board calendar event population!'));
+            return [];
         }
+
         $list = new EventOccurrenceList();
         $list->filterByCalendar($calendar);
 
@@ -58,7 +59,10 @@ class CalendarEventPopulator extends AbstractPopulator
         $list->getQueryObject()->andWhere('eo.startTime >= :past');
         $list->getQueryObject()->setParameter('future', $future->getTimestamp());
         $list->getQueryObject()->setParameter('past', $past->getTimestamp());
-        return $list->getResults();
+
+        $pagination = $list->getPagination();
+        $pagination->setMaxPerPage(1000)->setCurrentPage(1);
+        return $pagination->getCurrentPageResults();
 
         /* this is old logic, remove once we're sure this works
         if ($mode == PopulatorInterface::RETRIEVE_FIRST_RUN) {

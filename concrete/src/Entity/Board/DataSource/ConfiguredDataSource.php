@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="BoardConfiguredDataSources")
  */
-class ConfiguredDataSource implements \JsonSerializable
+class ConfiguredDataSource
 {
 
     /**
@@ -206,17 +206,5 @@ class ConfiguredDataSource implements \JsonSerializable
         return $this->items;
     }
 
-    public function jsonSerialize()
-    {
-        $data = [
-            'id' => $this->getConfiguredDataSourceID(),
-            'name' => $this->getName(),
-            'items' => [],
-        ];
-        foreach($this->getItems() as $item) {
-            $data['items'][] = $item->jsonSerialize();
-        }
-        return $data;
-    }
 
 }

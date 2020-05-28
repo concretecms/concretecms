@@ -49,7 +49,10 @@ class PagePopulator extends AbstractPopulator
         $past = $this->getPopulationDayIntervalPastDatetime($dataSource, $instance);
         $list->filterByPublicDate($future->format('Y-m-d- H:i:s'), '<=');
         $list->filterByPublicDate($past->format('Y-m-d- H:i:s'), '>=');
-        return $list->getResults();
+
+        $pagination = $list->getPagination();
+        $pagination->setMaxPerPage(1000);
+        return $pagination->getCurrentPageResults();
 
         /* this is old logic, remove once we're sure this works
         if ($mode == PopulatorInterface::RETRIEVE_FIRST_RUN) {

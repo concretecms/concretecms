@@ -22,9 +22,7 @@ class UnpinSlotFromBoardCommandHandler
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->delete(InstanceSlotRule::class, 'r')
-            ->where('r.ruleType = :ruleType')
-            ->andWhere('r.slot = :slot');
-        $qb->setParameter('ruleType', InstanceSlotRule::RULE_TYPE_PINNED);
+            ->where('r.slot = :slot');
         $qb->setParameter('slot', $command->getSlot());
         $qb->getQuery()->execute();
     }

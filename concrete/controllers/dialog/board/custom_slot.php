@@ -64,6 +64,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         $templates = $availableTemplateCollectionFactory->getAvailableTemplates(
             $instance, $this->request->request->get('slot')
         );
+
         $itemObjectGroups = $contentPopulator->createContentObjects($items);
         $contentObjects = [];
         foreach($itemObjectGroups as $itemObjectGroup) {
@@ -89,7 +90,18 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
     public function replace()
     {
         $instance = $this->getInstanceFromRequest();
-        $dataSources = $instance->getBoard()->getDataSources()->toArray();
+        $dataSources = [];
+        $entityManager = $this->app->make(EntityManager::class);
+        foreach($instance->getBoard()->getDataSources() as $dataSource) {
+            $items = $entityManager->getRepository(InstanceItem::class)
+                ->findByDataSource($dataSource, $instance)
+                ->toArray();
+            $dataSources[] = [
+                'id' => $dataSource->getConfiguredDataSourceID(),
+                'name' => $dataSource->getName(),
+                'items' => $items,
+            ];
+        }
         $this->set('dataSourcesJson', json_encode($dataSources));
         $this->set('instance', $instance);
         $this->set('slot', h($this->request->query->get('slot')));
