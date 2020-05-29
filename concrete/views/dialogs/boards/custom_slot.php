@@ -38,7 +38,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <div>
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" :value="index" name="selectedTemplateOption" v-model="selectedTemplateOption">
+                            <input type="radio" class="form-check-input" :value="index" name="selectedTemplateOption"
+                                   v-model="selectedTemplateOption">
                             <span class="text-muted"><?= t('Template Name:') ?> {{templateOption.template.name}}</span>
                         </div>
                     </div>
@@ -110,15 +111,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/boards/custom_slot/save_template?boardInstanceID=' +
                                 my.boardInstanceID,
                             method: 'POST',
+                            dataType: 'html',
                             data: {
                                 slot: my.slot,
                                 selectedTemplateOption: my.templateOptions[my.selectedTemplateOption]
                             },
                             success: function (r) {
-                                // Terrible - we need to render it into the slot. But this will have to do.
-                                jQuery.fn.dialog.closeTop();
-                                jQuery.fn.dialog.showLoader();
-                                window.location.reload();
+                                var customSlotData = {
+                                    content: r,
+                                    slot: my.slot,
+                                }
+                                ConcreteEvent.fire('SaveCustomSlot', customSlotData)
+                                jQuery.fn.dialog.closeTop()
                             }
                         })
                     }
