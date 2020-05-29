@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Controller\Dialog\Board;
 
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Board\Command\AddCustomBlockToBoardCommand;
 use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
 use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
@@ -18,6 +20,7 @@ use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CustomSlot extends \Concrete\Core\Controller\Controller
 {
@@ -131,8 +134,15 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         $command->setInstance($instance);
         $this->app->executeCommand($command);
 
-        return new JsonResponse([]);
-
+        \Cache::disableAll(); // This is required to make block output rendering work. This is not ideal.
+        $block = Block::getByID($block->getBlockID()); // need to make sure everything is refreshed.
+        $view = new BlockView($block);
+        ob_start();
+        $view->render('view');
+        $content = ob_get_contents();
+        ob_end_clean();
+        
+        return new Response($content);
     }
 
 }

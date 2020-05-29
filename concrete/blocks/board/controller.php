@@ -23,6 +23,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 500;
     protected $btTable = 'btBoard';
     protected $btIgnorePageThemeGridFrameworkContainer = true;
+    protected $btSupportsInlineEdit = true;
 
     public $helpers = ['form'];
 
@@ -95,7 +96,11 @@ class Controller extends BlockController
         $instance = $this->app->make(EntityManager::class)
             ->find(Instance::class, $this->boardInstanceID);
         if ($instance) {
+            $renderer = $this->app->make(Renderer::class);
+            $renderer->setEnableEditing(true);
+            $this->set('renderer', $renderer);
             $this->set('boardID', $instance->getBoard()->getBoardID());
+            $this->set('instance', $instance);
         }
     }
 
