@@ -3,7 +3,6 @@ namespace Concrete\Controller\Dialog\Express;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Controller\Search\Express\Entries;
-use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
 
 class Search extends BackendInterfaceController
 {
@@ -31,8 +30,8 @@ class Search extends BackendInterfaceController
         $search = new Entries();
         $search->search($this->getEntity());
         $result = json_encode($search->getSearchResultObject()->getJSONObject());
-        $header = new Header($this->getEntity());
-        $this->set('headerMenu', $header);
+        //$header = new Header($this->getEntity());
+        //$this->set('headerMenu', $header);
         $this->set('result', $result);
         $this->set('searchController', $search);
     }
