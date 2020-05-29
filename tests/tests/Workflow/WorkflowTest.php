@@ -20,6 +20,13 @@ class WorkflowTest extends ConcreteDatabaseTestCase
         'WorkflowProgress',
     ];
 
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->connection()->exec('delete from Workflows');
+        $this->connection()->exec('delete from WorkflowTypes');
+    }
+
     public function testBasicProperties()
     {
         $name = 'Test ' . time() . '@' . mt_rand();
@@ -92,12 +99,5 @@ class WorkflowTest extends ConcreteDatabaseTestCase
         $wf3 = Workflow::add($type, 'WF 3');
         $wf2 = Workflow::add($type, 'WF 2');
         $this->assertEquals([$wf1, $wf2, $wf3], Workflow::getList());
-    }
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->connection()->exec('delete from Workflows');
-        $this->connection()->exec('delete from WorkflowTypes');
     }
 }

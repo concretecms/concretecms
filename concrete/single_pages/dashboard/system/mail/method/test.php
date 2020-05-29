@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 if (!isset($mailRecipient)) {
     $mailRecipient = '';
-    $me = new User();
+    $me = Core::make(Concrete\Core\User\User::class);
     if ($me->isRegistered()) {
         $myInfo = Core::make(UserInfoRepository::class)->getByID($me->getUserID());
         if ($myInfo !== null) {

@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\StartingPointPackage\ElementalBlank;
 
 use Concrete\Core\Package\StartingPointPackage;
 
-class Controller extends StartingPointPackage
+class controller extends StartingPointPackage
 {
     protected $pkgHandle = 'elemental_blank';
 

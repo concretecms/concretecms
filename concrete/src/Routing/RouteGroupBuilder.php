@@ -41,9 +41,8 @@ class RouteGroupBuilder
     protected $requirements = [];
 
     /**
-     * RouteBuilder constructor.
+     * RouteGroupBuilder constructor.
      * @param Router $router
-     * @param Route $route
      */
     public function __construct(Router $router)
     {
@@ -60,6 +59,7 @@ class RouteGroupBuilder
 
     /**
      * @param string $prefix
+     * @return $this
      */
     public function setPrefix($prefix)
     {
@@ -69,6 +69,7 @@ class RouteGroupBuilder
 
     /**
      * @param string $scope
+     * @return $this
      */
     public function scope($scope)
     {
@@ -96,6 +97,7 @@ class RouteGroupBuilder
 
     /**
      * @param string|object $middleware
+     * @param int $priority
      * @return $this
      */
     public function addMiddleware($middleware, $priority = 10)
@@ -121,6 +123,7 @@ class RouteGroupBuilder
 
     /**
      * @param mixed $namespace
+     * @return $this
      */
     public function setNamespace($namespace)
     {
@@ -132,6 +135,7 @@ class RouteGroupBuilder
 
     /**
      * @param array $requirements
+     * @return $this
      */
     public function setRequirements($requirements)
     {
@@ -142,7 +146,6 @@ class RouteGroupBuilder
     protected function processPrefix(Route $route)
     {
         if ($this->prefix) {
-            $name = $route->getName();
             $path = '/' . trim($this->prefix, '/') . $route->getPath();
             $route->setPath($path);
         }
@@ -193,6 +196,11 @@ class RouteGroupBuilder
         }
     }
 
+    /**
+     * @param $routes
+     * @param null $pkgHandle
+     * @return $this
+     */
     public function routes($routes, $pkgHandle = null)
     {
         // First, create a new, empty router for use with the routes passed in the callable.

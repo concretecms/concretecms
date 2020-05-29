@@ -6,7 +6,7 @@ if (!$fp->canAccessFileManager()) {
     die(t("Unable to access the file manager."));
 }
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 
 $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();

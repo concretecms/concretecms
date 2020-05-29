@@ -133,11 +133,17 @@
 				}
 			});
 		});
-
 	};
 
+	var setupSiteListMenuItem = function() {
+        $('select[data-select=ccm-header-site-list]').show().selectize({
+            'onItemAdd': function(option) {
+                window.location.href = option;
+            }
+        });
+    };
 
-	var setupSelects = function() {
+    var setupSelects = function() {
 		$('select[data-select=bootstrap]').bootstrapSelectToButton();
 	};
 
@@ -160,6 +166,7 @@
 			setupTooltips();
 			setupResultMessages();
 			//setupHeaderMenu();
+			setupSiteListMenuItem();
             setupDialogs();
 			setupSelects();
 			setupDetailsURLs();

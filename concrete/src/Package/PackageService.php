@@ -8,6 +8,7 @@ use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -241,7 +242,7 @@ class PackageService
         $this->bootPackageEntityManager($p, true);
         $p->install($data);
 
-        $u = new \User();
+        $u = $this->application->make(User::class);
         $swapper = $p->getContentSwapper();
         if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
             $swapper->swapContent($p, $data);

@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Workflow;
-use Loader;
-use Exception;
 use Concrete\Core\Workflow\Type as WorkflowType;
+use Exception;
+use Loader;
+use Workflow;
 
 class Workflows extends DashboardPageController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     public function delete($wfID = null, $token = null)
     {
@@ -27,7 +28,7 @@ class Workflows extends DashboardPageController
 
             $wf->delete();
 
-            $this->redirect("/dashboard/system/permissions/workflows", 'workflow_deleted');
+            $this->redirect('/dashboard/system/permissions/workflows', 'workflow_deleted');
         } catch (Exception $e) {
             $this->error->add($e);
         }
@@ -63,7 +64,7 @@ class Workflows extends DashboardPageController
 
     public function add()
     {
-        $types = array();
+        $types = [];
         $list = WorkflowType::getList();
         foreach ($list as $wl) {
             $types[$wl->getWorkflowTypeID()] = $wl->getWorkflowTypeName();
@@ -74,7 +75,7 @@ class Workflows extends DashboardPageController
 
     public function workflow_deleted()
     {
-        $this->set("message", t('Workflow deleted successfully.'));
+        $this->set('message', t('Workflow deleted successfully.'));
         $this->view();
     }
 
@@ -90,7 +91,7 @@ class Workflows extends DashboardPageController
             $this->error->add(t('Invalid characters in workflow name.'));
         }
         $db = Loader::db();
-        $wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?', array($wfName));
+        $wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?', [$wfName]);
         if ($wfID) {
             $this->error->add(t('Workflow with that name already exists.'));
         }
@@ -113,7 +114,7 @@ class Workflows extends DashboardPageController
     {
         $wf = Workflow::getByID($wfID);
         if (!is_object($wf)) {
-            $this->redirect("/dashboard/system/permissions/workflows");
+            $this->redirect('/dashboard/system/permissions/workflows');
         }
         $this->set('wf', $wf);
     }
@@ -122,7 +123,7 @@ class Workflows extends DashboardPageController
     {
         $wf = Workflow::getByID($wfID);
         if (!is_object($wf)) {
-            $this->redirect("/dashboard/system/permissions/workflows");
+            $this->redirect('/dashboard/system/permissions/workflows');
         }
         switch ($message) {
             case 'workflow_created':

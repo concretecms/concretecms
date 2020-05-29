@@ -75,4 +75,4 @@ composer test -- --filter testCoreBlockView
 Send us tests via pull request:
 - actual test classes must go to the /tests/tests folder (classes must be defined in a namespace starting with Concrete\Tests\...)
 - helper classes must go to the /tests/helpers folder (classes must be defined in a namespace starting with Concrete\TestHelpers\...)
-- other files must go to the /tests/assets filder (images, fake classes, ...)
+- other files must go to the /tests/assets folder (images, fake classes, ...)

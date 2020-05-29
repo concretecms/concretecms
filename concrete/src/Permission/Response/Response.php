@@ -2,7 +2,8 @@
 namespace Concrete\Core\Permission\Response;
 
 use Exception;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use PermissionKeyCategory;
 use Core;
 
@@ -93,7 +94,8 @@ class Response
      */
     public function validate($permissionHandle, $args = array())
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

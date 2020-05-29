@@ -8,6 +8,16 @@ if (isset($page) && is_object($page)) {
     $v = CollectionVersion::get($page, "RECENT");
     $publishDate = $v->getPublishDate();
     $publishEndDate = $v->getPublishEndDate();
+
+    $scheduled = CollectionVersion::get($page, "SCHEDULED");
+    if (!$scheduled->isError()) {
+        ?>
+        <div class="alert alert-warning">
+            <p><?= t("At least one version is already scheduled to publish."); ?><br>
+            <?= t("This version will be scheduled to publish separately."); ?></p>
+        </div>
+        <?php
+    }
 }
 
 $dateService = Core::make('date');

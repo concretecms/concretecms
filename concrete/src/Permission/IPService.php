@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission;
 
 use Concrete\Core\Config\Repository\Repository;
@@ -7,90 +8,88 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Utility\IPAddress;
 use DateTime;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory as IPFactory;
 use IPLib\Range\RangeInterface;
 
+/**
+ * @deprecated check single methods to see the non-deprecated alternatives
+ */
 class IPService implements LoggerAwareInterface
 {
-
     use LoggerAwareTrait;
 
-    public function getLoggerChannel()
-    {
-        return Channels::CHANNEL_SECURITY;
-    }
-
     /**
-     * Bit mask for blacklist ranges.
+     * @deprecated Use \Concrete\Core\Permission\IpAccessControlService::IPRANGEFLAG_BLACKLIST
      *
      * @var int
      */
-    const IPRANGEFLAG_BLACKLIST = 0x0001;
+    const IPRANGEFLAG_BLACKLIST = IpAccessControlService::IPRANGEFLAG_BLACKLIST;
 
     /**
-     * Bit mask for whitelist ranges.
+     * @deprecated Use \Concrete\Core\Permission\IpAccessControlService::IPRANGEFLAG_WHITELIST
      *
      * @var int
      */
-    const IPRANGEFLAG_WHITELIST = 0x0002;
+    const IPRANGEFLAG_WHITELIST = IpAccessControlService::IPRANGEFLAG_WHITELIST;
 
     /**
-     * Bit mask for manually generated ranges.
+     * @deprecated Use \Concrete\Core\Permission\IpAccessControlService::IPRANGEFLAG_MANUAL
      *
      * @var int
      */
-    const IPRANGEFLAG_MANUAL = 0x0010;
+    const IPRANGEFLAG_MANUAL = IpAccessControlService::IPRANGEFLAG_MANUAL;
 
     /**
-     * Bit mask for automatically generated ranges.
+     * @deprecated Use \Concrete\Core\Permission\IpAccessControlService::IPRANGEFLAG_AUTOMATIC
      *
      * @var int
      */
-    const IPRANGEFLAG_AUTOMATIC = 0x0020;
+    const IPRANGEFLAG_AUTOMATIC = IpAccessControlService::IPRANGEFLAG_AUTOMATIC;
 
     /**
-     * IP range type: manually added to the blacklist.
+     * @deprecated Use \Concrete\Core\Permission\IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL
      *
      * @var int
      */
-    const IPRANGETYPE_BLACKLIST_MANUAL = 0x0011; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_MANUAL
+    const IPRANGETYPE_BLACKLIST_MANUAL = IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL;
 
     /**
-     * IP range type: automatically added to the blacklist.
+     * @deprecated Use \Concrete\Core\Permission\IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC
      *
      * @var int
      */
-    const IPRANGETYPE_BLACKLIST_AUTOMATIC = 0x0021; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_AUTOMATIC
+    const IPRANGETYPE_BLACKLIST_AUTOMATIC = IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC;
 
     /**
-     * IP range type: manually added to the whitelist.
+     * @deprecated Use \Concrete\Core\Permission\IpAccessControlService::IPRANGETYPE_WHITELIST_MANUAL
      *
      * @var int
      */
-    const IPRANGETYPE_WHITELIST_MANUAL = 0x0012; // IPRANGEFLAG_WHITELIST | IPRANGEFLAG_MANUAL
+    const IPRANGETYPE_WHITELIST_MANUAL = IpAccessControlService::IPRANGETYPE_WHITELIST_MANUAL;
 
     /**
-     * @var Repository
+     * @var \Concrete\Core\Config\Repository\Repository
      */
     protected $config;
 
     /**
-     * @var Connection
+     * @var \Concrete\Core\Database\Connection\Connection
      */
     protected $connection;
 
     /**
-     * @var Request
+     * @var \Concrete\Core\Http\Request
      */
     protected $request;
 
     /**
-     * @param Repository $config
-     * @param Connection $connection
-     * @param Request $request
+     * @param \Concrete\Core\Config\Repository\Repository $config
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     * @param \Concrete\Core\Http\Request $request
      */
     public function __construct(Repository $config, Connection $connection, Request $request)
     {
@@ -100,7 +99,17 @@ class IPService implements LoggerAwareInterface
     }
 
     /**
-     * Get the IP address of the current request.
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Logging\LoggerAwareInterface::getLoggerChannel()
+     */
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_SECURITY;
+    }
+
+    /**
+     * @deprecated Use $app->make(\IPLib\Address\AddressInterface::class)
      *
      * @return \IPLib\Address\AddressInterface
      */
@@ -110,315 +119,175 @@ class IPService implements LoggerAwareInterface
     }
 
     /**
-     * Check if an IP adress is blacklisted.
+     * @deprecated use $app->make('failed_login')->isBlacklisted()
+     *
+     * @param \IPLib\Address\AddressInterface|null $ip
      *
      * @return bool
      */
     public function isBlacklisted(AddressInterface $ip = null)
     {
-        if ($ip === null) {
-            $ip = $this->getRequestIPAddress();
-        }
-        $rangeType = $this->getRangeType($ip);
-
-        return $rangeType !== null && ($rangeType & static::IPRANGEFLAG_BLACKLIST) === static::IPRANGEFLAG_BLACKLIST;
+        return $this->getFailedLoginService()->isBlacklisted($ip);
     }
 
     /**
-     * Check if an IP adress is blacklisted.
+     * @deprecated use $app->make('failed_login')->isWhitelisted()
+     *
+     * @param \IPLib\Address\AddressInterface|null $ip
      *
      * @return bool
      */
     public function isWhitelisted(AddressInterface $ip = null)
     {
-        if ($ip === null) {
-            $ip = $this->getRequestIPAddress();
-        }
-        $rangeType = $this->getRangeType($ip);
-
-        return $rangeType !== null && ($rangeType & static::IPRANGEFLAG_WHITELIST) === static::IPRANGEFLAG_WHITELIST;
+        return $this->getFailedLoginService()->isWhitelisted($ip);
     }
 
     /**
-     * Get the (localized) message telling the users that their IP address has been banned.
+     * @deprecated use $app->make('failed_login')->getErrorMessage()
      *
      * @return string
      */
     public function getErrorMessage()
     {
-        return t('Unable to complete action: your IP address has been banned. Please contact the administrator of this site for more information.');
+        return $this->getFailedLoginService()->getErrorMessage();
     }
 
     /**
-     * Add the current IP address to the list of IPs with failed login attempts.
+     * @deprecated use $app->make('failed_login')->registerEvent()
      *
-     * @param AddressInterface $ip the IP address to log (if null, we'll use the current IP address)
-     * @param bool $ignoreConfig if set to true, we'll add the record even if the IP ban system is disabled in the configuration
+     * @param \IPLib\Address\AddressInterface|null $ip
+     * @param bool $ignoreConfig
      */
     public function logFailedLogin(AddressInterface $ip = null, $ignoreConfig = false)
     {
-        if ($ignoreConfig || $this->config->get('concrete.security.ban.ip.enabled')) {
-            if ($ip === null) {
-                $ip = $this->getRequestIPAddress();
-            }
-            $comparableIP = $ip->getComparableString();
-            $this->connection->executeQuery(
-                '
-                    INSERT INTO FailedLoginAttempts
-                        (flaIp, flaTimestamp)
-                    VALUES
-                        (?, ' . $this->connection->getDatabasePlatform()->getNowExpression() . ')
-                ',
-                [$ip->getComparableString()]
-            );
-            $this->logger->notice(t('Failed login attempt recorded from IP address %s', $ip->toString(), ['ip_address' => $ip->toString()]));
-        }
+        return $this->getFailedLoginService()->registerEvent($ip, $ignoreConfig);
     }
 
     /**
-     * Check if the current IP address has reached the failed login attempts threshold.
+     * @deprecated use $app->make('failed_login')->isThresholdReached()
      *
-     * @param AddressInterface $ip the IP address to log (if null, we'll use the current IP address)
-     * @param bool $ignoreConfig if set to true, we'll check the IP even if the IP ban system is disabled in the configuration
+     * @param \IPLib\Address\AddressInterface|null $ip
+     * @param bool $ignoreConfig
      *
      * @return bool
      */
     public function failedLoginsThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
     {
-        $result = false;
-        if ($ignoreConfig || $this->config->get('concrete.security.ban.ip.enabled')) {
-            if ($ip === null) {
-                $ip = $this->getRequestIPAddress();
-            }
-            if (!$this->isWhitelisted($ip)) {
-                $thresholdSeconds = (int) $this->config->get('concrete.security.ban.ip.time');
-                $thresholdTimestamp = new DateTime("-{$thresholdSeconds} seconds");
-                $rs = $this->connection->executeQuery(
-                    '
-                        SELECT
-                            ' . $this->connection->getDatabasePlatform()->getCountExpression('lcirID') . ' AS n
-                        FROM
-                            FailedLoginAttempts
-                        WHERE
-                            flaIp = ?
-                            AND flaTimestamp > ?
-                    ',
-                    [$ip->getComparableString(), $thresholdTimestamp->format($this->connection->getDatabasePlatform()->getDateTimeFormatString())]
-                );
-                $count = $rs->fetchColumn();
-                $rs->closeCursor();
-                $thresholdAttempts = (int) $this->config->get('concrete.security.ban.ip.attempts');
-                if ($count !== false && (int) $count >= $thresholdAttempts) {
-                    $result = true;
-                }
-            }
-        }
-
-        return $result;
+        return $this->getFailedLoginService()->isThresholdReached($ip, $ignoreConfig);
     }
 
     /**
-     * Add an IP address to the list of IPs banned for too many failed login attempts.
+     * @deprecated use $app->make('failed_login')->addToBlacklistForThresholdReached()
      *
-     * @param AddressInterface $ip the IP to add to the blacklist (if null, we'll use the current IP address)
-     * @param bool $ignoreConfig if set to true, we'll add the IP address even if the IP ban system is disabled in the configuration
+     * @param \IPLib\Address\AddressInterface $ip
+     * @param bool $ignoreConfig
      */
     public function addToBlacklistForThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
     {
-        if ($ignoreConfig || $this->config->get('concrete.security.ban.ip.enabled')) {
-            if ($ip === null) {
-                $ip = $this->getRequestIPAddress();
-            }
-            $banDurationMinutes = (int) $this->config->get('concrete.security.ban.ip.length');
-            if ($banDurationMinutes > 0) {
-                $expires = new DateTime("+{$banDurationMinutes} minutes");
-            } else {
-                $expires = null;
-            }
-            $this->createRange(IPFactory::rangeFromBoundaries($ip, $ip), static::IPRANGETYPE_BLACKLIST_AUTOMATIC, $expires);
-            $this->logger->warning(t('IP address %s added to blacklist.', $ip->toString(), $expires), [
-                'ip_address' => $ip->toString()
-            ]);
-        }
+        $this->getFailedLoginService()->addToBlacklistForThresholdReached($ip, $ignoreConfig);
     }
 
     /**
-     * Add persist an IP address range type.
+     * @deprecated use $app->make('failed_login')->createRange()
      *
-     * @param RangeInterface $range the IP address range to persist
-     * @param int $type The range type (one of the IPService::IPRANGETYPE_... constants)
-     * @param DateTime $expiration The optional expiration of the range type
+     * @param \IPLib\Range\RangeInterface $range
+     * @param int $type
+     * @param \DateTime|null $expiration
      *
-     * @return IPRange
+     * @return \Concrete\Core\Permission\IPRange
      */
     public function createRange(RangeInterface $range, $type, DateTime $expiration = null)
     {
-        $dateTimeFormat = $this->connection->getDatabasePlatform()->getDateTimeFormatString();
-        $this->connection->executeQuery(
-            '
-                INSERT INTO LoginControlIpRanges
-                    (lcirIpFrom, lcirIpTo, lcirType, lcirExpires)
-                VALUES
-                    (?, ?, ?, ?)
-            ',
-            [
-                $range->getComparableStartString(),
-                $range->getComparableEndString(),
-                $type,
-                ($expiration === null) ? null : $expiration->format($dateTimeFormat),
-            ]
-        );
-        $id = $this->connection->lastInsertId();
-        $rs = $this->connection->executeQuery('SELECT * FROM LoginControlIpRanges WHERE lcirID = ? LIMIT 1', [$id]);
-        $row = $rs->fetch();
-        $rs->closeCursor();
+        $rangeEntity = $this->getFailedLoginService()->createRange($range, $type, $expiration);
 
-        return IPRange::createFromRow($row, $dateTimeFormat);
+        return IPRange::createFromEntity($rangeEntity);
     }
 
     /**
-     * Get the list of currently available ranges.
+     * @deprecated use $app->make('failed_login')->getRanges()
      *
      * @param int $type (one of the IPService::IPRANGETYPE_... constants)
      * @param bool $includeExpired Include expired records?
      *
-     * @return IPRange[]|\Generator
+     * @return \Concrete\Core\Permission\IPRange[]|\Generator
      */
     public function getRanges($type, $includeExpired = false)
     {
-        $sql = 'SELECT * FROM LoginControlIpRanges WHERE lcirType = ?';
-        $params = [(int) $type];
-        if (!$includeExpired) {
-            $sql .= ' AND (lcirExpires IS NULL OR lcirExpires > ' . $this->connection->getDatabasePlatform()->getNowExpression() . ')';
-        }
-        $sql .= ' ORDER BY lcirID';
-        $result = [];
-        $dateTimeFormat = $this->connection->getDatabasePlatform()->getDateTimeFormatString();
-        $rs = $this->connection->executeQuery($sql, $params);
-        while (($row = $rs->fetch()) !== false) {
-            yield IPRange::createFromRow($row, $dateTimeFormat);
+        $rangeEntities = $this->getFailedLoginService()->getRanges($type, $includeExpired);
+        foreach ($rangeEntities as $rangeEntity) {
+            yield IPRange::createFromEntity($rangeEntity);
         }
     }
 
     /**
-     * Find already defined range given its record ID.
+     * @deprecated use $app->make('failed_login')->getRangeByID()
      *
      * @param int $id
      *
-     * @return IPRange|null
+     * @return \Concrete\Core\Permission\IPRange|null
      */
     public function getRangeByID($id)
     {
-        $result = null;
-        if ($id) {
-            $rs = $this->connection->executeQuery(
-                'SELECT * FROM LoginControlIpRanges WHERE lcirID = ? LIMIT 1',
-                [$id]
-            );
-            $row = $rs->fetch();
-            $rs->closeCursor();
-            if ($row !== false) {
-                $result = IPRange::createFromRow($row, $this->connection->getDatabasePlatform()->getDateTimeFormatString());
-            }
-        }
+        $rangeEntity = $this->getFailedLoginService()->getRangeByID($id);
 
-        return $result;
+        return $rangeEntity === null ? null : IPRange::createFromEntity($rangeEntity);
     }
 
     /**
-     * Delete a range record.
+     * @deprecated use $app->make('failed_login')->deleteRange()
      *
-     * @param IPRange|int $range
+     * @param \Concrete\Core\Permission\IPRange|int $range
      */
     public function deleteRange($range)
     {
-        if ($range instanceof IPRange) {
-            $id = $range->getID();
-        } else {
-            $id = (int) $range;
+        if (!$range) {
+            return;
         }
-        if ($id) {
-            $this->connection->executeQuery('DELETE FROM LoginControlIpRanges WHERE lcirID = ? LIMIT 1', [$id]);
-        }
+        $id = $range instanceof IPRange ? $range->getID() : $range;
+        $this->getFailedLoginService()->deleteRange($id);
     }
 
     /**
-     * Get the range type (if defined) of an IP adress.
+     * @deprecated use $app->make('failed_login')->deleteEvents()
      *
-     * @return int|null One of the IPRANGETYPE_... constants (or null if range is not defined).
-     */
-    protected function getRangeType(AddressInterface $ip)
-    {
-        $comparableIP = $ip->getComparableString();
-        $rs = $this->connection->executeQuery(
-            '
-                SELECT
-                    lcirType
-                FROM
-                    LoginControlIpRanges
-                WHERE
-                    lcirIpFrom <= ? AND ? <= lcirIpTo
-                    AND (lcirExpires IS NULL OR lcirExpires > ' . $this->connection->getDatabasePlatform()->getNowExpression() . ')
-            ',
-            [$comparableIP, $comparableIP]
-        );
-        $type = null;
-        while (($col = $rs->fetchColumn()) !== false) {
-            $type = (int) $col;
-            if (($type & static::IPRANGEFLAG_WHITELIST) === static::IPRANGEFLAG_WHITELIST) {
-                break;
-            }
-        }
-        $rs->closeCursor();
-
-        return $type;
-    }
-
-    /**
-     * Delete the failed login attempts.
+     * @param int|null $maxAge
      *
-     * @param int|null $maxAge the maximum age (in seconds) of the records (specify an empty value do delete all records)
-     *
-     * @return int return the number of records deleted
+     * @return int
      */
     public function deleteFailedLoginAttempts($maxAge = null)
     {
-        $sql = 'DELETE FROM FailedLoginAttempts';
-        if ($maxAge) {
-            $platform = $this->connection->getDatabasePlatform();
-            $sql .= ' WHERE flaTimestamp <= ' . $platform->getDateSubSecondsExpression($platform->getNowExpression(), (int) $maxAge);
-        }
-
-        return (int) $this->connection->executeQuery($sql)->rowCount();
+        return $this->getFailedLoginService()->deleteEvents($maxAge);
     }
 
     /**
      * Clear the IP addresses automatically blacklisted.
      *
      * @param bool $onlyExpired Clear only the expired bans?
+     *
+     * @return int
      */
     public function deleteAutomaticBlacklist($onlyExpired = true)
     {
-        $sql = 'DELETE FROM LoginControlIpRanges WHERE lcirType = ' . (int) static::IPRANGETYPE_BLACKLIST_AUTOMATIC;
-        if ($onlyExpired) {
-            $platform = $this->connection->getDatabasePlatform();
-            $sql .= ' AND lcirExpires <= ' . $platform->getNowExpression();
-        }
-
-        return (int) $this->connection->executeQuery($sql)->rowCount();
+        return $this->getFailedLoginService()->deleteAutomaticBlacklist($onlyExpired);
     }
 
     /**
-     * @deprecated Use \Core::make('ip')->getRequestIPAddress()
+     * @deprecated Use $app->make(\IPLib\Address\AddressInterface::class)
+     *
+     * @return \Concrete\Core\Utility\IPAddress
      */
     public function getRequestIP()
     {
-        $ip = $this->getRequestIPAddress();
+        $app = Application::getFacadeApplication();
+        $ip = $app->make(\IPLib\Address\AddressInterface::class);
+
         return new IPAddress($ip === null ? null : (string) $ip);
     }
 
     /**
-     * @deprecated Use \Core::make('ip')->isBlacklisted()
+     * @deprecated use $app->make('failed_login')->isBlacklisted()
+     *
+     * @param mixed $ip
      */
     public function isBanned($ip = false)
     {
@@ -427,11 +296,14 @@ class IPService implements LoggerAwareInterface
             $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
         }
 
-        return $this->isBlacklisted($ipAddress);
+        return $this->getFailedLoginService()->isBlacklisted($ipAddress);
     }
 
     /**
-     * @deprecated Use \Core::make('ip')->addToBlacklist()
+     * * @deprecated use $app->make('failed_login')->addToBlacklistForThresholdReached()
+     *
+     * @param mixed $ip
+     * @param mixed $ignoreConfig
      */
     public function createIPBan($ip = false, $ignoreConfig = false)
     {
@@ -439,30 +311,60 @@ class IPService implements LoggerAwareInterface
         if ($ip instanceof IPAddress) {
             $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
         }
-        $this->addToBlacklistForThresholdReached($ipAddress, $ignoreConfig);
+        $this->getFailedLoginService()->addToBlacklistForThresholdReached($ipAddress, $ignoreConfig);
     }
 
     /**
-     * @deprecated Use \Core::make('ip')->logFailedLogin()
+     * @deprecated use $app->make('failed_login')->registerEvent()
+     *
+     * @param bool $ignoreConfig
      */
     public function logSignupRequest($ignoreConfig = false)
     {
-        $this->logFailedLogin(null, $ignoreConfig);
+        return $this->getFailedLoginService()->registerEvent(null, $ignoreConfig);
     }
 
     /**
-     * @deprecated use signupRequestThresholdReached (same syntax, just fixed the typo in the name)
+     * @deprecated use $app->make('failed_login')->isThresholdReached()
+     *
+     * @param bool $ignoreConfig
      */
     public function signupRequestThreshholdReached($ignoreConfig = false)
     {
-        return $this->failedLoginsThresholdReached(null, $ignoreConfig);
+        return $this->getFailedLoginService()->isThresholdReached(null, $ignoreConfig);
     }
 
     /**
-     * @deprecated Use \Core::make('ip')->failedLoginsThresholdReached()
+     * @deprecated use $app->make('failed_login')->isThresholdReached()
+     *
+     * @param bool $ignoreConfig
      */
     public function signupRequestThresholdReached($ignoreConfig = false)
     {
-        return $this->failedLoginsThresholdReached(null, $ignoreConfig);
+        return $this->getFailedLoginService()->isThresholdReached(null, $ignoreConfig);
+    }
+
+    /**
+     * @deprecated use $app->make('failed_login')->getRangeType()
+     *
+     * @param \IPLib\Address\AddressInterface $ip
+     *
+     * @return int|null
+     */
+    protected function getRangeType(AddressInterface $ip)
+    {
+        $range = $this->getFailedLoginService()->getRange($ip);
+
+        return $range === null ? null : $range->getType();
+    }
+
+    /**
+     * @return \Concrete\Core\Permission\IpAccessControlService
+     */
+    private function getFailedLoginService()
+    {
+        $app = Application::getFacadeApplication();
+
+        return $app->make('failed_login');
     }
 }

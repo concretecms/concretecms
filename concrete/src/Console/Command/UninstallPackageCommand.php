@@ -3,6 +3,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -77,7 +78,7 @@ EOT
         if ($input->getOption('trash')) {
             $output->write('Moving package to trash... ');
             $r = $pkg->backup();
-            if (is_object($r)) {
+            if ($r instanceof ErrorList) {
                 throw new Exception(implode("\n", $r->getList()));
             }
             $output->writeln('<info>done.</info>');

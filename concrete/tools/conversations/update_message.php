@@ -33,7 +33,9 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
 
 $canReview = $blockObj->getController()->enableTopCommentReviews && !$message->getConversationMessageParentID();
 $messageAttachmentCount = count($message->getAttachments($_POST['cnvMessageID']));
-$attachmentsToAddCount = count($_POST['attachments']);
+if (is_array($_POST['attachments'])) {
+    $attachmentsToAddCount = count($_POST['attachments']);
+}
 $totalCurrentAttachments = intval($attachmentsToAddCount) + intval($messageAttachmentCount);
 if ($_POST['attachments'] && $attachmentsToAddCount) {
     if (is_object($pp) && !$pp->canAddConversationMessageAttachments()) {

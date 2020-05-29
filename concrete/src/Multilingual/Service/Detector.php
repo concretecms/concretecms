@@ -51,7 +51,7 @@ class Detector
 
         if ($result === null) {
             // Detect locale by user's preferred language
-            $u = new \User();
+            $u = $app->make(User::class);
             if ($u->isRegistered()) {
                 $userDefaultLanguage = $u->getUserDefaultLanguage();
                 if ($userDefaultLanguage) {
@@ -118,7 +118,7 @@ class Detector
                 $useUserLocale = $dh->inDashboard($c);
             }
             if ($useUserLocale) {
-                $u = new User();
+                $u = $app->make(User::class);
                 $locale = $u->getUserLanguageToDisplay();
             } else {
                 if ($this->isEnabled()) {

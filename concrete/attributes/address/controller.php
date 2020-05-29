@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Context\BasicFormContext;
@@ -14,6 +13,7 @@ use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Localization\Service\AddressFormat;
 use Concrete\Core\Localization\Service\CountryList;
 use Concrete\Core\Localization\Service\StatesProvincesList;
 use Concrete\Core\Support\Facade\Application;
@@ -128,11 +128,21 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
 
     public function validateForm($data)
     {
-        return !empty($data['address1'])
-        && !empty($data['city'])
-        && !empty($data['state_province'])
-        && !empty($data['country'])
-        && !empty($data['postal_code']);
+        if (empty($data['country'])) {
+            return false;
+        }
+
+        $app = isset($this->app) ? $this->app : Application::getFacadeApplication();
+        $af = $app->make(AddressFormat::class);
+
+        $required = $af->getCountryAddressRequiredFields($data['country']);
+        foreach ($required as $key) {
+            if (empty($data[$key])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function validateValue()
@@ -165,10 +175,20 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
     public function getDisplayValue()
     {
         $value = $this->getAttributeValue()->getValue();
-        $v = $this->app->make('helper/text')->entities($value);
-        $ret = nl2br($v);
+        $valueData = [
+            'address1' => $value->getAddress1(),
+            'address2' => $value->getAddress2(),
+            'address3' => $value->getAddress3(),
+            'city' => $value->getCity(),
+            'state_province' => $value->getStateProvince(),
+            'country' => $value->getCountry(),
+            'postal_code' => $value->getPostalCode(),
+        ];
 
-        return $ret;
+        $app = isset($this->app) ? $this->app : Application::getFacadeApplication();
+        $af = $app->make(AddressFormat::class);
+
+        return $af->format($valueData);
     }
 
     /**

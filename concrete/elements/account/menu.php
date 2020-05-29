@@ -4,7 +4,9 @@ use Concrete\Core\Support\Facade\Application;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-$u = new User();
+$app = Application::getFacadeApplication();
+
+$u = $app->make(Concrete\Core\User\User::class);
 if (!$u->isRegistered()) {
     return;
 }
@@ -24,7 +26,6 @@ $cp = new Permissions($desktop);
 if (!$cp->canRead()) {
     return;
 }
-$app = Application::getFacadeApplication();
 $url = $app->make('url/manager');
 ?>
 <div style="display: none">

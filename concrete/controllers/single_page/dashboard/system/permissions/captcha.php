@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 
 class Captcha extends DashboardPageController
@@ -10,7 +11,7 @@ class Captcha extends DashboardPageController
     public function view()
     {
         $list = SystemCaptchaLibrary::getList();
-        $captchas = array();
+        $captchas = [];
         foreach ($list as $sc) {
             $captchas[$sc->getSystemCaptchaLibraryHandle()] = $sc->getSystemCaptchaLibraryName();
         }
@@ -27,7 +28,7 @@ class Captcha extends DashboardPageController
 
     public function update_captcha()
     {
-        if (Loader::helper("validation/token")->validate('update_captcha')) {
+        if (Loader::helper('validation/token')->validate('update_captcha')) {
             $scl = SystemCaptchaLibrary::getByHandle($this->post('activeCaptcha'));
             if (is_object($scl)) {
                 $scl->activate();

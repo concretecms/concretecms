@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $h = Loader::helper('concrete/ui/help');
 if ($u->isRegistered() && Loader::helper('validation/token')->validate()) {
     if ($_POST['action'] == 'all') {
