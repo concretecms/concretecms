@@ -11,11 +11,9 @@ class Multisite extends DashboardPageController
     {
         $service = $this->app->make(InstallationService::class);
         if ($service->isMultisiteEnabled()) {
-            $to = [$this->getPageObject()->getFirstChild()];
-        } else {
-            $to = [$this->action('settings')];
+            return $this->buildRedirectToFirstAccessibleChildPage();
         }
 
-        return $this->buildRedirect($to);
+        return $this->buildRedirect($this->action('settings'));
     }
 }
