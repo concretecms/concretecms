@@ -20,11 +20,11 @@ $(function() {
     if ($selectMultiple === true) {
         ?>
         selectMode: 'multiple',
-        chooseMultiple: true
+        chooseMultiple: true,
     <?php
     } else {
     ?>
-        selectMode: 'choose'
+        selectMode: 'choose',
     <?php
     }
     ?>
