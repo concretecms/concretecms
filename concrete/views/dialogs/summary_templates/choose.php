@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-8 pl-0">
-                    <p class="text-muted"><small><?=t('Review your summary templates to make sure they look good at different breakpoints.')?></small></p>
+                    <p class="text-muted"><small><?=t('Review your summary templates to make sure they look good at different sizes of the browser window.')?></small></p>
                 </div>
                 <div class="col-4 text-right">
                     <toggle-button class="pr-2 mb-0" v-model="hasCustomSummaryTemplates" name="hasCustomSummaryTemplates"></toggle-button>
