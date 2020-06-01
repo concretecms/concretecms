@@ -855,6 +855,8 @@ return [
             'cookie_domain' => false,
             'cookie_secure' => false,
             'cookie_httponly' => true,
+            'cookie_raw' => false,
+            'cookie_samesite' => null,
         ],
         'remember_me' => [
             'lifetime' => 1209600, // 2 weeks in seconds
