@@ -8,6 +8,6 @@ class Registration extends DashboardPageController
 {
     public function view()
     {
-        return $this->buildRedirect([$this->getPageObject()->getFirstChild()]);
+        return $this->buildRedirectToFirstAccessibleChildPage();
     }
 }
