@@ -86,10 +86,21 @@ class FileManager
         }
         */
 
+        $uniqid = uniqid();
         $html = <<<EOL
-<div vue-enabled>
+<div data-concrete-file-input="{$uniqid}">
     <concrete-file-input :file-id="{$fID}" choose-text="{$chooseText}" input-name="{$inputName}"></concrete-file-input>
 </div>
+<script type="text/javascript">
+$(function() {
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-concrete-file-input="{$uniqid}"]',
+            components: config.components
+        })
+    })
+});
+</script>
 EOL;
         return $html;
     }

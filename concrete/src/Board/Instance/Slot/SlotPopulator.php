@@ -43,7 +43,7 @@ class SlotPopulator implements LoggerAwareInterface
 
         $type = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
 
-        $this->logger->debug(t('Passed %s instance slots and %s content groups passed to populate function',
+        $this->logger->debug(t(/*i18n: the two %s are two numbers*/'%s instance slots and %s content groups passed to the populate function',
             count($instanceSlots), count($contentObjectGroups)));
 
         foreach($instanceSlots as $instanceSlot) {
