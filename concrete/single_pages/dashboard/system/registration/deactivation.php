@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="form-group">
         <?= $form->label('inactiveMessage', t('Inactive User Error Message')) ?>
         <?= $form->textarea('inactiveMessage', $inactiveMessage, ['rows' => 4, 'cols' => 10]) ?>
-        <small class="text-mited"><?= t('This message will be shown to inactive users when they attempt to login.') ?></small>
+        <small class="text-muted"><?= t('This message will be shown to inactive users when they attempt to login.') ?></small>
     </div>
 
     <div class="form-group">
