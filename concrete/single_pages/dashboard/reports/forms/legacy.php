@@ -163,11 +163,7 @@ EOT
         $formPage = $block->getBlockCollectionObject();}
 
     ?>
-    <?php echo $h->getDashboardPaneHeaderWrapper(
-        t('Responses to %s', $surveys[$questionSet]['surveyName']),
-        false,
-        false,
-        false); ?>
+
 <div class="ccm-pane-body <?php if (!$paginator || !strlen($paginator->getPages()) > 0) { ?> ccm-pane-body-footer <?php } ?>">
     <?php if (count($answerSets) == 0) { ?>
         <div><?php echo t('No one has yet submitted this form.') ?></div>
@@ -283,5 +279,4 @@ EOT
             </div>
         <?php } ?>
     <?php } ?>
-    <?php echo $h->getDashboardPaneFooterWrapper(false); ?>
 <?php } ?>

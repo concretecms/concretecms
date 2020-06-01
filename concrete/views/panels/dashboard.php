@@ -1,9 +1,10 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::element('panels/dashboard', array(
+View::element('panels/dashboard', array(
 'c' => $c,
-'nav' => $nav,
+'favorites' => $favorites,
+'menu' => $menu,
 'tab' => $tab,
 'ui' => $ui,
 ));

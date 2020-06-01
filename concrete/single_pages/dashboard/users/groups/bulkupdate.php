@@ -128,5 +128,3 @@ $(function() {
     </div>
 </form>
 <?php } ?>
-
-<?=$app->make('helper/concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

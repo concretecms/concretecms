@@ -1,66 +1,53 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-$parents = Loader::helper('navigation')->getTrailToCollection($c);
-$pageIDs = array();
-foreach ($parents as $pc) {
-    $pageIDs[] = $pc->getCollectionID();
-}
-?>
-<section>
-	<div data-panel-menu="accordion" class="ccm-panel-header-accordion">
-	<nav>
-	<span><?php if (!in_array($tab, array('favorites'))) {
-    ?><?=t('Dashboard')?><?php 
-} else {
-    ?><?=t('Favorites')?><?php 
-} ?></span>
-	<ul class="ccm-panel-header-accordion-dropdown">
-		<li><a data-panel-accordion-tab="dashboard" <?php if (!in_array($tab, array('favorites'))) {
-    ?>data-panel-accordion-tab-selected="true" <?php 
-} ?>><?=t('Dashboard')?></a></li>
-		<li><a data-panel-accordion-tab="favorites" <?php if ($tab == 'favorites') {
-    ?>data-panel-accordion-tab-selected="true" <?php 
-} ?>><?=t('Favorites')?></a></li>
-	</ul>
-	</nav>
-	</div>
+<?php
+/**
+ * @var $menu \Concrete\Core\Application\UserInterface\Dashboard\Navigation\Navigation
+ */
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-		<?php if ($tab == 'favorites') {
-    ?>
-			<ul class="nav">
-			<?php
-			for ($i = 0; $i < count($nav); $i++) {
-				$cc = $nav[$i];
-				$active = ($cc->getCollectionID() == $c->getCollectionID() || (in_array($cc->getCollectionID(), $pageIDs)));
-    $cp = new Permissions($cc);
-    if ($cp->canViewPage()) {
-        ?>
-					<li <?php if ($active) {
-    ?>class="nav-selected"<?php } ?>><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>"><?=t($cc->getCollectionName())?></a></li>
+<section data-view="dashboard-panel" v-cloak>
+    <menu class="ccm-panel-dashboard-favorites-menu">
+        <li :class="{active: activeTab === 'dashboard'}"><a @click="activeTab = 'dashboard'" href="#" id="panel-dashboard-dashboard" data-toggle="pill"><?=t('Dashboard')?></a></li>
+        <li :class="{active: activeTab === 'favorites'}"><a @click="activeTab = 'favorites'" href="#" id="panel-dashboard-favorites" data-toggle="pill"><?=t('Favorites')?></a></li>
+    </menu>
 
-			<?php
-		$next = $nav[$i + 1];
-		if ($cc->getAttribute('is_desktop') || is_object($next) && $next->getPackageID() > 0 && $cc->getPackageID() == 0) {
-			echo '<li class="nav-divider"></li>';
-		}
+    <menu class="nav flex-column" v-show="activeTab === 'dashboard'">
+        <li v-for="item in menu"><a :href="item.url">{{item.name}}</a></li>
+    </menu>
 
-		?>
-				<?php
-    }
-    ?>
-			<?php 
-}
-    ?>
-			</ul>
-		<?php 
-} else {
-    ?>
-			<?php
-			$nav->render();
-		} ?>
+    <menu class="nav flex-column" v-show="activeTab === 'favorites'">
+        <li v-for="item in favorites"><a :href="item.url">{{item.name}}</a></li>
+    </menu>
 
-	
-	<div class="ccm-panel-dashboard-footer">
-		<p><?=t('Logged in as <a href="%s">%s</a>', URL::to('/account'), $ui->getUserDisplayName());?>. </p>
-		<a href="<?=URL::to('/login', 'do_logout', Loader::helper('validation/token')->generate('do_logout'))?>"><?=t('Sign Out.')?></a>
-	</div>
+
+    <div class="ccm-panel-dashboard-footer">
+        <p><?=t('Logged in as <a href="%s">%s</a>', URL::to('/account'), $ui->getUserDisplayName()); ?>. </p>
+        <a href="<?=URL::to('/login', 'do_logout', Loader::helper('validation/token')->generate('do_logout')); ?>"><?=t('Sign Out.'); ?></a>
+    </div>
 </section>
+
+
+<script type="text/javascript">
+
+    $(function() {
+
+        Concrete.Vue.activateContext('cms', function (Vue, config) {
+            new Vue({
+                el: 'section[data-view=dashboard-panel]',
+                components: config.components,
+                mounted() {
+
+                },
+                methods: {
+
+                },
+                data: {
+                    activeTab: 'dashboard',
+                    menu: <?=json_encode($menu)?>,
+                    favorites: <?=json_encode($favorites)?>
+                }
+            })
+        })
+
+    })
+
+</script>

@@ -3,10 +3,12 @@
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Application\Service\DashboardMenu;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FavoritesNavigationFactory;
 use Concrete\Core\Cookie\CookieJar;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Navigation\Breadcrumb\BreadcrumbInterface;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumbFactory;
+use Concrete\Core\Navigation\Item\PageItem;
 use Doctrine\ORM\EntityManagerInterface;
 use Mobile_Detect;
 
@@ -89,10 +91,8 @@ class DashboardPageController extends PageController
         $this->set('dashboard', $this->app->make('helper/concrete/dashboard'));
         $this->set('hideDashboardPanel', $cookieJar->get('dashboardPanelStatus') === 'closed');
 
-        // @todo fix this approach
-        $this->app->make('helper/concrete/dashboard');
-        $dh = DashboardMenu::getMine();
-        if ($dh->contains($this->getPageObject())) {
+        $favorites = $this->app->make(FavoritesNavigationFactory::class)->createNavigation();
+        if ($favorites->has(new PageItem($this->getPageObject()))) {
             $this->set('_bookmarked', true);
         } else {
             $this->set('_bookmarked', false);

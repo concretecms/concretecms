@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Navigation\Item;
 
-class Item implements ItemInterface
+class Item implements ItemInterface, \JsonSerializable
 {
 
     /**
@@ -74,5 +74,37 @@ class Item implements ItemInterface
         $this->children[] = $item;
     }
 
+    /**
+     * @param string $url
+     */
+    public function setUrl(string $url): void
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'url' => $this->getUrl(),
+            'name' => $this->getName(),
+            'isActive' => $this->isActive()
+        ];
+    }
 
 }

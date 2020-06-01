@@ -1,9 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Captcha Settings'), false, 'span10 offset1', (!is_object($activeCaptcha) || (!$activeCaptcha->hasOptionsForm())))?>
 <form method="post" id="site-form" action="<?=$view->action('update_captcha')?>">
 <?php if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) {
     ?>
-<?php 
+<?php
 } ?>
 <?=$this->controller->token->output('update_captcha')?>
 	<?php if (count($captchas) > 0) {
@@ -17,10 +16,10 @@
         $activeHandle = $activeCaptcha->getSystemCaptchaLibraryHandle();
     }
     ?>
-		
+
 		<?=$form->select('activeCaptcha', $captchas, $activeHandle, array('class' => 'span4'))?>
 		</div>
-		
+
 		<?php if (is_object($activeCaptcha)) {
     if ($activeCaptcha->hasOptionsForm()) {
         if ($activeCaptcha->getPackageID() > 0) {
@@ -33,11 +32,11 @@
     ?>
 
 
-	<?php 
+	<?php
 } else {
     ?>
 		<p><?=t('You have no captcha libraries installed.')?></p>
-	<?php 
+	<?php
 } ?>
 
 <?php if (is_object($activeCaptcha)) {
@@ -47,10 +46,10 @@
 		<?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
         </div>
 	</div>
-<?php 
-} ?>	
+<?php
+} ?>
 
-	
+
 </form>
 
 <script type="text/javascript">
