@@ -9,14 +9,6 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 // Note, this currently isn't technically necessary, but I'm putting here so we have some place to put components
 // as we create them.
 Concrete.Vue.createContext('backend', [], 'cms')
-if (document.querySelectorAll('[vue-enabled]').length) {
-    Concrete.Vue.activateContext('backend', function (Vue, config) {
-        new Vue({
-            el: '[vue-enabled]',
-            components: config.components
-        })
-    })
-}
 
 // Desktops and waiting for me
 import '@concretecms/bedrock/assets/desktop/js/frontend';

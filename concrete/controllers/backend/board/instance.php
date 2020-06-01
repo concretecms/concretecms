@@ -26,7 +26,7 @@ class Instance extends AbstractController
         }
 
         $checker = new Checker($board);
-        if ($board && $checker->canEditBoard($checker)) {
+        if ($board && $checker->canEditBoardContents()) {
             if ($this->request->request->get('action') === 'unpin') {
                 $command = new UnpinSlotFromBoardCommand();
             } else {

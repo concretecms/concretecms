@@ -28,7 +28,7 @@ class IndexedSearch
         $this->searchBatchSize = Config::get('concrete.limits.page_search_index_batch');
     }
 
-    public function getSearchableAreaAction()
+    public static function getSearchableAreaAction()
     {
         $action = Config::get('concrete.misc.search_index_area_method');
         if (!strlen($action)) {
@@ -38,7 +38,7 @@ class IndexedSearch
         return $action;
     }
 
-    public function getSavedSearchableAreas()
+    public static function getSavedSearchableAreas()
     {
         $areas = Config::get('concrete.misc.search_index_area_list');
         $areas = unserialize($areas);
@@ -49,7 +49,7 @@ class IndexedSearch
         return $areas;
     }
 
-    public function clearSearchIndex()
+    public static function clearSearchIndex()
     {
         $db = Loader::db();
         $db->Execute('truncate table PageSearchIndex');

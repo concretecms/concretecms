@@ -162,6 +162,52 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     }
 
     /**
+     * Filters by public date.
+     *
+     * @param string $date
+     * @param string $comparison
+     */
+    public function filterByDateAdded($date, $comparison = '=')
+    {
+        $this->query->andWhere($this->query->expr()->comparison('f.fDateAdded', $comparison,
+            $this->query->createNamedParameter($date)));
+    }
+
+    public function filterByOriginalPageID($ocID)
+    {
+        $this->query->andWhere('f.ocID = :ocID');
+        $this->query->setParameter('ocID', $ocID);
+    }
+
+    /**
+     * Filter the files by their storage location using a storage location id.
+     *
+     * @param int $fslID storage location id
+     */
+    public function filterByStorageLocationID($fslID)
+    {
+        $fslID = (int) $fslID;
+        $this->query->andWhere('f.fslID = :fslID');
+        $this->query->setParameter('fslID', $fslID);
+    }
+
+    /**
+     * Filter the files by their storage location using a storage location object.
+     *
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
+     */
+    public function filterByStorageLocation($storageLocation)
+    {
+        if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+            $this->filterByStorageLocationID($storageLocation->getID());
+        } elseif (!is_object($storageLocation)) {
+            $this->filterByStorageLocationID($storageLocation);
+        } else {
+            throw new \Exception(t('Invalid file storage location.'));
+        }
+    }
+
+    /**
      * Filter the files by their extension.
      *
      * @param string|string[] $extension one or more file extensions (with or without leading dot)
@@ -182,6 +228,15 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
             $this->query->andWhere($or);
         }
     }
+
+    public function filterBySet($fs)
+    {
+        $table = 'fsf' . $fs->getFileSetID();
+        $this->query->leftJoin('f', 'FileSetFiles', $table, 'f.fID = ' . $table . '.fID');
+        $this->query->andWhere($table . '.fsID = :fsID' . $fs->getFileSetID());
+        $this->query->setParameter('fsID' . $fs->getFileSetID(), $fs->getFileSetID());
+    }
+
 
     /**
      * Filters the file list by file size (in kilobytes).

@@ -5,6 +5,7 @@ use Concrete\Core\Board\Template\Slot\Driver\DriverInterface;
 use Concrete\Core\Board\Template\Slot\Driver\Manager;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Support\Facade\Facade;
+use Doctrine\ORM\EntityManager;
 use HtmlObject\Image;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="BoardSlotTemplates"
  * )
  */
-class SlotTemplate
+class SlotTemplate implements \JsonSerializable
 {
     use PackageTrait;
 
@@ -145,4 +146,16 @@ class SlotTemplate
         $template->addAttribute('icon', h($this->getIcon()));
         $template->addAttribute('package', $this->getPackageHandle());
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'icon' => $this->getIcon(),
+            'handle' => $this->getHandle(),
+            'name' => $this->getName(),
+            'contentSlots' => $this->getDriver()->getTotalContentSlots()
+        ];
+    }
+
 }

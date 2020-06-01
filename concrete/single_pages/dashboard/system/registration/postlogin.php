@@ -1,63 +1,56 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<form method="post" id="login-redirect-form" action="<?php echo $view->url('/dashboard/system/registration/postlogin', 'update_login_redirect')?>">
-    <?php echo $this->controller->token->output('update_login_redirect')?>
-    <fieldset>
-    <legend><?php echo t('After login')?></legend>
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Html\Service\Html $html
+ * @var Concrete\Core\Application\Service\UserInterface $interface
+ * @var Concrete\Core\Form\Service\Widget\PageSelector $pageSelector
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\Postlogin $controller
+ * @var string $loginRedirect
+ * @var int|null $loginRedirectCID
+ */
+?>
+<form method="POST" action="<?= $controller->action('update_login_redirect') ?>">
+    <?php $token->output('update_login_redirect') ?>
+
     <div class="form-group">
-        <div class="input">
-            <div class="radio">
-              <label>
-                <input type="radio" name="LOGIN_REDIRECT" value="HOMEPAGE"  <?php echo (!strlen($site_login_redirect) || $site_login_redirect == 'HOMEPAGE') ? 'checked' : ''?> />
-                <span><?php echo t('Redirect to Home')?></span>
-              </label>
+        <?= $form->label('', t('After login')) ?>
+        <div class="form-check">
+            <?= $form->radio('login_redirect', 'HOMEPAGE', $loginRedirect, ['id' => 'login_redirect_HOMEPAGE']) ?>
+            <label class="form-check-label" for="login_redirect_HOMEPAGE"><?= t('Redirect to Home') ?></label>
+        </div>
+        <div class="form-check">
+            <?= $form->radio('login_redirect', 'DESKTOP', $loginRedirect, ['id' => 'login_redirect_DESKTOP']) ?>
+            <label class="form-check-label" for="login_redirect_DESKTOP"><?= t("Redirect to user's Desktop") ?></label>
+        </div>
+        <div class="form-check">
+            <?= $form->radio('login_redirect', 'CUSTOM', $loginRedirect, ['id' => 'login_redirect_CUSTOM']) ?>
+            <label class="form-check-label" for="login_redirect_CUSTOM"><?= t('Redirect to a specific page') ?></label>
+            <div id="login_redirect_cid_wrap"<?= $loginRedirect === 'CUSTOM' ? '' : ' class="d-none"' ?>>
+                <?= $pageSelector->selectPage('login_redirect_cid', $loginRedirectCID) ?>
             </div>
-
-            <div class="radio">
-              <label>
-                <input type="radio" name="LOGIN_REDIRECT" value="DESKTOP" <?php echo ($site_login_redirect == 'DESKTOP') ? 'checked' : ''?> />
-                <span><?php echo t('Redirect to user\'s Desktop')?></span>
-              </label>
-            </div>
-
-            <div class="radio">
-              <label>
-                <input type="radio" name="LOGIN_REDIRECT" value="CUSTOM" <?php echo ($site_login_redirect == 'CUSTOM') ? 'checked' : ''?> />
-                <span><?php echo t('Redirect to a specific page')?></span>
-              </label>
-                <div id="login_redirect_custom_cid_wrap" style="display:<?php echo ($site_login_redirect == 'CUSTOM') ? 'block' : 'none'?>">
-                <?php
-                $formPageSelector = Loader::helper('form/page_selector');
-                echo $formPageSelector->selectPage('LOGIN_REDIRECT_CID', $login_redirect_cid);
-                ?>
-                </div>
-            </div>
-
         </div>
     </div>
-    </fieldset>
-    <div class="form-group">
-        <div class="ccm-dashboard-form-actions-wrapper">
-            <div class="ccm-dashboard-form-actions">
-                <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
-            </div>
+
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 
 </form>
-<script type="text/javascript">
-    $(function(){
-        $("#login_redirect_custom_cid_wrap .dialog-launch").dialog();
+<script>
+$(document).ready(function() {
+    function loginRedirectUpdated() {
+        var loginRedirect = $('input[name=login_redirect]:checked').val();
+        $('#login_redirect_cid_wrap').toggleClass('d-none', loginRedirect !== 'CUSTOM');
+    }
 
-        $("input[name='LOGIN_REDIRECT']").each(function(i,el){
-            el.onchange=function(){isLoginRedirectCustom();}
-        })
+    $('input[name=login_redirect]').on('change', function() {
+        loginRedirectUpdated();
     });
 
-    function isLoginRedirectCustom(){
-        if($("input[name='LOGIN_REDIRECT']:checked").val()=='CUSTOM'){
-            $('#login_redirect_custom_cid_wrap').css('display','block');
-        }else{
-            $('#login_redirect_custom_cid_wrap').css('display','none');
-        }
-    }
+    loginRedirectUpdated();
+});
 </script>

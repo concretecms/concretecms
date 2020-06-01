@@ -16,11 +16,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <p><?= t('If your site is displaying out-dated information, or behaving unexpectedly, it may help to clear your cache.') ?></p>
 
     <div class="form-group">
-        <div class="checkbox">
-            <label>
-                <?= $form->checkbox('thumbnails', '1', $clearThumbnails) ?>
-                <?= t('Clear cached thumbnails') ?>
-            </label>
+        <div class="form-check">
+            <?= $form->checkbox('thumbnails', '1', $clearThumbnails) ?>
+            <label class="form-check-label" for="thumbnails"><?= t('Clear cached thumbnails') ?></label>
         </div>
     </div>
 

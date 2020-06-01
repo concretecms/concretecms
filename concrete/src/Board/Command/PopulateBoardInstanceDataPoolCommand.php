@@ -9,10 +9,11 @@ class PopulateBoardInstanceDataPoolCommand
 
     /**
      * The unix timestamp to get all data since. Used to update progressively.
+     * If set to -1 then we dynamically determine this at runtime.
      *
      * @var int
      */
-    protected $retrieveDataObjectsAfter = 0;
+    protected $retrieveDataObjectsAfter = -1;
 
     /**
      * @return int

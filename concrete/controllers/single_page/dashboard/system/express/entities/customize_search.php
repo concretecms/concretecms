@@ -3,11 +3,10 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\User\Search\SearchProvider;
-use Concrete\Core\View\DialogView;
-use Concrete\Core\View\View;
 
 class CustomizeSearch extends DashboardPageController
 {
@@ -21,6 +20,9 @@ class CustomizeSearch extends DashboardPageController
 
     public function save($id = null)
     {
+        /**
+         * @var $entity Entity
+         */
         $entity = $this->repository->findOneById($id);
         if (is_object($entity)) {
             if (!$this->token->validate('save')) {
@@ -30,22 +32,14 @@ class CustomizeSearch extends DashboardPageController
                 /**
                  * @var $provider \Concrete\Core\Express\Search\SearchProvider
                  */
-                $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
-                $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
-                $available = $provider->getAvailableColumnSet();
-                foreach ($this->request->request->get('column') as $key) {
-                    $set->addColumn($available->getColumnByKey($key));
-                }
-
-                $sort = $available->getColumnByKey($this->request->request->get('fSearchDefaultSort'));
-                $set->setDefaultSortColumn($sort, $this->request->request->get('fSearchDefaultSortDirection'));
-
-                $entity->setResultColumnSet($set);
-                $itemsPerPage = (int) $this->request->request->get('fSearchItemsPerPage');
-                if (!$itemsPerPage) {
-                    $itemsPerPage = Entity::DEFAULT_ITEMS_PER_PAGE;
-                }
-                $entity->setItemsPerPage($itemsPerPage);
+                $provider = $this->app->make(\Concrete\Core\Express\Search\SearchProvider::class);
+                $factory = $this->app->make(QueryFactory::class);
+                $query = $factory->createFromAdvancedSearchRequest($provider, $this->request);
+                /**
+                 * @var $query Query
+                 */
+                $entity->setItemsPerPage($query->getItemsPerPage());
+                $entity->setResultColumnSet($query->getColumns());
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
                 $this->flash('success', t('Search preferences saved successfully.'));

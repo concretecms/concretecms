@@ -56,16 +56,6 @@ class AdvancedSearch extends AdvancedSearchController
         return $this->app->make('url')->to('/dashboard/files/search', 'preset', $search->getID());
     }
 
-    public function getCurrentSearchBaseURL()
-    {
-        return (string) URL::to('/ccm/system/search/files/current');
-    }
-
-    public function getBasicSearchBaseURL()
-    {
-        return (string) URL::to('/ccm/system/search/files/basic');
-    }
-
     public function getSavedSearchDeleteURL(SavedSearch $search)
     {
         return (string) URL::to('/ccm/system/dialogs/file/advanced_search/preset/delete?presetID=' . $search->getID());

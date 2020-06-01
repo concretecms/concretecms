@@ -35,16 +35,15 @@ class SlotPopulator implements LoggerAwareInterface
     }
 
     /**
-     * @param ItemObjectGroup[] $contentObjects
+     * @param ItemObjectGroup[] $contentObjectGroups
      * @param InstanceSlot[] $instanceSlots
      */
     public function populateSlotCollectionWithContent(array $contentObjectGroups, ArrayCollection $instanceSlots)
     {
 
-
         $type = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
 
-        $this->logger->debug(t('Passed %s instance slots and %s content groups passed to populate function',
+        $this->logger->debug(t(/*i18n: the two %s are two numbers*/'%s instance slots and %s content groups passed to the populate function',
             count($instanceSlots), count($contentObjectGroups)));
 
         foreach($instanceSlots as $instanceSlot) {
@@ -87,6 +86,7 @@ class SlotPopulator implements LoggerAwareInterface
                         json_encode($content)
                     ));
                 } else {
+
                     $this->logger->debug(t('No content objects found when attempting to populate slot %s',
                         $i));
                 }

@@ -1,45 +1,49 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
-use Concrete\Core\Tree\Node\Node;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="BoardItemCategories")
+ * @ORM\Table(name="BoardInstanceItemTags")
  */
-class ItemCategory
+class InstanceItemTag
 {
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $boardItemCategoryID;
+    protected $boardInstanceItemTagID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InstanceItem",  inversedBy="categories")
+     * @ORM\ManyToOne(targetEntity="InstanceItem",  inversedBy="tags")
      * @ORM\JoinColumn(name="boardInstanceItemID", referencedColumnName="boardInstanceItemID")
      **/
     protected $item;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $treeNodeID;
+    protected $tag;
 
-    public function __construct(InstanceItem $item, Node $category)
+    /**
+     * ItemTag constructor.
+     * @param $tag
+     */
+    public function __construct(InstanceItem $item, $tag)
     {
         $this->item = $item;
-        $this->treeNodeID = $category->getTreeNodeID();
+        $this->tag = $tag;
     }
 
     /**
      * @return mixed
      */
-    public function getBoardItemCategoryID()
+    public function getBoardInstanceItemTagID()
     {
-        return $this->boardItemCategoryID;
+        return $this->boardInstanceItemTagID;
     }
 
     /**
@@ -61,21 +65,18 @@ class ItemCategory
     /**
      * @return mixed
      */
-    public function getTreeNodeID()
+    public function getTag()
     {
-        return $this->treeNodeID;
+        return $this->tag;
     }
 
     /**
-     * @param mixed $treeNodeID
+     * @param mixed $tag
      */
-    public function setTreeNodeID($treeNodeID): void
+    public function setTag($tag): void
     {
-        $this->treeNodeID = $treeNodeID;
+        $this->tag = $tag;
     }
-
-
-
 
 
 

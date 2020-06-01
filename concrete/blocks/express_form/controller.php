@@ -215,7 +215,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $entry = $manager->createEntry($entity);
                 $e = $validator->getErrorList();
                 if (isset($e) && !$e->has() && $this->areFormSubmissionsStored()) {
-                    $entry = $manager->addEntry($entity);
+                    $entry = $manager->addEntry($entity, $this->app->make('site')->getSite());
                     $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
                     // Check antispam
@@ -690,7 +690,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
-        $this->requireAsset('core/tree');
         $this->clearSessionControls();
         $list = Type::getList();
 

@@ -7,9 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="InstanceItemRepository")
- * @ORM\Table(name="BoardInstanceItems")
+ * @ORM\Table(name="BoardInstanceItems", indexes={
+ * @ORM\Index(name="uniqueItemId", columns={"uniqueItemId"})
+ * })
  */
-class InstanceItem
+class InstanceItem implements \JsonSerializable
 {
 
     /**
@@ -51,6 +53,20 @@ class InstanceItem
     protected $relevantDate;
 
     /**
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\File\File")
+     * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
+     */
+    protected $relevantThumbnail;
+
+    /**
+     * Note: this is not fully unique in the table, but it is unique across data sources (e.g. calendar event IDs
+     * and page IDs can be dupes)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $uniqueItemId;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $name;
@@ -61,13 +77,13 @@ class InstanceItem
     protected $data;
 
     /**
-     * @ORM\OneToMany(targetEntity="ItemCategory", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="InstanceItemCategory", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
      *
      */
     protected $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="ItemTag", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="InstanceItemTag", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
      */
     protected $tags;
 
@@ -75,6 +91,22 @@ class InstanceItem
     {
         $this->tags = new ArrayCollection();
         $this->categories = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUniqueItemId()
+    {
+        return $this->uniqueItemId;
+    }
+
+    /**
+     * @param mixed $uniqueItemId
+     */
+    public function setUniqueItemId($uniqueItemId): void
+    {
+        $this->uniqueItemId = $uniqueItemId;
     }
 
     /**
@@ -217,6 +249,22 @@ class InstanceItem
     /**
      * @return mixed
      */
+    public function getRelevantThumbnail()
+    {
+        return $this->relevantThumbnail;
+    }
+
+    /**
+     * @param mixed $relevantThumbnail
+     */
+    public function setRelevantThumbnail($relevantThumbnail): void
+    {
+        $this->relevantThumbnail = $relevantThumbnail;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDateAddedToBoard()
     {
         return $this->dateAddedToBoard;
@@ -230,11 +278,20 @@ class InstanceItem
         $this->dateAddedToBoard = $dateAddedToBoard;
     }
 
-
-
-
-
-
+    public function jsonSerialize()
+    {
+        $file = $this->getRelevantThumbnail();
+        $thumbnail = null;
+        if ($file) {
+            $thumbnail = $file->getURL();
+        }
+        return [
+            'id' => $this->getBoardInstanceItemID(),
+            'name' => $this->getName(),
+            'thumbnail' => $thumbnail,
+            'relevantDate' => $this->getRelevantDate(),
+        ];
+    }
 
 
 }

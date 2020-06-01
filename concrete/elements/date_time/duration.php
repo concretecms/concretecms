@@ -88,7 +88,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                             <input type="hidden" class="form-control" name="<%=options.namespace%>_pdStartDate_<%=repetition.setID%>" value="<%=repetition.pdStartDate%>">
                         </div>
                         <div class="col-sm-6">
-                            <select name="<%=options.namespace%>_pdStartDateSelectTime_<%=repetition.setID%>" data-select="start-time">
+                            <select name="<%=options.namespace%>_pdStartDateSelectTime_<%=repetition.setID%>"  class="form-control" data-select="start-time">
                                 <?php foreach ($values as $value) { ?>
                                     <option value="<?= $value ?>" <% if (repetition.pdStartDateSelectTime == '<?=$value?>') { %>selected<% } %>><?= $value ?></option>
                                 <?php } ?>
@@ -108,7 +108,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                             <input type="hidden" class="form-control" name="<%=options.namespace%>_pdEndDate_<%=repetition.setID%>" value="<%=repetition.pdEndDate%>">
                         </div>
                         <div class="col-sm-6">
-                            <select name="<%=options.namespace%>_pdEndDateSelectTime_<%=repetition.setID%>" data-select="end-time">
+                            <select name="<%=options.namespace%>_pdEndDateSelectTime_<%=repetition.setID%>" class="form-control" data-select="end-time">
                                 <?php foreach ($values as $value) { ?>
                                     <option value="<?= $value ?>" <% if (repetition.pdEndDateSelectTime == '<?=$value?>') { %>selected<% } %>><?= $value ?></option>
                                 <?php } ?>

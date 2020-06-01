@@ -1,17 +1,19 @@
 <?php
+
 namespace Concrete\Authentication\Google;
 
 defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Authentication\Type\Google\Factory\GoogleServiceFactory;
-use Concrete\Core\Authentication\Type\OAuth\BindingService;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Error\UserMessageException;
-use OAuth\OAuth2\Service\Google;
-use Concrete\Core\User\User;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Strings;
+use OAuth\OAuth2\Service\Google;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -27,7 +29,7 @@ class Controller extends GenericOauth2TypeController
 
     public function getAuthenticationTypeIconHTML()
     {
-        return '<i class="fa fa-google"></i>';
+        return '<i class="fab fa-google"></i>';
     }
 
     public function getHandle()
@@ -77,29 +79,29 @@ class Controller extends GenericOauth2TypeController
             $blacklist[] = $decoded;
         }
 
-        $config->save('auth.google.appid', $args['apikey']);
-        $config->save('auth.google.secret', $args['apisecret']);
-        $config->save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
-        $config->save('auth.google.registration.group', (int) $args['registration_group']);
+        $config->save('auth.google.appid', (string) ($args['apikey'] ?? ''));
+        $config->save('auth.google.secret', (string) ($args['apisecret'] ?? ''));
+        $config->save('auth.google.registration.enabled', !empty($args['registration_enabled']));
+        $config->save('auth.google.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
         $config->save('auth.google.email_filters.whitelist', $whitelist);
         $config->save('auth.google.email_filters.blacklist', $blacklist);
     }
 
     public function edit()
     {
-        $config=$this->app->make('config');
+        $config = $this->app->make('config');
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('apikey', $config->get('auth.google.appid', ''));
-        $this->set('apisecret', $config->get('auth.google.secret', ''));
-
-        $list = new \GroupList();
-        $this->set('groups', $list->getResults());
-
-        $this->set('whitelist', $config->get('auth.google.email_filters.whitelist', []));
+        $this->set('groupSelector', $this->app->make(GroupSelector::class));
+        $this->set('apikey', (string) $config->get('auth.google.appid', ''));
+        $this->set('apisecret', (string) $config->get('auth.google.secret', ''));
+        $this->set('registrationEnabled', (bool) $config->get('auth.google.registration.enabled'));
+        $registrationGroupID = (int) $config->get('auth.google.registration.group');
+        $registrationGroup = $registrationGroupID === 0 ? null : $this->app->make(GroupRepository::class)->getGroupById($registrationGroupID);
+        $this->set('registrationGroup', $registrationGroup === null ? null : (int) $registrationGroup->getGroupID());
+        $this->set('whitelist', (array) $config->get('auth.google.email_filters.whitelist', []));
         $blacklist = array_map(function ($entry) {
             return json_encode($entry);
-        }, $config->get('auth.google.email_filters.blacklist', []));
-
+        }, (array) $config->get('auth.google.email_filters.blacklist', []));
         $this->set('blacklist', $blacklist);
     }
 
@@ -111,7 +113,7 @@ class Controller extends GenericOauth2TypeController
                 $image = \Image::open($this->getExtractor()->getImageURL());
                 $ui->updateUserAvatar($image);
             } catch (\Imagine\Exception\InvalidArgumentException $e) {
-                $this->logger->notice("Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?");
+                $this->logger->notice('Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?');
             } catch (\Exception $e) {
             }
         }
@@ -155,15 +157,15 @@ class Controller extends GenericOauth2TypeController
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
 
-
         $binding = $this->getBindingForUser($user);
         $accessToken = $this->getService()
             ->getStorage()
             ->retrieveAccessToken(
                 $this->getService()->service()
             )
-            ->getAccessToken();
-        $this->getService()->request('https://accounts.google.com/o/oauth2/revoke?token='.$accessToken, 'GET');
+            ->getAccessToken()
+        ;
+        $this->getService()->request('https://accounts.google.com/o/oauth2/revoke?token=' . $accessToken, 'GET');
         try {
             $this->getBindingService()->clearBinding($uID, $binding, $namespace, true);
             $this->showSuccess(t('Successfully detached.'));

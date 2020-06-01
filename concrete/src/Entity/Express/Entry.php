@@ -20,7 +20,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
- * @ORM\Table(name="ExpressEntityEntries")
+ * @ORM\Table(name="ExpressEntityEntries",
+ *  *     indexes={
+ *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"})
+ *     }
+ * )
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
  */
 class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface, ExportableInterface
@@ -198,6 +202,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $publicIdentifier;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $resultsNodeID;
+
+    /**
      * @return Entity
      */
     public function getEntity()
@@ -287,6 +296,23 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     {
         $this->associations = $associations;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getResultsNodeID()
+    {
+        return $this->resultsNodeID;
+    }
+
+    /**
+     * @param mixed $resultsNodeID
+     */
+    public function setResultsNodeID($resultsNodeID): void
+    {
+        $this->resultsNodeID = $resultsNodeID;
+    }
+
 
     /**
      * @param $handle

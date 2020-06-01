@@ -13,6 +13,7 @@ class InstanceSlotRule
 {
 
     const RULE_TYPE_PINNED = 'P';
+    const RULE_TYPE_CUSTOM_BLOCK = 'C';
 
     /**
      * @ORM\Id

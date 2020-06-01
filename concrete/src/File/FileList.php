@@ -248,6 +248,11 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
+    public function sortByDateAddedDescending()
+    {
+        $this->query->orderBy('fv.fvDateAdded', 'desc');
+    }
+
     /**
      * Filters by public date.
      *

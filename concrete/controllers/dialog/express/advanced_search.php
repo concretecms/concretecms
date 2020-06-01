@@ -2,32 +2,53 @@
 namespace Concrete\Controller\Dialog\Express;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
-use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Search\SavedExpressSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
-use Concrete\Core\Support\Facade\Express;
-use Concrete\Core\Express\Search\Field\Manager;
+use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Express\Search\SearchProvider;
-use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
-use League\Url\Url as LeagueUrl;
-use URL;
-use Permissions;
-use Exception;
+use League\Url\Url;
 
 class AdvancedSearch extends AdvancedSearchController
 {
+
     /**
-     * @var Express
+     * @var Entity
      */
     protected $entity;
 
     /**
-     * @var string
+     * @var ObjectManager
      */
-    protected $entityID;
+    protected $objectManager;
 
-    protected $supportsSavedSearch = true;
+    public function __construct(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
+        parent::__construct();
+    }
+
+    protected function loadEntity()
+    {
+        if (!isset($this->entity)) {
+            $entity = $this->objectManager->getObjectByID($this->request->query->get('exEntityID'));
+            if (is_object($entity)) {
+                $this->entity = $entity;
+            } else {
+                throw new \Exception(t('Access Denied.'));
+            }
+        }
+    }
+
+    protected function canAccess()
+    {
+        $this->loadEntity();
+        $ep = new Checker($this->entity);
+        return $ep->canViewExpressEntries();
+    }
 
     public function view()
     {
@@ -35,133 +56,86 @@ class AdvancedSearch extends AdvancedSearchController
         parent::view();
     }
 
-    public function setEntityID($entityID)
-    {
-        $this->entityID = (string) $entityID;
-    }
-
-    protected function loadEntity()
-    {
-        if (!isset($this->entity)) {
-            $entityID = $this->entityID;
-            if (empty($entityID)) {
-                $entityID = $this->request->query->get('exEntityID');
-                if (empty($entityID) && !empty($this->request->request->get('objectID'))) {
-                    $entityID = $this->request->request->get('objectID');
-                }
-            }
-            $entity = Express::getObjectByID($entityID);
-            if (is_object($entity)) {
-                $this->entity = $entity;
-                $this->objectID = $this->entity->getID();
-            } else {
-                throw new Exception(t('Access Denied.'));
-            }
-        }
-    }
-
-    protected function getCustomizeResultsElement()
-    {
-        $provider = $this->getSearchProvider();
-        $element = new CustomizeResults($provider);
-
-        return $element;
-    }
-
-    protected function canAccess()
+    protected function getAttributeCategory()
     {
         $this->loadEntity();
-        $ep = new Permissions($this->entity);
-
-        return $ep->canViewExpressEntries();
-    }
-
-    protected function getExpressCategory()
-    {
-        return new ExpressCategory($this->entity, $this->app, $this->app->make(EntityManager::class));
+        $category = $this->app->make(ExpressCategory::class, ['entity' => $this->entity]);
+        return $category;
     }
 
     public function getSearchProvider()
     {
-        $this->loadEntity();
-        $provider = new SearchProvider($this->entity, $this->getExpressCategory(), $this->app->make('session'));
-
+        $provider = $this->app->make(SearchProvider::class, [
+            'category' => $this->getAttributeCategory(),
+            'entity' => $this->entity
+        ]);
         return $provider;
-    }
-
-    public function getFieldManager()
-    {
-        $this->loadEntity();
-        $manager = ManagerFactory::get('express');
-        /*
-         * @var $manager Manager
-         */
-        $manager->setExpressCategory($this->getExpressCategory());
-
-        return $manager;
-    }
-
-    public function getSavedSearchBaseURL(SavedSearch $search)
-    {
-        $url = null;
-        if (is_object($this->entity)) {
-            $url = URL::to('/ccm/system/search/express/preset', $this->entity->getID(), $search->getID());
-        }
-
-        return (string) $url;
-    }
-
-    public function getCurrentSearchBaseURL()
-    {
-        $url = URL::to('/ccm/system/search/express/current');
-        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
-
-        return (string) $url;
-    }
-
-    public function getBasicSearchBaseURL()
-    {
-        $url = URL::to('/ccm/system/search/express/basic');
-        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
-
-        return (string) $url;
-    }
-
-    public function getSavedSearchDeleteURL(SavedSearch $search)
-    {
-        return (string) URL::to('/ccm/system/dialogs/express/advanced_search/preset/delete?presetID=' . $search->getID() . '&objectID=' . $this->objectID);
-    }
-
-    public function getSavedSearchEditURL(SavedSearch $search)
-    {
-        return (string) URL::to('/ccm/system/dialogs/express/advanced_search/preset/edit?presetID=' . $search->getID() . '&objectID=' . $this->objectID);
-    }
-
-    public function getAddFieldAction()
-    {
-        $action = $this->action('add_field');
-        $url = LeagueUrl::createFromUrl($action);
-        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
-
-        return (string) $url;
-    }
-
-    public function getSubmitAction()
-    {
-        $action = $this->action('submit');
-        $url = LeagueUrl::createFromUrl($action);
-        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
-
-        return (string) $url;
     }
 
     public function getSavedSearchEntity()
     {
         $em = $this->app->make(EntityManager::class);
         if (is_object($em)) {
-            return $em->getRepository('Concrete\Core\Entity\Search\SavedExpressSearch');
+            return $em->getRepository(SavedExpressSearch::class);
         }
 
         return null;
+    }
+
+    public function getSubmitMethod()
+    {
+        return 'get';
+    }
+
+    public function getSubmitAction()
+    {
+        return $this->app->make('url')->to('/dashboard/express/entries/', 'advanced_search', $this->entity->getId());
+    }
+
+    public function getFieldManager()
+    {
+        $this->loadEntity();
+        $provider = $this->getSearchProvider();
+        return $provider->getFieldManager();
+    }
+
+
+    public function getSavedSearchBaseURL(SavedSearch $search)
+    {
+        return $this->app->make('url')->to('/dashboard/express/entries', 'preset', $search->getId());
+    }
+
+    public function getAddFieldAction()
+    {
+        $action = $this->action('add_field');
+        $url = Url::createFromUrl($action);
+        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+        return (string) $url;
+    }
+
+    public function getSavePresetAction()
+    {
+        $action = parent::getSavePresetAction();
+        $url = Url::createFromUrl($action);
+        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+        return (string) $url;
+    }
+
+    public function getEditSearchPresetAction()
+    {
+        $action = parent::getEditSearchPresetAction();
+        $url = Url::createFromUrl($action);
+        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+        return (string) $url;
+    }
+
+    public function getSavedSearchDeleteURL(SavedSearch $search)
+    {
+        return $this->app->make('url')->to('/ccm/system/dialogs/express/advanced_search/preset/delete?presetID=' . $search->getID() . '&exEntityID=' . $this->entity->getId());
+    }
+
+    public function getSavedSearchEditURL(SavedSearch $search)
+    {
+        return $this->app->make('url')->to('/ccm/system/dialogs/express/advanced_search/preset/edit?presetID=' . $search->getID() . '&exEntityID=' . $this->entity->getId());
     }
 }

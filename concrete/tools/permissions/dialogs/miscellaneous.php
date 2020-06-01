@@ -1,7 +1,11 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
-$p = new Permissions();
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\View\View;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
+$p = new Checker();
 if ($p->canAccessTaskPermissions()) {
-    Loader::element('permission/details/miscellaneous');
+    View::element('permission/details/miscellaneous');
 }

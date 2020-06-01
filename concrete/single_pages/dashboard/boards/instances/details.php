@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <form method="post" class="float-right" action="<?=$view->action('refresh_pool', $instance->getBoardInstanceID())?>">
             <?=$token->output('refresh_pool')?>
-            <button type="submit" class="btn btn-sm btn-secondary"><?=t("Refresh Pool")?></button>
+            <button type="submit" class="btn btn-sm btn-secondary"><?=t("Refresh Data Pool")?></button>
         </form>
 
         <h4><?=t('Data Source Objects')?></h4>
