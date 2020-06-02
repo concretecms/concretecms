@@ -24,11 +24,6 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
-        $provider = $this->app->make(SearchProvider::class);
-        $queryFactory = $this->app->make(QueryFactory::class);
-        $resultFactory = $this->app->make(ResultFactory::class);
-        $query = $queryFactory->createQuery($provider);
-        $result = $resultFactory->createFromQuery($provider, $query);
-        $this->set('result', $result);
+        // Nothing
     }
 }
