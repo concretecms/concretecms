@@ -134,7 +134,7 @@ if ($key !== null) {
                         });
                         </script>
                         <?php
-                    }
+                    } ?>
             </div>
         </div>
 
