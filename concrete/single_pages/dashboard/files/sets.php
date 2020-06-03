@@ -305,7 +305,7 @@ $dh = $app->make(Date::class);
                 ]
             ); ?>
 
-            <button type="submit" class="btn-secondary ml-2 btn-sm">
+            <button type="submit" class="btn btn-secondary ml-2 btn-sm">
                 <svg width="16" height="16">
                     <use xlink:href="#icon-search"/>
                 </svg>
