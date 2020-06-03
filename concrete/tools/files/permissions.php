@@ -94,6 +94,9 @@ if ($_POST['task'] == 'set_location') {
 
         <div class="help-block">
             <p><?=t('Users who access files through the file manager will not be prompted for a password.')?></p>
+            <p>
+                <?= t('File passwords are stored in the database in plain text, they are not to be used for serious security concerns. Instead used a private storage location and user permissions.') ?>
+            </p>
         </div>
     </div>
 
