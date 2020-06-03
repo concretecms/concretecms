@@ -256,7 +256,7 @@ class UserInterface
     {
         $tcn = rand(0, getrandmax());
 
-        $html = '<ul class="nav-tabs nav mb-3" id="ccm-tabs-' . $tcn . '">';
+        $html = '<ul class="nav-tabs nav-fill nav mb-3" id="ccm-tabs-' . $tcn . '">';
         $c = Page::getCurrentPage();
         foreach ($tabs as $t) {
             if (is_array($t)) {
@@ -289,7 +289,7 @@ class UserInterface
     {
         $ul = new Element("ul");
         $ul->addClass("nav");
-        $ul->addClass("nav-tabs");
+        $ul->addClass("nav-tabs mb-3 nav-fill");
         $ul->setAttribute("role", "tablist");
 
         if ($id !== null) {
