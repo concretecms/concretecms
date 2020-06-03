@@ -114,11 +114,15 @@ class Location extends BackendInterfacePageController
 
             // now we do additional page URLs
             $req = Request::getInstance();
-            $oc->clearPagePaths();
-
+          
             $canonical = $req->request->get('canonical');
             $pathArray = $req->request->get('path');
 
+            // check if path exists, in order to avoid deleting single page path
+            if($pathArray){
+             $oc->clearPagePaths();
+            }
+            
             if (isset($canonical) && $this->page->getCollectionID() == Page::getHomePageID()) {
                 throw new Exception('You cannot change the canonical path of the home page.');
             }

@@ -129,7 +129,7 @@ class BindingServiceTest extends PHPUnit_Framework_TestCase
                 'binding' => 'foo',
                 'id' => 1
             ], [])
-            ->andReturn($fakeResult);
+            ->andReturn(1);
         $this->assertEquals(1, $service->clearBinding(1, 'foo', 'test', true));
     }
 

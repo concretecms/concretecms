@@ -6,10 +6,10 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.3a1',
-    'version_installed' => '8.5.3a1',
-    'version_db' => '20200203000000', // the key of the latest database migration
- 
+    'version' => '8.5.3',
+    'version_installed' => '8.5.3',
+    'version_db' => '20200501000000', // the key of the latest database migration
+
     /*
      * Installation status
      *
@@ -96,7 +96,8 @@ return [
          *
          * @var string semi-colon separated.
          */
-        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.phtml',
+        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
+
         'chunking' => [
             // Enable uploading files in chunks?
             'enabled' => true,
@@ -115,7 +116,7 @@ return [
             // Include the BOM (byte-order mark) in generated CSV files?
             // @var bool
             'include_bom' => false,
-            'datetime_format' => 'ATOM', 
+            'datetime_format' => 'ATOM',
         ],
     ],
 
@@ -855,6 +856,8 @@ return [
             'cookie_domain' => false,
             'cookie_secure' => false,
             'cookie_httponly' => true,
+            'cookie_raw' => false,
+            'cookie_samesite' => null,
         ],
         'remember_me' => [
             'lifetime' => 1209600, // 2 weeks in seconds
