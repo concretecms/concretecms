@@ -62,6 +62,12 @@ mix
     .js('assets/themes/dashboard/js/main.js', 'themes/dashboard');
 
 /**
+ * Build Block Components
+ */
+mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/view.js');
+
+
+/**
  * Build accessory Features
  */
 mix
