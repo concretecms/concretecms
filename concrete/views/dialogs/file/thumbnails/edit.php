@@ -1,22 +1,33 @@
 <?php
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\Exception\InvalidDimensionException;
+use Concrete\Core\File\File;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\View\View;
+use Symfony\Component\HttpFoundation\Request;
 
 $view = new View('image-editor/editor');
 
-$file = File::getByID(intval(Request::request('fID', 1)));
+$app = Application::getFacadeApplication();
+/** @var Request $request */
+$request = $app->make(Request::class);
+/** @var Repository $config */
+$config = $app->make(Repository::class);
 
-$file_version = $file->getVersion(intval(Request::request('fvID', 1)));
-
-$handle = Request::request('thumbnail', '');
+$file = File::getByID((int)$request->request->get('fID', 1));
+$file_version = $file->getVersion((int)$request->request->get('fvID', 1));
+$handle = $request->request->get('thumbnail', '');
 
 /* @var Thumbnail[] $thumbnails */
+
 try {
     $thumbnails = $file_version->getThumbnails();
 } catch (InvalidDimensionException $e) {
-    $view = \View::getInstance();
+
+    $view = View::getInstance();
     $view->renderError(
         t('Invalid File Dimensions'),
         t(
@@ -24,28 +35,33 @@ try {
             ' the correct dimensions.'));
 
     return;
-} catch (\Exception $e) {
-    $view = \View::getInstance();
+
+} catch (Exception $e) {
+    $view = View::getInstance();
     $view->renderError(
         t('Unknown Error'),
         t('An unknown error occurred while trying to find the thumbnails!'));
 
     return;
 }
+
 $type_version = null;
 $temp_version = false;
+
 foreach ($thumbnails as $thumb) {
     $temp_version = $thumb->getThumbnailTypeVersionObject();
+
     if ($temp_version->getHandle() === $handle) {
         $type_version = $temp_version;
         break;
     }
 }
+
 if ($type_version) {
     $height = $type_version->getHeight();
     $width = $type_version->getWidth();
 } else {
-    $view = \View::getInstance();
+    $view = View::getInstance();
     $view->renderError(
         t('Unable to find requested thumbnail'),
         t(
@@ -56,9 +72,8 @@ if ($type_version) {
 }
 
 $saveAreaBackgroundColor = $type_version->getSaveAreaBackgroundColor();
+
 if (empty($saveAreaBackgroundColor)) {
-    $app = Application::getFacadeApplication();
-    $config = $app->make('config');
     $saveAreaBackgroundColor = $config->get('concrete.file_manager.images.image_editor_save_area_background_color');
 }
 
@@ -69,7 +84,7 @@ $view->addScopeItems([
         'saveAreaBackgroundColor' => $saveAreaBackgroundColor,
         'saveHeight' => $height,
         'saveWidth' => $width,
-        'saveUrl' => (string) URL::to('/tools/required/files/importers/thumbnail'),
+        'saveUrl' => (string)Url::to('/tools/required/files/importers/thumbnail'),
         'saveData' => [
             'isThumbnail' => true,
             'fID' => $file_version->getFileID(),
@@ -78,4 +93,5 @@ $view->addScopeItems([
         ],
     ],
 ]);
+
 echo $view->render();

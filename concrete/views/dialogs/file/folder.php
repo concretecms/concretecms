@@ -1,40 +1,67 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 
-<form method="post" data-dialog-form="move-to-folder" action="<?=$controller->action('submit')?>">
+defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\View\View;
+use HtmlObject\Input;
+use Concrete\Controller\Dialog\File\Folder;
+
+/** @var Folder $controller */
+$app = Application::getFacadeApplication();
+/** @var Form $form */
+$form = $app->make(Form::class);
+?>
+
+<form method="post" data-dialog-form="move-to-folder" action="<?php echo $controller->action('submit') ?>">
     <div class="ccm-ui">
-        <?php Loader::element('files/move_to_folder', $func = array(
-            'isCurrentFolder' => function ($folder) use ($f) {
-                $fileFolderObject = $f->getFileFolderObject();
-                if (is_object($fileFolderObject) && $fileFolderObject->getTreeNodeID() === $folder->getTreeNodeID()) {
-                    return true;
+        <?php
+            /** @noinspection PhpUnhandledExceptionInspection */
+            View::element('files/move_to_folder', $func = [
+                'isCurrentFolder' => function ($folder) use ($f) {
+                    /** @var Node $fileFolderObject */
+                    /** @var Node $folder */
+                    $fileFolderObject = $f->getFileFolderObject();
+
+                    if (is_object($fileFolderObject) && $fileFolderObject->getTreeNodeID() === $folder->getTreeNodeID()) {
+                        return true;
+                    }
+
+                    return false;
+                },
+
+                'getRadioButton' => function ($folder, $checked = false) use ($f) {
+                    /** @var Node $folder */
+                    return id(new Input('radio', 'folderID', $folder->getTreeNodeID(), ['checked' => $checked]));
                 }
-                return false;
-            },
-            'getRadioButton' => function ($folder, $checked = false) use ($f) {
-                $radio = id(new HtmlObject\Input('radio', 'folderID', $folder->getTreeNodeID(), array('checked' => $checked)));
-                
-                return $radio;
-            }
-        ));?>
+            ]);
+        ?>
     </div>
 
     <div class="dialog-buttons">
-        <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-        <button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+        <button class="btn btn-secondary float-left" data-dialog-action="cancel">
+            <?php echo t('Cancel') ?>
+        </button>
+
+        <button type="button" data-dialog-action="submit" class="btn btn-primary float-right">
+            <?php echo t('Save') ?>
+        </button>
     </div>
-
 </form>
-<script type="text/javascript">
-    $(function() {
-        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateFolder');
-        ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateFolder', function(e, data) {
-            if (data.form == 'move-to-folder') {
-                ConcreteEvent.publish('FolderUpdateRequestComplete', {
-                    'folder': data.response.folder
-                });
-            }
-        });
 
-    });
+<script>
+    (function ($) {
+        $(function () {
+            ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateFolder');
+            ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateFolder', function (e, data) {
+                if (data.form === 'move-to-folder') {
+                    ConcreteEvent.publish('FolderUpdateRequestComplete', {
+                        'folder': data.response.folder
+                    });
+                }
+            });
+        });
+    })(jQuery);
 </script>
