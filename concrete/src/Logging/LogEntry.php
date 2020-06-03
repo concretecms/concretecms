@@ -89,13 +89,15 @@ class LogEntry
             case Monolog::EMERGENCY:
                 return '<i class="text-danger fa fa-fire launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Monolog::CRITICAL:
+                return '<i class="text-danger fa fa-ambulance launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Monolog::ALERT:
                 return '<i class="text-danger fa fa-exclamation-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Monolog::ERROR:
+                return '<i class="text-danger fa fa-flag launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Monolog::WARNING:
                 return '<i class="text-warning fa fa-warning launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Monolog::NOTICE:
-                return '<i class="fa fa-exclamation launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
+                return '<i class="text-success fa fa-leaf launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Monolog::INFO:
                 return '<i class="text-info fa fa-info-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Monolog::DEBUG:
