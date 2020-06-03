@@ -1,8 +1,11 @@
 <?php
+
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
@@ -15,6 +18,8 @@ use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Service\VolatileDirectory;
+use Concrete\Core\File\Type\TypeList as FileTypeList;
+use Concrete\Core\File\ValidationService;
 use Concrete\Core\Foundation\Queue\Batch\BatchDispatcher;
 use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\Batch\Processor;
@@ -25,17 +30,23 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Url;
+use Concrete\Core\Utility\Service\Number;
+use Concrete\Core\Utility\Service\Validation\Strings;
+use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FileSet;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use IPLib\Factory as IPFactory;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
 use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use ZipArchive;
 
 class File extends Controller
@@ -143,8 +154,7 @@ class File extends Controller
                 $expr->neq('fvID', $fv->getFileVersionID())
             ))
             ->andWhere($expr->eq('fvPrefix', $fv->getPrefix()))
-            ->andWhere($expr->eq('fvFilename', $fv->getFileName()))
-        ;
+            ->andWhere($expr->eq('fvFilename', $fv->getFileName()));
         $em = $this->app->make(EntityManagerInterface::class);
         $repo = $em->getRepository(FileVersionEntity::class);
         $deleteFilesAndThumbnails = $repo->matching($criteria)->isEmpty();
@@ -208,7 +218,7 @@ class File extends Controller
         $importedFileVersions = [];
         try {
             $token = $this->app->make('token');
-            if (!$token->validate('import_incoming')) {
+            if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage());
             }
             $filenames = $this->request->request->get('send_file');
@@ -232,7 +242,7 @@ class File extends Controller
             $incoming = $this->app->make(Incoming::class);
             $this->checkExistingIncomingFiles($filenames, $incoming);
             $fi = $this->app->make(Importer::class);
-            $removeFilesAfterPost = (bool) $this->request->request->get('removeFilesAfterPost');
+            $removeFilesAfterPost = (bool)$this->request->request->get('removeFilesAfterPost');
             $incomingFileSystemObject = $incoming->getIncomingFilesystem();
             $originalPage = $this->getImportOriginalPage();
             foreach ($filenames as $filename) {
@@ -265,7 +275,7 @@ class File extends Controller
         $importedFileVersions = [];
         try {
             $token = $this->app->make('token');
-            if (!$token->validate('import_remote')) {
+            if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage());
             }
             $urls = $this->request->request->get('url_upload');
@@ -274,6 +284,7 @@ class File extends Controller
             } elseif (!is_array($urls)) {
                 $urls = [];
             }
+
             $urls = array_values(array_filter(array_map('trim', $urls), 'strlen'));
             $replacingFile = $this->getFileToBeReplaced();
             switch (count($urls)) {
@@ -402,8 +413,8 @@ class File extends Controller
                 $processor->process($newFileVersion);
             }
         }
-        $width = (int) $config->get('concrete.file_manager.restrict_max_width');
-        $height = (int) $config->get('concrete.file_manager.restrict_max_height');
+        $width = (int)$config->get('concrete.file_manager.restrict_max_width');
+        $height = (int)$config->get('concrete.file_manager.restrict_max_height');
         if ($width > 0 || $height > 0) {
             $processor = new ConstrainImageProcessor($width, $height);
             if ($processor->shouldProcess($fv)) {
@@ -449,9 +460,9 @@ class File extends Controller
      * @param string $property
      * @param int|null $index
      *
+     * @return \Concrete\Core\Entity\File\Version|null returns NULL if the upload is chunked and we still haven't received the full file
      * @throws \Concrete\Core\Error\UserMessageException
      *
-     * @return \Concrete\Core\Entity\File\Version|null returns NULL if the upload is chunked and we still haven't received the full file
      */
     protected function handleUpload($property, $index = null)
     {
@@ -461,6 +472,7 @@ class File extends Controller
         } else {
             $file = $this->request->files->get($property);
         }
+
         if (!$file instanceof UploadedFile) {
             throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID));
         }
@@ -503,9 +515,9 @@ class File extends Controller
     /**
      * Get the file instance to be replaced by the uploaded file (if any).
      *
-     * @throws \Concrete\Core\Error\UserMessageException in case the file couldn't be found or it's not accessible
-     *
      * @return \Concrete\Core\Entity\File\File|null
+     *
+     * @throws \Concrete\Core\Error\UserMessageException in case the file couldn't be found or it's not accessible
      *
      * @since 8.5.0a3
      */
@@ -516,7 +528,7 @@ class File extends Controller
             if (!$fID) {
                 $this->fileToBeReplaced = null;
             } else {
-                $fID = is_scalar($fID) ? (int) $fID : 0;
+                $fID = is_scalar($fID) ? (int)$fID : 0;
                 $file = $fID === 0 ? null : $this->app->make(EntityManagerInterface::class)->find(FileEntity::class, $fID);
                 if ($file === null) {
                     throw new UserMessageException(t('Unable to find the specified file.'));
@@ -535,9 +547,9 @@ class File extends Controller
     /**
      * Get the destination folder where the uploaded files should be placed.
      *
-     * @throws \Concrete\Core\Error\UserMessageException in case the folder couldn't be found or it's not accessible
-     *
      * @return \Concrete\Core\Tree\Node\Type\FileFolder
+     *
+     * @throws \Concrete\Core\Error\UserMessageException in case the folder couldn't be found or it's not accessible
      *
      * @since 8.5.0a3
      */
@@ -554,7 +566,7 @@ class File extends Controller
             } else {
                 $treeNodeID = $this->request->request->get('currentFolder');
                 if ($treeNodeID) {
-                    $treeNodeID = is_scalar($treeNodeID) ? (int) $treeNodeID : 0;
+                    $treeNodeID = is_scalar($treeNodeID) ? (int)$treeNodeID : 0;
                     $folder = $treeNodeID === 0 ? null : Node::getByID($treeNodeID);
                 } else {
                     $filesystem = new Filesystem();
@@ -592,7 +604,7 @@ class File extends Controller
             if (!$ocID) {
                 $this->importOriginalPage = null;
             } else {
-                $ocID = is_scalar($ocID) ? (int) $ocID : 0;
+                $ocID = is_scalar($ocID) ? (int)$ocID : 0;
                 $page = $ocID === 0 ? null : CorePage::getByID($ocID);
                 if ($page === null || $page->isError()) {
                     throw new UserMessageException(t('Unable to find the specified page.'));
@@ -649,11 +661,11 @@ class File extends Controller
             } catch (RuntimeException $x) {
                 throw new UserMessageException(t('The URL "%s" is not valid: %s', $u, $x->getMessage()));
             }
-            $scheme = (string) $url->getScheme();
+            $scheme = (string)$url->getScheme();
             if ($scheme === '') {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
-            $host = trim((string) $url->getHost());
+            $host = trim((string)$url->getHost());
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
@@ -677,37 +689,41 @@ class File extends Controller
      * @param string $url
      * @param string $temporaryDirectory
      *
+     * @return string the local filename
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
-     * @return string the local filename
      */
     protected function downloadRemoteURL($url, $temporaryDirectory)
     {
-        $client = $this->app->make('http/client');
-        $request = $client->getRequest()->setUri($url);
-        $response = $client->send();
-        if (!$response->isSuccess()) {
-            throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
+        /** @var Client $client */
+        $client = $this->app->make(Client::class);
+        $request = new Request('GET', $url);
+        $response = $client->send($request);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
         }
-        $headers = $response->getHeaders();
+
         // figure out a filename based on filename, mimetype, ???
         $matches = null;
         if (preg_match('/^[^#\?]+[\\/]([-\w%]+\.[-\w%]+)($|\?|#)/', $request->getUri(), $matches)) {
             // got a filename (with extension)... use it
             $filename = $matches[1];
         } else {
-            $contentType = $headers->get('ContentType')->getFieldValue();
-            if ($contentType) {
-                list($mimeType) = explode(';', $contentType, 2);
-                $mimeType = trim($mimeType);
-                // use mimetype from http response
-                $extension = $this->app->make('helper/mime')->mimeToExtension($mimeType);
-                if ($extension === false) {
-                    throw new UserMessageException(t('Unknown mime-type: %s', h($mimeType)));
+            foreach($response->getHeader('Content-Type') as $contentType) {
+                if (!empty($contentType)) {
+                    list($mimeType) = explode(';', $contentType, 2);
+                    $mimeType = trim($mimeType);
+                    // use mimetype from http response
+                    $extension = $this->app->make('helper/mime')->mimeToExtension($mimeType);
+
+                    if ($extension === false) {
+                        throw new UserMessageException(t('Unknown mime-type: %s', h($mimeType)));
+                    }
+                    $filename = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $extension;
+                } else {
+                    throw new UserMessageException(t(/*i18n: %s is an URL*/ 'Could not determine the name of the file at %s', $url));
                 }
-                $filename = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $extension;
-            } else {
-                throw new UserMessageException(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', $url));
             }
         }
         $fullFilename = $temporaryDirectory . '/' . $filename;
@@ -730,7 +746,7 @@ class File extends Controller
         switch ($this->request->request->get('responseFormat')) {
             case 'dropzone':
                 if ($errors->has()) {
-                    return $responseFactory->create(json_encode($errors->toText()), 422, ['Content-Type' => 'application/json; charset='.APP_CHARSET]);
+                    return $responseFactory->create(json_encode($errors->toText()), 422, ['Content-Type' => 'application/json; charset=' . APP_CHARSET]);
                 }
                 break;
             default:
@@ -817,5 +833,149 @@ class File extends Controller
         fclose($finalFile);
 
         return new UploadedFile($finalFilePath, $originalFile->getClientOriginalName());
+    }
+
+    public function fetchDirectories()
+    {
+        $directories = [];
+
+        $editResponse = new EditResponse();
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var ErrorList $errors */
+        $errors = $this->app->make(ErrorList::class);
+
+        try {
+            if ($token->validate()) {
+                $filesystem = new Filesystem();
+                $folder = $filesystem->getRootFolder();
+
+                if ($folder instanceof FileFolder) {
+                    $nodes = $folder->getHierarchicalNodesOfType(
+                        "file_folder",
+                        1,
+                        true,
+                        true,
+                        20
+                    );
+
+                    foreach ($nodes as $node) {
+                        /** @var FileFolder $treeNodeObject */
+                        $treeNodeObject = $node["treeNodeObject"];
+
+                        $directories[] = [
+                            "directoryId" => $treeNodeObject->getTreeNodeID(),
+                            "directoryName" => $treeNodeObject->getTreeNodeName(),
+                            "directoryLevel" => $node["level"]
+                        ];
+                    }
+                }
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
+        $editResponse->setAdditionalDataAttribute("directories", $directories);
+
+        return $responseFactory->json($editResponse);
+    }
+
+    public function createDirectory()
+    {
+        $directoryId = null;
+
+        $editResponse = new EditResponse();
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var ErrorList $errors */
+        $errors = $this->app->make(ErrorList::class);
+        /** @var Strings $stringValidator */
+        $stringValidator = $this->app->make(Strings::class);
+
+        try {
+            if ($token->validate()) {
+                $directoryName = $this->request->request->get("directoryName", "");
+
+                if (!$stringValidator->notempty($directoryName)) {
+                    throw new UserMessageException(t('Folder Name cannot be empty.'), 401);
+                }
+
+                $filesystem = new Filesystem();
+
+                $folder = $filesystem->getRootFolder();
+
+                // the storage location of the root folder is used.
+                $directory = $filesystem->addFolder($folder, $directoryName, $folder->getTreeNodeStorageLocationID());
+
+                $directoryId = $directory->getTreeNodeID();
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
+        $editResponse->setAdditionalDataAttribute("directoryId", $directoryId);
+
+        return $responseFactory->json($editResponse);
+    }
+
+    /** @noinspection DuplicatedCode */
+    public function fetchIncomingFiles()
+    {
+        $files = [];
+        $incomingPath = "";
+        $incomingStorageLocation = "";
+
+        $editResponse = new EditResponse();
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var ErrorList $errors */
+        $errors = $this->app->make(ErrorList::class);
+        /** @var ValidationService $fh */
+        $fh = $this->app->make(ValidationService::class);
+        /** @var Number $nh */
+        $nh = $this->app->make(Number::class);
+        /** @var Incoming $incoming */
+        $incoming = $this->app->make(Incoming::class);
+
+        try {
+            if ($token->validate()) {
+                $incomingPath = $incoming->getIncomingPath();
+                $incomingStorageLocation = $incoming->getIncomingStorageLocation()->getDisplayName();
+
+                $files = $incoming->getIncomingFilesystem()->listContents($incomingPath);
+
+                foreach (array_keys($files) as $index) {
+                    $files[$index]['allowed'] = $fh->extension($files[$index]['basename']);
+                    $files[$index]['thumbnail'] = FileTypeList::getType($files[$index]['extension'])->getThumbnail();
+                    $files[$index]['displaySize'] = $nh->formatSize($files[$index]['size'], 'KB');
+                }
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
+        $editResponse->setAdditionalDataAttribute("files", $files);
+        $editResponse->setAdditionalDataAttribute("incomingPath", $incomingPath);
+        $editResponse->setAdditionalDataAttribute("incomingStorageLocation", $incomingStorageLocation);
+
+        return $responseFactory->json($editResponse);
     }
 }

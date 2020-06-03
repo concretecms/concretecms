@@ -56,9 +56,10 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
             $objects = $populator->createBoardInstanceItems($instance, $batch, $configuredDataSource, $mode);
 
             $this->logger->debug(
-                t('Retrieved %s objects from %s data source after timestamp %s',
-                    count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
-                ));
+                t(/*i18n: %1$s is a number, %2$s is the name of a data source*/'Retrieved %1$s objects from %2$s data source after timestamp %3$s',
+            count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
+                )
+            );
 
             $db = $this->entityManager->getConnection();
             foreach ($objects as $object) {

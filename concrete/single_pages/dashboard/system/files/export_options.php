@@ -11,16 +11,16 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?= $token->output('ccm-export-options') ?>
 
     <?= $form->label('', t('CSV')) ?>
-    <div class="checkbox">
-        <label>
-            <?= $form->checkbox('csvAddBom', '1', $csvAddBom) ?>
+    <div class="form-check">
+        <?= $form->checkbox('csvAddBom', '1', $csvAddBom) ?>
+        <label for="csvAddBom">
             <?= t('Include the BOM (Byte-Order Mark) in generated CSV files') ?>
         </label>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="pull-right">
+            <div class="float-right">
                 <button type="submit" class="btn btn-primary"><?= t('Save') ?></button>
             </div>
         </div>

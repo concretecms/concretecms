@@ -1,74 +1,78 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-
 <?php
 
-$permissionAccess = $key->getPermissionAssignmentObject()->getPermissionAccessObject();
-if (!is_object($permissionAccess)) {
-	$permissionAccess = PermissionAccess::create($key);
-}
+use Concrete\Core\View\View;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var Concrete\Core\Application\Service\Dashboard $dashboard
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Html\Service\Html $html
+ * @var Concrete\Core\Application\Service\UserInterface $interface
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\Notification $controller
+ * @var Concrete\Core\Permission\Key\NotifyInNotificationCenterNotificationKey $key
+ * @var Concrete\Core\Permission\Access\NotifyInNotificationCenterNotificationAccess $permissionAccess
+ */
 
 ?>
-<form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="post" action="<?=$key->getPermissionAssignmentObject()->getPermissionKeyToolsURL()?>">
+<form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="POST" action="<?= $key->getPermissionAssignmentObject()->getPermissionKeyToolsURL() ?>">
+    <input type="hidden" name="paID" value="<?= $permissionAccess->getPermissionAccessID() ?>" />
 
+    <div id="ccm-tab-content-access-types">
+        <?php View::element('permission/keys/notify_in_notification_center', ['permissionAccess' => $permissionAccess]) ?>
+    </div>
 
-	<input type="hidden" name="paID" value="<?=$permissionAccess->getPermissionAccessID()?>" />
-
-	<div id="ccm-tab-content-access-types">
-		<?php View::element('permission/keys/notify_in_notification_center', array('permissionAccess' => $permissionAccess))?>
-
-	</div>
-
-
-	<div class="ccm-dashboard-form-actions-wrapper" style="display:none">
-		<div class="ccm-dashboard-form-actions">
-			<button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
-		</div>
-	</div>
+    <div class="ccm-dashboard-form-actions-wrapper d-none">
+        <div class="ccm-dashboard-form-actions">
+            <button class="float-right btn btn-primary" type="submit" ><?= t('Save') ?></button>
+        </div>
+    </div>
 
 </form>
 
-<script type="text/javascript">
-	var ccm_permissionDialogURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/miscellaneous';
-	ccm_deleteAccessEntityAssignment = function(peID) {
-		jQuery.fn.dialog.showLoader();
+<script>
+var ccm_permissionDialogURL = '<?= REL_DIR_FILES_TOOLS_REQUIRED ?>/permissions/dialogs/miscellaneous';
+ccm_deleteAccessEntityAssignment = function(peID) {
+    jQuery.fn.dialog.showLoader();
 
-		if (ccm_permissionDialogURL.indexOf('?') > 0) {
-			var qs = '&';
-		} else {
-			var qs = '?';
-		}
+    if (ccm_permissionDialogURL.indexOf('?') > 0) {
+        var qs = '&';
+    } else {
+        var qs = '?';
+    }
 
-		$.get('<?=$key->getPermissionAssignmentObject()->getPermissionKeyToolsURL("remove_access_entity")?>&paID=<?=$permissionAccess->getPermissionAccessID()?>&peID=' + peID, function() {
-			$.get(ccm_permissionDialogURL + qs + 'paID=<?=$permissionAccess->getPermissionAccessID()?>&message=entity_removed&pkID=<?=$key->getPermissionKeyID()?>', function(r) {
-				window.location.reload();
-			});
-		});
-	}
+    $.get('<?= $key->getPermissionAssignmentObject()->getPermissionKeyToolsURL('remove_access_entity') ?>&paID=<?= $permissionAccess->getPermissionAccessID() ?>&peID=' + peID, function() {
+        $.get(ccm_permissionDialogURL + qs + 'paID=<?= $permissionAccess->getPermissionAccessID() ?>&message=entity_removed&pkID=<?= $key->getPermissionKeyID()?>', function(r) {
+            window.location.reload();
+        });
+    });
+}
 
-	ccm_addAccessEntity = function(peID, pdID, accessType) {
-		jQuery.fn.dialog.closeTop();
-		jQuery.fn.dialog.showLoader();
+ccm_addAccessEntity = function(peID, pdID, accessType) {
+    jQuery.fn.dialog.closeTop();
+    jQuery.fn.dialog.showLoader();
 
-		if (ccm_permissionDialogURL.indexOf('?') > 0) {
-			var qs = '&';
-		} else {
-			var qs = '?';
-		}
+    if (ccm_permissionDialogURL.indexOf('?') > 0) {
+        var qs = '&';
+    } else {
+        var qs = '?';
+    }
 
-		$.get('<?=$key->getPermissionAssignmentObject()->getPermissionKeyToolsURL("add_access_entity")?>&paID=<?=$permissionAccess->getPermissionAccessID()?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) {
-			$.get(ccm_permissionDialogURL + qs + 'paID=<?=$permissionAccess->getPermissionAccessID()?>&message=entity_added&pkID=<?=$key->getPermissionKeyID()?>', function(r) {
-				window.location.reload();
-			});
-		});
-	}
+    $.get('<?= $key->getPermissionAssignmentObject()->getPermissionKeyToolsURL('add_access_entity') ?>&paID=<?= $permissionAccess->getPermissionAccessID() ?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) {
+        $.get(ccm_permissionDialogURL + qs + 'paID=<?= $permissionAccess->getPermissionAccessID() ?>&message=entity_added&pkID=<?= $key->getPermissionKeyID() ?>', function(r) {
+            window.location.reload();
+        });
+    });
+}
 
 
-	ccm_submitPermissionsDetailForm = function() {
-		jQuery.fn.dialog.showLoader();
-		$("#ccm-permissions-detail-form").ajaxSubmit(function(r) {
-			window.location.reload();
-		});
-		return false;
-	}
+ccm_submitPermissionsDetailForm = function() {
+    jQuery.fn.dialog.showLoader();
+    $("#ccm-permissions-detail-form").ajaxSubmit(function(r) {
+        window.location.reload();
+    });
+    return false;
+}
 
 </script>

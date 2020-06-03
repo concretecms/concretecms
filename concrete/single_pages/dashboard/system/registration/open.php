@@ -1,142 +1,153 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php
 
-<form method="post" id="registration-type-form" action="<?= $view->action('update_registration_type'); ?>">
-    <?= $token->output('update_registration_type'); ?>
+defined('C5_EXECUTE') or die('Access Denied.');
 
-    <div class="form-group">
-        <?= $form->label('registration_type', t('Allow visitors to signup as site members?')); ?>
-        <div class="radio">
-            <label>
-                <input type="radio" name="registration_type" value="disabled" <?= ($registration_type == 'disabled' || !strlen($registration_type)) ? 'checked' : ''; ?> />
-                <span><?= t('Off - only admins can create accounts from Dashboard'); ?></span>
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="registration_type" value="enabled" <?= ($registration_type == 'enabled') ? 'checked' : ''; ?> />
-                <span><?= t('On - anyone can create an account from Login page'); ?></span>
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="registration_type" value="validate_email" <?= ($registration_type == 'validate_email') ? 'checked' : ''; ?> />
-                <span><?= t('Validate - anyone can create an account from Login page, once validated by email'); ?></span>
-            </label>
-        </div>
-    </div>
+/**
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Application\Service\Dashboard $dashboard
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Html\Service\Html $html
+ * @var Concrete\Core\Application\Service\UserInterface $interface
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\Open $controller
+ * @var string $registrationType
+ * @var bool $registerNotification
+ * @var string $registerNotificationEmail
+ * @var bool $emailAsUsername
+ * @var bool $displayUsernameField
+ * @var bool $displayConfirmPasswordField
+ * @var bool $enableRegistrationCaptcha
+ */
+?>
+
+<form method="POST" action="<?= $controller->action('update_registration_type') ?>">
+    <?php $token->output('update_registration_type') ?>
 
     <div class="form-group">
-        <?= $form->label('register_notification', t('Notification')); ?>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="register_notification" value="1"<?= ($register_notification) ? ' checked="checked"' : ''; ?>/>
-                <span><?= t('Send admin an email when new user registers.'); ?></span>
-            </label>
+        <?= $form->label('registration_type', t('Allow visitors to signup as site members?')) ?>
+        <div class="form-check">
+            <?= $form->radio('registration_type', 'disabled', $registrationType, ['id' => 'registration_type_disabled']) ?>
+            <label class="form-check-label" for="registration_type_disabled"><?= t('Off - only admins can create accounts from Dashboard') ?></label>
+        </div>
+        <div class="form-check">
+            <?= $form->radio('registration_type', 'enabled', $registrationType, ['id' => 'registration_type_enabled']) ?>
+            <label class="form-check-label" for="registration_type_enabled"><?= t('On - anyone can create an account from Login page') ?></label>
+        </div>
+        <div class="form-check">
+            <?= $form->radio('registration_type', 'validate_email', $registrationType, ['id' => 'registration_type_validate_email']) ?>
+            <label class="form-check-label" for="registration_type_validate_email"><?= t('Validate - anyone can create an account from Login page, once validated by email') ?></label>
         </div>
     </div>
-    <div class="form-group notify_email">
-        <?= $form->label('register_notification_email', t('Email addresses')); ?>
-        <?= $form->text('register_notification_email', h($register_notification_email)); ?>
-        <p class="help-block"><?= t('(Separate multiple emails with a comma)'); ?></p>
+
+    <div class="form-group">
+        <?= $form->label('', t('Notification')) ?>
+        <div class="form-check">
+            <?= $form->checkbox('register_notification', '1', $registerNotification, $registrationType === 'disabled' ? ['disabled' => 'disabled'] : []) ?>
+            <label class="form-check-label" for="register_notification"><?= t('Send admin an email when new user registers.') ?></label>
+            <div class="form-group notify_email<?= $registerNotification && $registrationType !== 'disabled' ? '' : ' d-none' ?>">
+                <?= $form->label('register_notification_email', t('Recipient email addresses')) ?>
+                <?= $form->text('register_notification_email', $registerNotificationEmail) ?>
+                <small class="form-text text-muted"><?= t('(Separate multiple emails with a comma)') ?></small>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <?= $form->label('', t('Login form')) ?>
+        <div class="form-check">
+            <?= $form->radio('email_as_username', '0', $emailAsUsername ? '1' : '0', ['id' => 'email_as_username_0']) ?>
+            <label class="form-check-label" for="email_as_username_0"><?= t('Ask for username & password') ?></label>
+        </div>
+        <div class="form-check">
+            <?= $form->radio('email_as_username', '1', $emailAsUsername ? '1' : '0', ['id' => 'email_as_username_1']) ?>
+            <label class="form-check-label" for="email_as_username_1"><?= t('Ask for email & password') ?></label>
+        </div>
     </div>
     <div class="form-group">
-        <?= $form->label('email_as_username', t('Login form')); ?>
-        <div class="radio">
-            <label>
-                <input type="radio" name="email_as_username" value="0" id="display_username_on_login" <?= (!$email_as_username) ? 'checked' : ''; ?> />
-                <span><?= t('Ask for username & password'); ?></span>
-            </label>
+        <?= $form->label('display_username_field', t('Registration form')) ?>
+        <div class="form-check">
+            <?= $form->checkbox('display_username_field', '1', $displayUsernameField) ?>
+            <label class="form-check-label" for="display_username_field"><?= t('Username required') ?></label>
         </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="email_as_username" value="1" <?= ($email_as_username) ? 'checked' : ''; ?> />
-                <span><?= t('Ask for email & password'); ?></span>
-            </label>
+        <div class="form-check">
+            <?= $form->checkbox('display_confirm_password_field', '1', $displayConfirmPasswordField) ?>
+            <label class="form-check-label" for="display_confirm_password_field"><?= t('Confirm Password required') ?></label>
         </div>
-    </div>
-    <div class="form-group">
-        <?= $form->label('display_username_field', t('Registration form')); ?>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="display_username_field" value="1" <?= ($display_username_field) ? 'checked' : ''; ?> />
-                <span><?= t('Username required'); ?></span>
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="display_confirm_password_field" value="1" <?= ($display_confirm_password_field) ? 'checked' : ''; ?> />
-                <span><?= t('Confirm Password required'); ?></span>
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="enable_registration_captcha" value="1" <?= ($enable_registration_captcha) ? 'checked' : ''; ?> />
-                <span><?= t('CAPTCHA required'); ?></span>
-            </label>
+        <div class="form-check">
+            <?= $form->checkbox('enable_registration_captcha', '1', $enableRegistrationCaptcha, $registrationType === 'disabled' ? ['disabled' => 'disabled'] : []) ?>
+            <label class="form-check-label" for="enable_registration_captcha"><?= t('CAPTCHA required') ?></label>
         </div>
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <?= $concrete_ui->submit(t('Save'), 'registration-type-form', 'right', 'btn-primary'); ?>
+            <?= $interface->submit(t('Save'), '', 'right', 'btn-primary') ?>
         </div>
     </div>
 </form>
 
-<div id="dialog-confirm" style="display: none" title="<?= t('Do you want to apply?'); ?>">
-    <p><?= t('You have to disable ask for Username on login form, if you want to disable it.'); ?></p>
-    <div class="dialog-buttons">
-        <button class="btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel'); ?></button>
-        <button class="btn btn-success pull-right" onclick="enableEmailAsUsername()"><?=  t('Apply'); ?></button>
-    </div>
-</div>
+<script>
+$(document).ready(function() {
 
-<script type="text/javascript">
+    function registrationTypeUpdated() {
+        var registrationType = $('input[name=registration_type]:checked').val();
+        $('input[name=register_notification]').attr('disabled', registrationType === 'disabled' ? 'disabled' : null);
+        $('input[name=enable_registration_captcha]').attr('disabled', registrationType === 'disabled' ? 'disabled' : null);
+        registerNotificationUpdated();
+    }
 
-    var val = $("input[name=registration_type]:checked").val();
-    if (val == 'disabled') {
-        $("input[name=enable_registration_captcha]").prop('disabled', true).prop('checked', false);
-        $("input[name=register_notification]").prop('checked', false);
-        $('.notify_email').hide();
-        $("input[name=register_notification]").prop('disabled', true);
+    function registerNotificationUpdated() {
+        var notify = $('input[name=register_notification]').is(':checked:enabled');
+        $('.notify_email').toggleClass('d-none', !notify);
+        $('#register_notification_email').attr('required', notify ? 'required' : null);
     }
-    if ($('input[name=register_notification]').prop('checked')) {
-        $('.notify_email').show();
-    } else {
-        $('.notify_email').hide();
-    }
-    $("input[name=registration_type]").click(function () {
-        if ($(this).val() === 'disabled') {
-            $("input[name=enable_registration_captcha]").prop('disabled', true).prop('checked', false);
-            $("input[name=register_notification]").prop('checked', false).prop('disabled', true);
-            $('.notify_email').hide();
-        } else {
-            $("input[name=enable_registration_captcha]").prop('disabled', false);
-            $("input[name=register_notification]").prop('disabled', false);
+
+    // If users choose to "login by username", "Username required" must be checked
+    $('input[name=email_as_username][value=0]').on('change', function (e) {
+        var $this = $(this),
+            $displayUsername = $('input[name=display_username_field]');
+        if (!$this.is(':checked') || $displayUsername.is(':checked')) {
+            return;
         }
+        $('input[name=email_as_username][value=1]').prop('checked', true);
+        e.preventDefault();
+        ConcreteAlert.confirm(
+            <?= json_encode(t('You have to require the username if you want to login by username.')) ?>,
+            function() {
+                $this.prop('checked', true);
+                $displayUsername.prop('checked', true);
+                $.fn.dialog.closeTop();
+            },
+            '',
+            <?= json_encode(t('Apply')) ?>
+        );
+        return false;
     });
 
-    $("input[name=register_notification]").click(function () {
-        if ($(this).is(':checked')) {
-            $('.notify_email').show();
-        } else {
-            $('.notify_email').hide();
+    // If users uncheck the "Username required", we must switch to "login by email"
+    $('input[name=display_username_field]').on('change', function (e) {
+        if ($(this).is(':checked') || !$('input[name=email_as_username][value=0]').is(':checked')) {
+            return;
         }
+        e.preventDefault();
+        ConcreteAlert.confirm(
+            <?= json_encode(t('You have to disable ask for Username on login form, if you want to disable it.')) ?>,
+            function() {
+                $('input[name=display_username_field]').prop('checked', false);
+                $('input[name=email_as_username]').prop('checked', true);
+                $.fn.dialog.closeTop();
+            },
+            '',
+            <?= json_encode(t('Apply')) ?>
+        );
+        return false;
     });
 
-    $("input[name=display_username_field]").click(function (e) {
-        if (!$(this).is(':checked') && $("#display_username_on_login").is(":checked")) {
-            $.fn.dialog.open({
-                width: 500,
-                height: 100,
-                element: $("#dialog-confirm"),
-            });
-            return false;
-        }
+    $('input[name=registration_type]').on('change', function () {
+        registrationTypeUpdated();
+    });
+    $('input[name=register_notification]').on('change', function () {
+        registerNotificationUpdated();
     });
 
-    function enableEmailAsUsername() {
-        $('input[name=display_username_field]').prop('checked', false);
-        $('input[name=email_as_username]').prop('checked', true);
-        $.fn.dialog.closeTop();
-    }
+    registrationTypeUpdated();
+});
 </script>
