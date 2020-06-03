@@ -115,7 +115,7 @@ class Profiles extends DashboardSitePageController
             'wavatar' => tc(/*i18n: %s is a set code */'GravatarImageSets', '%s: generated faces with differing features and backgrounds', 'wavatar'),
             'retro' => tc(/*i18n: %s is a set code */'GravatarImageSets', '%s: awesome generated, 8-bit arcade-style pixelated faces', 'retro'),
             'robohash' => tc(/*i18n: %s is a set code */'GravatarImageSets', '%s: a generated robot with different colors, faces, etc', 'robohash'),
-            'blank' => tc(/*i18n: %s is a set code */'GravatarImageSets', '%s: a transparent PNG image (border added to HTML below for demonstration purposes)', 'blank'),
+            'blank' => tc(/*i18n: %s is a set code */'GravatarImageSets', '%s: a transparent PNG image', 'blank'),
         ];
     }
 }
