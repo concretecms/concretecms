@@ -1,96 +1,119 @@
 <?php
 
+/** @noinspection PhpDeprecationInspection */
+/** @noinspection PhpUndefinedMethodInspection */
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\Entity\File\Version $version */
-/* @var Concrete\Core\File\Image\Thumbnail\Type\Version[] $types */
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\File\Image\Thumbnail\Type\Version;
+use Concrete\Core\Entity\File\Version as FileVersion;
+
+/** @var FileVersion $version */
+/** @var Version[] $types */
+/** @var FilePermissions $fp */
+
+$file = $version->getFile();
+$imageWidth = (int)$version->getAttribute('width');
+$imageHeight = (int)$version->getAttribute('height');
+$location = $version->getFile()->getFileStorageLocationObject();
+$configuration = $location->getConfigurationObject();
+$filesystem = $location->getFileSystemObject();
+$i = 1;
+
 ?>
+
 <div class="ccm-ui">
-    <?php
-    $file = $version->getFile();
-    $imageWidth = (int) $version->getAttribute('width');
-    $imageHeight = (int) $version->getAttribute('height');
-    $location = $version->getFile()->getFileStorageLocationObject();
-    $configuration = $location->getConfigurationObject();
-    $filesystem = $location->getFileSystemObject();
-    $url = URL::to('/ccm/system/dialogs/file/thumbnails/edit');
-    $i = 1;
-    foreach ($types as $type) {
-        $width = (int) $type->getWidth() ?: t('Automatic');
-        $height = (int) $type->getHeight() ?: t('Automatic');
-        $sizingMode = $type->getSizingModeDisplayName();
-        $thumbnailPath = $type->getFilePath($version);
-        $hasFile = $filesystem->has($thumbnailPath);
-        $shouldHaveFile = $type->shouldExistFor($imageWidth, $imageHeight, $file);
-        $query = http_build_query([
-            'fID' => $version->getFileID(),
-            'fvID' => $version->getFileVersionID(),
-            'thumbnail' => $type->getHandle(),
-        ]);
-        if ($i % 3 === 1) {
-            ?><div class="row"><?php
-        }
-        ?>
-        <div class="col-md-4">
-            <div class="ccm-image-thumbnail-card">
-                <div class="ccm-image-thumbnail-display-name">
-                    <h4><?php echo $type->getDisplayName(); ?></h4>
+    <?php foreach ($types as $type): ?>
+        <?php if ($i % 3 === 1): ?>
+            <div class="row">
+        <?php endif; ?>
+                <div class="col-md-4">
+                    <div class="ccm-image-thumbnail-card">
+                        <div class="ccm-image-thumbnail-display-name">
+                            <h4>
+                                <?php echo $type->getDisplayName(); ?>
+                            </h4>
+                        </div>
+
+                        <small class="ccm-image-thumbnail-dimensions">
+                            <?php
+                                echo t(
+                                    '%s x %s dimensions (%s)',
+                                    (int)$type->getWidth() ? : t('Automatic'),
+                                    (int)$type->getHeight() ? : t('Automatic'),
+                                    $type->getSizingModeDisplayName()
+                                );
+                            ?>
+                        </small>
+
+                        <?php if ($fp->canEditFileContents() && $filesystem->has($type->getFilePath($version))): ?>
+                            <!--suppress HtmlUnknownAttribute -->
+                            <a
+                                href="<?php echo (string)Url::to('/ccm/system/dialogs/file/thumbnails/edit')->setQuery([
+                                    'fID' => $version->getFileID(),
+                                    'fvID' => $version->getFileVersionID(),
+                                    'thumbnail' => $type->getHandle(),
+                                ]) ?>"
+                               dialog-width="90%"
+                               dialog-height="70%"
+                               class="btn btn-sm btn-secondary dialog-launch"
+                               dialog-title="<?php echo h(t('Edit Thumbnail Images')); ?>">
+
+                                <?php echo t('Edit Thumbnail') ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <hr class="ccm-image-thumbnail-divider"/>
+
+                        <div class="ccm-file-manager-image-thumbnail">
+                            <?php if ($filesystem->has($type->getFilePath($version))): ?>
+                                <img class="ccm-file-manager-image-thumbnail-image"
+                                     data-handle="<?php echo $type->getHandle() ?>"
+                                     data-fid="<?php echo $version->getFileID() ?>"
+                                     data-fvid="<?php echo $version->getFileVersionID() ?>"
+                                     alt="<?php echo h($version->getFileName()) ?>"
+                                     src="<?php echo $configuration->getPublicURLToFile($type->getFilePath($version)) ?>"
+                                />
+                            <?php elseif ($type->shouldExistFor($imageWidth, $imageHeight, $file)): ?>
+                                <?php echo t('Thumbnail not found.'); ?>
+                            <?php else: ?>
+                                <?php echo t('Thumbnail not to be generated for this file.'); ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
-                <small class="ccm-image-thumbnail-dimensions"><?= t('%s x %s dimensions (%s)', $width, $height, $sizingMode) ?></small>
-                <?php
-                if ($fp->canEditFileContents() && $hasFile) {
-                    ?>
-                    <a href="<?= $url . '?' . $query ?>"
-                        dialog-width="90%"
-                        dialog-height="70%"
-                        class="btn btn-sm btn-default dialog-launch"
-                        dialog-title="<?= t('Edit Thumbnail Images') ?>"
-                    >
-                        <?= t('Edit Thumbnail') ?>
-                    </a>
-                    <?php
-                    }
-                ?>
-                <hr class="ccm-image-thumbnail-divider" />
-                <div class="ccm-file-manager-image-thumbnail">
-                    <?php
-                    if ($hasFile) {
-                        ?>
-                        <img class="ccm-file-manager-image-thumbnail-image"
-                            data-handle="<?= $type->getHandle() ?>"
-                            data-fid="<?= $version->getFileID() ?>"
-                            data-fvid="<?= $version->getFileVersionID() ?>"
-                            style="max-width: 100%"
-                            src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"
-                        />
-                        <?php
-                    } elseif ($shouldHaveFile) {
-                        echo t('Thumbnail not found.');
-                    } else {
-                        echo t('Thumbnail not to be generated for this file.');
-                    }
-                    ?>
-                </div>
+
+        <?php if ($i % 3 === 0 || $i === count($types)): ?>
             </div>
-        </div>
-        <?php
-        if ($i % 3 === 0 || $i === count($types)) {
-            ?></div><?php
+        <?php endif; ?>
+
+        <?php ++$i; ?>
+    <?php endforeach; ?>
+
+    <style type="text/css">
+        .ccm-file-manager-image-thumbnail-image {
+            max-width: 100%;
         }
-        ++$i;
-    }
-    ?>
+    </style>
+
+    <!--suppress JSUnresolvedVariable -->
     <script>
-        (function() {
-            Concrete.event.unbind('ImageEditorDidSave.thumbnails');
-            var thumbnails = $('img.ccm-file-manager-image-thumbnail-image');
-            Concrete.event.bind('ImageEditorDidSave.thumbnails', function(event, data) {
-                if (data.isThumbnail) {
-                    var thumbnail = thumbnails.filter('[data-handle=' + data.handle + '][data-fid=' + data.fID + '][data-fvid=' + data.fvID + ']').get(0);
-                    thumbnail.src = data.imgData;
-                    $.fn.dialog.closeTop();
-                }
-            });
-        }());
+        (function($) {
+            (function () {
+                Concrete.event.unbind('ImageEditorDidSave.thumbnails');
+
+                let $thumbnails = $('img.ccm-file-manager-image-thumbnail-image');
+
+                Concrete.event.bind('ImageEditorDidSave.thumbnails', function (event, data) {
+                    if (data.isThumbnail) {
+                        let $thumbnail = $thumbnails.filter('[data-handle=' + data.handle + '][data-fid=' + data.fID + '][data-fvid=' + data.fvID + ']');
+                        $thumbnail.attr("src", data.imgData);
+                        $.fn.dialog.closeTop();
+                    }
+                });
+            }());
+        })(jQuery);
     </script>
 </div>
