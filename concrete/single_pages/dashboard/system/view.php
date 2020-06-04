@@ -4,7 +4,7 @@
 <?php
 $system = Page::getByPath('/dashboard/system');
 $factory = app(\Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory::class);
-$navigation = $factory->createNavigation($system);
+$navigation = $factory->createFullNavigation($system);
 $categories = $navigation->getItems();
 ?>
 

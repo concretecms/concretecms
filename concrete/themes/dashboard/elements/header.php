@@ -156,20 +156,9 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                 <div class="ccm-panel-content-wrapper ccm-ui">
                     <div class="ccm-panel-content ccm-panel-content-visible">
                       <?php
-                      $cnt = $app->make(DashboardPanel::class);
-            $cnt->setPageObject($c);
-            $cnt->view();
-            $_menu = $cnt->get('menu');
-            $_favorites = $cnt->get('favorites');
-            $_tab = $cnt->get('tab');
-            $_ui = $cnt->get('ui');
             View::element(
                           'panels/dashboard',
                           [
-                              'favorites' => $_favorites,
-                              'menu' => $_menu,
-                              'tab' => $_tab,
-                              'ui' => $_ui,
                               'c' => $c,
                           ]
                       ); ?>

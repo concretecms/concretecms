@@ -30,15 +30,8 @@ class Dashboard extends BackendInterfacePageController
 
     public function view()
     {
-        $menufactory = $this->app->make(NavigationFactory::class);
-        $favoritesFactory = $this->app->make(FavoritesNavigationFactory::class);
-        $menu = $menufactory->createNavigation();
-        $favorites = $favoritesFactory->createNavigation();
-        $u = new User();
-        $ui = UserInfo::getByID($u->getUserID());
-        $this->set('menu', $menu);
-        $this->set('favorites', $favorites);
-        $this->set('ui', $ui);
+        // Moved all the logic for this into the view because we have to reference the view in multiple spots
+        // and passing the data around is tedious.
     }
 
     protected function toggleFavorite($action)

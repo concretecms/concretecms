@@ -49,5 +49,15 @@ class Navigation implements  NavigationInterface, \JsonSerializable
         return $data;
     }
 
+    public function __clone()
+    {
+        $items = $this->getItems();
+        $this->setItems([]);
+        foreach($items as $item) {
+            $this->add(clone $item);
+        }
+    }
+
+
 
 }

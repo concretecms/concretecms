@@ -69,6 +69,14 @@ class Item implements ItemInterface, \JsonSerializable
         return $this->children;
     }
 
+    /**
+     * @param Item[] $children
+     */
+    public function setChildren(array $children): void
+    {
+        $this->children = $children;
+    }
+
     public function addChild(Item $item)
     {
         $this->children[] = $item;
@@ -103,8 +111,20 @@ class Item implements ItemInterface, \JsonSerializable
         return [
             'url' => $this->getUrl(),
             'name' => $this->getName(),
-            'isActive' => $this->isActive()
+            'isActive' => $this->isActive(),
+            'children' => $this->getChildren(),
         ];
     }
+
+    public function __clone()
+    {
+        $children = $this->getChildren();
+        $newChildren = [];
+        foreach($children as $child) {
+            $newChildren[] = clone $child;
+        }
+        $this->setChildren($newChildren);
+    }
+
 
 }

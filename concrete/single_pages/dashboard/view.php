@@ -3,7 +3,7 @@
 
 <?php
 $factory = app(\Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory::class);
-$navigation = $factory->createNavigation();
+$navigation = $factory->createFullNavigation();
 $categories = $navigation->getItems();
 ?>
 
