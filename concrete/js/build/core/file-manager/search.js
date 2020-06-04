@@ -468,10 +468,10 @@
 
     ConcreteFileManager.prototype.setupAddFolder = function() {
         var my = this;
-        var data = {
-            treeNodeID: my.currentFolder
-        };
         $('a[data-dialog=add-file-manager-folder]').on('click', function(e) {
+            var data = {
+                treeNodeID: my.currentFolder
+            };
             e.preventDefault();
             $.fn.dialog.open({
                 width: 550,
