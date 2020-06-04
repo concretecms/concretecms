@@ -75,7 +75,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                      ?>
                 </label>
                 <?php
-                if (!$singleOriginalPage->isExternalLink()) {
+                if ($singleOriginalPage && !$singleOriginalPage->isExternalLink()) {
                     ?>
                     <div class="checkbox" style="margin: 0 0 0 20px">
                         <label>

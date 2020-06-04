@@ -28,6 +28,20 @@ $image = date('Ymd') . '.jpg';
 /* @var Key[] $required_attributes */
 
 $attribute_mode = (isset($required_attributes) && count($required_attributes));
+
+// See if we have a user object and if that user is registered
+$loggedIn = !$attribute_mode && isset($user) && $user->isRegistered();
+
+// Determine title
+$title = t('Sign in.');
+
+if ($attribute_mode) {
+    $title = t('Required Attributes');
+}
+
+if ($loggedIn) {
+    $title = 'Log Out.';
+}
 ?>
 
 <div class="login-page">
@@ -40,7 +54,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
         </div>
     <?php } ?>
     <div class="col-sm-6 col-sm-offset-3">
-        <h1><?= !$attribute_mode ? t('Sign In.') : t('Required Attributes') ?></h1>
+        <h1><?= $title ?></h1>
     </div>
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row">
@@ -75,7 +89,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             </div>
         </div>
         <div class="row login-row">
-            <div <?php if (count($activeAuths) < 2) {
+            <div <?php if ($loggedIn || count($activeAuths) < 2) {
     ?>style="display: none" <?php 
 } ?> class="types col-sm-4 hidden-xs">
                 <ul class="auth-types">
@@ -103,13 +117,20 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     ?>
                 </ul>
             </div>
-            <div class="controls <?php if (count($activeAuths) < 2) {
+            <div class="controls <?php if (count($activeAuths) < 2 || $loggedIn) {
     ?>col-sm-12<?php 
 } else {
     ?>col-sm-8<?php 
 } ?> col-xs-12">
                 <?php
-                if ($attribute_mode) {
+                if ($loggedIn) {
+                    ?>
+                    <div class="text-center">
+                        <h3><?= t('You are already logged in.') ?></h3>
+                        <?= Core::make('helper/navigation')->getLogInOutLink() ?>
+                    </div>
+                    <?php
+                } elseif ($attribute_mode) {
                     $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute();
                     ?>
                     <form action="<?= View::action('fill_attributes') ?>" method="POST">

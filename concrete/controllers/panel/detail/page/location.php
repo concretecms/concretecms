@@ -9,7 +9,7 @@ use Exception;
 use Loader;
 use PageType;
 use Permissions;
-use User;
+use Concrete\Core\User\User;
 use Page;
 use Request;
 use Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
@@ -97,7 +97,7 @@ class Location extends BackendInterfacePageController
                 if ($oc->isPageDraft()) {
                     $oc->setPageDraftTargetParentPageID($dc->getCollectionID());
                 } else {
-                    $u = new User();
+                    $u = $this->app->make(User::class);
                     $pkr = new MovePagePageWorkflowRequest();
                     $pkr->setRequestedPage($oc);
                     $pkr->setRequestedTargetPage($dc);
@@ -114,11 +114,15 @@ class Location extends BackendInterfacePageController
 
             // now we do additional page URLs
             $req = Request::getInstance();
-            $oc->clearPagePaths();
-
+          
             $canonical = $req->request->get('canonical');
             $pathArray = $req->request->get('path');
 
+            // check if path exists, in order to avoid deleting single page path
+            if($pathArray){
+             $oc->clearPagePaths();
+            }
+            
             if (isset($canonical) && $this->page->getCollectionID() == Page::getHomePageID()) {
                 throw new Exception('You cannot change the canonical path of the home page.');
             }

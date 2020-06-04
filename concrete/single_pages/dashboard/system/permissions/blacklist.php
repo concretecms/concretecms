@@ -2,49 +2,48 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var Concrete\Core\Page\View\PageView $view */
-/* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Form\Service\Form $form */
 
-/* @var bool $banEnabled */
-/* @var int $allowedAttempts */
-/* @var int $attemptsTimeWindow */
-/* @var int $banDuration */
+/* @var Concrete\Core\Entity\Permission\IpAccessControlCategory[] $categories */
 
-$view->element('dashboard/system/permissions/blacklist/menu', ['type' => null]);
-?>
-
-<form method="post" id="ipblacklist-form" action="<?= $view->action('update_ipblacklist') ?>">
-    <?php $token->output('update_ipblacklist') ?>
-    <div class="ccm-pane-body">
-        <div class="form-group form-inline">
-            <?= $form->checkbox('banEnabled', 1, $banEnabled) ?>
-            <?= t(
-                'Lock IP after %1$s failed login attempts in %2$s seconds',
-                $form->number('allowedAttempts', $allowedAttempts, ['style' => 'width:70px', 'min' => 1]),
-                $form->number('attemptsTimeWindow', $attemptsTimeWindow, ['style' => 'width:90px', 'min' => 1])
-            ) ?>
-        </div>
-
-        <div class="form-group">
-            <?= $form->label('banDurationUnlimited', t('Ban Duration'))?>
-            <div class="radio">
-                <label>
-                    <?= $form->radio('banDurationUnlimited', 0, $banDuration ? 0 : 1) ?>
-                    <?= t('Ban IP for %s minutes', $form->number('banDuration', $banDuration ?: 300, ['style' => 'width:90px; display: inline-block', 'min' => 1])) ?>
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <?= $form->radio('banDurationUnlimited', 1, $banDuration ? 0 : 1) ?>
-                    <?= t('Ban Forever') ?>
-                </label>
-            </div>
-        </div>
+if (empty($categories)) {
+    ?>
+    <div class="alert alert-warning">
+        <?= t('No IP Access Control Category defined.') ?>
     </div>
-
-    <div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <input type="submit" class="btn btn-primary pull-right" value="<?= t('Save') ?>" />
-        </div>
-    </div>
-</form>
+    <?php
+}
+else {
+    ?>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th><?= t('Handle') ?></th>
+                <th><?= t('Name') ?></th>
+                <th><?= t('Enabled') ?></th>
+                <th><?= t('Package') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($categories as $category) {
+            $href = $view->action('configure', $category->getIpAccessControlCategoryID());
+            ?>
+            <tr class="ccm_ip-access-control-category" onclick="<?= h('window.location.href = ' . json_encode($href) . ';') ?>">
+                <td><a href="<?= h($href) ?>"><code><?= h($category->getHandle()) ?></code></a></td>
+                <td><a href="<?= h($href) ?>"><?= h($category->getDisplayName()) ?></a></td>
+                <td><?= $category->isEnabled() ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-ban text-danger"></i>' ?></td>
+                <td>
+                    <?php
+                    if ($category->getPackage() !== null) {
+                        echo h($category->getPackage()->getPackageName());
+                    }
+                    ?>
+                </td>
+            </tr>
+            <?php
+        }
+        ?>
+        </tbody>
+    </table>
+    <?php
+}

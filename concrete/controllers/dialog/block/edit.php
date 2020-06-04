@@ -47,27 +47,23 @@ class Edit extends BackendInterfaceBlockController
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-            $b = $this->getBlockToEdit();
-            $e = $this->validateBlock($b);
-            $pr = $this->getEditResponse($b, $e);
+            $app = Application::getFacadeApplication();
 
-            if (!is_object($e) || ($e instanceof ErrorList && !$e->has())) {
-                // we can update the block that we're submitting
-                $b->update($_POST);
-                $event = new BlockEdit($b, $this->page);
-                Events::dispatch('on_block_edit', $event);
-            }
-
-            // the block has a new id at this point, we have to pass it to the view
+            // validate the request
+            $e = $this->validateBlock($this->block);
             if ($e instanceof ErrorList && $e->has()) {
                 $formatter = new JsonFormatter($e);
                 $response = $formatter->asArray();
-                $response['newbID'] = intval($b->getBlockID());
-                $app = Application::getFacadeApplication();
                 return $app->make(ResponseFactoryInterface::class)->create(json_encode($response));
             }
 
-            $pr->outputJSON();
+            // create a new version of the block
+            $b = $this->getBlockToEdit();
+            $pr = $this->getEditResponse($b);
+            $b->update($_POST);
+            $event = new BlockEdit($b, $this->page);
+            Events::dispatch('on_block_edit', $event);
+            return $app->make(ResponseFactoryInterface::class)->json($pr);
         }
     }
 

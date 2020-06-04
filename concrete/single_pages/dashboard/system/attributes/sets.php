@@ -1,9 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 $form = Loader::helper('form');
-$txt = Loader::helper('text');?>
-<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) {
+$txt = Loader::helper('text'); ?>
+<?php if (in_array($this->controller->getTask(), ['update_set', 'update_set_attributes', 'edit', 'delete_set'])) {
     ?>
     <div class="row">
 		<div class="col-md-8">
@@ -32,7 +32,7 @@ $txt = Loader::helper('text');?>
                         <?php echo $form->label('asHandle', t('Handle'))?>
                         <?php if ($set->isAttributeSetLocked()) {
     ?>
-                            <?php echo $form->text('asHandle', $set->getAttributeSetHandle(), array('disabled' => 'disabled'))?>
+                            <?php echo $form->text('asHandle', $set->getAttributeSetHandle(), ['disabled' => 'disabled'])?>
                         <?php
 } else {
     ?>
@@ -48,7 +48,7 @@ $txt = Loader::helper('text');?>
                     </div>
 
                     <div class="form-group">
-                        <?php echo $form->submit('submit', t('Update Set'), array('class' => 'btn btn-primary'))?>
+                        <?php echo $form->submit('submit', t('Update Set'), ['class' => 'btn btn-primary'])?>
                     </div>
                     </fieldset>
             </form>
@@ -66,7 +66,7 @@ $txt = Loader::helper('text');?>
                         <span class="help-block"><?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?></span>
 
                         <div class="form-group">
-                            <?php echo $form->submit('submit', t('Delete Set'), array('class' => 'btn btn-danger'))?>
+                            <?php echo $form->submit('submit', t('Delete Set'), ['class' => 'btn btn-danger'])?>
                         </div>
                     </fieldset>
                 </form>
@@ -98,7 +98,7 @@ $txt = Loader::helper('text');?>
 
     $disabled = '';
     if (!$key->inAttributeSet($set) && count($keySets)) {
-        $disabled = array('disabled' => 'disabled');
+        $disabled = ['disabled' => 'disabled'];
     }
     ?>
                                 <div class="checkbox">
@@ -114,7 +114,7 @@ $txt = Loader::helper('text');?>
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->submit('submit', t('Update Attributes'), array('class' => 'btn btn-primary'))?>
+                            <?php echo $form->submit('submit', t('Update Attributes'), ['class' => 'btn btn-primary'])?>
                         </div>
                     <?php
     } else {
@@ -180,7 +180,7 @@ $txt = Loader::helper('text');?>
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn btn-primary pull-right'))?>
+                    <?php echo $form->submit('submit', t('Add Set'), ['class' => 'btn btn-primary pull-right'])?>
                 </div>
             </div>
         </fieldset>
@@ -189,7 +189,7 @@ $txt = Loader::helper('text');?>
 
 
 <?php
-} else { // Attribute Category List  ?>
+} else { // Attribute Category List?>
 
         <h3><?=t('Attribute Categories')?></h3>
 		<span class="help-block"><?php echo t('Attribute Categories are used to group different types of sets.')?></span>

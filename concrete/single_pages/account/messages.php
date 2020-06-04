@@ -43,7 +43,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			<span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-			<?php $u = new User(); ?>
+			<?php $u = Core::make(Concrete\Core\User\User::class); ?>
 			<?php if ($msg->getMessageAuthorID() != $u->getUserID()) {
             ?>
 				<?php

@@ -11,8 +11,7 @@ if (!$tp->canAccessGroupSearch()) {
 }
 
 $type = PermissionAccessEntityType::getByHandle('group_combination');
-$url = $type->getAccessEntityTypeToolsURL();
-?>
+$url = $type->getControllerUrl(); ?>
 
 <div class="ccm-ui">
 	<form method="post" action="<?=$url?>" id="ccm-permission-access-entity-combination-groups-form">

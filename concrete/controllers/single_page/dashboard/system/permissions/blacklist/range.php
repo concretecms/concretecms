@@ -1,51 +1,60 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist;
 
+use Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist;
 use Concrete\Core\Csv\WriterFactory;
+use Concrete\Core\Entity\Permission\IpAccessControlRange;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Permission\IPRange;
+use Concrete\Core\Permission\IpAccessControlService;
 use Concrete\Core\Permission\IPRangesCsvWriter;
-use Concrete\Core\Permission\IPService;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use IPLib\Factory as IPFactory;
-use League\Csv\Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Range extends DashboardPageController
+class Range extends Blacklist
 {
-    public function view($type = null)
+    public function view($type = null, $id = '')
     {
+        $service = $this->getService($id);
+        if ($service === null) {
+            return $this->app->make(ResponseFactoryInterface::class)->redirect(
+                $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/system/permissions/blacklist']),
+                302
+            );
+        }
+        $category = $service->getCategory();
         $type = (int) $type;
         switch ($type) {
-            case IPService::IPRANGETYPE_BLACKLIST_MANUAL:
-                $this->set('pageTitle', t('Blacklisted IP addresses (manual)'));
+            case IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL:
+                $this->set('pageTitle', t('%s: Blacklisted IP addresses (manual)', $category->getDisplayName()));
                 break;
-            case IPService::IPRANGETYPE_WHITELIST_MANUAL:
-                $this->set('pageTitle', t('Whitelisted IP addresses'));
+            case IpAccessControlService::IPRANGETYPE_WHITELIST_MANUAL:
+                $this->set('pageTitle', t('%s: Whitelisted IP addresses', $category->getDisplayName()));
                 break;
-            case IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC:
+            case IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC:
             default:
-                $this->set('pageTitle', t('Blacklisted IP addresses (automatic)'));
-                $type = IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC;
+                $this->set('pageTitle', t('%s: Blacklisted IP addresses (automatic)', $category->getDisplayName()));
+                $type = IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC;
                 break;
         }
         $this->set('type', $type);
-        $ip = $this->app->make('ip');
-        $this->set('ip', $ip);
-        $this->set('ranges', $ip->getRanges($type));
+        $this->set('service', $service);
+        $this->set('myIPAddress', IPFactory::addressFromString($this->app->make(Request::class)->getClientIp()));
     }
 
-    public function formatRangeRow(IPRange $range)
+    public function formatRangeRow(IpAccessControlRange $range)
     {
         $html = '';
-        $html .= '<tr data-range-id="' . $range->getID() . '">';
+        $html .= '<tr data-range-id="' . $range->getIpAccessControlRangeID() . '">';
         $html .= '<td><a class="btn btn-xs btn-danger ccm-iprange-delete" href="#"><i class="fa fa-times"></i></a></td>';
         $html .= '<td><code>' . $range->getIpRange() . '</code></td>';
-        if ($range->getType() === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+        if ($range->getType() === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
             $html .= '<td>';
-            if ($range->getExpires() !== null) {
-                $html .= $this->app->make('date')->formatPrettyDateTime($range->getExpires(), true);
+            if ($range->getExpiration() !== null) {
+                $html .= $this->app->make('date')->formatPrettyDateTime($range->getExpiration(), true);
             }
             $html .= '</td>';
             $html .= '<td class="pull-right"><a href="#" class="btn btn-xs btn-info ccm-iprange-makepermanent">' . t('Make permament') . '</a></td>';
@@ -55,21 +64,23 @@ class Range extends DashboardPageController
         return $html;
     }
 
-    public function add_range($type)
+    public function add_range($type, $id)
     {
-        if (!$this->token->validate('add_range/' . $type)) {
+        if (!$this->token->validate('add_range/' . $type . '/' . $id)) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
         $range = IPFactory::rangeFromString($this->request->request->get('range'));
         if ($range === null) {
             throw new UserMessageException(t('The specified IP range is invalid'));
         }
-        $ipService = $this->app->make('ip');
-        /* @var IPService $ipService */
-        if (!$this->request->request->get('force') && ($type & IPService::IPRANGEFLAG_BLACKLIST) === IPService::IPRANGEFLAG_BLACKLIST) {
-            $myIP = $ipService->getRequestIPAddress();
+        $service = $this->getService($id);
+        if ($service === null) {
+            throw new UserMessageException(t('Unable to find the requested category'));
+        }
+        if (!$this->request->request->get('force') && ($type & IpAccessControlService::IPRANGEFLAG_BLACKLIST) === IpAccessControlService::IPRANGEFLAG_BLACKLIST) {
+            $myIP = IPFactory::addressFromString($this->app->make(Request::class)->getClientIp());
             if ($range->contains($myIP)) {
-                if (!$ipService->isWhitelisted($myIP)) {
+                if (!$service->isWhitelisted($myIP)) {
                     if ($range instanceof \IPLib\Range\Single) {
                         $msg = t('The specified IP address is the one you are currently using.');
                     } else {
@@ -81,34 +92,36 @@ class Range extends DashboardPageController
                 }
             }
         }
-        $record = $ipService->createRange($range, $type);
+        $record = $service->createRange($range, $type);
 
         return $this->app->make(ResponseFactoryInterface::class)->json(['row' => $this->formatRangeRow($record)]);
     }
 
-    public function delete_range($type)
+    public function delete_range($type, $id)
     {
-        if (!$this->token->validate('delete_range/' . $type)) {
+        if (!$this->token->validate('delete_range/' . $type . '/' . $id)) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
+        $service = $this->getService($id);
+        if ($service === null) {
+            throw new UserMessageException(t('Unable to find the requested category'));
+        }
         $result = true;
-        $ipService = $this->app->make('ip');
-        /* @var IPService $ipService */
-        $record = $ipService->getRangeByID($this->request->request->get('id'));
+        $record = $service->getRangeByID($this->request->request->get('id'));
         if ($record !== null) {
             if ($record->getType() !== (int) $type) {
                 throw new UserMessageException(t('The specified IP range is invalid'));
             }
             $myIpWasWhitelisted = false;
-            if (($type & IPService::IPRANGEFLAG_WHITELIST) === IPService::IPRANGEFLAG_WHITELIST) {
-                $myIP = $ipService->getRequestIPAddress();
+            if (($type & IpAccessControlService::IPRANGEFLAG_WHITELIST) === IpAccessControlService::IPRANGEFLAG_WHITELIST) {
+                $myIP = IPFactory::addressFromString($this->app->make(Request::class)->getClientIp());
                 $range = $record->getIpRange();
                 if ($range->contains($myIP)) {
                     $myIpWasWhitelisted = true;
                 }
             }
-            $ipService->deleteRange($record);
-            if ($myIpWasWhitelisted && $ipService->isBlacklisted($myIP)) {
+            $service->deleteRange($record);
+            if ($myIpWasWhitelisted && $service->isBlacklisted($myIP)) {
                 $result = t("The removed range contained your current IP address, which is now in the blacklist.\nIf you want to log in again with the current IP address, you should add your IP to the whitelist, or remove the relevant blacklist records.");
             }
         }
@@ -116,40 +129,49 @@ class Range extends DashboardPageController
         return $this->app->make(ResponseFactoryInterface::class)->json($result);
     }
 
-    public function make_range_permanent($type)
+    public function make_range_permanent($type, $id)
     {
-        if (!$this->token->validate('make_range_permanent/' . $type)) {
+        if (!$this->token->validate('make_range_permanent/' . $type . '/' . $id)) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
-        $ipService = $this->app->make('ip');
-        /* @var IPService $ipService */
-        $record = $ipService->getRangeByID($this->request->request->get('id'));
-        if ($record === null) {
+        $service = $this->getService($id);
+        if ($service === null) {
+            throw new UserMessageException(t('Unable to find the requested category'));
+        }
+        $range = $service->getRangeByID($this->request->request->get('id'));
+        if ($range === null) {
             throw new UserMessageException(t('Unable to find the IP range specified'));
         }
-        if ($record->getType() !== (int) $type) {
+        if ($range->getType() !== (int) $type) {
             throw new UserMessageException(t('The specified IP range is invalid'));
         }
-        $ipService->createRange($record->getIpRange(), IPService::IPRANGETYPE_BLACKLIST_MANUAL);
-        $ipService->deleteRange($record);
+        $range
+            ->setType(IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL)
+            ->setExpiration(null)
+        ;
+        $this->entityManager->flush($range);
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    public function export($type, $includeExpired, $token)
+    public function export($type, $id, $includeExpired, $token)
     {
-        if (!$this->token->validate("iprange/export/range/{$type}/$includeExpired", $token)) {
+        if (!$this->token->validate("iprange/export/range/{$type}/{$id}/$includeExpired", $token)) {
             throw new UserMessageException($this->token->getErrorMessage());
+        }
+        $service = $this->getService($id);
+        if ($service === null) {
+            throw new UserMessageException(t('Unable to find the requested category'));
         }
         $type = (int) $type;
         switch ($type) {
-            case IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC:
+            case IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC:
                 $filename = 'blacklist-automatic';
                 break;
-            case IPService::IPRANGETYPE_BLACKLIST_MANUAL:
+            case IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL:
                 $filename = 'blacklist-manual';
                 break;
-            case IPService::IPRANGETYPE_WHITELIST_MANUAL:
+            case IpAccessControlService::IPRANGETYPE_WHITELIST_MANUAL:
                 $filename = 'whitelist';
                 break;
             default:
@@ -162,9 +184,7 @@ class Range extends DashboardPageController
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=' . $filename,
         ];
-        $ipService = $this->app->make('ip');
-        /* @var IPService $ipService */
-        $ranges = $ipService->getRanges($type, $includeExpired);
+        $ranges = $service->getRanges($type, $includeExpired);
         $app = $this->app;
         $config = $this->app->make('config');
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
@@ -173,7 +193,7 @@ class Range extends DashboardPageController
             function () use ($app, $type, $ranges, $bom) {
                 $writer = $app->build(IPRangesCsvWriter::class, [
                     'writer' => $app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
-                    'type' => $type
+                    'type' => $type,
                 ]);
                 echo $bom;
                 $writer->insertHeaders();
@@ -184,13 +204,16 @@ class Range extends DashboardPageController
         );
     }
 
-    public function clear_data()
+    public function clear_data($id)
     {
-        if (!$this->token->validate('blacklist-clear-data')) {
+        if (!$this->token->validate('blacklist-clear-data/' . $id)) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
+        $service = $this->getService($id);
+        if ($service === null) {
+            throw new UserMessageException(t('Unable to find the requested category'));
+        }
         $valn = $this->app->make('helper/validation/numbers');
-        /* @var \Concrete\Core\Utility\Service\Validation\Numbers $valn */
         $post = $this->request->request;
 
         $deleteFailedLoginAttempts = $post->get('delete-failed-login-attempts') === 'yes';
@@ -211,14 +234,12 @@ class Range extends DashboardPageController
                 $deleteAutomaticBlacklistOnlyExpired = false;
                 break;
         }
-        $ipService = $this->app->make('ip');
-        /* @var IPService $ipService */
         $messages = [];
         if ($deleteFailedLoginAttempts) {
-            $messages[] = t2('%s failed login attempt has been deleted.', '%s failed login attempts have been deleted.', $ipService->deleteFailedLoginAttempts($deleteFailedLoginAttemptsMinAge));
+            $messages[] = t2('%s failed login attempt has been deleted.', '%s failed login attempts have been deleted.', $service->deleteEvents($deleteFailedLoginAttemptsMinAge));
         }
         if ($deleteAutomaticBlacklist) {
-            $messages[] = t2('%s automatically banned IP address has been deleted.', '%s automatically banned IP addresses have been deleted.', $ipService->deleteAutomaticBlacklist($deleteAutomaticBlacklistOnlyExpired));
+            $messages[] = t2('%s automatically banned IP address has been deleted.', '%s automatically banned IP addresses have been deleted.', $service->deleteAutomaticBlacklist($deleteAutomaticBlacklistOnlyExpired));
         }
         if (empty($messages)) {
             throw new UserMessageException(t('Please specify what you would like to delete.'));

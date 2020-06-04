@@ -1,9 +1,9 @@
 <?php
 
-return array(
+return [
     'installed' => false,
 
-    'cache' => array(
+    'cache' => [
         'enabled' => false,
-    ),
-);
+    ],
+];

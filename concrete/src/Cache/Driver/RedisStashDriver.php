@@ -115,6 +115,7 @@ class RedisStashDriver extends AbstractDriver
         } else {
             $serverArray = [];
             $ttl = 0.5;
+            $password = null;
             foreach ($this->getRedisServers($servers) as $server) {
                 $serverString = $server['server'];
                 if (isset($server['port'])) {
@@ -122,13 +123,19 @@ class RedisStashDriver extends AbstractDriver
                 }
                 // We can only use one ttl for connection timeout so use the last set ttl
                 // isset allows for 0 - unlimited
-                if (!isset($server['ttl'])) {
+                if (isset($server['ttl'])) {
                     $ttl = $server['ttl'];
                 }
-
+                if (isset($server['password'])) {
+                    $password = $server['password'];
+                }
                 $serverArray[] = $serverString;
             }
-            $redis = new RedisArray($serverArray, ['connect_timeout' => $ttl]);
+            $options = ['connect_timeout' => $ttl];
+            if ($password !== null) {
+                $options['auth'] = $password;
+            }
+            $redis = new RedisArray($serverArray, $options);
         }
 
         return $redis;
@@ -145,15 +152,12 @@ class RedisStashDriver extends AbstractDriver
     {
         if (!empty($servers)) {
             foreach ($servers as $server) {
-                $password = null;
-                if (isset($server['password'])) {
-                    $password = $server['password'];
-                }
 
                 if (isset($server['socket'])) {
                     $server = [
                         'server' => array_get($server, 'socket', ''),
                         'ttl' => array_get($server, 'ttl', null),
+                        'password' => array_get($server, 'password', null)
                     ];
                 } else {
                     $host = array_get($server, 'host', '');
@@ -163,12 +167,10 @@ class RedisStashDriver extends AbstractDriver
                         'server' => $host,
                         'port' => array_get($server, 'port', 11211),
                         'ttl' => array_get($server, 'ttl', null),
+                        'password' => array_get($server, 'password', null)
                     ];
                 }
 
-                if ($password != null) {
-                    $server['password'] = $password;
-                }
 
                 yield $server;
             }

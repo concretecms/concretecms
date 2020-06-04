@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Form\Service;
 
 use Concrete\Core\Application\Application;
@@ -95,8 +94,10 @@ class Form
         if ($this->request == null) {
             $this->request = $this->app->make(Request::class);
         }
+
         return $this->request;
     }
+
     /**
      * Returns an action suitable for including in a form action property.
      *
@@ -488,6 +489,8 @@ class Form
             'required' => false,
             'allowedCountries' => null,
             'linkStateProvinceField' => false,
+            'hideUnusedStateProvinceField' => false,
+            'clearStateProvinceOnChange' => false,
         ];
         $allCountries = $this->app->make(CountryList::class)->getCountries();
         if (is_array($configuration['allowedCountries'])) {
@@ -545,10 +548,18 @@ class Form
         if ($configuration['linkStateProvinceField']) {
             $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $id);
             $r = ResponseAssetGroup::get();
-            $r->requireAsset('core/country-stateprovince-link');
-            $str .= '<script>';
-            $str .= '$(document).ready(function() { ccmCountryStateprovinceLink.withCountryField($(' . json_encode('#' . $escapedID) . ')); });';
-            $str .= '</script>';
+            $r->requireAsset('core/country-data-link');
+            $config = [
+                'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
+                'clearStateProvinceOnChange' => (bool) $configuration['clearStateProvinceOnChange'],
+            ];
+
+            $str .= '<script>$(document).ready(function() {';
+            $str .= 'ccmCountryDataLink.withCountryField(';
+            $str .= '$(' . json_encode('#' . $escapedID) . ')';
+            $str .= ', ' . json_encode($config);
+            $str .= ');';
+            $str .= '});</script>';
         }
 
         return $str;

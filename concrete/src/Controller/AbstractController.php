@@ -1,11 +1,16 @@
 <?php
+
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Core;
+use League\Url\UrlInterface;
 use Request;
+use Symfony\Component\HttpFoundation\Response;
 use View;
 
 /**
@@ -40,7 +45,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     /**
      * The current request instance.
      *
-     * @var Request|null
+     * @var \Concrete\Core\Http\Request|null
      */
     protected $request;
 
@@ -257,13 +262,29 @@ abstract class AbstractController implements ApplicationAwareInterface
      * Redirect the clients to a specific URL/page (specify path(s) as argument(s) of this function).
      *
      * @deprecated you should return a Response instance from your methods
+     * @see \Concrete\Core\Controller\AbstractController::buildRedirect()
      */
     public function redirect()
     {
-        $args = func_get_args();
-        $r = call_user_func_array(['Redirect', 'to'], $args);
-        $r->send();
+        $this->buildRedirect(func_get_args())->send();
         exit;
+    }
+
+    /**
+     * Build a response that redirects clients to a specific URL/page (specify path(s) as argument(s) of $args).
+     *
+     * @param array|string|\League\Url\UrlInterface $destination use an Url object to specify the destination URL, or a string/array of strings to build the URL with the resolver
+     * @param int $httpResponseCode the HTTP response code
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function buildRedirect($destination, $httpResponseCode = Response::HTTP_FOUND)
+    {
+        if (!$destination instanceof UrlInterface) {
+            $destination = $this->app->make(ResolverManagerInterface::class)->resolve((array) $destination);
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->redirect((string) $destination, Response::HTTP_FOUND);
     }
 
     /**
