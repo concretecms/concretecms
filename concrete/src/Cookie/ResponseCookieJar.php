@@ -30,12 +30,13 @@ class ResponseCookieJar
      * @param null|string $domain The domain the cookie is available to
      * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
-     *
+     * @param bool $raw Whether the cookie value should be sent with no url encoding
+     * @param string|null $sameSite Whether the cookie will be available for cross-site requests
      * @return \Symfony\Component\HttpFoundation\Cookie
      */
-    public function addCookie($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true)
+    public function addCookie($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
     {
-        $cookie = new Cookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
+        $cookie = new Cookie($name, $value, $expire, $path, $domain, $secure, $httpOnly, $raw, $sameSite);
         $this->addCookieObject($cookie);
 
         return $cookie;

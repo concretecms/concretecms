@@ -10,6 +10,7 @@ use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
+use Doctrine\DBAL\Driver\Statement;
 use Throwable;
 
 class BindingService implements LoggerAwareInterface
@@ -93,8 +94,10 @@ class BindingService implements LoggerAwareInterface
                     'binding' => $binding,
                 ]);
 
-                $result = $qb->execute();
-                $total = $result->fetchColumn();
+                $total = $qb->execute();
+                if ($total instanceof Statement) {
+                    $total = $total->fetchColumn();
+                }
             });
         } catch (\Exception $e) {
             throw new \RuntimeException('Unable to delete binding.');
