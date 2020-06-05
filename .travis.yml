@@ -9,6 +9,8 @@ cache:
     - build/node_modules
 notifications:
   email: false
+env:
+  - REDIS_VERSION=redis
 
 # Job list
 matrix:
@@ -24,6 +26,7 @@ matrix:
       before_script:
         - wget --tries=5 https://scrutinizer-ci.com/ocular.phar
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - phpdbg -qrr ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover
       after_script:
@@ -56,20 +59,27 @@ matrix:
       php: '5.5'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
+      env:
+        - REDIS_VERSION=redis-4.3.0
 
     - name: Test with PHP 5.6
       php: '5.6'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
+      env:
+        - REDIS_VERSION=redis-4.3.0
 
     - name: Test with PHP 7.0
       php: '7.0'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -77,6 +87,7 @@ matrix:
       php: '7.1'
       before_script:
         - COMPOSER_FLAGS='--prefer-lowest' ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -84,6 +95,7 @@ matrix:
       php: '7.2'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -91,13 +103,17 @@ matrix:
       php: '7.3'
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
+      env:
+        - REDIS_VERSION=redis-5.1.0
 
     - name: Test with PHP 7.4
       php: 7.4snapshot
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
 
@@ -114,5 +130,6 @@ matrix:
       php: nightly
       before_script:
         - ./.travis/composer-deps.sh
+        - ./.travis/setup-redis.sh
       script:
         - composer test
