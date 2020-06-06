@@ -3,8 +3,11 @@
 
 <?php
 $system = Page::getByPath('/dashboard/system');
-$factory = app(\Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory::class);
-$navigation = $factory->createFullNavigation($system);
+$navigation = app(\Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory::class)
+    ->createNavigation();
+$modifier = app(\Concrete\Core\Navigation\NavigationModifier::class);
+$modifier->addModifier(new \Concrete\Core\Navigation\Modifier\NavigationStartingPointModifier($system));
+$navigation = $modifier->process($navigation);
 $categories = $navigation->getItems();
 ?>
 

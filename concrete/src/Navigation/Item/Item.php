@@ -20,6 +20,11 @@ class Item implements ItemInterface, \JsonSerializable
     protected $isActive;
 
     /**
+     * @var bool
+     */
+    protected $isActiveParent = false;
+
+    /**
      * @var Item[]
      */
     protected $children = [];
@@ -30,11 +35,12 @@ class Item implements ItemInterface, \JsonSerializable
      * @param string $name
      * @param bool $isActive
      */
-    public function __construct(string $url, string $name, bool $isActive = false)
+    public function __construct(string $url, string $name, bool $isActive = false, $isActiveParent = false)
     {
         $this->url = $url;
         $this->name = $name;
         $this->isActive = $isActive;
+        $this->isActiveParent = $isActiveParent;
     }
 
     /**
@@ -106,12 +112,29 @@ class Item implements ItemInterface, \JsonSerializable
         $this->isActive = $isActive;
     }
 
+    /**
+     * @return bool
+     */
+    public function isActiveParent(): bool
+    {
+        return $this->isActiveParent;
+    }
+
+    /**
+     * @param bool $isActiveParent
+     */
+    public function setIsActiveParent(bool $isActiveParent): void
+    {
+        $this->isActiveParent = $isActiveParent;
+    }
+
     public function jsonSerialize()
     {
         return [
             'url' => $this->getUrl(),
             'name' => $this->getName(),
             'isActive' => $this->isActive(),
+            'isActiveParent' => $this->isActiveParent(),
             'children' => $this->getChildren(),
         ];
     }

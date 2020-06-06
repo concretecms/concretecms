@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory;
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory;
 use Concrete\Core\Http\Response;
@@ -246,10 +247,10 @@ class UserInterface
         $u = $app->make(ConcreteUser::class);
         if ($u->isRegistered()) {
             if ($app->make(Dashboard::class)->canRead()) {
-                $navigationFactory = $app->make(NavigationFactory::class);
+                $navigationFactory = $app->make(FullNavigationFactory::class);
                 $navigation = $navigationFactory->createNavigation();
                 $cache = $app->make(NavigationCache::class);
-                $cache->store($navigation);
+                $cache->set($navigation);
             }
         }
     }

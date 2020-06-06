@@ -2,8 +2,8 @@
 
 
 <?php
-$factory = app(\Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory::class);
-$navigation = $factory->createFullNavigation();
+$navigation = app(\Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory::class)
+    ->createNavigation();
 $categories = $navigation->getItems();
 ?>
 
