@@ -44,12 +44,7 @@ class AccountPageController extends CorePageController
         $this->token = Loader::helper('validation/token');
         $this->set('valt', $this->token);
         $this->set('av', Loader::helper('concrete/avatar'));
-
         $this->set('profile', $profile);
-
-        $nav = new AccountMenu($this->getPageObject());
-        $this->set('nav', $nav);
-
     }
 
     public function on_before_render()

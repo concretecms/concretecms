@@ -13,7 +13,12 @@ $currentMode = 'dashboard';
 $topLevelMenu = Element::get('dashboard/navigation/panel/top');
 $favoritesMenu = Element::get('dashboard/navigation/panel/favorites');
 if ($dashboard->inDashboard($c)) {
-    $section = array_reverse(app(\Concrete\Core\Html\Service\Navigation::class)->getTrailToCollection($c))[1];
+    $parents = array_reverse(app(\Concrete\Core\Html\Service\Navigation::class)->getTrailToCollection($c));
+    if (count($parents) == 1) {
+        $section = $c;
+    } else {
+        $section = $parents[1];
+    }
     if ($section) {
         $sectionMenu = Element::get('dashboard/navigation/panel/section', [$section, $c]);
         $currentMode = 'section';

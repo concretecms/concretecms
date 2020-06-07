@@ -18,6 +18,15 @@ class FullNavigationFactory
         $this->cache = $cache;
     }
 
+    protected function getPageChildren(Page $page)
+    {
+        if ($page->getCollectionPath() == '/dashboard/welcome') {
+            $page = Page::getByPath('/account');
+        }
+        $children = $page->getCollectionChildren();
+        return $children;
+    }
+
     /**
      * @param Page $currentPage
      * @param Navigation $navigation
@@ -29,7 +38,7 @@ class FullNavigationFactory
         $permissions = new Checker($currentPage);
         if ($permissions->canViewPage() && !$currentPage->getAttribute('exclude_nav')) {
             $item = new PageItem($currentPage);
-            $children = $currentPage->getCollectionChildren();
+            $children = $this->getPageChildren($currentPage);
             foreach($children as $child) {
                 $this->populateNavigation($child, $navigation, $item);
             }
