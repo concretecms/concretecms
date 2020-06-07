@@ -60,7 +60,12 @@ $file = $fileVersion->getFile();
             if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
                 ?>
                 <div>
-                    <button class="btn btn-secondary" onclick="alert('@todo');return false"><?= t('Edit')?></button>
+                    <a
+                        class="btn btn-secondary dialog-launch"
+                        dialog-title="<?= t('Edit') ?>"
+                        dialog-width="90%" dialog-height="75%"
+                        href="<?= REL_DIR_FILES_TOOLS_REQUIRED . '/files/edit?fID=' . $file->getFileID() ?>"
+                    ><?= t('Edit')?></a>
                     <div class="text-muted"><i><?= t('Adjust cropping and scale of this image and all its thumbnails.') ?></i></div>
                 </div>
                 <?php
@@ -187,7 +192,12 @@ $file = $fileVersion->getFile();
                     <?php
                 }
                 ?>
-                <button class="btn btn-secondary" onclick="alert('@todo');return false"><?= t('More') ?></button>
+                <a
+                    class="btn btn-secondary dialog-launch"
+                    dialog-title="<?= t('Download Statistics') ?>"
+                    dialog-width="620" dialog-height="400"
+                    href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/statistics', $file->getFileID()])) ?>"
+                ><?= t('More') ?></a>
                 <?php
             }
             ?>
