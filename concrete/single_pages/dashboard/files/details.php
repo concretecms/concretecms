@@ -17,6 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Utility\Service\Number $number
  * @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $resolverManager
  * @var Concrete\Core\Entity\File\Version $fileVersion
+ * @var Concrete\Core\Permission\Checker $filePermissions
  * @var string $thumbnail
  * @var Concrete\Core\Entity\Attribute\Key\FileKey[] $attributeKeys
  * @var Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord[] $usageRecords
@@ -31,26 +32,40 @@ $file = $fileVersion->getFile();
             <?= $thumbnail ?>
         </div>
         <div class="ccm-file-manager-details-preview-actions">
-            <div class="mb-4">
-                <a
-                    class="btn btn-secondary dialog-launch"
-                    dialog-title="<?= t('Swap') ?>"
-                    dialog-width="620" dialog-height="400"
-                    href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
-                ><?= t('Swap') ?></a>
-                <div class="text-muted"><i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i></div>
-            </div>
-            <div class="mb-4">
-                <form method="POST" action="<?= h($controller->action('rescan', $file->getFileID())) ?>">
-                    <?php $token->output("ccm-filedetails-rescan-{$file->getFileID()}") ?>
-                    <button type="submit" class="btn btn-secondary"><?= t('Rescan')?></button>
-                </form>
-                <div class="text-muted"><i><?= t('Automatically regenerate thumbnails for all sizes of this image.') ?></i></div>
-            </div>
-            <div>
-                <button class="btn btn-secondary" onclick="alert('@todo');return false"><?= t('Edit')?></button>
-                <div class="text-muted"><i><?= t('Adjust cropping and scale of this image and all its thumbnails.') ?></i></div>
-            </div>
+            <?php
+            if ($filePermissions->canEditFileContents()) {
+                ?>
+                <div class="mb-4">
+                    <a
+                        class="btn btn-secondary dialog-launch"
+                        dialog-title="<?= t('Swap') ?>"
+                        dialog-width="620" dialog-height="400"
+                        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
+                    ><?= t('Swap') ?></a>
+                    <div class="text-muted"><i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i></div>
+                </div>
+                <?php
+            }
+            if ($filePermissions->canEditFileContents()) {
+                ?>
+                <div class="mb-4">
+                    <form method="POST" action="<?= h($controller->action('rescan', $file->getFileID())) ?>">
+                        <?php $token->output("ccm-filedetails-rescan-{$file->getFileID()}") ?>
+                        <button type="submit" class="btn btn-secondary"><?= t('Rescan')?></button>
+                    </form>
+                    <div class="text-muted"><i><?= t('Automatically regenerate thumbnails for all sizes of this image.') ?></i></div>
+                </div>
+                <?php
+            }
+            if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
+                ?>
+                <div>
+                    <button class="btn btn-secondary" onclick="alert('@todo');return false"><?= t('Edit')?></button>
+                    <div class="text-muted"><i><?= t('Adjust cropping and scale of this image and all its thumbnails.') ?></i></div>
+                </div>
+                <?php
+            }
+            ?>
         </div>
     </div>
 </section>
@@ -232,12 +247,18 @@ $file = $fileVersion->getFile();
 <hr class="mt-5 mb-4" />
 
 <section>
-    <a
-        class="btn btn-secondary float-right dialog-launch"
-        dialog-title="<?= t('Storage Location') ?>"
-        dialog-width="500" dialog-height="400"
-        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()])) ?>"
-    ><?= t('Edit') ?></a>
+    <?php
+    if ($filePermissions->canEditFilePermissions()) {
+        ?>
+        <a
+            class="btn btn-secondary float-right dialog-launch"
+            dialog-title="<?= t('Storage Location') ?>"
+            dialog-width="500" dialog-height="400"
+            href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()])) ?>"
+        ><?= t('Edit') ?></a>
+        <?php
+    }
+    ?>
     <h3><?= t('Storage') ?></h3>
     <dl>
         <dt><?= t('Tracked URL') ?></dt>
@@ -260,7 +281,7 @@ $file = $fileVersion->getFile();
 
 <script>
 $(document).ready(function() {
-    ConcreteEvent.subscribe('FileManagerReplaceFileComplete', function(e, data) {
+    ConcreteEvent.subscribe('FileManagerReplaceFileComplete FileManagerBulkFileStorageComplete', function(e, data) {
         location.reload();
     });
 });

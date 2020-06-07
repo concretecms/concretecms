@@ -32,6 +32,7 @@ class Details extends DashboardPageController
         $this->set('number', $this->app->make('helper/number'));
         $this->set('resolverManager', $this->app->make(ResolverManagerInterface::class));
         $this->set('fileVersion', $fileVersion);
+        $this->set('filePermissions', new Checker($fileVersion->getFile()));
         $this->configureBreadcrumb($fileVersion);
         $this->configurePageTitle($fileVersion);
         $this->set('thumbnail', $fileVersion->getDetailThumbnailImage());
