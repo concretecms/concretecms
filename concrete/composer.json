@@ -36,6 +36,7 @@
     "symfony/routing": "3.*",
     "symfony/http-kernel": "3.4.*",
     "doctrine/orm": "^2.6.3",
+    "doctrine/common": "^2",
     "doctrine/migrations": "1.* <1.8",
     "league/flysystem": "1.*",
     "symfony/event-dispatcher": "3.*",

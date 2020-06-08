@@ -36,6 +36,7 @@ class FlatSitemapProvider extends StandardSitemapProvider
         } else {
             if ($cParentID > 0) {
                 $n = $dh->getNode($cParentID);
+                $n->expanded = true;
                 $n->children = $dh->getSubNodes($this->request->query->get('cParentID'));
                 $nodes[] = $n;
             } else {

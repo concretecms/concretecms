@@ -46,7 +46,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     /**
      * The current request instance.
      *
-     * @var Request|null
+     * @var \Concrete\Core\Http\Request|null
      */
     protected $request;
 

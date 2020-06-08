@@ -89,6 +89,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         $this->nullifyInvalidForeignKeys();
         $this->migrateDrafts();
         $this->executeDelayedQueries();
+        $this->fixMissingCategoryNames();
     }
 
     protected function output($message)
@@ -1396,6 +1397,32 @@ EOT
             $this->output(t('Executing delayed queries...'));
             while (($sql = array_shift($this->delayedQueries)) !== null) {
                 $this->connection->executeUpdate($sql);
+            }
+        }
+    }
+
+    private function fixMissingCategoryNames()
+    {
+
+        $sm = $this->connection->getSchemaManager();
+        if ($sm->tablesExist(['TreeCategoryNodes']) && !$sm->tablesExist(['_TreeCategoryNodes'])) {
+            $sm->renameTable('TreeCategoryNodes', '_TreeCategoryNodes');
+            $this->output(t('Updating Category Names...'));
+            $categories = $this->connection->fetchAll('select * from _TreeCategoryNodes');
+            $queryBuilder = $this->connection->createQueryBuilder();
+            $queryBuilder->update('TreeNodes')->set('treeNodeName', ':nodeName')
+                ->where('treeNodeID = :nodeID')
+                ->andWhere($queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->isNull('treeNodeName'),
+                    $queryBuilder->expr()->eq('treeNodeName', '\'\'')
+                ));
+            foreach ($categories as $category) {
+                $queryBuilder->setParameters([
+                        'nodeID' => $category['treeNodeID'],
+                        'nodeName' => $category['treeNodeCategoryName'],
+                    ]
+                );
+                $queryBuilder->execute();
             }
         }
     }
