@@ -46,11 +46,16 @@ class OpenToCurrentPageModifier implements ModifierInterface
         }
     }
 
-    public function modify(NavigationInterface $navigation)
+    protected function getSectionIDs(): array
     {
         $parents = array_reverse($this->navigationService->getTrailToCollection($this->currentPage));
         $sectionIDs = array_map(function($page) { return $page->getCollectionID(); }, $parents);
-        $this->removeUnrelatedSectionsFromNavigation($navigation->getItems(), $sectionIDs);
+        return $sectionIDs;
+    }
+
+    public function modify(NavigationInterface $navigation)
+    {
+        $this->removeUnrelatedSectionsFromNavigation($navigation->getItems(), $this->getSectionIDs());
     }
 
 }

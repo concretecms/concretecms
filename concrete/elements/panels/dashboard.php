@@ -8,10 +8,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $u = app(User::class);
 $ui = UserInfo::getByID($u->getUserID());
 $dashboard = new \Concrete\Core\Application\Service\Dashboard();
+$account = new \Concrete\Core\User\Account\AccountService();
 $currentMode = 'dashboard';
 
 $topLevelMenu = Element::get('dashboard/navigation/panel/top');
 $favoritesMenu = Element::get('dashboard/navigation/panel/favorites');
+$section = null;
 if ($dashboard->inDashboard($c)) {
     $parents = array_reverse(app(\Concrete\Core\Html\Service\Navigation::class)->getTrailToCollection($c));
     if (count($parents) == 1) {
@@ -19,10 +21,12 @@ if ($dashboard->inDashboard($c)) {
     } else {
         $section = $parents[1];
     }
-    if ($section) {
-        $sectionMenu = Element::get('dashboard/navigation/panel/section', [$section, $c]);
-        $currentMode = 'section';
-    }
+} else if ($account->inMyAccount($c)) {
+    $section = \Concrete\Core\Page\Page::getByPath('/dashboard/welcome');
+}
+if ($section) {
+    $sectionMenu = Element::get('dashboard/navigation/panel/section', [$section, $c]);
+    $currentMode = 'section';
 }
 
 ?>
