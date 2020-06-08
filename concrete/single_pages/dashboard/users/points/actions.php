@@ -144,10 +144,8 @@
 		<?php
     }
     ?>
-	
+
 <?=$actionList->displayPagingV2();?>
 
 <?php
 } ?>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

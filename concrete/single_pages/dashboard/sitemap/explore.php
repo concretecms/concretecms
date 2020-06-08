@@ -55,17 +55,15 @@ if ($dh->canRead()) {
     <?php
 }
 ?>
-<?= $dashboard->getDashboardPaneHeaderWrapper(t('Sitemap'), t('Sitemap flat view lets you page through particular long lists of pages.'), 'span10 offset1', false) ?>
 <div class="ccm-pane-body">
     <?php
     if ($dh->canRead()) {
-        ?><div id="ccm-flat-sitemap-container" data-sitemap="container"></div><?php 
+        ?><div id="ccm-flat-sitemap-container" data-sitemap="container"></div><?php
     } else {
-        ?><p><?= t('You do not have access to the dashboard sitemap.') ?></p><?php 
+        ?><p><?= t('You do not have access to the dashboard sitemap.') ?></p><?php
     }
     ?>
 </div>
 <div class="ccm-pane-footer" id="ccm-explore-paging-footer">
 </div>
-<?= $dashboard->getDashboardPaneFooterWrapper(false) ?>
 

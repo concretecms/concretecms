@@ -15,9 +15,14 @@ interface ItemInterface
     public function isActive(): bool;
 
     /**
+     * @return bool
+     */
+    public function isActiveParent(): bool;
+
+    /**
      * @return string
      */
-    public function getURL(): string;
+    public function getUrl(): string;
 
     /**
      * @return Item[]

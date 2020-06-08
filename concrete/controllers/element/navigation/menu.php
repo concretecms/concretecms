@@ -6,14 +6,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 
-/**
- * Note: this is an internal class with weird internal behaviors. If you want to use an actually maintained,
- * simpler version of this class styled explicitly for bootstrap 4, use the menu class instead.
- * 
- * Class ApplicationMenu
- * @package Concrete\Controller\Element\Navigation
- */
-class ApplicationMenu extends ElementController
+class Menu extends ElementController
 {
 
     protected $currentPage;
@@ -58,7 +51,7 @@ class ApplicationMenu extends ElementController
 
     public function getElement()
     {
-        return 'navigation/application_menu';
+        return 'navigation/menu';
     }
 
     public function displayChildPages(Page $page)
@@ -79,7 +72,6 @@ class ApplicationMenu extends ElementController
         $classes = [];
         if (is_object($this->currentPage) && $page->getCollectionID() == $this->currentPage->getCollectionID()) {
             $classes[] = 'nav-selected';
-            $classes[] = 'active';
         }
         if (in_array($page->getCollectionID(), $this->trail)) {
             $classes[] = 'nav-path-selected';

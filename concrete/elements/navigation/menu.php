@@ -16,15 +16,15 @@ if (!empty($top)) {
                         $page = $pages[$i];
                         $next = ($i + 1 < $n) ? $pages[$i + 1] : null;
                         ?>
-                        <li class="<?=$view->controller->getMenuItemClass($page)?>">
-                            <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
+                        <li class="nav-item <?=$view->controller->getMenuItemClass($page)?>">
+                            <a class="nav-link" href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
                             <?php
                             if ($view->controller->displayChildPages($page)) {
                                 $children = $view->controller->getChildPages($page);
                                 if (!empty($children)) {
                                     ?>
                                     <ul>
-                                    <?php $walk($children); ?>
+                                        <?php $walk($children); ?>
                                     </ul><?php
                                 }
                             }
