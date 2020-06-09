@@ -47,6 +47,13 @@ class ClonerOptions
     private $copyFeatureAssignments = true;
 
     /**
+     * Should the page type composer output block records be copied?
+     *
+     * @var bool
+     */
+    private $copyPageTypeComposerOutputBlocks = true;
+
+    /**
      * Should the custom theme styles be copied?
      *
      * @var bool
@@ -158,6 +165,27 @@ class ClonerOptions
 
         return $this;
     }
+
+    /**
+     * Should the page type composer output block records be copied?
+     *
+     * @return bool
+     */
+    public function copyPageTypeComposerOutputBlocks()
+    {
+        return $this->copyPageTypeComposerOutputBlocks;
+    }
+
+    /**
+     * Should the page type composer output block records be copied?
+     *
+     * @param bool $copyPageTypeComposerOutputBlocks
+     */
+    public function setCopyPageTypeComposerOutputBlocks($copyPageTypeComposerOutputBlocks)
+    {
+        $this->copyPageTypeComposerOutputBlocks = (bool) $copyPageTypeComposerOutputBlocks;
+    }
+
 
     /**
      * Should the feature assignments be copied?
