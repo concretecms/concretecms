@@ -137,7 +137,6 @@ if ($key !== null) {
                     } ?>
             </div>
         </div>
-
     </fieldset>
 
     <?php
