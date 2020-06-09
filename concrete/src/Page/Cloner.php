@@ -5,6 +5,7 @@ use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Entity\Page\Relation\SiblingRelation;
+use Concrete\Core\Entity\Site\SkeletonTree;
 use Concrete\Core\Localization\Service\Date as DateHelper;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Collection;
