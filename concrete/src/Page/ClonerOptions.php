@@ -183,7 +183,7 @@ class ClonerOptions
      */
     public function setCopyPageTypeComposerOutputBlocks($copyPageTypeComposerOutputBlocks)
     {
-        $this->copyPageTypeComposerOutputBlocks = $copyPageTypeComposerOutputBlocks;
+        $this->copyPageTypeComposerOutputBlocks = (bool) $copyPageTypeComposerOutputBlocks;
     }
 
 
