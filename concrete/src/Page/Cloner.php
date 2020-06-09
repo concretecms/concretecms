@@ -125,8 +125,6 @@ class Cloner
             'pkgID' => $page->getPackageID(),
         ]);
 
-        $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, cvID, bID', ['cID' => [$cID, $newCID]]);
-
         PageStatistics::incrementParents($newCID);
 
         $newPage = Page::getByID($newCID);
