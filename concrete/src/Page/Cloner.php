@@ -422,6 +422,9 @@ class Cloner
         if ($options->copyFeatureAssignments()) {
             $this->copyFeatureAssignments($cIDs, $cvIDs);
         }
+        if ($options->copyPageTypeComposerOutputBlocks()) {
+            $this->copyPageTypeComposerOutputBlocks($cIDs, $cvIDs);
+        }
         if ($options->copyCustomStyles()) {
             $this->copyCustomStyles($cIDs, $cvIDs);
         }
@@ -464,6 +467,17 @@ class Cloner
     protected function copyFeatureAssignments(array $cIDs, array $cvIDs = null)
     {
         $this->directCopy('CollectionVersionFeatureAssignments', 'faID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
+    }
+
+    /**
+     * Copy the page type composer block output records from one version to another.
+     *
+     * @param int[] $cIDs An array with the ID of the source and destination collections
+     * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
+     */
+    protected function copyPageTypeComposerOutputBlocks(array $cIDs, array $cvIDs = null)
+    {
+        $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
 
     /**
