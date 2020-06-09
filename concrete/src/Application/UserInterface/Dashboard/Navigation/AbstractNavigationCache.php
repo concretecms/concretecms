@@ -20,7 +20,6 @@ abstract class AbstractNavigationCache
 
     public function has()
     {
-        return false;
         return $this->session->has($this->getIdentifier());
     }
 
