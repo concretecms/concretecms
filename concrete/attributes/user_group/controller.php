@@ -349,11 +349,13 @@ class Controller extends AttributeTypeController
          * @var UserGroupSettings
          */
         $ak = $this->getAttributeKey();
-        $settings = $ak->getAttributeKeySettings();
-        if ($settings) {
-            $this->akGroupSelectionMethod = $settings->getGroupSelectionMethod();
-            $this->akDisplayGroupsBeneathSpecificParent = $settings->displayGroupsBeneathSpecificParent();
-            $this->akDisplayGroupsBeneathParentID = $settings->getDisplayGroupsBeneathParentID();
+        if ($ak) {
+            $settings = $ak->getAttributeKeySettings();
+            if ($settings) {
+                $this->akGroupSelectionMethod = $settings->getGroupSelectionMethod();
+                $this->akDisplayGroupsBeneathSpecificParent = $settings->displayGroupsBeneathSpecificParent();
+                $this->akDisplayGroupsBeneathParentID = $settings->getDisplayGroupsBeneathParentID();
+            }
         }
     }
 
