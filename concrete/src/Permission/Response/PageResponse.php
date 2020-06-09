@@ -1,23 +1,23 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use Concrete\Core\Page\Type\Type;
-use Loader;
-use Concrete\Core\User\User;
-use Concrete\Core\Support\Facade\Application;
-use Permissions;
-use Concrete\Core\Area\Area;
 use Block;
-use Config;
-use Session;
-use TaskPermission;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Assignment\PageTimedAssignment as PageContentPermissionTimedAssignment;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Key\AreaKey as AreaPermissionKey;
 use Concrete\Core\Permission\Key\BlockKey as BlockPermissionKey;
-use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use Concrete\Core\Permission\Duration as PermissionDuration;
-use Concrete\Core\Permission\Assignment\PageTimedAssignment as PageContentPermissionTimedAssignment;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Config;
+use Loader;
+use Permissions;
+use Session;
+use TaskPermission;
 
 class PageResponse extends Response
 {
@@ -107,6 +107,13 @@ class PageResponse extends Response
 
     public function canAddBlockType($bt)
     {
+        // Check can add the block to any area on the site.
+        $key = Key::getByHandle('add_block');
+        if (!$key || !$key->validate($bt)) {
+            return false;
+        }
+
+        // Check can add blocks to this area.
         $list = Area::getListOnPage($this->object);
         foreach ($list as $la) {
             $lap = new Permissions($la);
@@ -198,10 +205,10 @@ class PageResponse extends Response
     public function getAllAssignmentsForPage()
     {
         $db = Loader::db();
-        $assignments = array();
+        $assignments = [];
         $r = $db->Execute(
             'select peID, pkID, pdID from PagePermissionAssignments ppa inner join PermissionAccessList pal on ppa.paID = pal.paID where cID = ?',
-            array($this->object->getCollectionID())
+            [$this->object->getCollectionID()]
         );
         while ($row = $r->FetchRow()) {
             $pk = PagePermissionKey::getByID($row['pkID']);
@@ -215,12 +222,12 @@ class PageResponse extends Response
         }
         $r = $db->Execute(
             'select arHandle from Areas where cID = ? and arOverrideCollectionPermissions = 1',
-            array($this->object->getCollectionID())
+            [$this->object->getCollectionID()]
         );
         while ($row = $r->FetchRow()) {
             $r2 = $db->Execute(
                 'select peID, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID where cID = ? and arHandle = ?',
-                array($this->object->getCollectionID(), $row['arHandle'])
+                [$this->object->getCollectionID(), $row['arHandle']]
             );
             while ($row2 = $r2->FetchRow()) {
                 $pk = AreaPermissionKey::getByID($row2['pkID']);
@@ -239,18 +246,18 @@ class PageResponse extends Response
             'select peID, cvb.cvID, cvb.bID, pdID, pkID from BlockPermissionAssignments bpa
                     inner join PermissionAccessList pal on bpa.paID = pal.paID inner join CollectionVersionBlocks cvb on cvb.cID = bpa.cID and cvb.cvID = bpa.cvID and cvb.bID = bpa.bID
                     where cvb.cID = ? and cvb.cvID = ? and cvb.cbOverrideAreaPermissions = 1',
-            array($this->object->getCollectionID(), $this->object->getVersionID())
+            [$this->object->getCollectionID(), $this->object->getVersionID()]
         );
         while ($row = $r->FetchRow()) {
             $pk = BlockPermissionKey::getByID($row['pkID']);
             $pae = PermissionAccessEntity::getByID($row['peID']);
             $arHandle = $db->GetOne(
                 'select arHandle from CollectionVersionBlocks where bID = ? and cvID = ? and cID = ?',
-                array(
+                [
                     $row['bID'],
                     $row['cvID'],
                     $this->object->getCollectionID(),
-                )
+                ]
             );
             $b = Block::getByID($row['bID'], $this->object, $arHandle);
             $pk->setPermissionObject($b);
