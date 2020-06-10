@@ -376,7 +376,6 @@ class UserInterface
             'text' => false,
             'form' => false,
             'hide' => false,
-            'addclass' => 'ccm-notification-page-alert',
             'buttons' => [],
         ];
 
@@ -421,7 +420,7 @@ class UserInterface
         $string = json_encode($arguments);
 
         $content = '<script type="text/javascript">$(function() {';
-        $content .= 'new PNotify(' . $string . ');';
+        $content .= 'ConcreteNotificationsBox.notify(' . $string . ');';
         $content .= '});</script>';
 
         return $content;
