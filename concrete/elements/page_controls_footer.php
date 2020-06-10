@@ -424,7 +424,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 'title' => t('Editing Unavailable.'),
                 'text' => t('%s is currently editing this page.', $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
-                'icon' => 'fa fa-exclamation-circle',
+                'icon' => 'fas fa-exclamation-circle',
                 'buttons' => $buttons,
             ]);
         } else {
@@ -439,7 +439,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     'title' => t('Page Alias.'),
                     'text' => t('This page is an alias of one that actually appears elsewhere.'),
                     'type' => 'info',
-                    'icon' => 'fa fa-info-circle',
+                    'icon' => 'fas fa-info-circle',
                     'buttons' => $buttons,
                 ]);
             }
@@ -459,7 +459,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 'title' => t('Page Draft.'),
                                 'text' => t('This is an un-published draft.'),
                                 'type' => 'info',
-                                'icon' => 'fa fa-exclamation-circle',
+                                'icon' => 'fas fa-exclamation-circle',
                             ]);
                         } else {
                             $buttons = [];
@@ -489,7 +489,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 'title' => t('Page is Pending Approval.'),
                                 'text' => t('This page is newer than what appears to visitors on your live site.'),
                                 'type' => 'info',
-                                'icon' => 'fa fa-cog',
+                                'icon' => 'fas fa-cog',
                                 'buttons' => $buttons,
                             ]);
                         }
@@ -508,7 +508,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 'title' => t('Publish Pending.'),
                                 'text' => $message,
                                 'type' => 'info',
-                                'icon' => 'fa fa-cog',
+                                'icon' => 'fas fa-cog',
                                 'buttons' => $buttons,
                             ]);
                         }
