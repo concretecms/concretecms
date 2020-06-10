@@ -56,10 +56,7 @@ git checkout -qf "$TRAVIS_BRANCH"
 
 printf '%s: building assets\n' "$AUTO_COMMIT_NAME_BASE"
 cd "$TRAVIS_BUILD_DIR/build"
-printf -- '- CSS\n'
-grunt css:release
-printf -- '- JS\n'
-grunt js:release
+npm run prod
 
 printf '%s: checking changes\n' "$AUTO_COMMIT_NAME_BASE"
 CHANGES_DETECTED=0
@@ -78,6 +75,14 @@ if test -n "$(git status --porcelain .)"; then
     CHANGES_DETECTED=1
 else
     printf -- '- no changes in JS assets\n'
+fi
+cd "$TRAVIS_BUILD_DIR/concrete/themes"
+if test -n "$(git status --porcelain .)"; then
+    printf -- '- changes detected in themes assets\n'
+    git add --all .
+    CHANGES_DETECTED=1
+else
+    printf -- '- no changes in themes assets\n'
 fi
 
 if test $CHANGES_DETECTED -eq 0; then

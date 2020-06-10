@@ -13,8 +13,10 @@ use Request;
 
 class AreaLayoutPresetTest extends PageTestCase
 {
-    public function __construct()
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, [
             'AreaLayoutPresets',
             'AreaLayoutsUsingPresets',
@@ -25,8 +27,18 @@ class AreaLayoutPresetTest extends PageTestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
+
+        $this->tables = array_merge($this->tables, [
+            'AreaLayoutPresets',
+            'AreaLayoutsUsingPresets',
+            'AreaLayouts',
+            'AreaLayoutColumns',
+            'AreaLayoutCustomColumns',
+            'AreaLayoutThemeGridColumns',
+        ]);
+
         $service = Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
@@ -38,7 +50,7 @@ class AreaLayoutPresetTest extends PageTestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->truncateTables();
@@ -132,9 +144,9 @@ class AreaLayoutPresetTest extends PageTestCase
         $this->assertInstanceOf(Preset::class, $presets[0]);
 
         $columns = $presets[0]->getColumns();
-        $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-sm-2 col-sm-offset-2"></div>', (string) $columns[1]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-sm-6"></div>', (string) $columns[2]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-4"></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-2 offset-2"></div>', (string) $columns[1]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-6"></div>', (string) $columns[2]->getColumnHtmlObject());
 
         $req->clearCurrentPage();
     }

@@ -3,8 +3,9 @@ namespace Concrete\Core\Http\Client;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
-use Zend\Http\Client\Adapter\Curl;
-use Zend\Http\Client\Adapter\Proxy;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use League\Url\Url;
 
 class Factory
 {
@@ -41,134 +42,23 @@ class Factory
         if (!is_array($result)) {
             $result = [];
         }
-        $result['proxyhost'] = $config->get('concrete.proxy.host');
-        $result['proxyport'] = $config->get('concrete.proxy.port');
-        $result['proxyuser'] = $config->get('concrete.proxy.user');
-        $result['proxypass'] = $config->get('concrete.proxy.password');
 
-        return $result;
-    }
+        $host = $config->get('concrete.proxy.host');
+        $port = $config->get('concrete.proxy.port');
+        $user = $config->get('concrete.proxy.user');
+        $pass = $config->get('concrete.proxy.password');
 
-    /**
-     * Normalize the Zend HTTP Client options.
-     *
-     * @param array $options
-     *
-     * @return array
-     */
-    protected function normalizeOptions(array $options)
-    {
-        // Default values
-        $result = [
-            'adapter' => null,
-            'sslverifypeer' => true,
-            'sslverifypeername' => true,
-            'proxyhost' => '',
-            'proxyport' => 8080,
-            'proxyuser' => '',
-            'proxypass' => '',
-            'sslcafile' => null,
-            'sslcapath' => null,
-            'connecttimeout' => 5,
-            'timeout' => 60,
-            'keepalive' => false,
-            'maxredirects' => 5,
-            'rfc3986strict' => false,
-            'sslcert' => null,
-            'sslpassphrase' => null,
-            'storeresponse' => true,
-            'streamtmpdir' => null,
-            'strictredirects' => false,
-            'useragent' => 'concrete5 CMS',
-            'encodecookies' => true,
-            'httpversion' => '1.1',
-            'ssltransport' => 'tls',
-            'sslallowselfsigned' => false,
-            'persistent' => false,
-            'logger' => null,
-        ];
-        // Normalize the given options
-        foreach ($options as $key => $value) {
-            // Normalize the option key (exactly like Zend Http Client)
-            $key = str_replace(['-', '_', ' ', '.'], '', strtolower($key));
-            switch ($key) {
-                // Not nullable boolean values
-                case 'sslverifypeer':
-                case 'sslverifypeername':
-                case 'keepalive':
-                case 'rfc3986strict':
-                case 'storeresponse':
-                case 'strictredirects':
-                case 'encodecookies':
-                case 'sslallowselfsigned':
-                case 'persistent':
-                    if ($value !== null && $value !== '') {
-                        $result[$key] = (bool) $value;
-                    }
-                    break;
-                // Not nullable integer values
-                case 'proxyport':
-                case 'connecttimeout':
-                case 'timeout':
-                case 'maxredirects':
-                    if (is_int($value) || is_float($value) || (is_string($value) && is_numeric($value))) {
-                        $result[$key] = (int) $value;
-                    }
-                    break;
-                // Strings thay may be empty
-                case 'proxyhost':
-                case 'proxyuser':
-                case 'proxypass':
-                case 'sslpassphrase':
-                case 'useragent':
-                    $result[$key] = is_string($value) ? $value : '';
-                    break;
-                // Strings thay can't be empty
-                case 'sslcafile':
-                case 'sslcapath':
-                case 'sslcert':
-                case 'httpversion':
-                case 'ssltransport':
-                case 'streamtmpdir':
-                    if (is_string($value) && $value !== '') {
-                        $result[$key] = $value;
-                    }
-                    break;
-                // Class names / instances
-                case 'adapter':
-                case 'logger':
-                    if ((is_string($value) && $value !== '') || is_object($value)) {
-                        $result[$key] = $value;
-                    }
-                    break;
-                // Pass through
-                default:
-                    $result[$key] = $value;
-                    break;
-            }
+        if ($host) {
+            $url = Url::createFromUrl($host);
+            $url->setUser($user);
+            $url->setPass($pass);
+            $url->setPort($port);
         }
-        // Set the temporary directory
-        if ($result['streamtmpdir'] === null) {
-            $result['streamtmpdir'] = $this->app->make('helper/file')->getTemporaryDirectory();
-        }
-        // Fix proxy options (Zend uses some of these values even if they are null)
-        if ($result['proxyhost'] === '') {
-            unset($result['proxyhost']);
-            unset($result['proxyport']);
-            unset($result['proxyuser']);
-            unset($result['proxypass']);
-        } elseif ($result['proxyuser'] === '') {
-            unset($result['proxyuser']);
-            unset($result['proxypass']);
-        }
-        // Don't set sslpassphrase is sslcert is not set (Zend tries to set the sslpassphrase even if no sslcert has been specified)
-        if ($result['sslcert'] === null) {
-            unset($result['sslpassphrase']);
-        }
-        // Don't pass sslcafile/sslcapath if sslverifypeer is false
-        if ($result['sslverifypeer'] === false) {
-            $result['sslcafile'] = null;
-            $result['sslcapath'] = null;
+
+        if (isset($url)) {
+            $result['proxy'] = [
+                'http' => (string) $url
+            ];
         }
 
         return $result;
@@ -193,25 +83,22 @@ class Factory
      * Create a new HTTP Client instance starting from configuration.
      *
      * @param array $options See the app.http_client values at concrete/config/app.php, plus the concrete.proxy values at concrete/config/concrete.php.
-     * @param mixed $adapter The adapter to use (defaults to Curl adapter if curl extension is installed, otherwise we'll use the Socket adapter)
+     * @param mixed $handler Optionally specify a specific handler.
      *
      * @return Client
      */
-    public function createFromOptions(array $options, $adapter = null)
+    public function createFromOptions(array $options, $handler = null)
     {
-        $options = $this->normalizeOptions($options);
-        if ((is_string($adapter) && $adapter !== '') || is_object($adapter)) {
-            $options['adapter'] = $adapter;
-        } elseif ($options['adapter'] === null) {
-            if (function_exists('curl_init')) {
-                $options['adapter'] = Curl::class;
-            } else {
-                $options['adapter'] = Proxy::class;
+        if ($handler) {
+            if (is_string($handler)) {
+                $handler = new $handler();
             }
+            $options['handler'] = $handler;
         }
-        $client = new Client(null, $options);
 
-        if ($options['logger'] !== null) {
+        $client = new Client($options);
+
+        if (isset($options['logger'])) {
             if (is_object($options['logger'])) {
                 $client->setLogger($options['logger']);
             } else {

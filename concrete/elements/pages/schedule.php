@@ -28,16 +28,16 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 <div class="form-group form-group-last">
     <label class="control-label"><?=t('From')?></label>
     <?= $datetime->datetime('cvPublishDate', $publishDate, true, true,
-        'dark-panel-calendar'); ?>
+        'light-panel-calendar'); ?>
 </div>
 <div class="form-group form-group-last">
     <label class="control-label"><?=t('To')?></label>
     <?= $datetime->datetime('cvPublishEndDate', $publishEndDate, true, true,
-        'dark-panel-calendar'); ?>
+        'light-panel-calendar'); ?>
 </div>
 
 <div style="text-align: right">
-    <span class="help-block"><?=t('Time Zone: %s', $timezone)?></span>
+    <span class="form-text help-block"><?=t('Time Zone: %s', $timezone)?></span>
 </div>
 
 <div class="dialog-buttons">

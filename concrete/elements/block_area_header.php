@@ -18,28 +18,22 @@ if (is_object($css)) {
     $class .= ' ' . $css->getContainerClass();
 }
 
-$canAddGathering = false;
-
 foreach ($blockTypes as $bt) {
     if ($ap->canAddBlockToArea($bt)) {
         $handles .= $bt->getBlockTypeHandle() . ' ';
-        if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_GATHERING) {
-            $canAddGathering = true;
-        }
     }
 }
 
 if ($ap->canAddLayout()) {
     $handles .= BLOCK_HANDLE_LAYOUT_PROXY . ' ';
+    $handles .= BLOCK_HANDLE_CONTAINER_PROXY . ' ';
 }
 
 if ($ap->canAddStack()) {
     $handles .= 'stack ';
 }
 
-if ($canAddGathering) {
-    $handles .= BLOCK_HANDLE_GATHERING_ITEM_PROXY . ' ';
-}
+
 
 $c = Page::getCurrentPage();
 if ($c->isMasterCollection()) {

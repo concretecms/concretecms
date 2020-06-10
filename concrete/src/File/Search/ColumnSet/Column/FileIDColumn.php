@@ -21,7 +21,20 @@ class FileIDColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return 'getFileID';
+        return [self::class, 'getFileID'];
+    }
+
+    public function getFileID($node)
+    {
+        if ($node->getTreeNodeTypeHandle() == 'file_folder') {
+            return '';
+        }
+        if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+            if (is_object($file)) {
+                return $file->getFileID();
+            }
+        }
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)

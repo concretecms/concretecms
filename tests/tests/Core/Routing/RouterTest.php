@@ -14,6 +14,7 @@ use Concrete\Core\Routing\RouteActionFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\ClosureRouteAction;
+use Concrete\Tests\TestCase;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -38,7 +39,7 @@ class AnotherTestMiddleware
 
 }
 
-class RouterTest extends \PHPUnit_Framework_TestCase
+class RouterTest extends TestCase
 {
 
     public function testCreateRouter()
@@ -146,12 +147,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('oh hai', $response->getContent());
     }
 
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
+     */
     public function testInvalidRoute()
     {
-        $this->setExpectedException(ResourceNotFoundException::class);
         $request = Request::create('http://www.awesome.com/something/uh/oh/something_else');
         $router = new Router(new RouteCollection(), new RouteActionFactory());
-        $route = $router->matchRoute($request);
+        $router->matchRoute($request);
     }
 
     public function testGrouping()

@@ -11,55 +11,84 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Application\Service\Urls $ci */
 ?>
 <section>
-    <div data-panel-menu="accordion" class="ccm-panel-header-accordion">
-        <nav>
-            <span></span>
-            <ul class="ccm-panel-header-accordion-dropdown">
-                <li><a data-panel-accordion-tab="blocks"<?= $tab === 'blocks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Blocks') ?></a></li>
-                <li><a data-panel-accordion-tab="clipboard"<?= $tab === 'clipboard' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Clipboard') ?></a></li>
-                <li><a data-panel-accordion-tab="stacks"<?= $tab === 'stacks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Stacks') ?></a></li>
-            </ul>
-        </nav>
-    </div>
+    <header class="pl-0 pr-0">
+        <div class="dropdown" data-panel-menu="dropdown">
+            <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
+            <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
+                <?php
+                switch($tab) {
+                    case 'containers':
+                        print t('Containers');
+                        break;
+                    case 'stacks':
+                        print t('Stacks');
+                        break;
+                    case 'clipboard':
+                        print t('Clipboard');
+                        break;
+                    case 'blocks':
+                        print t('Blocks');
+                        break;
+                }
+                ?>
+            </h4>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="blocks">Blocks</a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="clipboard">Clipboard</a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="stacks">Stacks</a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="containers">Containers</a>
+            </div>
+        </div>
+    </header>
+
     <?php
     switch ($tab) {
+    case 'containers':
+        /* @var Concrete\Core\Entity\Page\Container[] $containers */
+        ?>
+        <ul id="ccm-panel-add-container-list">
+            <?php
+            foreach ($containers as $container) {
+                ?>
+                <li>
+                    <a
+                        href="#"
+                        class="ccm-panel-add-container-item"
+                        data-panel-add-block-drag-item="container"
+                        data-cID="<?= (int) $c->getCollectionID() ?>"
+                        data-container-id="<?=$container->getContainerID() ?>"
+                        data-block-type-handle="core_container"
+                        data-has-add-template="no"
+                        data-supports-inline-add="no"
+                        data-btID="0"
+                        data-dragging-avatar="<?= h('<p>' . $container->getContainerIconImage() . '<span>' . $container->getContainerName() . '</span></p>') ?>"
+                    >
+                       <span class="handle">
+                           <img src="<?=$container->getContainerIconImage(false)?>" />
+                            <span><?= h($container->getContainerName()) ?></span>
+                       </span>
+                    </a>
+                </li>
+                <?php
+            }
+            ?>
+        </ul>
+        <script>
+
+        </script>
+    <?php
+    break;
+
         case 'stacks':
             /* @var Concrete\Core\Page\Stack\Stack[] $stacks */
             ?>
             <div id="ccm-panel-add-block-stack-list">
                 <?php
-                foreach ($stacks as $stack) {
-                    if (!$stack) {
-                        continue;
-                    }
-                    //$blocks = $stack->getBlocks();
-                    ?>
-                    <div
-                        class="ccm-panel-add-block-stack-item"
-                        data-panel-add-block-drag-item="stack-item"
-                        data-cID="<?= (int) $c->getCollectionID() ?>"
-                        data-sID="<?= (int) $stack->getCollectionID() ?>"
-                        data-block-type-handle="stack"
-                        data-has-add-template="no"
-                        data-supports-inline-add="no",
-                        data-token="<?=Core::make('token')->generate('load_stack')?>"
-                        data-btID="0"
-                        data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
-                        data-block-id="<?= (int) $stack->getCollectionID() ?>"                    >
-                        <div class="stack-name">
-                            <div class="ccm-panel-add-block-stack-item-handle"> 
-                                <img src="<?=DIR_REL?>/concrete/images/stack.png" />
-                                <span class="stack-name-inner"><?= h($stack->getStackName()) ?></span>
-                            </div>
-                            <a  class="ccm-stack-expander" href="javascript:void(0);"><i class="fa fa-arrow-down"></i></a>
-                        </div>
-                    </div>
-                    <?php
-                }
+                    View::element('panels/add/stack_list', ['stacks' => $stacks, 'c' => $c]);
                 ?>
             </div>
             <script>
-            $('div.ccm-panel-add-block-stack-item').on('click', function () {
+            $('#ccm-panel-add-block-stack-list').on('click', 'div.ccm-panel-add-block-stack-item', function () {
                 var $stack = $(this);
                 if ($stack.data('ccm-stack-content-loaded')) {
                 	$stack.toggleClass('ccm-panel-add-block-stack-item-expanded');
@@ -85,6 +114,36 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             block = new Concrete.StackBlock($(this), stack, stack, dragger);
 
                             block.setPeper(dragger);
+                        });
+                    }
+                })
+            });
+
+            $('#ccm-panel-add-block-stack-list').on('click', 'div.ccm-panel-add-folder-stack-item', function () {
+                var $stackFolder = $(this);
+                if ($stackFolder.data('ccm-folder-stack-content-loaded')) {
+                    $stackFolder.toggleClass('ccm-panel-add-folder-stack-item-expanded');
+                    $stackFolder.data('ccm-folder-stack-content-loaded').toggle($stackFolder.hasClass('ccm-panel-add-folder-stack-item-expanded'));
+                    return;
+                }
+                if ($stackFolder.hasClass('ccm-panel-add-folder-stack-item-expanded')) {
+                    return;
+                }
+                $.concreteAjax({
+                    dataType: 'html',
+                    type: 'POST',
+                    data: {'cID': $(this).attr('data-cID'), 'stackFolderID': $(this).attr('data-sfID')},
+                    url: '<?=URL::to('/ccm/system/panels/add/get_stack_folder_contents')?>',
+                    success: function (r) {
+                        var $content = $(r);
+                        $stackFolder.after($content);
+                        $stackFolder.data('ccm-folder-stack-content-loaded', $content);
+                        $stackFolder.addClass('ccm-panel-add-folder-stack-item-expanded');
+                        $content.find('div.ccm-panel-add-block-stack-item').each(function () {
+                            var stack; var me = $(this); var dragger = me.find('div.ccm-panel-add-block-stack-item-handle');
+                            stack = new Concrete.Stack($(this), Concrete.getEditMode(), dragger);
+
+                            stack.setPeper(dragger)
                         });
                     }
                 })
@@ -122,13 +181,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
                         data-btID="<?= $type->getBlockTypeID() ?>"
                         data-pcID="<?= $pile_content->getPileContentID() ?>"
-                        data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
+                        data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
                         data-block-id="<?= (int) ($block->getBlockID()) ?>"
                     >
+
                         <div class="block-content">
-                            <div class="block-name">
+                            <div class="block-name float-left">
                                 <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
                             </div>
+                            <div class="delete float-right">
+                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
+                            </div>
+
                             <div class="blocks">
                                 <div class="block ccm-panel-add-block-draggable-block-type" title="<?= t($type->getBlockTypeName()) ?>">
                                     <div class="block-content">
@@ -141,9 +205,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 </div>
                             </div>
                         </div>
-                        <div class="delete">
-                            <button class="ccm-delete-clipboard-item pull-right btn btn-sm btn-link"><?= t('Delete') ?></button>
-                        </div>
+
                     </div>
                     <?php
                 }
@@ -175,16 +237,26 @@ defined('C5_EXECUTE') or die('Access Denied.');
             /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
             ?>
             <div class="ccm-panel-header-search">
-                <i class="fa fa-search"></i>
+                <svg><use xlink:href="#icon-search" /></svg>
                 <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
             </div>
             <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
                 <?php
+                $i = 0;
                 foreach ($blockTypesForSets as $setName => $blockTypes) {
+                    $i++;
                     ?>
                     <div class="ccm-panel-add-block-set">
-                        <header><?= $setName ?></header>
-                        <ul>
+                        <header
+                            data-toggle="collapse"
+                            data-target="#ccm-block-set-<?= $i ?>"
+                            aria-expanded="true"
+                            aria-controls="ccm-block-set-<?= $i ?>"
+                        >
+                            <?= $setName ?><i class="fa fa-chevron-up float-right"></i>
+                        </header>
+                        <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
+                        <ul class="d-flex flex-wrap">
                             <?php
                             foreach ($blockTypes as $bt) {
                                 $btIcon = $ci->getBlockTypeIconURL($bt);
@@ -201,17 +273,19 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                         data-has-add-template="<?= $bt->hasAddTemplate() ?>"
                                         data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
                                         data-btID="<?= $bt->getBlockTypeID() ?>"
-                                        data-dragging-avatar="<?= h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeInSetName()) . '</span></p>') ?>"
+                                        data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $btIcon . '" /></div><p><span>' . t($bt->getBlockTypeInSetName()) . '</span></p>') ?>"
                                         title="<?= t($bt->getBlockTypeName()) ?>"
                                         href="javascript:void(0)"
                                     >
-                                        <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
+                                        <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="<?= $btIcon ?>"/></div>
+                                        <p><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
                                     </a>
                                 </li>
                                 <?php
                             }
                             ?>
                         </ul>
+                        </div>
                     </div>
                     <?php
                 }
@@ -233,3 +307,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         break;
 }
+?>
+
+<script type="text/javascript">
+    $(function() {
+        // switching the up/down arrows for collapsing block sets
+        $('#ccm-panel-add-block').find('div[id^="ccm-block-set-"]').on('hidden.bs.collapse shown.bs.collapse', function () {
+            $(this).prev('header[data-toggle="collapse"]').find('i.fa').toggleClass('fa-chevron-up fa-chevron-down');
+        });
+        // switching between grid and stacked view for blocks
+        $('.ccm-panel-header-list-grid-view-switcher').on('click', function () {
+            $('#ccm-panel-add-blocktypes-list').toggleClass('ccm-stacked-list');
+            $(this).find('i.fa').toggleClass('fa-list fa-th');
+        });
+    });
+</script>

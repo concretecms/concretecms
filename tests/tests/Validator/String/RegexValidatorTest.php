@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator\String;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class RegexValidatorTest extends PHPUnit_Framework_TestCase
+class RegexValidatorTest extends TestCase
 {
     public function testIsValid()
     {
@@ -35,8 +35,6 @@ class RegexValidatorTest extends PHPUnit_Framework_TestCase
         $validator = new \Concrete\Core\Validator\String\RegexValidator('');
 
         $validator->isValid($validator);
-
-        $this->setExpectedException('RuntimeException');
         $validator->isValid('');
     }
 

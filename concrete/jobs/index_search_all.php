@@ -9,14 +9,14 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Express\Search\Index\EntityIndex;
 use Concrete\Core\File\File;
+use Concrete\Core\Job\JobQueue;
+use Concrete\Core\Job\JobQueueMessage;
 use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Punic\Misc as PunicMisc;
-use ZendQueue\Message as ZendQueueMessage;
-use ZendQueue\Queue as ZendQueue;
 
 class IndexSearchAll extends QueueableJob
 {
@@ -65,7 +65,7 @@ class IndexSearchAll extends QueueableJob
         $this->objectManager = $objectManager;
     }
 
-    public function start(ZendQueue $queue)
+    public function start(JobQueue $queue)
     {
         if ($this->clearTable) {
             // Send a "clear" queue item to clear out the index
@@ -118,7 +118,7 @@ class IndexSearchAll extends QueueableJob
         yield 'R' . json_encode([$pages, $users, $files, $sites, $objects, $entries]);
     }
 
-    public function processQueueItem(ZendQueueMessage $msg)
+    public function processQueueItem(JobQueueMessage $msg)
     {
         $index = $this->indexManager;
 
@@ -150,7 +150,7 @@ class IndexSearchAll extends QueueableJob
         }
     }
 
-    public function finish(ZendQueue $q)
+    public function finish(JobQueue $q)
     {
         if ($this->result) {
             list($pages, $users, $files, $sites, $objects, $entries) = $this->result;

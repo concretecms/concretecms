@@ -6,9 +6,9 @@ use Concrete\Core\Api\OAuth\Scope\ScopeRegistry;
 use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Support\Facade\Facade;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ScopeRegistryTest extends PHPUnit_Framework_TestCase
+class ScopeRegistryTest extends TestCase
 {
     public function testRegistry()
     {

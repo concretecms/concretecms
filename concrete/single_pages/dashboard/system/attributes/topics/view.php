@@ -1,43 +1,41 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li class="navbar-form" style="padding-left: 0px">
-                <select  name="topicTreeIDSelect" id="topicTreeIDSelect" class="form-control input-sm">
-                    <?php foreach ($trees as $stree) {
-    ?>
-                        <option value="<?=$stree->getTreeID(); ?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {
-        ?>selected<?php
-    } ?>><?=$stree->getTreeDisplayName(); ?></option>
-                    <?php
-} ?>
-                </select>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="navbar-form">
-                <?php if (PermissionKey::getByHandle('add_topic_tree')->validate()) {
-        ?>
-                    <button onclick="window.location.href='<?=$view->url('/dashboard/system/attributes/topics/add'); ?>'" class="btn btn-primary btn-sm"><?=t('Add Topic Tree'); ?></button>
-                    <?php
-    } ?>
-                <?php if (PermissionKey::getByHandle('edit_topic_tree')->validate() && is_object($tree)) {
-        ?>
-                    <button type="button" data-dialog="edit-topic-tree" class="btn btn-default btn-sm"><?=t('Edit Topic Tree'); ?></button>
-                    <?php
-    }
-                ?>
-                <?php if (PermissionKey::getByHandle('remove_topic_tree')->validate() && is_object($tree)) {
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+        <?php if($trees){ 
+            ?>
+            <select  name="topicTreeIDSelect" id="topicTreeIDSelect" class="form-control input-sm">
+                <?php foreach ($trees as $stree) {
                     ?>
-                    <button type="button" data-dialog="delete-topic-tree" class="btn btn-danger btn-sm"><?=t('Delete Topic Tree'); ?></button>
+                    <option value="<?=$stree->getTreeID(); ?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {
+                    ?>selected<?php
+                    } ?> ><?=$stree->getTreeDisplayName(); ?></option>
                     <?php
-                } ?>
-            </li>
-        </ul>
+                    } ?>
+            </select>
+            <?php 
+        } ?>        
     </div>
-</nav>
+    <div>
+    <?php if (PermissionKey::getByHandle('add_topic_tree')->validate()) {
+        ?>
+        <button onclick="window.location.href='<?=$view->url('/dashboard/system/attributes/topics/add'); ?>'" class="btn btn-primary btn-sm"><?=t('Add Topic Tree'); ?></button>
+        <?php
+    } ?>
+    <?php if (PermissionKey::getByHandle('edit_topic_tree')->validate() && is_object($tree)) {
+        ?>
+        <button type="button" data-dialog="edit-topic-tree" class="btn btn-secondary btn-sm"><?=t('Edit Topic Tree'); ?></button>
+    <?php
+    }
+    ?>
+    <?php if (PermissionKey::getByHandle('remove_topic_tree')->validate() && is_object($tree)) {
+        ?>
+        <button type="button" data-dialog="delete-topic-tree" class="btn btn-danger btn-sm"><?=t('Delete Topic Tree'); ?></button>
+    <?php
+        } ?>
+    </div>
+</div>
 
 <?php if (is_object($tree)) {
                     ?>
@@ -58,7 +56,7 @@
             jQuery.fn.dialog.open({
                 element: '#ccm-dialog-delete-topic-tree',
                 modal: true,
-                width: 320,
+                width: 380,
                 title: <?=json_encode(t("Delete Topic Tree")); ?>,
                 height: 'auto'
             });
@@ -68,7 +66,7 @@
             jQuery.fn.dialog.open({
                 element: '#ccm-dialog-edit-topic-tree',
                 modal: true,
-                width: 320,
+                width: 380,
                 title: <?=json_encode(t("Edit Topic Tree")); ?>,
                 height: 'auto'
             });
@@ -85,9 +83,11 @@
                 <input type="hidden" name="treeID" value="<?=$tree->getTreeID(); ?>" />
                 <p><?=t('Are you sure? This action cannot be undone.'); ?></p>
             </form>
-            <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-topic-tree form').submit()"><?=t('Delete Topic Tree'); ?></button>
+            <div class="ccm-dashboard-form-actions-wrapper">
+                <div class="ccm-dashboard-form-actions">
+                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                    <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-topic-tree form').submit()"><?=t('Delete Topic Tree'); ?></button>
+                </div>
             </div>
         </div>
     </div>
@@ -104,9 +104,11 @@
 
 
             </form>
-            <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-edit-topic-tree form').submit()"><?=t('Update Topic Tree'); ?></button>
+            <div class="ccm-dashboard-form-actions-wrapper">
+                <div class="ccm-dashboard-form-actions ">
+                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                    <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-edit-topic-tree form').submit()"><?=t('Update Topic Tree'); ?></button>
+                </div>
             </div>
         </div>
     </div>

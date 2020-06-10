@@ -79,7 +79,7 @@ class FileProcessorsTest extends FileStorageTestCase
         self::$app->make('cache/request')->flush();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->getStorageLocation();

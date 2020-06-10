@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class UserEmailValidatorServiceProviderTest extends PHPUnit_Framework_TestCase
+class UserEmailValidatorServiceProviderTest extends TestCase
 {
     public function testIsInstance()
     {

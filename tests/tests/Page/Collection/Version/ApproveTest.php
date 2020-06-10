@@ -28,7 +28,7 @@ class ApproveTest extends PageTestCase
      */
     private $cvIDs;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->dateHelper = Application::getFacadeApplication()->make('date');

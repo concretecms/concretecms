@@ -11,7 +11,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Http\ServerInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\Routing\Router;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\System\Mutex\MutexBusyException;
 use Concrete\Core\Updater\Migrations\MigrationIncompleteException;
@@ -37,7 +37,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     /** @var UrlResolverInterface */
     protected $urlResolver;
 
-    /** @var RouterInterface */
+    /** @var Router */
     protected $router;
 
     /** @var SiteService */
@@ -406,7 +406,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @return RouterInterface
+     * @return Router
      */
     protected function getRouter()
     {
@@ -420,11 +420,11 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     /**
      * Get the default router to use.
      *
-     * @return RouterInterface
+     * @return Router
      */
     private function getDefaultRouter()
     {
-        return $this->app->make(RouterInterface::class);
+        return $this->app->make('router');
     }
 
     /**
@@ -432,11 +432,11 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @param RouterInterface $router
+     * @param Router $router
      *
      * @return $this
      */
-    public function setRouter(RouterInterface $router)
+    public function setRouter(Router $router)
     {
         $this->router = $router;
 

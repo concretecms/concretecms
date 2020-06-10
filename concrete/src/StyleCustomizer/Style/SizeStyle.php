@@ -17,9 +17,6 @@ class SizeStyle extends Style
      */
     public function render($value = false)
     {
-        $r = \Concrete\Core\Http\ResponseAssetGroup::get();
-        $r->requireAsset('core/style-customizer');
-
         $strOptions = '';
         $options = [
             'inputName' => $this->getVariable(),

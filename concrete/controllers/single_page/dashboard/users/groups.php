@@ -17,7 +17,6 @@ class Groups extends DashboardPageController
     {
         $tree = GroupTree::get();
         $this->set('tree', $tree);
-        $this->requireAsset('core/groups');
 
         $cnt = $this->app->make(SearchGroupsController::class);
         $cnt->search();

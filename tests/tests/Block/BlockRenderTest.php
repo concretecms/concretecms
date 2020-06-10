@@ -72,7 +72,7 @@ class BlockRenderTest extends PageTestCase
         $em->flush();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -21,9 +21,9 @@ $valt = Loader::helper('validation/token');
 $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
         $request = \Request::getInstance();
-
-        $v->requireAsset('core/app');
-
+        
+        $v->requireAsset('core/cms');
+        
         $editMode = $c->isEditMode();
         $tools = REL_DIR_FILES_TOOLS_REQUIRED;
         $htmlTagClasses = 'ccm-toolbar-visible';
@@ -46,6 +46,7 @@ $dh = Loader::helper('concrete/dashboard');
             $panelDashboard = URL::to('/ccm/system/panels/dashboard');
             $panelPage = URL::to('/ccm/system/panels/page');
             $panelSitemap = URL::to('/ccm/system/panels/sitemap');
+            $panelHelp = URL::to('/ccm/system/panels/help');
             $panelAdd = URL::to('/ccm/system/panels/add');
             $panelCheckIn = URL::to('/ccm/system/panels/page/check_in');
             $panelRelations = URL::to('/ccm/system/panels/page/relations');
@@ -56,6 +57,7 @@ $dh = Loader::helper('concrete/dashboard');
 	ConcretePanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});
 	ConcretePanelManager.register({'identifier': 'page', url: '{$panelPage}'});
 	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});
+    ConcretePanelManager.register({'identifier': 'help', 'position': 'right', url: '{$panelHelp}'});
 	ConcretePanelManager.register({'identifier': 'page_relations', 'position': 'right', url: '{$panelRelations}'});
 	ConcretePanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '{$panelAdd}', pinable: true});
 	ConcretePanelManager.register({'identifier': 'check-in', 'position': 'left', url: '{$panelCheckIn}'});
@@ -79,7 +81,7 @@ EOL;
         $v->addFooterItem($js);
 
         if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
-            $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
+            $v->addFooterItem('<script type="text/javascript">$(function() { ConcretePageIndexer.reindexPendingPages(); });</script>');
         }
         $cih = Loader::helper('concrete/ui');
         if (Localization::activeLanguage() != 'en') {

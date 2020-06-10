@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Form\Service;
 
 use Concrete\Core\Form\Service\Validation;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ValidationTest extends PHPUnit_Framework_TestCase
+class ValidationTest extends TestCase
 {
     public function test()
     {

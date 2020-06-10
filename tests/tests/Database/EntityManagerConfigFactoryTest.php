@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Database;
 
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * EntityManagerConfigFactoryTest.
@@ -11,7 +11,7 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class EntityManagerConfigFactoryTest extends PHPUnit_Framework_TestCase
+class EntityManagerConfigFactoryTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application

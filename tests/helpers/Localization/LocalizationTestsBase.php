@@ -3,9 +3,9 @@
 namespace Concrete\TestHelpers\Localization;
 
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class LocalizationTestsBase extends PHPUnit_Framework_TestCase
+class LocalizationTestsBase extends TestCase
 {
     private static $applicationLanguagesRenamed = false;
     private static $applicationLanguagesCreated = false;

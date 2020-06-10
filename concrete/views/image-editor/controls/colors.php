@@ -1,6 +1,3 @@
-<?php
-    $view->requireAsset('core/colorpicker');
-?>
 <div class="row">
     <div class="col-sm-12 row">
         <div class="form-group">

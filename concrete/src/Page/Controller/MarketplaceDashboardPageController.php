@@ -22,7 +22,6 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 
         if ($mi->isConnected() && $tp->canInstallPackages()) {
             $mpID = intval($mpID);
-            $this->requireAsset('core/lightbox');
             $item = RemoteItem::getByID($mpID);
             if (is_object($item)) {
                 if (

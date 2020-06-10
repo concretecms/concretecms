@@ -5,20 +5,19 @@
 <?php $help = ob_get_contents(); ?>
 <?php ob_end_clean(); ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Permissions'), $help, 'span8 offset2', false)?>
 <form method="post" action="<?=$view->action('save')?>" role="form">
 	<?=Loader::helper('validation/token')->output('save_permissions')?>
-	
+
 	<?php
     $tp = new TaskPermission();
     if ($tp->canAccessTaskPermissions()) {
-        ?>	
+        ?>
 		<?php Loader::element('permission/lists/user')?>
-	<?php 
+	<?php
     } else {
         ?>
 		<p><?=t('You cannot access task permissions.')?></p>
-	<?php 
+	<?php
     } ?>
 
 	<div class="ccm-dashboard-form-actions-wrapper">
@@ -28,5 +27,3 @@
 	    </div>
 	</div>
 </form>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

@@ -72,6 +72,20 @@ class Channels
     const CHANNEL_USERS = 'users';
 
     /**
+     * Channel identifier: express.
+     *
+     * @var string
+     */
+    const CHANNEL_EXPRESS = 'express';
+
+    /**
+     * Channel identifier: content.
+     *
+     * @var string
+     */
+    const CHANNEL_CONTENT = 'content';
+
+    /**
      * Channel identifier: permissions.
      *
      * @var string
@@ -156,6 +170,8 @@ class Channels
     {
         $text = new Text();
         switch ($channel) {
+            case self::CHANNEL_EXPRESS:
+                return tc('Log channel', 'Express');
             case self::CHANNEL_APPLICATION:
                 return tc('Log channel', 'Application');
             case self::CHANNEL_AUTHENTICATION:

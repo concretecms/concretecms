@@ -2,6 +2,8 @@
 namespace Concrete\Block\Autonav;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Core;
 use Database;
 use Page;
@@ -23,7 +25,7 @@ use Doctrine\ORM\EntityManagerInterface;
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $collection;
     public $navArray = array();
@@ -49,6 +51,13 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportPageColumns = array('displayPagesCID');
     protected $includeParentItem;
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::NAVIGATION,
+        ];
+    }
 
     public function __construct($obj = null)
     {
@@ -81,16 +90,7 @@ class Controller extends BlockController
 
         parent::__construct($obj);
     }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        if (is_object($this->block) && $this->block->getBlockFilename() == 'responsive_header_navigation') {
-            // this isn't great but it's the only way to do this and still make block
-            // output caching available to this block.
-            $this->requireAsset('javascript', 'jquery');
-        }
-    }
-
+    
     // private variable $displayUnapproved, used by the dashboard
 
     public function getBlockTypeDescription()

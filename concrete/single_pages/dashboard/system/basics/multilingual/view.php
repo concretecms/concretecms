@@ -12,7 +12,7 @@ if (empty($interfacelocales)) {
     <fieldset>
 	   <?= t("You don't have any interface languages installed. You must run concrete5 in English.") ?>
     </fieldset>
-    <?php 
+    <?php
 } else {
     ?>
     <form method="post" action="<?= $view->action('save_interface_language') ?>">
@@ -37,7 +37,7 @@ if (empty($interfacelocales)) {
             </div>
         </div>
     </form>
-    <?php 
+    <?php
 }
 
 if (isset($mlLink)) {

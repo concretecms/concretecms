@@ -6,13 +6,13 @@ use Concrete\Core\Localization\Service\AddressFormat;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Support\Facade\Facade;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * Tests for:
  * Concrete\Core\Localization\Service\AddressFormat.
  */
-class AddressFormatTest extends PHPUnit_Framework_TestCase
+class AddressFormatTest extends TestCase
 {
     /** @var Localization */
     private $localization;

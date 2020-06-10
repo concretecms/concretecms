@@ -20,6 +20,7 @@ use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Page\Search\Field\Field\PageOwnerField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
+use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Support\Facade\Facade;
 
 class Manager extends FieldManager
@@ -49,11 +50,11 @@ class Manager extends FieldManager
         $app = Facade::getFacadeApplication();
         $siteService = $app->make('site');
         $site = $siteService->getActiveSiteForEditing();
-        $sites = $siteService->getList();
+        $installationService = $app->make(InstallationService::class);
         if (count($site->getLocales()) > 1) {
             $properties[] = new SiteLocaleField();
         }
-        if (count($sites) > 1) {
+        if ($installationService->isMultisiteEnabled()) {
             $properties[] = new SiteField();
         }
         $this->addGroup(t('Core Properties'), $properties);

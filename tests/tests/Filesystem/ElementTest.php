@@ -7,9 +7,9 @@ use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ElementTest extends PHPUnit_Framework_TestCase
+class ElementTest extends TestCase
 {
     public function testBasicElementAndController()
     {

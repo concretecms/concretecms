@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <containers>
+        <container handle="two_column_accent" name="Two Column Accent"
+                   icon="two_column.png" package=""/>
+        <container handle="two_column_equal" name="Two Column Equal"
+                   icon="two_column.png" package=""/>
+    </containers>
+</concrete5-cif>

@@ -2,13 +2,14 @@
 
 namespace Concrete\Core\Url\Resolver;
 
-use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 class RouterUrlResolver implements UrlResolverInterface
 {
     /**
-     * @var \Concrete\Core\Routing\RouterInterface
+     * @var \Concrete\Core\Routing\Router
      */
     protected $router;
 
@@ -17,7 +18,7 @@ class RouterUrlResolver implements UrlResolverInterface
      */
     protected $pathUrlResolver;
 
-    public function __construct(PathUrlResolver $path_url_resolver, RouterInterface $router)
+    public function __construct(PathUrlResolver $path_url_resolver, Router $router)
     {
         $this->pathUrlResolver = $path_url_resolver;
         $this->router = $router;

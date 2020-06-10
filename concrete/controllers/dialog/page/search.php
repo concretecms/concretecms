@@ -27,7 +27,6 @@ class Search extends BackendInterfaceController
 
         $header = new Header();
         $this->set('header', $header);
-        $this->requireAsset('core/sitemap');
     }
 
 }

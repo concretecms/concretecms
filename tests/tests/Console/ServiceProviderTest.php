@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Controller;
+namespace Concrete\Tests\Console;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
 use Concrete\Core\Console\ServiceProvider;
 use Concrete\Core\Database\Connection\Connection;
+use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Concrete\Core\Console\Command as ConcreteCommand;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,10 +14,10 @@ use Doctrine\DBAL\Tools\Console\Command as DBALCommand;
 use Doctrine\DBAL\Migrations\Tools\Console\Command as DBALMigrationCommand;
 use Doctrine\ORM\Tools\Console\Command as ORMCommand;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\Console\Command\Command;
 
-class ServiceProviderTest extends PHPUnit_Framework_TestCase
+class ServiceProviderTest extends TestCase
 {
     /** @var \Mockery\Mock|Application */
     protected $app;
@@ -151,6 +152,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             ConcreteCommand\InstallThemeCommand::class,
             ConcreteCommand\BlacklistClear::class,
             ConcreteCommand\SetDatabaseCharacterSetCommand::class,
+            ConcreteCommand\QueueProcessCommand::class,
             ConcreteCommand\JobCommand::class,
             ConcreteCommand\UpdateCommand::class,
             ConcreteCommand\RescanFilesCommand::class,
@@ -161,8 +163,12 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             ConcreteCommand\FixDatabaseForeignKeys::class,
             DBALCommand\ImportCommand::class,
             DBALCommand\RunSqlCommand::class,
+            DBALCommand\ReservedWordsCommand::class,
+            ORMCommand\ClearCache\CollectionRegionCommand::class,
+            ORMCommand\ClearCache\EntityRegionCommand::class,
             ORMCommand\ClearCache\MetadataCommand::class,
             ORMCommand\ClearCache\QueryCommand::class,
+            ORMCommand\ClearCache\QueryRegionCommand::class,
             ORMCommand\ClearCache\ResultCommand::class,
             ORMCommand\SchemaTool\CreateCommand::class,
             ORMCommand\SchemaTool\UpdateCommand::class,

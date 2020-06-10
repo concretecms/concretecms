@@ -12,7 +12,7 @@ class PhpVersion implements PreconditionInterface
      *
      * @var string
      */
-    const MINIMUM_PHP_VERSION = '5.5.9';
+    const MINIMUM_PHP_VERSION = '7.2.0';
 
     /**
      * {@inheritdoc}

@@ -37,7 +37,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
      */
     private $ipService;
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $app = Application::getFacadeApplication();

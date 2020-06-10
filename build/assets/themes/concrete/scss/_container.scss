@@ -1,0 +1,14 @@
+div.main-container {
+  @include make-container();
+  @include make-container-max-widths();
+  display: flex;
+  min-height: 100vh;
+}
+
+div.main-container-inner {
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 100%;
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+}

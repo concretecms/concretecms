@@ -10,18 +10,22 @@
     <fieldset>
         <legend><?=t('Add OAuth2 Integration')?></legend>
         <div class="form-group">
-            <label for="name" class="control-label"><?php echo t('Name'); ?></label>
+            <label for="name" ><?php echo t('Name'); ?></label>
             <div class="input-group">
                 <?php echo $form->text('name', array('autofocus' => 'autofocus', 'autocomplete' => 'off', 'required' => 'required')); ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="redirect" class="control-label"><?php echo t('Redirect'); ?></label>
+            <label for="redirect"><?php echo t('Redirect'); ?></label>
             <div class="input-group">
                 <?php echo $form->url('redirect', array('autocomplete' => 'off')); ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                </div>
             </div>
         </div>
 
@@ -30,8 +34,8 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/system/api/settings')?>" class="pull-left btn btn-default"><?=t('Cancel')?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Add Integration')?></button>
+            <a href="<?=URL::to('/dashboard/system/api/settings')?>" class="float-left btn btn-secondary"><?=t('Cancel')?></a>
+            <button class="float-right btn btn-primary" type="submit" ><?=t('Add Integration')?></button>
         </div>
     </div>
 

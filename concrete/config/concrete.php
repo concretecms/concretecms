@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.4',
-    'version_installed' => '8.5.4',
+    'version' => '9.0.0a2',
+    'version_installed' => '9.0.0a2',
     'version_db' => '20200609145307', // the key of the latest database migration
 
     /*
@@ -188,13 +188,6 @@ return [
         'blocks' => true,
 
         /*
-         * Cache Assets
-         *
-         * @var bool
-         */
-        'assets' => false,
-
-        /*
          * Cache Theme CSS/JS
          *
          * @var bool
@@ -337,6 +330,66 @@ return [
         'enable_custom' => true,
         'enable_layouts' => true,
     ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Queue settings
+     * ------------------------------------------------------------------------
+     */
+    'queue' => [
+
+        /*
+         * Driver
+         *
+         * @var string (redis|database)
+         */
+        'driver' => 'database',
+
+
+        /*
+         * Default queue to use
+         *
+         * @var string
+         */
+        'default' => 'default',
+
+        /*
+         * If we're consuming the queue through polling, how many entries do we do at a time
+         *
+         * @var int
+         */
+        'polling_batch' => [
+            'default' => 10,
+            'rescan_file' => 5,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+
+
+    ],
+
+    /*
+ * ------------------------------------------------------------------------
+ * Events settings
+ * ------------------------------------------------------------------------
+ */
+    'events' => [
+
+        'broadcast' => [
+
+            /*
+             * Driver
+             *
+             * @var string (redis|none)
+             */
+            'driver' => ''
+
+        ],
+
+
+    ],
+
 
     /*
      * ------------------------------------------------------------------------
@@ -581,7 +634,6 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
-        'help_overlay' => true,
         'require_version_comments' => false,
         /*
          * Control whether a block type can me moved to different block type sets
@@ -638,13 +690,13 @@ return [
         ],
         'file_manager_listing' => [
             'handle' => 'file_manager_listing',
-            'width' => 60,
-            'height' => 60,
+            'width' => 120,
+            'height' => 120,
         ],
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
-            'width' => 400,
-            'height' => 400,
+            'width' => 500,
+            'height' => 500,
         ],
         'user_avatar' => [
             'width' => 80,
@@ -731,13 +783,6 @@ return [
          * @var bool
          */
         'toolbar_large_font' => false,
-
-        /*
-         * Show help system
-         *
-         * @var bool
-         */
-        'display_help_system' => true,
 
         /*
          * Show tooltips in the concrete5 toolbars
@@ -829,11 +874,20 @@ return [
         'name' => false,
 
         /*
-         * Background image url
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed =
+         * standard behavior, "custom" = custom image.
          *
-         * @var null|string
+         * @var string "none"|"feed"|"custom"
          */
-        'background_image' => null,
+        'background_image' => 'feed',
+
+        /*
+         * If the background image is custom, this is where it loads from.
+         *
+         * @var null|string Custom URL for background image.
+         */
+        'background_url' => null,
+
     ],
     'session' => [
         'name' => 'CONCRETE5',
@@ -1115,8 +1169,6 @@ return [
     ],
     'limits' => [
         'sitemap_pages' => 100,
-        'delete_pages' => 100,
-        'copy_pages' => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch' => 10,
         'style_customizer' => [

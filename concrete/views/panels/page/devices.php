@@ -6,10 +6,11 @@ use Concrete\Core\Device\Device;
 <section id="ccm-panel-page-devices" class="ccm-ui">
 
     <header>
-        <a href="" class="ccm-panel-back" data-panel-navigation="back">
-            <span class="fa fa-chevron-left"></span>
+        <a href="" data-panel-navigation="back" class="ccm-panel-back">
+            <svg><use xlink:href="#icon-arrow-left" /></svg>
+            <?= t('Page Settings') ?>
         </a>
-        <a href="" class="ccm-panel-devices-back" data-panel-navigation="back"><?= t('Devices') ?></a>
+        <h5><?= t('Devices') ?></h5>
     </header>
 
     <div class="ccm-panel-content-inner">
@@ -51,7 +52,7 @@ use Concrete\Core\Device\Device;
         foreach ($organized as $type => $device_list) {
             ?>
 
-            <h5><?= $categories[$type] ?></h5>
+            <div class="panel-page-devices-title"><?= $categories[$type] ?></div>
             <div class="ccm-menu-device-set">
                 <ul>
                     <?php
@@ -75,8 +76,8 @@ use Concrete\Core\Device\Device;
                             data-device-orientation="<?= h($device->getDefaultOrientation()) ?>">
                             <script type="text/html" class="viewport"><?= $device->getViewportHTML() ?></script>
 
-                            <a href="#" class="ccm-device-select">
-                                <div class="ccm-panel-device-name row">
+                            <a href="#" class="ccm-device-select btn btn-secondary btn-sm btn-block">
+                                <div class="ccm-panel-device-name">
                                     <div class="ccm-panel-device-name-icon">
                                         <i class="<?= $device->getIconClass() ?>"></i>
                                     </div>
@@ -166,10 +167,11 @@ use Concrete\Core\Device\Device;
                 height = device.data('device-height'),
                 ratio = device.data('device-ratio'),
                 orientation = device.data('device-orientation'),
-                viewport = $(_(device_template).template({device: device}));
+                template = _.template(device_template),
+                viewport = $(template({device: device}));
 
-            $('.ccm-device-select-active').removeClass('ccm-device-select-active');
-            $(this).addClass('ccm-device-select-active');
+            $('.ccm-device-select.active').removeClass('active');
+            $(this).addClass('active');
 
             container.empty()
                 .addClass('ccm-device-preview')

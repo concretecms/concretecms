@@ -6,13 +6,13 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @runTestsInSeparateProcesses
  */
-class SessionValidatorTest extends PHPUnit_Framework_TestCase
+class SessionValidatorTest extends TestCase
 {
     protected $preserveGlobalState = false;
 

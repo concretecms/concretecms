@@ -14,7 +14,6 @@ class Avatar extends AccountProfileEditPageController
     {
         parent::view();
         $this->set('token', $this->app->make('token'));
-        $this->requireAsset('core/avatar');
     }
 
     public function save_avatar()

@@ -1,10 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-ui">
-    <form method="post" data-dialog-form="edit-search-preset" class="form-horizontal" action="<?= $controller->action('edit_search_preset'); ?>">
+    <form method="post" data-dialog-form="edit-search-preset" class="form-horizontal" action="<?= $controller->getEditSearchPresetAction(); ?>">
         <?= $token->output('edit_search_preset'); ?>
         <?= $form->hidden('presetID', $searchPreset->getId()); ?>
-        <?= $form->hidden('objectID', $controller->getObjectID()); ?>
         <div class="form-group">
             <?= $form->label('presetName', t('Name')); ?>
             <?= $form->text('presetName', $searchPreset->getPresetName()); ?>

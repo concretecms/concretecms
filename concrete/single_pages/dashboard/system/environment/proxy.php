@@ -1,37 +1,46 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-<form method="post" id="proxy-form" action="<?php echo $view->action('update_proxy'); ?>">
-    <?php echo $this->controller->token->output('update_proxy'); ?>
+/**
+ * @var Concrete\Core\Application\Service\UserInterface $interface
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var string $http_proxy_host
+ * @var string $http_proxy_port
+ * @var string $http_proxy_user
+ * @var string $http_proxy_pwd
+ */
+
+?>
+
+<form method="post" id="proxy-form" action="<?= $view->action('update_proxy'); ?>">
+    <?php $token->output('update_proxy'); ?>
+
     <fieldset>
         <div class="form-group">
-            <?php echo $form->label('http_proxy_host', t('Proxy Host'));?>
-            <div class="input">
-                <?php echo $form->text('http_proxy_host', $http_proxy_host)?>
-            </div>
+            <?= $form->label('http_proxy_host', t('Proxy Host')); ?>
+            <?= $form->text('http_proxy_host', $http_proxy_host); ?>
         </div>
+
         <div class="form-group">
-            <?php echo $form->label('http_proxy_port', t('Proxy Port'));?>
-            <div class="input">
-                <?php echo $form->text('http_proxy_port', $http_proxy_port)?>
-            </div>
+            <?= $form->label('http_proxy_port', t('Proxy Port')); ?>
+            <?= $form->text('http_proxy_port', $http_proxy_port); ?>
         </div>
+
         <div class="form-group">
-            <?php echo $form->label('http_proxy_user', t('Proxy User'));?>
-            <div class="input">
-                <?php echo $form->text('http_proxy_user', $http_proxy_user)?>
-            </div>
+            <?= $form->label('http_proxy_user', t('Proxy User')); ?>
+            <?= $form->text('http_proxy_user', $http_proxy_user); ?>
         </div>
+
         <div class="form-group">
-            <?php echo $form->label('http_proxy_pwd', t('Proxy Password'));?>
-            <div class="input">
-                <?php echo $form->text('http_proxy_pwd', $http_proxy_pwd)?>
-            </div>
+            <?= $form->label('http_proxy_pwd', t('Proxy Password')); ?>
+            <?= $form->text('http_proxy_pwd', $http_proxy_pwd); ?>
         </div>
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <?php echo $interface->submit(t('Save'), 'proxy-form', 'right', 'btn-primary'); ?>
+            <?= $interface->submit(t('Save'), 'proxy-form', 'right', 'btn-primary'); ?>
         </div>
     </div>
 </form>

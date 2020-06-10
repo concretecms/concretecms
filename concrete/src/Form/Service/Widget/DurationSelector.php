@@ -47,10 +47,7 @@ class DurationSelector
         } else {
             $repetitions[] = $baseRepetition;
         }
-
-        $ag = ResponseAssetGroup::get();
-        $ag->requireAsset('core/duration');
-
+        
         ob_start();
         View::element('date_time/duration');
         $contents = ob_get_contents();

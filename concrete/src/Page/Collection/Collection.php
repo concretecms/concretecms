@@ -11,18 +11,18 @@ use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
-use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Loader;
 use Page;
@@ -441,13 +441,10 @@ class Collection extends ConcreteObject implements TrackableInterface
             $cache = PageCache::getLibrary();
             $cache->purge($this);
 
-            // we check to see if this page is referenced in any gatherings
-            $c = Page::getByID($this->getCollectionID(), $this->getVersionID());
-            $items = PageGatheringItem::getListByItem($c);
-            foreach ($items as $it) {
-                $it->deleteFeatureAssignments();
-                $it->assignFeatureAssignments($c);
-            }
+            $app = Facade::getFacadeApplication();
+            $populator = $app->make(Populator::class);
+            $populator->updateAvailableSummaryTemplates($this);
+
         } else {
             $db = Loader::db();
             Config::save('concrete.misc.do_page_reindex_check', true);
@@ -1003,24 +1000,6 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         $res = $db->Execute($q, $v);
 
-        $controller = $nb->getController();
-        $features = $controller->getBlockTypeFeatureObjects();
-        if (count($features) > 0) {
-            foreach ($features as $fe) {
-                $fd = $fe->getFeatureDetailObject($controller);
-                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
-                $db->Execute(
-                   'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                   [
-                       $this->getCollectionID(),
-                       $this->getVersionID(),
-                       $nb->getBlockID(),
-                       $fa->getFeatureAssignmentID(),
-                   ]
-                );
-            }
-        }
-
         return Block::getByID($nb->getBlockID(), $this, $a);
     }
 
@@ -1090,37 +1069,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             $r->free();
         }
     }
-
-    /**
-     * Associate a feature to the currently loaded collection version.
-     *
-     * @param Feature $fe
-     */
-    public function addFeature(Feature $fe)
-    {
-        $db = Loader::db();
-        $db->Replace(
-           'CollectionVersionFeatures',
-           ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()],
-           ['cID', 'cvID', 'feID'],
-           true
-        );
-    }
-
-    /**
-     * Get the list of assigned features.
-     *
-     * @return \Concrete\Core\Feature\Assignment\CollectionVersionAssignment[]
-     */
-    public function getFeatureAssignments()
-    {
-        if (is_object($this->vObj)) {
-            return CollectionVersionFeatureAssignment::getList($this);
-        }
-
-        return [];
-    }
-
+    
     /**
      * Update the last edit date/time.
      */

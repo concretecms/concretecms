@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Http\Middleware\FractalNegotiatorMiddleware;
+
 class SystemRouteList implements RouteListInterface
 {
     public function loadRoutes(Router $router)
@@ -28,6 +30,9 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->setNamespace('Concrete\Controller\Backend')->setPrefix('/ccm/system/file')
             ->routes('actions/files.php');
+
+        $router->buildGroup()->setNamespace('Concrete\Controller\Backend\Board')->setPrefix('/ccm/system/board')
+            ->routes('actions/boards.php');
 
         $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Conversation')->setPrefix('/ccm/system/dialogs/conversation')
             ->routes('dialogs/conversations.php');
@@ -68,7 +73,8 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('attributes.php');
 
-        $router->buildGroup()->routes('search.php');
+        $router->buildGroup()
+            ->routes('search.php');
 
         $router->buildGroup()->routes('express.php');
 
@@ -79,6 +85,8 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->routes('trees.php');
 
         $router->buildGroup()->routes('site.php');
+
+        $router->buildGroup()->routes('boards.php');
 
         $router->buildGroup()->routes('calendar.php');
 

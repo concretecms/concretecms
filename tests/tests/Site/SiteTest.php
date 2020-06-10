@@ -14,11 +14,11 @@ use Concrete\Core\Site\Type\Controller\StandardController;
 use Concrete\Theme\Elemental\PageTheme;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Stash\Driver\Ephemeral;
 use Stash\Pool;
 
-class SiteTest extends PHPUnit_Framework_TestCase
+class SiteTest extends TestCase
 {
     public function testService()
     {

@@ -2,9 +2,9 @@
 
 namespace Concrete\TestHelpers\Url\Resolver;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
+abstract class ResolverTestCase extends TestCase
 {
     /**
      * @var \Concrete\Core\Url\UrlImmutable
@@ -16,7 +16,7 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
      */
     protected $urlResolver;
 
-    protected function setUp()
+    public function setUp()
     {
         $url = \Concrete\Core\Url\UrlImmutable::createFromUrl(\Core::make('url/canonical'));
         $this->canonicalUrl = $url;

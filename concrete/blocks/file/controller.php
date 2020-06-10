@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Block\File;
 
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Core;
 use File;
 use Concrete\Core\Block\BlockController;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 300;
     protected $btCacheBlockRecord = true;
@@ -35,6 +37,13 @@ class Controller extends BlockController
         return array('file-required' => t('You must select a file.'));
     }
 
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::BASICS
+        ];
+    }
+    
     public function getSearchableContent()
     {
         return $this->fileLinkText;

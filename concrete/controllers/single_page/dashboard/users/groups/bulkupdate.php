@@ -69,7 +69,6 @@ class Bulkupdate extends DashboardPageController
 
     public function search()
     {
-        $this->requireAsset('core/groups');
         $tree = GroupTree::get();
         $this->set("tree", $tree);
         $gName = (string) $this->app->make('helper/security')->sanitizeString($this->request('gName'));

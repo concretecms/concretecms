@@ -6,9 +6,9 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Support\Facade\Facade;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class BlockViewTest extends PHPUnit_Framework_TestCase
+class BlockViewTest extends TestCase
 {
     /** @var \Concrete\Core\Application\Application */
     protected $app;

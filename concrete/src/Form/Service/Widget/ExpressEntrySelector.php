@@ -12,10 +12,8 @@ class ExpressEntrySelector
 
     public function selectEntry(Entity $entity, $fieldName, Entry $entry = null)
     {
-        $v = \View::getInstance();
         $p = new \Permissions($entity);
         if ($p->canViewExpressEntries()) {
-            $v->requireAsset('core/express');
 
             $args['entityID'] = $entity->getID();
             $args['inputName'] = $fieldName;

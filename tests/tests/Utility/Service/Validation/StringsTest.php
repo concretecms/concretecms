@@ -2,10 +2,10 @@
 
 namespace Concrete\Tests\Utility\Service\Validation;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use stdClass;
 
-class StringsTest extends PHPUnit_Framework_TestCase
+class StringsTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Utility\Service\Validation\Strings
@@ -16,7 +16,7 @@ class StringsTest extends PHPUnit_Framework_TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    public function setUp()
     {
         $this->object = \Core::make(\Concrete\Core\Utility\Service\Validation\Strings::class);
     }
@@ -53,9 +53,6 @@ class StringsTest extends PHPUnit_Framework_TestCase
             [true, 'a.little.lengthy.but.fine@dept.example.com', false],
             [true, 'other.email-with-dash@example.com', false],
             [true, 'test@concrete5.org', false],
-
-            //mx validation
-            [true, 'test@concrete5.org', true],
         ];
     }
 

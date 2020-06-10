@@ -5,7 +5,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\View\DialogView $view */
 /* @var Concrete\Core\User\User $u */
 
-/* @var Concrete\Core\Application\Service\UserInterface\Help $ui */
 /* @var Concrete\Core\Application\Service\Composer $composer */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
 /* @var Concrete\Core\Page\Type\Type $pagetype */
@@ -18,12 +17,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <section class="ccm-ui">
-    <header><?= t('Composer - %s', $pagetype->getPageTypeDisplayName()); ?></header>
-    <form method="post" data-panel-detail-form="compose">
-        <?= $ui->display('panel', '/page/composer'); ?>
-
-        <?php $composer->display($pagetype, $c); ?>
-    </form>
+    <header><h3><?= t('Composer - %s', $pagetype->getPageTypeDisplayName()); ?></h3></header>
+    <div class="row">
+        <div class="col-sm-9">
+            <form method="post" data-panel-detail-form="compose">
+                <?php $composer->display($pagetype, $c); ?>
+            </form>
+        </div>
+    </div>
 
     <div class="ccm-panel-detail-form-actions dialog-buttons">
         <?php $composer->displayButtons($pagetype, $c); ?>

@@ -1,11 +1,9 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
-use Concrete\Core\Permission\Category;
 use Concrete\Core\User\UserInfo;
 
 class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements SpecifiableHomePageRoutineInterface

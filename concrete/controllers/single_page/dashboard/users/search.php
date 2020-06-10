@@ -377,13 +377,10 @@ class Search extends DashboardPageController
             $this->setupUser($uID);
         }
 
-        $this->requireAsset('selectize');
-
         $ui = $this->user;
         if (is_object($ui)) {
             $dh = $this->app->make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
-            $this->requireAsset('core/app/editable-fields');
             $uo = $this->user->getUserObject();
             $groups = [];
             foreach ($uo->getUserGroupObjects() as $g) {

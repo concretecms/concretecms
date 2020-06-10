@@ -5,9 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
 use Concrete\Core\User\User;
 use Mockery as M;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class Concrete5UserProcessorTest extends PHPUnit_Framework_TestCase
+class Concrete5UserProcessorTest extends TestCase
 {
 
     public function testProcessorAddsUserDetails()

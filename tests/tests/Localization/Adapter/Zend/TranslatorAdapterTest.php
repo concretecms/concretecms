@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Localization\Adapter\Zend;
 
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Zend\I18n\Translator\Translator;
 
 /**
@@ -12,11 +12,11 @@ use Zend\I18n\Translator\Translator;
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
+class TranslatorAdapterTest extends TestCase
 {
     protected $adapter;
 
-    protected function setUp()
+    public function setUp()
     {
         $translationsFile = DIR_TESTS . '/assets/Localization/Adapter/Zend/translations.php';
 

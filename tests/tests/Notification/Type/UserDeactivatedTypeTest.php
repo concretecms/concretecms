@@ -9,10 +9,10 @@ use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 use Concrete\Core\Notification\Type\UserDeactivatedType;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 
-class UserDeactivatedTypeTest extends PHPUnit_Framework_TestCase
+class UserDeactivatedTypeTest extends TestCase
 {
 
     use MockeryPHPUnitIntegration;

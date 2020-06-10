@@ -4,11 +4,11 @@ namespace Concrete\Core\Calendar\Event\Menu;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
+use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 
-class EventOccurrenceMenu extends Menu
+class EventOccurrenceMenu extends PopoverMenu
 {
 
     public function __construct(CalendarEventVersionOccurrence $occurrence)
@@ -34,6 +34,10 @@ class EventOccurrenceMenu extends Menu
             $this->addItem(new DialogLinkItem(
                 \URL::to('/ccm/calendar/dialogs/event/edit') . '?versionOccurrenceID=' . $occurrence->getID(),  t('Edit'),
                 t('Edit'), 640, 500
+            ));
+            $this->addItem(new DialogLinkItem(
+                \URL::to('/ccm/calendar/dialogs/event/summary_templates') . '?eventID=' . $occurrence->getEvent()->getID(),  t('Summary Templates'),
+                t('Summary Templates'), '90%', '70%'
             ));
             if ($permissions->canCopyCalendarEvents()) {
                 $year = date('Y', $occurrence->getStart());

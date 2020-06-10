@@ -19,7 +19,7 @@ class PageControllerTest extends PageTestCase
         $this->metadatas[] = Package::class;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $cache = \Core::make('cache/overrides')->flush();

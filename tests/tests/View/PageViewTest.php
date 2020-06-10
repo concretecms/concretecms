@@ -11,7 +11,7 @@ use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\View\View;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Concrete\Core\Page\Page;
 
 class PageViewTest extends PageTestCase
@@ -119,7 +119,7 @@ class PageViewTest extends PageTestCase
     public function testRenderingEditProfilePageThemePathOverride()
     {
         $collection = $this->app->make(ThemeRouteCollection::class);
-        $collection->setThemeByRoute('/account/*', 'elemental', 'full.php');
+        $collection->setThemeByRoute('/account/*', 'elemental', 'profile_full.php'); // should be ignored because dashboard doesn't have this.
 
         $edit_profile = Single::add('/account/edit_profile');
         $controller = $edit_profile->getPageController();
@@ -129,9 +129,9 @@ class PageViewTest extends PageTestCase
         $view->setupRender();
         $inner = $view->getInnerContentFile();
         $template = $view->getViewTemplate();
-        $this->assertEquals('elemental', $view->getThemeHandle());
+        $this->assertEquals('dashboard', $view->getThemeHandle());
         $this->assertEquals(DIR_BASE_CORE . '/single_pages/account/edit_profile.php', $inner);
-        $this->assertEquals(DIR_BASE_CORE . '/themes/elemental/full.php', $template);
+        $this->assertEquals(DIR_BASE_CORE . '/themes/dashboard/view.php', $template);
 
         $collection->setThemesByRoutes($this->app->make('config')->get('app.theme_paths'));
     }
@@ -180,7 +180,7 @@ class PageViewTest extends PageTestCase
         $inner = $view->getInnerContentFile();
         $template = $view->getViewTemplate();
         $this->assertEquals($inner, $base . '/single_pages/login.php');
-        $this->assertEquals($base . '/themes/concrete/background_image.php', $template);
+        $this->assertEquals($base . '/themes/concrete/view.php', $template);
         $this->assertEquals('concrete', $view->getThemeHandle());
 
         $collection = $this->app->make(ThemeRouteCollection::class);

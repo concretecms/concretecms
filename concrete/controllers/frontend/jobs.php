@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
+use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponseFactory;
 use Concrete\Core\Job\QueueableJob;
 use Controller;
 use stdClass;
@@ -106,8 +107,17 @@ class Jobs extends Controller
 
             if (is_object($job)) {
                 if ($job instanceof QueueableJob && $job->supportsQueue()) {
-                    $q = $job->getQueueObject();
+                    $q = $job->markStarted();
+                    $job->start($q);
+                    /**
+                     * @var $responseFactory BatchProcessorResponseFactory
+                     */
+                    $q->saveBatch();
+                    $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
+                    return $responseFactory->createResponse($q->getBatch());
 
+
+                    /*
                     if ($this->request->request->get('process')) {
                         $obj = new stdClass();
                         $obj->error = false;
@@ -134,8 +144,6 @@ class Jobs extends Controller
                         \Core::shutdown();
                     } else {
                         if ($q->count() == 0) {
-                            $q = $job->markStarted();
-                            $job->start($q);
                         }
                     }
 
@@ -145,6 +153,7 @@ class Jobs extends Controller
                         'totalItemsSummary' => t2("%d item", "%d items", $totalItems),
                     ));
                     \Core::shutdown();
+                    */
                 } else {
                     $r = $job->executeJob();
                     $response->setStatusCode(Response::HTTP_OK);

@@ -88,8 +88,14 @@ return [
      * Core Providers
      */
     'providers' => [
-        // Router service provider
+        // Note, the order of these first few is important - we need events early for other service providers, but it depends on some things.
+        'core_system' => '\Concrete\Core\System\SystemServiceProvider',
+        'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
+        'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
+        'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
+        'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
+        'core_bus' => '\Concrete\Core\Foundation\Command\DispatcherServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
@@ -110,16 +116,12 @@ return [
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
-        'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
-        'core_system' => '\Concrete\Core\System\SystemServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
-        'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
-        'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
@@ -132,6 +134,8 @@ return [
         'core_search' => \Concrete\Core\Search\SearchServiceProvider::class,
         'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
+        'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
+        'core_boards' => '\Concrete\Core\Board\ServiceProvider',
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -152,6 +156,7 @@ return [
         'core_attribute' => '\Concrete\Core\Attribute\AttributeServiceProvider',
         'core_express' => '\Concrete\Core\Express\ExpressServiceProvider',
 
+        //
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
     ],
@@ -233,19 +238,21 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeaturesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFeatureCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardDataSourcesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardSlotTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowProgressCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportWorkflowsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
+        // if we want the express entity attribute to work we need this to be first.
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportAttributeSetsRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressEntitiesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressAssociationsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressFormsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportExpressRelationsRoutine',
@@ -256,6 +263,10 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTemplatesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportContainersRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryFieldsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypesBaseRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
@@ -285,11 +296,9 @@ return [
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
-        '/install' => VIEW_CORE_THEME,
-        '/login' => [
-            VIEW_CORE_THEME,
-            VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE,
-        ],
+        '/frontend/install' => VIEW_CORE_THEME,
+        '/login' => VIEW_CORE_THEME,
+        '/oauth/authorize' => VIEW_CORE_THEME,
         '/register' => VIEW_CORE_THEME,
         '/frontend/maintenance_mode' => VIEW_CORE_THEME,
         '/upgrade' => VIEW_CORE_THEME,
@@ -372,6 +381,129 @@ return [
      * Assets
      */
     'assets' => [
+        // Basic JavaScript requirements
+        'jquery' => [
+            [
+                'javascript',
+                'js/jquery.js',
+                ['position' => Asset::ASSET_POSITION_HEADER],
+            ],
+        ],
+
+        'vue' => [
+            [
+                'javascript',
+                'js/vue.js',
+            ],
+        ],
+
+        // This is the base CKEditor library from CKEditor
+        'ckeditor' => [
+            [
+                'javascript',
+                'js/ckeditor/ckeditor.js'
+            ],
+        ],
+
+        // These are our CKEditor extensions, including custom plugins, and the jQuery adapter.
+        'ckeditor/concrete' => [
+            ['javascript', 'js/ckeditor/concrete.js'],
+            ['css', 'css/ckeditor/concrete.css'],
+        ],
+
+        'font-awesome' => [
+            [
+                'css',
+                'css/fontawesome/all.css'
+            ],
+        ],
+
+        // Foundational Assets
+        'core/cms' => [
+            ['javascript', 'js/cms.js'],
+            ['javascript-localized', '/ccm/assets/localization/core/js'],
+            ['css', 'css/cms.css'],
+        ],
+
+        // Fallback/minimal assets for accessory features
+        'feature/account/frontend' => [
+            ['javascript', 'js/features/account/frontend.js'],
+            ['css', 'css/features/account/frontend.css'],
+        ],
+
+        'feature/desktop/frontend' => [
+            ['javascript', 'js/features/desktop/frontend.js'],
+            ['css', 'css/features/desktop/frontend.css'],
+        ],
+
+        'feature/boards/frontend' => [
+            ['javascript', 'js/features/boards/frontend.js'],
+            ['css', 'css/features/boards/frontend.css'],
+        ],
+
+        'feature/calendar/frontend' => [
+            ['javascript', 'js/features/calendar/frontend.js'],
+            ['css', 'css/features/calendar/frontend.css'],
+        ],
+
+        'feature/conversations/frontend' => [
+            ['javascript', 'js/features/conversations/frontend.js'],
+            ['css', 'css/features/conversations/frontend.css'],
+        ],
+
+        'feature/documents/frontend' => [
+            ['javascript', 'js/features/documents/frontend.js'],
+            ['css', 'css/features/documents/frontend.css'],
+        ],
+
+        'feature/testimonials/frontend' => [
+            ['css', 'css/features/testimonials/frontend.css'],
+        ],
+
+        'feature/faq/frontend' => [
+            ['css', 'css/features/faq/frontend.css'],
+        ],
+
+        'feature/basics/frontend' => [
+            ['css', 'css/features/basics/frontend.css'],
+        ],
+
+        'feature/navigation/frontend' => [
+            ['javascript', 'js/features/navigation/frontend.js'],
+            ['css', 'css/features/navigation/frontend.css'],
+        ],
+
+        'feature/imagery/frontend' => [
+            ['javascript', 'js/features/imagery/frontend.js'],
+            ['css', 'css/features/imagery/frontend.css'],
+        ],
+
+        'feature/express/frontend' => [
+            ['javascript', 'js/features/express/frontend.js'],
+            ['css', 'css/features/express/frontend.css'],
+        ],
+
+        'feature/search/frontend' => [
+            ['css', 'css/features/search/frontend.css'],
+        ],
+
+        'feature/social/frontend' => [
+            ['css', 'css/features/social/frontend.css'],
+        ],
+
+        'feature/video/frontend' => [
+            ['css', 'css/features/video/frontend.css'],
+        ],
+
+        'feature/taxonomy/frontend' => [
+            ['css', 'css/features/taxonomy/frontend.css'],
+        ],
+
+        'feature/maps/frontend' => [
+            ['javascript', 'js/features/maps/frontend.js'],
+            ['css', 'css/features/maps/frontend.css'],
+        ],
+
         'google-charts' => [
             [
                 'javascript',
@@ -379,809 +511,158 @@ return [
                 ['local' => false],
             ],
         ],
+    ],
+    'asset_groups' => [
 
         'jquery' => [
             [
-                'javascript',
-                'js/jquery.js',
-                ['position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false],
+                ['javascript', 'jquery'],
             ],
         ],
-        'jquery/ui' => [
-            ['javascript', 'js/jquery-ui.js', ['minify' => false, 'combine' => false]],
-            ['javascript-localized', '/ccm/assets/localization/jquery/ui/js'],
-            ['css', 'css/jquery-ui.css', ['minify' => false]],
-        ],
-        'jquery/visualize' => [
-            ['javascript', 'js/jquery-visualize.js', ['minify' => false, 'combine' => false]],
-            ['css', 'css/jquery-visualize.css', ['minify' => false]],
-        ],
-        'jquery/touch-punch' => [
-            ['javascript', 'js/jquery-ui-touch-punch.js'],
-        ],
-        'jquery/tristate' => [
-            ['javascript', 'js/jquery-tristate.js'],
-        ],
-        'select2' => [
-            ['javascript', 'js/select2.js', ['minify' => false, 'combine' => false]],
-            ['javascript-localized', '/ccm/assets/localization/select2/js'],
-            ['css', 'css/select2.css', ['minify' => false]],
-        ],
-        'selectize' => [
-            ['javascript', 'js/selectize.js', ['minify' => false, 'combine' => false]],
-            ['css', 'css/selectize.css', ['minify' => false]],
-        ],
-        'underscore' => [
-            ['javascript', 'js/underscore.js', ['minify' => false]],
-        ],
-        'backbone' => [
-            ['javascript', 'js/backbone.js', ['minify' => false]],
-        ],
-        'dropzone' => [
-            ['javascript', 'js/dropzone.js'],
-            ['javascript-localized', '/ccm/assets/localization/dropzone/js'],
-            ['css', 'css/dropzone.css', ['minify' => false]],
-        ],
-        'jquery/form' => [
-            ['javascript', 'js/jquery-form.js'],
-        ],
-        'picturefill' => [
-            ['javascript', 'js/picturefill.js', ['minify' => false]],
-        ],
-        'responsive-slides' => [
-            ['javascript', 'js/responsive-slides.js', ['minify' => false]],
-            ['css', 'css/responsive-slides.css', ['minify' => false]],
-        ],
-        'fullcalendar' => [
-            ['javascript', 'js/fullcalendar/fullcalendar.js', ['minify' => false, 'combine' => false]],
-            ['css', 'js/fullcalendar/fullcalendar.css', ['minify' => false]],
-        ],
-        'fullcalendar/localization' => [
-            ['javascript', 'js/fullcalendar/locale-all.js', ['minify' => false, 'combine' => false]],
-        ],
-        'fullcalendar/print' => [
-            ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
-        ],
+
         'vue' => [
-            ['javascript', 'js/vue.js', ['minify' => false, 'combine' => false]],
-        ],
-        'html5-shiv' => [
             [
-                'javascript-conditional',
-                'js/ie/html5-shiv.js',
-                ['conditional' => 'lt IE 9'],
-            ],
-        ],
-        'respond' => [
-            [
-                'javascript-conditional',
-                'js/ie/respond.js',
-                ['conditional' => 'lt IE 9'],
-            ],
-        ],
-        'spectrum' => [
-            ['javascript', 'js/spectrum.js', ['minify' => false]],
-            ['css', 'css/spectrum.css', ['minify' => false]],
-        ],
-        'core/composer-save-coordinator' => [
-            ['javascript', 'js/composer-save-coordinator.js', ['minify' => false]],
-        ],
-        'font-awesome' => [
-            ['css', 'css/font-awesome.css', ['minify' => false]],
-        ],
-        'core/events' => [
-            ['javascript', 'js/events.js', ['minify' => false]],
-        ],
-        'core/asset-loader' => [
-            ['javascript', 'js/asset-loader.js', ['minify' => false]],
-        ],
-        'core/style-customizer' => [
-            ['javascript', 'js/style-customizer.js', ['minify' => false]],
-            ['css', 'css/style-customizer.css', ['minify' => false]],
-        ],
-        'core/localization' => [
-            ['javascript-localized', '/ccm/assets/localization/core/js'],
-        ],
-        'core/frontend/parallax-image' => [
-            ['javascript', 'js/frontend/parallax-image.js', ['minify' => false]],
-        ],
-        'core/frontend/thumbnail-builder' => [
-            ['javascript', 'js/frontend/thumbnail-builder.js'],
-        ],
-        'core/imageeditor/control/position' => [
-            ['css', 'css/image-editor/controls/position.css'],
-            ['javascript', 'js/image-editor/controls/position.js'],
-        ],
-        'core/imageeditor/control/colors' => [
-            ['javascript', 'js/image-editor/controls/colors.js'],
-        ],
-        'core/duration' => [
-            ['javascript', 'js/duration.js'],
-            ['css', 'css/duration.css'],
-        ],
-        'core/imageeditor/control/filter' => [
-            ['css', 'css/image-editor/controls/filter.css'],
-            ['javascript', 'js/image-editor/controls/filter.js'],
-        ],
-        'core/imageeditor/filter/gaussian_blur' => [
-            ['css', 'css/image-editor/filters/gaussian_blur.css'],
-            ['javascript', 'js/image-editor/filters/gaussian_blur.js'],
-        ],
-        'core/imageeditor/filter/none' => [
-            ['css', 'css/image-editor/filters/none.css'],
-            ['javascript', 'js/image-editor/filters/none.js'],
-        ],
-        'core/imageeditor/filter/sepia' => [
-            ['css', 'css/image-editor/filters/sepia.css'],
-            ['javascript', 'js/image-editor/filters/sepia.js'],
-        ],
-        'core/imageeditor/filter/vignette' => [
-            ['css', 'css/image-editor/filters/vignette.css'],
-            ['javascript', 'js/image-editor/filters/vignette.js'],
-        ],
-        'core/imageeditor/filter/grayscale' => [
-            ['css', 'css/image-editor/filters/grayscale.css'],
-            ['javascript', 'js/image-editor/filters/grayscale.js'],
-        ],
-        'jquery/awesome-rating' => [
-            ['javascript', 'js/jquery-awesome-rating.js', ['minify' => false]],
-            ['css', 'css/jquery-awesome-rating.css', ['minify' => false]],
-        ],
-        'jquery/fileupload' => [
-            ['javascript', 'js/jquery-fileupload.js'],
-        ],
-        'jquery/textcounter' => [
-            ['javascript', 'js/textcounter.js'],
-        ],
-        'swfobject' => [
-            ['javascript', 'js/swfobject.js'],
-        ],
-        'redactor' => [
-            ['javascript', 'js/redactor.js', ['minify' => false]],
-            ['javascript-localized', '/ccm/assets/localization/redactor/js'],
-            ['css', 'css/redactor.css'],
-        ],
-        'ace' => [
-            ['javascript', 'js/ace/ace.js', ['minify' => false]],
-        ],
-        'backstretch' => [
-            ['javascript', 'js/backstretch.js'],
-        ],
-        'background-check' => [
-            ['javascript', 'js/background-check.js'],
-        ],
-        /*
-        'dynatree' => array(
-            array('javascript', 'js/dynatree.js', array('minify' => false)),
-            array('javascript-localized', '/ccm/assets/localization/dynatree/js', array('minify' => false)),
-            array('css', 'css/dynatree.css', array('minify' => false)),
-        ),
-        */
-        'fancytree' => [
-            ['javascript', 'js/fancytree.js', ['minify' => false, 'version' => '2.18.0']],
-            ['javascript-localized', '/ccm/assets/localization/fancytree/js', ['minify' => false]],
-            ['css', 'css/fancytree.css', ['minify' => false]],
-        ],
-        'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
-            ['javascript-localized', '/ccm/assets/localization/moment/js'],
-        ],
-        'moment-timezone' => [
-            ['javascript', 'js/moment-timezone-with-data.js', ['minify' => false, 'version' => '0.5.25']],
-        ],
-        'bootstrap/dropdown' => [
-            ['javascript', 'js/bootstrap/dropdown.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap/tooltip' => [
-            ['javascript', 'js/bootstrap/tooltip.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap/popover' => [
-            ['javascript', 'js/bootstrap/popover.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap/collapse' => [
-            ['javascript', 'js/bootstrap/collapse.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap/alert' => [
-            ['javascript', 'js/bootstrap/alert.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap/button' => [
-            ['javascript', 'js/bootstrap/button.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap/transition' => [
-            ['javascript', 'js/bootstrap/transition.js'],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap' => [
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'core/app' => [
-            ['javascript', 'js/app.js', ['minify' => false, 'combine' => false]],
-            ['css', 'css/app.css', ['minify' => false]],
-        ],
-        'bootstrap-editable' => [
-            ['javascript', 'js/bootstrap-editable.js', ['minify' => false]],
-        ],
-        'core/app/editable-fields' => [
-            ['css', 'css/editable-fields.css', ['minify' => false]],
-        ],
-        'kinetic' => [
-            ['javascript', 'js/kinetic.js'],
-        ],
-        'core/imageeditor' => [
-            ['javascript', 'js/image-editor.js'],
-            ['javascript-localized', '/ccm/assets/localization/imageeditor/js'],
-            ['css', 'css/image-editor.css'],
-        ],
-        'dashboard' => [
-            ['javascript', 'js/dashboard.js'],
-        ],
-        'core/frontend/captcha' => [
-            ['css', 'css/frontend/captcha.css'],
-        ],
-        'core/frontend/pagination' => [
-            ['css', 'css/frontend/pagination.css'],
-        ],
-        'core/frontend/errors' => [
-            ['css', 'css/frontend/errors.css'],
-        ],
-        'core/file-manager' => [
-            ['javascript', 'js/file-manager.js', ['minify' => false]],
-            ['css', 'css/file-manager.css', ['minify' => false]],
-        ],
-        'core/file-uploader' => [
-            ['javascript', 'js/file-uploader.js', ['minify' => false]],
-        ],
-        'core/express' => [
-            ['javascript', 'js/express.js', ['minify' => false]],
-        ],
-        'core/sitemap' => [
-            ['javascript', 'js/sitemap.js', ['minify' => false]],
-            ['css', 'css/sitemap.css', ['minify' => false]],
-        ],
-        'core/users' => [
-            ['javascript', 'js/users.js', ['minify' => false]],
-        ],
-        'core/calendar/event-selector' => [
-            ['javascript', 'js/calendar/event-selector.js', ['minify' => false]],
-        ],
-        'core/calendar/admin' => [
-            ['javascript', 'js/calendar/admin.js', ['minify' => false]],
-        ],
-        'core/avatar' => [
-            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
-        ],
-        'core/notification' => [
-            ['javascript', 'js/notification.js', ['minify' => false]],
-        ],
-        'core/draft_list' => [
-            ['javascript', 'js/draft-list.js', ['minify' => false]],
-        ],
-        'core/tree' => [
-            ['javascript', 'js/tree.js', ['minify' => false]],
-        ],
-        'core/groups' => [
-            ['javascript', 'js/groups.js', ['minify' => false]],
-        ],
-        'core/gathering' => [
-            ['javascript', 'js/gathering.js'],
-        ],
-        'core/gathering/display' => [
-            ['css', 'css/gathering/display.css'],
-        ],
-        'core/gathering/base' => [
-            ['css', 'css/gathering/base.css'],
-        ],
-        'core/conversation' => [
-            ['javascript', 'js/conversations.js'],
-            ['javascript-localized', '/ccm/assets/localization/conversations/js'],
-            ['css', 'css/conversations.css'],
-        ],
-        'core/lightbox' => [
-            ['javascript', 'js/jquery-magnific-popup.js'],
-            ['css', 'css/jquery-magnific-popup.css'],
-        ],
-        'core/lightbox/launcher' => [
-            ['javascript', 'js/lightbox.js'],
-        ],
-        'core/account' => [
-            ['javascript', 'js/account.js'],
-            ['css', 'css/account.css'],
-        ],
-        'core/translator' => [
-            ['javascript', 'js/translator.js', ['minify' => false]],
-            ['javascript-localized', '/ccm/assets/localization/translator/js'],
-            ['css', 'css/translator.css', ['minify' => false]],
-        ],
-        'core/country-stateprovince-link' => [
-            ['javascript', 'js/country-stateprovince-link.js', ['minify' => false]],
-        ],
-        'core/country-data-link' => [
-            ['javascript', 'js/country-data-link.js', ['minify' => false]],
-        ],
-    ],
-    'asset_groups' => [
-        'jquery/ui' => [
-            [
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['css', 'jquery/ui'],
-            ],
-        ],
-        'jquery/visualize' => [
-            [
-                ['javascript', 'jquery/visualize'],
-                ['css', 'jquery/visualize'],
-            ],
-        ],
-        /*
-         * @deprecated
-         */
-        'select2' => [
-            [
-                ['javascript', 'select2'],
-                ['javascript-localized', 'select2'],
-                ['css', 'select2'],
-            ],
-        ],
-        'selectize' => [
-            [
-                ['javascript', 'selectize'],
-                ['css', 'selectize'],
-            ],
-        ],
-        'fullcalendar' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'moment'],
-                ['javascript', 'fullcalendar'],
-                ['javascript', 'fullcalendar/localization'],
-                ['css', 'fullcalendar'],
-            ],
-        ],
-        'dropzone' => [
-            [
-                ['javascript', 'dropzone'],
-                ['javascript-localized', 'dropzone'],
-                ['css', 'dropzone'],
-            ],
-        ],
-        'responsive-slides' => [
-            [
-                ['javascript', 'responsive-slides'],
-                ['css', 'responsive-slides'],
-            ],
-        ],
-        'ace' => [
-            [
-                ['javascript', 'ace'],
-            ],
-        ],
-        'core/avatar' => [
-            [
-                ['javascript', 'dropzone'],
-                ['javascript-localized', 'dropzone'],
                 ['javascript', 'vue'],
-                ['javascript', 'core/avatar'],
             ],
         ],
-        'core/notification' => [
-            [
-                ['javascript', 'core/notification'],
-            ],
-        ],
-        'core/draft_list' => [
-            [
-                ['javascript', 'core/draft_list'],
-                ['javascript', 'core/events'],
-            ],
-        ],
-        'core/colorpicker' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'core/events'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'spectrum'],
-                ['css', 'spectrum'],
-            ],
-        ],
+
         'font-awesome' => [
             [
                 ['css', 'font-awesome'],
             ],
         ],
-        'core/rating' => [
+
+        'ckeditor' => [
             [
-                ['javascript', 'jquery'],
-                ['javascript', 'jquery/awesome-rating'],
-                ['css', 'font-awesome'],
-                ['css', 'jquery/awesome-rating'],
-            ],
-        ],
-        'core/frontend/thumbnail-builder' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'underscore'],
-                ['javascript', 'core/frontend/thumbnail-builder'],
-            ],
-        ],
-        'core/style-customizer' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'core/events'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'core/colorpicker'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'core/app'],
-                ['javascript', 'jquery/fileupload'],
-                ['javascript', 'core/file-manager'],
-                ['javascript', 'core/style-customizer'],
-                ['css', 'core/app'],
-                ['css', 'core/file-manager'],
-                ['css', 'jquery/ui'],
-                ['css', 'core/colorpicker'],
-                ['css', 'core/style-customizer'],
-            ],
-        ],
-        'jquery/fileupload' => [
-            [
-                ['javascript', 'jquery/fileupload'],
-            ],
-        ],
-        'swfobject' => [
-            [
-                ['javascript', 'swfobject'],
-            ],
-        ],
-        'redactor' => [
-            [
-                ['javascript', 'redactor'],
-                ['javascript-localized', 'redactor'],
-                ['css', 'redactor'],
-                ['css', 'font-awesome'],
-            ],
-        ],
-        'moment' => [
-            [
-                ['javascript', 'moment'],
-                ['javascript', 'moment-timezone'],
-                ['javascript-localized', 'moment'],
-            ],
-        ],
-        'fancytree' => [
-            [
-                ['javascript', 'fancytree'],
-                ['javascript-localized', 'fancytree'],
-                ['css', 'fancytree'],
-            ],
-        ],
-        'core/app' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'core/events'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'bootstrap/dropdown'],
-                ['javascript', 'bootstrap/tooltip'],
-                ['javascript', 'bootstrap/popover'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'core/app'],
-                ['css', 'core/app'],
-                ['css', 'font-awesome'],
-                ['css', 'jquery/ui'],
-            ],
-        ],
-        'core/app/editable-fields' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'bootstrap/dropdown'],
-                ['javascript', 'bootstrap/tooltip'],
-                ['javascript', 'bootstrap/popover'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'core/events'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'core/app'],
-                ['javascript', 'bootstrap-editable'],
-                ['css', 'core/app/editable-fields'],
-                ['javascript', 'jquery/fileupload'],
-            ],
-        ],
-        'core/imageeditor' => [
-            [
-                ['javascript', 'kinetic'],
-                ['javascript-localized', 'core/imageeditor'],
-                ['javascript', 'core/imageeditor'],
-                ['css', 'core/imageeditor'],
-            ],
-        ],
-        'dashboard' => [
-            [
-                ['javascript', 'jquery'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'jquery/touch-punch'],
-                ['javascript', 'selectize'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'dashboard'],
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'bootstrap/dropdown'],
-                ['javascript', 'bootstrap/tooltip'],
-                ['javascript', 'bootstrap/collapse'],
-                ['javascript', 'bootstrap/popover'],
-                ['javascript', 'bootstrap/transition'],
-                ['javascript', 'bootstrap/alert'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'core/app'],
-                ['javascript-conditional', 'respond'],
-                ['javascript-conditional', 'html5-shiv'],
-                ['css', 'selectize'],
-                ['css', 'core/app'],
-                ['css', 'jquery/ui'],
-                ['css', 'font-awesome'],
-            ],
-        ],
-        'core/file-manager' => [
-            [
-                ['css', 'core/app'],
-                ['css', 'jquery/ui'],
-                ['css', 'core/file-manager'],
-                ['css', 'selectize'],
-                ['javascript', 'dropzone'],
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'bootstrap/tooltip'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'selectize'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript-localized', 'dropzone'],
-                ['javascript', 'core/app'],
-                ['javascript', 'jquery/fileupload'],
-                ['javascript', 'core/tree'],
-                ['javascript', 'core/file-uploader'],
-                ['javascript', 'core/file-manager'],
-            ],
-        ],
-        'core/file-uploader' => [
-            [
-                ['css', 'dropzone'],
-                ['javascript', 'dropzone'],
-                ['javascript-localized', 'dropzone'],
-                ['javascript', 'core/file-uploader'],
-            ],
-        ],
-        'core/duration' => [
-            [
-                ['css', 'selectize'],
-                ['css', 'jquery/ui'],
-                ['css', 'core/duration'],
-                ['javascript', 'selectize'],
-                ['javascript', 'moment'],
-                ['javascript', 'moment-timezone'],
-                ['javascript', 'core/duration'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'ckeditor'],
+                ['javascript', 'ckeditor/concrete'],
+                ['css', 'ckeditor/concrete'],
             ],
         ],
 
-        'core/file-folder-selector' => [
+        'core/cms' => [
             [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'fancytree'],
-                ['javascript-localized', 'fancytree'],
-                ['javascript', 'core/tree'],
-                ['css', 'fancytree'],
-            ],
+                ['javascript', 'jquery'],
+                ['javascript', 'vue'],
+                ['css', 'font-awesome'],
+                ['javascript', 'core/cms'],
+                ['javascript-localized', 'core/cms'],
+                ['css', 'core/cms'],
+            ]
         ],
 
-        'core/sitemap' => [
+        // Fallback/minimal assets groups
+
+        'feature/account/frontend' => [
             [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'fancytree'],
-                ['javascript', 'selectize'],
-                ['javascript-localized', 'fancytree'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'core/app'],
-                ['javascript', 'core/sitemap'],
-                ['css', 'fancytree'],
-                ['css', 'selectize'],
-                ['css', 'core/sitemap'],
-            ],
+                ['javascript', 'feature/account/frontend'],
+                ['css', 'feature/account/frontend'],
+            ]
         ],
-        'core/users' => [
+
+        'feature/desktop/frontend' => [
             [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'core/users'],
-            ],
+                ['javascript', 'feature/desktop/frontend'],
+                ['css', 'feature/desktop/frontend'],
+            ]
         ],
-        'core/calendar/event-selector' => [
+
+        'feature/calendar/frontend' => [
             [
-                ['javascript', 'jquery'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'core/events'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'core/calendar/event-selector'],
-                ['css', 'core/app'],
-                ['css', 'jquery/ui'],
-            ],
+                ['javascript', 'feature/calendar/frontend'],
+                ['css', 'feature/calendar/frontend'],
+            ]
         ],
-        'core/calendar/admin' => [
+
+        'feature/conversations/frontend' => [
             [
-                ['javascript-localized', 'core/localization'],
-                ['javascript', 'jquery'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'core/events'],
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'core/app'],
-                ['javascript', 'core/calendar/admin'],
-                ['css', 'core/app'],
-                ['css', 'jquery/ui'],
-            ],
+                ['javascript', 'feature/conversations/frontend'],
+                ['css', 'feature/conversations/frontend'],
+            ]
         ],
-        'core/express' => [
+
+        'feature/documents/frontend' => [
             [
-                ['javascript', 'underscore'],
-                ['javascript', 'backbone'],
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'bootstrap/tooltip'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'core/localization'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'core/app'],
-                ['javascript', 'core/express'],
-                ['css', 'core/app'],
-                ['css', 'core/express'],
-            ],
+                ['javascript', 'feature/documents/frontend'],
+                ['javascript-localized', 'core/cms'],
+                ['css', 'feature/documents/frontend'],
+            ]
         ],
-        'core/topics' => [
+
+        'feature/faq/frontend' => [
             [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'fancytree'],
-                ['javascript-localized', 'fancytree'],
-                ['javascript', 'core/tree'],
-                ['css', 'fancytree'],
-            ],
+                ['css', 'feature/faq/frontend'],
+            ]
         ],
-        'core/tree' => [
+
+        'feature/imagery/frontend' => [
             [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'fancytree'],
-                ['javascript-localized', 'fancytree'],
-                ['javascript', 'core/tree'],
-                ['css', 'fancytree'],
-            ],
+                ['javascript', 'feature/imagery/frontend'],
+                ['css', 'feature/imagery/frontend'],
+            ]
         ],
-        'core/groups' => [
+
+        'feature/navigation/frontend' => [
             [
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'underscore'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'fancytree'],
-                ['javascript-localized', 'fancytree'],
-                ['javascript', 'core/tree'],
-                ['css', 'fancytree'],
-            ],
+                ['javascript', 'feature/navigation/frontend'],
+                ['css', 'feature/navigation/frontend'],
+            ]
         ],
-        'core/gathering' => [
+
+        'feature/video/frontend' => [
             [
-                ['javascript', 'core/gathering'],
-                ['javascript', 'redactor'],
-                ['javascript-localized', 'redactor'],
-                ['css', 'core/gathering/base'],
-                ['css', 'core/conversation'],
-                ['css', 'core/gathering/display'],
-                ['css', 'redactor'],
-            ],
+                ['css', 'feature/video/frontend'],
+            ]
         ],
-        'core/conversation' => [
+
+        'feature/social/frontend' => [
             [
-                ['javascript', 'jquery'],
-                ['javascript', 'jquery/ui'],
-                ['javascript-localized', 'jquery/ui'],
-                ['javascript', 'underscore'],
-                ['javascript', 'core/lightbox'],
-                ['javascript', 'dropzone'],
-                ['javascript-localized', 'dropzone'],
-                ['javascript', 'bootstrap/dropdown'],
-                ['javascript', 'core/events'],
-                ['javascript', 'core/asset-loader'],
-                ['javascript', 'core/conversation'],
-                ['javascript-localized', 'core/conversation'],
-                ['css', 'core/conversation'],
-                ['css', 'core/frontend/errors'],
-                ['css', 'font-awesome'],
-                ['css', 'bootstrap/dropdown'],
-                ['css', 'core/lightbox'],
-                ['css', 'jquery/ui'],
-            ],
-            true,
+                ['css', 'feature/social/frontend'],
+            ]
         ],
-        'core/lightbox' => [
+
+        'feature/express/frontend' => [
             [
-                ['javascript', 'jquery'],
-                ['javascript', 'core/lightbox'],
-                ['javascript', 'core/lightbox/launcher'],
-                ['css', 'core/lightbox'],
-            ],
+                ['javascript', 'feature/express/frontend'],
+                ['css', 'feature/express/frontend'],
+            ]
         ],
-        'core/account' => [
+
+        'feature/maps/frontend' => [
             [
-                ['javascript', 'jquery'],
-                ['javascript', 'core/account'],
-                ['javascript', 'bootstrap/dropdown'],
-                ['css', 'bootstrap/dropdown'],
-                ['css', 'core/account'],
-            ],
+                ['javascript', 'feature/maps/frontend'],
+                ['css', 'feature/maps/frontend'],
+            ]
         ],
-        'core/translator' => [
+
+        'feature/search/frontend' => [
             [
-                ['javascript', 'core/translator'],
-                ['javascript-localized', 'core/translator'],
-                ['css', 'core/translator'],
-            ],
+                ['css', 'feature/search/frontend'],
+            ]
         ],
-        'core/country-stateprovince-link' => [
+
+        'feature/taxonomy/frontend' => [
             [
-                ['javascript', 'jquery'],
-                ['javascript', 'core/country-stateprovince-link'],
-            ],
+                ['css', 'feature/taxonomy/frontend'],
+            ]
         ],
-        'core/country-data-link' => [
+
+        'feature/testimonials/frontend' => [
             [
-                ['javascript', 'jquery'],
-                ['javascript', 'core/country-data-link'],
-            ],
+                ['css', 'feature/testimonials/frontend'],
+            ]
         ],
-        /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
-        'core/legacy' => [
+
+        'feature/basics/frontend' => [
             [
-            ],
+                ['css', 'feature/basics/frontend'],
+            ]
         ],
+
+
+
+
+
     ],
     // HTTP Client options
     'http_client' => [
@@ -1239,4 +720,49 @@ return [
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
+
+    'commands' => [
+        ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
+        ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
+        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
+        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler'],
+        ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler'],
+        ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler'],
+        ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler'],
+        ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler'],
+        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler'],
+        ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
+        ['Concrete\Core\User\Group\Command\AddGroupCommand', 'Concrete\Core\User\Group\Command\AddGroupCommandHandler'],
+        ['Concrete\Core\User\Group\Command\DeleteGroupCommand', 'Concrete\Core\User\Group\Command\DeleteGroupCommandHandler'],
+        ['Concrete\Core\Page\Container\Command\AddContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
+        ['Concrete\Core\Page\Container\Command\UpdateContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
+        ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
+        ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Calendar\Event\Summary\Template\Command\EnableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Calendar\Event\Summary\Template\Command\DisableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
+
+        ['Concrete\Core\Board\Command\CreateBoardCommand', 'Concrete\Core\Board\Command\CreateBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\UpdateBoardCommand', 'Concrete\Core\Board\Command\UpdateBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\DeleteBoardCommand', 'Concrete\Core\Board\Command\DeleteBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
+        ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
+        ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
+        ['Concrete\Core\Board\Command\RefreshBoardInstanceCommand', 'Concrete\Core\Board\Command\RefreshBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearBoardInstanceCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\GenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\GenerateBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
+
+
+        ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\UnpinSlotFromBoardCommand', 'Concrete\Core\Board\Command\UnpinSlotFromBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\AddCustomBlockToBoardCommand', 'Concrete\Core\Board\Command\AddCustomBlockToBoardCommandHandler'],
+        ['Concrete\Core\Express\Command\RescanEntityCommand', 'Concrete\Core\Express\Command\RescanEntityCommandHandler'],
+    ],
+
 ];

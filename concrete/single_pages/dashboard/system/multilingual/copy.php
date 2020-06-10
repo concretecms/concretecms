@@ -55,20 +55,19 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                             var ctf = $('select[name=copyTreeFrom]').val();
                             var ctt = $('select[name=copyTreeTo]').val();
                             if (ctt > 0 && ctf > 0 && ctt != ctf) {
-                                ccm_triggerProgressiveOperation(
-                                    CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
-                                    [
+                                new ConcreteProgressiveOperation({
+                                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
+                                    data: [
                                         {'name': 'origCID', 'value': ctf},
                                         {'name': 'destCID', 'value': ctt},
                                         {'name': 'copyChildrenOnly', 'value': true},
-                                        {'name': 'multilingual', 'value': true},
                                         {name: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>, value: <?= json_encode($token->generate('/dialogs/page/drag_request'))?>}
                                     ],
-                                    <?= json_encode(t('Copy Locale Tree')) ?>,
-                                    function () {
+                                    title: "<?=t('Copy Locale Tree')?>",
+                                    onComplete: function() {
                                         window.location.href = <?=json_encode((string) $this->action('tree_copied')) ?>;
                                     }
-                                );
+                                });
                             } else {
                                 alert(<?= json_encode(t('You must choose two separate multilingual sections to copy from/to')) ?>);
                             }
@@ -123,20 +122,20 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                         $("#ccm-internationalization-rescan-tree").on('submit', function () {
                             var ctf = $('select[name=rescanLocale]').val();
                             if (ctf > 0) {
-                                ccm_triggerProgressiveOperation(
-                                    '<?=$view->action('rescan_locale')?>',
-                                    [
+                                new ConcreteProgressiveOperation({
+                                    url: '<?=$view->action('rescan_locale')?>',
+                                    data: [
                                         {'name': 'locale', 'value': ctf},
                                         {
                                             'name': 'ccm_token',
                                             'value': '<?=Core::make('token')->generate('rescan_locale')?>'
                                         }
                                     ],
-                                    "<?=t('Rescan Links')?>",
-                                    function () {
+                                    title: "<?=t('Rescan Links')?>",
+                                    onComplete: function() {
                                         window.location.href = "<?=$this->action('links_rescanned')?>";
                                     }
-                                );
+                                });
                             }
                             return false;
                         });

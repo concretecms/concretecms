@@ -13,7 +13,6 @@ class Accessibility extends DashboardPageController
         $this->set('show_titles', $config->get('concrete.accessibility.toolbar_titles'));
         $this->set('show_tooltips', $config->get('concrete.accessibility.toolbar_tooltips'));
         $this->set('increase_font_size', $config->get('concrete.accessibility.toolbar_large_font'));
-        $this->set('display_help', $config->get('concrete.accessibility.display_help_system'));
         $this->set('full_lisiting_thumbnails', ($config->get('concrete.file_manager.images.preview_image_size')=='full')?true:false);
         $this->set('preview_popover', $config->get('concrete.file_manager.images.preview_image_popover'));
     }
@@ -29,7 +28,6 @@ class Accessibility extends DashboardPageController
             $config->save('concrete.accessibility.toolbar_titles', (bool) $post->get('show_titles', false));
             $config->save('concrete.accessibility.toolbar_tooltips', (bool) $post->get('show_tooltips', false));
             $config->save('concrete.accessibility.toolbar_large_font', (bool) $post->get('increase_font_size', false));
-            $config->save('concrete.accessibility.display_help_system', (bool) $post->get('display_help', false));
             $config->save('concrete.file_manager.images.preview_image_size', ((bool)$post->get('full_lisiting_thumbnails', false))?'full':'small');
             $config->save('concrete.file_manager.images.preview_image_popover', (bool) $post->get('preview_popover', false));
             $this->flash('message', t('Successfully saved accessibility settings.'));

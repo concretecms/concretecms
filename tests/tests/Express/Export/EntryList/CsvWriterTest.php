@@ -16,8 +16,9 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use League\Csv\Writer;
 use Mockery as M;
+use Concrete\Tests\TestCase;
 
-class CsvWriterTest extends \PHPUnit_Framework_TestCase
+class CsvWriterTest extends TestCase
 {
 
     public function testCsvValueOrder()

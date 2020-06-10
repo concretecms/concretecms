@@ -2,13 +2,14 @@
 namespace Concrete\Core\Entity\Calendar;
 
 use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="CalendarEventVersionOccurrences")
  */
-class CalendarEventVersionOccurrence implements ObjectInterface
+class CalendarEventVersionOccurrence implements ObjectInterface, CategoryMemberInterface
 {
 
     public function getAttribute($ak, $mode = false)
@@ -124,5 +125,29 @@ class CalendarEventVersionOccurrence implements ObjectInterface
 
         return call_user_func_array([$this->occurrence, $name], $arguments);
     }
+    
+    public function getSummaryIdentifier()
+    {
+        return $this->getEvent()->getSummaryIdentifier();
+    }
 
+    public function getSummaryCategoryHandle(): string
+    {
+        return $this->getEvent()->getSummaryCategoryHandle();
+    }
+    
+    public function getSummaryTemplates(): array
+    {
+        return $this->getEvent()->getSummaryTemplates();
+    }
+    
+    public function getCustomSelectedSummaryTemplates(): array
+    {
+        return $this->getEvent()->getCustomSelectedSummaryTemplates();
+    }
+    
+    public function hasCustomSummaryTemplates(): bool
+    {
+        return $this->getEvent()->hasCustomSummaryTemplates();
+    }
 }

@@ -1,7 +1,11 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory;
 use Concrete\Core\Http\Response;
+use HtmlObject\Element;
 use HtmlObject\Traits\Tag;
 use PermissionKey;
 use Concrete\Core\User\User as ConcreteUser;
@@ -42,9 +46,9 @@ class UserInterface
     public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' pull-right';
+            $innerClass .= ' float-right';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' pull-left';
+            $innerClass .= ' float-left';
         }
 
         if (!$formID) {
@@ -72,9 +76,9 @@ class UserInterface
     public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' pull-right';
+            $innerClass .= ' float-right';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' pull-left';
+            $innerClass .= ' float-left';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {
@@ -98,9 +102,9 @@ class UserInterface
     public function buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' pull-right';
+            $innerClass .= ' float-right';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' pull-left';
+            $innerClass .= ' float-left';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {
@@ -206,30 +210,20 @@ class UserInterface
     }
 
     /**
-     * Shall we show the introductive help overlay?
+     * @deprecated There's no more an "Introduction" dialog: we now have a Help panel.
      *
-     * @return bool
+     * @return false
      */
     public function showHelpOverlay()
     {
-        $result = false;
-        if (Config::get('concrete.misc.help_overlay')) {
-            $app = Application::getFacadeApplication();
-            $u = $app->make(ConcreteUser::class);
-            $timestamp = $u->config('MAIN_HELP_LAST_VIEWED');
-            if (!$timestamp) {
-                $result = true;
-            }
-        }
-
-        return $result;
+        return false;
     }
 
+    /**
+     * @deprecated There's no more an "Introduction" dialog: we now have a Help panel.
+     */
     public function trackHelpOverlayDisplayed()
     {
-        $app = Application::getFacadeApplication();
-        $u = $app->make(ConcreteUser::class);
-        $u->saveConfig('MAIN_HELP_LAST_VIEWED', time());
     }
 
     /**
@@ -252,7 +246,12 @@ class UserInterface
         $app = Application::getFacadeApplication();
         $u = $app->make(ConcreteUser::class);
         if ($u->isRegistered()) {
-            Core::make('helper/concrete/dashboard')->getIntelligentSearchMenu();
+            if ($app->make(Dashboard::class)->canRead()) {
+                $navigationFactory = $app->make(FullNavigationFactory::class);
+                $navigation = $navigationFactory->createNavigation();
+                $cache = $app->make(NavigationCache::class);
+                $cache->set($navigation);
+            }
         }
     }
 
@@ -265,7 +264,7 @@ class UserInterface
     {
         $tcn = rand(0, getrandmax());
 
-        $html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
+        $html = '<ul class="nav-tabs nav-fill nav mb-3" id="ccm-tabs-' . $tcn . '">';
         $c = Page::getCurrentPage();
         foreach ($tabs as $t) {
             if (is_array($t)) {
@@ -289,32 +288,45 @@ class UserInterface
     }
 
     /**
-     * @param \Concrete\Core\Page\Page[] $tabs
-     * @param bool $jstabs
-     * @param string $callback
+     * @param $tabs
      *
+     * @param null|string $id
      * @return string
      */
-    public function tabs($tabs, $jstabs = true, $callback = 'ccm_activateTabBar')
+    public function tabs($tabs, $id = null)
     {
-        $tcn = rand(0, getrandmax());
+        $ul = new Element("ul");
+        $ul->addClass("nav");
+        $ul->addClass("nav-tabs mb-3 nav-fill");
+        $ul->setAttribute("role", "tablist");
 
-        $html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
-        foreach ($tabs as $t) {
-            $dt = $t[0];
-            $href = '#';
-            if (!$jstabs) {
-                $dt = '';
-                $href = $t[0];
+        if ($id !== null) {
+            $ul->setAttribute("id", $id);
+        }
+
+        foreach ($tabs as $tab) {
+            $a = new Element("a");
+            $a->addClass("nav-link");
+
+            if ((isset($tab[2]) && $tab[2])) {
+                $a->addClass("active");
             }
-            $html .= '<li class="' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '"><a href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
-        }
-        $html .= '</ul>';
-        if ($jstabs) {
-            $html .= '<script type="text/javascript">$(function() { ' . $callback . '($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
+
+            $a->setAttribute("href", "#" . $tab[0]);
+            $a->setAttribute("id", $tab[0] . "-tab");
+            $a->setAttribute("data-toggle", "tab");
+            $a->setAttribute("aria-controls", $tab[0]);
+            $a->setAttribute("role", "tab");
+            $a->setAttribute("aria-selected", (isset($tab[2]) && $tab[2]) ? "true" : "false");
+            $a->setValue($tab[1]);
+
+            $li = new Element("li");
+            $li->addClass("nav-item");
+            $li->appendChild($a);
+            $ul->appendChild($li);
         }
 
-        return $html;
+        return (string)$ul;
     }
 
     /**

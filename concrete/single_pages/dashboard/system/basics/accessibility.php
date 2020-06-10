@@ -20,12 +20,6 @@
             <?= t('Increase Toolbar Font Size') ?>
         </label>
     </div>
-    <div class="checkbox">
-        <label>
-            <input name="display_help" value="1" type="checkbox" <?= $display_help ? 'checked' : '' ?> />
-            <?= t('Enable Help') ?>
-        </label>
-    </div>
 
     <hr/>
 

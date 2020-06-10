@@ -231,18 +231,16 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 					jQuery.fn.dialog.showLoader();
 				},
 				success: function(r) {
-					ccm_parseJSON(r, function() {
-						jQuery.fn.dialog.closeTop();
-						jQuery.fn.dialog.hideLoader();
-						ccm_deactivateSearchResults('<?=$searchInstance?>');
-						ConcreteAlert.notify({
-						'message': ccmi18n.saveSpeedSettingsMsg,
-						'title': ccmi18n.properties
-						});
-						$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
-							ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
-						});
-					});
+                    jQuery.fn.dialog.closeTop();
+                    jQuery.fn.dialog.hideLoader();
+                    ccm_deactivateSearchResults('<?=$searchInstance?>');
+                    ConcreteAlert.notify({
+                    'message': ccmi18n.saveSpeedSettingsMsg,
+                    'title': ccmi18n.properties
+                    });
+                    $("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
+                        ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
+                    });
 				}
 			});
 		});

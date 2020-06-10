@@ -32,24 +32,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         }
     }
 
-    if (!$c->isEditMode()) {
-        echo $app->make('helper/concrete/ui/help')->displayHelpDialogLauncher();
-    }
-
-
-    if ($cih->showHelpOverlay()) {
-        echo '<div style="display: none">';
-        View::element('help/dialog/introduction');
-        echo '</div>';
-        $v = View::getInstance();
-        $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteHelpDialog().open(); });</script>');
-        $cih->trackHelpOverlayDisplayed();
-    }
-
     ?>
+    <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
-            <div class="ccm-mobile-menu-overlay" style="height: calc(100vh - 48px)">
+            <?php /* <div class="ccm-mobile-menu-overlay" style="height: calc(100vh - 48px)">
                 <div class="ccm-mobile-menu-main">
                     <ul class="ccm-mobile-menu-entries">
                         <?php
@@ -57,7 +44,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             if ($c->isEditMode()) {
                                 ?>
                                 <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit">
-                                    <i class="fa fa-pencil mobile-leading-icon"></i>
+                                    <i class="fas fa-pencil-alt mobile-leading-icon"></i>
                                     <a
                                         <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                         data-toolbar-action="check-in"
@@ -80,7 +67,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             } elseif ($permissions->canEditPageContents()) {
                                 ?>
                                 <li class="ccm-toolbar-page-edit">
-                                    <i class="fa fa-pencil mobile-leading-icon"></i>
+                                    <i class="fas fa-pencil-alt mobile-leading-icon"></i>
                                     <a
                                         <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                         data-toolbar-action="check-out"
@@ -237,8 +224,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             ?>
                             <li class="parent-ul">
                                 <?php
-                                $dashboardMenu = new \Concrete\Controller\Element\Navigation\DashboardMobileMenu();
-                                $dashboardMenu->render();
+                               // $dashboardMenu = new \Concrete\Controller\Element\Navigation\DashboardMobileMenu();
+                               // $dashboardMenu->render();
                                 ?>
                             </li>
                             <?php
@@ -251,12 +238,12 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     </ul>
                 </div>
             </div>
-            <ul class="ccm-toolbar-item-list">
-                <li class="ccm-logo pull-left"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
+            */ ?><ul class="ccm-toolbar-item-list">
+                <li class="ccm-logo float-left"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
                 <?php
                 if ($c->isMasterCollection()) {
                     ?>
-                    <li class="pull-left">
+                    <li class="float-left">
                         <a href="<?php echo URL::to('/dashboard/pages/types/output', $c->getPageTypeID()); ?>">
                             <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?php echo tc('toolbar', 'Exit Edit Defaults'); ?></span>
                          </a>
@@ -266,7 +253,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) {
                     if ($c->isEditMode()) {
                         ?>
-                        <li data-guide-toolbar-action="check-in" class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs">
+                        <li data-guide-toolbar-action="check-in" class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit float-left hidden-xs">
                             <a
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-in"
@@ -280,20 +267,20 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
                                 title="<?= t('Exit Edit Mode') ?>"
                             >
-                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
+                                <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Exit Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
                     } elseif ($permissions->canEditPageContents()) {
                         ?>
-                        <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit pull-left hidden-xs">
+                        <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit float-left hidden-xs">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
-                                <i class="fa fa-pencil"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
+                                <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
                             </a>
                         </li>
                         <?php
@@ -307,9 +294,9 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $permissions->canEditPagePermissions()
                         )
                     ) {
-                        $hasComposer = is_object($pagetype) && $cp->canEditPageContents();
+                        $hasComposer = isset($pagetype) && is_object($pagetype) && $cp->canEditPageContents();
                         ?>
-                        <li data-guide-toolbar-action="page-settings" class="pull-left hidden-xs">
+                        <li data-guide-toolbar-action="page-settings" class="float-left hidden-xs">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 href="#"
                                 data-launch-panel="page"
@@ -322,7 +309,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 }
                                 ?>
 
-                                <i class="fa fa-cog"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings"><?php
+                                <svg><use xlink:href="#icon-cog" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings"><?php
                                     if ($hasComposer) {
                                         ?><?= tc('toolbar', 'Composer') ?> / <?php
                                     }
@@ -335,14 +322,14 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
                 if ($cp->canEditPageContents() && (!$pageInUseBySomeoneElse)) {
                     ?>
-                    <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add pull-left hidden-xs">
+                    <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add float-left hidden-xs">
                         <?php if ($c->isEditMode()) { ?>
                             <a href="#" data-launch-panel="add-block" data-panel-url="<?= URL::to('/ccm/system/panels/add') ?>" title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
                             <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
-                                <i class="fa fa-plus"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
+                                <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
                     </li>
@@ -355,46 +342,44 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="pull-left hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="float-left hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
 
                 if ($cih->showWhiteLabelMessage()) {
                     ?>
-                    <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', $config->get('concrete.urls.concrete5')) ?></li>
+                    <li class="float-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', $config->get('concrete.urls.concrete5')) ?></li>
                     <?php
                 }
                 ?>
-                <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg<?=$c->isEditMode() ? ' ccm-toolbar-mobile-menu-button-active' : ''?>">
-                    <i class="fa fa-bars fa-2"></i>
-                </li>
                 <?php
                 if ($dh->canRead()) {
                     ?>
-                    <li data-guide-toolbar-action="dashboard" class="pull-right hidden-xs ">
+                    <li data-guide-toolbar-action="dashboard" class="float-right hidden-xs ">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
-                            <i class="fa fa-sliders"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
+                            <svg><use xlink:href="#icon-dashboard" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                         </a>
                     </li>
                     <?php
                 } else {
                     ?>
-                    <li class="pull-right hidden-xs">
+                    <li class="float-right hidden-xs">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?=URL::to('/login', 'logout', $valt->generate('logout'))?>" title="<?=t('Sign Out')?>">
                             <i class="fa fa-sign-out"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
                         </a>
                     </li>
                     <?php
-                }
+                } ?>
+                <?php
                 if ($sh->canViewSitemapPanel()) {
                     ?>
-                    <li data-guide-toolbar-action="sitemap" class="pull-right hidden-xs">
+                    <li data-guide-toolbar-action="sitemap" class="float-right hidden-xs">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
                            data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
                            data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                            title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
-                            <i class="fa fa-files-o"></i><span
+                            <svg><use xlink:href="#icon-sitemap" /></svg><span
                                     class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages') ?></span>
                         </a>
                     </li>
@@ -407,25 +392,32 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="pull-right hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="float-right hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
                 ?>
-                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search pull-right hidden-xs">
-                    <i class="fa fa-search"></i>
+                <li data-guide-toolbar-action="help" class="float-right hidden-xs">
+                    <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
+                       data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
+                       data-panel-url="<?= URL::to('/ccm/system/panels/help') ?>"
+                       title="<?= t('View help about the CMS.') ?>" data-launch-panel="help">
+                        <svg><use xlink:href="#icon-help" /></svg><span
+                                class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>
+                    </a>
+                </li>
+                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search float-right hidden-xs">
+                    <svg><use xlink:href="#icon-search" /></svg>
                     <input type="search" id="ccm-nav-intelligent-search" autocomplete="off" tabindex="1"/>
                 </li>
             </ul>
         </div>
         <?php
 
-        echo $dh->getIntelligentSearchMenu();
-
         if ($pageInUseBySomeoneElse) {
             $buttons = [];
             if ($canApprovePageVersions) {
-                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-xs btn-default">' . t('Force Exit Edit Mode') . '</a>';
+                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-xs btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
             }
 
             echo $cih->notify([
@@ -438,7 +430,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         } else {
             if ($c->getCollectionPointerID() > 0) {
                 $buttons = [];
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-default btn-xs">' . t('View/Edit Original') . '</a>';
+                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-secondary btn-xs">' . t('View/Edit Original') . '</a>';
                 if ($canApprovePageVersions) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
                     $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
@@ -526,5 +518,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         }
     ?>
     </div>
+
     <?php
 }

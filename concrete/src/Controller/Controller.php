@@ -3,6 +3,7 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Theme\Theme as PageTheme;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\View\View;
 

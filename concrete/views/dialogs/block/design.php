@@ -17,8 +17,6 @@ if (is_object($set)) {
 
 }
 
-$ag = \Concrete\Core\Http\ResponseAssetGroup::get();
-$ag->requireAsset('core/style-customizer');
 $pt = $c->getCollectionThemeObject();
 
 $blockClasses = $pt->getThemeBlockClasses();

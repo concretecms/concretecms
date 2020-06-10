@@ -44,7 +44,7 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',
     ];
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

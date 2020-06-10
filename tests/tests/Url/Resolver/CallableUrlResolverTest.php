@@ -11,7 +11,7 @@ class CallableUrlResolverTest extends ResolverTestCase
      */
     protected $urlResolver;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->urlResolver = new \Concrete\Core\Url\Resolver\CallableUrlResolver(function () {});
@@ -27,9 +27,12 @@ class CallableUrlResolverTest extends ResolverTestCase
         $this->assertEquals($this, $this->urlResolver->resolve([]));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Resolver not callable
+     */
     public function testFailSet()
     {
-        $this->setExpectedException('\\InvalidArgumentException', 'Resolver not callable');
         $this->urlResolver->setResolver('string');
     }
 }

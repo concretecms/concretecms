@@ -3,8 +3,10 @@
 namespace Concrete\Block\Youtube;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btYouTube';
     protected $btInterfaceWidth = '400';
@@ -32,6 +34,13 @@ class Controller extends BlockController
         if ($this->vWidth || $this->vWidth) {
             $this->set('sizing', 'fixed');
         }
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::VIDEO
+        ];
     }
 
     public function view()
