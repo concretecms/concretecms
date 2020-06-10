@@ -1,3 +1,41 @@
+# 8.5.4
+
+## Bug Fixes
+
+* Fixing update errors that can happen (Update causes exception): https://github.com/concrete5/concrete5/issues/8729 (thanks mlocati)
+* 8.5.3 incorrectly enabled multisite extensions that aren’t ready until version 9. These are disabled in 8.5.4.
+* Fix certain occasions where editing pages would result in composer being unable to load blocks. Fixes error “Unable to load block into composer” (Note: this will fix the issue for pages going forward, but existing pages with this error will not be resolved.)
+
+## Additional Functionality Present in 8.5.3 not described in previous release notes
+
+### New Features (Note: some of these are present in 8.5.3)
+
+* Added the ability to copy, paste, import and export style customizer settings at the page level (thanks mlocati)
+* Added new public identifier property to express entries; you can use this identifier to relate entries to each other, or within custom API requests in such a way that it can’t be guessed.
+* Added a new Group custom attribute type for use with Express.
+* Added the ability to specify file storage locations at the file folder level (thanks marvinde)
+* Added the ability to send private messages to all users in a specific group.
+* CSV files exported from Express objects now containing association data.
+* Added the ability to show/hide survey results in the survey block.
+* Added a console command to export express entities.
+* Added the ability to require associations be selected in Express forms.
+* Running the reindex search all function will now reindex all Express entities and entries as well.
+
+### Behavioral Improvements (Note: some of these are present in 8.5.3)
+
+* Improvements to code quality, speed and efficiency (thanks mlocati)
+* Improvements to file importer code quality, better sanitization of problematic SVGs on upload. (thanks mlocati)
+* Much improved address attribute logic and presentation for non North American countries/provinces/states – see https://github.com/concrete5/concrete5/issues/7943 (thanks ahukkanen)
+* We now refresh the file manager after changing properties (thanks marvinde)
+
+
+### Developer Improvements (Note: some of these are present in 8.5.3)
+
+* Added coding style guideline sniffer using phpcs directly into the concrete5 console (thanks mlocati)
+* Refactored file importer, added support for pre and post processors (thanks mlocati)
+* Generalizes IP Blocking, making it easier for developers to add support for blocking IPs based on custom actions (thanks mlocati)
+* Cleanup and improvements to the c5:package:pack command (thanks mlocati)
+
 # 8.5.3
 
 ## New Features
