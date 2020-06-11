@@ -249,7 +249,6 @@ $file = $fileVersion->getFile();
                 }
             }
             ?>
-            <div class="text-muted"><i style="color:#ff0;background-color:#f00"><?= t('For debugging only, this is the complete URL to the source file.') ?></i></div>
         </dd>
     </dl>
 </section>
