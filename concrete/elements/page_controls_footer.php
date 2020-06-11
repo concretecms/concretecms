@@ -417,7 +417,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         if ($pageInUseBySomeoneElse) {
             $buttons = [];
             if ($canApprovePageVersions) {
-                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-xs btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
+                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
             }
 
             echo $cih->notify([
@@ -430,10 +430,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         } else {
             if ($c->getCollectionPointerID() > 0) {
                 $buttons = [];
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-secondary btn-xs">' . t('View/Edit Original') . '</a>';
+                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-secondary btn-sm">' . t('View/Edit Original') . '</a>';
                 if ($canApprovePageVersions) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
-                    $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
+                    $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-sm btn-danger">' . t('Remove Alias') . '</a>';
                 }
                 echo $cih->notify([
                     'title' => t('Page Alias.'),
@@ -483,7 +483,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 if (!isset($appLabel) || !$appLabel) {
                                     $appLabel = t('Approve Version');
                                 }
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
+                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary">' . $appLabel . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Page is Pending Approval.'),
@@ -501,8 +501,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
                             $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '"> ' . t('Publish Now') . '</a>';
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=cancel-schedule' . $token . '"> ' . t('Cancel Scheduled Publish') . '</a>';
+                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
+                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=cancel-schedule' . $token . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Publish Pending.'),

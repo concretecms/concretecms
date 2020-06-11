@@ -382,8 +382,6 @@ class UserInterface
         // overwrite all the defaults with the arguments
         $arguments = array_merge($defaults, $arguments);
 
-        $arguments['addclass'] .= ' ccm-ui';
-
         $text = '';
 
         if ($arguments['form']) {
@@ -394,14 +392,14 @@ class UserInterface
 
         if (count($arguments['buttons']) > 0) {
             $text .= '<div class="ccm-notification-inner-buttons">';
-            if (1 == count($arguments['buttons'])) {
+            if (count($arguments['buttons']) === 1) {
                 $singleButton = $arguments['buttons'][0];
                 if ($singleButton instanceof Tag) {
-                    $singleButton->addClass('btn btn-xs btn-default');
+                    $singleButton->addClass('btn btn-default');
                 }
                 $text .= '<div>' . $singleButton . '</div>';
             } else {
-                $text .= '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . ' <span class="caret"></span></button><ul class="dropdown-menu">';
+                $text .= '<div class="btn-group"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><ul class="dropdown-menu">';
                 foreach ($arguments['buttons'] as $button) {
                     $text .= '<li>' . $button . '</li>';
                 }
@@ -416,11 +414,11 @@ class UserInterface
 
         $arguments['text'] = $text;
 
-        unset($arguments['buttons']);
+        unset($arguments['buttons'], $arguments['form']);
         $string = json_encode($arguments);
 
         $content = '<script type="text/javascript">$(function() {';
-        $content .= 'ConcreteNotificationsBox.notify(' . $string . ');';
+        $content .= 'ConcretePageNotification.notify(' . $string . ');';
         $content .= '});</script>';
 
         return $content;
