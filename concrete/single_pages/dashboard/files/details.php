@@ -21,6 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string $thumbnail
  * @var Concrete\Core\Entity\Attribute\Key\FileKey[] $attributeKeys
  * @var Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord[] $usageRecords
+ * @var Concrete\Core\Entity\File\DownloadStatistics[][] $recentDownloads
  */
 //output_vars(get_defined_vars(), isset($this) ? $this : null);
 $file = $fileVersion->getFile();
@@ -165,29 +166,28 @@ $file = $fileVersion->getFile();
         <dt><?= t('Most Recent Downloads') ?></dt>
         <dd>
             <?php
-            $downloads = $file->getDownloadStatistics(3);
-            if ($downloads === []) {
+            if ($recentDownloads === []) {
                 ?><i><?= t('No downloads') ?></i><?php
             } else {
-                foreach ($downloads as $download) {
+                foreach ($recentDownloads as $recentDownload) {
                     ?>
                     <div class="row ccm-file-manager-details-download">
                         <div class="col-md-4">
                             <?php
-                            if ($download['uID']) {
-                                $downloader = User::getByUserID($download['uID']);
+                            if ($recentDownload->getDownloaderID() === null) {
+                                ?><i><?= t('Guest') ?></i><?php
+                            } else {
+                                $downloader = User::getByUserID($recentDownload->getDownloaderID());
                                 if ($downloader && $downloader->isRegistered()) {
                                     echo h($downloader->getUserName());
                                 } else {
-                                    ?><i><?= t('Deleted user (ID: %s)', $download['uID']) ?></i><?php
+                                    ?><i><?= t('Deleted user (ID: %s)', $recentDownload->getDownloaderID()) ?></i><?php
                                 }
-                            } else {
-                                ?><i><?= t('Guest') ?></i><?php
                             }
                             ?>
                         </div>
-                        <div class="col-md-4"><?= h($date->formatPrettyDateTime($download['timestamp'], true)) ?></div>
-                        <div class="col-md-4"><?= t('Version %s', $download['fvID']) ?></div>
+                        <div class="col-md-4"><?= h($date->formatPrettyDateTime($recentDownload->getDownloadDateTime(), true)) ?></div>
+                        <div class="col-md-4"><?= t('Version %s', $recentDownload->getFileVersion()) ?></div>
                     </div>
                     <?php
                 }

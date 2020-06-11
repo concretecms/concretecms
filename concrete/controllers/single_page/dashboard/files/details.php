@@ -3,6 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Attribute\Category\FileCategory;
+use Concrete\Core\Entity\File\DownloadStatistics;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
@@ -37,7 +38,8 @@ class Details extends DashboardPageController
         $this->configurePageTitle($fileVersion);
         $this->set('thumbnail', $fileVersion->getDetailThumbnailImage());
         $this->set('attributeKeys', $this->app->make(FileCategory::class)->getList());
-        $this->set('usageRecords', $this->getUsageRecorrds($fileVersion->getFile()));
+        $this->set('usageRecords', $this->getUsageRecords($fileVersion->getFile()));
+        $this->set('recentDownloads', $this->getRecentDownloads($fileVersion->getFile()));
     }
 
     public function rescan($fID = '')
@@ -114,7 +116,7 @@ class Details extends DashboardPageController
      *
      * @return \Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord[]
      */
-    protected function getUsageRecorrds(File $file): array
+    protected function getUsageRecords(File $file): array
     {
         $em = $this->app->make(EntityManagerInterface::class);
         $repo = $em->getRepository(FileUsageRecord::class);
@@ -128,5 +130,26 @@ class Details extends DashboardPageController
         ksort($dictionary);
 
         return array_values($dictionary);
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\File\File $file
+     *
+     * @return \Concrete\Core\Entity\File\DownloadStatistics[]
+     */
+    protected function getRecentDownloads(File $file, int $maxRecords = 20): array
+    {
+        $em = $this->app->make(EntityManagerInterface::class);
+        $qb = $em->createQueryBuilder()
+            ->from(DownloadStatistics::class, 'ds')
+            ->select('ds')
+            ->andWhere($em->getExpressionBuilder()->eq('ds.file', ':file'))
+            ->orderBy('ds.downloadDateTime', 'DESC')
+        ;
+        if ($maxRecords > 0) {
+            $qb->setMaxResults($maxRecords);
+        }
+
+        return $qb->getQuery()->execute(['file' => $file]);
     }
 }
