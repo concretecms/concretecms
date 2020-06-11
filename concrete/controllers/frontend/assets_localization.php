@@ -127,6 +127,7 @@ var ccmi18n = ' . json_encode([
     'emptyArea' => t('Empty %s Area', '<%- area_handle %>'),
     'fullArea' => t('This area is full!'),
     'progressiveOperationLoading' => t('Determining items remaining...'),
+    'notifications' => t('Notifications'),
 ]) . ';
 var ccmi18n_editor = ' . json_encode([
     'insertLinkToFile' => t('Insert Link to File'),
