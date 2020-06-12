@@ -142,7 +142,7 @@ if ($this->controller->getTask() == 'translate_po') {
                                 <td></td>
                                 <?php
                             } else {
-                                ?><td><a href="<?php echo $this->action('translate_po', $pc->getCollectionID()); ?>" class="icon-link"><i class="fa fa-pencil"></i></a></td><?php
+                                ?><td><a href="<?php echo $this->action('translate_po', $pc->getCollectionID()); ?>" class="icon-link"><i class="fas fa-pencil-alt"></i></a></td><?php
                             } ?>
                         </tr>
                         <?php
