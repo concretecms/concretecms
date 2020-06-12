@@ -17,11 +17,24 @@ class CalendarEventConfiguration extends Configuration
      */
     protected $calendar;
 
-    /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    protected $topicTreeNodeID = 0;
+    /** @ORM\Embedded(class = "\Concrete\Core\Entity\Search\Query") */
+    protected $query;
 
+    /**
+     * @return \Concrete\Core\Entity\Search\Query
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @param mixed $query
+     */
+    public function setQuery($query): void
+    {
+        $this->query = $query;
+    }
 
     /**
      * @return mixed
@@ -39,21 +52,6 @@ class CalendarEventConfiguration extends Configuration
         $this->calendar = $calendar;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTopicTreeNodeID()
-    {
-        return $this->topicTreeNodeID;
-    }
-
-    /**
-     * @param mixed $topicTreeNodeID
-     */
-    public function setTopicTreeNodeID($topicTreeNodeID)
-    {
-        $this->topicTreeNodeID = $topicTreeNodeID;
-    }
 
 
 

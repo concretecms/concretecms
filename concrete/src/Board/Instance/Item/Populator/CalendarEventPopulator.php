@@ -12,6 +12,7 @@ use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Page\Search\Field\Field\SiteField;
 use Doctrine\ORM\EntityManager;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -48,9 +49,14 @@ class CalendarEventPopulator extends AbstractPopulator
         $list = new EventOccurrenceList();
         $list->filterByCalendar($calendar);
 
-        $treeNodeID = $configuration->getTopicTreeNodeID();
-        if ($treeNodeID) {
-            $list->filterByTopic($treeNodeID);
+        $query = $configuration->getQuery();
+        if ($query) {
+            $fields = $query->getFields();
+            if ($fields) {
+                foreach ($fields as $field) {
+                    $field->filterList($list);
+                }
+            }
         }
 
         $future = $this->getPopulationDayIntervalFutureDatetime($dataSource, $instance);
