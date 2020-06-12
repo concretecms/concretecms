@@ -10,8 +10,9 @@
         </field>
     </table>
     <table name="btGalleryEntries">
-        <field name="id" type="integer">
+        <field name="eID" type="integer">
             <unsigned/>
+            <autoincrement/>
             <key/>
         </field>
         <field name="bID" type="integer">
@@ -21,6 +22,25 @@
             <unsigned/>
         </field>
         <field name="fID" type="integer">
+            <unsigned/>
+        </field>
+    </table>
+    <table name="btGalleryEntryDisplayChoices">
+        <field name="dcID" type="integer">
+            <unsigned/>
+            <autoincrement/>
+            <key/>
+        </field>
+        <field name="entryID" type="integer">
+            <unsigned/>
+        </field>
+        <field name="bID" type="integer">
+            <unsigned/>
+        </field>
+        <field name="value" type="string" size="255">
+            <unsigned/>
+        </field>
+        <field name="dcKey" type="string" size="255">
             <unsigned/>
         </field>
     </table>

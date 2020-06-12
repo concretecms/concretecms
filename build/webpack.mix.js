@@ -64,7 +64,7 @@ mix
 /**
  * Build Block Components
  */
-mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/view.js');
+mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js');
 
 
 /**
