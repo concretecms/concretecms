@@ -10,6 +10,7 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
@@ -150,6 +151,7 @@ class Statistics extends Controller
             'id' => $record->getID(),
             'dt' => $date->formatPrettyDateTime($record->getDownloadDateTime(), true, true),
             'v' => $record->getFileVersion(),
+            'p' => $record->getRelatedPageID() ? (string) Page::getCollectionPathFromID($record->getRelatedPageID()) : null,
         ];
         if ($record->getDownloaderID()) {
             $userInfo = $userInfoRepository->getByID($record->getDownloaderID());

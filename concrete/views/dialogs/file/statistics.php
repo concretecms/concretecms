@@ -31,6 +31,7 @@
                         <template v-else-if="typeof record.u === 'string'">{{ record.u }}</template>
                         <i v-else><?= t('Guest') ?></i>
                     </td>
+                    <td>{{ record.p }}</td>
                 </tr>
             </tbody>
         </table>
