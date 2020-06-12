@@ -19,8 +19,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Details extends DashboardPageController
 {
-    protected const DOWNLOADSTATS_PAGESIZE = 3;
-
     public function view($fID = '')
     {
         try {
@@ -139,7 +137,7 @@ class Details extends DashboardPageController
      *
      * @return \Concrete\Core\Entity\File\DownloadStatistics[]
      */
-    protected function getRecentDownloads(File $file, int $maxRecords = 20): array
+    protected function getRecentDownloads(File $file, int $maxRecords = 5): array
     {
         $em = $this->app->make(EntityManagerInterface::class);
         $qb = $em->createQueryBuilder()
