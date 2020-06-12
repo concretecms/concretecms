@@ -4,7 +4,6 @@ namespace Concrete\Core\Navigation\Breadcrumb\Dashboard;
 
 use Concrete\Core\Navigation\Breadcrumb\BreadcrumbInterface;
 use Concrete\Core\Navigation\Item\ItemInterface;
-use Concrete\Core\Navigation\self;
 
 class DashboardBreadcrumb implements BreadcrumbInterface
 {
