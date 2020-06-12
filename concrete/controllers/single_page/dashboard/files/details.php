@@ -11,6 +11,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Rescanner;
 use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -92,7 +93,8 @@ class Details extends DashboardPageController
     protected function configureBreadcrumb(Version $fileVersion): void
     {
         $resolverManager = $this->app->make(ResolverManagerInterface::class);
-        $breadcrumb = $this->createBreadcrumb();
+        $factory = $this->createBreadcrumbFactory();
+        $breadcrumb = $factory->getBreadcrumb(Page::getByPath('/dashboard/files/search'));
         $items = [new Item('#', $fileVersion->getFileName())];
         $folder = $fileVersion->getFile()->getFileFolderObject();
         while ($folder instanceof FileFolder && ($parentFolder = $folder->getTreeNodeParentObject()) instanceof FileFolder) {
