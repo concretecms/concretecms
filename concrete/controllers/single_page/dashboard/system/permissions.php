@@ -11,6 +11,6 @@ class Permissions extends DashboardPageController
      */
     public function view()
     {
-        $this->redirect('/dashboard/system/permissions/site');
+        return $this->buildRedirect('/dashboard/system/permissions/site');
     }
 }
