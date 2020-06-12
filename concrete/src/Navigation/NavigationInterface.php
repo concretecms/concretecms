@@ -21,4 +21,13 @@ interface NavigationInterface
      * @return \Concrete\Core\Navigation\Item\ItemInterface[]
      */
     public function getItems(): array;
+
+    /**
+     * Replace all the existing items with new ones.
+     *
+     * @param \Concrete\Core\Navigation\Item\ItemInterface[] $items
+     *
+     * @return $this
+     */
+    public function setItems(array $items): self;
 }

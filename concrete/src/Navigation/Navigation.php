@@ -44,9 +44,9 @@ class Navigation implements NavigationInterface, JsonSerializable
     }
 
     /**
-     * @param \Concrete\Core\Navigation\Item\ItemInterface[] $items
+     * {@inheritdoc}
      *
-     * @return $this
+     * @see \Concrete\Core\Navigation\NavigationInterface::setItems()
      */
     public function setItems(array $items): self
     {
