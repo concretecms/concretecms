@@ -41,7 +41,7 @@ $config = $app->make('config');
 					<div class="checkbox">
 						<label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, $config->get('concrete.log.spam'))?> <?=t('Log entries marked as spam.')?></label>
 					</div>
-					<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
+					<span class="form-text"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
 				</div>
 
 				<div class="form-group">

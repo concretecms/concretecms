@@ -44,7 +44,10 @@ $form = Loader::helper('form');
     
     <fieldset>
     <legend style="margin-bottom: 0px"><?=t('Edit Access')?></legend>
-        <span class="help-block"><?=t('Choose which users and groups may edit your site. Note: These settings can be overridden on specific pages.')?></span>
+        <span class="form-text">
+            <?=t('Choose which users and groups may edit your site. Note: These settings can be overridden on specific pages.')?>
+        </span>
+        <div class="form-group">
         <?php foreach ($gArray as $g):?>
             <div class="checkbox">
                 <label>
@@ -53,6 +56,7 @@ $form = Loader::helper('form');
                 </label>
             </div>
         <?php endforeach ?>
+        </div>
     </fieldset>
     
     <div class="ccm-dashboard-form-actions-wrapper">
