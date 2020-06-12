@@ -86,13 +86,13 @@ $file = $fileVersion->getFile();
         href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/properties?fID=' . $file->getFileID()])) ?>"
     ><?= t('Edit') ?></a>
     <h3><?= t('Attributes') ?></h3>
-    <dl class="row">
-        <dt class="col-md-3"><?= t('Title') ?></dt>
-        <dd class="col-md-9"><?= (string) $fileVersion->getTitle() === '' ? '<i>' . t('No title') . '</i>' : h($fileVersion->getTitle()) ?></dd>
-        <dt class="col-md-3"><?= t('Description') ?></dt>
-        <dd class="col-md-9"><?= (string) $fileVersion->getDescription() === '' ? '<i>' . t('No description') . '</i>' : nl2br(h($fileVersion->getDescription())) ?></dd>
-        <dt class="col-md-3"><?= t('Tags') ?></dt>
-        <dd class="col-md-9">
+    <dl class="ccm-file-manager-details-attributes">
+        <dt><?= t('Title') ?></dt>
+        <dd><div><?= (string) $fileVersion->getTitle() === '' ? '<i>' . t('No title') . '</i>' : h($fileVersion->getTitle()) ?></div></dd>
+        <dt><?= t('Description') ?></dt>
+        <dd><div><?= (string) $fileVersion->getDescription() === '' ? '<i>' . t('No description') . '</i>' : nl2br(h($fileVersion->getDescription())) ?></div></dd>
+        <dt><?= t('Tags') ?></dt>
+        <dd>
             <?php
             $tags = preg_split('/\s*\n\s*/', (string) $fileVersion->getTags(), -1, PREG_SPLIT_NO_EMPTY);
             if ($tags === []) {
@@ -100,13 +100,15 @@ $file = $fileVersion->getFile();
                 <i><?= t('No tags') ?></i>
                 <?php
             } else {
-                echo implode(', ', $tags);
+                ?>
+                <sapn><?= implode(', ', $tags) ?></span>
+                <?php
             }
             ?>
             <div class="text-muted"><i><?= t('Search for files with these tags using the advanced search link in the file manager.') ?></i></div>
         </dd>
-        <dt class="col-md-3"><?= t('Sets') ?></dt>
-        <dd class="col-md-9">
+        <dt><?= t('Sets') ?></dt>
+        <dd>
             <?php
             $fileSets = $file->getFileSets();
             if ($fileSets === []) {
@@ -120,7 +122,9 @@ $file = $fileVersion->getFile();
                     },
                     $fileSets
                 );
-                echo implode(', ', $fileSetNames);
+                ?>
+                <sapn><?= implode(', ', $fileSetNames) ?></sapn>
+                <?php
             }
             ?>
             <div class="text-muted"><i><?= t('You can add this file to many sets. Lots of image sliders/galleries use sets to determine what to display.') ?></i></div>
@@ -128,8 +132,8 @@ $file = $fileVersion->getFile();
         <?php
         foreach ($attributeKeys as $attributeKey) {
             ?>
-            <dt class="col-md-3"><?= $attributeKey->getAttributeKeyDisplayName() ?></dt>
-            <dd class="col-md-9">
+            <dt><?= $attributeKey->getAttributeKeyDisplayName() ?></dt>
+            <dd><div>
                 <?php
                 $attributeValue = $fileVersion->getAttributeValueObject($attributeKey);
                 if ($attributeValue === null) {
@@ -145,7 +149,7 @@ $file = $fileVersion->getFile();
                     echo (string) $attributeValue;
                 }
                 ?>
-            </dd>
+            </div></dd>
             <?php
         }
         ?>
@@ -156,7 +160,7 @@ $file = $fileVersion->getFile();
 
 <section>
     <h3><?= t('Statistics') ?></h3>
-    <dl>
+    <dl class="ccm-file-manager-details-statistics">
         <dt><?= t('Date Added') ?></dt>
         <dd>
             <?= t(/*%1$s is a user name, %2$s is a date/time*/'Added by %1$s on %2$s', h($fileVersion->getAuthorName()), h($date->formatPrettyDateTime($fileVersion->getDateAdded(), true))) ?>
@@ -169,29 +173,35 @@ $file = $fileVersion->getFile();
             if ($recentDownloads === []) {
                 ?><i><?= t('No downloads') ?></i><?php
             } else {
-                foreach ($recentDownloads as $recentDownload) {
-                    ?>
-                    <div class="row ccm-file-manager-details-download">
-                        <div class="col-md-4">
-                            <?php
-                            if ($recentDownload->getDownloaderID() === null) {
-                                ?><i><?= t('Guest') ?></i><?php
-                            } else {
-                                $downloader = User::getByUserID($recentDownload->getDownloaderID());
-                                if ($downloader && $downloader->isRegistered()) {
-                                    echo h($downloader->getUserName());
-                                } else {
-                                    ?><i><?= t('Deleted user (ID: %s)', $recentDownload->getDownloaderID()) ?></i><?php
-                                }
-                            }
-                            ?>
-                        </div>
-                        <div class="col-md-4"><?= h($date->formatPrettyDateTime($recentDownload->getDownloadDateTime(), true)) ?></div>
-                        <div class="col-md-4"><?= t('Version %s', $recentDownload->getFileVersion()) ?></div>
-                    </div>
-                    <?php
-                }
                 ?>
+                <table class="table table-sm table-borderless ccm-file-manager-details-download">
+                    <tbody>
+                        <?php
+                        foreach ($recentDownloads as $recentDownload) {
+                            ?>
+                        	<tr>
+                                <td>
+                                    <?php
+                                    if ($recentDownload->getDownloaderID() === null) {
+                                        ?><i><?= t('Guest') ?></i><?php
+                                    } else {
+                                        $downloader = User::getByUserID($recentDownload->getDownloaderID());
+                                        if ($downloader && $downloader->isRegistered()) {
+                                            echo h($downloader->getUserName());
+                                        } else {
+                                            ?><i><?= t('Deleted user (ID: %s)', $recentDownload->getDownloaderID()) ?></i><?php
+                                        }
+                                    }
+                                    ?>
+                                </td>
+                                <td><?= h($date->formatPrettyDateTime($recentDownload->getDownloadDateTime(), true)) ?></td>
+                                <td><?= t('Version %s', $recentDownload->getFileVersion()) ?></td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
                 <a
                     class="btn btn-secondary dialog-launch"
                     dialog-title="<?= t('Download Statistics') ?>"
@@ -212,41 +222,48 @@ $file = $fileVersion->getFile();
                 <?php
             } else {
                 ?>
-                <div class="row ccm-file-manager-details-download">
-                    <div class="col-md-3"><?= t('Page ID') ?></div>
-                    <div class="col-md-3"><?= t('Version') ?></div>
-                    <div class="col-md-3"><?= t('Handle') ?></div>
-                    <div class="col-md-3"><?= t('Location') ?></div>
-                </div>
-                <?php
-                foreach ($usageRecords as $usageRecord) {
-                    $page = Page::getByID($usageRecord->getCollectionId(), $usageRecord->getCollectionVersionId());
-                    if (!$page || $page->isError()) {
-                        $page = null;
-                    }
-                    $page->path
-                    ?>
-                    <div class="row ccm-file-manager-details-download">
-                        <div class="col-md-3"><strong><?= $usageRecord->getCollectionId() ?></strong></div>
-                        <div class="col-md-3"><strong><?= $usageRecord->getCollectionVersionId() ?></strong></div>
-                        <div class="col-md-3"><?= $page === null ? '<i>' . t('n/a') . '</i>' : '<strong>' . h($page->getCollectionHandle()) . '</strong>' ?></div>
-                        <div class="col-md-3">
-                            <?php
-                            if ($page === null) {
-                                ?>
-                                <i><?= t('n/a') ?></i>
-                                <?php
-                            } else {
-                                $pagePath = '/' . ltrim((string) $page->getCollectionPath(), '/');
-                                ?>
-                                <a href="<?= $resolverManager->resolve([$page]) ?>"><strong><?= h($pagePath) ?></strong></a>
-                                <?php
+                <table class="table table-sm table-borderless ccm-file-manager-details-usage">
+                    <thead>
+                        <tr>
+                            <th><?= t('Page ID') ?></th>
+                            <th><?= t('Version') ?></th>
+                            <th><?= t('Handle') ?></th>
+                            <th><?= t('Location') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($usageRecords as $usageRecord) {
+                            $page = Page::getByID($usageRecord->getCollectionId(), $usageRecord->getCollectionVersionId());
+                            if (!$page || $page->isError()) {
+                                $page = null;
                             }
                             ?>
-                        </div>
-                    </div>
-                    <?php
-                }
+                            <tr>
+                                <td><?= $usageRecord->getCollectionId() ?></td>
+                                <td><?= $usageRecord->getCollectionVersionId() ?></strong></td>
+                                <td><?= $page === null ? '<i>' . t('n/a') . '</i>' : '<strong>' . h($page->getCollectionHandle()) . '</strong>' ?></td>
+                                <td>
+                                    <?php
+                                    if ($page === null) {
+                                        ?>
+                                        <i><?= t('n/a') ?></i>
+                                        <?php
+                                    } else {
+                                        $pagePath = '/' . ltrim((string) $page->getCollectionPath(), '/');
+                                        ?>
+                                        <a href="<?= $resolverManager->resolve([$page]) ?>"><strong><?= h($pagePath) ?></strong></a>
+                                        <?php
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <?php
             }
             ?>
         </dd>
@@ -269,7 +286,7 @@ $file = $fileVersion->getFile();
     }
     ?>
     <h3><?= t('Storage') ?></h3>
-    <dl>
+    <dl class="ccm-file-manager-details-storage">
         <dt><?= t('Tracked URL') ?></dt>
         <dd>
             <?= h($fileVersion->getDownloadURL()) ?>
