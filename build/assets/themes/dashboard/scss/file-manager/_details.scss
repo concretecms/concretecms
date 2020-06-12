@@ -19,7 +19,15 @@
   }
 }
 
+@mixin ccm-file-manager-details-dl {
+  >dd {
+    max-width: 100%;
+    word-break: break-word;
+  }
+}
+
 @mixin ccm-file-manager-details-dl-horizontal {
+  @include ccm-file-manager-details-dl;
   display: flex;
   flex-wrap: wrap;
   >dt, >dl {
@@ -47,6 +55,7 @@
   }
 }
 @mixin ccm-file-manager-details-dl-vertical {
+  @include ccm-file-manager-details-dl;
   >dt {
     font-weight: bold;
   }
@@ -75,7 +84,7 @@
 }
 
 .ccm-file-manager-details-download, .ccm-file-manager-details-usage {
-  max-width: 600px;
+  width: auto;
   margin-bottom: 0.5rem;
 }
 
