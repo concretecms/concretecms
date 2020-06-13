@@ -96,7 +96,9 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getItemList()
     {
-        return new EntryList($this->entity);
+        $list = new EntryList($this->entity);
+        $list->setupAutomaticSorting();
+        return $list;
     }
 
     public function getDefaultColumnSet()
