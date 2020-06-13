@@ -26,7 +26,7 @@ class Navigation implements NavigationInterface, JsonSerializable
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::add()
      */
-    public function add(ItemInterface $item): self
+    public function add(ItemInterface $item): NavigationInterface
     {
         $this->items[] = $item;
 
@@ -48,7 +48,7 @@ class Navigation implements NavigationInterface, JsonSerializable
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::setItems()
      */
-    public function setItems(array $items): self
+    public function setItems(array $items): NavigationInterface
     {
         $this->items = $items;
 

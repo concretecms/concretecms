@@ -4,6 +4,7 @@ namespace Concrete\Core\Navigation\Breadcrumb\Dashboard;
 
 use Concrete\Core\Navigation\Breadcrumb\BreadcrumbInterface;
 use Concrete\Core\Navigation\Item\ItemInterface;
+use Concrete\Core\Navigation\NavigationInterface;
 
 class DashboardBreadcrumb implements BreadcrumbInterface
 {
@@ -17,7 +18,7 @@ class DashboardBreadcrumb implements BreadcrumbInterface
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::add()
      */
-    public function add(ItemInterface $item): self
+    public function add(ItemInterface $item): NavigationInterface
     {
         $this->items[] = $item;
 
@@ -39,7 +40,7 @@ class DashboardBreadcrumb implements BreadcrumbInterface
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::setItems()
      */
-    public function setItems(array $items): self
+    public function setItems(array $items): NavigationInterface
     {
         $this->items = [];
         foreach ($items as $item) {
