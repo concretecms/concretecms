@@ -1,6 +1,7 @@
 <?php
 use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\User\User;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Support\Facade\Application;
@@ -190,6 +191,7 @@ if (!empty($alternateHreflangTags)) {
     var CCM_APPLICATION_URL = <?= json_encode(rtrim((string) $app->make('url/canonical'), '/'), JSON_UNESCAPED_SLASHES) ?>;
     var CCM_REL = <?= json_encode((string) $app->make('app_relative_path'), JSON_UNESCAPED_SLASHES) ?>;
     var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale(), JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_UID = <?= $app->make(User::class)->getUserID() ?: 'null' ?>;
 </script>
 
 <?php
