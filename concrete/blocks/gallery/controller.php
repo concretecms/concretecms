@@ -33,12 +33,13 @@ class Controller extends BlockController
 
     public function add()
     {
+        //Manually adding images from the file manager.
         $entries = [
             0 => ['fID' => 1],
             1 => ['fID' => 2],
             2 => ['fID' => 3],
             3 => ['fID' => 4],
-            4 => ['fID' => 5]
+            5 => ['fID' => 5]
         ];
         $this->set('json', $this->getImages($entries));
     }
@@ -88,25 +89,9 @@ class Controller extends BlockController
         return $db->fetchAll("SELECT eID, fID FROM btGalleryEntries WHERE bID = ? ", [(int)$this->bID]);
     }
 
-    private function getDisplayOptions($entryID)
+    protected function getDisplayOptions($entryID)
     {
-        //We will be adding logic here, but for now we are hard coding the displayOptions
-        $displayOptions = [
-            "gallery-specific-options" => [
-                "value" => '',
-                "title" => 'Gallery Specific Options',
-                "type" => 'text'
-            ],
-            "size" => [
-                "value" => '',
-                "title" => 'Size',
-                "type" => 'select',
-                "options" => [
-                    "square" => 'Square Image',
-                    "default" => 'Keep Image Aspect Ratio'
-                ]
-            ]
-        ];
+        $displayOptions = $this->getImageDisplayOptions();
 
         if ($entryID) {
             /** @var \Concrete\Core\Database\Connection\Connection $db */
@@ -171,5 +156,30 @@ class Controller extends BlockController
             }
         }
         return $images;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getImageDisplayOptions()
+    {
+        //We will be adding logic here, but for now we are hard coding the displayOptions
+        $displayOptions = [
+            "gallery-specific-options" => [
+                "value" => '',
+                "title" => 'Gallery Specific Options',
+                "type" => 'text'
+            ],
+            "size" => [
+                "value" => '',
+                "title" => 'Size',
+                "type" => 'select',
+                "options" => [
+                    "square" => 'Square Image',
+                    "default" => 'Keep Image Aspect Ratio'
+                ]
+            ]
+        ];
+        return $displayOptions;
     }
 }
