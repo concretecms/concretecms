@@ -182,14 +182,14 @@ if (!empty($alternateHreflangTags)) {
 }
 ?>
 <script type="text/javascript">
-    var CCM_DISPATCHER_FILENAME = "<?php echo DIR_REL . '/' . DISPATCHER_FILENAME; ?>";
-    var CCM_CID = <?php echo $cID ? $cID : 0; ?>;
-    var CCM_EDIT_MODE = <?php echo $isEditMode ? 'true' : 'false'; ?>;
-    var CCM_ARRANGE_MODE = <?php echo $isArrangeMode ? 'true' : 'false'; ?>;
-    var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES; ?>";
-    var CCM_APPLICATION_URL = "<?php echo rtrim((string) $app->make('url/canonical'), '/'); ?>";
-    var CCM_REL = "<?php echo $app->make('app_relative_path'); ?>";
-    var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale()) ?>;
+    var CCM_DISPATCHER_FILENAME = <?= json_encode(DIR_REL . '/' . DISPATCHER_FILENAME, JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_CID = <?= (int) $cID ?>;
+    var CCM_EDIT_MODE = <?= $isEditMode ? 'true' : 'false' ?>;
+    var CCM_ARRANGE_MODE = <?= $isArrangeMode ? 'true' : 'false' ?>;
+    var CCM_IMAGE_PATH = <?= json_encode(ASSETS_URL_IMAGES, JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_APPLICATION_URL = <?= json_encode(rtrim((string) $app->make('url/canonical'), '/'), JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_REL = <?= json_encode((string) $app->make('app_relative_path'), JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale(), JSON_UNESCAPED_SLASHES) ?>;
 </script>
 
 <?php
