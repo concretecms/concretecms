@@ -5,15 +5,13 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Board\Command\AddCustomBlockToBoardCommand;
+use Concrete\Core\Board\Instance\Slot\Content\AvailableObjectCollectionFactory;
 use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
 use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
 use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
 use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollectionFactory;
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceItem;
-use Concrete\Core\Entity\Board\InstanceItemRepository;
-use Concrete\Core\Entity\Board\InstanceSlotRule;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
@@ -55,6 +53,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         $entityManager = $this->app->make(EntityManager::class);
         $contentPopulator = $this->app->make(ContentPopulator::class);
         $availableTemplateCollectionFactory = $this->app->make(AvailableTemplateCollectionFactory::class);
+        $availableObjectCollectionFactory = $this->app->make(AvailableObjectCollectionFactory::class);
         $renderer = $this->app->make(ContentRenderer::class);
 
         $instance = $this->getInstanceFromRequest();
@@ -68,25 +67,23 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
             $instance, $this->request->request->get('slot')
         );
 
-        $itemObjectGroups = $contentPopulator->createContentObjects($items);
-        $contentObjects = [];
-        foreach($itemObjectGroups as $itemObjectGroup) {
-            $contentObjects = array_merge($itemObjectGroup->getContentObjects(), $contentObjects);
-        }
-
         $options = [];
+        $itemObjectGroups = $contentPopulator->createContentObjects($items);
         foreach($templates as $template) {
-            foreach($contentObjects as $contentObject) {
-                $objectCollection = new ObjectCollection();
-                $objectCollection->addContentObject(1, $contentObject);
-                $options[] = [
-                    'template' => $template,
-                    'collection' => $objectCollection,
-                    'content' => $renderer->render($objectCollection, $template)
-                ];
+            $templateDriver = $template->getDriver();
+            if ($templateDriver->getTotalContentSlots() == count($itemObjectGroups)) {
+                $objectCollections = $availableObjectCollectionFactory
+                    ->getObjectCollectionsForTemplate($template, $itemObjectGroups);
+                foreach ($objectCollections as $objectCollection) {
+                    $options[] = [
+                        'template' => $template,
+                        'collection' => $objectCollection,
+                        'content' => $renderer->render($objectCollection, $template)
+                    ];
+                }
             }
-        }
 
+        }
         return new JsonResponse($options);
     }
 
