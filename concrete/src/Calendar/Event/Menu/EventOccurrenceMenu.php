@@ -36,7 +36,7 @@ class EventOccurrenceMenu extends PopoverMenu
                 t('Edit'), 640, 500
             ));
             $this->addItem(new DialogLinkItem(
-                \URL::to('/ccm/calendar/dialogs/event/summary_templates') . '?eventID=' . $occurrence->getEvent()->getID(),  t('Summary Templates'),
+                \URL::to('/ccm/calendar/dialogs/event/summary_templates') . '?versionOccurrenceID=' . $occurrence->getID(),  t('Summary Templates'),
                 t('Summary Templates'), '90%', '70%'
             ));
             if ($permissions->canCopyCalendarEvents()) {

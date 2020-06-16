@@ -4,6 +4,7 @@ namespace Concrete\Core\Summary\Data;
 use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\DataFieldInterface;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
+use Concrete\Core\Summary\SummaryObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;

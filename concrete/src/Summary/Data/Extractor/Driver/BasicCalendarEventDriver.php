@@ -2,7 +2,7 @@
 namespace Concrete\Core\Summary\Data\Extractor\Driver;
 
 use Carbon\Carbon;
-use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
+use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
@@ -12,6 +12,9 @@ use Concrete\Core\Summary\Data\Extractor\Driver\Traits\GetThumbnailTrait;
 use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\DatetimeDataFieldData;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
+use Concrete\Core\Summary\Data\Field\LazyEventOccurrenceEndDatetimeDataFieldData;
+use Concrete\Core\Summary\Data\Field\LazyEventOccurrenceLinkDataFieldData;
+use Concrete\Core\Summary\Data\Field\LazyEventOccurrenceStartDatetimeDataFieldData;
 use Doctrine\ORM\EntityManager;
 
 class BasicCalendarEventDriver implements DriverInterface
@@ -21,7 +24,7 @@ class BasicCalendarEventDriver implements DriverInterface
     use GetCategoriesTrait;
 
     /**
-     * @var LinkFormatter
+     * @var LinkFormatterInterface
      */
     protected $linkFormatter;
 
@@ -35,7 +38,7 @@ class BasicCalendarEventDriver implements DriverInterface
      */
     protected $repository;
 
-    public function __construct(EntityManager $entityManager, LinkFormatter $linkFormatter, Repository $repository)
+    public function __construct(EntityManager $entityManager, LinkFormatterInterface $linkFormatter, Repository $repository)
     {
         $this->entityManager = $entityManager;
         $this->linkFormatter = $linkFormatter;
@@ -86,14 +89,12 @@ class BasicCalendarEventDriver implements DriverInterface
             if ($description) {
                 $collection->addField(new DataField(FieldInterface::FIELD_DESCRIPTION, $description));
             }
-            $occurrence = $version->getOccurrences()[0];
-            if ($occurrence) {
-                $start = Carbon::createFromTimestamp($occurrence->getStart(), $mixed->getCalendar()->getTimezone());
-                $end = Carbon::createFromTimestamp($occurrence->getEnd(), $mixed->getCalendar()->getTimezone());
-                $collection->addField(new DataField(FieldInterface::FIELD_DATE, new DatetimeDataFieldData($start)));
-                $collection->addField(new DataField(FieldInterface::FIELD_DATE_START, new DatetimeDataFieldData($start)));
-                $collection->addField(new DataField(FieldInterface::FIELD_DATE_END, new DatetimeDataFieldData($end)));
-            }
+
+            $collection->addField(new DataField(FieldInterface::FIELD_LINK, new LazyEventOccurrenceLinkDataFieldData()));
+            $collection->addField(new DataField(FieldInterface::FIELD_DATE, new LazyEventOccurrenceStartDatetimeDataFieldData()));
+            $collection->addField(new DataField(FieldInterface::FIELD_DATE_START, new LazyEventOccurrenceStartDatetimeDataFieldData()));
+            $collection->addField(new DataField(FieldInterface::FIELD_DATE_END, new LazyEventOccurrenceEndDatetimeDataFieldData()));
+
             $thumbnail = $this->getThumbnailDataField($mixed);
             if ($thumbnail) {
                 $collection->addField($thumbnail);
