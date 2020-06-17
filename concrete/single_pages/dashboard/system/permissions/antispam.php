@@ -27,7 +27,7 @@ $config = $app->make('config');
 		<?php if (is_object($activeLibrary)) {
             if ($activeLibrary->hasOptionsForm()) {
                 if ($activeLibrary->getPackageID() > 0) {
-                    Loader::packageElement('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form', $activeLibrary->getPackageHandle());
+                    View::element('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form', $activeLibrary->getPackageHandle());
                 } else {
                     View::element('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form');
                 }

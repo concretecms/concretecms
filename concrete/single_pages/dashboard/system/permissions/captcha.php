@@ -24,7 +24,7 @@
 		<?php if (is_object($activeCaptcha)) {
     if ($activeCaptcha->hasOptionsForm()) {
         if ($activeCaptcha->getPackageID() > 0) {
-            Loader::packageElement('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
+            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
         } else {
             View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
         }
