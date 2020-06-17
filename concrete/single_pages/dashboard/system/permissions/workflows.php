@@ -57,7 +57,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 			
 			<div class="form-group">
 				<div class="input-group">
-          <div class="input-group-append"><?=$form->label('wftID', t('Type'), ['class'=>'input-group-text'])?></div>
+          <div class="input-group-prepend"><?=$form->label('wftID', t('Type'), ['class'=>'input-group-text'])?></div>
 					<?=$form->select('wftID', $types, ['class'=>'custom-select'])?>
 				</div>
 			</div>
