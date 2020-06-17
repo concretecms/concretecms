@@ -27,7 +27,7 @@ class Version20190509205043 extends AbstractMigration implements RepeatableMigra
         // Now we have to populate this. Let's bust out of the entity manager for performance purposes.
         $connection = $this->connection;
         $this->connection->transactional(function() use ($connection, $generator) {
-            $r = $connection->executeQuery('select exEntryID from ExpressEntityEntries');
+            $r = $connection->executeQuery('select exEntryID from ExpressEntityEntries where publicIdentifier is null');
             while ($row = $r->fetch()) {
                 $identifier = $generator->generate();
                 $connection->update(
