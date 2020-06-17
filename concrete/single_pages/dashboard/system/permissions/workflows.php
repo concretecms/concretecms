@@ -48,17 +48,17 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 			<legend><?=t('Add Workflow')?></legend>
 			
 			<div class="form-group">
-				<?=$form->label('wfName', t('Name'))?>
 				<div class="input-group">
+				  <div class="input-group-prepend"><?=$form->label('wfName', t('Name'), ['class'=>'input-group-text'])?></div>
 					<?=$form->text('wfName', $wfName)?>
-					<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+					<span class="input-group-append"><div class="input-group-text"><i class="fa fa-asterisk"></i></div></span>
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<?=$form->label('wftID', t('Type'))?>
 				<div class="input-group">
-					<?=$form->select('wftID', $types)?>
+          <div class="input-group-append"><?=$form->label('wftID', t('Type'), ['class'=>'input-group-text'])?></div>
+					<?=$form->select('wftID', $types, ['class'=>'custom-select'])?>
 				</div>
 			</div>
 

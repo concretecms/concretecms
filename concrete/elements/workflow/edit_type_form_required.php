@@ -14,10 +14,10 @@ $type = $workflow->getWorkflowTypeObject();
 <legend><?=t("Workflow Basics")?></legend>
 
 <div class="form-group">
-	<?=$form->label('wfName', t('Name'))?>
 	<div class="input-group">
+    <div class="input-group-prepend"><?=$form->label('wfName', t('Name'), ['class'=>'input-group-text'])?></div>
 		<?=$form->text('wfName', $wfName)?>
-		<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+		<span class="input-group-append"><div class="input-group-text"><i class="fa fa-asterisk"></i></div></span>
 	</div>
 </div>
 </fieldset>
