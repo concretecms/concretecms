@@ -1,8 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
-$form = Loader::helper('form');
-$ih = Loader::helper("concrete/ui");
-$valt = Loader::helper('validation/token');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$form = $app->make('helper/form');
+$ih = $app->make('helper/concrete/ui');
+$valt = $app->make('helper/validation/token');
 
 $wfName = $workflow->getWorkflowName();
 $type = $workflow->getWorkflowTypeObject();
@@ -23,8 +24,8 @@ $type = $workflow->getWorkflowTypeObject();
 
 <?php
 if ($type->getPackageID() > 0) {
-    @Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/edit_type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+    @View::element('workflow/types/' . $type->getWorkflowTypeHandle()  . '/edit_type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } else {
-    @Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/edit_type_form', array('type' => $type, 'workflow' => $workflow));
+    @View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/edit_type_form', array('type' => $type, 'workflow' => $workflow));
 }
 ?>
