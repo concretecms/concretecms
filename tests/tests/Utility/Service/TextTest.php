@@ -100,6 +100,7 @@ class TextTest extends ConcreteDatabaseTestCase
     /**
      * Test for many rounds with a language, that has no map associated
      * This causes a "regular expression is too large" error on old versions.
+     * @doesNotPerformAssertions
      */
     public function testUrlify_regexTooLarge()
     {
