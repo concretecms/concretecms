@@ -92,7 +92,7 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 
 	<div id="ccm-tab-content-workflow" class="ccm-tab-content">
 			<div class="form-group">
-    			<label class="control-label"><?=t('Attach Workflow to this Permission')?></label>
+    			<label class="col-form-label"><?=t('Attach Workflow to this Permission')?></label>
 				<?php foreach ($workflows as $wf) {
     ?>
 					<div class="checkbox"><label><input type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {

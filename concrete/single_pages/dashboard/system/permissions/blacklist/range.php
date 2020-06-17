@@ -21,7 +21,7 @@ if (($type & IpAccessControlService::IPRANGEFLAG_MANUAL) === IpAccessControlServ
         <fieldset>
             <legend><?= t('Add IP Range') ?></legend>
             <div class="form-group">
-                <label for="new-range" class="launch-tooltip control-label" data-html="true" title="<?= h(t(
+                <label for="new-range" class="launch-tooltip col-form-label" data-html="true" title="<?= h(t(
                     'Enter a single address<br />(example: %s) or a range<br />(example: %s or %s).<br />Accept both IPv4 and IPv6 ranges.',
                     '<code>1.2.3.4</code>',
                     '<code>1.2.3.*</code>',
