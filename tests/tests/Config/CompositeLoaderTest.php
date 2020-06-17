@@ -104,10 +104,4 @@ class CompositeLoaderTest extends TestCase
 
         $loader->exists('foo');
     }
-
-    public function testLoad()
-    {
-
-    }
-
 }
