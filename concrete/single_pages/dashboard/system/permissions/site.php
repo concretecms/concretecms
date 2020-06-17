@@ -19,26 +19,20 @@ $form = Loader::helper('form');
     <fieldset>
 	<legend style="margin-bottom: 0px"><?=t('Viewing Permissions')?></legend>
 	<div class="form-group">
-        <div class="radio">
-            <label>
-		    <?=$form->radio('view', 'ANYONE', $guestCanRead)?>
-		    <span><?=t('Public')?> - <?=t('Anyone may view the website.')?></span>
-                </label>
+        <div class="form-check">
+            <?=$form->radio('view', 'ANYONE', $guestCanRead)?>
+            <?=$form->label('view1', t('Anyone may view the website.'), ['class'=>'form-check-label'] )?>
         </div>
 		 
-        <div class="radio">
-            <label>
+        <div class="form-check">
             <?=$form->radio('view', 'USERS', $registeredCanRead)?>
-            <span><?=t('Members')?> - <?=t('Only registered users may view the website.')?></span>
-            </label>
+            <?=$form->label('view2', t('Members').' - '.t('Only registered users may view the website.'), ['class'=>'form-check-label'])?>
         </div>
 
-		<div class="radio">
-            <label>
-			<?=$form->radio('view', 'PRIVATE', !$guestCanRead && !$registeredCanRead)?>
-			<span><?=t('Private')?> - <?=t('Only the administrative group may view the website.')?></span>
-            </label>
-		</div>
+        <div class="form-check">
+          <?=$form->radio('view', 'PRIVATE', !$guestCanRead && !$registeredCanRead)?>
+          <?=$form->label('view3', t('Private').' - '.t('Only the administrative group may view the website.'), ['class'=>'form-check-label'])?>
+        </div>
     </div>
     </fieldset>
     
@@ -49,8 +43,8 @@ $form = Loader::helper('form');
         </span>
         <div class="form-group">
         <?php foreach ($gArray as $g):?>
-            <div class="checkbox">
-                <label>
+            <div class="form-check">
+                <label class="form-check-label">
                     <?=$form->checkbox('gID[]', $g->getGroupID(), in_array($g->getGroupID(), $editAccess))?>
                     <span><?=$g->getGroupDisplayName()?></span>
                 </label>
