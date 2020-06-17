@@ -1,31 +1,42 @@
 <?php
+
 namespace Concrete\Core\Navigation;
 
 use Concrete\Core\Navigation\Item\ItemInterface;
+use JsonSerializable;
 
-class Navigation implements  NavigationInterface, \JsonSerializable
+class Navigation implements NavigationInterface, JsonSerializable
 {
-
     /**
-     * @var ItemInterface[]
+     * @var \Concrete\Core\Navigation\Item\ItemInterface[]
      */
     protected $items = [];
 
-    /**
-     * Adds an item to the navigation.
-     *
-     * @param ItemInterface $item
-     * @return mixed
-     */
-    public function add(ItemInterface $item)
+    public function __clone()
     {
-        $this->items[] = $item;
+        $items = $this->getItems();
+        $this->setItems([]);
+        foreach ($items as $item) {
+            $this->add(clone $item);
+        }
     }
 
     /**
-     * Returns all the items in the navigation
+     * {@inheritdoc}
      *
-     * @return ItemInterface[]
+     * @see \Concrete\Core\Navigation\NavigationInterface::add()
+     */
+    public function add(ItemInterface $item): NavigationInterface
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * Returns all the items in the navigation.
+     *
+     * @return \Concrete\Core\Navigation\Item\ItemInterface[]
      */
     public function getItems(): array
     {
@@ -33,31 +44,31 @@ class Navigation implements  NavigationInterface, \JsonSerializable
     }
 
     /**
-     * @param ItemInterface[] $items
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Navigation\NavigationInterface::setItems()
      */
-    public function setItems(array $items): void
+    public function setItems(array $items): NavigationInterface
     {
         $this->items = $items;
+
+        return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     *
+     * @return array
+     */
     public function jsonSerialize()
     {
         $data = [];
-        foreach($this->getItems() as $item) {
+        foreach ($this->getItems() as $item) {
             $data[] = $item->jsonSerialize();
         }
+
         return $data;
     }
-
-    public function __clone()
-    {
-        $items = $this->getItems();
-        $this->setItems([]);
-        foreach($items as $item) {
-            $this->add(clone $item);
-        }
-    }
-
-
-
 }

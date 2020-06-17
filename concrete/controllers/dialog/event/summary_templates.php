@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Event;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Event\Summary\Template\Command\DisableCustomCalendarEventSummaryTemplatesCommand;
 use Concrete\Core\Calendar\Event\Summary\Template\Command\EnableCustomCalendarEventSummaryTemplatesCommand;
@@ -21,14 +22,14 @@ class SummaryTemplates extends BackendInterfaceController
     {
         parent::__construct();
         $app = Facade::getFacadeApplication();
-        $this->eventService = $app->make(EventService::class);
+        $this->eventOccurrenceService = $app->make(EventOccurrenceService::class);
     }
 
     protected function canAccess()
     {
-        $event = $this->eventService->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
-        if (is_object($event)) {
-            $calendar = $event->getCalendar();
+        $occurrence = $this->eventOccurrenceService->getByID($_REQUEST['versionOccurrenceID']);
+        if (is_object($occurrence)) {
+            $calendar = $occurrence->getEvent()->getCalendar();
             if (is_object($calendar)) {
                 $cp = new \Permissions($calendar);
                 return $cp->canEditCalendarEvents();
@@ -49,14 +50,14 @@ class SummaryTemplates extends BackendInterfaceController
 
     public function view()
     {
-        $event = $this->eventService->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
-        if (!$event) {
-            throw new \Exception(t('Invalid event.'));
+        $occurrence = $this->eventOccurrenceService->getByID($this->request->query->get('versionOccurrenceID'));
+        if (!$occurrence) {
+            throw new \Exception(t('Invalid occurrence.'));
         }
-        $pageTemplates = $event->getSummaryTemplates();
+        $pageTemplates = $occurrence->getSummaryTemplates();
         $selectedTemplateIDs = [];
         $templates = [];
-        $selectedTemplates = $event->getCustomSelectedSummaryTemplates();
+        $selectedTemplates = $occurrence->getCustomSelectedSummaryTemplates();
         if ($selectedTemplates) {
             foreach($selectedTemplates as $selectedTemplate) {
                 $selectedTemplateIDs[] = $selectedTemplate->getID();
@@ -68,8 +69,8 @@ class SummaryTemplates extends BackendInterfaceController
             }
         }
         $this->set('categoryHandle', 'calendar_event');
-        $this->set('memberIdentifier', $event->getID());
-        $this->set('object', $event);
+        $this->set('memberIdentifier', $occurrence->getID());
+        $this->set('object', $occurrence);
         $this->set('templates', $templates);
         $this->set('selectedTemplateIDs', $selectedTemplateIDs);
     }

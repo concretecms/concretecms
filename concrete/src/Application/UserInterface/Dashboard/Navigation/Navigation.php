@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application\UserInterface\Dashboard\Navigation;
 
 use Concrete\Core\Navigation\Item\PageItem;
@@ -8,36 +9,52 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class Navigation extends BaseNavigation implements DenormalizableInterface
 {
-
-    public function has(PageItem $pageItem)
+    /**
+     * Check if this instance contains a PageItem instance with the same page ID.
+     *
+     * @param \Concrete\Core\Navigation\Item\PageItem $pageItem
+     *
+     * @return bool
+     */
+    public function has(PageItem $pageItem): bool
     {
-        foreach($this->getItems() as $item) {
-            /**
-             * @var $item PageItem
-             */
+        foreach ($this->getItems() as $item) {
             if ($pageItem->getPageID() == $item->getPageID()) {
                 return true;
             }
         }
+
         return false;
     }
 
-    public function remove(PageItem $pageItem) {
+    /**
+     * Remove (if present) the PageItems with the same page ID as the PageItem specified.
+     *
+     * @param \Concrete\Core\Navigation\Item\PageItem $pageItem
+     *
+     * @return self
+     */
+    public function remove(PageItem $pageItem): self
+    {
         $items = [];
-        foreach($this->getItems() as $item) {
-            /**
-             * @var $item PageItem
-             */
+        foreach ($this->getItems() as $item) {
             if ($pageItem->getPageID() != $item->getPageID()) {
                 $items[] = $item;
             }
         }
         $this->setItems($items);
+
+        return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Symfony\Component\Serializer\Normalizer\DenormalizableInterface::denormalize()
+     */
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        foreach($data as $page) {
+        foreach ($data as $page) {
             $item = new PageItem();
             $item->setPageID($page['pageID']);
             $item->setUrl($page['url']);
@@ -46,5 +63,4 @@ class Navigation extends BaseNavigation implements DenormalizableInterface
             $this->add($item);
         }
     }
-
 }
