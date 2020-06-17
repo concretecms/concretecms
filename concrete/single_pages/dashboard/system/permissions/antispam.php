@@ -47,7 +47,7 @@ $config = $app->make('config');
 				<div class="form-group">
 					<label><?=t('Email Notification')?> </label>
 					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', $config->get('concrete.spam.notify_email'))?>
-					<span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
+					<span class="form-text"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
 				</div>
 			</fieldset>
 		<?php
