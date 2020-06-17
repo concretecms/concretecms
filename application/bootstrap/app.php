@@ -66,4 +66,3 @@
  *
  * ----------------------------------------------------------------------------
  */
-//\Concrete\Core\Block\BlockType\BlockType::installBlockType('gallery');
