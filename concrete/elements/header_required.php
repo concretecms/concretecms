@@ -191,7 +191,7 @@ if (!empty($alternateHreflangTags)) {
     var CCM_APPLICATION_URL = <?= json_encode(rtrim((string) $app->make('url/canonical'), '/'), JSON_UNESCAPED_SLASHES) ?>;
     var CCM_REL = <?= json_encode((string) $app->make('app_relative_path'), JSON_UNESCAPED_SLASHES) ?>;
     var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale(), JSON_UNESCAPED_SLASHES) ?>;
-    var CCM_UID = <?= $app->make(User::class)->getUserID() ?: 'null' ?>;
+    var CCM_USER_REGISTERED = <?= $app->make(User::class)->isRegistered() ? 'true ': 'false' ?>;
 </script>
 
 <?php
