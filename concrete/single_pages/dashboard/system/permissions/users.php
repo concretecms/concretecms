@@ -1,13 +1,15 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+?>
 
 <?php ob_start(); ?>
 <?=View::element('permission/help');?>
 <?php $help = ob_get_contents(); ?>
 <?php ob_end_clean(); ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Permissions'), $help, 'span8 offset2', false)?>
+<?=$app->make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Permissions'), $help, 'span8 offset2', false)?>
 <form method="post" action="<?=$view->action('save')?>" role="form">
-	<?=Loader::helper('validation/token')->output('save_permissions')?>
+	<?=$app->make('helper/validation/token')->output('save_permissions')?>
 	
 	<?php
     $tp = new TaskPermission();
@@ -29,4 +31,4 @@
 	</div>
 </form>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
+<?=$app->make('helper/concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

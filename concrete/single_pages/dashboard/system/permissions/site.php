@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
-$h = Loader::helper('concrete/dashboard');
-$ih = Loader::helper('concrete/ui');
-$form = Loader::helper('form');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$h = $app->make('helper/concrete/dashboard');
+$ih = $app->make('helper/concrete/ui');
+$form = $app->make('helper/form');
 ?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Site Access'), false, false, false);?>
 <form id="site-permissions-form" action="<?=$view->action('')?>" method="post" role="form">

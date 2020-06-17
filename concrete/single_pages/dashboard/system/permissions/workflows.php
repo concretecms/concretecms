@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+?>
 <?php $c = Page::getCurrentPage(); ?>
 
 <?php if (isset($wf)) {
@@ -9,7 +11,7 @@
 
 <form method="post" action="<?=$view->action('save_workflow_details')?>" method="post">
 <input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
-<?=Loader::helper('validation/token')->output('save_workflow_details')?>
+<?=$app->make('helper/validation/token')->output('save_workflow_details')?>
 
 <?php View::element("workflow/edit_type_form_required", array('workflow' => $wf));
     ?>
@@ -40,7 +42,7 @@
     ?>
 
 	<form method="post" action="<?=$view->action('submit_add')?>">
-	<?=Loader::helper('validation/token')->output('add_workflow')?>
+	<?=$app->make('helper/validation/token')->output('add_workflow')?>
 		<fieldset>
 		
 			<legend><?=t('Add Workflow')?></legend>

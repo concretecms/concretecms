@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-$h = Loader::helper('concrete/dashboard');
-$form = Loader::helper('form');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$h = $app->make('helper/concrete/dashboard');
+$form = $app->make('helper/form');
 echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offset3', false);?>
 
 <form id="maintenance-mode-form" action="<?php echo $view->action('')?>" method="post" role="form">

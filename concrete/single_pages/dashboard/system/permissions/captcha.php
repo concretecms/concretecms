@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Captcha Settings'), false, 'span10 offset1', (!is_object($activeCaptcha) || (!$activeCaptcha->hasOptionsForm())))?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+?>
+<?=$app->make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Captcha Settings'), false, 'span10 offset1', (!is_object($activeCaptcha) || (!$activeCaptcha->hasOptionsForm())))?>
 <form method="post" id="site-form" action="<?=$view->action('update_captcha')?>">
 <?php if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) {
     ?>
@@ -44,7 +46,7 @@
     ?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-		<?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
+		<?=$app->make('helper/concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
         </div>
 	</div>
 <?php 
