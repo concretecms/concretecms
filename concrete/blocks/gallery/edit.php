@@ -1,11 +1,18 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/** @var Concrete\Core\Form\Service\Form $form */
+$images = $images ?? [];
+
+// Strip out any file instances before serializing
+// A better way to do this would be to use an actual class for entries
+$images = array_map(function($image) {
+    unset($image['file']);
+    return $image;
+}, $images);
 ?>
 
 <div id="ccm-gallery-<?= $bID ?>">
-    <gallery-edit :gallery="data"></gallery-edit>
+    <gallery-edit :gallery="data" :choices="choices"></gallery-edit>
 </div>
 
 <script>
@@ -15,7 +22,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
             components: config.components,
             data: function() {
                 return {
-                    data: JSON.parse(<?= json_encode(json_encode($json)) ?>)
+                    data: JSON.parse(<?= json_encode(json_encode($images)) ?>),
+                    choices: JSON.parse(<?= json_encode(json_encode($displayChoices)) ?>),
                 }
             }
         })

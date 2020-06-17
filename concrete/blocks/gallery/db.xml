@@ -37,12 +37,8 @@
         <field name="bID" type="integer">
             <unsigned/>
         </field>
-        <field name="value" type="string" size="255">
-            <unsigned/>
-        </field>
-        <field name="dcKey" type="string" size="255">
-            <unsigned/>
-        </field>
+        <field name="value" type="text" />
+        <field name="dcKey" type="text" />
     </table>
 
 </schema>
