@@ -3,16 +3,16 @@
 namespace Concrete\Core\Summary\Template;
 
 use Concrete\Core\Filesystem\FileLocator;
-use Concrete\Core\Summary\SummaryObjectInterface;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
-use Concrete\Core\Summary\Data\Collection;
-use Doctrine\ORM\EntityManager;
 use Concrete\Core\Summary\SummaryObject;
+use Concrete\Core\Summary\SummaryObjectExtractor;
+use Concrete\Core\Summary\SummaryObjectInterface;
+use Doctrine\ORM\EntityManager;
 
 class Renderer implements LoggerAwareInterface
 {
@@ -49,12 +49,18 @@ class Renderer implements LoggerAwareInterface
      */
     protected $fileLocator;
 
+    /**
+     * @var SummaryObjectExtractor
+     */
+    protected $summaryObjectExtractor;
+
     public function __construct(
         JsonSerializer $serializer,
         RendererFilterer $rendererFilterer,
         EntityManager $entityManager,
         TemplateLocator $templateLocator,
         FileLocator $fileLocator,
+        SummaryObjectExtractor $summaryObjectExtractor,
         Page $currentPage = null)
     {
         $this->serializer = $serializer;
@@ -62,6 +68,7 @@ class Renderer implements LoggerAwareInterface
         $this->entityManager = $entityManager;
         $this->templateLocator = $templateLocator;
         $this->fileLocator = $fileLocator;
+        $this->summaryObjectExtractor = $summaryObjectExtractor;
         $this->currentPage = $currentPage;
     }
 
@@ -77,7 +84,7 @@ class Renderer implements LoggerAwareInterface
         if ($file) {
             include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_header.php')
                 ->getFile();
-            $fields = $summaryObject->getData()->getFields();
+            $fields = $this->summaryObjectExtractor->getData($summaryObject);
             extract($fields, EXTR_OVERWRITE);
             include $file;
             include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_footer.php')
