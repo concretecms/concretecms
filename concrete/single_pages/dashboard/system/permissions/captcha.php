@@ -26,7 +26,7 @@
         if ($activeCaptcha->getPackageID() > 0) {
             Loader::packageElement('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
         } else {
-            Loader::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
+            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
         }
     }
 }

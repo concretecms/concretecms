@@ -11,7 +11,7 @@
 <input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
 <?=Loader::helper('validation/token')->output('save_workflow_details')?>
 
-<?php Loader::element("workflow/edit_type_form_required", array('workflow' => $wf));
+<?php View::element("workflow/edit_type_form_required", array('workflow' => $wf));
     ?>
 
 <div class="ccm-dashboard-form-actions-wrapper">
@@ -26,7 +26,7 @@
 } else {
     ?>
 
-	<?php Loader::element("workflow/type_form_required", array('workflow' => $wf));
+	<?php View::element("workflow/type_form_required", array('workflow' => $wf));
     ?>
 
 <?php 
@@ -68,7 +68,7 @@
                     if ($type->getPackageID() > 0) {
                         @Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/add_type_form', $type->getPackageHandle(), array('type' => $type));
                     } else {
-                        @Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/add_type_form', array('type' => $type));
+                        @View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/add_type_form', array('type' => $type));
                     }
     ?>
 				</div>

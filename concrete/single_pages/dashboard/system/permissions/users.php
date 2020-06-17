@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php ob_start(); ?>
-<?=Loader::element('permission/help');?>
+<?=View::element('permission/help');?>
 <?php $help = ob_get_contents(); ?>
 <?php ob_end_clean(); ?>
 
@@ -13,7 +13,7 @@
     $tp = new TaskPermission();
     if ($tp->canAccessTaskPermissions()) {
         ?>	
-		<?php Loader::element('permission/lists/user')?>
+		<?php View::element('permission/lists/user')?>
 	<?php 
     } else {
         ?>
