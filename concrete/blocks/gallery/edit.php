@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <div id="ccm-gallery-<?= $bID ?>">
-    <gallery-edit :gallery="data"></gallery-edit>
+    <gallery-edit :gallery="data" :choices="choices"></gallery-edit>
 </div>
 
 <script>
@@ -15,7 +15,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
             components: config.components,
             data: function() {
                 return {
-                    data: JSON.parse(<?= json_encode(json_encode($json)) ?>)
+                    data: JSON.parse(<?= json_encode(json_encode($json)) ?>),
+                    choices: JSON.parse(<?= json_encode(json_encode($displayChoices)) ?>),
                 }
             }
         })
