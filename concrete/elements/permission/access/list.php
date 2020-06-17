@@ -3,7 +3,7 @@
 <?php foreach ($accessTypes as $accessType => $title) {
     $list = $permissionAccess->getAccessListItems($accessType);
     ?>
-	<a style="float: right" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?accessType=<?=$accessType?>&pkCategoryHandle=<?=$pkCategoryHandle?>" dialog-width="510" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch btn btn-xs btn-secondary"><?=t('Add')?></a>
+	<a style="float: right" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?accessType=<?=$accessType?>&pkCategoryHandle=<?=$pkCategoryHandle?>" dialog-width="510" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch btn btn-sm btn-secondary"><?=t('Add')?></a>
 
 	<h4><?=$title?></h4>
 
