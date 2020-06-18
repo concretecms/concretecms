@@ -95,14 +95,19 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
     			<label class="col-form-label"><?=t('Attach Workflow to this Permission')?></label>
 				<?php foreach ($workflows as $wf) {
     ?>
-					<div class="checkbox"><label><input type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {
     ?> disabled="disabled" <?php
 }
     ?>
 					<?php if (in_array($wf->getWorkflowID(), $workflowIDs)) {
     ?> checked="checked" <?php
 }
-    ?> /> <?=$wf->getWorkflowDisplayName()?></label></div>
+    ?> /> 
+             <?=$wf->getWorkflowDisplayName()?>
+           </label>
+    </div>
 				<?php
 }
     ?>
