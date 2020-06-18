@@ -73,8 +73,10 @@ class AvailableObjectCollectionFactory
                     $objects = $filterer->findContentObjectsForSlot($objects, $i + 1);
                 }
 
-                foreach ($objects as $contentObject) {
-                    $availableObjects[] = new AvailableObject($i + 1, $item, $contentObject);
+                if ($objects) {
+                    foreach ($objects as $contentObject) {
+                        $availableObjects[] = new AvailableObject($i + 1, $item, $contentObject);
+                    }
                 }
             }
             $slots[$i] = $availableObjects;

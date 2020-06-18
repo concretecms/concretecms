@@ -81,6 +81,16 @@ class RenderedSlotCollectionFactory
             $currentSlot++;
         }
 
+        // Finally, let's add empty objects to slots if the board has slots that
+        // are empty. This will allow us to use curation tools to work with those slots
+        $availableSlots = $instance->getBoard()->getTemplate()->getDriver()->getTotalSlots();
+        for ($i = 1; $i <= $availableSlots; $i++) {
+            if (!isset($collectionArray[$i])) {
+                $emptySlot = new RenderedSlot($instance, $i);
+                $collectionArray[$i] = $emptySlot;
+            }
+        }
+
         $collection = new RenderedSlotCollection($instance, $collectionArray);
         return $collection;
 
