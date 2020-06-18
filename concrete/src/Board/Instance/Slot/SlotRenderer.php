@@ -51,22 +51,20 @@ class SlotRenderer
         $slot = $this->renderedSlotCollection->getRenderedSlot($slot);
         if ($slot) {
             $block = Block::getByID($slot->getBlockID());
+            if ($this->enableEditing) {
+                $menuManager = $this->app->make(Manager::class);
+                $menu = $menuManager->getMenu($slot);
+                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_header.php')
+                    ->getFile();
+
+            }
             if ($block) {
-                if ($this->enableEditing) {
-                    $menuManager = $this->app->make(Manager::class);
-                    $menu = $menuManager->getMenu($slot);
-                    include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_header.php')
-                        ->getFile();
-
-                }
-
                 $view = new BlockView($block);
                 $view->render();
-
-                if ($this->enableEditing) {
-                    include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_footer.php')
-                        ->getFile();
-                }
+            }
+            if ($this->enableEditing) {
+                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_footer.php')
+                    ->getFile();
             }
         }
 

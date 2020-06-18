@@ -57,7 +57,7 @@ class RenderedSlot implements \JsonSerializable
     /**
      * @return int
      */
-    public function getBlockID(): int
+    public function getBlockID(): ?int
     {
         return $this->bID;
     }
