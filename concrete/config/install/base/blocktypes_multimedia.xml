@@ -9,6 +9,7 @@
         <blocktype handle="youtube" package=""/>
         <blocktype handle="google_map" package=""/>
         <blocktype handle="board" package=""/>
+        <blocktype handle="gallery" package=""/>
     </blocktypes>
 
     <blocktypesets>
@@ -20,6 +21,7 @@
             <blocktype handle="document_library"/>
             <blocktype handle="youtube"/>
             <blocktype handle="google_map"/>
+            <blocktype handle="gallery"/>
         </blocktypeset>
     </blocktypesets>
 
