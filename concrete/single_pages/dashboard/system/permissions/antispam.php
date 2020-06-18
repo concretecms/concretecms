@@ -6,14 +6,21 @@ $config = $app->make('config');
 
 <form method="post" id="site-form" action="<?=$view->action('update_library')?>">
     <div class="form-group">
-        <?=$form->label('group_id', t('Spam Whitelist Group'))?>
-		<?=$form->select('group_id', (array) $groups, $whitelistGroup);?>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <?=$form->label('group_id', t('Spam Whitelist Group'),['class'=>'input-group-text'])?>
+        </div>
+        <?=$form->select('group_id', (array) $groups, $whitelistGroup, ['class'=>'custom-select']);?>
+      </div>
     </div>
 
 	<?=$this->controller->token->output('update_library')?>
 	<?php if (count($libraries) > 0) { ?>
 		<div class="form-group">
-    		<?=$form->label('activeLibrary', t('Active Library'))?>
+      <div class="input-group">
+        <div class="input-group-prepend">
+    		<?=$form->label('activeLibrary', t('Active Library'),['class'=>'input-group-text'])?>
+        </div>
     		<?php
             $activeHandle = '';
             if (is_object($activeLibrary)) {
@@ -21,7 +28,8 @@ $config = $app->make('config');
             }
             ?>
 
-    		<?=$form->select('activeLibrary', $libraries, $activeHandle, array('class' => 'form-control'))?>
+    		<?=$form->select('activeLibrary', $libraries, $activeHandle, array('class' => 'custom-select'))?>
+      </div>
 		</div>
 
 		<?php if (is_object($activeLibrary)) {
@@ -37,9 +45,12 @@ $config = $app->make('config');
         if (is_object($activeLibrary)) { ?>
 			<fieldset>
 				<legend style="margin-bottom: 0"><?=t('Log Settings')?></legend>
-				<div class="checkbox">
-					<div class="checkbox">
-						<label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, $config->get('concrete.log.spam'))?> <?=t('Log entries marked as spam.')?></label>
+				<div class="form-group">
+					<div class="form-check">
+						<label class="form-check-label">
+              <?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, $config->get('concrete.log.spam'))?> 
+              <?=t('Log entries marked as spam.')?>
+            </label>
 					</div>
 					<span class="form-text"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
 				</div>

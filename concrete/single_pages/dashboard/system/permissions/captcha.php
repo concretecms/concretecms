@@ -12,7 +12,8 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     ?>
 
 		<div class="form-group">
-		<?=$form->label('activeCaptcha', t('Active Captcha'))?>
+    <div class="input-group">
+		<div class="input-group-prepend"><?=$form->label('activeCaptcha', t('Active Captcha'), ['class'=>'input-group-text'])?></div>
 		<?php
         $activeHandle = '';
     if (is_object($activeCaptcha)) {
@@ -20,8 +21,9 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     }
     ?>
 		
-		<?=$form->select('activeCaptcha', $captchas, $activeHandle, array('class' => 'span4'))?>
+		<?=$form->select('activeCaptcha', $captchas, $activeHandle, array('class' => 'span4 custom-select'))?>
 		</div>
+    </div>
 		
 		<?php if (is_object($activeCaptcha)) {
     if ($activeCaptcha->hasOptionsForm()) {

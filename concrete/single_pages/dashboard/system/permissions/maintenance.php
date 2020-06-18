@@ -9,8 +9,16 @@ echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offs
     <fieldset>
         <div class="form-group">
             <label class="col-form-label"><?= t('Only Dashboard Works') ?></label>
-            <div class="radio"><label><?=$form->radio('site_maintenance_mode', '1', $site_maintenance_mode)?> <span><?=t('Enabled - for emergencies')?></span></label></div>
-            <div class="radio"><label><?=$form->radio('site_maintenance_mode', '0', $site_maintenance_mode)?> <span><?=t('Disabled')?></span></label></div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <?=$form->radio('site_maintenance_mode', '1', $site_maintenance_mode)?> <span><?=t('Enabled - for emergencies')?></span>
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <?=$form->radio('site_maintenance_mode', '0', $site_maintenance_mode)?> <span><?=t('Disabled')?></span>
+              </label>
+            </div>
         </div>
     </fieldset>	
 
