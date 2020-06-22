@@ -96,7 +96,7 @@ $txt = Loader::helper('text'); ?>
                             <?php foreach ($list as $key) {
     $keySets = \Concrete\Core\Attribute\Set::getByAttributeKey($key);
 
-    $disabled = '';
+    $disabled = [];
     if (!$key->inAttributeSet($set) && count($keySets)) {
         $disabled = ['disabled' => 'disabled'];
     }
