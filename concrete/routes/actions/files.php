@@ -26,3 +26,5 @@ $router->all('/fetch_directories', 'File::fetchDirectories');
 $router->all('/create_directory', 'File::createDirectory');
 
 $router->all('/chooser/recent', 'File\Chooser::getRecent');
+$router->all('/chooser/get_file_sets', 'File\Chooser::getFileSets');
+$router->all('/chooser/get_file_set/{id}', 'File\Chooser::getFileSetFiles');
