@@ -6,10 +6,13 @@ use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
 class RescanMultilingualPageCommand extends PageCommand implements BatchableCommandInterface
 {
-
-    public function getBatchHandle()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
+     */
+    public function getBatchHandle(): string
     {
         return 'rescan_multilingual_page';
     }
-
 }

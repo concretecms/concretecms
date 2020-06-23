@@ -6,86 +6,93 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class BlockCommand implements CommandInterface
 {
-
-    public function __construct($blockID, $pageID, $collectionVersionID, $areaHandle)
-    {
-        $this->pageID = $pageID;
-        $this->blockID = $blockID;
-        $this->areaHandle = $areaHandle;
-        $this->collectionVersionID = $collectionVersionID;
-    }
-
-
-    protected $pageID;
-
+    /**
+     * @var int
+     */
     protected $blockID;
 
-    protected $areaHandle;
+    /**
+     * @var int
+     */
+    protected $pageID;
 
+    /**
+     * @var int
+     */
     protected $collectionVersionID;
 
     /**
-     * @return mixed
+     * @var string
      */
-    public function getPageID()
+    protected $areaHandle;
+
+    public function __construct(int $blockID, int $pageID, int $collectionVersionID, string $areaHandle)
     {
-        return $this->pageID;
+        $this
+            ->setBlockID($blockID)
+            ->setPageID($pageID)
+            ->setCollectionVersionID($collectionVersionID)
+            ->setAreaHandle($areaHandle)
+        ;
     }
 
-    /**
-     * @param mixed $pageID
-     */
-    public function setPageID($pageID)
-    {
-        $this->pageID = $pageID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBlockID()
+    public function getBlockID(): int
     {
         return $this->blockID;
     }
 
     /**
-     * @param mixed $blockID
+     * @return $this
      */
-    public function setBlockID($blockID)
+    public function setBlockID(int $blockID): object
     {
         $this->blockID = $blockID;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAreaHandle()
+    public function getPageID(): int
     {
-        return $this->areaHandle;
+        return $this->pageID;
     }
 
     /**
-     * @param mixed $areaHandle
+     * @return $this
      */
-    public function setAreaHandle($areaHandle)
+    public function setPageID(int $pageID): object
     {
-        $this->areaHandle = $areaHandle;
+        $this->pageID = $pageID;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCollectionVersionID()
+    public function getCollectionVersionID(): int
     {
         return $this->collectionVersionID;
     }
 
     /**
-     * @param mixed $collectionVersionID
+     * @return $this
      */
-    public function setCollectionVersionID($collectionVersionID)
+    public function setCollectionVersionID(int $collectionVersionID): object
     {
         $this->collectionVersionID = $collectionVersionID;
+
+        return $this;
     }
-    
+
+    public function getAreaHandle(): string
+    {
+        return $this->areaHandle;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAreaHandle(string $areaHandle): object
+    {
+        $this->areaHandle = $areaHandle;
+
+        return $this;
+    }
 }

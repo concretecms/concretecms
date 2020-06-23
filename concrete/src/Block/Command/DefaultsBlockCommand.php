@@ -4,95 +4,102 @@ namespace Concrete\Core\Block\Command;
 
 abstract class DefaultsBlockCommand extends BlockCommand
 {
-
+    /**
+     * @var int
+     */
     protected $originalBlockID;
 
+    /**
+     * @var int
+     */
     protected $originalPageID;
 
+    /**
+     * @var int
+     */
     protected $originalCollectionVersionID;
 
+    /**
+     * @var string
+     */
     protected $originalAreaHandle;
 
     public function __construct(
-        $originalBlockID,
-        $originalPageID,
-        $originalCollectionVersionID,
-        $originalAreaHandle,
-        $blockID,
-        $pageID,
-        $collectionVersionID,
-        $areaHandle
+        int $originalBlockID,
+        int $originalPageID,
+        int $originalCollectionVersionID,
+        string $originalAreaHandle,
+        int $blockID,
+        int $pageID,
+        int $collectionVersionID,
+        string $areaHandle
     ) {
-        $this->originalPageID = $originalPageID;
-        $this->originalBlockID = $originalBlockID;
-        $this->originalCollectionVersionID = $originalCollectionVersionID;
-        $this->originalAreaHandle = $originalAreaHandle;
         parent::__construct($blockID, $pageID, $collectionVersionID, $areaHandle);
+        $this
+            ->setOriginalBlockID($originalBlockID)
+            ->setOriginalPageID($originalPageID)
+            ->setOriginalCollectionVersionID($originalCollectionVersionID)
+            ->setOriginalAreaHandle($originalAreaHandle)
+        ;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOriginalBlockID()
+    public function getOriginalBlockID(): int
     {
         return $this->originalBlockID;
     }
 
     /**
-     * @param mixed $originalBlockID
+     * @return $this
      */
-    public function setOriginalBlockID($originalBlockID)
+    public function setOriginalBlockID(int $originalBlockID): object
     {
         $this->originalBlockID = $originalBlockID;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOriginalPageID()
+    public function getOriginalPageID(): int
     {
         return $this->originalPageID;
     }
 
     /**
-     * @param mixed $originalPageID
+     * @return $this
      */
-    public function setOriginalPageID($originalPageID)
+    public function setOriginalPageID(int $originalPageID): object
     {
         $this->originalPageID = $originalPageID;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOriginalCollectionVersionID()
+    public function getOriginalCollectionVersionID(): int
     {
         return $this->originalCollectionVersionID;
     }
 
     /**
-     * @param mixed $originalCollectionVersionID
+     * @return $this
      */
-    public function setOriginalCollectionVersionID($originalCollectionVersionID)
+    public function setOriginalCollectionVersionID(int $originalCollectionVersionID): object
     {
         $this->originalCollectionVersionID = $originalCollectionVersionID;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOriginalAreaHandle()
+    public function getOriginalAreaHandle(): string
     {
         return $this->originalAreaHandle;
     }
 
     /**
-     * @param mixed $originalAreaHandle
+     * @return $this
      */
-    public function setOriginalAreaHandle($originalAreaHandle)
+    public function setOriginalAreaHandle(string $originalAreaHandle): object
     {
         $this->originalAreaHandle = $originalAreaHandle;
+
+        return $this;
     }
-
-
 }
