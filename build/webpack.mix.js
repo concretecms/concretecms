@@ -136,6 +136,11 @@ mix
 mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concrete/images/icons/bedrock/sprites.svg');
 
 /**
+ * Copy jquery ui icons into our repository
+ */
+mix.copy('node_modules/jquery-ui/themes/base/images/ui-*', '../concrete/images/');
+
+/**
  * Turn off notifications
  */
 mix
