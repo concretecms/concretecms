@@ -62,7 +62,7 @@ if (isset($pagetype) && is_object($pagetype)) {
     <div class="form-group">
         <?=$form->label('ptIsFrequentlyAdded', t('Is this page type frequently added?'))?>
         <?=$form->select('ptIsFrequentlyAdded', array('0' => t('No'), '1' => t('Yes')), $ptIsFrequentlyAdded, array('class' => 'span5'))?>
-        <div class="help-block"><?=t('Frequently added page types are always visible in the Pages panel.')?></div>
+        <div class="form-text"><?=t('Frequently added page types are always visible in the Pages panel.')?></div>
     </div>
 
 	<div class="form-group">

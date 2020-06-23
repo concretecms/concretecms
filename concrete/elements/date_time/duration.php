@@ -189,7 +189,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                                 <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'month') { %>checked<% } %> value="month">
                                 <?= t('Same date.')?>
                             </label>
-                            <div class="help-block">
+                            <div class="form-text">
                                 <?=t('e.g. every Dec 25th...')?>
                             </div>
 
@@ -201,7 +201,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                                 <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'week') { %>checked<% } %> value="week">
                                 <?= t('Same type of day from start of the month.')?>
                             </label>
-                            <div class="help-block">
+                            <div class="form-text">
                                 <?=t('e.g. every third Thursday...')?>
                             </div>
                         </div>
@@ -220,7 +220,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="help-block">
+                            <div class="form-text">
                                 <?=t('e.g. every last Friday...')?>
                             </div>
                         </div>
