@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord[] $usageRecords
  * @var Concrete\Core\Entity\File\DownloadStatistics[][] $recentDownloads
  */
-//output_vars(get_defined_vars(), isset($this) ? $this : null);
+
 $file = $fileVersion->getFile();
 ?>
 <section>
