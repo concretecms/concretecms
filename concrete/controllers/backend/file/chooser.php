@@ -65,7 +65,7 @@ class Chooser extends \Concrete\Core\Controller\Controller
             $sets = $this->app->make(Set::class);
             $mySets = [];
             foreach ($sets->getMySets() as $set) {
-                $mySets[] = [$set->fsID => $set->fsName];
+                $mySets[] = [ "id" => $set->fsID, 'name' => $set->fsName];
             }
 
             return new Response(json_encode($mySets));
