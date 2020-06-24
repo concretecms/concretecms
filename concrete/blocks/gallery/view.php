@@ -12,17 +12,30 @@ if (!$images && $page && $page->isEditMode()) {
 }
 ?>
 
-<div class="d-flex flex-wrap">
+<div class="ccm-gallery-container ccm-gallery-<?= $bID ?>">
     <?php
     /** @var \Concrete\Core\Entity\File\File $image */
     foreach ($images as $image) {
         $tag = (new \Concrete\Core\Html\Image($image['file']))->getTag();
-        $tag->addClass('w-100 h-auto')
+        $tag->addClass('gallery-w-100 gallery-h-auto');
+        $size = $image['displayChoices']['size']['value'] ?? null;
         ?>
-        <div class="px-2 pb-4" style="width: calc(100% / 3)">
-            <?= $tag ?>
+        <div class="<?= $size === 'wide' ? 'gallery-w-100' : 'gallery-w-50' ?>" href="<?= $image['file']->getThumbnailUrl(null) ?>" data-magnific="true">
+            <div class="gallery-16-9"
+                <?= $tag ?>
+            </div>
         </div>
         <?php
     }
     ?>
 </div>
+<script>
+    $(function() {
+        $('.ccm-gallery-<?= $bID ?> [data-magnific=true]').magnificPopup({
+            type: 'image',
+            gallery: {
+                enabled: true
+            }
+        });
+    })
+</script>
