@@ -21,7 +21,7 @@ if (!$images && $page && $page->isEditMode()) {
         $size = $image['displayChoices']['size']['value'] ?? null;
         ?>
         <div class="<?= $size === 'wide' ? 'gallery-w-100' : 'gallery-w-50' ?>" href="<?= $image['file']->getThumbnailUrl(null) ?>" data-magnific="true">
-            <div class="gallery-16-9"
+            <div class="gallery-16-9">
                 <?= $tag ?>
             </div>
         </div>
