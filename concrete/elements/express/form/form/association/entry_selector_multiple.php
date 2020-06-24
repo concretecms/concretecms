@@ -22,7 +22,7 @@ if (isset($selectedEntities)) {
         <span class="text-muted small"><?=t('Required')?></span>
     <?php } ?>
 
-    <input type="hidden" data-select-and-add="<?= $control->getId(); ?>" style="width: 100%" name="express_association_<?= $control->getId(); ?>" value="" />
+    <input data-select-and-add="<?= $control->getId(); ?>" style="width: 100%;display: none" name="express_association_<?= $control->getId(); ?>" value="" />
 </div>
 
 <script type="text/javascript">
