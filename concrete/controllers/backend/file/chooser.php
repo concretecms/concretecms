@@ -94,5 +94,6 @@ class Chooser extends \Concrete\Core\Controller\Controller
             return new Response($response->toJson());
         }
 
+        throw new \Exception(t('Access Denied'));
     }
 }
