@@ -7,7 +7,5 @@ use Concrete\Core\User\Group\Command\Traits\ExistingGroupTrait;
 
 class DeleteGroupCommand implements CommandInterface
 {
-
     use ExistingGroupTrait;
-
 }

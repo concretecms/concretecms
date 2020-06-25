@@ -6,7 +6,8 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 
 interface BatchableCommandInterface extends CommandInterface
 {
-
-    public function getBatchHandle();
-
+    /**
+     * Get the handle of the batch queue.
+     */
+    public function getBatchHandle(): string;
 }

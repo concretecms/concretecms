@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Foundation\Command;
 
 use Concrete\Core\Application\Application;
@@ -8,16 +9,13 @@ use Concrete\Core\Foundation\Command\Middleware\BatchUpdatingMiddleware;
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
-use League\Tactician\Handler\Locator\InMemoryLocator;
-use League\Tactician\Middleware;
 
 abstract class AbstractSynchronousBus implements SynchronousBusInterface
 {
-
     use MiddlewareManagerTrait;
 
     /**
-     * @var Application
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
@@ -27,38 +25,36 @@ abstract class AbstractSynchronousBus implements SynchronousBusInterface
     }
 
     /**
-     * @return Middleware[]
+     * Build a command bus that submits synchronously.
+     *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Command\BusInterface::build()
      */
-    protected function getRequiredMiddleware(Dispatcher $dispatcher)
+    public function build(Dispatcher $dispatcher): CommandBus
+    {
+        $middleware = array_merge($this->getMiddleware(), $this->getRequiredMiddleware($dispatcher));
+
+        return $this->app->make(CommandBus::class, ['middleware' => $middleware]);
+    }
+
+    /**
+     * @return \League\Tactician\Middleware[]
+     */
+    protected function getRequiredMiddleware(Dispatcher $dispatcher): array
     {
         $locator = $this->app->make(ApplicationAwareLocator::class);
-        foreach($dispatcher->getCommands() as $row) {
-            [$handler, $command] = $row;
-            $locator->addHandler($handler, $command);
+        foreach ($dispatcher->getCommands() as [$handler, $commandClass]) {
+            $locator->addHandler($handler, $commandClass);
         }
 
-        $middleware = [
+        return [
             $this->app->make(BatchUpdatingMiddleware::class),
             new CommandHandlerMiddleware(
                 new ClassNameExtractor(),
                 $locator,
                 new HandleClassNameWithFallbackInflector()
-            )
+            ),
         ];
-
-        return $middleware;
-    }
-
-    /**
-     * Build a command bus that submits synchronously
-     *
-     * @param \Concrete\Core\Foundation\Command\Dispatcher $dispatcher
-     *
-     * @return \League\Tactician\CommandBus
-     */
-    public function build(Dispatcher $dispatcher)
-    {
-        $middleware = array_merge($this->getMiddleware(), $this->getRequiredMiddleware($dispatcher));
-        return $this->app->make(CommandBus::class, ['middleware' => $middleware]);
     }
 }

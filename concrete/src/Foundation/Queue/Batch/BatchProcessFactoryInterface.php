@@ -2,21 +2,19 @@
 
 namespace Concrete\Core\Foundation\Queue\Batch;
 
-use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
-use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponse;
-
 interface BatchProcessFactoryInterface
 {
+    /**
+     * Get the handle identifying the batch process.
+     */
+    public function getBatchHandle(): string;
 
     /**
-     * @param $mixed
-     * @return BatchableCommandInterface[]
+     * Build the list of the batch commands.
+     *
+     * @param mixed $mixed the data to be used to build the commands
+     *
+     * @return \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface[]
      */
-    public function getCommands($mixed) : array;
-
-    /**
-     * @return string
-     */
-    public function getBatchHandle();
-
+    public function getCommands($mixed): array;
 }

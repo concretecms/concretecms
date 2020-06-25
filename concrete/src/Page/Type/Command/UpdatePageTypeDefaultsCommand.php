@@ -7,121 +7,134 @@ use League\Tactician\Bernard\QueueableCommand;
 
 class UpdatePageTypeDefaultsCommand implements BatchableCommandInterface, QueueableCommand
 {
-
+    /**
+     * @var int
+     */
     protected $pageTypeDefaultPageID;
 
+    /**
+     * @var int
+     */
     protected $pageID;
 
+    /**
+     * @var int
+     */
     protected $collectionVersionID;
 
+    /**
+     * @var string
+     */
     protected $blocksToUpdate;
 
+    /**
+     * @var string
+     */
     protected $blocksToAdd;
 
-    /**
-     * UpdatePageTypeDefaultsCommand constructor.
-     * @param $pageID
-     * @param $collectionVersionID
-     * @param $blocksToUpdate
-     * @param $blocksToAdd
-     */
-    public function __construct($pageTypeDefaultPageID, $pageID, $collectionVersionID, $blocksToUpdate, $blocksToAdd)
+    public function __construct(int $pageTypeDefaultPageID, int $pageID, int $collectionVersionID, string $blocksToUpdate, string $blocksToAdd)
     {
-        $this->pageTypeDefaultPageID = $pageTypeDefaultPageID;
-        $this->pageID = $pageID;
-        $this->collectionVersionID = $collectionVersionID;
-        $this->blocksToUpdate = $blocksToUpdate;
-        $this->blocksToAdd = $blocksToAdd;
+        $this
+            ->setPageTypeDefaultPageID($pageTypeDefaultPageID)
+            ->setPageID($pageID)
+            ->setCollectionVersionID($collectionVersionID)
+            ->setBlocksToUpdate($blocksToUpdate)
+            ->setBlocksToAdd($blocksToAdd)
+        ;
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
      */
-    public function getPageID()
+    public function getBatchHandle(): string
     {
-        return $this->pageID;
+        return 'update_page_type_defaults';
     }
 
     /**
-     * @param mixed $pageID
+     * {@inheritdoc}
+     *
+     * @see \Bernard\Message::getName()
      */
-    public function setPageID($pageID)
+    public function getName(): string
     {
-        $this->pageID = $pageID;
+        return 'default';
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCollectionVersionID()
-    {
-        return $this->collectionVersionID;
-    }
-
-    /**
-     * @param mixed $collectionVersionID
-     */
-    public function setCollectionVersionID($collectionVersionID)
-    {
-        $this->collectionVersionID = $collectionVersionID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBlocksToUpdate()
-    {
-        return $this->blocksToUpdate;
-    }
-
-    /**
-     * @param mixed $blocksToUpdate
-     */
-    public function setBlocksToUpdate($blocksToUpdate)
-    {
-        $this->blocksToUpdate = $blocksToUpdate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBlocksToAdd()
-    {
-        return $this->blocksToAdd;
-    }
-
-    /**
-     * @param mixed $blocksToAdd
-     */
-    public function setBlocksToAdd($blocksToAdd)
-    {
-        $this->blocksToAdd = $blocksToAdd;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPageTypeDefaultPageID()
+    public function getPageTypeDefaultPageID(): int
     {
         return $this->pageTypeDefaultPageID;
     }
 
     /**
-     * @param mixed $pageTypeDefaultPageID
+     * @return $this
      */
-    public function setPageTypeDefaultPageID($pageTypeDefaultPageID)
+    public function setPageTypeDefaultPageID(int $pageTypeDefaultPageID): object
     {
         $this->pageTypeDefaultPageID = $pageTypeDefaultPageID;
+
+        return $this;
     }
 
-    public function getName()
+    public function getPageID(): int
     {
-        return 'default';
+        return $this->pageID;
     }
 
-    public function getBatchHandle()
+    /**
+     * @return $this
+     */
+    public function setPageID(int $pageID): object
     {
-        return 'update_page_type_defaults';
+        $this->pageID = $pageID;
+
+        return $this;
     }
 
+    public function getCollectionVersionID(): int
+    {
+        return $this->collectionVersionID;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setCollectionVersionID(int $collectionVersionID): object
+    {
+        $this->collectionVersionID = $collectionVersionID;
+
+        return $this;
+    }
+
+    public function getBlocksToUpdate(): string
+    {
+        return $this->blocksToUpdate;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setBlocksToUpdate(string $blocksToUpdate): object
+    {
+        $this->blocksToUpdate = $blocksToUpdate;
+
+        return $this;
+    }
+
+    public function getBlocksToAdd(): string
+    {
+        return $this->blocksToAdd;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setBlocksToAdd(string $blocksToAdd): object
+    {
+        $this->blocksToAdd = $blocksToAdd;
+
+        return $this;
+    }
 }

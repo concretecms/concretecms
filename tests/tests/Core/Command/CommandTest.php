@@ -123,7 +123,7 @@ class CommandTest extends ConcreteDatabaseTestCase
         $command = $dispatcher->wrapCommandForDispatch($command, $bus);
         $this->assertInstanceOf(UpdatePageTypeDefaultsCommand::class, $command);
 
-        $dispatcher->registerCommand(DeletePageCommandHandler::class, DeletePageCommand::class, AsynchronousBus::getHandle());
+        $dispatcher->registerCommand(app(DeletePageCommandHandler::class), DeletePageCommand::class, AsynchronousBus::getHandle());
 
         $command = new DeletePageCommand(1, 4);
         $bus = $dispatcher->getBusForCommand($command);

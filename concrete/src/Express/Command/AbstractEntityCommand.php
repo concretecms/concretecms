@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Express\Command;
 
 use Concrete\Core\Entity\Express\Entity;
@@ -6,15 +7,14 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class AbstractEntityCommand implements CommandInterface
 {
-
-
     /**
-     * @var Entity
+     * @var \Concrete\Core\Entity\Express\Entity
      */
     protected $entity;
 
     /**
      * AbstractEntityCommand constructor.
+     *
      * @param Entity $entity
      */
     public function __construct(Entity $entity)
@@ -22,24 +22,18 @@ abstract class AbstractEntityCommand implements CommandInterface
         $this->entity = $entity;
     }
 
-    /**
-     * @return Entity
-     */
-    public function getEntity()
+    public function getEntity(): Entity
     {
         return $this->entity;
     }
 
     /**
-     * @param Entity $entity
+     * @return $this
      */
-    public function setEntity(Entity $entity)
+    public function setEntity(Entity $entity): object
     {
         $this->entity = $entity;
+
+        return $this;
     }
-
-
-
-
-
 }

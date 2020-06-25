@@ -9,15 +9,21 @@ use RuntimeException;
 
 trait MiddlewareManagerTrait
 {
-
+    /**
+     * The list of middlewares (array keys are the priority, array values are list of middleware instances or class names or callables).
+     *
+     * @var array[]
+     */
     protected $middleware = [];
 
     /**
-     * Get a list of middlewares
+     * Get a list of middlewares.
      *
-     * @return Middleware[]
+     * @throws \RuntimeException if a registered middewares is not valid
+     *
+     * @return \League\Tactician\Middleware[]
      */
-    public function getMiddleware()
+    public function getMiddleware(): array
     {
         $middleware = $this->middleware;
         ksort($middleware);
@@ -26,9 +32,30 @@ trait MiddlewareManagerTrait
     }
 
     /**
-     * Inflate middlware from string to a class using the applicaton
+     * Add a middleware to this bus.
      *
      * @param string|Middleware $middleware
+     * @param int $priority
+     *
+     * @return $this
+     */
+    public function addMiddleware($middleware, int $priority = 10): object
+    {
+        if (!isset($this->middleware[$priority])) {
+            $this->middleware[$priority] = [];
+        }
+
+        $this->middleware[$priority][] = $middleware;
+
+        return $this;
+    }
+
+    /**
+     * Inflate middlware from string to a class using the applicaton.
+     *
+     * @param string|\League\Tactician\Middleware|callable $middleware
+     *
+     * @throws \RuntimeException if $middleware is not valid
      *
      * @return \League\Tactician\Middleware
      */
@@ -38,33 +65,17 @@ trait MiddlewareManagerTrait
             $middleware = $this->app->make($middleware);
         }
 
-        if (!$middleware instanceof Middleware && is_callable($middleware)) {
-            $middleware = $this->app->call($middleware);
-        }
-
-        // The given middleware wasn't a string, callable, or an instance
         if (!$middleware instanceof Middleware) {
-            throw new RuntimeException('Invalid command bus middleware provided. Must be a class name, a function, or a Middleware instance.');
+            if (is_callable($middleware)) {
+                $middleware = $this->app->call($middleware);
+            }
+            if (!$middleware instanceof Middleware) {
+                // The given middleware wasn't a string, callable, or an instance
+
+                throw new RuntimeException('Invalid command bus middleware provided. Must be a class name, a function, or a Middleware instance.');
+            }
         }
 
         return $middleware;
     }
-
-    /**
-     * Add a middleware to this bus
-     *
-     * @param string|Middleware $middleware
-     * @param int $priority
-     *
-     * @return void
-     */
-    public function addMiddleware($middleware, int $priority = 10): void
-    {
-        if (!isset($this->middleware[$priority])) {
-            $this->middleware[$priority] = [];
-        }
-
-        $this->middleware[$priority][] = $middleware;
-    }
-
 }

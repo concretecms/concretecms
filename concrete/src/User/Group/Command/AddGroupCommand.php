@@ -7,22 +7,25 @@ use Concrete\Core\User\Group\Command\Traits\GroupDetailsTrait;
 
 class AddGroupCommand implements CommandInterface
 {
-
     use GroupDetailsTrait;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $pkgID = 0;
+    protected $pkgID;
 
-    public function setPackageID($pkgID)
-    {
-        $this->pkgID =$pkgID;
-    }
-
-    public function getPackageID() : int
+    public function getPackageID(): ?int
     {
         return $this->pkgID;
     }
 
+    /**
+     * @return $this
+     */
+    public function setPackageID(?int $pkgID): object
+    {
+        $this->pkgID = $pkgID;
+
+        return $this;
+    }
 }
