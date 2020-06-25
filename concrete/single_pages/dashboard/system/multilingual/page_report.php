@@ -11,11 +11,15 @@ if (count($sections) > 0) {
         <div class="ccm-search-fields-row">
             <div class="form-group">
                 <?= $form->label('keywords', t('Search')) ?>
-                <div class="ccm-search-field-content">
-                    <div class="ccm-search-main-lookup-field">
-                        <i class="fa fa-search"></i>
+                <div class="ccm-search-field-content row">
+                    <div class="input-group col-md-11">
                         <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>
-                        <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?= t('Search') ?></button>
+                        <div class="ccm-search-main-lookup-field input-group-append">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary" tabindex="-1"><?= t('Search') ?></button>
                     </div>
                 </div>
             </div>
@@ -39,9 +43,9 @@ if (count($sections) > 0) {
                             $args['disabled'] = 'disabled';
                         }
                         ?>
-                        <div>
-                            <label class="checkbox-inline">
-                                <?= $form->checkbox('targets[' . $sc->getCollectionID() . ']', $sc->getCollectionID(), in_array($sc->getCollectionID(), $targets), $args) ?>
+                        <div class="form-check form-check-inline">
+                            <?= $form->checkbox('targets[' . $sc->getCollectionID() . ']', $sc->getCollectionID(), in_array($sc->getCollectionID(), $targets), $args) ?>
+                            <label class="form-check-label">
                                 <?= $fh->getSectionFlagIcon($sc) ?>
                                 <?= $sc->getLanguageText(). " (".$sc->getLocale().")" ?>
                             </label>
@@ -54,21 +58,25 @@ if (count($sections) > 0) {
         </div>
         <div class="ccm-search-fields-row">
             <div class="form-group">
-                <label class="control-label"><?= t('Display') ?></label>
+                <label><?= t('Display') ?></label>
                 <div class="ccm-search-field-content">
-                    <label class="radio-inline">
+                    <div class="form-check form-check-inline">
                         <?= $form->radio('showAllPages', 0, 0) ?>
-                        <?= t('Only Missing Pages') ?>
-                    </label>
-                    <label class="radio-inline">
+                        <label class="form-check-label">
+                            <?= t('Only Missing Pages') ?>
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
                         <?= $form->radio('showAllPages', 1, false) ?>
-                        <?= t('All Pages') ?>
-                    </label>
+                        <label class="form-check-label">
+                            <?= t('All Pages') ?>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="ccm-search-fields-submit">
-            <button type="submit" class="btn btn-primary pull-right"><?= t('Search') ?></button>
+            <button type="submit" class="btn btn-primary float-right"><?= t('Search') ?></button>
         </div>
     </form>
 
@@ -80,7 +88,7 @@ if (count($sections) > 0) {
     }
     $sourceMS = Concrete\Core\Multilingual\Page\Section\Section::getByID($sectionID);
     ?>
-    <div class="table-responsive">
+    <div class="table-responsive pt-2">
         <table class="ccm-search-results-table">
             <thead>
                 <tr>

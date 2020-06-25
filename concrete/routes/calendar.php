@@ -26,6 +26,7 @@ $router->all('/ccm/calendar/dialogs/event/occurrence', '\Concrete\Controller\Dia
 $router->all('/ccm/calendar/dialogs/choose_event', '\Concrete\Controller\Dialog\ChooseEvent::view');
 $router->all('/ccm/calendar/dialogs/choose_event/get_events', '\Concrete\Controller\Dialog\ChooseEvent::getEvents');
 $router->all('/ccm/calendar/event/get_json', '\Concrete\Controller\Event\Event::getJSON');
+$router->post('/ccm/calendar/event_occurrence/get_json', '\Concrete\Controller\Event\Event::getOccurrence');
 $router->all('/ccm/calendar/dialogs/permissions/{pkCategoryHandle}', '\Concrete\Controller\Dialog\Calendar\Permissions::view');
 
 $router->all('/ccm/calendar/dialogs/event/summary_templates', '\Concrete\Controller\Dialog\Event\SummaryTemplates::view');

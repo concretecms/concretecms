@@ -74,12 +74,14 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
             if ($templateDriver->getTotalContentSlots() == count($itemObjectGroups)) {
                 $objectCollections = $availableObjectCollectionFactory
                     ->getObjectCollectionsForTemplate($template, $itemObjectGroups);
-                foreach ($objectCollections as $objectCollection) {
-                    $options[] = [
-                        'template' => $template,
-                        'collection' => $objectCollection,
-                        'content' => $renderer->render($objectCollection, $template)
-                    ];
+                if ($objectCollections) {
+                    foreach ($objectCollections as $objectCollection) {
+                        $options[] = [
+                            'template' => $template,
+                            'collection' => $objectCollection,
+                            'content' => $renderer->render($objectCollection, $template)
+                        ];
+                    }
                 }
             }
 

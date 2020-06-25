@@ -31,23 +31,28 @@ class PageSelector
             }
         }
 
+        $pageIdProp = 0;
         if ($selectedCID && \Concrete\Core\Page\Page::getByID($selectedCID)->getError() !== COLLECTION_NOT_FOUND) {
-            $args = "{'inputName': '{$fieldName}', 'cID': {$selectedCID}}";
-        } else {
-            $args = "{'inputName': '{$fieldName}'}";
+            $pageIdProp = $selectedCID;
         }
 
-        $identifier = new \Concrete\Core\Utility\Service\Identifier();
-        $identifier = $identifier->getString(32);
+        $chooseText = t('Choose Page');
+        $uniqid = uniqid();
         $html = <<<EOL
-        <div data-page-selector="{$identifier}"></div>
-        <script type="text/javascript">
-        $(function() {
-            $('[data-page-selector={$identifier}]').concretePageSelector({$args});
-        });
-        </script>
+<div data-concrete-page-input="{$uniqid}">
+    <concrete-page-input :page-id="{$pageIdProp}" choose-text="{$chooseText}" input-name="{$fieldName}"></concrete-page-input>
+</div>
+<script type="text/javascript">
+$(function() {
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-concrete-page-input="{$uniqid}"]',
+            components: config.components
+        })
+    })
+});
+</script>
 EOL;
-
         return $html;
     }
 

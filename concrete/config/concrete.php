@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a2',
     'version_installed' => '9.0.0a2',
-    'version_db' => '20200611161800', // the key of the latest database migration
+    'version_db' => '20200625191946', // the key of the latest database migration
 
     /*
      * Installation status
@@ -611,7 +611,6 @@ return [
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,
-        'app_version_display_in_header' => true,
         /*
          * The JPEG compression level (in range 0... 100)
          */
