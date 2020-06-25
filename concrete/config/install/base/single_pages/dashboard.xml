@@ -51,6 +51,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="File Details" path="/dashboard/files/details" filename="/dashboard/files/details.php" pagetype="" description="" package="">
+            <attributes>
+            	<attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php"
               pagetype="" description="" package="">
             <attributes>
