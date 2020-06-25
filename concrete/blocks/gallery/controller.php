@@ -6,6 +6,8 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File as ConcreteFile;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
@@ -14,7 +16,7 @@ use Generator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btGallery';
     protected $btInterfaceWidth = '750';
@@ -29,6 +31,18 @@ class Controller extends BlockController
 
     /** @var ResolverManager|null */
     private $urls;
+
+    /**
+     * Return a list of features used by this block
+     *
+     * @return string[]
+     */
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::IMAGERY
+        ];
+    }
 
     public function getBlockTypeName()
     {
@@ -303,18 +317,13 @@ class Controller extends BlockController
     protected function getDisplayChoices(): array
     {
         return [
-            "gallery-specific-options" => [
-                "value" => '',
-                "title" => 'Gallery Specific Options',
-                "type" => 'text'
-            ],
             "size" => [
-                "value" => '',
+                "value" => 'standard',
                 "title" => 'Size',
                 "type" => 'select',
                 "options" => [
-                    "square" => 'Square Image',
-                    "default" => 'Keep Image Aspect Ratio'
+                    "wide" => 'Wide',
+                    "standard" => 'Standard',
                 ]
             ]
         ];
