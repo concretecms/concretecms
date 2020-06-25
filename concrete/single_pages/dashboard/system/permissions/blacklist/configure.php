@@ -21,7 +21,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
             list($selectedUnit, $unitValue) = $controller->splitSeconds($category->getTimeWindow());
             echo t(
                 /* i18n: %1$s is the number of events, %2$s is the number of seconds/minutes/hours/days, %3$s is "seconds", "minutes", "hours" or "days" */
-                'Lock IP after %1$s events in %2$s %3$s',
+                '<div class="form-text">Lock IP after %1$s events in %2$s %3$s</div>',
                 $form->number('maxEvents', $category->getMaxEvents(), ['style' => 'width:90px', 'required' => 'required', 'min' => 1]),
                 $form->number('timeWindowValue', $unitValue, ['style' => 'width:90px', 'min' => 1]),
                 $form->select('timeWindowUnit', $units, $selectedUnit)
@@ -30,16 +30,16 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
         </div>
 
         <div class="form-group form-inline">
-            <?= $form->label('banDurationUnlimited', t('Ban Duration'))?>
+            <?= $form->label('banDurationUnlimited', t('Ban Duration'), ['class'=>'form-check-label'])?>
             <br />
-            <div class="radio">
+            <div class="form-check">
                 <label>
                     <?= $form->radio('banDurationUnlimited', '0', $category->getBanDuration() === null ? '1' : '0') ?>
                     <?php
                     list($selectedUnit, $unitValue) = $controller->splitSeconds($category->getBanDuration() === null ? 300 : $category->getBanDuration());
                     echo t(
                         /* i18n: %1$s is the number of seconds/minutes/hours/days, %2$s is "seconds", "minutes", "hours" or "days" */
-                        'Ban IP for %1$s %2$s',
+                        '<div class="form-text">Ban IP for %1$s %2$s</div>',
                         $form->number('banDurationValue', $unitValue, ['style' => 'width:90px', 'min' => 1]),
                         $form->select('banDurationUnit', $units, $selectedUnit)
                     );
@@ -47,7 +47,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
                 </label>
             </div>
             <br />
-            <div class="radio">
+            <div class="form-check">
                 <label>
                     <?= $form->radio('banDurationUnlimited', '1', $category->getBanDuration() === null ? '1' : '0') ?>
                     <?= t('Ban Forever') ?>
