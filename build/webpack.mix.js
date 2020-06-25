@@ -32,6 +32,11 @@ mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
 /**
  * Build shared assets
  */
+// Fullcalendar
+mix
+    .copy('node_modules/fullcalendar/dist/fullcalendar.min.css', '../concrete/css/fullcalendar.css')
+    .js('node_modules/@concretecms/bedrock/assets/calendar/js/vendor/fullcalendar.js', 'js/fullcalendar.js');
+
 // CKEditor
 mix
     .sass('node_modules/@concretecms/bedrock/assets/ckeditor/scss/concrete.scss', 'css/ckeditor/concrete.css')

@@ -381,7 +381,9 @@ return [
      * Assets
      */
     'assets' => [
-        // Basic JavaScript requirements
+        // External vendor libraries required to run concrete5 or our themes at a fundamental level that can't
+        // or shouldn't be bundled with our own SCSS/JS files.
+
         'jquery' => [
             [
                 'javascript',
@@ -411,12 +413,26 @@ return [
             ['css', 'css/ckeditor/concrete.css'],
         ],
 
+        'fullcalendar' => [
+            ['javascript', 'js/fullcalendar.js'],
+            ['css', 'css/fullcalendar.css'],
+        ],
+
         'font-awesome' => [
             [
                 'css',
                 'css/fontawesome/all.css'
             ],
         ],
+
+        'google-charts' => [
+            [
+                'javascript',
+                'https://www.gstatic.com/charts/loader.js',
+                ['local' => false],
+            ],
+        ],
+
 
         // Foundational Assets
         'core/cms' => [
@@ -504,13 +520,6 @@ return [
             ['css', 'css/features/maps/frontend.css'],
         ],
 
-        'google-charts' => [
-            [
-                'javascript',
-                'https://www.gstatic.com/charts/loader.js',
-                ['local' => false],
-            ],
-        ],
     ],
     'asset_groups' => [
 
@@ -549,6 +558,13 @@ return [
                 ['javascript-localized', 'core/cms'],
                 ['css', 'core/cms'],
             ]
+        ],
+
+        'fullcalendar' => [
+            [
+                ['javascript', 'fullcalendar'],
+                ['css', 'fullcalendar'],
+            ],
         ],
 
         // Fallback/minimal assets groups

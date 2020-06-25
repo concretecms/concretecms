@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Event;
 
+use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\UnapproveCalendarEventRequest;
@@ -29,6 +30,31 @@ class Event extends \Concrete\Core\Controller\Controller
         }
         throw new \Exception(t('Access Denied'));
     }
+
+    public function getOccurrence()
+    {
+        $occurrence = $this->app->make(EventOccurrenceService::class)
+            ->getByID($this->request->request->get('eventOccurrenceID'));
+        if (is_object($occurrence)) {
+            $event = $occurrence->getEvent();
+            if ($event) {
+                $calendar = $event->getCalendar();
+                if (is_object($calendar)) {
+                    $p = new \Permissions($calendar);
+                    if ($p->canViewCalendarInEditInterface()) {
+                        $obj = new \stdClass();
+                        $obj->id = $occurrence->getID();
+                        $obj->eventID = $event->getID();
+                        $obj->title = $event->getName();
+
+                        return new JsonResponse($obj);
+                    }
+                }
+            }
+        }
+        throw new \Exception(t('Access Denied'));
+    }
+
 
     public function unapprove()
     {

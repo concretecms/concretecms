@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
-use Concrete\Core\Entity\Calendar;
+use Concrete\Core\Entity\Calendar\Calendar;
 
 class CalendarEventSelector
 {
