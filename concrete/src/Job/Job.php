@@ -350,9 +350,6 @@ abstract class Job extends ConcreteObject
             $error = static::JOB_ERROR_EXCEPTION_GENERAL;
         }
 
-        $je = new Event($this);
-        Events::dispatch('on_job_execute', $je);
-
         $obj = $this->markCompleted($error, $resultMsg);
 
         return $obj;
