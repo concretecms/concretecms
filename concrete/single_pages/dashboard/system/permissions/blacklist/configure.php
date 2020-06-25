@@ -30,7 +30,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
         </div>
 
         <div class="form-group form-inline">
-            <?= $form->label('banDurationUnlimited', t('Ban Duration'), ['class'=>'form-check-label'])?>
+            <?= $form->label('banDurationUnlimited', t('Ban Duration:'), ['class'=>'form-check-label','style'=>'margin-right:9px;'])?>
             <br />
             <div class="form-check">
                 <label>
@@ -47,6 +47,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
                 </label>
             </div>
             <br />
+            <div class="form-text" style="margin: 0 9px;"><?=t('or')?></div>
             <div class="form-check">
                 <label>
                     <?= $form->radio('banDurationUnlimited', '1', $category->getBanDuration() === null ? '1' : '0') ?>
