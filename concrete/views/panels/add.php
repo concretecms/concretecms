@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 <section>
     <header class="pl-0 pr-0">
-        <div class="dropdown" data-panel-menu="dropdown">
+        <div id="dropdown-menu" class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
             <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
                 <?php
@@ -46,33 +46,39 @@ defined('C5_EXECUTE') or die('Access Denied.');
     case 'containers':
         /* @var Concrete\Core\Entity\Page\Container[] $containers */
         ?>
-        <ul id="ccm-panel-add-container-list">
-            <?php
-            foreach ($containers as $container) {
-                ?>
-                <li>
-                    <a
-                        href="#"
-                        class="ccm-panel-add-container-item"
-                        data-panel-add-block-drag-item="container"
-                        data-cID="<?= (int) $c->getCollectionID() ?>"
-                        data-container-id="<?=$container->getContainerID() ?>"
-                        data-block-type-handle="core_container"
-                        data-has-add-template="no"
-                        data-supports-inline-add="no"
-                        data-btID="0"
-                        data-dragging-avatar="<?= h('<p>' . $container->getContainerIconImage() . '<span>' . $container->getContainerName() . '</span></p>') ?>"
-                    >
-                       <span class="handle">
-                           <img src="<?=$container->getContainerIconImage(false)?>" />
-                            <span><?= h($container->getContainerName()) ?></span>
-                       </span>
-                    </a>
-                </li>
+        <div class="ccm-panel-header-search">
+            <svg><use xlink:href="#icon-search" /></svg>
+            <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
+        </div>
+        <div class="ccm-panel-content-inner ccm-stacked-list" id="ccm-panel-add-blocktypes-list" data-hide-grid-view-switcher>
+            <ul class="ccm-stacked-list">
                 <?php
-            }
-            ?>
-        </ul>
+                foreach ($containers as $container) {
+                    ?>
+                    <li>
+                        <a
+                            href="#"
+                            class="ccm-panel-add-block-draggable-block-type"
+                            data-panel-add-block-drag-item="container"
+                            data-cID="<?= (int) $c->getCollectionID() ?>"
+                            data-container-id="<?=$container->getContainerID() ?>"
+                            data-block-type-handle="core_container"
+                            data-has-add-template="no"
+                            data-supports-inline-add="no"
+                            data-btID="0"
+                            data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">' . $container->getContainerIconImage() . '</div><p><span>' . $container->getContainerName() . '</span></p>') ?>"
+                        >
+                        <!-- <span class="handle"> -->
+                            <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="<?=$container->getContainerIconImage(false)?>" /></div>
+                                <p><span><?= h($container->getContainerName()) ?></span></p>
+                        <!-- </span> -->
+                        </a>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </div>
         <script>
 
         </script>
@@ -316,9 +322,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
             $(this).prev('header[data-toggle="collapse"]').find('i.fa').toggleClass('fa-chevron-up fa-chevron-down');
         });
         // switching between grid and stacked view for blocks
-        $('.ccm-panel-header-list-grid-view-switcher').on('click', function () {
+        var gridViewSwitcher = $('.ccm-panel-header-list-grid-view-switcher');
+
+        gridViewSwitcher.on('click', function () {
             $('#ccm-panel-add-blocktypes-list').toggleClass('ccm-stacked-list');
             $(this).find('i.fa').toggleClass('fa-list fa-th');
+        });
+
+        // hiding the grid view switcher when not needed.
+        Concrete.event.bind('PanelLoad', function(evt, data) {
+            gridViewSwitcher.removeClass('d-none');
+            var element = $(data.element);
+            if (element.find('[data-hide-grid-view-switcher]').length) {
+                gridViewSwitcher.addClass('d-none');
+            }
         });
     });
 </script>
