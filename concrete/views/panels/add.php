@@ -330,6 +330,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         });
 
         // hiding the grid view switcher when not needed.
+        // This uses a data attribute to mark panels
+        // that don't require the grid switcher
         Concrete.event.bind('PanelLoad', function(evt, data) {
             gridViewSwitcher.removeClass('d-none');
             var element = $(data.element);
