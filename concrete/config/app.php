@@ -779,6 +779,9 @@ return [
         ['Concrete\Core\Board\Command\UnpinSlotFromBoardCommand', 'Concrete\Core\Board\Command\UnpinSlotFromBoardCommandHandler'],
         ['Concrete\Core\Board\Command\AddCustomBlockToBoardCommand', 'Concrete\Core\Board\Command\AddCustomBlockToBoardCommandHandler'],
         ['Concrete\Core\Express\Command\RescanEntityCommand', 'Concrete\Core\Express\Command\RescanEntityCommandHandler'],
+
+        ['Concrete\Core\Board\Designer\Command\CreateCustomElementCommand', 'Concrete\Core\Board\Designer\Command\CreateCustomElementCommandHandler'],
+
     ],
 
 ];

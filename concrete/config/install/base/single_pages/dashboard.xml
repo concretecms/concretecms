@@ -296,6 +296,15 @@
             </attributes>
         </page>
 
+        <page name="Designer" path="/dashboard/boards/designer" filename="/dashboard/boards/designer.php" pagetype=""
+              description="" package="">
+        </page>
+
+        <page name="Choose Items" path="/dashboard/boards/designer/choose_items" filename="/dashboard/boards/designer/choose_items.php" pagetype=""
+              description="" package="">
+        </page>
+
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>
