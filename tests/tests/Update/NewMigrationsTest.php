@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Update;
 
-use Concrete\TestHelpers\CI\Exception;
-use Concrete\TestHelpers\CI\PullRequestState;
-use Concrete\TestHelpers\CI\StateFactory;
+use CIInfo\Exception;
+use CIInfo\State\PullRequest;
+use CIInfo\StateFactory;
 use PHPUnit\Framework\TestCase;
 
 class NewMigrationsTest extends TestCase
@@ -28,15 +28,15 @@ class NewMigrationsTest extends TestCase
     /**
      * @throws \PHPUnit\Framework\SkippedTestError
      */
-    protected function getPullRequestState(): PullRequestState
+    protected function getPullRequestState(): PullRequest
     {
         try {
-            $state = app(StateFactory::class, ['env' => getenv()])->getState();
+            $state = (new StateFactory())->getCurrentState();
         } catch (Exception $x) {
             $this->markTestSkipped('Failed to get the CI state: ' . $x->getMessage());
         }
-        if (!($state instanceof PullRequestState)) {
-            $this->markTestSkipped('Test valid only for pull request (current event: ' . $state->getEvent() . ')');
+        if (!($state instanceof PullRequest)) {
+            $this->markTestSkipped('Test valid only for pull requests (current job type: ' . $state->getEvent() . ')');
         }
 
         return $state;
@@ -45,7 +45,7 @@ class NewMigrationsTest extends TestCase
     /**
      * @throws \PHPUnit\Framework\SkippedTestError
      */
-    protected function getBaseMigrationID(PullRequestState $state): string
+    protected function getBaseMigrationID(PullRequest $state): string
     {
         $rc = -1;
         $output = [];
@@ -67,7 +67,7 @@ class NewMigrationsTest extends TestCase
      *
      * @return string[]
      */
-    protected function listPullRequestMigrationIDs(PullRequestState $state): array
+    protected function listPullRequestMigrationIDs(PullRequest $state): array
     {
         $rc = -1;
         $output = [];
