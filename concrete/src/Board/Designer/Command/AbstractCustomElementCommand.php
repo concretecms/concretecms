@@ -2,18 +2,13 @@
 
 namespace Concrete\Core\Board\Designer\Command;
 
-class CreateCustomElementCommand
+abstract class AbstractCustomElementCommand
 {
 
     /**
      * @var string
      */
     protected $elementName;
-
-    /**
-     * @var string
-     */
-    protected $creationMethod;
 
     /**
      * @return string
@@ -31,20 +26,5 @@ class CreateCustomElementCommand
         $this->elementName = $elementName;
     }
 
-    /**
-     * @return string
-     */
-    public function getCreationMethod(): string
-    {
-        return $this->creationMethod;
-    }
-
-    /**
-     * @param string $creationMethod
-     */
-    public function setCreationMethod(string $creationMethod): void
-    {
-        $this->creationMethod = $creationMethod;
-    }
 
 }

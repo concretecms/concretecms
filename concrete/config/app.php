@@ -780,7 +780,9 @@ return [
         ['Concrete\Core\Board\Command\AddCustomBlockToBoardCommand', 'Concrete\Core\Board\Command\AddCustomBlockToBoardCommandHandler'],
         ['Concrete\Core\Express\Command\RescanEntityCommand', 'Concrete\Core\Express\Command\RescanEntityCommandHandler'],
 
-        ['Concrete\Core\Board\Designer\Command\CreateCustomElementCommand', 'Concrete\Core\Board\Designer\Command\CreateCustomElementCommandHandler'],
+        ['Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommand', 'Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommandHandler'],
+        ['Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommand', 'Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommandHandler'],
+        ['Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand', 'Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommandHandler'],
 
     ],
 

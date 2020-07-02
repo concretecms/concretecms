@@ -19,6 +19,13 @@ class AvailableTemplateCollectionFactory
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @return SlotTemplate[]
+     */
+    public function getAllSlotTemplates()
+    {
+        return $this->entityManager->getRepository(SlotTemplate::class)->findAll();
+    }
 
     public function getAvailableTemplates(Instance $instance, int $slot)
     {
@@ -26,7 +33,7 @@ class AvailableTemplateCollectionFactory
         if ($board->hasCustomSlotTemplates()) {
             $availableTemplates = $board->getCustomSlotTemplates();
         } else {
-            $availableTemplates = $this->entityManager->getRepository(SlotTemplate::class)->findAll();
+            $availableTemplates = $this->getAllSlotTemplates();
         }
 
         $availableTemplatesByFormFactor = [];

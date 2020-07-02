@@ -3,6 +3,7 @@ namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceItem;
+use Concrete\Core\Entity\Board\Item;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
@@ -42,10 +43,11 @@ class ItemSegmenter implements LoggerAwareInterface
     public function getBoardItemsForInstance(Instance $instance)
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('i')
-            ->from(InstanceItem::class, 'i')
-            ->where($qb->expr()->eq('i.instance', $instance))
-            ->andWhere($qb->expr()->eq('i.dateAddedToBoard', 0));
+        $qb->select('ii')
+            ->from(InstanceItem::class, 'ii')
+            ->innerJoin(Item::class, 'i')
+            ->where($qb->expr()->eq('ii.instance', $instance))
+            ->andWhere($qb->expr()->eq('ii.dateAddedToBoard', 0));
 
         $board = $instance->getBoard();
         switch($board->getSortBy()) {

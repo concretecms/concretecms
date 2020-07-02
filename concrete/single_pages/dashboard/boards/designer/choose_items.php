@@ -13,33 +13,60 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 
-<form method="post" action="<?=$view->action('submit', $element->getID())?>" data-form="choose-items" v-cloak>
+<form method="post" action="<?=$view->action('submit', $element->getID())?>">
     <?=$token->output('submit')?>
 
-    <div v-for="(item, index) in items" :key="index">
+    <div data-form="choose-items" v-cloak>
+        <div v-for="(item, index) in items" :key="index">
 
-        <div>
-            <div class="form-group">
-                <label class="control-label">{{item.label}}</></label>
-                <a @click="removeItem(index)" href="#" class="ccm-hover-icon float-right">
-                    <svg width="20" height="20"><use xlink:href="#icon-minus-circle" /></svg>
-                </a>
-                <component :is="item.itemComponent" v-bind="item.data"></component>
+            <a @click="removeItem(index)" href="#" class="ccm-hover-icon float-right">
+                <svg width="20" height="20"><use xlink:href="#icon-minus-circle" /></svg>
+            </a>
+
+            <div v-if="item.itemType === 'page'">
+                <div class="form-group">
+                    <label class="control-label"><?=t('Page')?></label>
+                    <concrete-page-input
+                            choose-text="<?=t('Choose Page')?>"
+                            input-name="field[page][]"
+                            :page-id="item.data.pageId"
+                    ></concrete-page-input>
+                </div>
             </div>
+
+            <div v-if="item.itemType === 'calendar_event'">
+                <div class="form-group">
+                    <label class="control-label"><?=t('Choose Calendar')?></label>
+                    <select v-model.number="items[index].data.calendarId" class="form-control">
+                        <?php foreach($calendarSelect as $id => $calendar) { ?>
+                            <option value="<?=$id?>"><?=$calendar?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group" v-if="items[index].data.calendarId > 0">
+                    <label class="control-label"><?=t('Event')?></label>
+                    <concrete-event-occurrence-input
+                            :calendar-id="items[index].data.calendarId"
+                            choose-text="<?=t('Choose Event')?>"
+                            input-name="field[calendar_event][]"
+                            :event-occurrence-id="item.data.eventVersionOccurrenceId">
+
+                    </concrete-event-occurrence-input>
+                </div>
+            </div>
+
         </div>
 
+        <h3 class="font-weight-light"><?=t('Add Item')?></h3>
+        <div class="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                <?=t('Choose Type')?>
+            </button>
 
-    </div>
-
-    <h3 class="font-weight-light"><?=t('Add Item')?></h3>
-    <div class="dropdown">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-            <?=t('Choose Type')?>
-        </button>
-
-        <div class="dropdown-menu">
-            <a href="#" @click="addItem('page')" class="dropdown-item"><?=t('Page')?></a>
-            <a href="#" @click="addItem('calendar_event')" class="dropdown-item"><?=t('Calendar Event')?></a>
+            <div class="dropdown-menu">
+                <a href="#" @click="addItem('page')" class="dropdown-item"><?=t('Page')?></a>
+                <a href="#" @click="addItem('calendar_event')" class="dropdown-item"><?=t('Calendar Event')?></a>
+            </div>
         </div>
     </div>
 
@@ -54,31 +81,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $(function() {
     Concrete.Vue.activateContext('cms', function (Vue, config) {
         new Vue({
-            el: 'form[data-form=choose-items]',
+            el: 'div[data-form=choose-items]',
             components: config.components,
             data: {
-                availableItems: {
-                    'page': {
-                        'itemType': 'page',
-                        'itemComponent': 'ConcretePageInput',
-                        'label': <?=json_encode(t('Page'))?>,
-                        'data': {
-                            'chooseText': <?=json_encode(t('Choose Page'))?>,
-                            'inputName': 'field[page][]'
-                        }
-                    },
-                    'calendar_event': {
-                        'itemType': 'calendar_event',
-                        'itemComponent': 'ConcreteEventOccurrenceInput',
-                        'label': <?=json_encode(t('Calendar Event'))?>,
-                        'data': {
-                            'calendarId': 1,
-                            'chooseText': <?=json_encode(t('Choose Event'))?>,
-                            'inputName': 'field[calendar_event][]'
-                        }
-                    },
-                },
-                items: [],
+                items: <?=json_encode($items)?>,
             },
 
             watch: {},
@@ -88,8 +94,12 @@ $(function() {
                     this.items.splice(index, 1);
                 },
                 addItem(itemTypeHandle) {
-                    const data = this.availableItems[itemTypeHandle]
-                    this.items.push(data)
+                    this.items.push({
+                        itemType: itemTypeHandle,
+                        data: {
+                            'calendarId': '0'
+                        }
+                    })
                 }
             }
         })

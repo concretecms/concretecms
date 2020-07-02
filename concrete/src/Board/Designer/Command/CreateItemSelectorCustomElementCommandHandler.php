@@ -4,10 +4,11 @@ namespace Concrete\Core\Board\Designer\Command;
 
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Designer\CustomElement;
+use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManager;
 
-class CreateCustomElementCommandHandler
+class CreateItemSelectorCustomElementCommandHandler
 {
 
     /**
@@ -26,15 +27,14 @@ class CreateCustomElementCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(CreateCustomElementCommand $command)
+    public function handle(CreateItemSelectorCustomElementCommand $command)
     {
         if ($this->user->isRegistered()) {
             $author = $this->user->getUserInfoObject()->getEntityObject();
         }
 
-        $element = new CustomElement();
+        $element = new ItemSelectorCustomElement();
         $element->setElementName($command->getElementName());
-        $element->setCreationMethod($command->getCreationMethod());
         $element->setDateCreated(time());
         $element->setAuthor($author);
 

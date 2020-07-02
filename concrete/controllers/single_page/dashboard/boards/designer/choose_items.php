@@ -1,17 +1,16 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards\Designer;
 
-use Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand;
+use Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommand;
+use Concrete\Core\Board\Instance\Item\Populator\CalendarEventPopulator;
+use Concrete\Core\Board\Instance\Item\Populator\PagePopulator;
+use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\EventOccurrenceService;
-use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Entity\Board\Designer\CustomElement;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Utility\Service\Validation\Strings;
-use Concrete\Core\Validation\SanitizeService;
 
 class ChooseItems extends DashboardSitePageController
 {
@@ -20,7 +19,47 @@ class ChooseItems extends DashboardSitePageController
     {
         $element = $this->getCustomElement($id);
         if (is_object($element)) {
+            $calendars = Calendar::getList();
+            $calendarSelect = ['0' => t('** Choose Calendar')];
+            foreach($calendars as $calendar) {
+                $permissions = new Checker($calendar);
+                if ($permissions->canViewCalendarInEditInterface()) {
+                    $calendarSelect[$calendar->getID()] = $calendar->getName();
+                }
+            }
+            $this->set('calendarSelect', $calendarSelect);
             $this->set('element', $element);
+            $items = [];
+            // @TODO - this should be done in a way that's not as hard coded and much more modular. See other comments
+            // elsewhere
+            $eventOccurrenceService = $this->app->make(EventOccurrenceService::class);
+            foreach($element->getItems() as $elementItem) {
+                $item = $elementItem->getItem();
+                $this->entityManager->refresh($item);
+                $dataSourceHandle = $elementItem->getItem()->getDataSource()->getHandle();
+                $data = [];
+                switch($dataSourceHandle) {
+                    case 'calendar_event':
+                        $event = $eventOccurrenceService->getByID($elementItem->getItem()->getUniqueItemId());
+                        if ($event) {
+                            $data['eventVersionOccurrenceId'] = $event->getID();
+                            $data['calendarId'] = $event->getEvent()->getCalendar()->getID();
+                        }
+                        break;
+                    case 'page':
+                        $page = Page::getByID($elementItem->getItem()->getUniqueItemID());
+                        if ($page && !$page->isError()) {
+                            $data['pageId'] = $page->getCollectionID();
+                        }
+                        break;
+                }
+                $item = [
+                    'itemType' => $dataSourceHandle,
+                    'data' => $data
+                ];
+                $items[] = $item;
+            }
+            $this->set('items', $items);
         } else {
             return $this->redirect('/dashboard/boards/designer');
         }
@@ -54,6 +93,7 @@ class ChooseItems extends DashboardSitePageController
             $request = $this->request->request->all();
             $pages = [];
             $events = [];
+
             if (!empty($request['field']['page'])) {
                 foreach((array) $request['field']['page'] as $cID) {
                     $page = Page::getByID($cID);
@@ -71,130 +111,36 @@ class ChooseItems extends DashboardSitePageController
                     }
                 }
             }
+
+            $items = [];
+            $pagePopulator = $this->app->make(PagePopulator::class);
+            $calendarEventPopulator = $this->app->make(CalendarEventPopulator::class);
+            $pageDataSource = $this->entityManager->getRepository(DataSource::class)->findOneByHandle('page');
+            $calendarEventDataSource = $this->entityManager->getRepository(DataSource::class)->findOneByHandle('calendar_event');
+
+            foreach($pages as $page) {
+                $item = $pagePopulator->createItemFromObject($pageDataSource, $page);
+                if ($item) {
+                    $items[] = $item;
+                }
+            }
+            foreach($events as $event) {
+                $item = $calendarEventPopulator->createItemFromObject($calendarEventDataSource, $event);
+                if ($item) {
+                    $items[] = $item;
+                }
+            }
+
+            // Save the items against the instance.
+            $command = new SetItemSelectorCustomElementItemsCommand($element, $items);
+            $this->app->executeCommand($command);
+            $this->flash('success', t('Designer element items updated.'));
+            return $this->buildRedirect(['/dashboard/boards/designer/customize_slot', 'view', $element->getID()]);
         }
 
         $this->view($elementID);
     }
-    /*
-    public function add($boardID = null, $dataSourceID = null)
-    {
-        $board = $this->getBoard($boardID);
-        $dataSource = $this->entityManager->find(DataSource::class, $dataSourceID);
-        if (is_object($board) && $dataSource) {
-            $this->set('board', $board);
-            $this->set('dataSource', $dataSource);
-            $this->render('/dashboard/boards/data_sources/add');
-        } else {
-            return $this->redirect('/dashboard/boards/boards');
-        }
-    }
 
-    public function update($configuredDataSourceID = null)
-    {
-        $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $configuredDataSourceID);
-        if ($configuredDataSource) {
-            $board = $configuredDataSource->getBoard();
-            $dataSource = $configuredDataSource->getDataSource();
-            $this->set('board', $board);
-            $this->set('dataSource', $dataSource);
-            $this->set('configuredDataSource', $configuredDataSource);
-            $this->render('/dashboard/boards/data_sources/update');
-        } else {
-            return $this->redirect('/dashboard/boards/boards');
-        }
-    }
-
-    public function update_data_source($configuredDataSourceID = null)
-    {
-        $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $configuredDataSourceID);
-        if ($configuredDataSource) {
-            $board = $configuredDataSource->getBoard();
-            $dataSource = $configuredDataSource->getDataSource();
-            if (!$this->token->validate('update_data_source')) {
-                $this->error->add($this->token->getErrorMessage());
-            }
-            $security = new SanitizeService();
-            $strings = $this->app->make(Strings::class);
-            $name = $security->sanitizeString($this->post('dataSourceName'));
-
-            if (!$strings->notempty($name)) {
-                $this->error->add(t('You must specify a valid name for your data source.'));
-            }
-            if (!$this->error->has()) {
-                $driver = $dataSource->getDriver();
-                $saver = $driver->getSaver();
-                $saver->updateConfiguredDataSourceFromRequest($name, $configuredDataSource, $this->request);
-                $this->flash('success', t('Data Source updated successfully.'));
-                $resetCommand = new ResetBoardCustomWeightingCommand();
-                $resetCommand->setBoard($board);
-                $this->executeCommand($resetCommand);
-                return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
-            }
-            $this->update($board->getBoardID(), $dataSource->getId());
-        } else {
-            return $this->redirect('/dashboard/boards/boards');
-        }
-    }
-
-    public function delete_data_source($configuredDataSourceID = null)
-    {
-        $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $configuredDataSourceID);
-        if ($configuredDataSource) {
-            if (!$this->token->validate('delete_data_source')) {
-                $this->error->add($this->token->getErrorMessage());
-            }
-            if (!$this->error->has()) {
-                $board = $configuredDataSource->getBoard();
-                $this->entityManager->remove($configuredDataSource);
-                $this->entityManager->flush();
-                $resetCommand = new ResetBoardCustomWeightingCommand();
-                $resetCommand->setBoard($board);
-                $this->executeCommand($resetCommand);
-
-                $this->flash('success', t('Data Source removed successfully.'));
-                return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
-            }
-            $this->update($configuredDataSource->getId());
-        } else {
-            return $this->redirect('/dashboard/boards/boards');
-        }
-    }
-
-
-    public function add_data_source($boardID = null, $dataSourceID = null)
-    {
-        $board = $this->getBoard($boardID);
-        $dataSource = $this->entityManager->find(DataSource::class, $dataSourceID);
-        if (is_object($board) && $dataSource) {
-            if (!$this->token->validate('add_data_source')) {
-                $this->error->add($this->token->getErrorMessage());
-            }
-            $security = new SanitizeService();
-            $strings = $this->app->make(Strings::class);
-            $name = $security->sanitizeString($this->post('dataSourceName'));
-
-            if (!$strings->notempty($name)) {
-                $this->error->add(t('You must specify a valid name for your data source.'));
-            }
-
-            if (!$this->error->has()) {
-                $driver = $dataSource->getDriver();
-                $saver = $driver->getSaver();
-                $saver->addConfiguredDataSourceFromRequest($name, $board, $dataSource, $this->request);
-                $resetCommand = new ResetBoardCustomWeightingCommand();
-                $resetCommand->setBoard($board);
-                $this->executeCommand($resetCommand);
-
-                $this->flash('success', t('Data Source created successfully.'));
-                return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
-            }
-            $this->add($boardID, $dataSourceID);
-        } else {
-            return $this->redirect('/dashboard/boards/boards');
-        }
-
-    }
-    */
 
 
 }

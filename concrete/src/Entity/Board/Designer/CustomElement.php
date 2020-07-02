@@ -7,12 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="BoardDesignerCustomElements")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"itemSelector" = "ItemSelectorCustomElement"})
  */
-class CustomElement
+abstract class CustomElement
 {
-
-    const CREATION_METHOD_CUSTOM = 'C';
-    const CREATION_METHOD_ITEMS = 'I';
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
@@ -30,13 +30,6 @@ class CustomElement
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
      */
     protected $author;
-
-    /**
-     * I = select items and build a stripe that way
-     * C = custom designed stripe
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    protected $creationMethod;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
@@ -86,22 +79,6 @@ class CustomElement
     /**
      * @return mixed
      */
-    public function getCreationMethod()
-    {
-        return $this->creationMethod;
-    }
-
-    /**
-     * @param mixed $creationMethod
-     */
-    public function setCreationMethod($creationMethod): void
-    {
-        $this->creationMethod = $creationMethod;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAuthor()
     {
         return $this->author;
@@ -129,5 +106,6 @@ class CustomElement
         $dateTime->setTimezone(new \DateTimeZone($timeZone));
         return $dateTime;
     }
+
 
 }

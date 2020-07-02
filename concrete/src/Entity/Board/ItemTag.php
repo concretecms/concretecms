@@ -6,20 +6,20 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="BoardInstanceItemTags")
+ * @ORM\Table(name="BoardItemTags")
  */
-class InstanceItemTag
+class ItemTag
 {
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $boardInstanceItemTagID;
+    protected $boardItemTagID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InstanceItem",  inversedBy="tags")
-     * @ORM\JoinColumn(name="boardInstanceItemID", referencedColumnName="boardInstanceItemID")
+     * @ORM\ManyToOne(targetEntity="Item",  inversedBy="tags")
+     * @ORM\JoinColumn(name="boardItemID", referencedColumnName="boardItemID")
      **/
     protected $item;
 
@@ -32,7 +32,7 @@ class InstanceItemTag
      * ItemTag constructor.
      * @param $tag
      */
-    public function __construct(InstanceItem $item, $tag)
+    public function __construct(Item $item, $tag)
     {
         $this->item = $item;
         $this->tag = $tag;
@@ -41,9 +41,9 @@ class InstanceItemTag
     /**
      * @return mixed
      */
-    public function getBoardInstanceItemTagID()
+    public function getBoardItemTagID()
     {
-        return $this->boardInstanceItemTagID;
+        return $this->boardItemTagID;
     }
 
     /**

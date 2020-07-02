@@ -2,6 +2,9 @@
 namespace Concrete\Core\Entity\Board;
 
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Permission\Assignment\BoardAssignment;
+use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Permission\Response\BoardResponse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -229,10 +232,12 @@ class Instance implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        $site = $this->getSite();
         return [
             'boardInstanceID' => $this->getBoardInstanceID(),
             'name' => $this->getBoardInstanceName(),
-            'dateCreated' => $this->getDateCreated()
+            'dateCreated' => $this->getDateCreated(),
+            'site' => $site,
         ];
     }
 
