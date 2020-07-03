@@ -12,6 +12,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 <section>
     <header class="pl-0 pr-0">
+        <?php if ($tab == 'containers' || $tab == 'blocks') { ?>
+            <div class="ccm-panel-header-search">
+                <svg><use xlink:href="#icon-search" /></svg>
+                <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
+            </div>
+        <?php } ?>
         <div id="dropdown-menu" class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
             <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
@@ -46,10 +52,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
     case 'containers':
         /* @var Concrete\Core\Entity\Page\Container[] $containers */
         ?>
-        <div class="ccm-panel-header-search">
-            <svg><use xlink:href="#icon-search" /></svg>
-            <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
-        </div>
         <div class="ccm-panel-content-inner ccm-stacked-list" id="ccm-panel-add-blocktypes-list" data-hide-grid-view-switcher>
             <ul class="ccm-stacked-list">
                 <?php
@@ -242,10 +244,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
         case 'blocks':
             /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
             ?>
-            <div class="ccm-panel-header-search">
-                <svg><use xlink:href="#icon-search" /></svg>
-                <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
-            </div>
             <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
                 <?php
                 $i = 0;
