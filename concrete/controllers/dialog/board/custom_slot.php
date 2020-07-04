@@ -4,7 +4,7 @@ namespace Concrete\Controller\Dialog\Board;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Board\Command\AddCustomBlockToBoardCommand;
+use Concrete\Core\Board\Command\AddCustomSlotToBoardCommand;
 use Concrete\Core\Board\Helper\Traits\SlotTemplateJsonHelperTrait;
 use Concrete\Core\Board\Instance\Slot\Content\AvailableObjectCollectionFactory;
 use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
@@ -110,7 +110,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         ];
         $block = $type->add($data);
 
-        $command = new AddCustomBlockToBoardCommand();
+        $command = new AddCustomSlotToBoardCommand();
         $command->setBlockID($block->getBlockID());
         $command->setSlot($slot);
         $command->setInstance($instance);

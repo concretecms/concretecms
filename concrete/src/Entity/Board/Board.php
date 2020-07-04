@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Boards")
  */
-class Board implements ObjectInterface, AssignableObjectInterface
+class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializable
 {
 
     use AssignableObjectTrait;
@@ -297,6 +297,11 @@ class Board implements ObjectInterface, AssignableObjectInterface
         return false;
     }
 
+    public function __toString()
+    {
+        return (string) $this->getBoardID();
+    }
+
     public function setPermissionsToOverride()
     {
         $app = Facade::getFacadeApplication();
@@ -307,6 +312,14 @@ class Board implements ObjectInterface, AssignableObjectInterface
         $manager->setPermissionsToOverride($this);
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getBoardID(),
+            'name' => $this->getBoardName(),
+            'template' => $this->getTemplate()
+        ];
+    }
 
 
 }

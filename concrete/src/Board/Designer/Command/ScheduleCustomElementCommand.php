@@ -38,6 +38,11 @@ class ScheduleCustomElementCommand
     protected $timezone;
 
     /**
+     * @var int
+     */
+    protected $slot;
+
+    /**
      * L or U
      * @var string
      */
@@ -140,9 +145,21 @@ class ScheduleCustomElementCommand
         $this->lockType = $lockType;
     }
 
+    /**
+     * @return int
+     */
+    public function getSlot(): int
+    {
+        return $this->slot;
+    }
 
-
-
+    /**
+     * @param int $slot
+     */
+    public function setSlot(int $slot): void
+    {
+        $this->slot = $slot;
+    }
 
 
 

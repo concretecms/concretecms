@@ -81,16 +81,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <?= $form->label('timezone', t('Time Zone')); ?>
                         <?= $form->select('timezone', $date->getTimezones(), ['v-model' => 'timezone'])?>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label" for="chooseSlot"><?=t('Slot')?></label>
+                        <select class="form-control" id="chooseSlot" v-model="slot">
+                            <option v-for="currentSlot in totalSlots" :value="currentSlot">{{currentSlot}}</option>
+                        </select>
+                    </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" :checked="lockType === 'L'" id="lockType1" type="radio" name="lockType" value="L">
+                        <input class="form-check-input" id="lockType1" type="radio" v-model="lockType" value="L">
                         <label class="form-check-label" for="lockType1">
                             <?=t('Lock stripe – only admins can change.')?>
                         </label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="lockType" id="lockType2" value="U">
+                        <input class="form-check-input" type="radio" id="lockType2" v-model="lockType" value="U">
                         <label class="form-check-label" for="lockType2">
                             <?=t('Share stripe – editors can remove.')?>
                         </label>
@@ -122,6 +128,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     start: '',
                     end: '',
                     lockType: 'L',
+                    slot: 1,
                     timezone: '<?=date_default_timezone_get()?>'
                 },
 
@@ -138,6 +145,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         }
                         return null
                     },
+                    totalSlots() {
+                        let totalSlots = 0
+                        this.instances.forEach(function(instance) {
+                            if (instance.board.template.slots > totalSlots) {
+                                totalSlots = instance.board.template.slots
+                            }
+                        })
+                        return totalSlots
+                    }
                 },
 
                 watch: {
@@ -168,6 +184,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                 data: {
                                     ccm_token: '<?=$token->generate('submit')?>',
                                     elementId: '<?=$element->getID()?>',
+                                    slot: this.slot,
                                     start: this.startFormatted,
                                     end: this.endFormatted,
                                     lockType: this.lockType,

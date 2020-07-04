@@ -9,11 +9,30 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="BoardInstanceSlotRules")
  */
-class InstanceSlotRule
+class InstanceSlotRule implements \JsonSerializable
 {
 
-    const RULE_TYPE_PINNED = 'P';
-    const RULE_TYPE_CUSTOM_BLOCK = 'C';
+    /**
+     * This is set when an editor or administrator uses the in-context controls to pin an auto generated slot
+     */
+    const RULE_TYPE_EDITOR_PINNED = 'EP';
+
+    /**
+     * This is set when an editor or administrator uses the in-context controls to generate a custom slot and place
+     * it in the board.
+     */
+    const RULE_TYPE_EDITOR_CUSTOM_SLOT_CONTENT = 'ES';
+
+    /**
+     * This is set when an admin uses the Dashboard board designer interface to create custom content and push it out
+     * to one or more boards. These slots supersede the editor rules above.
+     */
+    const RULE_TYPE_ADMIN_PUBLISHED_SLOT = 'AS';
+
+    /**
+     * Like the above, this is set when an admin uses the dashboard designer interface but chooses to LOCK the slot
+     */
+    const RULE_TYPE_ADMIN_PUBLISHED_SLOT_LOCKED = 'AL';
 
     /**
      * @ORM\Id
@@ -48,9 +67,24 @@ class InstanceSlotRule
     protected $user;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $name;
+
+    /**
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $dateCreated;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $startDate;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $endDate;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -161,6 +195,51 @@ class InstanceSlotRule
         $this->bID = $bID;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param mixed $startDate
+     */
+    public function setStartDate($startDate): void
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param mixed $endDate
+     */
+    public function setEndDate($endDate): void
+    {
+        $this->endDate = $endDate;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getBoardInstanceSlotRuleID(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate() > 0 ? $this->getEndDate() : null,
+            'dateCreated' => $this->getDateCreated(),
+            'user' => $this->getUser(),
+            'ruleType' => $this->getRuleType(),
+            'slot' => $this->getSlot(),
+
+        ];
+    }
 
 
 }

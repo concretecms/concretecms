@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Board\Designer;
 
+use Concrete\Core\Block\Block;
 use Concrete\Core\Localization\Service\Date;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class CustomElement
 {
+
+    abstract public function createBlock() : Block;
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})

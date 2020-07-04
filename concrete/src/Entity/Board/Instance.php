@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="InstanceRepository")
  * @ORM\Table(name="BoardInstances")
  */
 class Instance implements \JsonSerializable
@@ -238,6 +238,7 @@ class Instance implements \JsonSerializable
             'name' => $this->getBoardInstanceName(),
             'dateCreated' => $this->getDateCreated(),
             'site' => $site,
+            'board' => $this->getBoard(),
         ];
     }
 

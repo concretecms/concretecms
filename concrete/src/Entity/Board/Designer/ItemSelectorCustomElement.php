@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Board\Designer;
 
+use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Localization\Service\Date;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -63,6 +65,17 @@ class ItemSelectorCustomElement extends CustomElement
     public function setSlotTemplate($slotTemplate): void
     {
         $this->slotTemplate = $slotTemplate;
+    }
+
+    public function createBlock(): Block
+    {
+        $type = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
+        $data = [
+            'contentObjectCollection' => json_encode($this->getContentObjectCollection()),
+            'slotTemplateID' => $this->getSlotTemplate()->getId(),
+        ];
+        $block = $type->add($data);
+        return $block;
     }
 
 

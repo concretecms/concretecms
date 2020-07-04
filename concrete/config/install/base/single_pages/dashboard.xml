@@ -296,6 +296,18 @@
             </attributes>
         </page>
 
+        <page name="Rules" path="/dashboard/boards/instances/rules" filename="/dashboard/boards/instances/rules.php" pagetype=""
+              description="View override rules for your instance." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Designer" path="/dashboard/boards/designer" filename="/dashboard/boards/designer.php" pagetype=""
               description="" package="">
         </page>

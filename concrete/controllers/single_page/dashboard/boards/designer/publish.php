@@ -37,8 +37,10 @@ class Publish extends DashboardSitePageController
     {
         $element = $this->getCustomElement($id);
         if (is_object($element)) {
+            $template = $element->getSlotTemplate();
             $instances = [];
-            foreach($this->entityManager->getRepository(Instance::class)->findBy([], ['boardInstanceName' => 'asc']) as $instance) {
+            $r = $this->entityManager->getRepository(Instance::class);
+            foreach($r->findByBoardsUsingSlotTemplate($template) as $instance) {
                 $permissions = new Checker($instance->getBoard());
                 if ($permissions->canEditBoardContents()) { // @TODO - make this is a separate permission?
                     $instances[] = $instance;
@@ -86,6 +88,7 @@ class Publish extends DashboardSitePageController
                 }
             }
             $command->setInstances($instances);
+            $command->setSlot((int) $this->request->request->get('slot'));
             $command->setLockType($this->request->request->get('lockType'));
             $command->setTimezone($this->request->request->get('timezone'));
             $command->setStartDate($this->request->request->get('start'));

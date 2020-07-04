@@ -34,7 +34,7 @@ class RenderedSlotCollectionFactory
         // commenting this out because we want to grab pinned OR custom blocks. We may need more control
         //    ->andWhere('r.ruleType = :ruleType');
         // so I'm keeping this here.
-        //$qb->setParameter('ruleType', InstanceSlotRule::RULE_TYPE_PINNED);
+        //$qb->setParameter('ruleType', InstanceSlotRule::RULE_TYPE_EDITOR_PINNED);
         $qb->setParameter('instance', $instance);
         $rules = $qb->getQuery()->execute();
 

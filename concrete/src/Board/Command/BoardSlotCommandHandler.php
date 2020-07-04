@@ -14,7 +14,7 @@ abstract class BoardSlotCommandHandler
      */
     protected $entityManager;
 
-    abstract protected function getRuleType();
+    abstract protected function getRuleType($command);
 
     public function __construct(EntityManager $entityManager)
     {
@@ -35,8 +35,10 @@ abstract class BoardSlotCommandHandler
                 $rule->setUser($userInfo->getEntityObject());
             }
         }
+        $rule->setStartDate($command->getStartDate());
+        $rule->setEndDate($command->getEndDate());
         $rule->setBlockID($command->getBlockID());
-        $rule->setRuleType($this->getRuleType());
+        $rule->setRuleType($this->getRuleType($command));
         $this->entityManager->persist($rule);
         $this->entityManager->flush();
     }

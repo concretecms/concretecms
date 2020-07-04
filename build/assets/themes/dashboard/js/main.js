@@ -8,7 +8,11 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 // Import the CMS components and the backend components
 // Note, this currently isn't technically necessary, but I'm putting here so we have some place to put components
 // as we create them.
-Concrete.Vue.createContext('backend', [], 'cms')
+import BoardInstanceRule from './components/Board/InstanceRule'
+
+Concrete.Vue.createContext('backend', {
+    BoardInstanceRule
+}, 'cms')
 
 // Desktops and waiting for me
 import '@concretecms/bedrock/assets/desktop/js/frontend';

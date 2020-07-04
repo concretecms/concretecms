@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="BoardTemplates"
  * )
  */
-class Template
+class Template implements \JsonSerializable
 {
     use PackageTrait;
 
@@ -125,5 +125,16 @@ class Template
         $template->addAttribute('name', h($this->getName()));
         $template->addAttribute('icon', h($this->getIcon()));
         $template->addAttribute('package', $this->getPackageHandle());
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->getName(),
+            'id' => $this->getId(),
+            'icon' => $this->getIcon(),
+            'slots' => $this->getDriver()->getTotalSlots(),
+            'formFactor' => $this->getDriver()->getFormFactor()
+        ];
     }
 }
