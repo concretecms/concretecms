@@ -260,7 +260,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             <?= $setName ?><i class="fa fa-chevron-up float-right"></i>
                         </header>
                         <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
-                        <ul class="d-flex flex-wrap">
+                        <?php
+                            // This class is added to help align the last row when it contains less than 3 elements
+                            $justifyLastRowClass= (count($blockTypes) % 3) > 0 ? 'ccm-flex-align-last-row' : '';
+                        ?>
+                        <ul class="d-flex flex-row flex-wrap justify-content-between <?= $justifyLastRowClass; ?>">
                             <?php
                             foreach ($blockTypes as $bt) {
                                 $btIcon = $ci->getBlockTypeIconURL($bt);
@@ -318,6 +322,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
         // switching the up/down arrows for collapsing block sets
         $('#ccm-panel-add-block').find('div[id^="ccm-block-set-"]').on('hidden.bs.collapse shown.bs.collapse', function () {
             $(this).prev('header[data-toggle="collapse"]').find('i.fa').toggleClass('fa-chevron-up fa-chevron-down');
+        });
+
+        // This makes the elements under the dropdown not react to hover.
+        // Originally the block below the dropdown would grab the focus
+        // and it would be impossible to click a link in the dropdown
+        $('#dropdown-menu').on('hide.bs.dropdown shown.bs.dropdown', function () {
+            $('#ccm-panel-add-blocktypes-list').toggleClass('ccm-no-pointer-events');
         });
         // switching between grid and stacked view for blocks
         var gridViewSwitcher = $('.ccm-panel-header-list-grid-view-switcher');
