@@ -57,11 +57,19 @@ class MailImporter extends ConcreteObject
 
     public static function getByID($miID)
     {
-        $db = Database::connection();
+        $db  = Database::connection();
         $row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
+
         if (isset($row['miID'])) {
             $txt = Core::make('helper/text');
-            $mi = Core::make('\\Concrete\\Core\\Mail\\Importer\\Type\\' . $txt->camelcase($row['miHandle']));
+
+            if (isset($row['pkgID'])) {
+              $pkgHandle = PackageList::getHandle($row['pkgID']);
+              $mi        = Core::make('\\Concrete\\Package\\' . $txt->camelcase($pkgHandle) . '\\Src\\Mail\\Importer\\Type\\' . $txt->camelcase($row['miHandle']));
+            } else {
+              $mi = Core::make('\\Concrete\\Core\\Mail\\Importer\\Type\\' . $txt->camelcase($row['miHandle']));
+            }
+
             $mi->setPropertiesFromArray($row);
 
             return $mi;
