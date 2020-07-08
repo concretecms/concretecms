@@ -2,20 +2,47 @@
 
 namespace Concrete\Core\Board\Designer\Command;
 
-
-use Concrete\Core\Board\Command\BoardSlotCommandHandler;
+use Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommand;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
+use Concrete\Core\User\User;
+use Doctrine\ORM\EntityManager;
 
-class AddDesignerSlotToBoardCommandHandler extends BoardSlotCommandHandler
+class AddDesignerSlotToBoardCommandHandler
 {
 
     /**
-     * @param AddDesignerSlotToBoardCommand $command
-     * @return string
+     * @var EntityManager
      */
-    public function getRuleType($command)
+    protected $entityManager;
+
+    public function __construct(EntityManager $entityManager)
     {
-        return $command->getLockType();
+        $this->entityManager = $entityManager;
     }
+
+    public function handle(AddDesignerSlotToBoardCommand $command)
+    {
+        $dateCreated = new \DateTime();
+        $dateCreated->setTimezone(new \DateTimeZone($command->getTimezone()));
+
+        $slot = $command->getSlot();
+        $rule = new InstanceSlotRule();
+        $rule->setInstance($command->getInstance());
+        $rule->setSlot($slot);
+        $rule->setDateCreated($dateCreated->getTimestamp());
+        $rule->setTimezone($command->getTimezone());
+        $rule->setUser($command->getUser());
+        $rule->setIsLocked($command->isLocked());
+        $rule->setBatchIdentifier($command->getBatchIdentifier());
+
+        $rule->setStartDate($command->getStartDate());
+        $rule->setEndDate($command->getEndDate());
+        $rule->setBlockID($command->getBlockID());
+        $rule->setRuleType($command->getRuleType());
+        $rule->setNotes($command->getNotes());
+        $this->entityManager->persist($rule);
+        $this->entityManager->flush();
+    }
+
 
 }

@@ -77,12 +77,13 @@ class CustomizeSlot extends DashboardSitePageController
 
             $element->setContentObjectCollection($objectCollection);
             $element->setSlotTemplate($template);
+            $element->setIsDraft(false);
             $this->entityManager->persist($element);
             $this->entityManager->flush();
 
             $this->flash('success', t('Designer element items updated.'));
 
-            return $this->buildRedirect(['/dashboard/boards/designer/publish', 'view', $element->getID()]);
+            return $this->buildRedirect(['/dashboard/boards/designer/', 'view_element', $element->getID()]);
         }
 
         $this->view($elementID);

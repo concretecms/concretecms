@@ -336,16 +336,8 @@
             </attributes>
         </page>
 
-        <page name="Publish Slot" path="/dashboard/boards/designer/publish" filename="/dashboard/boards/designer/publish.php" pagetype=""
+        <page name="Scheduler" path="/dashboard/boards/scheduler" filename="/dashboard/boards/scheduler.php" pagetype=""
               description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
         </page>
 
 

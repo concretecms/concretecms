@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"itemSelector" = "ItemSelectorCustomElement"})
  */
-abstract class CustomElement
+abstract class CustomElement implements \JsonSerializable
 {
 
     abstract public function createBlock() : Block;
@@ -38,6 +38,16 @@ abstract class CustomElement
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $dateCreated;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isDraft = true;
+
+    /**
+     * @ORM\Column(type="guid")
+     */
+    protected $batchIdentifier;
 
     /**
      * @return mixed
@@ -95,20 +105,53 @@ abstract class CustomElement
         $this->author = $author;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getBatchIdentifier()
+    {
+        return $this->batchIdentifier;
+    }
+
+    /**
+     * @param mixed $batchIdentifier
+     */
+    public function setBatchIdentifier($batchIdentifier): void
+    {
+        $this->batchIdentifier = $batchIdentifier;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDraft(): bool
+    {
+        return $this->isDraft;
+    }
+
+    /**
+     * @param bool $isDraft
+     */
+    public function setIsDraft(bool $isDraft): void
+    {
+        $this->isDraft = $isDraft;
+    }
+
     public function getDateCreatedDateTime()
     {
         $dateService = new Date();
-        $timeZone = $dateService->getTimezoneID('app');
-        if ($this->author) {
-            $authorTimeZone = $this->author->getUserTimezone();
-            if ($authorTimeZone) {
-                $timeZone = $authorTimeZone;
-            }
-        }
+        $timezone = $dateService->getUserTimeZoneID();
         $dateTime = new \DateTime('@' . $this->dateCreated);
-        $dateTime->setTimezone(new \DateTimeZone($timeZone));
+        $dateTime->setTimezone(new \DateTimeZone($timezone));
         return $dateTime;
     }
 
-
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getID(),
+            'name' => $this->getElementName(),
+            'dateCreated' => $this->getDateCreated(),
+        ];
+    }
 }

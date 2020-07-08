@@ -11,8 +11,19 @@ class Designer extends DashboardPageController
     public function view()
     {
         $r = $this->entityManager->getRepository(CustomElement::class);
-        $elements = $r->findBy([], ['dateCreated' => 'desc']);
+        $elements = $r->findBy(['isDraft' => false], ['dateCreated' => 'desc']);
+        $drafts = $r->findBy(['isDraft' => true], ['dateCreated' => 'desc']);
         $this->set('elements', $elements);
+        $this->set('drafts', $drafts);
+    }
+
+    public function view_element($id = null)
+    {
+        $element = $this->entityManager->find(CustomElement::class, $id);
+        if ($element && !$element->isDraft()) {
+            $this->set('element', $element);
+            $this->render('/dashboard/boards/designer/view_element');
+        }
     }
 
     public function add()
@@ -20,10 +31,44 @@ class Designer extends DashboardPageController
         $this->render('/dashboard/boards/designer/add');
     }
 
+    public function delete_element($id)
+    {
+        if (!$this->token->validate('delete_element')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $element = $this->entityManager->find(CustomElement::class, $id);
+            if ($element) {
+                $this->entityManager->remove($element);
+                $this->entityManager->flush();
+                $this->flash('success', t('Custom element removed.'));
+                return $this->buildRedirect(['/dashboard/boards/designer']);
+            }
+        }
+    }
+
+    public function getContinueURL(CustomElement $element)
+    {
+        $url = $this->app->make('url');
+        $items = $element->getItems();
+        if (count($items)) {
+            if ($element->getSlotTemplate()) {
+                return $url->to('/dashboard/boards/designer/publish', $element->getID());
+            } else {
+                return $url->to('/dashboard/boards/designer/customize_slot', $element->getID());
+            }
+        } else {
+            return $url->to('/dashboard/boards/designer/choose_items', $element->getID());
+        }
+    }
+
     public function add_element()
     {
         if (!$this->token->validate('add_element')) {
             $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->request->request->get('elementName')) {
+            $this->error->add(t('Element name is required.'));
         }
         if (!$this->error->has()) {
             // This is where we'll eventually put a switch on the creation method. But since there's only one
@@ -33,6 +78,7 @@ class Designer extends DashboardPageController
             $element = $this->app->executeCommand($command);
             return $this->buildRedirect(['/dashboard/boards/designer/choose_items', $element->getID()]);
         }
+        $this->add();
     }
 
 }

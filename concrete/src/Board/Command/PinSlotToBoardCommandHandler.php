@@ -9,7 +9,7 @@ class PinSlotToBoardCommandHandler extends BoardSlotCommandHandler
 
     protected function getRuleType($command)
     {
-        return InstanceSlotRule::RULE_TYPE_PINNED;
+        return InstanceSlotRule::RULE_TYPE_AUTOMATIC_SLOT_PINNED;
     }
 
 }

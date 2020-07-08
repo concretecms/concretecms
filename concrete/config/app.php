@@ -776,7 +776,7 @@ return [
 
 
         ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\UnpinSlotFromBoardCommand', 'Concrete\Core\Board\Command\UnpinSlotFromBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearSlotFromBoardCommand', 'Concrete\Core\Board\Command\ClearSlotFromBoardCommandHandler'],
         ['Concrete\Core\Board\Command\AddCustomSlotToBoardCommand', 'Concrete\Core\Board\Command\AddCustomSlotToBoardCommandHandler'],
         ['Concrete\Core\Express\Command\RescanEntityCommand', 'Concrete\Core\Express\Command\RescanEntityCommandHandler'],
 

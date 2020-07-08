@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Board\Instance\Slot\Template;
 
+use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
 use Concrete\Core\Entity\Board\SlotTemplate;
@@ -27,14 +28,20 @@ class AvailableTemplateCollectionFactory
         return $this->entityManager->getRepository(SlotTemplate::class)->findAll();
     }
 
-    public function getAvailableTemplates(Instance $instance, int $slot)
+    public function getBoardSlotTemplates(Board $board)
     {
-        $board = $instance->getBoard();
         if ($board->hasCustomSlotTemplates()) {
             $availableTemplates = $board->getCustomSlotTemplates();
         } else {
             $availableTemplates = $this->getAllSlotTemplates();
         }
+        return $availableTemplates;
+    }
+
+    public function getAvailableTemplates(Instance $instance, int $slot)
+    {
+
+        $availableTemplates = $this->getBoardSlotTemplates($instance->getBoard());
 
         $availableTemplatesByFormFactor = [];
         foreach($availableTemplates as $availableTemplate) {

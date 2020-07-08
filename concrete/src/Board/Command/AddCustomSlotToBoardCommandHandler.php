@@ -9,7 +9,7 @@ class AddCustomSlotToBoardCommandHandler extends BoardSlotCommandHandler
 
     protected function getRuleType($command)
     {
-        return InstanceSlotRule::RULE_TYPE_EDITOR_CUSTOM_SLOT_CONTENT;
+        return InstanceSlotRule::RULE_TYPE_CUSTOM_CONTENT;
     }
 
 }

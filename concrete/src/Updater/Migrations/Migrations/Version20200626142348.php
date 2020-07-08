@@ -24,8 +24,7 @@ class Version20200626142348 extends AbstractMigration implements RepeatableMigra
             ['exclude_nav' => true, 'exclude_search_index' => true]);
         $this->createSinglePage('/dashboard/boards/designer/customize_slot', 'Customize Slot',
             ['exclude_nav' => true, 'exclude_search_index' => true]);
-        $this->createSinglePage('/dashboard/boards/designer/publish', 'Publish',
-            ['exclude_nav' => true, 'exclude_search_index' => true]);
+        $this->createSinglePage('/dashboard/boards/scheduler', 'Scheduler');
         $this->createSinglePage('/dashboard/boards/instances/rules', 'Rules',
             ['exclude_nav' => true, 'exclude_search_index' => true]);
     }

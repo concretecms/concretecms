@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Boards\Designer;
+namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
 use Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand;
 use Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand;
@@ -19,6 +19,7 @@ use Concrete\Core\Entity\Board\Designer\CustomElement;
 use Concrete\Core\Entity\Board\Designer\CustomElementItem;
 use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement;
 use Concrete\Core\Entity\Board\Instance;
+use Concrete\Core\Entity\Board\InstanceSlotRule;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Localization\Service\Date;
@@ -30,13 +31,14 @@ use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\SanitizeService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Publish extends DashboardSitePageController
+class Scheduler extends DashboardSitePageController
 {
 
     public function view($id = null)
     {
         $element = $this->getCustomElement($id);
         if (is_object($element)) {
+            /*
             $template = $element->getSlotTemplate();
             $instances = [];
             $r = $this->entityManager->getRepository(Instance::class);
@@ -46,12 +48,22 @@ class Publish extends DashboardSitePageController
                     $instances[] = $instance;
                 }
             }
-            $this->set('date', new Date());
-            $this->set('instances', $instances);
-            $this->set('element', $element);
+            $this->set('instances', $instances);*/
+            $this->set('selectedElementID', $element->getID());
         } else {
-            return $this->redirect('/dashboard/boards/designer');
+            $this->set('selectedElementID', 0);
         }
+        $instances = [];
+        $r = $this->entityManager->getRepository(Instance::class);
+        foreach ($r->findAll() as $instance) {
+            $permissions = new Checker($instance->getBoard());
+            if ($permissions->canEditBoardContents()) {
+                $instances[] = $instance;
+            }
+        }
+        $this->set('elements', $this->entityManager->getRepository(CustomElement::class)->findAll([], ['elementName' => 'asc']));
+        $this->set('instances', $instances);
+        $this->set('date', new Date());
     }
 
     /**
@@ -63,6 +75,32 @@ class Publish extends DashboardSitePageController
         $r = $this->entityManager->getRepository(CustomElement::class);
         $element = $r->findOneById($id);
         return $element;
+    }
+
+    /**
+     * Returns a JSON encoded list of all rules that are shared across all the selected instances.
+     * If a single instance is sent to the server, we're just getting a full list of that instances
+     * rules.
+     */
+    public function get_shared_rules()
+    {
+        if (!$this->token->validate('get_shared_rules')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $instances = [];
+            $instanceRepository = $this->entityManager->getRepository(Instance::class);
+            foreach ((array)$this->request->request->get('instances') as $instanceID) {
+                $instance = $instanceRepository->find($instanceID);
+                if ($instance) {
+                    $instances[] = $instance;
+                }
+            }
+            $r = $this->entityManager->getRepository(InstanceSlotRule::class);
+            $rules = $r->findByMultipleInstances($instances);
+            return new JsonResponse($rules);
+        }
+        $this->view();
     }
 
     public function submit()

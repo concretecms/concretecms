@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollectionFactory;
 use Concrete\Core\Board\Permissions\PermissionsManager;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\PackageTrait;
@@ -317,7 +318,8 @@ class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializ
         return [
             'id' => $this->getBoardID(),
             'name' => $this->getBoardName(),
-            'template' => $this->getTemplate()
+            'template' => $this->getTemplate(),
+            'slotTemplates' => app(AvailableTemplateCollectionFactory::class)->getBoardSlotTemplates($this),
         ];
     }
 

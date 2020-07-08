@@ -9,10 +9,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <form data-form="publish" v-cloak>
     <div class="row">
         <div class="col-lg-5">
-            <button :disabled="selectedInstances.length === 0"
-                    type="button"
-                    class="btn btn-primary float-right btn-sm"
-                    data-toggle="modal" data-target="#schedule-modal"><?=t('Add Scheduled Stripe')?></button>
             <h3><?=t('Boards')?></h3>
             <table class="table w-100">
                 <thead>
@@ -32,12 +28,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </table>
         </div>
 
-        <div class="col-lg-5 offset-1">
-            <div>
-                <h3><?=t('Stripes Shared by Selected Boards')?></h3>
-                <p><?=t('Select some boards to see scheduled instances shared by those boards.')?></p>
+        <div class="col-lg-5 offset-1 pt-3">
+            <div class="mb-3">
+                <h3 class="mb-3"><?=t('Stripes Shared by Selected Boards')?></h3>
 
+                <transition-group name="concrete-delete-item">
+                    <board-instance-rule v-for="(rule, index) in sharedInstanceSlotRules" :key="rule.id"
+                                         v-on:delete="deleteRule(rule, index)" :rule="rule"
+                                         :show-delete-controls="true"></board-instance-rule>
+                </transition-group>
+
+                <p v-if="selectedInstances.length === 0"><?=t('Select some boards to see scheduled instances shared by those boards.')?></p>
             </div>
+            <div class="text-center">
+                    <button :disabled="selectedInstances.length === 0"
+        type="button"
+        class="btn btn-secondary"
+        data-toggle="modal" data-target="#schedule-modal"><?=t('Add Scheduled Stripe')?></button>
+            </div>
+
         </div>
     </div>
 
@@ -45,12 +54,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title"><?=t('Publish')?></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <svg><use xlink:href="#icon-dialog-close" /></svg>
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="element"><?=t('Element')?></label>
+                        <select :class='{"form-control": true, "is-invalid": invalidSelectedElement}' id="element" v-model="selectedElement">
+                            <option value="0">** Choose Element</option>
+                            <option v-for="element in elements" :value="element.id">{{element.name}}</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-6">
@@ -116,20 +132,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/javascript">
     $(function() {
-        Concrete.Vue.activateContext('cms', function (Vue, config) {
+        Concrete.Vue.activateContext('backend', function (Vue, config) {
             new Vue({
                 el: 'form[data-form=publish]',
                 components: config.components,
                 data: {
                     instances: <?=json_encode($instances)?>,
-                    selectedInstances: [4],
+                    selectedInstances: [],
                     bulkEnabled: false,
                     invalidStartDate: false,
+                    invalidSelectedElement: false,
                     start: '',
                     end: '',
                     lockType: 'L',
                     slot: 1,
-                    timezone: '<?=date_default_timezone_get()?>'
+                    timezone: '<?=date_default_timezone_get()?>',
+                    selectedElement: <?=json_encode($selectedElementID)?>,
+                    elements: <?=json_encode($elements)?>,
+                    sharedInstanceSlotRules: []
                 },
 
                 computed: {
@@ -159,6 +179,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 watch: {
                     start: function() {
                         this.invalidStartDate = false
+                    },
+                    selectedInstances: function() {
+                        this.sharedInstanceSlotRules = []
+                        var my = this
+                        new ConcreteAjaxRequest({
+                            url: '<?=$view->action('get_shared_rules')?>',
+                            method: 'POST',
+                            data: {
+                                ccm_token: '<?=$token->generate('get_shared_rules')?>',
+                                instances: this.selectedInstances
+                            },
+                            success: function (r) {
+                                my.sharedInstanceSlotRules = r
+                            }
+                        })
                     }
                 },
                 methods: {
@@ -169,6 +204,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             this.selectedInstances = [];
                         }
                     },
+                    deleteRule(rule, index) {
+                        var my = this
+                        new ConcreteAjaxRequest({
+                            url: CCM_DISPATCHER_FILENAME + '/ccm/system/board/instance/delete_rule_by_batch',
+                            data: {
+                                instances: this.selectedInstances,
+                                batchIdentifier: rule.batchIdentifier,
+                                ccm_token: CCM_SECURITY_TOKEN,
+                            },
+                            success: function (r) {
+                                my.sharedInstanceSlotRules.splice(index, 1);
+                            }
+                        })
+                    },
                     save() {
                         let valid = true
                         if (!this.startFormatted) {
@@ -177,13 +226,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         } else {
                             this.invalidStartDate = false
                         }
+                        if (this.selectedElement < 1) {
+                            this.invalidSelectedElement = true
+                        } else {
+                            this.invalidSelectedElement = false
+                        }
                         if (valid) {
                             new ConcreteAjaxRequest({
                                 url: '<?=$view->action('submit')?>',
                                 method: 'POST',
                                 data: {
                                     ccm_token: '<?=$token->generate('submit')?>',
-                                    elementId: '<?=$element->getID()?>',
+                                    elementId: this.selectedElement,
                                     slot: this.slot,
                                     start: this.startFormatted,
                                     end: this.endFormatted,

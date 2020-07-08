@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <hr>
 
         <div class="form-group">
-            <label class="control-label" for="elementName"><?=t('Name')?> <span class="text-muted font-weight-light"><?=t('Optional')?></span></label>
+            <label class="control-label" for="elementName"><?=t('Name')?></label>
             <input class="form-control" name="elementName" />
         </div>
 

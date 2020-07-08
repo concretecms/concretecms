@@ -78,5 +78,12 @@ class ItemSelectorCustomElement extends CustomElement
         return $block;
     }
 
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        $data['slotTemplate'] = $this->getSlotTemplate();
+        return $data;
+    }
+
 
 }
