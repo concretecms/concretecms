@@ -166,6 +166,11 @@
                 <entity type="group" name="Administrators"/>
             </access>
         </permissionkey>
+        <permissionkey handle="edit_boards_locked_rules" name="Edit Locked Rules" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
         <permissionkey handle="edit_boards_permissions" name="Edit Permissions" description="" package="" category="board_admin">
             <access>
                 <entity type="group" name="Administrators"/>
@@ -181,6 +186,7 @@
         <permissionkey handle="edit_board_settings" name="Edit Settings" description="" package="" category="board"/>
         <permissionkey handle="edit_board_permissions" name="Edit Permissions" description="" package="" category="board"/>
         <permissionkey handle="edit_board_contents" name="Edit Contents" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_locked_rules" name="Edit Locked Rules" description="" package="" category="board"/>
         <permissionkey handle="delete_board" name="Delete Board" description="" package="" category="board"/>
     </permissionkeys>
 

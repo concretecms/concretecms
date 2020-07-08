@@ -4,7 +4,8 @@ namespace Concrete\Controller\Dialog\Board;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Board\Command\AddCustomBlockToBoardCommand;
+use Concrete\Core\Board\Command\AddCustomSlotToBoardCommand;
+use Concrete\Core\Board\Helper\Traits\SlotTemplateJsonHelperTrait;
 use Concrete\Core\Board\Instance\Slot\Content\AvailableObjectCollectionFactory;
 use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
 use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
@@ -23,7 +24,10 @@ use Symfony\Component\HttpFoundation\Response;
 class CustomSlot extends \Concrete\Core\Controller\Controller
 {
 
+    use SlotTemplateJsonHelperTrait;
+
     protected $viewPath = '/dialogs/boards/custom_slot';
+
 
     protected function getInstanceFromRequest()
     {
@@ -53,8 +57,6 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         $entityManager = $this->app->make(EntityManager::class);
         $contentPopulator = $this->app->make(ContentPopulator::class);
         $availableTemplateCollectionFactory = $this->app->make(AvailableTemplateCollectionFactory::class);
-        $availableObjectCollectionFactory = $this->app->make(AvailableObjectCollectionFactory::class);
-        $renderer = $this->app->make(ContentRenderer::class);
 
         $instance = $this->getInstanceFromRequest();
         $items = [];
@@ -67,26 +69,8 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
             $instance, $this->request->request->get('slot')
         );
 
-        $options = [];
         $itemObjectGroups = $contentPopulator->createContentObjects($items);
-        foreach($templates as $template) {
-            $templateDriver = $template->getDriver();
-            if ($templateDriver->getTotalContentSlots() == count($itemObjectGroups)) {
-                $objectCollections = $availableObjectCollectionFactory
-                    ->getObjectCollectionsForTemplate($template, $itemObjectGroups);
-                if ($objectCollections) {
-                    foreach ($objectCollections as $objectCollection) {
-                        $options[] = [
-                            'template' => $template,
-                            'collection' => $objectCollection,
-                            'content' => $renderer->render($objectCollection, $template)
-                        ];
-                    }
-                }
-            }
-
-        }
-        return new JsonResponse($options);
+        return new JsonResponse($this->createSlotTemplateJsonArray($templates, $itemObjectGroups));
     }
 
     public function replace()
@@ -96,8 +80,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         $entityManager = $this->app->make(EntityManager::class);
         foreach($instance->getBoard()->getDataSources() as $dataSource) {
             $items = $entityManager->getRepository(InstanceItem::class)
-                ->findByDataSource($dataSource, $instance)
-                ->toArray();
+                ->findByDataSource($dataSource, $instance);
             $dataSources[] = [
                 'id' => $dataSource->getConfiguredDataSourceID(),
                 'name' => $dataSource->getName(),
@@ -127,7 +110,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         ];
         $block = $type->add($data);
 
-        $command = new AddCustomBlockToBoardCommand();
+        $command = new AddCustomSlotToBoardCommand();
         $command->setBlockID($block->getBlockID());
         $command->setSlot($slot);
         $command->setInstance($instance);

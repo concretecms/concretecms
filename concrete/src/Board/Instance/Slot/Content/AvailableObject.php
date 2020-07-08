@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
-use Concrete\Core\Entity\Board\InstanceItem;
+use Concrete\Core\Board\Item\ItemProviderInterface;
 
 class AvailableObject
 {
@@ -12,7 +12,7 @@ class AvailableObject
     protected $slot = 0;
 
     /**
-     * @var InstanceItem
+     * @var ItemProviderInterface
      */
     protected $item;
 
@@ -24,10 +24,10 @@ class AvailableObject
     /**
      * AvailableObject constructor.
      * @param int $slot
-     * @param InstanceItem $item
+     * @param ItemProviderInterface $item
      * @param ObjectInterface $contentObject
      */
-    public function __construct(int $slot, InstanceItem $item, ObjectInterface $contentObject)
+    public function __construct(int $slot, ItemProviderInterface $item, ObjectInterface $contentObject)
     {
         $this->slot = $slot;
         $this->item = $item;
@@ -43,9 +43,9 @@ class AvailableObject
     }
 
     /**
-     * @return InstanceItem
+     * @return ItemProviderInterface
      */
-    public function getItem(): InstanceItem
+    public function getItem(): ItemProviderInterface
     {
         return $this->item;
     }

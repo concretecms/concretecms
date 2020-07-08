@@ -1,19 +1,37 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
-use Doctrine\Common\Collections\ArrayCollection;
+use Concrete\Core\Board\Instance\Slot\Rule\BoardDesignerSharedSlotFormatter;
+use Concrete\Core\Board\Instance\Slot\Rule\CustomSlotContentFormatter;
+use Concrete\Core\Board\Instance\Slot\Rule\FormatterInterface;
+use Concrete\Core\Board\Instance\Slot\Rule\SlotPinnedFormatter;
+use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="InstanceSlotRuleRepository")
  * @ORM\Table(name="BoardInstanceSlotRules")
  */
-class InstanceSlotRule
+class InstanceSlotRule implements \JsonSerializable
 {
 
-    const RULE_TYPE_PINNED = 'P';
-    const RULE_TYPE_CUSTOM_BLOCK = 'C';
+    /**
+     * This is set when an editor or administrator uses the in-context controls to pin an auto generated slot
+     */
+    const RULE_TYPE_AUTOMATIC_SLOT_PINNED = 'EP';
+
+    /**
+     * This is set when an editor or administrator uses the in-context controls to generate a custom slot and place
+     * it in the board.
+     */
+    const RULE_TYPE_CUSTOM_CONTENT = 'ES';
+
+    /**
+     * This is set when an admin uses the Dashboard board designer interface to create custom content and push it out
+     * to one or more boards. These slots supersede the editor rules above.
+     */
+    const RULE_TYPE_DESIGNER_CUSTOM_CONTENT = 'AS';
+
 
     /**
      * @ORM\Id
@@ -37,6 +55,11 @@ class InstanceSlotRule
     protected $slot;
 
     /**
+     * @ORM\Column(type="guid")
+     */
+    protected $batchIdentifier;
+
+    /**
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $bID;
@@ -48,9 +71,34 @@ class InstanceSlotRule
     protected $user;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $notes;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $timezone;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isLocked = false;
+
+    /**
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $dateCreated;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $startDate;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $endDate;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -161,6 +209,140 @@ class InstanceSlotRule
         $this->bID = $bID;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param mixed $startDate
+     */
+    public function setStartDate($startDate): void
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param mixed $endDate
+     */
+    public function setEndDate($endDate): void
+    {
+        $this->endDate = $endDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone): void
+    {
+        $this->timezone = $timezone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    public function getRuleFormatter(): FormatterInterface
+    {
+        if ($this->getRuleType() === self::RULE_TYPE_AUTOMATIC_SLOT_PINNED) {
+            return new SlotPinnedFormatter();
+        }
+        if ($this->getRuleType() === self::RULE_TYPE_CUSTOM_CONTENT) {
+            return new CustomSlotContentFormatter();
+        }
+        if ($this->getRuleType() === self::RULE_TYPE_DESIGNER_CUSTOM_CONTENT) {
+            return new BoardDesignerSharedSlotFormatter();
+        }
+    }
+
+    /**
+     * @param mixed $notes
+     */
+    public function setNotes($notes): void
+    {
+        $this->notes = $notes;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked(): bool
+    {
+        return $this->isLocked;
+    }
+
+    /**
+     * @param bool $isLocked
+     */
+    public function setIsLocked(bool $isLocked): void
+    {
+        $this->isLocked = $isLocked;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBatchIdentifier()
+    {
+        return $this->batchIdentifier;
+    }
+
+    /**
+     * @param mixed $batchIdentifier
+     */
+    public function setBatchIdentifier($batchIdentifier): void
+    {
+        $this->batchIdentifier = $batchIdentifier;
+    }
+
+    public function jsonSerialize()
+    {
+        $checker = new Checker($this->getInstance()->getBoard());
+        if ($this->isLocked()) {
+            $canDeleteRule = $checker->canEditBoardLockedRules();
+        } else {
+            $canDeleteRule = $checker->canEditBoardContents();
+        }
+        return [
+            'id' => $this->getBoardInstanceSlotRuleID(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate() > 0 ? $this->getEndDate() : null,
+            'dateCreated' => $this->getDateCreated(),
+            'user' => $this->getUser(),
+            'ruleType' => $this->getRuleType(),
+            'slot' => $this->getSlot(),
+            'timezone' => $this->getTimezone(),
+            'name' =>  $this->getRuleFormatter()->getRuleName($this),
+            'actionDescription' =>  $this->getRuleFormatter()->getRuleActionDescription($this),
+            'canDeleteRule' => $canDeleteRule,
+            'isLocked' => $this->isLocked(),
+            'instance' => $this->getInstance(),
+            'batchIdentifier' => $this->getBatchIdentifier(),
+        ];
+    }
 
 
 }

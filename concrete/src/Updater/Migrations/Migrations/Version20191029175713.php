@@ -15,8 +15,9 @@ use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Entity\Board\Instance as BoardInstance;
 use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Entity\Board\InstanceItemBatch;
-use Concrete\Core\Entity\Board\InstanceItemCategory;
-use Concrete\Core\Entity\Board\InstanceItemTag;
+use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Entity\Board\ItemCategory;
+use Concrete\Core\Entity\Board\ItemTag;
 use Concrete\Core\Entity\Board\Template as BoardTemplate;
 use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
@@ -45,8 +46,9 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
             BoardInstance::class,
             InstanceItem::class,
             InstanceItemBatch::class,
-            InstanceItemCategory::class,
-            InstanceItemTag::class,
+            Item::class,
+            ItemCategory::class,
+            ItemTag::class,
             InstanceSlot::class,
             InstanceSlotRule::class,
             BoardTemplate::class,

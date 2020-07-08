@@ -3,9 +3,9 @@
 namespace Concrete\Core\Board\Instance\Item\Populator;
 
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
+use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\InstanceItem;
-use Concrete\Core\Entity\Board\InstanceItemBatch;
+use Concrete\Core\Entity\Board\Item;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -17,16 +17,20 @@ interface PopulatorInterface
 
     /**
      * @param Instance $instance
-     * @param InstanceItemBatch $batch
      * @param ConfiguredDataSource $configuredDataSource
      * @param int $mode
-     * @return InstanceItem[]
+     * @return Item[]
      */
-    public function createBoardInstanceItems(
+    public function createItemsFromDataSource(
         Instance $instance,
-        InstanceItemBatch $batch,
         ConfiguredDataSource $configuredDataSource,
         $mode = PopulatorInterface::RETRIEVE_FIRST_RUN
     ): array;
 
+    /**
+     * @param $mixed
+     * @return Item|null
+     */
+    public function createItemFromObject(DataSource $dataSource, $mixed):? Item;
 }
+

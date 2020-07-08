@@ -8,10 +8,19 @@ use Concrete\Core\Entity\Board\InstanceSlot;
 class RenderedSlot implements \JsonSerializable
 {
 
+    const SLOT_TYPE_AUTOMATIC = 'S'; // This is the default
+    const SLOT_TYPE_PINNED = 'P'; // An automatic slot was pinned
+    const SLOT_TYPE_CUSTOM = 'C'; // The in-page slot builder or designer slot builder was used.
+
+    /**
+     * @var string
+     */
+    protected $slotType = self::SLOT_TYPE_AUTOMATIC;
+
     /**
      * @var bool
      */
-    protected $isPinned = false;
+    protected $isLocked = false;
 
     /**
      * @var int
@@ -41,17 +50,17 @@ class RenderedSlot implements \JsonSerializable
     /**
      * @return bool
      */
-    public function isPinned(): bool
+    public function isLocked(): bool
     {
-        return $this->isPinned;
+        return $this->isLocked;
     }
 
     /**
-     * @param bool $isPinned
+     * @param bool $isLocked
      */
-    public function setIsPinned(bool $isPinned): void
+    public function setIsLocked(bool $isLocked): void
     {
-        $this->isPinned = $isPinned;
+        $this->isLocked = $isLocked;
     }
 
     /**
@@ -102,13 +111,30 @@ class RenderedSlot implements \JsonSerializable
         $this->instance = $instance;
     }
 
+    /**
+     * @return string
+     */
+    public function getSlotType(): string
+    {
+        return $this->slotType;
+    }
+
+    /**
+     * @param string $slotType
+     */
+    public function setSlotType(string $slotType): void
+    {
+        $this->slotType = $slotType;
+    }
+
     public function jsonSerialize()
     {
         return [
             'boardInstanceID' => $this->instance->getBoardInstanceID(),
-            'isPinned' => $this->isPinned,
             'slot' => $this->slot,
             'bID' => $this->bID,
+            'slotType' => $this->getSlotType(),
+            'isLocked' => $this->isLocked()
         ];
     }
 

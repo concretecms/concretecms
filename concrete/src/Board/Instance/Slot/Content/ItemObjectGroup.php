@@ -1,13 +1,14 @@
 <?php
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
+use Concrete\Core\Board\Item\ItemProviderInterface;
 use Concrete\Core\Entity\Board\InstanceItem;
 
 class ItemObjectGroup
 {
 
     /**
-     * @var Item
+     * @var ItemProviderInterface
      */
     protected $item;
 
@@ -16,7 +17,7 @@ class ItemObjectGroup
      */
     protected $contentObjects;
 
-    public function __construct(InstanceItem $item, array $contentObjects)
+    public function __construct(ItemProviderInterface $item, array $contentObjects)
     {
         $this->item = $item;
         $this->contentObjects = $contentObjects;
@@ -25,7 +26,7 @@ class ItemObjectGroup
     /**
      * @return Item
      */
-    public function getItem(): InstanceItem
+    public function getItem(): ItemProviderInterface
     {
         return $this->item;
     }

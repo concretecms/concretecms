@@ -1,17 +1,16 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Board\Item\ItemProviderInterface;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="InstanceItemRepository")
- * @ORM\Table(name="BoardInstanceItems", indexes={
- * @ORM\Index(name="uniqueItemId", columns={"uniqueItemId"})
- * })
+ * @ORM\Table(name="BoardInstanceItems")
  */
-class InstanceItem implements \JsonSerializable
+class InstanceItem implements \JsonSerializable, ItemProviderInterface
 {
 
     /**
@@ -19,6 +18,18 @@ class InstanceItem implements \JsonSerializable
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $boardInstanceItemID;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Item", cascade={"remove"})
+     * @ORM\JoinColumn(name="boardItemID", referencedColumnName="boardItemID")
+     */
+    protected $item;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource", inversedBy="items")
+     * @ORM\JoinColumn(name="configuredDataSourceID", referencedColumnName="configuredDataSourceID")
+     **/
+    protected $data_source;
 
     /**
      * @ORM\ManyToOne(targetEntity="Instance", inversedBy="items")
@@ -33,81 +44,9 @@ class InstanceItem implements \JsonSerializable
     protected $batch;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource", inversedBy="items")
-     * @ORM\JoinColumn(name="configuredDataSourceID", referencedColumnName="configuredDataSourceID")
-     **/
-    protected $data_source;
-
-    /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    protected $dateCreated;
-    /**
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $dateAddedToBoard = 0;
-
-    /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    protected $relevantDate;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\File\File")
-     * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
-     */
-    protected $relevantThumbnail;
-
-    /**
-     * Note: this is not fully unique in the table, but it is unique across data sources (e.g. calendar event IDs
-     * and page IDs can be dupes)
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $uniqueItemId;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    protected $data;
-
-    /**
-     * @ORM\OneToMany(targetEntity="InstanceItemCategory", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
-     *
-     */
-    protected $categories;
-
-    /**
-     * @ORM\OneToMany(targetEntity="InstanceItemTag", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
-     */
-    protected $tags;
-
-    public function __construct()
-    {
-        $this->tags = new ArrayCollection();
-        $this->categories = new ArrayCollection();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUniqueItemId()
-    {
-        return $this->uniqueItemId;
-    }
-
-    /**
-     * @param mixed $uniqueItemId
-     */
-    public function setUniqueItemId($uniqueItemId): void
-    {
-        $this->uniqueItemId = $uniqueItemId;
-    }
 
     /**
      * @return mixed
@@ -116,23 +55,6 @@ class InstanceItem implements \JsonSerializable
     {
         return $this->boardInstanceItemID;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getInstance()
-    {
-        return $this->instance;
-    }
-
-    /**
-     * @param mixed $instance
-     */
-    public function setInstance($instance): void
-    {
-        $this->instance = $instance;
-    }
-
 
     /**
      * @return mixed
@@ -153,33 +75,17 @@ class InstanceItem implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getDateCreated()
+    public function getInstance()
     {
-        return $this->dateCreated;
+        return $this->instance;
     }
 
     /**
-     * @param mixed $dateCreated
+     * @param mixed $instance
      */
-    public function setDateCreated($dateCreated): void
+    public function setInstance($instance): void
     {
-        $this->dateCreated = $dateCreated;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRelevantDate()
-    {
-        return $this->relevantDate;
-    }
-
-    /**
-     * @param mixed $relevantDate
-     */
-    public function setRelevantDate($relevantDate): void
-    {
-        $this->relevantDate = $relevantDate;
+        $this->instance = $instance;
     }
 
     /**
@@ -201,70 +107,6 @@ class InstanceItem implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData($data): void
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRelevantThumbnail()
-    {
-        return $this->relevantThumbnail;
-    }
-
-    /**
-     * @param mixed $relevantThumbnail
-     */
-    public function setRelevantThumbnail($relevantThumbnail): void
-    {
-        $this->relevantThumbnail = $relevantThumbnail;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDateAddedToBoard()
     {
         return $this->dateAddedToBoard;
@@ -278,18 +120,34 @@ class InstanceItem implements \JsonSerializable
         $this->dateAddedToBoard = $dateAddedToBoard;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getItem() :? Item
+    {
+        return $this->item;
+    }
+
+    /**
+     * @param mixed $item
+     */
+    public function setItem($item): void
+    {
+        $this->item = $item;
+    }
+
     public function jsonSerialize()
     {
-        $file = $this->getRelevantThumbnail();
+        $file = $this->item->getRelevantThumbnail();
         $thumbnail = null;
         if ($file) {
             $thumbnail = $file->getURL();
         }
         return [
             'id' => $this->getBoardInstanceItemID(),
-            'name' => $this->getName(),
+            'name' => $this->item->getName(),
             'thumbnail' => $thumbnail,
-            'relevantDate' => $this->getRelevantDate(),
+            'relevantDate' => $this->item->getRelevantDate(),
         ];
     }
 

@@ -13,7 +13,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
  *     }
  * )
  */
-class User implements UserEntityInterface
+class User implements UserEntityInterface, \JsonSerializable
 {
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
@@ -467,5 +467,17 @@ class User implements UserEntityInterface
     public function getIdentifier()
     {
         return $this->getUserID();
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getUserID(),
+            'name' => $this->getUserName(),
+            'email' => $this->getUserEmail(),
+        ];
     }
 }
