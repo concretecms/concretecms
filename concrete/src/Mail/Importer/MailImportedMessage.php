@@ -110,7 +110,8 @@ class MailImportedMessage
         return $this->body;
     }
 
-    protected function findAttachedFilesInPart($part) {
+    protected function findAttachedFilesInPart($part) 
+    {
         $files = [];
 
         // Another multipart? Recursively search!
