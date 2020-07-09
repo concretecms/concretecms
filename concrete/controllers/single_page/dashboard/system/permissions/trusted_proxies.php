@@ -51,7 +51,7 @@ class TrustedProxies extends DashboardPageController
         $currentProxyIP = null;
         if ($this->request->isFromTrustedProxy()) {
             $clientIP = $this->app->make(AddressInterface::class);
-            $rawClientIP = Factory::addressFromString($this->request->server->get('REMOTE_ADDR'));
+            $rawClientIP = Factory::addressFromString($this->request->server->get('REMOTE_ADDR'), true, true, true);
             if ((string) $clientIP !== (string) $rawClientIP) {
                 $currentProxyIP = $rawClientIP;
             }
