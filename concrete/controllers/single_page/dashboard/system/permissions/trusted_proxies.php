@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use IPLib\Address\AddressInterface;
 use IPLib\Factory;
 use IPLib\Range\Pattern;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -49,7 +50,7 @@ class TrustedProxies extends DashboardPageController
         $this->set('request', $this->request);
         $currentProxyIP = null;
         if ($this->request->isFromTrustedProxy()) {
-            $clientIP = Factory::addressFromString($this->request->getClientIp());
+            $clientIP = $this->app->make(AddressInterface::class);
             $rawClientIP = Factory::addressFromString($this->request->server->get('REMOTE_ADDR'));
             if ((string) $clientIP !== (string) $rawClientIP) {
                 $currentProxyIP = $rawClientIP;
