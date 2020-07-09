@@ -3,6 +3,7 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Board\Instance\Item\Populator\PopulatorInterface;
+use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
@@ -53,22 +54,28 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
                 $mode = PopulatorInterface::RETRIEVE_NEW_ITEMS;
             }
 
-            $objects = $populator->createBoardInstanceItems($instance, $batch, $configuredDataSource, $mode);
+            $items = $populator->createItemsFromDataSource($instance, $configuredDataSource, $mode);
 
             $this->logger->debug(
                 t(/*i18n: %1$s is a number, %2$s is the name of a data source*/'Retrieved %1$s objects from %2$s data source after timestamp %3$s',
-            count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
+            count($items), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
                 )
             );
 
             $db = $this->entityManager->getConnection();
-            foreach ($objects as $object) {
-                $existing = $db->executeQuery('select count(boardInstanceItemID) from BoardInstanceItems
-                where uniqueItemId = ? and configuredDataSourceID = ?', [
-                    $object->getUniqueItemId(), $object->getDataSource()->getConfiguredDataSourceID()
+            foreach ($items as $item) {
+                $existing = $db->executeQuery('select count(boardInstanceItemID) from BoardInstanceItems bi
+                inner join BoardItems i on bi.boardItemID = i.boardItemID where i.uniqueItemId = ? and bi.configuredDataSourceID = ?', [
+                    $item->getUniqueItemId(), $configuredDataSource->getConfiguredDataSourceID()
                 ]);
                 if ($existing->fetchColumn() !== 0) {
-                    $this->entityManager->persist($object);
+                    $instanceItem = new InstanceItem();
+                    $instanceItem->setInstance($instance);
+                    $instanceItem->setDataSource($configuredDataSource);
+                    $instanceItem->setBatch($batch);
+                    $instanceItem->setItem($item);
+                    $this->entityManager->persist($item);
+                    $this->entityManager->persist($instanceItem);
                 }
             }
         }

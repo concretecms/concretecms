@@ -22,31 +22,70 @@ class RenderedSlotCollectionFactory
         $this->entityManager = $entityManager;
     }
 
-
-    public function createCollection(Instance $instance)
+    /**
+     * @param array $ruleTypes All the InstanceSlotRule::CONSTANTS
+     * @return RenderedSlot[]
+     */
+    protected function getRenderedSlotsFromRules(Instance $instance, array $ruleTypes)
     {
-        $collectionArray = [];
+        $now = new \DateTime();
+        $now->setTimezone(new \DateTimeZone($instance->getSite()->getTimezone()));
 
-        // First, let's fill the slots that are pinned.
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('r')->from(InstanceSlotRule::class, 'r')
-            ->where('r.instance = :instance');
-        // commenting this out because we want to grab pinned OR custom blocks. We may need more control
-        //    ->andWhere('r.ruleType = :ruleType');
-        // so I'm keeping this here.
-        //$qb->setParameter('ruleType', InstanceSlotRule::RULE_TYPE_PINNED);
+            ->where('r.instance = :instance')
+            ->andWhere($qb->expr()->in('r.ruleType', $ruleTypes))
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->lt('r.startDate', $now->getTimestamp()),
+                $qb->expr()->eq('r.startDate', 0)
+            ))
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->gt('r.endDate', $now->getTimestamp()),
+                $qb->expr()->eq('r.endDate', 0)
+            ));
         $qb->setParameter('instance', $instance);
         $rules = $qb->getQuery()->execute();
 
+        $renderedSlots = [];
         /**
          * @var $rule InstanceSlotRule
          */
         foreach($rules as $rule) {
             $slot = $rule->getSlot();
             $renderedSlot = new RenderedSlot($instance, $slot);
-            $renderedSlot->setIsPinned(true);
+            if ($rule->getRuleType() == $rule::RULE_TYPE_AUTOMATIC_SLOT_PINNED) {
+                $renderedSlot->setSlotType($renderedSlot::SLOT_TYPE_PINNED);
+            }
+            if ($rule->getRuleType() == $rule::RULE_TYPE_DESIGNER_CUSTOM_CONTENT ||
+                $rule->getRuleType() == $rule::RULE_TYPE_CUSTOM_CONTENT) {
+                $renderedSlot->setSlotType($renderedSlot::SLOT_TYPE_CUSTOM);
+            }
+            $renderedSlot->setIsLocked($rule->isLocked());
             $renderedSlot->setBlockID($rule->getBlockID());
-            $collectionArray[$slot] = $renderedSlot;
+            $renderedSlots[] = $renderedSlot;
+        }
+
+        return $renderedSlots;
+    }
+
+
+    public function createCollection(Instance $instance)
+    {
+        $collectionArray = [];
+
+        $renderedSlotsEditors = $this->getRenderedSlotsFromRules($instance, [
+            InstanceSlotRule::RULE_TYPE_AUTOMATIC_SLOT_PINNED, InstanceSlotRule::RULE_TYPE_CUSTOM_CONTENT
+        ]);
+        $renderedSlotsAdmins = $this->getRenderedSlotsFromRules($instance, [
+            InstanceSlotRule::RULE_TYPE_DESIGNER_CUSTOM_CONTENT
+        ]);
+
+        // Now, let's merge these two arrays together, with the admin slots taking precedence.
+        foreach($renderedSlotsEditors as $renderedSlot) {
+            $collectionArray[$renderedSlot->getSlot()] = $renderedSlot;
+        }
+        foreach($renderedSlotsAdmins as $renderedSlot) {
+            $collectionArray[$renderedSlot->getSlot()] = $renderedSlot;
         }
 
         // Now let's automatically place everything else.

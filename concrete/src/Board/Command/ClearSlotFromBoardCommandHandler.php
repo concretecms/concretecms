@@ -5,7 +5,7 @@ namespace Concrete\Core\Board\Command;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
 use Doctrine\ORM\EntityManager;
 
-class UnpinSlotFromBoardCommandHandler
+class ClearSlotFromBoardCommandHandler
 {
 
     /**
@@ -18,7 +18,7 @@ class UnpinSlotFromBoardCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(UnpinSlotFromBoardCommand $command)
+    public function handle(ClearSlotFromBoardCommand $command)
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->delete(InstanceSlotRule::class, 'r')

@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
+class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface, \JsonSerializable
 {
     use ObjectTrait;
 
@@ -468,5 +468,14 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function setThemeID($pThemeID)
     {
         $this->pThemeID = $pThemeID;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getSiteID(),
+            'handle' => $this->getSiteHandle(),
+            'name' => $this->getSiteName(),
+        ];
     }
 }

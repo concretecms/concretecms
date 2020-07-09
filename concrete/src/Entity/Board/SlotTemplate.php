@@ -154,7 +154,8 @@ class SlotTemplate implements \JsonSerializable
             'icon' => $this->getIcon(),
             'handle' => $this->getHandle(),
             'name' => $this->getName(),
-            'contentSlots' => $this->getDriver()->getTotalContentSlots()
+            'contentSlots' => $this->getDriver()->getTotalContentSlots(),
+            'formFactor' => $this->getFormFactor(),
         ];
     }
 

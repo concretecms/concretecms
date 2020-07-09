@@ -296,6 +296,52 @@
             </attributes>
         </page>
 
+        <page name="Rules" path="/dashboard/boards/instances/rules" filename="/dashboard/boards/instances/rules.php" pagetype=""
+              description="View override rules for your instance." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Designer" path="/dashboard/boards/designer" filename="/dashboard/boards/designer.php" pagetype=""
+              description="" package="">
+        </page>
+
+        <page name="Choose Items" path="/dashboard/boards/designer/choose_items" filename="/dashboard/boards/designer/choose_items.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Customize Slot" path="/dashboard/boards/designer/customize_slot" filename="/dashboard/boards/designer/customize_slot.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Scheduler" path="/dashboard/boards/scheduler" filename="/dashboard/boards/scheduler.php" pagetype=""
+              description="" package="">
+        </page>
+
+
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Board\Command;
 
-class UnpinSlotFromBoardCommand
+class ClearSlotFromBoardCommand
 {
 
     use BoardInstanceTrait;

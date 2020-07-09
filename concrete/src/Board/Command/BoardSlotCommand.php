@@ -10,6 +10,16 @@ abstract class BoardSlotCommand
     /**
      * @var int
      */
+    protected $startDate = 0;
+
+    /**
+     * @var int
+     */
+    protected $endDate = 0;
+
+    /**
+     * @var int
+     */
     protected $slot = 0;
 
     /**
@@ -48,6 +58,40 @@ abstract class BoardSlotCommand
     {
         $this->bID = $bID;
     }
+
+    /**
+     * @return int
+     */
+    public function getStartDate(): int
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param int $startDate
+     */
+    public function setStartDate(int $startDate): void
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndDate(): int
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param int $endDate
+     */
+    public function setEndDate(int $endDate): void
+    {
+        $this->endDate = $endDate;
+    }
+
+
 
 
 

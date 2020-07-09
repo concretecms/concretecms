@@ -75,8 +75,8 @@ if (!isset($month)) {
 } ?>"><i class="fa fa-list"></i></a>
         <?php if ($calendarPermissions->canAddCalendarEvent()) {
     ?>
-            <a class="dialog-launch btn btn-primary" dialog-width="640" dialog-title="<?= t('Add Event') ?>"
-               dialog-height="500"
+            <a class="dialog-launch btn btn-primary" dialog-width="1100" dialog-title="<?= t('Add Event') ?>"
+               dialog-height="600"
                href="<?= URL::to('/ccm/calendar/dialogs/event/add?caID=' . $calendar->getID()) ?>"><?= t("Add Event") ?></a>
         <?php
 } ?>
