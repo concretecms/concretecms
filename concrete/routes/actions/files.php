@@ -28,3 +28,4 @@ $router->all('/create_directory', 'File::createDirectory');
 $router->all('/chooser/recent', 'File\Chooser::getRecent');
 $router->all('/chooser/get_file_sets', 'File\Chooser::getFileSets');
 $router->all('/chooser/get_file_set/{id}', 'File\Chooser::getFileSetFiles');
+$router->all('/chooser/search/{keyword}', 'File\Chooser::searchFiles');
