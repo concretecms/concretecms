@@ -292,7 +292,7 @@ class MailImporter extends ConcreteObject
         }
         $i = 1;
         foreach ($mail as $m) {
-            $mim = new MailImportedMessage($mail, $m, $i++);
+            $mim = new MailImportedMessage($mail, $m, $i);
             $messages[] = $mim;
             ++$i;
         }
