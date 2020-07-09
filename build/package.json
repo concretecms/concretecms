@@ -20,5 +20,8 @@
     "sass": "^1.26.1",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
+  },
+  "dependencies": {
+    "ajax-bootstrap-select": "^1.4.5"
   }
 }
