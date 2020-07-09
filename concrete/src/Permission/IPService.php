@@ -115,7 +115,7 @@ class IPService implements LoggerAwareInterface
      */
     public function getRequestIPAddress()
     {
-        return IPFactory::addressFromString($this->request->getClientIp());
+        return app(AddressInterface::class);
     }
 
     /**
