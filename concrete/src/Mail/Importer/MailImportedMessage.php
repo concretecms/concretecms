@@ -20,17 +20,16 @@ class MailImportedMessage
     protected $oMail;
     protected $oMailMessage;
     protected $oMailCnt;
+    protected $oMailID;
 
-    public function __construct($mail, MailMessage $msg, $count)
+    public function __construct($mail, MailMessage $msg, $count, $id)
     {
-        try {
-            $this->subject = $msg->subject;
-        } catch (Exception $e) {
-        }
 
-        $this->oMail = $mail;
+        $this->subject      = $msg->subject;
+        $this->oMail        = $mail;
         $this->oMailMessage = $msg;
-        $this->oMailCnt = $count;
+        $this->oMailCnt     = $count;
+        $this->oMailID      = $id;
 
         if (strpos($msg->from, ' ') === false) {
             $this->sender = str_replace(array('>', '<'), '', $msg->from);
@@ -80,26 +79,106 @@ class MailImportedMessage
     {
         return $this->sender;
     }
+
     public function getOriginalMailObject()
     {
         return $this->oMail;
     }
+
     public function getOriginalMessageObject()
     {
         return $this->oMailMessage;
     }
+
     public function getOriginalMessageCount()
     {
         return $this->oMailCnt;
+    }
+
+    public function getOriginalMessageID()
+    {
+        return $this->oMailID;
     }
 
     public function getSubject()
     {
         return $this->subject;
     }
+
     public function getBody()
     {
         return $this->body;
+    }
+
+    protected function findAttachedFilesInPart($part) {
+        $files = [];
+
+        // Another multipart? Recursively search!
+        if ($part->isMultipart()) {
+
+            for ($i = 1; $i <= $part->countParts(); $i++) {
+                $files = array_merge($files, $this->findAttachedFilesInPart($part->getPart($i)));
+            }
+
+        } else {
+            $fileName    = null;
+            $fileContent = $part->getContent();
+            $fileType    = null;
+
+            if ($part->getHeaders()->has('Content-Disposition')) {
+                $params = explode(';', $part->getHeaders()->get('Content-Disposition')->getFieldValue());
+
+                // Attachment and inline are okay!
+                if ($params[0] == 'attachment' || $params[0] == 'inline') {
+
+                    // Lookup filename
+                    if (isset($params[1])) {
+                        $fileName = trim($params[1]);
+                    }
+
+
+                    if ($part->getHeaders()->has('Content-Type')) {
+                        $params   = explode(';', $part->getHeaders()->get('Content-Type')->getFieldValue());
+                        $fileType = trim($params[0]);
+                        $params   = $part->getHeaders()->get('Content-Type')->getParameters();
+
+                        // Lookup filename (this is the preferred method)
+                        if (isset($params['name'])) {
+                            $fileName = $params['name'];
+                        }
+
+                    }
+
+                    if ($part->getHeaders()->has('Content-Transfer-Encoding')) {
+
+                        // Decode for the user
+                        if ($part->getHeaders()->get('Content-Transfer-Encoding')->getFieldValue() == 'base64') {
+                            $fileContent = base64_decode($fileContent);
+                        }
+
+                    }
+                }
+            }
+
+            if ($fileName !== null) {
+                $files[] = [
+                    'name'    => $fileName,
+                    'type'    => $fileType,
+                    'content' => $fileContent
+                ];
+            }
+
+        }
+
+        return $files;
+    }
+
+    /**
+     * Return contents of attached files
+     */
+    public function getAttachments()
+    {
+        return $this->findAttachedFilesInPart($this->oMailMessage);
     }
 
     /**
@@ -140,6 +219,22 @@ class MailImportedMessage
                 return $row['mDateRedeemed'] == 0;
             //}
         }
+    }
+
+    /**
+     * Deletes this mail by unique id
+     */
+    public function delete()
+    {
+        $this->oMail->removeMessage($this->oMail->getNumberByUniqueId($this->oMailID));
+    }
+
+    /**
+     * Moves this mail by unique id (folder starts with '/')
+     */
+    public function moveTo($folder)
+    {
+        $this->oMail->moveMessage($this->oMail->getNumberByUniqueId($this->oMailID), $folder);
     }
 
     public function getDataObject()

@@ -274,13 +274,18 @@ class MailImporter extends ConcreteObject
      */
     public function getPendingMessages()
     {
-        $messages = array();
-        // connect to the server to grab all messages
+        $messages = [];
 
-        $args = array('host' => $this->miServer, 'user' => $this->miUsername, 'password' => $this->miPassword);
+        $args = [
+          'host'     => $this->miServer,
+          'user'     => $this->miUsername,
+          'password' => $this->miPassword
+        ];
+
         if ($this->miEncryption != '') {
             $args['ssl'] = $this->miEncryption;
         }
+
         if ($this->miPort > 0) {
             $args['port'] = $this->miPort;
         }
@@ -290,11 +295,12 @@ class MailImporter extends ConcreteObject
         } else {
             $mail = new MailStoragePop3($args);
         }
-        $i = 1;
-        foreach ($mail as $m) {
-            $mim = new MailImportedMessage($mail, $m, $i);
-            $messages[] = $mim;
-            ++$i;
+
+        // Returns a map with $index => $uniqueID
+        $mailIDMap = $mail->getUniqueId();
+
+        foreach ($mail as $i => $m) {
+            $messages[] = new MailImportedMessage($mail, $m, $i, $mailIDMap[$i]);
         }
 
         return $messages;
@@ -304,9 +310,6 @@ class MailImporter extends ConcreteObject
     {
         $db = Database::connection();
         $db->query("update MailValidationHashes set mDateRedeemed = " . time() . " where mHash = ?", array($me->getValidationHash()));
-
-        $m = $me->getOriginalMailObject();
-        $msg = $me->getOriginalMessageObject();
-        $m->removeMessage($me->getOriginalMessageCount());
+        $me->delete();
     }
 }
