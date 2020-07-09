@@ -167,9 +167,9 @@
             "authors": [
                 {
                     "name": "Michele Locati",
+                    "role": "author",
                     "email": "michele@locati.it",
-                    "homepage": "https://mlocati.github.io",
-                    "role": "author"
+                    "homepage": "https://mlocati.github.io"
                 }
             ],
             "description": "Patches required for concrete5 dependencies",
@@ -2820,16 +2820,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.9.0",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902"
+                "reference": "65a3396d064267f2fef1fd0b8ded712dbe0946b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
-                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/65a3396d064267f2fef1fd0b8ded712dbe0946b2",
+                "reference": "65a3396d064267f2fef1fd0b8ded712dbe0946b2",
                 "shasum": ""
             },
             "require": {
@@ -2872,7 +2872,17 @@
                 "range",
                 "subnet"
             ],
-            "time": "2019-09-20T08:26:10+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/mlocati",
+                    "type": "github"
+                },
+                {
+                    "url": "https://paypal.me/mlocati",
+                    "type": "other"
+                }
+            ],
+            "time": "2020-07-09T15:15:38+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -3005,7 +3015,7 @@
             "time": "2019-09-06T13:49:17+00:00"
         },
         {
-            "name": "natxet/cssmin",
+            "name": "natxet/CssMin",
             "version": "v3.0.6",
             "source": {
                 "type": "git",
@@ -3180,12 +3190,12 @@
             "version": "v1.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/whiteoctober/Pagerfanta.git",
+                "url": "https://github.com/BabDev/Pagerfanta.git",
                 "reference": "29aade64addfdfb12c05aabf160f09d1aea6b143"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/29aade64addfdfb12c05aabf160f09d1aea6b143",
+                "url": "https://api.github.com/repos/BabDev/Pagerfanta/zipball/29aade64addfdfb12c05aabf160f09d1aea6b143",
                 "reference": "29aade64addfdfb12c05aabf160f09d1aea6b143",
                 "shasum": ""
             },
