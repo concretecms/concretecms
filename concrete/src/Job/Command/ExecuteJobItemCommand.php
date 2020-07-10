@@ -17,11 +17,11 @@ class ExecuteJobItemCommand implements BatchableCommandInterface
     protected $jobHandle;
 
     /**
-     * @var string
+     * @var mixed
      */
     protected $data;
 
-    public function __construct(string $batchHandle, string $jobHandle, string $data)
+    public function __construct(string $batchHandle, string $jobHandle, $data)
     {
         $this->setBatchHandle($batchHandle);
         $this->setJobHandle($jobHandle);
@@ -41,7 +41,7 @@ class ExecuteJobItemCommand implements BatchableCommandInterface
     /**
      * @return $this
      */
-    public function setBatchHandle(string $batchHandle): object
+    public function setBatchHandle(string $batchHandle)
     {
         $this->batchHandle = $batchHandle;
 
@@ -56,14 +56,14 @@ class ExecuteJobItemCommand implements BatchableCommandInterface
     /**
      * @return $this
      */
-    public function setJobHandle(string $jobHandle): object
+    public function setJobHandle(string $jobHandle)
     {
         $this->jobHandle = $jobHandle;
 
         return $this;
     }
 
-    public function getData(): string
+    public function getData()
     {
         return $this->data;
     }
@@ -71,7 +71,7 @@ class ExecuteJobItemCommand implements BatchableCommandInterface
     /**
      * @return $this
      */
-    public function setData(string $data): object
+    public function setData(string $data)
     {
         $this->data = $data;
     }

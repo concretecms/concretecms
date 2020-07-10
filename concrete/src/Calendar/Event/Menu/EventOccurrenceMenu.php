@@ -33,7 +33,7 @@ class EventOccurrenceMenu extends PopoverMenu
             $this->addItem(new DividerItem());
             $this->addItem(new DialogLinkItem(
                 \URL::to('/ccm/calendar/dialogs/event/edit') . '?versionOccurrenceID=' . $occurrence->getID(),  t('Edit'),
-                t('Edit'), 640, 500
+                t('Edit'), 1100, 600
             ));
             $this->addItem(new DialogLinkItem(
                 \URL::to('/ccm/calendar/dialogs/event/summary_templates') . '?versionOccurrenceID=' . $occurrence->getID(),  t('Summary Templates'),

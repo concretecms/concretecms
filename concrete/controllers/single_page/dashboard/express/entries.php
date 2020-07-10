@@ -2,10 +2,13 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Entity\Search\SavedExpressSearch;
+use Concrete\Core\Express\EntryList;
+use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\OwnedEntityForm;
@@ -16,6 +19,7 @@ use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Form\Context\ContextFactory;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Search\Field\Field\KeywordsField;
@@ -25,7 +29,9 @@ use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
+use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Entries extends DashboardSitePageController
 {
@@ -107,6 +113,11 @@ class Entries extends DashboardSitePageController
             );
         }
 
+        $headerMenu->getElementController()->setExportURL(
+            $this->app->make('url/resolver/path')->resolve([
+                $this->getPageObject()->getCollectionPath(), 'csv_export', $entity->getEntityResultsNodeId()])
+        );
+
         $this->set('result', $result);
         $this->set('headerMenu', $headerMenu);
         $this->set('headerSearch', $headerSearch);
@@ -136,8 +147,8 @@ class Entries extends DashboardSitePageController
         $keywords = null;
         if ($this->request->query->has('keywords')) {
             $keywords = $this->request->query->get('keywords');
+            return new KeywordsField($keywords);
         }
-        return new KeywordsField($keywords);
     }
 
     public function view($entity = null, $folder = null)
@@ -148,10 +159,15 @@ class Entries extends DashboardSitePageController
         }
         if (isset($entity) && is_object($entity)) {
             $this->set('entity', $entity);
-            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider($entity), [
-                $this->getSearchKeywordsField(),
-                new SiteField(),
-            ]);
+            $fields = [
+                new SiteField()
+            ];
+            $keywordsField = $this->getSearchKeywordsField();
+            if ($keywordsField) {
+                $fields[] = $keywordsField;
+            }
+
+            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider($entity), $fields);
             $result = $this->createSearchResult($entity, $query);
             $this->set('pageTitle', tc(/*i18n: %s is an entity name*/'EntriesOfEntityName', '%s Entries', $entity->getName()));
             $this->renderSearchResult($result);
@@ -238,6 +254,45 @@ class Entries extends DashboardSitePageController
     }
 
     // these methods from the entries page conotroller
+
+    /**
+     * Export Express entries into a CSV.
+     *
+     * @param int|null $treeNodeParentID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function csv_export($resultsNodeID = null)
+    {
+        $me = $this;
+        $node = Node::getByID($resultsNodeID);
+        $r = $this->entityManager->getRepository(Entity::class);
+        $entity = $r->findOneByResultsNode($node);
+        $permissions = new \Permissions($entity);
+        if (!$permissions->canViewExpressEntries()) {
+            throw new \Exception(t('Access Denied'));
+        }
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv',
+        ];
+        $config = $this->app->make('config');
+        $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
+        $datetime_format = $config->get('concrete.export.csv.datetime_format');
+
+        return StreamedResponse::create(function () use ($entity, $me, $bom, $datetime_format) {
+            $entryList = new EntryList($entity);
+
+            $writer = $this->app->make(CsvWriter::class, [
+                $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                new Date()
+            ]);
+            echo $bom;
+            $writer->insertHeaders($entity);
+            $writer->insertEntryList($entryList,$datetime_format);
+        }, 200, $headers);
+    }
 
     protected function getBackURL(Entity $entity)
     {
