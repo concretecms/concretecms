@@ -136,8 +136,8 @@ class Entries extends DashboardSitePageController
         $keywords = null;
         if ($this->request->query->has('keywords')) {
             $keywords = $this->request->query->get('keywords');
+            return new KeywordsField($keywords);
         }
-        return new KeywordsField($keywords);
     }
 
     public function view($entity = null, $folder = null)
@@ -148,10 +148,15 @@ class Entries extends DashboardSitePageController
         }
         if (isset($entity) && is_object($entity)) {
             $this->set('entity', $entity);
-            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider($entity), [
-                $this->getSearchKeywordsField(),
-                new SiteField(),
-            ]);
+            $fields = [
+                new SiteField()
+            ];
+            $keywordsField = $this->getSearchKeywordsField();
+            if ($keywordsField) {
+                $fields[] = $keywordsField;
+            }
+
+            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider($entity), $fields);
             $result = $this->createSearchResult($entity, $query);
             $this->set('pageTitle', tc(/*i18n: %s is an entity name*/'EntriesOfEntityName', '%s Entries', $entity->getName()));
             $this->renderSearchResult($result);

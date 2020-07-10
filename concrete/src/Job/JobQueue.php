@@ -65,7 +65,6 @@ class JobQueue
         $this->entityManager = $em;
         $this->app = $app;
         $this->queue = $service->get($service->getDefaultQueueHandle());
-        $this->batch = $this->batchFactory->getBatch(sprintf('job_%s', $this->job->getJobHandle()));
 
     }
 
@@ -84,12 +83,12 @@ class JobQueue
 
     public function getBatch()
     {
-        return $this->batch;
+        return $this->batchFactory->createOrGetBatch(sprintf('job_%s', $this->job->getJobHandle()));
     }
 
     public function saveBatch()
     {
-        $this->batchProgressUpdater->incrementTotals($this->batch, $this->totalMessages);
+        $this->batchProgressUpdater->incrementTotals($this->getBatch(), $this->totalMessages);
     }
 
     public function deleteQueue()
@@ -103,7 +102,7 @@ class JobQueue
     {
         $data = serialize($mixed);
         $this->totalMessages++;
-        $command = new ExecuteJobItemCommand($this->batch->getBatchHandle(), $this->job->getJobHandle(), $data);
+        $command = new ExecuteJobItemCommand($this->getBatch()->getBatchHandle(), $this->job->getJobHandle(), $data);
         return $this->app->getCommandDispatcher()->dispatch($command, AsynchronousBus::getHandle());
     }
 
