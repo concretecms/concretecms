@@ -106,6 +106,26 @@ class Container
         }
     }
 
+    /**
+     * Determines if the container has templates available.
+     *
+     * @return bool
+     */
+    public function hasAddTemplate()
+    {
+        return false;
+    }
+
+    /**
+     * if a the current container supports inline add or not.
+     *
+     * @return bool
+     */
+    public function supportsInlineAdd()
+    {
+        return false;
+    }
+
     public function export(\SimpleXMLElement $node): void
     {
         $container = $node->addChild('container');

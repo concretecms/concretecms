@@ -60,13 +60,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     <li>
                         <a
                             href="#"
-                            class="ccm-panel-add-block-draggable-block-type"
+                            class="ccm-panel-add-container-item"
                             data-panel-add-block-drag-item="container"
                             data-cID="<?= (int) $c->getCollectionID() ?>"
                             data-container-id="<?=$container->getContainerID() ?>"
                             data-block-type-handle="core_container"
-                            data-has-add-template="no"
-                            data-supports-inline-add="no"
+                            data-has-add-template="<?= $container->hasAddTemplate() ?>"
+                            data-supports-inline-add="<?= $container->supportsInlineAdd() ?>"
                             data-btID="0"
                             data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">' . $container->getContainerIconImage() . '</div><p><span>' . $container->getContainerName() . '</span></p>') ?>"
                         >
