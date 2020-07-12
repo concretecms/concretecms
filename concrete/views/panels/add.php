@@ -72,8 +72,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             data-cID="<?= (int) $c->getCollectionID() ?>"
                             data-container-id="<?=$container->getContainerID() ?>"
                             data-block-type-handle="core_container"
-                            data-has-add-template="<?= $container->hasAddTemplate() ?>"
-                            data-supports-inline-add="<?= $container->supportsInlineAdd() ?>"
+                            data-has-add-template="0"
+                            data-supports-inline-add="0"
                             data-btID="0"
                             data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">' . $container->getContainerIconImage() . '</div><p><span>' . $container->getContainerName() . '</span></p>') ?>"
                         >
