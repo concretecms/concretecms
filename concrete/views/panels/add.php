@@ -19,12 +19,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php } ?>
 
     <header class="pl-0 pr-0">
-        <?php if ($tab == 'containers' || $tab == 'blocks') { ?>
-            <div class="ccm-panel-header-search">
-                <svg><use xlink:href="#icon-search" /></svg>
-                <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
-            </div>
-        <?php } ?>
         <div id="dropdown-menu" class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
             <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
