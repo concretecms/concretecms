@@ -19,12 +19,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php } ?>
 
     <header class="pl-0 pr-0">
-        <?php if ($tab == 'containers' || $tab == 'blocks') { ?>
-            <div class="ccm-panel-header-search">
-                <svg><use xlink:href="#icon-search" /></svg>
-                <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
-            </div>
-        <?php } ?>
         <div id="dropdown-menu" class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
             <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
@@ -72,8 +66,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             data-cID="<?= (int) $c->getCollectionID() ?>"
                             data-container-id="<?=$container->getContainerID() ?>"
                             data-block-type-handle="core_container"
-                            data-has-add-template="<?= $container->hasAddTemplate() ?>"
-                            data-supports-inline-add="<?= $container->supportsInlineAdd() ?>"
+                            data-has-add-template="0"
+                            data-supports-inline-add="0"
                             data-btID="0"
                             data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">' . $container->getContainerIconImage() . '</div><p><span>' . $container->getContainerName() . '</span></p>') ?>"
                         >
