@@ -22,7 +22,7 @@
 	</div>
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button type="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+            <button type="submit" value="<?=t('Save')?>" class="btn btn-primary float-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
         </div>
     </div>
 	</form>

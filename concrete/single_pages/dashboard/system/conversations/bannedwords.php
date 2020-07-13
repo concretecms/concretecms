@@ -6,15 +6,16 @@ $token = Core::make('token');
 	<?php
     $token->output('update_banned_words');
     ?>
-    <div class="ccm-dashboard-header-buttons">
-        <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
+    <div class="ccm-dashboard-header-buttons d-flex align-items-baseline mb-2 ">
+		<div class="mr-2">
+			<input id="banned-word-list-enabled" value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> 
+        	<label for="banned-word-list-enabled"><?=t('Disallow posts that include banned words?')?></label>
+		</div>
+		<div>
+        	<a class='add_word btn btn-primary <?= (!$bannedListEnabled) ? 'd-none': '' ?>' href='#'><?=t('Add Word')?></a>
+		</div>
     </div>
 
-    <div class="checkbox">
-        <label>
-		    <input value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> <?=t('Disallow posts that include banned words?')?>
-        </label>
-    </div>
 
 	<script class='word_template' type="text/template" charset="utf-8">
 		<tr class='editing'>
@@ -24,39 +25,6 @@ $token = Core::make('token');
 		</tr>
 	</script>
 
-	<div class='banned_words_table' style='overflow:hidden'>
-		<table class='banned_word_list table'>
-			<thead>
-				<tr>
-					<th style='width:20px'>ID</th>
-					<th><?=t('Word')?></th>
-					<th style='width:200px;text-align:right'></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-                foreach ($bannedWords as $word) {
-                    if (!is_object($word)) {
-                        continue;
-                    }
-                    ?>
-					<tr>
-						<th class='id'><?=$word->getID()?></th>
-						<td class='word'><span><?=h($word->getWord())?></span><input style='display:none' name='banned_word[]' value='<?=h($word->getWord())?>'></td>
-						<td style='text-align:right'>
-                            <div class="btn-group">
-                                <a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a>
-                                <a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a>
-                            </div>
-						 </td>
-					</tr>
-					<?php
-
-                }
-                ?>
-			</tbody>
-		</table>
-	</div>
 
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
@@ -64,11 +32,45 @@ $token = Core::make('token');
         </div>
     </div>
 </form>
+
+<div class='banned_words_table' style='overflow:hidden'>
+	<table class='banned_word_list table'>
+		<thead>
+			<tr>
+				<th style='width:20px'>ID</th>
+				<th><?=t('Word')?></th>
+				<th style='width:200px;text-align:right'></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+            foreach ($bannedWords as $word) {
+                if (!is_object($word)) {
+                    continue;
+                }
+                ?>
+				<tr>
+					<th class='id'><?=$word->getID()?></th>
+					<td class='word'><span><?=h($word->getWord())?></span><input style='display:none' name='banned_word[]' value='<?=h($word->getWord())?>'></td>
+					<td style='text-align:right'>
+                        <div class="btn-group">
+                            <a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a>
+                            <a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a>
+                       </div>
+					</td>
+				</tr>
+				<?php
+
+            }
+             ?>
+		</tbody>
+	</table>
+</div>
 <script>
 var ctx = $('table.banned_word_list'), template = $('script.word_template'),
 	getTemplate = function(){return $(template.text());},
 	save = $("<a href='#' class='save_word btn btn-primary'><?=t('Save')?></a>"),
-	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a><a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a></div>"),
+	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a><a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a></div>"),
 	totalheight = ctx.parent().height();
 
 if (!$('input[name=banned_list_enabled]').get(0).checked) {
@@ -138,5 +140,14 @@ ctx.on('click','a.edit_word',function(e){
 }).on('click','a.delete_word',function(e){
 	if (confirm("<?=t('Are you sure you want to delete this word?')?>"))
 		$(this).closest('tr').remove();
+});
+$('#banned-word-list-enabled').change(function(){
+	if(this.checked && $('.add_word').hasClass('d-none')) {
+        $('.add_word').removeClass('d-none')
+    }
+
+	if(!this.checked && !$('.add_word').hasClass('d-none')){
+		$('.add_word').addClass('d-none')
+	}
 });
 </script>
