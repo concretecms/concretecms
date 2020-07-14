@@ -6,10 +6,11 @@ use Core;
 use Database;
 use RecursiveIteratorIterator;
 use Concrete\Core\Package\PackageList;
-use Zend\Mail\Storage\Pop3    as MailStoragePop3;
-use Zend\Mail\Storage\Imap    as MailStorageImap;
-use Zend\Mail\Storage\Message as MailMessage;
-use Zend\Mail\Exception       as MailException;
+use Zend\Mail\Storage\Pop3                             as MailStoragePop3;
+use Zend\Mail\Storage\Imap                             as MailStorageImap;
+use Zend\Mail\Storage\Message                          as MailMessage;
+use Zend\Mail\Exception                                as MailException;
+use Concrete\Core\Mail\Importer\MailImportedAttachment as Attachment;
 
 class MailImportedMessage
 {
@@ -110,7 +111,7 @@ class MailImportedMessage
         return $this->body;
     }
 
-    protected function findAttachedFilesInPart($part) 
+    protected function findAttachedFilesInPart($part)
     {
         $files = [];
 
@@ -162,11 +163,13 @@ class MailImportedMessage
             }
 
             if ($fileName !== null) {
-                $files[] = [
-                    'name'    => $fileName,
-                    'type'    => $fileType,
-                    'content' => $fileContent
-                ];
+                $attachment = new Attachment($this);
+
+                $attachment->setName($fileName);
+                $attachment->setType($fileType);
+                $attachment->setContent($fileContent);
+
+                $files[] = $attachment;
             }
 
         }
