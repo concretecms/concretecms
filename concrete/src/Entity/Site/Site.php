@@ -14,12 +14,13 @@ use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
+class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface, Serializable
 {
     use ObjectTrait;
 
@@ -468,5 +469,18 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function setThemeID($pThemeID)
     {
         $this->pThemeID = $pThemeID;
+    }
+
+    public function serialize()
+    {
+        $siteId = $this->getSiteID();
+
+        return serialize([(int)$siteId]);
+    }
+
+    public function unserialize($serialized)
+    {
+        list($siteId) =  unserialize($serialized);
+        $this->siteID = $siteId;
     }
 }
