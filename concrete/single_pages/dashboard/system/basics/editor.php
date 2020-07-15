@@ -26,14 +26,14 @@
                 <legend><?= t('concrete5 Extensions') ?></legend>
                 <div class="form-group">
                     <div class="form-check">
-                        <label>
-                            <?= $form->checkbox('enable_filemanager', 1, $filemanager) ?>
+                        <?= $form->checkbox('enable_filemanager', 1, $filemanager, ['class' => 'form-check-input']) ?>
+                        <label class="form-check-label" for="enable_filemanager">
                             <?= t('Enable file selection from file manager.') ?>
                         </label>
                     </div>
                     <div class="form-check">
-                        <label>
-                            <?= $form->checkbox('enable_sitemap', 1, $sitemap) ?>
+                        <?= $form->checkbox('enable_sitemap', 1, $sitemap, ['class' => 'form-check-input']) ?>
+                        <label class="form-check-label" for="enable_sitemap">
                             <?= t('Enable page selection from sitemap.') ?>
                         </label>
                     </div>
@@ -48,9 +48,11 @@
                             $description = $plugin->getDescription();
                             ?>
                             <div class="form-check">
-                                <label>
-                                    <?php
-                                    echo $form->checkbox('plugin[]', $key, $manager->isSelected($key));
+                                <?php
+                                echo $form->checkbox('plugin[]', $key, $manager->isSelected($key), ['class' => 'form-check-input']);
+                                ?>
+                                <label class="form-check-label" for="plugin[]">
+                                <?php
                                     if ($description !== '') {
                                         echo '<span class="launch-tooltip" title="', h($description), '">';
                                     }
@@ -58,7 +60,7 @@
                                     if ($description !== '') {
                                         echo '</span>';
                                     }
-                                    ?>
+                                ?>
                                 </label>
                             </div>
                             <?php
