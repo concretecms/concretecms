@@ -76,20 +76,33 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
     public function replace()
     {
         $instance = $this->getInstanceFromRequest();
+        $this->set('dataSourcesJson', json_encode($this->getDataSourcesJson($instance)));
+        $this->set('instance', $instance);
+        $this->set('slot', h($this->request->query->get('slot')));
+    }
+
+    public function searchItems()
+    {
+        $instance = $this->getInstanceFromRequest();
+        return new JsonResponse($this->getDataSourcesJson(
+            $instance, $this->request->request->get('keywords')
+        ));
+    }
+
+    protected function getDataSourcesJson(Instance $instance, $keywords = null)
+    {
         $dataSources = [];
         $entityManager = $this->app->make(EntityManager::class);
         foreach($instance->getBoard()->getDataSources() as $dataSource) {
             $items = $entityManager->getRepository(InstanceItem::class)
-                ->findByDataSource($dataSource, $instance);
+                ->findByDataSource($dataSource, $instance, $keywords);
             $dataSources[] = [
                 'id' => $dataSource->getConfiguredDataSourceID(),
                 'name' => $dataSource->getName(),
                 'items' => $items,
             ];
         }
-        $this->set('dataSourcesJson', json_encode($dataSources));
-        $this->set('instance', $instance);
-        $this->set('slot', h($this->request->query->get('slot')));
+        return $dataSources;
     }
 
     public function saveTemplate()
