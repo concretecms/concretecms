@@ -16,14 +16,31 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </li>
             </ul>
 
+            <form @submit="performSearch">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <input type="text" v-model="searchKeywords" class="form-control" placeholder="<?=t('Search items')?>">
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="submit"><?=t('Search')?></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
             <div class="container" v-show="activeDataSource === dataSource.id" v-for="dataSource in dataSources"
                  :key="dataSource.id">
                 <div class="row row-cols-1 row-cols-md-3">
-                    <div class="col mb-4" v-for="item in dataSource.items">
-                        <div class="card mb-4" style="">
+                    <div class="col mb-4"
+                         v-for="item in dataSource.items" @click="toggleChecked(item)" style="cursor: pointer">
+                        <div class="card mb-4">
                             <img :src="item.thumbnail" class="ccm-board-slot-designer-thumbnail" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">{{item.name}}</h5>
+                                <div class="text-muted">{{item.relevantDateString}}</div>
                             </div>
                             <input type="checkbox" :value="item.id" v-model="selectedItemIds">
                         </div>
@@ -101,6 +118,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         this.currentStep = 'items'
                     }
                 },
+                toggleChecked(item) {
+                    if (this.selectedItemIds.includes(item.id)) {
+                        this.selectedItemIds.splice(this.selectedItemIds.indexOf(item.id), 1)
+                    } else {
+                        this.selectedItemIds.push(item.id)
+                    }
+                },
+                performSearch(event) {
+                    event.preventDefault()
+                    var my = this
+                    new ConcreteAjaxRequest({
+                        url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/boards/custom_slot/search_items?boardInstanceID=' +
+                            my.boardInstanceID,
+                        method: 'POST',
+                        data: {
+                            keywords: my.searchKeywords
+                        },
+                        success: function (r) {
+                            my.dataSources = r;
+                        }
+                    })
+                },
                 handleSaveButton() {
                     var my = this
                     if (this.currentStep === 'items') {
@@ -147,6 +186,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             watch: {},
             data: {
                 currentStep: 'items',
+                searchKeywords: '',
                 selectedItemIds: [],
                 boardInstanceID: <?=$instance->getBoardInstanceID()?>,
                 slot: <?=(int)$slot?>,

@@ -143,11 +143,15 @@ class InstanceItem implements \JsonSerializable, ItemProviderInterface
         if ($file) {
             $thumbnail = $file->getURL();
         }
+        $timezone = $this->getInstance()->getSite()->getTimezone();
+        $datetime = new \DateTime('@' . $this->item->getRelevantDate(), new \DateTimeZone($timezone));
+        $relevantDateString = $datetime->format('F d, Y g:i a');
         return [
             'id' => $this->getBoardInstanceItemID(),
             'name' => $this->item->getName(),
             'thumbnail' => $thumbnail,
             'relevantDate' => $this->item->getRelevantDate(),
+            'relevantDateString' => $relevantDateString,
         ];
     }
 

@@ -26,10 +26,19 @@ class InstanceItemRepository extends EntityRepository
                 ->getSingleScalarResult();
     }
 
-    public function findByDataSource(ConfiguredDataSource $configuredDataSource, Instance $instance)
+    public function findByDataSource(
+        ConfiguredDataSource $configuredDataSource,
+        Instance $instance,
+        string $keywords = null
+    )
     {
-        return $this->getDataSourceQueryBuilder($configuredDataSource, $instance)
-            ->select('instanceItem')
+        $qb = $this->getDataSourceQueryBuilder($configuredDataSource, $instance)
+            ->select('instanceItem');
+        if ($keywords) {
+            $qb->andWhere($qb->expr()->like('instanceItemItem.name', ':keywords'));
+            $qb->setParameter('keywords', '%' . $keywords . '%');
+        }
+        return $qb
             ->getQuery()
             ->execute();
     }
