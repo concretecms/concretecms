@@ -47,40 +47,37 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?=t('Settings')?></legend>
         <div class="form-group">
-            <label class="control-label launch-tooltip" data-placement="right" title="<?= t(
+            <label class="control-label launch-tooltip" for="timezone" data-placement="right" title="<?= t(
                 'This will control the default timezone that will be used to display date/times.'
             ) ?>">
                 <?php echo t('Default Timezone') ?>
             </label>
-            <select name="timezone">
-                <?php
-                foreach ($timezones as $areaName => $namedTimezones) {
-                    ?>
-                    <optgroup label="<?= h($areaName) ?>">
-                        <?php
-                        foreach ($namedTimezones as $tzID => $tzName) {
-
-                            $zone = new DateTimeZone($tzID);
-                            $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
-                            if ($zoneName) {
-                                $zoneName = '(' .$zoneName . ')';
-                            }
-                            ?>
-                            <option value="<?= h($tzID) ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : '' ?>>
-                                <?= h($tzName) ?> <?=$zoneName?>
-                            </option>
-                            <?php
-                        } ?>
-                    </optgroup>
+            <div class="row pl-3">
+                <select class="selectpicker" name="timezone" data-live-search="true" data-width="auto">
                     <?php
-                }
-                ?>
-            </select>
-            <script type="text/javascript">
-                $(function() {
-                    $('select[name=timezone]').selectize();
-                });
-            </script>
+                    foreach ($timezones as $areaName => $namedTimezones) {
+                        ?>
+                        <optgroup label="<?= h($areaName) ?>">
+                            <?php
+                            foreach ($namedTimezones as $tzID => $tzName) {
+
+                                $zone = new DateTimeZone($tzID);
+                                $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
+                                if ($zoneName) {
+                                    $zoneName = '(' .$zoneName . ')';
+                                }
+                                ?>
+                                <option value="<?= h($tzID) ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : '' ?>>
+                                    <?= h($tzName) ?> <?=$zoneName?>
+                                </option>
+                                <?php
+                            } ?>
+                        </optgroup>
+                        <?php
+                    }
+                    ?>
+                </select>
+            </div>
         </div>
         <div class="form-group">
             <label class="control-label">
