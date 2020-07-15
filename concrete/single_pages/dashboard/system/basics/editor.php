@@ -147,7 +147,7 @@ function updatePreview() {
     })
 }
 
-var previewOffsetTop = $previewContainer.offset().top, previewOffsetLimit = $('.ccm-dashboard-page-header').offset().top;
+var previewOffsetTop = $previewContainer.offset().top, previewOffsetLimit = $('#ccm-dashboard-content header').offset().top;
 function updatePreviewView() {
     if ($window.scrollTop() >= previewOffsetTop - previewOffsetLimit) {
         $preview
