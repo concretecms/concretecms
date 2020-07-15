@@ -59,7 +59,6 @@ error_log
 /build/release
 /build/Gruntfile.parameters.js
 /build/npm-debug.log
-/build/package-lock.json
 
 # ignore PHP symbol map
 __IDE_SYMBOLS__.php
@@ -69,7 +68,7 @@ __IDE_SYMBOLS__.php
 /.php_cs
 
 # ignore php-cs-fixer cache file
-/.php_cs.cache
+/.php_cs.cache*
 
 # ignore Visual Code project files
 .vscode

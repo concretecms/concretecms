@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\Dialog\Page;
 
-use Area;
+use Concrete\Core\Area\Area;
 use Block;
 use BlockType;
 use Concrete\Core\Block\Events\BlockAdd;
@@ -14,7 +14,7 @@ use Loader;
 use PageEditResponse;
 use Permissions;
 use Stack;
-use User;
+use Concrete\Core\User\User;
 
 class AddBlock extends BackendInterfacePageController
 {
@@ -90,7 +90,7 @@ class AddBlock extends BackendInterfacePageController
         if (!$this->error->has()) {
             $data = $_POST;
             $bt = $this->blockType;
-            $u = new User();
+            $u = $this->app->make(User::class);
             $data['uID'] = $u->getUserID();
 
             $e = $this->blockTypeController->validate($data);

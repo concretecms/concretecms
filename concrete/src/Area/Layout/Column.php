@@ -5,7 +5,7 @@ use Database;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Area\SubArea;
 use Page;
-use Area;
+use Concrete\Core\Area\Area;
 use RuntimeException;
 
 abstract class Column extends ConcreteObject implements ColumnInterface

@@ -1,15 +1,14 @@
 <?php
+
 namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\Package;
-use Concrete\Controller\Element\Package\ThemeItemList;
 use Concrete\Core\Page\Type\Type;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class PageType extends AbstractCategory
 {
-
     public function getItemCategoryDisplayName()
     {
         return t('Page Types');
@@ -24,5 +23,4 @@ class PageType extends AbstractCategory
     {
         return Type::getListByPackage($package);
     }
-
 }

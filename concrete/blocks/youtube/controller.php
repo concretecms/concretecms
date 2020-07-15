@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Youtube;
 
 use Concrete\Core\Block\BlockController;
@@ -6,8 +7,8 @@ use Concrete\Core\Block\BlockController;
 class Controller extends BlockController
 {
     protected $btTable = 'btYouTube';
-    protected $btInterfaceWidth = "400";
-    protected $btInterfaceHeight = "490";
+    protected $btInterfaceWidth = '400';
+    protected $btInterfaceHeight = '490';
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
@@ -18,12 +19,12 @@ class Controller extends BlockController
      */
     public function getBlockTypeDescription()
     {
-        return t("Embeds a YouTube Video in your web page.");
+        return t('Embeds a YouTube Video in your web page.');
     }
 
     public function getBlockTypeName()
     {
-        return t("YouTube Video");
+        return t('YouTube Video');
     }
 
     public function edit()
@@ -37,14 +38,13 @@ class Controller extends BlockController
     {
         $url = parse_url($this->videoURL);
         $pathParts = explode('/', rtrim($url['path'], '/'));
-        parse_str($url['query'], $params);
         $videoID = end($pathParts);
         $playListID = '';
 
-        if (isset($url['query'])) {
+        if (isset($url['query']) === true) {
             parse_str($url['query'], $query);
-
-            if (isset($query['list'])) {
+            
+            if (isset($query['list']) === true) {
                 $playListID = $query['list'];
                 $videoID = '';
             } else {
@@ -65,9 +65,8 @@ class Controller extends BlockController
 
         if ($this->startTimeEnabled == 1 && ($this->startTime === '0' || $this->startTime)) {
             $this->set('startSeconds', $this->convertStringToSeconds($this->startTime));
-        }
-        elseif (!empty($params['t'])) {
-            $this->set('startSeconds', $this->convertStringToSeconds($params['t']));
+        } elseif (isset($query['t']) === true && empty($query['t']) === false) {
+            $this->set('startSeconds', $this->convertStringToSeconds($query['t']));
         }
 
         $this->set('videoID', $videoID);
@@ -77,24 +76,24 @@ class Controller extends BlockController
     public function convertStringToSeconds($string)
     {
         if (preg_match_all('/(\d+)(h|m|s)/i', $string, $matches)) {
-            $h = (($key = array_search('h', $matches[2])) !== false) ? (int)$matches[1][$key] : 0;
-            $m = (($key = array_search('m', $matches[2])) !== false) ? (int)$matches[1][$key] : 0;
-            $s = (($key = array_search('s', $matches[2])) !== false) ? (int)$matches[1][$key] : 0;
+            $h = (($key = array_search('h', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
+            $m = (($key = array_search('m', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
+            $s = (($key = array_search('s', $matches[2])) !== false) ? (int) $matches[1][$key] : 0;
             $seconds = ($h * 3600) + ($m * 60) + $s;
-        }
-        else {
+        } else {
             $pieces = array_reverse(explode(':', $string));
             $seconds = 0;
             $multipliers = [1, 60, 3600];
             foreach ($multipliers as $key => $multiplier) {
                 if (array_key_exists($key, $pieces)) {
-                    $seconds += (int)$pieces[$key] * $multiplier;
+                    $seconds += (int) $pieces[$key] * $multiplier;
                 }
             }
         }
         if ($seconds === 0 || $seconds > 0) {
             return $seconds;
         }
+
         return false;
     }
 
@@ -109,9 +108,9 @@ class Controller extends BlockController
             'vHeight' => null,
             'vWidth' => null,
 
-            'showinfo' => false,
             'controls' => false,
             'modestbranding' => false,
+            'showCaptions' => false,
 
             'color' => null,
 
@@ -123,6 +122,8 @@ class Controller extends BlockController
             'startTime' => '',
 
             'noCookie' => false,
+
+            'lazyLoad' => false
         ];
 
         $args = [
@@ -132,9 +133,9 @@ class Controller extends BlockController
 
             'sizing' => $data['sizing'],
 
-            'showinfo' => $data['showinfo'] ? 1 : 0,
             'controls' => $data['controls'] ? 1 : 0,
             'modestbranding' => $data['modestbranding'] ? 1 : 0,
+            'showCaptions' => $data['showCaptions'] ? 1 : 0,
 
             'color' => $data['color'],
 
@@ -147,6 +148,8 @@ class Controller extends BlockController
             'startTime' => trim($data['startTime']),
 
             'noCookie' => $data['noCookie'] ? 1 : 0,
+
+            'lazyLoad' => $data['lazyLoad'] ? 1 : 0
         ];
         if ($args['sizing'] === 'fixed') {
             $args += [

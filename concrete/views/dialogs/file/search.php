@@ -16,7 +16,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $(function() {
 	$('div[data-search=files]').concreteFileManager({
 		result: <?=json_encode($result->getJSONObject())?>,
-		selectMode: 'choose',
+    <?php
+    if ($selectMultiple === true) {
+        ?>
+        selectMode: 'multiple',
+        chooseMultiple: true,
+    <?php
+    } else {
+    ?>
+        selectMode: 'choose',
+    <?php
+    }
+    ?>
 		upload_token: '<?=Core::make('token')->generate()?>'
 	});
 });

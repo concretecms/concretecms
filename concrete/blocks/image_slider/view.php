@@ -89,7 +89,7 @@ $(document).ready(function(){
                 <?php if (is_object($f)) {
                     $tag = Core::make('html/image', [$f, false])->getTag();
                     if ($row['title']) {
-                        $tag->alt($row['title']);
+                        $tag->alt(h($row['title']));
                     } else {
                         $tag->alt("slide");
                     }
@@ -99,7 +99,7 @@ $(document).ready(function(){
                 <div class="ccm-image-slider-text">
                     <?php if ($row['title']) {
                     ?>
-                    	<h2 class="ccm-image-slider-title"><?php echo $row['title']; ?></h2>
+                    	<h2 class="ccm-image-slider-title"><?php echo h($row['title']); ?></h2>
                     <?php
                 } ?>
                     <?php echo $row['description']; ?>

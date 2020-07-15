@@ -47,7 +47,7 @@ if ($controller->getAction() == 'inspect') {
             <div class="pull-right">
                 <a href="<?= $urlResolver->resolve(['/dashboard/blocks/types', 'refresh', $bt->getBlockTypeID(), $token->generate('ccm-refresh-blocktype')]) ?>" class="btn btn-default"><?= t('Refresh') ?></a>
                 <?php
-                $u = new User();
+                $u = Core::make(Concrete\Core\User\User::class);
                 if ($u->isSuperUser()) {
                     ?>
                     <a href="javascript:void(0)" class="btn btn-danger" onclick="removeBlockType()"><?= t('Remove') ?></a>

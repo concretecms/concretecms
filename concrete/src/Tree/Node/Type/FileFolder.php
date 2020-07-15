@@ -1,16 +1,32 @@
 <?php
 namespace Concrete\Core\Tree\Node\Type;
 
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\FileFolderMenu;
 use Concrete\Core\User\User;
 use Gettext\Translations;
 use Symfony\Component\HttpFoundation\Request;
+use Exception;
 
-class FileFolder extends Category
+class FileFolder extends TreeNode
 {
+    /**
+     * @return int|null
+     */
+    protected $fslID = null;
+
+    public function getTreeNodeTranslationContext()
+    {
+        return 'TreeNodeFileFolderName';
+    }
+
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\FileFolderResponse';
@@ -31,6 +47,109 @@ class FileFolder extends Category
         return t('Folder');
     }
 
+    public function getTreeNodeDisplayName($format = 'html')
+    {
+        if ($this->getTreeNodeName()) {
+            $name = tc($this->getTreeNodeTranslationContext(), $this->getTreeNodeName());
+            switch ($format) {
+                case 'html':
+                    return h($name);
+                case 'text':
+                default:
+                    return $name;
+            }
+        } elseif ($this->getTreeNodeParentID() == 0) {
+            return t('Folders');
+        }
+    }
+
+    /**
+     * Returns the storage location id of the folder.
+     *
+     * @return int
+     */
+    public function getTreeNodeStorageLocationID()
+    {
+        return (int) $this->fslID;
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     */
+    public function getTreeNodeStorageLocationObject()
+    {
+        $app = Application::getFacadeApplication();
+
+        return $app->make(StorageLocationFactory::class)->fetchByID($this->getTreeNodeStorageLocationID());
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation Storage location object or id
+     */
+    public function setTreeNodeStorageLocation($storageLocation)
+    {
+        if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+            $this->setTreeNodeStorageLocationID($storageLocation->getID());
+        } elseif (!is_object($storageLocation)) {
+            $this->setTreeNodeStorageLocationID($storageLocation);
+        } else {
+            throw new Exception(t('Invalid file storage location.'));
+        }
+    }
+
+    /**
+     * @param int $fslID Storage location id
+     */
+    public function setTreeNodeStorageLocationID($fslID)
+    {
+        $app = Application::getFacadeApplication();
+        $location = $app->make(StorageLocationFactory::class)->fetchByID((int) $fslID);
+        if (!is_object($location)) {
+            throw new Exception(t('Invalid file storage location.'));
+        }
+
+        $db = $app->make(Connection::class);
+        $db->replace('TreeFileFolderNodes', [
+            'treeNodeID' => $this->getTreeNodeID(),
+            'fslID' => (int) $fslID,
+        ], ['treeNodeID'], true);
+        $this->fslID = (int) $fslID;
+    }
+
+    public function loadDetails()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $row = $db->fetchAssoc('SELECT * FROM TreeFileFolderNodes WHERE treeNodeID = ?', [
+            $this->treeNodeID,
+        ]);
+        if (!empty($row)) {
+            $this->setPropertiesFromArray($row);
+        }
+    }
+
+    public function deleteDetails()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery('DELETE FROM TreeFileFolderNodes WHERE treeNodeID = ?', [
+            $this->treeNodeID,
+        ]);
+    }
+
+    /**
+     * @param \Concrete\Core\Tree\Node\Node|bool $parent Node's parent folder
+     *
+     * @return \Concrete\Core\Tree\Node\Node
+     */
+    public function duplicate($parent = false)
+    {
+        $node = static::add($this->getTreeNodeName(), $parent, $this->getTreeNodeStorageLocationID());
+        $this->duplicateChildren($node);
+
+        return $node;
+    }
+
     public function getTreeNodeMenu()
     {
         return new FileFolderMenu($this);
@@ -42,6 +161,48 @@ class FileFolder extends Category
         if ($node) {
             $node->isFolder = true;
             $node->resultsThumbnailImg = $this->getListFormatter()->getIconElement();
+        }
+
+        return $node;
+    }
+
+    public function getListFormatter()
+    {
+        return new CategoryListFormatter();
+    }
+
+    /**
+     * @param string $treeNodeName Node name
+     * @param \Concrete\Core\Tree\Node\Node|bool $parent Node's parent folder
+     * @param int|\Concrete\Core\Entity\File\StorageLocation\StorageLocation|null $storageLocationID Id or object of the storage location, if null the default one will be used
+     *
+     * @return \Concrete\Core\Tree\Node\Node
+     */
+    public static function add($treeNodeName = '', $parent = false, $storageLocationID = null)
+    {
+        // Get the storage location id if we have an object
+        if (is_object($storageLocationID) && $storageLocationID instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+            $storageLocationID = $storageLocationID->getID();
+        }
+
+        // If its not empty verify its a real location
+        elseif (!empty($storageLocationID)) {
+            $app = Application::getFacadeApplication();
+            $storageLocation = $app->make(StorageLocationFactory::class)->fetchByID((int) $storageLocationID);
+            if (is_object($storageLocation)) {
+                $storageLocationID = $storageLocation->getID();
+            } else {
+                $storageLocationID = null;
+            }
+        } else {
+            $storageLocationID = null;
+        }
+        $node = parent::add($parent);
+        $node->setTreeNodeName($treeNodeName);
+
+        // Only set storage location if we have one
+        if (!empty($storageLocationID)) {
+            $node->setTreeNodeStorageLocationID($storageLocationID);
         }
 
         return $node;

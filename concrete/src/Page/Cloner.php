@@ -1,10 +1,11 @@
 <?php
-
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
+use Concrete\Core\Entity\Page\Relation\SiblingRelation;
+use Concrete\Core\Entity\Site\SkeletonTree;
 use Concrete\Core\Localization\Service\Date as DateHelper;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Collection;
@@ -125,8 +126,6 @@ class Cloner
             'pkgID' => $page->getPackageID(),
         ]);
 
-        $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, cvID, bID', ['cID' => [$cID, $newCID]]);
-
         PageStatistics::incrementParents($newCID);
 
         $newPage = Page::getByID($newCID);
@@ -163,14 +162,37 @@ class Cloner
                 'stMultilingualSection' => 0,
             ]);
             $newPage = Stack::getByID($newPage->getCollectionID());
-            if ($page->isNeutralStack()) {
-                foreach (Section::getList() as $section) {
-                    $localized = $page->getLocalizedStack($section);
-                    if ($localized !== null) {
-                        $this->clonePage($localized, $options, $newPage, $site);
-                    }
+        }
+
+        $tree = $page->getSiteTreeObject();
+        if ($tree instanceof SkeletonTree) {
+            // Add a relation between the pages.
+            // Is there already a relation used by the source page?
+            $relation = $this->entityManager->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation')
+                ->findOneBy(['cID' => $page->getCollectionID()]);
+            if (!is_object($relation)) {
+                $mpRelationID = $this->entityManager->getConnection()->GetOne('select max(mpRelationID) as mpRelationID from SiblingPageRelations');
+                if (!$mpRelationID) {
+                    $mpRelationID = 1;
+                } else {
+                    ++$mpRelationID;
                 }
+
+                // Create one for the original sibling.
+                $original = new SiblingRelation();
+                $original->setPageRelationID($mpRelationID);
+                $original->setPageID($page->getCollectionID());
+                $this->entityManager->persist($original);
+
+            } else {
+                $mpRelationID = $relation->getPageRelationID();
             }
+
+            $new = new SiblingRelation();
+            $new->setPageRelationID($mpRelationID);
+            $new->setPageID($newPage->getCollectionID());
+            $this->entityManager->persist($new);
+            $this->entityManager->flush();
         }
 
         return $newPage;
@@ -345,7 +367,7 @@ class Cloner
         $uniquePageName = $pageName;
         $parentID = (int) $parentID;
         $index = 1;
-        for (; ;) {
+        for (;;) {
             $pageWithSameName = $this->connection->fetchColumn(
                 'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvName = ? limit 1',
                 [$parentID, $uniquePageName]
@@ -371,7 +393,7 @@ class Cloner
         $uniqueHandle = $handle;
         $parentID = (int) $parentID;
         $index = 1;
-        for (; ;) {
+        for (;;) {
             $pageWithSameHandle = $this->connection->fetchColumn(
                 'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvHandle = ? limit 1',
                 [$parentID, $uniqueHandle]
@@ -398,6 +420,9 @@ class Cloner
         }
         if ($options->copyFeatureAssignments()) {
             $this->copyFeatureAssignments($cIDs, $cvIDs);
+        }
+        if ($options->copyPageTypeComposerOutputBlocks()) {
+            $this->copyPageTypeComposerOutputBlocks($cIDs, $cvIDs);
         }
         if ($options->copyCustomStyles()) {
             $this->copyCustomStyles($cIDs, $cvIDs);
@@ -441,6 +466,17 @@ class Cloner
     protected function copyFeatureAssignments(array $cIDs, array $cvIDs = null)
     {
         $this->directCopy('CollectionVersionFeatureAssignments', 'faID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
+    }
+
+    /**
+     * Copy the page type composer block output records from one version to another.
+     *
+     * @param int[] $cIDs An array with the ID of the source and destination collections
+     * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
+     */
+    protected function copyPageTypeComposerOutputBlocks(array $cIDs, array $cvIDs = null)
+    {
+        $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
 
     /**

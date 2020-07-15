@@ -102,8 +102,10 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
                 foreach ($this->getAttributeValues($entry) as $attributeValue) {
                     if ($attributeValue->getAttributeTypeObject()->getAttributeTypeHandle() == "image_file") {
                         $file = $attributeValue->getValue();
-                        $files[] = $file;
-                        $mh->addAttachment($file);
+                        if ($file) {
+                            $files[] = $file;
+                            $mh->addAttachment($file);
+                        }
                     }
                 }
             }

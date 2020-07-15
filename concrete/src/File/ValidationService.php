@@ -75,16 +75,23 @@ class ValidationService
      */
     public function extension($filename, $extensions = null)
     {
-        $f = Loader::helper('file');
+        $f = app('helper/file');
+        $cf = app('helper/concrete/file');
+        $config = app('config');
         $ext = strtolower($f->getExtension($filename));
-        if (isset($extensions) && is_array($extensions) && count($extensions)) {
+        
+        $blacklist = array_map('strtolower', $cf->unSerializeUploadFileExtensions($config->get('concrete.upload.extensions_blacklist')));
+        if (in_array($ext, $blacklist, true)) {
+            return false;
+        }
+        if (is_array($extensions) && $extensions !== []) {
             $allowed_extensions = $extensions;
         } else { // pull from constants
-            $extensions_string = strtolower(str_replace(array("*", "."), "", Config::get('concrete.upload.extensions')));
-            $allowed_extensions = explode(";", $extensions_string);
+            $allowed_extensions = $cf->unSerializeUploadFileExtensions($config->get('concrete.upload.extensions'));
         }
+        $allowed_extensions = array_map('strtolower', $allowed_extensions);
 
-        return in_array($ext, $allowed_extensions);
+        return in_array($ext, $allowed_extensions, true);
     }
 
     /**

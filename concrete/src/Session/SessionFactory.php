@@ -178,8 +178,11 @@ class SessionFactory implements SessionFactoryInterface
         $storage = $app->make(NativeSessionStorage::class, [[], $handler]);
 
         // Initialize the storage with some options
-        $options = array_get($config, 'cookie', []);
-        $options['gc_maxlifetime'] = array_get($config, 'max_lifetime');
+        $options = array_get($config, 'cookie', []) + [
+            'gc_maxlifetime' => (int) array_get($config, 'max_lifetime') ?: (int) ini_get('session.gc_maxlifetime') ?: 7200,
+            'gc_probability' => (int) array_get($config, 'gc_probability') ?: (int) ini_get('session.gc_probability') ?: 1,
+            'gc_divisor' => (int) array_get($config, 'gc_divisor') ?: (int) ini_get('session.gc_divisor') ?: 100,
+        ];
 
         if (array_get($options, 'cookie_path', false) === false) {
             $options['cookie_path'] = $app['app_relative_path'] . '/';
@@ -311,6 +314,7 @@ class SessionFactory implements SessionFactoryInterface
         } else {
             $serverArray = [];
             $ttl = 0.5;
+            $password = null;
             foreach ($this->getRedisServers($servers) as $server) {
                 $serverString = $server['server'];
                 if (isset($server['port'])) {
@@ -318,13 +322,20 @@ class SessionFactory implements SessionFactoryInterface
                 }
                 // We can only use one ttl for connection timeout so use the last set ttl
                 // isset allows for 0 - unlimited
-                if (!isset($server['ttl'])) {
+                if (isset($server['ttl'])) {
                     $ttl = $server['ttl'];
+                }
+                if (isset($server['password'])) {
+                    $password = $server['password'];
                 }
 
                 $serverArray[] = $serverString;
             }
-            $redis = $this->app->make(RedisArray::class, [$serverArray, ['connect_timeout' => $ttl]]);
+            $options = ['connect_timeout' => $ttl];
+            if ($password !== null) {
+                $options['auth'] = $password;
+            }
+            $redis = $this->app->make(RedisArray::class, [$serverArray, $options]);
         }
 
         return $redis;
@@ -345,6 +356,7 @@ class SessionFactory implements SessionFactoryInterface
                     $server = [
                         'server' => array_get($server, 'socket', ''),
                         'ttl' => array_get($server, 'ttl', null),
+                        'password' => array_get($server, 'password', null),
                     ];
                 } else {
                     $host = array_get($server, 'host', '');
@@ -354,6 +366,7 @@ class SessionFactory implements SessionFactoryInterface
                         'server' => $host,
                         'port' => array_get($server, 'port', 11211),
                         'ttl' => array_get($server, 'ttl', null),
+                        'password' => array_get($server, 'password', null),
                     ];
                 }
                 yield $server;

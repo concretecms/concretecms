@@ -37,7 +37,7 @@ function getAttributeOptionHTML($v)
 }
     ?>
 				<input id="akSelectValueField_<?php echo $akSelectValueID?>" onkeypress="ccmAttributesHelper.keydownHandler(event);" class="akSelectValueField form-control" data-select-value-id="<?php echo $akSelectValueID;
-    ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo $akSelectValue?>" size="40" />
+    ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo h($akSelectValue)?>" size="40" />
 			</span>		
 			<div class="rightCol">
 				<input class="btn btn-default" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />

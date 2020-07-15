@@ -1,14 +1,9 @@
 <?php
-namespace Concrete\Core\Routing;
 
-use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
-use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
-use Concrete\Core\Http\Middleware\ProjectorMiddleware;
+namespace Concrete\Core\Routing;
 
 class SystemRouteList implements RouteListInterface
 {
-
     public function loadRoutes(Router $router)
     {
         $router->buildGroup()->setPrefix('/ccm/system/panels')->setNamespace('Concrete\Controller\Panel')
@@ -53,6 +48,10 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/system/dialogs/page')
             ->routes('dialogs/pages.php');
 
+        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Permissions')
+            ->setPrefix('/ccm/system/dialogs/permissions')
+            ->routes('dialogs/permissions.php');
+
         $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\File')
             ->setPrefix('/ccm/system/dialogs/file')
             ->routes('dialogs/files.php');
@@ -75,13 +74,14 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('marketplace.php');
 
+        $router->buildGroup()->routes('permissions.php');
+
         $router->buildGroup()->routes('trees.php');
+
+        $router->buildGroup()->routes('site.php');
 
         $router->buildGroup()->routes('calendar.php');
 
         $router->buildGroup()->routes('misc.php');
-
     }
-
-
 }

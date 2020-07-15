@@ -163,6 +163,13 @@ module.exports = function(grunt) {
             ]
         },
 
+        draftlist: {
+            dest: '<%= DIR_BASE %>/concrete/js/draft-list.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/blocks/draft-list.js',
+            ]
+        },
+
         express: {
             dest: '<%= DIR_BASE %>/concrete/js/express.js',
             src: [
@@ -298,6 +305,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/image.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/size.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/typography.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/color.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/custom.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/style-customizer/inline-toolbar.js'
             ]
         },
@@ -445,6 +454,10 @@ module.exports = function(grunt) {
         ccm_country_stateprovince_link: {
             dest: '<%= DIR_BASE %>/concrete/js/country-stateprovince-link.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/country-stateprovince-link.js'
+        },
+        ccm_country_data_link: {
+            dest: '<%= DIR_BASE %>/concrete/js/country-data-link.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/country-data-link.js'
         }
     };
 
@@ -490,7 +503,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
-        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.0/bootstrap.less',
+        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.4.1/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
     };

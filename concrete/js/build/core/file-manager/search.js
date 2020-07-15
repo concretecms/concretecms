@@ -10,8 +10,8 @@
             'breadcrumbElement': 'div.ccm-search-results-breadcrumb.ccm-file-manager-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
-            'appendToOuterDialog': true,
-            'selectMode': 'multiple' // Enables multiple advanced item selection, range click, etc
+            'selectMode': 'multiple',// Enables multiple advanced item selection, range click, etc
+            'chooseMultiple': false, // Enable multiple choice mode
         }, options);
 
         my.currentFolder = 0;
@@ -109,6 +109,7 @@
             });
 
             my.$element.find('tr[data-file-manager-tree-node-type=file_folder], ol[data-search-navigation=breadcrumb] a[data-file-manager-tree-node]').droppable({
+                accept: 'tr[data-file-manager-file], tr[data-file-manager-folder]',
                 tolerance: 'pointer',
                 hoverClass: 'ccm-search-select-active-droppable',
                 drop: function(event, ui) {
@@ -293,6 +294,11 @@
             my.reloadFolder();
         });
 
+        ConcreteEvent.unsubscribe('ConcreteTreeAddTreeNode.concreteTree');
+        ConcreteEvent.subscribe('ConcreteTreeAddTreeNode.concreteTree', function(e, r) {
+            my.reloadFolder();
+        });
+
         ConcreteEvent.unsubscribe('ConcreteTreeUpdateTreeNode.concreteTree');
         ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
@@ -368,7 +374,13 @@
 
     ConcreteFileManager.prototype.activateMenu = function($menu) {
         var my = this;
+        var holder = $menu.find('ul');
+
         if (my.getSelectedResults().length > 1) {
+            if (my.options.chooseMultiple) {
+                holder.prepend('<li><a data-bulk-action="choose" href="#">'+ccmi18n_filemanager.selectMultiple+'</a></li>' +
+                    '<li class="divider"></li>');
+            }
             // bulk menu
             $menu.find('a').on('click.concreteFileManagerBulkAction', function(e) {
 
@@ -382,6 +394,22 @@
 
                 my.handleSelectedBulkAction(value, type, $(this), ids);
             });
+        } else if (my.options.chooseMultiple) {
+            // prepend choose
+            holder.prepend('<li><a data-file-manager-action="choose" href="#">'+ccmi18n_filemanager.select+'</a></li>' +
+                '<li class="divider"></li>');
+            holder.on('click.concreteFileManagerChooseFile','a[data-file-manager-action=choose]', function(e) {
+                var ids = [];
+
+                $.each(my.getSelectedResults(), function(i, result) {
+                    ids.push(result.fID);
+                });
+                ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: ids });
+                ConcreteEvent.publish('FileManagerSelectFile', { fID: ids });
+                my.$downloadTarget.remove();
+                return false;
+            });
+
         }
 
         // Hide clear if we're not in choose mode
@@ -392,6 +420,7 @@
             $clear.remove();
             $choose.remove();
         }
+
 
     };
 
@@ -407,7 +436,6 @@
                 $list.attr('data-search-file-menu', $menu.attr('data-search-file-menu'));
                 $(this).parent().find('ul').remove();
                 $(this).parent().append($list);
-
                 var fileMenu = new ConcreteFileMenu();
                 fileMenu.setupMenuOptions($(this).next('ul'));
 
@@ -440,24 +468,19 @@
 
     ConcreteFileManager.prototype.setupAddFolder = function() {
         var my = this;
-        $('a[data-launch-dialog=add-file-manager-folder]').on('click', function(e) {
-            $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
-            $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
-
-            $.fn.dialog.open({
-                element: 'div[data-dialog=add-file-manager-folder]',
-                modal: true,
-                width: 320,
-                title: 'Add Folder',
-                height: 'auto'
-            });
-
-            $('div[data-dialog=add-file-manager-folder]').on('dialogopen', function() {
-                var $this = $(this);
-                $this.off('dialogopen');
-                $this.find('[autofocus]').focus();
-            });
+        $('a[data-dialog=add-file-manager-folder]').on('click', function(e) {
+            var data = {
+                treeNodeID: my.currentFolder
+            };
             e.preventDefault();
+            $.fn.dialog.open({
+                width: 550,
+                height: 'auto',
+                modal: true,
+                title: ccmi18n_filemanager.addFiles,
+                data: data,
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/tree/node/add/file_folder'
+            });
         });
     };
 
@@ -593,7 +616,9 @@
         };
 
         $.extend(options, opts);
-
+        if (options.multipleSelection) {
+            data.mode = 'selectMultiple';
+        }
         if (options.filters.length > 0) {
             data['field\[\]'] = [];
 

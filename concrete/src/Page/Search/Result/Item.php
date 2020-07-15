@@ -23,7 +23,8 @@ class Item extends SearchResultItem
 
     protected function populateDetails($item)
     {
-        $this->cID = $item->getCollectionID();
+        $this->cID = $item->isAliasPage() ? $item->getCollectionPointerOriginalID() : $item->getCollectionID();
+        $this->cPointerID = $item->getCollectionPointerID();
         $this->link = $item->getCollectionLink();
         $cp = new Permissions($item);
         $this->canEditPageProperties = $cp->canEditPageProperties();

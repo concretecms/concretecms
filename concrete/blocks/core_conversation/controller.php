@@ -8,6 +8,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
 use Concrete\Core\Feature\ConversationFeatureInterface;
+use Concrete\Core\User\User;
 use Page;
 
 /**
@@ -116,7 +117,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
     {
         $this->requireAsset('core/conversation');
         $this->requireAsset('core/lightbox');
-        $u = new \User();
+        $u = $this->app->make(User::class);
         if (!$u->isRegistered()) {
             $this->requireAsset('css', 'core/frontend/captcha');
         }
@@ -141,6 +142,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
             $this->set('addMessageToken', $addMessageToken);
             $this->set('editMessageToken', $tokenHelper->generate('edit_conversation_message'));
             $this->set('deleteMessageToken', $tokenHelper->generate('delete_conversation_message'));
+            $this->set('flagMessageToken', $tokenHelper->generate('flag_conversation_message'));
             $this->set('cID', Page::getCurrentPage()->getCollectionID());
             $this->set('users', $this->getActiveUsers(true));
             $this->set('maxFilesGuest', $fileSettings['maxFilesGuest']);

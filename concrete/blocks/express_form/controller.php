@@ -172,7 +172,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
             // Important – are other blocks in the system using this form? If so, we don't want to delete it!
             $db = $entityManager->getConnection();
             $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
-            if (0 == $r) {
+            if (0 == $r && !$entity->getIncludeInPublicList()) {
                 $entityManager->remove($entity);
                 $entityManager->flush();
             }

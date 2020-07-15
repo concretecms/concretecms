@@ -37,6 +37,7 @@ class DashboardMenu extends Menu
     {
         $list = parent::getPageList($parent);
         $list->includeSystemPages();
+        $list->includeAliases();
         return $list;
     }
 

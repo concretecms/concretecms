@@ -2,12 +2,18 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserInfoRepository
 {
     protected $entityManager;
     protected $application;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
+    protected $repository;
 
     public function __construct(Application $application, EntityManagerInterface $entityManager)
     {
@@ -40,7 +46,7 @@ class UserInfoRepository
     }
 
     /**
-     * @deprecated
+     * @deprecated Use ->getByName($name) instead
      */
     public function getByUserName($uName)
     {
@@ -60,10 +66,45 @@ class UserInfoRepository
     }
 
     /**
+     * Get a UserInfo object from a user entity
+     *
+     * @param \Concrete\Core\Entity\User\User $entity
+     *
+     * @return \Concrete\Core\User\UserInfo
+     */
+    public function getByUserEntity(UserEntity $entity)
+    {
+        $ui = $this->application->make(UserInfo::class);
+        $ui->setEntityObject($entity);
+
+        return $ui;
+    }
+
+    /**
+     * Get all users
+     *
+     * @param bool $activeOnly Only return active users
+     *
+     * @return \Concrete\Core\User\UserInfo[]
+     */
+    public function all($activeOnly = false)
+    {
+        $repository = $this->getRepository();
+
+        // If we only want active users
+        if ($activeOnly) {
+            $filter['uIsActive'] = true;
+            return array_map([$this, 'getByUserEntity'], $repository->findBy(['uIsActive' => true]));
+        }
+
+        return array_map([$this, 'getByUserEntity'], $repository->findAll());
+    }
+
+    /**
      * @param string $uHash
      * @param bool $unredeemedHashesOnly
      *
-     * @return UserInfo|null
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
@@ -79,14 +120,36 @@ class UserInfoRepository
         }
     }
 
+    /**
+     * Resolve an single entity by
+     *
+     * @param $where
+     * @param $var
+     *
+     * @return \Concrete\Core\User\UserInfo|null
+     */
     private function get($where, $var)
     {
-        $repository = $this->entityManager->getRepository('Concrete\Core\Entity\User\User');
-        $entity = $repository->findOneBy(array($where => $var));
-        if (is_object($entity)) {
-            $ui = $this->application->make('Concrete\Core\User\UserInfo');
-            $ui->setEntityObject($entity);
-            return $ui;
+        $entity = $this->getRepository()->findOneBy(array($where => $var));
+
+        if (!is_object($entity)) {
+            return null;
         }
+
+        return $this->getByUserEntity($entity);
+    }
+
+    /**
+     * Resolve the repository instance
+     *
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
+    protected function getRepository()
+    {
+        if (!$this->repository) {
+            $this->repository = $this->entityManager->getRepository(UserEntity::class);
+        }
+
+        return $this->repository;
     }
 }

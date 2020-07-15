@@ -1,12 +1,18 @@
 <?php
+
 namespace Concrete\Job;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Express\ObjectManager;
+use Concrete\Core\Express\Search\Index\EntityIndex;
 use Concrete\Core\File\File;
 use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Punic\Misc as PunicMisc;
 use ZendQueue\Message as ZendQueueMessage;
@@ -16,6 +22,7 @@ class IndexSearchAll extends QueueableJob
 {
     // A flag for clearing the index
     const CLEAR = '-1';
+    const CLEAR_EXPRESS_ENTITY = '-2';
 
     public $jQueueBatchSize = 50;
     public $jNotUninstallable = 1;
@@ -36,6 +43,11 @@ class IndexSearchAll extends QueueableJob
      */
     protected $connection;
 
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
     public function getJobName()
     {
         return t('Index Search Engine - All');
@@ -46,10 +58,11 @@ class IndexSearchAll extends QueueableJob
         return t('Empties the page search index and reindexes all pages.');
     }
 
-    public function __construct(IndexManagerInterface $indexManager, Connection $connection)
+    public function __construct(IndexManagerInterface $indexManager, Connection $connection, ObjectManager $objectManager)
     {
         $this->indexManager = $indexManager;
         $this->connection = $connection;
+        $this->objectManager = $objectManager;
     }
 
     public function start(ZendQueue $queue)
@@ -72,7 +85,12 @@ class IndexSearchAll extends QueueableJob
      */
     protected function queueMessages()
     {
-        $pages = $users = $files = $sites = 0;
+        $pages = $users = $files = $sites = $objects = $entries = 0;
+
+        foreach ($this->expressObjectsToQueue() as $id) {
+            yield self::CLEAR_EXPRESS_ENTITY . $id;
+            $objects++;
+        }
 
         foreach ($this->pagesToQueue() as $id) {
             yield "P{$id}";
@@ -91,8 +109,13 @@ class IndexSearchAll extends QueueableJob
             $sites++;
         }
 
+        foreach ($this->expressEntriesToQueue() as $id) {
+            yield "E{$id}";
+            $entries++;
+        }
+
         // Yield the result very last
-        yield 'R' . json_encode([$pages, $users, $files, $sites]);
+        yield 'R' . json_encode([$pages, $users, $files, $sites, $objects, $entries]);
     }
 
     public function processQueueItem(ZendQueueMessage $msg)
@@ -100,7 +123,9 @@ class IndexSearchAll extends QueueableJob
         $index = $this->indexManager;
 
         // Handle a "clear" message
-        if ($msg->body == self::CLEAR) {
+        if (substr($msg->body, 0, 2) === '-2') {
+            $this->clearExpressEntityIndex(substr($msg->body, 2));
+        } else if ($msg->body == self::CLEAR) {
             $this->clearIndex($index);
         } else {
             $body = $msg->body;
@@ -112,7 +137,8 @@ class IndexSearchAll extends QueueableJob
                 'P' => Page::class,
                 'U' => User::class,
                 'F' => File::class,
-                'S' => Site::class
+                'S' => Site::class,
+                'E' => Entry::class,
             ];
 
             if (isset($map[$type])) {
@@ -127,7 +153,7 @@ class IndexSearchAll extends QueueableJob
     public function finish(ZendQueue $q)
     {
         if ($this->result) {
-            list($pages, $users, $files, $sites) = $this->result;
+            list($pages, $users, $files, $sites, $objects, $entries) = $this->result;
             return t(
                 'Index performed on: %s',
                 PunicMisc::join([
@@ -135,10 +161,22 @@ class IndexSearchAll extends QueueableJob
                     t2('%d user', '%d users', $users),
                     t2('%d file', '%d files', $files),
                     t2('%d site', '%d sites', $sites),
+                    t2('%d Express object', '%d Express objects', $objects),
+                    t2('%d Express entry', '%d Express entries', $entries),
                 ])
             );
         } else {
-            return t('Indexed pages, users, files, and sites.');
+            return t('Indexed pages, users, files, sites and express data.');
+        }
+    }
+
+    protected function clearExpressEntityIndex($id)
+    {
+        $object = $this->objectManager->getObjectByID($id);
+        if ($object) {
+            $app = Facade::getFacadeApplication();
+            $index = $app->make(EntityIndex::class, ['entity' => $object]);
+            $index->clear();
         }
     }
 
@@ -195,6 +233,39 @@ class IndexSearchAll extends QueueableJob
             yield $id;
         }
     }
+
+    /**
+     * Get Express objects to add to the queue.
+     *
+     * @return \Iterator
+     */
+    protected function expressObjectsToQueue()
+    {
+        /** @var Connection $db */
+        $db = $this->connection;
+
+        $query = $db->executeQuery('SELECT id FROM ExpressEntities order by id asc');
+        while ($id = $query->fetchColumn()) {
+            yield $id;
+        }
+    }
+
+    /**
+     * Get Express entries to add to the queue.
+     *
+     * @return \Iterator
+     */
+    protected function expressEntriesToQueue()
+    {
+        /** @var Connection $db */
+        $db = $this->connection;
+
+        $query = $db->executeQuery('SELECT exEntryID FROM ExpressEntityEntries order by exEntryID asc');
+        while ($id = $query->fetchColumn()) {
+            yield $id;
+        }
+    }
+
 
     /**
      * Get Files to add to the queue.

@@ -97,4 +97,14 @@ class UserMessageException extends Exception implements JsonSerializable, HtmlAw
 
         return $result;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Exception::__toString()
+     */
+    public function __toString()
+    {
+        return $this->getMessage();
+    }
 }

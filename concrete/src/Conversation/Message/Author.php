@@ -85,8 +85,6 @@ class Author
      */
     public function getFormatter()
     {
-        $formatter = new AuthorFormatter($this);
-
-        return $formatter;
+        return \Core::make(AuthorFormatter::class, [$this]);
     }
 }

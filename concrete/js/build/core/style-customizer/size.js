@@ -32,6 +32,7 @@
                 $(this).parent().find('span').html(ui.value + my.options.unit);
             }
         });
+        $element.addClass('ccm-style-customizer-importexport').data('ccm-style-customizer-importexport', this);
     }
 
     ConcreteSizeSelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
@@ -59,6 +60,40 @@
         my.updateSwatch();
         ConcreteEvent.publish('StyleCustomizerControlUpdate');
         my.closeSelector(e);
+    };
+
+    ConcreteSizeSelector.prototype.exportStyle = function (data, cb) {
+        var my = this;
+        if (!my.options.inputName) {
+            cb();
+            return;
+        }
+        var $i = my.$element.find('input[data-style-customizer-input="size"]');
+        if ($i.length !== 1) {
+            cb();
+            return;
+        }
+        var v = parseFloat($i.val());
+        if (!(my.options.inputName in data)) {
+            data[my.options.inputName] = {};
+        }
+        data[my.options.inputName].size = isNaN(v) ? null : v;
+        data[my.options.inputName].unit = my.options.unit;
+        cb();
+    };
+
+    ConcreteSizeSelector.prototype.importStyle = function (data, cb) {
+        var my = this;
+        if (!my.options.inputName || !data[my.options.inputName] || data[my.options.inputName].unit !== my.options.unit) {
+            cb();
+            return;
+        }
+        if (data[my.options.inputName].size === null) {
+            my.setValue('size', '');
+        } else if (typeof data[my.options.inputName].size === 'number') {
+            my.setValue('size', data[my.options.inputName].size.toString());
+        }
+        cb();
     };
 
     // jQuery Plugin

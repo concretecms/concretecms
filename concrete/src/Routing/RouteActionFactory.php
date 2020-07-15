@@ -11,11 +11,17 @@ class RouteActionFactory implements RouteActionFactoryInterface
 
     public function createAction(Route $route)
     {
-        if ($route->getAction() instanceof \Closure) {
+        $action = $route->getAction();
+
+        // Allow passing through explicit route actions
+        if ($action instanceof RouteActionInterface) {
+            return $action;
+        }
+
+        if ($action instanceof \Closure) {
             return new ClosureRouteAction($route->getAction());
         }
 
-        $action = $route->getAction();
         $class = null;
         $method = null;
         if (is_string($action)) {

@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Site;
 use Concrete\Core\Site\Tree\LocalizableTreeInterface;
 use Concrete\Core\Site\TypeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 
 /**
  * @ORM\Entity
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="SiteTrees"
  * )
  */
-abstract class Tree implements LocalizableTreeInterface, TypeInterface
+abstract class Tree implements LocalizableTreeInterface, TypeInterface, Serializable
 {
 
     /**
@@ -74,5 +75,18 @@ abstract class Tree implements LocalizableTreeInterface, TypeInterface
     }
 
     abstract public function getDisplayName();
+
+    public function serialize()
+    {
+        $siteTreeId = $this->getSiteTreeID();
+
+        return serialize([(int)$siteTreeId]);
+    }
+
+    public function unserialize($serialized)
+    {
+        list($siteTreeId) =  unserialize($serialized);
+        $this->setSiteTreeID($siteTreeId);
+    }
 
 }
