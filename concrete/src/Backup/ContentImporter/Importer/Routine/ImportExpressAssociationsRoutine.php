@@ -18,6 +18,7 @@ class ImportExpressAssociationsRoutine extends AbstractRoutine
         $em = \Database::connection()->getEntityManager();
 
         $em->getClassMetadata('Concrete\Core\Entity\Express\Association')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $em->flush();
 
         if (isset($sx->expressentities)) {
             foreach ($sx->expressentities->entity as $entityNode) {
