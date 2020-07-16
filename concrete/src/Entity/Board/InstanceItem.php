@@ -144,7 +144,8 @@ class InstanceItem implements \JsonSerializable, ItemProviderInterface
             $thumbnail = $file->getURL();
         }
         $timezone = $this->getInstance()->getSite()->getTimezone();
-        $datetime = new \DateTime('@' . $this->item->getRelevantDate(), new \DateTimeZone($timezone));
+        $datetime = new \DateTime('@' . $this->item->getRelevantDate());
+        $datetime->setTimezone(new \DateTimeZone($timezone));
         $relevantDateString = $datetime->format('F d, Y g:i a');
         return [
             'id' => $this->getBoardInstanceItemID(),
