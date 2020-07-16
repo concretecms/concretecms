@@ -5,6 +5,7 @@ use Bernard\Queue;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Queue\Batch;
 use Concrete\Core\Foundation\Command\AsynchronousBus;
+use Concrete\Core\Foundation\Command\SynchronousBus;
 use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\Batch\BatchProgressUpdater;
 use Concrete\Core\Foundation\Queue\QueueService;
@@ -56,6 +57,11 @@ class JobQueue
      */
     protected $batchProgressUpdater;
 
+    /**
+     * @var bool
+     */
+    protected $isAsynchronous = true;
+
     public function __construct(QueueableJob $job, Application $app, QueueService $service, BatchProgressUpdater $batchProgressUpdater, BatchFactory $batchFactory, EntityManager $em)
     {
         $this->service = $service;
@@ -66,6 +72,22 @@ class JobQueue
         $this->app = $app;
         $this->queue = $service->get($service->getDefaultQueueHandle());
 
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAsynchronous(): bool
+    {
+        return $this->isAsynchronous;
+    }
+
+    /**
+     * @param bool $isAsynchronous
+     */
+    public function setIsAsynchronous(bool $isAsynchronous): void
+    {
+        $this->isAsynchronous = $isAsynchronous;
     }
 
     /**
@@ -93,17 +115,19 @@ class JobQueue
 
     public function deleteQueue()
     {
-        $this->queue->close();
-        $this->entityManager->remove($this->batch);
+        $this->entityManager->remove($this->getBatch());
         $this->entityManager->flush();
     }
 
     public function send($mixed)
     {
+        // We need to be able to set the bus because sometimes we're running these synchronously - e.g from the
+        // command line using c5:job
+        $bus = $this->isAsynchronous() ? AsynchronousBus::getHandle() : SynchronousBus::getHandle();
         $data = serialize($mixed);
         $this->totalMessages++;
         $command = new ExecuteJobItemCommand($this->getBatch()->getBatchHandle(), $this->job->getJobHandle(), $data);
-        return $this->app->getCommandDispatcher()->dispatch($command, AsynchronousBus::getHandle());
+        return $this->app->getCommandDispatcher()->dispatch($command, $bus);
     }
 
 }
