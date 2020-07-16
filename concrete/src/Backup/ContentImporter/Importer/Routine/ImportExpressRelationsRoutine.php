@@ -48,8 +48,8 @@ class ImportExpressRelationsRoutine extends AbstractRoutine
                             if (is_object($target_entity)) {
                                 $association->setTargetEntity($target_entity);
                             }
+                            $em->persist($association);
                         }
-                        $em->persist($association);
                     }
                 }
             }
