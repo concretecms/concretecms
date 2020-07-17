@@ -20,6 +20,7 @@ class ImportExpressFormsRoutine extends AbstractRoutine
         $em = \Database::connection()->getEntityManager();
 
         $em->getClassMetadata('Concrete\Core\Entity\Express\Form')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $em->flush();
 
         if (isset($sx->expressentities)) {
             foreach ($sx->expressentities->entity as $entityNode) {
