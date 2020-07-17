@@ -1,20 +1,18 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\Support\Facade\Url;
 use Doctrine\ORM\EntityManager;
-use URL;
 
 class AdvancedSearch extends AdvancedSearchController
 {
-    protected $supportsSavedSearch = true;
-
     protected function canAccess()
     {
         $dh = $this->app->make('helper/concrete/dashboard/sitemap');
-
         return $dh->canRead();
     }
 
@@ -33,6 +31,16 @@ class AdvancedSearch extends AdvancedSearchController
         return null;
     }
 
+    public function getSubmitMethod()
+    {
+        return 'get';
+    }
+
+    public function getSubmitAction()
+    {
+        return $this->app->make('url')->to('/dashboard/sitemap/search', 'advanced_search');
+    }
+
     public function getFieldManager()
     {
         return ManagerFactory::get('page');
@@ -40,26 +48,16 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return (string) URL::to('/ccm/system/search/pages/preset', $search->getID());
-    }
-
-    public function getCurrentSearchBaseURL()
-    {
-        return (string) URL::to('/ccm/system/search/pages/current');
-    }
-
-    public function getBasicSearchBaseURL()
-    {
-        return (string) URL::to('/ccm/system/search/pages/basic');
+        return $this->app->make('url')->to('/dashboard/sitemap/search', 'preset', $search->getID());
     }
 
     public function getSavedSearchDeleteURL(SavedSearch $search)
     {
-        return (string) (string) URL::to('/ccm/system/dialogs/page/advanced_search/preset/delete?presetID=' . $search->getID());
+        return (string)Url::to('/ccm/system/dialogs/page/advanced_search/preset/delete?presetID=' . $search->getID());
     }
 
     public function getSavedSearchEditURL(SavedSearch $search)
     {
-        return (string) (string) URL::to('/ccm/system/dialogs/page/advanced_search/preset/edit?presetID=' . $search->getID());
+        return (string)Url::to('/ccm/system/dialogs/page/advanced_search/preset/edit?presetID=' . $search->getID());
     }
 }
