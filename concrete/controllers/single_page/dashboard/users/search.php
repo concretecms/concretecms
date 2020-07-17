@@ -6,9 +6,11 @@ use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Csv\WriterFactory;
+use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\User;
@@ -21,6 +23,19 @@ use stdClass;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use UserAttributeKey;
 use UserInfo;
+use Concrete\Core\Entity\Search\Query;
+use Concrete\Core\User\Search\Menu\MenuFactory;
+use Concrete\Core\User\Search\SearchProvider;
+use Concrete\Core\Filesystem\Element;
+use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\Search\Field\Field\KeywordsField;
+use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
+use Concrete\Core\Search\Query\Modifier\ItemsPerPageRequestModifier;
+use Concrete\Core\Search\Query\QueryFactory;
+use Concrete\Core\Search\Query\QueryModifier;
+use Concrete\Core\Search\Result\Result;
+use Concrete\Core\Search\Result\ResultFactory;
+use Symfony\Component\HttpFoundation\Request;
 
 class Search extends DashboardPageController
 {
@@ -28,6 +43,132 @@ class Search extends DashboardPageController
      * @var \Concrete\Core\User\UserInfo|false
      */
     protected $user = false;
+    /**
+     * @var Element
+     */
+    protected $headerMenu;
+
+    /**
+     * @var Element
+     */
+    protected $headerSearch;
+
+    /**
+     * @return SearchProvider
+     */
+    protected function getSearchProvider()
+    {
+        return $this->app->make(SearchProvider::class);
+    }
+
+    /**
+     * @return QueryFactory
+     */
+    protected function getQueryFactory()
+    {
+        return $this->app->make(QueryFactory::class);
+    }
+
+    protected function getHeaderMenu()
+    {
+        if (!isset($this->headerMenu)) {
+            $this->headerMenu = $this->app->make(ElementManager::class)->get('users/search/menu');
+        }
+
+        return $this->headerMenu;
+    }
+
+    protected function getHeaderSearch()
+    {
+        if (!isset($this->headerSearch)) {
+            $this->headerSearch = $this->app->make(ElementManager::class)->get('users/search/search');
+        }
+
+        return $this->headerSearch;
+    }
+
+    /**
+     * @param Result $result
+     */
+    protected function renderSearchResult(Result $result)
+    {
+        $headerMenu = $this->getHeaderMenu();
+        $headerSearch = $this->getHeaderSearch();
+        $headerMenu->getElementController()->setQuery($result->getQuery());
+        $headerSearch->getElementController()->setQuery($result->getQuery());
+
+        $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
+        $this->set('result', $result);
+        $this->set('headerMenu', $headerMenu);
+        $this->set('headerSearch', $headerSearch);
+
+        $this->setThemeViewTemplate('full.php');
+    }
+
+    /**
+     * @param Query $query
+     * @return Result
+     */
+    protected function createSearchResult(Query $query)
+    {
+        $provider = $this->app->make(SearchProvider::class);
+        $resultFactory = $this->app->make(ResultFactory::class);
+        $queryModifier = $this->app->make(QueryModifier::class);
+
+        $queryModifier->addModifier(new AutoSortColumnRequestModifier($provider, $this->request, Request::METHOD_GET));
+        $queryModifier->addModifier(new ItemsPerPageRequestModifier($provider, $this->request, Request::METHOD_GET));
+        $query = $queryModifier->process($query);
+
+        return $resultFactory->createFromQuery($provider, $query);
+    }
+
+    protected function getSearchKeywordsField()
+    {
+        $keywords = null;
+
+        if ($this->request->query->has('keywords')) {
+            $keywords = $this->request->query->get('keywords');
+        }
+
+        return new KeywordsField($keywords);
+    }
+
+    public function advanced_search()
+    {
+        $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
+            $this->getSearchProvider(), $this->request, Request::METHOD_GET
+        );
+
+        $result = $this->createSearchResult($query);
+
+        $this->renderSearchResult($result);
+    }
+
+    public function preset($presetID = null)
+    {
+        if ($presetID) {
+            $preset = $this->entityManager->find(SavedUserSearch::class, $presetID);
+
+            if ($preset) {
+                /** @noinspection PhpParamsInspection */
+                $query = $this->getQueryFactory()->createFromSavedSearch($preset);
+                $result = $this->createSearchResult($query);
+                $this->renderSearchResult($result);
+
+                return;
+            }
+        }
+
+        $this->view();
+    }
+
+    /**
+     * @return DashboardUserBreadcrumbFactory
+     */
+    protected function createBreadcrumbFactory()
+    {
+        return $this->app->make(DashboardUserBreadcrumbFactory::class);
+    }
 
     public function update_avatar($uID = false)
     {
@@ -93,28 +234,28 @@ class Search extends DashboardPageController
                         $mh->sendMail();
                     }
 
-                    $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'activated');
+                    $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'activated');
                 }
                 break;
             case 'deactivate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->triggerDeactivate();
-                    $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deactivated');
+                    $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'deactivated');
                 }
                 break;
             case 'validate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->markValidated();
-                    $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validated');
+                    $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'email_validated');
                 }
                 break;
             case 'send_email_validation':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
                     $this->app->make('user/status')->sendEmailValidation($this->user);
-                    $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validation_sent');
+                    $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'email_validation_sent');
                 }
                 break;
             case 'sudo':
@@ -134,7 +275,7 @@ class Search extends DashboardPageController
                 $this->setupUser($uID);
                 if ($this->canDeleteUser && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->triggerDelete($this->user);
-                    $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deleted');
+                    $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'deleted');
                 }
                 break;
         }
@@ -371,7 +512,7 @@ class Search extends DashboardPageController
         $this->view();
     }
 
-    public function view($uID = false, $status = false)
+    public function edit($uID = false, $status = false)
     {
         if ($uID) {
             $this->setupUser($uID);
@@ -478,6 +619,23 @@ class Search extends DashboardPageController
                 $this->set('result', $result);
             }
         }
+
+        $factory = $this->createBreadcrumbFactory();
+        $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $ui));
+
+        $this->render("/dashboard/users/search/edit");
+    }
+
+    public function view() {
+        $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
+            $this->getSearchKeywordsField()
+        ]);
+
+        $result = $this->createSearchResult($query);
+
+        $this->renderSearchResult($result);
+
+        $this->headerSearch->getElementController()->setQuery(null);
     }
 
     /**
