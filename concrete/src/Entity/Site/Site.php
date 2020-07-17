@@ -475,12 +475,12 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     {
         $siteId = $this->getSiteID();
 
-        return serialize([(int)$siteId]);
+        return serialize((int)$siteId);
     }
 
     public function unserialize($serialized)
     {
-        list($siteId) =  unserialize($serialized);
+        $siteId =  unserialize($serialized);
         $this->siteID = $siteId;
     }
 }

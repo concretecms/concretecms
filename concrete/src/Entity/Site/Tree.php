@@ -80,12 +80,12 @@ abstract class Tree implements LocalizableTreeInterface, TypeInterface, Serializ
     {
         $siteTreeId = $this->getSiteTreeID();
 
-        return serialize([(int)$siteTreeId]);
+        return serialize((int)$siteTreeId);
     }
 
     public function unserialize($serialized)
     {
-        list($siteTreeId) =  unserialize($serialized);
+        $siteTreeId =  unserialize($serialized);
         $this->setSiteTreeID($siteTreeId);
     }
 
