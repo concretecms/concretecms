@@ -56,7 +56,7 @@ class ItemSegmenter implements LoggerAwareInterface
                 $qb->andWhere($qb->expr()->gte('item.relevantDate', time()));
                 break;
             default:
-                $qb->andWhere($qb->expr()->lte('i.relevantDate', time()));
+                $qb->andWhere($qb->expr()->lte('item.relevantDate', time()));
                 $qb->orderBy('item.relevantDate', 'desc');
                 break;
         }
