@@ -8,7 +8,6 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Utility\Service\Validation\Numbers;
-use Concrete\Core\View\View;
 
 class UserSelector
 {
@@ -52,26 +51,32 @@ class UserSelector
         } else {
             $selectedUID = $uID;
         }
+
         if ($selectedUID && $this->app->make(Numbers::class)->integer($selectedUID, 1)) {
             $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int) $selectedUID);
         } else {
             $userInfo = null;
         }
-        $selectedUID = $userInfo ? $userInfo->getUserID() : null;
+
+        $selectedUID = $userInfo ? $userInfo->getUserID() : 0;
 
         $permissions = new Checker();
         if ($permissions->canAccessUserSearch()) {
             $identifier = $this->app->make(Identifier::class)->getString(32);
-            $args = ['inputName' => $fieldName];
-            if ($userInfo) {
-                $args['uID'] = $userInfo->getUserID();
-            }
-            $args = json_encode($args);
+            $chooseText = t('Choose a User');
+
             $html = <<<EOL
-<div data-user-selector="{$identifier}"></div>
-<script>
+<div data-concrete-user-input="{$identifier}">
+    <concrete-user-input :user-id="{$selectedUID}" choose-text="{$chooseText}" input-name="{$fieldName}"></concrete-user-input>
+</div>
+<script type="text/javascript">
 $(function() {
-    $('[data-user-selector={$identifier}]').concreteUserSelector({$args});
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-concrete-user-input="{$identifier}"]',
+            components: config.components
+        })
+    })
 });
 </script>
 EOL;
@@ -92,13 +97,13 @@ EOL;
             }
 
             $html = <<<EOL
-<div class="ccm-item-selector">
-    <div class="ccm-item-selector-item-selected">
-        <input type="hidden" name="{$fieldName}" value="{$selectedUID}">
-        <div class="ccm-item-selector-item-selected-thumbnail">
-            <img src="{$uAvatar}" alt="admin" class="u-avatar">
+<div class="ccm-item-selector-group">
+    <input type="hidden" name="{$fieldName}" value="{$selectedUID}">
+    <div class="ccm-item-selector-loaded">
+        <div class="btn btn-secondary">
+            <span><img src="{$uAvatar}" alt="admin" class="u-avatar"></span>
+            <span class="ccm-item-selector-title">{$uName}</span>
         </div>
-        <div class="ccm-item-selector-item-selected-title">{$uName}</div>
     </div>
 </div>
 EOL;
