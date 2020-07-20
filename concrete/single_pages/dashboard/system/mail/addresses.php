@@ -48,6 +48,10 @@
     <fieldset>
         <legend><?php echo t('Website Registration Notification'); ?></legend>
         <div class="form-group">
+            <?php echo $form->label('registerNotificationName', t('Email From Name')); ?>
+            <?php echo $form->email('registerNotificationName', $registerNotificationName); ?>
+        </div>
+        <div class="form-group">
             <?php echo $form->label('registerNotificationAddress', t('Email Address')); ?>
             <?php echo $form->email('registerNotificationAddress', $registerNotificationAddress); ?>
         </div>
