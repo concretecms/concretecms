@@ -1,60 +1,55 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-?>
-<?=$app->make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Captcha Settings'), false, 'span10 offset1', (!is_object($activeCaptcha) || (!$activeCaptcha->hasOptionsForm())))?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
 <form method="post" id="site-form" action="<?=$view->action('update_captcha')?>">
 <?php if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) {
     ?>
-<?php 
+<?php
 } ?>
 <?=$this->controller->token->output('update_captcha')?>
 	<?php if (count($captchas) > 0) {
     ?>
 
 		<div class="form-group">
-    <div class="input-group">
-		<div class="input-group-prepend"><?=$form->label('activeCaptcha', t('Active Captcha'), ['class'=>'input-group-text'])?></div>
+		<?=$form->label('activeCaptcha', t('Active Captcha'))?>
 		<?php
         $activeHandle = '';
     if (is_object($activeCaptcha)) {
         $activeHandle = $activeCaptcha->getSystemCaptchaLibraryHandle();
     }
     ?>
-		
-		<?=$form->select('activeCaptcha', $captchas, $activeHandle, array('class' => 'span4 custom-select'))?>
+
+		<?=$form->select('activeCaptcha', $captchas, $activeHandle, array('class' => 'span4'))?>
 		</div>
-    </div>
-		
+
 		<?php if (is_object($activeCaptcha)) {
     if ($activeCaptcha->hasOptionsForm()) {
         if ($activeCaptcha->getPackageID() > 0) {
-            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
+            Loader::packageElement('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
         } else {
-            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
+            Loader::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
         }
     }
 }
     ?>
 
 
-	<?php 
+	<?php
 } else {
     ?>
 		<p><?=t('You have no captcha libraries installed.')?></p>
-	<?php 
+	<?php
 } ?>
 
 <?php if (is_object($activeCaptcha)) {
     ?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-		<?=$app->make('helper/concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
+		<?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
         </div>
 	</div>
-<?php 
-} ?>	
+<?php
+} ?>
 
-	
+
 </form>
 
 <script type="text/javascript">
