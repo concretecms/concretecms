@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+?>
 <form method="post" id="site-form" action="<?=$view->action('update_captcha')?>">
 <?php if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) {
     ?>
@@ -23,9 +25,9 @@
 		<?php if (is_object($activeCaptcha)) {
     if ($activeCaptcha->hasOptionsForm()) {
         if ($activeCaptcha->getPackageID() > 0) {
-            Loader::packageElement('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
+            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
         } else {
-            Loader::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
+            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
         }
     }
 }
@@ -43,7 +45,7 @@
     ?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-		<?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
+		<?=$app->make('helper/concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
         </div>
 	</div>
 <?php
