@@ -88,7 +88,7 @@ abstract class QueueableJob extends AbstractJob
     public function reset()
     {
         parent::reset();
-        $this->getQueueObject()->close();
+        $this->getQueueObject()->deleteQueue();
     }
 
     /**
@@ -123,23 +123,13 @@ abstract class QueueableJob extends AbstractJob
      */
     public function executeJob()
     {
-        // If the job's already running, don't try to restart it
-        if ($this->getJobStatus() !== 'RUNNING') {
-            $queue = $this->markStarted();
-
-            // Prepare the queue for processing
-            $this->start($queue);
-        } else {
-            $queue = $this->getQueueObject();
-        }
-
         try {
-            $batchSize = $this->getJobQueueBatchSize() ?: PHP_INT_MAX;
-
-            // Loop over queue batches
-            while (($messages = $queue->receive($batchSize)) && $messages->count() > 0) {
-                // Run the batch
-                $this->executeBatch($messages, $queue);
+            if ($this->getJobStatus() !== 'RUNNING') {
+                $queue = $this->markStarted();
+                $queue->setIsAsynchronous(false);
+                $this->start($queue);
+            } else {
+                $queue = $this->getQueueObject();
             }
 
             // Mark the queue as finished
@@ -153,19 +143,5 @@ abstract class QueueableJob extends AbstractJob
         }
 
         return $result;
-    }
-
-    /**
-     * Process a queue batch
-     *
-     * @param array|iterator $batch
-     * @param \ZendQueue\Queue $queue
-     */
-    public function executeBatch($batch, ZendQueue $queue)
-    {
-        foreach ($batch as $item) {
-            $this->processQueueItem($item);
-            $queue->deleteMessage($item);
-        }
     }
 }

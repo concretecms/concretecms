@@ -6,11 +6,13 @@ use Concrete\Core\Calendar\Event\Command\CalendarEventCommand;
 
 class EnableCustomCalendarEventSummaryTemplatesCommand extends CalendarEventCommand
 {
-
+    /**
+     * @var int[]
+     */
     protected $templateIDs = [];
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getTemplateIDs(): array
     {
@@ -18,13 +20,14 @@ class EnableCustomCalendarEventSummaryTemplatesCommand extends CalendarEventComm
     }
 
     /**
-     * @param array $templateIDs
+     * @param int[] $templateIDs
+     *
+     * @return $this
      */
-    public function setTemplateIDs(array $templateIDs): void
+    public function setTemplateIDs(array $templateIDs): object
     {
         $this->templateIDs = $templateIDs;
+
+        return $this;
     }
-
-
-
 }

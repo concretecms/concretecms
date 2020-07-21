@@ -109,7 +109,7 @@ class Add extends DashboardPageController
 
                 $uo->updateGroups($gIDs);
                 $uID = $uo->getUserID();
-                $this->redirect('/dashboard/users/search', 'view', $uID, 'created');
+                $this->redirect('/dashboard/users/search', 'edit', $uID, 'created');
             } else {
                 $this->error->add(t('An error occurred while trying to create the account.'));
                 $this->set('error', $this->error);

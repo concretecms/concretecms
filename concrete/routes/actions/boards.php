@@ -10,3 +10,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $router->all('/instance/pin_slot', 'Instance::pinSlot');
+$router->all('/instance/clear_slot', 'Instance::clearSlot');
+$router->post('/instance/delete_rule', 'Instance::deleteRule');
+$router->post('/instance/delete_rule_by_batch', 'Instance::deleteRuleByBatch');

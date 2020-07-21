@@ -18,8 +18,8 @@ class ItemTag
     protected $boardItemTagID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InstanceItem",  inversedBy="tags")
-     * @ORM\JoinColumn(name="boardInstanceItemID", referencedColumnName="boardInstanceItemID")
+     * @ORM\ManyToOne(targetEntity="Item",  inversedBy="tags")
+     * @ORM\JoinColumn(name="boardItemID", referencedColumnName="boardItemID")
      **/
     protected $item;
 
@@ -32,7 +32,7 @@ class ItemTag
      * ItemTag constructor.
      * @param $tag
      */
-    public function __construct(InstanceItem $item, $tag)
+    public function __construct(Item $item, $tag)
     {
         $this->item = $item;
         $this->tag = $tag;

@@ -6,11 +6,13 @@ use Concrete\Core\Page\Command\PageCommand;
 
 class EnableCustomPageSummaryTemplatesCommand extends PageCommand
 {
-
+    /**
+     * @var int[]
+     */
     protected $templateIDs = [];
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getTemplateIDs(): array
     {
@@ -18,13 +20,14 @@ class EnableCustomPageSummaryTemplatesCommand extends PageCommand
     }
 
     /**
-     * @param array $templateIDs
+     * @param int[] $templateIDs
+     *
+     * @return $this
      */
-    public function setTemplateIDs(array $templateIDs): void
+    public function setTemplateIDs(array $templateIDs): object
     {
         $this->templateIDs = $templateIDs;
-    }
-    
-    
 
+        return $this;
+    }
 }

@@ -96,6 +96,17 @@ class CalendarEventTemplate implements RenderableTemplateInterface
         $this->data = $data;
     }
 
-    
-    
+    public function jsonSerialize()
+    {
+        $data = [
+            'template' => $this->getTemplate(),
+            'data' => $this->getData(),
+            'id' => $this->getId(),
+            'eventID' => $this->getEvent()->getID(),
+        ];
+        return $data;
+    }
+
+
+
 }

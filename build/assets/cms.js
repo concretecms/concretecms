@@ -6,13 +6,6 @@ import "bootstrap/js/dist/tooltip";
 import "bootstrap/js/dist/popover";
 import "bootstrap/js/dist/tab";
 import "bootstrap/js/dist/toast";
-
-// Activate our CMS components for use
-if (document.querySelectorAll('[vue-enabled]').length) {
-    Concrete.Vue.activateContext('cms', function (Vue, config) {
-        new Vue({
-            el: '[vue-enabled]',
-            components: config.components
-        })
-    })
-}
+import "bootstrap/js/dist/modal";
+import "bootstrap/js/dist/dropdown";
+import "bootstrap/js/dist/collapse";

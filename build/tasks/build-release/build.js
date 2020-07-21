@@ -8,7 +8,7 @@ module.exports = function(grunt, config, parameters, done) {
 		var path = require('path'),
 			exec = require('child_process').exec,
 			fs = require('fs');
-		process.stdout.write('Installng PHP dependencies with Composer... ');
+		process.stdout.write('Installing PHP dependencies with Composer... ');
 		exec(
 			'composer install --no-dev',
 			{

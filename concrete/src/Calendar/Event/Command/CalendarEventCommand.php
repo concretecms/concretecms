@@ -6,25 +6,18 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class CalendarEventCommand implements CommandInterface
 {
-
+    /**
+     * @var int
+     */
     protected $eventID;
 
-    /**
-     * @param $eventID
-     */
-    public function __construct($eventID)
+    public function __construct(int $eventID)
     {
         $this->eventID = $eventID;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEventID()
+    public function getEventID(): int
     {
         return $this->eventID;
     }
-
-
-
 }

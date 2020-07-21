@@ -7,7 +7,9 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Html\Service\Html;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\View\PageView;
@@ -385,5 +387,28 @@ class PageController extends Controller
     public function getSearchableContent()
     {
         return;
+    }
+
+    /**
+     * Build a Redirect Response that instruct the browser to load the first accessible child page of this page.
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response Return a RedirectResponse if an accessible child page is found, a forbidden Response otherwise
+     */
+    public function buildRedirectToFirstAccessibleChildPage()
+    {
+        $myPage = $this->getPageObject();
+        if ($myPage && !$myPage->isError()) {
+            $firstChildPage = $myPage->getFirstChild();
+            if ($firstChildPage && !$firstChildPage->isError() && (new Checker($firstChildPage))->canRead()) {
+                return $this->buildRedirect([$firstChildPage]);
+            }
+            foreach ($myPage->getCollectionChildren() as $childPage) {
+                if (!$childPage->isError() && (new Checker($childPage))->canRead()) {
+                    return $this->buildRedirect([$childPage]);
+                }
+            }
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->forbidden($this->request->getUri());
     }
 }

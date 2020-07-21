@@ -21,7 +21,9 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getFieldManager()
     {
-        return ManagerFactory::get('express');
+        $manager = ManagerFactory::get('express');
+        $manager->setExpressCategory($this->category);
+        return $manager;
     }
 
     /**
@@ -87,17 +89,25 @@ class SearchProvider extends AbstractSearchProvider
 
     public function createSearchResultObject($columns, $list)
     {
-        return new Result($columns, $list);
+        $result = new Result($columns, $list);
+        $result->setEntity($this->entity);
+        return $result;
     }
 
     public function getItemList()
     {
-        return new EntryList($this->entity);
+        $list = new EntryList($this->entity);
+        $list->setupAutomaticSorting();
+        return $list;
     }
 
     public function getDefaultColumnSet()
     {
-        return new DefaultSet($this->category);
+        $defaultSet = $this->entity->getResultColumnSet();
+        if (!$defaultSet) {
+            $defaultSet = new DefaultSet($this->category);
+        }
+        return $defaultSet;
     }
 
     /**

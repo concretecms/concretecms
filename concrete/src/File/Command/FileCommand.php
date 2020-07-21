@@ -6,26 +6,18 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class FileCommand implements CommandInterface
 {
-
+    /**
+     * @var int
+     */
     protected $fileID;
 
-    /**
-     * FileCommand constructor.
-     * @param $fID
-     */
-    public function __construct($fileID)
+    public function __construct(int $fileID)
     {
         $this->fileID = $fileID;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFileID()
+    public function getFileID(): int
     {
         return $this->fileID;
     }
-
-
-
 }

@@ -115,45 +115,7 @@ class Jobs extends Controller
                     $q->saveBatch();
                     $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
                     return $responseFactory->createResponse($q->getBatch());
-
-
-                    /*
-                    if ($this->request->request->get('process')) {
-                        $obj = new stdClass();
-                        $obj->error = false;
-                        try {
-                            $messages = $q->receive($job->getJobQueueBatchSize());
-                            $job->executeBatch($messages, $q);
-
-                            $totalItems = $q->count();
-                            $obj->totalItems = $totalItems;
-                            if ($q->count() == 0) {
-                                $result = $job->finish($q);
-                                $obj = $job->markCompleted(0, $result);
-                                $obj->error = false;
-                                $obj->totalItems = $totalItems;
-                            }
-                        } catch (\Exception $e) {
-                            $obj = $job->markCompleted(Job::JOB_ERROR_EXCEPTION_GENERAL, $e->getMessage());
-                            $obj->error = true;
-                            $obj->message = $obj->result; // needed for progressive library.
-                        }
-                        $response->setStatusCode(Response::HTTP_OK);
-                        $response->setContent(json_encode($obj));
-                        $response->send();
-                        \Core::shutdown();
-                    } else {
-                        if ($q->count() == 0) {
-                        }
-                    }
-
-                    $totalItems = $q->count();
-                    \View::element('progress_bar', array(
-                        'totalItems' => $totalItems,
-                        'totalItemsSummary' => t2("%d item", "%d items", $totalItems),
-                    ));
-                    \Core::shutdown();
-                    */
+                    
                 } else {
                     $r = $job->executeJob();
                     $response->setStatusCode(Response::HTTP_OK);

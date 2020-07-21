@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="SummaryTemplates"
  * )
  */
-class Template
+class Template implements \JsonSerializable
 {
     use PackageTrait;
 
@@ -180,5 +180,17 @@ class Template
                 $fieldNode->addAttribute('required', '1');
             }
         }
+    }
+
+    public function jsonSerialize()
+    {
+        $data = [
+            'id' => $this->getId(),
+            'handle' => $this->getHandle(),
+            'name' => $this->getName(),
+            'icon' => $this->getIcon(),
+            'iconImage', $this->getTemplateIconImage()
+        ];
+        return $data;
     }
 }

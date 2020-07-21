@@ -6,26 +6,18 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 
 abstract class PageCommand implements CommandInterface
 {
-
+    /**
+     * @var int
+     */
     protected $pageID;
 
-    /**
-     * FileCommand constructor.
-     * @param $fID
-     */
-    public function __construct($pageID)
+    public function __construct(int $pageID)
     {
         $this->pageID = $pageID;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPageID()
+    public function getPageID(): int
     {
         return $this->pageID;
     }
-
-
-
 }

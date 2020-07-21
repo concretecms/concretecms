@@ -97,6 +97,16 @@ div#ccm-dashboard-content {
         @include list-unstyled();
         margin-bottom: 0px;
 
+        a {
+          color: $body-color;
+          transition: $transition-base;
+
+          &:hover {
+            color: $blue;
+            text-decoration: none;
+          }
+        }
+
         li {
           display: inline-block;
           margin-left: 20px;

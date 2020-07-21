@@ -32,7 +32,7 @@ class Item extends SearchResultItem
     public function getDetailsURL()
     {
         if ($this->getItem() instanceof FileNode) {
-            return app('url/resolver/path')->resolve(['/dashboard/files/details', 'view',
+            return app('url/resolver/path')->resolve(['/dashboard/files/details',
                 $this->getItem()->getTreeNodeFileID()]
             );
         }

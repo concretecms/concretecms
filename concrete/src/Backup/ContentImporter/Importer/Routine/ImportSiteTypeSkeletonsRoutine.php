@@ -94,8 +94,8 @@ class ImportSiteTypeSkeletonsRoutine extends AbstractRoutine
                     foreach($type->skeleton->locale as $localeNode ) {
 
                         $locale = new SkeletonLocale();
-                        $locale->setCountry((string) $localeNode['country']);
-                        $locale->setLanguage((string) $localeNode['language']);
+                        $locale->setCountry((string)$localeNode['country']);
+                        $locale->setLanguage((string)$localeNode['language']);
 
                         /**
                          * @var $skeleton Skeleton
@@ -105,29 +105,27 @@ class ImportSiteTypeSkeletonsRoutine extends AbstractRoutine
                         if (!is_object($skeleton)) {
                             $skeleton = $this->skeletonService->createSkeleton($site_type, $locale);
                         }
-                        $home = $skeleton->getMatchingLocale((string) $localeNode['language'], (string) $localeNode['country'])->getSiteTree()->getSiteHomePageObject();
+                        $home = $skeleton->getMatchingLocale((string)$localeNode['language'], (string)$localeNode['country'])->getSiteTree()->getSiteHomePageObject();
 
                         $importer = new ContentImporter();
                         $importer->setHomePage($home);
                         $importer->importXml($type->skeleton->locale);
 
-                        $controller = $this->typeService->getController($site_type);
-                        $site_type = $controller->addType($site_type);
-
-                        if (isset($type->attributes)) {
-                            foreach ($type->attributes->children() as $attr) {
-                                $handle = (string) $attr['handle'];
-                                $ak = $this->siteTypeCategory->getByHandle($handle);
-                                if (is_object($ak)) {
-                                    $value = $ak->getController()->importValue($attr);
-                                    $skeleton->setAttribute($handle, $value);
-                                }
-                            }
-                        }
-
-
                     }
 
+                    $controller = $this->typeService->getController($site_type);
+                    $controller->addType($site_type);
+
+                    if (isset($type->attributes)) {
+                        foreach ($type->attributes->children() as $attr) {
+                            $handle = (string) $attr['handle'];
+                            $ak = $this->siteTypeCategory->getByHandle($handle);
+                            if (is_object($ak)) {
+                                $value = $ak->getController()->importValue($attr);
+                                $skeleton->setAttribute($handle, $value);
+                            }
+                        }
+                    }
 
                 }
             }

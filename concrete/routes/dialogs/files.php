@@ -38,6 +38,9 @@ $router->all('/jump_to_folder', 'JumpToFolder::view');
 $router->all('/thumbnails', 'Thumbnails::view');
 $router->all('/thumbnails/edit', 'Thumbnails\Edit::view');
 $router->all('/usage/{fID}', 'Usage::view');
+$router->all('/statistics/{fID}', 'Statistics::view');
+$router->all('/statistics/load_more/{fID}', 'Statistics::load_more');
+$router->all('/statistics/download/{fID}', 'Statistics::download');
 
 $router->all('/advanced_search/preset/edit', 'Preset\Edit::view');
 $router->all('/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::edit_search_preset');

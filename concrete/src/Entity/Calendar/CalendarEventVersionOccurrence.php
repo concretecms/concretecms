@@ -128,7 +128,7 @@ class CalendarEventVersionOccurrence implements ObjectInterface, CategoryMemberI
     
     public function getSummaryIdentifier()
     {
-        return $this->getEvent()->getSummaryIdentifier();
+        return $this->getID();
     }
 
     public function getSummaryCategoryHandle(): string

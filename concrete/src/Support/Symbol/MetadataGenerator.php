@@ -116,9 +116,9 @@ class MetadataGenerator
             foreach ($customEntityRepositories as $entityClass => $repositoryClass) {
                 $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::find(0)", ['' => "'{$entityClass}|null'"], '$em->getRepository(EntityClass::class)->find()'));
                 $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::findOneBy(0)", ['' => "'{$entityClass}|null'"], '$em->getRepository(EntityClass::class)->findOneBy()'));
-                $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::findAll(0)", ['' => "'{$entityClass}[]'"], '$em->getRepository(EntityClass::class)->find()'));
-                $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::findBy(0)", ['' => "'{$entityClass}[]'"], '$em->getRepository(EntityClass::class)->find()'));
-                $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::matching(0)", ['' => "'Doctrine\Common\Collections\Collection|{$entityClass}[]'"], '$em->getRepository(EntityClass::class)->find()'));
+                $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::findAll(0)", ['' => "'{$entityClass}[]'"], '$em->getRepository(EntityClass::class)->findAll()'));
+                $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::findBy(0)", ['' => "'{$entityClass}[]'"], '$em->getRepository(EntityClass::class)->findBy()'));
+                $output = array_merge($output, $this->getOverride("\\{$repositoryClass}::matching(0)", ['' => "'Doctrine\Common\Collections\Collection|{$entityClass}[]'"], '$em->getRepository(EntityClass::class)->matching()'));
             }
         }
         $output = array_merge($output, $this->getOverride('\Doctrine\ORM\EntityManagerInterface::find(0)', ['' => "'@'"], '$em->find(EntityClass::class, $id)'));

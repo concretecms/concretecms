@@ -21,3 +21,11 @@ $router->all('/download', 'File::download');
 $router->all('/import_incoming', 'File::importIncoming');
 $router->all('/import_remote', 'File::importRemote');
 $router->all('/thumbnailer', 'File\Thumbnailer::generate');
+$router->all('/fetch_incoming_files', 'File::fetchIncomingFiles');
+$router->all('/fetch_directories', 'File::fetchDirectories');
+$router->all('/create_directory', 'File::createDirectory');
+
+$router->all('/chooser/recent', 'File\Chooser::getRecent');
+$router->all('/chooser/get_file_sets', 'File\Chooser::getFileSets');
+$router->all('/chooser/get_file_set/{id}', 'File\Chooser::getFileSetFiles');
+$router->all('/chooser/search/{keyword}', 'File\Chooser::searchFiles');

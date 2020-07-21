@@ -11,6 +11,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\File\DownloadStatistics;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -260,7 +261,13 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
         $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
-        $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->entityManager->createQueryBuilder()
+            ->update(DownloadStatistics::class, 'ds')
+            ->set('ds.downloaderID', ':null')
+            ->where($this->entityManager->getExpressionBuilder()->eq('ds.downloaderID', ':uID'))
+            ->getQuery()
+            ->execute(['null' => null, 'uID' => $this->getUserID()])
+        ;
 
         // We need to clear out the doctrine proxies for userSignups or we will get a Doctrine Error
         /** @var UserSignup[] $userSignups */

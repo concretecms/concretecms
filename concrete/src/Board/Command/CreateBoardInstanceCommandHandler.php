@@ -50,14 +50,6 @@ class CreateBoardInstanceCommandHandler
         $this->entityManager->persist($instance);
         $this->entityManager->flush();
 
-        $populate = new PopulateBoardInstanceDataPoolCommand();
-        $populate->setInstance($instance);
-        $this->app->executeCommand($populate);
-
-        $regenerate = new GenerateBoardInstanceCommand();
-        $regenerate->setInstance($instance);
-        $this->app->executeCommand($regenerate);
-
         return $instance;
     }
 

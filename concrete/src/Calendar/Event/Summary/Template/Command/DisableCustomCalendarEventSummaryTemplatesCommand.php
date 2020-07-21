@@ -6,6 +6,4 @@ use Concrete\Core\Calendar\Event\Command\CalendarEventCommand;
 
 class DisableCustomCalendarEventSummaryTemplatesCommand extends CalendarEventCommand
 {
-
-
 }

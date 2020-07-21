@@ -3,6 +3,7 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Board\Instance\Item\Populator\PopulatorInterface;
+use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
@@ -11,8 +12,6 @@ use Doctrine\ORM\EntityManager;
 
 class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterface
 {
-
-    const MAX_POPULATION_DAY_INTERVAL = 60; // we go 60 days into the past.
 
     use LoggerAwareTrait;
 
@@ -55,15 +54,29 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
                 $mode = PopulatorInterface::RETRIEVE_NEW_ITEMS;
             }
 
-            $objects = $populator->createBoardInstanceItems($instance, $batch, $configuredDataSource, $mode);
+            $items = $populator->createItemsFromDataSource($instance, $configuredDataSource, $mode);
 
             $this->logger->debug(
-                t('Retrieved %s objects from %s data source after timestamp %s',
-                    count($objects), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
-                ));
+                t(/*i18n: %1$s is a number, %2$s is the name of a data source*/'Retrieved %1$s objects from %2$s data source after timestamp %3$s',
+            count($items), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
+                )
+            );
 
-            foreach ($objects as $object) {
-                $this->entityManager->persist($object);
+            $db = $this->entityManager->getConnection();
+            foreach ($items as $item) {
+                $existing = $db->executeQuery('select count(boardInstanceItemID) from BoardInstanceItems bi
+                inner join BoardItems i on bi.boardItemID = i.boardItemID where i.uniqueItemId = ? and bi.configuredDataSourceID = ?', [
+                    $item->getUniqueItemId(), $configuredDataSource->getConfiguredDataSourceID()
+                ]);
+                if ($existing->fetchColumn() !== 0) {
+                    $instanceItem = new InstanceItem();
+                    $instanceItem->setInstance($instance);
+                    $instanceItem->setDataSource($configuredDataSource);
+                    $instanceItem->setBatch($batch);
+                    $instanceItem->setItem($item);
+                    $this->entityManager->persist($item);
+                    $this->entityManager->persist($instanceItem);
+                }
             }
         }
         $instance->setDateDataPoolLastUpdated(time());

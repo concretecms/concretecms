@@ -7,6 +7,7 @@ $ui = Core::make(Concrete\Core\Application\Service\UserInterface::class);
 $renderer->render($instance);
 ?>
 
+<?=View::element('icons')?>
 <div id="ccm-page-controls-wrapper" class="ccm-ui">
     <div id="ccm-toolbar">
         <ul>
@@ -19,3 +20,16 @@ $renderer->render($instance);
         </ul>
     </div>
 </div>
+
+<script type="text/javascript">
+
+    $(function() {
+        Concrete.Vue.activateContext('cms', function (Vue, config) {
+            new Vue({
+                el: 'div[data-vue=board]',
+                components: config.components
+            })
+        })
+    });
+
+</script>

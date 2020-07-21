@@ -6,7 +6,6 @@ use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
 class ExecuteJobItemCommand implements BatchableCommandInterface
 {
-
     /**
      * @var string
      */
@@ -15,55 +14,24 @@ class ExecuteJobItemCommand implements BatchableCommandInterface
     /**
      * @var string
      */
-    protected $data;
-
-    /**
-     * @var string
-     */
     protected $jobHandle;
 
-    public function __construct($batchHandle, $jobHandle, $data)
-    {
-        $this->batchHandle = $batchHandle;
-        $this->data = $data;
-        $this->jobHandle = $jobHandle;
-    }
-
     /**
-     * @return mixed
+     * @var mixed
      */
-    public function getJobHandle()
+    protected $data;
+
+    public function __construct(string $batchHandle, string $jobHandle, $data)
     {
-        return $this->jobHandle;
+        $this->setBatchHandle($batchHandle);
+        $this->setJobHandle($jobHandle);
+        $this->setData($data);
     }
 
     /**
-     * @param mixed $jobHandle
-     */
-    public function setJobHandle($jobHandle)
-    {
-        $this->jobHandle = $jobHandle;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
      */
     public function getBatchHandle(): string
     {
@@ -71,11 +39,40 @@ class ExecuteJobItemCommand implements BatchableCommandInterface
     }
 
     /**
-     * @param string $batchHandle
+     * @return $this
      */
-    public function setBatchHandle(string $batchHandle): void
+    public function setBatchHandle(string $batchHandle)
     {
         $this->batchHandle = $batchHandle;
+
+        return $this;
     }
 
+    public function getJobHandle(): string
+    {
+        return $this->jobHandle;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setJobHandle(string $jobHandle)
+    {
+        $this->jobHandle = $jobHandle;
+
+        return $this;
+    }
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setData(string $data)
+    {
+        $this->data = $data;
+    }
 }

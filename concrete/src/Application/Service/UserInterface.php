@@ -1,7 +1,11 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory;
 use Concrete\Core\Http\Response;
+use HtmlObject\Element;
 use HtmlObject\Traits\Tag;
 use PermissionKey;
 use Concrete\Core\User\User as ConcreteUser;
@@ -242,7 +246,12 @@ class UserInterface
         $app = Application::getFacadeApplication();
         $u = $app->make(ConcreteUser::class);
         if ($u->isRegistered()) {
-            Core::make('helper/concrete/dashboard')->getIntelligentSearchMenu();
+            if ($app->make(Dashboard::class)->canRead()) {
+                $navigationFactory = $app->make(FullNavigationFactory::class);
+                $navigation = $navigationFactory->createNavigation();
+                $cache = $app->make(NavigationCache::class);
+                $cache->set($navigation);
+            }
         }
     }
 
@@ -255,7 +264,7 @@ class UserInterface
     {
         $tcn = rand(0, getrandmax());
 
-        $html = '<ul class="nav-tabs nav mb-3" id="ccm-tabs-' . $tcn . '">';
+        $html = '<ul class="nav-tabs nav-fill nav mb-3" id="ccm-tabs-' . $tcn . '">';
         $c = Page::getCurrentPage();
         foreach ($tabs as $t) {
             if (is_array($t)) {
@@ -281,19 +290,43 @@ class UserInterface
     /**
      * @param $tabs
      *
+     * @param null|string $id
      * @return string
      */
-    public function tabs($tabs)
+    public function tabs($tabs, $id = null)
     {
-        $html = '<ul class="nav-tabs nav nav-fill mb-3">';
-        foreach ($tabs as $t) {
-            $dt = $t[0];
-            $href = '#' . $dt;
-            $html .= '<li class="nav-item"><a class="nav-link ' . ((isset($t[2]) && true == $t[2]) ? 'active' : '') . '" href="' . $href . '" data-toggle="tab">' . $t[1] . '</a></li>';
-        }
-        $html .= '</ul>';
+        $ul = new Element("ul");
+        $ul->addClass("nav");
+        $ul->addClass("nav-tabs mb-3 nav-fill");
+        $ul->setAttribute("role", "tablist");
 
-        return $html;
+        if ($id !== null) {
+            $ul->setAttribute("id", $id);
+        }
+
+        foreach ($tabs as $tab) {
+            $a = new Element("a");
+            $a->addClass("nav-link");
+
+            if ((isset($tab[2]) && $tab[2])) {
+                $a->addClass("active");
+            }
+
+            $a->setAttribute("href", "#" . $tab[0]);
+            $a->setAttribute("id", $tab[0] . "-tab");
+            $a->setAttribute("data-toggle", "tab");
+            $a->setAttribute("aria-controls", $tab[0]);
+            $a->setAttribute("role", "tab");
+            $a->setAttribute("aria-selected", (isset($tab[2]) && $tab[2]) ? "true" : "false");
+            $a->setValue($tab[1]);
+
+            $li = new Element("li");
+            $li->addClass("nav-item");
+            $li->appendChild($a);
+            $ul->appendChild($li);
+        }
+
+        return (string)$ul;
     }
 
     /**
@@ -343,14 +376,11 @@ class UserInterface
             'text' => false,
             'form' => false,
             'hide' => false,
-            'addclass' => 'ccm-notification-page-alert',
             'buttons' => [],
         ];
 
         // overwrite all the defaults with the arguments
         $arguments = array_merge($defaults, $arguments);
-
-        $arguments['addclass'] .= ' ccm-ui';
 
         $text = '';
 
@@ -362,14 +392,14 @@ class UserInterface
 
         if (count($arguments['buttons']) > 0) {
             $text .= '<div class="ccm-notification-inner-buttons">';
-            if (1 == count($arguments['buttons'])) {
+            if (count($arguments['buttons']) === 1) {
                 $singleButton = $arguments['buttons'][0];
                 if ($singleButton instanceof Tag) {
-                    $singleButton->addClass('btn btn-xs btn-default');
+                    $singleButton->addClass('btn btn-default');
                 }
                 $text .= '<div>' . $singleButton . '</div>';
             } else {
-                $text .= '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . ' <span class="caret"></span></button><ul class="dropdown-menu">';
+                $text .= '<div class="btn-group"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><ul class="dropdown-menu">';
                 foreach ($arguments['buttons'] as $button) {
                     $text .= '<li>' . $button . '</li>';
                 }
@@ -384,11 +414,11 @@ class UserInterface
 
         $arguments['text'] = $text;
 
-        unset($arguments['buttons']);
+        unset($arguments['buttons'], $arguments['form']);
         $string = json_encode($arguments);
 
         $content = '<script type="text/javascript">$(function() {';
-        $content .= 'new PNotify(' . $string . ');';
+        $content .= 'ConcretePageNotification.notify(' . $string . ');';
         $content .= '});</script>';
 
         return $content;

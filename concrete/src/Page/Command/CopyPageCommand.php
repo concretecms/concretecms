@@ -6,49 +6,50 @@ use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
 class CopyPageCommand extends PageCommand implements BatchableCommandInterface
 {
-
+    /**
+     * @var int
+     */
     protected $destinationPageID;
 
-    protected $isMultilingual = false;
     /**
-     * CopyPageCommand constructor.
-     * @param $destinationPageID
+     * @var bool
      */
-    public function __construct($pageID, $destinationPageID, $isMultilingual = false)
+    protected $isMultilingual;
+
+    public function __construct(int $pageID, int $destinationPageID, bool $isMultilingual = false)
     {
         parent::__construct($pageID);
-        $this->destinationPageID = $destinationPageID;
+        $this->setDestinationPageID($destinationPageID);
         $this->isMultilingual = $isMultilingual;
     }
 
     /**
-     * @return boolean
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
      */
-    public function isMultilingualCopy()
+    public function getBatchHandle(): string
     {
-        return $this->isMultilingual;
+        return 'copy_page';
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDestinationPageID()
+    public function getDestinationPageID(): int
     {
         return $this->destinationPageID;
     }
 
     /**
-     * @param mixed $destinationPageID
+     * @return $this
      */
-    public function setDestinationPageID($destinationPageID)
+    public function setDestinationPageID(int $destinationPageID): object
     {
         $this->destinationPageID = $destinationPageID;
+
+        return $this;
     }
 
-
-    public function getBatchHandle()
+    public function isMultilingualCopy(): bool
     {
-        return 'copy_page';
+        return $this->isMultilingual;
     }
-
 }

@@ -1,16 +1,15 @@
 <?php
+
 namespace Concrete\Core\Foundation\Command\Middleware;
 
 use Concrete\Core\Foundation\Queue\Batch\BatchProgressUpdater;
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
-use Doctrine\ORM\EntityManager;
 use League\Tactician\Middleware;
 
 class BatchUpdatingMiddleware implements Middleware
 {
-
     /**
-     * @var BatchProgressUpdater
+     * @var \Concrete\Core\Foundation\Queue\Batch\BatchProgressUpdater
      */
     protected $updater;
 
@@ -19,18 +18,19 @@ class BatchUpdatingMiddleware implements Middleware
         $this->updater = $updater;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\Tactician\Middleware::execute()
+     */
     public function execute($command, callable $next)
     {
-
         $return = $next($command);
-
 
         if ($command instanceof BatchableCommandInterface) {
             $this->updater->incrementCommandProgress($command);
         }
 
-
         return $return;
-
     }
 }

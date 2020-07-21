@@ -14,6 +14,7 @@ use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use FileSet;
 use League\Flysystem\AdapterInterface;
@@ -694,7 +695,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
             $db->Execute('delete from FileSetFiles where fID = ?', [$this->fID]);
             $db->Execute('delete from FileSearchIndexAttributes where fID = ?', [$this->fID]);
-            $db->Execute('delete from DownloadStatistics where fID = ?', [$this->fID]);
             $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
             $db->Execute('delete from FileImageThumbnailPaths where fileID = ?', [$this->fID]);
             $db->Execute('delete from Files where fID = ?', [$this->fID]);
@@ -761,34 +761,54 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function getTotalDownloads()
     {
-        $db = Loader::db();
+        $em = app(EntityManagerInterface::class);
+        $qb = $em->createQueryBuilder();
+        $x = $qb->expr();
+        $qb
+            ->select($x->count('ds.id'))
+            ->from(DownloadStatistics::class, 'ds')
+            ->andWhere($x->eq('ds.file', $this->getFileID()));
+        ;
 
-        return $db->GetOne('select count(*) from DownloadStatistics where fID = ?', [$this->getFileID()]);
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
-     * Get the download statistics for the current file.
+     * @deprecated Use the DownloadStatistics entity
      *
-     * @param int $limit max number of stats to retrieve
+     * @param int $limit
      *
      * @return array
      */
     public function getDownloadStatistics($limit = 20)
     {
-        $db = Loader::db();
-        $limitString = '';
-        if ($limit != false) {
-            $limitString = 'limit ' . intval($limit);
+        $em = app(EntityManagerInterface::class);
+        $qb = $em->createQueryBuilder();
+        $x = $qb->expr();
+        $qb
+            ->select('ds')
+            ->from(DownloadStatistics::class, 'ds')
+            ->andWhere($x->eq('ds.file', $this->getFileID()))
+            ->addOrderBy('ds.downloadDateTime', 'DESC')
+        ;
+        $limit = (int) $limit;
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        $dtFormat = $em->getConnection()->getDatabasePlatform()->getDateTimeFormatString();
+        $result = [];
+        foreach ($qb->getQuery()->execute() as $ds) {
+            $result[] = [
+                'dsID' => $ds->getID(),
+                'fID' => $ds->getFile()->getFileID(),
+                'fvID' => $ds->getFileVersion(),
+                'uID' => $ds->getDownloaderID() ?: 0,
+                'rcID' => $ds->getRelatedPageID() ?: 0,
+                'timestamp' => $ds->getDownloadDateTime()->format($dtFormat)
+            ];
         }
 
-        if (is_object($this) && $this instanceof self) {
-            return $db->getAll(
-                "SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc {$limitString}",
-                [$this->getFileID()]
-            );
-        } else {
-            return $db->getAll("SELECT * FROM DownloadStatistics ORDER BY timestamp desc {$limitString}");
-        }
+        return $result;
     }
 
     /**
@@ -811,11 +831,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         $config = Core::make('config');
         if ($config->get('concrete.statistics.track_downloads')) {
-            $db = Loader::db();
-            $db->Execute(
-                'insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',
-                [$this->fID, intval($fvID), $uID, $rcID]
-            );
+            $em = app(EntityManagerInterface::class);
+            $ds = DownloadStatistics::create($this, $fvID, $uID, $rcID);
+            $em->persist($ds);
+            $em->flush($ds);
         }
     }
 

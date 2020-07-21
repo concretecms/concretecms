@@ -3,11 +3,13 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Entity\PackageTrait;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\ExpressEntryResults;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Export\Item\Express\Entity as EntityExporter;
 use Doctrine\ORM\Mapping as ORM;
@@ -74,6 +76,14 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      * @ORM\Column(type="integer")
      */
     protected $entity_results_node_id;
+
+    /**
+     * If true, this entity splits its results by multisite. If false, it is shared across all sites. Default should
+     * probably be true, but for backwards compatibility it is false.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $use_separate_site_result_buckets = false;
 
     /**
      * @ORM\Column(type="integer")
@@ -465,6 +475,23 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return $this->entity_results_node_id;
     }
 
+    public function getEntityResultsNodeObject(Site $site = null)
+    {
+        $node = Node::getByID($this->getEntityResultsNodeId());
+        if ($node) {
+            /**
+             * @var $node ExpressEntryResults
+             */
+            if ($site && $this->usesSeparateSiteResultsBuckets()) {
+                $siteNode = $node->getSiteResultsNode($site);
+                if ($siteNode) {
+                    return $siteNode;
+                }
+            }
+        }
+        return $node;
+    }
+
     /**
      * @param mixed $entity_results_node_id
      */
@@ -496,6 +523,24 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
             }
         }
     }
+
+    /**
+     * @return mixed
+     */
+    public function usesSeparateSiteResultsBuckets()
+    {
+        return $this->use_separate_site_result_buckets;
+    }
+
+    /**
+     * @param mixed $use_separate_site_result_buckets
+     */
+    public function setUseSeparateSiteResultBuckets($use_separate_site_result_buckets)
+    {
+        $this->use_separate_site_result_buckets = $use_separate_site_result_buckets;
+    }
+
+
 
     public function getPermissionAssignmentClassName()
     {

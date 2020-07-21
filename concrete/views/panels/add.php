@@ -11,8 +11,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Application\Service\Urls $ci */
 ?>
 <section>
+    <?php if ($tab == 'containers' || $tab == 'blocks') { ?>
+        <div class="ccm-panel-header-search">
+            <svg><use xlink:href="#icon-search" /></svg>
+            <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
+        </div>
+    <?php } ?>
+
     <header class="pl-0 pr-0">
-        <div class="dropdown" data-panel-menu="dropdown">
+        <div id="dropdown-menu" class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
             <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
                 <?php
@@ -40,49 +47,41 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </div>
         </div>
     </header>
-    <?php /*
-    <nav>
-        <ul class="ccm-panel-header-accordion-dropdown">
-            <li><a data-panel-accordion-tab="blocks"<?= $tab === 'blocks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Blocks') ?></a></li>
-            <li><a data-panel-accordion-tab="clipboard"<?= $tab === 'clipboard' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Clipboard') ?></a></li>
-            <li><a data-panel-accordion-tab="stacks"<?= $tab === 'stacks' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Stacks') ?></a></li>
-            <li><a data-panel-accordion-tab="containers"<?= $tab === 'containers' ? ' data-panel-accordion-tab-selected="true"' : '' ?>><?= t('Containers') ?></a></li>
-        </ul>
-    </nav>
- */ ?>
 
     <?php
     switch ($tab) {
     case 'containers':
         /* @var Concrete\Core\Entity\Page\Container[] $containers */
         ?>
-        <ul id="ccm-panel-add-container-list">
-            <?php
-            foreach ($containers as $container) {
-                ?>
-                <li>
-                    <a
-                        href="#"
-                        class="ccm-panel-add-container-item"
-                        data-panel-add-block-drag-item="container"
-                        data-cID="<?= (int) $c->getCollectionID() ?>"
-                        data-container-id="<?=$container->getContainerID() ?>"
-                        data-block-type-handle="core_container"
-                        data-has-add-template="no"
-                        data-supports-inline-add="no"
-                        data-btID="0"
-                        data-dragging-avatar="<?= h('<p>' . $container->getContainerIconImage() . '<span>' . $container->getContainerName() . '</span></p>') ?>"
-                    >
-                       <span class="handle">
-                           <img src="<?=$container->getContainerIconImage(false)?>" />
-                            <span><?= h($container->getContainerName()) ?></span>
-                       </span>
-                    </a>
-                </li>
+        <div class="ccm-panel-content-inner ccm-stacked-list" id="ccm-panel-add-blocktypes-list" data-hide-grid-view-switcher>
+            <ul class="ccm-stacked-list">
                 <?php
-            }
-            ?>
-        </ul>
+                foreach ($containers as $container) {
+                    ?>
+                    <li>
+                        <a
+                            href="#"
+                            class="ccm-panel-add-container-item"
+                            data-panel-add-block-drag-item="container"
+                            data-cID="<?= (int) $c->getCollectionID() ?>"
+                            data-container-id="<?=$container->getContainerID() ?>"
+                            data-block-type-handle="core_container"
+                            data-has-add-template="0"
+                            data-supports-inline-add="0"
+                            data-btID="0"
+                            data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">' . $container->getContainerIconImage() . '</div><p><span>' . $container->getContainerName() . '</span></p>') ?>"
+                        >
+                        <!-- <span class="handle"> -->
+                            <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="<?=$container->getContainerIconImage(false)?>" /></div>
+                                <p><span><?= h($container->getContainerName()) ?></span></p>
+                        <!-- </span> -->
+                        </a>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </div>
         <script>
 
         </script>
@@ -246,10 +245,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
         case 'blocks':
             /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
             ?>
-            <div class="ccm-panel-header-search">
-                <svg><use xlink:href="#icon-search" /></svg>
-                <input type="text" data-input="search-blocks" placeholder="<?= t('Search') ?>" autocomplete="false"/>
-            </div>
             <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
                 <?php
                 $i = 0;
@@ -266,7 +261,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             <?= $setName ?><i class="fa fa-chevron-up float-right"></i>
                         </header>
                         <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
-                        <ul class="d-flex flex-wrap">
+                        <?php
+                            // This class is added to help align the last row when it contains less than 3 elements
+                            $justifyLastRowClass= (count($blockTypes) % 3) > 0 ? 'ccm-flex-align-last-row' : '';
+                        ?>
+                        <ul class="d-flex flex-row flex-wrap justify-content-between <?= $justifyLastRowClass; ?>">
                             <?php
                             foreach ($blockTypes as $bt) {
                                 $btIcon = $ci->getBlockTypeIconURL($bt);
@@ -325,10 +324,30 @@ defined('C5_EXECUTE') or die('Access Denied.');
         $('#ccm-panel-add-block').find('div[id^="ccm-block-set-"]').on('hidden.bs.collapse shown.bs.collapse', function () {
             $(this).prev('header[data-toggle="collapse"]').find('i.fa').toggleClass('fa-chevron-up fa-chevron-down');
         });
+
+        // This makes the elements under the dropdown not react to hover.
+        // Originally the block below the dropdown would grab the focus
+        // and it would be impossible to click a link in the dropdown
+        $('#dropdown-menu').on('hide.bs.dropdown shown.bs.dropdown', function () {
+            $('#ccm-panel-add-blocktypes-list').toggleClass('ccm-no-pointer-events');
+        });
         // switching between grid and stacked view for blocks
-        $('.ccm-panel-header-list-grid-view-switcher').on('click', function () {
+        var gridViewSwitcher = $('.ccm-panel-header-list-grid-view-switcher');
+
+        gridViewSwitcher.on('click', function () {
             $('#ccm-panel-add-blocktypes-list').toggleClass('ccm-stacked-list');
             $(this).find('i.fa').toggleClass('fa-list fa-th');
+        });
+
+        // hiding the grid view switcher when not needed.
+        // This uses a data attribute to mark panels
+        // that don't require the grid switcher
+        Concrete.event.bind('PanelLoad', function(evt, data) {
+            gridViewSwitcher.removeClass('d-none');
+            var element = $(data.element);
+            if (element.find('[data-hide-grid-view-switcher]').length) {
+                gridViewSwitcher.addClass('d-none');
+            }
         });
     });
 </script>

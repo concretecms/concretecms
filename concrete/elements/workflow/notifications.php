@@ -53,13 +53,13 @@ if (is_array($workflowList) && !empty($workflowList)) {
             echo implode("\n", $buttons);
             echo '</form>';
         } else {
-            echo $cih->notify(array(
+            echo $cih->notify([
                 'text' => $text,
                 'type' => 'info',
                 'form' => $form,
-                'icon' => 'fa fa-info-circle',
+                'icon' => 'fas fa-info-circle',
                 'buttons' => $buttons
-            ));
+            ]);
         }
     }
 }

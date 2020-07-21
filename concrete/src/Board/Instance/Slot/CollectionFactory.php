@@ -2,6 +2,8 @@
 namespace Concrete\Core\Board\Instance\Slot;
 
 use Concrete\Core\Board\Instance\Slot\Content\ObjectInterface;
+use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollection;
+use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollectionFactory;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlot;
 use Concrete\Core\Entity\Board\SlotTemplate;
@@ -22,13 +24,13 @@ class CollectionFactory implements LoggerAwareInterface
     }
 
     /**
-     * @var EntityManager
+     * @var AvailableTemplateCollectionFactory
      */
-    protected $entityManager;
+    protected $availableTemplateCollectionFactory;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(AvailableTemplateCollectionFactory $availableTemplateCollectionFactory)
     {
-        $this->entityManager = $entityManager;
+        $this->availableTemplateCollectionFactory = $availableTemplateCollectionFactory;
     }
 
     /**
@@ -37,24 +39,9 @@ class CollectionFactory implements LoggerAwareInterface
      * @param int $slot
      * @return SlotTemplate
      */
-    protected function getTemplateForSlot($availableTemplates, Instance $instance, int $slot, int $totalItemsRemaining)
+    protected function getTemplateForSlot($filteredTemplates, int $totalItemsRemaining)
     {
-        $availableTemplatesByFormFactor = [];
-        foreach($availableTemplates as $availableTemplate) {
-            $availableTemplatesByFormFactor[$availableTemplate->getFormFactor()][] = $availableTemplate;
-        }
-
-        $driver = $instance->getBoard()->getTemplate()->getDriver();
-        $formFactor = $driver->getFormFactor();
-        if (is_array($formFactor)) {
-            $formFactor = $formFactor[$slot];
-        } else {
-            $formFactor = $driver->getFormFactor();
-        }
-
-        $filteredTemplates = $availableTemplatesByFormFactor[$formFactor];
         shuffle($filteredTemplates);
-
         foreach($filteredTemplates as $filteredTemplate) {
             if ($filteredTemplate->getDriver()->getTotalContentSlots() <= $totalItemsRemaining) {
                 return $filteredTemplate;
@@ -69,20 +56,12 @@ class CollectionFactory implements LoggerAwareInterface
      */
     public function createSlotCollection(Instance $instance, array $contentObjectGroups) : ArrayCollection
     {
-
-        $board = $instance->getBoard();
-        if ($board->hasCustomSlotTemplates()) {
-            $availableTemplates = $board->getCustomSlotTemplates();
-        } else {
-            $availableTemplates = $this->entityManager->getRepository(SlotTemplate::class)->findAll();
-        }
-
         $collection = new ArrayCollection();
         $totalItemsRemaining = count($contentObjectGroups);
-
         $currentSlot = 1;
         while($totalItemsRemaining > 0) {
-            $template = $this->getTemplateForSlot($availableTemplates, $instance, $currentSlot, $totalItemsRemaining);
+            $availableTemplates = $this->availableTemplateCollectionFactory->getAvailableTemplates($instance, $currentSlot);
+            $template = $this->getTemplateForSlot($availableTemplates, $totalItemsRemaining);
             if ($template) {
                 $slot = new InstanceSlot();
                 $slot->setSlot($currentSlot);

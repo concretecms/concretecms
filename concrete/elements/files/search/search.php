@@ -1,53 +1,70 @@
 <?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Support\Facade\Url;
+
+/** @var string $headerSearchAction */
+/** @var Form $form */
 ?>
 
 <div class="ccm-header-search-form ccm-ui" data-header="file-manager">
-
-    <form method="get" class="form-inline" action="<?=$headerSearchAction?>">
-
-        <a href="#" data-launch-dialog="advanced-search" class="ccm-header-launch-advanced-search"
-           <?php if (isset($query)) { ?>
-                data-advanced-search-query="advanced-search-query"
-            <?php } ?>
-           data-advanced-search-dialog-url="<?php echo URL::to('/ccm/system/dialogs/file/advanced_search') ?>">
-            <?= t('Advanced') ?>
-
-
-            <?php if (isset($query)) { ?>
-                <script type="text/concrete-query" data-query="advanced-search-query">
-                    <?=$query?>
-                </script>
-            <?php } ?>
-
-        </a>
+    <form method="get" class="form-inline" action="<?php echo $headerSearchAction ?>">
 
         <div class="ccm-header-search-form-input input-group">
-            <?=$form->search('keywords', [
+            <?php if (isset($query)): ?>
+                <a href="javascript:void(0);"
+                   data-launch-dialog="advanced-search"
+                   class="ccm-header-launch-advanced-search"
+                   data-advanced-search-dialog-url="<?php echo Url::to('/ccm/system/dialogs/file/advanced_search') ?>"
+                   data-advanced-search-query="advanced-search-query">
+
+                    <?php echo t('Advanced') ?>
+
+                    <script type="text/concrete-query" data-query="advanced-search-query">
+                        <?php echo $query ?>
+                    </script>
+                </a>
+            <?php else: ?>
+                <a href="javascript:void(0);"
+                   data-launch-dialog="advanced-search"
+                   class="ccm-header-launch-advanced-search"
+                   data-advanced-search-dialog-url="<?php echo Url::to('/ccm/system/dialogs/file/advanced_search') ?>">
+
+                    <?php echo t('Advanced') ?>
+                </a>
+            <?php endif; ?>
+
+            <?php
+                echo $form->search('keywords', [
                     'placeholder' => t('Search'),
                     'class' => 'border-right-0',
-                    'autocomplete' => 'off']);
+                    'autocomplete' => 'off'
+                ]);
             ?>
+            
             <div class="input-group-append">
-                    <button type="submit" class="input-group-icon">
-                        <svg width="16" height="16"><use xlink:href="#icon-search"/></svg>
-                    </button>
+                <button type="submit" class="input-group-icon">
+                    <svg width="16" height="16">
+                        <use xlink:href="#icon-search"/>
+                    </svg>
+                </button>
             </div>
         </div>
-
     </form>
-
 </div>
 
-<script type="text/javascript">
-    $(function() {
-        ConcreteEvent.subscribe('SavedSearchCreated', function(e, data) {
-            window.location.reload();
+<script>
+    (function ($) {
+        $(function () {
+            ConcreteEvent.subscribe('SavedSearchCreated', function () {
+                window.location.reload();
+            });
+            
+            ConcreteEvent.subscribe('SavedPresetSubmit', function (e, url) {
+                window.location.href = url;
+            });
         });
-        ConcreteEvent.subscribe('SavedPresetSubmit', function(e, url) {
-            window.location.href = url;
-        });
-    });
-
-
+    })(jQuery);
 </script>

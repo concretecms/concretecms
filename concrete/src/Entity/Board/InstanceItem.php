@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Board\Item\ItemProviderInterface;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="InstanceItemRepository")
  * @ORM\Table(name="BoardInstanceItems")
  */
-class InstanceItem
+class InstanceItem implements \JsonSerializable, ItemProviderInterface
 {
 
     /**
@@ -17,6 +18,18 @@ class InstanceItem
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $boardInstanceItemID;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Item", cascade={"remove"})
+     * @ORM\JoinColumn(name="boardItemID", referencedColumnName="boardItemID")
+     */
+    protected $item;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource", inversedBy="items")
+     * @ORM\JoinColumn(name="configuredDataSourceID", referencedColumnName="configuredDataSourceID")
+     **/
+    protected $data_source;
 
     /**
      * @ORM\ManyToOne(targetEntity="Instance", inversedBy="items")
@@ -31,51 +44,9 @@ class InstanceItem
     protected $batch;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource", inversedBy="items")
-     * @ORM\JoinColumn(name="configuredDataSourceID", referencedColumnName="configuredDataSourceID")
-     **/
-    protected $data_source;
-
-    /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    protected $dateCreated;
-    /**
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $dateAddedToBoard = 0;
-
-    /**
-     * @ORM\Column(type="integer", options={"unsigned": true})
-     */
-    protected $relevantDate;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    protected $data;
-
-    /**
-     * @ORM\OneToMany(targetEntity="ItemCategory", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
-     *
-     */
-    protected $categories;
-
-    /**
-     * @ORM\OneToMany(targetEntity="ItemTag", cascade={"persist", "remove"}, mappedBy="item", fetch="EXTRA_LAZY")
-     */
-    protected $tags;
-
-    public function __construct()
-    {
-        $this->tags = new ArrayCollection();
-        $this->categories = new ArrayCollection();
-    }
 
     /**
      * @return mixed
@@ -84,23 +55,6 @@ class InstanceItem
     {
         return $this->boardInstanceItemID;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getInstance()
-    {
-        return $this->instance;
-    }
-
-    /**
-     * @param mixed $instance
-     */
-    public function setInstance($instance): void
-    {
-        $this->instance = $instance;
-    }
-
 
     /**
      * @return mixed
@@ -121,33 +75,17 @@ class InstanceItem
     /**
      * @return mixed
      */
-    public function getDateCreated()
+    public function getInstance()
     {
-        return $this->dateCreated;
+        return $this->instance;
     }
 
     /**
-     * @param mixed $dateCreated
+     * @param mixed $instance
      */
-    public function setDateCreated($dateCreated): void
+    public function setInstance($instance): void
     {
-        $this->dateCreated = $dateCreated;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRelevantDate()
-    {
-        return $this->relevantDate;
-    }
-
-    /**
-     * @param mixed $relevantDate
-     */
-    public function setRelevantDate($relevantDate): void
-    {
-        $this->relevantDate = $relevantDate;
+        $this->instance = $instance;
     }
 
     /**
@@ -169,54 +107,6 @@ class InstanceItem
     /**
      * @return mixed
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData($data): void
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDateAddedToBoard()
     {
         return $this->dateAddedToBoard;
@@ -230,11 +120,41 @@ class InstanceItem
         $this->dateAddedToBoard = $dateAddedToBoard;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getItem() :? Item
+    {
+        return $this->item;
+    }
 
+    /**
+     * @param mixed $item
+     */
+    public function setItem($item): void
+    {
+        $this->item = $item;
+    }
 
-
-
-
+    public function jsonSerialize()
+    {
+        $file = $this->item->getRelevantThumbnail();
+        $thumbnail = null;
+        if ($file) {
+            $thumbnail = $file->getURL();
+        }
+        $timezone = $this->getInstance()->getSite()->getTimezone();
+        $datetime = new \DateTime('@' . $this->item->getRelevantDate());
+        $datetime->setTimezone(new \DateTimeZone($timezone));
+        $relevantDateString = $datetime->format('F d, Y g:i a');
+        return [
+            'id' => $this->getBoardInstanceItemID(),
+            'name' => $this->item->getName(),
+            'thumbnail' => $thumbnail,
+            'relevantDate' => $this->item->getRelevantDate(),
+            'relevantDateString' => $relevantDateString,
+        ];
+    }
 
 
 }

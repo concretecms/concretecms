@@ -12,6 +12,11 @@ interface UsesFeatureInterface
 {
 
     /**
+     * The list of one or more Features this class makes use of.
+     *
+     * @see \Concrete\Core\Feature\Features The class that contains all the available feature constants
+     * @see \Concrete\Block\Gallery\Controller::getRequiredFeatures An example of a core block using a feature
+     *
      * @return string[] Feature handles
      */
     public function getRequiredFeatures(): array;

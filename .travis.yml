@@ -1,7 +1,9 @@
 # Global/default configuration
-dist: trusty
+dist: xenial
 language: php
 sudo: false
+services:
+  - mysql
 cache:
   npm: true
   directories:
@@ -15,7 +17,6 @@ matrix:
   fast_finish: true
   allow_failures:
     - name: Test with PHP nightly
-    - name: Test with PHP 7.4
     - name: Check PHP coding style
   include:
 
@@ -59,7 +60,7 @@ matrix:
         - composer test
 
     - name: Test with PHP 7.4
-      php: 7.4snapshot
+      php: '7.4'
       before_script:
         - ./.travis/composer-deps.sh
       script:
@@ -69,6 +70,7 @@ matrix:
       php: '7.2'
       services:
         - docker
+        - mysql
       before_script:
         - ./.travis/composer-deps.sh
       script:

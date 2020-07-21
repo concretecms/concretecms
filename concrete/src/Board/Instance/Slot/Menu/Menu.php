@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Board\Instance\Slot\Menu;
 
+use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
+use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Board\Instance\Slot\RenderedSlot;
@@ -19,12 +21,20 @@ class Menu extends PopoverMenu
         $permissions = new Checker($board);
         parent::__construct();
         $this->setAttribute('data-menu-board-instance-slot-id', $slot->getSlot());
-        if ($permissions->canEditBoardContents()) {
+        if (($slot->isLocked() && $permissions->canEditBoardLockedRules())
+            || (!$slot->isLocked() && $permissions->canEditBoardContents())) {
+
             $this->addItem(new LinkItem('javascript:void(0)', t('Pin To Board'), [
                 'data-menu-action' => 'pin-item',
             ]));
             $this->addItem(new LinkItem('javascript:void(0)', t('Un-Pin From Board'), [
                 'data-menu-action' => 'unpin-item',
+            ]));
+            $this->addItem(new LinkItem('javascript:void(0)', t('Delete Custom Slot'), [
+                'data-menu-action' => 'delete-custom-slot',
+            ]));
+            $this->addItem(new LinkItem('javascript:void(0)', t('Replace Slot'), [
+                'data-menu-action' => 'replace-slot',
             ]));
         }
     }

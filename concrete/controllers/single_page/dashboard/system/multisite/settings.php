@@ -35,7 +35,6 @@ class Settings extends DashboardPageController
 
             return $this->buildRedirect($this->action());
         }
-
         return $this->view();
     }
 }

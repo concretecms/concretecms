@@ -4,7 +4,7 @@ namespace Concrete\Core\Summary\Data\Field;
 use Concrete\Core\Entity\Summary\Field;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class DataField implements DataFieldInterface
+final class DataField implements DataFieldInterface
 {
 
     /**

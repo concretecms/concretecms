@@ -16,7 +16,7 @@ $(function() {
         Concrete.event.unbind('add_control.block_express_form');
         Concrete.event.bind('add_control.block_express_form', function(e, data) {
 
-            var $tabEdit = $('#ccm-tab-content-form-edit'),
+            var $tabEdit = $('#ccm-block-express-form-edit'),
                 $list = $tabEdit.find('ul');
             $list.append(data.controlTemplate({'control': data.control}));
 
@@ -28,7 +28,7 @@ $(function() {
         Concrete.event.unbind('update_control.block_express_form');
         Concrete.event.bind('update_control.block_express_form', function(e, data) {
 
-            var $tabEdit = $('#ccm-tab-content-form-edit'),
+            var $tabEdit = $('#ccm-block-express-form-edit'),
                 $control = $tabEdit.find('[data-form-control-id=' + data.control.id + ']');
             if ($control) {
                 $control.replaceWith(data.controlTemplate({'control': data.control}));
@@ -88,17 +88,17 @@ $(function() {
     ConcreteBlockForm.prototype.init = function(data) {
 
         var my = this,
-            $tabAdd = $('#ccm-tab-content-form-add'),
-            $tabEdit = $('#ccm-tab-content-form-edit'),
-            $tabResults = $('#ccm-tab-content-form-results'),
-            $tabOptions = $('#ccm-tab-content-form-options'),
+            $tabAdd = $('#ccm-block-express-form-add'),
+            $tabEdit = $('#ccm-block-express-form-edit'),
+            $tabResults = $('#ccm-block-express-form-results'),
+            $tabOptions = $('#ccm-block-express-form-options'),
             $storeFormSubmission = $tabResults.find('input[name=storeFormSubmission]'),
             $formResultsFolderSection = $tabResults.find('div[data-section=form-results-folder]'),
             controlTemplate = _.template($('script[data-template=express-form-form-control]').html()),
             questionTemplate = _.template($('script[data-template=express-form-form-question]').html());
 
         $tabOptions.on('change', 'input[name=notifyMeOnSubmission]', function() {
-            var $emailReplyToView = $('#ccm-tab-content-form-options div[data-view=form-options-email-reply-to]');
+            var $emailReplyToView = $('#ccm-block-express-form-options div[data-view=form-options-email-reply-to]');
             $('input[name=recipientEmail]').focus();
             if ($(this).is(':checked')) {
                 $emailReplyToView.show();
@@ -258,7 +258,7 @@ $(function() {
         $tabEdit.find('ul').sortable({
             placeholder: "ui-state-highlight",
             axis: "y",
-            handle: "i.fa-arrows",
+            handle: "i.fa-arrows-alt",
             cursor: "move",
             update: function() {
 
@@ -333,8 +333,8 @@ $(function() {
 
     ConcreteBlockForm.prototype.rescanEmailFields = function($emailReplyToView) {
         // Gather all the email controls
-        var $tabEdit = $('#ccm-tab-content-form-edit'),
-            $emailReplyToView = $('#ccm-tab-content-form-options div[data-view=form-options-email-reply-to]'),
+        var $tabEdit = $('#ccm-block-express-form-edit'),
+            $emailReplyToView = $('#ccm-block-express-form-options div[data-view=form-options-email-reply-to]'),
             emailReplyToTemplate = _.template($('script[data-template=express-form-reply-to-email]').html()),
             $controls = $tabEdit.find('li[data-form-control-id]'),
             selected = $emailReplyToView.find('select[name=replyToEmailControlID]').val(),

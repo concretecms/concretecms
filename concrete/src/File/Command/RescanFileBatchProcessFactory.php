@@ -6,18 +6,30 @@ use Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface;
 
 class RescanFileBatchProcessFactory implements BatchProcessFactoryInterface
 {
-
-    public function getBatchHandle()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface::getBatchHandle()
+     */
+    public function getBatchHandle(): string
     {
         return 'rescan_file';
     }
 
-    public function getCommands($files) : array
+    /**
+     * {@inheritdoc}
+     *
+     * @param \Concrete\Core\Entity\File\File[] $files
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface::getCommands()
+     */
+    public function getCommands($files): array
     {
         $commands = [];
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $commands[] = new RescanFileCommand($file->getFileID());
         }
+
         return $commands;
     }
 }

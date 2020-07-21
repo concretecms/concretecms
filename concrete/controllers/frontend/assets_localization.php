@@ -29,6 +29,7 @@ var ccmi18n = ' . json_encode([
     'deleteBlockMsg' => t('The block has been removed successfully.'),
     'addBlock' => t('Add Block'),
     'addBlockNew' => t('Add Block'),
+    'addBlockContainer' => t('Add Container'),
     'addBlockStack' => t('Add Stack'),
     'addBlockStackMsg' => t('The stack has been added successfully'),
     'addBlockPaste' => t('Paste from Clipboard'),
@@ -46,6 +47,7 @@ var ccmi18n = ' . json_encode([
     'confirmLayoutPresetDelete' => t('Are you sure you want to delete this layout preset?'),
     'setAreaPermissions' => t('Set Permissions'),
     'addBlockMsg' => t('The block has been added successfully.'),
+    'addBlockContainerMsg' => t('The container has been added successfully.'),
     'updateBlock' => t('Update Block'),
     'updateBlockMsg' => t('The block has been saved successfully.'),
     'copyBlockToScrapbookMsg' => t('The block has been added to your clipboard.'),
@@ -127,6 +129,7 @@ var ccmi18n = ' . json_encode([
     'emptyArea' => t('Empty %s Area', '<%- area_handle %>'),
     'fullArea' => t('This area is full!'),
     'progressiveOperationLoading' => t('Determining items remaining...'),
+    'notifications' => t('Notifications'),
 ]) . ';
 var ccmi18n_editor = ' . json_encode([
     'insertLinkToFile' => t('Insert Link to File'),
@@ -198,6 +201,34 @@ var ccmi18n_groups = ' . json_encode([
     'editGroup' => t('Edit Group'),
     'editPermissions' => t('Edit Permissions'),
 ]) . ';
+
+var ccmi18n_fileuploader = ' . json_encode([
+    "dialogTitle" => t("Import Files"),
+    "yourComputer" => t("Your Computer"),
+    "incomingDirectory" => t("Incoming Directory"),
+    "remoteFiles" => t("Remote Files"),
+    "dropFilesHere" => t("Drop files here or click to upload"),
+    "uploadFilesTo" => t("Upload files to"),
+    "createNewDirectoryButton" => t("Create New Folder"),
+    "directoryName" => t("Name"),
+    "directoryPlaceholder" => t("Please enter a name..."),
+    "uploadSuccessfulTitle" => t("Complete"),
+    "uploadSuccessfulMessage" => t("The upload was successfully."),
+    "cancelButton" => t("Cancel"),
+    "continueButton" => t("Continue"),
+    "loading" => t("Loading..."),
+    "confirmMessage" => t("Are you sure that you want to close this dialog? All pending files will be removed."),
+    "confirmButton" => t("Remove pending files"),
+    "filename" => t("Filename"),
+    "size" => t("Size"),
+    "removeFilesAfterPost" => t("Remove files from {0} directory of {1} storage location."),
+    "invalidFileExtension" => t("Invalid file extension"),
+    "enterSingleUrl" => t("Enter URL to valid file"),
+    "errorNotificationTitle" => t("Error"),
+    "enterMultipleUrls" => t("Enter URL to valid file(s), one URL per line"),
+    "noFilesFound" => t('No files found in {0} for the storage location "{1}".')
+]) . ';
+
 var ccmi18n_filemanager = ' . json_encode([
     'view' => t('View'),
     'download' => t('Download'),
@@ -214,6 +245,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'properties' => t('Properties'),
     'deleteFile' => t('Delete'),
     'title' => t('File Manager'),
+    'chooseFile' => t('Choose File'),
     'uploadErrorChooseFile' => t('You must choose a file.'),
     'addFiles' => t('Add Files'),
     'rescan' => t('Rescan'),
@@ -472,7 +504,7 @@ var ccmi18n_helpGuides = ' . json_encode([
                 'alignment' => t('Alignment'),
                 'filename' => t('Name (optional)'),
                 'edit' => t('Edit'),
-                'upload_label' => t('Drop file here or '),
+                'upload_label' => t('Drop file here or ')
             ]) . ';
 jQuery.Redactor.opts.lang = ' . json_encode($locale) . ';
 jQuery.each(jQuery.Redactor.opts.langs.en, function(key, value) {

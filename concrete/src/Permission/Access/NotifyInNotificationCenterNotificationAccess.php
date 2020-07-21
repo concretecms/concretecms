@@ -38,14 +38,14 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
             }
         }
 
-        if (is_array($args['subscriptionsExcluded'])) {
+        if (is_array($args['subscriptionsExcluded'] ?? null)) {
             foreach ($args['subscriptionsExcluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
                 $db->executeQuery('insert into NotificationPermissionSubscriptionList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
-        if (is_array($args['subscriptionIdentifierInclude'])) {
+        if (is_array($args['subscriptionIdentifierInclude'] ?? null)) {
             foreach ($args['subscriptionIdentifierInclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];
@@ -54,7 +54,7 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
             }
         }
 
-        if (is_array($args['subscriptionIdentifierExclude'])) {
+        if (is_array($args['subscriptionIdentifierExclude'] ?? null)) {
             foreach ($args['subscriptionIdentifierExclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];

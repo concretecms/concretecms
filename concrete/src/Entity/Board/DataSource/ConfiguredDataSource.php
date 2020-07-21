@@ -28,6 +28,16 @@ class ConfiguredDataSource
     protected $board;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $populationDayIntervalFuture = 0;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $populationDayIntervalPast = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="DataSource")
      * @ORM\JoinColumn(name="dataSourceID", referencedColumnName="dataSourceID")
      * @var DataSource
@@ -138,6 +148,62 @@ class ConfiguredDataSource
     public function setCustomWeight($customWeight): void
     {
         $this->customWeight = $customWeight;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopulationIntervalFuture(): int
+    {
+        return $this->populationIntervalFuture;
+    }
+
+    /**
+     * @param int $populationIntervalFuture
+     */
+    public function setPopulationIntervalFuture(int $populationIntervalFuture): void
+    {
+        $this->populationIntervalFuture = $populationIntervalFuture;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopulationDayIntervalFuture(): int
+    {
+        return $this->populationDayIntervalFuture;
+    }
+
+    /**
+     * @param int $populationDayIntervalFuture
+     */
+    public function setPopulationDayIntervalFuture(int $populationDayIntervalFuture): void
+    {
+        $this->populationDayIntervalFuture = $populationDayIntervalFuture;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopulationDayIntervalPast(): int
+    {
+        return $this->populationDayIntervalPast;
+    }
+
+    /**
+     * @param int $populationDayIntervalPast
+     */
+    public function setPopulationDayIntervalPast(int $populationDayIntervalPast): void
+    {
+        $this->populationDayIntervalPast = $populationDayIntervalPast;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getItems()
+    {
+        return $this->items;
     }
 
 

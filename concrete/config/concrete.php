@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.0.0a1',
-    'version_installed' => '9.0.0a1',
-    'version_db' => '20200203000000', // the key of the latest database migration
+    'version' => '9.0.0a2',
+    'version_installed' => '9.0.0a2',
+    'version_db' => '20200626142348', // the key of the latest database migration
 
     /*
      * Installation status
@@ -96,7 +96,8 @@ return [
          *
          * @var string semi-colon separated.
          */
-        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.phtml',
+        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
+
         'chunking' => [
             // Enable uploading files in chunks?
             'enabled' => true,
@@ -115,7 +116,7 @@ return [
             // Include the BOM (byte-order mark) in generated CSV files?
             // @var bool
             'include_bom' => false,
-            'datetime_format' => 'ATOM', 
+            'datetime_format' => 'ATOM',
         ],
     ],
 
@@ -185,7 +186,7 @@ return [
          * @var bool
          */
         'blocks' => true,
-        
+
         /*
          * Cache Theme CSS/JS
          *
@@ -610,7 +611,6 @@ return [
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,
-        'app_version_display_in_header' => true,
         /*
          * The JPEG compression level (in range 0... 100)
          */
@@ -689,13 +689,13 @@ return [
         ],
         'file_manager_listing' => [
             'handle' => 'file_manager_listing',
-            'width' => 60,
-            'height' => 60,
+            'width' => 120,
+            'height' => 120,
         ],
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
-            'width' => 400,
-            'height' => 400,
+            'width' => 500,
+            'height' => 500,
         ],
         'user_avatar' => [
             'width' => 80,
@@ -873,7 +873,7 @@ return [
         'name' => false,
 
         /*
-         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed = 
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed =
          * standard behavior, "custom" = custom image.
          *
          * @var string "none"|"feed"|"custom"
@@ -886,7 +886,7 @@ return [
          * @var null|string Custom URL for background image.
          */
         'background_url' => null,
-        
+
     ],
     'session' => [
         'name' => 'CONCRETE5',
@@ -909,6 +909,8 @@ return [
             'cookie_domain' => false,
             'cookie_secure' => false,
             'cookie_httponly' => true,
+            'cookie_raw' => false,
+            'cookie_samesite' => null,
         ],
         'remember_me' => [
             'lifetime' => 1209600, // 2 weeks in seconds

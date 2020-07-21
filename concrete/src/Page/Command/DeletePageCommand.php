@@ -6,34 +6,39 @@ use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
 class DeletePageCommand extends PageCommand implements BatchableCommandInterface
 {
-
+    /**
+     * @var int|null
+     */
     protected $userID;
 
+    public function __construct(int $pageID, ?int $userID)
+    {
+        parent::__construct($pageID);
+        $this->setUserID($userID);
+    }
+
     /**
-     * @return mixed
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
      */
-    public function getUserID()
+    public function getBatchHandle(): string
+    {
+        return 'delete_page';
+    }
+
+    public function getUserID(): ?int
     {
         return $this->userID;
     }
 
     /**
-     * @param mixed $userID
+     * @return $this
      */
-    public function setUserID($userID)
+    public function setUserID(?int $userID): object
     {
         $this->userID = $userID;
-    }
 
-    public function __construct($pageID, $userID)
-    {
-        $this->userID = $userID;
-        parent::__construct($pageID);
+        return $this;
     }
-
-    public function getBatchHandle()
-    {
-        return 'delete_page';
-    }
-
 }

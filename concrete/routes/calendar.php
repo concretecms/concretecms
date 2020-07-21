@@ -26,10 +26,21 @@ $router->all('/ccm/calendar/dialogs/event/occurrence', '\Concrete\Controller\Dia
 $router->all('/ccm/calendar/dialogs/choose_event', '\Concrete\Controller\Dialog\ChooseEvent::view');
 $router->all('/ccm/calendar/dialogs/choose_event/get_events', '\Concrete\Controller\Dialog\ChooseEvent::getEvents');
 $router->all('/ccm/calendar/event/get_json', '\Concrete\Controller\Event\Event::getJSON');
+$router->post('/ccm/calendar/event_occurrence/get_json', '\Concrete\Controller\Event\Event::getOccurrence');
 $router->all('/ccm/calendar/dialogs/permissions/{pkCategoryHandle}', '\Concrete\Controller\Dialog\Calendar\Permissions::view');
 
 $router->all('/ccm/calendar/dialogs/event/summary_templates', '\Concrete\Controller\Dialog\Event\SummaryTemplates::view');
 $router->all('/ccm/calendar/dialogs/event/summary_templates/submit', '\Concrete\Controller\Dialog\Event\SummaryTemplates::submit');
+
+//$router->all('/ccm/calendar/dialogs/event/advanced_search', 'AdvancedSearch::view');
+$router->all('/ccm/calendar/dialogs/event/advanced_search/add_field', '\Concrete\Controller\Dialog\Event\AdvancedSearch::addField');
+//$router->all('/ccm/calendar/dialogs/event/advanced_search/submit', 'AdvancedSearch::submit');
+//$router->all('/ccm/calendar/dialogs/event/advanced_search/save_preset', 'AdvancedSearch::savePreset');
+
+//$router->all('/ccm/calendar/dialogs/event/advanced_search/preset/edit', 'Preset\Edit::view');
+//$router->all('/ccm/calendar/dialogs/event/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::edit_search_preset');
+//$router->all('/ccm/calendar/dialogs/event/advanced_search/preset/delete', 'Preset\Delete::view');
+//$router->all('/ccm/calendar/dialogs/event/advanced_search/preset/delete/remove_search_preset', 'Preset\Delete::remove_search_preset');
 
 /* Permissions Tools Hack */
 $router->all('/tools/required/permissions/categories/calendar_admin', '\Concrete\Controller\Event\Permissions::process');

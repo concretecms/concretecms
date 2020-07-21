@@ -66,7 +66,6 @@ class SummaryObject implements ObjectInterface
 
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        
         $entityManager = $context['app']->make(EntityManager::class);
         $template = $entityManager->find(Template::class, $data['templateID']);
         $identifier = $data['identifier'];

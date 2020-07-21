@@ -1,1 +1,1 @@
-<?=$form->select('calendarID', $calendars, $calendarID);
+<?=$form->select($this->field('calendarID'), $calendars, $calendarID);
