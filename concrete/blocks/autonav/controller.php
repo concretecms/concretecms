@@ -38,7 +38,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $haveRetrievedSelfPlus1 = false;
     public $displayUnapproved = false;
     public $ignoreExcludeNav = false;
-    protected $helpers = ['form', 'validation/token'];
+    protected $helpers = ['form', 'validation/token', 'form/page_selector', 'concrete/ui'];
     protected $homePageID;
     protected $btTable = 'btNavigation';
     protected $btInterfaceWidth = 700;
@@ -90,7 +90,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         parent::__construct($obj);
     }
-    
+
     // private variable $displayUnapproved, used by the dashboard
 
     public function getBlockTypeDescription()
@@ -796,7 +796,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $btc->displaySubPageLevelsNum = $post->get('displaySubPageLevelsNum');
         $btc->displayUnavailablePages = $post->get('displayUnavailablePages');
         if ($btc->displayPages === 'custom') {
-            $btc->displayPagesCID = $post->get('displayPagesCID');
+            $btc->displayPagesCID = $post->get('displayPagesCID') ? $post->get('displayPagesCID') : Page::getHomePageID();
             $btc->displayPagesIncludeSelf = $post->get('displayPagesIncludeSelf');
         }
         $bv = new BlockView($bt);
