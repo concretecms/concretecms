@@ -4,6 +4,7 @@ namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\FolderItemList;
+use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
@@ -215,6 +216,36 @@ class FileFolder extends TreeNode
         }
 
         return parent::getTreeNodeName();
+    }
+
+    public function getFolderItemList(User $u, Request $request)
+    {
+        $available = new Available();
+        $sort = false;
+        $list = new FolderItemList();
+        $list->filterByParentFolder($this);
+        if ($u !== null) {
+            if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
+                if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
+                    $sort = [$column, $direction];
+                    $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
+                }
+            } else {
+                $sort = $u->config(sprintf('file_manager.sort.%s', $this->getTreeNodeID()));
+                if ($sort) {
+                    /** @noinspection PhpComposerExtensionStubsInspection */
+                    $sort = json_decode($sort);
+                }
+            }
+            if (is_array($sort)) {
+                if ($sortColumn = $available->getColumnByKey($sort[0])) {
+                    $sortColumn->setColumnSortDirection($sort[1]);
+                    $list->sortBySearchColumn($sortColumn);
+                }
+            }
+        }
+
+        return $list;
     }
 
     /**
