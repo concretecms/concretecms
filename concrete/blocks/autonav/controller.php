@@ -458,7 +458,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
 
             /*
-
             if ($displayHeadPage) {
                 $niRow = array();
                 $niRow['cvName'] = $tc1->getCollectionName();
@@ -542,7 +541,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         // increment all items in the nav array with a greater $currentLevel
-
         foreach ($this->navArray as $ni) {
             if ($ni->getLevel() + 1 < $currentLevel) {
                 $ni->hasChildren = true;
