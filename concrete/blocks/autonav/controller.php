@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Autonav;
 
 use Concrete\Core\Block\BlockController;
@@ -14,6 +15,8 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Doctrine\ORM\EntityManagerInterface;
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
  * The controller for the Auto-Nav block.
  *
@@ -25,15 +28,23 @@ use Doctrine\ORM\EntityManagerInterface;
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
+
 class Controller extends BlockController implements UsesFeatureInterface
 {
     public $collection;
-    public $navArray = array();
-    public $cParentIDArray = array();
-    public $sorted_array = array();
-    public $navSort = array();
-    public $navObjectNames = array();
-    public $displayPages, $displayPagesCID, $displayPagesIncludeSelf, $displaySubPages, $displaySubPageLevels, $displaySubPageLevelsNum, $orderBy, $displayUnavailablePages;
+    public $navArray = [];
+    public $cParentIDArray = [];
+    public $sorted_array = [];
+    public $navSort = [];
+    public $navObjectNames = [];
+    public $displayPages;
+    Public $displayPagesCID;
+    Public $displayPagesIncludeSelf;
+    Public $displaySubPages;
+    Public $displaySubPageLevels;
+    Public $displaySubPageLevelsNum;
+    Public $orderBy;
+    Public $displayUnavailablePages;
     public $haveRetrievedSelf = false;
     public $haveRetrievedSelfPlus1 = false;
     public $displayUnapproved = false;
@@ -49,15 +60,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutputLifetime = 300;
     protected $btWrapperClass = 'ccm-ui';
-    protected $btExportPageColumns = array('displayPagesCID');
+    protected $btExportPageColumns = ['displayPagesCID'];
     protected $includeParentItem;
-
-    public function getRequiredFeatures(): array
-    {
-        return [
-            Features::NAVIGATION,
-        ];
-    }
 
     public function __construct($obj = null)
     {
@@ -87,8 +91,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         } else {
             $this->homePageID = Page::getHomePageID();
         }
-
         parent::__construct($obj);
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::NAVIGATION,
+        ];
     }
 
     // private variable $displayUnapproved, used by the dashboard
@@ -122,7 +132,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function getContent()
     {
         /* our templates expect a variable not an object */
-        $con = array();
+        $con = [];
         foreach ($this as $key => $value) {
             $con[$key] = $value;
         }
@@ -137,8 +147,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         $db = Database::connection();
         $r = $db->query(
                 "select cID from Pages where cParentID = ? order by cDisplayOrder asc",
-                array($c->getCollectionID()));
-        $pages = array();
+                [$c->getCollectionID()]);
+        $pages = [];
         while ($row = $r->fetchRow()) {
             $pages[] = Page::getByID($row['cID'], 'ACTIVE');
         }
@@ -165,7 +175,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (!is_object($this->collection)) {
             $c = Page::getCurrentPage();
             if (!is_object($c)) {
-                return array();
+                return [];
             }
         } else {
             $c = $this->collection;
@@ -177,7 +187,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         //Create an array of parent cIDs so we can determine the "nav path" of the current page
         $inspectC = $c;
-        $selectedPathCIDs = array($inspectC->getCollectionID());
+        $selectedPathCIDs = [$inspectC->getCollectionID()];
         $parentCIDnotZero = true;
 
         while ($parentCIDnotZero) {
@@ -198,7 +208,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $allNavItems = $this->generateNav();
 
         //Remove excluded pages from the list (do this first because some of the data prep code needs to "look ahead" in the list)
-        $includedNavItems = array();
+        $includedNavItems = [];
         $excluded_parent_level = 9999; //Arbitrarily high number denotes that we're NOT currently excluding a parent (because all actual page levels will be lower than this)
         $exclude_children_below_level = 9999; //Same deal as above. Note that in this case "below" means a HIGHER number (because a lower number indicates higher placement in the sitemp -- e.g. 0 is top-level)
         foreach ($allNavItems as $ni) {
@@ -225,7 +235,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         //Prep all data and put it into a clean structure so markup output is as simple as possible
-        $navItems = array();
+        $navItems = [];
         $navItemCount = count($includedNavItems);
         for ($i = 0; $i < $navItemCount; ++$i) {
             $ni = $includedNavItems[$i];
@@ -326,7 +336,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function generateNav()
     {
         // Initialize Nav Array
-        $this->navArray = array();
+        $this->navArray = [];
 
         if (isset($this->displayPagesCID) && !Core::make('helper/validation/numbers')->integer($this->displayPagesCID)) {
             $this->displayPagesCID = 0;
@@ -445,7 +455,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 } else {
                     $tc1 = Page::getByID($cParentID, "ACTIVE");
                 }
-                $niRow = array();
+                $niRow = [];
                 $niRow['cvName'] = $tc1->getCollectionName();
                 $niRow['cID'] = $cParentID;
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
@@ -459,7 +469,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             /*
             if ($displayHeadPage) {
-                $niRow = array();
+                $niRow = [];
                 $niRow['cvName'] = $tc1->getCollectionName();
                 $niRow['cID'] = $row['cID'];
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
@@ -497,7 +507,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->populateParentIDArray($this->cID);
 
         $idArray = array_reverse($this->cParentIDArray);
-        $this->cParentIDArray = array();
+        $this->cParentIDArray = [];
         if ($level - count($idArray) == 0) {
             // This means that the parent ID array is one less than the item
             // we're trying to grab - so we return our CURRENT page as the item to get
@@ -585,7 +595,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $displayPage = $this->displayPage($tc);
 
                     if ($displayPage) {
-                        $niRow = array();
+                        $niRow = [];
                         $niRow['cvName'] = $tc->getCollectionName();
                         $niRow['cID'] = $row['cID'];
                         $niRow['cvDescription'] = $tc->getCollectionDescription();
