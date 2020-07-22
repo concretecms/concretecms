@@ -8,10 +8,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Validation\CSRF\Token $validation_token */
 /* @var array $info */
+
 $c = Page::getCurrentPage();
+
 if (!isset($info)) {
     $info = [];
 }
+
 $info += [
     'orderBy' => null,
     'displayUnavailablePages' => null,
@@ -26,7 +29,7 @@ $info += [
 <?=$concrete_ui->tabs(array(
     array('autonav-settings', t('Settings'), true),
     array('autonav-preview', t('Preview'))
-));?>
+)); ?>
 
 <div class="tab-content">
     <div class="tab-pane show active" id="autonav-settings">
@@ -118,24 +121,20 @@ $info += [
 
                     <select class='form-control' name="displaySubPages" onchange="toggleSubPageLevels(this.value);">
                         <option value="none"<?php if ($info['displaySubPages'] == 'none') {
-                            ?> selected<?php
-                        } ?>>
+                            ?> selected<?php } ?>>
                             <?= t('None') ?>
                         </option>
                         <option value="relevant"<?php if ($info['displaySubPages'] == 'relevant') {
-                            ?> selected<?php
-                        } ?>>
+                            ?> selected<?php } ?>>
                             <?= t('Relevant sub pages.') ?>
                         </option>
                         <option
                             value="relevant_breadcrumb"<?php if ($info['displaySubPages'] == 'relevant_breadcrumb') {
-                            ?> selected<?php
-                        } ?>>
+                            ?> selected<?php } ?>>
                             <?= t('Display breadcrumb trail.') ?>
                         </option>
                         <option value="all"<?php if ($info['displaySubPages'] == 'all') {
-                            ?> selected<?php
-                        } ?>>
+                            ?> selected<?php } ?>>
                             <?= t('Display all.') ?>
                         </option>
                     </select>
