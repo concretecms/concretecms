@@ -2,7 +2,7 @@
 
 namespace Concrete\Block\Form;
 
-use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Support\Facade\Application;
 
 class Statistics
 {
@@ -37,7 +37,7 @@ class Statistics
      */
     public static function getTotalSubmissionsBetween($fromDate = null, $toDate = null, $datesTimezone = 'user')
     {
-        $app = Facade::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database/connection');
         $dh = $app->make('helper/date');
         // @var $dh \Concrete\Core\Localization\Service\Date
@@ -68,7 +68,7 @@ class Statistics
 
     public static function loadSurveys($MiniSurvey)
     {
-        $app = Facade::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database/connection');
         $dh = $app->make('date');
         $now = $dh->getOverridableNow();
@@ -84,7 +84,7 @@ class Statistics
 
     public static function buildAnswerSetsArray($questionSet, $orderBy = '', $limit = '')
     {
-        $app = Facade::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $db = $app->make('database/connection');
 
         if ((strlen(trim($limit)) > 0) && (!strstr(strtolower($limit), 'limit'))) {
