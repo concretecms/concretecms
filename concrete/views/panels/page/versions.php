@@ -4,10 +4,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Support\Facade\Url;
 
-/* @var Concrete\Controller\Panel\Page\Versions $controller */
-/* @var Concrete\Core\View\DialogView $view */
-/* @var Concrete\Core\Page\Collection\Version\EditResponse $response */
-/* @var Concrete\Core\Page\Page $c */
+/** @var Concrete\Controller\Panel\Page\Versions $controller */
+/** @var Concrete\Core\View\DialogView $view */
+/** @var Concrete\Core\Page\Collection\Version\EditResponse $response */
+/** @var Concrete\Core\Page\Page $c */
+/** @var bool|null $isDialogMode  */
 ?>
 
 <script type="text/template" class="tbody">
@@ -481,27 +482,61 @@ use Concrete\Core\Support\Facade\Url;
     });
 </script>
 
-<section id="ccm-panel-page-versions" class="ccm-ui">
-    <header>
-        <a href="" data-panel-navigation="back" class="ccm-panel-back">
-            <svg>
-                <use xlink:href="#icon-arrow-left"/>
-            </svg>
-            <?php echo t('Page Settings') ?>
-        </a>
+<?php if ($isDialogMode): ?>
+    <section id="ccm-panel-page-versions" class="ccm-ui">
+        <header>
+            <a href="" data-panel-navigation="back" class="ccm-panel-back">
+                <svg>
+                    <use xlink:href="#icon-arrow-left"/>
+                </svg>
+                <?php echo t('Page Settings') ?>
+            </a>
 
-        <h5><?php echo t('Versions') ?></h5>
-    </header>
+            <h5><?php echo t('Versions') ?></h5>
+        </header>
 
-    <table>
-        <thead></thead>
-        <tbody></tbody>
-        <tfoot></tfoot>
-    </table>
+        <table>
+            <thead></thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
 
-    <hr/>
+        <hr/>
 
-    <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete">
-        <?php echo t('Delete') ?>
-    </button>
-</section>
+        <div class="dialog-buttons">
+            <button class="btn btn-secondary float-left" data-dialog-action="cancel">
+                <?php echo t('Cancel') ?>
+            </button>
+
+            <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete">
+                <?php echo t('Delete') ?>
+            </button>
+        </div>
+    </section>
+<?php else: ?>
+    <section id="ccm-panel-page-versions" class="ccm-ui">
+        <header>
+            <a href="" data-panel-navigation="back" class="ccm-panel-back">
+                <svg>
+                    <use xlink:href="#icon-arrow-left"/>
+                </svg>
+                <?php echo t('Page Settings') ?>
+            </a>
+
+            <h5><?php echo t('Versions') ?></h5>
+        </header>
+
+        <table>
+            <thead></thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
+
+        <hr/>
+
+        <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete">
+            <?php echo t('Delete') ?>
+        </button>
+    </section>
+<?php endif; ?>
+
