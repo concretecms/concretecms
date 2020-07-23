@@ -5,8 +5,8 @@ namespace Concrete\Block\GoogleMap;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Page\Page;
 use Config;
-use Page;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {

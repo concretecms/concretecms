@@ -48,8 +48,8 @@
         <div class="form-group">
             <?= $form->label('zoom', t('Zoom')) ?>
             <?php
-            $zoomLevels = range(0, 21);
-            $zoomArray = array_combine($zoomLevels, $zoomLevels);
+                $zoomLevels = range(0, 21);
+                $zoomArray = array_combine($zoomLevels, $zoomLevels);
             ?>
             <?= $form->select('zoom', $zoomArray, $zoom) ?>
         </div>
@@ -59,7 +59,7 @@
         <div class="form-group">
             <?= $form->label('width', t('Map Width')) ?>
             <div class="input-group">
-                <div class="input-group-append">
+                <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-arrows-alt-h"></i></span>
                 </div>
                 <?= $form->text('width', $width) ?>
@@ -71,7 +71,7 @@
         <div class="form-group">
             <?= $form->label('height', t('Map Height')) ?>
             <div class="input-group">
-                <div class="input-group-append">
+                <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-arrows-alt-v"></i></span>
                 </div>
                 <?= $form->text('height', $height) ?>
@@ -83,9 +83,7 @@
         <div class="form-group">
             <div class="form-check">
                 <?= $form->checkbox('scrollwheel', 1, $scrollwheel) ?>
-                <label class="form-check-label" for="scrollwheel">
-                    <?= t('Enable Scroll Wheel') ?>
-                </label>
+                <?= $form->label('scrollwheel', t('Enable Scroll Wheel'), ['class' => 'form-check-label']) ?>
             </div>
         </div>
     </div>

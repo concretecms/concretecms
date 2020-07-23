@@ -10,7 +10,7 @@
 ?>
 <div class="form-group">
     <?= $form->label('fID', t('File')) ?>
-    <?= $al->file('ccm-b-file', 'fID', t('Choose File'), $bf); ?>
+    <?= $al->file('ccm-b-file', 'fID', t('Choose File'), $bf) ?>
 </div>
 <div class="form-group">
     <?= $form->label('fileLinkText', t('Link Text')) ?>
@@ -18,9 +18,7 @@
 </div>
 <div class="form-group">
     <div class="form-check">
-        <?= $form->checkbox('forceDownload', '1', $forceDownload); ?>
-        <label class="form-check-label" for="forceDownload">
-            <?= t('Force file to download') ?>
-        </label>
+        <?= $form->checkbox('forceDownload', '1', $forceDownload) ?>
+        <?= $form->label('forceDownload', t('Force file to download'), ['class' => 'form-check-label']) ?>
     </div>
 </div>

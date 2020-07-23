@@ -121,6 +121,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $this->fID;
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
     public function getFileObject()
     {
         if ($this->fID) {
