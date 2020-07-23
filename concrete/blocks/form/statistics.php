@@ -2,9 +2,7 @@
 
 namespace Concrete\Block\Form;
 
-use Concrete\Core\Support\Facade\Application;
-use Core;
-use Loader;
+use Concrete\Core\Support\Facade\Facade;
 
 class Statistics
 {
@@ -21,11 +19,10 @@ class Statistics
     public static function getTotalSubmissions($date = null, $dateTimezone = 'user')
     {
         if ($date) {
-            return static::getTotalSubmissionsBetween("$date 00:00:00", "$date 23:59:59", $dateTimezone);
+            return static::getTotalSubmissionsBetween("{$date} 00:00:00", "{$date} 23:59:59", $dateTimezone);
         }
 
             return static::getTotalSubmissionsBetween();
-
     }
 
     /**
@@ -40,8 +37,10 @@ class Statistics
      */
     public static function getTotalSubmissionsBetween($fromDate = null, $toDate = null, $datesTimezone = 'user')
     {
-        $dh = Core::make('helper/date');
-        /* @var $dh \Concrete\Core\Localization\Service\Date */
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database/connection');
+        $dh = $app->make('helper/date');
+        // @var $dh \Concrete\Core\Localization\Service\Date
         if ($fromDate) {
             $fromDate = $dh->toDB($fromDate, $datesTimezone);
         }
@@ -61,16 +60,16 @@ class Statistics
             $where = ' where created <= ?';
             $q[] = $toDate;
         }
-        $count = Loader::db()->GetOne('select count(asID) from btFormAnswerSet' . $where, $q);
+
+        $count = $db->fetchColumn('select count(asID) from btFormAnswerSet' . $where, $q);
 
         return empty($count) ? 0 : (int) $count;
     }
 
     public static function loadSurveys($MiniSurvey)
     {
-        $db = Loader::db();
-
-        $app = Application::getFacadeApplication();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database/connection');
         $dh = $app->make('date');
         $now = $dh->getOverridableNow();
 
@@ -85,7 +84,8 @@ class Statistics
 
     public static function buildAnswerSetsArray($questionSet, $orderBy = '', $limit = '')
     {
-        $db = Loader::db();
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database/connection');
 
         if ((strlen(trim($limit)) > 0) && (!strstr(strtolower($limit), 'limit'))) {
             $limit = ' LIMIT ' . $limit;

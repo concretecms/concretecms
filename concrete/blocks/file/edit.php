@@ -1,25 +1,26 @@
-<?php
-    defined('C5_EXECUTE') or die("Access Denied.");
-    $al = Loader::helper('concrete/asset_library');
-    $bf = null;
-    if ($controller->getFileID() > 0) {
-        $bf = $controller->getFileObject();
-    }
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var Concrete\Block\File\Controller $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\File\File $bf
+ * @var string $fileLinkText
+ * @var bool $forceDownload
+ */
 ?>
 <div class="form-group">
-	<?=$form->label('fID', t('File'))?>
-	<?=$al->file('ccm-b-file', 'fID', t('Choose File'), $bf);?>
+    <?= $form->label('fID', t('File')) ?>
+    <?= $al->file('ccm-b-file', 'fID', t('Choose File'), $bf); ?>
 </div>
 <div class="form-group">
-	<?=$form->label('fileLinkText', t('Link Text'))?>
-	<?=$form->text('fileLinkText', $controller->getLinkText())?>
+    <?= $form->label('fileLinkText', t('Link Text')) ?>
+    <?= $form->text('fileLinkText', $fileLinkText) ?>
 </div>
-
 <div class="form-group">
-    <div class="checkbox">
-        <label>
-            <?=$form->checkbox('forceDownload', '1', $forceDownload); ?>
-            <?=t('Force file to download')?>
+    <div class="form-check">
+        <?= $form->checkbox('forceDownload', '1', $forceDownload); ?>
+        <label class="form-check-label" for="forceDownload">
+            <?= t('Force file to download') ?>
         </label>
     </div>
 </div>
