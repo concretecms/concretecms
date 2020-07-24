@@ -84,7 +84,7 @@ $ih = app('helper/concrete/ui');
                                         break;
                                     case PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW:
                                         $pf++;
-                                        echo '<label><input type="checkbox" value="'.$f->getHandle().'" name="pageTemplates[]" checked /> <span>'.t('Create page template.').'</span></label>';
+                                        echo '<label><input type="checkbox" value="' . $f->getHandle() . '" name="pageTemplates[]" checked /> <span>' . t('Create page template.') . '</span></label>';
                                         break;
                                     case PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING:
                                         print t('None. This file will be used by pages with the <strong>%s</strong> template.', $txt->unhandle($f->getHandle()));

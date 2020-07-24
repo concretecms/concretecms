@@ -49,13 +49,13 @@ if (isset($activate_confirm)) {
                     <td width="100%" style="vertical-align:middle;">
                         <div class="btn-group" style="float: right"><?php
                             if ($siteThemeID == $t->getThemeID()) {
-                                echo $ih->buttonJs(t('Activate'), "alert('".$alreadyActiveMessage."')", 'left', 'btn-secondary ccm-button-inactive', array('disabled' => 'disabled'));
+                                echo $ih->buttonJs(t('Activate'), "alert('" . $alreadyActiveMessage . "')", 'left', 'btn-secondary ccm-button-inactive', ['disabled' => 'disabled']);
                             } else {
                                 echo $ih->button(t('Activate'), $view->url('/dashboard/pages/themes', 'activate', $t->getThemeID()), 'left', 'btn-secondary');
                             }
                 echo $ih->button(t('Page Templates'), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left', 'btn-secondary');
                 if ($siteThemeID == $t->getThemeID()) {
-                    echo $ih->button(t('Remove'), '', 'right', 'btn-danger', array('disabled' => 'disabled'));
+                    echo $ih->button(t('Remove'), '', 'right', 'btn-danger', ['disabled' => 'disabled']);
                 } else {
                     echo $ih->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger');
                 } ?></div>
@@ -72,13 +72,13 @@ if (isset($activate_confirm)) {
         <h3><?=t('Mobile Theme'); ?></h3>
         <p><?=t('To use a separate theme for mobile browsers, specify it below.'); ?></p>
         <div class="form-group form-inline">
-            <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), array('class' => 'mr-3')); ?>
+            <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), ['class' => 'mr-3']); ?>
             <?php
             $themes[0] = t('** Same as website (default)');
         foreach ($tArray as $pt) {
             $themes[$pt->getThemeID()] = $pt->getThemeDisplayName();
         } ?>
-            <?=$form->select('MOBILE_THEME_ID', $themes, Config::get('concrete.misc.mobile_theme_id'), array('class' => 'mr-1')); ?>
+            <?=$form->select('MOBILE_THEME_ID', $themes, Config::get('concrete.misc.mobile_theme_id'), ['class' => 'mr-1']); ?>
             <button class="btn btn-secondary" type="submit"><?=t('Save'); ?></button>
         </div>
     </form>
