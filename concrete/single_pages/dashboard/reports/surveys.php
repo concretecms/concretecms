@@ -1,28 +1,32 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var string $pie_chart
+ * @var string $chart_options
+ * @var array $survey_details
+ * @var array $surveys
+ * @var Concrete\Block\Survey\SurveyList $surveyList
+ */
 
 // Content
 if ($this->controller->getTask() == 'viewDetail') { ?>
-
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?= $view->action('view'); ?>" class="btn btn-default"><?= t('Go back'); ?></a>
+        <a href="<?= $view->action('view'); ?>" class="btn btn-secondary"><?= t('Go back'); ?></a>
     </div>
-
     <div>
         <div class="text-center">
             <?= $pie_chart; ?>
         </div>
         <?= $chart_options; ?>
     </div>
-
     <div class="table-responsive">
         <table class="ccm-search-results-table compact-results">
             <thead>
-                <tr>
-                    <th><span><?= t('Option'); ?></span></th>
-                    <th><span><?= t('IP Address'); ?></span></th>
-                    <th><span><?= t('Date'); ?></span></th>
-                    <th><span><?= t('User'); ?></span></th>
-                </tr>
+            <tr>
+                <th><span><?= t('Option'); ?></span></th>
+                <th><span><?= t('IP Address'); ?></span></th>
+                <th><span><?= t('Date'); ?></span></th>
+                <th><span><?= t('User'); ?></span></th>
+            </tr>
             </thead>
             <tbody>
             <?php foreach ($survey_details as $detail) { ?>
@@ -36,15 +40,13 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
             </tbody>
         </table>
     </div>
-
 <?php } else { ?>
-
     <?php if (count($surveys) == 0) { ?>
-    <p><?= t('You have not created any surveys.'); ?></p>
+        <p><?= t('You have not created any surveys.'); ?></p>
     <?php } else { ?>
-    <div class="table-responsive">
-        <table class="ccm-search-results-table">
-            <thead>
+        <div class="table-responsive">
+            <table class="ccm-search-results-table">
+                <thead>
                 <tr>
                     <th class="<?= $surveyList->getSearchResultsClass('question'); ?>">
                         <a href="<?= $surveyList->getSortByURL('question', 'asc'); ?>">
@@ -67,36 +69,31 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
                         </a>
                     </th>
                 </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($surveys as $survey) { ?>
-                <tr>
-                    <td>
-                        <strong>
-                            <a href="<?= $view->action(
-                                'viewDetail',
-                                $survey['bID'],
-                                $survey['cID']); ?>">
-                                <?= $survey['question']; ?>
-                            </a>
-                        </strong>
-                    </td>
-                    <td>
-                        <?= $survey['cvName']; ?>
-                    </td>
-                    <td>
-                        <?= $this->controller->formatDate($survey['lastResponse']); ?>
-                    </td>
-                    <td>
-                        <?= $survey['numberOfResponses']; ?>
-                    </td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                <?php foreach ($surveys as $survey) { ?>
+                    <tr>
+                        <td>
+                            <strong>
+                                <a href="<?= $view->action('viewDetail', $survey['bID'], $survey['cID']); ?>">
+                                    <?= $survey['question']; ?>
+                                </a>
+                            </strong>
+                        </td>
+                        <td>
+                            <?= $survey['cvName']; ?>
+                        </td>
+                        <td>
+                            <?= $this->controller->formatDate($survey['lastResponse']); ?>
+                        </td>
+                        <td>
+                            <?= $survey['numberOfResponses']; ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
     <?php }
     $surveyList->displayPagingV2();
-    ?>
-
-<?php } ?>
+} ?>
