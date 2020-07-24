@@ -1,4 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php
+$ih = \Concrete\Core\Support\Facade\Application::getFacadeApplication()->make('helper/concrete/ui');
+?>
+
 
 <?php
 if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
@@ -19,7 +23,7 @@ if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
 
 <?php $workflows = Workflow::getList(); ?>
 
-<?php Loader::element('permission/message_list'); ?>
+<?php View::element('permission/message_list'); ?>
 
 <?php
 $tabs = [];
@@ -34,7 +38,7 @@ $tabs = [];
      if ($permissionKey->hasCustomOptionsForm()) {
          $tabs[] = ['custom-options', t('Details')];
      } ?>
-	<?=Loader::helper('concrete/ui')->tabs($tabs); ?>
+	<?=$ih->tabs($tabs); ?>
 <?php
  } ?>
 
@@ -53,7 +57,7 @@ $tabs = [];
 <?php
 $pkCategoryHandle = $permissionKey->getPermissionKeyCategoryHandle();
 $accessTypes = $permissionKey->getSupportedAccessTypes();
-Loader::element('permission/access/list', ['pkCategoryHandle' => $pkCategoryHandle, 'permissionAccess' => $pa, 'accessTypes' => $accessTypes]); ?>
+View::element('permission/access/list', ['pkCategoryHandle' => $pkCategoryHandle, 'permissionAccess' => $pa, 'accessTypes' => $accessTypes]); ?>
 </div>
 
 <?php if ($permissionKey->hasCustomOptionsForm()) {
@@ -62,11 +66,11 @@ Loader::element('permission/access/list', ['pkCategoryHandle' => $pkCategoryHand
 
 <?php if ($permissionKey->getPackageID() > 0) {
         ?>
-	<?php Loader::packageElement('permission/keys/' . $permissionKey->getPermissionKeyHandle(), $permissionKey->getPackageHandle(), ['permissionAccess' => $pa]); ?>
+	<?php View::element('permission/keys/'.$permissionKey->getPermissionKeyHandle(), $permissionKey->getPackageHandle(), ['permissionAccess' => $pa]); ?>
 <?php
     } else {
         ?>
-	<?php Loader::element('permission/keys/' . $permissionKey->getPermissionKeyHandle(), ['permissionAccess' => $pa]); ?>
+	<?php View::element('permission/keys/'.$permissionKey->getPermissionKeyHandle(), ['permissionAccess' => $pa]); ?>
 <?php
     } ?>
 
@@ -86,20 +90,18 @@ Loader::element('permission/access/list', ['pkCategoryHandle' => $pkCategoryHand
 
 	<div id="ccm-tab-content-workflow" class="ccm-tab-content">
 			<div class="form-group">
-    			<label class="col-form-label"><?=t('Attach Workflow to this Permission')?></label>
+    			<label class="col-form-label"><?=t('Attach Workflow to this Permission'); ?></label>
 				<?php foreach ($workflows as $wf) {
-    ?>
+            ?>
           <div class="form-check">
             <label class="form-check-label">
-              <input class="form-check-input" type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {
-    ?> disabled="disabled" <?php
-}
-    ?>
+              <input class="form-check-input" type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID(); ?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {
+                ?> disabled="disabled" <?php
+            } ?>
 					<?php if (in_array($wf->getWorkflowID(), $workflowIDs)) {
-    ?> checked="checked" <?php
-}
-    ?> />
-             <?=$wf->getWorkflowDisplayName()?>
+                ?> checked="checked" <?php
+            } ?> />
+             <?=$wf->getWorkflowDisplayName(); ?>
            </label>
     </div>
 				<?php
