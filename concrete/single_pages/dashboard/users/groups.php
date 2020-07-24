@@ -274,8 +274,21 @@ $(function() {
     ?>
 
 
-<?php Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
+    <div data-choose="group-search">
+        <concrete-group-chooser></concrete-group-chooser>
+    </div>
+    <script type="text/javascript">
+    $(function() {
 
+        Concrete.Vue.activateContext('cms', function (Vue, config) {
+            new Vue({
+                el: 'div[data-choose=group-search]',
+                components: config.components
+            })
+        })
+
+    })
+    </script>
 
 <?php
 } ?>

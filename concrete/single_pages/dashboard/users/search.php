@@ -15,6 +15,7 @@ use Concrete\Core\User\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\User\Menu;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
 
 /** @var MenuInterface $menu */
 /** @var Result $result */
@@ -69,7 +70,7 @@ use Concrete\Core\User\UserInfo;
         </thead>
 
         <tbody>
-        <?php foreach ($result->getItems() as $item): ?>
+        <?php foreach ($result->getItems() as $item) { ?>
             <?php
             /** @var Item $item */
             /** @var UserInfo $user */
@@ -77,34 +78,32 @@ use Concrete\Core\User\UserInfo;
             ?>
             <tr data-details-url="javascript:void(0)">
                 <td class="ccm-search-results-checkbox">
-                    <?php if ($user instanceof UserInfo): ?>
+                    <?php if ($user instanceof UserInfo) { ?>
                         <!--suppress HtmlFormInputWithoutLabel -->
                         <input data-search-checkbox="individual"
                                type="checkbox"
                                data-item-id="<?php echo $user->getUserID() ?>"/>
-                    <?php endif; ?>
+                    <?php } ?>
                 </td>
 
-                <?php foreach ($item->getColumns() as $column): ?>
+                <?php foreach ($item->getColumns() as $column) { ?>
                     <?php /** @var ItemColumn $column */ ?>
                     <?php /** @noinspection PhpUndefinedMethodInspection */
 
-                    if ($column->getColumnKey() === "u.uName"): ?>
+                    if ($column->getColumnKey() ==  'u.uName') { ?>
                         <td class="ccm-search-results-name">
-                            <a href="<?php echo (string)Url::to("/dashboard/users/search/edit/", $user->getUserID()); ?>">
-                                <?php echo $column->getColumnValue(); ?>
-                            </a>
+                            <?php echo $column->getColumnValue(); ?>
                         </td>
-                    <?php else: ?>
+                    <?php } else { ?>
                         <td class="<?php echo $class ?>">
                             <?php echo $column->getColumnValue(); ?>
                         </td>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+                    <?php } ?>
+                <?php } ?>
 
                 <?php $menu = new Menu($user); ?>
 
-                <?php if ($menu): ?>
+                <?php if ($menu) { ?>
                     <td class="ccm-search-results-menu-launcher">
                         <div class="dropdown" data-menu="search-result">
 
@@ -123,9 +122,9 @@ use Concrete\Core\User\UserInfo;
                             <?php echo $menu->getMenuElement(); ?>
                         </div>
                     </td>
-                <?php endif; ?>
+                <?php } ?>
             </tr>
-        <?php endforeach; ?>
+        <?php } ?>
         </tbody>
     </table>
 </div>
@@ -135,6 +134,12 @@ use Concrete\Core\User\UserInfo;
         $(function () {
             let searchResultsTable = new window.ConcreteSearchResultsTable($("#ccm-search-results-table"));
             searchResultsTable.setupBulkActions();
+
+            $('#ccm-search-results-table').on('click', 'a[data-user-id]', function () {
+                window.location.href = '<?=rtrim(URL::to('/dashboard/users/search', 'edit'), '/')?>/' + $(this).attr('data-user-id');
+                return false;
+            });
+
         });
     })(jQuery);
 </script>

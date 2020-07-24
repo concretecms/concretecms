@@ -14,6 +14,7 @@ $save_url = $save_url->setQuery(array(
 
     <avatar-cropper v-bind:height="<?= Config::get('concrete.icons.user_avatar.height') ?>"
                     v-bind:width="<?= Config::get('concrete.icons.user_avatar.width') ?>"
+                    uploadtoken="<?=$token->generate()?>"
                     uploadurl="<?= $save_url?>"
                     src="<?= $profile->getUserAvatar()->getPath() ?>">
     </avatar-cropper>
