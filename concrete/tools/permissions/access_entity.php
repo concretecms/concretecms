@@ -1,13 +1,13 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
-$form = Loader::helper('form');
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
+$form = app('helper/form');
 $tp = new TaskPermission();
-$tu = Loader::helper('concrete/user');
-$dt = Loader::helper('form/date_time');
+$tu = app('helper/concrete/user');
+$dt = app('helper/form/date_time');
 if (!$tu->canAccessUserSearchInterface() && !$tp->canAccessGroupSearch()) {
     die(t('You do not have user search or group search permissions.'));
 }
@@ -28,7 +28,7 @@ if (!is_object($pd)) {
 }
 
 if (isset($_POST['task']) && $_POST['task'] == 'save_permissions') {
-    $js = Loader::helper('json');
+    $js = app('helper/json');
     $r = new stdClass();
 
     if (is_object($pae)) {
@@ -97,11 +97,11 @@ if (isset($_POST['task']) && $_POST['task'] == 'save_permissions') {
 
 <?php if ($type->getPackageID() > 0) {
                 ?>
-	<?php Loader::packageElement('permission/access/entity/types/'.$type->getAccessEntityTypeHandle(), $type->getPackageHandle(), array('type' => $type)); ?>
+	<?php View::element('permission/access/entity/types/'.$type->getAccessEntityTypeHandle(), $type->getPackageHandle(), array('type' => $type)); ?>
 <?php
             } else {
                 ?>
-	<?php Loader::element('permission/access/entity/types/'.$type->getAccessEntityTypeHandle(), array('type' => $type)); ?>
+	<?php View::element('permission/access/entity/types/'.$type->getAccessEntityTypeHandle(), array('type' => $type)); ?>
 <?php
             } ?>
 
@@ -118,14 +118,14 @@ if (isset($_POST['task']) && $_POST['task'] == 'save_permissions') {
 
 <h4><?=t('Time Settings'); ?></h4>
 
-<?=Loader::element('permission/duration', array('pd' => $pd)); ?>
+<?=View::element('permission/duration', array('pd' => $pd)); ?>
 
 <?php
     } ?>
 
 <div class="dialog-buttons">
-	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel'); ?>" class="btn btn-default pull-left" />
-	<input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?=t('Save'); ?>" class="btn btn-primary pull-right" />
+	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel'); ?>" class="btn btn-secondary float-left" />
+	<input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?=t('Save'); ?>" class="btn btn-primary float-right" />
 </div>
 
 
