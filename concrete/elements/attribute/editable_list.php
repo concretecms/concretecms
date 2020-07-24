@@ -1,7 +1,7 @@
 <?php
 
 foreach ($attributes as $ak) {
-    Loader::element(
+    View::element(
         'attribute/editable_attribute',
         [
             'ak' => $ak,

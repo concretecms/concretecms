@@ -4,7 +4,7 @@ use Concrete\Core\Attribute\CustomNoValueTextAttributeInterface;
 use Concrete\Core\Attribute\XEditableConfigurableAttributeInterface;
 
 /**
- * @var Concrete\Core\Entity\Attribute\Key\Key
+ * @var Concrete\Core\Entity\Attribute\Key\Key $ak
  * @var Traversable|array|null $objects
  * @var object|null $object
  * @var callback $permissionsCallback
@@ -98,13 +98,13 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments ?? null);
 </div>
 <?php
 if ($canEdit) {
-                        ?>
+?>
     <div style="display: none">
         <div data-editable-attribute-key-id="<?= $ak->getAttributeKeyID(); ?>">
             <?php
             $value = $object->getAttributeValueObject($ak);
-                        $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $value); ?>
+            $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $value); ?>
         </div>
     </div>
     <?php
-                    }
+}

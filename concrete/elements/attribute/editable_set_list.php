@@ -1,17 +1,20 @@
 <?php
 /**
- * @var \Concrete\Core\Attribute\Key\Category
- * @var *
+ * @var \Concrete\Core\Entity\Attribute\Category $category
+ * @var array $objects
+ * @var object $object
+ * @var callback $permissionsCallback
  * @var array $permissionsArguments
  * @var string $clearAction
  * @var string $saveAction
  */
+
 $setManager = $category->getController()->getSetManager();
 $sets = $setManager->getAttributeSets();
 foreach ($sets as $set) {
     echo '<h3>' . $set->getAttributeSetDisplayName() . '</h3><hr/>';
     foreach ($set->getAttributeKeys() as $key => $ak) {
-        Loader::element(
+        View::element(
             'attribute/editable_attribute',
             [
                 'ak' => $ak,
@@ -20,7 +23,7 @@ foreach ($sets as $set) {
                 'saveAction' => $saveAction,
                 'clearAction' => $clearAction,
                 'permissionsCallback' => $permissionsCallback,
-                'permissionArguments' => $permissionsArguments ?? $null,
+                'permissionArguments' => $permissionsArguments ?? null,
             ]
         );
     }
@@ -30,7 +33,7 @@ $attributeKeys = $setManager->getUnassignedAttributeKeys();
 if (count($attributeKeys) > 0) {
     echo '<h3>' . t('Other') . '</h3><hr/>';
     foreach ($attributeKeys as $key => $ak) {
-        Loader::element(
+        View::element(
             'attribute/editable_attribute',
             [
                 'ak' => $ak,
