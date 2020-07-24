@@ -30,7 +30,7 @@
     </div>
 </div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
     $(function() {
         $('ul[data-sort]').sortable({
             connectWith: 'ul[data-sort]'
@@ -51,7 +51,7 @@
             $.concreteAjax({
                url: '<?=$view->action('submit'); ?>',
                data: {
-                   ccm_token: '<?=Loader::helper('validation/token')->generate('submit'); ?>',
+                   ccm_token: '<?= $token->generate('submit'); ?>',
                    frequent: frequent,
                    infrequent: infrequent
                },
@@ -62,7 +62,6 @@
                     });
                 }
             });
-
         });
     });
-    </script>
+</script>
