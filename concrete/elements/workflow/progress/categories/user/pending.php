@@ -7,7 +7,7 @@ $items = $list->get();
 if (count($items) > 0): ?>
 
     <div id="ccm-workflow-waiting-for-me-wrapper">
-        <?php Loader::element('workflow/progress/categories/user/table_data', array('items' => $items, 'list' => $list)) ?>
+        <?php View::element('workflow/progress/categories/user/table_data', array('items' => $items, 'list' => $list)) ?>
     </div>
 
     <script type="text/javascript">

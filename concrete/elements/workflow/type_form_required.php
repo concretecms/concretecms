@@ -1,13 +1,14 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
-$form = Loader::helper('form');
-$ih = Loader::helper("concrete/ui");
-$valt = Loader::helper('validation/token');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$form = $app->make('helper/form');
+$ih = $app->make('helper/concrete/ui');
+$valt = $app->make('helper/validation/token');
 
 $type = $workflow->getWorkflowTypeObject();
 
-$valt = Loader::helper('validation/token');
-$ih = Loader::helper('concrete/ui');
+$valt = $app->make('helper/validation/token');
+$ih = $app->make('helper/concrete/ui');
 $delConfirmJS = t('Are you sure you want to remove this workflow?');
 ?>
 
@@ -30,7 +31,7 @@ $delConfirmJS = t('Are you sure you want to remove this workflow?');
 } ?>
         <?php
         if ($type->getPackageID() > 0) {
-            Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+            View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
         } ?>
         <a href="<?=$view->action('edit_details', $workflow->getWorkflowID())?>" class="btn btn-primary"><?=t('Edit Details')?></a>
 </div>
@@ -40,9 +41,9 @@ $delConfirmJS = t('Are you sure you want to remove this workflow?');
 
 <?php
 if ($type->getPackageID() > 0) {
-    Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+    View::element('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } else {
-    Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form', array('type' => $type, 'workflow' => $workflow));
+    View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form', array('type' => $type, 'workflow' => $workflow));
 }
 ?>
 
