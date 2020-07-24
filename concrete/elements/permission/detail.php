@@ -1,119 +1,105 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
-$ih = \Concrete\Core\Support\Facade\Application::getFacadeApplication()->make('helper/concrete/ui');
-?>
+defined('C5_EXECUTE') or die('Access Denied.');
 
-
-<?php
-if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
-    $pa = PermissionAccess::getByID($_REQUEST['paID'], $permissionKey);
-    if ($pa->isPermissionAccessInUse() || (isset($_REQUEST['duplicate']) && $_REQUEST['duplicate'] == '1')) {
-        $pa = $pa->duplicate();
+    if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
+        $pa = PermissionAccess::getByID($_REQUEST['paID'], $permissionKey);
+        if ($pa->isPermissionAccessInUse() || (isset($_REQUEST['duplicate']) && $_REQUEST['duplicate'] == '1')) {
+            $pa = $pa->duplicate();
+        }
+    } else {
+        $pa = PermissionAccess::create($permissionKey);
     }
-} else {
-    $pa = PermissionAccess::create($permissionKey);
-}
-
 ?>
 
 <div class="ccm-ui" id="ccm-permission-detail">
-<form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="post" action="<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL(); ?>">
+<form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="post" action="<?= $permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL() ?>">
 
-<input type="hidden" name="paID" value="<?=$pa->getPermissionAccessID(); ?>" />
-
-<?php $workflows = Workflow::getList(); ?>
-
-<?php View::element('permission/message_list'); ?>
-
+<input type="hidden" name="paID" value="<?= $pa->getPermissionAccessID() ?>" />
 <?php
-$tabs = [];
+    View::element('permission/message_list');
 
- if ($permissionKey->hasCustomOptionsForm() || ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0)) {
-     ?>
-	<?php
-    $tabs[] = ['access-types', t('Access'), true];
-     if ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0) {
-         $tabs[] = ['workflow', t('Workflow')];
-     }
-     if ($permissionKey->hasCustomOptionsForm()) {
-         $tabs[] = ['custom-options', t('Details')];
-     } ?>
-	<?=$ih->tabs($tabs); ?>
+    $tabs = [];
+    $workflows = Workflow::getList();
+    if ($permissionKey->hasCustomOptionsForm() || ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0)) {
+        $tabs[] = ['access-types', t('Access'), true];
+        if ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0) {
+            $tabs[] = ['workflow', t('Workflow')];
+        }
+
+        if ($permissionKey->hasCustomOptionsForm()) {
+            $tabs[] = ['custom-options', t('Details')];
+        }
+
+        echo app('helper/concrete/ui')->tabs($tabs);
+    }
+
+    if ($permissionKey->getPermissionKeyDisplayDescription()) {
+?>
+    <div class="dialog-help">
+        <?= $permissionKey->getPermissionKeyDisplayDescription() ?>
+    </div>
 <?php
- } ?>
-
-<?php if ($permissionKey->getPermissionKeyDisplayDescription()) {
-     ?>
-<div class="dialog-help">
-<?=$permissionKey->getPermissionKeyDisplayDescription(); ?>
-</div>
-<?php
- } ?>
-
+    }
+?>
 
 <div id="ccm-tab-content-access-types" <?php if (count($tabs) > 0) {
      ?>class="ccm-tab-content"<?php
  } ?>>
 <?php
-$pkCategoryHandle = $permissionKey->getPermissionKeyCategoryHandle();
-$accessTypes = $permissionKey->getSupportedAccessTypes();
-View::element('permission/access/list', ['pkCategoryHandle' => $pkCategoryHandle, 'permissionAccess' => $pa, 'accessTypes' => $accessTypes]); ?>
+    $pkCategoryHandle = $permissionKey->getPermissionKeyCategoryHandle();
+    $accessTypes = $permissionKey->getSupportedAccessTypes();
+    View::element('permission/access/list', ['pkCategoryHandle' => $pkCategoryHandle, 'permissionAccess' => $pa, 'accessTypes' => $accessTypes]);
+?>
 </div>
 
-<?php if ($permissionKey->hasCustomOptionsForm()) {
-    ?>
-<div id="ccm-tab-content-custom-options" class="ccm-tab-content">
-
-<?php if ($permissionKey->getPackageID() > 0) {
+<?php if ($permissionKey->hasCustomOptionsForm()) { ?>
+    <div id="ccm-tab-content-custom-options" class="ccm-tab-content">
+        <?php
+            View::element(
+                'permission/keys/' . $permissionKey->getPermissionKeyHandle(),
+                ['permissionAccess' => $pa],
+                ($permissionKey->getPackageID() > 0) ? $permissionKey->getPackageHandle() : null
+            );
         ?>
-	<?php View::element('permission/keys/'.$permissionKey->getPermissionKeyHandle(), $permissionKey->getPackageHandle(), ['permissionAccess' => $pa]); ?>
-<?php
-    } else {
-        ?>
-	<?php View::element('permission/keys/'.$permissionKey->getPermissionKeyHandle(), ['permissionAccess' => $pa]); ?>
-<?php
-    } ?>
-
-</div>
-
-<?php
-} ?>
+    </div>
+<?php } ?>
 
 <?php if ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0) {
-        ?>
-	<?php
-    $selectedWorkflows = $pa->getWorkflows();
+        $selectedWorkflows = $pa->getWorkflows();
         $workflowIDs = [];
         foreach ($selectedWorkflows as $swf) {
             $workflowIDs[] = $swf->getWorkflowID();
-        } ?>
+        }
+    ?>
 
 	<div id="ccm-tab-content-workflow" class="ccm-tab-content">
-			<div class="form-group">
-    			<label class="col-form-label"><?=t('Attach Workflow to this Permission'); ?></label>
-				<?php foreach ($workflows as $wf) {
+        <div class="form-group">
+            <label class="col-form-label"><?=t('Attach Workflow to this Permission'); ?></label>
+        <?php
+            foreach ($workflows as $wf) {
             ?>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID(); ?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {
-                ?> disabled="disabled" <?php
-            } ?>
-					<?php if (in_array($wf->getWorkflowID(), $workflowIDs)) {
-                ?> checked="checked" <?php
-            } ?> />
-             <?=$wf->getWorkflowDisplayName(); ?>
-           </label>
-    </div>
-				<?php
-        } ?>
-			</div>
+            <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" name="wfID[]" value="<?= $wf->getWorkflowID(); ?>" <?php if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) {
+                    ?> disabled="disabled" <?php
+                } ?>
+                        <?php if (in_array($wf->getWorkflowID(), $workflowIDs)) {
+                    ?> checked="checked" <?php
+                } ?> />
+                 <?= $wf->getWorkflowDisplayName(); ?>
+               </label>
+            </div>
+		<?php
+            }
+         ?>
+        </div>
 	</div>
 <?php
     } ?>
 
 	<div class="dialog-buttons">
 		<button href="javascript:void(0)" class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-		<button type="submit" class="btn btn-primary float-right" onclick="$('#ccm-permissions-detail-form').submit()"><?=t('Save'); ?> <i class="icon-ok-sign icon-white"></i></button>
+		<button type="submit" class="btn btn-primary float-right" onclick="$('#ccm-permissions-detail-form').submit()"><?=t('Save'); ?></button>
 	</div>
 </form>
 </div>
@@ -200,7 +186,5 @@ View::element('permission/access/list', ['pkCategoryHandle' => $pkCategoryHandle
 		$('a[data-tab=workflow]').click();
 	<?php
     } ?>
-
-
 });
 </script>
