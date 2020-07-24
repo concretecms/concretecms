@@ -100,7 +100,7 @@ class Surveys extends DashboardPageController
         $r = $db->executeQuery($q, $v);
 
         $i = 0;
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $options[$i]['name'] = $row['optionName'];
             $options[$i]['id'] = $row['optionID'];
             $i++;

@@ -219,7 +219,7 @@ if ($controller->getAction() == 'add'
             var treeViewTemplate = $('.tree-view-template');
 
             $('select[name=customTopicAttributeKeyHandle]').on('change', function () {
-                var toolsURL = '<?php echo Loader::helper('concrete/urls')->getToolsURL('tree/load');
+                var toolsURL = '<?= app('helper/concrete/urls')->getToolsURL('tree/load');
                     ?>';
                 var chosenTree = $(this).find('option:selected').attr('data-topic-tree-id');
                 $('.tree-view-template').remove();
@@ -257,7 +257,7 @@ if ($controller->getAction() == 'add'
 } else {
     ?>
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?php echo URL::to('/dashboard/pages/feeds', 'add') ?>"
+        <a href="<?= URL::to('/dashboard/pages/feeds', 'add') ?>"
            class="btn btn-primary"><?php echo t('Add Feed') ?></a>
     </div>
 
