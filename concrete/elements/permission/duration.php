@@ -2,11 +2,11 @@
 // Arguments
 /* Concrete\Core\Foundation\Repetition\RepetitionInterface|null $pd */
 
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration;
+use Concrete\Core\Support\Facade\Application;
 use Punic\Calendar;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = Application::getFacadeApplication();
 
@@ -70,7 +70,7 @@ if (isset($pd) && is_object($pd)) {
         $pdEndRepeatDate = 'date';
     } else {
         $pdEndRepeatDateSpecific = null;
-    }    
+    }
 } else {
     $pdStartDate = '';
     $pdEndDate = '';
@@ -97,24 +97,29 @@ for ($i = 0; $i < 7; ++$i) {
     <div class="form-group">
         <label for="pdStartDate_activate" class="col-form-label"><?= tc('Start date', 'From') ?></label>
         <div>
-            <?= $dt->datetime('pdStartDate', $pdStartDate, true) ?>
-            <div class="checkbox">
-                <label><?= $form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDay) ?> <?= t('All Day') ?></label>
+            <?= $dt->datetime('pdStartDate', $pdStartDate, true); ?>
+            <div class="form-check">
+                <?= $form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDay); ?>
+                <label class="form-check-label" for="checkStartDateAllDayActivate"> <?= t('All Day'); ?></label>
             </div>
         </div>
     </div>
     <div class="form-group">
         <label for="pdEndDate_activate" class="col-form-label"><?= tc('End date', 'To') ?></label>
         <div>
-            <?= $dt->datetime('pdEndDate', $pdEndDate, true) ?>
-            <div class="checkbox"><label><?= $form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDay) ?> <?= t('All Day') ?></label></div>
+            <?= $dt->datetime('pdEndDate', $pdEndDate, true); ?>
+            <div class="form-check">
+                 <?= $form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDay); ?>
+                 <label class="form-check-label" for="checkEndDateAllDayActivate"> <?= t('All Day'); ?></label>
+            </div>
         </div>
     </div>
 </div>
 <div id="ccm-permissions-access-entity-repeat" style="display: none">
     <div class="form-group">
-        <div>
-            <div class="checkbox"><label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat...') ?></label></div>
+        <div class="form-check">
+             <?= $form->checkbox('pdRepeat', 1, $pdRepeats); ?>
+             <label class="form-check-label" for="checkPdRepeat"> <?= t('Repeat...'); ?></label>
         </div>
     </div>
 </div>
@@ -147,7 +152,7 @@ for ($i = 0; $i < 7; ++$i) {
                         $pdRepeatPeriodDaysEvery,
                         ['style' => 'width: 60px']
                     ); ?>
-                    <?= t('days') ?>
+                    <?= t('days'); ?>
                 </div>
             </div>
         </div>
@@ -156,30 +161,24 @@ for ($i = 0; $i < 7; ++$i) {
         <div class="form-group">
             <label for="pdRepeatPeriodMonthsRepeatBy" class="col-form-label"><?= t('Repeat By') ?></label>
             <div>
-                <div class="radio">
-                    <label>
-                        <?= $form->radio('pdRepeatPeriodMonthsRepeatBy', 'month', $pdRepeatPeriodMonthsRepeatBy) ?>
-                        <?= t('Day of Month') ?>
-                    </label>
+                <div class="form-check">
+                    <?= $form->radio('pdRepeatPeriodMonthsRepeatBy', 'month', $pdRepeatPeriodMonthsRepeatBy); ?>
+                    <label class="form-check-label" for="dayOfMonthLabel"> <?= t('Day of Month'); ?></label>
                 </div>
-                <div class="radio">
-                    <label>
-                        <?= $form->radio('pdRepeatPeriodMonthsRepeatBy', 'week', $pdRepeatPeriodMonthsRepeatBy) ?>
-                        <?= t('Day of Week') ?>
-                    </label>
+                <div class="form-check">
+                        <?= $form->radio('pdRepeatPeriodMonthsRepeatBy', 'week', $pdRepeatPeriodMonthsRepeatBy); ?>
+                        <label class="form-check-label" for="dayOfWeekLabel"> <?= t('Day of Week'); ?></label>
                 </div>
-                <div class="radio">
-                    <label>
-                        <?= $form->radio('pdRepeatPeriodMonthsRepeatBy', 'lastweekday', $pdRepeatPeriodMonthsRepeatBy) ?>
-                        <?= t('The last ') ?>
+                <div class="form-check">
+                        <?= $form->radio('pdRepeatPeriodMonthsRepeatBy', 'lastweekday', $pdRepeatPeriodMonthsRepeatBy); ?>
+                        <label class="form-check-label" for="lestWeekDayLabel">  <?= t('The last '); ?></label>
                         <select name="pdRepeatPeriodMonthsRepeatLastDay">
                             <?php
                             foreach ($weekdays as $key => $value) {
-                                ?><option value="<?= $key?>"<?= ($key == $pdRepeatPeriodMonthsRepeatLastDay) ? ' selected="selected"' : ''?>><?= $value ?></option><?php
+                                ?><option value="<?= $key; ?>"<?= ($key == $pdRepeatPeriodMonthsRepeatLastDay) ? ' selected="selected"' : ''; ?>><?= $value; ?></option><?php
                             }
                             ?>
                         </select>
-                    </label>
                 </div>
             </div>
         </div>
@@ -196,11 +195,12 @@ for ($i = 0; $i < 7; ++$i) {
                         ['style' => 'width: 60px']
                     );
                     ?>
-                    <?= t('months') ?>
+                    <?= t('months'); ?>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="ccm-permissions-access-entity-dates-repeat-weekly" style="display: none">
         <div id="ccm-permissions-access-entity-dates-repeat-weekly-dow" style="display: none">
             <div class="form-group">
@@ -211,8 +211,8 @@ for ($i = 0; $i < 7; ++$i) {
                         ?>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?= $key ?>"<?= in_array($key, $pdRepeatPeriodWeekDays) ? ' checked="checked"' : '' ?> />
-                                <?= $value ?>
+                                <input type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?= $key; ?>"<?= in_array($key, $pdRepeatPeriodWeekDays) ? ' checked="checked"' : ''; ?> />
+                                <?= $value; ?>
                             </label>
                         </div>
                         <?php
@@ -232,8 +232,8 @@ for ($i = 0; $i < 7; ++$i) {
                         array_combine($range, $range),
                         $pdRepeatPeriodWeeksEvery,
                         ['style' => 'width: 60px']
-                    ) ?>
-                    <?= t('weeks') ?>
+                    ); ?>
+                    <?= t('weeks'); ?>
                 </div>
             </div>
         </div>
@@ -248,8 +248,13 @@ for ($i = 0; $i < 7; ++$i) {
         <div class="form-group">
             <label for="pdEndRepeatDate" class="col-form-label"><?= t('Ends') ?></label>
             <div>
-                <div class="radio"><label><?= $form->radio('pdEndRepeatDate', '', $pdEndRepeatDate) ?> <?= t('Never') ?></label></div>
-                <div class="radio"><label><?= $form->radio('pdEndRepeatDate', 'date', $pdEndRepeatDate) ?> <?= $dt->date('pdEndRepeatDateSpecific', $pdEndRepeatDateSpecific) ?></label></div>
+                 <div class="form-check">
+                    <?= $form->radio('pdEndRepeatDate', '', $pdEndRepeatDate); ?>
+                    <label class="form-check-label" for="pdEndRepeatDateLabel"><?= t('Never'); ?></label>
+                </div>
+                <div class="form-check">
+                    <?= $form->radio('pdEndRepeatDate', 'date', $pdEndRepeatDate); ?> <?= $dt->date('pdEndRepeatDateSpecific', $pdEndRepeatDateSpecific); ?>
+                </div>
             </div>
         </div>
     </div>

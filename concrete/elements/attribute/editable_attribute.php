@@ -4,7 +4,7 @@ use Concrete\Core\Attribute\CustomNoValueTextAttributeInterface;
 use Concrete\Core\Attribute\XEditableConfigurableAttributeInterface;
 
 /**
- * @var Concrete\Core\Entity\Attribute\Key\Key $ak
+ * @var Concrete\Core\Entity\Attribute\Key\Key
  * @var Traversable|array|null $objects
  * @var object|null $object
  * @var callback $permissionsCallback
@@ -45,33 +45,37 @@ if (isset($objects)) {
     }
 }
 
-$canEdit = $permissionsCallback($ak, isset($permissionsArguments) ? $permissionsArguments : null);
+$canEdit = $permissionsCallback($ak, $permissionsArguments ?? null);
 ?>
 <div class="row">
     <div class="editable-attribute-wrapper">
         <div class="col-md-3">
-            <p class="editable-attribute-display-name"><?= $ak->getAttributeKeyDisplayName() ?></p>
+            <p class="editable-attribute-display-name"><?= $ak->getAttributeKeyDisplayName(); ?></p>
         </div>
-        <div class="col-md-9"<?php if ($canEdit) { ?> data-editable-field-inline-commands="true"<?php } ?>>
+        <div class="col-md-9"<?php if ($canEdit) {
+    ?> data-editable-field-inline-commands="true"<?php
+} ?>>
             <div class="editable-attribute-field-inline">
-                <?php if ($canEdit) { ?>
+                <?php if ($canEdit) {
+        ?>
                     <ul class="ccm-edit-mode-inline-commands">
                         <li>
-                            <a href="#" data-key-id="<?= $ak->getAttributeKeyID() ?>" data-url="<?= $clearAction ?>" data-editable-field-command="clear_attribute">
-                                <i class="fa fa-trash-o"></i>
+                            <a href="#" data-key-id="<?= $ak->getAttributeKeyID(); ?>" data-url="<?= $clearAction; ?>" data-editable-field-command="clear_attribute">
+                                <i class="fa fa-trash-alt"></i>
                             </a>
                         </li>
                     </ul>
-                <?php } ?>
+                <?php
+    } ?>
                 <span
                     <?php
                     if ($canEdit) {
                         ?>
-                        data-title="<?= $ak->getAttributeKeyDisplayName() ?>"
-                        data-key-id="<?= $ak->getAttributeKeyID() ?>"
-                        data-name="<?= $ak->getAttributeKeyID() ?>"
+                        data-title="<?= $ak->getAttributeKeyDisplayName(); ?>"
+                        data-key-id="<?= $ak->getAttributeKeyID(); ?>"
+                        data-name="<?= $ak->getAttributeKeyID(); ?>"
                         data-editable-field-type="xeditableAttribute"
-                        data-url="<?= $saveAction ?>"
+                        data-url="<?= $saveAction; ?>"
                         data-type="concreteattribute"
                         data-placement="bottom"
                         <?php
@@ -87,21 +91,20 @@ $canEdit = $permissionsCallback($ak, isset($permissionsArguments) ? $permissions
                         }
                     }
                     ?>
-                    ><?= $canEdit || $display !== null ? $display : $noValueDisplayHtml ?></span>
+                    ><?= $canEdit || $display !== null ? $display : $noValueDisplayHtml; ?></span>
             </div>
         </div>
     </div>
 </div>
 <?php
 if ($canEdit) {
-    ?>
+                        ?>
     <div style="display: none">
-        <div data-editable-attribute-key-id="<?= $ak->getAttributeKeyID() ?>">
+        <div data-editable-attribute-key-id="<?= $ak->getAttributeKeyID(); ?>">
             <?php
             $value = $object->getAttributeValueObject($ak);
-            $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $value);
-            ?>
+                        $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), $value); ?>
         </div>
     </div>
     <?php
-}
+                    }

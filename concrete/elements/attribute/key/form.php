@@ -105,20 +105,20 @@ if ($key !== null) {
         <div class="form-group">
             <label class="control-label"><?= t('Searchable') ?></label>
             <div class="form-check">
-                <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ["class" => "form-check-input"]) ?>
-                <?= $form->label('akIsSearchableIndexed', t('Content included in search index.'), ["class" => "form-check-label"] ) ?>
+                <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ['class' => 'form-check-input']) ?>
+                <?= $form->label('akIsSearchableIndexed', t('Content included in search index.'), ['class' => 'form-check-label']) ?>
             </div>
             <div class="form-check">
-                <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable(), ["class" => "form-check-input"]) ?>
-                <?= $form->label('akIsSearchable', t('Field available in advanced search.'), ["class" => "form-check-label"] ) ?>
+                <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable(), ['class' => 'form-check-input']) ?>
+                <?= $form->label('akIsSearchable', t('Field available in advanced search.'), ['class' => 'form-check-label']) ?>
                 <?php
                 if ($key && $key->isAttributeKeySearchable()) {
                     ?>
                     <div class="alert alert-danger small hide" id="akIsSearchable-warning">
                         <?= t(
-                            'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
-                            '<strong>' . t('Index Search Engine - All') . '</strong>'
-                        ) ?>
+                        'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
+                        '<strong>' . t('Index Search Engine - All') . '</strong>'
+                    ) ?>
                     </div>
                     <script>
                     $(document).ready(function() {
@@ -156,7 +156,7 @@ if ($key !== null) {
         }
     }
     $valt->output('add_or_update_attribute');
-    $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), isset($key) ? $key : null);
+    $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), $key ?? null);
     ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
