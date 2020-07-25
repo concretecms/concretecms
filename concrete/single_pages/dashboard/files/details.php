@@ -83,7 +83,7 @@ $file = $fileVersion->getFile();
         class="btn btn-secondary float-right dialog-launch"
         dialog-title="<?= t('Attributes') ?>"
         dialog-width="680" dialog-height="450"
-        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/properties?fID=' . $file->getFileID()])) ?>"
+        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/properties', $file->getFileID()])) ?>"
     ><?= t('Edit') ?></a>
     <h3><?= t('Attributes') ?></h3>
     <dl class="ccm-file-manager-details-attributes">

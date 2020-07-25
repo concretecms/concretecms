@@ -26,7 +26,7 @@ $router->all('/sets', 'Sets::view');
 $router->all('/sets/submit', 'Sets::submit');
 $router->all('/folder', 'Folder::view');
 $router->all('/folder/submit', 'Folder::submit');
-$router->all('/properties', 'Properties::view');
+$router->all('/properties/{fID}', 'Properties::view');
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
