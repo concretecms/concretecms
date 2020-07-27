@@ -107,7 +107,7 @@
     				<th class="<?=$actionList->getSearchResultsClass('upaName')?>"><a href="<?=$actionList->getSortByURL('upaName', 'asc')?>"><?=t('Action Name')?></a></th>
     				<th class="<?=$actionList->getSearchResultsClass('upaHandle')?>"><a href="<?=$actionList->getSortByURL('upaHandle', 'asc')?>"><?=t('Action Handle')?></a></th>
     				<th class="<?=$actionList->getSearchResultsClass('upaDefaultPoints')?>"><a href="<?=$actionList->getSortByURL('upaDefaultPoints', 'asc')?>"><?=t('Default Points')?></a></th>
-    				<th class="<?=$actionList->getSearchResultsClass('upaBadgeGroupID')?>"><a href="<?=$actionList->getSortByURL('upaBadgeGroupID', 'asc')?>"><?=t('Group')?></a></th>
+    				<th class="<?=$actionList->getSearchResultsClass('gBadgeID')?>"><a href="<?=$actionList->getSortByURL('gBadgeID', 'asc')?>"><?=t('Group')?></a></th>
     				<th></th>
     			</thead>
 

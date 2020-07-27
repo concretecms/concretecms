@@ -58,9 +58,6 @@ class Actions extends DashboardPageController
         $al = new UserPointActionList();
 
         switch ($_REQUEST['ccm_order_by']) {
-            case 'groupName':
-                $al->sortBy('Groups.groupName', $_REQUEST['ccm_order_dir']);
-            break;
             case 'upaDefaultPoints':
                 $al->sortBy('upaDefaultPoints', $_REQUEST['ccm_order_dir']);
             break;
@@ -70,6 +67,9 @@ class Actions extends DashboardPageController
             case 'upaName':
                 $al->sortBy('upaName', $_REQUEST['ccm_order_dir']);
             break;
+            case 'gBadgeID':
+                $al->sortBy('gBadgeID', $_REQUEST['ccm_order_dir']);
+                break;
             case 'upaTypeID':
                 $al->sortBy('upaTypeID', $_REQUEST['ccm_order_dir']);
             break;
