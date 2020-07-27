@@ -1,4 +1,12 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::element('permission/lists/block', array('b' => $b, 'rcID' => $rcID));
+
+use Concrete\Core\Block\Block;
+use Concrete\Core\View\View;
+
+/** @var Block $b */
+/** @var int $rcID */
+
+/** @noinspection PhpUnhandledExceptionInspection */
+View::element('permission/lists/block', ['b' => $b, 'rcID' => $rcID]);

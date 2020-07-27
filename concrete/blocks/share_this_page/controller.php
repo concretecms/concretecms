@@ -43,14 +43,8 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function edit()
     {
-        $selected = $this->getSelectedServices();
-        $services = array();
-        foreach ($selected as $s) {
-            $services[] = $s->getHandle();
-        }
-
-        $this->set('selected', json_encode($services));
-        $this->set('services', ServiceList::get());
+        $this->set('selectedServices', $this->getSelectedServices());
+        $this->set('availableServices', ServiceList::get());
     }
 
     public function add()
