@@ -114,9 +114,9 @@ var pageList ={
             group, left;
 
         if (element.is('input[type=checkbox]')) {
-            group = element.closest('div.checkbox');
+            group = element.closest('div.form-check');
         } else if (element.is('input[type=radio]')) {
-            group = element.closest('div.radio');
+            group = element.closest('div.form-check');
         } else {
             group = element.closest('div.form-group');
         }

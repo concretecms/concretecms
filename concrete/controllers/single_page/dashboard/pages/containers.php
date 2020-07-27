@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Concrete\Core\Entity\Page\Container;
@@ -9,25 +10,13 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Containers extends DashboardPageController
 {
-
     public function view()
     {
-        $this->set('containers', $this->entityManager->getRepository(Container::class)
-            ->findAll()
+        $this->set(
+            'containers',
+            $this->entityManager->getRepository(Container::class)
+                ->findAll()
         );
-    }
-    
-    protected function getContainer($containerID = null)
-    {
-        $container = null;
-        if ($containerID) {
-            $container = $this->entityManager->find(Container::class, $containerID);
-        }
-        if (!$container) {
-            return $this->redirect('/dashboard/pages/containers');
-        } else {
-            return $container;
-        }
     }
 
     public function edit($containerID = null)
@@ -45,14 +34,14 @@ class Containers extends DashboardPageController
             $command = new DeleteContainerCommand($container);
             $this->executeCommand($command);
             $this->flash('success', t('Container removed successfully.'));
-            return $this->redirect('/dashboard/pages/containers');
-        } else {
-            $this->error->add($this->token->getErrorMessage());
+
+            return $this->buildRedirect('/dashboard/pages/containers');
         }
+
+        $this->error->add($this->token->getErrorMessage());
 
         $this->edit($containerID);
     }
-
 
     public function update_container($containerID = null)
     {
@@ -71,7 +60,8 @@ class Containers extends DashboardPageController
             } else {
                 $this->executeCommand($command);
                 $this->flash('success', t('Container saved successfully.'));
-                return $this->redirect('/dashboard/pages/containers');
+
+                return $this->buildRedirect('/dashboard/pages/containers');
             }
         } else {
             $this->error->add($this->token->getErrorMessage());
@@ -80,5 +70,17 @@ class Containers extends DashboardPageController
         $this->edit($containerID);
     }
 
+    protected function getContainer($containerID = null)
+    {
+        $container = null;
+        if ($containerID) {
+            $container = $this->entityManager->find(Container::class, $containerID);
+        }
 
+        if (!$container) {
+            return $this->buildRedirect('/dashboard/pages/containers');
+        }
+
+        return $container;
+    }
 }
