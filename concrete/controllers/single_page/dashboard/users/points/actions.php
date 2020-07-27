@@ -98,7 +98,11 @@ class Actions extends DashboardPageController
             }
             $this->upa->upaName = $this->post('upaName');
             $this->upa->upaDefaultPoints = $this->post('upaDefaultPoints');
-            $this->upa->gBadgeID = $this->post('gBadgeID');
+            if (!$this->post('gBadgeID')) {
+                $this->upa->gBadgeID = 0;
+            } else {
+                $this->upa->gBadgeID = $this->post('gBadgeID');
+            }
             if (!$this->upa->pkgID) {
                 // i hate this activerecord crap
                 $this->upa->pkgID = 0;
