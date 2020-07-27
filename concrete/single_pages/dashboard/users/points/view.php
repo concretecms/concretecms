@@ -1,22 +1,26 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var \Concrete\Core\Localization\Service\Date $dh
+ * @var \Concrete\Core\Validation\CSRF\Token $valt
+ * @var \Concrete\Core\Form\Service\Widget\UserSelector $form_user_selector
+ * @var \Concrete\Core\Legacy\DatabaseItemList $upEntryList
+ * @var array $entries
+ */
 ?>
-<form class="form-inline" action="<?php echo $view->action('view')?>" method="get">
-    <div class="ccm-dashboard-header-buttons">
-	    <a href="<?=View::url('/dashboard/users/points/assign')?>" class="btn btn-primary"><?=t('Add Points')?></a>
-	</div>
+<div class="ccm-dashboard-header-buttons">
+    <a href="<?= URL::to('/dashboard/users/points/assign') ?>" class="btn btn-primary"><?=t('Add Points')?></a>
+</div>
 
+<form action="<?php echo $view->action('view')?>" method="get">
     <div class="ccm-pane-options">
         <div class="ccm-pane-options-permanent-search">
             <?=$form->label('uID', t('User'))?>
-            <?php echo $form_user_selector->quickSelect('uID', $_GET['uID'], array('form-control'));?>
+            <?php echo $form_user_selector->quickSelect('uID', $_GET['uID'], ['form-control']); ?>
         </div>
     </div>
 
     <div class="clearfix" style="margin-top: 30px;">
-        <input type="submit" value="<?=t('Search')?>" class="btn btn-primary pull-right" />
+        <input type="submit" value="<?=t('Search')?>" class="btn btn-primary float-right" />
     </div>
 </form>
 <?php
@@ -30,7 +34,7 @@ if (count($entries) > 0) {
     		<th class="<?=$upEntryList->getSearchResultsClass('upaName')?>"><a href="<?=$upEntryList->getSortByURL('upaName', 'asc')?>"><?=t('Action')?></a></th>
     		<th class="<?=$upEntryList->getSearchResultsClass('upPoints')?>"><a href="<?=$upEntryList->getSortByURL('upPoints', 'asc')?>"><?=t('Points')?></a></th>
     		<th class="<?=$upEntryList->getSearchResultsClass('timestamp')?>"><a href="<?=$upEntryList->getSortByURL('timestamp', 'asc')?>"><?=t('Date Assigned')?></a></th>
-    		<th><span><?=t("Details")?></span></th>
+    		<th><span><?=t('Details')?></span></th>
     		<th></th>
     	</thead>
 
@@ -59,9 +63,9 @@ if (count($entries) > 0) {
                     <?php
                     $delete = \Concrete\Core\Url\Url::createFromUrl($view->action('deleteEntry', $up->getUserPointEntryID()));
 
-            $delete->setQuery(array(
-                        'ccm_token' => \Core::make('helper/validation/token')->generate('delete_community_points'),
-                    ));
+            $delete->setQuery([
+                'ccm_token' => $valt->generate('delete_community_points'),
+            ]);
             ?>
         		    <a href="<?=$delete?>" class="btn btn-sm btn-danger"><?=t('Delete')?></a>
         		</td>

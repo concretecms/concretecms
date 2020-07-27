@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -8,7 +9,8 @@ use Group;
 
 class Actions extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library');
+    public $helpers = ['form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library'];
+
     public $upa;
 
     public function on_start()
@@ -39,10 +41,11 @@ class Actions extends DashboardPageController
 
         $actionList = $this->getActionList();
         $badges = Group::getBadges();
-        $select = array('' => t('** None'));
+        $select = ['' => t('** None')];
         foreach ($badges as $g) {
             $select[$g->getGroupID()] = $g->getGroupDisplayName(false);
         }
+        $this->set('valt', $this->app->make('helper/validation/token'));
         $this->set('badges', $select);
         $this->set('pagination', $actionList->getPagination());
         $this->set('actionList', $actionList);
@@ -77,18 +80,10 @@ class Actions extends DashboardPageController
         return $al;
     }
 
-    protected function setAttribs($upa)
-    {
-        $attribs = $upa->getAttributeNames();
-        foreach ($attribs as $key) {
-            $this->set($key, $upa->$key);
-        }
-    }
-
     public function save()
     {
-        if (!\Core::make('helper/validation/token')->validate('add_action')) {
-            $this->error = \Core::make('error');
+        if (!$this->app->make('helper/validation/token')->validate('add_action')) {
+            $this->error = $this->app->make('error');
             $this->error->add('Invalid Token');
             $this->add();
 
@@ -117,13 +112,13 @@ class Actions extends DashboardPageController
             $upa = UserPointAction::add($this->post('upaHandle'), $this->post('upaName'), $this->post('upaDefaultPoints'), $this->post('gBadgeID'), $this->post('upaIsActive'));
         }
 
-        $this->redirect('/dashboard/users/points/actions', 'action_saved');
+        return $this->buildRedirect(['/dashboard/users/points/actions', 'action_saved']);
     }
 
     public function delete($upaID)
     {
-        if (!\Core::make('helper/validation/token')->validate('delete_action')) {
-            $this->error = \Core::make('error');
+        if (!$this->app->make('helper/validation/token')->validate('delete_action')) {
+            $this->error = $this->app->make('error');
             $this->error->add('Invalid Token');
             $this->view();
 
@@ -131,7 +126,8 @@ class Actions extends DashboardPageController
         }
         $this->upa->load($upaID);
         $this->upa->delete();
-        $this->redirect('/dashboard/users/points/actions', 'action_deleted');
+
+        return $this->buildRedirect(['/dashboard/users/points/actions', 'action_deleted']);
     }
 
     public function action_deleted()
@@ -144,5 +140,13 @@ class Actions extends DashboardPageController
     {
         $this->set('message', t('Community Point Action Saved'));
         $this->view();
+    }
+
+    protected function setAttribs($upa)
+    {
+        $attribs = $upa->getAttributeNames();
+        foreach ($attribs as $key) {
+            $this->set($key, $upa->{$key});
+        }
     }
 }

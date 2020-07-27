@@ -1,6 +1,19 @@
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var \Concrete\Core\Form\Service\Widget\DateTime $form_date_time
+ * @var \Concrete\Core\Validation\CSRF\Token $valt
+ * @var \Concrete\Core\Form\Service\Widget\UserSelector $form_user_selector
+ * @var int $upUser
+ * @var int $upaID
+ * @var array $userPointActions
+ * @var string $upPoints
+ * @var string $upComments
+ * @var string $timestamp
+ */
+?>
 <form method="post" action="<?=$view->action('save')?>" id="ccm-community-point-entry">
 	<?php
-    \Core::make('helper/validation/token')->output('add_community_points');
+    $valt->output('add_community_points');
     if (isset($upID) && $upID > 0) {
         echo $form->hidden('upID', $upID);
     }
@@ -8,28 +21,28 @@
 	<div class="form-group">
 	    <?=$form->label('upUser', t('User'))?>
 		<div class="input">
-			<?php echo $form_user_selector->quickSelect('upUser', $upUser, ['autofocus' => 'autofocus']);?>
+			<?php echo $form_user_selector->quickSelect('upUser', $upUser, ['autofocus' => 'autofocus']); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
 	    <?=$form->label('upaID', t('Action'))?>
 		<div class="input">
-			<?php echo $form->select('upaID', $userPointActions, $upaID, array('json-src' => $view->action('getJsonDefaultPointAction'))); ?>
+			<?php echo $form->select('upaID', $userPointActions, $upaID, ['json-src' => $view->action('getJsonDefaultPointAction')]); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
 	    <?=$form->label('upPoints', t('Points'))?>
 		<div class="input">
-			<?php echo $form->number('upPoints', $upPoints);?>
+			<?php echo $form->number('upPoints', $upPoints); ?>
 		</div>
 	</div>
 
 	<div class="form-group">
 	    <?=$form->label('upComments', t('Comments'))?>
 		<div class="input">
-			<?php echo $form->textarea('upComments', $upComments);?>
+			<?php echo $form->textarea('upComments', $upComments); ?>
 		</div>
 	</div>
 
@@ -37,15 +50,15 @@
 	    <?=$form->label('dtoverride', t('Override Timestamp'))?>
 		<div class="input">
 		    <div class="checkbox">
-			    <?php echo $form_date_time->datetime('dtoverride', $timestamp, true);?>
+			    <?php echo $form_date_time->datetime('dtoverride', $timestamp, true); ?>
             </div>
 		</div>
 	</div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=$view->url('/dashboard/users/points')?>" class="btn btn-default pull-left"><?=t('Back to List')?></a>
-            <button type="submit" class="btn btn-primary pull-right"><?=t('Assign')?> <i class="icon-white icon-ok"></i></button>
+            <a href="<?= URL::to('/dashboard/users/points') ?>" class="btn btn-secondary float-left"><?=t('Back to List')?></a>
+            <button type="submit" class="btn btn-primary float-right"><?=t('Assign')?> <i class="icon-white icon-ok"></i></button>
         </div>
     </div>
 </form>

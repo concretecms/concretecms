@@ -1,13 +1,14 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\User\Point\EntryList as UserPointEntryList;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
+use Concrete\Core\User\Point\EntryList as UserPointEntryList;
 
 class Points extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library', 'form/user_selector');
+    public $helpers = ['form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library', 'form/user_selector'];
 
     public function view()
     {
@@ -15,6 +16,8 @@ class Points extends DashboardPageController
         $this->set('pagination', $upEntryList->getPagination());
         $this->set('upEntryList', $upEntryList);
         $this->set('entries', $upEntryList->getPage());
+        $this->set('valt', $this->app->make('helper/validation/token'));
+        $this->set('dh', $this->app->make('date'));
     }
 
     public function getEntries()
@@ -25,7 +28,7 @@ class Points extends DashboardPageController
         if ($_REQUEST['uID']) {
             $entries->filterByUserID($_REQUEST['uID']);
         }
-        
+
         if ($_REQUEST['uName']) {
             $entries->filterByUserName($_REQUEST['uName']);
         }
@@ -57,8 +60,8 @@ class Points extends DashboardPageController
 
     public function deleteEntry($upID)
     {
-        if (!\Core::make('helper/validation/token')->validate('delete_community_points')) {
-            $this->error = \Core::make('error');
+        if (!$this->app->make('helper/validation/token')->validate('delete_community_points')) {
+            $this->error = $this->app->make('error');
             $this->error->add('Invalid Token');
             $this->view();
 
@@ -67,7 +70,8 @@ class Points extends DashboardPageController
         $up = new UserPointEntry();
         $up->load($upID);
         $up->Delete();
-        $this->redirect('/dashboard/users/points/', 'entry_deleted');
+
+        return $this->buildRedirect(['/dashboard/users/points/', 'entry_deleted']);
     }
 
     public function entry_deleted()

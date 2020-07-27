@@ -1,23 +1,23 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use Concrete\Core\User\Point\Entry as UserPointEntry;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
-use Concrete\Core\User\Point\Action\ActionList as UserPointActionList;
 use Concrete\Core\User\Point\Action\ActionDescription as UserPointActionDescription;
-use UserInfo;
+use Concrete\Core\User\Point\Action\ActionList as UserPointActionList;
+use Concrete\Core\User\Point\Entry as UserPointEntry;
+use Concrete\Core\User\UserInfoRepository;
 
 class Assign extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library', 'form/user_selector', 'form/date_time');
+    public $helpers = ['form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library', 'form/user_selector', 'form/date_time'];
+
     protected $upe;
 
     public function on_start()
     {
         parent::on_start();
-        $html = Loader::helper('html');
         $this->upe = new UserPointEntry();
     }
 
@@ -33,21 +33,14 @@ class Assign extends DashboardPageController
             }
         }
 
+        $this->set('valt', $this->app->make('helper/validation/token'));
         $this->set('userPointActions', $this->getUserPointActions());
-    }
-
-    protected function setAttribs($upe)
-    {
-        $attribs = $upe->getAttributeNames();
-        foreach ($attribs as $key) {
-            $this->set($key, $upe->$key);
-        }
     }
 
     public function save()
     {
-        if (!\Core::make('helper/validation/token')->validate('add_community_points')) {
-            $this->error = \Core::make('error');
+        if (!$this->app->make('helper/validation/token')->validate('add_community_points')) {
+            $this->error = $this->app->make('error');
             $this->error->add('Invalid Token');
             $this->view();
 
@@ -57,9 +50,9 @@ class Assign extends DashboardPageController
         $user = $this->post('upUser');
         if (is_numeric($user)) {
             // rolling as user id
-            $ui = UserInfo::getByID($user);
+            $ui = $this->app->make(UserInfoRepository::class)->getByID($user);
         } else {
-            $ui = UserInfo::getByUserName($user);
+            $ui = $this->app->make(UserInfoRepository::class)->getByName($user);
             // look up userID
         }
 
@@ -82,26 +75,26 @@ class Assign extends DashboardPageController
             $obj = new UserPointActionDescription();
             $obj->setComments($this->post('upComments'));
             if ($this->post('manual_datetime') > 0) {
-                $dt = Loader::helper('form/date_time');
+                $dt = $this->app->make('helper/form/date_time');
                 $entry = $action->addEntry($ui, $obj, $this->post('upPoints'), $dt->translate('dtoverride'));
             } else {
                 $entry = $action->addEntry($ui, $obj, $this->post('upPoints'));
             }
-            $this->redirect('/dashboard/users/points/assign', 'entry_saved');
-        } else {
-            $this->view();
+
+            return $this->buildRedirect(['/dashboard/users/points/assign', 'entry_saved']);
         }
+        $this->view();
     }
 
     public function getUserPointActions()
     {
-        $res = array(0 => t('-- None --'));
+        $res = [0 => t('-- None --')];
         $upal = new UserPointActionList();
         $upal->filterByIsActive(1);
         $userPointActions = $upal->get(0);
         if (is_array($userPointActions) && count($userPointActions)) {
             foreach ($userPointActions as $upa) {
-                $res[$upa['upaID']] = h($upa['upaDefaultPoints']." - ".t($upa['upaName']));
+                $res[$upa['upaID']] = h($upa['upaDefaultPoints'] . ' - ' . t($upa['upaName']));
             }
         }
 
@@ -111,9 +104,9 @@ class Assign extends DashboardPageController
     public function getJsonActionSelectOptions()
     {
         $actions = $this->getUserPointActions();
-        $res = array();
+        $res = [];
         foreach ($actions as $key => $value) {
-            $res[] = array('optionValue' => $key, 'optionDisplay' => $value);
+            $res[] = ['optionValue' => $key, 'optionDisplay' => $value];
         }
         echo json_encode($res);
         exit;
@@ -131,5 +124,13 @@ class Assign extends DashboardPageController
     {
         $this->set('message', t('User Point Entry Saved'));
         $this->view();
+    }
+
+    protected function setAttribs($upe)
+    {
+        $attribs = $upe->getAttributeNames();
+        foreach ($attribs as $key) {
+            $this->set($key, $upe->{$key});
+        }
     }
 }

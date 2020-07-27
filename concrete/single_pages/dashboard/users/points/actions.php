@@ -1,12 +1,23 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-    //$interface = Loader::helper('interface');
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var \Concrete\Core\Validation\CSRF\Token $valt
+ * @var \Concrete\Core\Legacy\DatabaseItemList $actionList
+ * @var bool $showForm
+ * @var int $upaID
+ * @var bool $upaHasCustomClass
+ * @var string $upaHandle
+ * @var string $upaName
+ * @var string $upaDefaultPoints
+ * @var array $badges
+ * @var int $gBadgeID
+ * @var array $actions
+ * @var int $upaIsActive
+ */
 ?>
-
 <?php if ($showForm) {
     ?>
-<form method="post" action="<?=$view->action('save')?>" id="ccm-community-points-action">
-    <?= \Core::make('helper/validation/token')->output('add_action');
+<form method="post" action="<?= $view->action('save'); ?>" id="ccm-community-points-action">
+    <?= $valt->output('add_action');
     ?>
     <div class="row">
         <div class="col-md-12">
@@ -15,7 +26,7 @@
                 echo $form->hidden('upaID', $upaID);
     ?>
 
-        	<div class="checkbox">
+        	<div class="form-check">
                 <label>
                     <?=$form->checkbox('upaIsActive', 1, ($upaIsActive == 1 || (!$upaID)))?> <?=t('Enabled')?>
                 </label>
@@ -26,7 +37,7 @@
     ?>
         		<div class="input">
             		<?php
-                        $args = array();
+                        $args = [];
     if ($upaHasCustomClass) {
         $args['disabled'] = 'disabled';
     }
@@ -72,8 +83,8 @@
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <a href="<?=$view->url('/dashboard/users/points/actions')?>" class="btn btn-default pull-left"><?=t('Back to List')?></a>
-                    <button class="btn btn-primary pull-right" type="submit"><?=$label?></button>
+                    <a href="<?= URL::to('/dashboard/users/points/actions')?>" class="btn btn-secondary float-left"><?=t('Back to List')?></a>
+                    <button class="btn btn-primary float-right" type="submit"><?=$label?></button>
                 </div>
             </div>
         </div>
@@ -87,18 +98,12 @@
 	</div>
 
 	<?php
-        if (!$mode) {
-            $mode = $_REQUEST['mode'];
-        }
-    $txt = Loader::helper('text');
-    $keywords = $_REQUEST['keywords'];
-
     if (count($actions) > 0) {
         ?>
         <div class="table-responsive">
 			<table class="ccm-search-results-table compact-results">
     			<thead>
-    				<th><span><?=t("Active")?></span></th>
+    				<th><span><?=t('Active')?></span></th>
     				<th class="<?=$actionList->getSearchResultsClass('upaName')?>"><a href="<?=$actionList->getSortByURL('upaName', 'asc')?>"><?=t('Action Name')?></a></th>
     				<th class="<?=$actionList->getSearchResultsClass('upaHandle')?>"><a href="<?=$actionList->getSortByURL('upaHandle', 'asc')?>"><?=t('Action Handle')?></a></th>
     				<th class="<?=$actionList->getSearchResultsClass('upaDefaultPoints')?>"><a href="<?=$actionList->getSortByURL('upaDefaultPoints', 'asc')?>"><?=t('Default Points')?></a></th>
@@ -123,11 +128,11 @@
             			<td style="text-align: right">
                             <?php
                             $delete_url = \League\Url\Url::createFromUrl($view->action('delete', $upa['upaID']));
-                        $delete_url = $delete_url->setQuery(array(
-                                'ccm_token' => \Core::make('helper/validation/token')->generate('delete_action'),
-                            ));
+                        $delete_url = $delete_url->setQuery([
+                            'ccm_token' => $valt->generate('delete_action'),
+                        ]);
                         ?>
-            			    <a href="<?=$view->action($upa['upaID'])?>" class="btn btn-sm btn-default"><?=t('Edit')?></a>
+            			    <a href="<?=$view->action($upa['upaID'])?>" class="btn btn-sm btn-secondary"><?=t('Edit')?></a>
             			    <a href="<?=$delete_url?>" class="btn btn-sm btn-danger"><?=t('Delete')?></a>
             			</td>
             		</tr>
@@ -145,7 +150,7 @@
     }
     ?>
 
-<?=$actionList->displayPagingV2();?>
+<?=$actionList->displayPagingV2(); ?>
 
 <?php
 } ?>
