@@ -1,51 +1,34 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Conversations;
 
 use Concrete\Core\Application\EditResponse;
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use stdClass;
-use UserInfo;
-use Core;
 use Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use Concrete\Core\Conversation\FlagType\FlagTypeList as ConversationFlagTypeList;
 use Concrete\Core\Conversation\Message\Message as ConversationMessage;
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Messages extends DashboardPageController
 {
-    /**
-     * Returns default message filter for search interface. We default to all, UNLESS we have at least one access
-     * entity that publishes its messages and has them be unapproved. If that's the case, then we default to unapproved.
-     */
-    protected function getDefaultMessageFilter()
-    {
-        $filter = 'all';
-        $db = \Database::get();
-        $count = $db->GetOne('select count(cpa.paID) from ConversationPermissionAssignments cpa
-            inner join PermissionAccess pa on cpa.paID = pa.paID
-            inner join ConversationPermissionAddMessageAccessList cpl on pa.paID = cpl.paID
-            where paIsInUse = 1 and permission = "U"');
-        if ($count > 0) {
-            $filter = 'unapproved';
-        }
-
-        return $filter;
-    }
-
     public function view()
     {
+        $this->set('valt', $this->app->make('helper/validation/token'));
+        $this->set('th', $this->app->make('helper/text'));
+        $this->set('dh', $this->app->make('date'));
+        $this->set('ip', $this->app->make('helper/validation/ip'));
+
         $ml = new ConversationMessageList();
         $ml->setItemsPerPage(20);
-        $cmpFilterTypes = array(
+        $cmpFilterTypes = [
             'all' => t('Show All'),
             'unapproved' => t('Unapproved'),
             'approved' => t('Approved'),
             'deleted' => t('Deleted'),
-        );
+        ];
         $fl = new ConversationFlagTypeList();
         foreach ($fl->get() as $flagtype) {
-            $cmpFilterTypes[$flagtype->getConversationFlagTypeHandle()] = Loader::helper('text')->unhandle(
+            $cmpFilterTypes[$flagtype->getConversationFlagTypeHandle()] = $this->app->make('helper/text')->unhandle(
                 $flagtype->getConversationFlagTypeHandle()
             );
         }
@@ -83,7 +66,6 @@ class Messages extends DashboardPageController
                     $ml->filterByNotDeleted();
                 }
                 break;
-
         }
 
         $ml->sortByDateDescending();
@@ -96,7 +78,7 @@ class Messages extends DashboardPageController
 
     public function approve_message()
     {
-        $e = Core::make('error');
+        $e = $this->app->make('error');
         $message = ConversationMessage::getByID($this->post('cnvMessageID'));
         if (!is_object($message)) {
             $e->add(t('Invalid message'));
@@ -116,7 +98,7 @@ class Messages extends DashboardPageController
 
     public function unflag_message()
     {
-        $e = Core::make('error');
+        $e = $this->app->make('error');
         $message = ConversationMessage::getByID($this->post('cnvMessageID'));
         if (!is_object($message)) {
             $e->add(t('Invalid message'));
@@ -137,7 +119,7 @@ class Messages extends DashboardPageController
 
     public function undelete_message()
     {
-        $e = Core::make('error');
+        $e = $this->app->make('error');
         $message = ConversationMessage::getByID($this->post('cnvMessageID'));
         if (!is_object($message)) {
             $e->add(t('Invalid message'));
@@ -153,6 +135,25 @@ class Messages extends DashboardPageController
             $er->setMessage(t('Message restored.'));
         }
         $er->outputJSON();
+    }
+
+    /**
+     * Returns default message filter for search interface. We default to all, UNLESS we have at least one access
+     * entity that publishes its messages and has them be unapproved. If that's the case, then we default to unapproved.
+     */
+    protected function getDefaultMessageFilter()
+    {
+        $filter = 'all';
+        $db = $this->app->make(('database/connection'));
+        $count = $db->fetchColumn('select count(cpa.paID) from ConversationPermissionAssignments cpa
+            inner join PermissionAccess pa on cpa.paID = pa.paID
+            inner join ConversationPermissionAddMessageAccessList cpl on pa.paID = cpl.paID
+            where paIsInUse = 1 and permission = "U"');
+        if ($count > 0) {
+            $filter = 'unapproved';
+        }
+
+        return $filter;
     }
 
     /*
@@ -247,5 +248,5 @@ class Messages extends DashboardPageController
         }
         exit;
     }
-    */
+     */
 }

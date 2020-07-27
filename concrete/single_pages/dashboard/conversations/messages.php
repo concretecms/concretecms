@@ -1,8 +1,10 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-$valt = Loader::helper('validation/token');
-$th = Loader::helper('text');
-$ip = Loader::helper('validation/ip');
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var \Concrete\Core\Conversation\Message\MessageList $list
+ * @var array $messages
+ * @var array $cmpFilterTypes
+ * @var string $cmpMessageFilter
+ */
 ?>
 
 <div data-search-element="results">
@@ -18,7 +20,6 @@ $ip = Loader::helper('validation/ip');
             </thead>
             <tbody>
             <?php if (count($messages) > 0) {
-            $dh = Core::make('date');
             foreach ($messages as $msg) {
                 $cnv = $msg->getConversationObject();
                 if (is_object($cnv)) {
@@ -50,30 +51,30 @@ $ip = Loader::helper('validation/ip');
                             <div class="arrow"></div><div class="popover-inner">
                                 <ul class="dropdown-menu">
                                 <?php if (is_object($page)) { ?>
-                                    <li><a href="<?=$page->getCollectionLink()?>#cnv<?=$cnv->getConversationID()?>Message<?=$msg->getConversationMessageID()?>"><?=t('View Conversation')?></a></li>
+                                    <li><a href="<?=$page->getCollectionLink()?>#cnv<?=$cnv->getConversationID()?>Message<?=$msg->getConversationMessageID()?>" class="dropdown-item"><?=t('View Conversation')?></a></li>
                                     <?php if ($displayFlagOption || $displayApproveOption || $displayDeleteOption || $displayUnflagOption || $displayUndeleteOption) { ?>
                                     <li class="divider"></li>
                                     <?php } ?>
                                 <?php } ?>
 
                                     <?php if ($displayApproveOption) { ?>
-                                    <li><a href="#" data-message-action="approve" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Approve')?></a></li>
+                                    <li><a href="#" class="dropdown-item" data-message-action="approve" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Approve')?></a></li>
                                     <?php } ?>
 
                                     <?php if ($displayFlagOption) { ?>
-                                    <li><a href="#" data-message-action="flag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Flag as Spam')?></a></li>
+                                    <li><a href="#" class="dropdown-item" data-message-action="flag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Flag as Spam')?></a></li>
                                     <?php } ?>
 
                                     <?php if ($displayDeleteOption) { ?>
-                                    <li><a href="#" data-message-action="delete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Delete')?></a></li>
+                                    <li><a href="#" class="dropdown-item" data-message-action="delete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Delete')?></a></li>
                                     <?php } ?>
 
                                     <?php if ($displayUnflagOption) { ?>
-                                    <li><a href="#" data-message-action="unflag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Flag As Spam')?></a></li>
+                                    <li><a href="#" class="dropdown-item" data-message-action="unflag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Flag As Spam')?></a></li>
                                     <?php } ?>
 
                                     <?php if ($displayUndeleteOption) { ?>
-                                    <li><a href="#" data-message-action="undelete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Delete Message')?></a></li>
+                                    <li><a href="#" class="dropdown-item" data-message-action="undelete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Delete Message')?></a></li>
                                     <?php } ?>
                                 </ul>
                             </div>
@@ -98,16 +99,16 @@ $ip = Loader::helper('validation/ip');
 
                     <td style="text-align: center">
                     <?php if (!$msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
-                        <i class="fa fa-warning text-warning launch-tooltip" title="<?php echo t('Message has not been approved.')?>"></i>
+                        <i class="fas fa-exclamation-triangle text-warning launch-tooltip" title="<?php echo t('Message has not been approved.')?>"></i>
                     <?php }
                     if ($msg->isConversationMessageDeleted()) { ?>
-                        <i class="fa fa-trash launch-tooltip" title="<?php echo t('Message is deleted.')?>"></i>
+                        <i class="fas fa-trash launch-tooltip" title="<?php echo t('Message is deleted.')?>"></i>
                     <?php }
                     if ($msg->isConversationMessageFlagged()) { ?>
-                        <i class="fa fa-flag text-danger launch-tooltip" title="<?php echo t('Message is flagged as spam.')?>"></i>
+                        <i class="fas fa-flag text-danger launch-tooltip" title="<?php echo t('Message is flagged as spam.')?>"></i>
                     <?php }
                     if ($msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
-                        <i class="fa fa-thumbs-up launch-tooltip" title="<?php echo t('Message is approved.')?>"></i>
+                        <i class="fas fa-thumbs-up launch-tooltip" title="<?php echo t('Message is approved.')?>"></i>
                     <?php } ?>
                     </td>
                 </tr>
@@ -123,13 +124,12 @@ $ip = Loader::helper('validation/ip');
         <input type="text" class="ml-2 form-control-sm form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
         <select class="ml-2 custom-select custom-select-sm" name="cmpMessageFilter">
             <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
-                <option value="<?php echo $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?php echo $optionText; ?></option>
+                <option value="<?= $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?= $optionText; ?></option>
             <?php } ?>
         </select>
-        <button class="ml-2 btn btn-secondary btn-sm" type="submit"><i class="fa fa-search"></i></button>
+        <button class="ml-2 btn btn-secondary btn-sm" type="submit"><i class="fas fa-search"></i></button>
     </form>
 </div>
-
 
 <script>
 $(function() {
@@ -209,12 +209,6 @@ $(function() {
 </script>
 
 <style>
-span.ccm-conversation-display-author-name,
-#ccm-conversation-messages i.fa {
-    position: relative;
-    z-index: 800;
-}
-
 div.ccm-popover.ccm-conversation-message-popover {
     z-index: 801;
 }
@@ -222,4 +216,3 @@ div.ccm-popover.ccm-conversation-message-popover {
 
 <!-- END Body Pane -->
 <?=$list->displayPagingV2()?>
-</div>
