@@ -81,7 +81,7 @@ if (isset($_POST['task']) && $_POST['task'] == 'save_permissions') {
 		</a>
 	<ul class="dropdown-menu">
 	<?php
-    $category = PermissionKeyCategory::getByHandle(isset($_REQUEST['pkCategoryHandle']) ? $_REQUEST['pkCategoryHandle'] : null);
+    $category = PermissionKeyCategory::getByHandle($_REQUEST['pkCategoryHandle'] ?? null);
         $entitytypes = PermissionAccessEntityType::getList($category);
         foreach ($entitytypes as $type) {
             ?>
@@ -92,33 +92,23 @@ if (isset($_POST['task']) && $_POST['task'] == 'save_permissions') {
 </div>
 <br/><br/>
 
-<?php foreach ($entitytypes as $type) {
-            ?>
-
-<?php if ($type->getPackageID() > 0) {
-                ?>
-	<?php View::element('permission/access/entity/types/'.$type->getAccessEntityTypeHandle(), $type->getPackageHandle(), array('type' => $type)); ?>
 <?php
-            } else {
-                ?>
-	<?php View::element('permission/access/entity/types/'.$type->getAccessEntityTypeHandle(), array('type' => $type)); ?>
-<?php
-            } ?>
-
-
-<?php
-        } ?>
-
-<?php
-    } ?>
-
+    foreach ($entitytypes as $type) {
+        View::element(
+            'permission/access/entity/types/' . $type->getAccessEntityTypeHandle(),
+            ['type' => $type],
+            ($type->getPackageID() > 0) ? $type->getPackageHandle() : null
+        );
+    }
+}
+?>
 
 <?php if (!isset($_REQUEST['disableDuration'])) {
         ?>
 
 <h4><?=t('Time Settings'); ?></h4>
 
-<?=View::element('permission/duration', array('pd' => $pd)); ?>
+<?php View::element('permission/duration', ['pd' => $pd]); ?>
 
 <?php
     } ?>
@@ -148,12 +138,10 @@ if (isset($_POST['task']) && $_POST['task'] == 'save_permissions') {
 					ccm_addAccessEntity(r.peID, r.pdID, <?= json_encode(isset($_REQUEST['accessType']) ? h((string) $_REQUEST['accessType']) : ''); ?>);
 				} else {
 					alert(r.peID);
-					alert(r.pdID);
 				}
 			}
 		}
 	});
-
 </script>
 
 
