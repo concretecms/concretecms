@@ -2,9 +2,9 @@
 
 // HELPERS
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$form = app('helper/form');
-$ih = app('helper/concrete/ui');
-$valt = app('helper/validation/token');
+$form = $app->make('helper/form');
+$ih = $app->make('helper/concrete/ui');
+$valt = $app->make('helper/validation/token');
 
 $alreadyActiveMessage = t('This theme is currently active on your site.');
 
