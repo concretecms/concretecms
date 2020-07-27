@@ -11,7 +11,7 @@ use Concrete\Core\Search\Pagination\Pagination;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 
-class Search extends \Concrete\Core\Controller\Controller
+class Chooser extends \Concrete\Core\Controller\Controller
 {
     /**
      * @var Manager

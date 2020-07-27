@@ -17,8 +17,8 @@
 
         <div id="sitemap-search" class="tab-pane">
             <?php $uniqid = uniqid() ?>
-            <div data-concrete-sitemap-search="<?= $uniqid ?>">
-                <concrete-sitemap-search/>
+            <div data-concrete-page-chooser-search="<?= $uniqid ?>">
+                <concrete-page-chooser-search/>
             </div>
         </div>
     </div>
@@ -106,7 +106,7 @@
 
         Concrete.Vue.activateContext('cms', function (Vue, config) {
             new Vue({
-                el: 'div[data-concrete-sitemap-search="<?= $uniqid ?>"]',
+                el: 'div[data-concrete-page-chooser-search="<?= $uniqid ?>"]',
                 components: config.components
             });
         });
