@@ -8,13 +8,15 @@ use Concrete\Core\Support\Facade\Application;
 		<?php if (Config::get('concrete.seo.url_rewriting')) {
     $base = Application::getApplicationURL();
 } else {
-    $base = Application::getApplicationURL() . '/' . DISPATCHER_FILENAME;
+    $base = Application::getApplicationURL().'/'.DISPATCHER_FILENAME;
 }?>
 		<form class="form-inline" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single'); ?>">
 			<?php echo $this->controller->token->output('add_single_page'); ?>
             <div class="form-group">
                 <div class="input-group">
-                    <div class="input-group-text"  ><?php echo $base; ?>/</div>
+				    <div class="input-group-append">
+                       <span class="input-group-text"  ><?php echo $base; ?>/</span>
+					</div>
                     <input type="text" style="width: 200px" class="form-control" name="pageURL" value="<?php echo h($this->post('pageURL')); ?>" />
                     &nbsp; <button class="btn btn-secondary" type="submit"><?=t('Add'); ?></button>
                 </div>
