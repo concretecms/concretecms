@@ -1,4 +1,6 @@
 <?php
+// Arguments
+// Concrete\Core\Foundation\Repetition\RepetitionInterface|null $pd
 
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Support\Facade\Application;
@@ -6,18 +8,14 @@ use Punic\Calendar;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/**
- * @var Concrete\Core\Foundation\Repetition\RepetitionInterface|null $pd
- */
-
 $app = Application::getFacadeApplication();
 
 $service = $app->make('helper/date');
-/* @var Concrete\Core\Localization\Service\Date $service */
+// @var Concrete\Core\Localization\Service\Date $service
 $form = $app->make('helper/form');
-/* @var Concrete\Core\Form\Service\Form $form */
+// @var Concrete\Core\Form\Service\Form $form
 $dt = $app->make('helper/form/date_time');
-/* @var Concrete\Core\Form\Service\Widget\DateTime $dt */
+// @var Concrete\Core\Form\Service\Widget\DateTime $dt
 
 $pdRepeatPeriod = '';
 $pdRepeatPeriodDaysEvery = 1;
@@ -99,29 +97,24 @@ for ($i = 0; $i < 7; $i++) {
     <div class="form-group">
         <label for="pdStartDate_activate" class="col-form-label"><?= tc('Start date', 'From') ?></label>
         <div>
-            <?= $dt->datetime('pdStartDate', $pdStartDate, true); ?>
-            <div class="form-check">
-                <?= $form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDay); ?>
-                <?= $form->label('pdStartDateAllDayActivate', t('All Day'), ['class' => 'form-check-label']); ?>
+            <?= $dt->datetime('pdStartDate', $pdStartDate, true) ?>
+            <div class="checkbox">
+                <label><?= $form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDay) ?> <?= t('All Day') ?></label>
             </div>
         </div>
     </div>
     <div class="form-group">
         <label for="pdEndDate_activate" class="col-form-label"><?= tc('End date', 'To') ?></label>
         <div>
-            <?= $dt->datetime('pdEndDate', $pdEndDate, true); ?>
-            <div class="form-check">
-                <?= $form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDay); ?>
-                <?= $form->label('pdEndDateAllDayActivate', t('All Day'), ['class' => 'form-check-label']); ?>
-            </div>
+            <?= $dt->datetime('pdEndDate', $pdEndDate, true) ?>
+            <div class="checkbox"><label><?= $form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDay) ?> <?= t('All Day') ?></label></div>
         </div>
     </div>
 </div>
 <div id="ccm-permissions-access-entity-repeat" style="display: none">
     <div class="form-group">
-        <div class="form-check">
-            <?= $form->checkbox('pdRepeat', 1, $pdRepeats); ?>
-            <?= $form->label('pdRepeat', t('Repeat...'), ['class' => 'form-check-label']); ?>
+        <div>
+            <div class="checkbox"><label><?= $form->checkbox('pdRepeat', 1, $pdRepeats) ?> <?= t('Repeat...') ?></label></div>
         </div>
     </div>
 </div>
@@ -154,7 +147,7 @@ for ($i = 0; $i < 7; $i++) {
                         $pdRepeatPeriodDaysEvery,
                         ['style' => 'width: 80px']
                     ); ?>
-                    <?= t('days'); ?>
+                    <?= t('days') ?>
                 </div>
             </div>
         </div>
@@ -197,12 +190,11 @@ for ($i = 0; $i < 7; $i++) {
                         ['style' => 'width: 80px']
                     );
                     ?>
-                    <?= t('months'); ?>
+                    <?= t('months') ?>
                 </div>
             </div>
         </div>
     </div>
-
     <div id="ccm-permissions-access-entity-dates-repeat-weekly" style="display: none">
         <div id="ccm-permissions-access-entity-dates-repeat-weekly-dow" style="display: none">
             <div class="form-group">
@@ -232,8 +224,8 @@ for ($i = 0; $i < 7; $i++) {
                         array_combine($range, $range),
                         $pdRepeatPeriodWeeksEvery,
                         ['style' => 'width: 60px']
-                    ); ?>
-                    <?= t('weeks'); ?>
+                    ) ?>
+                    <?= t('weeks') ?>
                 </div>
             </div>
         </div>
