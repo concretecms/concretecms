@@ -1,6 +1,4 @@
-<?php
-
-defined('C5_EXECUTE') or die('Access Denied.');
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Block\Form\MiniSurvey;
 
 $miniSurvey = new MiniSurvey();
@@ -27,7 +25,7 @@ if ($_GET['cID'] && $_GET['arHandle']) {
             if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
                 $b = Block::getByID($b->getController()->getOriginalBlockID());
                 $b->setBlockAreaObject($a);
-                $b->loadNewCollection($c);
+                $b->setBlockCollectionObject($c);
                 $bID = $b->getBlockID();
             }
         } else {
@@ -49,23 +47,18 @@ if ($badPermissions) {
 }
 
 switch ($_GET['mode']) {
-
     case 'addQuestion':
         $miniSurvey->addEditQuestion($_POST);
         break;
-
     case 'getQuestion':
         $miniSurvey->getQuestionInfo((int) ($_GET['qsID']), (int) ($_GET['qID']));
         break;
-
     case 'delQuestion':
         $miniSurvey->deleteQuestion((int) ($_GET['qsID']), (int) ($_GET['msqID']));
         break;
-
     case 'reorderQuestions':
         $miniSurvey->reorderQuestions((int) ($_POST['qsID']), $_POST['qIDs']);
         break;
-
     case 'refreshSurvey':
     default:
         $showEdit = (isset($_REQUEST['showEdit']) && (int) ($_REQUEST['showEdit']) == 1) ? true : false;
