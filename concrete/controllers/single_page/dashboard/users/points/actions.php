@@ -15,6 +15,7 @@ class Actions extends DashboardPageController
 
     public function on_start()
     {
+        parent::on_start();
         $this->upa = new UserPointAction();
     }
 
