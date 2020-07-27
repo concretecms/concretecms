@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+?>
 <?php $c = Page::getCurrentPage(); ?>
 
 <?php if (isset($wf)) {
@@ -9,15 +11,15 @@
 
 <form method="post" action="<?=$view->action('save_workflow_details')?>" method="post">
 <input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
-<?=Loader::helper('validation/token')->output('save_workflow_details')?>
+<?=$app->make('helper/validation/token')->output('save_workflow_details')?>
 
-<?php Loader::element("workflow/edit_type_form_required", array('workflow' => $wf));
+<?php View::element("workflow/edit_type_form_required", array('workflow' => $wf));
     ?>
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
-	<a href="<?=URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
-	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
+	<a href="<?=URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-secondary float-left"><?=t("Cancel")?></a>
+	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary float-right" />
 </div>
 </div>
 </form>
@@ -26,7 +28,7 @@
 } else {
     ?>
 
-	<?php Loader::element("workflow/type_form_required", array('workflow' => $wf));
+	<?php View::element("workflow/type_form_required", array('workflow' => $wf));
     ?>
 
 <?php 
@@ -40,23 +42,23 @@
     ?>
 
 	<form method="post" action="<?=$view->action('submit_add')?>">
-	<?=Loader::helper('validation/token')->output('add_workflow')?>
+	<?=$app->make('helper/validation/token')->output('add_workflow')?>
 		<fieldset>
 		
 			<legend><?=t('Add Workflow')?></legend>
 			
 			<div class="form-group">
-				<?=$form->label('wfName', t('Name'))?>
 				<div class="input-group">
+				  <div class="input-group-prepend"><?=$form->label('wfName', t('Name'), ['class'=>'input-group-text'])?></div>
 					<?=$form->text('wfName', $wfName)?>
-					<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+					<span class="input-group-append"><div class="input-group-text"><i class="fa fa-asterisk"></i></div></span>
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<?=$form->label('wftID', t('Type'))?>
 				<div class="input-group">
-					<?=$form->select('wftID', $types)?>
+          <div class="input-group-prepend"><?=$form->label('wftID', t('Type'), ['class'=>'input-group-text'])?></div>
+					<?=$form->select('wftID', $types, ['class'=>'custom-select'])?>
 				</div>
 			</div>
 
@@ -66,9 +68,9 @@
 				<div style="display: none" class="form-group ccm-workflow-type-form" id="ccm-workflow-type-<?=$type->getWorkflowTypeID()?>">
 					<?php
                     if ($type->getPackageID() > 0) {
-                        @Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/add_type_form', $type->getPackageHandle(), array('type' => $type));
+                        @View::element('workflow/types/' . $type->getWorkflowTypeHandle()  . '/add_type_form', $type->getPackageHandle(), array('type' => $type));
                     } else {
-                        @Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/add_type_form', array('type' => $type));
+                        @View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/add_type_form', array('type' => $type));
                     }
     ?>
 				</div>
@@ -79,8 +81,8 @@
 		
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
-			<a href="<?=URL::page($c)?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
-			<button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
+			<a href="<?=URL::page($c)?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
+			<button type="submit" class="btn btn-primary float-right"><?=t('Add')?></button>
 		</div>
 		</div>
 			

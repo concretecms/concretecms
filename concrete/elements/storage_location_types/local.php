@@ -30,7 +30,7 @@ if (is_object($configuration)) {
         </div>
     </div>
     <?php if ($locationHasFiles) { ?>
-        <span class="help-block"><?= t('You can not change the root path of this storage location because it contains files.') ?></span>
+        <span class="help-block form-text"><?= t('You can not change the root path of this storage location because it contains files.') ?></span>
     <?php } ?>
 </div>
 <div class="form-group">

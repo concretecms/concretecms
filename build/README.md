@@ -9,7 +9,7 @@ In order to build assets for concrete5 you need:
 
 - [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/) (may be bundled with Node.js)
-- [Grunt](https://gruntjs.com/) (install it globally with `npm --global install gulp`)
+- [Grunt](https://gruntjs.com/) (install it globally with `npm install -g grunt-cli`)
 
 Once you have installed the grunt client, you need to install the project dependencies. From inside the `build` directory launch the following command:
 ```

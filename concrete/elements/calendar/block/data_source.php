@@ -2,16 +2,35 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-$form = Core::make('helper/form');
+use Concrete\Core\Attribute\Category\SiteCategory;
+use Concrete\Core\Calendar\Calendar\CalendarService;
+use Concrete\Core\Entity\Calendar\Calendar;
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Support\Facade\Application;
 
+/** @var bool $multiple */
+/** @var array $caID */
+/** @var string $calendarAttributeKeyHandle */
+
+$app = Application::getFacadeApplication();
+/** @var Form $form */
+$form = $app->make(Form::class);
+/** @var CalendarService $calendarService */
+$calendarService = $app->make(CalendarService::class);
+/** @var SiteCategory $siteCategory */
+$siteCategory = $app->make(SiteCategory::class);
+
+/** @var Calendar[] $calendars */
 $calendars = array_filter(
-    Concrete\Core\Calendar\Calendar::getList(),
+    $calendarService->getList(),
     function ($calendar) {
-        $p = new \Permissions($calendar);
-
-        return $p->canViewCalendarInEditInterface();
+        $permissionChecker = new Checker($calendar);
+        $responseObject = $permissionChecker->getResponseObject();
+        return $responseObject->validate("view_calendar_in_edit_interface");
     }
 );
+
 if (isset($multiple) && $multiple) {
     $calendarSelect = [];
 } else {
@@ -24,7 +43,9 @@ foreach ($calendars as $calendar) {
 
 $chooseCalendar = 'all';
 $calendarAttributeKeys = [];
-$keys = Concrete\Core\Attribute\Key\SiteKey::getList();
+
+$keys = $siteCategory->getList();
+
 foreach ($keys as $ak) {
     if ($ak->getAttributeTypeHandle() == 'calendar') {
         $calendarAttributeKeys[] = $ak;
@@ -42,61 +63,55 @@ if ($calendarAttributeKeyHandle) {
     $chooseCalendar = 'specific';
 }
 ?>
+
 <div class="form-group">
-    <label class="control-label"><?= t('Calendar') ?></label>
-    <?php /* ?>
-    <div class="radio">
-        <label>
-            <input type="radio" name="chooseCalendar" value="all"<?= $chooseCalendar == 'all' ? ' checked' : '' ?>>
-            <?= t('All Events') ?>
-        </label>
-    </div>*/ ?>
-    <div class="radio">
-        <label>
-            <input type="radio" name="chooseCalendar" value="specific"<?= $chooseCalendar == 'specific' ? ' checked' : '' ?>>
-            <?= t('Specific Calendar') ?>
-        </label>
+    <?php echo $form->label("chooseCalendar", t('Calendar')); ?>
+
+    <div class="form-check">
+        <?php echo $form->radio('chooseCalendar', 'specific', $chooseCalendar, ["id" => "chooseCalendarSpecific", "name" => "chooseCalendar"]) ?>
+        <?php echo $form->label('chooseCalendarSpecific', t('Specific Calendar'), ["class" => "form-check-label"]) ?>
     </div>
-    <?php
-    if (count($calendarAttributeKeys)) {
-        ?>
-        <div class="radio">
-            <label>
-                <input type="radio" name="chooseCalendar" value="site<?= $chooseCalendar == 'site' ? ' checked' : '' ?>>
-                <?= t('Site-wide Calendar') ?>
-            </label>
+
+    <?php if (count($calendarAttributeKeys)) { ?>
+        <div class="form-check">
+            <?php echo $form->radio('chooseCalendar', 'site', $chooseCalendar, ["id" => "chooseCalendarSite", "name" => "chooseCalendar"]) ?>
+            <?php echo $form->label('chooseCalendarSite', t('Site-wide Calendar'), ["class" => "form-check-label"]) ?>
         </div>
+
         <div data-row="calendar-attribute">
             <div class="form-group">
-                <?= $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute')) ?>
-                <?= $form->select('calendarAttributeKeyHandle', $calendarAttributeKeySelect, $calendarAttributeKeyHandle) ?>
+                <?php echo $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute')) ?>
+                <?php echo $form->select('calendarAttributeKeyHandle', $calendarAttributeKeySelect, $calendarAttributeKeyHandle) ?>
             </div>
         </div>
-        <?php
-        }
-    ?>
+    <?php } ?>
+
     <div data-row="specific-calendar">
         <div class="form-group">
             <?php
-            $method = isset($multiple) && $multiple ? 'selectMultiple' : 'select';
-            $calendarField = isset($multiple) && $multiple ? 'caID[]' : 'caID';
+            echo $form->label("calendarSelect", t('Calendar'));
+
+            if (isset($multiple) && $multiple) {
+                echo $form->selectMultiple('caID[]', $calendarSelect, $caID, ["id" => "calendarSelect", "name" => "caID[]"]);
+            } else {
+                echo $form->select('caID', $calendarSelect, $caID, ["id" => "calendarSelect", "name" => "caID"]);
+            }
             ?>
-            <?= $form->label($calendarField, t('Calendar')) ?>
-            <?= $form->$method('caID', $calendarSelect, $caID) ?>
         </div>
     </div>
 </div>
 
+<!--suppress EqualityComparisonWithCoercionJS -->
 <script>
-    $(function() {
+    $(function () {
         <?php if (isset($multiple) && $multiple) { ?>
-            $('#caID').selectize({
-                plugins: ['remove_button']
-            });
+        $('#caID').selectize({
+            plugins: ['remove_button']
+        });
         <?php } ?>
 
-        $('input[name=chooseCalendar]').on('change', function() {
-            var selected = $('input[name=chooseCalendar]:checked').val();
+        $('input[name=chooseCalendar]').on('change', function () {
+            let selected = $('input[name=chooseCalendar]:checked').val();
             if (selected == 'site') {
                 $('div[data-row=calendar-attribute]').show();
                 $('div[data-row=specific-calendar]').hide();

@@ -283,7 +283,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $c = Page::getByID($this->redirectCID);
                         if (is_object($c) && !$c->isError()) {
                             $r = Redirect::page($c);
-                            $r->setTargetUrl($r->getTargetUrl() . '?form_success=1&entry=' . $entry->getID());
+                            $target = strpos($r->getTargetUrl(),"?") === false ? $r->getTargetUrl()."?" : $r->getTargetUrl()."&";
+                            $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getID());
                         }
                     }
 

@@ -1,14 +1,14 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <div class="form-group">
     <?php
     echo $form->label($view->field('content'), $label);
 
-    if ($description): ?>
+    if ($description) { ?>
         <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo $description ?>"></i>
-    <?php endif; ?>
+    <?php } ?>
 
     <div class="controls">
         <?php

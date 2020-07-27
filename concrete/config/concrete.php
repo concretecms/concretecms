@@ -501,6 +501,10 @@ return [
             'address' => null,
             'name' => null,
         ],
+        'register_notification' => [
+            'address' => null,
+            'name' => null,
+        ],
         'validate_registration' => [
             'address' => null,
             'name' => null,

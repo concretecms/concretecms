@@ -85,7 +85,7 @@ class UserInterface
             $argsstr .= $k . '="' . $v . '" ';
         }
 
-        return '<a href="' . $href . '" class="btn btn-default ' . $innerClass . '" ' . $argsstr . '>' . $text . '</a>';
+        return '<a href="' . $href . '" class="btn btn-secondary ' . $innerClass . '" ' . $argsstr . '>' . $text . '</a>';
     }
 
     /**
@@ -111,7 +111,7 @@ class UserInterface
             $argsstr .= $k . '="' . $v . '" ';
         }
 
-        return '<input type="button" class="btn btn-default ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $buttonAlign . ' ' . $argsstr . ' />';
+        return '<input type="button" class="btn btn-secondary ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $buttonAlign . ' ' . $argsstr . ' />';
     }
 
     /**

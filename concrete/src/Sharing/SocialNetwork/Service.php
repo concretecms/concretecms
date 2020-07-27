@@ -1,7 +1,10 @@
 <?php
+
 namespace Concrete\Core\Sharing\SocialNetwork;
 
-class Service
+use JsonSerializable;
+
+class Service implements JsonSerializable
 {
     protected $ssHandle;
     protected $ssName;
@@ -53,5 +56,13 @@ class Service
                 return $s;
             }
         }
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "handle" => $this->getHandle(),
+            "displayName" => $this->getDisplayName()
+        ];
     }
 }

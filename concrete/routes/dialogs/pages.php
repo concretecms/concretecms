@@ -7,6 +7,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Namespace: Concrete\Controller\Dialog\Page\
  */
 $router->all('/add', 'Add::view');
+$router->all('/versions', 'Versions::view');
+$router->all('/versions/duplicate', 'Versions::duplicate');
+$router->all('/versions/new_page', 'Versions::new_page');
+$router->all('/versions/delete', 'Versions::delete');
+$router->all('/versions/approve', 'Versions::approve');
+$router->all('/versions/unapprove', 'Versions::unapprove');
 $router->all('/add_block', 'AddBlock::view');
 $router->all('/add_block/submit', 'AddBlock::submit');
 $router->all('/add_block_list', 'AddBlockList::view');

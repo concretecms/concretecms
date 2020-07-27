@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c723921a80a1b3b990b583b036a1a7c1",
+    "content-hash": "83d000632818efb9f857147532620d1b",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -3921,12 +3921,12 @@
             "version": "v1.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/whiteoctober/Pagerfanta.git",
+                "url": "https://github.com/BabDev/Pagerfanta.git",
                 "reference": "29aade64addfdfb12c05aabf160f09d1aea6b143"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/29aade64addfdfb12c05aabf160f09d1aea6b143",
+                "url": "https://api.github.com/repos/BabDev/Pagerfanta/zipball/29aade64addfdfb12c05aabf160f09d1aea6b143",
                 "reference": "29aade64addfdfb12c05aabf160f09d1aea6b143",
                 "shasum": ""
             },
@@ -8129,6 +8129,75 @@
                 "test"
             ],
             "time": "2015-05-11T14:41:42+00:00"
+        },
+        {
+            "name": "mlocati/ci-info",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/ci-info.git",
+                "reference": "596d7c9584d556843c37dfd169aecff800e606ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/ci-info/zipball/596d7c9584d556843c37dfd169aecff800e606ad",
+                "reference": "596d7c9584d556843c37dfd169aecff800e606ad",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpunit/phpunit": "^8.5"
+            },
+            "bin": [
+                "bin/ci-info"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CIInfo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "michele@locati.it",
+                    "homepage": "https://github.com/mlocati",
+                    "role": "author"
+                }
+            ],
+            "description": "Get informations about the current continuous integration environment",
+            "homepage": "https://github.com/mlocati/ci-info",
+            "keywords": [
+                "actions",
+                "appveyor",
+                "ci",
+                "continuous",
+                "github",
+                "info",
+                "integrations",
+                "pull",
+                "request",
+                "travis",
+                "travisci"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/mlocati",
+                    "type": "github"
+                },
+                {
+                    "url": "https://paypal.me/mlocati",
+                    "type": "other"
+                }
+            ],
+            "time": "2020-06-30T15:39:45+00:00"
         },
         {
             "name": "mockery/mockery",
