@@ -7,9 +7,7 @@ return [
     'debug' => false,
     'namespace' => 'Application',
 
-    /*
-     * Core Aliases
-     */
+    // Core Aliases
     'aliases' => [
         'Area' => '\Concrete\Core\Area\Area',
         'Asset' => '\Concrete\Core\Asset\Asset',
@@ -84,9 +82,7 @@ return [
         'Workflow' => '\Concrete\Core\Workflow\Workflow',
     ],
 
-    /*
-     * Core Providers
-     */
+    // Core Providers
     'providers' => [
         // Note, the order of these first few is important - we need events early for other service providers, but it depends on some things.
         'core_system' => '\Concrete\Core\System\SystemServiceProvider',
@@ -161,9 +157,7 @@ return [
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
     ],
 
-    /*
-     * Core Facades
-     */
+    // Core Facades
     'facades' => [
         'Core' => '\Concrete\Core\Support\Facade\Application',
         'Session' => '\Concrete\Core\Support\Facade\Session',
@@ -284,15 +278,11 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
     ],
 
-    /*
-     * Core Routes - no longer used in the core in this way. Look to the routes/ directories instead.
-     */
+    // Core Routes - no longer used in the core in this way. Look to the routes/ directories instead.
     'routes' => [
     ],
 
-/*
- * Route themes
- */
+    // Route themes
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
@@ -356,18 +346,14 @@ return [
         'WebM' => ['webm', FileType::T_VIDEO, false, 'video'],
     ],
 
-    /*
-     * Importer Attributes
-     */
+    // Importer Attributes
     'importer_attributes' => [
         'width' => ['Width', 'NUMBER', false],
         'height' => ['Height', 'NUMBER', false],
         'duration' => ['Duration', 'NUMBER', false],
     ],
 
-    /*
-     * Importer processors
-     */
+    // Importer processors
     'import_processors' => [
         'ccm.file.exists' => Concrete\Core\File\Import\Processor\FileExistingValidator::class,
         'ccm.file.extension' => Concrete\Core\File\Import\Processor\FileExtensionValidator::class,
@@ -377,9 +363,7 @@ return [
         'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
     ],
 
-    /*
-     * Assets
-     */
+    // Assets
     'assets' => [
         // External vendor libraries required to run concrete5 or our themes at a fundamental level that can't
         // or shouldn't be bundled with our own SCSS/JS files.
@@ -403,7 +387,7 @@ return [
         'ckeditor' => [
             [
                 'javascript',
-                'js/ckeditor/ckeditor.js'
+                'js/ckeditor/ckeditor.js',
             ],
         ],
 
@@ -421,7 +405,7 @@ return [
         'font-awesome' => [
             [
                 'css',
-                'css/fontawesome/all.css'
+                'css/fontawesome/all.css',
             ],
         ],
 
@@ -432,7 +416,6 @@ return [
                 ['local' => false],
             ],
         ],
-
 
         // Foundational Assets
         'core/cms' => [
@@ -466,7 +449,9 @@ return [
             ['javascript', 'js/features/conversations/frontend.js'],
             ['css', 'css/features/conversations/frontend.css'],
         ],
-
+        'ace' => [
+            ['javascript', 'js/ace/ace.js'],
+        ],
         'feature/documents/frontend' => [
             ['javascript', 'js/features/documents/frontend.js'],
             ['css', 'css/features/documents/frontend.css'],
@@ -519,10 +504,8 @@ return [
             ['javascript', 'js/features/maps/frontend.js'],
             ['css', 'css/features/maps/frontend.css'],
         ],
-
     ],
     'asset_groups' => [
-
         'jquery' => [
             [
                 ['javascript', 'jquery'],
@@ -548,7 +531,11 @@ return [
                 ['css', 'ckeditor/concrete'],
             ],
         ],
-
+        'ace' => [
+            [
+                ['javascript', 'ace'],
+            ],
+        ],
         'core/cms' => [
             [
                 ['javascript', 'jquery'],
@@ -557,7 +544,7 @@ return [
                 ['javascript', 'core/cms'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'core/cms'],
-            ]
+            ],
         ],
 
         'fullcalendar' => [
@@ -573,28 +560,28 @@ return [
             [
                 ['javascript', 'feature/account/frontend'],
                 ['css', 'feature/account/frontend'],
-            ]
+            ],
         ],
 
         'feature/desktop/frontend' => [
             [
                 ['javascript', 'feature/desktop/frontend'],
                 ['css', 'feature/desktop/frontend'],
-            ]
+            ],
         ],
 
         'feature/calendar/frontend' => [
             [
                 ['javascript', 'feature/calendar/frontend'],
                 ['css', 'feature/calendar/frontend'],
-            ]
+            ],
         ],
 
         'feature/conversations/frontend' => [
             [
                 ['javascript', 'feature/conversations/frontend'],
                 ['css', 'feature/conversations/frontend'],
-            ]
+            ],
         ],
 
         'feature/documents/frontend' => [
@@ -602,83 +589,78 @@ return [
                 ['javascript', 'feature/documents/frontend'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'feature/documents/frontend'],
-            ]
+            ],
         ],
 
         'feature/faq/frontend' => [
             [
                 ['css', 'feature/faq/frontend'],
-            ]
+            ],
         ],
 
         'feature/imagery/frontend' => [
             [
                 ['javascript', 'feature/imagery/frontend'],
                 ['css', 'feature/imagery/frontend'],
-            ]
+            ],
         ],
 
         'feature/navigation/frontend' => [
             [
                 ['javascript', 'feature/navigation/frontend'],
                 ['css', 'feature/navigation/frontend'],
-            ]
+            ],
         ],
 
         'feature/video/frontend' => [
             [
                 ['css', 'feature/video/frontend'],
-            ]
+            ],
         ],
 
         'feature/social/frontend' => [
             [
                 ['css', 'feature/social/frontend'],
-            ]
+            ],
         ],
 
         'feature/express/frontend' => [
             [
                 ['javascript', 'feature/express/frontend'],
                 ['css', 'feature/express/frontend'],
-            ]
+            ],
         ],
 
         'feature/maps/frontend' => [
             [
                 ['javascript', 'feature/maps/frontend'],
                 ['css', 'feature/maps/frontend'],
-            ]
+            ],
         ],
 
         'feature/search/frontend' => [
             [
                 ['css', 'feature/search/frontend'],
-            ]
+            ],
         ],
 
         'feature/taxonomy/frontend' => [
             [
                 ['css', 'feature/taxonomy/frontend'],
-            ]
+            ],
         ],
 
         'feature/testimonials/frontend' => [
             [
                 ['css', 'feature/testimonials/frontend'],
-            ]
+            ],
         ],
 
         'feature/basics/frontend' => [
             [
                 ['css', 'feature/basics/frontend'],
-            ]
+            ],
         ],
-
-
-
-
-
     ],
     // HTTP Client options
     'http_client' => [
@@ -774,7 +756,6 @@ return [
         ['Concrete\Core\Board\Command\GenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\GenerateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
 
-
         ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],
         ['Concrete\Core\Board\Command\ClearSlotFromBoardCommand', 'Concrete\Core\Board\Command\ClearSlotFromBoardCommandHandler'],
         ['Concrete\Core\Board\Command\AddCustomSlotToBoardCommand', 'Concrete\Core\Board\Command\AddCustomSlotToBoardCommandHandler'],
@@ -784,7 +765,5 @@ return [
         ['Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommand', 'Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommandHandler'],
         ['Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand', 'Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommandHandler'],
         ['Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommand', 'Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommandHandler'],
-
     ],
-
 ];
