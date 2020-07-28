@@ -401,7 +401,7 @@ echo $userInterface->tabs([
                         <?php echo t('RSS Feed can be found here: %s', '<a href="' . h($rssFeed->getFeedURL()) . '" target="_blank">' . $rssFeed->getFeedURL() . '</a>') ?>
                     <?php } else { ?>
                         <div class="form-group">
-                            <?php echo $form->label('num', t('NRSS Feed Title')); ?>
+                            <?php echo $form->label('num', t('RSS Feed Title')); ?>
                             <?php echo $form->text("rssTitle", $num, ["id" => "ccm-pagelist-rssTitle", "name" => "rssTitle"]); ?>
                         </div>
 
