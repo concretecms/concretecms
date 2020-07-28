@@ -64,9 +64,9 @@ echo $userInterface->tabs([
     </div>
 
     <div class="tab-pane" id="options-<?php echo $id; ?>" role="tabpanel">
-        <label class="control-label">
-            <?php echo t('Navigation'); ?>
-        </label>
+        <div class="form-group">
+            <?php echo $form->label("", t("Navigation")); ?>
+        </div>
 
         <div class="form-group">
             <div class="form-check">

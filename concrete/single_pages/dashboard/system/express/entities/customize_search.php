@@ -1,28 +1,51 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php
 
-    <div class="ccm-dashboard-header-buttons">
+defined('C5_EXECUTE') or die("Access Denied.");
 
-        <?php
-        $manage = new \Concrete\Controller\Element\Dashboard\Express\Menu($entity);
-        $manage->render();
-        ?>
+use Concrete\Controller\Element\Dashboard\Express\Menu;
+use Concrete\Controller\Element\Search\Express\CustomizeResults;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validation\CSRF\Token;
+use Concrete\Core\View\View;
 
-    </div>
+/** @var View $view */
+/** @var Entity $entity */
+/** @var CustomizeResults $customizeElement */
+
+$app = Application::getFacadeApplication();
+/** @var Token $token */
+$token = $app->make(Token::class);
+
+?>
+
+<div class="ccm-dashboard-header-buttons">
+
+    <?php
+    $manage = new Menu($entity);
+    /** @noinspection PhpDeprecationInspection */
+    $manage->render();
+    ?>
+
+</div>
 
 <div class="row">
-    <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
+    <?php /** @noinspection PhpUnhandledExceptionInspection */
+    View::element('dashboard/express/detail_navigation', ['entity' => $entity]) ?>
+
     <div class="col-md-8">
-        <form method="post" action="<?=$view->action('save', $entity->getID())?>">
-            <?=$token->output('save')?>
-        <?php
-        print $customizeElement->render();
-        ?>
+        <form method="post" action="<?php echo $view->action('save', $entity->getID()) ?>">
+            <?php echo $token->output('save') ?>
+            <?php /** @noinspection PhpDeprecationInspection */
+            print $customizeElement->render();  ?>
+
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+                    <button class="float-right btn btn-primary" type="submit">
+                        <?php echo t('Save') ?>
+                    </button>
                 </div>
             </div>
-
         </form>
     </div>
 </div>

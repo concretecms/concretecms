@@ -48,7 +48,7 @@ $form = $app->make(Form::class);
 </div>
 
 <div class="alert alert-info">
-    <?php echo t('Add social links %s', '<a href="' . (string)Url::to('/dashboard/system/basics/social') . '">' . t("in the dashboard") . '</a>'); ?>
+    <?php echo t(/*i18n: the two %s will be replaced with HTML code*/'Add social links %sin the dashboard%s', '<a href="' . (string)Url::to('/dashboard/system/basics/social') . '">' ,'</a>'); ?>
 </div>
 
 <!--suppress CssUnusedSymbol -->
