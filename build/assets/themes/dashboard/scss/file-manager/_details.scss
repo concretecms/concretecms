@@ -20,17 +20,20 @@
 }
 
 @media (min-width: map-get($grid-breakpoints, "md")) {
+  .ccm-file-manager-details-sets,
   .ccm-file-manager-details-attributes {
     @include concrete-data-row-dl-horizontal;
   }
 }
 @media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-file-manager-details-sets,
   .ccm-file-manager-details-attributes {
     @include concrete-data-row-dl-vertical;
   }
 }
 
-.ccm-file-manager-details-statistics, .ccm-file-manager-details-storage {
+.ccm-file-manager-details-statistics,
+.ccm-file-manager-details-storage {
   @include concrete-data-row-dl-vertical;
 }
 

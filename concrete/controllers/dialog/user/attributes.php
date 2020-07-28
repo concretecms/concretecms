@@ -10,6 +10,7 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Command\ClearAttributesCommand;
 use Concrete\Core\Attribute\Command\SaveAttributesCommand;
+use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait;
 use Concrete\Core\Attribute\Key\Component\KeySelector\KeySerializer;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Filesystem\ElementManager;
@@ -21,6 +22,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Attributes extends BackendInterfaceController
 {
+
+    use ControllerTrait;
 
     protected $viewPath = '/dialogs/user/attributes';
 
@@ -92,6 +95,21 @@ class Attributes extends BackendInterfaceController
         }
     }
 
+    public function getObjects(): array
+    {
+        return [$this->getUserFromRequest()];
+    }
+
+    public function getCategory(): CategoryInterface
+    {
+        return $this->category;
+    }
+
+    public function canEditAttributeKey(int $akID): bool
+    {
+        return in_array($akID, $this->allowedEditAttributes);
+    }
+
     public function view($uID)
     {
         $user = $this->getUserFromRequest();
@@ -103,52 +121,14 @@ class Attributes extends BackendInterfaceController
         $this->set('keySelector', $keySelector);
     }
 
-    public function saveAttributes()
+    public function submit()
     {
-        // Let's retrieve a list of attribute keys that we're trying to set.
-        $selectedAttributes = (array) $this->request->request->get('selectedKeys');
-
-        // Now, let's divide attributes into piles of those we need to save, and those we need to clear
-        $attributesToClear = [];
-        $attributesToSave = [];
-
-        $user = $this->getUserFromRequest();
-        $values = $this->category->getAttributeValues($user);
-        foreach ($values as $value) {
-            $attributeKey = $value->getAttributeKey();
-            if ($attributeKey) {
-                if (!in_array($attributeKey->getAttributeKeyID(), $selectedAttributes) &&
-                    in_array($attributeKey->getAttributeKeyID(), $this->allowedEditAttributes)) {
-                    // This is an attribute we have currently set on the object, but it's not
-                    // in the request, and it is something we're allowed to edit, so that means it needs
-                    // to be cleared
-                    $attributesToClear[] = $attributeKey;
-                }
-            }
+        if ($this->validateAction()) {
+            $this->saveAttributes();
+            $message = new EditResponse();
+            $message->setMessage(t('Attributes updated successfully.'));
+            return new JsonResponse($message);
         }
-
-        foreach($selectedAttributes as $akID) {
-            if (in_array($akID, $this->allowedEditAttributes)) {
-                $ak = $this->category->getAttributeKeyByID($akID);
-                if ($ak) {
-                    $attributesToSave[] = $ak;
-                }
-            }
-        }
-
-        $this->app->executeCommand(new ClearAttributesCommand($attributesToClear, $user));
-        $this->app->executeCommand(new SaveAttributesCommand($attributesToSave, $user));
-
-        $message = new EditResponse();
-        $message->setMessage(t('Attributes updated successfully.'));
-        return new JsonResponse($message);
-    }
-
-    public function getAttribute()
-    {
-        $key = $this->category->getByID($this->request->request->get('akID'));
-        $keySerializer = new KeySerializer($key);
-        return new JsonResponse($keySerializer);
     }
 
 }

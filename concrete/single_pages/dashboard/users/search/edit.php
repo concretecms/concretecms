@@ -45,11 +45,11 @@ if (count($languages) > 0) {
 
 <hr class="mt-2 mb-4"/>
 
-<section data-section="account" class="position-relative">
+<section data-section="account">
     <?php if ($canViewAccountModal) { ?>
-        <button style="top: 0; right: 0"
+        <button
                 data-toggle="modal" data-target="#edit-account-modal"
-                class="position-absolute btn btn-secondary"><?= t('Edit') ?></button>
+                class="btn-section btn btn-secondary"><?= t('Edit') ?></button>
     <?php } ?>
     <h3><?= t('Account') ?></h3>
     <dl class="ccm-user-detail-account">
@@ -203,11 +203,11 @@ if (count($languages) > 0) {
 
 <hr class="mt-5 mb-4"/>
 
-<section class="position-relative" data-section="groups" v-cloak>
+<section data-section="groups" v-cloak>
     <?php
     if ($canAddGroup) {
     ?>
-    <button style="top: 0; right: 0" class="position-absolute btn btn-secondary"
+    <button class="btn-section btn btn-secondary"
             data-toggle="modal" data-target="#edit-groups-modal"
     ><?= t('Edit') ?></button>
     <?php } ?>
@@ -259,11 +259,11 @@ if (count($languages) > 0) {
 
 <hr class="mt-5 mb-4"/>
 
-<section class="position-relative" data-section="attributes">
+<section data-section="attributes">
     <?php
     if (count($allowedEditAttributes)) {
         ?>
-        <a style="top: 0; right: 0" class="dialog-launch position-absolute btn btn-secondary"
+        <a class="dialog-launch btn-section btn btn-secondary"
            href="<?=URL::to('/ccm/system/dialogs/user/attributes', $user->getUserID())?>"
            dialog-width="800" dialog-height="640" dialog-title="<?=t('Edit Attributes')?>">
         <?= t('Edit') ?></a>

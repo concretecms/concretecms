@@ -26,13 +26,13 @@ $router->all('/sets', 'Sets::view');
 $router->all('/sets/submit', 'Sets::submit');
 $router->all('/folder', 'Folder::view');
 $router->all('/folder/submit', 'Folder::submit');
-$router->all('/properties/{fID}', 'Properties::view');
+$router->all('/properties/', 'Properties::view');
+$router->all('/properties/submit', 'Properties::submit');
+$router->all('/properties/get_attribute', 'Properties::getAttribute');
+
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
-$router->all('/properties/clear_attribute', 'Properties::clear_attribute');
-$router->all('/properties/save', 'Properties::save');
-$router->all('/properties/update_attribute', 'Properties::update_attribute');
 $router->all('/search', 'Search::view');
 $router->all('/jump_to_folder', 'JumpToFolder::view');
 $router->all('/thumbnails', 'Thumbnails::view');

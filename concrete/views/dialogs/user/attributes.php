@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<form method="post" action="<?=$view->action('save_attributes')?>" data-dialog-form="user-attributes">
+<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="user-attributes">
 
     <div class="ccm-ui">
         <?php
