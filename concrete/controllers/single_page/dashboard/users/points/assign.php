@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
 
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Concrete\Core\User\Point\Action\ActionDescription as UserPointActionDescription;
@@ -13,11 +14,15 @@ class Assign extends DashboardPageController
 {
     public $helpers = ['form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library', 'form/user_selector', 'form/date_time'];
 
+    /**
+     * @var UserPointEntry
+     */
     protected $upe;
 
     public function on_start()
     {
         parent::on_start();
+
         $this->upe = new UserPointEntry();
     }
 
@@ -25,7 +30,6 @@ class Assign extends DashboardPageController
     {
         if (isset($upID) && $upID > 0) {
             $this->upe->load($upID);
-            $this->setAttribs($this->upe);
 
             $u = $this->upe->getUserPointEntryUserObject();
             if (is_object($u) && $u->getUserID() > 0) {
@@ -33,21 +37,19 @@ class Assign extends DashboardPageController
             }
         }
 
-        $this->set('valt', $this->app->make('helper/validation/token'));
         $this->set('userPointActions', $this->getUserPointActions());
     }
 
     public function save()
     {
-        if (!$this->app->make('helper/validation/token')->validate('add_community_points')) {
-            $this->error = $this->app->make('error');
+        if (!$this->token->validate('add_community_points')) {
             $this->error->add('Invalid Token');
-            $this->view();
 
-            return;
+            return $this->view();
         }
 
-        $user = $this->post('upUser');
+        $post = $this->request->request;
+        $user = $post->get('upUser');
         if (is_numeric($user)) {
             // rolling as user id
             $ui = $this->app->make(UserInfoRepository::class)->getByID($user);
@@ -59,30 +61,33 @@ class Assign extends DashboardPageController
         if (!is_object($ui)) {
             $this->error->add(t('User Required'));
         }
-        if (!$this->post('upaID')) {
+
+        if (!($upaID = $post->get('upaID'))) {
             $this->error->add(t('Action Required'));
         }
-        if (!is_numeric($this->post('upPoints'))) {
+
+        if (!is_numeric($upPoints = $post->get('upPoints'))) {
             $this->error->add(t('Points Required'));
         }
 
-        $action = UserPointAction::getByID($this->post('upaID'));
+        $action = UserPointAction::getByID($upaID);
         if (!$action) {
             $this->error->add(t('Invalid Action'));
         }
 
         if (!$this->error->has()) {
             $obj = new UserPointActionDescription();
-            $obj->setComments($this->post('upComments'));
+            $obj->setComments($post->get('upComments'));
             if ($this->post('manual_datetime') > 0) {
                 $dt = $this->app->make('helper/form/date_time');
-                $entry = $action->addEntry($ui, $obj, $this->post('upPoints'), $dt->translate('dtoverride'));
+                $entry = $action->addEntry($ui, $obj, $upPoints, $dt->translate('dtoverride'));
             } else {
-                $entry = $action->addEntry($ui, $obj, $this->post('upPoints'));
+                $entry = $action->addEntry($ui, $obj, $upPoints);
             }
 
-            return $this->buildRedirect(['/dashboard/users/points/assign', 'entry_saved']);
+            return $this->buildRedirect($this->action('entry_saved'));
         }
+
         $this->view();
     }
 
@@ -108,29 +113,21 @@ class Assign extends DashboardPageController
         foreach ($actions as $key => $value) {
             $res[] = ['optionValue' => $key, 'optionDisplay' => $value];
         }
-        echo json_encode($res);
-        exit;
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($res);
     }
 
     public function getJsonDefaultPointAction($upaID)
     {
         $upa = new UserPointAction();
         $upa->load($upaID);
-        echo json_encode($upa->getUserPointActionDefaultPoints());
-        exit;
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($upa->getUserPointActionDefaultPoints());
     }
 
     public function entry_saved()
     {
         $this->set('message', t('User Point Entry Saved'));
         $this->view();
-    }
-
-    protected function setAttribs($upe)
-    {
-        $attribs = $upe->getAttributeNames();
-        foreach ($attribs as $key) {
-            $this->set($key, $upe->{$key});
-        }
     }
 }
