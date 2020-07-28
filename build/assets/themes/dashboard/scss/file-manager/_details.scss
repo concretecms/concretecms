@@ -19,68 +19,22 @@
   }
 }
 
-@mixin ccm-file-manager-details-dl {
-  >dd {
-    max-width: 100%;
-    word-break: break-word;
-  }
-}
-
-@mixin ccm-file-manager-details-dl-horizontal {
-  @include ccm-file-manager-details-dl;
-  display: flex;
-  flex-wrap: wrap;
-  >dt, >dl {
-    position: relative;
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-  >dt {
-    flex: 0 0 25%;
-    max-width: 25%;
-    text-align: right;
-    font-weight: normal;
-  }
-  >dd {
-    >:first-child {
-      font-weight: bold;
-    }
-    flex: 0 0 75%;
-    max-width: 75%;
-    margin-bottom: 2rem;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-@mixin ccm-file-manager-details-dl-vertical {
-  @include ccm-file-manager-details-dl;
-  >dt {
-    font-weight: bold;
-  }
-  >dd {
-    font-weight: normal;
-    margin-bottom: 2rem;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
 @media (min-width: map-get($grid-breakpoints, "md")) {
+  .ccm-file-manager-details-sets,
   .ccm-file-manager-details-attributes {
-    @include ccm-file-manager-details-dl-horizontal;
+    @include concrete-data-row-dl-horizontal;
   }
 }
 @media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-file-manager-details-sets,
   .ccm-file-manager-details-attributes {
-    @include ccm-file-manager-details-dl-vertical;
+    @include concrete-data-row-dl-vertical;
   }
 }
 
-.ccm-file-manager-details-statistics, .ccm-file-manager-details-storage {
-  @include ccm-file-manager-details-dl-vertical;
+.ccm-file-manager-details-statistics,
+.ccm-file-manager-details-storage {
+  @include concrete-data-row-dl-vertical;
 }
 
 .ccm-file-manager-details-download, .ccm-file-manager-details-usage {

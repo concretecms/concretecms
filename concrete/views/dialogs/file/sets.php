@@ -60,6 +60,7 @@ use Concrete\Core\Entity\File\File;
                     $div = new Element('div');
 
                     $div->addClass("form-check");
+                    $div->addClass('li');
 
                     /** @noinspection PhpParamsInspection */
                     $div->appendChild($checkbox)->appendChild($label);
@@ -80,3 +81,13 @@ use Concrete\Core\Entity\File\File;
         </button>
     </div>
 </form>
+
+<script>
+    $(function() {
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+            if (data.form === 'save-file-set') {
+                window.location.reload();
+            }
+        });
+    })
+</script>

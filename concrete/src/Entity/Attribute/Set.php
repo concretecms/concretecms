@@ -18,7 +18,7 @@ use Concrete\Core\Export\Item\AttributeSet;
  *     }
  * )
  */
-class Set implements ExportableInterface
+class Set implements ExportableInterface, \JsonSerializable
 {
     use PackageTrait;
 
@@ -223,5 +223,13 @@ class Set implements ExportableInterface
     public function __toString()
     {
         return (string) $this->getAttributeSetID();
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->getAttributeSetDisplayName('text'),
+            'keys' => $this->getAttributeKeys(),
+        ];
     }
 }

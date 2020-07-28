@@ -7,11 +7,13 @@ use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Search\SavedUserSearch;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\User\Command\UpdateUserAvatarCommand;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
@@ -20,6 +22,7 @@ use Imagine\Image\Box;
 use PermissionKey;
 use Permissions;
 use stdClass;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use UserAttributeKey;
 use UserInfo;
@@ -173,45 +176,39 @@ class Search extends DashboardPageController
     public function update_avatar($uID = false)
     {
         $this->setupUser($uID);
-        if (!$this->app->make('helper/validation/token')->validate()) {
-            throw new Exception($this->app->make('helper/validation/token')->getErrorMessage());
+        $token = $this->token;
+        if (!$token->validate('avatar/save_avatar', $this->request->query->get('ccm_token'))) {
+            $result['error'] = true;
+            $result['message'] = $token->getErrorMessage();
+            return new JsonResponse($result, 400);
         }
+
         if ($this->canEditAvatar) {
-            $file = $this->request->files->get('avatar');
+            $result = [];
+            $file = $this->request->files->get('file');
             if ($file !== null) {
-                /* @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
-                if (!$file->isValid()) {
-                    throw new Exception($file->getErrorMessage());
-                }
-                $image = \Image::open($file->getPathname());
-                $config = $this->app->make('config');
-                $image = $image->thumbnail(
-                    new Box(
-                        $config->get('concrete.icons.user_avatar.width'),
-                        $config->get('concrete.icons.user_avatar.height')
-                    )
-                );
-                $this->user->updateUserAvatar($image);
+
+                $command = new UpdateUserAvatarCommand($this->user, $file);
+                $this->app->executeCommand($command);
+
+                // Update the result
+                $result['success'] = true;
+                $result['avatar'] = $this->user->getUserAvatar()->getPath() . '?' . time();
+
             } elseif ($this->request->post('task') == 'clear') {
                 $this->user->update(['uHasAvatar' => 0]);
             }
+
+            return new JsonResponse($result, $result['success'] ? 200 : 400);
+
         } else {
             throw new Exception(t('Access Denied.'));
         }
-
-        $ui = UserInfo::getByID($uID); // avatar doesn't reload automatically
-        $sr = new UserEditResponse();
-        $sr->setUser($this->user);
-        $sr->setMessage(t('Avatar saved successfully.'));
-        $av = $this->user->getUserAvatar();
-        $html = $av->output();
-        $sr->setAdditionalDataAttribute('imageHTML', $html);
-        $sr->outputJSON();
     }
 
-    public function update_status($uID = false)
+    public function update_status($task = null, $uID = false, $token = null)
     {
-        switch ($this->request->post('task')) {
+        switch ($task) {
             case 'activate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
@@ -251,14 +248,14 @@ class Search extends DashboardPageController
                 break;
             case 'validate':
                 $this->setupUser($uID);
-                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
+                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate('', $token)) {
                     $this->user->markValidated();
                     $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'email_validated');
                 }
                 break;
             case 'send_email_validation':
                 $this->setupUser($uID);
-                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
+                if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate('', $token)) {
                     $this->app->make('user/status')->sendEmailValidation($this->user);
                     $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'email_validation_sent');
                 }
@@ -279,99 +276,79 @@ class Search extends DashboardPageController
             case 'delete':
                 $this->setupUser($uID);
                 if ($this->canDeleteUser && $this->app->make('helper/validation/token')->validate()) {
-                    $this->user->triggerDelete($this->user);
-                    $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'deleted');
+                    $wasDeleted = $this->user->triggerDelete($this->user);
+                    if ($wasDeleted) {
+                        $this->flash('success', t("User deleted successfully"));
+                        return $this->buildRedirect('/dashboard/users/search');
+                    } else {
+                        $this->redirect('/dashboard/users/search', 'edit', $uID, 'deleted');
+                    }
                 }
                 break;
         }
         $this->view($uID);
     }
 
-    public function update_email($uID = false)
+    public function save_account($uID = null)
     {
+        $error = new ErrorList();
         $this->setupUser($uID);
-        if ($this->user && $this->canEditEmail) {
-            $email = $this->post('value');
-            if (!$this->app->make('helper/validation/token')->validate()) {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+        if ($this->user && $this->canEdit) {
+            $userMessage = new UserEditResponse();
+            if (!$this->app->make('helper/validation/token')->validate('save_account')) {
+                $error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
-            $this->app->make('validator/user/email')->isValidFor($email, $this->user, $this->error);
 
-            $sr = new UserEditResponse();
-            $sr->setUser($this->user);
-            if (!$this->error->has()) {
-                $data = ['uEmail' => $email];
+            $data = [];
+            if ($this->canEditUserName) {
+                $username = $this->request->request->get('uName');
+                $this->app->make('validator/user/name')->isValidFor($username, $this->user, $error);
+                $data['uName'] = $username;
+            }
+            if ($this->canEditEmail) {
+                $email = $this->request->request->get('uEmail');
+                $this->app->make('validator/user/email')->isValidFor($email, $this->user, $error);
+                $data['uEmail'] = $email;
+            }
+            if ($this->app->make('config')->get('concrete.misc.user_timezones') && $this->canEditTimezone) {
+                $timezone = $this->request->request->get('uTimezone');
+                $data['uTimezone'] = $timezone;
+            }
+            if ($this->app->make('config')->get('concrete.misc.user_timezones') && $this->canEditTimezone) {
+                $timezone = $this->request->request->get('uTimezone');
+                $data['uTimezone'] = $timezone;
+            }
+            $languages = Localization::getAvailableInterfaceLanguages();
+            if (count($languages) > 0 && $this->canEditLanguage) {
+                $language = $this->request->request->get('uDefaultLanguage');
+                $data['uDefaultLanguage'] = $language;
+            }
+            if ($this->canEditPassword && !empty($this->request->request->get('uPassword'))) {
+                $password = $this->request->request->get('uPassword');
+                $passwordConfirm = $this->request->request->get('uPasswordConfirm');
+                $this->app->make('validator/password')->isValidFor($password, $this->user, $error);
+                if ($password != $passwordConfirm) {
+                    $error->add(t('The two passwords provided do not match.'));
+                }
+                $data['uPassword'] = $password;
+                $data['uPasswordConfirm'] = $passwordConfirm;
+            }
+
+            $userMessage->setError($error);
+            if (!$error->has()) {
                 $this->user->update($data);
-                $sr->setMessage(t('Email saved successfully.'));
-            } else {
-                $sr->setError($this->error);
+                $message[] = t('User updated successfully.');
+                if (!empty($password)) {
+                    $message[] = t('Password changed successfully.');
+                }
+                $this->flash('success', implode(' ', $message));
             }
-            $sr->outputJSON();
-        }
-    }
 
-    public function update_timezone($uID = false)
-    {
-        $this->setupUser($uID);
-        if ($this->canEditTimezone) {
-            $timezone = $this->post('value');
-            if (!$this->app->make('helper/validation/token')->validate()) {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
-            }
-            $sr = new UserEditResponse();
-            $sr->setUser($this->user);
-            if (!$this->error->has()) {
-                $data = ['uTimezone' => $timezone];
-                $this->user->update($data);
-                $sr->setMessage(t('Time zone saved successfully.'));
-            } else {
-                $sr->setError($this->error);
-            }
-            $sr->outputJSON();
-        }
-    }
+            return new JsonResponse($userMessage);
 
-    public function update_language($uID = false)
-    {
-        $this->setupUser($uID);
-        if ($this->canEditLanguage) {
-            $language = $this->post('value');
-            if (!$this->app->make('helper/validation/token')->validate()) {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
-            }
-            $sr = new UserEditResponse();
-            $sr->setUser($this->user);
-            if (!$this->error->has()) {
-                $data = ['uDefaultLanguage' => $language];
-                $this->user->update($data);
-                $sr->setMessage(t('Language saved successfully.'));
-            } else {
-                $sr->setError($this->error);
-            }
-            $sr->outputJSON();
-        }
-    }
-
-    public function update_username($uID = false)
-    {
-        $this->setupUser($uID);
-        if ($this->user && $this->canEditUserName) {
-            $username = $this->post('value');
-            if (!$this->app->make('helper/validation/token')->validate()) {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
-            }
-            $this->app->make('validator/user/name')->isValidFor($username, $this->user, $this->error);
-
-            $sr = new UserEditResponse();
-            $sr->setUser($this->user);
-            if (!$this->error->has()) {
-                $data = ['uName' => $username];
-                $this->user->update($data);
-                $sr->setMessage(t('Username saved successfully.'));
-            } else {
-                $sr->setError($this->error);
-            }
-            $sr->outputJSON();
+        } else {
+            $error->add(t('Invalid user.'));
+            return new JsonResponse($error);
         }
     }
 
@@ -427,96 +404,6 @@ class Search extends DashboardPageController
         $sr->outputJSON();
     }
 
-    public function change_password($uID = false)
-    {
-        $this->setupUser($uID);
-        if ($this->canEditPassword) {
-            $password = $this->post('uPassword');
-            $passwordConfirm = $this->post('uPasswordConfirm');
-
-            $this->app->make('validator/password')->isValidFor($password, $this->user, $this->error);
-
-            if (!$this->app->make('helper/validation/token')->validate('change_password')) {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
-            }
-            if ($password != $passwordConfirm) {
-                $this->error->add(t('The two passwords provided do not match.'));
-            }
-
-            $sr = new UserEditResponse();
-            $sr->setUser($this->user);
-            if (!$this->error->has()) {
-                $data = [
-                    'uPassword' => $password,
-                    'uPasswordConfirm' => $passwordConfirm,
-                ];
-                $this->user->update($data);
-                $sr->setMessage(t('Password updated successfully.'));
-            } else {
-                $sr->setError($this->error);
-            }
-            $sr->outputJSON();
-        }
-    }
-
-    public function get_timezones()
-    {
-        $query = $this->request->get('query');
-        if (is_string($query)) {
-            $query = preg_replace('/\s+/', ' ', $query);
-        } else {
-            $query = '';
-        }
-        $timezones = $this->app->make('helper/date')->getTimezones();
-        $result = [];
-        foreach ($timezones as $timezoneID => $timezoneName) {
-            if (($query === '') || (stripos($timezoneName, $query) !== false)) {
-                $obj = new stdClass();
-                $obj->value = $timezoneID;
-                $obj->text = $timezoneName;
-                $result[] = $obj;
-            }
-        }
-        $this->app->make('helper/ajax')->sendResult($result);
-    }
-
-    public function get_languages()
-    {
-        $languages = Localization::getAvailableInterfaceLanguages();
-        array_unshift($languages, Localization::BASE_LOCALE);
-        $obj = new stdClass();
-        $obj->text = tc('Default locale', '** Default');
-        $obj->value = '';
-        $result = [$obj];
-        foreach ($languages as $lang) {
-            $obj = new stdClass();
-            $obj->value = $lang;
-            $obj->text = \Punic\Language::getName($lang);
-            $result[] = $obj;
-        }
-        usort(
-            $result,
-            function ($a, $b) {
-                if ($a->value === '') {
-                    $cmp = -1;
-                } elseif ($b->value === '') {
-                    $cmp = 1;
-                } else {
-                    $cmp = strcasecmp($a->text, $b->text);
-                }
-
-                return $cmp;
-            }
-        );
-        $this->app->make('helper/ajax')->sendResult($result);
-    }
-
-    public function delete_complete()
-    {
-        $this->set('message', t('User deleted successfully.'));
-        $this->view();
-    }
-
     public function edit($uID = false, $status = false)
     {
         if ($uID) {
@@ -547,7 +434,7 @@ class Search extends DashboardPageController
             $this->set('attributeSets', $sets);
             $this->set('unassigned', $unassigned);
 
-            $this->set('pageTitle', t('View/Edit %s', $this->user->getUserDisplayName()));
+            $this->set('pageTitle', t('View User'));
 
             $workflowRequestActions = [];
             $workflowList = UserWorkflowProgress::getList($uo->getUserID());
@@ -601,37 +488,29 @@ class Search extends DashboardPageController
                     // $this->set('message', t('User %s has been deleted.', $ui->getUserDisplayName()));
                     if (in_array('delete', $workflowRequestActions)) {
                         $this->set('message', t('User deletion workflow initiated.'));
-                    } else {
-                        $this->set('message', t('User has been deleted.'));
                     }
                     break;
             }
+
+            $factory = $this->createBreadcrumbFactory();
+            $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $ui));
+
+            $saveAvatarUrl = $this->app->make('url')->to($this->getPageObject(), 'update_avatar', $ui->getUserID());
+            $saveAvatarUrl = $saveAvatarUrl->setQuery(array(
+                'ccm_token' => $this->token->generate('avatar/save_avatar'),
+            ));
+
+            $this->set('saveAvatarUrl', $saveAvatarUrl);
+            $this->render("/dashboard/users/search/edit");
         } else {
-            switch ($status) {
-                case 'deleted':
-                    $this->set('message', t('User has been deleted.'));
-                    break;
-            }
-
-            $header = new Header();
-            $header->setShowAddButton(true);
-            $this->set('headerMenu', $header);
-
-            $search = $this->app->make('Concrete\Controller\Search\Users');
-            $result = $search->getCurrentSearchObject();
-
-            if (is_object($result)) {
-                $this->set('result', $result);
-            }
+            return $this->buildRedirect('/dashboard/users/search');
         }
 
-        $factory = $this->createBreadcrumbFactory();
-        $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $ui));
 
-        $this->render("/dashboard/users/search/edit");
     }
 
-    public function view() {
+    public function view()
+    {
         $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
             $this->getSearchKeywordsField()
         ]);
@@ -714,6 +593,8 @@ class Search extends DashboardPageController
             $this->set('canActivateUser', $this->canActivateUser);
             $this->set('canSignInAsUser', $this->canSignInAsUser);
             $this->set('canDeleteUser', $this->canDeleteUser);
+            $this->set('canViewAccountModal', $this->canEditUserName || $this->canEditEmail || $this->canEditPassword
+                || $this->canEditLanguage || $this->canEditTimezone);
             $this->set('allowedEditAttributes', $this->allowedEditAttributes);
             $this->set('canAddGroup', $this->canAddGroup);
         }

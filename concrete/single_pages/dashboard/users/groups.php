@@ -299,104 +299,30 @@ if (isset($group)) { ?>
         </p>
     <?php } else { ?>
 
-        <?php
-        $app = Application::getFacadeApplication();
-        /** @var Form $form */
-        $form = $app->make(Form::class);
-        /** @var Request $request */
-        $request = $app->make(Request::class);
-        /** @noinspection PhpComposerExtensionStubsInspection */
-        $result = json_encode($searchController->getSearchResultObject()->getJSONObject());
-        $tree = GroupTree::get();
-        $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
-        $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
-        ?>
-        <!--suppress CssUnusedSymbol -->
-        <style>
-            div[data-search=groups] form.ccm-search-fields {
-                margin-left: 0 !important;
-            }
-        </style>
+	<?php if ($canAddGroup) {
+    ?>
+	<div class="ccm-dashboard-header-buttons">
+		<a href="<?php echo View::url('/dashboard/users/add_group')?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
+	</div>
+	<?php
+}
+    ?>
 
-        <script type="text/template" data-template="search-results-table-body">
-            <% _.each(items, function(group) {%>
-            <tr>
-                <%
-                for(i = 0; i < group.columns.length; i++) {
-                var column = group.columns[i];
-                %>
-                <td><%=column.value%></td>
-                <%
-                }
-                %>
-            </tr>
-            <% }); %>
-        </script>
+    <div data-choose="group-search">
+        <concrete-group-chooser></concrete-group-chooser>
+    </div>
+    <script type="text/javascript">
+    $(function() {
 
-        <div data-search-element="wrapper"></div>
+        Concrete.Vue.activateContext('cms', function (Vue, config) {
+            new Vue({
+                el: 'div[data-choose=group-search]',
+                components: config.components
+            })
+        })
 
-        <div class="group-tree" data-group-tree="<?php echo $tree->getTreeID() ?>"></div>
+    })
+    </script>
 
-        <div data-search-element="results">
-            <table class="ccm-search-results-table">
-                <thead></thead>
-                <tbody></tbody>
-            </table>
-
-            <div class="ccm-search-results-pagination"></div>
-        </div>
-
-        <script type="text/template" data-template="search-results-pagination">
-            <%=paginationTemplate%>
-        </script>
-
-        <script type="text/template" data-template="search-results-table-head">
-            <tr>
-                <%
-                for (i = 0; i < columns.length; i++) {
-                var column = columns[i];
-                if (column.isColumnSortable) {
-                %>
-                <th class="<%=column.className%>"><!--suppress HtmlUnknownTarget -->
-                    <a href="<%=column.sortURL%>"><%=column.title%></a></th>
-                <%
-                } else {
-                %>
-                <th><span><%=column.title%></span></th>
-                <%
-                }
-                }
-                %>
-            </tr>
-        </script>
-
-        <!--suppress EqualityComparisonWithCoercionJS, ES6ConvertVarToLetConst -->
-        <script>
-            $(function () {
-                $('[data-group-tree]').concreteTree({
-                    <?php
-                    if ($request->request('filter') == 'assign') {
-                    ?>
-                    'removeNodesByKey': ['<?php echo $guestGroupNode->getTreeNodeID()?>', '<?php echo $registeredGroupNode->getTreeNodeID()?>'],
-                    <?php
-                    }
-                    if ($selectMode) {
-                    ?>
-                    onClick: function (node) {
-                        if (node.data.gID) {
-                            ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.title});
-                        } else {
-                            return false;
-                        }
-                    },
-                    'enableDragAndDrop': false,
-                    <?php
-                    }
-                    ?>
-                    'treeID': '<?php echo $tree->getTreeID()?>'
-                });
-            });
-        </script>
-    <?php } ?>
-
-<?php } ?>
+<?php }
+} ?>

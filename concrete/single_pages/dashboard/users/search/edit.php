@@ -1,368 +1,396 @@
 <?php
-$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+
+use Concrete\Core\Localization\Localization;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+$dh = Core::make('helper/date');
+/* @var $dh \Concrete\Core\Localization\Service\Date */
+$languages = Localization::getAvailableInterfaceLanguages();
+$locales = [];
+if (count($languages) > 0) {
+    array_unshift($languages, Localization::BASE_LOCALE);
+}
+if (count($languages) > 0) {
+    foreach ($languages as $lang) {
+        $locales[$lang] = \Punic\Language::getName($lang, $lang);
+    }
+    asort($locales);
+    $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
+}
+
 ?>
 
-    <style type="text/css">
-        div[data-container=editable-fields] section {
-            margin-bottom: 30px;
-            position: relative;
-            border-bottom: 1px solid #f1f1f1;
-            padding-bottom: 30px;
-            clear: both;
-        }
-    </style>
-
-    <div data-container="editable-fields">
-
-        <section>
-            <h3><?= t('Basic Details') ?></h3>
-            <div class="row">
-
-                <div class="col-md-6">
-                    <h4><?= t('Login &amp; Email') ?></h4>
-                    <div class="row">
-                        <div class="col-md-4"><p><?= t('Username') ?></p></div>
-                        <div class="col-md-8"><p><span
-                            <?php
-                            if ($canEditUserName) {
-                                ?>
-                                data-editable-field-type="xeditable"
-                                data-url="<?= $view->action('update_username', $user->getUserID()) ?>"
-                                data-type="text"
-                                data-name="uName"
-                                <?php
-                            }
-                            ?>
-                        ><?= h($user->getUserName()) ?></span></p></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4"><p><?= t('Email Address') ?></p></div>
-                        <div class="col-md-8"><p><span
-                        <?php
-                        if ($canEditEmail) {
-                            ?>
-                            data-editable-field-type="xeditable"
-                            data-url="<?= $view->action('update_email', $user->getUserID()) ?>"
-                            data-type="email"
-                            data-name="uEmail"
-                            <?php
-                        }
-                        ?>
-                        ><?= h($user->getUserEmail()) ?></span></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4"><p><?= t('Password') ?></p></div>
-                        <div class="col-md-8"><p>
-                                <?php
-                                if ($canEditPassword) {
-                                    ?><a href="#" class="btn btn-xs btn-default"
-                                         data-button="change-password"><?= t('Change') ?></a><?php
-                                } else {
-                                    ?>*********<?php
-                                }
-                                ?>
-                            </p></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4"><p><?= t('Profile Picture') ?></p></div>
-                        <div class="col-md-8"><p>
-                            <div
-                                <?php
-                                if ($canEditAvatar) {
-                                    ?>
-                                    data-editable-field-type="image"
-                                    data-editable-field-inline-commands="true"
-                                    data-url="<?= $view->action('update_avatar', $user->getUserID()) ?>"
-                                    <?php
-                                }
-                                ?>
-                            >
-                                <ul class="ccm-edit-mode-inline-commands">
-                                    <li><a href="#" data-editable-field-command="clear"><i
-                                                    class="fa fa-trash-o"></i></a></li>
-                                </ul>
-                                <span class="editable-image-wrapper">
-                                <input type="file" id="file-avatar" name="avatar"/>
-                                <div class="editable-image-display"><?= $user->getUserAvatar()->output() ?></div>
-                            </span>
-                            </div>
-                            </p></div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <h4><?= t('Account') ?></h4>
-                    <div class="row">
-                        <div class="col-md-4"><p><?= t('Date Created') ?></p></div>
-                        <div class="col-md-8"><p><?= $dh->formatDateTime($user->getUserDateAdded()) ?></p></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4"><p><?= t('Last IP Address') ?></p></div>
-                        <div class="col-md-8"><p><?= $user->getLastIPAddress() ?></p></div>
-                    </div>
-                    <?php
-                    if (Config::get('concrete.misc.user_timezones')) {
-                        $uTimezone = $user->getUserTimezone();
-                        if (empty($uTimezone)) {
-                            $uTimezone = date_default_timezone_get();
-                        }
-                        ?>
-                        <div class="row">
-                            <div class="col-md-4"><p><?= t('Timezone') ?></p></div>
-                            <div class="col-md-8"><p><span
-                            <?php
-                            if ($canEditTimezone) {
-                                ?>
-                                data-editable-field-type="xeditable"
-                                data-source="<?= $view->action('get_timezones') ?>"
-                                data-url="<?= $view->action('update_timezone', $user->getUserID()) ?>"
-                                data-type="select" data-name="uTimezone"
-                                data-value="<?= h($uTimezone) ?>"
-                                <?php
-                            }
-                            ?>
-                            ><?= $dh->getTimezoneDisplayName($uTimezone) ?></span></p></div>
-                        </div>
-                        <?php
-                    }
-                    $languages = Localization::getAvailableInterfaceLanguages();
-                    if (count($languages) > 0) {
-                        ?>
-                        <div class="row">
-                            <div class="col-md-4"><p><?= t('Language') ?></p></div>
-                            <div class="col-md-8"><p><span
-                            <?php
-                            if ($canEditLanguage) {
-                                ?>
-                                data-editable-field-type="xeditable"
-                                data-source="<?= $view->action('get_languages') ?>"
-                                data-url="<?= $view->action('update_language', $user->getUserID()) ?>"
-                                data-type="select"
-                                data-name="uDefaultLanguage"
-                                data-value="<?= h($user->getUserDefaultLanguage()) ?>"
-                                <?php
-                            }
-                            ?>
-                            ><?= h(Punic\Language::getName($user->getUserDefaultLanguage())) ?></span></p></div>
-                        </div>
-                        <?php
-                    }
-                    if (Config::get('concrete.user.registration.validate_email')) {
-                        ?>
-                        <div class="row">
-                            <div class="col-md-4"><p><?= t('Full Record') ?></p></div>
-                            <div class="col-md-8"><p><?= ($user->isFullRecord()) ? t('Yes') : t('No') ?></p></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4"><p><?= t('Email Validated') ?></p></div>
-                            <div class="col-md-8"><p>
-                                    <?php
-                                    switch ($user->isValidated()) {
-                                        case '-1':
-                                            print t('Unknown');
-                                            break;
-                                        case '0':
-                                            print t('No');
-                                            break;
-                                        case '1':
-                                            print t('Yes');
-                                            break;
-                                    }
-                                    ?>
-                                </p></div>
-                        </div>
-                        <?php
-                    }
-                    ?>
-
-                    <h4><?= t('Groups') ?></h4>
-                    <div data-container="group-list"></div>
-                    <?php
-                    if ($canAddGroup) {
-                        ?>
-                        <hr>
-                        <a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="640"
-                           dialog-height="480" dialog-modal="true"
-                           href="<?= URL::to('/ccm/system/dialogs/group/search') ?>?filter=assign"
-                           dialog-title="<?= t('Add Groups') ?>" dialog-modal="false"><?= t('Add Group') ?></a>
-                        <?php
-                    }
-                    ?>
-                </div>
-
+<h3 class="mb-4"><?= t('Basic Details') ?></h3>
+<section data-section="basics" class="row">
+    <div class="col-lg-12">
+        <div class="ccm-user-detail-basics">
+            <div class="ccm-user-detail-basics-avatar">
+                <?php if ($canEditAvatar) { ?>
+                    <avatar-cropper v-bind:height="<?= Config::get('concrete.icons.user_avatar.height') ?>"
+                                    v-bind:width="<?= Config::get('concrete.icons.user_avatar.width') ?>"
+                                    uploadurl="<?= $saveAvatarUrl ?>"
+                                    src="<?= $user->getUserAvatar()->getPath() ?>">
+                    </avatar-cropper>
+                <?php } else { ?>
+                    <?= $user->getUserAvatar()->output() ?>
+                <?php } ?>
             </div>
-        </section>
+            <div>
+                <h5><?= $user->getUserName() ?></h5>
+                <a href="mailto:<?= $user->getUserEmail() ?>"><?= $user->getUserEmail() ?></a>
+            </div>
+        </div>
+    </div>
+</section>
 
-        <section>
-            <h3><?= t('Custom Attributes') ?></h3>
+<hr class="mt-2 mb-4"/>
 
-            <?php foreach ($attributeSets as $set) : ?>
-                <h4><?php echo $set->getAttributeSetDisplayName() ?></h4>
-                <?php
-                View::element('attribute/editable_list', [
-                    'attributes' => $set->getAttributeKeys(),
-                    'object' => $user,
-                    'saveAction' => $view->action('update_attribute', $user->getUserID()),
-                    'clearAction' => $view->action('clear_attribute', $user->getUserID()),
-                    'permissionsArguments' => ['attributes' => $allowedEditAttributes],
-                    'permissionsCallback' => function ($ak, $permissionsArguments) {
-                        return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
-                    },
-                ]); ?>
-            <?php endforeach; ?>
+<section data-section="account">
+    <?php if ($canViewAccountModal) { ?>
+        <button
+                data-toggle="modal" data-target="#edit-account-modal"
+                class="btn-section btn btn-secondary"><?= t('Edit') ?></button>
+    <?php } ?>
+    <h3><?= t('Account') ?></h3>
+    <dl class="ccm-user-detail-account">
+        <dt><?= t('Date Created') ?></dt>
+        <dd>
+            <div><?= $dh->formatDateTime($user->getUserDateAdded()) ?></div>
+        </dd>
+        <dt><?= t('Last IP Address') ?></dt>
+        <dd>
+            <div><?= $user->getLastIPAddress() ? $user->getLastIPAddress() : t('None') ?></div>
+        </dd>
+        <?php
+        if (Config::get('concrete.misc.user_timezones')) {
+            $uTimezone = $user->getUserTimezone();
+            if (empty($uTimezone)) {
+                $uTimezone = date_default_timezone_get();
+            }
+            ?>
+            <dt><?= t('Timezone') ?></dt>
+            <dd>
+                <div><?= $dh->getTimezoneDisplayName($uTimezone) ?></div>
+            </dd>
+            <?php
+        }
+        ?>
 
-            <?php if (count($unassigned)) :
-                if (count($attributeSets)) { ?>
-                    <h4><?php echo t('Other') ?></h4>
+        <?php
+        if (count($languages) > 0) {
+            ?>
+            <dt><?= t('Language') ?></dt>
+            <?php if ($user->getUserDefaultLanguage()) { ?>
+                <dd>
+                    <div><?= h(Punic\Language::getName($user->getUserDefaultLanguage())) ?></div>
+                </dd>
+            <?php } else { ?>
+                <dd>
+                    <div><?= h(Punic\Language::getName(Config::get('concrete.locale'))) ?></div>
+                </dd>
+            <?php } ?>
+            <?php
+        }
+        ?>
+
+        <?php
+        if (Config::get('concrete.user.registration.validate_email')) {
+            ?>
+            <dt><?= t('Full Registration Record') ?></dt>
+            <dd>
+                <div><?= ($user->isFullRecord()) ? t('Yes') : t('No') ?></div>
+            </dd>
+            <dt><?= t('Email Validated') ?></dt>
+            <dd>
+                <div>
                     <?php
-                }
-                View::element('attribute/editable_list', [
-                    'attributes' => $unassigned,
-                    'object' => $user,
-                    'saveAction' => $view->action('update_attribute', $user->getUserID()),
-                    'clearAction' => $view->action('clear_attribute', $user->getUserID()),
-                    'permissionsArguments' => ['attributes' => $allowedEditAttributes],
-                    'permissionsCallback' => function ($ak, $permissionsArguments) {
-                        return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
-                    },
-                ]); ?>
-            <?php endif; ?>
-        </section>
-
-
-    </div>
-
-<?php
-if ($canEditPassword) {
-    ?>
-    <div style="display: none">
-        <div data-dialog="change-password" class="ccm-ui">
-            <form data-dialog-form="change-password"
-                  action="<?= $view->action('change_password', $user->getUserID()) ?>">
-                <?= $token->output('change_password') ?>
-
-                <div class="form-group">
-                    <?= $form->label('uPassword', t('Password')) ?>
-                    <?= $form->password('uPassword', ['autocomplete' => 'off']) ?>
+                    switch ($user->isValidated()) {
+                        case '-1':
+                            print t('Unknown');
+                            break;
+                        case '0':
+                            print t('No');
+                            break;
+                        case '1':
+                            print t('Yes');
+                            break;
+                    }
+                    ?>
                 </div>
+            </dd>
+            <?php
+        }
+        ?>
 
-                <div class="form-group">
-                    <?= $form->label('uPasswordConfirm', t('Confirm Password')) ?>
-                    <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']) ?>
+    </dl>
+
+    <?php if ($canViewAccountModal) { ?>
+
+        <form method="post" @submit.prevent="saveAccount">
+            <div class="modal fade" tabindex="-1" role="dialog" id="edit-account-modal">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><?= t('Edit Account') ?></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <svg>
+                                    <use xlink:href="#icon-dialog-close"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <fieldset>
+                                <legend><?= t('Basic Information'); ?></legend>
+                                <?php if ($canEditUserName) { ?>
+                                    <div class="form-group">
+                                        <?= $form->label('uName', t('Username')); ?>
+                                        <?= $form->text('uName', $user->getUserName()); ?>
+                                    </div>
+                                <?php } ?>
+                                <?php if ($canEditEmail) { ?>
+                                    <div class="form-group">
+                                        <?= $form->label('uEmail', t('Email')); ?>
+                                        <?= $form->text('uEmail', $user->getUserEmail()); ?>
+                                    </div>
+                                <?php } ?>
+                                <?php if ($canEditTimezone) { ?>
+                                    <?php if (Config::get('concrete.misc.user_timezones')) { ?>
+                                        <div class="form-group">
+                                            <?= $form->label('uTimezone', t('Time Zone')); ?>
+                                            <?= $form->select('uTimezone', $dh->getTimezones(), ($user->getUserTimezone() ? $user->getUserTimezone() : date_default_timezone_get())); ?>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                                <?php if ($canEditLanguage) { ?>
+                                    <?php if (is_array($locales) && count($locales)) { ?>
+                                        <div class="form-group">
+                                            <?= $form->label('uDefaultLanguage', t('Language')); ?>
+                                            <?= $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                            </fieldset>
+                            <?php if ($canEditPassword) { ?>
+                                <fieldset>
+                                    <legend><?= t('Change Password'); ?></legend>
+                                    <div class="form-group">
+                                        <?= $form->label('uPassword', t('New Password')); ?>
+                                        <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
+                                        <a href="javascript:void(0)" title="<?= t('Leave blank to keep current password.'); ?>"><i
+                                                    class="icon-question-sign"></i></a>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <?= $form->label('uPasswordConfirm', t('Confirm New Password')); ?>
+                                        <div class="controls">
+                                            <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']); ?>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            <?php } ?>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= t('Close') ?></button>
+                            <button type="submit" class="btn btn-primary"><?= t('Save') ?></button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </form>
+    <?php } ?>
 
-                <div class="dialog-buttons">
-                    <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                    <button type="button" data-dialog-action="submit"
-                            class="btn btn-primary pull-right"><?= t('Update') ?></button>
-                </div>
+</section>
 
-            </form>
-        </div>
-    </div>
+<hr class="mt-5 mb-4"/>
+
+<section data-section="groups" v-cloak>
     <?php
-}
-?>
+    if ($canAddGroup) {
+    ?>
+    <button class="btn-section btn btn-secondary"
+            data-toggle="modal" data-target="#edit-groups-modal"
+    ><?= t('Edit') ?></button>
+    <?php } ?>
 
-    <script type="text/template" data-template="user-add-groups">
-        <% _.each(groups, function(group) { %>
-        <div class="row" data-editable-field-inline-commands="true" data-group-id="<%=group.gID%>">
-            <ul class="ccm-edit-mode-inline-commands">
-                <li><a href="#" data-group-id="<%=group.gID%>" data-button="delete-group"><i class="fa fa-trash-o"></i></a>
-                </li>
-            </ul>
-            <div class="col-md-6"><p><%=group.gDisplayName%></p></div>
-            <div class="col-md-6"><p><%=group.gDateTimeEntered%></p></div>
+    <h3><?= t('Groups') ?></h3>
+    <dl class="ccm-user-detail-groups">
+        <template v-for="group in groups">
+            <dt><span v-html="group.gDisplayName"></span></dt>
+            <dd>
+                <div>{{group.gDateTimeEntered}}</div>
+            </dd>
+        </template>
+    </dl>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="edit-groups-modal">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?= t('Edit Groups') ?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg>
+                            <use xlink:href="#icon-dialog-close"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><?= t('Selected Groups') ?></h4>
+                    <div class="mb-3" v-if="groups.length > 0">
+                        <div class="d-flex" v-for="group in groups">
+                            <div class="mr-auto"><span v-html="group.gDisplayName"></span></div>
+                            <div><a class="ccm-hover-icon" href="#" @click.prevent="removeGroup(group.gID)"><i
+                                            class="fa fa-minus-circle"></i></a></div>
+                        </div>
+                    </div>
+                    <div v-if="groups.length === 0" class="mb-3"><?= t('None') ?></div>
+
+                    <h4><?= t('Add Group') ?></h4>
+                    <concrete-group-chooser mode="select" @select="addGroup"></concrete-group-chooser>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= t('Close') ?></button>
+                </div>
+            </div>
         </div>
-        <% }); %>
-    </script>
+    </div>
 
-    <script type="text/javascript">
-        $(function () {
+</section>
 
-            var _addGroupsTemplate = _.template($('script[data-template=user-add-groups]').html());
-            $('div[data-container=group-list]').append(
-                _addGroupsTemplate({'groups': <?=$groupsJSON?>})
-            );
-            $('div[data-container=editable-fields]').concreteEditableFieldContainer({
-                url: '<?=$view->action('save', $user->getUserID())?>',
-                data: {
-                    ccm_token: '<?=$token->generate()?>'
-                }
-            });
+<hr class="mt-5 mb-4"/>
 
-            $('button[name=task][value=sudo]').on('click', function () {
-                return confirm('<?=t("This will end your current session and sign you in as %s", $user->getUserName())?>');
-            });
+<section data-section="attributes">
+    <?php
+    if (count($allowedEditAttributes)) {
+        ?>
+        <a class="dialog-launch btn-section btn btn-secondary"
+           href="<?=URL::to('/ccm/system/dialogs/user/attributes', $user->getUserID())?>"
+           dialog-width="800" dialog-height="640" dialog-title="<?=t('Edit Attributes')?>">
+        <?= t('Edit') ?></a>
+    <?php } ?>
 
-            $('button[name=task][value=delete]').on('click', function () {
-                return confirm('<?=t("Are you sure you want to permanently remove this user?")?>');
-            });
-            ConcreteEvent.subscribe('SelectGroup', function (e, data) {
-                $.concreteAjax({
-                    url: "<?=URL::to('/ccm/system/user/add_group')?>",
-                    data: {
-                        gID: data.gID,
-                        uID: '<?=$user->getUserID()?>',
-                        ccm_token: '<?= $token->generate('add_group') ?>'
-                    },
-                    success: function (r) {
-                        $('div[data-container=group-list]').append(
-                            _addGroupsTemplate({'groups': r.groups})
-                        );
-                        _.each(r.groups, function (group) {
-                            $('div[data-container=group-list] div[data-group-id=' + group.gID + ']').addClass('animated bounceIn');
+    <h3><?= t('Custom Attributes') ?></h3>
+
+    <?php foreach ($attributeSets as $set) { ?>
+        <h5 class="mt-3"><?php echo $set->getAttributeSetDisplayName() ?></h5>
+        <dl class="ccm-user-detail-attributes">
+            <?php foreach ($set->getAttributeKeys() as $key) { ?>
+                <dt><?= $key->getAttributeKeyDisplayName() ?></dt>
+                <dd><?php
+                    $value = $user->getAttribute($key);
+                    if ($value) {
+                        echo $value->getDisplayValue();
+                    }
+                    ?>
+                </dd>
+            <?php } ?>
+        </dl>
+    <?php } ?>
+
+
+    <?php if (count($unassigned)) { ?>
+        <?php if (count($attributeSets)) { ?>
+            <h5 class="mt-3"><?= t('Other') ?></h5>
+        <?php } ?>
+
+        <dl class="ccm-user-detail-attributes">
+            <?php foreach ($unassigned as $key) { ?>
+                <dt><?= $key->getAttributeKeyDisplayName() ?></dt>
+                <dd>
+                    <div><?php
+                        $value = $user->getAttributeValueObject($key);
+                        if ($value) {
+                            echo $value->getDisplayValue();
+                        }
+                        ?></div>
+                </dd>
+            <?php } ?>
+
+        </dl>
+    <?php } ?>
+
+</section>
+
+<script>
+    $(document).ready(function () {
+        Concrete.Vue.activateContext('frontend', function (Vue, config) {
+            new Vue({
+                el: '[data-section=basics]',
+                components: config.components
+            })
+        })
+
+        Concrete.Vue.activateContext('backend', function (Vue, config) {
+            new Vue({
+                components: config.components,
+                el: 'section[data-section=account]',
+                data: {},
+                mounted() {
+
+                },
+                methods: {
+                    saveAccount() {
+                        var my = this
+                        var data = $(this.$el).find("form").serializeArray()
+                        data.push({'name': 'ccm_token', 'value': '<?=$token->generate('save_account')?>'})
+
+                        $.concreteAjax({
+                            url: "<?=$view->action('save_account', $user->getUserID())?>",
+                            data: data,
+                            success: function (r) {
+                                window.location.reload()
+                            }
                         });
-                        jQuery.fn.dialog.closeTop();
-                    }
-                });
-            });
-
-            $('div[data-container=editable-fields]').on('click', 'a[data-button=change-password]', function () {
-                $.fn.dialog.open({
-                    element: 'div[data-dialog=change-password]',
-                    title: '<?=t('Change Password')?>',
-                    width: '280',
-                    height: '220',
-                    modal: true,
-                    close: function () {
-                        $(this).find('input[type=password]').val('');
-                    }
-                });
-                return false;
-            });
-
-            $('div[data-container=editable-fields]').on('click', 'a[data-button=delete-group]', function () {
-                $.concreteAjax({
-                    url: "<?=URL::to('/ccm/system/user/remove_group')?>",
-                    data: {
-                        gID: $(this).attr('data-group-id'),
-                        uID: '<?=$user->getUserID()?>',
-                        ccm_token: '<?= $token->generate('remove_group') ?>'
                     },
-                    success: function (r) {
-                        $('div[data-container=group-list] div[data-group-id=' + r.group.gID + ']').queue(function () {
-                            $(this).addClass('animated bounceOutLeft');
-                            $(this).dequeue();
-                        }).delay(500).queue(function () {
-                            $(this).remove();
-                            $(this).dequeue();
-                        })
-                        jQuery.fn.dialog.closeTop();
-                    }
-                });
-                return false;
+                },
             });
 
-            $('a[data-button=assign-groups]').dialog();
+            new Vue({
+                components: config.components,
+                el: 'section[data-section=groups]',
+                data: {
+                    'groups': <?=$groupsJSON?>
+                },
+                mounted() {
+                    $('[data-button=assign-groups]').dialog();
+                },
+                methods: {
+                    addGroup(group) {
+                        var my = this
+                        $.concreteAjax({
+                            url: "<?=URL::to('/ccm/system/user/add_group')?>",
+                            data: {
+                                gID: group.gID,
+                                uID: '<?=$user->getUserID()?>',
+                                ccm_token: '<?= $token->generate('add_group') ?>'
+                            },
+                            success: function (r) {
+                                if (r.groups) {
+                                    r.groups.forEach(group => my.groups.push(group))
+                                }
+                            }
+                        });
+                    },
+                    removeGroup(gID) {
+                        var my = this
+                        $.concreteAjax({
+                            url: "<?=URL::to('/ccm/system/user/remove_group')?>",
+                            data: {
+                                gID: gID,
+                                uID: '<?=$user->getUserID()?>',
+                                ccm_token: '<?= $token->generate('remove_group') ?>'
+                            },
+                            success: function (r) {
+                                const index = my.groups.findIndex(function (group) {
+                                    return group.gID == r.group.gID
+                                });
+                                my.groups.splice(index, 1)
+                            }
+                        });
+                    }
+                },
+            });
+        })
 
-        });
-    </script>
-<?php
-if (is_array($workflowList)) {
-    View::element('workflow/notifications', [
-        'workflowList' => $workflowList,
-    ]);
-}
-?>
+    });
+</script>

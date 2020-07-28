@@ -1,0 +1,49 @@
+@mixin concrete-data-row-dl {
+  >dd {
+    max-width: 100%;
+    word-break: break-word;
+  }
+}
+
+@mixin concrete-data-row-dl-horizontal {
+  @include concrete-data-row-dl;
+  display: flex;
+  flex-wrap: wrap;
+  >dt, >dl {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  >dt {
+    flex: 0 0 25%;
+    max-width: 25%;
+    text-align: right;
+    font-weight: normal;
+  }
+  >dd {
+    >:first-child {
+      font-weight: bold;
+    }
+    flex: 0 0 75%;
+    max-width: 75%;
+    margin-bottom: 2rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@mixin concrete-data-row-dl-vertical {
+  @include concrete-data-row-dl;
+  >dt {
+    font-weight: bold;
+  }
+  >dd {
+    font-weight: normal;
+    margin-bottom: 2rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

@@ -37,6 +37,15 @@ div#ccm-dashboard-content {
     padding-top: 1rem;
   }
 
+  section {
+    position: relative;
+    .btn-section {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+  }
 }
 
 

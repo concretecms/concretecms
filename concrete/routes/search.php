@@ -22,5 +22,5 @@ $router->all('/ccm/system/search/users/clear', '\Concrete\Controller\Search\User
 $router->all('/ccm/system/search/express/basic', '\Concrete\Controller\Search\Express::searchBasic');
 $router->all('/ccm/system/search/express/current', '\Concrete\Controller\Search\Express::searchCurrent');
 $router->all('/ccm/system/search/express/clear', '\Concrete\Controller\Search\Express::clearSearch');
-
-$router->all('/ccm/system/search/groups/submit', '\Concrete\Controller\Search\Groups::submit');
+/*
+$router->all('/ccm/system/search/groups/submit', '\Concrete\Controller\Search\Groups::submit');*/
