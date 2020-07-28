@@ -36,5 +36,17 @@
     "/css/features/polls/frontend.css": "/css/features/polls/frontend.css",
     "/themes/concrete/main.js": "/themes/concrete/main.js",
     "/themes/dashboard/main.js": "/themes/dashboard/main.js",
-    "/themes/elemental/main.js": "/themes/elemental/main.js"
+    "/themes/elemental/main.js": "/themes/elemental/main.js",
+    "/js/vue.js": "/js/vue.js",
+    "/js/jquery.js": "/js/jquery.js",
+    "/css/fontawesome/all.css": "/css/fontawesome/all.css",
+    "/css/fullcalendar.css": "/css/fullcalendar.css",
+    "/images/icons/bedrock/sprites.svg": "/images/icons/bedrock/sprites.svg",
+    "/images/ui-bg_flat_0_aaaaaa_40x100.png": "/images/ui-bg_flat_0_aaaaaa_40x100.png",
+    "/images/ui-icons_444444_256x240.png": "/images/ui-icons_444444_256x240.png",
+    "/images/ui-icons_555555_256x240.png": "/images/ui-icons_555555_256x240.png",
+    "/images/ui-icons_777620_256x240.png": "/images/ui-icons_777620_256x240.png",
+    "/images/ui-icons_777777_256x240.png": "/images/ui-icons_777777_256x240.png",
+    "/images/ui-icons_cc0000_256x240.png": "/images/ui-icons_cc0000_256x240.png",
+    "/images/ui-icons_ffffff_256x240.png": "/images/ui-icons_ffffff_256x240.png"
 }
