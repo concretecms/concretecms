@@ -32,7 +32,8 @@ $saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
 
     <avatar-cropper
             v-bind:height="<?php echo h($config->get('concrete.icons.user_avatar.height')) ?>"
-            v-bind:width="<?php echo h($config->get('concrete.icons.user_avatar.width')) ?>"
+            v-bind:width="<?php echo h($config->get('concrete.icons.user_avatar.width')) ?>"                    
+            uploadtoken="<?=$token->generate()?>"
             uploadurl="<?php echo h($saveUrl) ?>"
             src="<?php echo h($profile->getUserAvatar()->getPath()) ?>">
     </avatar-cropper>

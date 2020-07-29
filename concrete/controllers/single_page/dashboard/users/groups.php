@@ -3,7 +3,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Controller\Element\Search\Users\Groups\Header;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Controller\Search\Groups as SearchGroupsController;
 use Permissions;
 use Group;
 use Exception;
@@ -19,16 +18,11 @@ class Groups extends DashboardPageController
         $tree = GroupTree::get();
         $this->set('tree', $tree);
 
-        $cnt = $this->app->make(SearchGroupsController::class);
-        $cnt->search();
-        $this->set('searchController', $cnt);
-
         $c = Page::getByPath('/dashboard/users/add_group');
         $cp = new Permissions($c);
         $this->set('searchController', $cnt);
         $headerMenu = new Header();
         $headerMenu->setCanAddGroup($cp->canViewPage());
-        $headerMenu->setSearchController($cnt);
         $this->set('headerMenu', $headerMenu);
     }
 

@@ -2,10 +2,8 @@
 namespace Concrete\Controller\SinglePage\Account;
 
 use Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
+use Concrete\Core\User\Command\UpdateUserAvatarCommand;
 use Concrete\Core\User\UserInfo;
-use Imagine\Image\Palette\RGB;
-use Imagine\Image\Point;
-use Imagine\Image\ImagineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Avatar extends AccountProfileEditPageController
@@ -22,6 +20,7 @@ class Avatar extends AccountProfileEditPageController
             'success' => false,
             'avatar' => null,
         ];
+
         $this->view();
         $token = $this->app->make('token');
         if (!$token->validate('avatar/save_avatar', $this->request->query->get('ccm_token'))) {
@@ -36,42 +35,14 @@ class Avatar extends AccountProfileEditPageController
 
         /** @var \Symfony\Component\HttpFoundation\File\UploadedFile */
         $file = $this->request->files->get('file');
+
         if ($file) {
-            try {
-                /** @var ImagineInterface $imagine */
-                $imagine = $this->app->make(ImagineInterface::class);
-                $image = $imagine->open($file->getPathname());
+            $command = new UpdateUserAvatarCommand($profile, $file);
+            $this->app->executeCommand($command);
 
-                $palette = new RGB();
-
-                // Give our image a white background
-                $canvas = $imagine->create($image->getSize(), $palette->color('fff'));
-                $canvas->paste($image, new Point(0, 0));
-
-                // Update the avatar
-                $profile->updateUserAvatar($canvas);
-
-                // Update the result
-                $result['success'] = true;
-                $result['avatar'] = $profile->getUserAvatar()->getPath() . '?' . time();
-            } catch (\Exception $error) {
-                if ($this->app->make('config')->get('concrete.log.errors')) {
-                    $logger = $this->app->make('log/exceptions');
-                    $logger->emergency(
-                        t(
-                            "Exception Occurred: %s:%d %s (%d)\n",
-                            $error->getFile(),
-                            $error->getLine(),
-                            $error->getMessage(),
-                            $error->getCode()
-                        ),
-                        [$error]
-                    );
-                }
-
-                $result['error'] = true;
-                $result['message'] = t('Error while setting profile picture.');
-            }
+            // Update the result
+            $result['success'] = true;
+            $result['avatar'] = $profile->getUserAvatar()->getPath() . '?' . time();
         } else {
             $result['error'] = true;
             $result['message'] = t('Error while uploading file.');

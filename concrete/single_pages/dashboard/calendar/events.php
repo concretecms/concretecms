@@ -190,4 +190,19 @@ Loader::element('calendar/header', array(
     $(function() {
         var admin = new ConcreteCalendarAdmin($('body'));
     });
+    <?php
+    if (isset($initialEdit) && $initialEdit) {
+        ?>
+        setTimeout(function() {
+            let anchor = $(document.createElement('a'))
+                .attr('dialog-title', 'Edit')
+                .attr('dialog-width', 1100)
+                .attr('dialog-height', 600)
+                .attr('href', "/ccm/calendar/dialogs/event/edit?versionOccurrenceID=<?= (int) $initialEdit ?>")
+
+            anchor.dialog().click()
+        });
+        <?php
+    }
+    ?>
 </script>

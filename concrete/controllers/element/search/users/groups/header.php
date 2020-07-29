@@ -1,15 +1,14 @@
 <?php
+
 namespace Concrete\Controller\Element\Search\Users\Groups;
 
 use Concrete\Core\Controller\ElementController;
-use Concrete\Controller\Search\Groups;
 
 class Header extends ElementController
 {
 
     protected $canAddGroup = false;
-    /** @var Groups */
-    protected $searchController;
+
     /**
      * @return bool
      */
@@ -33,27 +32,9 @@ class Header extends ElementController
         return 'users/groups/search_header';
     }
 
-    /**
-     * @return Groups
-     */
-    public function getSearchController(): Groups
+    public function view()
     {
-        return $this->searchController;
-    }
-
-    /**
-     * @param Groups $searchController
-     * @return Header
-     */
-    public function setSearchController(Groups $searchController): Header
-    {
-        $this->searchController = $searchController;
-        return $this;
-    }
-
-    public function view() {
         $this->set("canAddGroup", $this->canAddGroup);
-        $this->set("searchController", $this->searchController);
     }
 
 }
