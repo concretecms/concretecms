@@ -482,11 +482,11 @@ EOT
     }
 
     /**
-     * Gets a list of collections that include this block, along with area name, etc... used in the block_details.php page in the admin control panel.
+     * Gets a list of pages that include this block, along with area name, etc...
      *
      * @return \Concrete\Core\Page\Page[]
      */
-    public function getCollectionList()
+    public function getPageList()
     {
         $cArray = [];
         $bID = $this->getBlockID();
