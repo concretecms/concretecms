@@ -407,8 +407,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     </a>
                 </li>
                 <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search float-right hidden-xs">
-                    <svg><use xlink:href="#icon-search" /></svg>
-                    <input type="search" id="ccm-nav-intelligent-search" autocomplete="off" tabindex="1"/>
+                    <?php
+                    $menu = Element::get('navigation/intelligent_search');
+                    $menu->render();
+                    ?>
                 </li>
             </ul>
         </div>
