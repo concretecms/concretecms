@@ -29,6 +29,12 @@ class Controller extends AbstractController implements AttributeInterface
     protected $attributeValue;
 
     /**
+     * @var \Concrete\Core\Attribute\ObjectInterface
+     */
+    protected $attributeObject;
+
+
+    /**
      * @var array|null
      */
     protected $searchIndexFieldDefinition;
@@ -82,6 +88,14 @@ class Controller extends AbstractController implements AttributeInterface
     public function getAttributeType()
     {
         return isset($this->attributeType) ? $this->attributeType : null;
+    }
+
+    /**
+     * @param ObjectInterface $object
+     */
+    public function setAttributeObject(ObjectInterface $object)
+    {
+        $this->attributeObject = $object;
     }
 
     /**
