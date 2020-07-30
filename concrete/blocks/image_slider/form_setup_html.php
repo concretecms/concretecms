@@ -66,9 +66,6 @@ echo $userInterface->tabs([
     <div class="tab-pane" id="options-<?php echo $id; ?>" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label("", t("Navigation")); ?>
-        </div>
-
-        <div class="form-group">
             <div class="form-check">
                 <?php echo $form->radio($view->field('navigationType'), 0, $navigationType, ["id" => "navigationTypeArrows", "name" => $view->field('navigationType')]); ?>
                 <?php echo $form->label("navigationTypeArrows", t("Arrows"), ["class" => "form-check-label"]); ?>
