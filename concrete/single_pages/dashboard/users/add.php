@@ -17,32 +17,32 @@ defined('C5_EXECUTE') or die('Access Denied.');
 		
 		<div class="form-group">
             <?= $form->label('uName', t('Username')) ?>
-			<div class="input-group">
-				<?= $form->text('uName', ['autofocus' => 'autofocus', 'autocomplete' => 'off']); ?>
-                <span class="input-group-append">
-                    <span class="input-group-text"><?= t('Required') ?></span>
-                </span>
-			</div>
+            <div class="float-right">
+            <span class="text-muted small">
+                <?php echo t('Required') ?>
+            </span>
+            </div>
+            <?= $form->text('uName', ['autofocus' => 'autofocus', 'autocomplete' => 'off']); ?>
 		</div>
 
-		<div class="form-group">
+        <div class="form-group">
             <?= $form->label('uPassword', t('Password')) ?>
-			<div class="input-group">
-				<?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
-                <span class="input-group-append">
-                    <span class="input-group-text"><?= t('Required') ?></span>
-                </span>
-			</div>
+            <div class="float-right">
+            <span class="text-muted small">
+                <?php echo t('Required') ?>
+            </span>
+            </div>
+            <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
 		</div>
 
 		<div class="form-group">
             <?= $form->label('uEmail', t('Email Address')) ?>
-			<div class="input-group">
-				<?= $form->email('uEmail'); ?>
-                <span class="input-group-append">
-                    <span class="input-group-text"><?= t('Required') ?></span>
-                </span>
-			</div>
+            <div class="float-right">
+            <span class="text-muted small">
+                <?php echo t('Required') ?>
+            </span>
+            </div>
+            <?= $form->email('uEmail'); ?>
 		</div>
 
 		<?php if (count($locales)) { // "> 1" because en_US is always available?>

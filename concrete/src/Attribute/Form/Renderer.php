@@ -77,6 +77,9 @@ class Renderer
          * @var $view View
          */
         $view->setValue($value);
+        if ($this->object) {
+            $view->setObject($this->object);
+        }
         $renderer = $view->getControlRenderer();
         $renderer->render();
     }
