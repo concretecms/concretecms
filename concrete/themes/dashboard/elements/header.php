@@ -132,8 +132,10 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     </a>
                 </li>
                 <li class="ccm-toolbar-search float-right d-none d-sm-none d-md-block">
-                    <svg><use xlink:href="#icon-search" /></svg>
-                    <input type="search" autocomplete="off" id="ccm-nav-intelligent-search" tabindex="1" />
+                    <?php
+                    $menu = Element::get('navigation/intelligent_search');
+                    $menu->render();
+                    ?>
                 </li>
                 <?php
                 $items = $ihm->getPageHeaderMenuItems('right');
