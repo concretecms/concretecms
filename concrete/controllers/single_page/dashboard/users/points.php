@@ -1,55 +1,48 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\User\Point\EntryList as UserPointEntryList;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
+use Concrete\Core\User\Point\EntryList as UserPointEntryList;
 
 class Points extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library', 'form/user_selector');
+    public $helpers = ['form', 'concrete/ui', 'concrete/urls', 'image', 'concrete/asset_library', 'form/user_selector'];
 
     public function view()
     {
         $upEntryList = $this->getEntries();
-        $this->set('pagination', $upEntryList->getPagination());
+        $factory = $this->app->make(PaginationFactory::class, [$this->request]);
+        $pagination = $factory->createPaginationObject($upEntryList);
+
+        $this->set('pagination', $pagination);
         $this->set('upEntryList', $upEntryList);
-        $this->set('entries', $upEntryList->getPage());
+        $this->set('entries', $pagination->getCurrentPageResults());
+        $this->set('dh', $this->app->make('date'));
     }
 
-    public function getEntries()
+    public function getEntries(): UserPointEntryList
     {
         $entries = new UserPointEntryList();
         $entries->setItemsPerPage(100);
 
-        if ($_REQUEST['uID']) {
-            $entries->filterByUserID($_REQUEST['uID']);
-        }
-        
-        if ($_REQUEST['uName']) {
-            $entries->filterByUserName($_REQUEST['uName']);
+        if ($uID = $this->request->get('uID')) {
+            $entries->filterByUserID($uID);
         }
 
-        if ($_REQUEST['upaName'] && strlen($_REQUEST['upaName'])) {
-            $entries->filterByUserPointActionName($_REQUEST['upaName']);
+        if ($uName = $this->request->get('uName')) {
+            $entries->filterByUserName($uName);
         }
 
-        switch ($_REQUEST['ccm_order_by']) {
-            case 'uName':
-                $entries->sortBy('Users.uName', $_REQUEST['ccm_order_dir']);
-            break;
-            case 'upaName':
-                $entries->sortBy('UserPointActions.upaName', $_REQUEST['ccm_order_dir']);
-            break;
-            case 'upPoints':
-                $entries->sortBy('UserPointHistory.upPoints', $_REQUEST['ccm_order_dir']);
-            break;
-            case 'timestamp':
-                $entries->sortBy('UserPointHistory.timestamp', $_REQUEST['ccm_order_dir']);
-            break;
-            default:
-                $entries->sortBy('timestamp', 'desc');
-            break;
+        $upaName = (string) $this->request->get('upaName', '');
+        if ($upaName !== '') {
+            $entries->filterByUserPointActionName($upaName);
+        }
+
+        if (!$this->request->query->has('ccm_order_by')) {
+            $entries->sortBy('uph.timestamp', 'desc');
         }
 
         return $entries;
@@ -57,17 +50,17 @@ class Points extends DashboardPageController
 
     public function deleteEntry($upID)
     {
-        if (!\Core::make('helper/validation/token')->validate('delete_community_points')) {
-            $this->error = \Core::make('error');
+        if (!$this->token->validate('delete_community_points')) {
             $this->error->add('Invalid Token');
-            $this->view();
 
-            return;
+            return $this->view();
         }
+
         $up = new UserPointEntry();
         $up->load($upID);
-        $up->Delete();
-        $this->redirect('/dashboard/users/points/', 'entry_deleted');
+        $up->delete();
+
+        return $this->buildRedirect($this->action('entry_deleted'));
     }
 
     public function entry_deleted()
