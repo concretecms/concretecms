@@ -11,17 +11,19 @@ use Concrete\Core\View\View;
 
 ?>
 
-<div class="ccm-dashboard-header-buttons btn-group">
-    <?php
-    $manage = new Menu($entity);
-    /** @noinspection PhpDeprecationInspection */
-    $manage->render();
-    ?>
+<div class="ccm-dashboard-header-buttons">
+    <div class="btn-group">
+        <?php
+        $manage = new Menu($entity);
+        /** @noinspection PhpDeprecationInspection */
+        $manage->render();
+        ?>
 
-    <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/associations', 'add', $entity->getId()) ?>"
-       class="btn btn-primary">
-        <?php echo t("Add Association") ?>
-    </a>
+        <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/associations', 'add', $entity->getId()) ?>"
+           class="btn btn-primary">
+            <?php echo t("Add Association") ?>
+        </a>
+    </div>
 </div>
 
 <div class="row">
