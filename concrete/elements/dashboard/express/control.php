@@ -37,7 +37,7 @@ $c = Page::getCurrentPage();
 				<p><?=t('Are you sure you want to delete this control? This cannot be undone.')?></p>
 				<div class="dialog-buttons">
 					<button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-					<button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-set-control-<?=$control->getId()?> form').submit()"><?=t('Delete Set')?></button>
+					<button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-set-control-<?=$control->getId()?> form').submit()"><?=t('Delete Control')?></button>
 				</div>
 			</form>
 		</div>

@@ -114,20 +114,22 @@ if (!isset($type)) {
     <fieldset>
         <legend><?= t('Column Order') ?></legend>
 
-        <p><?= t('Click and drag to change column order.') ?></p>
-        <ul class="item-select-list" data-search-column-list="<?= $type ?>">
-            <?php
-            foreach ($current->getColumns() as $col) {
-                ?>
-                <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
-                                                                                                      name="column[]"
-                                                                                                      value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
-                    <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
-                </li>
+        <div class="form-group">
+            <p><?= t('Click and drag to change column order.') ?></p>
+            <ul class="item-select-list" data-search-column-list="<?= $type ?>">
                 <?php
-            }
-            ?>
-        </ul>
+                foreach ($current->getColumns() as $col) {
+                    ?>
+                    <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
+                                                                                                          name="column[]"
+                                                                                                          value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
+                        <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </div>
     </fieldset>
     <hr>
     <fieldset>
@@ -170,6 +172,8 @@ if (!isset($type)) {
 
         <fieldset>
             <legend><?= t('Number of Results') ?></legend>
+
+            <div class="form-group">
             <select class="form-control" name="fSearchItemsPerPage">
                 <?php
                 foreach ($itemsPerPageOptions as $option) {
@@ -182,6 +186,7 @@ if (!isset($type)) {
                 }
                 ?>
             </select>
+            </div>
         </fieldset>
 
     <?php } ?>

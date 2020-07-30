@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Navigation\Item;
 
 use Concrete\Core\Page\Page;
@@ -12,6 +13,11 @@ class PageItem extends Item
     protected $pageID;
 
     /**
+     * @var string
+     */
+    protected $keywords = '';
+
+    /**
      * Item constructor.
      * @param string $url
      * @param string $name
@@ -21,7 +27,11 @@ class PageItem extends Item
     {
         if ($page) {
             $this->pageID = $page->getCollectionID();
+            $this->keywords = (string)$page->getAttribute("meta_keywords");
             parent::__construct($page->getCollectionLink(), $page->getCollectionName(), $isActive);
+        }
+        if ($this->keywords === null) {
+            $this->keywords = '';
         }
     }
 
@@ -49,10 +59,29 @@ class PageItem extends Item
         $this->pageID = $pageID;
     }
 
+    /**
+     * @return string
+     */
+    public function getKeywords(): string
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * @param string $keywords
+     * @return PageItem
+     */
+    public function setKeywords(string $keywords): PageItem
+    {
+        $this->keywords = $keywords;
+        return $this;
+    }
+
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();
         $data['pageID'] = $this->getPageID();
+        $data['keywords'] = $this->getKeywords();
         return $data;
     }
 

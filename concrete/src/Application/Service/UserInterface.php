@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application\Service;
 
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory;
@@ -200,9 +201,9 @@ class UserInterface
     }
 
     /**
+     * @return bool
      * @deprecated The Newsflow Overlay feature has been removed
      *
-     * @return bool
      */
     public function showNewsflowOverlay()
     {
@@ -312,9 +313,14 @@ class UserInterface
                 $a->addClass("active");
             }
 
-            $a->setAttribute("href", "#" . $tab[0]);
+            if (strpos($tab[0], "/") !== false) {
+                $a->setAttribute("href", $tab[0]);
+            } else {
+                $a->setAttribute("href", "#" . $tab[0]);
+                $a->setAttribute("data-toggle", "tab");
+            }
+
             $a->setAttribute("id", $tab[0] . "-tab");
-            $a->setAttribute("data-toggle", "tab");
             $a->setAttribute("aria-controls", $tab[0]);
             $a->setAttribute("role", "tab");
             $a->setAttribute("aria-selected", (isset($tab[2]) && $tab[2]) ? "true" : "false");

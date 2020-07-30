@@ -111,7 +111,9 @@ if (is_object($entity)) {
 </script>
 
 <script type="application/javascript">
-    Concrete.event.publish('block.express_entry_detail.open', {
-        exFormID: '<?php echo $exFormID?>'
+    $(function(){
+        Concrete.event.publish('block.express_entry_detail.open', {
+            exFormID: '<?php echo $exFormID?>'
+        });
     });
 </script>
