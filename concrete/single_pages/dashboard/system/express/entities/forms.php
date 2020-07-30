@@ -12,17 +12,20 @@ use Concrete\Core\View\View;
 /** @var ExpressForm[] $forms */
 ?>
 
-<div class="ccm-dashboard-header-buttons btn-group">
-    <?php
-    $manage = new Menu($entity);
-    /** @noinspection PhpDeprecationInspection */
-    $manage->render();
-    ?>
+<div class="ccm-dashboard-header-buttons">
+    <div class="btn-group">
 
-    <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/forms', 'add', $entity->getId()) ?>"
-       class="btn btn-primary">
-        <?php echo t("Add Form") ?>
-    </a>
+        <?php
+        $manage = new Menu($entity);
+        /** @noinspection PhpDeprecationInspection */
+        $manage->render();
+        ?>
+
+        <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/forms', 'add', $entity->getId()) ?>"
+           class="btn btn-primary">
+            <?php echo t("Add Form") ?>
+        </a>
+    </div>
 </div>
 
 <div class="row">

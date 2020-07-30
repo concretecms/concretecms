@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 
-<div class="dropdown">
+<div class="btn-group">
 
     <button type="button" class="btn btn-secondary dropdown-toggle"
             data-toggle="dropdown"

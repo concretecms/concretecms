@@ -106,7 +106,7 @@ class PageViewTest extends PageTestCase
         $edit_profile = Single::add('/account/edit_profile');
         $controller = $edit_profile->getPageController();
         $controller->setTheme('dashboard');
-        $controller->setThemeViewTemplate('account.php'); // This should be ignored because the dashboard doesn't have this.
+        $controller->setThemeViewTemplate('profile.php'); // This should be ignored because the dashboard doesn't have this.
         $view = $controller->getViewObject();
         $view->setupRender();
         $inner = $view->getInnerContentFile();
