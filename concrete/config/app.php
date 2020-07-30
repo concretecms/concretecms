@@ -7,7 +7,9 @@ return [
     'debug' => false,
     'namespace' => 'Application',
 
-    // Core Aliases
+    /*
+     * Core Aliases
+     */
     'aliases' => [
         'Area' => '\Concrete\Core\Area\Area',
         'Asset' => '\Concrete\Core\Asset\Asset',
@@ -82,7 +84,9 @@ return [
         'Workflow' => '\Concrete\Core\Workflow\Workflow',
     ],
 
-    // Core Providers
+    /*
+     * Core Providers
+     */
     'providers' => [
         // Note, the order of these first few is important - we need events early for other service providers, but it depends on some things.
         'core_system' => '\Concrete\Core\System\SystemServiceProvider',
@@ -157,7 +161,9 @@ return [
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
     ],
 
-    // Core Facades
+    /*
+     * Core Facades
+     */
     'facades' => [
         'Core' => '\Concrete\Core\Support\Facade\Application',
         'Session' => '\Concrete\Core\Support\Facade\Session',
@@ -278,11 +284,15 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
     ],
 
-    // Core Routes - no longer used in the core in this way. Look to the routes/ directories instead.
+    /*
+     * Core Routes - no longer used in the core in this way. Look to the routes/ directories instead.
+     */
     'routes' => [
     ],
 
-    // Route themes
+    /*
+     * Route themes
+     */
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
@@ -346,14 +356,18 @@ return [
         'WebM' => ['webm', FileType::T_VIDEO, false, 'video'],
     ],
 
-    // Importer Attributes
+    /*
+     * Importer Attributes
+     */
     'importer_attributes' => [
         'width' => ['Width', 'NUMBER', false],
         'height' => ['Height', 'NUMBER', false],
         'duration' => ['Duration', 'NUMBER', false],
     ],
 
-    // Importer processors
+    /*
+     * Importer processors
+     */
     'import_processors' => [
         'ccm.file.exists' => Concrete\Core\File\Import\Processor\FileExistingValidator::class,
         'ccm.file.extension' => Concrete\Core\File\Import\Processor\FileExtensionValidator::class,
@@ -363,7 +377,9 @@ return [
         'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
     ],
 
-    // Assets
+    /*
+     * Assets
+     */
     'assets' => [
         // External vendor libraries required to run concrete5 or our themes at a fundamental level that can't
         // or shouldn't be bundled with our own SCSS/JS files.
@@ -720,6 +736,8 @@ return [
     ],
 
     'commands' => [
+        ['Concrete\Core\User\Command\UpdateUserAvatarCommand', 'Concrete\Core\User\Command\UpdateUserAvatarCommandHandler'],
+
         ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
         ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
         ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
@@ -765,5 +783,8 @@ return [
         ['Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommand', 'Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommandHandler'],
         ['Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand', 'Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommandHandler'],
         ['Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommand', 'Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommandHandler'],
+
+        ['Concrete\Core\Attribute\Command\SaveAttributesCommand', 'Concrete\Core\Attribute\Command\SaveAttributesCommandHandler'],
+        ['Concrete\Core\Attribute\Command\ClearAttributesCommand', 'Concrete\Core\Attribute\Command\ClearAttributesCommandHandler'],
     ],
 ];

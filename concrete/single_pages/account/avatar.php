@@ -26,6 +26,10 @@ $saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
 ?>
 
 <div data-view="account">
+    <h2>
+        <?php echo $c->getCollectionName()?>
+    </h2>
+  
     <p>
         <?php echo t('Change the picture attached to my posts.') ?>
     </p>
@@ -34,6 +38,7 @@ $saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
             v-bind:height="<?php echo h($config->get('concrete.icons.user_avatar.height')) ?>"
             v-bind:width="<?php echo h($config->get('concrete.icons.user_avatar.width')) ?>"
             uploadurl="<?php echo h($saveUrl) ?>"
+            uploadtoken="<?php echo h($token->generate()) ?>"
             src="<?php echo h($profile->getUserAvatar()->getPath()) ?>">
     </avatar-cropper>
 

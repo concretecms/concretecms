@@ -190,4 +190,25 @@ Loader::element('calendar/header', array(
     $(function() {
         var admin = new ConcreteCalendarAdmin($('body'));
     });
+    <?php
+    // Show an event edit dialog if there was a provided event version occurrence ID
+    if (isset($initialEdit) && $initialEdit) {
+        ?>
+        let initDialog = function() {
+            if (typeof $.fn.dialog !== 'function') {
+                return setTimeout(initDialog, 50);
+            }
+
+            let anchor = $(document.createElement('a'))
+                .attr('dialog-title', 'Edit')
+                .attr('dialog-width', 1100)
+                .attr('dialog-height', 600)
+                .attr('href', "/ccm/calendar/dialogs/event/edit?versionOccurrenceID=<?= (int) $initialEdit ?>")
+
+            anchor.dialog().click()
+        }
+        initDialog()
+        <?php
+    }
+    ?>
 </script>

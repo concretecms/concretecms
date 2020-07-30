@@ -25,8 +25,8 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->setNamespace('Concrete\Controller\Backend')->setPrefix('/ccm/system/user')
             ->routes('actions/users.php');
 
-        $router->buildGroup()->setNamespace('Concrete\Controller\Backend')->setPrefix('/ccm/system/user')
-            ->routes('actions/users.php');
+        $router->buildGroup()->setNamespace('Concrete\Controller\Backend')->setPrefix('/ccm/system/group')
+            ->routes('actions/groups.php');
 
         $router->buildGroup()->setNamespace('Concrete\Controller\Backend')->setPrefix('/ccm/system/file')
             ->routes('actions/files.php');
