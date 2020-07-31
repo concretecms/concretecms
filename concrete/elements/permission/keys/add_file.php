@@ -25,7 +25,7 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 
 
 <div class="form-group">
-	<label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
+	<label class="col-form-label"><?=$entity->getAccessEntityLabel()?></label>
 	<?=$form->select('fileTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?>
 </div>
 

@@ -45,7 +45,7 @@ class DashboardUserBreadcrumbFactory implements ApplicationAwareInterface
                 $this->app->make('url')->to(
                     '/dashboard/users/search', 'edit', $mixed->getUserID()
                 ),
-                t("Edit User")
+                $mixed->getUserDisplayName()
             );
 
             $breadcrumb->add($item);

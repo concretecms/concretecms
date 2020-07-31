@@ -82,7 +82,7 @@ class Instance
     }
 
     /**
-     * @return mixed
+     * @return InstanceArea[]
      */
     public function getInstanceAreas()
     {

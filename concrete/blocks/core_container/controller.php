@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Block\CoreContainer;
 
+use Concrete\Core\Area\ContainerArea;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
@@ -30,7 +31,7 @@ class Controller extends BlockController
         return t("Container");
     }
     
-    protected function getContainerInstanceObject()
+    protected function getContainerInstanceObject() :? Container\Instance
     {
         $entityManager = $this->app->make(EntityManager::class);
         if ($this->containerInstanceID) {
@@ -100,6 +101,31 @@ class Controller extends BlockController
         }
         return $args;
     }
+
+    public function delete()
+    {
+        $entityManager = $this->app->make(EntityManager::class);
+        // Remove all the blocks within this container's areas.
+        $instance = $this->getContainerInstanceObject();
+        if ($instance) {
+            foreach($instance->getInstanceAreas() as $instanceArea) {
+                $containerBlockInstance = new ContainerBlockInstance(
+                    $this->getBlockObject(),
+                    $instance,
+                    $entityManager
+                );
+                $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
+                $subBlocks = $containerArea->getAreaBlocksArray($this->getCollectionObject());
+                foreach($subBlocks as $subBlock) {
+                    $subBlock->delete();
+                }
+            }
+            $this->app->make(EntityManager::class)->remove($instance);
+            $this->app->make(EntityManager::class)->flush();
+        }
+        parent::delete();
+    }
+
 
     protected function importAdditionalData($b, $blockNode)
     {

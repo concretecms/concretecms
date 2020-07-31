@@ -1,24 +1,18 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
+use Concrete\Core\Package\ItemCategory\Manager;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Theme\Theme;
 use Config;
-use Loader;
-use View;
 use Exception;
-use Concrete\Core\Package\ItemCategory\Manager;
-use Concrete\Core\Package\PackageService;
 
 class Themes extends DashboardPageController
 {
-    protected $helpers = array('html');
-
     public function view()
     {
-        $tArray = array();
-        $tArray2 = array();
-
         $tArray = Theme::getList();
         $tArray2 = Theme::getAvailableThemes();
 
@@ -31,14 +25,15 @@ class Themes extends DashboardPageController
         }
 
         $this->set('siteThemeID', $siteThemeID);
-        $this->set('activate', View::url('/dashboard/pages/themes', 'activate'));
-        $this->set('install', View::url('/dashboard/pages/themes', 'install'));
+        $this->set('activate', $this->action('activate'));
+        $this->set('install', $this->action('install'));
     }
 
     public function save_mobile_theme()
     {
         if (!$this->token->validate('save_mobile_theme')) {
             $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+
             return $this->view();
         }
 
@@ -48,7 +43,8 @@ class Themes extends DashboardPageController
         } else {
             Config::save('concrete.misc.mobile_theme_id', 0);
         }
-        $this->redirect('/dashboard/pages/themes', 'mobile_theme_saved');
+
+        return $this->buildRedirect($this->action('mobile_theme_saved'));
     }
 
     public function mobile_theme_saved()
@@ -59,12 +55,11 @@ class Themes extends DashboardPageController
 
     public function remove($pThemeID, $token = '')
     {
-
         try {
-            $valt = Loader::helper('validation/token');
-            if (!$valt->validate('remove', $token)) {
-                throw new Exception($valt->getErrorMessage());
+            if (!$this->token->validate('remove', $token)) {
+                throw new Exception($this->token->getErrorMessage());
             }
+
             /** @var \Concrete\Core\Page\Theme\Theme $pl */
             $pl = Theme::getByID($pThemeID);
             if (!is_object($pl)) {
@@ -74,14 +69,14 @@ class Themes extends DashboardPageController
             if (!$pl->isUninstallable()) {
                 throw new Exception(t('You can not uninstall a core theme'));
             }
+
             $obj = Theme::getSiteTheme();
             if (is_object($obj)) {
                 $siteThemeID = $obj->getThemeID();
             }
             if ($siteThemeID === $pl->getThemeID()) {
-                 throw new Exception(t('You can not uninstall an active theme'));
+                throw new Exception(t('You can not uninstall an active theme'));
             }
-
 
             $localUninstall = true;
             if ($pl->getPackageID() > 0) {
@@ -92,7 +87,7 @@ class Themes extends DashboardPageController
                 $items = [];
                 foreach ($categories as $category) {
                     if ($category->hasItems($pkg)) {
-                        foreach($category->getItems($pkg) as $item) {
+                        foreach ($category->getItems($pkg) as $item) {
                             $items[] = $item;
                         }
                     }
@@ -118,25 +113,24 @@ class Themes extends DashboardPageController
 
     public function activate($pThemeID)
     {
-        $valt = Loader::helper('validation/token');
-        $this->set('activate_confirm', View::url('/dashboard/pages/themes', 'activate_confirm', $pThemeID, $valt->generate('activate')));
+        $this->set('activate_confirm', $this->action('activate_confirm', $pThemeID, $this->token->generate('activate')));
     }
 
     public function install($pThemeHandle = null)
     {
         $th = Theme::getByFileHandle($pThemeHandle);
         if ($pThemeHandle == null) {
-            $this->redirect('/dashboard/pages/themes');
+            return $this->buildRedirect($this->action());
         }
 
-        $v = Loader::helper('validation/error');
+        $v = $this->app->make('helper/validation/error');
         try {
             if (is_object($th)) {
                 $t = Theme::add($pThemeHandle);
-                $this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 'install');
-            } else {
-                throw new Exception('Invalid Theme');
+
+                return $this->buildRedirect($this->action('inspect', $t->getThemeID(), 'install'));
             }
+            throw new Exception('Invalid Theme');
         } catch (Exception $e) {
             switch ($e->getMessage()) {
                 case Theme::E_THEME_INSTALLED:
@@ -157,18 +151,19 @@ class Themes extends DashboardPageController
     public function activate_confirm($pThemeID, $token)
     {
         $l = Theme::getByID($pThemeID);
-        $val = Loader::helper('validation/error');
-        $valt = Loader::helper('validation/token');
-        if (!$valt->validate('activate', $token)) {
-            $val->add($valt->getErrorMessage());
+        $val = $this->app->make('helper/validation/error');
+        if (!$this->token->validate('activate', $token)) {
+            $val->add($this->token->getErrorMessage());
             $this->set('error', $val);
         } elseif (!is_object($l)) {
             $val->add('Invalid Theme');
             $this->set('error', $val);
         } else {
             $l->applyToSite();
-            $this->redirect('/dashboard/pages/themes/inspect', $l->getThemeID(), 'activate');
+
+            return $this->buildRedirect($this->action('inspect', $l->getThemeID(), 'activate'));
         }
+
         $this->view();
     }
 }

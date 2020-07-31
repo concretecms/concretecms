@@ -290,9 +290,9 @@ return [
     'routes' => [
     ],
 
-/*
- * Route themes
- */
+    /*
+     * Route themes
+     */
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
@@ -403,7 +403,7 @@ return [
         'ckeditor' => [
             [
                 'javascript',
-                'js/ckeditor/ckeditor.js'
+                'js/ckeditor/ckeditor.js',
             ],
         ],
 
@@ -421,7 +421,7 @@ return [
         'font-awesome' => [
             [
                 'css',
-                'css/fontawesome/all.css'
+                'css/fontawesome/all.css',
             ],
         ],
 
@@ -432,7 +432,6 @@ return [
                 ['local' => false],
             ],
         ],
-
 
         // Foundational Assets
         'core/cms' => [
@@ -466,7 +465,9 @@ return [
             ['javascript', 'js/features/conversations/frontend.js'],
             ['css', 'css/features/conversations/frontend.css'],
         ],
-
+        'ace' => [
+            ['javascript', 'js/ace/ace.js'],
+        ],
         'feature/documents/frontend' => [
             ['javascript', 'js/features/documents/frontend.js'],
             ['css', 'css/features/documents/frontend.css'],
@@ -519,10 +520,8 @@ return [
             ['javascript', 'js/features/maps/frontend.js'],
             ['css', 'css/features/maps/frontend.css'],
         ],
-
     ],
     'asset_groups' => [
-
         'jquery' => [
             [
                 ['javascript', 'jquery'],
@@ -548,7 +547,11 @@ return [
                 ['css', 'ckeditor/concrete'],
             ],
         ],
-
+        'ace' => [
+            [
+                ['javascript', 'ace'],
+            ],
+        ],
         'core/cms' => [
             [
                 ['javascript', 'jquery'],
@@ -557,7 +560,7 @@ return [
                 ['javascript', 'core/cms'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'core/cms'],
-            ]
+            ],
         ],
 
         'fullcalendar' => [
@@ -573,28 +576,28 @@ return [
             [
                 ['javascript', 'feature/account/frontend'],
                 ['css', 'feature/account/frontend'],
-            ]
+            ],
         ],
 
         'feature/desktop/frontend' => [
             [
                 ['javascript', 'feature/desktop/frontend'],
                 ['css', 'feature/desktop/frontend'],
-            ]
+            ],
         ],
 
         'feature/calendar/frontend' => [
             [
                 ['javascript', 'feature/calendar/frontend'],
                 ['css', 'feature/calendar/frontend'],
-            ]
+            ],
         ],
 
         'feature/conversations/frontend' => [
             [
                 ['javascript', 'feature/conversations/frontend'],
                 ['css', 'feature/conversations/frontend'],
-            ]
+            ],
         ],
 
         'feature/documents/frontend' => [
@@ -602,83 +605,78 @@ return [
                 ['javascript', 'feature/documents/frontend'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'feature/documents/frontend'],
-            ]
+            ],
         ],
 
         'feature/faq/frontend' => [
             [
                 ['css', 'feature/faq/frontend'],
-            ]
+            ],
         ],
 
         'feature/imagery/frontend' => [
             [
                 ['javascript', 'feature/imagery/frontend'],
                 ['css', 'feature/imagery/frontend'],
-            ]
+            ],
         ],
 
         'feature/navigation/frontend' => [
             [
                 ['javascript', 'feature/navigation/frontend'],
                 ['css', 'feature/navigation/frontend'],
-            ]
+            ],
         ],
 
         'feature/video/frontend' => [
             [
                 ['css', 'feature/video/frontend'],
-            ]
+            ],
         ],
 
         'feature/social/frontend' => [
             [
                 ['css', 'feature/social/frontend'],
-            ]
+            ],
         ],
 
         'feature/express/frontend' => [
             [
                 ['javascript', 'feature/express/frontend'],
                 ['css', 'feature/express/frontend'],
-            ]
+            ],
         ],
 
         'feature/maps/frontend' => [
             [
                 ['javascript', 'feature/maps/frontend'],
                 ['css', 'feature/maps/frontend'],
-            ]
+            ],
         ],
 
         'feature/search/frontend' => [
             [
                 ['css', 'feature/search/frontend'],
-            ]
+            ],
         ],
 
         'feature/taxonomy/frontend' => [
             [
                 ['css', 'feature/taxonomy/frontend'],
-            ]
+            ],
         ],
 
         'feature/testimonials/frontend' => [
             [
                 ['css', 'feature/testimonials/frontend'],
-            ]
+            ],
         ],
 
         'feature/basics/frontend' => [
             [
                 ['css', 'feature/basics/frontend'],
-            ]
+            ],
         ],
-
-
-
-
-
     ],
     // HTTP Client options
     'http_client' => [
@@ -738,6 +736,8 @@ return [
     ],
 
     'commands' => [
+        ['Concrete\Core\User\Command\UpdateUserAvatarCommand', 'Concrete\Core\User\Command\UpdateUserAvatarCommandHandler'],
+
         ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
         ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
         ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
@@ -774,7 +774,6 @@ return [
         ['Concrete\Core\Board\Command\GenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\GenerateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
 
-
         ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],
         ['Concrete\Core\Board\Command\ClearSlotFromBoardCommand', 'Concrete\Core\Board\Command\ClearSlotFromBoardCommandHandler'],
         ['Concrete\Core\Board\Command\AddCustomSlotToBoardCommand', 'Concrete\Core\Board\Command\AddCustomSlotToBoardCommandHandler'],
@@ -785,6 +784,7 @@ return [
         ['Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand', 'Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommandHandler'],
         ['Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommand', 'Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommandHandler'],
 
+        ['Concrete\Core\Attribute\Command\SaveAttributesCommand', 'Concrete\Core\Attribute\Command\SaveAttributesCommandHandler'],
+        ['Concrete\Core\Attribute\Command\ClearAttributesCommand', 'Concrete\Core\Attribute\Command\ClearAttributesCommandHandler'],
     ],
-
 ];
