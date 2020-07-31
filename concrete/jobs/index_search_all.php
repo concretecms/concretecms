@@ -14,6 +14,7 @@ use Concrete\Core\Job\JobQueueMessage;
 use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
+use Concrete\Core\Search\Index\IndexObjectProvider;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Punic\Misc as PunicMisc;
@@ -48,6 +49,11 @@ class IndexSearchAll extends QueueableJob
      */
     protected $objectManager;
 
+    /**
+     * @var IndexObjectProvider
+     */
+    protected $dataProvider;
+
     public function getJobName()
     {
         return t('Index Search Engine - All');
@@ -58,11 +64,16 @@ class IndexSearchAll extends QueueableJob
         return t('Empties the page search index and reindexes all pages.');
     }
 
-    public function __construct(IndexManagerInterface $indexManager, Connection $connection, ObjectManager $objectManager)
+    public function __construct(
+        IndexManagerInterface $indexManager,
+        Connection $connection,
+        ObjectManager $objectManager,
+        IndexObjectProvider $dataProvider)
     {
         $this->indexManager = $indexManager;
         $this->connection = $connection;
         $this->objectManager = $objectManager;
+        $this->dataProvider = $dataProvider;
     }
 
     public function start(JobQueue $queue)
@@ -87,29 +98,29 @@ class IndexSearchAll extends QueueableJob
     {
         $pages = $users = $files = $sites = $objects = $entries = 0;
 
-        foreach ($this->expressObjectsToQueue() as $id) {
+        foreach ($this->dataProvider->fetchExpressObjects() as $id) {
             yield self::CLEAR_EXPRESS_ENTITY . $id;
             $objects++;
         }
 
-        foreach ($this->pagesToQueue() as $id) {
+        foreach ($this->dataProvider->fetchPages() as $id) {
             yield "P{$id}";
             $pages++;
         }
-        foreach ($this->usersToQueue() as $id) {
+        foreach ($this->dataProvider->fetchUsers() as $id) {
             yield "U{$id}";
             $users++;
         }
-        foreach ($this->filesToQueue() as $id) {
+        foreach ($this->dataProvider->fetchFiles() as $id) {
             yield "F{$id}";
             $files++;
         }
-        foreach ($this->sitesToQueue() as $id) {
+        foreach ($this->dataProvider->fetchSites() as $id) {
             yield "S{$id}";
             $sites++;
         }
 
-        foreach ($this->expressEntriesToQueue() as $id) {
+        foreach ($this->dataProvider->fetchExpressEntries() as $id) {
             yield "E{$id}";
             $entries++;
         }
@@ -193,109 +204,5 @@ class IndexSearchAll extends QueueableJob
         $index->clear(Site::class);
     }
 
-    /**
-     * Get Pages to add to the queue.
-     *
-     * @return \Iterator
-     */
-    protected function pagesToQueue()
-    {
-        $qb = $this->connection->createQueryBuilder();
 
-        // Find all pages that need indexing
-        $query = $qb
-            ->select('p.cID')
-            ->from('Pages', 'p')
-            ->leftJoin('p', 'CollectionSearchIndexAttributes', 'a', 'p.cID = a.cID')
-            ->where('cIsActive = 1')
-            ->andWhere($qb->expr()->orX(
-                'a.ak_exclude_search_index is null',
-                'a.ak_exclude_search_index = 0'
-            ))->execute();
-
-        while ($id = $query->fetchColumn()) {
-            yield $id;
-        }
-    }
-
-    /**
-     * Get Users to add to the queue.
-     *
-     * @return \Iterator
-     */
-    protected function usersToQueue()
-    {
-        /** @var Connection $db */
-        $db = $this->connection;
-
-        $query = $db->executeQuery('SELECT uID FROM Users WHERE uIsActive = 1');
-        while ($id = $query->fetchColumn()) {
-            yield $id;
-        }
-    }
-
-    /**
-     * Get Express objects to add to the queue.
-     *
-     * @return \Iterator
-     */
-    protected function expressObjectsToQueue()
-    {
-        /** @var Connection $db */
-        $db = $this->connection;
-
-        $query = $db->executeQuery('SELECT id FROM ExpressEntities order by id asc');
-        while ($id = $query->fetchColumn()) {
-            yield $id;
-        }
-    }
-
-    /**
-     * Get Express entries to add to the queue.
-     *
-     * @return \Iterator
-     */
-    protected function expressEntriesToQueue()
-    {
-        /** @var Connection $db */
-        $db = $this->connection;
-
-        $query = $db->executeQuery('SELECT exEntryID FROM ExpressEntityEntries order by exEntryID asc');
-        while ($id = $query->fetchColumn()) {
-            yield $id;
-        }
-    }
-
-
-    /**
-     * Get Files to add to the queue.
-     *
-     * @return \Iterator
-     */
-    protected function filesToQueue()
-    {
-        /** @var Connection $db */
-        $db = $this->connection;
-
-        $query = $db->executeQuery('SELECT fID FROM Files');
-        while ($id = $query->fetchColumn()) {
-            yield $id;
-        }
-    }
-
-    /**
-     * Get Sites to add to the queue.
-     *
-     * @return \Iterator
-     */
-    protected function sitesToQueue()
-    {
-        /** @var Connection $db */
-        $db = $this->connection;
-
-        $query = $db->executeQuery('SELECT siteID FROM Sites');
-        while ($id = $query->fetchColumn()) {
-            yield $id;
-        }
-    }
 }
