@@ -57,6 +57,7 @@ class PageIndex extends AbstractIndex implements ApplicationAwareInterface
         // Truncate the existing search index
         $database = $this->app['database']->connection();
         $database->Execute('truncate table PageSearchIndex');
+        $database->Execute('truncate table CollectionSearchIndexAttributes');
     }
 
 }

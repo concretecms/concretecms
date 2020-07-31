@@ -161,6 +161,7 @@ class ServiceProviderTest extends TestCase
             ConcreteCommand\RefreshEntitiesCommand::class,
             ConcreteCommand\Express\ExportCommand::class,
             ConcreteCommand\FixDatabaseForeignKeys::class,
+            ConcreteCommand\ReindexCommand::class,
             DBALCommand\ImportCommand::class,
             DBALCommand\RunSqlCommand::class,
             DBALCommand\ReservedWordsCommand::class,
