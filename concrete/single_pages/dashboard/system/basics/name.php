@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
 <div class="ccm-dashboard-header-buttons">
-	<a href="<?php echo View::url('/dashboard/system/basics/attributes')?>" class="btn btn-default"><?php echo t("Manage Attributes")?></a>
+	<a href="<?php echo View::url('/dashboard/system/basics/attributes')?>" class="btn btn-secondary"><?php echo t("Manage Attributes")?></a>
 </div>
 
 <form method="post" class="ccm-dashboard-content-form" action="<?=$view->action('update_sitename')?>">
@@ -23,14 +23,15 @@
 				echo $renderer->render($ak);
 			}
 		} else { ?>
-			<p><?=t('You have not defined any <a href="%s">custom attributes</a> for this site.', URL::to('/dashboard/system/basics/attributes'))?></p>
+			<div class="ml-3">
+				<p><?=t('You have not defined any <a href="%s">custom attributes</a> for this site.', URL::to('/dashboard/system/basics/attributes'))?></p>
+			</div>
 		<?php } ?>
-
 	</fieldset>
 
 	<div class="ccm-dashboard-form-actions-wrapper">
 	<div class="ccm-dashboard-form-actions">
-		<button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+		<button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
 	</div>
 	</div>
 
