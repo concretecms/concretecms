@@ -3,186 +3,168 @@
 namespace Concrete\Core\Logging;
 
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\User\User;
-use Monolog\Logger as Monolog;
+use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
+use DateTime;
 
 class LogEntry
 {
-    /**
-     * Gets the level of the log.
-     *
-     * @return string
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
+    /** @var int|null */
+    protected $id;
+    /** @var string|null */
+    protected $channel;
+    /** @var DateTime|null */
+    protected $time;
+    /** @var string|null */
+    protected $message;
+    /** @var string|null */
+    protected $level;
+    /** @var UserInfo|null */
+    protected $user;
 
-    /**
-     * Gets the name of the logging level.
-     *
-     * @return string
-     */
-    public function getLevelName()
+    public function __construct($row = null)
     {
-        return Monolog::getLevelName($this->level);
-    }
+        $app = Application::getFacadeApplication();
+        /** @var UserInfoRepository $userInfoRepository */
+        $userInfoRepository = $app->make(UserInfoRepository::class);
 
-    /**
-     * Gets the name of the logging level.
-     *
-     * @return string
-     */
-    public function getLevelDisplayName()
-    {
-        return Levels::getLevelDisplayName($this->level);
-    }
+        if (is_array($row)) {
+            if (isset($row["logID"])) {
+                $this->setId($row["logID"]);
+            }
 
-    /**
-     * Gets the message of the log.
-     *
-     * @return string
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
+            if (isset($row["channel"])) {
+                $this->setChannel($row["channel"]);
+            }
 
-    /**
-     * Gets the channel of the log.
-     *
-     * @return string
-     */
-    public function getChannel()
-    {
-        return $this->channel;
-    }
+            if (isset($row["time"])) {
+                $time = new DateTime();
+                $time->setTimestamp($row["time"]);
+                $this->setTime($time);
+            }
 
-    /**
-     * Gets the channel name of the logging level.
-     *
-     * @return string
-     */
-    public function getChannelDisplayName()
-    {
-        return Channels::getChannelDisplayName($this->channel);
-    }
+            if (isset($row["message"])) {
+                $this->setMessage($row["message"]);
+            }
 
-    /**
-     * Gets the id of the log.
-     *
-     * @return int
-     */
-    public function getID()
-    {
-        return $this->logID;
-    }
+            if (isset($row["level"])) {
+                $this->setLevel($row["level"]);
+            }
 
-    /**
-     * Gets the HTML code for the icon of the logging level.
-     *
-     * @return string
-     */
-    public function getLevelIcon()
-    {
-        switch ($this->getLevel()) {
-            case Monolog::EMERGENCY:
-                return '<i class="text-danger fa fa-fire launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Monolog::CRITICAL:
-                return '<i class="text-danger fa fa-ambulance launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Monolog::ALERT:
-                return '<i class="text-danger fa fa-exclamation-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Monolog::ERROR:
-                return '<i class="text-danger fa fa-flag launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Monolog::WARNING:
-                return '<i class="text-warning fa fa-warning launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Monolog::NOTICE:
-                return '<i class="text-success fa fa-leaf launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Monolog::INFO:
-                return '<i class="text-info fa fa-info-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-            case Monolog::DEBUG:
-                return '<i class="text-info fa fa-cog launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
-        }
-    }
-
-    /**
-     * Gets the user id of the user that caused the log.
-     *
-     * @return int
-     */
-    public function getUserID()
-    {
-        return $this->uID;
-    }
-
-    /**
-     * Gets the user object of the user that caused the log.
-     *
-     * @return \Concrete\Core\User\User|null
-     */
-    public function getUserObject()
-    {
-        if ($this->getUserID()) {
-            $u = User::getByUserID($this->getUserID());
-            if (is_object($u)) {
-                return $u;
+            if (isset($row["uID"])) {
+                $user = $userInfoRepository->getByID($row["uID"]);
+                $this->setUser($user);
             }
         }
     }
 
     /**
-     * Gets the formatted time of the log timestamp.
-     *
-     * @return string
+     * @return int|null
      */
-    public function getDisplayTimestamp()
+    public function getId(): ?int
     {
-        $app = Application::getFacadeApplication();
-        $dh = $app->make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-
-        return $dh->formatDateTime($this->time, true, true);
+        return $this->id;
     }
 
     /**
-     * Gets the timestamp of the log.
-     *
-     * @return string
+     * @param int|null $id
+     * @return LogEntry
      */
-    public function getTimestamp()
+    public function setId(?int $id): LogEntry
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getChannel(): ?string
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @param string|null $channel
+     * @return LogEntry
+     */
+    public function setChannel(?string $channel): LogEntry
+    {
+        $this->channel = $channel;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getTime(): ?DateTime
     {
         return $this->time;
     }
 
     /**
-     * Gets the log object from its id.
-     *
-     * @param int $logID Id of the log
-     *
-     * @return LogEntry|null
+     * @param DateTime|null $time
+     * @return LogEntry
      */
-    public static function getByID($logID)
+    public function setTime(?DateTime $time): LogEntry
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $row = $db->fetchAssoc('select * from Logs where logID = ?', [$logID]);
-        if ($row) {
-            $obj = new static();
-            $obj = array_to_object($obj, $row);
-
-            return $obj;
-        }
+        $this->time = $time;
+        return $this;
     }
 
     /**
-     * Deletes the log entry.
+     * @return string|null
      */
-    public function delete()
+    public function getMessage(): ?string
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $logID = $this->getID();
-        if (!empty($logID)) {
-            $db->delete('Logs', ['logID' => $logID]);
-        }
+        return $this->message;
     }
+
+    /**
+     * @param string|null $message
+     * @return LogEntry
+     */
+    public function setMessage(?string $message): LogEntry
+    {
+        $this->message = $message;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLevel(): ?string
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param string|null $level
+     * @return LogEntry
+     */
+    public function setLevel(?string $level): LogEntry
+    {
+        $this->level = $level;
+        return $this;
+    }
+
+    /**
+     * @return UserInfo|null
+     */
+    public function getUser(): ?UserInfo
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param UserInfo|null $user
+     * @return LogEntry
+     */
+    public function setUser(?UserInfo $user): LogEntry
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+
 }

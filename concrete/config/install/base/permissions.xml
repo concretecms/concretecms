@@ -32,6 +32,7 @@
         <category handle="express_entry" package=""/>
         <category handle="board_admin" package=""/>
         <category handle="board" package=""/>
+        <category handle="logs" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -135,6 +136,23 @@
         <permissionkey handle="rate_conversation_message" name="Rate Message" description="" package="" category="conversation" />
         <permissionkey handle="flag_conversation_message" name="Flag Message" description="" package="" category="conversation" />
         <permissionkey handle="approve_conversation_message" name="Approve Message" description="" package="" category="conversation" />
+
+        <!-- logs //-->
+        <permissionkey handle="view_log_entries" has-custom-class="true" name="View Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_log_entries" has-custom-class="true" name="Delete Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="export_log_entries" has-custom-class="true" name="Export Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
 
         <!-- users //-->
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
