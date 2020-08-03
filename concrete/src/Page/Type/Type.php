@@ -396,8 +396,10 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if ($ptAllowedPageTemplates) {
             $data['allowedTemplates'] = $ptAllowedPageTemplates;
         }
-        if ($node['internal']) {
-            $data['internal'] = true;
+
+        $data['internal'] = 0;
+        if ($node['internal'] == '1') {
+            $data['internal'] = 1;
         }
 
         $data['ptLaunchInComposer'] = 0;
