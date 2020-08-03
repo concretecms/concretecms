@@ -3,7 +3,7 @@
 namespace Concrete\Core\Search\ItemList\Pager\Manager;
 
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Logging\LogItem;
+use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\Search\ColumnSet\Available;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Support\Facade\Facade;
@@ -12,7 +12,7 @@ class LogListPagerManager extends AbstractPagerManager
 {
 
     /**
-     * @param LogItem $mixed
+     * @param LogEntry $mixed
      * @return int
      */
     public function getCursorStartValue($mixed)
@@ -26,7 +26,7 @@ class LogListPagerManager extends AbstractPagerManager
         /** @var Connection $db */
         $db = $app->make(Connection::class);
         $row = $db->fetchArray("SELECT * FROM Logs WHERE logID = ?", [$cursor]);
-        return new LogItem($row);
+        return new LogEntry($row);
     }
 
     public function getAvailableColumnSet()
