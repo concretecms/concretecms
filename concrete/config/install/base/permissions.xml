@@ -138,17 +138,17 @@
         <permissionkey handle="approve_conversation_message" name="Approve Message" description="" package="" category="conversation" />
 
         <!-- logs //-->
-        <permissionkey handle="view_log_entries" has-custom-class="true" name="View Log Entries" description="" package="" category="logs">
+        <permissionkey handle="view_log_entries" name="View Log Entries" description="" package="" category="logs">
             <access>
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
-        <permissionkey handle="delete_log_entries" has-custom-class="true" name="Delete Log Entries" description="" package="" category="logs">
+        <permissionkey handle="delete_log_entries" name="Delete Log Entries" description="" package="" category="logs">
             <access>
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
-        <permissionkey handle="export_log_entries" has-custom-class="true" name="Export Log Entries" description="" package="" category="logs">
+        <permissionkey handle="export_log_entries" name="Export Log Entries" description="" package="" category="logs">
             <access>
                 <group name="Administrators" description=""/>
             </access>
