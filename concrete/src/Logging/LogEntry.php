@@ -63,7 +63,7 @@ class LogEntry
     /**
      * @return int|null
      */
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
@@ -72,7 +72,7 @@ class LogEntry
      * @param int|null $id
      * @return LogEntry
      */
-    public function setId(?int $id): LogEntry
+    public function setId($id)
     {
         $this->id = $id;
         return $this;
@@ -81,7 +81,7 @@ class LogEntry
     /**
      * @return string|null
      */
-    public function getChannel(): ?string
+    public function getChannel()
     {
         return $this->channel;
     }
@@ -90,7 +90,7 @@ class LogEntry
      * @param string|null $channel
      * @return LogEntry
      */
-    public function setChannel(?string $channel): LogEntry
+    public function setChannel($channel)
     {
         $this->channel = $channel;
         return $this;
@@ -99,7 +99,7 @@ class LogEntry
     /**
      * @return DateTime|null
      */
-    public function getTime(): ?DateTime
+    public function getTime()
     {
         return $this->time;
     }
@@ -108,7 +108,7 @@ class LogEntry
      * @param DateTime|null $time
      * @return LogEntry
      */
-    public function setTime(?DateTime $time): LogEntry
+    public function setTime($time)
     {
         $this->time = $time;
         return $this;
@@ -117,7 +117,7 @@ class LogEntry
     /**
      * @return string|null
      */
-    public function getMessage(): ?string
+    public function getMessage()
     {
         return $this->message;
     }
@@ -126,7 +126,7 @@ class LogEntry
      * @param string|null $message
      * @return LogEntry
      */
-    public function setMessage(?string $message): LogEntry
+    public function setMessage($message)
     {
         $this->message = $message;
         return $this;
@@ -135,7 +135,7 @@ class LogEntry
     /**
      * @return string|null
      */
-    public function getLevel(): ?string
+    public function getLevel()
     {
         return $this->level;
     }
@@ -144,7 +144,7 @@ class LogEntry
      * @param string|null $level
      * @return LogEntry
      */
-    public function setLevel(?string $level): LogEntry
+    public function setLevel($level)
     {
         $this->level = $level;
         return $this;
@@ -153,7 +153,7 @@ class LogEntry
     /**
      * @return UserInfo|null
      */
-    public function getUser(): ?UserInfo
+    public function getUser()
     {
         return $this->user;
     }
@@ -162,7 +162,7 @@ class LogEntry
      * @param UserInfo|null $user
      * @return LogEntry
      */
-    public function setUser(?UserInfo $user): LogEntry
+    public function setUser($user)
     {
         $this->user = $user;
         return $this;
