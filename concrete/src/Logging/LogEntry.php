@@ -12,17 +12,17 @@ use Monolog\Logger as Monolog;
 class LogEntry
 {
     /** @var int|null */
-    protected $id;
+    public $id;
     /** @var string|null */
-    protected $channel;
+    public $channel;
     /** @var DateTime|null */
-    protected $time;
+    public $time;
     /** @var string|null */
-    protected $message;
+    public $message;
     /** @var string|null */
-    protected $level;
+    public $level;
     /** @var UserInfo|null */
-    protected $user;
+    public $user;
 
     public function __construct($row = null)
     {
