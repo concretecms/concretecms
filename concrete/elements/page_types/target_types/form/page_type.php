@@ -1,7 +1,12 @@
 <?php
+defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var Concrete\Core\Page\Page $target
+ * @var Concrete\Core\Page\Type\Composer\Control\Control $control
+ * @var Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration $configuration
+ */
 
-defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');
+$form = app('helper/form');
 $cParentID = false;
 $tree = null;
 if (is_object($target)) {
@@ -12,7 +17,7 @@ $relevantPage = null;
 
 if (is_object($control->getPageObject())) {
     $relevantPage = $control->getPageObject();
-} else if ($control->getTargetParentPageID()) {
+} elseif ($control->getTargetParentPageID()) {
     $relevantPage = \Page::getByID($control->getTargetParentPageID());
 }
 
@@ -30,8 +35,9 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         } else {
             $siteMapParentID = Page::getHomePageID($relevantPage);
         }
-        $ps = Loader::helper('form/page_selector');
-        $args = array('ptID' => $configuredTarget->getPageTypeID());
+
+        $ps = app('helper/form/page_selector');
+        $args = ['ptID' => $configuredTarget->getPageTypeID()];
         echo $ps->selectFromSitemap('cParentID', $cParentID, $siteMapParentID, $tree, $args);
     } else {
         $pl = new PageList();
@@ -41,10 +47,11 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         if (is_object($site)) {
             $pl->filterBySite($site);
         }
-        $pages = $pl->get();
+        $pages = $pl->getResults();
+
         if (count($pages) > 1) {
-            $navigation = \Core::make('helper/navigation');
-            $options = array();
+            $navigation = $ps = app('helper/navigation');
+            $options = [];
             foreach ($pages as $p) {
                 $pp = new Permissions($p);
                 if ($pp->canAddSubCollection($pagetype)) {
