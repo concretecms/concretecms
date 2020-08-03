@@ -84,6 +84,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         return $this->ptPublishTargetTypeID;
     }
 
+    /**
+     * @return \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration
+     */
     public function getPageTypePublishTargetObject()
     {
         return $this->ptPublishTargetObject;

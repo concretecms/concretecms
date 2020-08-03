@@ -1,14 +1,16 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');
+defined('C5_EXECUTE') or die('Access Denied.');
+
+$form = app('helper/form');
+$pageSelector = app('helper/form/page_selector');
+
 $ctArray = PageType::getList(false, $sitetype);
-$pageSelector = Core::make('helper/form/page_selector');
-$types = array('' => t('** Choose a page type'));
+$types = ['' => t('** Choose a page type')];
 foreach ($ctArray as $cta) {
     $types[$cta->getPageTypeID()] = $cta->getPageTypeDisplayName();
 }
 $ptID = 0;
-$factors = array('' => t('Select Menu'), 'sitemap_in_page' => t('In-Page Sitemap'));
+$factors = ['' => t('Select Menu'), 'sitemap_in_page' => t('In-Page Sitemap')];
 
 if (isset($pagetype) && is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
@@ -25,18 +27,18 @@ if (isset($pagetype) && is_object($pagetype) && $pagetype->getPageTypePublishTar
 }
 ?>
 <div class="form-group">
-	<?=$form->label('ptID', t('Publish Beneath Pages of Type'))?>
-	<?=$form->select('ptID', $types, $ptID)?>
+	<?= $form->label('ptID', t('Publish Beneath Pages of Type')) ?>
+	<?= $form->select('ptID', $types, $ptID) ?>
 </div>
 
 <div class="form-group">
-	<?=$form->label('selectorFormFactorPageType', t('Selector Form Factor'))?>
-	<?=$form->select('selectorFormFactorPageType', $factors, $selectorFormFactor)?>
+	<?= $form->label('selectorFormFactorPageType', t('Selector Form Factor')) ?>
+	<?= $form->select('selectorFormFactorPageType', $factors, $selectorFormFactor) ?>
 </div>
 
 <div class="form-group" data-page-type-form-factor-display="sitemap_in_page">
-	<?=$form->label('startingPointPageIDPageType', t('Display Pages Beneath Page'))?>
-	<?=$pageSelector->selectPage('startingPointPageIDPageType', $startingPointPageID)?>
+	<?= $form->label('startingPointPageIDPageType', t('Display Pages Beneath Page')) ?>
+	<?= $pageSelector->selectPage('startingPointPageIDPageType', $startingPointPageID) ?>
 </div>
 
 <script type="text/javascript">
