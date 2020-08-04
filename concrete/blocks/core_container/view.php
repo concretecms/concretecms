@@ -22,4 +22,8 @@ if ($container) {
     }
 
     $container->endRender();
+} elseif (is_object($c) && $c->isEditMode()) {
+    ?>
+    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Container Block.')?></div>
+    <?php
 }
