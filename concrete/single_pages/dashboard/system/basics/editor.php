@@ -19,59 +19,72 @@
 }
 </style>
 <form id="ccm-editor-config" method="post" class="ccm-dashboard-content-form" action="<?= $view->action('submit') ?>">
-    <?php $token->output('submit') ?>
+<?php $token->output('submit') ?>
     <div class="row">
         <div class="col-md-6">
-            <?= $form->label('', t('concrete5 Extensions')) ?>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('enable_filemanager', 1, $filemanager) ?>
-                    <?= t('Enable file selection from file manager.') ?>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('enable_sitemap', 1, $sitemap) ?>
-                    <?= t('Enable page selection from sitemap.') ?>
-                </label>
-            </div>
-            <?= $form->label('', t('Editor Plugins')) ?>
-            <?php
-            foreach ($plugins as $key => $plugin) {
-                if (!in_array($key, $selected_hidden)) {
-                    $description = $plugin->getDescription();
-                    ?>
-                    <div class="checkbox">
-                        <label>
-                            <?php
-                            echo $form->checkbox('plugin[]', $key, $manager->isSelected($key));
-                            if ($description !== '') {
-                                echo '<span class="launch-tooltip" title="', h($description), '">';
-                            }
-                            echo h($plugin->getName());
-                            if ($description !== '') {
-                                echo '</span>';
-                            }
-                            ?>
+            <fieldset>
+                <legend><?= t('concrete5 Extensions') ?></legend>
+                <div class="form-group">
+                    <div class="form-check">
+                        <?= $form->checkbox('enable_filemanager', 1, $filemanager, ['class' => 'form-check-input']) ?>
+                        <label class="form-check-label" for="enable_filemanager">
+                            <?= t('Enable file selection from file manager.') ?>
                         </label>
                     </div>
+                    <div class="form-check">
+                        <?= $form->checkbox('enable_sitemap', 1, $sitemap, ['class' => 'form-check-input']) ?>
+                        <label class="form-check-label" for="enable_sitemap">
+                            <?= t('Enable page selection from sitemap.') ?>
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><?= t('Editor Plugins') ?></legend>
+                <div class="form-group">
                     <?php
-                }
-            }
-            ?>
+                    foreach ($plugins as $key => $plugin) {
+                        if (!in_array($key, $selected_hidden)) {
+                            $description = $plugin->getDescription();
+                            ?>
+                            <div class="form-check">
+                                <?php
+                                echo $form->checkbox('plugin[]', $key, $manager->isSelected($key), ['class' => 'form-check-input']);
+                                ?>
+                                <label class="form-check-label" for="plugin[]">
+                                <?php
+                                    if ($description !== '') {
+                                        echo '<span class="launch-tooltip" title="', h($description), '">';
+                                    }
+                                    echo '&nbsp;' . h($plugin->getName());
+                                    if ($description !== '') {
+                                        echo '</span>';
+                                    }
+                                ?>
+                                </label>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+            </fieldset>
         </div>
+
         <div class="col-md-6">
             <div id="ccm-editor-preview" style="display: none">
-                <?= $form->label('', t('Editor Preview')) ?>
-                <div id="ccm-editor-preview-content"></div>
+                <fieldset>
+                    <legend><?= t('Editor Preview') ?></legend>
+                    <div id="ccm-editor-preview-content"></div>
+                </fieldset>
             </div>
         </div>
     </div>
-            
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-left btn btn-default" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
-            <button class="pull-right btn btn-primary" type="submit"><?= t('Save') ?></button>
+            <button class="float-left btn btn-secondary" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
+            <button class="float-right btn btn-primary" type="submit"><?= t('Save') ?></button>
         </div>
     </div>
 </form>
@@ -92,8 +105,8 @@ function showPreview(show) {
     }
     previewEnabled = show;
     $togglePreview
-        .removeClass(previewEnabled ? 'btn-default' : 'btn-success')
-        .addClass(previewEnabled ? 'btn-success' : 'btn-default')
+        .removeClass(previewEnabled ? 'btn-secondary' : 'btn-success')
+        .addClass(previewEnabled ? 'btn-success' : 'btn-secondary')
     ;
     if (previewEnabled) {
         updatePreview();
@@ -125,15 +138,18 @@ function updatePreview() {
     $.ajax({
         method: 'POST',
         url: <?= json_encode((string) URL::to('/ccm/system/dialogs/editor/settings/preview')) ?>,
-        data: data
+        data: data,
+        beforeSend: function() {
+            $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fa fa-circle-notch fa-spin fa-sm"></i></p>');
+            $preview.show();
+        }
     })
-    .success(function (data) {
-        $preview.show();
+    .done(function (data, textStatus, jqXHR) {
         $previewContent.html(data);
     })
 }
 
-var previewOffsetTop = $previewContainer.offset().top, previewOffsetLimit = $('.ccm-dashboard-page-header').offset().top;
+var previewOffsetTop = $previewContainer.offset().top, previewOffsetLimit = $('#ccm-dashboard-content header').offset().top;
 function updatePreviewView() {
     if ($window.scrollTop() >= previewOffsetTop - previewOffsetLimit) {
         $preview
@@ -152,13 +168,18 @@ updatePreviewView();
 $window.on('scroll resize', function() {
     updatePreviewView();
 });
-    
+
 $togglePreview.on('click', function(e) {
     e.preventDefault();
     showPreview(!previewEnabled);
 });
+
+var debounced_updatePreview = _.debounce(updatePreview, 1500);
+
 $('#ccm-editor-config input').on('change', function() {
-    updatePreview();
+    $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fa fa-circle-notch fa-spin fa-sm"></i></p>');
+    debounced_updatePreview.cancel();
+    debounced_updatePreview();
 });
 
 });

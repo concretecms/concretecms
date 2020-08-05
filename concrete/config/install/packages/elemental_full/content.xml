@@ -3030,9 +3030,9 @@
         </page>
     </pages>
     <sociallinks>
-        <link service="facebook" url="http://facebook.com/concrete5"/>
-        <link service="github" url="http://github.com/concrete5"/>
-        <link service="twitter" url="http://twitter.com/concrete5"/>
+        <link service="facebook" url="https://facebook.com/concrete5"/>
+        <link service="github" url="https://github.com/concrete5"/>
+        <link service="twitter" url="https://twitter.com/concrete5"/>
     </sociallinks>
     <trees>
         <tree type="topic" name="Blog Entries">

@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 ?>
 <div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?= $view->action('update') ?>" class="btn btn-default"><?= t('Install/Update Languages') ?></a>
+    <a href="<?= $view->action('update') ?>" class="btn btn-secondary"><?= t('Install/Update Languages') ?></a>
 </div>
 <?php
 
@@ -19,8 +19,8 @@ if (empty($interfacelocales)) {
         <fieldset>
             <div class="form-group">
                 <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Login')) ?>
-                <div class="checkbox">
-                    <label><?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?><?= t('Offer choice of language on login.') ?></label>
+                <div class="form-check">
+                    <label><?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?>&nbsp;<?= t('Offer choice of language on login.') ?></label>
                 </div>
             </div>
             <div class="form-group">
@@ -42,7 +42,7 @@ if (empty($interfacelocales)) {
 
 if (isset($mlLink)) {
     ?>
-    <div class="alert alert-info small">
+    <div class="ml-3 alert alert-info small">
         <?= t(
             'You can configure the site languages in the %s dashboard page.',
             sprintf('<a href="%s">%s</a>', h($mlLink[1]), h($mlLink[0]))

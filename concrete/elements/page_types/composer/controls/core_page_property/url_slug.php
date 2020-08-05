@@ -1,31 +1,37 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var Concrete\Core\Page\Type\Composer\Control\Control $control
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var string $label
+ * @var string $description
+ */
+
 $draft = $control->getPageObject();
+$element = $form->text($this->field('url_slug'), $control->getPageTypeComposerControlDraftValue());
 ?>
 
 <div class="form-group ccm-composer-url-slug" data-composer-field="url_slug" style="position: relative">
-	<label class="control-label"><?=$label?></label>
-    <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) : ?>
+    <?= $form->label('', $label) ?>
+    <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) { ?>
         <span class="label label-info"><?= t('Required') ?></span>
-    <?php endif; ?>
-	<?php if ($description): ?>
-	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<?php endif; ?>
+    <?php } ?>
 
-    <?php
-    $element = $form->text($this->field('url_slug'), $control->getPageTypeComposerControlDraftValue(), array('class' => 'span4'));
-    ?>
+	<?php if ($description) { ?>
+	    <i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?= $description ?>"></i>
+	<?php } ?>
+
     <div>
-        <i class="fa-refresh fa-spin fa ccm-composer-url-slug-loading"></i>
-        <?php if (is_object($draft) && !$draft->isPageDraft()) {
-    ?>
-            <div><a href="#" class="icon-link" data-composer-field="edit_url_slug"><i class="fa fa-pencil"></i></a> <span><?=$control->getPageTypeComposerControlDraftValue()?></span></div>
-        <?php 
-} else {
-    ?>
-            <?=$element?>
-        <?php 
-} ?>
+        <i class="fas fa-sync fa-spin ccm-composer-url-slug-loading"></i>
+        <?php
+        if (is_object($draft) && !$draft->isPageDraft()) {
+            ?>
+            <div><a href="#" class="icon-link" data-composer-field="edit_url_slug"><i class="fas fa-pencil"></i></a> <span><?= $control->getPageTypeComposerControlDraftValue() ?></span></div>
+        <?php
+        } else {
+            echo $element;
+        }
+        ?>
     </div>
 </div>
 
@@ -40,7 +46,7 @@ $draft = $control->getPageObject();
 </style>
 
 <script type="text/javascript">
-    var slugHTML = '<?=addslashes($element)?>';
+    var slugHTML = '<?= addslashes($element) ?>';
     $(function() {
         $('a[data-composer-field=edit_url_slug]').on('click', function(e) {
             e.preventDefault();

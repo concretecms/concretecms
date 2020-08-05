@@ -29,7 +29,7 @@ class Name extends DashboardSitePageController
 
     public function sitename_saved()
     {
-        $this->set('message', t("Your site's name has been saved."));
+        $this->set('success', t("Your site's name has been saved."));
         $this->view();
     }
 
@@ -51,7 +51,8 @@ class Name extends DashboardSitePageController
                 $this->redirect('/dashboard/system/basics/name', 'sitename_saved');
             }
         } else {
-            $this->set('error', array($this->token->getErrorMessage()));
+            $this->error->add($this->token->getErrorMessage());
+
         }
         $this->view();
     }
