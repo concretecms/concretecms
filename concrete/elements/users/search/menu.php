@@ -57,7 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <li>
             <a class="ccm-hover-icon" title="<?php echo h(t('Add User')) ?>"
                href="<?php echo (string)UrlFacade::to("/dashboard/users/add"); ?>">
-                <i class="fa fa-user" aria-hidden="true"></i>
+                <i class="fa fa-user-plus" aria-hidden="true"></i>
             </a>
         </li>
     </ul>
