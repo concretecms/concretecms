@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
+use Concrete\Core\Express\ObjectManager;
 use Doctrine\ORM\Query\Expr;
 
 class Controller extends AttributeTypeController
@@ -85,6 +86,14 @@ class Controller extends AttributeTypeController
                 $entry = $value->getSelectedEntries()[0];
             }
         }
+        if (!$entry) {
+            if ($this->request->query->has($this->attributeKey->getAttributeKeyHandle())) {
+                $entry = $this->app->make(ObjectManager::class)->getEntry(
+                    (int) $this->request->query->get($this->attributeKey->getAttributeKeyHandle())
+                );
+            }
+        }
+
         $entrySelector = $this->app->make('form/express/entry_selector');
         $this->set('entrySelector', $entrySelector);
         $this->set('entry', $entry);
