@@ -2,14 +2,22 @@
 
 namespace Concrete\Controller\Backend\Page;
 
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Http\Response;
-use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\PageTransformer;
-use Concrete\Core\Permission\Checker;
-use Concrete\Core\Permission\Response\PageResponse;
-use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Page\Search\SearchProvider;
+use Concrete\Core\Search\Field\Field\KeywordsField;
+use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
+use Concrete\Core\Search\Query\Modifier\ItemsPerPageRequestModifier;
+use Concrete\Core\Search\Query\QueryFactory;
+use Concrete\Core\Search\Query\QueryModifier;
+use Concrete\Core\Search\Result\Result;
+use Concrete\Core\Search\Result\ResultFactory;
 use League\Fractal\Manager;
+use League\Fractal\Pagination\PagerfantaPaginatorAdapter;
 use League\Fractal\Resource\Collection;
+use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\Request;
 
 class Chooser extends \Concrete\Core\Controller\Controller
 {
@@ -18,30 +26,112 @@ class Chooser extends \Concrete\Core\Controller\Controller
      */
     protected $manager;
 
+
     public function __construct(Manager $manager)
     {
+        parent::__construct();
         $this->manager = $manager;
     }
 
-    public function searchPages($keyword)
+    /**
+     * @return SearchProvider
+     */
+    protected function getSearchProvider()
     {
-        $list = new PageList();
-        $list->setPermissionsChecker(function ($page) {
-            /** @var PageResponse $cp */
-            $cp = new Checker($page);
+        return $this->app->make(SearchProvider::class);
+    }
 
-            return $cp->canViewPageInSitemap();
-        });
-        $list->filterByKeywords($keyword);
-        $list->sortByPublicDateDescending();
-        $list->setPageVersionToRetrieve(PageList::PAGE_VERSION_RECENT);
+    /**
+     * @return QueryFactory
+     */
+    protected function getQueryFactory()
+    {
+        return $this->app->make(QueryFactory::class);
+    }
 
-        $adapter = $list->getPaginationAdapter();
-        $pagination = new Pagination($list, $adapter);
-        $pagination->setMaxPerPage(20);
-        $collection = new Collection($pagination->getCurrentPageResults(), new PageTransformer());
-        $response = $this->manager->createData($collection);
+    protected function getSearchKeywordsField($keywords = null)
+    {
+        if (!$keywords && $this->request->query->has('keywords')) {
+            $keywords = $this->request->query->get('keywords');
+        }
 
-        return new Response($response->toJson());
+        return new KeywordsField($keywords);
+    }
+
+    /**
+     * @param Query $query
+     * @return Result
+     */
+    protected function createSearchResult(Query $query)
+    {
+        $provider = $this->app->make(SearchProvider::class);
+        $resultFactory = $this->app->make(ResultFactory::class);
+        $queryModifier = $this->app->make(QueryModifier::class);
+
+        $queryModifier->addModifier(new AutoSortColumnRequestModifier($provider, $this->request, Request::METHOD_GET));
+        $queryModifier->addModifier(new ItemsPerPageRequestModifier($provider, $this->request, Request::METHOD_GET));
+        $query = $queryModifier->process($query);
+
+        return $resultFactory->createFromQuery($provider, $query);
+    }
+
+    /**
+     * From the search results create a response that includes results and metadata
+     * @param $result
+     * @return Response
+     */
+    protected function getSearchResponse($result)
+    {
+        $pages = $this->extractSearchResultPages($result);
+
+        $collection = new Collection($pages, new PageTransformer());
+
+        // Setting the paginator includes paging metadata in the result
+        $this->setPaginator($collection, $result->getPagination());
+
+        // Send the response to the client
+        $scope = $this->manager->createData($collection);
+        return new Response($scope->toJson());
+    }
+
+    /**
+     * Gets an array of page objects
+     * @param $result
+     * @return array - List of \Concrete\Core\Page\Page
+     */
+    protected function extractSearchResultPages($result)
+    {
+        return array_map(function ($item) {
+            return $item->getItem();
+        }, $result->getItems());
+    }
+
+    /**
+     * Add pagination to the collection adds metadata to the response
+     * @param Collection $collection
+     * @param Pagerfanta $pagination
+     */
+    protected function setPaginator(Collection $collection, Pagerfanta $pagination)
+    {
+        // PagerfantaPaginatorAdapter requires a Callable, which the empty function is for
+        $paginatorAdapter = new PagerfantaPaginatorAdapter($pagination, function () {});
+        $collection->setPaginator($paginatorAdapter);
+    }
+
+    /**
+     * Callable through /ccm/system/page/chooser/search/{keywords}
+     * @param $keywords
+     * @return Response
+     */
+    public function searchPages($keywords)
+    {
+        $searchProvider = $this->getSearchProvider();
+        $query = $this->getQueryFactory()->createQuery($searchProvider, [
+            $this->getSearchKeywordsField($keywords)
+        ]);
+
+        $result = $this->createSearchResult($query);
+
+        return $this->getSearchResponse($result);
     }
 }

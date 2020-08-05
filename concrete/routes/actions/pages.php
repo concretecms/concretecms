@@ -21,6 +21,6 @@ $router->all('/select_sitemap', 'Page\SitemapSelector::view');
 $router->all('/sitemap_data', 'Page\SitemapData::view');
 $router->all('/sitemap_delete_forever', 'Page\SitemapDeleteForever::fillQueue');
 
-$router->all('/chooser/search/{keyword}', 'Page\Chooser::searchPages');
+$router->all('/chooser/search/{keywords}', 'Page\Chooser::searchPages');
 
 $router->all('/sitemap_overlay', '\Concrete\Controller\Element\Dashboard\Sitemap\SitemapOverlay::view');
