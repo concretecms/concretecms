@@ -54,8 +54,8 @@ if (! is_array($users) || count($users) ==0) {
 
 	<script type="text/javascript">
 		$(function() {
-			$('#groupIDs').removeClass('form-control').selectize({
-				plugins: ['remove_button']
+			$('#groupIDs').removeClass('form-control').selectpicker({
+				width: '100%'
 			});
 		});
 	</script>
