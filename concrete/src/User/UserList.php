@@ -311,7 +311,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->andWhere(
             $this->query->expr()->like('u.uName', ':uName')
         );
-        $this->query->setParameter('uName', $username . '%');
+        $this->query->setParameter('uName', '%' . $username . '%');
     }
 
     /**
