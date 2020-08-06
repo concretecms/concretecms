@@ -31,5 +31,10 @@ class ManagerServiceProvider extends ServiceProvider
 
             return $manager;
         });
+        $this->app['manager/search_field/logging'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\Logging\Search\Field\Manager');
+
+            return $manager;
+        });
     }
 }
