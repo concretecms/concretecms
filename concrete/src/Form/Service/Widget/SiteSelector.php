@@ -70,7 +70,7 @@ EOL;
         }
 
         $html .= <<<EOL
-        <script type="text/javascript">$(function() { $('select[data-select=search-sites]').selectize(); });</script>
+        <script type="text/javascript">$(function() { $('select[data-select=search-sites]').selectpicker({width: '100%'}); });</script>
 EOL;
 
         return $html;
