@@ -155,8 +155,11 @@ EOL;
             $selectedUserId = $uID;
         }
 
+        $userList = [];
+
         if ($selectedUserId && $this->app->make(Numbers::class)->integer($selectedUserId, 1)) {
             $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int)$selectedUserId);
+            $userList[(int)$selectedUserId] = $userInfo->getUserDisplayName();
         } else {
             $userInfo = null;
         }
@@ -178,7 +181,7 @@ EOL;
             "</script>\n",
             (string)new Element(
                 "span",
-                $form->select($fieldName, $selectedUserId, $miscFields),
+                $form->select($fieldName, $userList, $selectedUserId, $miscFields),
                 [
                     "class" => "ccm-quick-user-selector",
                     "id" => "ccm-quick-user-selector-" . $identifier
@@ -203,7 +206,8 @@ EOL;
                     "statusSearching" => t("Searching..."),
                     "statusTooShort" => t("Please enter more characters")
                 ],
-                "preserveSelected" => false
+                "preserveSelected" => false,
+                "minLength" => 2
             ])
         );
     }
