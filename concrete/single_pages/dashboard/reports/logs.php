@@ -3,7 +3,6 @@
 /** @noinspection PhpUndefinedMethodInspection */
 /** @noinspection PhpDeprecationInspection */
 /** @noinspection DuplicatedCode */
-
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
@@ -15,9 +14,9 @@ use Concrete\Core\Logging\Search\Result\Item;
 use Concrete\Core\Logging\Search\Result\ItemColumn;
 use Concrete\Core\Logging\Menu;
 
-/** @var MenuInterface $menu */
-/** @var Result $result */
-/** @var DropdownMenu $resultsBulkMenu */
+/* @var MenuInterface $menu */
+/* @var Result $result */
+/* @var DropdownMenu $resultsBulkMenu */
 
 ?>
 <div id="ccm-search-results-table">
@@ -52,14 +51,14 @@ use Concrete\Core\Logging\Menu;
 
             <?php foreach ($result->getColumns() as $column): ?>
                 <?php /** @var Column $column */ ?>
-                <th class="<?php echo $column->getColumnStyleClass() ?>">
+                <th class="<?php echo $column->getColumnStyleClass(); ?>">
                     <?php if ($column->isColumnSortable()): ?>
-                        <a href="<?php echo $column->getColumnSortURL() ?>">
-                            <?php echo $column->getColumnTitle() ?>
+                        <a href="<?php echo $column->getColumnSortURL(); ?>">
+                            <?php echo $column->getColumnTitle(); ?>
                         </a>
                     <?php else: ?>
                         <span>
-                            <?php echo $column->getColumnTitle() ?>
+                            <?php echo $column->getColumnTitle(); ?>
                         </span>
                     <?php endif; ?>
                 </th>
@@ -80,13 +79,13 @@ use Concrete\Core\Logging\Menu;
                         <!--suppress HtmlFormInputWithoutLabel -->
                         <input data-search-checkbox="individual"
                                type="checkbox"
-                               data-item-id="<?php echo $logEntry->getId() ?>"/>
+                               data-item-id="<?php echo $logEntry->getId(); ?>"/>
                     <?php endif; ?>
                 </td>
 
                 <?php foreach ($item->getColumns() as $column): ?>
                     <?php /** @var ItemColumn $column */ ?>
-                    <td class="<?php echo $class ?>">
+                    <td class="<?php echo $class; ?>">
                         <?php echo $column->getColumnValue(); ?>
                     </td>
                 <?php endforeach; ?>
