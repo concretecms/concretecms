@@ -197,26 +197,27 @@ if (isset($type)) {
             .trigger('change')
         ;
         <?php
-        
+
         if ($allowConditionalThumbnails) {
             ?>
             var $fileSets = $('#fileSets');
-            $fileSets.selectize({
-                plugins: ['remove_button']
+            $fileSets.selectpicker({
+                width: '100%'
             });
             $('#fileSetOption')
                 .on('change', function() {
                     if ($(this).val() === <?= json_encode($controller::FILESETOPTION_ALL) ?>) {
-                        $fileSets[0].selectize.disable();
+                        $fileSets.prop('disabled', true);
                     } else {
-                        $fileSets[0].selectize.enable();
+                        $fileSets.prop('disabled', false);
                     }
+                    $fileSets.selectpicker('refresh');
                 })
                 .trigger('change')
             ;
             <?php
         }
-        
+
         ?>
     });
     </script>
