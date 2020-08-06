@@ -105,9 +105,9 @@ if ($calendarAttributeKeyHandle) {
 <script>
     $(function () {
         <?php if (isset($multiple) && $multiple) { ?>
-        $('#caID').selectize({
-            plugins: ['remove_button']
-        });
+            $('#caID').selectpicker({
+                width: 'fit'
+            });
         <?php } ?>
 
         $('input[name=chooseCalendar]').on('change', function () {
