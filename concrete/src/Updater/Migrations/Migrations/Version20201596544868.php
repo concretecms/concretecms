@@ -7,7 +7,7 @@ use Concrete\Core\Entity\Search\SavedLogSearch;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20201596544868 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20200810000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
@@ -18,6 +18,8 @@ class Version20201596544868 extends AbstractMigration implements RepeatableMigra
         $this->output(t('Installing log permissions upgrade XML...'));
         $importer = new ContentImporter();
         $importer->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/log_permissions.xml');
+        /* Refresh image block */
+        $this->refreshBlockType('calendar_event');
     }
 
 }
