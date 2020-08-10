@@ -38,7 +38,7 @@ class DeleteInvalidatedUsers extends Job
             $threshold = $config->get('concrete.user.registration.validate_email_threshold', 0);
             if ($threshold) {
                 $thresholdDateTime = new \DateTime();
-                $thresholdDateTime->sub(new \DateInterval('P' . $threshold . 'S'));
+                $thresholdDateTime->sub(new \DateInterval('PT' . $threshold . 'S'));
                 $userList->filterByDateAdded($thresholdDateTime->format('Y-m-d H:i:s'), '<');
             }
             $users = $userList->getResults();
