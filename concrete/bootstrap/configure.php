@@ -106,6 +106,11 @@ const DIRNAME_PAGE_TEMPLATES = 'page_templates';
 const DIRNAME_PAGE_THEME = 'page_theme';
 const DIRNAME_PAGE_THEME_CUSTOM = 'custom';
 const DIRNAME_ELEMENTS = 'elements';
+const DIRNAME_SUMMARY = 'summary';
+const DIRNAME_SUMMARY_TEMPLATES = 'templates';
+const DIRNAME_BOARDS = 'boards';
+const DIRNAME_BOARD_SLOTS = 'slots';
+const DIRNAME_CONTAINERS = 'containers';
 const DIRNAME_LANGUAGES = 'languages';
 const DIRNAME_JOBS = 'jobs';
 const DIRNAME_DASHBOARD = 'dashboard';
@@ -271,6 +276,8 @@ define('DIR_CORE_CONFIG', DIR_BASE_CORE . '/config');
  * ----------------------------------------------------------------------------
  */
 const BLOCK_HANDLE_SCRAPBOOK_PROXY = 'core_scrapbook_display';
+const BLOCK_HANDLE_CONTAINER_PROXY = 'core_container';
+const BLOCK_HANDLE_BOARD_SLOT_PROXY = 'core_board_slot';
 const BLOCK_HANDLE_LAYOUT_PROXY = 'core_area_layout';
 const BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY = 'core_page_type_composer_control_output';
 const BLOCK_HANDLE_STACK_PROXY = 'core_stack_display';

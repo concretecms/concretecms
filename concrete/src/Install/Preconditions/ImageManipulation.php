@@ -8,8 +8,6 @@ use Concrete\Core\Install\PreconditionResult;
 
 class ImageManipulation implements PreconditionInterface
 {
-    const MINIMUM_PHP_VERSION = '5.5.9';
-
     /**
      * The FunctionInspector instance.
      *

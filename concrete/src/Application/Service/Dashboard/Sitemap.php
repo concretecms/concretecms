@@ -234,12 +234,12 @@ class Sitemap
             $cIconClass = null;
             $cIcon = $c->getCollectionIcon();
             if (!$cIcon) {
-                if ($cID == 1) {
-                    $cIconClass = 'fa fa-home';
+                if ($c->isHomePage()) {
+                    $cIconClass = 'icon-home';
                 } elseif ($numSubpages > 0) {
-                    $cIconClass = 'fa fa-folder-o';
+                    $cIconClass = 'icon-folder';
                 } else {
-                    $cIconClass = 'fa fa-file-o';
+                    $cIconClass = 'icon-page';
                 }
             }
         }

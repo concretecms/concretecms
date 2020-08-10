@@ -12,10 +12,10 @@ use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Statement;
 use Mockery as M;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 
-class BindingServiceTest extends PHPUnit_Framework_TestCase
+class BindingServiceTest extends TestCase
 {
 
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -29,7 +29,9 @@ class BindingServiceTest extends PHPUnit_Framework_TestCase
         /** @var BindingService|M\Mock $service */
         $service = new BindingService($fakeDatabaseManager);
 
-        $this->setExpectedException(\RuntimeException::class, 'Unable to delete binding.');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to delete binding.');
+
         $service->clearBinding(1, null, 'test');
     }
 
@@ -129,7 +131,7 @@ class BindingServiceTest extends PHPUnit_Framework_TestCase
                 'binding' => 'foo',
                 'id' => 1
             ], [])
-            ->andReturn($fakeResult);
+            ->andReturn(1);
         $this->assertEquals(1, $service->clearBinding(1, 'foo', 'test', true));
     }
 
@@ -141,7 +143,8 @@ class BindingServiceTest extends PHPUnit_Framework_TestCase
 
         $service = new BindingService($fakeDatabaseManager);
 
-        $this->setExpectedException(\InvalidArgumentException::class, 'Invalid user id provided');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid user id provided');
         $service->bindUserId('foo', 'testing', 'test');
     }
 

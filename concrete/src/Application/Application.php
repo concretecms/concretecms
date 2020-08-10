@@ -7,7 +7,10 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Foundation\Command\Dispatcher;
+use Concrete\Core\Foundation\Command\DispatcherFactory;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
@@ -42,6 +45,27 @@ class Application extends Container
     protected $installed = null;
     protected $environment = null;
     protected $packages = [];
+
+    /**
+     * @var Dispatcher
+     */
+    protected $commandDispatcher;
+
+    public function getCommandDispatcher()
+    {
+        if (!isset($this->commandDispatcher)) {
+            $this->commandDispatcher = $this->make(DispatcherFactory::class)->getDispatcher();
+        }
+        return $this->commandDispatcher;
+    }
+
+    /**
+     * @param mixed $command
+     */
+    public function executeCommand($command)
+    {
+        return $this->getCommandDispatcher()->dispatch($command);
+    }
 
     /**
      * Turns off the lights.
@@ -85,6 +109,59 @@ class Application extends Container
     public function clearCaches()
     {
         $this->make(CacheClearer::class)->flush();
+    }
+
+    /**
+     * If we have job scheduling running through the site, we check to see if it's time to go for it.
+     */
+    protected function handleScheduledJobs()
+    {
+        $config = $this['config'];
+
+        if ($config->get('concrete.jobs.enable_scheduling')) {
+            $c = Page::getCurrentPage();
+            if ($c instanceof Page && !$c->isAdminArea()) {
+                // check for non dashboard page
+                $jobs = Job::getList(true);
+                $auth = Job::generateAuth();
+                $url = '';
+                // jobs
+                if (count($jobs)) {
+                    foreach ($jobs as $j) {
+                        if ($j->isScheduledForNow()) {
+                            $url = View::url(
+                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
+                                                  )
+                                );
+                            break;
+                        }
+                    }
+                }
+
+                // job sets
+                if (!strlen($url)) {
+                    $jSets = JobSet::getList(true);
+                    if (is_array($jSets) && count($jSets)) {
+                        foreach ($jSets as $set) {
+                            if ($set->isScheduledForNow()) {
+                                $url = View::url(
+                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
+                                                      )
+                                    );
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (strlen($url)) {
+                    try {
+                        $this->make('http/client')->get($url);
+                    } catch (Exception $x) {
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -440,57 +517,5 @@ class Application extends Container
     {
         return $this->singleton($abstract, $concrete);
     }
-
-    /**
-     * If we have job scheduling running through the site, we check to see if it's time to go for it.
-     */
-    protected function handleScheduledJobs()
-    {
-        $config = $this['config'];
-
-        if ($config->get('concrete.jobs.enable_scheduling')) {
-            $c = Page::getCurrentPage();
-            if ($c instanceof Page && !$c->isAdminArea()) {
-                // check for non dashboard page
-                $jobs = Job::getList(true);
-                $auth = Job::generateAuth();
-                $url = '';
-                // jobs
-                if (count($jobs)) {
-                    foreach ($jobs as $j) {
-                        if ($j->isScheduledForNow()) {
-                            $url = View::url(
-                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
-                                                  )
-                                );
-                            break;
-                        }
-                    }
-                }
-
-                // job sets
-                if (!strlen($url)) {
-                    $jSets = JobSet::getList(true);
-                    if (is_array($jSets) && count($jSets)) {
-                        foreach ($jSets as $set) {
-                            if ($set->isScheduledForNow()) {
-                                $url = View::url(
-                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
-                                                      )
-                                    );
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (strlen($url)) {
-                    try {
-                        $this->make('http/client')->setUri($url)->send();
-                    } catch (Exception $x) {
-                    }
-                }
-            }
-        }
-    }
+    
 }

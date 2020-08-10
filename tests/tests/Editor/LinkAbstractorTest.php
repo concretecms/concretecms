@@ -7,9 +7,9 @@ use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class LinkAbstractorTest extends PHPUnit_Framework_TestCase
+class LinkAbstractorTest extends TestCase
 {
     public function testTranslateFromEditMode()
     {

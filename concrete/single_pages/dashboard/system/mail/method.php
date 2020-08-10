@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 // Arguments
 /* @var Concrete\Core\Config\Repository\Repository $config */
+/* @var \Concrete\Core\Form\Service\Form $form */
 
 $enabledVals = ['0' => t('No'), '1' => t('Yes')];
 $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('Encryption', 'TLS')];
@@ -15,11 +16,13 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
     <fieldset>
         <div class="form-group">
             <?= $form->label('EMAIL_ENABLED', t('Email Sending')) ?>
-            <div class="radio">
-                <label><?= $form->radio('EMAIL_ENABLED', false, $config->get('concrete.email.enabled')) ?><span><?= t('Disabled') ?></span></label>
+            <div class="form-check">
+                <?= $form->radio('EMAIL_ENABLED', false, $config->get('concrete.email.enabled'), ["class" => "form-check-input", "id" => "EMAIL_ENABLED1"]) ?>
+                <?= $form->label('EMAIL_ENABLED1', t('Disabled'), ["form-check-label"]);?>
             </div>
-            <div class="radio">
-                <label><?= $form->radio('EMAIL_ENABLED', true, $config->get('concrete.email.enabled')) ?><span><?= t('Enabled') ?></span></label>
+            <div class="form-check">
+                <?= $form->radio('EMAIL_ENABLED', true, $config->get('concrete.email.enabled'), ["class" => "form-check-input", "id" => "EMAIL_ENABLED2"]) ?>
+                <?= $form->label('EMAIL_ENABLED2', t('Enabled'), ["form-check-label"]);?>
             </div>
         </div>
     </fieldset>
@@ -27,11 +30,13 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
     <fieldset>
         <div class="form-group">
             <?= $form->label('MAIL_SEND_METHOD', t('Email Sending Method')) ?>
-            <div class="radio">
-                <label><?= $form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', strtoupper($config->get('concrete.mail.method'))) ?><span><?= t('Default PHP Mail Function') ?></span></label>
+            <div class="form-check">
+                <?= $form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', strtoupper($config->get('concrete.mail.method')), ["class" => "form-check-input", "id" => "MAIL_SEND_METHOD1"]) ?>
+                <?= $form->label('MAIL_SEND_METHOD1', t('Default PHP Mail Function'), ["form-check-label"]);?>
             </div>
-            <div class="radio">
-                <label><?= $form->radio('MAIL_SEND_METHOD', 'SMTP', strtoupper($config->get('concrete.mail.method'))) ?><span><?= t('External SMTP Server') ?></span></label>
+            <div class="form-check">
+                <?= $form->radio('MAIL_SEND_METHOD', 'SMTP', strtoupper($config->get('concrete.mail.method')), ["class" => "form-check-input", "id" => "MAIL_SEND_METHOD2"]) ?>
+                <?= $form->label('MAIL_SEND_METHOD2', t('External SMTP Server'), ["form-check-label"]);?>
             </div>
         </div>
     </fieldset>
@@ -73,7 +78,7 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= $this->action('test') ?>" class="btn btn-default pull-left"><?= t('Test Settings') ?></a>
+            <a href="<?= $this->action('test') ?>" class="btn btn-secondary float-left"><?= t('Test Settings') ?></a>
             <?= $interface->submit(t('Save'), 'mail-settings-form', 'right', 'btn-primary') ?>
         </div>
     </div>

@@ -87,11 +87,6 @@ class Result
         return $this->baseURL;
     }
 
-    public function getSearchResultBulkMenus()
-    {
-        return false;
-    }
-
     /**
      * @return Set
      */
@@ -156,6 +151,14 @@ class Result
         return $this->getItemListObject()->getSortURL($column, $dir, $this->getBaseURL());
     }
 
+    /**
+     * @return \Concrete\Core\Search\Pagination\Pagination
+     */
+    public function getPagination(): \Concrete\Core\Search\Pagination\Pagination
+    {
+        return $this->pagination;
+    }
+
     public function getJSONObject()
     {
         $obj = new stdClass();
@@ -178,7 +181,6 @@ class Result
         $obj->fields = $this->fields;
         $obj->filters = $this->filters;
         $obj->query = $this->query;
-        $obj->bulkMenus = $this->getSearchResultBulkMenus();
         $obj->baseUrl = (string) $this->getBaseURL();
         $obj->breadcrumb = $this->getBreadcrumb();
         $obj->itemsPerPage = $this->pagination->getItemListObject()->getItemsPerPage();

@@ -4,9 +4,9 @@ namespace Concrete\Tests\Foundation\Environment;
 
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FunctionInspectorTest extends PHPUnit_Framework_TestCase
+class FunctionInspectorTest extends TestCase
 {
     /**
      * @var FunctionInspector

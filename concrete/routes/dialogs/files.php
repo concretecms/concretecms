@@ -26,19 +26,21 @@ $router->all('/sets', 'Sets::view');
 $router->all('/sets/submit', 'Sets::submit');
 $router->all('/folder', 'Folder::view');
 $router->all('/folder/submit', 'Folder::submit');
-$router->all('/properties', 'Properties::view');
+$router->all('/properties/', 'Properties::view');
+$router->all('/properties/submit', 'Properties::submit');
+$router->all('/properties/get_attribute', 'Properties::getAttribute');
+
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
-$router->all('/advanced_search/submit', 'AdvancedSearch::submit');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
-$router->all('/properties/clear_attribute', 'Properties::clear_attribute');
-$router->all('/properties/save', 'Properties::save');
-$router->all('/properties/update_attribute', 'Properties::update_attribute');
 $router->all('/search', 'Search::view');
 $router->all('/jump_to_folder', 'JumpToFolder::view');
 $router->all('/thumbnails', 'Thumbnails::view');
 $router->all('/thumbnails/edit', 'Thumbnails\Edit::view');
 $router->all('/usage/{fID}', 'Usage::view');
+$router->all('/statistics/{fID}', 'Statistics::view');
+$router->all('/statistics/load_more/{fID}', 'Statistics::load_more');
+$router->all('/statistics/download/{fID}', 'Statistics::download');
 
 $router->all('/advanced_search/preset/edit', 'Preset\Edit::view');
 $router->all('/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::edit_search_preset');

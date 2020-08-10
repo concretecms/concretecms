@@ -10,8 +10,6 @@ use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
-use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
@@ -484,11 +482,11 @@ EOT
     }
 
     /**
-     * Gets a list of collections that include this block, along with area name, etc... used in the block_details.php page in the admin control panel.
+     * Gets a list of pages that include this block, along with area name, etc...
      *
      * @return \Concrete\Core\Page\Page[]
      */
-    public function getCollectionList()
+    public function getPageList()
     {
         $cArray = [];
         $bID = $this->getBlockID();
@@ -1642,24 +1640,7 @@ EOT
         } else {
             $bc->duplicate($newBID);
         }
-
-        $features = $bc->getBlockTypeFeatureObjects();
-        if (count($features) > 0) {
-            foreach ($features as $fe) {
-                $fd = $fe->getFeatureDetailObject($bc);
-                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $nc);
-                $db->Execute(
-                    'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                    [
-                        $ncID,
-                        $nvID,
-                        $newBID,
-                        $fa->getFeatureAssignmentID(),
-                    ]
-                    );
-            }
-        }
-
+        
         // finally, we insert into the CollectionVersionBlocks table
         $cbDisplayOrder = $this->getBlockDisplayOrder();
         if ($cbDisplayOrder === null) {
@@ -1757,21 +1738,7 @@ EOT
             $q = 'delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?';
             $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
         }
-
-        // delete any feature assignments that have been attached to this block to the collection version
-        $faIDs = $db->GetCol(
-            'select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?',
-            [
-                $cID,
-                $cvID,
-                $bID,
-            ]
-            );
-        foreach ($faIDs as $faID) {
-            $fa = FeatureAssignment::getByID($faID, $c);
-            $fa->delete();
-        }
-
+        
         //then, we see whether or not this block is aliased to anything else
         $totalBlocks = $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
         $totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);
@@ -1860,11 +1827,10 @@ EOT
      *
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
      * @param bool $updateForkedBlocks
-     * @param \ZendQueue\Queue $queue The queue to add the messages too (it will be emptied before adding the new messages)
      *
      * @return \ZendQueue\Queue
      */
-    public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks, $queue)
+    public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
     {
         $records = [];
         $db = \Database::connection();
@@ -1923,15 +1889,7 @@ EOT
             }
         }
 
-        $name = $queue->getName();
-        $queue->deleteQueue();
-        $queue = Queue::get($name);
-
-        foreach ($records as $record) {
-            $queue->send(serialize($record));
-        }
-
-        return $queue;
+        return $records;
     }
 
     /**
@@ -1944,7 +1902,7 @@ EOT
      *
      * @return \ZendQueue\Queue
      */
-    public function queueForDefaultsUpdate($data, $queue, $includeThisBlock = true)
+    public function queueForDefaultsUpdate($data, $includeThisBlock = true)
     {
         $blocks = [];
         $db = \Database::connection();
@@ -1971,15 +1929,7 @@ EOT
             }
         }
 
-        $name = $queue->getName();
-        $queue->deleteQueue();
-        $queue = Queue::get($name);
-
-        foreach ($blocks as $block) {
-            $queue->send(serialize($block));
-        }
-
-        return $queue;
+        return $blocks;
     }
 
     /**

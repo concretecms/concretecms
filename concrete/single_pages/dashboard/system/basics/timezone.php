@@ -30,7 +30,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </label>
             <div>
                 <?php if (!$dbTimezoneOk) { ?>
-                    <p class="text-warning"><i class="fa fa-warning"></i>
+                    <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
                         <?= $dbDeltaDescription ?>
                     </p>
                     <p>
@@ -47,51 +47,48 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?=t('Settings')?></legend>
         <div class="form-group">
-            <label class="control-label launch-tooltip" data-placement="right" title="<?= t(
+            <label class="control-label launch-tooltip" for="timezone" data-placement="right" title="<?= t(
                 'This will control the default timezone that will be used to display date/times.'
             ) ?>">
                 <?php echo t('Default Timezone') ?>
             </label>
-            <select name="timezone">
-                <?php
-                foreach ($timezones as $areaName => $namedTimezones) {
-                    ?>
-                    <optgroup label="<?= h($areaName) ?>">
-                        <?php
-                        foreach ($namedTimezones as $tzID => $tzName) {
-
-                            $zone = new DateTimeZone($tzID);
-                            $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
-                            if ($zoneName) {
-                                $zoneName = '(' .$zoneName . ')';
-                            }
-                            ?>
-                            <option value="<?= h($tzID) ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : '' ?>>
-                                <?= h($tzName) ?> <?=$zoneName?>
-                            </option>
-                            <?php
-                        } ?>
-                    </optgroup>
+            <div class="row pl-3">
+                <select class="selectpicker" name="timezone" data-live-search="true" data-width="auto">
                     <?php
-                }
-                ?>
-            </select>
-            <script type="text/javascript">
-                $(function() {
-                    $('select[name=timezone]').selectize();
-                });
-            </script>
+                    foreach ($timezones as $areaName => $namedTimezones) {
+                        ?>
+                        <optgroup label="<?= h($areaName) ?>">
+                            <?php
+                            foreach ($namedTimezones as $tzID => $tzName) {
+
+                                $zone = new DateTimeZone($tzID);
+                                $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
+                                if ($zoneName) {
+                                    $zoneName = '(' .$zoneName . ')';
+                                }
+                                ?>
+                                <option value="<?= h($tzID) ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : '' ?>>
+                                    <?= h($tzName) ?> <?=$zoneName?>
+                                </option>
+                                <?php
+                            } ?>
+                        </optgroup>
+                        <?php
+                    }
+                    ?>
+                </select>
+            </div>
         </div>
         <div class="form-group">
             <label class="control-label">
                 <?php echo t('User-Specific Timezones') ?>
             </label>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="user_timezones" value="1"<?= $user_timezones ? ' checked="checked"' : '' ?> />
-                <span class="launch-tooltip control-label" data-placement="right" title="<?= t(
-                    'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.'
-                ) ?>"><?php echo t('Enable user defined time zones.') ?></span>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="user_timezones" value="1"<?= $user_timezones ? ' checked="checked"' : '' ?> />
+                <label class="form-check-label" for="user_timezones">
+                    <span class="launch-tooltip control-label" data-placement="right" title="<?= t(
+                        'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.'
+                    ) ?>"><?php echo t('Enable user defined time zones.') ?></span>
                 </label>
             </div>
         </div>
@@ -122,8 +119,8 @@ if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
             </div>
         </form>
         <div class="dialog-buttons">
-            <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
-            <button type="button" onclick="$('#user-timezone-autofix-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?></button>
+            <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-left"><?=t('Cancel')?></button>
+            <button type="button" onclick="$('#user-timezone-autofix-form').submit()" class="btn btn-primary float-right"><?=t('Save')?></button>
         </div>
     </div>
     <?php

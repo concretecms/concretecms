@@ -6,10 +6,10 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.3a1',
-    'version_installed' => '8.5.3a1',
-    'version_db' => '20200203000000', // the key of the latest database migration
- 
+    'version' => '9.0.0a2',
+    'version_installed' => '9.0.0a2',
+    'version_db' => '20201596544868', // the key of the latest database migration
+
     /*
      * Installation status
      *
@@ -96,7 +96,8 @@ return [
          *
          * @var string semi-colon separated.
          */
-        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.phtml',
+        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
+
         'chunking' => [
             // Enable uploading files in chunks?
             'enabled' => true,
@@ -115,7 +116,7 @@ return [
             // Include the BOM (byte-order mark) in generated CSV files?
             // @var bool
             'include_bom' => false,
-            'datetime_format' => 'ATOM', 
+            'datetime_format' => 'ATOM',
         ],
     ],
 
@@ -185,13 +186,6 @@ return [
          * @var bool
          */
         'blocks' => true,
-
-        /*
-         * Cache Assets
-         *
-         * @var bool
-         */
-        'assets' => false,
 
         /*
          * Cache Theme CSS/JS
@@ -339,6 +333,66 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Queue settings
+     * ------------------------------------------------------------------------
+     */
+    'queue' => [
+
+        /*
+         * Driver
+         *
+         * @var string (redis|database)
+         */
+        'driver' => 'database',
+
+
+        /*
+         * Default queue to use
+         *
+         * @var string
+         */
+        'default' => 'default',
+
+        /*
+         * If we're consuming the queue through polling, how many entries do we do at a time
+         *
+         * @var int
+         */
+        'polling_batch' => [
+            'default' => 10,
+            'rescan_file' => 5,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+
+
+    ],
+
+    /*
+ * ------------------------------------------------------------------------
+ * Events settings
+ * ------------------------------------------------------------------------
+ */
+    'events' => [
+
+        'broadcast' => [
+
+            /*
+             * Driver
+             *
+             * @var string (redis|none)
+             */
+            'driver' => ''
+
+        ],
+
+
+    ],
+
+
+    /*
+     * ------------------------------------------------------------------------
      * Logging settings
      * ------------------------------------------------------------------------
      */
@@ -444,6 +498,10 @@ return [
             'address' => false,
         ],
         'forgot_password' => [
+            'address' => null,
+            'name' => null,
+        ],
+        'register_notification' => [
             'address' => null,
             'name' => null,
         ],
@@ -557,7 +615,6 @@ return [
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,
-        'app_version_display_in_header' => true,
         /*
          * The JPEG compression level (in range 0... 100)
          */
@@ -580,7 +637,6 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
-        'help_overlay' => true,
         'require_version_comments' => false,
         /*
          * Control whether a block type can me moved to different block type sets
@@ -637,13 +693,13 @@ return [
         ],
         'file_manager_listing' => [
             'handle' => 'file_manager_listing',
-            'width' => 60,
-            'height' => 60,
+            'width' => 120,
+            'height' => 120,
         ],
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
-            'width' => 400,
-            'height' => 400,
+            'width' => 500,
+            'height' => 500,
         ],
         'user_avatar' => [
             'width' => 80,
@@ -730,13 +786,6 @@ return [
          * @var bool
          */
         'toolbar_large_font' => false,
-
-        /*
-         * Show help system
-         *
-         * @var bool
-         */
-        'display_help_system' => true,
 
         /*
          * Show tooltips in the concrete5 toolbars
@@ -828,11 +877,20 @@ return [
         'name' => false,
 
         /*
-         * Background image url
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed =
+         * standard behavior, "custom" = custom image.
          *
-         * @var null|string
+         * @var string "none"|"feed"|"custom"
          */
-        'background_image' => null,
+        'background_image' => 'feed',
+
+        /*
+         * If the background image is custom, this is where it loads from.
+         *
+         * @var null|string Custom URL for background image.
+         */
+        'background_url' => null,
+
     ],
     'session' => [
         'name' => 'CONCRETE5',
@@ -855,6 +913,8 @@ return [
             'cookie_domain' => false,
             'cookie_secure' => false,
             'cookie_httponly' => true,
+            'cookie_raw' => false,
+            'cookie_samesite' => null,
         ],
         'remember_me' => [
             'lifetime' => 1209600, // 2 weeks in seconds
@@ -1112,8 +1172,6 @@ return [
     ],
     'limits' => [
         'sitemap_pages' => 100,
-        'delete_pages' => 100,
-        'copy_pages' => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch' => 10,
         'style_customizer' => [

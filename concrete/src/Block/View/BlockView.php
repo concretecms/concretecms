@@ -1,18 +1,24 @@
 <?php
 namespace Concrete\Core\Block\View;
 
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Block\Events\BlockOutput;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
-use Config;
 use Concrete\Core\Area\Area;
-use Environment;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\User\User;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\Block;
-use View;
+use Concrete\Core\View\View;
 
 /**
  * Work with the rendered view of a block.
@@ -173,6 +179,7 @@ class BlockView extends AbstractView
 
                     $this->setViewTemplate($bvt->getTemplate());
                 }
+                $this->handleRequiredFeatures($this->controller);
                 break;
             case 'add':
                 if ($this->controller->blockViewRenderOverride) {
@@ -266,7 +273,7 @@ class BlockView extends AbstractView
         }
 
         $this->controller->registerViewAssets($this->outputContent);
-
+        
         $this->onBeforeGetContents();
         $this->fireOnBlockOutputEvent();
         echo $this->outputContent;
@@ -279,12 +286,46 @@ class BlockView extends AbstractView
         $loc->popActiveContext();
     }
 
-    protected function setBlockViewHeaderFile($file)
+    /**
+     * Given a block controller that we're rendering, we request all the features required by that block controller
+     * and then add them to the page's header/footer via requireAsset, if they're not already provided by the theme
+     * (which we check via getThemeSupportedFeatures)
+     * 
+     * @param BlockController $controller
+     */
+    protected function handleRequiredFeatures(BlockController $controller): void 
+    {
+        $logger = app(LoggerFactory::class)->createLogger(Channels::CHANNEL_CONTENT);
+        if ($controller instanceof UsesFeatureInterface) {
+            $page = $controller->getCollectionObject();
+            if ($page && $page instanceof Page) {
+                $theme = $page->getCollectionThemeObject();
+                if ($theme && $theme instanceof Theme) {
+                    $assetList = AssetList::getInstance();
+                    foreach ($controller->getRequiredFeatures() as $feature) {
+                        if (!in_array($feature, $theme->getThemeSupportedFeatures())) {
+                            $assetHandle = "feature/{$feature}/frontend";
+                            if ($assetList->getAssetGroup($assetHandle)) {
+                                $this->requireAsset($assetHandle);
+                            } else {
+                                $logger->notice(
+                                    t("Block type requested required feature '%s' but it was not registered.",
+                                        $assetHandle)
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function setBlockViewHeaderFile($file)
     {
         $this->blockViewHeaderFile = $file;
     }
 
-    protected function setBlockViewFooterFile($file)
+    public function setBlockViewFooterFile($file)
     {
         $this->blockViewFooterFile = $file;
     }
@@ -374,9 +415,10 @@ class BlockView extends AbstractView
 
     protected function useBlockCache()
     {
-        $u = Application::getFacadeApplication()->make(User::class);
+        $u = app(User::class);
+        $config = app(Repository::class);
         $c = Page::getCurrentPage();
-        if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
+        if ($this->viewToRender == 'view' && $config->get('concrete.cache.blocks') && $this->block instanceof Block
             && $this->block->cacheBlockOutput() && is_object($c) && $c->isPageDraft() === false
         ) {
             if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&

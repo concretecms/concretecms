@@ -12,10 +12,10 @@ use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\TestHelpers\Form\TestController;
 use Concrete\TestHelpers\Form\TestDashboardFormContext;
 use Concrete\TestHelpers\Form\TestFrontendFormContext;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContextTest extends PHPUnit_Framework_TestCase
+class ContextTest extends TestCase
 {
     public function testController()
     {

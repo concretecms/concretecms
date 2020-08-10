@@ -118,7 +118,7 @@ EOT
                         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                             $output->writeln(
                                 $formatter->formatSection(
-                                    $job->getJobHandle(), '<error>' . t('Job Failed') . '</error>'
+                                    $job->getJobHandle(), '<error>' . t('Job Failed: %s', $result->getResultMessage()) . '</error>'
                                 )
                             );
                         }

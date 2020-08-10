@@ -250,7 +250,7 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
     {
         $this->load();
         $type = $akey->addChild('type');
-        $type->addAttribute('custom-countries', $this->akHasCustomCountries);
+        $type->addAttribute('custom-countries', $this->akHasCustomCountries ? 1 : 0);
         $type->addAttribute('default-country', $this->akDefaultCountry);
         $type->addAttribute('geolocate-country', $this->akGeolocateCountry ? 1 : 0);
         if ($this->akHasCustomCountries) {
@@ -313,7 +313,8 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $type->setHasCustomCountries((bool) $akey->type['custom-countries']);
+            
+            $type->setHasCustomCountries(!empty($akey->type['custom-countries']));
             $type->setDefaultCountry((string) $akey->type['default-country']);
             if (isset($akey->type->countries)) {
                 $countries = [];

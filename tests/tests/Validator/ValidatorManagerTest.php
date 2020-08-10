@@ -4,9 +4,9 @@ namespace Concrete\Tests\Validator;
 
 use Concrete\Core\Validator\ValidatorManagerInterface;
 use Concrete\TestHelpers\CreateClassMockTrait;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ValidatorManagerTest extends PHPUnit_Framework_TestCase
+class ValidatorManagerTest extends TestCase
 {
     use CreateClassMockTrait;
 

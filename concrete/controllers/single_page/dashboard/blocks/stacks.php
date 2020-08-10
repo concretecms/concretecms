@@ -1,71 +1,56 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
 use Concrete\Core\Entity\Statistics\UsageTracker\StackUsageRecord;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardStacksBreadcrumbFactory;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\StackFolder;
-use Config;
-use Concrete\Core\Page\Stack\StackList;
-use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Core\Page\Stack\Stack;
-use Page;
 use Concrete\Core\User\User;
-use Concrete\Core\Workflow\Request\DeletePageRequest;
-use Concrete\Core\Workflow\Request\ApproveStackRequest;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
-use View;
+use Concrete\Core\Workflow\Request\ApproveStackRequest;
+use Concrete\Core\Workflow\Request\DeletePageRequest;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Redirect;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use View;
 
 class Stacks extends DashboardPageController
 {
+    protected $themeViewTemplate = 'full.php';
+
     public function view_global_areas()
     {
         $stm = new StackList();
         $stm->filterByGlobalAreas();
         $this->deliverStackList($stm);
-        $this->set('breadcrumb', $this->getBreadcrumb());
-    }
 
-    /**
-     * @return Section[]
-     */
-    protected function getMultilingualSections()
-    {
-        $result = [];
-        if ($this->app->make('multilingual/detector')->isEnabled()) {
-            foreach (Section::getList() as $section) {
-                /* @var Section $section */
-                $result[$section->getLocale()] = $section;
-            }
-            uasort($result, function (Section $a, Section $b) {
-                $r = strcasecmp($a->getLanguageText(), $b->getLanguageText());
-                if ($r === 0) {
-                    $r = strcasecmp($a->getLocale(), $b->getLocale());
-                }
-
-                return $r;
-            });
-        }
-
-        return $result;
+        $factory = $this->createBreadcrumbFactory();
+        $factory->setDisplayGlobalAreasLandingPage(true);
+        $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject()));
     }
 
     public function view_details($cID, $msg = false)
     {
+        $factory = $this->createBreadcrumbFactory();
         if (strpos($cID, '@') !== false) {
             list($cID, $locale) = explode('@', $cID, 2);
         } else {
             $locale = '';
         }
+
         $s = Stack::getByID($cID);
         if (is_object($s)) {
             $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
+            $factory->setDisplayGlobalAreasLandingPage($isGlobalArea);
             if ($s->isNeutralStack()) {
                 $neutralStack = $s;
                 $stackToEdit = $s;
@@ -74,7 +59,7 @@ class Stacks extends DashboardPageController
                 $stackToEdit = $s;
             }
             $sections = $this->getMultilingualSections();
-            $breadcrumb = $this->getBreadcrumb($neutralStack);
+            $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $s, $sections, $locale));
             if (!empty($sections)) {
                 if ($stackToEdit !== $neutralStack) {
                     $section = $stackToEdit->getMultilingualSection();
@@ -90,55 +75,26 @@ class Stacks extends DashboardPageController
                     $this->set('localeName', $sections[$locale]->getLanguageText());
                     $stackToEdit = $neutralStack->getLocalizedStack($sections[$locale]);
                 }
-                $localeCrumbs = [];
-                $localeCrumbs[] = [
-                    'id' => $neutralStack->getCollectionID(),
-                    'active' => $locale === '',
-                    'name' => '<strong>' . h(tc('Locale', 'default')) . '</strong>',
-                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID()),
-                ];
-                $mif = $this->app->make('multilingual/interface/flag');
-                /* @var \Concrete\Core\Multilingual\Service\UserInterface\Flag $mif */
-                foreach ($sections as $sectionLocale => $section) {
-                    /* @var Section $section */
-                    $localizedStackName = $mif->getSectionFlagIcon($section) . ' ' . h($section->getLanguageText());
-                    if ($neutralStack->getLocalizedStack($section) !== null) {
-                        $localizedStackName = '<strong>' . $localizedStackName . '</strong>';
-                    }
-                    $localeCrumbs[] = [
-                        'id' => $neutralStack->getCollectionID() . '@' . $sectionLocale,
-                        'active' => $locale === $sectionLocale,
-                        'name' => $localizedStackName . ' <span class="text-muted">' . h($sectionLocale) . '</span>',
-                        'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID() . rawurlencode('@' . $sectionLocale)),
-                    ];
-                }
-                foreach ($localeCrumbs as $localeCrumb) {
-                    if ($localeCrumb['active']) {
-                        $localeCrumb['children'] = array_filter($localeCrumbs, function ($child) {
-                            return !$child['active'];
-                        });
-                        $breadcrumb[] = $localeCrumb;
-                        break;
-                    }
-                }
             }
             if ($stackToEdit !== null) {
                 $blocks = $stackToEdit->getBlocks('Main');
                 $view = View::getInstance();
                 foreach ($blocks as $b1) {
-                    $btc = $b1->getInstance();
+                    $btc = $b1->getController();
                     // now we inject any custom template CSS and JavaScript into the header
                     if ($btc instanceof \Concrete\Core\Block\BlockController) {
                         $btc->outputAutoHeaderItems();
                     }
-                    $btc->runTask('on_page_view', [$view]);
+
+                    $btc->runAction('on_page_view', [$view]);
                 }
+
                 $this->addHeaderItem($stackToEdit->outputCustomStyleHeaderItems(true));
                 $this->set('blocks', $blocks);
             }
+
             $this->set('neutralStack', $neutralStack);
             $this->set('stackToEdit', $stackToEdit);
-            $this->set('breadcrumb', $breadcrumb);
             $this->set('isGlobalArea', $isGlobalArea);
         } else {
             $folder = StackFolder::getByID($cID);
@@ -146,9 +102,9 @@ class Stacks extends DashboardPageController
                 $stm = new StackList();
                 $stm->filterByFolder($folder);
                 $this->set('currentStackFolderID', $folder->getPage()->getCollectionID());
-                $this->set('breadcrumb', $this->getBreadcrumb($folder->getPage()));
                 $this->deliverStackList($stm);
                 $this->set('canMoveStacks', $this->canMoveStacks($folder));
+                $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $folder));
             } else {
                 $root = Page::getByPath(STACKS_PAGE_PATH);
                 if ($root->getCollectionID() != $cID) {
@@ -157,6 +113,7 @@ class Stacks extends DashboardPageController
                 $this->view();
             }
         }
+
         switch ($msg) {
             case 'stack_added':
                 $this->set('flashMessage', t('Stack added successfully.'));
@@ -216,62 +173,8 @@ class Stacks extends DashboardPageController
                 $this->set('flashMessage', t('Folder deleted successfully.'));
                 break;
         }
-    }
 
-    /**
-     * Check if stacks in a Page or StackFolder can be moved.
-     *
-     * @param Page|StackFolder $parent
-     *
-     * @return bool
-     */
-    protected function canMoveStacks($parent)
-    {
-        $page = ($parent instanceof \Concrete\Core\Page\Page) ? $parent : $parent->getPage();
-        $cpc = new Checker($page);
-
-        return (bool) $cpc->canMoveOrCopyPage();
-    }
-
-    protected function getBreadcrumb(\Concrete\Core\Page\Page $page = null)
-    {
-        $breadcrumb = [[
-            'active' => false,
-            'name' => t('Stacks & Global Areas'),
-            'url' => \URL::to('/dashboard/blocks/stacks'),
-        ]];
-        if ($this->getAction() == 'view_global_areas' || ($page instanceof Stack && $page->getStackType() == Stack::ST_TYPE_GLOBAL_AREA)) {
-            $breadcrumb[] = [
-                'id' => '',
-                'active' => $this->getTask() == 'view_global_areas',
-                'name' => t('Global Areas'),
-                'url' => \URL::to('/dashboard/blocks/stacks', 'view_global_areas'),
-            ];
-        }
-        if ($page !== null) {
-            $nav = $this->app->make('helper/navigation');
-            $pages = array_reverse($nav->getTrailToCollection($page));
-            $pages[] = $page;
-            for ($i = 1; $i < count($pages); ++$i) {
-                $item = $pages[$i];
-                $breadcrumb[] = [
-                    'id' => $item->getCollectionID(),
-                    'active' => $item->getCollectionID() == $page->getCollectionID(),
-                    'name' => $item->getCollectionName(),
-                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $item->getCollectionID()),
-                ];
-            }
-        }
-
-        return $breadcrumb;
-    }
-
-    protected function deliverStackList(StackList $list)
-    {
-        $list->setFoldersFirst(true);
-//        $list->setSiteTreeObject($this->getSite()->getSiteTreeObject());
-        $this->set('list', $list);
-        $this->set('stacks', $list->getResults());
+        $this->set('composer', $this->app->make('helper/concrete/composer'));
     }
 
     public function view()
@@ -288,34 +191,34 @@ class Stacks extends DashboardPageController
 
     public function add_stack()
     {
-        if ($this->app->make('helper/validation/token')->validate('add_stack')) {
-            $stackName = $this->post('stackName');
+        if ($this->token->validate('add_stack')) {
+            $stackName = $this->request->request->get('stackName');
             if ($this->app->make('helper/validation/strings')->notempty($stackName)) {
                 $folder = null;
-                $folderID = $this->post('stackFolderID');
+                $folderID = $this->request->request->get('stackFolderID');
                 if ($this->app->make('helper/validation/numbers')->integer($folderID)) {
                     $folder = StackFolder::getByID($folderID);
                     if (!is_object($folder)) {
                         $this->error->add(t('Unable to find the specified stack folder.'));
                     }
                 }
+
                 if (!$this->error->has()) {
                     $stack = Stack::addStack($stackName, $folder);
-                    $this->redirect('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID(), 'stack_added');
+
+                    return $this->buildRedirect($this->action('view_details', $stack->getCollectionID(), 'stack_added'));
                 }
             } else {
                 $this->error->add(t('You must give your stack a name.'));
             }
         } else {
-            $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+            $this->error->add($this->token->getErrorMessage());
         }
     }
 
     public function add_localized_stack()
     {
-        $token = $this->app->make('helper/validation/token');
-        /* @var \Concrete\Core\Validation\CSRF\Token $token */
-        if ($token->validate('add_localized_stack')) {
+        if ($this->token->validate('add_localized_stack')) {
             $neutralStack = Stack::getByID($this->post('stackID'));
             $isGlobalArea = false;
             if (!$neutralStack) {
@@ -328,9 +231,15 @@ class Stacks extends DashboardPageController
                 $this->error->add(t('Unable to find the specified language'));
             } elseif ($neutralStack && $neutralStack->getLocalizedStack($section) !== null) {
                 if ($isGlobalArea) {
-                    $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this global area in %s", $section->getLanguageText()) . ' (' . $section->getLocale() . ')');
+                    $this->error->add(t(// i18n %s is a language name
+                            "There's already a version of this global area in %s",
+                        $section->getLanguageText()
+                    ) . ' (' . $section->getLocale() . ')');
                 } else {
-                    $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this stack in %s", $section->getLanguageText()) . ' (' . $section->getLocale() . ')');
+                    $this->error->add(t(// i18n %s is a language name
+                            "There's already a version of this stack in %s",
+                        $section->getLanguageText()
+                    ) . ' (' . $section->getLocale() . ')');
                 }
             }
             if ($neutralStack) {
@@ -341,15 +250,15 @@ class Stacks extends DashboardPageController
             }
             if (!$this->error->has()) {
                 $neutralStack->addLocalizedStack($section);
-                $this->redirect(
-                    '/dashboard/blocks/stacks',
+
+                return $this->buildRedirect($this->action(
                     'view_details',
                     $neutralStack->getCollectionID() . rawurlencode('@' . $section->getLocale()),
                     $isGlobalArea ? 'localized_global_area_added' : 'localized_stack_added'
-                );
+                ));
             }
         } else {
-            $this->error->add($token->getErrorMessage());
+            $this->error->add($this->token->getErrorMessage());
         }
     }
 
@@ -358,31 +267,36 @@ class Stacks extends DashboardPageController
         if (!$this->token->validate('add_folder')) {
             $this->error->add($this->token->getErrorMessage());
         }
-        $folderName = $this->post('folderName');
+
+        $folderName = $this->request->request->get('folderName');
         if (!$this->app->make('helper/validation/strings')->notempty($folderName)) {
             $this->error->add(t('You must give the folder a name.'));
         }
+
         $parentFolder = null;
-        $stackFolderID = $this->post('stackFolderID');
+        $stackFolderID = $this->request->request->get('stackFolderID');
         if ($this->app->make('helper/validation/numbers')->integer($stackFolderID)) {
-            $parentFolder = StackFolder::getByID($this->post('stackFolderID'));
+            $parentFolder = StackFolder::getByID($stackFolderID);
             if (!is_object($parentFolder)) {
                 $this->error->add(t('Unable to find the specified stack folder.'));
             }
         } else {
             $stackFolderID = null;
         }
+
         if (!$this->error->has()) {
             StackFolder::add($folderName, $parentFolder);
             $parentID = ($stackFolderID === null) ? Page::getByPath(STACKS_PAGE_PATH)->getCollectionID() : $stackFolderID;
-            $this->redirect('/dashboard/blocks/stacks', 'view_details', $parentID, 'folder_added');
+
+            return $this->buildRedirect($this->action('view_details', $parentID, 'folder_added'));
         }
+
         $this->view();
     }
 
     public function delete_stack()
     {
-        if ($this->app->make('helper/validation/token')->validate('delete_stack')) {
+        if ($this->token->validate('delete_stack')) {
             $s = Stack::getByID($this->request('stackID'));
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
@@ -402,6 +316,7 @@ class Stacks extends DashboardPageController
                         $nextID .= '@' . $section->getLocale();
                     }
                 }
+
                 if (!$this->error->has()) {
                     $sps = new Checker($s);
                     if ($sps->canDeletePage()) {
@@ -412,29 +327,29 @@ class Stacks extends DashboardPageController
                         $response = $pkr->trigger();
                         if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                             // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                            $this->redirect('/dashboard/blocks/stacks', 'view_details', rawurlencode($nextID), $msg);
-                        } else {
-                            $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->cID, $isGlobalArea ? 'global_area_delete_saved' : 'stack_delete_saved');
+                            return $this->buildRedirect($this->action('view_details', rawurlencode($nextID), $msg));
                         }
+
+                        return $this->buildRedirect($this->action('view_details', $s->getCollectionID(), $isGlobalArea ? 'global_area_delete_saved' : 'stack_delete_saved'));
+                    }
+
+                    if ($isGlobalArea) {
+                        $this->error->add(t('You do not have access to delete this stack.'));
                     } else {
-                        if ($isGlobalArea) {
-                            $this->error->add(t('You do not have access to delete this stack.'));
-                        } else {
-                            $this->error->add(t('You do not have access to delete this global area.'));
-                        }
+                        $this->error->add(t('You do not have access to delete this global area.'));
                     }
                 }
             } else {
                 $this->error->add(t('Invalid stack'));
             }
         } else {
-            $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+            $this->error->add($this->token->getErrorMessage());
         }
     }
 
     public function approve_stack($stackID = false, $token = false)
     {
-        if ($this->app->make('helper/validation/token')->validate('approve_stack', $token)) {
+        if ($this->token->validate('approve_stack', $token)) {
             $s = Stack::getByID($stackID);
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
@@ -449,18 +364,18 @@ class Stacks extends DashboardPageController
                     $response = $pkr->trigger();
                     if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                         // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackID, $isGlobalArea ? 'global_area_approved' : 'stack_approved');
-                    } else {
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackID, 'approve_saved');
+                        return $this->buildRedirect($this->action('view_details', $stackID, $isGlobalArea ? 'global_area_approved' : 'stack_approved'));
                     }
-                } else {
-                    $this->error->add(t('You do not have access to approve this stack.'));
+
+                    return $this->buildRedirect($this->action('view_details', $stackID, 'approve_saved'));
                 }
+
+                $this->error->add(t('You do not have access to approve this stack.'));
             } else {
                 $this->error->add(t('Invalid stack'));
             }
         } else {
-            $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+            $this->error->add($this->token->getErrorMessage());
         }
     }
 
@@ -471,14 +386,15 @@ class Stacks extends DashboardPageController
         if ($stack) {
             $neutralStack = $stack->getNeutralStack();
             if ($neutralStack !== null) {
-                $this->redirect('/dashboard/blocks/stacks', 'rename', $neutralStack->getCollectionID());
+                return $this->buildRedirect($this->action('rename', $neutralStack->getCollectionID()));
             }
+
             if ($stack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
                 $this->error->add(t("You can't rename global areas"));
-                $this->view_details($cID);
 
-                return;
+                return $this->view_details($cID);
             }
+
             $isFolder = false;
             $page = $stack;
             $viewCID = $cID;
@@ -490,6 +406,7 @@ class Stacks extends DashboardPageController
                 $viewCID = $page->getCollectionParentID();
             }
         }
+
         if ($page === null) {
             $this->error->add(t('Invalid stack'));
             $this->view();
@@ -501,17 +418,18 @@ class Stacks extends DashboardPageController
                 } else {
                     $this->error->add(t("You don't have the permission to rename this stack folder"));
                 }
+
                 $this->view_details($viewCID);
             } else {
                 $this->set('renamePage', $page);
                 $this->set('isFolder', $isFolder);
                 $this->set('oldName', $isFolder ? $page->getCollectionName() : $stack->getStackName());
-                if ($this->isPost()) {
-                    $valt = $this->app->make('helper/validation/token');
-                    if (!$valt->validate('rename_stack')) {
-                        $this->error->add($valt->getErrorMessage());
+
+                if ($this->request->isMethod(Request::METHOD_POST)) {
+                    if (!$this->token->validate('rename_stack')) {
+                        $this->error->add($this->token->getErrorMessage());
                     } else {
-                        $newName = $this->post('newName');
+                        $newName = $this->request->request->get('newName');
                         if (!$this->app->make('helper/validation/strings')->notempty($newName)) {
                             $this->error->add(t('The name cannot be empty.'));
                         } else {
@@ -519,7 +437,7 @@ class Stacks extends DashboardPageController
                             $v = $page->getVersionToModify();
                             $v->update([
                                 'cName' => $newName,
-                                'cHandle' => str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($newName)),
+                                'cHandle' => str_replace('-', $this->app['config']->get('concrete.seo.page_path_separator'), $txt->urlify($newName)),
                             ]);
                             $u = $this->app->make(User::class);
                             if ($isFolder) {
@@ -527,6 +445,7 @@ class Stacks extends DashboardPageController
                             } else {
                                 $pkr = new ApproveStackRequest();
                             }
+
                             $pkr->setRequestedPage($page);
                             $pkr->setRequestedVersionID($v->getVersionID());
                             $pkr->setRequesterUserID($u->getUserID());
@@ -534,13 +453,13 @@ class Stacks extends DashboardPageController
                             if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                                 // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
                                 if ($isFolder) {
-                                    $this->redirect('/dashboard/blocks/stacks', 'view_details', $viewCID, 'folder_renamed');
-                                } else {
-                                    $this->redirect('/dashboard/blocks/stacks', 'view_details', $viewCID, 'stack_renamed');
+                                    return $this->buildRedirect($this->action('view_details', $viewCID, 'folder_renamed'));
                                 }
-                            } else {
-                                $this->redirect('/dashboard/blocks/stacks', 'view_details', $viewCID, 'rename_saved');
+
+                                return $this->buildRedirect($this->action('view_details', $viewCID, 'stack_renamed'));
                             }
+
+                            return $this->buildRedirect($this->action('view_details', $viewCID, 'rename_saved'));
                         }
                     }
                 }
@@ -550,17 +469,17 @@ class Stacks extends DashboardPageController
 
     public function move_to_folder()
     {
-        $valt = $this->app->make('helper/validation/token');
-        if (!$valt->validate('move_to_folder')) {
-            throw new Exception($valt->getErrorMessage());
+        if (!$this->token->validate('move_to_folder')) {
+            throw new Exception($this->token->getErrorMessage());
         }
-        $valn = $this->app->make('helper/validation/numbers');
-        /* @var \Concrete\Core\Utility\Service\Validation\Numbers $valn */
-        $receivedSourceIDs = $this->post('sourceIDs');
+
+        $receivedSourceIDs = $this->request->request->get('sourceIDs');
         if (!is_array($receivedSourceIDs)) {
             throw new Exception(t('Bad parameter: %s', 'sourceIDs'));
         }
+
         $sourceIDs = [];
+        $valn = $this->app->make('helper/validation/numbers');
         foreach ($receivedSourceIDs as $receivedSourceID) {
             if (!$valn->integer($receivedSourceID)) {
                 throw new Exception(t('Bad parameter: %s', 'sourceIDs'));
@@ -570,9 +489,11 @@ class Stacks extends DashboardPageController
                 $sourceIDs[] = $receivedSourceID;
             }
         }
+
         if (empty($sourceIDs)) {
             throw new Exception(t('Bad parameter: %s', 'sourceIDs'));
         }
+
         $moveStacks = [];
         $moveFolders = [];
         $checkedParents = [];
@@ -591,37 +512,44 @@ class Stacks extends DashboardPageController
                     throw new Exception(t('Unable to find the specified stack or folder'));
                 }
             }
+
             if ($parentID && !isset($checkedParents[$parentID])) {
                 $parent = Page::getByID($parentID);
                 if ($parent && !$parent->isError() && !$this->canMoveStacks($parent)) {
                     throw new Exception(t('Access denied'));
                 }
+
                 $checkedParents[$parentID] = true;
             }
         }
-        $destinationID = $this->post('destinationID');
+
+        $destinationID = $this->request->request->get('destinationID');
         if ($destinationID === '') {
             $destinationPage = Page::getByPath(STACKS_PAGE_PATH);
         } else {
             if (!$valn->integer($destinationID)) {
                 throw new Exception(t('Bad parameter: %s', 'destinationID'));
             }
+
             $destinationFolder = StackFolder::getByID($destinationID);
             if (!is_object($destinationFolder)) {
                 throw new Exception(t('Unable to find the specified stack folder'));
             }
+
             $destinationPage = $destinationFolder->getPage();
         }
+
         foreach ($moveStacks as $moveStack) {
             $moveStack->move($destinationPage);
         }
+
         foreach ($moveFolders as $moveFolder) {
             $moveFolder->getPage()->move($destinationPage);
         }
-        JsonResponse::create(
+
+        return JsonResponse::create(
             t2('%d item has been moved under the folder %s', '%d items have been moved under the folder %s', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
-        )->send();
-        exit;
+        );
     }
 
     public function duplicate($cID)
@@ -629,27 +557,30 @@ class Stacks extends DashboardPageController
         $s = Stack::getByID($cID);
         if (!$s) {
             $this->error->add(t('Invalid stack'));
-            $this->view();
-        } elseif ($s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+
+            return $this->view();
+        }
+
+        if ($s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
             $this->error->add(t("You can't duplicate global areas"));
             $this->view_details($cID);
         } else {
             $ns = $s->getNeutralStack();
             if ($ns !== null) {
-                $this->redirect('/dashboard/blocks/stacks', 'duplicate', $ns->getCollectionID());
+                return $this->buildRedirect($this->action('duplicate', $ns->getCollectionID()));
             }
+
             $sps = new Checker($s);
             if (!$sps->canMoveOrCopyPage()) {
                 $this->error->add(t("You don't have the permission to clone this stack"));
                 $this->view_details($cID);
             } else {
                 $this->set('duplicateStack', $s);
-                if ($this->isPost()) {
-                    $valt = $this->app->make('helper/validation/token');
-                    if (!$valt->validate('duplicate_stack')) {
-                        $this->error->add($valt->getErrorMessage());
+                if ($this->request->isMethod(Request::METHOD_POST)) {
+                    if (!$this->token->validate('duplicate_stack')) {
+                        $this->error->add($this->token->getErrorMessage());
                     } else {
-                        $stackName = $this->post('stackName');
+                        $stackName = $this->request->request->get('stackName');
                         if (!$this->app->make('helper/validation/strings')->notempty($stackName)) {
                             $this->error->add(t('You must give your stack a name.'));
                         } else {
@@ -657,8 +588,10 @@ class Stacks extends DashboardPageController
                             $ns->update([
                                 'stackName' => $stackName,
                             ]);
+
                             $ns->copyLocalizedStacksFrom($s);
-                            $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->getCollectionParentID(), 'stack_duplicated');
+
+                            return $this->buildRedirect($this->action('view_details', $s->getCollectionParentID(), 'stack_duplicated'));
                         }
                     }
                 }
@@ -674,11 +607,10 @@ class Stacks extends DashboardPageController
     public function delete_stackfolder()
     {
         $parentID = null;
-        $valt = $this->app->make('helper/validation/token');
-        if (!$valt->validate('delete_stackfolder')) {
-            $this->error->add($valt->getErrorMessage());
+        if (!$this->token->validate('delete_stackfolder')) {
+            $this->error->add($this->token->getErrorMessage());
         } else {
-            $folder = StackFolder::getByID($this->post('stackfolderID'));
+            $folder = StackFolder::getByID($this->request->request->get('stackfolderID'));
             if (!is_object($folder)) {
                 $this->error->add(t('Unable to find the specified stack folder.'));
             } else {
@@ -694,13 +626,14 @@ class Stacks extends DashboardPageController
                     $response = $pkr->trigger();
                     if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                         // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $parentID, 'folder_deleted');
-                    } else {
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $parentID, 'folder_delete_saved');
+                        return $this->buildRedirect($this->action('view_details', $parentID, 'folder_deleted'));
                     }
+
+                    return $this->buildRedirect($this->action('view_details', $parentID, 'folder_delete_saved'));
                 }
             }
         }
+
         if ($parentID) {
             $this->view_details($parentID);
         } else {
@@ -717,17 +650,74 @@ class Stacks extends DashboardPageController
         $repository = $entityManager->getRepository(StackUsageRecord::class);
 
         $records = $repository->findBy([
-                'stack_id' => $stackId,
+            'stack_id' => $stackId,
         ]);
 
         $view = new \Concrete\Core\View\DialogView('dialogs/stack/usage');
         $view->setController($this);
-
         $view->addScopeItems([
             'records' => $this->getUsageGenerator($records),
         ]);
 
         return new Response($view->render());
+    }
+
+    public function stack_duplicated()
+    {
+        $this->set('message', t('Stack duplicated successfully'));
+        $this->view();
+    }
+
+    protected function createBreadcrumbFactory(): DashboardStacksBreadcrumbFactory
+    {
+        return $this->app->make(DashboardStacksBreadcrumbFactory::class);
+    }
+
+    /**
+     * @return Section[]
+     */
+    protected function getMultilingualSections()
+    {
+        $result = [];
+        if ($this->app->make('multilingual/detector')->isEnabled()) {
+            foreach (Section::getList() as $section) {
+                // @var Section $section
+                $result[$section->getLocale()] = $section;
+            }
+            uasort($result, function (Section $a, Section $b) {
+                $r = strcasecmp($a->getLanguageText(), $b->getLanguageText());
+                if ($r === 0) {
+                    $r = strcasecmp($a->getLocale(), $b->getLocale());
+                }
+
+                return $r;
+            });
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if stacks in a Page or StackFolder can be moved.
+     *
+     * @param Page|StackFolder $parent
+     *
+     * @return bool
+     */
+    protected function canMoveStacks($parent)
+    {
+        $page = ($parent instanceof \Concrete\Core\Page\Page) ? $parent : $parent->getPage();
+        $cpc = new Checker($page);
+
+        return (bool) $cpc->canMoveOrCopyPage();
+    }
+
+    protected function deliverStackList(StackList $list)
+    {
+        $list->setFoldersFirst(true);
+        // $list->setSiteTreeObject($this->getSite()->getSiteTreeObject());
+        $this->set('list', $list);
+        $this->set('stacks', $list->getResults());
     }
 
     /**
@@ -758,11 +748,5 @@ class Stacks extends DashboardPageController
             // Yield the collection object
             yield $collection;
         }
-    }
-
-    public function stack_duplicated()
-    {
-        $this->set('message', t('Stack duplicated successfully'));
-        $this->view();
     }
 }

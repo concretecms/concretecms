@@ -24,15 +24,9 @@ class StackList extends PageList
         $this->sortByName();
     }
 
-    public function setSiteTreeObject(TreeInterface $tree)
+    public function performAutomaticSorting(StickyRequest $request = null)
     {
-        parent::setSiteTreeObject($tree);
-        $this->query->andWhere('s.siteTreeID = :siteTreeID or s.siteTreeID is null');
-    }
-
-    public function setupAutomaticSorting(StickyRequest $request = null)
-    {
-        parent::setupAutomaticSorting($request);
+        parent::performAutomaticSorting($request);
         if ($this->foldersFirst) {
             $previousOrderBy = $this->query->getQueryPart('orderBy');
             $this->query->orderBy('pt.ptHandle', 'desc');

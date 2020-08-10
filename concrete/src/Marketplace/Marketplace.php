@@ -5,10 +5,11 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\Service\File;
-use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Support\Facade\Package;
+
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Exception;
@@ -308,9 +309,9 @@ class Marketplace implements ApplicationAwareInterface
                 if ($this->hasConnectionError()) {
                     if ($this->connectionError == self::E_DELETED_SITE_TOKEN) {
                         $connectMethod = 'view';
-                        $csToken = self::generateSiteToken();
-
-                        if (!$csToken && $this->connectionError === self::E_CONNECTION_TIMEOUT) {
+                        try {
+                            $csToken = self::generateSiteToken();
+                        } catch (RequestException $exception) {
                             return '<div class="ccm-error">' .
                                 t('Unable to generate a marketplace token. Request timed out.') .
                                 '</div>';
@@ -320,9 +321,9 @@ class Marketplace implements ApplicationAwareInterface
                     }
                 } else {
                     // new connection
-                    $csToken = self::generateSiteToken();
-
-                    if (!$csToken && $this->connectionError === self::E_CONNECTION_TIMEOUT) {
+                    try {
+                        $csToken = self::generateSiteToken();
+                    } catch (RequestException $exception) {
                         return '<div class="ccm-error">' .
                         t('Unable to generate a marketplace token. Request timed out.') .
                         '</div>';
@@ -373,6 +374,8 @@ class Marketplace implements ApplicationAwareInterface
 
     /**
      * @return bool|string
+     *
+     * @throws RequestException
      */
     public function generateSiteToken()
     {

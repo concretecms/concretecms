@@ -919,7 +919,8 @@ class Theme extends ConcreteObject
 
     public function supportsGridFramework()
     {
-        return $this->pThemeGridFrameworkHandle != false;
+        $handle = $this->getThemeGridFrameworkHandle();
+        return $handle != false;
     }
 
     /**
@@ -927,11 +928,21 @@ class Theme extends ConcreteObject
      */
     public function getThemeGridFrameworkObject()
     {
-        if ($this->pThemeGridFrameworkHandle) {
-            $framework = Core::make('manager/grid_framework')->driver($this->pThemeGridFrameworkHandle);
-
+        $handle = $this->getThemeGridFrameworkHandle();
+        if ($handle) {
+            $framework = Core::make('manager/grid_framework')->driver($handle);
             return $framework;
         }
+    }
+    
+    public function getThemeGridFrameworkHandle()
+    {
+        return $this->pThemeGridFrameworkHandle;
+    }
+    
+    public function getThemeSupportedFeatures()
+    {
+        return [];
     }
 
     public function getThemeBlockClasses()

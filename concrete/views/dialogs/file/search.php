@@ -2,22 +2,16 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<div data-search="files" class="ccm-ui">
-
-	<?php
-	$header->render();
-	?>
-
-	<?php Loader::element('files/search', array('result' => $result))?>
-
+<div data-choose="file-manager" class="h-100">
+    <concrete-file-chooser></concrete-file-chooser>
 </div>
-
 <script type="text/javascript">
-$(function() {
-	$('div[data-search=files]').concreteFileManager({
-		result: <?=json_encode($result->getJSONObject())?>,
-		selectMode: 'choose',
-		upload_token: '<?=Core::make('token')->generate()?>'
-	});
-});
+
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-choose=file-manager]',
+            components: config.components
+        })
+    })
+
 </script>

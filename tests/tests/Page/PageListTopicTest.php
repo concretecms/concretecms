@@ -38,7 +38,7 @@ class PageListTopicTest extends PageTestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

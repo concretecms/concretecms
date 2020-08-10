@@ -77,7 +77,11 @@ class CookieService
             // $secure
             $this->config->get('concrete.session.cookie.cookie_secure'),
             // $httpOnly
-            $this->config->get('concrete.session.cookie.cookie_httponly')
+            $this->config->get('concrete.session.cookie.cookie_httponly'),
+            // $raw
+            $this->config->get('concrete.session.cookie.cookie_raw'),
+            // $sameSite
+            $this->config->get('concrete.session.cookie.cookie_samesite')
         );
     }
 

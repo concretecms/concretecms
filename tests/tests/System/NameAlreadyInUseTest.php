@@ -2,10 +2,10 @@
 
 namespace Concrete\Tests\Update;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use RuntimeException;
 
-class NameAlreadyInUseTest extends PHPUnit_Framework_TestCase
+class NameAlreadyInUseTest extends TestCase
 {
     /**
      * The root directory of concrete5, with '/' as directory separator, without any leading '/'.

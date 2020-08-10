@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Database\Driver;
 
 use Concrete\Core\Database\Driver\DriverManager;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class DriverManagerTest extends PHPUnit_Framework_TestCase
+class DriverManagerTest extends TestCase
 {
     /** @var DriverManager */
     protected $driverManager;

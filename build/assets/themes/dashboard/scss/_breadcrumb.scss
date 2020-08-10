@@ -1,0 +1,11 @@
+div.ccm-ui {
+
+  /*
+   * Handle the special multilingual folder dropdown states
+   */
+  .breadcrumb {
+    a.dropdown-toggle {
+      color: $breadcrumb-active-color;
+    }
+  }
+}

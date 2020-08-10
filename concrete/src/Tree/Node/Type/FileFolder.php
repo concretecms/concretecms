@@ -4,6 +4,7 @@ namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\FolderItemList;
+use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
@@ -217,9 +218,9 @@ class FileFolder extends TreeNode
         return parent::getTreeNodeName();
     }
 
-    public function getFolderItemList(User $u = null, Request $request)
+    public function getFolderItemList(User $u, Request $request)
     {
-        $available = new FolderSet();
+        $available = new Available();
         $sort = false;
         $list = new FolderItemList();
         $list->filterByParentFolder($this);
@@ -232,6 +233,7 @@ class FileFolder extends TreeNode
             } else {
                 $sort = $u->config(sprintf('file_manager.sort.%s', $this->getTreeNodeID()));
                 if ($sort) {
+                    /** @noinspection PhpComposerExtensionStubsInspection */
                     $sort = json_decode($sort);
                 }
             }

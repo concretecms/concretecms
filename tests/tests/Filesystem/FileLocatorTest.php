@@ -8,9 +8,9 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FileLocatorTest extends PHPUnit_Framework_TestCase
+class FileLocatorTest extends TestCase
 {
     protected $app;
 

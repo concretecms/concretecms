@@ -9,10 +9,10 @@ use Concrete\Core\Notification\View\UserDeactivatedListView;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 
-class UserDeactivatedListViewTest extends PHPUnit_Framework_TestCase
+class UserDeactivatedListViewTest extends TestCase
 {
 
     use MockeryPHPUnitIntegration;

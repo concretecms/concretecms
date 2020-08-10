@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\File;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ExecutableFilesTest extends PHPUnit_Framework_TestCase
+class ExecutableFilesTest extends TestCase
 {
     public function testExecutableFiles()
     {

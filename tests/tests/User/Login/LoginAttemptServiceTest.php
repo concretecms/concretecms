@@ -8,11 +8,11 @@ use Concrete\Core\Entity\User\LoginAttemptRepository;
 use Concrete\Core\User\Login\LoginAttemptService;
 use Doctrine\ORM\EntityManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class LoginAttemptServiceTest extends PHPUnit_Framework_TestCase
+class LoginAttemptServiceTest extends TestCase
 {
 
     use MockeryPHPUnitIntegration;

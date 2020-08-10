@@ -1,0 +1,8 @@
+div.ccm-details-panel {
+  cursor: pointer;
+  transition: all 0.1s linear;
+
+  &:hover {
+    border-color: #09f;
+  }
+}

@@ -12,7 +12,6 @@ class PageRelations extends BackendInterfacePageController
 
     public function view()
     {
-        $this->requireAsset('core/sitemap');
         $mlist = Section::getList();
         $ml = array();
         $currentSection = Section::getCurrentSection();

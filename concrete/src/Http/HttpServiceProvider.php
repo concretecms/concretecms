@@ -10,8 +10,6 @@ use Concrete\Core\Http\Middleware\StackInterface;
 use Concrete\Core\Http\PSR7\GuzzleFactory;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Http\Client\Adapter\Curl as CurlHttpAdapter;
-use Zend\Http\Client\Adapter\Proxy as SocketHttpAdapter;
 
 class HttpServiceProvider extends ServiceProvider
 {
@@ -59,22 +57,9 @@ class HttpServiceProvider extends ServiceProvider
 
         $this->app->bind(Client\Client::class, function ($app) {
             $factory = $app->make(Client\Factory::class);
-
             return $factory->createFromConfig($app->make('config'));
         });
         $this->app->alias(Client\Client::class, 'http/client');
-
-        $this->app->bind('http/client/curl', function ($app) {
-            $factory = $app->make(Client\Factory::class);
-
-            return $factory->createFromConfig($app->make('config'), CurlHttpAdapter::class);
-        });
-
-        $this->app->bind('http/client/socket', function ($app) {
-            $factory = $app->make(Client\Factory::class);
-
-            return $factory->createFromConfig($app->make('config'), SocketHttpAdapter::class);
-        });
 
         $this->app->bind(ServerRequestInterface::class, ServerRequest::class);
         $this->app->bind(ServerRequest::class, function(Application $app) {

@@ -23,15 +23,5 @@ class BasicFormContext extends Context
         return $locator;
     }
 
-    public function render(Key $key, $value = null)
-    {
-        if (is_object($value)) {
-            $v = new View($value);
-        } else {
-            $v = new View($key);
-        }
-        $v->render($this);
-    }
-
 
 }

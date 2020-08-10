@@ -10,6 +10,5 @@ interface ContextInterface extends FormContextInterface
 
     function getActions();
     function getControlTemplates();
-    function render(Key $key, $value = null);
 
 }

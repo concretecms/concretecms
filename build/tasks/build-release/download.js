@@ -1,7 +1,7 @@
 /* jshint unused:vars, undef:true, node:true */
 
 module.exports = function(grunt, config, parameters, done) {
-	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concrete5/concrete5/archive/release/8.5.2.zip';
+	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concrete5/concrete5/archive/release/8.5.4.zip';
 	var workFolder = parameters.releaseWorkFolder || './release';
 	function endForError(e) {
 		process.stderr.write(e.message || e);
@@ -23,7 +23,7 @@ module.exports = function(grunt, config, parameters, done) {
 			}
 			process.stdout.write('done.\n');
 		}
-		fs.mkdir(workFolder);
+		fs.mkdirSync(workFolder);
 
 		process.stdout.write('Downloading archive... ');
 		(new Download({extract: false}))

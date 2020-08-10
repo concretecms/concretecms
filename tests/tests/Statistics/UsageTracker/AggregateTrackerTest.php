@@ -8,11 +8,11 @@ use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerInterface;
 use Concrete\TestHelpers\CreateClassMockTrait;
 use InvalidArgumentException;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use ReflectionClass;
 use stdClass;
 
-class AggregateTrackerTest extends PHPUnit_Framework_TestCase
+class AggregateTrackerTest extends TestCase
 {
     use CreateClassMockTrait;
 
@@ -193,9 +193,11 @@ class AggregateTrackerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($tracker2, $this->tracker->tracker('test'));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testErrorOnMiss()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $this->tracker->tracker('test');
     }
 

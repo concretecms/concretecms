@@ -17,13 +17,11 @@ abstract class AbstractItem implements ItemInterface
 
     public function getItemElement()
     {
-        $element = new Element('li');
-        $link = new Link('#', $this->getItemName());
+        $link = new Link('#', $this->getItemName(), ['class' => 'dropdown-item']);
         $link->setAttribute('data-tree-action', $this->getAction());
         $link->setAttribute('dialog-title', $this->getDialogTitle());
         $link->setAttribute('data-tree-action-url', $this->getActionURL());
-        $element->appendChild($link);
-        return $element;
+        return $link;
     }
 
 }

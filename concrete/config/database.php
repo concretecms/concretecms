@@ -34,6 +34,13 @@ return [
         ],
     ],
 
+    'redis' => [
+
+        'parameters' => [],
+        'options' => []
+    ],
+
+
     // The preferred database character set (derived from preferred_collation if empty)
     'preferred_character_set' => '',
 

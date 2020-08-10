@@ -5,13 +5,15 @@ namespace Concrete\Block\Search;
 use CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\PageList;
 use Core;
 use Database;
 use Page;
 use Request;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
      * Search title.
@@ -167,6 +169,13 @@ class Controller extends BlockController
         $this->hText = @preg_replace('#' . preg_quote($this->hHighlight, '#') . '#ui', '<span style="background-color:' . $this->hColor . ';">$0</span>', $this->hText);
 
         return $this->hText;
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::SEARCH
+        ];
     }
 
     /**

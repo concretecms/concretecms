@@ -8,25 +8,6 @@ if (!$sh->canRead()) {
     die(t('Access Denied.') . ' ' . t('You do not have access to the sitemap.'));
 }
 
-$v = View::getInstance();
-$v->requireAsset('core/sitemap');
-
-/*
-
-$select_mode = $app->make('helper/text')->entities($_REQUEST['sitemap_select_mode']);
-$callback = $app->make('helper/text')->entities($_REQUEST['callback']);
-
-if ($app->make('helper/validation/numbers')->integer($_REQUEST['cID']) && $select_mode == 'move_copy_delete') {
-    $cID = '&cID=' . $_REQUEST['cID'];
-} else {
-    $cID = '';
-}
-
-if ($callback) {
-    $callback = '&callback=' . addslashes($callback);
-}
-*/
-
 ?>
 
 <div class="ccm-ui" id="ccm-sitemap-search-selector">

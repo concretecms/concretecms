@@ -39,7 +39,7 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'Groups',
     ];
 
-    protected function setUp()
+    public function setUp(): void
     {
         $service = Core::make('site/type');
         if (!$service->getDefault()) {
@@ -64,7 +64,7 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // Attribute tests need tables truncated after every test
         $this->truncateTables();

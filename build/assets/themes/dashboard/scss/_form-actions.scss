@@ -1,0 +1,22 @@
+div#ccm-dashboard-content {
+
+  div.ccm-dashboard-form-actions-wrapper {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 0 15px 0 15px;
+    z-index: $index-level-dashboard-form-actions-wrapper;
+
+    transition: cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s;
+
+    div.ccm-dashboard-form-actions {
+      @include clearfix();
+      padding: 20px 35px;
+      margin: 0 -15px;
+      border-top: 1px solid $gray-200;
+      background-color: $body-bg;
+    }
+  }
+
+}

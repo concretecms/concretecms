@@ -4,9 +4,9 @@ namespace Concrete\Tests\File\Image\Thumbnail;
 
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ThumbnailTypeTest extends PHPUnit_Framework_TestCase
+class ThumbnailTypeTest extends TestCase
 {
     public function typeShouldExistForProvider()
     {

@@ -2,27 +2,20 @@
 
 if (isset($error)) {
     ?>
-    <div class="alert alert-danger"><?= $error ?></div>
+    <div class="alert alert-danger"><?= $error; ?></div>
     <?php
-
 }
 if (isset($message)) {
     ?>
-    <div class="alert alert-success"><?= $message ?></div>
+    <div class="alert alert-success"><?= $message; ?></div>
 <?php
 }
 ?>
 
-<div class="form-group">
-    <span>
-        <?= t('Sign in with your %s account', h($name)) ?>
-    </span>
-    <hr class="ccm-authentication-type-external-concrete5">
-</div>
-<div class="form-group">
-    <a href="<?= $authUrl ?>" class="btn btn-success btn-login btn-block">
-        <img src="<?= $assetBase ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
-        <?= t('Log in with %s', h($name)) ?>
+<div class="form-group external-auth-option">
+    <a href="<?= $authUrl; ?>" class="btn btn-success btn-login btn-block">
+        <img src="<?= $assetBase; ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
+        <?= t('Log in with %s', h($name)); ?>
     </a>
 </div>
 

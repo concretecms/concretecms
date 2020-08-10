@@ -6,6 +6,8 @@ use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Importer;
@@ -21,7 +23,7 @@ use Concrete\Core\User\User;
 use Core;
 use FileAttributeKey;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = '640';
     protected $btInterfaceHeight = '400';
@@ -42,6 +44,13 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t('Document Library');
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::DOCUMENTS
+        ];
     }
 
     public function action_navigate($blockID, $folderID = 0)
@@ -573,7 +582,7 @@ class Controller extends BlockController
                 break;
             case 'image':
                 if ($file->getTypeObject()->getGenericType() == Type::T_IMAGE) {
-                    return sprintf('<img src="%s" class="img-responsive" />', $file->getRelativePath());
+                    return sprintf('<img src="%s" class="img-fluid" />', $file->getRelativePath());
                 }
                 break;
             case 'edit_properties':
@@ -752,16 +761,14 @@ class Controller extends BlockController
 
         $this->requireAsset('css', 'font-awesome');
         if ($this->enableSearch) {
-            $this->requireAsset('jquery/ui');
         }
         $this->set('canAddFiles', false);
         $fp = \FilePermissions::getGlobal();
         if ($this->allowInPageFileManagement) {
-            $this->requireAsset('core/file-manager');
+
         }
 
         if ($this->allowFileUploading && $fp->canAddFile()) {
-            $this->requireAsset('core/file-manager');
             $this->set('canAddFiles', true);
         }
 

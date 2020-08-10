@@ -53,12 +53,14 @@ class ServiceProvider extends Provider
         Command\JobCommand::class,
         Command\RefreshEntitiesCommand::class,
         Command\GenerateSitemapCommand::class,
+        Command\QueueProcessCommand::class,
         Command\FillThumbnailsTableCommand::class,
         Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
         Command\SetDatabaseCharacterSetCommand::class,
         Command\Express\ExportCommand::class,
         Command\FixDatabaseForeignKeys::class,
+        Command\ReindexCommand::class,
     ];
 
     /**

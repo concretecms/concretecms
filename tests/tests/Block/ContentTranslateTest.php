@@ -12,11 +12,11 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
         'SystemContentEditorSnippets',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         \Core::forgetInstance('url/canonical');
 
-        return parent::setUp();
+        parent::setUp();
     }
 
     /**

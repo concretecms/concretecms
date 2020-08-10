@@ -1,38 +1,23 @@
 <?php
+
 namespace Concrete\Core\User\Point;
 
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Legacy\DatabaseItemList;
-use Concrete\Core\Support\Facade\Application;
-use Loader;
+use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
+use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\User\Point\Entry as UserPointEntry;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class EntryList extends DatabaseItemList
 {
-    protected $autoSortColumns = array('uName', 'upaName', 'upPoints', 'timestamp');
-
-    public function __construct()
-    {
-        $this->setBaseQuery();
-    }
-
-    protected function setBaseQuery()
-    {
-        $db = Application::getFacadeApplication()->make(Connection::class);
-        $this->setQuery('SELECT UserPointHistory.upID
-			FROM UserPointHistory
-			LEFT JOIN UserPointActions ON UserPointActions.upaID = UserPointHistory.upaID
-			LEFT JOIN ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' ON UserPointActions.gBadgeID = Groups.gID
-			LEFT JOIN Users ON UserPointHistory.upuID = Users.uID
-		');
-    }
+    protected $autoSortColumns = ['u.uName', 'upa.upaName', 'uph.upPoints', 'uph.timestamp'];
 
     /**
      * @param int $gID
      */
     public function filterByGroupID($gID)
     {
-        $this->filter('UserPointActions.gBadgeID', $gID);
+        $this->query->andWhere('upa.gBadgeID = :gBadgeID');
+        $this->query->setParameter('gBadgeID', $gID);
     }
 
     /**
@@ -40,13 +25,17 @@ class EntryList extends DatabaseItemList
      */
     public function filterByUserName($uName)
     {
-        $this->filter('Users.uName', $uName);
+        $this->query->andWhere('u.uName = :uName');
+        $this->query->setParameter('uName', $uName);
     }
 
+    /**
+     * @param string $upaName
+     */
     public function filterByUserPointActionName($upaName)
     {
-        $db = Loader::db();
-        $this->filter(false, "UserPointActions.upaName LIKE ".$db->quote('%'.$upaName.'%'));
+        $this->query->andWhere($this->query->expr()->like('upa.upaName', ':upaName'));
+        $this->query->setParameter('upaName', '%' . $upaName . '%');
     }
 
     /**
@@ -54,19 +43,57 @@ class EntryList extends DatabaseItemList
      */
     public function filterByUserID($uID)
     {
-        $this->filter('UserPointHistory.upuID', (int) $uID);
+        $this->query->andWhere('uph.upuID = :upuID');
+        $this->query->setParameter('upuID', (int) $uID);
     }
 
-    public function get($items = 0, $offset = 0)
+    /**
+     * @param $queryRow
+     *
+     * @return UserPointEntry
+     */
+    public function getResult($queryRow)
     {
-        $resp = parent::get($items, $offset);
-        $entries = array();
-        foreach ($resp as $r) {
-            $up = new UserPointEntry();
-            $up->load($r['upID']);
-            $entries[] = $up;
-        }
+        $up = new UserPointEntry();
+        $up->load($queryRow['upID']);
 
-        return $entries;
+        return $up;
+    }
+
+    /**
+     * The total results of the query.
+     *
+     * @return int
+     */
+    public function getTotalResults()
+    {
+        $query = $this->deliverQueryObject();
+
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct uph.upID)')->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    public function createQuery()
+    {
+        $db = $this->query->getConnection();
+        $this->query->select('uph.upID')
+            ->from('UserPointHistory', 'uph')
+            ->leftJoin('uph', 'UserPointActions', 'upa', 'uph.upaID = upa.upaID')
+            ->leftJoin('upa', $db->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'upa.gBadgeID = g.gID')
+            ->leftJoin('uph', 'Users', 'u', 'uph.upuID = u.uID')
+        ;
+    }
+
+    /**
+     * Gets the pagination object for the query.
+     *
+     * @return Pagination
+     */
+    public function createPaginationObject()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct uph.upID)')->setMaxResults(1);
+        });
+
+        return new Pagination($this, $adapter);
     }
 }

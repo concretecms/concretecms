@@ -10,7 +10,8 @@ use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControl
 use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerWithgetPackageEntityPath;
 use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
+use function var_dump_safe;
 
 /**
  * PackageProviderFactoryTest.
@@ -18,7 +19,7 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
+class DefaultPackageProviderTest extends TestCase
 {
     use DirectoryHelpers;
 
@@ -122,7 +123,6 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
         $package = new PackageControllerDefaultWithAdditionalNamespaces($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
-
         $this->assertInternalType('array', $drivers);
         $this->assertEquals(3, count($drivers), 'Not all MappingDrivers have bin loaded');
         $c5Driver1 = $drivers[1];
@@ -142,7 +142,7 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest(\Exception $e)
+    protected function onNotSuccessfulTest($e)
     {
         $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverDefault();
@@ -151,23 +151,11 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
 
     private function createPackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
-                '/test_metadatadriver_additional_namespace');
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
-                '/test_metadatadriver_additional_namespace/' .
-                DIRNAME_CLASSES);
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
-                '/test_metadatadriver_additional_namespace/' .
-                DIRNAME_CLASSES .
-                '/Concrete');
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
-                '/test_metadatadriver_additional_namespace/' .
-                DIRNAME_CLASSES .
-                '/Concrete/' . DIRNAME_ENTITIES);
+        $base = DIR_BASE . '/' . DIRNAME_PACKAGES . '/test_metadatadriver_additional_namespace';
+        $this->filesystem->makeDirectory($base, 0755, false, true);
+        $this->filesystem->makeDirectory($base . DIRNAME_CLASSES, 0755, false, true);
+        $this->filesystem->makeDirectory($base . DIRNAME_CLASSES . '/Concrete', 0755, false, true);
+        $this->filesystem->makeDirectory($base . DIRNAME_CLASSES . '/Concrete/' . DIRNAME_ENTITIES, 0755, false, true);
     }
 
     private function removePackageFolderOfTestMetadataDriverAdditionalNamespace()

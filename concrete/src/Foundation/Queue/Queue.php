@@ -4,9 +4,6 @@ namespace Concrete\Core\Foundation\Queue;
 
 use Concrete\Core\Support\Facade\Facade;
 
-/**
- * @deprecated Use $app->make(\Concrete\Core\Foundation\Queue\QueueService::class)
- */
 class Queue extends Facade
 {
     /**

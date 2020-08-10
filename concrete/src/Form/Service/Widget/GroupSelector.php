@@ -59,8 +59,6 @@ class GroupSelector
 
     public function selectGroupWithTree($field, $group = null)
     {
-        $this->assetGroup->requireAsset('core/groups');
-
         $identifier = new Identifier();
         $identifier = $identifier->getString(32);
 

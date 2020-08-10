@@ -8,16 +8,20 @@
         <blocktype handle="document_library" package=""/>
         <blocktype handle="youtube" package=""/>
         <blocktype handle="google_map" package=""/>
+        <blocktype handle="board" package=""/>
+        <blocktype handle="gallery" package=""/>
     </blocktypes>
 
     <blocktypesets>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="board"/>
             <blocktype handle="page_attribute_display"/>
             <blocktype handle="image_slider"/>
             <blocktype handle="video"/>
             <blocktype handle="document_library"/>
             <blocktype handle="youtube"/>
             <blocktype handle="google_map"/>
+            <blocktype handle="gallery"/>
         </blocktypeset>
     </blocktypesets>
 

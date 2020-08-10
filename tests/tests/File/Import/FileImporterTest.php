@@ -9,7 +9,6 @@ use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Import\FileImporter;
-use Concrete\Core\File\Import\ImportException;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\File\FileStorageTestCase;
@@ -53,7 +52,7 @@ class FileImporterTest extends FileStorageTestCase
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = static::$app->make('config');
@@ -73,25 +72,31 @@ class FileImporterTest extends FileStorageTestCase
         CacheLocal::flush();
     }
 
+    /**
+     * @expectedException \Concrete\Core\File\Import\ImportException
+     */
     public function testFileNotFound()
     {
-        $this->setExpectedException(ImportException::class, '', ImportException::E_FILE_INVALID);
         $fi = static::$app->make(FileImporter::class);
         $fi->importLocalFile('foo.txt', 'foo.txt');
     }
 
+    /**
+     * @expectedException \Concrete\Core\File\Import\ImportException
+     */
     public function testFileInvalidExtension()
     {
-        $this->setExpectedException(ImportException::class, '', ImportException::E_FILE_INVALID_EXTENSION);
         $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/test.invalid';
         touch($file);
         $fi = static::$app->make(FileImporter::class);
         $fi->importLocalFile($file, 'test.invalid');
     }
 
+    /**
+     * @expectedException \Concrete\Core\File\Import\ImportException
+     */
     public function testFileInvalidStorageLocation()
     {
-        $this->setExpectedException(ImportException::class, '', ImportException::E_FILE_INVALID_STORAGE_LOCATION);
         $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/test.txt';
         touch($file);
         $fi = static::$app->make(FileImporter::class);
@@ -175,10 +180,10 @@ class FileImporterTest extends FileStorageTestCase
         $cf = static::$app->make('helper/concrete/file');
         $fh = static::$app->make('helper/file');
         $config = static::$app->make('config');
-        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
+        $file = DIR_BASE . '/concrete/config/install/packages/elemental_full/files/123412345678_plants.jpg';
         $humbnailTypes = ThumbnailType::getList();
         foreach ([
-            'auto' => ['png', IMAGETYPE_PNG],
+            'auto' => ['jpg', IMAGETYPE_JPEG],
             'jpeg' => ['jpg', IMAGETYPE_JPEG],
             'png' => ['png', IMAGETYPE_PNG],
         ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
@@ -186,7 +191,7 @@ class FileImporterTest extends FileStorageTestCase
             foreach (['async', 'now'] as $strategy) {
                 $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
                 $fi = static::$app->make(FileImporter::class);
-                $fo = $fi->importLocalFile($file, 'background-slider-night-road.png');
+                $fo = $fi->importLocalFile($file, '123412345678_plants.jpg');
                 $this->assertTrue(is_object($fo), 'Import failed (' . (is_object($fo) ? null : Importer::getErrorMessage($fo)) . ')');
                 $type = $fo->getTypeObject();
                 $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());

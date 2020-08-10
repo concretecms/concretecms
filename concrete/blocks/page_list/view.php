@@ -106,7 +106,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
                             <?php
                             $img = Core::make('html/image', [$thumbnail]);
                             $tag = $img->getTag();
-                            $tag->addClass('img-responsive');
+                            $tag->addClass('img-fluid');
                             echo $tag; ?>
                         </div>
                         <?php

@@ -15,7 +15,7 @@ if (count($included) > 0) {
 
 
 <div class="form-group">
-	<label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
+	<label class="col-form-label"><?=$entity->getAccessEntityLabel()?></label>
 	<?=$form->select('addMessageApproval[' . $entity->getAccessEntityID() . ']', array('A' => t('Approved'), 'U' => t('Pending')), $assignment->getNewConversationMessageApprovalStatus())?>
 </div>
 

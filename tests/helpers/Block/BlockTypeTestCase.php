@@ -30,7 +30,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Block\BlockType\BlockType',
     ];
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $env = Environment::get();
         $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_DB);

@@ -13,7 +13,7 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
 
     protected $tables = ['Config'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->saver = new DatabaseSaver();

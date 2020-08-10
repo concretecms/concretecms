@@ -21,11 +21,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         foreach ($thumbnail_generation_strategies as $id => $name) {
             ?>
-            <div class="radio">
-                <label>
-                    <?= $form->radio('thumbnail_generation_strategy', $id, $id === $thumbnail_generation_strategy, ['required' => 'required']) ?>
-                    <?= h($name) ?>
-                </label>
+            <div class="form-check">
+                <?= $form->radio('thumbnail_generation_strategy', $id, $id === $thumbnail_generation_strategy, ['required' => 'required']) ?>
+                <label><?= h($name) ?></label>
             </div>
             <?php
         }
@@ -37,11 +35,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         foreach ($thumbnail_formats as $id => $name) {
             ?>
-            <div class="radio">
-                <label>
-                    <?= $form->radio('thumbnail_format', $id, $id === $thumbnail_format, ['required' => 'required']) ?>
-                    <?= h($name) ?>
-                </label>
+            <div class="form-check">
+                <?= $form->radio('thumbnail_format', $id, $id === $thumbnail_format, ['required' => 'required']) ?>
+                <label><?= h($name) ?></label>
             </div>
             <?php
         }
@@ -50,11 +46,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="form-group">
         <?= $form->label('create_high_dpi_thumbnails', t('Create high DPI thumbnails')) ?>
-        <div class="checkbox">
-            <label>
-                <?= $form->checkbox('create_high_dpi_thumbnails', 1, $create_high_dpi_thumbnails) ?>
-                <?= t('Create high DPI thumbnails') ?>
-            </label>
+        <div class="form-check">
+            <?= $form->checkbox('create_high_dpi_thumbnails', 1, $create_high_dpi_thumbnails) ?>
+            <label><?= t('Create high DPI thumbnails') ?></label>
         </div>
     </div>
 
@@ -70,8 +64,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/system/files/thumbnails')?>" class="btn btn-default"><?=t('Cancel')?></a>
-            <button class="pull-right btn btn-primary" type="submit"><?=t('Save')?></button>
+            <a href="<?=URL::to('/dashboard/system/files/thumbnails')?>" class="btn btn-secondary"><?=t('Cancel')?></a>
+            <button class="float-right btn btn-primary" type="submit"><?=t('Save')?></button>
         </div>
     </div>
 

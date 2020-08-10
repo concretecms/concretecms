@@ -1,0 +1,36 @@
+div#ccm-dashboard-content {
+
+  div#ccm-dashboard-content-full {
+
+    .ccm-search-results-table {
+
+      thead {
+        th {
+          &:first-child {
+            padding-left: $dashboard-content-padding-l;
+          }
+
+          &.ccm-search-results-bulk-selector {
+            padding-bottom: 0;
+            padding-top: 0;
+
+            .btn-group {
+              margin-left: -5px; // move it left so that the checkboxes match up
+            }
+            .btn {
+              padding: 2px 5px;
+            }
+          }
+        }
+      }
+      tbody {
+        td {
+          &:first-child {
+            padding-left: $dashboard-content-padding-l;
+          }
+        }
+
+      }
+    }
+  }
+}

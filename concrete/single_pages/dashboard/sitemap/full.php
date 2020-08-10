@@ -3,43 +3,28 @@
 $sh = Loader::helper('concrete/dashboard/sitemap');
 ?>
 
-<div class="ccm-dashboard-header-buttons btn-group">
-    <button type="button" class="btn btn-default dropdown-toggle" data-button="attribute-type" data-toggle="dropdown">
+<div class="ccm-dashboard-header-buttons">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-button="attribute-type" data-toggle="dropdown">
         <?=t('Options')?> <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu">
+    <div class="dropdown-menu">
         <?php if ($includeSystemPages) { ?>
-            <li><a href="<?=$view->action('include_system_pages', 0)?>"><span class="text-success"><i class="fa fa-check"></i> <?=t('Include System Pages in Sitemap')?></span></a></li>
+            <a class="dropdown-item" href="<?=$view->action('include_system_pages', 0)?>"><span class="text-success"><i class="fa fa-check"></i> <?=t('Include System Pages in Sitemap')?></span></a>
         <?php } else { ?>
-            <li><a href="<?=$view->action('include_system_pages', 1)?>"><?=t('Include System Pages in Sitemap')?></a></li>
+            <a class="dropdown-item" href="<?=$view->action('include_system_pages', 1)?>"><?=t('Include System Pages in Sitemap')?></a>
         <?php } ?>
 
 
         <?php if ($displayDoubleSitemap) { ?>
-            <li><a href="<?=$view->action('display_double_sitemap', 0)?>"><span class="text-success"><i class="fa fa-check"></i> <?=t('View 2-Up Sitemap')?></span></a></li>
+            <a class="dropdown-item" href="<?=$view->action('display_double_sitemap', 0)?>"><span class="text-success"><i class="fa fa-check"></i> <?=t('View 2-Up Sitemap')?></span></a></li>
         <?php } else { ?>
-            <li><a href="<?=$view->action('display_double_sitemap', 1)?>"><?=t('View 2-Up Sitemap')?></a></li>
+            <a class="dropdown-item" href="<?=$view->action('display_double_sitemap', 1)?>"><?=t('View 2-Up Sitemap')?></a>
         <?php } ?>
-    </ul>
+    </div>
 </div>
 
 
 <?php if ($sh->canRead()) { ?>
-
-<?php
-$u = Core::make(Concrete\Core\User\User::class);
-if ($u->isSuperUser()) {
-    if (Queue::exists('copy_page')) {
-        $q = Queue::get('copy_page');
-        if ($q->count() > 0) { ?>
-		<div class="alert alert-warning">
-			<?=t('Page copy operations pending.')?>
-			<button class="btn btn-xs btn-default pull-right" onclick="ConcreteSitemap.refreshCopyOperations()"><?=t('Resume Copy')?></button>
-		</div>
-	<?php }
-    }
-}
-    ?>
 
     <?php if ($displayDoubleSitemap) { ?>
 

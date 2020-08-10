@@ -1,0 +1,33 @@
+.ccm-avatar-creator {
+  margin: 0 auto 0 auto;
+}
+
+img.u-avatar {
+  max-width: 80px;
+  max-height: 80px;
+  border: 1px solid $gray-500;
+  border-radius: $border-radius;
+}
+
+div.ccm-user-detail-basics {
+  .ccm-user-detail-basics-avatar {
+    padding-right: 1.5em;
+  }
+
+  display: flex;
+}
+
+@media (min-width: map-get($grid-breakpoints, "md")) {
+  .ccm-user-detail-account,
+  .ccm-user-detail-groups,
+  .ccm-user-detail-attributes {
+    @include concrete-data-row-dl-horizontal;
+  }
+}
+@media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-user-detail-account,
+  .ccm-user-detail-groups,
+  .ccm-user-detail-attributes {
+    @include concrete-data-row-dl-vertical;
+  }
+}

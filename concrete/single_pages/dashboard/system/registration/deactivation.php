@@ -1,88 +1,78 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php
 
-$resetText = tc(/*i18n: a text to be asked to the users to confirm the global password reset operation */'GlobalPasswordReset', 'RESET');
+defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @var Concrete\Core\Application\Service\Dashboard $dashboard
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Html\Service\Html $html
+ * @var Concrete\Core\Application\Service\UserInterface $interface
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\Deactivation $controller
+ * @var string $inactiveMessage
+ * @var bool $enableAutomaticUserDeactivation
+ * @var int $userDeactivationDays
+ * @var bool $enableLogoutDeactivation
+ * @var int $userLoginAmount
+ * @var int $userLoginDuration
+ */
 ?>
-<form action="<?= $view->action('update') ?>" method="post">
-    <?= $token->output('update') ?>
+<form method="POST" action="<?= $controller->action('update') ?>">
+    <?php $token->output('update') ?>
 
-    <div class="row">
-        <div class="col-md-12">
-            <fieldset>
-                <legend><?=t('Inactive User Error Message')?></legend>
-                <div class="form-group">
-                    <p>
-                        <?=t('This message will be shown to inactive users when they attempt to login.')?>
-                    </p>
-                    <div class="input">
-                        <?= $form->textarea('inactiveMessage', $inactiveMessage, array('rows' => 4, 'cols' => 10)) ?>
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend><?=t('Automatic User Deactivation')?></legend>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label>
-                            <?=$form->checkbox('enableAutomaticUserDeactivation', 1, $enableAutomaticUserDeactivation)?>
-                            <?=t('Automatically deactivate users when they have not logged in for awhile. Users will need to be manually reactivated.')?>
-                        </label>
-                    </div>
-                </div>
-                <div class="well" data-group="user-deactivation-days">
-                    <div class="form-group">
-                        <label class="control-label"><?=t('Threshold')?></label>
-                        <div class="form-inline">
-                            <p><?=t('Deactivate users when they have not logged in for %s days',
-                                $form->number('userDeactivationDays', $userDeactivationDays, ['style' => 'width: 100px'])
-                            )?></p>
-                        </div>
-                    </div>
-
-                    <div class="help-block">
-                        <?=t('Note: You will need to run the "Deactivate Users" job in order for these deactivations to actually occur.')?>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label>
-                            <?=$form->checkbox('enableLogoutDeactivation', 1, $enableLogoutDeactivation)?>
-                            <?=t('Automatically deactivate users after failed login attempts.')?>
-                        </label>
-                    </div>
-                </div>
-                <div class="well" data-group="user-deactivation-logins">
-                    <div class="form-group" data-group="user-deactivation-logins">
-                        <label class="control-label"><?=t('Threshold')?></label>
-                        <div class="form-inline">
-                            <p>
-                                <?= t('Deactivate users once they have failed %s login(s) within %s seconds',
-                                    $form->number('userLoginAmount', $userLoginAmount, ['style' => 'width: 100px']),
-                                    $form->number('userLoginDuration', $userLoginDuration, ['style' => 'width: 100px'])
-                                ) ?>
-                            </p>
-
-                            <div class="help-block">
-                                <?=t('Note: Any person can attempt to log into any account, causing account deactivation')?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </fieldset>
-
-
-            <div class="ccm-dashboard-form-actions-wrapper">
-                <div class="ccm-dashboard-form-actions">
-                    <button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button>
-                </div>
-            </div>
-
-        </div>
+    <div class="form-group">
+        <?= $form->label('inactiveMessage', t('Inactive User Error Message')) ?>
+        <?= $form->textarea('inactiveMessage', $inactiveMessage, ['rows' => 4, 'cols' => 10]) ?>
+        <small class="text-muted"><?= t('This message will be shown to inactive users when they attempt to login.') ?></small>
     </div>
 
+    <div class="form-group">
+        <?= $form->label('', t('Automatic User Deactivation')) ?>
+        <div class="form-check">
+            <?= $form->checkbox('enableAutomaticUserDeactivation', '1', $enableAutomaticUserDeactivation) ?>
+            <label class="form-check-label" for="enableAutomaticUserDeactivation"><?= t('Automatically deactivate users when they have not logged in for awhile. Users will need to be manually reactivated.') ?></label>
+        </div>
+        <div class="card card-body bg-light pb-0" data-group="user-deactivation-days">
+            <div class="form-group">
+                <?= $form->label('userDeactivationDays', t('Threshold')) ?>
+                <div class="form-inline">
+                    <?= t(
+                        'Deactivate users when they have not logged in for %s days',
+                        $form->number('userDeactivationDays', $userDeactivationDays, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ml-1 mr-1'])
+                    ) ?>
+                </div>
+                <small class="text-muted">
+                    <?= t('Note: You will need to run the "Deactivate Users" job in order for these deactivations to actually occur.') ?>
+                </small>
+            </div>
+        </div>
+        <div class="form-check">
+            <?= $form->checkbox('enableLogoutDeactivation', '1', $enableLogoutDeactivation) ?>
+            <label class="form-check-label" for="enableLogoutDeactivation"><?= t('Automatically deactivate users after failed login attempts.') ?></label>
+        </div>
+        <div class="card card-body bg-light pb-0" data-group="user-deactivation-logins">
+            <div class="form-group">
+                <?= $form->label('userLoginAmount', t('Threshold')) ?>
+                <div class="form-inline">
+                    <?= t(
+                        'Deactivate users once they have failed %s login(s) within %s seconds',
+                        $form->number('userLoginAmount', $userLoginAmount, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ml-1 mr-1']),
+                        $form->number('userLoginDuration', $userLoginDuration, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ml-1 mr-1'])
+                    ) ?>
+                </div>
+                <small class="text-muted">
+                    <?= t('Note: Any person can attempt to log into any account, causing account deactivation') ?>
+                </small>
+            </div>
+        </div>
+
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
+                <button type="submit" class="btn btn-primary float-right"><?= t('Save') ?></button>
+            </div>
+        </div>
+
+    </div>
 </form>
 
 <script type="text/javascript">

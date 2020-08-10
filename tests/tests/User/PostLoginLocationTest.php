@@ -12,8 +12,9 @@ use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Mockery as M;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Concrete\Tests\TestCase;
 
-class PostLoginLocationTest extends \PHPUnit_Framework_TestCase
+class PostLoginLocationTest extends TestCase
 {
 
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;

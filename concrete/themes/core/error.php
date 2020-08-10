@@ -5,12 +5,6 @@
 <meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
     <link rel="stylesheet" type="text/css" href="<?=DIR_REL?>/concrete/themes/concrete/main.css" />
     <?php
-    $view->requireAsset('core/app');
-    $view->requireAsset('css', 'bootstrap');
-    $view->requireAsset('css', 'font-awesome');
-    $view->requireAsset('javascript', 'jquery');
-    $view->requireAsset('javascript', 'bootstrap/alert');
-    $view->requireAsset('javascript', 'bootstrap/transition');
     $view->markHeaderAssetPosition();
     ?>
 </head>

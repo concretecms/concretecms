@@ -2,9 +2,11 @@
 namespace Concrete\Block\Video;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use File;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 450;
     protected $btInterfaceHeight = 440;
@@ -62,6 +64,13 @@ class Controller extends BlockController
     public function getPosterFileObject()
     {
         return ($id = $this->getPosterFileID()) ? File::getByID($id) : null;
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::VIDEO
+        ];
     }
 
     public function save($data)

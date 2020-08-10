@@ -24,7 +24,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function getIconFormatter()
     {
-        return new FontAwesomeIconFormatter('clock-o');
+        return new FontAwesomeIconFormatter('clock');
     }
 
     public function saveKey($data)

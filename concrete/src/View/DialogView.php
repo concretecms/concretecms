@@ -56,8 +56,6 @@ class DialogView extends ConcreteView
             foreach ($assets as $asset) {
                 if ($asset instanceof Asset) {
                     $asset->setAssetPosition(Asset::ASSET_POSITION_HEADER);
-                    $asset->setAssetSupportsMinification(false);
-                    $asset->setAssetSupportsCombination(false);
                 }
                 $return[$position][] = $asset;
             }
@@ -66,19 +64,4 @@ class DialogView extends ConcreteView
         return $return;
     }
 
-    /*
-    protected function onAfterGetContents() {
-        // now that we have the contents of the tool,
-        // we make sure any require assets get moved into the header
-        // since that's the only place they work in the AJAX output.
-        $r = Request::getInstance();
-        $assets = $r->getRequiredAssetsToOutput();
-        foreach($assets as $asset) {
-            $asset->setAssetPosition(Asset::ASSET_POSITION_HEADER);
-            $asset->setAssetSupportsMinification(false);
-            $asset->setAssetSupportsCombination(false);
-            $this->addOutputAsset($asset);
-        }
-    }
-    */
 }

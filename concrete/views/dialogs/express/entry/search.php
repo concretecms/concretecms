@@ -3,7 +3,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="ccm-express-entry-search-dialog">
-  <?php $headerMenu->render(); ?>
+    <?php
+    /*
+    ?><?php $headerMenu->render(); ?>
+*/ ?>
 
   <div data-search="express_entries" class="ccm-ui">
       <?php View::element('express/entries/search', array('controller' => $searchController, 'selectMode' => true)) ?>

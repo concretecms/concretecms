@@ -1,0 +1,74 @@
+div.ccm-block-desktop-featured-addon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: $gray-100;
+  border-radius: .25rem;
+  box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+
+  div.ccm-block-desktop-featured-addon-inner {
+    text-align: center;
+    padding: 60px 20px 30px;
+
+    img {
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-weight: 400;
+    }
+
+    h6 {
+      text-transform: none;
+      font-size: .9rem;
+      font-weight: 700;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+  }
+}
+
+div.ccm-block-desktop-featured-theme {
+  padding: 0px;
+  position: relative;
+  background: $gray-100;
+  border-radius: .25rem;
+  box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+  display: flex;
+  align-items: center;
+
+  h6 {
+    text-transform: none;
+    font-size: .9rem;
+    font-weight: 700;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+
+  div.ccm-block-desktop-featured-theme-inner {
+    padding: 50px 10px 10px 10px;
+    display: flex;
+    flex-wrap: wrap;
+
+    h3 {
+      font-weight: 400;
+    }
+
+    div.ccm-block-desktop-featured-theme-description {
+      margin: 10px;
+      flex-basis: 0;
+      flex-grow: 1;
+
+      .btn {
+        padding: 9px 20px;
+      }
+    }
+  }
+
+  img {
+    margin: 10px;
+  }
+}

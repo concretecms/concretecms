@@ -7,7 +7,7 @@ if (!empty($top)) {
         <?php if (isset($title) && $title) {
             ?><h3><?=$title?></h3><?php
         } ?>
-        <ul class="nav">
+        <ul class="nav flex-column">
             <?php
             $walk = function ($pages) use (&$walk, &$view) {
                 $n = count($pages);
@@ -16,8 +16,8 @@ if (!empty($top)) {
                         $page = $pages[$i];
                         $next = ($i + 1 < $n) ? $pages[$i + 1] : null;
                         ?>
-                        <li class="<?=$view->controller->getMenuItemClass($page)?>">
-                            <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
+                        <li class="nav-item <?=$view->controller->getMenuItemClass($page)?>">
+                            <a class="nav-link" href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
                             <?php
                             if ($view->controller->displayChildPages($page)) {
                                 $children = $view->controller->getChildPages($page);

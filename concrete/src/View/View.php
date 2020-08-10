@@ -165,10 +165,15 @@ class View extends AbstractView
     {
         $env = Environment::get();
         $app = Facade::getFacadeApplication();
-        $tmpTheme = $app->make(ThemeRouteCollection::class)
-            ->getThemeByRoute($this->getViewPath());
-        if (isset($tmpTheme[0])) {
-            $this->themeHandle = $tmpTheme[0];
+        // Note: Making this ALWAYS override the $controller->setTheme() was making this really inflexible.
+        // We need to be able to set site themes from dashboard pages for complex board rendering. So I'm only going
+        // to go to the theme route collection if the theme isn't set explicitly in the controller.
+        if (!$this->getThemeHandle()) {
+            $tmpTheme = $app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->getViewPath());
+            if (isset($tmpTheme[0])) {
+                $this->themeHandle = $tmpTheme[0];
+            }
         }
 
         if ($this->themeHandle) {
@@ -212,6 +217,7 @@ class View extends AbstractView
         }
         if ($this->themeHandle) {
             if (is_object($this->controller)) {
+                $this->controller->setViewObject($this);
                 $templateFile = $this->controller->getThemeViewTemplate();
             } else {
                 $templateFile = $this->getViewTemplateFile();
@@ -340,63 +346,6 @@ class View extends AbstractView
         return $contents;
     }
 
-    protected function postProcessAssets($assets)
-    {
-        $c = Page::getCurrentPage();
-        if (!Config::get('concrete.cache.assets')) {
-            return $assets;
-        }
-
-        if (!count($assets)) {
-            return [];
-        }
-
-        // goes through all assets in this list, creating new URLs and post-processing them where possible.
-        $segment = 0;
-        $groupedAssets = [];
-        for ($i = 0; $i < count($assets); ++$i) {
-            $asset = $assets[$i];
-            $nextasset = isset($assets[$i + 1]) ? $assets[$i + 1] : null;
-
-            $groupedAssets[$segment][] = $asset;
-            if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
-                ++$segment;
-                continue;
-            }
-
-            if ($asset->getOutputAssetType() != $nextasset->getOutputAssetType()) {
-                ++$segment;
-                continue;
-            }
-
-            if (!$asset->assetSupportsCombination() || !$nextasset->assetSupportsCombination()) {
-                ++$segment;
-                continue;
-            }
-        }
-
-        $return = [];
-        // now we have a sub assets array with different segments split by whether they can be combined.
-
-        foreach ($groupedAssets as $assets) {
-            if (
-                ($assets[0] instanceof Asset)
-                &&
-                (
-                    (count($assets) > 1)
-                    ||
-                    $assets[0]->assetSupportsMinification()
-                )
-            ) {
-                $class = get_class($assets[0]);
-                $assets = call_user_func([$class, 'process'], $assets);
-            }
-            $return = array_merge($return, $assets);
-        }
-
-        return $return;
-    }
-
     protected function replaceEmptyAssetPlaceholders($pageContent)
     {
         foreach (['<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->', '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->'] as $comment) {
@@ -411,8 +360,7 @@ class View extends AbstractView
         $outputItems = [];
         foreach ($outputAssets as $position => $assets) {
             $output = '';
-            $transformed = $this->postProcessAssets($assets);
-            foreach ($transformed as $item) {
+            foreach ($assets as $item) {
                 $itemstring = (string) $item;
                 if (!in_array($itemstring, $outputItems)) {
                     $output .= $this->outputAssetIntoView($item);

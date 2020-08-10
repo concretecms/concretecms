@@ -245,7 +245,7 @@ class Set extends ConcreteObject
         if ($this->getJobSetID()) {
             $db = Loader::db();
             $db->query("UPDATE JobSets SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jsID = ?",
-            array($this->isScheduled, $this->scheduledInterval, $this->scheduledValue, $this->getJobSetID()));
+            array($this->isScheduled ? 1 : 0, $this->scheduledInterval, $this->scheduledValue, $this->getJobSetID()));
 
             return true;
         } else {

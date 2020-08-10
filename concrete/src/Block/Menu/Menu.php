@@ -2,20 +2,16 @@
 namespace Concrete\Core\Block\Menu;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
+use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
-use Concrete\Core\Tree\Menu\Item\DeleteItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu as ContextMenu;
 
-class Menu extends ContextMenu
+class Menu extends PopoverMenu
 {
 
     protected $permissions;

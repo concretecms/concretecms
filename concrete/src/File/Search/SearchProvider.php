@@ -4,24 +4,37 @@ namespace Concrete\Core\File\Search;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\File\FileList;
+use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Search\AbstractSearchProvider;
-use Concrete\Core\Search\QueryableInterface;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class SearchProvider extends AbstractSearchProvider implements QueryableInterface
+class SearchProvider extends AbstractSearchProvider
 {
+
+    public function getFieldManager()
+    {
+        return ManagerFactory::get('file');
+    }
+
     /**
      * @var \Concrete\Core\Attribute\Category\FileCategory
      */
     protected $category;
+
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
 
     /**
      * @return string
@@ -31,9 +44,10 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         return 'file';
     }
 
-    public function __construct(FileCategory $category, Session $session)
+    public function __construct(Filesystem $filesystem, FileCategory $category, Session $session)
     {
         $this->category = $category;
+        $this->filesystem = $filesystem;
         parent::__construct($session);
     }
 
@@ -84,13 +98,8 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
      */
     public function getItemList()
     {
-        $list = new FileList();
-        $list->setPermissionsChecker(function ($file) {
-            $fp = new \Permissions($file);
-
-            return $fp->canViewFileInFileManager();
-        });
-
+        $list = new FolderItemList();
+        $list->setupAutomaticSorting();
         return $list;
     }
 
@@ -101,29 +110,8 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
      */
     public function getItemsPerPage()
     {
-        $searchRequest = new StickyRequest('file_manager_folder');
-        $searchParams = $searchRequest->getSearchRequest();
-        $node = empty($searchParams['folder']) ? null : Node::getByID($searchParams['folder']);
-
-        if (($node instanceof SearchPreset)) {
-            $searchObj = $node->getSavedSearchObject();
-
-            return $searchObj->getQuery()->getItemsPerPage();
-        }
-
-        $sessionQuery = $this->getSessionCurrentQuery();
-        if ($sessionQuery instanceof \Concrete\Core\Entity\Search\Query) {
-            return (int) $sessionQuery->getItemsPerPage();
-        }
-
-        $itemsPerPageSession = $this->getItemsPerPageSession();
-        if (!empty($itemsPerPageSession)) {
-            return $itemsPerPageSession;
-        }
-
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-
         return $config->get('concrete.file_manager.results');
     }
 
@@ -140,41 +128,7 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         if (!empty($options)) {
             return $options;
         }
-
         return parent::getItemsPerPageOptions();
-    }
-
-    /**
-     * Set items per page option in session.
-     *
-     * @param int $itemsPerPage
-     */
-    public function setItemsPerPageSession($itemsPerPage)
-    {
-        $this->session->set('search/' . $this->getSessionNamespace() . '/items_per_page', $itemsPerPage);
-    }
-
-    /**
-     * Retrieve the items per page option from the session.
-     *
-     * @return int|null
-     */
-    public function getItemsPerPageSession()
-    {
-        $variable = 'search/' . $this->getSessionNamespace() . '/items_per_page';
-        if ($this->session->has($variable)) {
-            return (int) $this->session->get($variable);
-        }
-
-        return null;
-    }
-
-    /**
-     * Clear the item per page option from the session.
-     */
-    public function clearItemsPerPageSession()
-    {
-        $this->session->remove('search/' . $this->getSessionNamespace() . '/items_per_page');
     }
 
     /**
