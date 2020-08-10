@@ -58,6 +58,7 @@ class DeleteInvalidatedUsers extends Job
 
     /**
      * @param UserInfo $userInfo
+     *
      * @return bool
      */
     protected function deleteUser(UserInfo $userInfo)
