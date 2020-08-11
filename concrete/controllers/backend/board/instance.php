@@ -7,6 +7,8 @@ use Concrete\Core\Board\Command\UnpinSlotFromBoardCommand;
 use Concrete\Core\Board\Instance\Slot\RenderedSlotCollectionFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
@@ -98,6 +100,11 @@ class Instance extends AbstractController
 
             $renderedSlotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
             $renderedSlotCollection = $renderedSlotCollectionFactory->createCollection($instance);
+
+            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_BOARD);
+            $logger->info(t('Slot {slot} pinned from editing interface'), [
+                'slot' => $this->request->request->get('slot')
+            ]);
 
             return new JsonResponse($renderedSlotCollection->getRenderedSlot($this->request->request->get('slot')));
         }
