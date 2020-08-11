@@ -27,7 +27,7 @@ class GroupEntity extends Entity
 
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="' . URL::to('/ccm/system/dialogs/group/search') . '" class="dialog-launch" dialog-width="640" dialog-height="480" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . tc('PermissionAccessEntityTypeName',
+        $html = '<a href="' . URL::to('/ccm/system/dialogs/group/search') . '" class="dropdown-item dialog-launch" dialog-width="640" dialog-height="480" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . tc('PermissionAccessEntityTypeName',
                 'Group') . '</a>';
 
         return $html;
