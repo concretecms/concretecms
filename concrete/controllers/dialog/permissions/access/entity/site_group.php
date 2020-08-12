@@ -35,36 +35,14 @@ class SiteGroup extends Controller
         return $p->canViewPage();
     }
 
-    public function view($pkCategoryHandle, $permissionObjectId)
+    public function view()
     {
-        $type = false;
-        switch($pkCategoryHandle) {
-            case 'page_type':
-                $pageType = \Concrete\Core\Page\Type\Type::getByID($permissionObjectId);
-                $type = $pageType->getSiteTypeObject();
-                break;
-            case 'page':
-                $page = \Page::getByID($permissionObjectId);
-                if (is_object($page) && !$page->isError()) {
-                    $tree = $page->getSiteTreeObject();
-                    if (is_object($tree)) {
-                        $type = $tree->getSiteType();
-                    }
-                }
-                break;
+        $groups = array();
+        foreach($this->siteTypeService->getList() as $type) {
+            $siteGroups = $this->groupService->getSiteTypeGroups($type);
+            $groups = array_merge($groups, $siteGroups);
         }
 
-        $groups = array();
-        if (is_object($type)) {
-            $groups = $this->groupService->getSiteTypeGroups($type);
-        } else {
-            // make a list of all of them
-            $groups = array();
-            foreach($this->siteTypeService->getList() as $type) {
-                $siteGroups = $this->groupService->getSiteTypeGroups($type);
-                $groups = array_merge($groups, $siteGroups);
-            }
-        }
         $accessEntityType = Type::getByHandle('site_group');
         $url = $accessEntityType->getControllerUrl();
         $this->set('groups', $groups);

@@ -221,7 +221,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     save() {
                         let valid = true
                         if (!this.startFormatted) {
-                            valid = false
                             this.invalidStartDate = true
                         } else {
                             this.invalidStartDate = false
@@ -230,6 +229,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             this.invalidSelectedElement = true
                         } else {
                             this.invalidSelectedElement = false
+                        }
+                        if (this.invalidStartDate || this.invalidSelectedElement) {
+                            valid = false
                         }
                         if (valid) {
                             new ConcreteAjaxRequest({
