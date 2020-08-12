@@ -16,7 +16,7 @@ mix.webpackConfig({
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /(bower_components)/,
+                exclude: /(bower_components|node_modules\/v-calendar)/,
                 use: [
                     {
                         loader: 'babel-loader',
