@@ -85,6 +85,7 @@ class ChooseItems extends DashboardSitePageController
         if (!$this->token->validate('submit')) {
             $this->error->add($this->token->getErrorMessage());
         }
+        $items = [];
         if (!$this->error->has()) {
             // @TODO - This should not be hard coded. We should be able to pick these out of the request
             // but the signature of these drivers isn't set in stone yet, and I don't want to have
@@ -95,7 +96,7 @@ class ChooseItems extends DashboardSitePageController
             $events = [];
 
             if (!empty($request['field']['page'])) {
-                foreach((array) $request['field']['page'] as $cID) {
+                foreach ((array)$request['field']['page'] as $cID) {
                     $page = Page::getByID($cID);
                     if ($page && !$page->isError()) {
                         $pages[] = $page;
@@ -104,7 +105,7 @@ class ChooseItems extends DashboardSitePageController
             }
             $eventOccurrenceService = $this->app->make(EventOccurrenceService::class);
             if (!empty($request['field']['calendar_event'])) {
-                foreach((array) $request['field']['calendar_event'] as $eventOccurrenceID) {
+                foreach ((array)$request['field']['calendar_event'] as $eventOccurrenceID) {
                     $occurrence = $eventOccurrenceService->getByID($eventOccurrenceID);
                     if ($occurrence) {
                         $events[] = $occurrence;
@@ -112,25 +113,30 @@ class ChooseItems extends DashboardSitePageController
                 }
             }
 
-            $items = [];
             $pagePopulator = $this->app->make(PagePopulator::class);
             $calendarEventPopulator = $this->app->make(CalendarEventPopulator::class);
             $pageDataSource = $this->entityManager->getRepository(DataSource::class)->findOneByHandle('page');
-            $calendarEventDataSource = $this->entityManager->getRepository(DataSource::class)->findOneByHandle('calendar_event');
+            $calendarEventDataSource = $this->entityManager->getRepository(DataSource::class)->findOneByHandle(
+                'calendar_event'
+            );
 
-            foreach($pages as $page) {
+            foreach ($pages as $page) {
                 $item = $pagePopulator->createItemFromObject($pageDataSource, $page);
                 if ($item) {
                     $items[] = $item;
                 }
             }
-            foreach($events as $event) {
+            foreach ($events as $event) {
                 $item = $calendarEventPopulator->createItemFromObject($calendarEventDataSource, $event);
                 if ($item) {
                     $items[] = $item;
                 }
             }
-
+        }
+        if (!count($items)) {
+            $this->error->add(t('You must choose at least one item for your custom element.'));
+        }
+        if (!$this->error->has()) {
             // Save the items against the instance.
             $command = new SetItemSelectorCustomElementItemsCommand($element, $items);
             $this->app->executeCommand($command);

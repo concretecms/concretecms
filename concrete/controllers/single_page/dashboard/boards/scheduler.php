@@ -61,7 +61,9 @@ class Scheduler extends DashboardSitePageController
                 $instances[] = $instance;
             }
         }
-        $this->set('elements', $this->entityManager->getRepository(CustomElement::class)->findAll([], ['elementName' => 'asc']));
+        $this->set('elements', $this->entityManager->getRepository(CustomElement::class)->findBy([
+            'status' => CustomElement::STATUS_READY_TO_PUBLISH
+        ], ['elementName' => 'asc']));
         $this->set('instances', $instances);
         $this->set('date', new Date());
     }

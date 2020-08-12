@@ -8,7 +8,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <a href="<?=$view->action('add')?>" class="btn btn-secondary"><?=t('Create Custom Board Element')?></a>
     </div>
 
-<h2><?=t('Library')?></h2>
+<h2 class="mb-3"><?=t('Library')?></h2>
+
+<h3><?=t('Ready to Publish')?></h3>
 
 <?php if ($elements && count($elements)) { ?>
 
