@@ -114,6 +114,13 @@ class Channels
     const CHANNEL_API = 'api';
 
     /**
+     * Channel identifier: board.
+     *
+     * @var string
+     */
+    const CHANNEL_BOARD = 'board';
+
+    /**
      * Channel identifier: all – Do NOT use this to log to. This is a separate system channel that tells configuration
      * that you want to apply all configuration options to all channels, and listen to all of them.
      *
@@ -192,6 +199,8 @@ class Channels
                 return tc('Log channel', 'Users');
             case self::CHANNEL_API:
                 return tc('Log channel', 'API');
+            case self::CHANNEL_BOARD:
+                return tc('Log channel', 'BOARD');
             default:
                 return tc('Log channel', $text->unhandle($channel));
         }

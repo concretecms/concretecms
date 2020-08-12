@@ -23,6 +23,8 @@ use Concrete\Core\Entity\Board\InstanceSlotRule;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
@@ -134,6 +136,11 @@ class Scheduler extends DashboardSitePageController
             $command->setStartDate($this->request->request->get('start'));
             $command->setEndDate($this->request->request->get('end'));
             $this->app->executeCommand($command);
+
+            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_BOARD);
+            $logger->info(t('Slot {slot} scheduled successfully.'), [
+                'slot' => $this->request->request->get('slot')
+            ]);
 
             $this->flash('success', t('Board element scheduled successfully.'));
             return new JsonResponse([]);
