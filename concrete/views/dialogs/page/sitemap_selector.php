@@ -15,7 +15,12 @@
 
         <div id="sitemap-explore" class="tab-pane"></div>
 
-        <div id="sitemap-search" class="tab-pane"></div>
+        <div id="sitemap-search" class="tab-pane">
+            <?php $uniqid = uniqid() ?>
+            <div data-concrete-page-chooser-search="<?= $uniqid ?>">
+                <concrete-page-chooser-search/>
+            </div>
+        </div>
     </div>
 
 
@@ -87,9 +92,6 @@
         $("a[href='#sitemap-explore']").click(function() {
             loadSitemapOverlay('explore', CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_overlay?display=flat&cParentID=' + cParentID);
         });
-        $("a[href='#sitemap-search']").click(function() {
-            loadSitemapOverlay('search', '<?= URL::to('/ccm/system/dialogs/page/search'); ?>');
-        });
 
         $('#ccm-sitemap-search-selector ul li.active a').click();
 
@@ -100,6 +102,13 @@
             }
             $('#ccm-tab-content-explore').html('');
             $('a[data-tab=explore]').trigger('click');
+        });
+
+        Concrete.Vue.activateContext('cms', function (Vue, config) {
+            new Vue({
+                el: 'div[data-concrete-page-chooser-search="<?= $uniqid ?>"]',
+                components: config.components
+            });
         });
     });
 </script>
