@@ -1,52 +1,41 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <div class="ccm-ui" id="ccm-sitemap-search-selector">
-
-    <?php
-        echo $concrete_ui->tabs([
-            ['sitemap-sitemap', t('Full Sitemap')],
-            ['sitemap-explore', t('Flat View')],
-            ['sitemap-search', t('Search')],
-        ]);
-    ?>
-    
-    <div class="tab-content">
-        <div id="sitemap-sitemap" class="tab-pane active"></div>
-
-        <div id="sitemap-explore" class="tab-pane"></div>
-
-        <div id="sitemap-search" class="tab-pane">
-            <?php $uniqid = uniqid() ?>
-            <div data-concrete-page-chooser-search="<?= $uniqid ?>">
-                <concrete-page-chooser-search/>
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-3 border-right">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a data-toggle="tab" id="sitemap-sitemap-tab" href="#sitemap-sitemap" class="nav-link active"><?=t('Full Sitemap')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-toggle="tab" id="sitemap-explore-tab" href="#sitemap-explore" class="nav-link"><?=t('Flat Sitemap')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-toggle="tab" id="sitemap-search-tab" href="#sitemap-search" class="nav-link"><?=t('Search')?></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-9">
+                <div class="tab-content">
+                    <div id="sitemap-sitemap" class="tab-pane active"></div>
+                    <div id="sitemap-explore" class="tab-pane"></div>
+                    <div id="sitemap-search" class="tab-pane">
+                        <?php $uniqid = uniqid() ?>
+                        <div data-concrete-page-chooser-search="<?= $uniqid ?>">
+                            <concrete-page-chooser-search/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-
 </div>
 
 <script type="text/javascript">
-    ccm_sitemapSearchSelectorHideBottom = function() {
-        $('#ccm-sitemap-search-selector').parent().parent().find('.ui-dialog-buttonpane').hide();
-    }
-
-    ccm_sitemapSearchSelectorShowBottom = function() {
-        $('#ccm-sitemap-search-selector').parent().parent().find('.ui-dialog-buttonpane').show();
-    }
 
     loadSitemapOverlay = function(type, url) {
-        jQuery.cookie('ccm-sitemap-selector-tab', type, { path: '<?=DIR_REL; ?>/' });
-
-        switch (type) {
-            case 'search':
-                ccm_sitemapSearchSelectorShowBottom();
-                break;
-            default:
-                ccm_sitemapSearchSelectorHideBottom();
-                break;
-        }
-
         if ($('#sitemap-' + type).html() == '') {
             jQuery.fn.dialog.showLoader();
             $('#sitemap-' + type).load(url, function() {
@@ -85,7 +74,6 @@
             sst = 'sitemap';
         }
         $("a[href='#sitemap-" + sst + "']").parent().addClass('active');
-        ccm_sitemapSearchSelectorHideBottom();
         $("a[href='#sitemap-sitemap']").click(function() {
             loadSitemapOverlay('sitemap', CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_overlay');
         });
