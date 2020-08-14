@@ -18,8 +18,6 @@ class Version20200810000000 extends AbstractMigration implements RepeatableMigra
         $this->output(t('Installing log permissions upgrade XML...'));
         $importer = new ContentImporter();
         $importer->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/log_permissions.xml');
-        /* Refresh image block */
-        $this->refreshBlockType('calendar_event');
     }
 
 }
