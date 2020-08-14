@@ -38,7 +38,7 @@ class EventRepetitionService
 
         $repetitions = array();
 
-        foreach($sets as $repetitionSetID) {
+        foreach((array) $sets as $repetitionSetID) {
 
             $dateStart = $r->get($namespace . '_pdStartDate_' . $repetitionSetID);
             $dateEnd = $r->get($namespace . '_pdEndDate_' . $repetitionSetID);
