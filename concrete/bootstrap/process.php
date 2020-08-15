@@ -89,36 +89,3 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
             }
     }
 }
-
-if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
-
-    // piles !
-    switch ($_REQUEST['ptask']) {
-        case 'delete_content':
-            //personal scrapbook
-            if ($_REQUEST['pcID'] > 0) {
-                $pc = PileContent::get($_REQUEST['pcID']);
-                $p = $pc->getPile();
-                if ($p->isMyPile()) {
-                    $pc->delete();
-                }
-                //global scrapbooks
-            } elseif ($_REQUEST['bID'] > 0 && $_REQUEST['arHandle']) {
-                $bID = intval($_REQUEST['bID']);
-                $scrapbookHelper = Loader::helper('concrete/scrapbook');
-                $globalScrapbookC = $scrapbookHelper->getGlobalScrapbookPage();
-                $globalScrapbookA = Area::get($globalScrapbookC, $_REQUEST['arHandle']);
-                $block = Block::getById($bID, $globalScrapbookC, $globalScrapbookA);
-                if ($block) { //&& $block->getAreaHandle()=='Global Scrapbook'
-                    $bp = new Permissions($block);
-                    if (!$bp->canWrite()) {
-                        throw new Exception(t('Access to block denied'));
-                    } else {
-                        $block->delete(1);
-                    }
-                }
-            }
-            die;
-            break;
-    }
-}
