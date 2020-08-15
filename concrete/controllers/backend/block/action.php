@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\Backend\Block;
 
 use Concrete\Core\Block\BlockController;
@@ -29,35 +30,15 @@ class Action extends AbstractController
             }
         }
 
-        $response = new Response(t('Access Denied'));
-
-        return $response;
+        return new Response(t('Access Denied'));
     }
 
     public function getMethodAndParameters(BlockController $controller, $action)
     {
         $action = trim($action, '/');
         $action = explode('/', $action);
+
         return $controller->getPassThruActionAndParameters($action);
-    }
-
-    protected function deliverResponse(BlockController $controller, $action)
-    {
-        list($method, $parameters) = $this->getMethodAndParameters($controller, $action);
-        if ($controller->isValidControllerTask($method, $parameters)) {
-            $controller->on_start();
-            $response = $controller->runAction($method, $parameters);
-            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-                return $response;
-            } else {
-                $r = new Response($response);
-
-                return $r;
-            }
-        }
-        $response = new Response(t('Access Denied'));
-
-        return $response;
     }
 
     public function edit($cID, $arHandle, $bID, $action)
@@ -81,9 +62,7 @@ class Action extends AbstractController
             }
         }
 
-        $response = new Response(t('Access Denied'));
-
-        return $response;
+        return new Response(t('Access Denied'));
     }
 
     public function add_composer($ptComposerFormLayoutSetControlID, $action)
@@ -100,9 +79,8 @@ class Action extends AbstractController
                 }
             }
         }
-        $response = new Response(t('Access Denied'));
 
-        return $response;
+        return new Response(t('Access Denied'));
     }
 
     public function edit_composer($cID, $arHandle, $ptComposerFormLayoutSetControlID, $action)
@@ -124,8 +102,23 @@ class Action extends AbstractController
                 }
             }
         }
-        $response = new Response(t('Access Denied'));
 
-        return $response;
+        return new Response(t('Access Denied'));
+    }
+
+    protected function deliverResponse(BlockController $controller, $action)
+    {
+        list($method, $parameters) = $this->getMethodAndParameters($controller, $action);
+        if ($controller->isValidControllerTask($method, $parameters)) {
+            $controller->on_start();
+            $response = $controller->runAction($method, $parameters);
+            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $response;
+            }
+
+            return new Response($response);
+        }
+
+        return new Response(t('Access Denied'));
     }
 }
