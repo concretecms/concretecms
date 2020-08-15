@@ -1,8 +1,6 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use Concrete\Core\Block\Events\BlockDelete;
-use Concrete\Core\Page\Stack\Pile\PileContent;
 use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 
 # Filename: _process.php
@@ -17,7 +15,6 @@ use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 // ATTENTION! This file is legacy and needs to die. We are moving it's various pieces into
 // controllers.
 $valt = Loader::helper('validation/token');
-$token = '&' . $valt->getParameter();
 
 // If the user has checked out something for editing, we'll increment the lastedit variable within the database
 $u = Core::make(Concrete\Core\User\User::class);
@@ -25,27 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $u->refreshCollectionEdit($c);
 }
 
-$securityHelper = Loader::helper('security');
-
 if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
     switch ($_REQUEST['ctask']) {
-        case 'check-out-add-block':
-        case 'check-out':
-        case 'check-out-first':
-            if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApprovePageVersions()) {
-                // checking out the collection for editing
-                $u->loadCollectionEdit($c);
-
-                if ($_REQUEST['ctask'] == 'check-out-add-block') {
-                    setcookie("ccmLoadAddBlockWindow", "1", -1, DIR_REL . '/');
-                    header(
-                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
-                    exit;
-                    break;
-                }
-            }
-            break;
-
         case 'approve-recent':
             if ($cp->canApprovePageVersions()) {
                 $pkr = new \Concrete\Core\Workflow\Request\ApprovePageRequest();

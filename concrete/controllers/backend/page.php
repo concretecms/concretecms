@@ -3,12 +3,14 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Page as ConcretePage;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User as ConcreteUser;
 use Concrete\Core\Validation\SanitizeService;
 
@@ -35,9 +37,50 @@ class Page extends Controller
                     $d->setPageDraftTargetParentPageID($parent->getCollectionID());
                 }
 
-                return $this->buildRedirect('/' . DISPATCHER_FILENAME . '?cID=' . $d->getCollectionID() . '&ctask=check-out-first&' . $this->app->make('token')->getParameter());
+                return $this->buildRedirect('/ccm/system/page/checkout/' . $d->getCollectionID() . '/first/' . $this->app->make('token')->generate());
             }
         }
+    }
+
+    /**
+     * @param int $cID
+     * @param string $flag use 'first' or 'add-block'
+     * @param string $token
+     *
+     * @throws \Concrete\Core\Error\UserMessageException
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function checkout($cID, $flag, $token)
+    {
+        $valt = $this->app->make('token');
+        if (!$valt->validate('', $token)) {
+            throw new UserMessageException($valt->getErrorMessage());
+        }
+        $c = ConcretePage::getByID($cID);
+        if (!$c || $c->isError()) {
+            throw new UserMessageException(t('Unable to find the specified page'));
+        }
+        $cp = new Checker($c);
+        if (!$cp->canEditPageContents() && !$cp->canEditPageProperties() && !$cp->canApprovePageVersions()) {
+            throw new UserMessageException(t('Access Denied'));
+        }
+        $u = $this->app->make(ConcreteUser::class);
+        $u->loadCollectionEdit($c);
+
+        $redirectUrl = $this->app->make(ResolverManagerInterface::class)->resolve([$c]);
+        switch ($flag) {
+            case 'first':
+                $query = $redirectUrl->getQuery();
+                $query->modify(['ccmCheckoutFirst' => '1']);
+                $redirectUrl = $redirectUrl->setQuery($query);
+                break;
+            case 'add-block':
+                $this->app->make(ResponseCookieJar::class)->addCookie('ccmLoadAddBlockWindow', '1');
+                break;
+        }
+
+        return $this->buildRedirect($redirectUrl);
     }
 
     public function exitEditMode($cID, $token)

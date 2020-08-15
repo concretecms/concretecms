@@ -1,4 +1,8 @@
 <?php
+
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
@@ -15,6 +19,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     $token = '&' . $valt->getParameter();
     $cID = $c->getCollectionID();
     $permissions = new Permissions($c);
+    $resolver = $app->make(ResolverManagerInterface::class);
 
     $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
 
@@ -71,7 +76,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                     <a
                                         <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                         data-toolbar-action="check-out"
-                                        href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
+                                        href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $valt->generate()]) ?>"
                                     ><?php echo t('Edit this Page') ?></a>
                                 </li>
                                 <?php
@@ -277,7 +282,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
-                                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
+                                href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $valt->generate()])) ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
                                 <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
@@ -328,7 +333,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
-                            <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
+                            <a href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/add-block/" . $valt->generate()])) ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
                                 <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
