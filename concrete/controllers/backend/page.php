@@ -14,6 +14,7 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User as ConcreteUser;
 use Concrete\Core\Validation\SanitizeService;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
+use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 
 class Page extends Controller
 {
@@ -143,6 +144,32 @@ class Page extends Controller
         }
         $v = $c->getVersionObject();
         $v->approve(false, null);
+
+        return $this->buildRedirect([$c]);
+    }
+
+    public function cancelSchedule($cID, $token)
+    {
+        $valt = $this->app->make('token');
+        if (!$valt->validate('', $token)) {
+            throw new UserMessageException($valt->getErrorMessage());
+        }
+        $c = ConcretePage::getByID($cID, 'SCHEDULED');
+        if (!$c || $c->isError()) {
+            throw new UserMessageException(t('Unable to find the specified page'));
+        }
+        $cp = new Checker($c);
+        if (!$cp->canApprovePageVersions()) {
+            throw new UserMessageException(t('Access Denied'));
+        }
+        $u = $this->app->make(ConcreteUser::class);
+        $pkr = new UnapprovePageRequest();
+        $pkr->setRequestedPage($c);
+        $v = $c->getVersionObject();
+        $v->setPublishInterval(null, null);
+        $pkr->setRequestedVersionID($v->getVersionID());
+        $pkr->setRequesterUserID($u->getUserID());
+        $pkr->trigger();
 
         return $this->buildRedirect([$c]);
     }

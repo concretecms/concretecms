@@ -509,7 +509,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
                                 $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/publish_now/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=cancel-schedule' . $token . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/cancel_schedule/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Publish Pending.'),
