@@ -24,18 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
     switch ($_REQUEST['ctask']) {
-        case 'publish-now':
-            if ($cp->canApprovePageVersions()) {
-                $v = CollectionVersion::get($c, "SCHEDULED");
-                $v->approve(false, null);
-
-                header('Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME .
-                    '?cID=' . $c->getCollectionID());
-
-                exit;
-            }
-            break;
-
         case 'cancel-schedule':
             if ($cp->canApprovePageVersions()) {
                 $u = new User();

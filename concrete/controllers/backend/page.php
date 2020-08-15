@@ -127,6 +127,26 @@ class Page extends Controller
         return $this->buildRedirect([$c]);
     }
 
+    public function publishNow($cID, $token)
+    {
+        $valt = $this->app->make('token');
+        if (!$valt->validate('', $token)) {
+            throw new UserMessageException($valt->getErrorMessage());
+        }
+        $c = ConcretePage::getByID($cID, 'SCHEDULED');
+        if (!$c || $c->isError()) {
+            throw new UserMessageException(t('Unable to find the specified page'));
+        }
+        $cp = new Checker($c);
+        if (!$cp->canApprovePageVersions()) {
+            throw new UserMessageException(t('Access Denied'));
+        }
+        $v = $c->getVersionObject();
+        $v->approve(false, null);
+
+        return $this->buildRedirect([$c]);
+    }
+
     public function getJSON()
     {
         $h = $this->app->make('helper/concrete/dashboard/sitemap');

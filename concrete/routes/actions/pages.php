@@ -24,6 +24,7 @@ $router->all('/multilingual/unmap', 'Page\Multilingual::unmap');
 $router->all('/sitemap_data', 'Page\SitemapData::view');
 $router->all('/sitemap_delete_forever', 'Page\SitemapDeleteForever::fillQueue');
 $router->all('/approve_recent/{cID}/{token}', 'Page::approveRecent');
+$router->all('/publish_now/{cID}/{token}', 'Page::publishNow');
 $router->all('/chooser/search/{keywords}', 'Page\Chooser::searchPages');
 
 $router->all('/sitemap_overlay', '\Concrete\Controller\Element\Dashboard\Sitemap\SitemapOverlay::view');

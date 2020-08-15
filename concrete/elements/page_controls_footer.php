@@ -508,7 +508,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
                             $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/publish_now/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
                                 $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=cancel-schedule' . $token . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
                             }
                             echo $cih->notify([
