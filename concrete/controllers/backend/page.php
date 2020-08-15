@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\User\User as ConcreteUser;
 use Controller;
+use Core;
+use Loader;
+use Page as ConcretePage;
 use PageType;
 use Permissions;
-use Loader;
 use Redirect;
-use Page as ConcretePage;
-use Concrete\Core\User\User as ConcreteUser;
-use Concrete\Core\Page\EditResponse as PageEditResponse;
-use Core;
 
 class Page extends Controller
 {
