@@ -24,21 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
     switch ($_REQUEST['ctask']) {
-        case 'approve-recent':
-            if ($cp->canApprovePageVersions()) {
-                $pkr = new \Concrete\Core\Workflow\Request\ApprovePageRequest();
-                $pkr->setRequestedPage($c);
-                $v = CollectionVersion::get($c, "RECENT");
-                $pkr->setRequestedVersionID($v->getVersionID());
-                $pkr->setRequesterUserID($u->getUserID());
-                $u->unloadCollectionEdit($c);
-                $response = $pkr->trigger();
-                header(
-                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
-                exit;
-            }
-            break;
-
         case 'publish-now':
             if ($cp->canApprovePageVersions()) {
                 $v = CollectionVersion::get($c, "SCHEDULED");

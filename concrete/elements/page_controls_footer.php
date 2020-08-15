@@ -490,7 +490,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 if (!isset($appLabel) || !$appLabel) {
                                     $appLabel = t('Approve Version');
                                 }
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary">' . $appLabel . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/approve_recent/{$cID}/" . $valt->generate()])) . '" class="btn btn-primary">' . $appLabel . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Page is Pending Approval.'),

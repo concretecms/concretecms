@@ -13,6 +13,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User as ConcreteUser;
 use Concrete\Core\Validation\SanitizeService;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 
 class Page extends Controller
 {
@@ -95,6 +96,33 @@ class Page extends Controller
             $u = $this->app->make(ConcreteUser::class);
             $u->unloadCollectionEdit();
         }
+
+        return $this->buildRedirect([$c]);
+    }
+
+    public function approveRecent($cID, $token)
+    {
+        $valt = $this->app->make('token');
+        if (!$valt->validate('', $token)) {
+            throw new UserMessageException($valt->getErrorMessage());
+        }
+        $c = ConcretePage::getByID($cID, 'RECENT');
+        if (!$c || $c->isError()) {
+            throw new UserMessageException(t('Unable to find the specified page'));
+        }
+        $cp = new Checker($c);
+        if (!$cp->canApprovePageVersions()) {
+            throw new UserMessageException(t('Access Denied'));
+        }
+
+        $pkr = new ApprovePageRequest();
+        $pkr->setRequestedPage($c);
+        $v = $c->getVersionObject();
+        $pkr->setRequestedVersionID($v->getVersionID());
+        $u = $this->app->make(ConcreteUser::class);
+        $pkr->setRequesterUserID($u->getUserID());
+        $u->unloadCollectionEdit($c);
+        $pkr->trigger();
 
         return $this->buildRedirect([$c]);
     }
