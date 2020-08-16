@@ -12,12 +12,7 @@ class WorkflowProgressListViewMenu extends DropdownMenu
     public function getMenuElement()
     {
         $menu = parent::getMenuElement();
-
-        foreach ($this->items as $item) {
-            /* @var ItemInterface $item */
-            $menu->appendChild($item->getItemElement());
-        }
-
+        
         $menu->appendChild((new DividerItem())->getItemElement());
 
         $item = new LinkItem(
