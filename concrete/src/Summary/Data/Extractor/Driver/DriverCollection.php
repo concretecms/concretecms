@@ -34,6 +34,7 @@ class DriverCollection
     {
         $collection = new Collection();
         foreach($this->getDrivers() as $driver) {
+            print 'hi';
             $fields = $driver->extractData($mixed);
             foreach($fields->getFields() as $key => $data) {
                 $dataField = new DataField($key, $data);
