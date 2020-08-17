@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class PagePopulator extends AbstractPopulator
 {
 
-    public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource, int $mode) : array
+    public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource) : array
     {
         $configuration = $dataSource->getConfiguration();
         $list = new PageList();
