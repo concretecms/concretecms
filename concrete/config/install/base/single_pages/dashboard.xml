@@ -1172,6 +1172,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Email Logging" path="/dashboard/system/mail/logging" filename="/dashboard/system/mail/logging.php" pagetype=""
+              description="Control how emails get logged." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>email logging, mail logging, log mails, log emails</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Calendar" path="/dashboard/system/calendar"
               filename="/dashboard/system/calendar/view.php" pagetype=""

@@ -3,6 +3,7 @@
 namespace Concrete\Core\Mail;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\GroupLogger;
@@ -130,6 +131,10 @@ class Service
      * @var false
      */
     protected $throwOnFailure;
+
+    const LOG_MAILS_NONE = '';
+    const LOG_MAILS_ONLY_METADATA = 'metadata';
+    const LOG_MAILS_METADATA_AND_BODY = 'metadata_and_body';
 
     /**
      * Initialize the instance.
@@ -532,6 +537,32 @@ class Service
         $this->headers = $headers;
     }
 
+    private function isMetaDataLoggingEnabled() {
+        /** @var Repository $config */
+        $config = $this->app->make(Repository::class);
+        $logging = $config->get('concrete.log.emails');
+
+        if ((is_numeric($logging) && $logging == 1) || $logging === true) {
+            // legacy support
+            return true;
+        } else {
+            return $logging === self::LOG_MAILS_ONLY_METADATA || $logging === self::LOG_MAILS_METADATA_AND_BODY;
+        }
+    }
+
+    private function isBodyLoggingEnabled() {
+        /** @var Repository $config */
+        $config = $this->app->make(Repository::class);
+        $logging = $config->get('concrete.log.emails');
+
+        if ((is_numeric($logging) && $logging == 1) || $logging === true) {
+            // legacy support
+            return true;
+        } else {
+            return $logging === self::LOG_MAILS_METADATA_AND_BODY;
+        }
+    }
+
     /**
      * Sends the email.
      *
@@ -648,22 +679,20 @@ class Service
             $l = new GroupLogger(Channels::CHANNEL_EXCEPTIONS, Logger::CRITICAL);
             $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $sendError->getMessage());
             $l->write($sendError->getTraceAsString());
-            if ($config->get('concrete.log.emails')) {
-                $l->write(t('Template Used') . ': ' . $this->template);
-                $l->write(t('To') . ': ' . $toStr);
-                $l->write(t('From') . ': ' . $fromStr);
-                if (isset($this->replyto)) {
-                    $l->write(t('Reply-To') . ': ' . $replyStr);
-                }
-                $l->write(t('Subject') . ': ' . $this->subject);
-                $l->write(t('Body') . ': ' . $this->body);
-            }
             $l->close();
         }
 
-        // add email to log
-        if ($config->get('concrete.log.emails') && !$this->getTesting()) {
+        if ($this->isMetaDataLoggingEnabled() && !$this->getTesting()) {
             $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
+            $l->write(t('Template Used') . ': ' . $this->template);
+            $l->write(t('To') . ': ' . $toStr);
+            $l->write(t('From') . ': ' . $fromStr);
+            if (isset($this->replyto)) {
+                $l->write(t('Reply-To') . ': ' . $replyStr);
+            }
+            $l->write(t('Subject') . ': ' . $this->subject);
+            $l->write(t('Body') . ': ' . $this->body);
+
             if ($config->get('concrete.email.enabled')) {
                 if ($sendError === null) {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
@@ -674,7 +703,11 @@ class Service
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
             }
             $l->write(t('Template Used') . ': ' . $this->template);
-            $l->write(t('Mail Details: %s', $mail->toString()));
+
+            if ($this->isBodyLoggingEnabled()) {
+                $l->write(t('Mail Details: %s', $mail->toString()));
+            }
+
             $l->close();
         }
 
