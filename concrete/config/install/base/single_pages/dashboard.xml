@@ -535,7 +535,7 @@
             </attributes>
         </page>
         <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype="" description="" package="" />
-        <page name="Permissions" path="/dashboard/calendar/permissions" filename="/dashboard/calendar/permissions.php" pagetype="" description="" package="">
+        <page name="Calendar Permissions" path="/dashboard/calendar/permissions" filename="/dashboard/calendar/permissions.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
@@ -1182,7 +1182,7 @@
         <page name="Color Settings" path="/dashboard/system/calendar/colors"
               filename="/dashboard/system/calendar/colors.php" pagetype=""
               description="" package="" />
-        <page name="Permissions" path="/dashboard/system/calendar/permissions"
+        <page name="Calendar Permissions" path="/dashboard/system/calendar/permissions"
               filename="/dashboard/system/calendar/permissions.php" pagetype=""
               description="" package="" />
         <page name="Import Calendar Data" path="/dashboard/system/calendar/import"
