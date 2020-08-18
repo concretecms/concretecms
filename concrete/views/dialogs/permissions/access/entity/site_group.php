@@ -6,7 +6,7 @@
     <ul class="item-select-list">
         <?php foreach ($groups as $group) {
             ?>
-            <li><a href="#" data-access-entity-group="<?=$group->getSiteGroupID()?>"><i class="fa fa-users"></i> <?=$group->getSiteGroupName()?></a></li>
+            <li><a href="#" data-access-entity-group="<?=$group->getSiteGroupID()?>"><i class="fa fa-users"></i> <?=$group->getSiteType()->getSiteTypeName()?>: <?=$group->getSiteGroupName()?></a></li>
             <?php
         }
         ?>

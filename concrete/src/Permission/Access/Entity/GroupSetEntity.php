@@ -18,7 +18,7 @@ class GroupSetEntity extends Entity
 
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/permissions/dialogs/access/entity/types/group_set" dialog-width="400" dialog-height="300" class="dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group Set') . '">' . tc('PermissionAccessEntityTypeName', 'Group Set') . '</a>';
+        $html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/permissions/dialogs/access/entity/types/group_set" dialog-width="400" dialog-height="300" class="dropdown-item dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group Set') . '">' . tc('PermissionAccessEntityTypeName', 'Group Set') . '</a>';
 
         return $html;
     }

@@ -6,4 +6,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Base path: /ccm/system/dialogs/permissions
  * Namespace: Concrete\Controller\Dialog\Permissions\
  */
-$router->all('/access/entity/site_group/{pkCategoryHandle}/{permissionObjectId}', 'Access\Entity\SiteGroup::view');
+$router->all('/access/entity/site_group', 'Access\Entity\SiteGroup::view');

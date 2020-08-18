@@ -9,11 +9,29 @@ mix.webpackConfig({
     externals: {
         jquery: 'jQuery',
         vue: 'Vue'
+    },
+    // Override the default js compile settings to replace exclude with something that doesn't exclude node_modules.
+    // @see node_modules/laravel-mix/src/components/JavaScript.js for the original
+    module: {
+        rules: [
+            {
+                test: /\.jsx?$/,
+                exclude: /(bower_components|node_modules\/v-calendar)/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: Config.babel()
+                    }
+                ]
+            }
+        ]
     }
 });
+
 mix.options({
     processCssUrls: false
 });
+
 mix.setPublicPath('../concrete');
 
 /**

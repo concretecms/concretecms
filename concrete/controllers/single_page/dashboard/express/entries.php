@@ -283,6 +283,7 @@ class Entries extends DashboardSitePageController
 
         return StreamedResponse::create(function () use ($entity, $me, $bom, $datetime_format) {
             $entryList = new EntryList($entity);
+            $entryList->filterBySite($this->getSite());
 
             $writer = $this->app->make(CsvWriter::class, [
                 $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),

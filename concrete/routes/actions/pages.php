@@ -17,8 +17,9 @@ $router->all('/multilingual/assign', 'Page\Multilingual::assign');
 $router->all('/multilingual/create_new', 'Page\Multilingual::create_new');
 $router->all('/multilingual/ignore', 'Page\Multilingual::ignore');
 $router->all('/multilingual/unmap', 'Page\Multilingual::unmap');
-$router->all('/select_sitemap', 'Page\SitemapSelector::view');
 $router->all('/sitemap_data', 'Page\SitemapData::view');
 $router->all('/sitemap_delete_forever', 'Page\SitemapDeleteForever::fillQueue');
+
+$router->all('/chooser/search/{keywords}', 'Page\Chooser::searchPages');
 
 $router->all('/sitemap_overlay', '\Concrete\Controller\Element\Dashboard\Sitemap\SitemapOverlay::view');

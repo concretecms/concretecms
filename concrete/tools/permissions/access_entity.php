@@ -87,17 +87,17 @@ if (!is_object($pae)) {
         <a class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="fas fa-plus"></i> <?=t('Select')?> <span class="caret"></span>
         </a>
-        <ul class="dropdown-menu">
+        <div class="dropdown-menu">
         <?php
             $category = PermissionKeyCategory::getByHandle($request->get('pkCategoryHandle'));
             $entitytypes = PermissionAccessEntityType::getList($category);
             foreach ($entitytypes as $type) {
                 ?>
-                <li><?= $type->getAccessEntityTypeLinkHTML() ?></li>
+                <?= $type->getAccessEntityTypeLinkHTML() ?>
             <?php
             }
         ?>
-        </ul>
+        </div>
     </div>
     <br/><br/>
 
