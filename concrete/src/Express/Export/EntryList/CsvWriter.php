@@ -9,8 +9,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Localization\Service\Date;
-use Concrete\Core\Tree\Node\Node;
-use Concrete\Core\Tree\Node\Type\ExpressEntrySiteResults;
+use Concrete\Core\Site\Service;
 use League\Csv\Writer;
 
 /**
@@ -31,6 +30,11 @@ class CsvWriter
      * @var string
      */
     private $datetime_format;
+
+    /**
+     * @var Service|null
+     */
+    private $siteService;
 
     public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = DATE_ATOM)
     {
@@ -105,13 +109,7 @@ class CsvWriter
         yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
         // Resolve the site
-        $resultsNodeID = $entry->getResultsNodeID();
-        $siteResultsNode = Node::getByID($resultsNodeID);
-        $site = null;
-        if ($siteResultsNode instanceof ExpressEntrySiteResults) {
-            $site = $siteResultsNode->getSite();
-        }
-
+        $site = $this->getSiteService()->getSiteByExpressResultsNodeID($entry->getResultsNodeID());
         yield 'site' => $site instanceof Site ? $site->getSiteHandle() : null;
 
         $author = $entry->getAuthor();
@@ -186,6 +184,30 @@ class CsvWriter
         foreach ($associations as $association) {
             yield $association->getId() => $association->getTargetPropertyName();
         }
+    }
+
+    /**
+     * Get the site service instance to use
+     *
+     * @return Service
+     */
+    protected function getSiteService(): Service
+    {
+        if (!$this->siteService) {
+            $this->siteService = app(Service::class);
+        }
+
+        return $this->siteService;
+    }
+
+    /**
+     * Override the site service
+     *
+     * @param Service $siteService
+     */
+    public function setSiteService(Service $siteService): void
+    {
+        $this->siteService = $siteService;
     }
 
 }

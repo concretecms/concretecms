@@ -28,9 +28,24 @@ class ExpressEntrySiteResults extends ExpressEntryResults
         }
     }
 
+    /**
+     * @deprecated Use the siteservice to resolve the site object using ->getByResultsNode(...)
+     *
+     * @return Site|null
+     */
     public function getSite()
     {
-        return app(Service::class)->getByID($this->siteID);
+        return app(Service::class)->getByID($this->getSiteID());
+    }
+
+    /**
+     * Get the ID of the site this node belongs to
+     *
+     * @return int|null
+     */
+    public function getSiteID(): ?int
+    {
+        return $this->siteID;
     }
 
     public static function add($treeNodeCategoryName = '', $parent = false, Site $site = null)
