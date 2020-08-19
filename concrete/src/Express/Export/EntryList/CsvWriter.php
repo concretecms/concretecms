@@ -2,10 +2,15 @@
 
 namespace Concrete\Core\Express\Export\EntryList;
 
+use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\ExpressEntrySiteResults;
 use League\Csv\Writer;
 
 /**
@@ -27,7 +32,7 @@ class CsvWriter
      */
     private $datetime_format;
 
-    public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = 'ATOM' )
+    public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = DATE_ATOM)
     {
         $this->writer = $writer;
         $this->dateFormatter = $dateFormatter;
@@ -99,6 +104,16 @@ class CsvWriter
         }
         yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
+        // Resolve the site
+        $resultsNodeID = $entry->getResultsNodeID();
+        $siteResultsNode = Node::getByID($resultsNodeID);
+        $site = null;
+        if ($siteResultsNode instanceof ExpressEntrySiteResults) {
+            $site = $siteResultsNode->getSite();
+        }
+
+        yield 'site' => $site instanceof Site ? $site->getSiteHandle() : null;
+
         $author = $entry->getAuthor();
         if ($author) {
             yield 'author_name' => $author->getUserInfoObject()->getUserDisplayName();
@@ -108,7 +123,20 @@ class CsvWriter
 
         $attributes = $entry->getAttributes();
         foreach ($attributes as $attribute) {
-            yield $attribute->getAttributeKey()->getAttributeKeyHandle() => $attribute->getPlainTextValue();
+            $handle = $attribute->getAttributeKey()->getAttributeKeyHandle();
+
+            // First yield out the plain text value
+            yield $handle => $attribute->getPlainTextValue();
+
+            // Next check for any multi-column values
+            $controller = $attribute->getController();
+            if ($controller instanceof MulticolumnTextExportableAttributeInterface) {
+                $headers = $controller->getAttributeTextRepresentationHeaders();
+                foreach ($controller->getAttributeValueTextRepresentation() as $key => $value) {
+                    $header = $headers[$key];
+                    yield "{$handle}.{$header}" => $value;
+                }
+            }
         }
 
         $associations = $entry->getAssociations();
@@ -133,11 +161,25 @@ class CsvWriter
     {
         yield 'publicIdentifier' => 'publicIdentifier';
         yield 'ccm_date_created' => 'dateCreated';
+        yield 'site' => 'site';
         yield 'author_name' => 'authorName';
 
         $attributes = $entity->getAttributes();
+        /** @var ExpressKey $attribute */
         foreach ($attributes as $attribute) {
-            yield $attribute->getAttributeKeyHandle() => $attribute->getAttributeKeyDisplayName();
+            $name = $attribute->getAttributeKeyDisplayName();
+            $handle = $attribute->getAttributeKeyHandle();
+
+            // First yield out the main attribute key
+            yield $handle => $name;
+
+            // Next check for multi-column values
+            $controller = $attribute->getController();
+            if ($controller instanceof MulticolumnTextExportableAttributeInterface) {
+                foreach ($controller->getAttributeTextRepresentationHeaders() as $subheader) {
+                    yield "{$handle}.{$subheader}" => "{$name} - {$subheader}";
+                }
+            }
         }
 
         $associations = $entity->getAssociations();
