@@ -6,7 +6,7 @@ use Concrete\Core\Job\Job;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20200810034546 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20200818034546 extends AbstractMigration implements RepeatableMigrationInterface
 {
     public function upgradeDatabase()
     {
