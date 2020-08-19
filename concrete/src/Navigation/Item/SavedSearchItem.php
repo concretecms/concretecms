@@ -5,8 +5,6 @@ namespace Concrete\Core\Navigation\Item;
 use Concrete\Core\Entity\Search\SavedSearch;
 
 /**
- * Class SavedFileSearchItem.
- *
  * @method SavedSearchItem[] getChildren()
  */
 class SavedSearchItem extends Item

@@ -9,7 +9,7 @@ class NodeTransformer extends TransformerAbstract
     /**
      * Basic transforming of a node into an array.
      *
-     * @param Node $file
+     * @param Node $node
      *
      * @return array
      */

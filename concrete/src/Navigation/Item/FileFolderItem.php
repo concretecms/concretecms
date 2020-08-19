@@ -5,8 +5,6 @@ namespace Concrete\Core\Navigation\Item;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
 /**
- * Class FileFolderItem.
- *
  * @method FileFolderItem[] getChildren()
  */
 class FileFolderItem extends Item
