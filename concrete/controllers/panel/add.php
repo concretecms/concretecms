@@ -3,10 +3,14 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Concrete\Core\Entity\Page\Container;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Pile\Pile;
 use Concrete\Core\Page\Stack\Stack;
@@ -19,6 +23,41 @@ class Add extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/add';
     protected $pagetypes = [];
+    /** @var Page */
+    protected $page;
+
+    public function removeOrphanedBlocks()
+    {
+        $editResponse = new EditResponse();
+        /** @var ResponseFactory $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactory::class);
+        /** @var ErrorList $errorList */
+        $errorList = $this->app->make(ErrorList::class);
+
+        $arrOrphanedBlocks = $this->page->getOrphanedBlockIds();
+
+        if (count($arrOrphanedBlocks) === 0) {
+            $errorList->add(t("There are no blocks to remove."));
+        } else {
+            foreach ($this->page->getOrphanedBlockIds() as $arrOrphanedBlock) {
+                $bID = (int)$arrOrphanedBlock["bID"];
+                $block = Block::getByID($bID);
+
+                if (!$block instanceof Block) {
+                    $errorList->add(t("Error while removing orphaned block."));
+                } else {
+                    // returns false because the area no longer exists in the theme.
+                    $block->deleteBlock(true);
+                }
+            }
+        }
+
+        $editResponse->setTitle(t("Blocks removed successfully"));
+        $editResponse->setMessage(t("All blocks from the current page has been removed successfully."));
+        $editResponse->setError($errorList);
+
+        return $responseFactory->json($editResponse);
+    }
 
     public function view()
     {
@@ -45,6 +84,15 @@ class Add extends BackendInterfacePageController
                 $sp = Pile::getDefault();
                 $contents = $sp->getPileContentObjects('date_desc');
                 $this->set('contents', $contents);
+                break;
+            case 'orphaned_blocks':
+                $orphanedAreas = [];
+
+                $page = Page::getCurrentPage();
+                if ($page instanceof Page) {
+                    $orphanedAreas = $page->getOrphanedBlockIdsGroupedByAreaHandle();
+                }
+                $this->set('orphanedAreas', $orphanedAreas);
                 break;
             case 'blocks':
             default:
