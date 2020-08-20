@@ -11,6 +11,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\SummaryObject;
 use Concrete\Core\Summary\SummaryObjectExtractor;
+use Concrete\Core\Summary\SummaryObjectInspector;
 use Concrete\Core\Summary\SummaryObjectInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -54,6 +55,11 @@ class Renderer implements LoggerAwareInterface
      */
     protected $summaryObjectExtractor;
 
+    /**
+     * @var SummaryObjectInspector
+     */
+    protected $summaryObjectInspector;
+
     public function __construct(
         JsonSerializer $serializer,
         RendererFilterer $rendererFilterer,
@@ -61,6 +67,7 @@ class Renderer implements LoggerAwareInterface
         TemplateLocator $templateLocator,
         FileLocator $fileLocator,
         SummaryObjectExtractor $summaryObjectExtractor,
+        SummaryObjectInspector $summaryObjectInspector,
         Page $currentPage = null)
     {
         $this->serializer = $serializer;
@@ -69,6 +76,7 @@ class Renderer implements LoggerAwareInterface
         $this->templateLocator = $templateLocator;
         $this->fileLocator = $fileLocator;
         $this->summaryObjectExtractor = $summaryObjectExtractor;
+        $this->summaryObjectInspector = $summaryObjectInspector;
         $this->currentPage = $currentPage;
     }
 
@@ -84,6 +92,7 @@ class Renderer implements LoggerAwareInterface
         if ($file) {
             include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_header.php')
                 ->getFile();
+            $summaryObjectInspector = $this->summaryObjectInspector;
             $fields = $this->summaryObjectExtractor->getData($summaryObject);
             extract($fields, EXTR_OVERWRITE);
             include $file;
