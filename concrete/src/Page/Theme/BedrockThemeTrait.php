@@ -15,6 +15,7 @@ trait BedrockThemeTrait
         $this->requireAsset('jquery');
         $this->requireAsset('vue');
         $this->requireAsset('bootstrap');
+        $this->requireAsset('moment');
     }
 
     public function getThemeGridFrameworkHandle(): string

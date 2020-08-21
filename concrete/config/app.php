@@ -410,6 +410,11 @@ return [
             ]
         ],
 
+        'moment' => [
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
+        ],
+
         // This is the base CKEditor library from CKEditor
         'ckeditor' => [
             [
@@ -545,6 +550,13 @@ return [
             ],
         ],
 
+        'moment' => [
+            [
+                ['javascript', 'moment'],
+                ['javascript-localized', 'moment'],
+            ],
+        ],
+
         'vue' => [
             [
                 ['javascript', 'vue'],
@@ -573,6 +585,7 @@ return [
             [
                 ['javascript', 'jquery'],
                 ['javascript', 'bootstrap'],
+                ['javascript', 'moment'],
                 ['javascript', 'vue'],
                 ['css', 'font-awesome'],
                 ['javascript', 'core/cms'],

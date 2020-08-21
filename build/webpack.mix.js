@@ -9,7 +9,8 @@ mix.webpackConfig({
     externals: {
         jquery: 'jQuery',
         bootstrap: true,
-        vue: 'Vue'
+        vue: 'Vue',
+        moment: 'moment'
     },
     // Override the default js compile settings to replace exclude with something that doesn't exclude node_modules.
     // @see node_modules/laravel-mix/src/components/JavaScript.js for the original
