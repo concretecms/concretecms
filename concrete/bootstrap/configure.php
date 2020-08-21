@@ -121,7 +121,6 @@ const DIRNAME_THEMES = 'themes';
 const DIRNAME_THEMES_CORE = 'core';
 const DIRNAME_CONFIG = 'config';
 const DIRNAME_TOOLS = 'tools';
-const DIRNAME_BLOCK_TOOLS = 'tools';
 const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
 const DIRNAME_CSS = 'css';

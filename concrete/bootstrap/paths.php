@@ -46,5 +46,4 @@ define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.svg');
  */
 define('REL_DIR_FILES_TOOLS', $app['app_relative_path'] . '/' . DISPATCHER_FILENAME . '/tools');
 define('REL_DIR_FILES_TOOLS_REQUIRED', $app['app_relative_path'] . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
-define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
 define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages');

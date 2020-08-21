@@ -98,8 +98,7 @@ echo $userInterface->tabs([
 <div class="tab-content">
     <div class="tab-pane show active pagelist-form" id="page-list-settings" role="tabpanel">
         <input type="hidden" name="pageListToolsDir"
-               value="<?php /** @noinspection PhpParamsInspection */
-               echo $urlService->getBlockTypeToolsURL($bt) ?>/"/>
+               value="<?php /* echo $urlService->getBlockTypeToolsURL($bt) */ ?>/"/>
 
         <fieldset>
             <div class="form-group">
