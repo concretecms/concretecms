@@ -14,6 +14,7 @@ trait BedrockThemeTrait
         $this->requireAsset('font-awesome');
         $this->requireAsset('jquery');
         $this->requireAsset('vue');
+        $this->requireAsset('bootstrap');
     }
 
     public function getThemeGridFrameworkHandle(): string

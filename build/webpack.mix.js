@@ -8,6 +8,7 @@ mix.webpackConfig({
     },
     externals: {
         jquery: 'jQuery',
+        bootstrap: true,
         vue: 'Vue'
     },
     // Override the default js compile settings to replace exclude with something that doesn't exclude node_modules.
