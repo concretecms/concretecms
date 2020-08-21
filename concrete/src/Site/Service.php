@@ -17,6 +17,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Concrete\Core\Site\Type\Controller\Manager;
+use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntrySiteResults;
 use Concrete\Core\User\Group\Group;
 use Doctrine\ORM\EntityManagerInterface;
