@@ -1,6 +1,8 @@
 <?php
 
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validation\CSRF\Token;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -177,81 +179,152 @@ defined('C5_EXECUTE') or die('Access Denied.');
         break;
 
     case 'clipboard':
-        /* @var Concrete\Core\Page\Stack\Pile\PileContent[] $contents */
         ?>
         <div id="ccm-panel-add-clipboard-block-list">
             <?php
-            $pileToken = Core::make('token')->generate('tools/clipboard/from');
-            foreach ($contents as $pile_content) {
-                $block = Block::getByID($pile_content->getItemID());
-                if (!$block || !is_object($block) || $block->isError()) {
-                    continue;
-                }
-                $type = $block->getBlockTypeObject();
-                $icon = $ci->getBlockTypeIconURL($type);
-                ?>
-                <div
+                $app = Application::getFacadeApplication();
+                /** @var Token $token */
+                $token = $app->make(Token::class);
+                $pileToken = $token->generate('tools/clipboard/from');
+            ?>
+
+            <div id="ccm-clipboard-container">
+                <?php echo t("Loading..."); ?>
+            </div>
+
+            <script type="text/template" id="ccm-clipboard-template">
+                <%_.forEach(results, function (result) {%>
+                    <div
                         class="ccm-panel-add-clipboard-block-item"
                         data-event="duplicate"
                         data-panel-add-block-drag-item="clipboard-item"
-                        data-name="<?= h($type->getBlockTypeName()) ?>"
-                        data-cID="<?= $c->getCollectionID() ?>"
-                        data-token="<?= $pileToken ?>"
-                        data-block-type-handle="<?= $type->getBlockTypeHandle() ?>"
-                        data-dialog-title="<?= t('Add %s', t($type->getBlockTypeName())) ?>"
-                        data-dialog-width="<?= $type->getBlockTypeInterfaceWidth() ?>"
-                        data-dialog-height="<?= $type->getBlockTypeInterfaceHeight() ?>"
-                        data-has-add-template="<?= $type->hasAddTemplate() ?>"
-                        data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
-                        data-btID="<?= $type->getBlockTypeID() ?>"
-                        data-pcID="<?= $pile_content->getPileContentID() ?>"
-                        data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
-                        data-block-id="<?= (int) ($block->getBlockID()) ?>"
-                >
+                        data-name="<%=result.name%>"
+                        data-cID="<?php echo $c->getCollectionID() ?>"
+                        data-token="<?php echo $pileToken ?>"
+                        data-block-type-handle="<%=result.handle%>"
+                        data-dialog-title="<%=result.dialogTitle%>"
+                        data-dialog-width="<%=result.dialogWidth%>"
+                        data-dialog-height="<%=result.dialogHeight%>"
+                        data-has-add-template="<%=result.hasAddTemplate%>"
+                        data-supports-inline-add="<%=result.supportsInlineAdd%>"
+                        data-btID="<%=result.blockTypeId%>"
+                        data-pcID="<%=result.pileContentId%>"
+                        data-dragging-avatar="<%=result.draggingAvatar%>"
+                        data-block-id="<%=result.blockId%>"
+                    >
+                        <div class="block-content">
+                            <div class="block-name float-left">
+                                <span class="handle">
+                                    <%=result.name%>
+                                </span>
+                            </div>
 
-                    <div class="block-content">
-                        <div class="block-name float-left">
-                            <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
-                        </div>
-                        <div class="delete float-right">
-                            <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
-                        </div>
+                            <div class="delete float-right">
+                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger">
+                                    <?php echo t('Delete') ?>
+                                </button>
+                            </div>
 
-                        <div class="blocks">
-                            <div class="block ccm-panel-add-block-draggable-block-type" title="<?= t($type->getBlockTypeName()) ?>">
-                                <div class="block-content">
-                                    <?php
-                                    $bv = new BlockView($block);
-                                    $bv->render('scrapbook');
-                                    ?>
+                            <div class="blocks">
+                                <div class="block ccm-panel-add-block-draggable-block-type" title="<%=result.name%>">
+                                    <div class="block-content">
+                                        <%=result.blockContent%>
+                                    </div>
+
+                                    <div class="block-handle"></div>
                                 </div>
-                                <div class="block-handle"></div>
                             </div>
                         </div>
                     </div>
+                <%})%>
 
-                </div>
-                <?php
-            }
-            ?>
+                <% if (displayPagination) { %>
+                    <div class="d-flex"">
+                        <nav class="mx-auto">
+                            <ul class="pagination">
+                                <li class="page-item<% if (!hasPrev) { %> disabled<% } %>">
+                                    <a class="prev page-link<% if (!hasPrev) { %> disabled<% } %>" href="javascript:void(0);" aria-label="<?php echo t("Previous"); ?>">
+                                        <span aria-hidden="true">&laquo;</span>
+
+                                        <span class="sr-only">
+                                            <?php echo t("Previous"); ?>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li class="page-item<% if (!hasNext) { %> disabled<% } %>">
+                                    <a class="next page-link<% if (!hasNext) { %> disabled<% } %>" href="javascript:void(0);" aria-label="<?php echo t("Next"); ?>">
+                                        <span aria-hidden="true">&raquo;</span>
+
+                                        <span class="sr-only">
+                                            <?php echo t("Next"); ?>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                <% } %>
+            </script>
+
             <script>
-                $('button.ccm-delete-clipboard-item').unbind().click(function (e) {
-                    e.preventDefault();
-                    var me = $(this),
-                        item = me.closest('.ccm-panel-add-clipboard-block-item');
+                (function($) {
+                    $(function(){
+                        var curPage = 0;
 
-                    $.post(CCM_TOOLS_PATH + '/pile_manager', {
-                        task: 'delete',
-                        pcID: item.data('pcid'),
-                        cID: item.data('cid'),
-                        ccm_token: item.data('token')
-                    }, function () {
-                        item.remove();
-                    }).fail(function (data) {
-                        alert("<?= t('An error occurred while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
+                        var loadClipboardItems = function() {
+                            $.fn.dialog.showLoader();
+
+                            $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/panels/add/get_clipboard_contents', {
+                                cID: <?php echo $c->getCollectionID(); ?>,
+                                curPage: curPage
+                            }, function (json) {
+                                var templateHtml = $("#ccm-clipboard-template").html();
+                                var html = _.template(templateHtml)(json);
+                                var $container = $("#ccm-clipboard-container");
+
+                                $container.html(html);
+
+                                $container.find("a.prev").on("click", function () {
+                                    curPage--;
+                                    loadClipboardItems();
+                                });
+
+                                $container.find("a.next").on("click", function () {
+                                    curPage++;
+                                    loadClipboardItems();
+                                });
+
+                                $container.find('div.ccm-panel-add-clipboard-block-item').each(function () {
+                                    new Concrete.DuplicateBlock($(this), window.concreteEditMode, window.concreteEditMode.getNextBlockArea())
+                                })
+
+                                $container.find('.ccm-delete-clipboard-item').click(function (e) {
+                                    e.preventDefault();
+
+                                    var me = $(this),
+                                        item = me.closest('.ccm-panel-add-clipboard-block-item');
+
+                                    $.post(CCM_TOOLS_PATH + '/pile_manager', {
+                                        task: 'delete',
+                                        pcID: item.data('pcid'),
+                                        cID: item.data('cid'),
+                                        ccm_token: item.data('token')
+                                    }, function () {
+                                        loadClipboardItems();
+                                    }).fail(function (data) {
+                                        alert("<?php echo t('An error occurred while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
+                                    });
+                                    return false;
+                                });
+
+                                $.fn.dialog.hideLoader();
+                            });
+                        };
+
+                        loadClipboardItems();
                     });
-                    return false;
-                });
+                })(jQuery);
             </script>
         </div>
         <?php

@@ -10,6 +10,7 @@ $router->all('/add', 'Add::view');
 $router->all('/add/get_stack_contents', 'Add::getStackContents');
 $router->all('/add/get_stack_folder_contents', 'Add::getStackFolderContents');
 $router->all('/add/remove_orphaned_blocks', 'Add::removeOrphanedBlocks');
+$router->all('/add/get_clipboard_contents', 'Add::getClipboardContents');
 $router->all('/dashboard', 'Dashboard::view');
 $router->all('/dashboard/add_favorite', 'Dashboard::addFavorite');
 $router->all('/dashboard/remove_favorite', 'Dashboard::removeFavorite');

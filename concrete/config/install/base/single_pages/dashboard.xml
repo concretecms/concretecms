@@ -739,7 +739,7 @@
             </attributes>
         </page>
 
-        <page name="Reset Edit Mode" path="/dashboard/system/basics/reset_edit_mode" filename="/dashboard/system/basics/reset_edit_mode.php"
+        <page name="Reset Clipboard and Edit Mode" path="/dashboard/system/basics/reset_edit_mode" filename="/dashboard/system/basics/reset_edit_mode.php"
               pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">

@@ -29,7 +29,7 @@ $dh = Loader::helper('concrete/dashboard');
         $htmlTagClasses = 'ccm-toolbar-visible';
 
         if ($c->isEditMode()) {
-            $startEditMode = 'new Concrete.EditMode();';
+            $startEditMode = 'window.concreteEditMode = new Concrete.EditMode();';
             $htmlTagClasses .= ' ccm-edit-mode';
         } else {
             $startEditMode = '';

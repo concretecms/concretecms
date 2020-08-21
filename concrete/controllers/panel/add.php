@@ -26,6 +26,33 @@ class Add extends BackendInterfacePageController
     /** @var Page */
     protected $page;
 
+    public function getClipboardContents()
+    {
+        /** @var ResponseFactory $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactory::class);
+
+        $sp = Pile::getDefault();
+
+        $contents = $sp->getPileContentObjects('date_desc');
+
+        /*
+         * For the clipboard pagination a client-side pagination is enough.
+         * The performance issues are not because of fetching the items from database.
+         * Furthermore it's an issue related to the block view rendering.
+         * Therefore all results will be fetched from the database and splitted with PHP.
+         */
+
+        $curPage = (int)$this->request->query->get("curPage", 0);
+        $maxItems = 10;
+
+        return $responseFactory->json([
+            "displayPagination" => count($contents) > $maxItems,
+            "hasPrev" => $curPage > 0,
+            "hasNext" => ($curPage * $maxItems + $maxItems) < count($contents),
+            "results" => array_slice($contents, $curPage * $maxItems, $maxItems)
+        ]);
+    }
+
     public function removeOrphanedBlocks()
     {
         $editResponse = new EditResponse();
