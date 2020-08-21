@@ -1,11 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');
 $ve = Loader::helper('validation/error');
 $as = Loader::helper('validation/antispam');
-
+$resolverManager = app(ResolverManagerInterface::class);
 $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
@@ -62,8 +63,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
                 <?php if ($attachmentsEnabled) {
     ?>
                     <div class="ccm-conversation-attachment-container">
-                        <form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');
-    ?>" class="dropzone" id="file-upload-reply">
+                        <form action="<?= h($resolverManager->resolve(['/ccm/frontend/conversations/add_file'])) ?> ?>" class="dropzone" id="file-upload-reply">
                             <div class="ccm-conversation-errors alert alert-danger"></div>
                             <?php $val->output('add_conversations_file');
     ?>

@@ -1,8 +1,12 @@
 <?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make('helper/form');
 $val = Core::make('token');
 $u = Core::make(Concrete\Core\User\User::class);
+$resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <?php if ($displayForm && $displayPostingForm == $position) {
@@ -58,8 +62,7 @@ $u = Core::make(Concrete\Core\User\User::class);
 			<?php if ($attachmentsEnabled) {
     ?>
 				<div class="ccm-conversation-attachment-container">
-					<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');
-    ?>" class="dropzone" id="file-upload">
+					<form action="<?= h($resolverManager->resolve(['/ccm/frontend/conversations/add_file'])) ?>" class="dropzone" id="file-upload">
 						<div class="ccm-conversation-errors alert alert-danger"></div>
 						<?php $val->output('add_conversations_file');
     ?>
@@ -97,8 +100,7 @@ $u = Core::make(Concrete\Core\User\User::class);
 			<?php if ($attachmentsEnabled) {
     ?>
 				<div class="ccm-conversation-attachment-container">
-					<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');
-    ?>" class="dropzone" id="file-upload-reply">
+					<form action="<?= h($resolverManager->resolve(['/ccm/frontend/conversations/add_file'])) ?>" class="dropzone" id="file-upload-reply">
 						<div class="ccm-conversation-errors alert alert-danger"></div>
 						<?php $val->output('add_conversations_file');
     ?>
