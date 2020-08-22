@@ -1,10 +1,16 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
  * @var \Concrete\Core\Conversation\Message\MessageList $list
  * @var array $messages
  * @var array $cmpFilterTypes
  * @var string $cmpMessageFilter
  */
+$resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <div data-search-element="results">
@@ -156,7 +162,7 @@ $(function() {
     $('a[data-message-action=delete]').on('click', function(e) {
         e.preventDefault();
         $.concreteAjax({
-            url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/conversations/delete_message',
+            url: <?= json_encode((string) $resolverManager->resolve(['/ccm/frontend/conversations/delete_message'])) ?>,
             data: {
                 'cnvMessageID': $(this).attr('data-message-id'),
                 'token': '<?= $valt->generate('delete_conversation_message'); ?>'
