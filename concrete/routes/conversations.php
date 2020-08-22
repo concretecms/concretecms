@@ -7,3 +7,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Namespace: Concrete\Controller\Frontend\Conversations
  */
 $router->post('/add_file', 'AddFile::handle');
+$router->post('/add_message', 'AddMessage::handle');
