@@ -21,7 +21,7 @@ class Page extends Controller
     public function create($ptID, $parentID = false)
     {
         $pagetype = PageType::getByID($this->app->make(SanitizeService::class)->sanitizeInt($ptID));
-        if (!$pagetype) {
+        if ($pagetype) {
             $proceed = false;
             $parent = $parentID ? ConcretePage::getByID($parentID) : null;
             if ($parent && !$parent->isError()) {
