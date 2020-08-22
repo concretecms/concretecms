@@ -8,3 +8,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 $router->post('/add_file', 'AddFile::handle');
 $router->post('/add_message', 'AddMessage::handle');
+$router->post('/count_header', 'CountHeader::view');
