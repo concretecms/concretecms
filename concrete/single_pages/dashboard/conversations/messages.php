@@ -148,7 +148,7 @@ $(function() {
     $('a[data-message-action=flag]').on('click', function(e) {
         e.preventDefault();
         $.concreteAjax({
-            url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/conversations/flag_message',
+            url: <?= json_encode((string) $resolverManager->resolve(['/ccm/frontend/conversations/flag_message/1'])) ?>,
             data: {
                 'cnvMessageID': $(this).attr('data-message-id'),
                 'token': '<?= $valt->generate('flag_conversation_message'); ?>'

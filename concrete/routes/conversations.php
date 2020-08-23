@@ -12,3 +12,8 @@ $router->post('/count_header', 'CountHeader::view');
 $router->post('/delete_file', 'DeleteFile::handle');
 $router->post('/delete_message', 'DeleteMessage::handle');
 $router->post('/edit_message', 'EditMessage::view');
+$router->post('/flag_message/{asJSON}', 'FlagMessage::view')
+    ->setRequirements([
+        'asJSON' => '^(?:0|1)$',
+    ])
+;
