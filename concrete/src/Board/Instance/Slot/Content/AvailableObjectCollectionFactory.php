@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
+use Concrete\Core\Board\Item\ItemProviderInterface;
 use Concrete\Core\Entity\Board\SlotTemplate;
 
 class AvailableObjectCollectionFactory
@@ -32,7 +33,10 @@ class AvailableObjectCollectionFactory
         $result = array_filter($result, function($values) {
             $itemIDs = [];
             foreach ($values as $availableObject) {
-                $itemIDs[] = $availableObject->getItem()->getBoardInstanceItemID();
+                /**
+                 * @var $availableObject AvailableObject
+                 */
+                $itemIDs[] = $availableObject->getItem()->getItem()->getUniqueItemId();
             }
             $countedValues = array_count_values($itemIDs);
             foreach($countedValues as $countedValue) {
