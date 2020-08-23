@@ -17,3 +17,4 @@ $router->post('/flag_message/{asJSON}', 'FlagMessage::view')
         'asJSON' => '^(?:0|1)$',
     ])
 ;
+$router->post('/get_rating', 'GetRating::view');
