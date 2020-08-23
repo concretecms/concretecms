@@ -20,3 +20,4 @@ $router->post('/flag_message/{asJSON}', 'FlagMessage::view')
 $router->post('/get_rating', 'GetRating::view');
 $router->post('/message_detail', 'MessageDetail::view');
 $router->post('/message_page', 'MessagePage::view');
+$router->post('/rate', 'Rate::handle');
