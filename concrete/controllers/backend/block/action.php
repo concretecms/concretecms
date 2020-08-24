@@ -182,6 +182,6 @@ class Action extends AbstractController
         $controller->on_start();
         $response = $controller->runAction($method, $parameters);
 
-        return $response instanceof SymphonyResponse ? $response : new Response($response);
+        return $response instanceof SymphonyResponse ? $response : new SymphonyResponse($response);
     }
 }
