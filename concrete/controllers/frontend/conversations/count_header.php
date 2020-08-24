@@ -2,15 +2,15 @@
 
 namespace Concrete\Controller\Frontend\Conversations;
 
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class CountHeader extends Controller
+class CountHeader extends FrontendController
 {
     /**
      * {@inheritdoc}

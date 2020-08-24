@@ -4,8 +4,8 @@ namespace Concrete\Controller\Frontend\Conversations;
 
 use Concrete\Core\Antispam\Service as AntispamService;
 use Concrete\Core\Application\EditResponse;
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\Conversation\FlagType\FlagType;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class FlagMessage extends Controller
+class FlagMessage extends FrontendController
 {
     /**
      * {@inheritdoc}
@@ -25,7 +25,10 @@ class FlagMessage extends Controller
      */
     protected $viewPath = '/frontend/conversations/flag_message';
 
-    public function view($asJSON): ?Response
+    /**
+     * @param string $asJSON '0' (false) or '1' (true)
+     */
+    public function view(string $asJSON): ?Response
     {
         $asJSON = (bool) $asJSON;
         $this->checkToken();

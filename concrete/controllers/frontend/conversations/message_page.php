@@ -2,8 +2,8 @@
 
 namespace Concrete\Controller\Frontend\Conversations;
 
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Conversation\Message\MessageList;
 use Concrete\Core\Conversation\Message\ThreadedList;
 use Concrete\Core\Error\UserMessageException;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class MessagePage extends Controller
+class MessagePage extends FrontendController
 {
     /**
      * {@inheritdoc}

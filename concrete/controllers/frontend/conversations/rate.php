@@ -2,7 +2,7 @@
 
 namespace Concrete\Controller\Frontend\Conversations;
 
-use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Conversation\Rating\Type as RatingType;
 use Concrete\Core\Error\UserMessageException;
@@ -15,9 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Rate extends AbstractController
+class Rate extends FrontendController
 {
-    public function handle(): Response
+    public function view(): Response
     {
         $message = $this->getMessage();
         $this->checkMessage($message);

@@ -3,7 +3,7 @@
 namespace Concrete\Controller\Frontend\Conversations;
 
 use Concrete\Core\Application\EditResponse;
-use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class DeleteMessage extends AbstractController
+class DeleteMessage extends FrontendController
 {
-    public function handle(): Response
+    public function view(): Response
     {
         $errors = $this->app->make(ErrorList::class);
         try {

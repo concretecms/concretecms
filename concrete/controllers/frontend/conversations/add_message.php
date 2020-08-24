@@ -3,14 +3,11 @@
 namespace Concrete\Controller\Frontend\Conversations;
 
 use ArrayAccess;
-use Concrete\Block\CoreConversation\Controller as CoreConversationBlockController;
 use Concrete\Core\Antispam\Service as AntispamService;
-use Concrete\Core\Area\Area;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\ConversationService;
 use Concrete\Core\Conversation\FlagType\FlagType;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Conversation\Message\Author;
 use Concrete\Core\Conversation\Message\Message as ConversationMessage;
 use Concrete\Core\Conversation\Message\MessageEvent;
@@ -18,10 +15,10 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\BannedWord\Service as BannedWordService;
 use Concrete\Core\Validator\String\EmailValidator;
@@ -31,29 +28,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class AddMessage extends AbstractController
+class AddMessage extends FrontendController
 {
-    /**
-     * @var \Concrete\Core\Block\Block|null
-     */
-    private $blockObject;
-
-    /**
-     * @var \Concrete\Block\CoreConversation\Controller|null
-     */
-    private $blockController;
-
-    /**
-     * @var \Concrete\Core\Conversation\Conversation|null
-     */
-    private $conversation;
-
     /**
      * @var \Concrete\Core\Conversation\Message\Message|false|null FALSE if and oonly if not yet determined
      */
     private $parentMessage = false;
 
-    public function handle(): Response
+    public function view(): Response
     {
         $errors = $this->app->make(ErrorList::class);
         try {
@@ -95,46 +77,11 @@ class AddMessage extends AbstractController
         return $this->buildErrorsResponse($errors);
     }
 
-    /**
-     * @throws \Concrete\Core\Error\UserMessageException
-     */
-    protected function getBlockObject(): Block
+    protected function getConversationID(): ?int
     {
-        if ($this->blockObject === null) {
-            $post = $this->request->request;
-            $pageObj = $post->get('cID') ? Page::getByID($post->get('cID')) : null;
-            if (!$pageObj || $pageObj->isError()) {
-                throw new UserMessageException(t('Unable to find the specified page'));
-            }
-            $areaObj = Area::get($pageObj, $post->get('blockAreaHandle'));
-            $blockObj = $post->get('bID') ? Block::getByID($post->get('bID'), $pageObj, $areaObj) : null;
-            if (!$blockObj || $blockObj->isError()) {
-                throw new UserMessageException(t('Unable to find the specified block'));
-            }
-            if ($blockObj->getBlockTypeHandle() !== BLOCK_HANDLE_CONVERSATION) {
-                throw new UserMessageException(t('Invalid block'));
-            }
-            $p = new Checker($blockObj);
-            if (!$p->canRead()) {
-                // block read permissions check
-                throw new UserMessageException(t('You do not have permission to view this conversation'));
-            }
-            $this->blockObject = $blockObj;
-        }
+        $conversationID = $this->request->request->get('cnvID');
 
-        return $this->blockObject;
-    }
-
-    /**
-     * @throws \Concrete\Core\Error\UserMessageException
-     */
-    protected function getBlockController(): CoreConversationBlockController
-    {
-        if ($this->blockController === null) {
-            $this->blockController = $this->getBlockObject()->getController();
-        }
-
-        return $this->blockController;
+        return $this->app->make(Numbers::class)->integer($conversationID, 1) ? (int) $conversationID : null;
     }
 
     /**
@@ -142,18 +89,12 @@ class AddMessage extends AbstractController
      */
     protected function getConversation(): Conversation
     {
-        if ($this->conversation === null) {
-            $conversation = $this->getBlockController()->getConversationObject();
-            if (!($conversation instanceof Conversation)) {
-                throw new UserMessageException(t('Invalid Conversation.'));
-            }
-            if ($conversation->getConversationID() != (int) $this->request->request->get('cnvID')) {
-                throw new UserMessageException(t('Invalid Conversation.'));
-            }
-            $this->conversation = $conversation;
+        $conversation = $this->getBlockConversation();
+        if ((int) $conversation->getConversationID() !== $this->getConversationID()) {
+            throw new UserMessageException(t('Invalid Conversation.'));
         }
 
-        return $this->conversation;
+        return $conversation;
     }
 
     /**
@@ -374,7 +315,7 @@ class AddMessage extends AbstractController
     protected function trackMessage(ConversationMessage $message): void
     {
         $conversationService = $this->app->make(ConversationService::class);
-        $conversationService->trackReview($message, $this->getBlockObject());
+        $conversationService->trackReview($message, $this->getBlock());
     }
 
     protected function buildErrorsResponse(ErrorList $errors): Response

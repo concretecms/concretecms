@@ -2,7 +2,7 @@
 
 namespace Concrete\Controller\Frontend\Conversations;
 
-use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class DeleteFile extends AbstractController
+class DeleteFile extends FrontendController
 {
-    public function handle(): Response
+    public function view(): Response
     {
         $attachmentID = $this->getAttachmentID();
         $message = $attachmentID === null ? null : Message::getByAttachmentID($attachmentID);

@@ -3,18 +3,14 @@
 namespace Concrete\Controller\Frontend\Conversations;
 
 use ArrayAccess;
-use Concrete\Block\CoreConversation\Controller as CoreConversationBlockController;
-use Concrete\Core\Area\Area;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Conversation\ConversationService;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Conversation\Message\MessageEvent;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Numbers;
@@ -24,19 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class UpdateMessage extends AbstractController
+class UpdateMessage extends FrontendController
 {
-    /**
-     * @var \Concrete\Core\Block\Block|null
-     */
-    private $blockObject;
-
-    /**
-     * @var \Concrete\Block\CoreConversation\Controller|null
-     */
-    private $blockController;
-
-    public function handle(): Response
+    public function view(): Response
     {
         $errors = $this->app->make(ErrorList::class);
         try {
@@ -68,48 +54,6 @@ class UpdateMessage extends AbstractController
     /**
      * @throws \Concrete\Core\Error\UserMessageException
      */
-    protected function getBlockObject(): Block
-    {
-        if ($this->blockObject === null) {
-            $post = $this->request->request;
-            $pageObj = $post->get('cID') ? Page::getByID($post->get('cID')) : null;
-            if (!$pageObj || $pageObj->isError()) {
-                throw new UserMessageException(t('Unable to find the specified page'));
-            }
-            $areaObj = Area::get($pageObj, $post->get('blockAreaHandle'));
-            $blockObj = $post->get('bID') ? Block::getByID($post->get('bID'), $pageObj, $areaObj) : null;
-            if (!$blockObj || $blockObj->isError()) {
-                throw new UserMessageException(t('Unable to find the specified block'));
-            }
-            if ($blockObj->getBlockTypeHandle() !== BLOCK_HANDLE_CONVERSATION) {
-                throw new UserMessageException(t('Invalid block'));
-            }
-            $p = new Checker($blockObj);
-            if (!$p->canRead()) {
-                // block read permissions check
-                throw new UserMessageException(t('You do not have permission to view this conversation'));
-            }
-            $this->blockObject = $blockObj;
-        }
-
-        return $this->blockObject;
-    }
-
-    /**
-     * @throws \Concrete\Core\Error\UserMessageException
-     */
-    protected function getBlockController(): CoreConversationBlockController
-    {
-        if ($this->blockController === null) {
-            $this->blockController = $this->getBlockObject()->getController();
-        }
-
-        return $this->blockController;
-    }
-
-    /**
-     * @throws \Concrete\Core\Error\UserMessageException
-     */
     protected function checkToken(): void
     {
         $val = $this->app->make('token');
@@ -132,7 +76,7 @@ class UpdateMessage extends AbstractController
     {
         $messageID = $this->getMessageID();
         $message = $messageID === null ? null : Message::getByID($messageID);
-        if ($message === null || $this->getBlockController()->getConversationObject()->getConversationID() != $message->getConversationID()) {
+        if ($message === null || $this->getBlockConversation()->getConversationID() != $message->getConversationID()) {
             throw new UserMessageException(t('Invalid message object.'));
         }
         $mp = new Checker($message);
@@ -253,7 +197,7 @@ class UpdateMessage extends AbstractController
     protected function trackMessage(Message $message): void
     {
         $conversationService = $this->app->make(ConversationService::class);
-        $conversationService->trackReview($message, $this->getBlockObject());
+        $conversationService->trackReview($message, $this->getBlock());
     }
 
     protected function buildErrorsResponse(ErrorList $errors): Response

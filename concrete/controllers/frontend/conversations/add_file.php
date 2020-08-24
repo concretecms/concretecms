@@ -2,33 +2,29 @@
 
 namespace Concrete\Controller\Frontend\Conversations;
 
-use Concrete\Core\Area\Area;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\FrontendController;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportException;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class AddFile extends AbstractController
+class AddFile extends FrontendController
 {
-    public function handle(): Response
+    public function view(): Response
     {
         $responseFactory = $this->app->make(ResponseFactoryInterface::class);
         $post = $this->request->request;
         try {
             $this->checkToken();
-            $conversation = $this->getConversation();
+            $conversation = $this->getBlockConversation();
             $this->checkConversation($conversation);
             $file = $this->getPostedFile();
             $this->checkPostedFileLimits($conversation, $file);
@@ -57,37 +53,6 @@ class AddFile extends AbstractController
         if (!$val->validate('add_conversations_file')) {
             throw new UserMessageException($val->getErrorMessage());
         }
-    }
-
-    /**
-     * @throws \Concrete\Core\Error\UserMessageException
-     */
-    protected function getConversation(): Conversation
-    {
-        $post = $this->request->request;
-        $pageObj = $post->get('cID') ? Page::getByID($post->get('cID')) : null;
-        if (!$pageObj || $pageObj->isError()) {
-            throw new UserMessageException(t('Unable to find the specified page'));
-        }
-        $areaObj = Area::get($pageObj, $post->get('blockAreaHandle'));
-        $blockObj = $post->get('bID') ? Block::getByID($post->get('bID'), $pageObj, $areaObj) : null;
-        if (!$blockObj || $blockObj->isError()) {
-            throw new UserMessageException(t('Unable to find the specified block'));
-        }
-        if ($blockObj->getBlockTypeHandle() !== BLOCK_HANDLE_CONVERSATION) {
-            throw new UserMessageException(t('Invalid block'));
-        }
-        $p = new Checker($blockObj);
-        if (!$p->canRead()) {
-            // block read permissions check
-            throw new UserMessageException(t('You do not have permission to view this conversation'));
-        }
-        $conversation = $blockObj->getController()->getConversationObject();
-        if (!($conversation instanceof Conversation)) {
-            throw new UserMessageException(t('Invalid Conversation.'));
-        }
-
-        return $conversation;
     }
 
     /**
