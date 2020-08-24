@@ -22,3 +22,4 @@ $router->post('/message_detail', 'MessageDetail::view');
 $router->post('/message_page', 'MessagePage::view');
 $router->post('/rate', 'Rate::handle');
 $router->post('/update_message', 'UpdateMessage::handle');
+$router->post('/view_ajax', 'ViewAjax::view');
