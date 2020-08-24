@@ -8,6 +8,7 @@ use Concrete\Core\Board\Command\ClearBoardInstanceCommand;
 use Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand;
 use Concrete\Core\Board\Command\GenerateBoardInstanceCommand;
 use Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand;
+use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
@@ -55,30 +56,32 @@ EOT
         if ($this->input->getOption('regenerate')) {
             $this->output->writeln(t('** Clearing board instance data pool: %s', $instance->getBoardInstanceName()));
             $command = new ClearBoardInstanceDataPoolCommand();
-            $command->setInstance($instance);;
+            $command->setInstance($instance);
             $app->executeCommand($command);
 
             $this->output->writeln(t('** Populating board instance data pool: %s', $instance->getBoardInstanceName()));
             $command = new PopulateBoardInstanceDataPoolCommand();
-            $command->setInstance($instance);;
+            $command->setInstance($instance);
             $app->executeCommand($command);
 
             $this->output->writeln(t('** Regenerating instance: %s', $instance->getBoardInstanceName()));
             $command = new ClearBoardInstanceCommand();
             $command->setInstance($instance);
             $app->executeCommand($command);
+
             $command = new GenerateBoardInstanceCommand();
             $command->setInstance($instance);
             $app->executeCommand($command);
         } else {
-            $this->output->writeln(t('** Adding content to board instance: %s', $instance->getBoardInstanceName()));
-            $command = new PopulateBoardInstanceDataPoolCommand();
-            $command->setInstance($instance);;
+            $this->output->writeln(t('** Refreshing board instance: %s', $instance->getBoardInstanceName()));
+            $command = new RefreshBoardInstanceCommand();
+            $command->setInstance($instance);
             $app->executeCommand($command);
+
             $command = new AddContentToBoardInstanceCommand();
             $command->setInstance($instance);
+            $app->executeCommand($command);
         }
-        $app->executeCommand($command);
     }
 
     public function handle(Application $app, EntityManager $em)
