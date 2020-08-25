@@ -496,7 +496,7 @@ class PhpFixerRuleResolver
             'nullable_type_declaration_for_default_null_value' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '7.1') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
 
             // `@var` and `@type` annotations should not contain the variable name.
-            'phpdoc_var_without_name' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
+            'phpdoc_var_without_name' => false,
 
             // Converts `pow` to the `**` operator.
             'pow_to_exponentiation' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '5.6') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
