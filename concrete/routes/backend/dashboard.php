@@ -15,3 +15,7 @@ $router
 $router
     ->all('sitemap_check_in', 'SitemapCheckIn::view')
 ;
+$router
+    ->all('sitemap_update', 'SitemapUpdate::view')
+;
+    
