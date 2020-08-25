@@ -185,7 +185,7 @@ class IndexSearchAll extends QueueableJob
             list($pages, $users, $files, $sites, $objects, $entries) = $this->result;
             return t(
                 'Index performed on: %s',
-                PunicMisc::join([
+                PunicMisc::joinAnd([
                     t2('%d page', '%d pages', $pages),
                     t2('%d user', '%d users', $users),
                     t2('%d file', '%d files', $files),
