@@ -83,9 +83,27 @@ class IndexSearchAll extends QueueableJob
             $queue->send(self::CLEAR);
         }
 
-        // Queue everything
-        foreach ($this->queueMessages() as $message) {
-            $queue->send($message);
+        try {
+            $i = 0;
+            $transactionSize = 5000;
+            foreach($this->queueMessages() as $i => $message) {
+                if ($i % $transactionSize === 0)  {
+                    $this->connection->beginTransaction();
+                }
+
+                $queue->send($message);
+
+                if (($i+1) % $transactionSize === 0)  {
+                    $this->connection->commit();
+                }
+            }
+
+            if (($i+1) % $transactionSize !== 0)  {
+                $this->connection->commit();
+            }
+        } catch (\Exception $e) {
+            $this->connection->rollback();
+            throw $e;
         }
     }
 
