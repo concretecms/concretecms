@@ -12,3 +12,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $router
     ->all('get_image_data', 'GetImageData::view')
 ;
+$router
+    ->all('sitemap_check_in', 'SitemapCheckIn::view')
+;
