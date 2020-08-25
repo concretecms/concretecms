@@ -9,3 +9,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Base path: /ccm/system/backend/dashboard
  * Namespace: Concrete\Controller\Backend\Dashboard
  */
+$router
+    ->all('get_image_data', 'GetImageData::view')
+;
