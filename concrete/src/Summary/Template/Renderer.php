@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Summary\Template;
 
+use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
@@ -68,8 +69,8 @@ class Renderer implements LoggerAwareInterface
         FileLocator $fileLocator,
         SummaryObjectExtractor $summaryObjectExtractor,
         SummaryObjectInspector $summaryObjectInspector,
-        Page $currentPage = null)
-    {
+        Page $currentPage = null
+    ) {
         $this->serializer = $serializer;
         $this->rendererFilterer = $rendererFilterer;
         $this->entityManager = $entityManager;
@@ -85,29 +86,65 @@ class Renderer implements LoggerAwareInterface
         return Channels::CHANNEL_CONTENT;
     }
 
+    /**
+     * @param array $summaryObjectFields
+     * @param Template $template
+     */
+    protected function summaryObjectSupportsTemplate($summaryObjectFields, Template $template)
+    {
+        $summaryObjectFieldIdentifiers = [];
+        $templateRequiredFieldIdentifiers = [];
+        foreach($summaryObjectFields as $identifier => $summaryObjectField) {
+            $summaryObjectFieldIdentifiers[] = $identifier;
+        }
+        foreach($template->getRequiredFields() as $requiredField) {
+            $templateRequiredFieldIdentifiers[] = $requiredField->getFieldIdentifier();
+        }
+        foreach($templateRequiredFieldIdentifiers as $templateRequiredFieldIdentifier) {
+            if (!in_array($templateRequiredFieldIdentifier, $summaryObjectFieldIdentifiers)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function render(SummaryObjectInterface $summaryObject)
     {
         $template = $summaryObject->getTemplate();
         $file = $this->templateLocator->getFileToRender($template);
         if ($file) {
-            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_header.php')
-                ->getFile();
-            $summaryObjectInspector = $this->summaryObjectInspector;
-            $fields = $this->summaryObjectExtractor->getData($summaryObject);
-            extract($fields, EXTR_OVERWRITE);
-            include $file;
-            include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_footer.php')
-                ->getFile();
-
-        } else if ($template->getHandle()) {
-            if ($this->currentPage) {
-                $this->logger->notice(t('Error rendering summary template on page %s - Unable to locate file for summary template: %s',
-                        $this->currentPage->getCollectionID(), $template->getHandle())
-                );
-            } else {
-                $this->logger->notice(t('Error rendering summary template - Unable to locate file for summary template: %s',
-                        $template->getHandle())
-                );
+            $summaryObjectInspector = $this->summaryObjectInspector; // This is included here for use in the template.
+            $summaryObjectFields = $this->summaryObjectExtractor->getData($summaryObject);
+            if ($this->summaryObjectSupportsTemplate($summaryObjectFields, $template)) {
+                include $this->fileLocator->getRecord(
+                    DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_header.php'
+                )
+                    ->getFile();
+                extract($summaryObjectFields, EXTR_OVERWRITE);
+                include $file;
+                include $this->fileLocator->getRecord(
+                    DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_footer.php'
+                )
+                    ->getFile();
+            }
+        } else {
+            if ($template->getHandle()) {
+                if ($this->currentPage) {
+                    $this->logger->notice(
+                        t(
+                            'Error rendering summary template on page %s - Unable to locate file for summary template: %s',
+                            $this->currentPage->getCollectionID(),
+                            $template->getHandle()
+                        )
+                    );
+                } else {
+                    $this->logger->notice(
+                        t(
+                            'Error rendering summary template - Unable to locate file for summary template: %s',
+                            $template->getHandle()
+                        )
+                    );
+                }
             }
         }
     }
