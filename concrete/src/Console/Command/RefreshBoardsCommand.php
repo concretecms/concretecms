@@ -40,9 +40,9 @@ EOT
         ;
     }
 
-    protected function refreshBoard(Application $app, EntityManager $em, Board $board)
+    protected function refreshBoard(Application $app, EntityManager $em, int $boardID)
     {
-        $board = $em->merge($board);
+        $board = $em->find(Board::class, $boardID); // we do this because em->clear() clears out the board.
         $this->output->writeln(t('Retrieving instances from board: %s', $board->getBoardName()));
         $instances = $board->getInstances();
         foreach($instances as $instance) {
@@ -90,7 +90,7 @@ EOT
             $boards = $em->getRepository(Board::class)
                 ->findAll();
             foreach($boards as $board) {
-                $this->refreshBoard($app, $em, $board);
+                $this->refreshBoard($app, $em, $board->getBoardID());
             }
         } else {
             $boardID = $this->input->getArgument('boardID');
