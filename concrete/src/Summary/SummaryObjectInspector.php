@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Summary;
 
 use Concrete\Core\Entity\Summary\Category;
@@ -29,7 +30,7 @@ class SummaryObjectInspector
         $this->entityManager = $entityManager;
     }
 
-    public function getCategoryMember(SummaryObjectInterface $summaryObject):? CategoryMemberInterface
+    public function getCategoryMember(SummaryObjectInterface $summaryObject): ?CategoryMemberInterface
     {
         if (!empty($this->memberMap[$summaryObject->getDataSourceCategoryHandle()][$summaryObject->getIdentifier()])) {
             return $this->memberMap[$summaryObject->getDataSourceCategoryHandle()][$summaryObject->getIdentifier()];
@@ -39,9 +40,13 @@ class SummaryObjectInspector
         $category = $r->findOneByHandle($summaryObject->getDataSourceCategoryHandle());
         if ($category) {
             $object = $category->getDriver()->getCategoryMemberFromIdentifier($summaryObject->getIdentifier());
-            $this->memberMap[$summaryObject->getDataSourceCategoryHandle()][$summaryObject->getIdentifier()] = $object;
-            return $object;
+            if ($object) {
+                $this->memberMap[$summaryObject->getDataSourceCategoryHandle()][$summaryObject->getIdentifier(
+                )] = $object;
+                return $object;
+            }
         }
+        return null;
     }
 
 }

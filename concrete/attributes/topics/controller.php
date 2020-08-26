@@ -207,21 +207,24 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->load();
         if (is_object($this->attributeValue)) {
             $valueIDs = [];
-            foreach ($this->attributeValue->getValueObject()->getSelectedTopics() as $value) {
-                $valueID = $value->getTreeNodeID();
-                $withinParentScope = false;
-                $nodeObj = TreeNode::getByID($value->getTreeNodeID());
-                if (is_object($nodeObj)) {
-                    $parentNodeArray = $nodeObj->getTreeNodeParentArray();
-                    // check to see if selected node is still within parent scope, in case it has been changed.
-                    foreach ($parentNodeArray as $parent) {
-                        if ($parent->treeNodeID == $this->akTopicParentNodeID) {
-                            $withinParentScope = true;
-                            break;
+            $valueObject = $this->attributeValue->getValueObject();
+            if ($valueObject) {
+                foreach ($valueObject->getSelectedTopics() as $value) {
+                    $valueID = $value->getTreeNodeID();
+                    $withinParentScope = false;
+                    $nodeObj = TreeNode::getByID($value->getTreeNodeID());
+                    if (is_object($nodeObj)) {
+                        $parentNodeArray = $nodeObj->getTreeNodeParentArray();
+                        // check to see if selected node is still within parent scope, in case it has been changed.
+                        foreach ($parentNodeArray as $parent) {
+                            if ($parent->treeNodeID == $this->akTopicParentNodeID) {
+                                $withinParentScope = true;
+                                break;
+                            }
                         }
-                    }
-                    if ($withinParentScope) {
-                        $valueIDs[] = $valueID;
+                        if ($withinParentScope) {
+                            $valueIDs[] = $valueID;
+                        }
                     }
                 }
             }
