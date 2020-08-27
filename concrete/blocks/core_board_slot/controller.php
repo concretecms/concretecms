@@ -48,7 +48,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $entityManager = $this->app->make(EntityManager::class);
         $renderer = $this->app->make(ContentRenderer::class);
         $collection = $renderer->denormalizeIntoCollection(json_decode($this->contentObjectCollection, true));
-        $template = $entityManager->find(SlotTemplate::class, $this->slotTemplateID);
+        $template = $entityManager->find(SlotTemplate::class, (int) $this->slotTemplateID);
         $this->set('dataCollection', $collection);
         $this->set('renderer', $renderer);
         $this->set('template', $template);
