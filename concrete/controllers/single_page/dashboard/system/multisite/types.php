@@ -2,12 +2,11 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multisite;
 
-use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Application\UserInterface\Sitemap\JsonFormatter;
 use Concrete\Core\Application\UserInterface\Sitemap\SkeletonSitemapProvider;
 use Concrete\Core\Attribute\Category\CategoryService;
-use Concrete\Core\Attribute\Category\SiteTypeCategory;
 use Concrete\Core\Controller\Traits\MultisiteRequiredTrait;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Site\Group\Group;
 use Concrete\Core\Entity\Site\Skeleton;
 use Concrete\Core\Entity\Site\SkeletonLocale;
@@ -22,6 +21,7 @@ use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Type\Skeleton\Service as SkeletonService;
 use Concrete\Core\Site\User\Group\Service;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class Types extends DashboardPageController
@@ -300,60 +300,23 @@ class Types extends DashboardPageController
 
             return $this->buildRedirect($this->action());
         }
+
         $this->setCurrentSiteType($type);
         $this->prepareSkelpeton($type, false);
-        $this->set('category', $this->app->make(CategoryService::class)->getByHandle('site_type'));
+
+        $category = $this->getCategoryObject();
+        $skeleton = $this->get('skeleton');
+
+        if ($skeleton !== null) {
+            $attributesView = $this->elementManager->get('attribute/editable_set_list', [$category, $skeleton]);
+            /** @var \Concrete\Controller\Element\Attribute\EditableSetList $controller */
+            $controller = $attributesView->getElementController();
+            $controller->setEditDialogURL(Url::to('/ccm/system/dialogs/site_type/attributes', $type->getSiteTypeID()));
+
+            $this->set('attributesView', $attributesView);
+        }
+
         $this->render('/dashboard/system/multisite/types/view_attributes');
-    }
-
-    public function update_attribute($id = null)
-    {
-        $id = (int) $id;
-        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
-        if ($type === null) {
-            throw new UserMessageException(t('The site type specified does not exist.'));
-        }
-        $sr = new EditResponse();
-        if (!$this->token->validate()) {
-            $sr->getError()->add($this->token->getErrorMessage());
-        }
-        $akID = (int) $this->request->request->get('name', $this->request->query->get('name'));
-        $ak = $akID === 0 ? null : $this->app->make(SiteTypeCategory::class)->getAttributeKeyByID($akID);
-        if ($ak === null) {
-            $sr->getError()->add(t('Invalid attribute key'));
-        }
-        if (!$sr->getError()->has()) {
-            $controller = $ak->getController();
-            $val = $controller->createAttributeValueFromRequest();
-            $val = $this->getTypeSkeleton($type)->setAttribute($ak, $val);
-            $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value', $val->getDisplayValue());
-        }
-
-        return $this->app->make(ResponseFactoryInterface::class)->json($sr);
-    }
-
-    public function clear_attribute($id = null)
-    {
-        $id = (int) $id;
-        $type = $id === 0 ? null : $this->app->make('site/type')->getByID($id);
-        if ($type === null) {
-            throw new UserMessageException(t('The site type specified does not exist.'));
-        }
-        $sr = new EditResponse();
-        if (!$this->token->validate()) {
-            $sr->getError()->add($this->token->getErrorMessage());
-        }
-        $akID = (int) $this->request->request->get('name', $this->request->query->get('akID'));
-        $ak = $akID === 0 ? null : $this->app->make(SiteTypeCategory::class)->getAttributeKeyByID($akID);
-        if (!$sr->getError()->has()) {
-            if ($ak !== null) {
-                $this->getTypeSkeleton($type)->clearAttribute($ak);
-            }
-            $sr->setMessage(t('Attribute cleared successfully.'));
-        }
-
-        return $this->app->make(ResponseFactoryInterface::class)->json($sr);
     }
 
     protected function prepareAddOrEdit(Type $type): void
@@ -440,5 +403,12 @@ class Types extends DashboardPageController
     protected function prepareSkelpeton(?Type $type, bool $createIfNotFound): void
     {
         $this->set('skeleton', $this->getTypeSkeleton($type, $createIfNotFound));
+    }
+
+    protected function getCategoryObject(): Category
+    {
+        $categoryService = $this->app->make(CategoryService::class);
+
+        return $categoryService->getByHandle('site_type');
     }
 }

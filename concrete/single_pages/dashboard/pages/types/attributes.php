@@ -1,33 +1,22 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Support\Facade\Url;
+
+/**
+ * @var Concrete\Core\Filesystem\Element $attributesView
+ * @var Concrete\Core\Page\Type\Type $pagetype
+ * @var Concrete\Core\View\View $view
+ */
+
+?>
 <p class="lead"><?= $pagetype->getPageTypeDisplayName() ?></p>
 
 <div class="alert alert-info"><?= t('Attributes set here will automatically be applied to new pages of that type.') ?></div>
-<div data-container="editable-fields">
-    <?php
-        View::element('attribute/editable_set_list', [
-            'category' => $category,
-            'object' => $defaultPage,
-            'saveAction' => $view->action('update_attribute', $pagetype->getPageTypeID()),
-            'clearAction' => $view->action('clear_attribute', $pagetype->getPageTypeID()),
-            'permissionsCallback' => function ($ak) {
-                return true;
-            },
-        ]);
-    ?>
-</div>
 
-
-<script type="text/javascript">
-    $(function() {
-        $('div[data-container=editable-fields]').concreteEditableFieldContainer({
-            url: '<?=$view->action('save', $pageTypeID); ?>',
-            data: {
-                ccm_token: '<?= app('helper/validation/token')->generate() ?>'
-            }
-        });
-    });
-</script>
+<?php
+    $attributesView->render();
+?>
 
 <div class="ccm-dashboard-header-buttons">
-    <a href="<?= URL::to('/dashboard/pages/types') ?>" class="btn btn-secondary"><?= t('Back to List') ?></a>
+    <a href="<?= Url::to('/dashboard/pages/types') ?>" class="btn btn-secondary"><?= t('Back to List') ?></a>
 </div>

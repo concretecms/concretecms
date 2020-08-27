@@ -1,10 +1,11 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var $selectedAttributes string
- * @var $selectAttributeUrl string
+ * @var array $attributes
+ * @var string $selectedAttributes
+ * @var string $selectAttributeUrl
  */
 ?>
 
@@ -13,7 +14,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div v-for="attribute in selectedAttributes" :key="attribute.akID">
         <div class="form-group">
             <a class="float-right ccm-hover-icon" href="#" @click.prevent="removeAttribute(attribute.akID)">
-                <i class="fa fa-minus-circle"></i></a>
+                <i class="fa fa-minus-circle"></i>
+            </a>
             <label class="control-label" :for="attribute.controlID">{{attribute.label}}</label>
             <div :id="'ccm-attribute-key-' + attribute.akID"></div>
             <input type="hidden" name="selectedKeys[]" :value="attribute.akID" />

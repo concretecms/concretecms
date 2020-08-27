@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Controller\Element\Attribute\Component;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ObjectSerializer;
+use Concrete\Core\Attribute\Key\Component\KeySelector\ObjectsSerializer;
 use Concrete\Core\Attribute\Key\Component\KeySelector\SetSerializer;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Controller\ElementController;
 
 class KeySelector extends ElementController
 {
-
     /**
      * @var string
      */
@@ -21,9 +22,14 @@ class KeySelector extends ElementController
     protected $category;
 
     /**
-     * @var ObjectInterface
+     * @var ObjectInterface[]
      */
-    protected $object;
+    protected $objects = [];
+
+    public function __construct(CategoryInterface $category)
+    {
+        $this->category = $category;
+    }
 
     public function getElement()
     {
@@ -47,36 +53,31 @@ class KeySelector extends ElementController
     }
 
     /**
-     * @return ObjectInterface
+     * @return ObjectInterface[]
      */
-    public function getObject(): ObjectInterface
+    public function getObjects(): array
     {
-        return $this->object;
+        return $this->objects;
     }
 
     /**
-     * @param ObjectInterface $object
+     * @param ObjectInterface[] $objects
      */
-    public function setObject(ObjectInterface $object): void
+    public function setObjects(array $objects): void
     {
-        $this->object = $object;
+        $this->objects = $objects;
     }
-
-    public function __construct(CategoryInterface $category)
-    {
-        $this->category = $category;
-    }
-
 
     public function view()
     {
         $serializer = new SetSerializer($this->category->getSetManager());
         $this->set('selectAttributeUrl', $this->selectAttributeUrl);
         $this->set('attributes', json_encode($serializer));
-        if ($this->object) {
-            $this->set('selectedAttributes', json_encode(
-                new ObjectSerializer($this->category, $this->object)
-            ));
-        }
+
+        $this->set('selectedAttributes', json_encode(
+            count($this->objects) === 1
+                ? new ObjectSerializer($this->category, head($this->objects))
+                : new ObjectsSerializer($this->category, $this->objects)
+        ));
     }
 }
