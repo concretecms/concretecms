@@ -47,6 +47,7 @@ class CsvWriterTest extends TestCase
         $this->assertSame([
             'publicIdentifier' => 'publicIdentifier',
             'ccm_date_created' => 'dateCreated',
+            'ccm_date_modified' => 'dateModified',
             'site' => 'site',
             'author_name' => 'authorName',
             'foo' => 'Foo',
@@ -58,6 +59,7 @@ class CsvWriterTest extends TestCase
             [
                 'publicIdentifier' => 'abc',
                 'ccm_date_created' => 'not now',
+                'ccm_date_modified' => 'not now',
                 'site' => 'foo',
                 'author_name' => 'author name',
                 'foo' => 'Foo value',
@@ -91,6 +93,7 @@ class CsvWriterTest extends TestCase
         $this->assertSame([
             'publicIdentifier' => 'publicIdentifier',
             'ccm_date_created' => 'dateCreated',
+            'ccm_date_modified' => 'dateModified',
             'site' => 'site',
             'author_name' => 'authorName',
             'foo' => 'Foo',
@@ -103,6 +106,7 @@ class CsvWriterTest extends TestCase
             [
                 'publicIdentifier' => 'abc',
                 'ccm_date_created' => 'not now',
+                'ccm_date_modified' => 'not now',
                 'site' => 'foo',
                 'author_name' => 'author name',
                 'foo' => 'Foo value',
@@ -154,6 +158,7 @@ class CsvWriterTest extends TestCase
         $author = M::mock(User::class);
         $author->shouldReceive('getUserInfoObject')->andReturn($userInfo);
         $entry->shouldReceive('getDateCreated')->andReturn($created);
+        $entry->shouldReceive('getDateModified')->andReturn($created->copy()->addDays(20));
         $entry->shouldReceive('getAuthor')->andReturn($author);
         $entry->shouldReceive('getAttributes')->andReturn($values);
         $entry->shouldReceive('getPublicIdentifier')->andReturn('abc');
