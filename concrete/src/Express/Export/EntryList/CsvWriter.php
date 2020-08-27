@@ -101,11 +101,11 @@ class CsvWriter
     private function projectEntry(Entry $entry)
     {
         $date = $entry->getDateCreated();
-        if ($date) {
-            yield 'ccm_date_created' => $this->dateFormatter->formatCustom($this->datetime_format, $date);
-        } else {
-            yield 'ccm_date_created' => null;
-        }
+        yield 'ccm_date_created' => $date ? $this->dateFormatter->formatCustom($this->datetime_format, $date) : null;
+
+        $date = $entry->getDateModified();
+        yield 'ccm_date_modified' => $date ? $this->dateFormatter->formatCustom($this->datetime_format, $date) : null;
+
         yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
         // Resolve the site
@@ -159,6 +159,7 @@ class CsvWriter
     {
         yield 'publicIdentifier' => 'publicIdentifier';
         yield 'ccm_date_created' => 'dateCreated';
+        yield 'ccm_date_modified' => 'dateModified';
         yield 'site' => 'site';
         yield 'author_name' => 'authorName';
 
