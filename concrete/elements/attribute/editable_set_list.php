@@ -28,7 +28,13 @@
         <dl class="ccm-attribute-display">
             <?php foreach ($set->getAttributeKeys() as $key) { ?>
                 <dt><?= $key->getAttributeKeyDisplayName() ?></dt>
-                <dd><?= $attributedObject->getAttribute($key, 'display') ?></dd>
+                <dd><?php
+                        $value = $attributedObject->getAttributeValueObject($key);
+                        if ($value !== null) {
+                            echo $value->getDisplayValue();
+                        }
+                    ?>
+                </dd>
             <?php } ?>
         </dl>
     <?php } ?>
@@ -42,7 +48,13 @@
         <dl class="ccm-attribute-display">
             <?php foreach ($unassigned as $key) { ?>
                 <dt><?= $key->getAttributeKeyDisplayName() ?></dt>
-                <dd><?= $attributedObject->getAttribute($key, 'display') ?></dd>
+                <dd><?php
+                    $value = $attributedObject->getAttributeValueObject($key);
+                    if ($value !== null) {
+                        echo $value->getDisplayValue();
+                    }
+                    ?>
+                </dd>
             <?php } ?>
         </dl>
     <?php } ?>
