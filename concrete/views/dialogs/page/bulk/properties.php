@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var Concrete\Controller\Dialog\Type\Attributes $controller
+ * @var Concrete\Controller\Dialog\Page\Bulk\Properties $controller
  * @var Concrete\Core\Filesystem\Element $keySelector
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Page\Page[] $pages
