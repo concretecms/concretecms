@@ -52,12 +52,17 @@ class ObjectsSerializer implements \JsonSerializable
 
         $data = [];
         foreach ($aks as $akID => $values) {
-            if (count(array_unique($values)) === 1) {
+            $filteredValues = array_filter($values);
+
+            // Check if all values are equals. if not, then we have multiple values for this attribute.
+            if (count(array_unique($filteredValues)) === 1 && count($filteredValues) === count($values)) {
                 $value = head($values);
                 $data[] = new KeySerializer($value->getAttributeKey(), $value);
             } else {
-                $value = current(array_filter($values));
-                $data[] = new KeySerializer($value->getAttributeKey(), null);
+                $value = current($filteredValues);
+                $keySerializer = new KeySerializer($value->getAttributeKey());
+                $keySerializer->setMultipleValues(true);
+                $data[] = $keySerializer;
             }
         }
 

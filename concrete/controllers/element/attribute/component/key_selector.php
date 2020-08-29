@@ -73,6 +73,7 @@ class KeySelector extends ElementController
         $serializer = new SetSerializer($this->category->getSetManager());
         $this->set('selectAttributeUrl', $this->selectAttributeUrl);
         $this->set('attributes', json_encode($serializer));
+        $this->set('isBulkMode', json_encode(count($this->objects) > 1));
 
         $this->set('selectedAttributes', json_encode(
             count($this->objects) === 1

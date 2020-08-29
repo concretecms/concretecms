@@ -45,7 +45,7 @@ class EditableSetList extends ElementController
     /**
      * @return UrlInterface
      */
-    public function getEditDialogURL(): UrlInterface
+    public function getEditDialogURL(): ?UrlInterface
     {
         return $this->editDialogURL;
     }
