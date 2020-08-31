@@ -12,6 +12,7 @@ use Exception;
 use Monolog\Logger;
 use Throwable;
 use Zend\Mail\Header\MessageId as MessageIdHeader;
+use Zend\Mail\Headers;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
@@ -578,7 +579,6 @@ class Service
         $fromStr = $this->generateEmailStrings([$this->from]);
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
-
         $mail = (new Message())->setEncoding(APP_CHARSET);
 
         if (is_array($this->from) && count($this->from)) {
@@ -705,7 +705,36 @@ class Service
             $l->write(t('Template Used') . ': ' . $this->template);
 
             if ($this->isBodyLoggingEnabled()) {
-                $l->write(t('Mail Details: %s', $mail->toString()));
+                // Clone the mail without attachments for logging
+                $mailWithoutAttachments = clone $mail;
+
+                $attachedFiles = [];
+
+                if ($mailWithoutAttachments->getBody() instanceof \Zend\Mime\Message) {
+                    $parts = $mailWithoutAttachments->getBody()->getParts();
+
+                    if (is_array($parts)) {
+                        foreach ($parts as $key => $part) {
+                            $partHeaders = $part->getHeadersArray();
+
+                            if (!(isset($partHeaders["disposition"]) && $partHeaders["disposition"] === Mime::DISPOSITION_ATTACHMENT)) {
+                                $attachedFiles[] = $part->getFileName();
+                                unset($parts[$key]);
+                            }
+                        }
+
+                        $mailWithoutAttachments->getBody()->setParts($parts);
+                    }
+                }
+
+                $mailDetails = $mailWithoutAttachments->toString();
+
+                // append the attached file names to the mail log
+                foreach($attachedFiles as $attachedFile) {
+                    $mailDetails .= t("[Attached File: %s]" , $attachedFile) . Headers::EOL;
+                }
+
+                $l->write(t('Mail Details: %s', $mailDetails));
             }
 
             $l->close();
