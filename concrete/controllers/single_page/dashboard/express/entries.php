@@ -276,6 +276,7 @@ class Entries extends DashboardSitePageController
      */
     public function csv_export($entityID = null, $searchMethod = null)
     {
+        set_time_limit(0);
         $r = $this->entityManager->getRepository(Entity::class);
         $entity = $r->findOneById($entityID);
         $permissions = new \Permissions($entity);
