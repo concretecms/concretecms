@@ -30,6 +30,7 @@ use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Url\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -113,10 +114,15 @@ class Entries extends DashboardSitePageController
             );
         }
 
-        $headerMenu->getElementController()->setExportURL(
-            $this->app->make('url/resolver/path')->resolve([
-                $this->getPageObject()->getCollectionPath(), 'csv_export', $entity->getEntityResultsNodeId()])
-        );
+        $exportArgs = [$this->getPageObject()->getCollectionPath(), 'csv_export', $entity->getID()];
+        if ($this->getAction() == 'advanced_search') {
+            $exportArgs[] = 'advanced_search';
+        }
+
+        $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
+        $query = Url::createFromServer($_SERVER)->getQuery();
+        $exportURL = $exportURL->setQuery($query);
+        $headerMenu->getElementController()->setExportURL($exportURL);
 
         $this->set('result', $result);
         $this->set('headerMenu', $headerMenu);
@@ -151,6 +157,19 @@ class Entries extends DashboardSitePageController
         }
     }
 
+    protected function createDefaultQuery(Entity $entity)
+    {
+        $fields = [
+            new SiteField()
+        ];
+        $keywordsField = $this->getSearchKeywordsField();
+        if ($keywordsField) {
+            $fields[] = $keywordsField;
+        }
+        $query = $this->getQueryFactory()->createQuery($this->getSearchProvider($entity), $fields);
+        return $query;
+    }
+
     public function view($entity = null, $folder = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -159,15 +178,8 @@ class Entries extends DashboardSitePageController
         }
         if (isset($entity) && is_object($entity)) {
             $this->set('entity', $entity);
-            $fields = [
-                new SiteField()
-            ];
-            $keywordsField = $this->getSearchKeywordsField();
-            if ($keywordsField) {
-                $fields[] = $keywordsField;
-            }
 
-            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider($entity), $fields);
+            $query = $this->createDefaultQuery($entity);
             $result = $this->createSearchResult($entity, $query);
             $this->set('pageTitle', tc(/*i18n: %s is an entity name*/'EntriesOfEntityName', '%s Entries', $entity->getName()));
             $this->renderSearchResult($result);
@@ -258,16 +270,14 @@ class Entries extends DashboardSitePageController
     /**
      * Export Express entries into a CSV.
      *
-     * @param int|null $treeNodeParentID
+     * @param int|null $entityID
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function csv_export($resultsNodeID = null)
+    public function csv_export($entityID = null, $searchMethod = null)
     {
-        $me = $this;
-        $node = Node::getByID($resultsNodeID);
         $r = $this->entityManager->getRepository(Entity::class);
-        $entity = $r->findOneByResultsNode($node);
+        $entity = $r->findOneById($entityID);
         $permissions = new \Permissions($entity);
         if (!$permissions->canViewExpressEntries()) {
             throw new \Exception(t('Access Denied'));
@@ -281,10 +291,19 @@ class Entries extends DashboardSitePageController
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
         $datetime_format = $config->get('concrete.export.csv.datetime_format');
 
-        return StreamedResponse::create(function () use ($entity, $me, $bom, $datetime_format) {
-            $entryList = new EntryList($entity);
-            $entryList->filterBySite($this->getSite());
+        if ($searchMethod == 'advanced_search') {
+            $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
+                $this->getSearchProvider($entity),
+                $this->request,
+                Request::METHOD_GET
+            );
+        } else {
+            $query = $this->createDefaultQuery($entity);
+        }
+        $result = $this->createSearchResult($entity, $query);
+        $entryList = $result->getItemListObject();
 
+        return StreamedResponse::create(function () use ($entity, $entryList, $bom, $datetime_format) {
             $writer = $this->app->make(CsvWriter::class, [
                 $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                 new Date()

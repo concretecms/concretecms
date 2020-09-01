@@ -9,6 +9,8 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
@@ -30,6 +32,10 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
 
     public function __construct(Entity $entity)
     {
+        $u = app(User::class);
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
         $this->category = $entity->getAttributeKeyCategory();
         $this->entity = $entity;
         $this->setItemsPerPage($entity->getItemsPerPage());
