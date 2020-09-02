@@ -15,6 +15,7 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
         $this->tables = array_merge($this->tables, [
             'Users',
             'PermissionAccessEntityTypes',
+            'Logs',
         ]);
     }
 
