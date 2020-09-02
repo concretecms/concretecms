@@ -30,6 +30,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'AttributeValues',
             'atNumber',
             'FileVersionLog',
+            'Logs',
         ]);
         $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\File\File',

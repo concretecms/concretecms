@@ -21,6 +21,7 @@ class FilesystemTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'TreeNodePermissionAssignments',
+        'Logs',
     ];
 
     public function setUp(): void

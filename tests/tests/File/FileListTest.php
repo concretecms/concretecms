@@ -30,6 +30,7 @@ class FileListTest extends FileStorageTestCase
             'FileSets',
             'FileVersionLog',
             'FileSetFiles',
+            'Logs'
         ]);
         $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
