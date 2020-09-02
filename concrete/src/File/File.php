@@ -7,6 +7,8 @@ use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Permission\Access\Entity\FileUploaderEntity as FileUploaderPermissionAccessEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Type\File as FileNode;
@@ -123,6 +125,9 @@ class File
         $em = $app->make(EntityManagerInterface::class);
         $em->persist($f);
         $em->flush();
+
+        $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_CONTENT);
+        $logger->notice(t("User Uploaded File {id:'%s'} '%s' successfully.", $f->getFileID(), $filename));
 
         $node = FileNode::add($f, $folder);
 

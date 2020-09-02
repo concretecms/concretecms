@@ -2,6 +2,8 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\File\Menu;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Menu\FileMenu;
@@ -77,6 +79,9 @@ class File extends TreeNode
         $f = $this->getTreeNodeFileObject();
         if (is_object($f)) {
             $f->delete(false);
+
+            $logger = app(LoggerFactory::class)->createLogger(Channels::CHANNEL_CONTENT);
+            $logger->notice(t("File {id:'%s'} '%s' has been deleted by user.", $f->getFileID(), $this->getTreeNodeDisplayName()));
         }
         $db = Loader::db();
         $db->Execute('delete from TreeFileNodes where treeNodeID = ?', array($this->treeNodeID));
