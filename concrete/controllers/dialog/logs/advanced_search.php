@@ -3,6 +3,8 @@
 namespace Concrete\Controller\Dialog\Logs;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
+use Concrete\Core\Entity\Search\SavedFileSearch;
+use Concrete\Core\Entity\Search\SavedLogSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Search\Field\ManagerFactory;
@@ -31,11 +33,11 @@ class AdvancedSearch extends AdvancedSearchController
         return $this->app->make('Concrete\Core\Logging\Search\SearchProvider');
     }
 
-    public function getSavedSearchEntity()
+    public function getSearchPresets()
     {
         $em = $this->app->make(EntityManager::class);
         if (is_object($em)) {
-            return $em->getRepository('Concrete\Core\Entity\Search\SavedLogSearch');
+            return $em->getRepository(SavedLogSearch::class)->findAll();
         }
 
         return null;
