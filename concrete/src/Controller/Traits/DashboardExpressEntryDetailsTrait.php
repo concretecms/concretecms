@@ -253,8 +253,8 @@ trait DashboardExpressEntryDetailsTrait
                     $this->flash(
                         'success',
                         tc(/*i18n: %s is an Express entity name*/'Express', 'New record %s added successfully.', $entity->getEntityDisplayName())
-                        . '<br />'
-                        . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
+                        . '<br /><br />'
+                        . '<a class="btn btn-secondary" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
                     );
                     if (is_object($entry->getOwnedByEntry())) {

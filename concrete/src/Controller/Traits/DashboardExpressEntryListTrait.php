@@ -40,6 +40,8 @@ trait DashboardExpressEntryListTrait
      */
     abstract public function getPageObject();
 
+    abstract protected function getHeaderSearchAction(Entity $entity);
+
     protected function getAdvancedSearchDialogPath()
     {
         return '/ccm/system/dialogs/express/advanced_search/';
@@ -165,9 +167,8 @@ trait DashboardExpressEntryListTrait
             $exportArgs[] = 'advanced_search';
         }
 
-        $this->headerSearch->getElementController()->setHeaderSearchAction(
-            $this->app->make('url')->to($this->getPageObject()->getCollectionPath(), 'results', $entity->getID())
-        );
+        $this->headerSearch->getElementController()->setHeaderSearchAction($this->getHeaderSearchAction($entity));
+
         $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
         $query = Url::createFromServer($_SERVER)->getQuery();
         $exportURL = $exportURL->setQuery($query);
@@ -185,19 +186,25 @@ trait DashboardExpressEntryListTrait
         $this->render('/dashboard/express/entries/entries', false);
     }
 
-    public function advanced_search($entity)
+    protected function renderExpressEntryDefaultResults(Entity $entity)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        if ($entity) {
-            $entity = $r->findOneById($entity);
-        }
-        if ($entity) {
-            $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
-                $this->getSearchProvider($entity), $this->request, Request::METHOD_GET
-            );
-            $result = $this->createSearchResult($entity, $query);
-            $this->renderSearchResult($result);
-        }
+        $this->set('entity', $entity);
+        $query = $this->createDefaultQuery($entity);
+        $result = $this->createSearchResult($entity, $query);
+        $this->set(
+            'pageTitle',
+            tc(/*i18n: %s is an entity name*/ 'EntriesOfEntityName', '%s Entries', $entity->getName())
+        );
+        $this->renderSearchResult($result);
+    }
+
+    protected function renderExpressEntryAdvancedSearchResults(Entity $entity)
+    {
+        $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
+            $this->getSearchProvider($entity), $this->request, Request::METHOD_GET
+        );
+        $result = $this->createSearchResult($entity, $query);
+        $this->renderSearchResult($result);
     }
 
     public function preset($presetID = null)
@@ -218,39 +225,15 @@ trait DashboardExpressEntryListTrait
         $this->view();
     }
 
-    public function results($entityID = null)
-    {
-        $r = $this->entityManager->getRepository(Entity::class);
-        if ($entityID) {
-            $entity = $r->findOneById($entityID);
-        }
-        if ($entity) {
-            $this->set('entity', $entity);
-
-            $query = $this->createDefaultQuery($entity);
-            $result = $this->createSearchResult($entity, $query);
-            $this->set(
-                'pageTitle',
-                tc(/*i18n: %s is an entity name*/ 'EntriesOfEntityName', '%s Entries', $entity->getName())
-            );
-            $this->renderSearchResult($result);
-        } else {
-            throw new UserMessageException(t('Invalid express entity ID.'));
-        }
-    }
-
     /**
      * Export Express entries into a CSV.
      *
-     * @param int|null $entityID
-     *
+     * @param Entity $entity
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function csv_export($entityID = null, $searchMethod = null)
+    protected function exportCsv(Entity $entity, $searchMethod = null)
     {
         set_time_limit(0);
-        $r = $this->entityManager->getRepository(Entity::class);
-        $entity = $r->findOneById($entityID);
         $permissions = new \Permissions($entity);
         if (!$permissions->canViewExpressEntries()) {
             throw new \Exception(t('Access Denied'));

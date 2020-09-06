@@ -2,13 +2,13 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
 use Concrete\Core\Controller\Traits\DashboardExpressEntryDetailsTrait;
-use Concrete\Core\Controller\Traits\DashboardExpressEntryListTrait;
+use Concrete\Core\Controller\Traits\DashboardSelectableExpressEntryListTrait;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 
 class Entries extends DashboardSitePageController
 {
 
-    use DashboardExpressEntryListTrait;
+    use DashboardSelectableExpressEntryListTrait;
     use DashboardExpressEntryDetailsTrait;
 
     public function view()
