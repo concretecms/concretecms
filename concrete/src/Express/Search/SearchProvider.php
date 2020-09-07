@@ -126,6 +126,8 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getSavedSearch()
     {
-        return new SavedExpressSearch();
+        $search = new SavedExpressSearch();
+        $search->setEntity($this->getEntity());
+        return $search;
     }
 }
