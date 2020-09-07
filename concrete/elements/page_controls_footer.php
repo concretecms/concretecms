@@ -1,4 +1,8 @@
 <?php
+
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
@@ -15,6 +19,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     $token = '&' . $valt->getParameter();
     $cID = $c->getCollectionID();
     $permissions = new Permissions($c);
+    $resolver = $app->make(ResolverManagerInterface::class);
 
     $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
 
@@ -36,10 +41,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
-            <?php
-            $mobileMenu = Element::get('dashboard/navigation/mobile');
-            $mobileMenu->render();
-            ?>
+						<?php
+              $mobileMenu = Element::get('dashboard/navigation/mobile');
+              $mobileMenu->render();
+            ?> 
             <ul class="ccm-toolbar-item-list">
                 <li class="ccm-logo float-left"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
                 <?php
@@ -79,7 +84,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
-                                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
+                                href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $valt->generate()])) ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
                                 <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
@@ -130,7 +135,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
-                            <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
+                            <a href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/add-block/" . $valt->generate()])) ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
                                 <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
@@ -287,7 +292,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 if (!isset($appLabel) || !$appLabel) {
                                     $appLabel = t('Approve Version');
                                 }
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary">' . $appLabel . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/approve_recent/{$cID}/" . $valt->generate()])) . '" class="btn btn-primary">' . $appLabel . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Page is Pending Approval.'),
@@ -305,8 +310,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
                             $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=cancel-schedule' . $token . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/publish_now/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/cancel_schedule/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Publish Pending.'),

@@ -37,7 +37,8 @@ $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 
 
 $dh = $app->make('helper/concrete/dashboard');
- $valt = $app->make('helper/validation/token');
+$valt = $app->make('helper/validation/token');
+$vo = $c->getVersionObject();
      
 ?>
             <div class="ccm-mobile-menu-overlay d-md-none" style="height: calc(100vh - 48px)">
