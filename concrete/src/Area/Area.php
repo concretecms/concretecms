@@ -1,10 +1,15 @@
 <?php
 namespace Concrete\Core\Area;
 
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Support\Facade\Application;
 use Core;
 use Database;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
+use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use PermissionKey;
 use View;
 use Permissions;
@@ -805,7 +810,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      * displays the Area in the page
      * ex: $a = new Area('Main'); $a->display($c);.
      *
-     * @param Page $c
+     * @param \Concrete\Core\Page\Page|bool $c
      * @param Block[] $alternateBlockArray optional array of blocks to render instead of default behavior
      *
      * @return bool
@@ -819,6 +824,45 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         if (!is_object($c) || $c->isError()) {
             return false;
+        }
+
+        if (!$c->isAdminArea()) {
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
+
+            try {
+
+                /*
+                 * We need to track all rendered areas with the associated theme, page type, page id etc. to be able to
+                 * determinate the orphaned blocks and areas for a specific page.
+                 *
+                 * Therefore the table "UsedAreas" was created in db.xml and added to migration 20200818000002.
+                 *
+                 * To get the all orphaned blocks from a given page you can use $page->getOrphanedBlockIds().
+                 */
+
+                $db->insert("UsedAreas", [
+                    "cID" => $c->getCollectionID(),
+                    "cvID" => $c->getVersionID(),
+                    "arHandle" => $this->getAreaHandle(),
+                    "pThemeID" => $c->getCollectionThemeID(),
+                    "pTemplateID" => $c->getPageTemplateID(),
+                    "ptID" => $c->getPageTypeID()
+                ], [
+                    ParameterType::INTEGER,
+                    ParameterType::INTEGER,
+                    ParameterType::STRING,
+                    ParameterType::INTEGER,
+                    ParameterType::INTEGER,
+                    ParameterType::INTEGER
+                ]);
+
+            } catch (TableNotFoundException $exception) {
+                // table not found => maybe this is run before the migration is complete
+            } catch (UniqueConstraintViolationException $exception) {
+                // Ignore => the item already exists in database.
+            }
         }
 
         $this->load($c);

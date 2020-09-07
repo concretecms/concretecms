@@ -62,6 +62,32 @@
     </index>
   </table>
 
+  <table name="UsedAreas">
+    <field name="cID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="cvID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="arHandle" type="string" size="255">
+      <key/>
+    </field>
+    <field name="pThemeID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="pTemplateID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="ptID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+    </field>
+  </table>
+
   <table name="PageTypePageTemplates">
     <field name="ptID" type="integer" size="10">
       <unsigned/>

@@ -1,6 +1,8 @@
 <?php
 
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validation\CSRF\Token;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -27,6 +29,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     case 'containers':
                         print t('Containers');
                         break;
+                    case 'orphaned_blocks':
+                        print t('Orphaned Blocks');
+                        break;
                     case 'stacks':
                         print t('Stacks');
                         break;
@@ -40,10 +45,22 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 ?>
             </h4>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#" data-panel-dropdown-tab="blocks">Blocks</a>
-                <a class="dropdown-item" href="#" data-panel-dropdown-tab="clipboard">Clipboard</a>
-                <a class="dropdown-item" href="#" data-panel-dropdown-tab="stacks">Stacks</a>
-                <a class="dropdown-item" href="#" data-panel-dropdown-tab="containers">Containers</a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="blocks">
+                    <?php echo t("Blocks"); ?>
+                </a>
+
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="orphaned_blocks">
+                    <?php echo t("Orphaned Blocks"); ?>
+                </a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="clipboard">
+                    <?php echo t("Clipboard"); ?>
+                </a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="stacks">
+                    <?php echo t("Stacks"); ?>
+                </a>
+                <a class="dropdown-item" href="#" data-panel-dropdown-tab="containers">
+                    <?php echo t("Containers"); ?>
+                </a>
             </div>
         </div>
     </header>
@@ -60,21 +77,21 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     ?>
                     <li>
                         <a
-                            href="#"
-                            class="ccm-panel-add-container-item"
-                            data-panel-add-block-drag-item="container"
-                            data-cID="<?= (int) $c->getCollectionID() ?>"
-                            data-container-id="<?=$container->getContainerID() ?>"
-                            data-block-type-handle="core_container"
-                            data-has-add-template="0"
-                            data-supports-inline-add="0"
-                            data-btID="0"
-                            data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">' . $container->getContainerIconImage() . '</div><p><span>' . $container->getContainerName() . '</span></p>') ?>"
+                                href="#"
+                                class="ccm-panel-add-container-item"
+                                data-panel-add-block-drag-item="container"
+                                data-cID="<?= (int) $c->getCollectionID() ?>"
+                                data-container-id="<?=$container->getContainerID() ?>"
+                                data-block-type-handle="core_container"
+                                data-has-add-template="0"
+                                data-supports-inline-add="0"
+                                data-btID="0"
+                                data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">' . $container->getContainerIconImage() . '</div><p><span>' . $container->getContainerName() . '</span></p>') ?>"
                         >
-                        <!-- <span class="handle"> -->
+                            <!-- <span class="handle"> -->
                             <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="<?=$container->getContainerIconImage(false)?>" /></div>
-                                <p><span><?= h($container->getContainerName()) ?></span></p>
-                        <!-- </span> -->
+                            <p><span><?= h($container->getContainerName()) ?></span></p>
+                            <!-- </span> -->
                         </a>
                     </li>
                     <?php
@@ -85,23 +102,23 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <script>
 
         </script>
-    <?php
-    break;
+        <?php
+        break;
 
-        case 'stacks':
-            /* @var Concrete\Core\Page\Stack\Stack[] $stacks */
+    case 'stacks':
+        /* @var Concrete\Core\Page\Stack\Stack[] $stacks */
+        ?>
+        <div id="ccm-panel-add-block-stack-list">
+            <?php
+            View::element('panels/add/stack_list', ['stacks' => $stacks, 'c' => $c]);
             ?>
-            <div id="ccm-panel-add-block-stack-list">
-                <?php
-                    View::element('panels/add/stack_list', ['stacks' => $stacks, 'c' => $c]);
-                ?>
-            </div>
-            <script>
+        </div>
+        <script>
             $('#ccm-panel-add-block-stack-list').on('click', 'div.ccm-panel-add-block-stack-item', function () {
                 var $stack = $(this);
                 if ($stack.data('ccm-stack-content-loaded')) {
-                	$stack.toggleClass('ccm-panel-add-block-stack-item-expanded');
-                	$stack.data('ccm-stack-content-loaded').toggle($stack.hasClass('ccm-panel-add-block-stack-item-expanded'));
+                    $stack.toggleClass('ccm-panel-add-block-stack-item-expanded');
+                    $stack.data('ccm-stack-content-loaded').toggle($stack.hasClass('ccm-panel-add-block-stack-item-expanded'));
                     return;
                 }
                 if ($stack.hasClass('ccm-panel-add-block-stack-item-expanded')) {
@@ -157,121 +174,296 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     }
                 })
             });
-            </script>
-            <?php
-            break;
+        </script>
+        <?php
+        break;
 
-        case 'clipboard':
-            /* @var Concrete\Core\Page\Stack\Pile\PileContent[] $contents */
+    case 'clipboard':
+        ?>
+        <div id="ccm-panel-add-clipboard-block-list">
+            <?php
+                $app = Application::getFacadeApplication();
+                /** @var Token $token */
+                $token = $app->make(Token::class);
+                $pileToken = $token->generate('tools/clipboard/from');
             ?>
-            <div id="ccm-panel-add-clipboard-block-list">
-                <?php
-                $pileToken = Core::make('token')->generate('tools/clipboard/from');
-                foreach ($contents as $pile_content) {
-                    $block = Block::getByID($pile_content->getItemID());
-                    if (!$block || !is_object($block) || $block->isError()) {
-                        continue;
-                    }
-                    $type = $block->getBlockTypeObject();
-                    $icon = $ci->getBlockTypeIconURL($type);
-                    ?>
+
+            <div id="ccm-clipboard-container">
+                <?php echo t("Loading..."); ?>
+            </div>
+
+            <script type="text/template" id="ccm-clipboard-template">
+                <%_.forEach(results, function (result) {%>
                     <div
                         class="ccm-panel-add-clipboard-block-item"
                         data-event="duplicate"
                         data-panel-add-block-drag-item="clipboard-item"
-                        data-name="<?= h($type->getBlockTypeName()) ?>"
-                        data-cID="<?= $c->getCollectionID() ?>"
-                        data-token="<?= $pileToken ?>"
-                        data-block-type-handle="<?= $type->getBlockTypeHandle() ?>"
-                        data-dialog-title="<?= t('Add %s', t($type->getBlockTypeName())) ?>"
-                        data-dialog-width="<?= $type->getBlockTypeInterfaceWidth() ?>"
-                        data-dialog-height="<?= $type->getBlockTypeInterfaceHeight() ?>"
-                        data-has-add-template="<?= $type->hasAddTemplate() ?>"
-                        data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
-                        data-btID="<?= $type->getBlockTypeID() ?>"
-                        data-pcID="<?= $pile_content->getPileContentID() ?>"
-                        data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
-                        data-block-id="<?= (int) ($block->getBlockID()) ?>"
+                        data-name="<%=result.name%>"
+                        data-cID="<?php echo $c->getCollectionID() ?>"
+                        data-token="<?php echo $pileToken ?>"
+                        data-block-type-handle="<%=result.handle%>"
+                        data-dialog-title="<%=result.dialogTitle%>"
+                        data-dialog-width="<%=result.dialogWidth%>"
+                        data-dialog-height="<%=result.dialogHeight%>"
+                        data-has-add-template="<%=result.hasAddTemplate%>"
+                        data-supports-inline-add="<%=result.supportsInlineAdd%>"
+                        data-btID="<%=result.blockTypeId%>"
+                        data-pcID="<%=result.pileContentId%>"
+                        data-dragging-avatar="<%=result.draggingAvatar%>"
+                        data-block-id="<%=result.blockId%>"
                     >
-
                         <div class="block-content">
                             <div class="block-name float-left">
-                                <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
+                                <span class="handle">
+                                    <%=result.name%>
+                                </span>
                             </div>
+
                             <div class="delete float-right">
-                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger"><?= t('Delete') ?></button>
+                                <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger">
+                                    <?php echo t('Delete') ?>
+                                </button>
                             </div>
 
                             <div class="blocks">
-                                <div class="block ccm-panel-add-block-draggable-block-type" title="<?= t($type->getBlockTypeName()) ?>">
+                                <div class="block ccm-panel-add-block-draggable-block-type" title="<%=result.name%>">
                                     <div class="block-content">
-                                        <?php
-                                        $bv = new BlockView($block);
-                                        $bv->render('scrapbook');
-                                        ?>
+                                        <%=result.blockContent%>
                                     </div>
+
                                     <div class="block-handle"></div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                    <?php
-                }
-                ?>
-                <script>
-                $('button.ccm-delete-clipboard-item').unbind().click(function (e) {
-                    e.preventDefault();
-                    var me = $(this),
-                        item = me.closest('.ccm-panel-add-clipboard-block-item');
+                <%})%>
 
-                    $.post(CCM_TOOLS_PATH + '/pile_manager', {
-                        task: 'delete',
-                        pcID: item.data('pcid'),
-                        cID: item.data('cid'),
-                        ccm_token: item.data('token')
-                    }, function () {
-                        item.remove();
-                    }).fail(function (data) {
-                        alert("<?= t('An error occurred while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
+                <% if (displayPagination) { %>
+                    <div class="d-flex"">
+                        <nav class="mx-auto">
+                            <ul class="pagination">
+                                <li class="page-item<% if (!hasPrev) { %> disabled<% } %>">
+                                    <a class="prev page-link<% if (!hasPrev) { %> disabled<% } %>" href="javascript:void(0);" aria-label="<?php echo t("Previous"); ?>">
+                                        <span aria-hidden="true">&laquo;</span>
+
+                                        <span class="sr-only">
+                                            <?php echo t("Previous"); ?>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li class="page-item<% if (!hasNext) { %> disabled<% } %>">
+                                    <a class="next page-link<% if (!hasNext) { %> disabled<% } %>" href="javascript:void(0);" aria-label="<?php echo t("Next"); ?>">
+                                        <span aria-hidden="true">&raquo;</span>
+
+                                        <span class="sr-only">
+                                            <?php echo t("Next"); ?>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                <% } %>
+            </script>
+
+            <script>
+                (function($) {
+                    $(function(){
+                        var curPage = 0;
+
+                        var loadClipboardItems = function() {
+                            $.fn.dialog.showLoader();
+
+                            $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/panels/add/get_clipboard_contents', {
+                                cID: <?php echo $c->getCollectionID(); ?>,
+                                curPage: curPage
+                            }, function (json) {
+                                var templateHtml = $("#ccm-clipboard-template").html();
+                                var html = _.template(templateHtml)(json);
+                                var $container = $("#ccm-clipboard-container");
+
+                                $container.html(html);
+
+                                $container.find("a.prev").on("click", function () {
+                                    curPage--;
+                                    loadClipboardItems();
+                                });
+
+                                $container.find("a.next").on("click", function () {
+                                    curPage++;
+                                    loadClipboardItems();
+                                });
+
+                                $container.find('div.ccm-panel-add-clipboard-block-item').each(function () {
+                                    new Concrete.DuplicateBlock($(this), window.concreteEditMode, window.concreteEditMode.getNextBlockArea())
+                                })
+
+                                $container.find('.ccm-delete-clipboard-item').click(function (e) {
+                                    e.preventDefault();
+
+                                    var me = $(this),
+                                        item = me.closest('.ccm-panel-add-clipboard-block-item');
+
+                                    $.post(CCM_TOOLS_PATH + '/pile_manager', {
+                                        task: 'delete',
+                                        pcID: item.data('pcid'),
+                                        cID: item.data('cid'),
+                                        ccm_token: item.data('token')
+                                    }, function () {
+                                        loadClipboardItems();
+                                    }).fail(function (data) {
+                                        alert("<?php echo t('An error occurred while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
+                                    });
+                                    return false;
+                                });
+
+                                $.fn.dialog.hideLoader();
+                            });
+                        };
+
+                        loadClipboardItems();
                     });
-                    return false;
-                });
-                </script>
-            </div>
-            <?php
-            break;
+                })(jQuery);
+            </script>
+        </div>
+        <?php
+        break;
 
-        case 'blocks':
-            /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
-            ?>
-            <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
-                <?php
-                $i = 0;
-                foreach ($blockTypesForSets as $setName => $blockTypes) {
-                    $i++;
-                    ?>
-                    <div class="ccm-panel-add-block-set">
-                        <header
-                            data-toggle="collapse"
-                            data-target="#ccm-block-set-<?= $i ?>"
-                            aria-expanded="true"
-                            aria-controls="ccm-block-set-<?= $i ?>"
-                        >
-                            <?= $setName ?><i class="fa fa-chevron-up float-right"></i>
-                        </header>
-                        <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
+    case 'orphaned_blocks':
+        /* @var array $orphanedAreas */
+        $i = 0;
+
+        /*
+         * Unfortunately it is not possible to render the orphaned blocks (e.g. with the scrapbook template like in the
+         * clipboard panel). This is because the block has no more valid area which is required for rendering, when the
+         * block is orphaned. Therefore the same view for displaying the orphaned blocks is used like in the add blocks
+         * panel. For removing the orphaned blocks for the current page there is a remove button at the bottom of the
+         * panel. This button removes all orphaned blocks at once.
+         */
+        ?>
+
+        <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
+            <?php foreach($orphanedAreas as $arHandle => $orphanedBlocks) { ?>
+                <?php $i++; ?>
+
+                <div class="ccm-panel-add-block-set">
+                    <header
+                        data-toggle="collapse"
+                        data-target="#ccm-block-set-<?php echo $i ?>"
+                        aria-expanded="true"
+                        aria-controls="ccm-block-set-<?php echo $i ?>"
+                    >
+                        <?php echo $arHandle ?>
+
+                        <i class="fa fa-chevron-up float-right"></i>
+                    </header>
+
+                    <div id="ccm-block-set-<?php echo $i ?>" class="ccm-block-set collapse show">
+
                         <?php
-                            // This class is added to help align the last row when it contains less than 3 elements
-                            $justifyLastRowClass= (count($blockTypes) % 3) > 0 ? 'ccm-flex-align-last-row' : '';
+                        // This class is added to help align the last row when it contains less than 3 elements
+                        $justifyLastRowClass= (count($orphanedBlocks) % 3) > 0 ? 'ccm-flex-align-last-row' : '';
                         ?>
                         <ul class="d-flex flex-row flex-wrap justify-content-between <?= $justifyLastRowClass; ?>">
-                            <?php
-                            foreach ($blockTypes as $bt) {
-                                $btIcon = $ci->getBlockTypeIconURL($bt);
+                            <?php foreach($orphanedBlocks as $orphanedBlock) { ?>
+                                <?php
+                                    $block = \Concrete\Core\Block\Block::getByID($orphanedBlock["bID"]);
+
+                                    if (!$block || !is_object($block) || $block->isError()) {
+                                        continue;
+                                    }
+
+                                    /** @var \Concrete\Core\Entity\Block\BlockType\BlockType $bt */
+                                    $bt = $block->getBlockTypeObject();
+                                    $btIcon = $ci->getBlockTypeIconURL($bt);
                                 ?>
+
                                 <li>
                                     <a
+                                            class="ccm-panel-add-orphaned-block"
+                                            data-cID="<?php echo h($c->getCollectionID()) ?>"
+                                            data-block-id="<?php echo h($orphanedBlock["bID"]); ?>"
+                                            data-source-area-handle="<?php echo h($orphanedBlock["arID"]); ?>"
+                                            data-block-type-handle="<?php echo h($bt->getBlockTypeHandle()) ?>"
+                                            title="<?php echo h(t($bt->getBlockTypeName())) ?>"
+                                            href="javascript:void(0)">
+
+                                        <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center">
+                                            <!--suppress HtmlRequiredAltAttribute -->
+                                            <img src="<?php echo $btIcon ?>"/>
+                                        </div>
+
+                                        <p>
+                                            <span>
+                                                <?php echo t($bt->getBlockTypeInSetName()) ?>
+                                            </span>
+                                        </p>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+
+        <a href="javascript:void(0);" class="btn-info btn-block btn btn-large btn-danger ccm-delete-orphaned-blocks">
+            <?php echo t('Remove all orphaned blocks') ?>
+        </a>
+
+        <script>
+            $('a.ccm-delete-orphaned-blocks').unbind().click(function (e) {
+                e.preventDefault();
+
+                $.concreteAjax({
+                    url: '<?php echo \Concrete\Core\Support\Facade\Url::to('/ccm/system/panels/add/remove_orphaned_blocks')->setQuery(["cID" => $c->getCollectionID()]) ?>',
+                    success: function (r) {
+                        ConcreteAlert.notify({
+                            message: r.message,
+                            title: r.title
+                        });
+
+                        $("#ccm-panel-add-blocktypes-list").html("");
+                    }
+                });
+
+                return false;
+            });
+        </script>
+
+        <?php
+        break;
+    case 'blocks':
+    /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
+    ?>
+    <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
+        <?php
+        $i = 0;
+        foreach ($blockTypesForSets as $setName => $blockTypes) {
+            $i++;
+            ?>
+            <div class="ccm-panel-add-block-set">
+                <header
+                        data-toggle="collapse"
+                        data-target="#ccm-block-set-<?= $i ?>"
+                        aria-expanded="true"
+                        aria-controls="ccm-block-set-<?= $i ?>"
+                >
+                    <?= $setName ?><i class="fa fa-chevron-up float-right"></i>
+                </header>
+                <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
+                    <?php
+                    // This class is added to help align the last row when it contains less than 3 elements
+                    $justifyLastRowClass= (count($blockTypes) % 3) > 0 ? 'ccm-flex-align-last-row' : '';
+                    ?>
+                    <ul class="d-flex flex-row flex-wrap justify-content-between <?= $justifyLastRowClass; ?>">
+                        <?php
+                        foreach ($blockTypes as $bt) {
+                            $btIcon = $ci->getBlockTypeIconURL($bt);
+                            ?>
+                            <li>
+                                <a
                                         data-panel-add-block-drag-item="block"
                                         class="ccm-panel-add-block-draggable-block-type"
                                         data-cID="<?= $c->getCollectionID() ?>"
@@ -285,36 +477,36 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                         data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $btIcon . '" /></div><p><span>' . t($bt->getBlockTypeInSetName()) . '</span></p>') ?>"
                                         title="<?= t($bt->getBlockTypeName()) ?>"
                                         href="javascript:void(0)"
-                                    >
-                                        <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="<?= $btIcon ?>"/></div>
-                                        <p><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
-                                    </a>
-                                </li>
-                                <?php
-                            }
-                            ?>
-                        </ul>
-                        </div>
-                    </div>
-                    <?php
-                }
-                $p = new Permissions();
-                if (Config::get('concrete.marketplace.enabled') && $p->canInstallPackages()) {
-                    ?>
-                    <div class="ccm-marketplace-btn-wrapper">
-                        <button
-                            type="button"
-                            onclick="window.location.href='<?= URL::to('/dashboard/extend/addons') ?>'"
-                            class="btn-info btn-block btn btn-large"
-                        ><?= t('Get More Blocks') ?></button>
-                    </div>
-                    <?php
-                }
-                ?>
+                                >
+                                    <div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="<?= $btIcon ?>"/></div>
+                                    <p><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
+                                </a>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
             </div>
-        </section>
-        <?php
-        break;
+            <?php
+        }
+        $p = new Permissions();
+        if (Config::get('concrete.marketplace.enabled') && $p->canInstallPackages()) {
+            ?>
+            <div class="ccm-marketplace-btn-wrapper">
+                <button
+                        type="button"
+                        onclick="window.location.href='<?= URL::to('/dashboard/extend/addons') ?>'"
+                        class="btn-info btn-block btn btn-large"
+                ><?= t('Get More Blocks') ?></button>
+            </div>
+            <?php
+        }
+        ?>
+    </div>
+</section>
+<?php
+break;
 }
 ?>
 

@@ -399,6 +399,22 @@ return [
             ],
         ],
 
+        'bootstrap' => [
+            [
+                'javascript',
+                'js/bootstrap.js',
+                [
+                    'position' => Asset::ASSET_POSITION_FOOTER,
+                    'version' => '4.0.0'
+                ]
+            ]
+        ],
+
+        'moment' => [
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
+        ],
+
         // This is the base CKEditor library from CKEditor
         'ckeditor' => [
             [
@@ -528,6 +544,19 @@ return [
             ],
         ],
 
+        'bootstrap' => [
+            [
+                ['javascript', 'bootstrap']
+            ],
+        ],
+
+        'moment' => [
+            [
+                ['javascript', 'moment'],
+                ['javascript-localized', 'moment'],
+            ],
+        ],
+
         'vue' => [
             [
                 ['javascript', 'vue'],
@@ -555,6 +584,8 @@ return [
         'core/cms' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'bootstrap'],
+                ['javascript', 'moment'],
                 ['javascript', 'vue'],
                 ['css', 'font-awesome'],
                 ['javascript', 'core/cms'],

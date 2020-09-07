@@ -10,6 +10,7 @@ use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
@@ -896,6 +897,127 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
 
         return $blocks;
+    }
+
+    /**
+     *
+     */
+    public function getOrphanedBlockIdsGroupedByAreaHandle() {
+        $groupedBlocks = [];
+
+        foreach($this->getOrphanedBlockIds() as $row) {
+            if (!isset($groupedBlocks[$row["arHandle"]])) {
+                $groupedBlocks[$row["arHandle"]] = [];
+            }
+
+            $groupedBlocks[$row["arHandle"]][] = $row;
+        }
+
+        return $groupedBlocks;
+    }
+
+    /**
+     * Get a collection of all orphaned blocks used on this page.
+     * 
+     * @return array
+     */
+    public function getOrphanedBlockIds() {
+        $orphanedBlockIds = [];
+
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        
+        /*
+         * Get all areas from database for the current page.
+         */
+
+        $availableAreas = [];
+
+        $queryBuilder = $db->createQueryBuilder()
+            ->select("a.arHandle")
+            ->from("Areas", "a")
+            ->where("a.cID = :pageId")
+            ->setParameter("pageId", $this->getCollectionID());
+
+        $rows = $queryBuilder->execute()->fetchAll();
+
+        foreach ($rows as $row) {
+            $availableAreas[] = $row["arHandle"];
+        }
+
+        /*
+         * Get all used areas for the current page
+         */
+
+        $usedAreas = [];
+
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        $queryBuilder = $queryBuilder
+            ->resetQueryParts()
+            ->select("ua.arHandle")
+            ->from("UsedAreas", "ua")
+            ->where("ua.cID = :pageId")
+            ->andWhere("ua.cvID = :pageVersionId")
+            ->andWhere("ua.pThemeID = :themeId")
+            ->andWhere("ua.pTemplateID = :templateId")
+            ->andWhere("ua.ptID = :pageTypeId")
+            ->setParameter("pageId", $this->getCollectionID())
+            ->setParameter("pageVersionId", $this->getVersionID())
+            ->setParameter("themeId", $this->getCollectionThemeID())
+            ->setParameter("templateId", $this->getPageTemplateID())
+            ->setParameter("pageTypeId", $this->getPageTypeID());
+
+        $rows = $queryBuilder->execute()->fetchAll();
+
+        foreach ($rows as $row) {
+            $usedAreas[] = $row["arHandle"];
+        }
+
+        /*
+         * Calculate the orphaned areas
+         */
+
+        $orphanedAreas = [];
+
+        foreach($availableAreas as $availableArea) {
+            if (!in_array($availableArea, $usedAreas)) {
+                $orphanedAreas[] = $availableArea;
+            }
+        }
+
+        /*
+         * Get all blocks from database for all orphaned areas of the current page.
+         */
+
+        $queryBuilder = $queryBuilder
+            ->resetQueryParts()
+            ->select("cvb.bID, cvb.arHandle, a.arID")
+            ->from("CollectionVersionBlocks", "cvb")
+            ->leftJoin("cvb", "Blocks", "b", "cvb.bID = b.bID")
+            ->leftJoin("cvb", "Areas", "a", "cvb.arHandle = a.arHandle")
+            ->where("cvb.cID = :pageId AND cvb.cvID = :pageVersionId")
+            ->setParameter("pageId", $this->getCollectionID())
+            ->setParameter("pageVersionId", $this->getVersionID());
+
+        $orX = $queryBuilder->expr()->orX();
+
+        foreach ($orphanedAreas as $orphanedArea) {
+            $orX->add($queryBuilder->expr()->eq("cvb.arHandle", $db->quote($orphanedArea)));
+        }
+
+        $queryBuilder->andWhere($orX);
+
+        foreach($queryBuilder->execute()->fetchAll() as $row) {
+            /*
+             * Use the block id as key to prevent duplicates because of the second join statement. The "group by"
+             * statement results in sql_mode=only_full_group_by” MySQL-issue and all other solutions like executing
+             * sub-queries to get the area name are having a bad performance.
+             */
+            $orphanedBlockIds[$row["bID"]] = $row;
+        }
+
+        return $orphanedBlockIds;
     }
 
     /**
