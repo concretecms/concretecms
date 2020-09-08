@@ -1,29 +1,42 @@
 <?php
+
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Controller\Search\FileFolder;
-use Concrete\Core\File\Search\SearchProvider;
-use Concrete\Core\Search\Query\QueryFactory;
-use Concrete\Core\Search\Result\ResultFactory;
-use FilePermissions;
+use Concrete\Core\File\Filesystem;
+use Concrete\Core\Permission\Checker;
 
 class Search extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/file/search';
 
-    protected function canAccess()
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    public function __construct(Filesystem $filesystem)
     {
-        $cp = FilePermissions::getGlobal();
-        if ($cp->canSearchFiles() || $cp->canAddFile()) {
-            return true;
-        } else {
-            return false;
-        }
+        parent::__construct();
+
+        $this->filesystem = $filesystem;
     }
 
     public function view()
     {
-        // Nothing
+        $this->set('multipleSelection', $this->request->request->getBoolean('multipleSelection'));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
+    protected function canAccess()
+    {
+        $folder = $this->filesystem->getRootFolder();
+        $cp = new Checker($folder);
+
+        return $cp->canSearchFiles() || $cp->canAddFile();
     }
 }

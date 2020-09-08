@@ -1,6 +1,7 @@
 var miniSurvey = {
     bid: 0,
     serviceURL: $("input[name=miniSurveyServices]").val() + '?block=form&',
+    serviceToken: $("input[name=miniSurveyServicesToken]").val(),
     init: function () {
         this.tabSetup();
 
@@ -61,13 +62,13 @@ var miniSurvey = {
     },
     refreshSurvey: function () {
         $.ajax({
-            url: this.serviceURL + 'mode=refreshSurvey&qsID=' + parseInt(this.qsID) + '&hide=' + miniSurvey.hideQuestions.join(','),
+            url: this.serviceURL + 'mode=refreshSurvey&qsID=' + parseInt(this.qsID) + '&hide=' + miniSurvey.hideQuestions.join(',') + '&ccm_token=' + this.serviceToken,
             success: function (msg) {
                 $('#miniSurveyPreviewWrap').html(msg);
             }
         });
         $.ajax({
-            url: this.serviceURL + 'mode=refreshSurvey&qsID=' + parseInt(this.qsID) + '&showEdit=1&hide=' + miniSurvey.hideQuestions.join(','),
+            url: this.serviceURL + 'mode=refreshSurvey&qsID=' + parseInt(this.qsID) + '&showEdit=1&hide=' + miniSurvey.hideQuestions.join(',') + '&ccm_token=' + this.serviceToken,
             success: function (msg) {
                 $('#miniSurveyWrap').html(msg);
             }
@@ -133,7 +134,7 @@ var miniSurvey = {
         $.ajax({
             type: "POST",
             data: postStr,
-            url: this.serviceURL + 'mode=addQuestion&qsID=' + parseInt(this.qsID),
+            url: this.serviceURL + 'mode=addQuestion&qsID=' + parseInt(this.qsID) + '&ccm_token=' + this.serviceToken,
             success: function (msg) {
                 eval('var jsonObj=' + msg);
                 if (!jsonObj) {
@@ -182,7 +183,7 @@ var miniSurvey = {
     reloadQuestion: function (qID) {
 
         $.ajax({
-            url: this.serviceURL + "mode=getQuestion&qsID=" + parseInt(this.qsID) + '&qID=' + parseInt(qID),
+            url: this.serviceURL + "mode=getQuestion&qsID=" + parseInt(this.qsID) + '&qID=' + parseInt(qID) + '&ccm_token=' + this.serviceToken,
             success: function (msg) {
                 eval('var jsonObj=' + msg);
                 $('#editQuestionForm').css('display', 'block');
@@ -240,7 +241,7 @@ var miniSurvey = {
     deleteQuestion: function (el, msqID, qID) {
         if (confirm(ccm_t('delete-question'))) {
             $.ajax({
-                url: this.serviceURL + "mode=delQuestion&qsID=" + parseInt(this.qsID) + '&msqID=' + parseInt(msqID),
+                url: this.serviceURL + "mode=delQuestion&qsID=" + parseInt(this.qsID) + '&msqID=' + parseInt(msqID) + '&ccm_token=' + this.serviceToken,
                 success: function (msg) {
                     miniSurvey.resetQuestion();
                     miniSurvey.refreshSurvey();
@@ -333,7 +334,7 @@ var miniSurvey = {
         $.ajax({
             type: "POST",
             data: postStr,
-            url: this.serviceURL + "mode=reorderQuestions",
+            url: this.serviceURL + "mode=reorderQuestions" + '&ccm_token=' + this.serviceToken,
             success: function (msg) {
                 miniSurvey.refreshSurvey();
             }

@@ -6,7 +6,7 @@ use Concrete\Core\Navigation\Breadcrumb\BreadcrumbInterface;
 use Concrete\Core\Navigation\Item\ItemInterface;
 use Concrete\Core\Navigation\NavigationInterface;
 
-class DashboardBreadcrumb implements BreadcrumbInterface
+class DashboardBreadcrumb implements BreadcrumbInterface, \Iterator
 {
     /**
      * @var \Concrete\Core\Navigation\Item\ItemInterface[]
@@ -48,5 +48,30 @@ class DashboardBreadcrumb implements BreadcrumbInterface
         }
 
         return $this;
+    }
+
+    public function rewind()
+    {
+        reset($this->items);
+    }
+
+    public function current()
+    {
+        return current($this->items);
+    }
+
+    public function key()
+    {
+        return key($this->items);
+    }
+
+    public function next()
+    {
+        next($this->items);
+    }
+
+    public function valid()
+    {
+        return $this->current() !== false;
     }
 }

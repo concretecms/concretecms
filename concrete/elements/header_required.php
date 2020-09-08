@@ -1,4 +1,5 @@
 <?php
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Url\SeoCanonical;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -196,7 +197,7 @@ if ($cp) {
         $cookie = $app->make('cookie');
         if ($cookie->get('ccmLoadAddBlockWindow')) {
             $v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>');
-            $cookie->clear('ccmLoadAddBlockWindow');
+            $app->make(ResponseCookieJar::class)->clear('ccmLoadAddBlockWindow');
         }
     }
 }

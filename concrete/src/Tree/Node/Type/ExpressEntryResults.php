@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Core\Tree\Node\Type;
 
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\ExpressEntryResultsListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryResultsFolderMenu;
+use Doctrine\ORM\EntityManager;
 use Loader;
 
 class ExpressEntryResults extends ExpressEntryCategory
@@ -37,6 +39,13 @@ class ExpressEntryResults extends ExpressEntryCategory
         if ($row && $row['treeNodeID']) {
             return ExpressEntrySiteResults::getByID($row['treeNodeID']);
         }
+    }
+
+    public function getEntity()
+    {
+        $r = app(EntityManager::class)->getRepository(Entity::class);
+        $entity = $r->findOneByResultsNode($this);
+        return $entity;
     }
 
 }

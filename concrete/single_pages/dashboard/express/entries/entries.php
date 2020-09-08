@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             foreach ($result->getItems() as $item) {
                 $entry = $item->getItem();
                 ?>
-                <tr data-details-url="<?=$view->url('/dashboard/express/entries', 'view_entry', $entry->getId())?>">
+                <tr data-details-url="<?=$view->action('view_entry', $entry->getId())?>">
                     <?php
                     $i = 0;
                     foreach ($item->getColumns() as $column) {

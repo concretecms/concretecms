@@ -1,5 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+$c = Page::getCurrentPage();
 ?>
 
 <div class="ccm-header-search-form ccm-ui" data-header="express">
@@ -10,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
            <?php if (isset($query)) { ?>
                 data-advanced-search-query="advanced-search-query"
             <?php } ?>
-           data-advanced-search-dialog-url="<?php echo URL::to('/ccm/system/dialogs/express/advanced_search') ?>?exEntityID=<?=$entity->getId()?>">
+           data-advanced-search-dialog-url="<?php echo URL::to('/ccm/system/dialogs/express/advanced_search') ?>?cID=<?=$c->getCollectionID()?>&amp;exEntityID=<?=$entity->getId()?>">
             <?= t('Advanced') ?>
 
 

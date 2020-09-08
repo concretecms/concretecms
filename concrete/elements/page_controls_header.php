@@ -37,7 +37,7 @@ $dh = Loader::helper('concrete/dashboard');
 
         if (!$dh->inDashboard()) {
             $launchPageComposer = '';
-            if ($cp->canEditPageContents() && $request->get('ctask') == 'check-out-first') {
+            if ($cp->canEditPageContents() && $request->query->get('ccmCheckoutFirst') === '1') {
                 $pagetype = $c->getPageTypeObject();
                 if (is_object($pagetype) && $pagetype->doesPageTypeLaunchInComposer()) {
                     $launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); ConcretePanelManager.getByIdentifier('page').show();";

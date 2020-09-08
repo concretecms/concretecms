@@ -29,40 +29,54 @@ class RefreshBoardInstanceCommandHandler
     public function handle(RefreshBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
+        $rules = $instance->getRules();
+        $blockIDs = [];
+        foreach ($rules as $rule) {
+            if ($rule->getBlockID()) {
+                $blockIDs[] = $rule->getBlockID();
+            }
+        }
         $slots = $instance->getSlots();
-        foreach($slots as $slot) {
+        foreach ($slots as $slot) {
             if ($slot->getBlockID()) {
-                $block = Block::getByID($slot->getBlockID());
-                if ($block && $block->getBlockTypeHandle() == BLOCK_HANDLE_BOARD_SLOT_PROXY) {
-                    $blockController = $block->getController();
-                    $contentObjectCollection = $this->serializer->deserialize(
-                        $blockController->contentObjectCollection, ObjectCollection::class, 'json',
-                        [
-                            'app' => $this->app
-                        ]
-                    );
-                    if ($contentObjectCollection) {
-                        $updatedObjectCollection = new ObjectCollection();
-                        /**
-                         * @var ObjectCollection $contentObjectCollection
-                         */
-                        $objects = $contentObjectCollection->getContentObjects();
-                        foreach($objects as $contentSlot => $object) {
-                            $object->refresh($this->app);
-                            $updatedObjectCollection->addContentObject($contentSlot, $object);
-                        }
-
-                        $json = $this->serializer->serialize($updatedObjectCollection, 'json');
-
-                        $blockController->save([
-                            'slotTemplateID' => $blockController->slotTemplateID,
-                            'contentObjectCollection' => $json
-                        ]);
-                    }
-                }
+                $blockIDs[] = $slot->getBlockID();
             }
         }
 
+        foreach ($blockIDs as $bID) {
+            $block = Block::getByID($bID);
+            if ($block && $block->getBlockTypeHandle() == BLOCK_HANDLE_BOARD_SLOT_PROXY) {
+                $blockController = $block->getController();
+                $contentObjectCollection = $this->serializer->deserialize(
+                    $blockController->contentObjectCollection,
+                    ObjectCollection::class,
+                    'json',
+                    [
+                        'app' => $this->app
+                    ]
+                );
+                if ($contentObjectCollection) {
+                    $updatedObjectCollection = new ObjectCollection();
+                    /**
+                     * @var ObjectCollection $contentObjectCollection
+                     */
+                    $objects = $contentObjectCollection->getContentObjects();
+                    foreach ($objects as $contentSlot => $object) {
+                        $object->refresh($this->app);
+                        $updatedObjectCollection->addContentObject($contentSlot, $object);
+                    }
+
+                    $json = $this->serializer->serialize($updatedObjectCollection, 'json');
+
+                    $blockController->save(
+                        [
+                            'slotTemplateID' => $blockController->slotTemplateID,
+                            'contentObjectCollection' => $json
+                        ]
+                    );
+                }
+            }
+        }
     }
 
 

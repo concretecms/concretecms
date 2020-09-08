@@ -2,10 +2,14 @@
 
 namespace Concrete\Core\Express\Export\EntryList;
 
+use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Site\Service;
 use League\Csv\Writer;
 
 /**
@@ -27,7 +31,12 @@ class CsvWriter
      */
     private $datetime_format;
 
-    public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = 'ATOM' )
+    /**
+     * @var Service|null
+     */
+    private $siteService;
+
+    public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = DATE_ATOM)
     {
         $this->writer = $writer;
         $this->dateFormatter = $dateFormatter;
@@ -92,12 +101,16 @@ class CsvWriter
     private function projectEntry(Entry $entry)
     {
         $date = $entry->getDateCreated();
-        if ($date) {
-            yield 'ccm_date_created' => $this->dateFormatter->formatCustom($this->datetime_format, $date);
-        } else {
-            yield 'ccm_date_created' => null;
-        }
+        yield 'ccm_date_created' => $date ? $this->dateFormatter->formatCustom($this->datetime_format, $date) : null;
+
+        $date = $entry->getDateModified();
+        yield 'ccm_date_modified' => $date ? $this->dateFormatter->formatCustom($this->datetime_format, $date) : null;
+
         yield 'publicIdentifier' => $entry->getPublicIdentifier();
+
+        // Resolve the site
+        $site = $this->getSiteService()->getSiteByExpressResultsNodeID($entry->getResultsNodeID());
+        yield 'site' => $site instanceof Site ? $site->getSiteHandle() : null;
 
         $author = $entry->getAuthor();
         if ($author) {
@@ -108,7 +121,20 @@ class CsvWriter
 
         $attributes = $entry->getAttributes();
         foreach ($attributes as $attribute) {
-            yield $attribute->getAttributeKey()->getAttributeKeyHandle() => $attribute->getPlainTextValue();
+            $handle = $attribute->getAttributeKey()->getAttributeKeyHandle();
+
+            // First yield out the plain text value
+            yield $handle => $attribute->getPlainTextValue();
+
+            // Next check for any multi-column values
+            $controller = $attribute->getController();
+            if ($controller instanceof MulticolumnTextExportableAttributeInterface) {
+                $headers = $controller->getAttributeTextRepresentationHeaders();
+                foreach ($controller->getAttributeValueTextRepresentation() as $key => $value) {
+                    $header = $headers[$key];
+                    yield "{$handle}.{$header}" => $value;
+                }
+            }
         }
 
         $associations = $entry->getAssociations();
@@ -133,17 +159,56 @@ class CsvWriter
     {
         yield 'publicIdentifier' => 'publicIdentifier';
         yield 'ccm_date_created' => 'dateCreated';
+        yield 'ccm_date_modified' => 'dateModified';
+        yield 'site' => 'site';
         yield 'author_name' => 'authorName';
 
         $attributes = $entity->getAttributes();
+        /** @var ExpressKey $attribute */
         foreach ($attributes as $attribute) {
-            yield $attribute->getAttributeKeyHandle() => $attribute->getAttributeKeyDisplayName();
+            $name = $attribute->getAttributeKeyDisplayName();
+            $handle = $attribute->getAttributeKeyHandle();
+
+            // First yield out the main attribute key
+            yield $handle => $name;
+
+            // Next check for multi-column values
+            $controller = $attribute->getController();
+            if ($controller instanceof MulticolumnTextExportableAttributeInterface) {
+                foreach ($controller->getAttributeTextRepresentationHeaders() as $subheader) {
+                    yield "{$handle}.{$subheader}" => "{$name} - {$subheader}";
+                }
+            }
         }
 
         $associations = $entity->getAssociations();
         foreach ($associations as $association) {
             yield $association->getId() => $association->getTargetPropertyName();
         }
+    }
+
+    /**
+     * Get the site service instance to use
+     *
+     * @return Service
+     */
+    protected function getSiteService(): Service
+    {
+        if (!$this->siteService) {
+            $this->siteService = app(Service::class);
+        }
+
+        return $this->siteService;
+    }
+
+    /**
+     * Override the site service
+     *
+     * @param Service $siteService
+     */
+    public function setSiteService(Service $siteService): void
+    {
+        $this->siteService = $siteService;
     }
 
 }
