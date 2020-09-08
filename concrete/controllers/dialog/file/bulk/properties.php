@@ -1,44 +1,147 @@
 <?php
+
 namespace Concrete\Controller\Dialog\File\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
 use Concrete\Core\File\EditResponse as FileEditResponse;
-use FileAttributeKey;
-use Permissions;
-use File;
+use Concrete\Core\File\File;
+use Concrete\Core\File\Filesystem;
+use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\Permission\Checker;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Properties extends BackendInterfaceController
 {
+    use KeySelectorControllerTrait;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Controller::$viewPath
+     */
     protected $viewPath = '/dialogs/file/bulk/properties';
-    protected $controllerActionPath = '/ccm/system/dialogs/file/bulk/properties';
-    protected $files;
-    protected $canAccess = false;
 
-    protected function canAccess()
+    /**
+     * @var CategoryInterface
+     */
+    protected $category;
+
+    /**
+     * List of files to edit.
+     *
+     * @var array
+     */
+    protected $files = [];
+
+    /**
+     * Define whether the user can edit file properties.
+     *
+     * @var bool
+     */
+    protected $canEdit = false;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    public function __construct(CategoryService $attributeCategoryService, Filesystem $filesystem)
     {
-        return $this->canAccess;
+        parent::__construct();
+
+        $categoryEntity = $attributeCategoryService->getByHandle('file');
+        $this->category = $categoryEntity->getAttributeKeyCategory();
+        $this->filesystem = $filesystem;
     }
 
-    protected function setFiles($files)
-    {
-        $this->files = $files;
-    }
-
-    protected function checkPermissions($file)
-    {
-        $fp = new Permissions($file);
-
-        return $fp->canEditFileProperties();
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::on_start()
+     */
     public function on_start()
     {
         parent::on_start();
-        if (!isset($this->files)) {
-            $this->files = [];
+
+        $this->populateFiles();
+    }
+
+    public function view()
+    {
+        $keySelector = $this->app->make(ElementManager::class)->get('attribute/component/key_selector', [$this->getCategory()]);
+        /** @var \Concrete\Controller\Element\Attribute\Component\KeySelector $controller */
+        $controller = $keySelector->getElementController();
+        $controller->setSelectAttributeUrl($this->action('get_attribute'));
+        $controller->setObjects($this->getObjects());
+
+        $this->set('files', $this->files);
+        $this->set('keySelector', $keySelector);
+        $this->set('form', $this->app->make('helper/form'));
+    }
+
+    public function submit()
+    {
+        if ($this->validateAction()) {
+            $this->saveAttributes();
+            $r = new FileEditResponse();
+            $r->setFiles($this->files);
+            $r->setMessage(t('Attributes updated successfully.'));
+
+            return new JsonResponse($r);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::getObjects()
+     */
+    public function getObjects(): array
+    {
+        return $this->files;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::getCategory()
+     */
+    public function getCategory(): CategoryInterface
+    {
+        return $this->category;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::canEditAttributeKey()
+     */
+    public function canEditAttributeKey(int $akID): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
+    protected function canAccess()
+    {
+        $folder = $this->filesystem->getRootFolder();
+        $fp = new Checker($folder);
+        if ($fp->canAccessFileManager()) {
+            return $this->getAction() === 'getAttribute' || $this->canEdit;
         }
 
+        return false;
+    }
+
+    protected function populateFiles(): void
+    {
         $requestFID = $this->request->get('fID');
         if (is_array($requestFID)) {
             foreach ($requestFID as $fID) {
@@ -50,68 +153,16 @@ class Properties extends BackendInterfaceController
         }
 
         if (!empty($this->files)) {
-            $this->canAccess = true;
+            $this->canEdit = true;
             foreach ($this->files as $f) {
-                if (!$this->checkPermissions($f)) {
-                    $this->canAccess = false;
+                $fp = new Checker($f);
+                if (!$fp->canEditFileProperties()) {
+                    $this->canEdit = false;
                     break;
                 }
             }
         } else {
-            $this->canAccess = false;
+            $this->canEdit = false;
         }
-    }
-
-    public function view()
-    {
-        $r = ResponseAssetGroup::get();
-        $form = $this->app->make('helper/form');
-        $attribs = FileAttributeKey::getList();
-        $this->set('files', $this->files);
-        $this->set('attributes', $attribs);
-    }
-
-    public function updateAttribute()
-    {
-        $fr = new FileEditResponse();
-        if ($this->validateAction()) {
-            if ($this->canAccess) {
-                $name = $this->request->get('name');
-                $ak = FileAttributeKey::getByID($name);
-                foreach ($this->files as $f) {
-                    $fv = $f->getVersionToModify();
-                    $controller = $ak->getController();
-                    $value = $controller->createAttributeValueFromRequest();
-                    $fv->setAttribute($ak, $value);
-                    $f->reindex();
-                }
-
-                $fr->setFiles($this->files);
-                $val = $f->getAttributeValueObject($ak);
-                $fr->setAdditionalDataAttribute('value', $val->getDisplayValue());
-                $fr->setMessage(t('Files updated successfully.'));
-            }
-        }
-        $fr->outputJSON();
-    }
-
-    public function clearAttribute()
-    {
-        $fr = new FileEditResponse();
-        if ($this->validateAction()) {
-            if ($this->canAccess) {
-                $akID = $this->request->get('akID');
-                $ak = FileAttributeKey::get($akID);
-                foreach ($this->files as $f) {
-                    $fv = $f->getVersionToModify();
-                    $fv->clearAttribute($ak);
-                    $f->reindex();
-                }
-                $fr->setFiles($this->files);
-                $fr->setAdditionalDataAttribute('value', false);
-                $fr->setMessage(t('Attributes cleared successfully.'));
-            }
-        }
-        $fr->outputJSON();
     }
 }

@@ -2,11 +2,6 @@
 
 namespace Concrete\Core\Page\Controller;
 
-use Concrete\Controller\Element\Attribute\EditKey;
-use Concrete\Controller\Element\Attribute\Form;
-use Concrete\Controller\Element\Attribute\KeyHeader;
-use Concrete\Controller\Element\Attribute\KeyList;
-use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Attribute\Set;
@@ -25,18 +20,22 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $entity = $this->getCategoryObject();
         $category = $entity->getAttributeKeyCategory();
-        $list = new KeyList();
-        $list->setAttributeSets($category->getSetManager()->getAttributeSets());
-        $list->setUnassignedAttributeKeys($category->getSetManager()->getUnassignedAttributeKeys());
-        $list->setAttributeTypes($category->getAttributeTypes());
-        $list->setDashboardPagePath($this->getPageObject()->getCollectionPath());
-        $list->setDashboardPageParameters($this->getRequestActionParameters());
+        $list = $this->elementManager->get('attribute/key_list');
+
+        /**
+         * @var \Concrete\Controller\Element\Attribute\KeyList $controller
+         */
+        $controller = $list->getElementController();
+        $controller->setAttributeSets($category->getSetManager()->getAttributeSets());
+        $controller->setUnassignedAttributeKeys($category->getSetManager()->getUnassignedAttributeKeys());
+        $controller->setAttributeTypes($category->getAttributeTypes());
+        $controller->setDashboardPagePath($this->getPageObject()->getCollectionPath());
+        $controller->setDashboardPageParameters($this->getRequestActionParameters());
         if (!$category->getSetManager()->allowAttributeSets()) {
-            $list->setEnableSorting(false);
+            $controller->setEnableSorting(false);
         }
 
         $this->set('headerMenu', $this->getHeaderMenu($entity));
-
         $this->set('attributeView', $list);
     }
 
@@ -48,10 +47,16 @@ abstract class DashboardAttributesPageController extends DashboardPageController
      */
     public function renderAdd($type, $backURL)
     {
-        $add = new Form($type);
-        $add->setBackButtonURL($backURL);
-        $add->setCategory($this->getCategoryObject());
-        $add->setDashboardPageParameters($this->getRequestActionParameters());
+        $add = $this->elementManager->get('attribute/form', ['type' => $type]);
+
+        /**
+         * @var \Concrete\Controller\Element\Attribute\Form $controller
+         */
+        $controller = $add->getElementController();
+        $controller->setBackButtonURL($backURL);
+        $controller->setCategory($this->getCategoryObject());
+        $controller->setDashboardPageParameters($this->getRequestActionParameters());
+
         $this->set('attributeView', $add);
         $this->set('pageTitle', t('Add Attribute'));
     }
@@ -64,16 +69,26 @@ abstract class DashboardAttributesPageController extends DashboardPageController
      */
     public function renderEdit($key, $backURL)
     {
-        $edit = new EditKey($key);
-        $edit->setBackButtonURL($backURL);
-        $edit->setCategory($this->getCategoryObject());
-        $edit->setDashboardPageParameters($this->getRequestActionParameters());
+        $edit = $this->elementManager->get('attribute/edit_key', ['key' => $key]);
+
+        /**
+         * @var \Concrete\Controller\Element\Attribute\EditKey $controller
+         */
+        $controller = $edit->getElementController();
+        $controller->setBackButtonURL($backURL);
+        $controller->setCategory($this->getCategoryObject());
+        $controller->setDashboardPageParameters($this->getRequestActionParameters());
         $this->set('attributeView', $edit);
         $this->set('pageTitle', t('Edit Attribute'));
 
-        $header = new KeyHeader($key);
-        $header->setDashboardPageParameters($this->getRequestActionParameters());
-        $this->set('headerMenu', $header);
+        $header = $this->elementManager->get('attribute/key_header', ['key' => $key]);
+        /**
+         * @var \Concrete\Controller\Element\Attribute\EditKey $headerController
+         */
+        $headerController = $header->getElementController();
+        $headerController->setDashboardPageParameters($this->getRequestActionParameters());
+
+        $this->set('headerMenu', $headerController);
     }
 
     /**
@@ -109,7 +124,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                         $setKey->setAttributeSet($set);
                         $setKey->setDisplayOrder($i);
                         $set->getAttributeKeyCollection()->add($setKey);
-                        ++$i;
+                        $i++;
                     }
                     break;
                 }
@@ -138,7 +153,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
      */
     protected function getHeaderMenu(CategoryObjectInterface $category)
     {
-        return new StandardListHeader($category);
+        return $this->elementManager->get('attribute/standard_list_header', ['category' => $category])->getElementController();
     }
 
     /**
@@ -163,8 +178,11 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             if ($onComplete instanceof \Closure) {
                 $onComplete();
             }
+
             $this->flash('success', t('Attribute created successfully.'));
-            $this->redirect($successURL);
+
+            $this->buildRedirect($successURL)->send();
+            $this->app->shutdown();
         }
     }
 
@@ -204,7 +222,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 foreach ($set->getAttributeKeyCollection() as $setKey) {
                     $setKey->setDisplayOrder($displayOrder);
                     $this->entityManager->persist($setKey);
-                    ++$displayOrder;
+                    $displayOrder++;
                 }
 
                 $setKey = new SetKey();
@@ -239,8 +257,11 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             if ($onComplete instanceof \Closure) {
                 $onComplete();
             }
+
             $this->flash('success', t('Attribute updated successfully.'));
-            $this->redirect($successURL);
+
+            $this->buildRedirect($successURL)->send();
+            $this->app->shutdown();
         }
     }
 
@@ -266,7 +287,9 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             }
 
             $this->flash('success', t('Attribute deleted successfully.'));
-            $this->redirect($successURL);
+
+            $this->buildRedirect($successURL)->send();
+            $this->app->shutdown();
         } catch (UserMessageException $e) {
             $this->error = $e;
         }

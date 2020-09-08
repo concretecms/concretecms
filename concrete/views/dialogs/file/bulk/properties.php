@@ -1,42 +1,30 @@
-<?php /** @noinspection PhpUnusedParameterInspection */
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
-use Concrete\Core\View\View;
-use Concrete\Controller\Dialog\File\Bulk\Properties;
-
-/** @var Properties $controller */
+/**
+ * @var Concrete\Controller\Dialog\File\Bulk\Properties $controller
+ * @var Concrete\Core\Filesystem\Element $keySelector
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Entity\File\File[] $files
+ */
 ?>
 
-<div class="ccm-ui">
-    <div data-container="editable-fields">
-        <section>
-            <h4>
-                <?php echo t('Other Attributes') ?>
-            </h4>
+<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="files-attributes">
+    <?php
+    foreach ($files as $file) {
+        echo $form->hidden("fID{$file->getFileID()}", $file->getFileID(), ['name' => 'fID[]']);
+    }
+    ?>
 
-            <?php
-                /** @noinspection PhpUnhandledExceptionInspection */
-                View::element('attribute/editable_list', [
-                    'attributes' => $attributes,
-                    'objects' => $files,
-                    'saveAction' => $controller->action('update_attribute'),
-                    'clearAction' => $controller->action('clear_attribute'),
-                    'permissionsCallback' => function ($ak, $permissionsArguments) {
-                        return true; // this is fine because you can't even access this interface without being able to edit every file.
-                    },
-                ]);
-            ?>
-        </section>
-
-        <script>
-            $('div[data-container=editable-fields]').concreteEditableFieldContainer({
-                data: [
-                    <?php foreach ($files as $f): ?>
-                        {'name': 'fID[]', 'value': '<?php echo $f->getFileID()?>'},
-                    <?php endforeach; ?>
-                ]
-            });
-        </script>
+    <div class="ccm-ui">
+        <?php
+            $keySelector->render();
+        ?>
     </div>
-</div>
+
+    <div class="dialog-buttons">
+        <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+        <button type="button" data-dialog-action="submit" class="btn btn-primary"><?=t('Save')?></button>
+    </div>
+
+</form>

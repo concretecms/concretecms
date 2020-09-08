@@ -2,7 +2,9 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var \Concrete\Core\Routing\Router $router
+ */
+/*
  * Base path: /ccm/system/dialogs/page
  * Namespace: Concrete\Controller\Dialog\Page\
  */
@@ -22,8 +24,8 @@ $router->all('/add/compose/{ptID}/{cParentID}', 'Add\Compose::view');
 $router->all('/add/compose/submit', 'Add\Compose::submit');
 $router->all('/attributes', 'Attributes::view');
 $router->all('/bulk/properties', 'Bulk\Properties::view');
-$router->all('/bulk/properties/clear_attribute', 'Bulk\Properties::clearAttribute');
-$router->all('/bulk/properties/update_attribute', 'Bulk\Properties::updateAttribute');
+$router->all('/bulk/properties/get_attribute', 'Bulk\Properties::getAttribute');
+$router->all('/bulk/properties/submit', 'Bulk\Properties::submit');
 $router->all('/bulk/delete', 'Bulk\Delete::view');
 $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 $router->all('/clipboard', 'Clipboard::view');

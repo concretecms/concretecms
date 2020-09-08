@@ -2,7 +2,9 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\Routing\Router $router */
+/**
+ * @var Concrete\Core\Routing\Router $router
+ */
 
 /*
  * Base path: /ccm/system/dialogs/file
@@ -17,8 +19,8 @@ $router->all('/bulk/sets', 'Bulk\Sets::view');
 $router->all('/bulk/sets/submit', 'Bulk\Sets::submit');
 $router->all('/bulk/folder', 'Bulk\Folder::view');
 $router->all('/bulk/folder/submit', 'Bulk\Folder::submit');
-$router->all('/bulk/properties/clear_attribute', 'Bulk\Properties::clearAttribute');
-$router->all('/bulk/properties/update_attribute', 'Bulk\Properties::updateAttribute');
+$router->all('/bulk/properties/get_attribute', 'Bulk\Properties::getAttribute');
+$router->all('/bulk/properties/submit', 'Bulk\Properties::submit');
 $router->all('/bulk/storage', 'Bulk\Storage::view');
 $router->all('/bulk/storage/submit', 'Bulk\Storage::submit');
 $router->all('/bulk/storage/change_files_storage_location', 'Bulk\Storage::doChangeStorageLocation');

@@ -112,12 +112,11 @@ class Attributes extends BackendInterfaceController
 
     public function view($uID)
     {
-        $user = $this->getUserFromRequest();
         $keySelector = $this->app->make(ElementManager::class)
             ->get('attribute/component/key_selector', [$this->category]);
         $controller = $keySelector->getElementController();
         $controller->setSelectAttributeUrl($this->action('get_attribute'));
-        $controller->setObject($user);
+        $controller->setObjects($this->getObjects());
         $this->set('keySelector', $keySelector);
     }
 
