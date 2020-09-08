@@ -10,11 +10,14 @@
 <?php
 $walkNavigation = function(array $items) use (&$walkNavigation) {
     if (count($items)) { ?>
-        <ul class="nav flex-column mobile-menu">
+        <ul class="nav flex-column mobile-menu list-unstyled">
             <?php foreach($items as $item) { ?>
-                <li>
+                <li 
+                  <?php if ($item->isActiveParent()) {?> class="nav-path-selected"<?php } ?>
+                  <?php if ($item->isActive()) {?> class="nav-selected"<?php } ?>
+                  >
                     <a href="<?=$item->getURL()?>"
-                    <?php if ($item->isActive()) { ?>class="ccm-panel-menu-item-active"<?php } ?>
+                    <?php if ($item->isActive()) { ?>class="ccm-panel-menu-item-active nav-selected nav-path-selected"<?php } ?>
                     <?php if ($item->isActiveParent()) { ?>class="ccm-panel-menu-parent-item-active"<?php } ?>>
                         <?=$item->getName()?>
                     </a>
@@ -231,7 +234,7 @@ $vo = $c->getVersionObject();
                             <?php
                         }?>
                         <?php // dashboard menu ?>
-                        <li class="parent-ul">
+                        <li class="parent-ul mobile-menu-container">
                           <i class="fa fa-sliders-h mobile-leading-icon"></i>
                           <a href="<?= URL::to('/dashboard');?>"><?= t('Dashboard');?></a>
                           <i class="fa fa-caret-down drop-down-toggle"></i>
