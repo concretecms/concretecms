@@ -66,7 +66,7 @@ trait DashboardSelectableExpressEntryListTrait
             $entity = $r->findOneById($entityID);
         }
         if ($entity) {
-            return $this->exportCsv($entity);
+            return $this->exportCsv($entity, $searchMethod);
         } else {
             throw new UserMessageException(t('Invalid express entity ID.'));
         }

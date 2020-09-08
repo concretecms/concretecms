@@ -64,7 +64,7 @@ trait DashboardExpressEntityTrait
 
     public function csv_export($entityID = null, $searchMethod = null)
     {
-        return $this->exportCsv($this->getExpressEntity());
+        return $this->exportCsv($this->getExpressEntity(), $searchMethod);
     }
 
 }
