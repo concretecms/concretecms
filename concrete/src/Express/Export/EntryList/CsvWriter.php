@@ -83,6 +83,7 @@ class CsvWriter
             $total++;
             if ($total > 100) {
                 $this->entityManager->clear();
+                $total = 0;
             }
         }
     }
