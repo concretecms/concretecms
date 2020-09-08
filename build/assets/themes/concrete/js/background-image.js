@@ -28,7 +28,7 @@ $(function () {
         var date = new Date(), shown = false, info;
         date = date.toISOString().split('T')[0].replace(/-/g, '');
         var image = date + '.jpg';
-        $.getJSON(CCM_DISPATCHER_FILENAME + '/tools/required/dashboard/get_image_data', {'image': image}, function (responseData) {
+        $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/backend/dashboard/get_image_data', {'image': image}, function (responseData) {
             info = responseData;
         });
         $(window).on('backstretch.show', function () {

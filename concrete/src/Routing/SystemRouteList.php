@@ -95,5 +95,11 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->routes('calendar.php');
 
         $router->buildGroup()->routes('misc.php');
+
+        $router->buildGroup()
+            ->setNamespace('Concrete\Controller\Backend\Dashboard')
+            ->setPrefix('/ccm/system/backend/dashboard')
+            ->routes('backend/dashboard.php')
+        ;
     }
 }
