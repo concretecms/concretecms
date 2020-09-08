@@ -104,7 +104,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
                     </a>
                 </li>
-                <li data-guide-toolbar-action="help" class="float-right hidden-xs">
+                <li data-guide-toolbar-action="help" class="float-right d-none d-sm-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
                     } ?> data-toggle="tooltip"
@@ -138,7 +138,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
         $dh = $app->make('helper/concrete/dashboard');
         if (!$hideDashboardPanel) {
             ?>
-            <div id="ccm-panel-dashboard" class="hidden-xs hidden-sm ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
+            <div id="ccm-panel-dashboard" class="d-none d-md-block ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
                 <div class="ccm-panel-content-wrapper ccm-ui">
                     <div class="ccm-panel-content ccm-panel-content-visible">
                       <?php
