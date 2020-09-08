@@ -3,6 +3,10 @@
  * @var $navigation \Concrete\Core\Application\UserInterface\Dashboard\Navigation\Navigation
  */
 ?>
+<?php
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+?>
 <li class="float-right ccm-toolbar-mobile-menu-button d-block d-md-none">
   <i class="fa fa-bars"></i>
 </li>
@@ -10,7 +14,7 @@
 <?php
 $walkNavigation = function(array $items) use (&$walkNavigation) {
     if (count($items)) { ?>
-        <ul class="nav flex-column mobile-menu list-unstyled">
+        <ul class="nav flex-column mobile-menu">
             <?php foreach($items as $item) { ?>
                 <li 
                   <?php if ($item->isActiveParent()) {?> class="nav-path-selected"<?php } ?>
@@ -42,6 +46,11 @@ $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 $dh = $app->make('helper/concrete/dashboard');
 $valt = $app->make('helper/validation/token');
 $vo = $c->getVersionObject();
+if (!$dh->inDashboard()) {
+    $resolver = $app->make(ResolverManagerInterface::class);
+    $c = Page::getCurrentPage();
+    $cID = $c->getCollectionID();
+}
      
 ?>
             <div class="ccm-mobile-menu-overlay d-md-none" style="height: calc(100vh - 48px)">
@@ -82,8 +91,8 @@ $vo = $c->getVersionObject();
                                     <a
                                         <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                         data-toolbar-action="check-out"
-                                        href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
-                                    ><?php echo t('Edit this Page') ?></a>
+                                        href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $valt->generate()])) ?>"
+                                    ><?php echo t('Edit This Page') ?></a>
                                 </li>
                                 <?php
                             }
@@ -234,7 +243,7 @@ $vo = $c->getVersionObject();
                             <?php
                         }?>
                         <?php // dashboard menu ?>
-                        <li class="parent-ul mobile-menu-container">
+                        <li class="parent-ul">
                           <i class="fa fa-sliders-h mobile-leading-icon"></i>
                           <a href="<?= URL::to('/dashboard');?>"><?= t('Dashboard');?></a>
                           <i class="fa fa-caret-down drop-down-toggle"></i>
