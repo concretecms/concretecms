@@ -7,7 +7,10 @@ if ($akTextareaDisplayMode == 'text' || $akTextareaDisplayMode == '') { ?>
     echo $form->textarea(
         $view->controller->field('value'),
         h($value),
-        array('rows' => 5)
+        [
+            'rows' => 5,
+            'placeholder' => tc('AttributeKeyPlaceholder', h($akTextPlaceholder))
+        ]
     );
     ?>
 

@@ -15,6 +15,11 @@ class TextareaSettings extends Settings
     protected $akTextareaDisplayMode = '';
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $akTextPlaceholder = '';
+
+    /**
      * @return mixed
      */
     public function getMode()
@@ -28,6 +33,22 @@ class TextareaSettings extends Settings
     public function setMode($mode)
     {
         $this->akTextareaDisplayMode = $mode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlaceholder()
+    {
+        return $this->akTextPlaceholder;
+    }
+
+    /**
+     * @param string $placeholder
+     */
+    public function setPlaceholder($placeholder)
+    {
+        $this->akTextPlaceholder = $placeholder;
     }
 
 }

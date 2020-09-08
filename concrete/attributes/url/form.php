@@ -1,6 +1,9 @@
 <?php
-    defined('C5_EXECUTE') or die("Access Denied.");
-    print $form->url(
-        $this->field('value'),
-        $value
-    );
+defined('C5_EXECUTE') or die("Access Denied.");
+print $form->url(
+    $this->field('value'),
+    $value,
+    [
+        'placeholder' => tc('AttributeKeyPlaceholder', h($akTextPlaceholder))
+    ]
+);
