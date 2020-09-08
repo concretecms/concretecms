@@ -10,6 +10,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Site\Service;
+use Doctrine\ORM\EntityManager;
 use League\Csv\Writer;
 
 /**
@@ -36,10 +37,16 @@ class CsvWriter
      */
     private $siteService;
 
-    public function __construct(Writer $writer, Date $dateFormatter, $datetime_format = DATE_ATOM)
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    public function __construct(Writer $writer, Date $dateFormatter, EntityManager $entityManager, $datetime_format = DATE_ATOM)
     {
         $this->writer = $writer;
         $this->dateFormatter = $dateFormatter;
+        $this->entityManager = $entityManager;
         $this->datetime_format = $datetime_format;
     }
 
@@ -68,9 +75,14 @@ class CsvWriter
         $headers = array_keys(iterator_to_array($this->getHeaders($list->getEntity())));
         $statement = $list->deliverQueryObject()->execute();
 
+        $total = 0;
         foreach ($statement as $result) {
             if ($entry = $list->getResult($result)) {
                 yield $this->orderedEntry(iterator_to_array($this->projectEntry($entry)), $headers);
+            }
+            $total++;
+            if ($total > 100) {
+                $this->entityManager->clear();
             }
         }
     }
