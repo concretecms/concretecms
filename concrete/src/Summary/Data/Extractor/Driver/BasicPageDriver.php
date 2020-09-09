@@ -9,6 +9,7 @@ use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\DatetimeDataFieldData;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
 use Concrete\Core\Summary\Data\Field\ImageDataFieldData;
+use Concrete\Core\Summary\Data\Field\LinkDataFieldData;
 
 class BasicPageDriver implements DriverInterface
 {
@@ -38,7 +39,7 @@ class BasicPageDriver implements DriverInterface
     {
         $collection = new Collection();
         $collection->addField(new DataField(FieldInterface::FIELD_TITLE, $mixed->getCollectionName()));
-        $collection->addField(new DataField(FieldInterface::FIELD_LINK, $mixed->getCollectionLink()));
+        $collection->addField(new DataField(FieldInterface::FIELD_LINK, new LinkDataFieldData($mixed->getCollectionLink())));
         $collection->addField(new DataField(FieldInterface::FIELD_DATE, new DatetimeDataFieldData($mixed->getCollectionDatePublicObject())));
         $description = $mixed->getCollectionDescription();
         if ($description) {
