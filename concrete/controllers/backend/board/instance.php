@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Backend\Board;
 
 use Concrete\Core\Board\Command\ClearSlotFromBoardCommand;
+use Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommand;
 use Concrete\Core\Board\Command\PinSlotToBoardCommand;
 use Concrete\Core\Board\Command\UnpinSlotFromBoardCommand;
 use Concrete\Core\Board\Instance\Slot\RenderedSlotCollectionFactory;
@@ -38,8 +39,8 @@ class Instance extends AbstractController
         $entityManager = $this->app->make(EntityManager::class);
         $rule = $entityManager->find(InstanceSlotRule::class, $this->request->request->get('boardInstanceSlotRuleID'));
         if ($rule && $this->canDeleteRule($rule)) {
-            $entityManager->remove($rule);
-            $entityManager->flush();
+            $command = new DeleteBoardInstanceSlotRuleCommand($rule);
+            $this->app->executeCommand($command);
             return new JsonResponse($rule);
         }
         throw new \Exception(t('Access Denied.'));
@@ -73,9 +74,9 @@ class Instance extends AbstractController
             }
             if ($canProceed) {
                 foreach($rules as $rule) {
-                    $entityManager->remove($rule);
+                    $command = new DeleteBoardInstanceSlotRuleCommand($rule);
+                    $this->app->executeCommand($command);
                 }
-                $entityManager->flush();
                 return new JsonResponse([]);
             }
             throw new \Exception(t('Access Denied.'));
@@ -100,11 +101,6 @@ class Instance extends AbstractController
 
             $renderedSlotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
             $renderedSlotCollection = $renderedSlotCollectionFactory->createCollection($instance);
-
-            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_BOARD);
-            $logger->info(t('Slot {slot} pinned from editing interface'), [
-                'slot' => $this->request->request->get('slot')
-            ]);
 
             return new JsonResponse($renderedSlotCollection->getRenderedSlot($this->request->request->get('slot')));
         }
