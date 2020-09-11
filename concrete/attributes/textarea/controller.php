@@ -172,25 +172,6 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
         return TextareaSettings::class;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Attribute\XEditableConfigurableAttributeInterface::getXEditableOptions()
-     */
-    public function getXEditableOptions()
-    {
-        $this->load();
-        if ($this->akTextareaDisplayMode === 'rich_text') {
-            return [
-                'editableMode' => 'inline',
-                'onblur' => 'ignore',
-                'showbuttons' => 'bottom',
-            ];
-        }
-
-        return [];
-    }
-
     protected function load()
     {
         $ak = $this->getAttributeKey();
