@@ -16,6 +16,7 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
 
     protected $akTextareaDisplayMode;
     protected $akTextareaDisplayModeCustomOptions;
+    protected $akTextPlaceholder;
 
     public function getIconFormatter()
     {
@@ -27,6 +28,7 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
         $type = $this->getAttributeKeySettings();
         $data += [
             'akTextareaDisplayMode' => null,
+            'akTextPlaceholder' => null,
         ];
         $akTextareaDisplayMode = $data['akTextareaDisplayMode'];
         if (!$akTextareaDisplayMode) {
@@ -36,8 +38,10 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
         if ($akTextareaDisplayMode == 'rich_text_custom') {
             $options = $data['akTextareaDisplayModeCustomOptions'];
         }
+        $akTextPlaceholder = $data['akTextPlaceholder'];
 
         $type->setMode($akTextareaDisplayMode);
+        $type->setPlaceholder($akTextPlaceholder);
 
         return $type;
     }
@@ -92,6 +96,11 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
         }
         $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
         $this->set('value', $value);
+        $akTextPlaceholder = '';
+        if (isset($this->akTextPlaceholder)) {
+            $akTextPlaceholder = $this->akTextPlaceholder;
+        }
+        $this->set('akTextPlaceholder', $akTextPlaceholder);
     }
 
     public function composer()
@@ -127,6 +136,7 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
     {
         $this->load();
         $akey->addChild('type')->addAttribute('mode', $this->akTextareaDisplayMode);
+        $akey->addChild('type')->addAttribute('placeholder', $this->akTextPlaceholder);
 
         return $akey;
     }
@@ -150,6 +160,8 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
         if (isset($akey->type)) {
             $data['akTextareaDisplayMode'] = $akey->type['mode'];
             $type->setMode((string) $akey->type['mode']);
+            $data['akTextPlaceholder'] = $akey->type['placeholder'];
+            $type->setPlaceholder((string) $akey->type['placeholder']);
         }
 
         return $type;
@@ -160,25 +172,6 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
         return TextareaSettings::class;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Attribute\XEditableConfigurableAttributeInterface::getXEditableOptions()
-     */
-    public function getXEditableOptions()
-    {
-        $this->load();
-        if ($this->akTextareaDisplayMode === 'rich_text') {
-            return [
-                'editableMode' => 'inline',
-                'onblur' => 'ignore',
-                'showbuttons' => 'bottom',
-            ];
-        }
-
-        return [];
-    }
-  
     protected function load()
     {
         $ak = $this->getAttributeKey();
@@ -192,5 +185,7 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
          */
         $this->akTextareaDisplayMode = $type->getMode();
         $this->set('akTextareaDisplayMode', $type->getMode());
+        $this->akTextPlaceholder = $type->getPlaceholder();
+        $this->set('akTextPlaceholder', $type->getPlaceholder());
     }
 }
