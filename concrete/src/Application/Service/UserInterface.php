@@ -401,13 +401,13 @@ class UserInterface
             if (count($arguments['buttons']) === 1) {
                 $singleButton = $arguments['buttons'][0];
                 if ($singleButton instanceof Tag) {
-                    $singleButton->addClass('btn btn-default');
+                    $singleButton->addClass('btn btn-primary');
                 }
                 $text .= '<div>' . $singleButton . '</div>';
             } else {
-                $text .= '<div class="btn-group"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><ul class="dropdown-menu">';
+                $text .= '<div class="btn-group dropup"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><ul class="dropdown-menu">';
                 foreach ($arguments['buttons'] as $button) {
-                    $text .= '<li>' . $button . '</li>';
+                    $text .= '<li class="dropdown-item">' . $button . '</li>';
                 }
                 $text .= '</ul></div>';
             }
