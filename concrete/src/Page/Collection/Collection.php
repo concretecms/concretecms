@@ -900,7 +900,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     *
+     * @return array
      */
     public function getOrphanedBlockIdsGroupedByAreaHandle() {
         $groupedBlocks = [];
@@ -918,16 +918,19 @@ class Collection extends ConcreteObject implements TrackableInterface
 
     /**
      * Get a collection of all orphaned blocks used on this page.
-     * 
+     *
      * @return array
      */
     public function getOrphanedBlockIds() {
         $orphanedBlockIds = [];
 
         $app = Application::getFacadeApplication();
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $app->make("session");
+        $app = Application::getFacadeApplication();
         /** @var Connection $db */
         $db = $app->make(Connection::class);
-        
+
         /*
          * Get all areas from database for the current page.
          */
@@ -950,29 +953,7 @@ class Collection extends ConcreteObject implements TrackableInterface
          * Get all used areas for the current page
          */
 
-        $usedAreas = [];
-
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-        $queryBuilder = $queryBuilder
-            ->resetQueryParts()
-            ->select("ua.arHandle")
-            ->from("UsedAreas", "ua")
-            ->where("ua.cID = :pageId")
-            ->andWhere("ua.cvID = :pageVersionId")
-            ->andWhere("ua.pThemeID = :themeId")
-            ->andWhere("ua.pTemplateID = :templateId")
-            ->andWhere("ua.ptID = :pageTypeId")
-            ->setParameter("pageId", $this->getCollectionID())
-            ->setParameter("pageVersionId", $this->getVersionID())
-            ->setParameter("themeId", $this->getCollectionThemeID())
-            ->setParameter("templateId", $this->getPageTemplateID())
-            ->setParameter("pageTypeId", $this->getPageTypeID());
-
-        $rows = $queryBuilder->execute()->fetchAll();
-
-        foreach ($rows as $row) {
-            $usedAreas[] = $row["arHandle"];
-        }
+        $usedAreas = $session->get("used_areas", []);
 
         /*
          * Calculate the orphaned areas
