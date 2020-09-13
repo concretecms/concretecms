@@ -54,6 +54,7 @@ class GenerateBoardInstanceCommandHandler
     {
         $instance = $command->getInstance();
         $items = $this->itemSegmenter->getBoardItemsForInstance($instance);
+
         if (count($items)) {
             $contentObjectGroups = $this->contentPopulator->createContentObjects($items);
 
@@ -88,6 +89,7 @@ class GenerateBoardInstanceCommandHandler
 
             $this->entityManager->flush(); // need to do this here so our instance slots have IDs.
         }
+
         $this->entityManager->persist($instance);
         $this->entityManager->flush();
     }
