@@ -4,6 +4,7 @@ namespace Concrete\Block\Board;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Board\Command\CreateBoardInstanceCommand;
+use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Board\Template\TemplateLocator;
 use Concrete\Core\Entity\Board\Board;
@@ -14,6 +15,7 @@ use Concrete\Core\Permission\Checker;
 use Cookie;
 use Doctrine\ORM\EntityManager;
 use Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -90,6 +92,27 @@ class Controller extends BlockController
         parent::save($args);
     }
 
+    public function action_regenerate()
+    {
+        if ($this->app->make('token')->validate('regenerate')) {
+            $instance = $this->app->make(EntityManager::class)
+                ->find(Instance::class, $this->boardInstanceID);
+            if ($instance) {
+                $board = $instance->getBoard();
+                $checker = new Checker($board);
+                if ($checker->canEditBoardContents()) {
+                    $command = new RegenerateBoardInstanceCommand();
+                    $command->setInstance($instance);
+                    $this->app->executeCommand($command);
+                    return new JsonResponse($instance);
+                } else {
+                    throw new \RuntimeException(t('Access Denied.'));
+                }
+            }
+        }
+        throw new \RuntimeException(t('Access Denied.'));
+    }
+
     public function edit()
     {
         $this->add();
@@ -101,6 +124,7 @@ class Controller extends BlockController
             $this->set('renderer', $renderer);
             $this->set('boardID', $instance->getBoard()->getBoardID());
             $this->set('instance', $instance);
+            $this->set('token', $this->app->make('token'));
         }
     }
 

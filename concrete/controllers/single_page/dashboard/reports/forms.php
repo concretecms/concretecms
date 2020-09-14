@@ -4,12 +4,12 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 use Concrete\Block\ExpressForm\Controller;
 use Concrete\Core\Controller\Traits\DashboardExpressEntryDetailsTrait;
 use Concrete\Core\Controller\Traits\DashboardSelectableExpressEntryListTrait;
-use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 
-class Forms extends DashboardSitePageController
+class Forms extends DashboardPageController
 {
 
     use DashboardSelectableExpressEntryListTrait;

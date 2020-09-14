@@ -25,7 +25,6 @@ $approveAction = $controller->action('submit');
 
 if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) {
     $imagePath = Config::get('concrete.urls.background_feed') . '/' . $image;
-    $imageData = Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data';
 } else if (Config::get('concrete.white_label.background_url')) {
     $imagePath = Config::get('concrete.white_label.background_url');
 }

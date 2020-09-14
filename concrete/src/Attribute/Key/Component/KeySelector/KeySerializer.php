@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Attribute\Key\Component\KeySelector;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
@@ -22,10 +23,33 @@ class KeySerializer implements \JsonSerializable
      */
     protected $value;
 
-    public function __construct(AttributeKey $key, AttributeValueInterface $value = null)
+    /**
+     * Check whether we need a specific display for this attribute form or not.
+     *
+     * @var bool
+     */
+    protected $hasMultipleValues = false;
+
+    public function __construct(AttributeKey $key, ?AttributeValueInterface $value = null)
     {
         $this->key = $key;
         $this->value = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMultipleValues(): bool
+    {
+        return $this->hasMultipleValues;
+    }
+
+    /**
+     * @param bool $hasMultipleValues
+     */
+    public function setMultipleValues(bool $hasMultipleValues): void
+    {
+        $this->hasMultipleValues = $hasMultipleValues;
     }
 
     public function getAssets()
@@ -40,6 +64,7 @@ class KeySerializer implements \JsonSerializable
                 }
             }
         }
+
         return $return;
     }
 
@@ -58,14 +83,13 @@ class KeySerializer implements \JsonSerializable
         $html = ob_get_contents();
         ob_end_clean();
 
-        $data = [
+        return [
             'controlID' => $this->key->getController()->getControlID(),
             'akID' => $this->key->getAttributeKeyID(),
             'label' => $this->key->getAttributeKeyDisplayName(),
             'content' => $html,
             'assets' => $this->getAssets(),
+            'hasMultipleValues' => $this->hasMultipleValues(),
         ];
-
-        return $data;
     }
 }

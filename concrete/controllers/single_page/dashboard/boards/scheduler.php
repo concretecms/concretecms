@@ -1,36 +1,15 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards;
 
-use Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand;
 use Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand;
 use Concrete\Core\Board\Designer\Command\SetCustomElementItemsCommand;
-use Concrete\Core\Board\Helper\Traits\SlotTemplateJsonHelperTrait;
-use Concrete\Core\Board\Instance\Item\Populator\CalendarEventPopulator;
-use Concrete\Core\Board\Instance\Item\Populator\PagePopulator;
-use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
-use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
-use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollectionFactory;
-use Concrete\Core\Calendar\Calendar;
-use Concrete\Core\Calendar\Event\EventOccurrenceService;
-use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
-use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Entity\Board\Designer\CustomElement;
 use Concrete\Core\Entity\Board\Designer\CustomElementItem;
-use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
-use Concrete\Core\Entity\Board\SlotTemplate;
-use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Localization\Service\Date;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Summary\Data\Collection;
-use Concrete\Core\Utility\Service\Validation\Strings;
-use Concrete\Core\Validation\SanitizeService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Scheduler extends DashboardSitePageController
@@ -136,11 +115,6 @@ class Scheduler extends DashboardSitePageController
             $command->setStartDate($this->request->request->get('start'));
             $command->setEndDate($this->request->request->get('end'));
             $this->app->executeCommand($command);
-
-            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_BOARD);
-            $logger->info(t('Slot {slot} scheduled successfully.'), [
-                'slot' => $this->request->request->get('slot')
-            ]);
 
             $this->flash('success', t('Board element scheduled successfully.'));
             return new JsonResponse([]);

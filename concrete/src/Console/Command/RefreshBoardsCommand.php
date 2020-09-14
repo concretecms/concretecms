@@ -9,6 +9,7 @@ use Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand;
 use Concrete\Core\Board\Command\GenerateBoardInstanceCommand;
 use Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand;
 use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
+use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
@@ -54,22 +55,8 @@ EOT
     protected function refreshInstance(Application $app, Instance $instance)
     {
         if ($this->input->getOption('regenerate')) {
-            $this->output->writeln(t('** Clearing board instance data pool: %s', $instance->getBoardInstanceName()));
-            $command = new ClearBoardInstanceDataPoolCommand();
-            $command->setInstance($instance);
-            $app->executeCommand($command);
-
-            $this->output->writeln(t('** Populating board instance data pool: %s', $instance->getBoardInstanceName()));
-            $command = new PopulateBoardInstanceDataPoolCommand();
-            $command->setInstance($instance);
-            $app->executeCommand($command);
-
-            $this->output->writeln(t('** Regenerating instance: %s', $instance->getBoardInstanceName()));
-            $command = new ClearBoardInstanceCommand();
-            $command->setInstance($instance);
-            $app->executeCommand($command);
-
-            $command = new GenerateBoardInstanceCommand();
+            $this->output->writeln(t('** Regenerating board instance: %s', $instance->getBoardInstanceName()));
+            $command = new RegenerateBoardInstanceCommand();
             $command->setInstance($instance);
             $app->executeCommand($command);
         } else {
@@ -97,7 +84,7 @@ EOT
             if ($boardID) {
                 $board = $em->find(Board::class, $boardID);
                 if ($board) {
-                    $this->refreshBoard($app, $em, $board);
+                    $this->refreshBoard($app, $em, $board->getBoardID());
                 } else {
                     throw new \Exception(t('Invalid board ID.'));
                 }
