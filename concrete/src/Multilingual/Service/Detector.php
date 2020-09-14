@@ -1,17 +1,45 @@
 <?php
+
 namespace Concrete\Core\Multilingual\Service;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Session\SessionValidatorInterface;
-use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Validation\Strings;
+use Punic\Misc;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Detector
+class Detector implements ApplicationAwareInterface, SiteAggregateInterface
 {
+    use ApplicationAwareTrait;
+
+    /** @var bool */
+    protected $enabled;
+    /** @var bool|Section */
+    protected $preferredSection = false;
+    /** @var Site */
+    protected $site;
+
+    /**
+     * @return Site
+     */
+    public function getSite()
+    {
+        if ($this->site === null) {
+            $this->site = $this->app->make('site')->getSite();
+        }
+
+        return $this->site;
+    }
+
     /**
      * Returns the preferred section based on session, cookie,
      * user object, default browser (if allowed), and finally
@@ -23,78 +51,85 @@ class Detector
      */
     public function getPreferredSection()
     {
-        $app = Facade::getFacadeApplication();
-        $site = $app->make('site')->getSite();
-        $siteConfig = $site->getConfigRepository();
-        $session = $app->make('session');
-        $detector = $app->make(Detector::class);
+        if ($this->preferredSection === false) {
+            /** @var Session $session */
+            $session = $this->app->make('session');
+            /** @var Strings $stringsValidator */
+            $stringsValidator = $this->app->make(Strings::class);
 
-        $result = null;
-        if ($result === null) {
-            $locale = false;
-            // Detect locale by value stored in session or cookie
-            if ($detector->canSetSessionValue() && $session->has('multilingual_default_locale')) {
-                $locale = $session->get('multilingual_default_locale');
-            } else {
-                $cookie = $app->make('cookie');
-                if ($cookie->has('multilingual_default_locale')) {
-                    $locale = $cookie->get('multilingual_default_locale');
+            $section = null;
+            $default_locale = null;
+            if ($section === null) {
+                $locale = false;
+                // Detect locale by value stored in session or cookie
+                if ($this->canSetSessionValue() && $session->has('multilingual_default_locale')) {
+                    $locale = $session->get('multilingual_default_locale');
+                } else {
+                    $cookie = $this->app->make('cookie');
+                    if ($cookie->has('multilingual_default_locale')) {
+                        $locale = $cookie->get('multilingual_default_locale');
+                    }
                 }
-            }
-            if ($locale) {
-                $home = Section::getByLocale($locale);
-                if ($home) {
-                    $result = [$locale, $home];
-                }
-            }
-        }
-
-        if ($result === null) {
-            // Detect locale by user's preferred language
-            $u = $app->make(User::class);
-            if ($u->isRegistered()) {
-                $userDefaultLanguage = $u->getUserDefaultLanguage();
-                if ($userDefaultLanguage) {
-                    $home = Section::getByLocaleOrLanguage($userDefaultLanguage);
-                    if ($home) {
-                        $result = [$userDefaultLanguage, $home];
+                if ($locale) {
+                    $home = Section::getByLocale($locale);
+                    if (is_object($home)) {
+                        $section = $home;
+                        $default_locale = $locale;
                     }
                 }
             }
-        }
 
-        if ($result === null) {
-            // Detect locale by browsers headers
-            if ($siteConfig->get('multilingual.use_browser_detected_locale')) {
-                $home = false;
-                $browserLocales = \Punic\Misc::getBrowserLocales();
-                foreach (array_keys($browserLocales) as $browserLocale) {
-                    $home = Section::getByLocaleOrLanguage($browserLocale);
-                    if ($home) {
-                        $result = [$home->getLocale(), $home];
-                        break;
+            if ($section === null) {
+                // Detect locale by user's preferred language
+                $u = $this->app->make(User::class);
+                if ($u->isRegistered()) {
+                    $userDefaultLanguage = $u->getUserDefaultLanguage();
+                    if ($userDefaultLanguage) {
+                        $home = Section::getByLocaleOrLanguage($userDefaultLanguage);
+                        if (is_object($home)) {
+                            $section = $home;
+                            $default_locale = $home->getLocale();
+                        }
                     }
                 }
             }
-        }
 
-        if ($result === null) {
-            // Use the default site locale
-            $locale = $site->getDefaultLocale();
-            $home = Section::getByLocale($locale);
-            if ($home) {
-                if (!is_object($locale)) {
-                    $locale = $home->getLocaleObject();
+            if ($section === null) {
+                // Detect locale by browsers headers
+                $siteConfig = $this->getSite()->getConfigRepository();
+                if ($siteConfig->get('multilingual.use_browser_detected_locale')) {
+                    $browserLocales = Misc::getBrowserLocales();
+                    foreach (array_keys($browserLocales) as $browserLocale) {
+                        $home = Section::getByLocaleOrLanguage($browserLocale);
+                        if (is_object($home)) {
+                            $section = $home;
+                            $default_locale = $browserLocale;
+                            break;
+                        }
+                    }
                 }
-                $result = [$locale->getLocale(), $home];
             }
+
+            if ($section === null) {
+                // Use the default site locale
+                $locale = $this->getSite()->getDefaultLocale();
+                if (is_object($locale)) {
+                    $home = Section::getByLocale($locale->getLocale());
+                    if ($home) {
+                        $section = $home;
+                        $default_locale = $locale->getLocale();
+                    }
+                }
+            }
+
+            if ($section !== null && $stringsValidator->notempty($default_locale) && $this->canSetSessionValue()) {
+                $session->set('multilingual_default_locale', $default_locale);
+            }
+
+            $this->preferredSection = $section;
         }
 
-        if ($result !== null && $detector->canSetSessionValue()) {
-            $session->set('multilingual_default_locale', $result[0]);
-        }
-
-        return ($result === null) ? null : $result[1];
+        return $this->preferredSection;
     }
 
     /**
@@ -106,22 +141,21 @@ class Detector
      */
     public function setupSiteInterfaceLocalization(Page $c = null)
     {
-        $app = Facade::getFacadeApplication();
-        $loc = $app->make(Localization::class);
+        $loc = $this->app->make(Localization::class);
         $locale = null;
         if ($c === null) {
             $c = Page::getCurrentPage();
         }
         if ($c) {
             $pageController = $c->getPageController();
-            if (is_callable([$pageController, 'useUserLocale'])) {
+            if (is_object($pageController) && is_callable([$pageController, 'useUserLocale'])) {
                 $useUserLocale = $pageController->useUserLocale();
             } else {
-                $dh = $app->make('helper/concrete/dashboard');
+                $dh = $this->app->make('helper/concrete/dashboard');
                 $useUserLocale = $dh->inDashboard($c);
             }
             if ($useUserLocale) {
-                $u = $app->make(User::class);
+                $u = $this->app->make(User::class);
                 $locale = $u->getUserLanguageToDisplay();
             } else {
                 if ($this->isEnabled()) {
@@ -133,7 +167,7 @@ class Detector
                         $locale = $ms->getLocale();
 
                         if ($this->canSetSessionValue()) {
-                            $app->make('session')->set('multilingual_default_locale', $locale);
+                            $this->app->make('session')->set('multilingual_default_locale', $locale);
                         }
                     }
                 }
@@ -146,7 +180,7 @@ class Detector
             }
         }
         if (!$locale) {
-            $locale = $app->make('config')->get('concrete.locale');
+            $locale = $this->app->make('config')->get('concrete.locale');
         }
         $loc->setContextLocale(Localization::CONTEXT_SITE, $locale);
     }
@@ -154,50 +188,44 @@ class Detector
     /**
      * Check if there's some multilingual section.
      *
-     * @return bool
-     *
      * @throws \Exception
+     *
+     * @return bool
      */
     public function isEnabled()
     {
-        $app = Facade::getFacadeApplication();
-        $cache = $app->make('cache/request');
-        $item = $cache->getItem('multilingual/enabled');
-        if (!$item->isMiss()) {
-            return $item->get();
-        }
-
-        $item->lock();
-        $result = false;
-        if ($app->isInstalled()) {
-            $site = $app->make('site')->getSite();
-            if (count($site->getLocales()) > 1) {
-                $result = true;
+        if ($this->enabled === null) {
+            $result = false;
+            if ($this->app->isInstalled()) {
+                $site = $this->getSite();
+                if (count($site->getLocales()) > 1) {
+                    $result = true;
+                }
             }
+            $this->enabled = $result;
         }
 
-        $cache->save($item->set($result));
-
-        return $result;
+        return $this->enabled;
     }
 
     /**
+     * Check if we can set a session value.
+     *
      * @return bool
      */
     protected function canSetSessionValue()
     {
-        $app = Facade::getFacadeApplication();
-        if ($app->make(SessionValidatorInterface::class)->hasActiveSession()) {
+        // If we already started the session, return true.
+        if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
             return true;
         }
-        $page = Page::getCurrentPage();
-        if ($page !== null) {
-            $site = $page->getSite();
-            if ($site !== null) {
-                $siteConfig = $site->getConfigRepository();
 
-                return (bool) $siteConfig->get('multilingual.always_track_user_locale');
-            }
+        // If the site config value is true, it may start a new session without sign in to concrete5.
+        $site = $this->getSite();
+        if ($site !== null) {
+            $siteConfig = $site->getConfigRepository();
+
+            return (bool) $siteConfig->get('multilingual.always_track_user_locale');
         }
 
         return false;
