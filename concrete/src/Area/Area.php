@@ -822,24 +822,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             return false;
         }
 
-        if (!$c->isAdminArea()) {
-            /*
-             * Temporary store the rendered areas into a session variable to determinate the orphaned blocks later.
-             */
-
-            $app = Application::getFacadeApplication();
-            /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-            $session = $app->make('session');
-
-            $usedAreas = $session->get("used_areas", []);
-
-            if (!in_array($this->getAreaHandle(), $usedAreas)) {
-                $usedAreas[] = $this->getAreaHandle();
-                $session->set("used_areas", $usedAreas);
-                $session->save();
-            }
-        }
-
         $this->load($c);
         $ap = new Permissions($this);
         if (!$ap->canViewArea()) {
