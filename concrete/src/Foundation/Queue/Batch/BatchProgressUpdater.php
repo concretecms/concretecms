@@ -3,6 +3,7 @@
 namespace Concrete\Core\Foundation\Queue\Batch;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Queue\Batch;;
 
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
@@ -40,19 +41,12 @@ class BatchProgressUpdater
 
     public function incrementCommandProgress(BatchableCommandInterface $command)
     {
-        $entityManager = $this->app->make(EntityManager::class);
-        $r = $entityManager->getRepository(Batch::class);
-        $batch = $r->findOneByBatchHandle($command->getBatchHandle());
-        if ($batch) {
-            /**
-             * @var $batch Batch
-             */
-            $completed = $batch->getCompleted();
-            $completed++;
-            $batch->setCompleted($completed);
-            $entityManager->persist($batch);
-            $entityManager->flush();
-        }
+        $db = $this->app->make(Connection::class);
+        $db->transactional(function($db) use ($command) {
+            $db->executeQuery('update QueueBatches set completed = completed + 1 where batchHandle = ?', [
+                $command->getBatchHandle()
+            ]);
+        });
     }
 
 

@@ -35,6 +35,14 @@ class QueueProcessCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app = Core::make('app');
+        $config = $app->make('config');
+        if ($config->get('concrete.queue.listening') == 'automatic') {
+            throw new \Exception(
+                t('Your queue processing is set to automatic, so you cannot run this console command.') .
+                "\n" .
+                t('You must set the queue listener to manual in the Automation Settings Dashboard page first.')
+            );
+        }
 
         if ($output->isVeryVerbose()) {
             $eventDispatcher = $app->make('director');

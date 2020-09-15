@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20200903201537', // the key of the latest database migration
+    'version_db' => '20200914023919', // the key of the latest database migration
 
     /*
      * Installation status
@@ -345,6 +345,15 @@ return [
          */
         'driver' => 'database',
 
+        /**
+         * Listener. If set to automatic, then queueable operations like rescanning files and deleting bulk pages
+         * will be polled and executed through an in-page dialog window on demand only. If set to manual you must run
+         * `concrete/bin/concrete5 queue:process` from the command line. This command can be run multiple times to
+         * add additional queue workers for command processing.
+         *
+         * @var string (automatic|manual)
+         */
+        'listening' => 'automatic',
 
         /*
          * Default queue to use

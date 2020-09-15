@@ -49,11 +49,11 @@ class Processor implements ProcessorInterface
         $batch = $this->batchFactory->createOrGetBatch($factory->getBatchHandle());
         $commands = $factory->getCommands($mixed);
 
+        $this->updater->incrementTotals($batch, count($commands));
+
         foreach($commands as $command) {
             $dispatcher->dispatch($command, AsynchronousBus::getHandle());
         }
-
-        $this->updater->incrementTotals($batch, count($commands));
 
         return $this->responseFactory->createResponse($batch, $additionalResponseData);
 

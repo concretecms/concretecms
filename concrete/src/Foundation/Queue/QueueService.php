@@ -147,25 +147,23 @@ class QueueService
     }
     public function consumeBatchFromPoll(Batch $batch)
     {
+        if ($this->config->get('concrete.queue.listening') == 'manual') {
+            return false; // The `concrete/bin/concrete5 queue:process` command is being run separately.
+        }
+
         $maxMessages = $this->getPollingMax($batch->getBatchHandle());
         $queue = $this->get($this->getDefaultQueueHandle());
-        try {
-            $this->consume($queue, [
-                'stop-when-empty' => true,
-                'max-messages' => $maxMessages
-            ]);
-        } catch (MutexBusyException $exception) {
-            return false;
-        }
+
+        $this->consume($queue, [
+            'stop-when-empty' => true,
+            'max-messages' => $maxMessages
+        ]);
     }
 
     public function consume(Queue $queue, $options = [])
     {
         $consumer = $this->app->make('queue/consumer');
-        $generator = $this->mutexGeneratorFactory->create($queue);
-        $generator->execute($queue, function() use ($consumer, $queue, $options) {
-            $consumer->consume($queue, $options);
-        });
+        $consumer->consume($queue, $options);
     }
 
 
