@@ -7,6 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var Concrete\Core\Entity\File\File $file
  * @var Concrete\Core\Entity\File\Version|null $fileVersion
+ * @var Concrete\Core\Application\Application $app
  */
 
 if ($fileVersion === null) {
@@ -15,5 +16,5 @@ if ($fileVersion === null) {
     <?php
 } else {
     $fileType = $fileVersion->getTypeObject();
-    View::element('files/edit/' . $fileType->getEditor(), ['fv' => $fileVersion], $fileType->getPackageHandle());
+    View::element('files/edit/' . $fileType->getEditor(), ['fv' => $fileVersion, 'app' => $app], $fileType->getPackageHandle());
 }

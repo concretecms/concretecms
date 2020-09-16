@@ -10,6 +10,8 @@ use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
 class Edit extends Controller
 {
     /**
@@ -25,6 +27,7 @@ class Edit extends Controller
         $this->checkAccessibleFile($file);
         $this->set('file', $file);
         $this->set('fileVersion', $file->getApprovedVersion());
+        $this->set('app', $this->app);
 
         return null;
     }
