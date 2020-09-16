@@ -14,14 +14,14 @@ final class Version20200914023919 extends AbstractMigration implements Repeatabl
     public function upgradeDatabase()
     {
         $this->createSinglePage('/dashboard/system/automation', 'Automation');
-        $this->createSinglePage('/dashboard/system/automation/commands', 'Commands', ['meta_keywords' => 'automated jobs, commands, console, cli']);
-        $this->createSinglePage('/dashboard/system/automation/queues', 'Queues');
+        $this->createSinglePage('/dashboard/system/automation/tasks', 'Tasks', ['meta_keywords' => 'automated jobs, tasks, commands, console, cli']);
+        $this->createSinglePage('/dashboard/system/automation/processes', 'Processes', ['meta_keywords' => 'queues, jobs, running']);
         $this->createSinglePage('/dashboard/system/automation/settings', 'Automation Settings');
 
         $this->refreshEntities([Command::class]);
 
-        $this->output(t('Installing automated commands upgrade XML...'));
+        $this->output(t('Installing automated tasks upgrade XML...'));
         $importer = new ContentImporter();
-        $importer->importContentFile(DIR_BASE_CORE . '/config/install/base/commands.xml');
+        $importer->importContentFile(DIR_BASE_CORE . '/config/install/base/tasks.xml');
     }
 }

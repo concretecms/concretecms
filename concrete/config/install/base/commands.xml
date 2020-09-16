@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<concrete5-cif version="1.0">
-    <commands>
-        <command handle="rescan_files" package=""/>
-    </commands>
-</concrete5-cif>

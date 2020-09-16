@@ -78,7 +78,7 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_boards', 66, t('Adding boards.')),
             new StartingPointInstallRoutine('install_page_types', 67, t('Page type basic setup.')),
             new StartingPointInstallRoutine('install_themes', 68, t('Adding themes.')),
-            new StartingPointInstallRoutine('install_jobs', 69, t('Installing automated jobs.')),
+            new StartingPointInstallRoutine('install_tasks', 69, t('Installing tasks.')),
             new StartingPointInstallRoutine('install_dashboard', 78, t('Installing dashboard.')),
             new StartingPointInstallRoutine('install_required_single_pages', 79, t('Installing login and registration pages.')),
             new StartingPointInstallRoutine('install_image_editor', 80, t('Adding image editor functionality.')),
@@ -348,10 +348,11 @@ class StartingPointPackage extends Package
         }
     }
 
-    protected function install_jobs()
+    protected function install_tasks()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/jobs.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/tasks.xml');
     }
 
     protected function install_config()

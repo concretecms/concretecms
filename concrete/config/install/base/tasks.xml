@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <tasks>
+        <task handle="clear_cache" package=""/>
+        <task handle="rescan_files" package=""/>
+    </tasks>
+</concrete5-cif>

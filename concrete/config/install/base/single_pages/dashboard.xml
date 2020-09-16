@@ -957,16 +957,21 @@
         <page name="Automation" path="/dashboard/system/automation"
               filename="/dashboard/system/automation/view.php" pagetype="" description="Run and automate commands."
               package=""/>
-        <page name="Commands" path="/dashboard/system/automation/commands"
-              filename="/dashboard/system/automation/commands.php" pagetype="" description="" package="">
+        <page name="Tasks" path="/dashboard/system/automation/tasks"
+              filename="/dashboard/system/automation/tasks.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>automated jobs, commands, console, cli</value>
+                    <value>automated jobs, commands, tasks, console, cli</value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="Queues" path="/dashboard/system/automation/queues"
-              filename="/dashboard/system/automation/queues.php" pagetype="" description="" package="">
+        <page name="Processes" path="/dashboard/system/automation/processes"
+              filename="/dashboard/system/automation/processes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>queues, jobs, running</value>
+                </attributekey>
+            </attributes>
         </page>
         <page name="Automation Settings" path="/dashboard/system/automation/settings"
               filename="/dashboard/system/automation/settings.php" pagetype="" description="" package="">

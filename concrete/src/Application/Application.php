@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Application;
 
-use Concrete\Core\Cache\CacheClearer;
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
@@ -108,7 +108,8 @@ class Application extends Container
      */
     public function clearCaches()
     {
-        $this->make(CacheClearer::class)->flush();
+        $command = new ClearCacheCommand();
+        $this->executeCommand($command);
     }
 
     /**
