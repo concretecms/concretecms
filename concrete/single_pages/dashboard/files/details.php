@@ -83,7 +83,7 @@ $file = $fileVersion->getFile();
                             class="btn btn-secondary dialog-launch"
                             dialog-title="<?= t('Edit') ?>"
                             dialog-width="90%" dialog-height="75%"
-                            href="<?= REL_DIR_FILES_TOOLS_REQUIRED . '/files/edit?fID=' . $file->getFileID() ?>"
+                            href="<?= h($resolverManager->resolve(['/ccm/system/file/edit?fID=' . $file->getFileID()])) ?>"
                     ><?= t('Edit') ?></a>
                     <div class="text-muted">
                         <?php

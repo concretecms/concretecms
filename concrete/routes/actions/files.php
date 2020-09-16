@@ -26,6 +26,7 @@ $router->all('/thumbnailer', 'File\Thumbnailer::generate');
 $router->all('/fetch_incoming_files', 'File::fetchIncomingFiles');
 $router->all('/fetch_directories', 'File::fetchDirectories');
 $router->all('/create_directory', 'File::createDirectory');
+$router->all('/edit', 'File\Edit::view');
 
 $router->all('/chooser/recent', 'File\Chooser::getRecent');
 $router->all('/chooser/get_file_sets', 'File\Chooser::getFileSets');
