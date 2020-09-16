@@ -1,9 +1,8 @@
 <?php
-namespace Concrete\Core\Express\Search\Column;
+namespace Concrete\Core\Express\Search\ColumnSet\Column;
 
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Search\Column\Column;
-use Concrete\Core\Search\Result\Result;
 
 class AssociationColumn extends Column
 {

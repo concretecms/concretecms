@@ -3,6 +3,9 @@ namespace Concrete\Core\Express\Search\ColumnSet;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Express\Search\ColumnSet\Column\DateCreatedColumn;
+use Concrete\Core\Express\Search\ColumnSet\Column\DateLastModifiedColumn;
+use Concrete\Core\Express\Search\ColumnSet\Column\DisplayOrderColumn;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Column;
 use Core;
@@ -54,12 +57,12 @@ class DefaultSet extends ColumnSet
     {
         parent::__construct($category);
 
-        $this->addColumn(new Column('e.exEntryDateCreated', t('Date Added'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDateAdded')));
-        $this->addColumn(new Column('e.exEntryDateModified', t('Date Modified'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDateModified')));
+        $this->addColumn(new DateCreatedColumn());
+        $this->addColumn(new DateLastModifiedColumn());
 
         $entity = $category->getExpressEntity();
         if ($entity->supportsCustomDisplayOrder()) {
-            $this->addColumn(new Column('e.exEntryDisplayOrder', t('Custom Display Order'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDisplayOrder')));
+            $this->addColumn(new DisplayOrderColumn());
         }
 
         $entity = $category->getExpressEntity();
