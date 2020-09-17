@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
+use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Support\Facade\Facade;
 use Loader;
 use Concrete\Core\User\Group\Group;
 use Config;
@@ -75,6 +77,17 @@ class GroupEntity extends Entity
 
     public static function getOrCreate(Group $g)
     {
+        /** @var RequestCache $cache */
+        $cache = Facade::getFacadeApplication()->make('cache/request');
+        $key = '/Permission/Access/Entity/Group/' . $g->getGroupID();
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $pe = null;
         $db = Loader::db();
         $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'group\'');
         $peID = $db->GetOne('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petID = ? and paeg.gID = ?',
@@ -87,7 +100,14 @@ class GroupEntity extends Entity
                 array($peID, $g->getGroupID()));
         }
 
-        return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+        $pe = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+
+        if (is_object($pe) && isset($item) && $item->isMiss()) {
+            $item->set($pe);
+            $cache->save($item);
+        }
+
+        return $pe;
     }
 
     public function load()
