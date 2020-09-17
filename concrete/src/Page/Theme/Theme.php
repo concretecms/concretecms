@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Theme;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Loader;
 use Page;
@@ -437,15 +439,30 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * @param int $ptID
+     * @param int $pThemeID
      *
      * @return PageTheme
      */
     public static function getByID($pThemeID)
     {
+        /** @var RequestCache $cache */
+        $cache = Facade::getFacadeApplication()->make('cache/request');
+        $key = '/PageTheme/' . $pThemeID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
         $where = 'pThemeID = ?';
         $args = [$pThemeID];
         $pt = static::populateThemeQuery($where, $args);
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($pt);
+            $cache->save($item);
+        }
 
         return $pt;
     }
