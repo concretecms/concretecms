@@ -3,7 +3,8 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Backup\ContentImporter;
-use Concrete\Core\Entity\Command\Command;
+use Concrete\Core\Entity\Automation\Process;
+use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
@@ -18,7 +19,10 @@ final class Version20200914023919 extends AbstractMigration implements Repeatabl
         $this->createSinglePage('/dashboard/system/automation/processes', 'Processes', ['meta_keywords' => 'queues, jobs, running']);
         $this->createSinglePage('/dashboard/system/automation/settings', 'Automation Settings');
 
-        $this->refreshEntities([Command::class]);
+        $this->refreshEntities([
+            Process::class,
+            Task::class
+       ]);
 
         $this->output(t('Installing automated tasks upgrade XML...'));
         $importer = new ContentImporter();

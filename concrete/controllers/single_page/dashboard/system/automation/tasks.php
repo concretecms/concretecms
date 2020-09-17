@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Automation;
 
-use Concrete\Core\Entity\Task\Task;
+use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Tasks extends DashboardPageController

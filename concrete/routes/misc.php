@@ -17,17 +17,16 @@ $router->all('/ccm/system/css/page/{cID}/{stylesheet}', '\Concrete\Controller\Fr
 $router->all('/ccm/system/backend/editor_data/', '\Concrete\Controller\Backend\EditorData::view');
 $router->all('/ccm/system/backend/get_remote_help/', '\Concrete\Controller\Backend\GetRemoteHelp::view');
 $router->all('/ccm/system/backend/intelligent_search/', '\Concrete\Controller\Backend\IntelligentSearch::view');
+
+$router->all('/ccm/system/tasks/execute', '\Concrete\Controller\Backend\Tasks::execute');
+
+
 $router->all('/ccm/system/jobs', '\Concrete\Controller\Frontend\Jobs::view');
 $router->all('/ccm/system/jobs/run_single', '\Concrete\Controller\Frontend\Jobs::run_single');
 $router->all('/ccm/system/jobs/check_queue', '\Concrete\Controller\Frontend\Jobs::check_queue');
 
 $router->all('/ccm/system/summary_template/render/{categoryHandle}/{memberIdentifier}/{templateID}', '\Concrete\Controller\Backend\SummaryTemplate::render');
 
-// @TODO remove the line below
-$router->all('/tools/required/jobs', '\Concrete\Controller\Frontend\Jobs::view');
-$router->all('/tools/required/jobs/check_queue', '\Concrete\Controller\Frontend\Jobs::check_queue');
-$router->all('/tools/required/jobs/run_single', '\Concrete\Controller\Frontend\Jobs::run_single');
-// end removing lines
 $router->all('/ccm/system/upgrade/', '\Concrete\Controller\Upgrade::view');
 $router->all('/ccm/system/upgrade/submit', '\Concrete\Controller\Upgrade::submit');
 $router->all('/ccm/system/country-stateprovince-link/get_stateprovinces', '\Concrete\Controller\Frontend\CountryDataLink::getStateprovinces');

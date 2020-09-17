@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Entity\Task\Task;
+use Concrete\Core\Entity\Automation\Task;
 use Doctrine\ORM\EntityManager;
 
 class ImportTasksRoutine extends AbstractRoutine

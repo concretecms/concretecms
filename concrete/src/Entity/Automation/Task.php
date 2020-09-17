@@ -1,9 +1,10 @@
 <?php
 
-namespace Concrete\Core\Entity\Task;
+namespace Concrete\Core\Entity\Automation;
 
 use Concrete\Core\Automation\Task\Controller\ControllerInterface;
 use Concrete\Core\Automation\Task\Manager;
+use Concrete\Core\Automation\Task\TaskInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Tasks")
  */
-class Task implements \JsonSerializable
+class Task implements \JsonSerializable, TaskInterface
 {
 
     use PackageTrait;
@@ -98,7 +99,7 @@ class Task implements \JsonSerializable
     /**
      * @return ControllerInterface
      */
-    public function getController()
+    public function getController(): ControllerInterface
     {
         $app = Facade::getFacadeApplication();
         $manager = $app->make(Manager::class);

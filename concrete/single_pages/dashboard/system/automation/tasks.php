@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button type="submit" class="btn btn-primary float-right" :disabled="selectedTask === null"><?=t('Run Task')?></button>
+            <button @click="runTask" type="submit" class="btn btn-primary float-right" :disabled="selectedTask === null"><?=t('Run Task')?></button>
         </div>
     </div>
 
@@ -45,7 +45,23 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 computed: {},
 
                 watch: {},
-                methods: {}
+                methods: {
+                    runTask() {
+                        const my = this;
+                        if (this.selectedTask) {
+                            new ConcreteAjaxRequest({
+                                url: '<?=URL::to('/ccm/system/tasks/execute')?>',
+                                data: {
+                                    'id': my.selectedTask.id,
+                                    'ccm_token': '<?=$token->generate('execute')?>'
+                                },
+                                success: function(r) {
+
+                                }
+                            })
+                        }
+                    }
+                }
             })
         })
     });
