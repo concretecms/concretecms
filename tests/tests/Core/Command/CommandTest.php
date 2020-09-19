@@ -109,27 +109,4 @@ class CommandTest extends ConcreteDatabaseTestCase
         $bus2 = $dispatcher->getBusForCommand($command);
         $this->assertInstanceOf(AsynchronousBus::class, $bus2);
     }
-
-    public function testForcingACommandToABus()
-    {
-        $app = Facade::getFacadeApplication();
-        $config = $app->make('config');
-        $dispatcherFactory = new DispatcherFactory($app, $config);
-        $dispatcher = $dispatcherFactory->getDispatcher();
-
-        $command = new UpdatePageTypeDefaultsCommand(1, 1, 1, 1, 1);
-        $bus = $dispatcher->getBusForCommand($command);
-        $this->assertInstanceOf(AsynchronousBus::class, $bus);
-        $command = $dispatcher->wrapCommandForDispatch($command, $bus);
-        $this->assertInstanceOf(UpdatePageTypeDefaultsCommand::class, $command);
-
-        $dispatcher->registerCommand(app(DeletePageCommandHandler::class), DeletePageCommand::class, AsynchronousBus::getHandle());
-
-        $command = new DeletePageCommand(1, 4);
-        $bus = $dispatcher->getBusForCommand($command);
-        $this->assertInstanceOf(AsynchronousBus::class, $bus);
-        $command = $dispatcher->wrapCommandForDispatch($command, $bus);
-        $this->assertInstanceOf(QueueCommand::class, $command);
-        $this->assertEquals('default', $command->getName());
-    }
 }

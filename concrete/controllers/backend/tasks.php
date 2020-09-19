@@ -2,18 +2,14 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Automation\Process\ProcessFactory;
-use Concrete\Core\Automation\Task\TaskDispatcher;
+use Concrete\Core\Automation\Task\Input\Input;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponseFactory;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\QueueProgressResponse;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Validation\CSRF\Token;
 use Doctrine\ORM\EntityManager;
-use League\Tactician\Bernard\QueueCommand;
+use Concrete\Core\Automation\Process\Dispatcher\Dispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Tasks extends AbstractController
@@ -40,18 +36,18 @@ class Tasks extends AbstractController
     protected $processFactory;
 
     /**
-     * @var TaskDispatcher
+     * @var Dispatcher
      */
-    protected $taskDispatcher;
+    protected $processDispatcher;
 
-    public function __construct(ErrorList $errorList, Token $token, EntityManager $entityManager, ProcessFactory $processFactory, TaskDispatcher $taskDispatcher)
+    public function __construct(ErrorList $errorList, Token $token, EntityManager $entityManager, ProcessFactory $processFactory, Dispatcher $processDispatcher)
     {
         parent::__construct();
         $this->errorList = $errorList;
         $this->token = $token;
         $this->entityManager = $entityManager;
         $this->processFactory = $processFactory;
-        $this->taskDispatcher = $taskDispatcher;
+        $this->processDispatcher = $processDispatcher;
     }
 
     public function execute()
@@ -78,9 +74,10 @@ class Tasks extends AbstractController
         if ($this->errorList->has()) {
             return new JsonResponse($this->errorList);
         } else {
-            $process = $this->processFactory->createProcess($task);
-            $this->taskDispatcher->dispatch($process);
-            return new JsonResponse($process);
+            $input = new Input();
+            $process = $this->processFactory->createProcess($task, $input);
+            $response = $this->processDispatcher->dispatch($process);
+            return $response;
         }
 
     }

@@ -3,25 +3,35 @@
 namespace Concrete\Core\Foundation\Command\Handler;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
+use Concrete\Core\Foundation\Command\SelfHandlingCommandInterface;
+use League\Tactician\Exception\CanNotInvokeHandlerException;
 use League\Tactician\Exception\MissingHandlerException;
+use League\Tactician\Handler\Locator\HandlerLocator;
 use League\Tactician\Handler\Locator\InMemoryLocator;
 
 /**
  * A class responsible for handling Concrete-specific command locating, including the ability to hydrate
  * via Application, and self handling commands.
  */
-class CoreLocator extends InMemoryLocator
+class CoreLocator implements HandlerLocator
 {
+
+    /**
+     * @var \Concrete\Core\Config\Repository\Repository;
+     */
+    private $config;
 
     /**
      * @var \Concrete\Core\Application\Application
      */
     private $app;
 
-    public function __construct(Application $app, array $commandClassToHandlerMap = [])
+    public function __construct(Application $app, Repository $config)
     {
-        parent::__construct($commandClassToHandlerMap);
         $this->app = $app;
+        $this->config = $config;
     }
 
     /**
@@ -33,11 +43,25 @@ class CoreLocator extends InMemoryLocator
      */
     public function getHandlerForCommand($commandName)
     {
-        if (!isset($this->handlers[$commandName])) {
-            throw MissingHandlerException::forCommand($commandName);
+        $handler = null;
+
+        $commands = $this->config->get('app.commands');
+        foreach($commands as $entry) {
+            if ($entry[0] === $commandName) {
+                $handler = $entry[1];
+            }
         }
 
-        $handler = $this->handlers[$commandName];
+        if (!$handler) {
+            $reflectionCommand = new \ReflectionClass($commandName);
+            if ($reflectionCommand->implementsInterface(HandlerAwareCommandInterface::class)) {
+                $handler = $commandName::getHandler();
+            }
+        }
+
+        if (!$handler) {
+            throw MissingHandlerException::forCommand($commandName);
+        }
 
         // If we have a string, try to make it with the container
         if (is_string($handler)) {
@@ -48,9 +72,6 @@ class CoreLocator extends InMemoryLocator
         if (is_callable($handler)) {
             $handler = $this->app->call($handler);
         }
-
-        // Reset the handler in case our resolution had an effect
-        $this->handlers[$commandName] = $handler;
 
         return $handler;
     }

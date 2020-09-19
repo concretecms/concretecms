@@ -14,7 +14,7 @@ use Concrete\Core\Entity\Automation\Task;
 class ProcessFactory
 {
 
-    public function createProcess(Task $task, InputInterface $input = null)
+    public function createProcess(Task $task, InputInterface $input)
     {
         $process = new Process();
         $process->setTask($task);

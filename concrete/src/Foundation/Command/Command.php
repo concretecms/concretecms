@@ -11,7 +11,7 @@ namespace Concrete\Core\Foundation\Command;
 abstract class Command implements HandlerAwareCommandInterface
 {
 
-    public function getHandler(): string
+    public static function getHandler(): string
     {
         return static::class . 'Handler';
     }

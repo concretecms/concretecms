@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         <tbody>
         <tr :key="task.id" v-for="task in tasks">
             <td><input type="radio" :id="task.id" v-model="selectedTask" :value="task"></td>
-            <td><b><label :for="task.id">{{task.name}}</label></b></td>
+            <td><b><label :for="task.id" class="mb-0">{{task.name}}</label></b></td>
             <td>{{task.description}}</td>
         </tr>
         </tbody>

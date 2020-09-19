@@ -28,12 +28,17 @@ class Process implements \JsonSerializable
     protected $started;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned":true}, nullable=true)
+     */
+    protected $completed;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Task")
      **/
     protected $task;
 
     /**
-     * @var ???
+     * @ORM\Column(type="json")
      */
     protected $input;
 
@@ -59,6 +64,22 @@ class Process implements \JsonSerializable
     public function setStarted($started): void
     {
         $this->started = $started;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompleted()
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param mixed $completed
+     */
+    public function setCompleted($completed): void
+    {
+        $this->completed = $completed;
     }
 
     /**
