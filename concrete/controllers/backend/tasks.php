@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Controller\Backend;
 
-use Concrete\Core\Automation\Process\ProcessFactory;
 use Concrete\Core\Automation\Task\Input\Input;
+use Concrete\Core\Automation\Task\Response\HttpResponseFactory;
+use Concrete\Core\Automation\Task\Runner\TaskRunner;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Validation\CSRF\Token;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Automation\Process\Dispatcher\Dispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Tasks extends AbstractController
@@ -31,23 +32,28 @@ class Tasks extends AbstractController
     protected $entityManager;
 
     /**
-     * @var ProcessFactory
+     * @var TaskRunner
      */
-    protected $processFactory;
+    protected $taskRunner;
 
     /**
-     * @var Dispatcher
+     * @var HttpResponseFactory
      */
-    protected $processDispatcher;
+    protected $httpResponseFactory;
 
-    public function __construct(ErrorList $errorList, Token $token, EntityManager $entityManager, ProcessFactory $processFactory, Dispatcher $processDispatcher)
-    {
+    public function __construct(
+        ErrorList $errorList,
+        Token $token,
+        EntityManager $entityManager,
+        TaskRunner $taskRunner,
+        HttpResponseFactory $httpResponseFactory
+    ) {
         parent::__construct();
         $this->errorList = $errorList;
         $this->token = $token;
         $this->entityManager = $entityManager;
-        $this->processFactory = $processFactory;
-        $this->processDispatcher = $processDispatcher;
+        $this->taskRunner = $taskRunner;
+        $this->httpResponseFactory = $httpResponseFactory;
     }
 
     public function execute()
@@ -64,6 +70,9 @@ class Tasks extends AbstractController
 
         $task = null;
         if ($this->request->request->has('id')) {
+            /**
+             * @var $task Task
+             */
             $task = $this->entityManager->find(Task::class, $this->request->request->get('id'));
         }
 
@@ -75,11 +84,10 @@ class Tasks extends AbstractController
             return new JsonResponse($this->errorList);
         } else {
             $input = new Input();
-            $process = $this->processFactory->createProcess($task, $input);
-            $response = $this->processDispatcher->dispatch($process);
-            return $response;
+            $command = $task->getController()->getTaskRunnerCommand($input);
+            $response = $this->taskRunner->run($command);
+            return $this->httpResponseFactory->createResponse($response);
         }
-
     }
 
 

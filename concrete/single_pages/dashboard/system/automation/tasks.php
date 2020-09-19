@@ -56,7 +56,9 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                                     'ccm_token': '<?=$token->generate('execute')?>'
                                 },
                                 success: function(r) {
-
+                                    if (r.status === 'completed') {
+                                        window.location.reload();
+                                    }
                                 }
                             })
                         }

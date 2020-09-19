@@ -2,9 +2,8 @@
 
 namespace Concrete\Core\Automation\Task\Controller;
 
-use Concrete\Core\Automation\Process\Response\ResponseInterface;
+use Concrete\Core\Automation\Task\Command\TaskRunnerCommandInterface;
 use Concrete\Core\Automation\Task\Input\InputInterface;
-use Concrete\Core\Foundation\Command\CommandInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -17,6 +16,6 @@ interface ControllerInterface
 
     public function getHelpText(): string;
 
-    public function getCommand(InputInterface $input): CommandInterface;
+    public function getTaskRunnerCommand(InputInterface $input): TaskRunnerCommandInterface;
 
 }
