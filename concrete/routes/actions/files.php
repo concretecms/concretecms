@@ -11,6 +11,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Namespace: Concrete\Controller\Backend\
  */
 
+$router->all('/view', 'File\View::view');
 $router->all('/approve_version', 'File::approveVersion');
 $router->all('/delete_version', 'File::deleteVersion');
 $router->all('/duplicate', 'File::duplicate');
