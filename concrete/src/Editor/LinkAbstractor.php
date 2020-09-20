@@ -235,9 +235,11 @@ class LinkAbstractor extends ConcreteObject
         );
 
         // snippets
-        $snippets = Snippet::getActiveList();
-        foreach ($snippets as $sn) {
-            $text = $sn->findAndReplace($text);
+        if (strrpos($text, 'data-scs') !== false) {
+            $snippets = Snippet::getActiveList();
+            foreach ($snippets as $sn) {
+                $text = $sn->findAndReplace($text);
+            }
         }
 
         return $text;
