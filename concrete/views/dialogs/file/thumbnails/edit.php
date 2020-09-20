@@ -84,7 +84,7 @@ $view->addScopeItems([
         'saveAreaBackgroundColor' => $saveAreaBackgroundColor,
         'saveHeight' => $height,
         'saveWidth' => $width,
-        'saveUrl' => (string)Url::to('/tools/required/files/importers/thumbnail'),
+        'saveUrl' => (string)Url::to('/ccm/system/file/importers/thumbnail'),
         'saveData' => [
             'isThumbnail' => true,
             'fID' => $file_version->getFileID(),

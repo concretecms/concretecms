@@ -29,6 +29,7 @@ $router->all('/fetch_directories', 'File::fetchDirectories');
 $router->all('/create_directory', 'File::createDirectory');
 $router->all('/edit', 'File\Edit::view');
 $router->all('/importers/imageeditor', 'File\Importer\ImageEditor::view');
+$router->all('/importers/thumbnail', 'File\Importer\Thumbnail::view');
 
 $router->all('/chooser/recent', 'File\Chooser::getRecent');
 $router->all('/chooser/get_file_sets', 'File\Chooser::getFileSets');
