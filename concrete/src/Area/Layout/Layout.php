@@ -1,13 +1,14 @@
 <?php
+
 namespace Concrete\Core\Area\Layout;
 
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Support\Facade\Application;
 use Core;
 use Database;
-use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Area\Area;
-use Concrete\Core\Block\Block;
 
 abstract class Layout extends ConcreteObject
 {
@@ -56,7 +57,7 @@ abstract class Layout extends ConcreteObject
 
         $al = null;
         $db = Database::connection();
-        $row = $db->GetRow('select arLayoutID, arLayoutIsPreset, arLayoutUsesThemeGridFramework from AreaLayouts where arLayoutID = ?', array($arLayoutID));
+        $row = $db->GetRow('select arLayoutID, arLayoutIsPreset, arLayoutUsesThemeGridFramework from AreaLayouts where arLayoutID = ?', [$arLayoutID]);
         if (is_array($row) && $row['arLayoutID']) {
             if ($row['arLayoutUsesThemeGridFramework']) {
                 $al = new ThemeGridLayout();
@@ -76,12 +77,6 @@ abstract class Layout extends ConcreteObject
         }
 
         return $al;
-    }
-
-    protected function loadColumnNumber()
-    {
-        $db = Database::connection();
-        $this->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($this->arLayoutID));
     }
 
     /**
@@ -146,11 +141,11 @@ abstract class Layout extends ConcreteObject
     public function getAreaLayoutColumns()
     {
         $db = Database::connection();
-        $r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
-        $columns = array();
+        $r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', [$this->arLayoutID]);
+        $columns = [];
         $class = '\\Concrete\\Core\\Area\\Layout\\' . Core::make('helper/text')->camelcase($this->arLayoutType) . 'Column';
         while ($row = $r->FetchRow()) {
-            $column = call_user_func_array(array($class, 'getByID'), array($row['arLayoutColumnID']));
+            $column = call_user_func_array([$class, 'getByID'], [$row['arLayoutColumnID']]);
             if (is_object($column)) {
                 $column->setAreaLayoutObject($this);
                 $columns[] = $column;
@@ -168,18 +163,18 @@ abstract class Layout extends ConcreteObject
         $db = Database::connection();
         $arLayoutColumnDisplayID = $db->GetOne('select max(arLayoutColumnDisplayID) as arLayoutColumnDisplayID from AreaLayoutColumns');
         if ($arLayoutColumnDisplayID) {
-            ++$arLayoutColumnDisplayID;
+            $arLayoutColumnDisplayID++;
         } else {
             $arLayoutColumnDisplayID = 1;
         }
-        $index = $db->GetOne('select count(arLayoutColumnID) from AreaLayoutColumns where arLayoutID = ?', array($this->arLayoutID));
-        $db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', array($this->arLayoutID, $index, $arLayoutColumnDisplayID));
-        $arLayoutColumnID = $db->Insert_ID();
+        $index = $db->GetOne('select count(arLayoutColumnID) from AreaLayoutColumns where arLayoutID = ?', [$this->arLayoutID]);
+        $db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', [$this->arLayoutID, $index, $arLayoutColumnDisplayID]);
 
-        return $arLayoutColumnID;
+        return $db->Insert_ID();
     }
 
     abstract public function duplicate();
+
     abstract public function exportDetails($node);
 
     /**
@@ -207,8 +202,8 @@ abstract class Layout extends ConcreteObject
             $col->delete();
         }
         $db = Database::connection();
-        $db->Execute('delete from AreaLayouts where arLayoutID = ?', array($this->arLayoutID));
-        $db->Execute('delete from AreaLayoutPresets where arLayoutID = ?', array($this->arLayoutID));
+        $db->Execute('delete from AreaLayouts where arLayoutID = ?', [$this->arLayoutID]);
+        $db->Execute('delete from AreaLayoutPresets where arLayoutID = ?', [$this->arLayoutID]);
     }
 
     /**
@@ -218,8 +213,13 @@ abstract class Layout extends ConcreteObject
     {
         $class = '\\Concrete\\Core\\Area\\Layout\\' .
             'Formatter\\' . Core::make('helper/text')->camelcase($this->arLayoutType) . 'Formatter';
-        $o = new $class($this);
 
-        return $o;
+        return new $class($this);
+    }
+
+    protected function loadColumnNumber()
+    {
+        $db = Database::connection();
+        $this->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', [$this->arLayoutID]);
     }
 }
