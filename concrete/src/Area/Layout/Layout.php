@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
+use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Support\Facade\Application;
 use Core;
 use Database;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -41,6 +43,18 @@ abstract class Layout extends ConcreteObject
      */
     public static function getByID($arLayoutID)
     {
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/Area/Layout/' . $arLayoutID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $al = null;
         $db = Database::connection();
         $row = $db->GetRow('select arLayoutID, arLayoutIsPreset, arLayoutUsesThemeGridFramework from AreaLayouts where arLayoutID = ?', array($arLayoutID));
         if (is_array($row) && $row['arLayoutID']) {
@@ -54,9 +68,14 @@ abstract class Layout extends ConcreteObject
             $al->setPropertiesFromArray($row);
             $al->loadDetails();
             $al->loadColumnNumber();
-
-            return $al;
         }
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($al);
+            $cache->save($item);
+        }
+
+        return $al;
     }
 
     protected function loadColumnNumber()
