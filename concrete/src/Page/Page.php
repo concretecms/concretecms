@@ -3906,6 +3906,7 @@ EOT
         $key = '/page/row/' . $cInfo;
         $item = $cache->getItem($key);
         $row = false;
+        $originalRow = null;
 
         if ($item->isHit()) {
             $row = $item->get();
@@ -3919,8 +3920,6 @@ EOT
             if ($row !== false && $row['cPointerID'] > 0) {
                 $originalRow = $row;
                 $row = $db->fetchAssoc("SELECT {$fields}, CollectionVersions.cvName FROM {$from} LEFT JOIN CollectionVersions ON CollectionVersions.cID = ? WHERE Pages.cID = ? LIMIT 1", [$row['cID'], $row['cPointerID']]);
-            } else {
-                $originalRow = null;
             }
 
             $item->set($row);
