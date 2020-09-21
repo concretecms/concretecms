@@ -27,5 +27,6 @@ $router->all('/approve_recent/{cID}/{token}', 'Page::approveRecent');
 $router->all('/publish_now/{cID}/{token}', 'Page::publishNow');
 $router->all('/cancel_schedule/{cID}/{token}', 'Page::cancelSchedule');
 $router->all('/chooser/search/{keywords}', 'Page\Chooser::searchPages');
+$router->all('/autocomplete', 'Page\Autocomplete::view');
 
 $router->all('/sitemap_overlay', '\Concrete\Controller\Element\Dashboard\Sitemap\SitemapOverlay::view');
