@@ -48,7 +48,6 @@ $form = Loader::helper('form');
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Move/Copy')?>" data-bulk-action-url="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector" data-bulk-action-dialog-width="90%" data-bulk-action-dialog-height="70%"><?php echo t('Move/Copy')?></option>
                 <?php /*	    <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Speed Settings')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/speed_settings" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="340"><?=t('Speed Settings')?></option>
                 <?php if (Config::get('concrete.permissions.model') == 'advanced') { ?>
-                    <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions" data-bulk-action-dialog-width="430" data-bulk-action-dialog-height="630"><?=t('Change Permissions')?></option>
                 <?php } ?>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Design')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/design" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="405"><?=t('Design')?></option>
      */ ?>
