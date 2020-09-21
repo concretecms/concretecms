@@ -49,8 +49,6 @@ $form = Loader::helper('form');
                 <?php /*	    <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Speed Settings')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/speed_settings" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="340"><?=t('Speed Settings')?></option>
                 <?php if (Config::get('concrete.permissions.model') == 'advanced') { ?>
                     <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions" data-bulk-action-dialog-width="430" data-bulk-action-dialog-height="630"><?=t('Change Permissions')?></option>
-                    <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions - Add Access')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions_access?task=add" data-bulk-action-dialog-width="440" data-bulk-action-dialog-height="200"><?=t('Change Permissions - Add Access')?></option>
-                    <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions - Remove Access')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions_access?task=remove" data-bulk-action-dialog-width="440" data-bulk-action-dialog-height="300"><?=t('Change Permissions - Remove Access')?></option>
                 <?php } ?>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Design')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/design" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="405"><?=t('Design')?></option>
      */ ?>
