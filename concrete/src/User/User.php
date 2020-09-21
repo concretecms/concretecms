@@ -27,7 +27,7 @@ class User extends ConcreteObject
     public $uTimezone = null;
     protected $uDefaultLanguage = null;
     // an associative array of all access entity objects that are associated with this user.
-    protected $accessEntities = [];
+    protected $accessEntities = null;
     protected $hasher;
     protected $uLastPasswordChange;
 
@@ -590,46 +590,50 @@ class User extends ConcreteObject
      */
     public function getUserAccessEntityObjects()
     {
-        $app = Application::getFacadeApplication();
-        $session = $app['session'];
-        $validator = $app->make(SessionValidator::class);
-        // Check if the user is loggged in
-        if ($validator->hasActiveSession() && $session->has('uID')) {
-            $req = Request::getInstance();
+        if ($this->accessEntities === null) {
+            $app = Application::getFacadeApplication();
+            $session = $app['session'];
+            $validator = $app->make(SessionValidator::class);
+            // Check if the user is loggged in
+            if ($validator->hasActiveSession() && $session->has('uID')) {
+                $req = Request::getInstance();
 
-            if ($req->hasCustomRequestUser()) {
-                // we bypass session-saving performance
-                // and we don't save them in session.
-                return PermissionAccessEntity::getForUser($this);
-            }
+                if ($req->hasCustomRequestUser()) {
+                    // we bypass session-saving performance
+                    // and we don't save them in session.
+                    return PermissionAccessEntity::getForUser($this);
+                }
 
-            // If a user is logged in and running a script to get the user access entities
-            // return the correct access entities
-            if ($session->has('accessEntities') && $this->getUserID() == $session->get('uID')) {
-                $entities = $session->get('accessEntities');
-            } elseif ($this->getUserID() == $session->get('uID')) {
-                $entities = PermissionAccessEntity::getForUser($this);
-                $session->set('accessEntities', $entities);
-                $session->set('accessEntitiesUpdated', time());
-            } else {
-                $entities = PermissionAccessEntity::getForUser($this);
-
-            }
-        } else {
-
-            if ((int) $this->getUserID() > 0) {
-                $entities = PermissionAccessEntity::getForUser($this);
-            } else {
-                $group = Group::getByID(GUEST_GROUP_ID);
-                if ($group) {
-                    $entities = [GroupEntity::getOrCreate($group)];
+                // If a user is logged in and running a script to get the user access entities
+                // return the correct access entities
+                if ($session->has('accessEntities') && $this->getUserID() == $session->get('uID')) {
+                    $entities = $session->get('accessEntities');
+                } elseif ($this->getUserID() == $session->get('uID')) {
+                    $entities = PermissionAccessEntity::getForUser($this);
+                    $session->set('accessEntities', $entities);
+                    $session->set('accessEntitiesUpdated', time());
                 } else {
-                    $entities = [];
+                    $entities = PermissionAccessEntity::getForUser($this);
+
+                }
+            } else {
+
+                if ((int)$this->getUserID() > 0) {
+                    $entities = PermissionAccessEntity::getForUser($this);
+                } else {
+                    $group = Group::getByID(GUEST_GROUP_ID);
+                    if ($group) {
+                        $entities = [GroupEntity::getOrCreate($group)];
+                    } else {
+                        $entities = [];
+                    }
                 }
             }
+
+            $this->accessEntities = $entities;
         }
 
-        return $entities;
+        return $this->accessEntities;
     }
 
     /**
