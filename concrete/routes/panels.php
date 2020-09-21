@@ -34,8 +34,7 @@ $router->all('/page/versions/get_json', 'Page\Versions::get_json', 'ccm_system_p
 $router->all('/page/versions/duplicate', 'Page\Versions::duplicate', 'ccm_system_panels_page_versions_duplicate_all');
 $router->all('/page/versions/new_page', 'Page\Versions::new_page', 'ccm_system_panels_page_versions_new_page_all');
 $router->all('/page/versions/delete', 'Page\Versions::delete', 'ccm_system_panels_page_versions_delete_all');
-$router->all('/page/versions/approve', 'Page\Versions::approve', 'ccm_system_panels_page_versions_approve_all
-');
+$router->all('/page/versions/approve', 'Page\Versions::approve', 'ccm_system_panels_page_versions_approve_all');
 $router->all('/page/versions/unapprove', 'Page\Versions::unapprove', 'ccm_system_panels_page_versions_unapprove_all');
 $router->all('/page/devices', 'Page\Devices::view', 'ccm_system_panels_page_devices_all');
 $router->all('/page/devices/preview', 'Page\Devices::preview', 'ccm_system_panels_page_devices_preview_all');
