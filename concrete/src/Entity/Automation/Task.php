@@ -2,10 +2,12 @@
 
 namespace Concrete\Core\Entity\Automation;
 
+use Carbon\Carbon;
 use Concrete\Core\Automation\Task\Controller\ControllerInterface;
 use Concrete\Core\Automation\Task\Manager;
 use Concrete\Core\Automation\Task\TaskInterface;
 use Concrete\Core\Entity\PackageTrait;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,7 +34,12 @@ class Task implements \JsonSerializable, TaskInterface
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $dateLastRun;
+    protected $dateLastStarted;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $dateLastCompleted;
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
@@ -67,22 +74,6 @@ class Task implements \JsonSerializable, TaskInterface
     /**
      * @return mixed
      */
-    public function getDateLastRun()
-    {
-        return $this->dateLastRun;
-    }
-
-    /**
-     * @param mixed $dateLastRun
-     */
-    public function setDateLastRun($dateLastRun): void
-    {
-        $this->dateLastRun = $dateLastRun;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getLastRunBy()
     {
         return $this->lastRunBy;
@@ -97,6 +88,38 @@ class Task implements \JsonSerializable, TaskInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getDateLastStarted()
+    {
+        return $this->dateLastStarted;
+    }
+
+    /**
+     * @param mixed $dateLastStarted
+     */
+    public function setDateLastStarted($dateLastStarted): void
+    {
+        $this->dateLastStarted = $dateLastStarted;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateLastCompleted()
+    {
+        return $this->dateLastCompleted;
+    }
+
+    /**
+     * @param mixed $dateLastCompleted
+     */
+    public function setDateLastCompleted($dateLastCompleted): void
+    {
+        $this->dateLastCompleted = $dateLastCompleted;
+    }
+
+    /**
      * @return ControllerInterface
      */
     public function getController(): ControllerInterface
@@ -104,6 +127,24 @@ class Task implements \JsonSerializable, TaskInterface
         $app = Facade::getFacadeApplication();
         $manager = $app->make(Manager::class);
         return $manager->driver($this->getHandle());
+    }
+
+    public function formatDateLastStarted($format)
+    {
+        $date = new Date();
+        if ($this->getDateLastStarted()) {
+            return $date->toDateTime('@' . $this->getDateLastStarted())
+                ->format($format);
+        }
+    }
+
+    public function formatDateLastCompleted($format)
+    {
+        $date = new Date();
+        if ($this->getDateLastCompleted()) {
+            return $date->toDateTime('@' . $this->getDateLastCompleted())
+                ->format($format);
+        }
     }
 
     public function jsonSerialize()
@@ -114,6 +155,11 @@ class Task implements \JsonSerializable, TaskInterface
             'name' => $controller->getName(),
             'description' => $controller->getDescription(),
             'help' => $controller->getHelpText(),
+            'dateLastStarted' => $this->getDateLastStarted(),
+            'dateLastCompleted' => $this->getDateLastCompleted(),
+            'dateLastStartedFormatted' => $this->formatDateLastStarted('M d, Y g:i a'),
+            'dateLastCompletedFormatted' => $this->formatDateLastCompleted('M d, Y g:i a'),
+            'lastRunBy' => $this->getLastRunBy(),
         ];
         return $data;
     }

@@ -3,7 +3,9 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver as ThumbnailPathResolver;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
@@ -34,71 +36,27 @@ class RescanFilesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Rescanning files... ');
-        $count = 0;
-        $list = new FileList();
-        $list->ignorePermissions();
-        if ($input->getOption('after') !== null) {
-            $list->getQueryObject()->andWhere('f.fID > :after');
-            $list->getQueryObject()->setParameter('after', $input->getOption('after'));
-        }
-        $list->sortBy('f.fID', 'asc');
         $app = Facade::getFacadeApplication();
-        $config = $app->make('config');
-        $em = $app->make(EntityManager::class);
-        $paginationFactory = $app->make(PaginationFactory::class);
-        $currentFilename = null;
-        $currentID = 0;
-        try {
-            \Cache::disableAll();
-            if ($input->getOption('limit') !== null) {
-                $pagination = $paginationFactory->createPaginationObject($list);
-                $pagination->setMaxPerPage($input->getOption('limit'));
-                $results = $pagination->getCurrentPageResults();
-            } else {
-                $results = $list->getResults();
-            }
-
-            foreach ($results as $f) {
-                $currentFilename = $f->getFilename();
-                $currentID = $f->getFileID();
-                $fv = $f->getApprovedVersion();
-                $resp = $fv->refreshAttributes(false);
-                switch ($resp) {
-                    case Importer::E_FILE_INVALID:
-                        $errorMessage = t('File could not be found.');
-                        throw new \Exception($errorMessage);
-                }
-                $newFileVersion = null;
-                if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-                    $processor = new AutorotateImageProcessor();
-                    if ($processor->shouldProcess($fv)) {
-                        if ($newFileVersion === null) {
-                            $fv = $newFileVersion = $f->createNewVersion(true);
-                        }
-                        $processor->setRescanThumbnails(false);
-                        $processor->process($newFileVersion);
-                    }
-                }
-                $width = (int)$config->get('concrete.file_manager.restrict_max_width');
-                $height = (int)$config->get('concrete.file_manager.restrict_max_height');
-                if ($width > 0 || $height > 0) {
-                    $processor = new ConstrainImageProcessor($width, $height);
-                    if ($processor->shouldProcess($fv)) {
-                        if ($newFileVersion === null) {
-                            $fv = $newFileVersion = $f->createNewVersion(true);
-                        }
-                        $processor->setRescanThumbnails(false);
-                        $processor->process($newFileVersion);
-                    }
-                }
-                $fv->rescanThumbnails();
-                $fv->releaseImagineImage();
-                $output->writeln(t('File rescanned: "%s" (ID: %s)', $currentFilename, $currentID));
-                $count++;
-                $em->clear();
-            }
-        } catch (\Exception $e) {
-            $output->writeln(t('Unable to rescan file "%s" (ID: %s): %s', $currentFilename, $currentID, $e->getMessage()));
+        $db = $app->make(Connection::class);
+        /**
+         * @var $db Connection
+         */
+        $query = $db->createQueryBuilder();
+        $query->select('fID')->from('Files', 'f');
+        if ($input->getOption('after') !== null) {
+            $query->andWhere('f.fID > :after');
+            $query->setParameter('after', $input->getOption('after'));
+        }
+        $query->orderBy('f.fID', 'asc');
+        if ($input->getOption('limit') !== null) {
+            $query->setMaxResults($input->getOption('limit'));
+        }
+        $count = 0;
+        foreach($query->execute()->fetchAll() as $result) {
+            $command = new RescanFileCommand($result['fID']);
+            $output->writeln(t('Rescanning file ID: %s', $result['fID']));
+            $app->executeCommand($command);
+            $count++;
         }
         $output->writeln("{$count} files rescanned.");
     }

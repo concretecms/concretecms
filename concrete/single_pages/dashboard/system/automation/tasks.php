@@ -11,13 +11,19 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <th></th>
             <th><?= t('Name') ?></th>
             <th><?= t('Description') ?></th>
+            <th><?= t('Last Started')?></th>
+            <th><?= t('Last Completed')?></th>
+            <th><?= t('Last Run By')?></th>
         </tr>
         </thead>
         <tbody>
         <tr :key="task.id" v-for="task in tasks">
             <td><input type="radio" :id="task.id" v-model="selectedTask" :value="task"></td>
             <td><b><label :for="task.id" class="mb-0">{{task.name}}</label></b></td>
-            <td>{{task.description}}</td>
+            <td class="small">{{task.description}}</td>
+            <td>{{task.dateLastStartedFormatted}}</td>
+            <td>{{task.dateLastCompletedFormatted}}</td>
+            <td>{{task.lastRunBy ? task.lastRunBy.name : ''}}</td>
         </tr>
         </tbody>
     </table>
