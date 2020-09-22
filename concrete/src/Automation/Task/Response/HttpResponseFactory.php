@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Automation\Task\Response;
 
+use Concrete\Core\Automation\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface as RunnerResponseInterface;
 use Concrete\Core\Automation\Task\Runner\Response\TaskCompletedResponse;
 use Concrete\Core\Support\Facade\Facade;
@@ -25,9 +26,18 @@ class HttpResponseFactory implements ResponseFactoryInterface
 
     public function createResponse(RunnerResponseInterface $response)
     {
-        $this->session->getFlashBag()->add('page_message', ['success', $response->getMessage()]);
         if ($response instanceof TaskCompletedResponse) {
+            $this->session->getFlashBag()->add('page_message', ['success', $response->getMessage()]);
             return new JsonResponse(['status' => self::STATUS_COMPLETED]);
+        }
+        if ($response instanceof ProcessStartedResponse) {
+            $this->session->getFlashBag()->add('page_message', ['message', $response->getMessage()]);
+            return new JsonResponse(
+                [
+                    'processId' => $response->getProcess()->getID(),
+                    'status' => self::STATUS_PROCESS_STARTED
+                ]
+            );
         }
     }
 }

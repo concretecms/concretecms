@@ -3,6 +3,7 @@ namespace Concrete\Core\Automation\Task;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Automation\Task\Controller\ClearCacheController;
+use Concrete\Core\Automation\Task\Controller\GenerateSitemapController;
 use Concrete\Core\Automation\Task\Controller\RescanFilesController;
 use Concrete\Core\Support\Manager as CoreManager;
 
@@ -18,6 +19,11 @@ class Manager extends CoreManager
     public function createClearCacheDriver()
     {
         return $this->app->make(ClearCacheController::class);
+    }
+
+    public function createGenerateSItemapDriver()
+    {
+        return $this->app->make(GenerateSitemapController::class);
     }
 
     public function __construct(Application $app)

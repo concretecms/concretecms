@@ -1,18 +1,22 @@
 <?php
+
 namespace Concrete\Core\Automation\Task\Runner;
 
+use Concrete\Core\Automation\Task\Input\InputInterface;
+use Concrete\Core\Automation\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Automation\Task\Runner\Response\TaskCompletedResponse;
 use Concrete\Core\Automation\Task\TaskInterface;
+use Concrete\Core\Entity\Automation\Process;
 use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\Foundation\Command\CommandInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
- * Receives a task and a command, and synchronously executes the command. On complete, returns the response.
+ * Receives a command and asynchronously executes it on a process.
  */
-class CommandTaskRunner extends Command implements TaskRunnerInterface
+class ProcessTaskRunner extends Command implements TaskRunnerInterface
 {
 
     /**
@@ -30,11 +34,42 @@ class CommandTaskRunner extends Command implements TaskRunnerInterface
      */
     protected $task;
 
-    public function __construct(TaskInterface $task, CommandInterface $command, string $responseMessage)
-    {
+    /**
+     * @var InputInterface
+     */
+    protected $input;
+
+    /**
+     * @var Process
+     */
+    protected $process;
+
+    public function __construct(
+        TaskInterface $task,
+        CommandInterface $command,
+        InputInterface $input,
+        string $responseMessage
+    ) {
         $this->task = $task;
         $this->command = $command;
         $this->responseMessage = $responseMessage;
+        $this->input = $input;
+    }
+
+    /**
+     * @return Process
+     */
+    public function getProcess(): Process
+    {
+        return $this->process;
+    }
+
+    /**
+     * @param Process $process
+     */
+    public function setProcess(Process $process): void
+    {
+        $this->process = $process;
     }
 
     /**
@@ -63,8 +98,15 @@ class CommandTaskRunner extends Command implements TaskRunnerInterface
 
     public function getTaskRunnerResponse(): ResponseInterface
     {
-        return new TaskCompletedResponse($this->getResponseMessage());
+        return new ProcessStartedResponse($this->process, $this->getResponseMessage());
     }
 
+    /**
+     * @return InputInterface
+     */
+    public function getInput(): ?InputInterface
+    {
+        return $this->input;
+    }
 
 }

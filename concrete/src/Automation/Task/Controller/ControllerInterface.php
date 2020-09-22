@@ -17,6 +17,6 @@ interface ControllerInterface
 
     public function getHelpText(): string;
 
-    public function getTaskRunnerCommand(TaskInterface $task, InputInterface $input): TaskRunnerInterface;
+    public function getTaskRunner(TaskInterface $task, InputInterface $input): TaskRunnerInterface;
 
 }

@@ -8,7 +8,6 @@ use Bernard\Normalizer\PlainMessageNormalizer;
 use Bernard\Producer;
 use Bernard\Router\ClassNameRouter;
 use Concrete\Core\Foundation\Command\DispatcherFactory;
-use Concrete\Core\Foundation\Command\SynchronousBus;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
 use Concrete\Core\Foundation\Queue\Receiver\QueueCommandMessageReceiver;
@@ -16,12 +15,11 @@ use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Foundation\Service\Provider;
 use League\Tactician\Bernard\QueueableCommand;
-use League\Tactician\Bernard\QueueCommandNormalizer;
+use Concrete\Core\Foundation\Queue\QueueCommandNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
 use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class QueueServiceProvider extends Provider
 {

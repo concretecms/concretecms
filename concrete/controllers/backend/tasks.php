@@ -84,8 +84,8 @@ class Tasks extends AbstractController
             return new JsonResponse($this->errorList);
         } else {
             $input = new Input();
-            $command = $task->getController()->getTaskRunnerCommand($task, $input);
-            $response = $this->taskRunner->run($command);
+            $runner = $task->getController()->getTaskRunner($task, $input);
+            $response = $this->taskRunner->run($runner);
             return $this->httpResponseFactory->createResponse($response);
         }
     }

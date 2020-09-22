@@ -3,6 +3,7 @@
 namespace Concrete\Core\Automation\Task;
 
 use Concrete\Core\Entity\Automation\Task;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
@@ -38,22 +39,30 @@ class TaskService
      * TaskService constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(Date $dateService, User $user, UserInfoRepository $userInfoRepository, EntityManager $entityManager)
-    {
+    public function __construct(
+        Date $dateService,
+        User $user,
+        UserInfoRepository $userInfoRepository,
+        EntityManager $entityManager
+    ) {
         $this->dateService = $dateService;
         $this->user = $user;
         $this->userInfoRepository = $userInfoRepository;
         $this->entityManager = $entityManager;
     }
 
-    public function start(Task $task)
+    protected function getCurrentUserEntity(): ?UserEntity
     {
-        $lastRunBy = null;
         if ($this->user->isRegistered()) {
             $userInfo = $this->userInfoRepository->getByID($this->user->getUserID());
-            $lastRunBy = $userInfo->getEntityObject();
+            return $userInfo->getEntityObject();
         }
-        $task->setLastRunBy($lastRunBy);
+        return null;
+    }
+
+    public function start(Task $task)
+    {
+        $task->setLastRunBy($this->getCurrentUserEntity());
         $task->setDateLastStarted($this->dateService->toDateTime()->getTimestamp());
         $this->entityManager->persist($task);
         $this->entityManager->flush();

@@ -22,7 +22,7 @@ class ClearCacheController extends AbstractController
         return t('Clears all caches.');
     }
 
-    public function getTaskRunnerCommand(TaskInterface $task, InputInterface $input): TaskRunnerInterface
+    public function getTaskRunner(TaskInterface $task, InputInterface $input): TaskRunnerInterface
     {
         return new CommandTaskRunner($task, new ClearCacheCommand(), t('Cache cleared successfully.'));
     }

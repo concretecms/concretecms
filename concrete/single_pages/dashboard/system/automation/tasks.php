@@ -1,9 +1,10 @@
 <?php
+
 defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div data-view="automated-tasks" v-cloak>
 
-    <h3 class="mb-3"><?=t('Run a Task')?></h3>
+    <h3 class="mb-3"><?= t('Run a Task') ?></h3>
 
     <table class="table table-striped" id="ccm-jobs-list">
         <thead>
@@ -11,9 +12,9 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <th></th>
             <th><?= t('Name') ?></th>
             <th><?= t('Description') ?></th>
-            <th><?= t('Last Started')?></th>
-            <th><?= t('Last Completed')?></th>
-            <th><?= t('Last Run By')?></th>
+            <th><?= t('Last Started') ?></th>
+            <th><?= t('Last Completed') ?></th>
+            <th><?= t('Last Run By') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -30,7 +31,8 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button @click="runTask" type="submit" class="btn btn-primary float-right" :disabled="selectedTask === null"><?=t('Run Task')?></button>
+            <button @click="runTask" type="submit" class="btn btn-primary float-right"
+                    :disabled="selectedTask === null"><?= t('Run Task') ?></button>
         </div>
     </div>
 
@@ -61,9 +63,13 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                                     'id': my.selectedTask.id,
                                     'ccm_token': '<?=$token->generate('execute')?>'
                                 },
-                                success: function(r) {
+                                success: function (r) {
                                     if (r.status === 'completed') {
                                         window.location.reload();
+                                    } else if (r.status === 'process_started') {
+                                        window.location.href = '<?=URL::to(
+                                            '/dashboard/system/automation/processes'
+                                        )?>/' + r.processId
                                     }
                                 }
                             })

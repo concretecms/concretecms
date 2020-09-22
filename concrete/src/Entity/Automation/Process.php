@@ -25,12 +25,23 @@ class Process implements \JsonSerializable
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
-    protected $started;
+    protected $dateStarted;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true}, nullable=true)
      */
-    protected $completed;
+    protected $dateCompleted;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
+     */
+    protected $user;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $queue;
 
     /**
      * @ORM\ManyToOne(targetEntity="Task")
@@ -53,33 +64,65 @@ class Process implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getStarted()
+    public function getDateStarted()
     {
-        return $this->started;
+        return $this->dateStarted;
     }
 
     /**
-     * @param mixed $started
+     * @param mixed $dateStarted
      */
-    public function setStarted($started): void
+    public function setDateStarted($dateStarted): void
     {
-        $this->started = $started;
+        $this->dateStarted = $dateStarted;
     }
 
     /**
      * @return mixed
      */
-    public function getCompleted()
+    public function getDateCompleted()
     {
-        return $this->completed;
+        return $this->dateCompleted;
     }
 
     /**
-     * @param mixed $completed
+     * @param mixed $dateCompleted
      */
-    public function setCompleted($completed): void
+    public function setDateCompleted($dateCompleted): void
     {
-        $this->completed = $completed;
+        $this->dateCompleted = $dateCompleted;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQueue()
+    {
+        return $this->queue;
+    }
+
+    /**
+     * @param mixed $queue
+     */
+    public function setQueue($queue): void
+    {
+        $this->queue = $queue;
     }
 
     /**

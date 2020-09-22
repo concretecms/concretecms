@@ -5,4 +5,10 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Processes extends DashboardPageController
 {
+
+    public function view($processID = null)
+    {
+
+    }
+
 }
