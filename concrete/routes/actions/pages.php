@@ -29,5 +29,6 @@ $router->all('/cancel_schedule/{cID}/{token}', 'Page::cancelSchedule');
 $router->all('/chooser/search/{keywords}', 'Page\Chooser::searchPages');
 $router->all('/autocomplete', 'Page\Autocomplete::view');
 $router->all('/preview_version', 'Page\PreviewVersion::view');
+$router->all('/url_slug', 'Page\UrlSlug::view');
 
 $router->all('/sitemap_overlay', '\Concrete\Controller\Element\Dashboard\Sitemap\SitemapOverlay::view');
