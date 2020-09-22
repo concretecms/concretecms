@@ -42,3 +42,11 @@ $router->post(
     '/ccm/system/permissions/access/entity/types/site_group/get_or_create',
     'Concrete\Controller\Permissions\Access\Entity\SiteGroup::getOrCreate'
 );
+$router->all(
+    '/ccm/system/permissions/access/entity',
+    'Concrete\Controller\Permissions\Access\Entity::view'
+);
+$router->post(
+    '/ccm/system/permissions/access/entity/save',
+    'Concrete\Controller\Permissions\Access\Entity::save'
+);
