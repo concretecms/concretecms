@@ -534,7 +534,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         while ($row = $r->FetchRow()) {
             $handles[] = $row['arHandle'];
         }
-        $r->Free();
         unset($r);
         unset($db);
 

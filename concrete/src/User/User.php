@@ -210,7 +210,6 @@ class User extends ConcreteObject
                 } else {
                     $this->loadError(USER_INVALID);
                 }
-                $r->free();
                 if ($pw_is_valid_legacy) {
                     // this password was generated on a previous version of Concrete5.
                     // We re-hash it to make it more secure.
