@@ -50,3 +50,11 @@ $router->post(
     '/ccm/system/permissions/access/entity/save',
     'Concrete\Controller\Permissions\Access\Entity::save'
 );
+$router->post(
+    '/ccm/system/permissions/set/copy',
+    'Concrete\Controller\Permissions\Set\Clipboard::copy'
+);
+$router->post(
+    '/ccm/system/permissions/set/paste',
+    'Concrete\Controller\Permissions\Set\Clipboard::paste'
+);
