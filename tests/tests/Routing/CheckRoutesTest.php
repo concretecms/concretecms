@@ -10,14 +10,13 @@ class CheckRoutesTest extends TestCase
 {
     public function routeDestinationProvider()
     {
-        
         $app = ApplicationFacade::getFacadeApplication();
-        /** @var $router  \Concrete\Core\Routing\Router */
+        /** @var \Concrete\Core\Routing\Router $router */
         $router = $app->make('router');
         $routes = $router->getRoutes();
         $result = [];
         /**
-         * @var  $route \Concrete\Core\Routing\Route
+         * @var \Concrete\Core\Routing\Route $route
          */
         foreach ($routes as $route) {
             $data = $route->getAction();
@@ -27,35 +26,33 @@ class CheckRoutesTest extends TestCase
             }
         }
 
-
         return $result;
     }
 
-/** @dataProvider routeDestinationProvider
- *
- * @param $app Application
- * @param $path string
- * @param $callable mixed
- */
+    /** @dataProvider routeDestinationProvider
+     *
+     * @param $app Application
+     * @param $path string
+     * @param $callable mixed
+     */
     public function testRouteDestination(Application $app, $path, $callable)
     {
-
         $checked = false;
         if (preg_match('/^([^:]+)::([^:]+)$/', $callable, $m)) {
             $class = $m[1];
             $method = $m[2];
             if ($method === '__construct') {
-                $this->assertTrue(class_exists($m[1], true), "No class! Invalid route for path $path : $callable");
+                $this->assertTrue(class_exists($m[1], true), "No class! Invalid route for path {$path} : {$callable}");
                 $checked = true;
             } elseif (interface_exists($class, true)) {
-                $this->assertTrue(method_exists($class, $method), "No Method! Invalid route for path $path : $callable");
+                $this->assertTrue(method_exists($class, $method), "No Method! Invalid route for path {$path} : {$callable}");
                 $checked = true;
             } elseif ($app->isAlias($class)) {
-                $this->assertTrue(method_exists($class, $method), "Alias but no method! Invalid route for path $path : $callable");
+                $this->assertTrue(method_exists($class, $method), "Alias but no method! Invalid route for path {$path} : {$callable}");
             }
         }
         if ($checked === false) {
-            $this->assertTrue(is_callable($callable), "Not callable! Invalid route for path $path : $callable");
+            $this->assertTrue(is_callable($callable), "Not callable! Invalid route for path {$path} : {$callable}");
         }
     }
 }
