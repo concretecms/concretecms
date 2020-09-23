@@ -3,8 +3,13 @@
 namespace Concrete\Tests\Routing;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Routing\MatchedRoute;
+use Concrete\Core\Routing\Router;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use PHPUnit_Framework_TestCase;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Throwable;
 
 class CheckRoutesTest extends PHPUnit_Framework_TestCase
 {
@@ -53,6 +58,56 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
         }
         if ($checked === false) {
             $this->assertTrue(is_callable($callable), "Not callable! Invalid route for path {$path} : {$callable}");
+        }
+    }
+
+    public function provideRouteWithDefaultParameters(): array
+    {
+        $app = ApplicationFacade::getFacadeApplication();
+        $result = [];
+        for ($flags = 0b0000; $flags <= 0b1111; $flags++) {
+            $result[] = [
+                $app,
+                ($flags & 0b0001) !== 0,
+                ($flags & 0b0010) !== 0,
+                ($flags & 0b0100) !== 0,
+                ($flags & 0b1000) !== 0,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @dataProvider provideRouteWithDefaultParameters
+     */
+    public function testRouteWithArguments(Application $app, bool $requestArgumentValue, bool $requestWithTrailingSlash, bool $routeWithTrailingShash, bool $routeWithDefaultArgumentValue): void
+    {
+        $router = $app->build(Router::class);
+        $request = Request::create('http://localhost/foo/bar' . ($requestArgumentValue ? '/custom-baz' : '') . ($requestWithTrailingSlash ? '/' : ''));
+        $route = $router->register('/foo/bar/{baz}' . ($routeWithTrailingShash ? '/' : ''), static function ($baz) { return $baz; });
+        if ($routeWithDefaultArgumentValue) {
+            $route->setDefaults(['baz' => 'default-baz']);
+        }
+        $matchedRoute = null;
+        $marchError = null;
+        try {
+            $matchedRoute = $router->matchRoute($request);
+        } catch (Throwable $x) {
+            $marchError = $x;
+        }
+        if ($requestArgumentValue === false && $routeWithDefaultArgumentValue === false) {
+            $this->assertInstanceOf(ResourceNotFoundException::class, $marchError);
+        } else {
+            $this->assertInstanceOf(MatchedRoute::class, $matchedRoute);
+            $this->assertSame($route, $matchedRoute->getRoute());
+            $foundArguments = $matchedRoute->getArguments();
+            $this->assertArrayHasKey('baz', $foundArguments);
+            if ($requestArgumentValue) {
+                $this->assertSame('custom-baz', $foundArguments['baz']);
+            } else {
+                $this->assertSame('default-baz', $foundArguments['baz']);
+            }
         }
     }
 }
