@@ -314,8 +314,7 @@ class Router implements RouterInterface
 
     private function normalizePath($path)
     {
-        $path = trim($path, '/');
-        return $path === '' ? '/' : "/{$path}/";
+        return '/' . trim($path, '/');
     }
 
     private function createRouteBuilder($path, $action, $methods)
@@ -349,6 +348,9 @@ class Router implements RouterInterface
                 }
             } elseif ($p > 0) {
                 $routeFixedPath = substr($routePath, 0, $p);
+                if ($route->getDefaults() !== []) {
+                    $routeFixedPath = rtrim($routeFixedPath, '/');
+                }
                 if (strpos($path, $routeFixedPath) !== 0) {
                     $skip = true;
                 }
