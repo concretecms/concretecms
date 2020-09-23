@@ -28,6 +28,9 @@ $router->all('/fetch_incoming_files', 'File::fetchIncomingFiles');
 $router->all('/fetch_directories', 'File::fetchDirectories');
 $router->all('/create_directory', 'File::createDirectory');
 $router->all('/edit', 'File\Edit::view');
+$router->all('/permissions', 'File\Permissions::view');
+$router->post('/permissions/set_password', 'File\Permissions::setPassword');
+$router->post('/permissions/set_location', 'File\Permissions::setLocation');
 $router->all('/importers/imageeditor', 'File\Importer\ImageEditor::view');
 $router->all('/importers/thumbnail', 'File\Importer\Thumbnail::view');
 

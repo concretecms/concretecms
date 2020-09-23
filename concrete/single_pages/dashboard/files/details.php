@@ -78,7 +78,7 @@ $file = $fileVersion->getFile();
             }
             if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
                 ?>
-                <div>
+                <div class="mb-4">
                     <a
                             class="btn btn-secondary dialog-launch"
                             dialog-title="<?= t('Edit') ?>"
@@ -95,6 +95,21 @@ $file = $fileVersion->getFile();
                         <?php
                         }
                         ?>
+                    </div>
+                </div>
+                <?php
+            }
+            if ($filePermissions->canEditFilePermissions()) {
+                ?>
+                <div>
+                    <a
+                        class="btn btn-secondary dialog-launch"
+                        dialog-title="<?= t('Permissions') ?>"
+                        dialog-width="520" dialog-height="500"
+                        href="<?=URL::to('/ccm/system/file/permissions?fID=' . $file->getFileID())?>"
+                    ><?= t('Permissions') ?></a>
+                    <div class="text-muted">
+                        <i><?= t('Configure who can view or edit this file.') ?></i>
                     </div>
                 </div>
                 <?php
