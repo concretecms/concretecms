@@ -66,7 +66,7 @@ class RouterTest extends TestCase
         $route = $router->getRoutes()->get('update_api');
         $this->assertInstanceOf(Route::class, $route);
 
-        $this->assertEquals('/api/update/', $route->getPath());
+        $this->assertEquals('/api/update', $route->getPath());
         $methods = $route->getMethods();
         $this->assertCount(1, $methods);
         $this->assertEquals('POST', $methods[0]);
@@ -102,7 +102,7 @@ class RouterTest extends TestCase
         $route = $router->getRoutes()->get('rss');
         $this->assertInstanceOf(Route::class, $route);
 
-        $this->assertEquals('/rss/{identifier}/', $route->getPath());
+        $this->assertEquals('/rss/{identifier}', $route->getPath());
         $methods = $route->getMethods();
         $this->assertCount(1, $methods);
         $this->assertEquals('GET', $methods[0]);
@@ -175,10 +175,10 @@ class RouterTest extends TestCase
         $this->assertCount(4, $routes);
 
         // Test prefix and name.
-        $this->assertEquals('/api/v1/hello-world/', $routes->get('api_v1_hello_world_get')->getPath());
-        $this->assertEquals('/a-fun-test/', $routes->get('a_fun_test_post')->getPath());
-        $this->assertEquals('/api/v1/status/', $routes->get('api_v1_status_get')->getPath());
-        $this->assertEquals('/api/v1/user/{:user}/', $routes->get('user_details')->getPath());
+        $this->assertEquals('/api/v1/hello-world', $routes->get('api_v1_hello_world_get')->getPath());
+        $this->assertEquals('/a-fun-test', $routes->get('a_fun_test_post')->getPath());
+        $this->assertEquals('/api/v1/status', $routes->get('api_v1_status_get')->getPath());
+        $this->assertEquals('/api/v1/user/{:user}', $routes->get('user_details')->getPath());
 
         // Test everything
         $router = new Router(new RouteCollection(), new RouteActionFactory());
@@ -250,7 +250,7 @@ class RouterTest extends TestCase
         $scope = $route->getOption('oauth_scopes');
 
         $this->assertCount(2, $middlewares);
-        $this->assertEquals('/ccm/api/v1/system/status/', $route->getPath());
+        $this->assertEquals('/ccm/api/v1/system/status', $route->getPath());
         $this->assertEquals('api', $scope);
 
         $route = $router->getRoutes()->get('ccm_api_v1_products_add_post');
@@ -259,7 +259,7 @@ class RouterTest extends TestCase
         $methods = $route->getMethods();
 
         $this->assertCount(2, $middlewares);
-        $this->assertEquals('/ccm/api/v1/products/add/', $route->getPath());
+        $this->assertEquals('/ccm/api/v1/products/add', $route->getPath());
         $this->assertCount(1, $methods);
         $this->assertEquals('POST', $methods[0]);
         $this->assertEquals('api,products', $scope);
