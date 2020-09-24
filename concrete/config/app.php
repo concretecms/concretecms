@@ -236,6 +236,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeComposerControlTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBannedWordsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportDesignTagsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',

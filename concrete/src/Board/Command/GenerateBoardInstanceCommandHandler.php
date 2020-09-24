@@ -2,10 +2,12 @@
 
 namespace Concrete\Core\Board\Command;
 
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Board\Instance\ItemSegmenter;
-use Concrete\Core\Board\Instance\Slot\CollectionFactory;
 use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
-use Concrete\Core\Board\Instance\Slot\SlotPopulator;
+use Concrete\Core\Board\Instance\Slot\Planner\Planner;
+use Concrete\Core\Entity\Board\InstanceSlot;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Doctrine\ORM\EntityManager;
 
 class GenerateBoardInstanceCommandHandler
@@ -22,72 +24,66 @@ class GenerateBoardInstanceCommandHandler
     protected $contentPopulator;
 
     /**
-     * @var CollectionFactory
-     */
-    protected $collectionFactory;
-
-    /**
-     * @var SlotPopulator
-     */
-    protected $slotPopulator;
-
-    /**
      * @var ItemSegmenter
      */
     protected $itemSegmenter;
+
+    /**
+     * @var Planner
+     */
+    protected $planner;
+
+    /**
+     * @var JsonSerializer
+     */
+    protected $serializer;
 
     public function __construct(
         EntityManager $entityManager,
         ItemSegmenter $itemSegmenter,
         ContentPopulator $contentPopulator,
-        SlotPopulator $slotPopulator,
-        CollectionFactory $collectionFactory)
-    {
+        Planner $planner,
+        JsonSerializer $serializer
+    ) {
         $this->entityManager = $entityManager;
         $this->itemSegmenter = $itemSegmenter;
         $this->contentPopulator = $contentPopulator;
-        $this->collectionFactory = $collectionFactory;
-        $this->slotPopulator = $slotPopulator;
+        $this->planner = $planner;
+        $this->serializer = $serializer;
     }
 
     public function handle(GenerateBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
         $items = $this->itemSegmenter->getBoardItemsForInstance($instance);
+        $contentObjectGroups = $this->contentPopulator->createContentObjects($items);
+        $boardTemplateDriver = $instance->getBoard()->getTemplate()->getDriver();
+        $slotsToPlan = $boardTemplateDriver->getTotalSlots() * 1.5; // This will give us some wiggle room
+        $plannedInstance = $this->planner->plan($instance, $contentObjectGroups, 1, $slotsToPlan);
 
-        if (count($items)) {
-            $contentObjectGroups = $this->contentPopulator->createContentObjects($items);
+        $blockType = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);
+        foreach ($plannedInstance->getPlannedSlots() as $plannedSlot) {
 
-            $collection = $this->collectionFactory->createSlotCollection($instance, $contentObjectGroups);
+            $plannedSlotTemplate = $plannedSlot->getTemplate();
+            $slot = new InstanceSlot();
+            $slot->setSlot($plannedSlot->getSlot());
+            $slot->setInstance($instance);
+            $slot->setTemplate($plannedSlotTemplate->getSlotTemplate());
 
-            // Now, however large our collection is, we need to move any existing content within our
-            // instance DOWN by that many slots.
-            $increment = (int) $collection->count();
-            $db = $this->entityManager->getConnection();
-            $db->executeQuery("update BoardInstanceSlots set slot = slot + {$increment}");
+            $json = $this->serializer->serialize($plannedSlotTemplate->getObjectCollection(), 'json');
 
-            // Now loop through our collection and ensure it's persisted.
-            foreach ($collection as $slot) {
-                $this->entityManager->persist($slot);
-            }
-            $this->entityManager->flush(); // need to do this here so our instance slots have IDs.
+            $data = [
+                'contentObjectCollection' => $json,
+                'slotTemplateID' => $plannedSlotTemplate->getSlotTemplate()->getId(),
+            ];
 
-            $this->slotPopulator->populateSlotCollectionWithContent($contentObjectGroups, $collection);
+            $block = $blockType->add($data);
 
-            // Next, mark all items in our objectgroups as added to the board
-            $items = [];
-            foreach($contentObjectGroups as $contentObjectGroup) {
-                if (!in_array($contentObjectGroup->getItem(), $items)) {
-                    $items[] = $contentObjectGroup->getItem();
-                }
-            }
-            $dateAddedToBoard = time();
-            foreach($items as $item) {
-                $item->setDateAddedToBoard($dateAddedToBoard);
-                $this->entityManager->persist($slot);
+            if ($block) {
+                $slot->setBlockID($block->getBlockID());
             }
 
-            $this->entityManager->flush(); // need to do this here so our instance slots have IDs.
+            $this->entityManager->persist($slot);
         }
 
         $this->entityManager->persist($instance);
