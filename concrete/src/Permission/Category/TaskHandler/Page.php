@@ -23,6 +23,8 @@ use Concrete\Core\Workflow\Request\ChangeSubpageDefaultsInheritanceRequest as Ch
 use Concrete\Core\Workflow\Workflow;
 use Symfony\Component\HttpFoundation\Response;
 
+defined('C5_EXECUTE') or die("Access Denied.");
+
 class Page extends Controller implements TaskHandlerInterface
 {
     /**
@@ -33,6 +35,9 @@ class Page extends Controller implements TaskHandlerInterface
     public function handle(string $task, array $options): ?Response
     {
         $pages = $this->getPages($options);
+        if ($pages === []) {
+            throw new UserMessageException(t('No pages received'));
+        }
         $method = lcfirst(camelcase($task));
         if (!method_exists($this, $method)) {
             throw new UserMessageException(t('Unknown permission task: %s', $task));
@@ -101,9 +106,6 @@ class Page extends Controller implements TaskHandlerInterface
      */
     protected function savePermission(array $pages, array $options): ?Response
     {
-        if ($pages === []) {
-            return $this->app->make(ResponseFactoryInterface::class)->json(false);
-        }
         $pk = PageKey::getByID($options['pkID']);
         $pa = empty($options['paID']) ? null : Access::getByID($options['paID'], $pk);
         if ($pa !== null) {
