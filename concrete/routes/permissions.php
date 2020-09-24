@@ -58,3 +58,10 @@ $router->post(
     '/ccm/system/permissions/set/paste',
     'Concrete\Controller\Permissions\Set\Clipboard::paste'
 );
+$router
+    ->all(
+        '/ccm/system/permissions/categories/{categoryHandle}/{task}',
+        'Concrete\Core\Permission\Category\TaskLauncher::launch',
+    )
+    ->setRequirements(['categoryHandle' => '\w[\w\-]*'])
+;

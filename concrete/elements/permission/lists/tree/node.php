@@ -51,7 +51,7 @@ if (!isset($disableDialog) || !$disableDialog) {
 <?php $cat = PermissionKeyCategory::getByHandle($handle);?>
 
 	<?php if (!isset($disableDialog) || !$disableDialog) { ?>
-		<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&amp;treeNodeID=<?=$node->getTreeNodeID()?>">
+		<form method="post" id="ccm-permission-list-form" action="<?=h ($cat->getTaskURL('save_permission_assignments', ['treeNodeID' => $node->getTreeNodeID()])) ?>">
 	<?php } ?>
 
 <table class="ccm-permission-grid table table-striped">
@@ -152,14 +152,14 @@ ccm_permissionLaunchDialog = function(link) {
 
 		setTreeNodePermissionsToInherit: function() {
 			jQuery.fn.dialog.showLoader();
-			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("revert_to_global_node_permissions")?>&treeNodeID=<?=$node->getTreeNodeID()?>', function() {
+			$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('revert_to_global_node_permissions', ['treeNodeID' => $node->getTreeNodeID()])) ?>, function() {
 				TopicsPermissions.refresh();
 			});
 		},
 
 		setTreeNodePermissionsToOverride: function() {
 			jQuery.fn.dialog.showLoader();
-			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("override_global_node_permissions")?>&treeNodeID=<?=$node->getTreeNodeID()?>', function() {
+			$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_global_node_permissions', ['treeNodeID' => $node->getTreeNodeID()])) ?>', function() {
 				TopicsPermissions.refresh();
 			});
 		}

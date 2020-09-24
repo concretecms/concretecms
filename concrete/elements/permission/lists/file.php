@@ -35,7 +35,7 @@ if (!$f->overrideFileFolderPermissions()) {
 
 <?php $cat = PermissionKeyCategory::getByHandle('file');?>
 
-<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&fID=<?=$f->getFileID()?>">
+<form method="post" id="ccm-permission-list-form" action="<?=h ($cat->getTaskURL('save_permission_assignments', ['fID' => $f->getFileID()])) ?>">
 
 <table class="ccm-permission-grid table table-striped">
 <?php
@@ -112,14 +112,14 @@ $(function() {
 
 ccm_revertToGlobalFilePermissions = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("revert_to_global_file_permissions")?>&fID=<?=$f->getFileID()?>', function() { 
+	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('revert_to_global_file_permissions', ['fID' => $f->getFileID()])) ?>, function() { 
 		ccm_refreshFilePermissions();
 	});
 }
 
 ccm_setFilePermissionsToOverride = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("override_global_file_permissions")?>&fID=<?=$f->getFileID()?>', function() { 
+	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_global_file_permissions', ['fID' => $f->getFileID()])) ?>, function() { 
 		ccm_refreshFilePermissions();
 	});
 }

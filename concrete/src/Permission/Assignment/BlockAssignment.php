@@ -111,12 +111,17 @@ class BlockAssignment extends Assignment
         $pa->markAsInUse();
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
         $b = $this->getPermissionObject();
         $c = $b->getBlockCollectionObject();
         $arHandle = $b->getAreaHandle();
 
-        return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&cvID=' . $c->getVersionID() . '&bID=' . $b->getBlockID() . '&arHandle=' . urlencode($arHandle);
+        return parent::getPermissionKeyTaskURL($task, $options + ['cID' => $c->getCollectionID(), 'cvID' => $c->getVersionID(), 'bID=' => $b->getBlockID(), 'arHandle' => $arHandle]);
     }
 }

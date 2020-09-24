@@ -10,6 +10,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
+use Concrete\Core\Permission\Category;
 
 /** @var Block $b */
 /** @var int $rcID */
@@ -45,13 +46,12 @@ foreach ($list as $pa) {
         }
     }
 }
-
 ?>
 
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">
     <!--suppress HtmlUnknownTarget -->
     <form id="ccm-permissions-timed-guest-access-form" class="form-stacked" method="post"
-          action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED ?>/permissions/categories/block">
+          action="<?= h(Category::getByHandle('block')->getTaskURL()) ?>">
 
         <?php echo $token->output('set_timed_guest_access'); ?>
 

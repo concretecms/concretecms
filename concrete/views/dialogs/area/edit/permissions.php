@@ -67,7 +67,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     View::element('permission/help');
     $cat = PermissionKeyCategory::getByHandle('area');
     ?>
-    <form method="post" id="ccm-permission-list-form" action="<?= $cat->getToolsURL('save_permission_assignments') ?>&cID=<?= $c->getCollectionID() ?>&arHandle=<?=urlencode($a->getAreaHandle()) ?>">
+    <form method="post" id="ccm-permission-list-form" action="<?= h($cat->getTaskURL('save_permission_assignments', ['cID' => $c->getCollectionID(), 'arHandle' => $a->getAreaHandle()])) ?>">
         <table class="ccm-permission-grid table table-striped">
             <?php
             $permissions = PermissionKey::getList('area');
@@ -147,7 +147,7 @@ $(function() {
 window.ccm_revertToPagePermissions = function() {
     jQuery.fn.dialog.showLoader();
     $.get(
-        <?= json_encode((string) $pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL('revert_to_page_permissions') . '&arHandle=' . urlencode($a->getAreaHandle()) . '&cID=' . $c->getCollectionID()) ?>,
+        <?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('revert_to_page_permissions', ['arHandle' => $a->getAreaHandle(), 'cID' => $c->getCollectionID()])) ?>,
         function() {
             ccm_refreshAreaPermissions();
         }
@@ -156,7 +156,7 @@ window.ccm_revertToPagePermissions = function() {
 window.ccm_setAreaPermissionsToOverride = function() {
     jQuery.fn.dialog.showLoader();
     $.get(
-        <?= json_encode((string) $pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL('override_page_permissions') . '&arHandle=' . urlencode($a->getAreaHandle()) . '&cID=' . $c->getCollectionID()) ?>,
+        <?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_page_permissions', ['arHandle' => $a->getAreaHandle(), 'cID' => $c->getCollectionID()])) ?>,
         function() {
             ccm_refreshAreaPermissions();
         }

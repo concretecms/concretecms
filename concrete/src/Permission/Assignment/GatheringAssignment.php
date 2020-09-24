@@ -29,8 +29,13 @@ class GatheringAssignment extends Assignment
         $pa->markAsInUse();
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        return parent::getPermissionKeyToolsURL($task) . '&gaID=' . $this->getPermissionObject()->getGatheringID();
+        return parent::getPermissionKeyTaskURL($task, $options + ['gaID' => $this->getPermissionObject()->getGatheringID()]);
     }
 }
