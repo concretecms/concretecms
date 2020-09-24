@@ -122,6 +122,6 @@ class BlockAssignment extends Assignment
         $c = $b->getBlockCollectionObject();
         $arHandle = $b->getAreaHandle();
 
-        return parent::getPermissionKeyTaskURL($task, $options + ['cID' => $c->getCollectionID(), 'cvID' => $c->getVersionID(), 'bID=' => $b->getBlockID(), 'arHandle' => $arHandle]);
+        return parent::getPermissionKeyTaskURL($task, $options + ['cID' => $c->getCollectionID(), 'cvID' => $c->getVersionID(), 'bID' => $b->getBlockID(), 'arHandle' => $arHandle]);
     }
 }

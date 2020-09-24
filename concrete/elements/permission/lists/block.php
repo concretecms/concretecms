@@ -126,7 +126,7 @@ ccm_revertToAreaPermissions = function() {
 
 ccm_setBlockPermissionsToOverride = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_area_permissions', ['bID' => $b->getBlockID(), 'cvID' => $c->getVersionID(), 'arHandle' => $b->getAreaHandle(), 'cID=' => $c->getCollectionID()])) ?>, function() {
+	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_area_permissions', ['bID' => $b->getBlockID(), 'cvID' => $c->getVersionID(), 'arHandle' => $b->getAreaHandle(), 'cID' => $c->getCollectionID()])) ?>, function() {
         ConcreteToolbar.disableDirectExit();
 		ccm_refreshBlockPermissions();
 	});
