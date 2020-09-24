@@ -23,7 +23,7 @@ use Concrete\Core\Workflow\Request\ChangeSubpageDefaultsInheritanceRequest as Ch
 use Concrete\Core\Workflow\Workflow;
 use Symfony\Component\HttpFoundation\Response;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Page extends Controller implements TaskHandlerInterface
 {
