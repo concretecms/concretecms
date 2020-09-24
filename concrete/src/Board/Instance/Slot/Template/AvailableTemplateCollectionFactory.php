@@ -38,6 +38,11 @@ class AvailableTemplateCollectionFactory
         return $availableTemplates;
     }
 
+    /**
+     * @param Instance $instance
+     * @param int $slot
+     * @return SlotTemplate[]
+     */
     public function getAvailableTemplates(Instance $instance, int $slot)
     {
 

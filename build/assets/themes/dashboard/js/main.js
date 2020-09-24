@@ -187,11 +187,9 @@ var setupHeaderMenu = function() {
 };
 
 var setupSiteListMenuItem = function() {
-    $('select[data-select=ccm-header-site-list]').show().selectize({
-        'onItemAdd': function(option) {
-            window.location.href = option;
-        }
-    });
+    $('select[data-select=ccm-header-site-list]').on('changed.bs.select', function() {
+        window.location.href = $(this).val()
+    })
 };
 
 setupTooltips();

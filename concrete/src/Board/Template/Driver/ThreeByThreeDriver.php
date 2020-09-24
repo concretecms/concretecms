@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Board\Template\Driver;
 
+use Concrete\Core\Board\Layout\PlannerInterface;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class ThreeByThreeDriver implements DriverInterface
@@ -15,5 +17,11 @@ class ThreeByThreeDriver implements DriverInterface
     {
         return 9;
     }
+
+    public function getLayoutPlanner(): ?PlannerInterface
+    {
+        return null;
+    }
+
 
 }
