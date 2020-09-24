@@ -61,7 +61,7 @@ $router->post(
 $router
     ->all(
         '/ccm/system/permissions/categories/{categoryHandle}/{task}',
-        'Concrete\Core\Permission\Category\TaskLauncher::launch',
+        'Concrete\Core\Permission\Category\TaskLauncher::launch'
     )
     ->setRequirements(['categoryHandle' => '\w[\w\-]*'])
 ;
