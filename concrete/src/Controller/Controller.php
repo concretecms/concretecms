@@ -10,7 +10,14 @@ use Concrete\Core\View\View;
 class Controller extends AbstractController
 {
     protected $view;
-    protected $viewPath;
+
+    /**
+     * The path to the view file (update it with the setViewPath method).
+     *
+     * @var string
+     */
+    protected $viewPath = '';
+
     protected $theme;
     protected $controllerActionPath;
     protected $themeViewTemplate;
@@ -74,14 +81,38 @@ class Controller extends AbstractController
     public function __construct()
     {
         parent::__construct();
-        if ($this->viewPath) {
+        $this->setViewPath((string) $this->viewPath);
+    }
+
+    /**
+     * Set the path to the view file.
+     *
+     * @return $this
+     */
+    protected function setViewPath(string $viewPath): self
+    {
+        $this->viewPath = $viewPath;
+        if ($this->viewPath === '') {
+            $this->view = null;
+        } else {
             $this->view = new View($this->viewPath);
+            $matches = null;
             if (preg_match('/Concrete\\\Package\\\(.*)\\\Controller/i', get_class($this), $matches)) {
                 $pkgHandle = uncamelcase($matches[1]);
                 $this->view->setPackageHandle($pkgHandle);
             }
             $this->view->setController($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the path to the view file.
+     */
+    public function getViewPath(): string
+    {
+        return $this->viewPath;
     }
 
     public function flash($key, $value, $isHTML = false)
