@@ -40,7 +40,7 @@ class ItemSegmenter implements LoggerAwareInterface
      * @param $instance Instance
      * @return InstanceItem[]
      */
-    public function getBoardItemsForInstance(Instance $instance)
+    public function getBoardItemsForInstance(Instance $instance): array
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('instanceItem, item')
@@ -50,7 +50,7 @@ class ItemSegmenter implements LoggerAwareInterface
             ->andWhere($qb->expr()->eq('instanceItem.dateAddedToBoard', 0));
 
         $board = $instance->getBoard();
-        switch($board->getSortBy()) {
+        switch ($board->getSortBy()) {
             case $board::ORDER_BY_RELEVANT_DATE_ASC:
                 $qb->orderBy('item.relevantDate', 'asc');
                 $qb->andWhere($qb->expr()->gte('item.relevantDate', time()));
@@ -63,7 +63,10 @@ class ItemSegmenter implements LoggerAwareInterface
 
         $items = $qb->getQuery()->execute();
         $this->logger->debug(t('%s items returned from item segmenter', count($items)));
-        return $items;
+        if ($items) {
+            return $items;
+        }
+        return [];
     }
 
 

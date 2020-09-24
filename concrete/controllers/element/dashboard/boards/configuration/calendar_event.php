@@ -49,6 +49,7 @@ class CalendarEvent extends DataSourceElementController
                 }
             }
         }
+        $this->set('maxOccurrencesOfSameEvent', $configuration->getMaxOccurrencesOfSameEvent());
         $this->set('fieldSelector', $fieldSelector);
     }
 
