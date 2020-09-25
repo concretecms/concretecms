@@ -102,6 +102,6 @@ class FileAssignment extends TreeNodeAssignment
      */
     public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        return parent::getPermissionKeyTaskURL($task, $options + ['fID' => $this->getPermissionObject()->getFileID()]);
+        return Assignment::getPermissionKeyTaskURL($task, $options + ['fID' => $this->getPermissionObject()->getFileID()]);
     }
 }
