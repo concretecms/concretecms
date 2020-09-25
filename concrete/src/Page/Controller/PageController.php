@@ -355,17 +355,6 @@ class PageController extends Controller
             }
         }
 
-        // If a request path is shorter than the collection path, the request is not valid
-        // Example: If a request is made to "domain.com/d" but the shortest path is "domain.com/de"
-        // a 404 response should be returned.
-        $requestPath = $this->request->getPath();
-        if ($requestPath !== '') {
-            $collectionPath = $this->getPageObject()->getCollectionPath();
-            if (strlen($requestPath) < strlen($collectionPath)) {
-                $valid = false;
-            }
-        }
-
         $this->requestValidated = $valid;
 
         return $valid;
