@@ -7,12 +7,17 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\ExpressEntryListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
-class EntryList extends DatabaseItemList implements PermissionableListItemInterface, PaginationProviderInterface
+class EntryList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
 
     protected $category;
@@ -30,6 +35,10 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
 
     public function __construct(Entity $entity)
     {
+        $u = app(User::class);
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
         $this->category = $entity->getAttributeKeyCategory();
         $this->entity = $entity;
         $this->setItemsPerPage($entity->getItemsPerPage());
@@ -100,6 +109,16 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         }
     }
 
+    public function getPagerManager()
+    {
+        return new ExpressEntryListPagerManager($this->entity, $this);
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this);
+    }
+
 
     public function getPaginationAdapter()
     {
@@ -135,7 +154,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         return $fp->canViewExpressEntry();
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }

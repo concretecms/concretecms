@@ -164,17 +164,4 @@ class Urls
     {
         return $this->getBlockTypeAssetsURL($bt, 'auto.css');
     }
-
-    /**
-     * @deprecated
-     * Gets a full URL to a block's tools directory
-     *
-     * @param \BlockType $bt
-     *
-     * @return string $url
-     */
-    public function getBlockTypeToolsURL($bt)
-    {
-        return REL_DIR_FILES_TOOLS_BLOCKS . '/' . $bt->getBlockTypeHandle();
-    }
 }

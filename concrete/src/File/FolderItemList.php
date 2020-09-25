@@ -12,7 +12,6 @@ use Concrete\Core\Search\ItemList\Pager\Manager\FolderItemListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -22,7 +21,9 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 class FolderItemList extends AttributedItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;
+
     protected $searchSubFolders = false;
+
     protected $permissionsChecker;
 
     /**
@@ -42,6 +43,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         'size',
         'f.fID',
         'fv.fvFilename',
+        'fv.fvTitle',
     ];
 
     public function __construct()
@@ -56,6 +58,11 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     public function enableSubFolderSearch()
     {
         $this->searchSubFolders = true;
+    }
+
+    public function enableAutomaticSorting()
+    {
+        $this->enableAutomaticSorting = true;
     }
 
     /**
@@ -76,7 +83,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         return new FolderItemListPagerManager($this);
     }
 
-    public function setPermissionsChecker(Closure $checker = null)
+    public function setPermissionsChecker(?Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -104,7 +111,8 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
             ->leftJoin('tf', 'FileVersions', 'fv', 'tf.fID = fv.fID and fv.fvIsApproved = 1')
             ->leftJoin('fv', 'Files', 'f', 'fv.fID = f.fID')
             ->leftJoin('f', 'Users', 'u', 'f.uID = u.uID')
-            ->leftJoin('f', 'FileSearchIndexAttributes', 'fsi', 'f.fID = fsi.fID');
+            ->leftJoin('f', 'FileSearchIndexAttributes', 'fsi', 'f.fID = fsi.fID')
+        ;
     }
 
     public function getTotalResults()
@@ -113,9 +121,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
             $query = $this->deliverQueryObject();
 
             return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct n.treeNodeID)')->setMaxResults(1)->execute()->fetchColumn();
-        } else {
-            return -1; // unknown
         }
+
+        return -1; // unknown
     }
 
     public function getPaginationAdapter()
@@ -140,9 +148,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         if (isset($this->permissionsChecker)) {
             if ($this->permissionsChecker === -1) {
                 return true;
-            } else {
-                return call_user_func_array($this->permissionsChecker, [$mixed]);
             }
+
+            return call_user_func_array($this->permissionsChecker, [$mixed]);
         }
 
         $fp = new Permissions($mixed);
@@ -169,8 +177,11 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('f.fDateAdded', $comparison,
-            $this->query->createNamedParameter($date)));
+        $this->query->andWhere($this->query->expr()->comparison(
+            'f.fDateAdded',
+            $comparison,
+            $this->query->createNamedParameter($date)
+        ));
     }
 
     public function filterByOriginalPageID($ocID)
@@ -237,7 +248,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $this->query->setParameter('fsID' . $fs->getFileSetID(), $fs->getFileSetID());
     }
 
-
     /**
      * Filters the file list by file size (in kilobytes).
      *
@@ -256,14 +266,12 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         }
     }
 
-
     /**
      * Filters by "keywords" (which searches everything including filenames,
      * title, folder names, etc....
      *
      * @param string $keywords
      */
-
     public function filterByKeywords($keywords)
     {
         $expressions = [
@@ -282,7 +290,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $expr = $this->query->expr();
         $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
-
     }
 
     public function deliverQueryObject()
@@ -299,7 +306,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         // of the parent, because there is no need for any further filtering.
         if (isset($this->parent) &&
             $this->parent->getTreeNodeID() == $rootFolder->getTreeNodeID() && $this->searchSubFolders) {
-
             // Before we can simply return, however, we need to ensure we're only returning nodes that the
             // file manager cares about.
             $this->query->andWhere(
@@ -360,7 +366,8 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
                         $query
                             ->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID')
                             ->andWhere('(f.uID = :fileUploaderID OR f.fOverrideSetPermissions = 1) OR nt.treeNodeTypeHandle != \'file\'')
-                            ->setParameter('fileUploaderID', $u->getUserID());
+                            ->setParameter('fileUploaderID', $u->getUserID())
+                        ;
                     }
                 }
             }

@@ -224,12 +224,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     {
         $router = $this->getRouter();
         $router->register(
-            '/tools/blocks/{btHandle}/{tool}',
-            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
-            'blockTool',
-            ['tool' => '[A-Za-z0-9_/.]+']
-        );
-        $router->register(
             '/tools/{tool}',
             '\Concrete\Core\Legacy\Controller\ToolController::display',
             'tool',

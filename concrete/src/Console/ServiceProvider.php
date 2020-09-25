@@ -58,6 +58,7 @@ class ServiceProvider extends Provider
         Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
         Command\SetDatabaseCharacterSetCommand::class,
+        Command\RefreshBoardsCommand::class,
         Command\Express\ExportCommand::class,
         Command\FixDatabaseForeignKeys::class,
         Command\ReindexCommand::class,

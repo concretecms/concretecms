@@ -16,7 +16,8 @@
     ]); ?>
 </p>
 
-<input type="hidden" name="miniSurveyServices" value="<?php echo REL_DIR_FILES_TOOLS_BLOCKS . '/' . $bt->getBlockTypeHandle() ?>/services"/>
+<input type="hidden" name="miniSurveyServices" value="<?= h($controller->getActionURL('services')) ?>"/>
+<input type="hidden" name="miniSurveyServicesToken" value="<?= h(app('token')->generate('ccm-bt-form-service')) ?>" />
 <?php /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 <input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value=""/>
 <input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value=""/>

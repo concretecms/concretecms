@@ -1,36 +1,31 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var Concrete\Controller\Dialog\Page\Bulk\Properties $controller
+ * @var Concrete\Core\Filesystem\Element $keySelector
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Page\Page[] $pages
+ */
 ?>
 
-<div class="ccm-ui">
-<div data-container="editable-fields">
-
-<section>
-	<h4><?=t('Page Attributes')?></h4>
-	<?php
-
-    Loader::element('attribute/editable_list', array(
-        'attributes' => $attributes,
-        'objects' => $pages,
-        'saveAction' => $controller->action('update_attribute'),
-        'clearAction' => $controller->action('clear_attribute'),
-        'permissionsCallback' => function ($ak, $permissionsArguments) {
-            return true;
-        },
-    ));?>
-</section>
-
-<script type="text/javascript">
-	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
-		data: [
-			<?php foreach ($pages as $c) {
+<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="pages-attributes">
+    <?php
+        foreach ($pages as $page) {
+            echo $form->hidden("item{$page->getCollectionID()}", $page->getCollectionID(), ['name' => 'item[]']);
+        }
     ?>
-				{'name': 'item[]', 'value': '<?=$c->getCollectionID()?>'},
-			<?php 
-} ?>	
-		]
-	});
-</script>
 
-</div>
-</div>
+    <div class="ccm-ui">
+        <?php
+            $keySelector->render();
+        ?>
+    </div>
+
+    <div class="dialog-buttons">
+        <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+        <button type="button" data-dialog-action="submit" class="btn btn-primary"><?=t('Save')?></button>
+    </div>
+
+</form>
+

@@ -8,7 +8,7 @@ $coreProperties = array();
 $associations = array();
 foreach($available->getColumns() as $column) {
     if (!($column instanceof \Concrete\Core\Search\Column\AttributeKeyColumn)) {
-        if ($column instanceof \Concrete\Core\Express\Search\Column\AssociationColumn) {
+        if ($column instanceof \Concrete\Core\Express\Search\ColumnSet\Column\AssociationColumn) {
             $associations[] = $column;
         } else {
             $coreProperties[] = $column;

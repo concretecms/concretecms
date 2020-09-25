@@ -3,7 +3,6 @@ namespace Concrete\Core\Legacy\Controller;
 
 use Controller;
 use Environment;
-use BlockType;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\View\DialogView;
 
@@ -37,22 +36,6 @@ class ToolController extends Controller
             $this->setViewObject($v);
         } else {
             return $this->app->make(ResponseFactoryInterface::class)->notFound('');
-        }
-    }
-
-    public function displayBlock($btHandle, $tool)
-    {
-        $bt = BlockType::getByHandle($btHandle);
-        $env = Environment::get();
-        if (is_object($bt)) {
-            $pkgHandle = $bt->getPackageHandle();
-            $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_TOOLS . '/' . $tool . '.php', $pkgHandle);
-            if ($r->exists()) {
-                $v = new DialogView($btHandle . '/' . DIRNAME_TOOLS . '/' . $tool);
-                $v->setViewRootDirectoryName(DIRNAME_BLOCKS);
-                $v->setInnerContentFile($r->file);
-                $this->setViewObject($v);
-            }
         }
     }
 }

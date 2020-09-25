@@ -37,7 +37,8 @@ class CalendarEventSaver extends AbstractSaver
         if ($calendar) {
             $calendarEventConfiguration->setCalendar($calendar);
         }
-        $calendarEventConfiguration->setQuery($query);;
+        $calendarEventConfiguration->setQuery($query);
+        $calendarEventConfiguration->setMaxOccurrencesOfSameEvent((int) $request->request->get('maxOccurrencesOfSameEvent'));
         return $calendarEventConfiguration;
     }
 

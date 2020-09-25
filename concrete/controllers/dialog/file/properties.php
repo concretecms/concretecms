@@ -65,7 +65,7 @@ class Properties extends BackendInterfaceFileController
             ->get('attribute/component/key_selector', [$this->category]);
         $controller = $keySelector->getElementController();
         $controller->setSelectAttributeUrl($this->action('get_attribute'));
-        $controller->setObject($version);
+        $controller->setObjects([$version]);
         $this->set('keySelector', $keySelector);
         $this->set('file', $version);
         $this->set('form', $this->app->make('helper/form'));

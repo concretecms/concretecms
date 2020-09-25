@@ -110,38 +110,28 @@ div.ccm-block-desktop-waiting-for-me {
 
         i {
           position: absolute;
-          top: 9px;
-          left: 9px;
+          top: 10px;
+          left: 10px;
           color: #ccc;
-          -webkit-text-stroke: 2px #fff;
         }
 
-        &:hover {
-          i {
-            -webkit-text-stroke: 2px #ebebeb !important;
-          }
-        }
         &:active {
           box-shadow: none;
         }
-      }
 
-      &.open {
-        .btn {
-          i {
-            -webkit-text-stroke: 2px #ebebeb !important;
-          }
+        &.dropdown-toggle::after {
+          display: none;
         }
       }
 
       .btn-waiting-for-me-archive {
-        i {
-          opacity: (0.7);
-          top: 11px;
-          left: 11px;
-          height: 16px;
-          width: 16px;
-          background: transparent url(../../images/icons/icon_close.png) no-repeat scroll;
+        svg {
+          position: absolute;
+          fill: #c6c6c6;
+          top: 7px;
+          left: 7px;
+          height: 20px;
+          width: 20px;
         }
       }
     }

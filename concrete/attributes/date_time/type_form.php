@@ -3,9 +3,9 @@
     <legend><?=t('Date/Time Options')?></legend>
 
     <div class="form-group">
-        <div class="checkbox">
-            <label class="checkbox">
-                <?=$form->checkbox('akUseNowIfEmpty', '1', isset($akUseNowIfEmpty) ? $akUseNowIfEmpty : false)?>
+        <div class="form-check">
+            <?=$form->checkbox('akUseNowIfEmpty', '1', isset($akUseNowIfEmpty) ? $akUseNowIfEmpty : false)?>
+            <label class="form-check-label" for="akUseNowIfEmpty">
                 <?=t('Suggest the current date/time if empty')?>
             </label>
         </div>
