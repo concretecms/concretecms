@@ -159,7 +159,7 @@ ccm_permissionLaunchDialog = function(link) {
 
 		setTreeNodePermissionsToOverride: function() {
 			jQuery.fn.dialog.showLoader();
-			$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_global_node_permissions', ['treeNodeID' => $node->getTreeNodeID()])) ?>', function() {
+			$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_global_node_permissions', ['treeNodeID' => $node->getTreeNodeID()])) ?>, function() {
 				TopicsPermissions.refresh();
 			});
 		}
