@@ -223,7 +223,14 @@ class PageController extends Controller
         if ($requestPath === null) {
             $requestPath = $request->getPath();
         }
+
+        if (strpos($requestPath, $this->c->getCollectionPath()) !== false) {
+            // If the request path starts with the collection path, remove it
         $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
+        } else {
+            // Otherwise, just remove leading slash
+            $task = ltrim($requestPath, '/');
+        }
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
         if (isset($taskparts[0]) && $taskparts[0] !== '') {
