@@ -53,8 +53,6 @@ foreach ($list as $pa) {
     <form id="ccm-permissions-timed-guest-access-form" class="form-stacked" method="post"
           action="<?= h(Category::getByHandle('block')->getTaskURL()) ?>">
 
-        <?php echo $token->output('set_timed_guest_access'); ?>
-
         <?php echo $form->hidden('task', 'set_timed_guest_access'); ?>
         <?php echo $form->hidden('cID', $c->getCollectionID()); ?>
         <?php echo $form->hidden('bID', $b->getBlockID()); ?>
