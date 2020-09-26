@@ -18,14 +18,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
         foreach ($nodes as $node) {
             $formatter = $node->getListFormatter();
             $np = new Permissions($node);
+            $detailsURL = null;
             if ($np->canViewExpressEntries()) {
                 if ($node instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
-                    $detailsURL = $view->action('results', $node->getEntity()->getID());
+                    $entity = $node->getEntity();
+                    if ($entity) {
+                        $detailsURL = $view->action('results', $node->getEntity()->getID());
+                    }
                 } else {
                     $detailsURL = $view->action('view', $node->getTreeNodeID());
                 }
             ?>
-            <tr data-details-url="<?=$detailsURL?>"
+            <tr <?php if ($detailsURL) { ?>data-details-url="<?=$detailsURL?>"<?php } ?>
                 class="<?=$formatter->getSearchResultsClass()?>">
                 <td class="ccm-search-results-icon"><?=$formatter->getIconElement()?></td>
                 <td class="ccm-search-results-name"><?=$node->getTreeNodeDisplayName()?></td>

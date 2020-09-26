@@ -1,37 +1,31 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var Concrete\Controller\Dialog\User\Bulk\Properties $controller
+ * @var Concrete\Core\Filesystem\Element $keySelector
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\User\UserInfo[] $users
+ */
 ?>
 
-<div class="ccm-ui">
-<div data-container="editable-fields">
-
-<section>
-	<h4><?=t('Other Attributes')?></h4>
-	<?php
-
-    Loader::element('attribute/editable_list', array(
-        'attributes' => $attributes,
-        'objects' => $users,
-        'saveAction' => $controller->action('update_attribute'),
-        'clearAction' => $controller->action('clear_attribute'),
-        'permissionsArguments' => array('attributes' => $allowedEditAttributes),
-        'permissionsCallback' => function ($ak, $permissionsArguments) {
-            return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
-        },
-    ));?>
-</section>
-
-<script type="text/javascript">
-	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
-		data: [
-			<?php foreach ($users as $ui) {
+<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="users-attributes">
+    <?php
+    foreach ($users as $user) {
+        echo $form->hidden("item{$user->getUserID()}", $user->getUserID(), ['name' => 'item[]']);
+    }
     ?>
-				{'name': 'item[]', 'value': '<?=$ui->getUserID()?>'},
-			<?php 
-} ?>	
-		]
-	});
-</script>
 
-</div>
-</div>
+    <div class="ccm-ui">
+        <?php
+            $keySelector->render();
+        ?>
+    </div>
+
+    <div class="dialog-buttons">
+        <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+        <button type="button" data-dialog-action="submit" class="btn btn-primary"><?=t('Save')?></button>
+    </div>
+
+</form>
+

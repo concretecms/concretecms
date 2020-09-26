@@ -830,6 +830,12 @@ class User extends ConcreteObject
     {
         $c->refreshCache();
 
+        // clear the cached available areas before entering edit mode
+        $app = Application::getFacadeApplication();
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $app->make("session");
+        $session->remove("used_areas");
+
         // can only load one page into edit mode at a time.
         if ($c->isCheckedOut()) {
             return false;

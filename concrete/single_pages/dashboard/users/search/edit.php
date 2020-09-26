@@ -3,8 +3,13 @@
 use Concrete\Core\Localization\Localization;
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var Concrete\Core\User\UserInfo $user
+ */
+
 $dh = Core::make('helper/date');
-/* @var $dh \Concrete\Core\Localization\Service\Date */
+// @var $dh \Concrete\Core\Localization\Service\Date
 $languages = Localization::getAvailableInterfaceLanguages();
 $locales = [];
 if (count($languages) > 0) {
@@ -277,7 +282,7 @@ if (count($languages) > 0) {
             <?php foreach ($set->getAttributeKeys() as $key) { ?>
                 <dt><?= $key->getAttributeKeyDisplayName() ?></dt>
                 <dd><?php
-                    $value = $user->getAttribute($key);
+                    $value = $user->getAttributeValueObject($key);
                     if ($value) {
                         echo $value->getDisplayValue();
                     }

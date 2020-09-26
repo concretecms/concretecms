@@ -8,7 +8,7 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Doctrine\ORM\EntityManager;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController
 {
     protected $btTable = 'btCoreBoardSlot';
     protected $btIsInternal = true;
@@ -19,13 +19,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $slotTemplateID;
 
     public $instanceSlotID;
-
-    public function getRequiredFeatures(): array
-    {
-        return [
-            Features::BOARDS
-        ];
-    }
 
     public function getBlockTypeDescription()
     {

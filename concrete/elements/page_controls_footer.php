@@ -424,7 +424,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         if ($pageInUseBySomeoneElse) {
             $buttons = [];
             if ($canApprovePageVersions) {
-                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
+                $buttons[] = '<a onclick="' . h('$.get(CCM_DISPATCHER_FILENAME + "/ccm/system/backend/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '", function() { window.location.reload(); })') . '" href="javascript:void(0)" class="btn btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
             }
 
             echo $cih->notify([
