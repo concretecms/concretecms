@@ -134,5 +134,10 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/system/dialogs/workflow')
             ->routes('dialogs/workflows.php')
         ;
+
+        $router->buildGroup()->setNamespace('Concrete\Controller\Workflow')
+            ->setPrefix('/ccm/system/workflow')
+            ->routes('workflow.php')
+        ;
     }
 }
