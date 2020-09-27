@@ -93,48 +93,38 @@ class Service
         return false;
     }
 
+    /**
+     * @param string[] $bannedWords
+     */
+    public function setBannedWords($bannedWords)
+    {
+        $this->bannedWords = $bannedWords;
+                }
+
+    /**
+     * @return string[]
+     */
+    public function getBannedWords()
+    {
+        if (!is_array($this->bannedWords) || count($this->bannedWords) === 0) {
+            $this->loadBannedWords();
+        }
+        return $this->bannedWords;
+            }
+
+    /**
+     * @param string $string String to check it has banned words. From version 9, it won't be passed by reference.
+     * @return int Return 1 if string has banned words, otherwise 0. From version 9, it will return boolean.
+     */
     public function hasBannedWords(&$string)
     {
-        $alpha = "abcdefghijklmnopqrstuvwxyz";
-        $alpha   .= strtoupper($alpha);
-        $start = $end = 0;
-        $ra = 0;
-        $i = 0;
         $out = 0;
-        while ($c = $string[$i]) {
-            if ($ra) {
-                if (strpos($alpha, $c) !== false) {
-                } else {
-                    $ra = 0;
-                    $end = $i;
-                    $word = substr($string, $start, $end - $start);
-                    if ($this->isBannedWord($word)) {
-                        ++$out;
-                        $string = substr($string, 0, $start).
-                      $word.
-                      substr($string, $end);
-                    }
-                }
-            } else {
-                if (strpos($alpha, $c) !== false) {
-                    $ra = 1;
-                    $start = $i;
-                } else {
-                }
-            }
-            ++$i;
+        $bannedWords = $this->getBannedWords();
+        foreach ($bannedWords as $bannedWord) {
+            if (mb_stripos($string, $bannedWord) !== false) {
+                $out = 1;
+                break;
         }
-        if ($ra) {
-            $word = substr($string, $start);
-            if ($this->isBannedWord($word)) {
-                ++$out;
-                $string = substr($string, 0, $start).
-                  $word;
-            }
-        }
-        if (strlen($this->errorMsg) && !$this->errorMsgDisplayed) {
-            //echo "<div class=\"infoBox\">$this->errorMsg</div>";
-            //$this->errorMsgDisplayed=1;
         }
 
         return $out;
