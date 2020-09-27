@@ -145,6 +145,8 @@ EOL;
         /** @var Form $form */
         $form = $this->app->make(Form::class);
 
+        $resolverManager = $this->app->make(ResolverManagerInterface::class);
+
         if ($request->request->has($fieldName)) {
             $selectedUserId = $request->request->get($fieldName);
         } elseif ($request->query->has($fieldName)) {
@@ -184,7 +186,7 @@ EOL;
             ),
             json_encode([
                 "ajax" => [
-                    "url" => REL_DIR_FILES_TOOLS_REQUIRED . '/users/autocomplete',
+                    "url" => (string) $resolverManager->resolve(['/ccm/system/user/autocomplete']),
                     "data" => [
                         "term" => "{{{q}}}",
                         "key" => $fieldName,

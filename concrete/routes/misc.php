@@ -44,3 +44,5 @@ $router->all('/ccm/system/batch/monitor/{handle}/{token}', '\Concrete\Controller
 $router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller\Dialog\Editor\Settings\Preview::view');
 $router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Controller\Backend\Attribute\Set\UpdateOrder::view');
 $router->all('/ccm/system/heartbeat', '\Concrete\Controller\Frontend\Heartbeat::view');
+
+$router->all('/ccm/system/user/autocomplete', 'Concrete\Controller\Backend\User\Autocomplete::view');
