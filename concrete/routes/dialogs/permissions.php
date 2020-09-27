@@ -17,3 +17,4 @@ $router->all('/access/entity/types/group_set', 'Access\Entity\Types\GroupSet::vi
 $router->all('/basic_workflow', 'BasicWorkflow::view');
 $router->all('/block_type', 'BlockType::view');
 $router->all('/conversation', 'Conversation::view');
+$router->all('/file', 'File::view');
