@@ -12,3 +12,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $router->all('/access/entity/site_group', 'Access\Entity\SiteGroup::view');
+$router->all('/access/entity/types/group_combination', 'Access\Entity\Types\GroupCombination::view');
