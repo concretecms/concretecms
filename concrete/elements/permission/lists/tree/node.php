@@ -117,7 +117,7 @@ ccm_permissionLaunchDialog = function(link) {
 	}
 	jQuery.fn.dialog.open({
 		title: $(link).attr('dialog-title'),
-		href: '<?=Loader::helper('concrete/urls')->getToolsURL('permissions/dialogs/tree/node')?>?duplicate=' + dupe + '&treeNodeID=<?=$node->getTreeNodeID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+		href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/tree/node?duplicate=' + dupe + '&treeNodeID=<?=$node->getTreeNodeID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
 		modal: true,
 		width: 500,
 		height: 380
