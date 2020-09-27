@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </form>
 
 <script>
-var ccm_permissionDialogURL = '<?= REL_DIR_FILES_TOOLS_REQUIRED ?>/permissions/dialogs/miscellaneous';
+var ccm_permissionDialogURL = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/miscellaneous';
 ccm_deleteAccessEntityAssignment = function(peID) {
     jQuery.fn.dialog.showLoader();
 
