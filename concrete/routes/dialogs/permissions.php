@@ -18,3 +18,4 @@ $router->all('/basic_workflow', 'BasicWorkflow::view');
 $router->all('/block_type', 'BlockType::view');
 $router->all('/conversation', 'Conversation::view');
 $router->all('/file', 'File::view');
+$router->all('/file_set', 'FileSet::view');
