@@ -22,4 +22,4 @@ $router->all('/file_set', 'FileSet::view');
 $router->all('/miscellaneous', 'Miscellaneous::view');
 $router->all('/page_type', 'PageType::view');
 $router->all('/tree/node', 'Tree\Node::view');
-
+$router->all('/user', 'User::view');
