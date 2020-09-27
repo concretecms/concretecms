@@ -4,6 +4,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\Group\GroupSet;
 use UserInfo;
 
@@ -18,7 +19,7 @@ class GroupSetEntity extends Entity
 
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/permissions/dialogs/access/entity/types/group_set" dialog-width="400" dialog-height="300" class="dropdown-item dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group Set') . '">' . tc('PermissionAccessEntityTypeName', 'Group Set') . '</a>';
+        $html = '<a href="' . h(app(ResolverManagerInterface::class)->resolve(['/ccm/system/dialogs/permissions/access/entity/types/group_set'])) . '" dialog-width="400" dialog-height="300" class="dropdown-item dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group Set') . '">' . tc('PermissionAccessEntityTypeName', 'Group Set') . '</a>';
 
         return $html;
     }
