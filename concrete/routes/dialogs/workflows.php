@@ -11,3 +11,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
   * Namespace: Concrete\Controller\Dialog\Workflow\
   */
 
+$router
+    ->all('/change_page_permissions/{wpID}', 'ChangePagePermissions::view')
+    ->setRequirements([
+        'wpID' => '[1-9]\d*',
+    ])
+;
