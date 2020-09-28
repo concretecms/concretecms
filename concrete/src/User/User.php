@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User;
 
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
@@ -56,6 +57,10 @@ class User extends ConcreteObject
             if ($login) {
                 $nu->persist($cacheItemsOnLogin);
                 $nu->recordLogin();
+                $app = Application::getFacadeApplication();
+                /** @var NavigationCache $navigationCache */
+                $navigationCache = $app->make(NavigationCache::class);
+                $navigationCache->clear();
             }
         }
 
@@ -448,6 +453,11 @@ class User extends ConcreteObject
             return new User();
         });
         $events->dispatch('on_user_logout');
+
+        $app = Application::getFacadeApplication();
+        /** @var NavigationCache $navigationCache */
+        $navigationCache = $app->make(NavigationCache::class);
+        $navigationCache->clear();
     }
 
     /**
@@ -819,6 +829,12 @@ class User extends ConcreteObject
     public function loadCollectionEdit(&$c)
     {
         $c->refreshCache();
+
+        // clear the cached available areas before entering edit mode
+        $app = Application::getFacadeApplication();
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $app->make("session");
+        $session->remove("used_areas");
 
         // can only load one page into edit mode at a time.
         if ($c->isCheckedOut()) {

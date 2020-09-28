@@ -10,6 +10,7 @@ use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
