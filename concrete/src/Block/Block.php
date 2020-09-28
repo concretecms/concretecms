@@ -498,7 +498,6 @@ EOT
                 while ($row = $r->fetchRow()) {
                     $cArray[] = Page::getByID($row['cID'], 'RECENT');
                 }
-                $r->free();
             }
         }
 
@@ -1631,7 +1630,6 @@ EOT
                     true
                     );
             }
-            $r->free();
         }
 
         // we duplicate block-specific sub-content

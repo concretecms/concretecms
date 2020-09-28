@@ -1067,7 +1067,6 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $db->query($q, $args);
                 ++$displayOrder;
             }
-            $r->free();
         }
     }
     
