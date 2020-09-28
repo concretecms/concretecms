@@ -7,7 +7,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-final class Version20200818000000 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20200928000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
