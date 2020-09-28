@@ -136,6 +136,7 @@ return [
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
+        'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
