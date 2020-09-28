@@ -50,10 +50,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <a class="dropdown-item" href="#" data-panel-dropdown-tab="blocks">
                     <?php echo t("Blocks"); ?>
                 </a>
-
-                <a class="dropdown-item" href="#" data-panel-dropdown-tab="orphaned_blocks">
-                    <?php echo t("Orphaned Blocks"); ?>
-                </a>
+                <?php if ($showOrphanedBlockOption) { ?>
+                    <a class="dropdown-item" href="#" data-panel-dropdown-tab="orphaned_blocks">
+                        <?php echo t("Orphaned Blocks"); ?>
+                    </a>
+                <?php } ?>
                 <a class="dropdown-item" href="#" data-panel-dropdown-tab="clipboard">
                     <?php echo t("Clipboard"); ?>
                 </a>

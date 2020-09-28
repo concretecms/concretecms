@@ -38,7 +38,8 @@ class Add extends BackendInterfacePageController
      * @return array
      * @noinspection PhpDocSignatureInspection
      */
-    private function getOrphanedBlockIds($usedAreas) {
+    private function getOrphanedBlockIds($usedAreas)
+    {
         $orphanedBlockIds = [];
 
         $app = Application::getFacadeApplication();
@@ -69,7 +70,7 @@ class Add extends BackendInterfacePageController
 
         $orphanedAreas = [];
 
-        foreach($availableAreas as $availableArea) {
+        foreach ($availableAreas as $availableArea) {
             if (!in_array($availableArea, $usedAreas)) {
                 $orphanedAreas[] = $availableArea;
             }
@@ -101,7 +102,7 @@ class Add extends BackendInterfacePageController
 
         $queryBuilder->andWhere($orX);
 
-        foreach($queryBuilder->execute()->fetchAll() as $row) {
+        foreach ($queryBuilder->execute()->fetchAll() as $row) {
             /*
              * Use the block id as key to prevent duplicates because of the second join statement. The "group by"
              * statement results in sql_mode=only_full_group_by” MySQL-issue and all other solutions like executing
@@ -111,6 +112,15 @@ class Add extends BackendInterfacePageController
         }
 
         return $orphanedBlockIds;
+    }
+
+    public function showOrphanedBlockOption(): bool
+    {
+        // @TODO - in order to make orphaned blocks work, we have to change the logic of this method to
+        // check whether there are used areas on this page not included in the DOM. This controls whether the
+        // orphaned blocks header shows up in the panel. Right now by returning false we are simply disabling
+        // this feature.
+        return false;
     }
 
     public function getOrphanedBlockContents()
@@ -125,11 +135,10 @@ class Add extends BackendInterfacePageController
 
         $contents = [];
 
-        foreach($this->getOrphanedBlockIds($usedAreas) as $item) {
+        foreach ($this->getOrphanedBlockIds($usedAreas) as $item) {
             $block = Block::getByID($item["bID"]);
 
             if ($block instanceof Block) {
-
                 /** @var \Concrete\Core\Entity\Block\BlockType\BlockType $type */
                 /** @noinspection DuplicatedCode */
                 $type = $block->getBlockTypeObject();
@@ -145,19 +154,26 @@ class Add extends BackendInterfacePageController
                 $blockContent = ob_get_contents();
                 ob_end_clean();
 
-                $item = array_merge($item, [
-                    "name" => $type->getBlockTypeName(),
-                    "handle" => $type->getBlockTypeHandle(),
-                    "dialogTitle" => t('Add %s', t($type->getBlockTypeName())),
-                    "dialogWidth" => (int)$type->getBlockTypeInterfaceWidth(),
-                    "dialogHeight" => (int)$type->getBlockTypeInterfaceHeight(),
-                    "hasAddTemplate" => (int)$type->hasAddTemplate(),
-                    "supportsInlineAdd" => (int)$type->supportsInlineAdd(),
-                    "blockTypeId" => $type->getBlockTypeID(),
-                    "draggingAvatar" => h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>'),
-                    "blockId" => (int) $block->getBlockID(),
-                    "blockContent" => $blockContent
-                ]);
+                $item = array_merge(
+                    $item,
+                    [
+                        "name" => $type->getBlockTypeName(),
+                        "handle" => $type->getBlockTypeHandle(),
+                        "dialogTitle" => t('Add %s', t($type->getBlockTypeName())),
+                        "dialogWidth" => (int)$type->getBlockTypeInterfaceWidth(),
+                        "dialogHeight" => (int)$type->getBlockTypeInterfaceHeight(),
+                        "hasAddTemplate" => (int)$type->hasAddTemplate(),
+                        "supportsInlineAdd" => (int)$type->supportsInlineAdd(),
+                        "blockTypeId" => $type->getBlockTypeID(),
+                        "draggingAvatar" => h(
+                            '<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t(
+                                $type->getBlockTypeName()
+                            ) . '</span></p>'
+                        ),
+                        "blockId" => (int)$block->getBlockID(),
+                        "blockContent" => $blockContent
+                    ]
+                );
 
                 $contents[] = $item;
             }
@@ -166,12 +182,14 @@ class Add extends BackendInterfacePageController
         $curPage = (int)$this->request->query->get("curPage", 0);
         $maxItems = 10;
 
-        return $responseFactory->json([
-            "displayPagination" => count($contents) > $maxItems,
-            "hasPrev" => $curPage > 0,
-            "hasNext" => ($curPage * $maxItems + $maxItems) < count($contents),
-            "results" => array_slice($contents, $curPage * $maxItems, $maxItems)
-        ]);
+        return $responseFactory->json(
+            [
+                "displayPagination" => count($contents) > $maxItems,
+                "hasPrev" => $curPage > 0,
+                "hasNext" => ($curPage * $maxItems + $maxItems) < count($contents),
+                "results" => array_slice($contents, $curPage * $maxItems, $maxItems)
+            ]
+        );
     }
 
     public function getClipboardContents()
@@ -193,12 +211,14 @@ class Add extends BackendInterfacePageController
         $curPage = (int)$this->request->query->get("curPage", 0);
         $maxItems = 10;
 
-        return $responseFactory->json([
-            "displayPagination" => count($contents) > $maxItems,
-            "hasPrev" => $curPage > 0,
-            "hasNext" => ($curPage * $maxItems + $maxItems) < count($contents),
-            "results" => array_slice($contents, $curPage * $maxItems, $maxItems)
-        ]);
+        return $responseFactory->json(
+            [
+                "displayPagination" => count($contents) > $maxItems,
+                "hasPrev" => $curPage > 0,
+                "hasNext" => ($curPage * $maxItems + $maxItems) < count($contents),
+                "results" => array_slice($contents, $curPage * $maxItems, $maxItems)
+            ]
+        );
     }
 
     /**
@@ -218,42 +238,46 @@ class Add extends BackendInterfacePageController
 
         if (!$request->request->has("blockId")) {
             $errorList->add(t("You need to enter a valid block id."));
-        } else if (!$request->request->has("ccm_token")) {
-            $errorList->add(t("You need to enter a valid token"));
-        } else if (!$this->page instanceof Page) {
-            $errorList->add(t("You need to enter a valid page id."));
         } else {
-            $blockId = (int)$request->request->get("blockId");
-            $removeToken = $request->request->get("ccm_token");
-
-            if (!$token->validate('remove_orphaned_block', $removeToken)) {
-                $errorList->add($token->getErrorMessage());
+            if (!$request->request->has("ccm_token")) {
+                $errorList->add(t("You need to enter a valid token"));
             } else {
-                $usedAreas = $request->request->get("usedAreas", []);
-
-                $arrOrphanedBlocks = $this->getOrphanedBlockIds($usedAreas);
-
-                if (count($arrOrphanedBlocks) === 0) {
-                    $errorList->add(t("There are no blocks to remove."));
+                if (!$this->page instanceof Page) {
+                    $errorList->add(t("You need to enter a valid page id."));
                 } else {
-                    $orphanedBlockFound = false;
+                    $blockId = (int)$request->request->get("blockId");
+                    $removeToken = $request->request->get("ccm_token");
 
-                    foreach ($this->getOrphanedBlockIds($usedAreas) as $arrOrphanedBlock) {
-                        if ($blockId === (int)$arrOrphanedBlock["bID"]) {
-                            $orphanedBlockFound = true;
-                        }
-                    }
-
-                    if (!$orphanedBlockFound) {
-                        $errorList->add(t("The given block is not orphaned."));
+                    if (!$token->validate('remove_orphaned_block', $removeToken)) {
+                        $errorList->add($token->getErrorMessage());
                     } else {
-                        $block = Block::getByID($blockId);
+                        $usedAreas = $request->request->get("usedAreas", []);
 
-                        if (!$block instanceof Block) {
-                            //$errorList->add(t("Error while removing orphaned block."));
+                        $arrOrphanedBlocks = $this->getOrphanedBlockIds($usedAreas);
+
+                        if (count($arrOrphanedBlocks) === 0) {
+                            $errorList->add(t("There are no blocks to remove."));
                         } else {
-                            // returns false because the area no longer exists in the theme.
-                            $block->deleteBlock(true);
+                            $orphanedBlockFound = false;
+
+                            foreach ($this->getOrphanedBlockIds($usedAreas) as $arrOrphanedBlock) {
+                                if ($blockId === (int)$arrOrphanedBlock["bID"]) {
+                                    $orphanedBlockFound = true;
+                                }
+                            }
+
+                            if (!$orphanedBlockFound) {
+                                $errorList->add(t("The given block is not orphaned."));
+                            } else {
+                                $block = Block::getByID($blockId);
+
+                                if (!$block instanceof Block) {
+                                    //$errorList->add(t("Error while removing orphaned block."));
+                                } else {
+                                    // returns false because the area no longer exists in the theme.
+                                    $block->deleteBlock(true);
+                                }
+                            }
                         }
                     }
                 }
@@ -344,6 +368,7 @@ class Add extends BackendInterfacePageController
         }
         $this->set('tab', $tab);
         $this->set('ci', $this->app->make('helper/concrete/urls'));
+        $this->set('showOrphanedBlockOption', $this->showOrphanedBlockOption());
     }
 
     public function getStackFolderContents()
