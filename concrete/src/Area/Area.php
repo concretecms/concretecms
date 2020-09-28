@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Area;
 
+use Concrete\Core\Support\Facade\Application;
 use Core;
 use Database;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -805,7 +806,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      * displays the Area in the page
      * ex: $a = new Area('Main'); $a->display($c);.
      *
-     * @param Page $c
+     * @param \Concrete\Core\Page\Page|bool $c
      * @param Block[] $alternateBlockArray optional array of blocks to render instead of default behavior
      *
      * @return bool

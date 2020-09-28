@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\CoreAreaLayout;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
@@ -261,7 +262,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $a = $b->getBlockAreaObject();
         $this->arLayout = $this->getAreaLayoutObject();
         if (is_object($this->arLayout)) {
-            $this->arLayout->setAreaObject($a);
+            if ($a instanceof Area) {
+                $this->arLayout->setAreaObject($a);
+            }
             $this->set('columns', $this->arLayout->getAreaLayoutColumns());
             $c = Page::getCurrentPage();
             $this->set('c', $c);
@@ -345,18 +348,22 @@ class Controller extends BlockController implements UsesFeatureInterface
         $c = $this->getCollectionObject();
 
         $blocks = [];
-        $layout = $this->getAreaLayoutObject();
-        $layout->setAreaObject($this->getAreaObject());
-        if ($layout) {
-            foreach ($layout->getAreaLayoutColumns() as $column) {
-                $area = $column->getSubAreaObject();
-                if ($area) {
-                    foreach ($area->getAreaBlocksArray($c) as $block) {
-                        $blocks[] = $block;
+        if ($this->getAreaObject() instanceof Area) {
+            $layout = $this->getAreaLayoutObject();
+            $layout->setAreaObject($this->getAreaObject());
+
+            if ($layout) {
+                foreach ($layout->getAreaLayoutColumns() as $column) {
+                    $area = $column->getSubAreaObject();
+                    if ($area) {
+                        foreach ($area->getAreaBlocksArray($c) as $block) {
+                            $blocks[] = $block;
+                        }
                     }
                 }
             }
         }
+
 
         $arrAssetBlocks = [];
 
