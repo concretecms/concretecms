@@ -75,6 +75,10 @@ class Add extends BackendInterfacePageController
             }
         }
 
+        if (!$orphanedAreas) {
+            return [];
+        }
+
         /*
          * Get all blocks from database for all orphaned areas of the current page.
          */
