@@ -11,3 +11,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Namespace: Concrete\Controller\Workflow\
  */
 
+$router->all('/categories/page/save_progress', 'Categories\Page::saveProgress');
