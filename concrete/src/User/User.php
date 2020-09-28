@@ -1022,6 +1022,7 @@ class User extends ConcreteObject
         if ($cache_interface) {
             $app->make('helper/concrete/ui')->cacheInterfaceItems();
         }
+        $app->instance(User::class, $this);
     }
 
     /**
