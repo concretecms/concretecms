@@ -5,6 +5,7 @@ namespace Concrete\Tests\Summary\Data\Extractor\Driver;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Data\Extractor\Driver\BasicPageDriver;
 use Concrete\Core\Summary\Data\Extractor\Driver\PageThumbnailDriver;
@@ -26,15 +27,18 @@ class PageDriverTest extends TestCase
     
     public function testIsValidForObject()
     {
+        $installationService = M::mock(InstallationService::class);
         $event = M::mock(CalendarEvent::class);
         $page = M::mock(Page::class);
-        $driver = new BasicPageDriver();
+        $driver = new BasicPageDriver($installationService);
         $this->assertFalse($driver->isValidForObject($event));
         $this->assertTrue($driver->isValidForObject($page));
     }
     
     public function testExtractData()
     {
+        $installationService = M::mock(InstallationService::class);
+        $installationService->shouldReceive('isMultisiteEnabled');
         $file = M::mock(File::class);
         $file->shouldReceive('getFileID')->andReturn(4);
 
@@ -46,7 +50,7 @@ class PageDriverTest extends TestCase
             '2010-01-01 00:00:00', new \DateTimeZone('GMT')
         ));
         $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
-        $driver = new BasicPageDriver();
+        $driver = new BasicPageDriver($installationService);
         $data = $driver->extractData($page);
         $this->assertInstanceOf(Collection::class, $data);
         $fields = $data->getFields();
