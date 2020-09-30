@@ -48,9 +48,9 @@ class Controller extends BlockController
 
     protected $btCopyWhenPropagate = true;
 
-    public function __construct($b = null)
+    public function __construct($obj = null)
     {
-        parent::__construct($b);
+        parent::__construct($obj);
         //$this->bID = intval($this->_bID);
         if (is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)) {
             $this->thankyouMsg = $this->getDefaultThankYouMsg();

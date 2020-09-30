@@ -7,7 +7,7 @@ class ManagerServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app['manager/grid_framework'] = $this->app->share(function ($app) {
+        $this->app->singleton('manager/grid_framework', function($app) {
             return new Manager($app);
         });
     }

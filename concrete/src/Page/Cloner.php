@@ -17,7 +17,7 @@ use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PDO;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 /**
  * A class to copy pages and page versions.
@@ -47,11 +47,11 @@ class Cloner
     protected $dateHelper;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var \Concrete\Core\Events\EventDispatcher
      */
     protected $eventDispatcher;
 
-    public function __construct(EntityManagerInterface $entityManager, SiteService $siteService, DateHelper $dateHelper, EventDispatcherInterface $eventDispatcher)
+    public function __construct(EntityManagerInterface $entityManager, SiteService $siteService, DateHelper $dateHelper, EventDispatcher $eventDispatcher)
     {
         $this->connection = $entityManager->getConnection();
         $this->entityManager = $entityManager;

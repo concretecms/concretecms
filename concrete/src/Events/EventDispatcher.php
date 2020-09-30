@@ -4,29 +4,35 @@ namespace Concrete\Core\Events;
 
 use Concrete\Core\Events\Broadcast\BroadcastableEventInterface;
 use Concrete\Core\Events\Broadcast\Broadcaster;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyEventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class EventDispatcher extends SymfonyEventDispatcher
+class EventDispatcher
 {
 
     protected $broadcasters = [];
 
     /**
      * @var Broadcaster
+     *
      */
     protected $broadcaster;
 
-    public function __construct(Broadcaster $broadcaster)
+    /**
+     * @var SymfonyEventDispatcher
+     */
+    protected $eventDispatcher;
+
+    public function __construct(Broadcaster $broadcaster, SymfonyEventDispatcher $eventDispatcher)
     {
         $this->broadcaster = $broadcaster;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dispatch($eventName, Event $event = null)
+    public function dispatch($eventName, object $event = null)
     {
         if (null === $event) {
             $event = new Event();
@@ -36,12 +42,19 @@ class EventDispatcher extends SymfonyEventDispatcher
             $this->broadcaster->broadcast($event->getBroadcastChannel(), $event);
         }
 
-        if ($listeners = $this->getListeners($eventName)) {
-            $this->doDispatch($listeners, $eventName, $event);
-        }
-
-        return $event;
+        return $this->eventDispatcher->dispatch($event, $eventName);
     }
+
+    public function addListener(string $eventName, $listener)
+    {
+        return $this->eventDispatcher->addListener($eventName, $listener);
+    }
+
+    public function removeListener(string $eventName, $listener)
+    {
+        return $this->eventDispatcher->removeListener($eventName, $listener);
+    }
+
 
 
 }

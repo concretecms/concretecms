@@ -446,9 +446,9 @@ class Application extends Container
      *
      * @return mixed
      */
-    public function build($concrete, array $parameters = [])
+    public function build($concrete)
     {
-        $object = parent::build($concrete, $parameters);
+        $object = parent::build($concrete);
         if (is_object($object)) {
             if ($object instanceof ApplicationAwareInterface) {
                 $object->setApplication($this);

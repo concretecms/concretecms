@@ -670,7 +670,7 @@ EOT
                 $nb->setBlockAreaObject($a);
             }
             $class = $this->getBlockTypeClass();
-            $bc = $app->build($class, [$nb]);
+            $bc = $app->make($class, ['obj' => $nb]);
             $bc->save($data);
 
             return Block::getByID($bIDnew);
@@ -686,7 +686,7 @@ EOT
 
         /** @var Controller controller */
         if ($class) {
-            $this->controller = Facade::getFacadeApplication()->build($class, [$this]);
+            $this->controller = Facade::getFacadeApplication()->make($class, ['obj' => $this]);
         }
     }
 }

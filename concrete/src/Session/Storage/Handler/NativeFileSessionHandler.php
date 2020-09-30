@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandle
  * to. Those directories should be able to be warded off for security reasons using open_basedir restrictions. By
  * testing the existence of that directory such a restriction is useless as it will always generate a fatal error.
  */
-class NativeFileSessionHandler extends NativeSessionHandler
+class NativeFileSessionHandler extends \SessionHandler
 {
     /**
      * Constructor.

@@ -20,6 +20,7 @@ use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Statistics as PageStatistics;
@@ -380,9 +381,9 @@ class Page extends Collection implements CategoryMemberInterface,
             }
 
             if (isset($class) && class_exists($class)) {
-                $this->controller = Core::make($class, [$this]);
+                $this->controller = Core::make($class, ['c' => $this]);
             } else {
-                $this->controller = Core::make('\PageController', [$this]);
+                $this->controller = Core::make(PageController::class, ['c' => $this]);
             }
         }
 

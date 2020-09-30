@@ -180,7 +180,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             }
 
             $app = Facade::getFacadeApplication();
-            $b->instance = $app->build($class, [$b]);
+            $b->instance = $app->make($class, ['obj' => $b]);
 
             if ($c != null || $a != null) {
                 CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
@@ -1423,7 +1423,7 @@ EOT
             $bt = $this->getBlockTypeObject();
             $class = $bt->getBlockTypeClass();
             $app = Facade::getFacadeApplication();
-            $this->instance = $app->build($class, [$this]);
+            $this->instance = $app->make($class, ['obj' => $this]);
         }
         $this->instance->setBlockObject($this);
         $this->instance->setAreaObject($this->getBlockAreaObject());
@@ -1483,7 +1483,7 @@ EOT
         $bt = BlockType::getByID($btID);
         $class = $bt->getBlockTypeClass();
         $app = Facade::getFacadeApplication();
-        $bc = $app->build($class, [$this]);
+        $bc = $app->make($class, ['obj' => $this]);
         $bc->save($data);
     }
 
@@ -1572,7 +1572,7 @@ EOT
             return false;
         }
         $app = Facade::getFacadeApplication();
-        $bc = $app->build($blockTypeClass, [$this]);
+        $bc = $app->make($blockTypeClass, ['obj' => $this]);
 
         $bDate = $dh->getOverridableNow();
         $v = [$this->getBlockName(), $bDate, $bDate, $this->getBlockFilename(), $this->getBlockTypeID(), $this->getBlockUserID()];
@@ -1753,7 +1753,7 @@ EOT
             if ($bt && method_exists($bt, 'getBlockTypeClass')) {
                 $class = $bt->getBlockTypeClass();
                 $app = Facade::getFacadeApplication();
-                $bc = $app->build($class, [$this]);
+                $bc = $app->make($class, ['obj' => $this]);
                 $bc->delete();
             }
 

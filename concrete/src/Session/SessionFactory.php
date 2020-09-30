@@ -66,7 +66,7 @@ class SessionFactory implements SessionFactoryInterface
         $storage = $this->getSessionStorage($config);
 
         // We have to use "build" here because we have bound this classname to this factory method
-        $session = $this->app->build(SymfonySession::class, [$storage]);
+        $session = new SymfonySession($storage);
         $session->setName(array_get($config, 'name'));
 
         /* @TODO Remove this call. We should be able to set this against the request somewhere much higher than this */
@@ -190,7 +190,7 @@ class SessionFactory implements SessionFactoryInterface
 
         $storage->setOptions($options);
 
-        return $app->make(Storage\LoggedStorage::class, [$storage]);
+        return $app->make(Storage\LoggedStorage::class, ['wrappedStorage' => $storage]);
     }
 
     /**

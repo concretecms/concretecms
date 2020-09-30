@@ -2,9 +2,8 @@
 namespace Concrete\Core\File\Event;
 
 use Concrete\Core\Entity\File\Version;
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class FileVersion extends AbstractEvent
+class FileVersion
 {
     protected $fv;
 

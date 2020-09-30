@@ -209,9 +209,11 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeEvents(Application $app)
     {
         if ($app->isInstalled()) {
+            /*
             $subscriber = $app->make(BernardSubscriber::class);
             $dispatcher = $app->make('director');
             $dispatcher->addSubscriber($subscriber);
+            */
         }
     }
 

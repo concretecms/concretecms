@@ -9,6 +9,7 @@ use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\BitmapFormat;
@@ -43,7 +44,6 @@ use League\Flysystem\Util;
 use Page;
 use Permissions;
 use stdClass;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Throwable;
 use Concrete\Core\User\User;
@@ -346,7 +346,7 @@ class Version implements ObjectInterface
         $em->flush();
 
         $fve = new FileVersionEvent($fv);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_add', $fve);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_add', $fve);
 
         return $fv;
     }
@@ -448,7 +448,7 @@ class Version implements ObjectInterface
             $this->logVersionUpdate(self::UT_RENAME);
             $this->save();
             $fve = new FileVersionEvent($this);
-            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_rename', $fve);
+            $app->make(EventDispatcher::class)->dispatch('on_file_version_rename', $fve);
         }
     }
 
@@ -537,7 +537,7 @@ class Version implements ObjectInterface
         $this->save();
 
         $fve = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_approve', $fve);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_approve', $fve);
 
         $fo = $this->getFile();
         $fo->reindex();
@@ -553,7 +553,7 @@ class Version implements ObjectInterface
         $this->fvIsApproved = false;
         $this->save();
         $fve = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_deny', $fve);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_deny', $fve);
         $app->make('cache/request')->delete('file/version/approved/' . $this->getFileID());
     }
 
@@ -657,7 +657,7 @@ class Version implements ObjectInterface
         $this->save();
         $this->logVersionUpdate(self::UT_TITLE);
         $fve = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_title', $fve);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_update_title', $fve);
     }
 
     /**
@@ -682,7 +682,7 @@ class Version implements ObjectInterface
         $this->save();
         $this->logVersionUpdate(self::UT_DESCRIPTION);
         $fve = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_description', $fve);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_update_description', $fve);
     }
 
     /**
@@ -718,7 +718,7 @@ class Version implements ObjectInterface
         $this->save();
         $this->logVersionUpdate(self::UT_TAGS);
         $fve = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_tags', $fve);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_update_tags', $fve);
     }
 
     /**
@@ -1081,7 +1081,7 @@ class Version implements ObjectInterface
         $em->flush();
 
         $fve = new FileVersionEvent($fv);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_duplicate', $fve);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_duplicate', $fve);
 
         return $fv;
     }
@@ -1192,7 +1192,7 @@ class Version implements ObjectInterface
             $filesystem->write($path, $contents);
             $this->logVersionUpdate(self::UT_CONTENTS);
             $fve = new FileVersionEvent($this);
-            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_contents', $fve);
+            $app->make(EventDispatcher::class)->dispatch('on_file_version_update_contents', $fve);
             $this->refreshAttributes($rescanThumbnails);
         }
     }

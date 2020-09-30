@@ -110,7 +110,7 @@ class ServiceManager implements ManagerInterface
 
         if (is_string($abstract)) {
             // If it's a string, throw it at the IoC container
-            $resolved = $this->app->make($abstract, array($version));
+            $resolved = $this->app->make($abstract, array('version' => $version));
         } elseif (is_callable($abstract)) {
             // If it's a callable, lets call it with the application and $this
             $resolved = $abstract($version, $this->app, $this);

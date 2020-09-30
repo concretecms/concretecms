@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Logging;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
+use Symfony\Component\EventDispatcher\GenericEvent as AbstractEvent;
 use Monolog\Logger as MonologLogger;
 
 class Event extends AbstractEvent

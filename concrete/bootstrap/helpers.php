@@ -288,7 +288,7 @@ function core_log(
     $logger = Core::make(LoggerFactory::class)->createLogger($channel);
     $context = [];
     if (is_array($message)) {
-        $context = $message[1];
+        $context = $message[1];$
         $message = $message[0];
     }
     $logger->log($level, $message, $context);

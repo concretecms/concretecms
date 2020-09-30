@@ -24,7 +24,7 @@ class ConfigServiceProvider extends Provider
     private function registerFileConfig()
     {
         $this->app->bindIf(LoaderInterface::class, static function($app) {
-            return $app->make(CompositeLoader::class, [$app, [
+            return $app->make(CompositeLoader::class, [$app, 'loaders' => [
                 CoreFileLoader::class,
                 FileLoader::class,
             ]]);
@@ -34,8 +34,7 @@ class ConfigServiceProvider extends Provider
         $this->app->singleton('config', function ($app) {
             $loader = $app->make(LoaderInterface::class);
             $saver = $app->make(SaverInterface::class);
-
-            return $app->build('Concrete\Core\Config\Repository\Repository', array($loader, $saver, $app->environment()));
+            return new Repository\Repository($loader, $saver, $app->environment());
         });
     }
 
@@ -47,8 +46,7 @@ class ConfigServiceProvider extends Provider
         $this->app->bindShared('config/database', function ($app) {
             $loader = $app->make('Concrete\Core\Config\DatabaseLoader');
             $saver = $app->make('Concrete\Core\Config\DatabaseSaver');
-
-            return $app->build('Concrete\Core\Config\Repository\Repository', array($loader, $saver, $app->environment()));
+            return new Repository\Repository($loader, $saver, $app->environment());
         });
     }
 }
