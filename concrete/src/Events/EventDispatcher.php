@@ -45,16 +45,10 @@ class EventDispatcher
         return $this->eventDispatcher->dispatch($event, $eventName);
     }
 
-    public function addListener(string $eventName, $listener)
+    public function __call($name, $arguments)
     {
-        return $this->eventDispatcher->addListener($eventName, $listener);
+        return $this->eventDispatcher->$name(...$arguments);
     }
-
-    public function removeListener(string $eventName, $listener)
-    {
-        return $this->eventDispatcher->removeListener($eventName, $listener);
-    }
-
 
 
 }

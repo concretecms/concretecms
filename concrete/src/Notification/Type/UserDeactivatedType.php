@@ -77,8 +77,7 @@ class UserDeactivatedType implements TypeInterface
     protected function getDefaultSubscription()
     {
         if (!$this->defaultSubscription) {
-            $this->defaultSubscription = $this->app->make(StandardSubscription::class,
-                [self::IDENTIFIER, t('User Deactivated')]);
+            $this->defaultSubscription = new StandardSubscription(self::IDENTIFIER, t('User Deactivated'));
         }
 
         return $this->defaultSubscription;
@@ -116,12 +115,15 @@ class UserDeactivatedType implements TypeInterface
     public function getAvailableFilters()
     {
         if (!$this->defaultFilter) {
-            $this->defaultFilter = $this->app->make(StandardFilter::class, [
-                $this,
-                self::IDENTIFIER,
-                t('User Deactivated'),
-                'userdeactivatednotification'
-            ]);
+            $this->defaultFilter = $this->app->make(
+                StandardFilter::class,
+                [
+                    'type' => $this,
+                    'key' => self::IDENTIFIER,
+                    'name' => t('User Deactivated'),
+                    'databaseNotificationType' => 'userdeactivatednotification'
+                ]
+            );
         }
 
         return [$this->defaultFilter];

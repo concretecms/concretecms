@@ -48,7 +48,7 @@ use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
 use League\URL\URLInterface;
 use stdClass;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\Events\EventDispatcher;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {

@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Core\User\Event;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
-
-class AddUser extends AbstractEvent
+class AddUser
 {
     protected $proceed = true;
     protected $data = array();

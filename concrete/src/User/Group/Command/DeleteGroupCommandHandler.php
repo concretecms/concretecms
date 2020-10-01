@@ -7,7 +7,7 @@ use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\User\Group\DeleteEvent;
 use Concrete\Core\User\Group\GroupRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class DeleteGroupCommandHandler
 {
@@ -18,7 +18,7 @@ class DeleteGroupCommandHandler
     protected $connection;
 
     /**
-     * @var EventDispatcherInterface
+     * @var EventDispatcher
      */
     protected $dispatcher;
 
@@ -31,7 +31,7 @@ class DeleteGroupCommandHandler
     public function __construct(
         GroupRepository $groupRepository,
         Connection $connection,
-        EventDispatcherInterface $dispatcher
+        EventDispatcher $dispatcher
     )
     {
         $this->groupRepository = $groupRepository;

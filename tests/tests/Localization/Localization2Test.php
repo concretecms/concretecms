@@ -186,8 +186,9 @@ class Localization2Test extends LocalizationTestsBase
         $app = Facade::getFacadeApplication();
         $origDirector = $app->make('director');
 
-        $director = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
-            ->setMethods(['dispatch'])
+        $director = $this->getMockBuilder('Concrete\Core\Events\EventDispatcher')
+            ->setMethods(['dispatch', 'addListener'])
+            ->disableOriginalConstructor()
             ->getMock();
 
         // Force the events to use the new director to be bound.

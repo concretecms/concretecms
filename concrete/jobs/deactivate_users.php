@@ -9,19 +9,17 @@ use Doctrine\ORM\EntityNotFoundException;
 use Job as AbstractJob;
 use Core;
 use Concrete\Core\User\UserInfoRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class DeactivateUsers extends AbstractJob
 {
 
     /**
      * The event dispatcher we use to report that a user is being deactivated
-     *
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     protected $dispatcher;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(EventDispatcher $eventDispatcher)
     {
         $this->dispatcher = $eventDispatcher;
     }

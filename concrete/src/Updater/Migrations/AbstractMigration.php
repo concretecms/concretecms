@@ -9,9 +9,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
-use Doctrine\DBAL\Migrations\AbstractMigration as DoctrineAbstractMigration;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\Migrations\AbstractMigration as DoctrineAbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\Version\Version;
 use Doctrine\ORM\Tools\SchemaTool;
 
 /**
@@ -67,9 +67,9 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::up()
+     * @see \Doctrine\Migrations\AbstractMigration::up()
      */
-    final public function up(Schema $schema)
+    final public function up(Schema $schema): void
     {
         $this->upgradeSchema($schema);
     }
@@ -77,9 +77,9 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::postUp()
+     * @see \Doctrine\Migrations\AbstractMigration::postUp()
      */
-    final public function postUp(Schema $schema)
+    final public function postUp(Schema $schema): void
     {
         $this->upgradeDatabase();
     }
@@ -87,9 +87,9 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::down()
+     * @see \Doctrine\Migrations\AbstractMigration::down()
      */
-    final public function down(Schema $schema)
+    final public function down(Schema $schema): void
     {
         $this->downgradeSchema($schema);
     }
@@ -97,9 +97,9 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::postDown()
+     * @see \Doctrine\Migrations\AbstractMigration::postDown()
      */
-    final public function postDown(Schema $schema)
+    final public function postDown(Schema $schema): void
     {
         $this->downgradeDatabase();
     }

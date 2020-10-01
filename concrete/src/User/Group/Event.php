@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Core\User\Group;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
-
-class Event extends AbstractEvent
+class Event
 {
     protected $g;
 

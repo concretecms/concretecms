@@ -56,7 +56,7 @@ use PageType;
 use Queue;
 use Request;
 use Session;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use UserInfo;
 
 /**
@@ -1004,7 +1004,7 @@ class Page extends Collection implements CategoryMemberInterface,
             $this->rescanCollectionPath();
         }
         $pe = new Event($this);
-        $eventDispatcher = $app->make(EventDispatcherInterface::class);
+        $eventDispatcher = $app->make(EventDispatcher::class);
         $eventDispatcher->dispatch('on_page_alias_edit', $pe);
     }
 

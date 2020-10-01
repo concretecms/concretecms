@@ -11,7 +11,7 @@ use Concrete\Core\Console\Command as ConcreteCommand;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Tools\Console\Command as DBALCommand;
-use Doctrine\DBAL\Migrations\Tools\Console\Command as DBALMigrationCommand;
+use Doctrine\Migrations\Tools\Console\Command as DBALMigrationCommand;
 use Doctrine\ORM\Tools\Console\Command as ORMCommand;
 use Mockery;
 use Concrete\Tests\TestCase;

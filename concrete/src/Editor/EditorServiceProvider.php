@@ -31,7 +31,7 @@ class EditorServiceProvider extends ServiceProvider
                 $this->registerCorePlugins($pluginManager);
                 $pluginManager->select($this->resolveSelectedPlugins($activeSite, $config, $siteService));
 
-                $editor = $app->build(CkeditorEditor::class,
+                $editor = $app->make(CkeditorEditor::class,
                     ['config' => $config, 'pluginManager' => $pluginManager, 'styles' => $styles]);
                 $editor->setToken($app->make('token')->generate('editor'));
 

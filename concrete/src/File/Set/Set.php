@@ -12,7 +12,7 @@ use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEnt
 use Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use Events;
 use File as ConcreteFile;
 use Database;
@@ -495,7 +495,7 @@ class Set
         } else {
             $file_set_file = File::createAndGetFile($f_id, $this->fsID);
             $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
-            $director = $app->make(EventDispatcherInterface::class);
+            $director = $app->make(EventDispatcher::class);
             $director->dispatch('on_file_added_to_set', $fe);
             if ($fileVersion !== null && $this->shouldRefreshFileThumbnails('add')) {
                 $fileVersion->refreshThumbnails(false);
@@ -550,7 +550,7 @@ class Set
                 [$f_id, $this->getFileSetID()]
             );
             $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
-            $director = $app->make(EventDispatcherInterface::class);
+            $director = $app->make(EventDispatcher::class);
             $director->dispatch('on_file_removed_from_set', $fe);
             if ($fileVersion !== null && $this->shouldRefreshFileThumbnails('remove')) {
                 $fileVersion->refreshThumbnails(false);

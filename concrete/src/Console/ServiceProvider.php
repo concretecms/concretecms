@@ -5,7 +5,7 @@ namespace Concrete\Core\Console;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Tools\Console\Doctrine\ConsoleRunner as DeprecatedConsoleRunner;
 use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
-use Doctrine\DBAL\Migrations\OutputWriter;
+use Doctrine\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -70,12 +70,12 @@ class ServiceProvider extends Provider
      * @var string[]
      */
     protected $migrationCommands = [
-        \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand::class,
-        \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand::class,
-        \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand::class,
-        \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand::class,
-        \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand::class,
-        \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class,
+        \Doctrine\Migrations\Tools\Console\Command\DiffCommand::class,
+        \Doctrine\Migrations\Tools\Console\Command\ExecuteCommand::class,
+        \Doctrine\Migrations\Tools\Console\Command\GenerateCommand::class,
+        \Doctrine\Migrations\Tools\Console\Command\MigrateCommand::class,
+        \Doctrine\Migrations\Tools\Console\Command\StatusCommand::class,
+        \Doctrine\Migrations\Tools\Console\Command\VersionCommand::class,
     ];
 
     /**

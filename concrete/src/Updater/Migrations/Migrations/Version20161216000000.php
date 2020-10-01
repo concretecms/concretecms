@@ -13,9 +13,9 @@ class Version20161216000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     * @see \Doctrine\Migrations\AbstractMigration::getDescription()
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return '8.0.3';
     }

@@ -186,7 +186,7 @@ EOT
     private static function prepareClass()
     {
         if (!self::$prepared) {
-            $apache = \Core::make('\Concrete\Core\Service\HTTP\Apache', ['']);
+            $apache = \Core::make('\Concrete\Core\Service\HTTP\Apache', ['version' => '']);
             /* @var $apache \Concrete\Core\Service\HTTP\Apache */
             self::$configurator = $apache->getConfigurator();
             self::$prettyUrlRule = $apache->getGenerator()->getRule('pretty_urls');

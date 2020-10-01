@@ -7,7 +7,8 @@ use Bernard\Queue\AbstractQueue;
 use Bernard\Queue\PersistentQueue as BernardPersistentQueue;
 use Concrete\Core\Foundation\Queue\Serializer\Serializer;
 
-class PersistentQueue extends BernardPersistentQueue
+//class PersistentQueue extends BernardPersistentQueue
+class PersistentQueue
 {
 
     /**

@@ -2,9 +2,8 @@
 namespace Concrete\Core\File\Event;
 
 use Concrete\Core\File\Set\Set;
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class FileSet extends AbstractEvent
+class FileSet
 {
     protected $fs;
 

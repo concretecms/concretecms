@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Concrete\Tests\TestCase;
 use Mockery as M;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class LoginAttemptServiceTest extends TestCase
 {
@@ -24,7 +24,7 @@ class LoginAttemptServiceTest extends TestCase
         $fakeAttempt2 = M::mock(LoginAttempt::class);
         $config = M::mock(Repository::class);
         $repository = M::mock(LoginAttemptRepository::class);
-        $director = M::mock(EventDispatcherInterface::class);
+        $director = M::mock(EventDispatcher::class);
 
         $em = M::mock(EntityManager::class);
         $em->shouldReceive('remove')->once()->with($fakeAttempt);

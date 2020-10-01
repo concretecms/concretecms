@@ -40,12 +40,12 @@ class UserDeactivatedTypeTest extends TestCase
         $filter = M::mock(StandardFilter::class);
         $type = null;
 
-        $app->shouldReceive('make')->once()->withArgs([StandardSubscription::class, ['user_deactivated', 'User Deactivated']])->andReturn($subscription);
-        $app->shouldReceive('make')->once()->withArgs([StandardFilter::class, [&$type, 'user_deactivated', 'User Deactivated', 'userdeactivatednotification']])->andReturn($filter);
+        $app->shouldReceive('make')->andReturn($filter);
 
         $type = new UserDeactivatedType($app, $notifier);
-        $this->assertEquals($subscription, $type->getSubscription($subject));
-        $this->assertEquals([$subscription], $type->getAvailableSubscriptions());
+        $this->assertInstanceOf(StandardSubscription::class, $type->getSubscription($subject));
+        $subscriptions = $type->getAvailableSubscriptions();
+        $this->assertInstanceOf(StandardSubscription::class, $subscriptions[0]);
         $this->assertEquals([$filter], $type->getAvailableFilters());
         $this->assertEquals($notifier, $type->getNotifier());
     }

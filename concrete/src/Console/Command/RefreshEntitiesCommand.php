@@ -9,7 +9,7 @@ use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class RefreshEntitiesCommand extends Command
 {
@@ -37,8 +37,8 @@ EOT
         $app = Application::getFacadeApplication();
 
         $pev = new PackageEntities();
-        $app->make(EventDispatcherInterface::class)->dispatch('on_refresh_package_entities', $pev);
-        $entityManagers = array_merge([$app->make(EntityManagerInterface::class)], $pev->getEntityManagers());
+        $app->make(EventDispatcher::class)->dispatch('on_refresh_package_entities', $pev);
+        $entityManagers = array_merge([$app->make(EventDispatcher::class)], $pev->getEntityManagers());
         foreach ($entityManagers as $em) {
             $manager = new DatabaseStructureManager($em);
             $manager->refreshEntities();

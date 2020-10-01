@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -10,12 +10,12 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20140908095447 extends AbstractMigration
 {
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Version571';
     }
 
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->createTable('Widgets');
@@ -24,7 +24,7 @@ class Version20140908095447 extends AbstractMigration
         $table->setPrimaryKey(['id']);
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('Widgets');

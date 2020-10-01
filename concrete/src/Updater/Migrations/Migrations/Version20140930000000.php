@@ -11,9 +11,9 @@ class Version20140930000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     * @see \Doctrine\Migrations\AbstractMigration::getDescription()
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return '5.7.0.4';
     }
@@ -21,9 +21,9 @@ class Version20140930000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::preUp()
+     * @see \Doctrine\Migrations\AbstractMigration::preUp()
      */
-    public function preUp(Schema $schema)
+    public function preUp(Schema $schema): void
     {
         \Database::query('UPDATE Config SET configNamespace="" WHERE configNamespace IS NULL');
     }

@@ -4,9 +4,8 @@ namespace Concrete\Core\User\Event;
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\UserInfo as ConcreteUserInfo;
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class UserInfo extends AbstractEvent
+class UserInfo
 {
     protected $ui;
 

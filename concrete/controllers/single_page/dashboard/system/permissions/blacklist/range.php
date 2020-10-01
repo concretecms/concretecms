@@ -191,7 +191,7 @@ class Range extends Blacklist
 
         return StreamedResponse::create(
             function () use ($app, $type, $ranges, $bom) {
-                $writer = $app->build(IPRangesCsvWriter::class, [
+                $writer = $app->make(IPRangesCsvWriter::class, [
                     'writer' => $app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                     'type' => $type,
                 ]);

@@ -7,7 +7,7 @@ use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\Migrations\Version\Version;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\TextType;
 

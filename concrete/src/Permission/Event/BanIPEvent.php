@@ -1,11 +1,10 @@
 <?php
 namespace Concrete\Core\Permission\Event;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 use Concrete\Core\Utility\IPAddress;
 use DateTime;
 
-class BanIPEvent extends AbstractEvent
+class BanIPEvent
 {
     /**
      * The IP address that is going to be banned.

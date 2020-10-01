@@ -20,7 +20,7 @@ use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
 use Concrete\Core\User\User;
 use Exception;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 /**
  * Default HTTP Runner.
@@ -43,7 +43,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     /** @var SiteService */
     protected $siteService;
 
-    /** @var EventDispatcherInterface */
+    /** @var EventDispatcher */
     protected $eventDispatcher;
 
     /** @var ServerInterface */
@@ -528,7 +528,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @return EventDispatcherInterface
+     * @return EventDispatcher
      */
     protected function getEventDispatcher()
     {
@@ -544,7 +544,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @return EventDispatcherInterface
+     * @return EventDispatcher
      */
     private function getDefaultEventDispatcher()
     {
@@ -556,11 +556,11 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @param EventDispatcherInterface $urlResolver
+     * @param EventDispatcher $urlResolver
      *
      * @return $this
      */
-    public function setEventDispatcher(EventDispatcherInterface $urlResolver)
+    public function setEventDispatcher(EventDispatcher $urlResolver)
     {
         $this->eventDispatcher = $urlResolver;
 

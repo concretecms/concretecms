@@ -10,7 +10,8 @@ use Concrete\Core\Foundation\Queue\Serializer\Serializer;
  * Class QueueFactory
  * @package Concrete\Core\Foundation\Queue
  */
-class QueueFactory extends PersistentFactory
+//class QueueFactory extends PersistentFactory
+class QueueFactory
 {
 
     /**

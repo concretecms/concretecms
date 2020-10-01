@@ -9,7 +9,8 @@ use Doctrine\DBAL\Connection;
  * Driver supporting Concrete's DBAL implementation
  *
  */
-class ConcreteDatabaseDriver extends DoctrineDriver
+class ConcreteDatabaseDriver
+//class ConcreteDatabaseDriver extends DoctrineDriver
 {
 
     /**

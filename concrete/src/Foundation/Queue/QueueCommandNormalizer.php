@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  * assertion.
  *
  */
-final class QueueCommandNormalizer extends AbstractAggregateNormalizerAware implements NormalizerInterface, DenormalizerInterface
+final class QueueCommandNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
      * {@inheritdoc}

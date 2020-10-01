@@ -32,7 +32,7 @@ class FormServiceProvider extends ServiceProvider
         $this->app->singleton(ControlRegistry::class);
 
         $this->app->bind(DestinationPicker\DestinationPicker::class, function (Application $app) {
-            return $app->build(DestinationPicker\DestinationPicker::class)
+            return $app->make(DestinationPicker\DestinationPicker::class)
                 ->registerPickers([
                     'none' => $app->make(DestinationPicker\NoDestinationPicker::class),
                     'page' => $app->make(DestinationPicker\PagePicker::class),

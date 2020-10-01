@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
@@ -129,8 +130,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getObjectAttributeCategory()
     {
-        $category = \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', [$this->getEntity()]);
-
+        $category = app(ExpressCategory::class, ['entity' => $this->getEntity()]);
         return $category;
     }
 

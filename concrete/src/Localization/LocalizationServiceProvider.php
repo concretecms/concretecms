@@ -45,13 +45,13 @@ class LocalizationServiceProvider extends ServiceProvider
             $this->app->alias(LocalTranslationsFactory::class, LocalTranslationsFactoryInterface::class);
         }
         $this->app->bind(LocalTranslationsFactory::class, function ($app) {
-            return $app->build(LocalTranslationsFactory::class, ['cache' => $app->make('cache/expensive')]);
+            return $app->make(LocalTranslationsFactory::class, ['cache' => $app->make('cache/expensive')]);
         });
         if (!$this->app->bound(RemoteTranslationsProviderInterface::class)) {
             $this->app->alias(CommunityStoreTranslationProvider::class, RemoteTranslationsProviderInterface::class);
         }
         $this->app->bind(CommunityStoreTranslationProvider::class, function ($app) {
-            return $app->build(CommunityStoreTranslationProvider::class, ['cache' => $app->make('cache/expensive')]);
+            return $app->make(CommunityStoreTranslationProvider::class, ['cache' => $app->make('cache/expensive')]);
         });
 
         $this->app->singleton(AddressFormat::class);

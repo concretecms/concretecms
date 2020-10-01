@@ -13,7 +13,7 @@ use Exception;
 use FilesystemIterator;
 use Illuminate\Filesystem\Filesystem;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Cache\OpCache;
 
 class ClearCacheCommandHandler
