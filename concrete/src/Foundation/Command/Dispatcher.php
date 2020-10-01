@@ -145,7 +145,6 @@ class Dispatcher
 
         $dispatchCommand = $this->wrapCommandForDispatch($command, $bus);
         $commandBus = $bus->build($this);
-
         return $commandBus->handle($dispatchCommand);
     }
 }
