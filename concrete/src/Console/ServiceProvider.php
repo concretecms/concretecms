@@ -64,13 +64,15 @@ class ServiceProvider extends Provider
         Command\FixDatabaseForeignKeys::class,
         Command\ReindexCommand::class,
 
-//        MessengerCommand\DebugCommand::class,
         MessengerCommand\FailedMessagesShowCommand::class,
+        /*
         MessengerCommand\FailedMessagesRetryCommand::class,
         MessengerCommand\FailedMessagesRemoveCommand::class,
+        MessengerCommand\DebugCommand::class,
         MessengerCommand\SetupTransportsCommand::class,
         MessengerCommand\StopWorkersCommand::class,
         MessengerCommand\ConsumeMessagesCommand::class,
+        */
 
     ];
 
