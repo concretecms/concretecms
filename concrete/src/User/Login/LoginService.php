@@ -181,12 +181,12 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
     public function logLoginAttempt($username, array $errors = [])
     {
         if ($this->app) {
-            $entry = $this->app->make(LoginAttempt::class, [
+            $entry = new LoginAttempt(
                 $username,
                 $this->request ? $this->request->getPath() : '',
                 $this->getGroups($username),
                 $errors
-            ]);
+            );
 
             $context = $entry->getContext();
             $context['ip_address'] = (string) $this->ipService->getRequestIPAddress();

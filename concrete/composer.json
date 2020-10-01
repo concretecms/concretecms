@@ -35,6 +35,7 @@
     "symfony/routing": "^5.1",
     "symfony/http-kernel": "^5.1",
     "symfony/event-dispatcher": "^5.1",
+    "symfony/messenger": "^5.1",
     "symfony/serializer": "^5.1",
     "symfony/yaml":"^4",
     "doctrine/dbal": "~2.5",

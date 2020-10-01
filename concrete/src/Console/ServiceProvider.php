@@ -9,6 +9,7 @@ use Doctrine\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Messenger\Command as MessengerCommand;
 
 class ServiceProvider extends Provider
 {
@@ -62,6 +63,15 @@ class ServiceProvider extends Provider
         Command\Express\ExportCommand::class,
         Command\FixDatabaseForeignKeys::class,
         Command\ReindexCommand::class,
+
+//        MessengerCommand\DebugCommand::class,
+        MessengerCommand\FailedMessagesShowCommand::class,
+        MessengerCommand\FailedMessagesRetryCommand::class,
+        MessengerCommand\FailedMessagesRemoveCommand::class,
+        MessengerCommand\SetupTransportsCommand::class,
+        MessengerCommand\StopWorkersCommand::class,
+        MessengerCommand\ConsumeMessagesCommand::class,
+
     ];
 
     /**

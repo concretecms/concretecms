@@ -25,7 +25,7 @@ if ($dashboard->inDashboard($c)) {
     $section = \Concrete\Core\Page\Page::getByPath('/dashboard/welcome');
 }
 if ($section) {
-    $sectionMenu = Element::get('dashboard/navigation/panel/section', [$section, $c]);
+    $sectionMenu = Element::get('dashboard/navigation/panel/section', ['section' => $section, 'currentPage' => $c]);
     $currentMode = 'section';
 }
 

@@ -76,7 +76,7 @@ class Pagination extends Pagerfanta
     {
         $manager = Core::make('manager/view/pagination');
         $driver = $manager->driver($driver);
-        $v = Core::make('\Concrete\Core\Search\Pagination\View\ViewRenderer', array($this, $driver));
+        $v = Core::make('\Concrete\Core\Search\Pagination\View\ViewRenderer', array('pagination' => $this, 'paginationView' => $driver));
 
         return $v->render($arguments);
     }

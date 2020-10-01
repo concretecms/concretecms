@@ -91,7 +91,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function delete()
     {
         $app = Facade::getFacadeApplication();
-        return $app->executeCommand(new DeleteGroupCommand($this->getGroupID()));
+        $command = new DeleteGroupCommand();
+        $command->setGroupID($this->getGroupID());
+        return $app->executeCommand($command);
     }
 
     public function rescanGroupPath()
