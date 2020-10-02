@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Express\Entry;
 
-use Concrete\Attribute\ImageFile\Controller as AttributeImageFileController;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
@@ -123,18 +122,19 @@ class Manager implements EntryManagerInterface
     public function getEntryAttributeValuesForm(Form $form, Entry $entry)
     {
         $submittedAttributeValues = [];
-
         foreach ($form->getControls() as $control) {
             if($control instanceof AttributeKeyControl){
                 $attributeKey = $control->getAttributeKey();
-                $akHandle = $attributeKey->getAttributeKeyHandle();
-                /** @var ExpressValue $attributeValue */
-                $attributeValue = $entry->getAttributeValue($akHandle);
+                $genericValue = $attributeKey->getController()->createAttributeValueFromRequest();
+                $attributeValue = new ExpressValue();
+                $attributeValue->setAttributeKey($attributeKey);
+                $attributeValue->setEntry($entry);
+                $attributeValue->setAttributeValueObject($genericValue);
                 $submittedAttributeValues[] = $attributeValue;
             }
         }
-
         //TODO implement for other express entities controls as TextControl And Association control
+
         return $submittedAttributeValues;
     }
 
