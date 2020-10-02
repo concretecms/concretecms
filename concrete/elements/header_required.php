@@ -14,6 +14,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @var string|null $pageDescription
  * @var string|null $pageMetaKeywords
  * @var bool|null $disableTrackingCode
+ * @var bool|null $display_account_menu
  */
 
 $c = Page::getCurrentPage();
@@ -190,11 +191,23 @@ if (!empty($alternateHreflangTags)) {
 
 <?php
 $v = View::getRequestInstance();
-$u = $app->make(Concrete\Core\User\User::class);
-if ($u->isRegistered()) {
-    $v->requireAsset('core/account');
-    $v->addFooterItem('<script type="text/javascript">$(function() { if (window.ccm_enableUserProfileMenu) ccm_enableUserProfileMenu(); });</script>');
+
+if (!isset($display_account_menu)) {
+    $display_account_menu = $config->get('user.display_account_menu');
 }
+if ($display_account_menu) {
+    if (!$cp || !$cp->canViewToolbar()) {
+        $u = $app->make(Concrete\Core\User\User::class);
+        if ($u->isRegistered()) {
+            $dh = $app->make('helper/concrete/dashboard');
+            if (!$dh->inDashboard($c)) {
+                $v->requireAsset('core/account');
+                $v->addFooterItem('<script type="text/javascript">$(function() { if (window.ccm_enableUserProfileMenu) ccm_enableUserProfileMenu(); });</script>');
+            }
+        }
+    }
+}
+
 if ($cp) {
     View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
     if ($isEditMode) {
