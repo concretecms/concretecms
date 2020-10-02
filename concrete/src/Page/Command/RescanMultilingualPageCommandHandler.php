@@ -99,7 +99,7 @@ class RescanMultilingualPageCommandHandler
         }
     }
 
-    public function handle(RescanMultilingualPageCommand $command)
+    public function __invoke(RescanMultilingualPageCommand $command)
     {
         $page = Page::getByID($command->getPageID());
         if ($page && !$page->isError()) {

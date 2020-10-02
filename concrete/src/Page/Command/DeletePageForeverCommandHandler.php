@@ -8,7 +8,7 @@ use Concrete\Core\Page\Page;
 class DeletePageForeverCommandHandler
 {
 
-    public function handle(DeletePageForeverCommand $command)
+    public function __invoke(DeletePageForeverCommand $command)
     {
         $c = Page::getByID($command->getPageID());
         if ($c && !$c->isError()) {

@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\File\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-abstract class FileCommand implements CommandInterface
+abstract class FileCommand extends Command
 {
     /**
      * @var int

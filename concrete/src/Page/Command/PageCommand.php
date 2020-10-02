@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\Page\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-abstract class PageCommand implements CommandInterface
+abstract class PageCommand extends Command
 {
     /**
      * @var int

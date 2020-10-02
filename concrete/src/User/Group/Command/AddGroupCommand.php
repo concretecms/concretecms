@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\User\Group\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\User\Group\Command\Traits\GroupDetailsTrait;
 
-class AddGroupCommand implements CommandInterface
+class AddGroupCommand extends Command
 {
     use GroupDetailsTrait;
 

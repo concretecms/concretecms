@@ -7,6 +7,7 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\Command\Dispatcher;
@@ -38,6 +39,8 @@ use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
 use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use View;
 
 class Application extends Container
@@ -47,24 +50,20 @@ class Application extends Container
     protected $packages = [];
 
     /**
-     * @var Dispatcher
-     */
-    protected $commandDispatcher;
-
-    public function getCommandDispatcher()
-    {
-        if (!isset($this->commandDispatcher)) {
-            $this->commandDispatcher = $this->make(DispatcherFactory::class)->getDispatcher();
-        }
-        return $this->commandDispatcher;
-    }
-
-    /**
-     * @param mixed $command
+     * Dispatches a command/message on the command bus. If the command is executed immediately, the result is returned.
+     * This is a convenience method for mostly synchronous commands, and it uses the command bus.
+     *
+     * @param $command
+     * @return mixed
      */
     public function executeCommand($command)
     {
-        return $this->getCommandDispatcher()->dispatch($command);
+        $messenger = $this->app->make('messenger/bus/command');
+        $envelope = $messenger->dispatch($command);
+        $handled = $envelope->last(HandledStamp::class);
+        if ($handled instanceof HandledStamp) {
+            return $handled->getResult();
+        }
     }
 
     /**

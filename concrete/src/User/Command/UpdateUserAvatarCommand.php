@@ -2,11 +2,11 @@
 
 namespace Concrete\Core\User\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\User\UserInfo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UpdateUserAvatarCommand implements CommandInterface
+class UpdateUserAvatarCommand extends Command
 {
 
     /**

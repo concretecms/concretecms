@@ -8,7 +8,7 @@ use Concrete\Core\Page\Page;
 class CopyPageCommandHandler
 {
 
-    public function handle(CopyPageCommand $command)
+    public function __invoke(CopyPageCommand $command)
     {
         $oc = Page::getByID($command->getPageID());
         $db = \Database::connection();

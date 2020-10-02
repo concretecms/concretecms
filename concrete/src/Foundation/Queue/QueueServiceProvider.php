@@ -66,14 +66,5 @@ class QueueServiceProvider extends Provider
             return $app->make(QueueService::class);
         });
 
-        $this->app->singleton(JsonSerializer::class, function($app) {
-            $serializer = new JsonSerializer([
-                new JsonSerializableNormalizer(),
-                new CustomNormalizer()
-            ], [
-                new JsonEncoder()
-            ]);
-            return $serializer;
-        });
     }
 }

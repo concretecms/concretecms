@@ -39,7 +39,7 @@ class DeleteGroupCommandHandler
         $this->dispatcher = $dispatcher;
     }
 
-    public function handle(DeleteGroupCommand $command)
+    public function __invoke(DeleteGroupCommand $command)
     {
         $groupID = $command->getGroupID();
         // we will NOT let you delete the required groups

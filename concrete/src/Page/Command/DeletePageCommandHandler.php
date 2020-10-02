@@ -9,7 +9,7 @@ use Concrete\Core\Workflow\Request\DeletePageRequest;
 class DeletePageCommandHandler
 {
 
-    public function handle(DeletePageCommand $command)
+    public function __invoke(DeletePageCommand $command)
     {
         $c = Page::getByID($command->getPageID());
         if ($c && !$c->isError()) {

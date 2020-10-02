@@ -35,7 +35,7 @@ class RescanFileCommandHandler
         $this->rescanner = $rescanner;
     }
 
-    public function handle(RescanFileCommand $command)
+    public function __invoke(RescanFileCommand $command)
     {
         $f = $this->entityManager->find(FileEntity::class, $command->getFileID());
         if ($f) {

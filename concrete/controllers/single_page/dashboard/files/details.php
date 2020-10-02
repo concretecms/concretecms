@@ -58,7 +58,7 @@ class Details extends DashboardPageController
         }
 
         $rescanFileCommand = new RescanFileCommand($fID);
-        $this->app->make(Rescanner::class)->rescanFileVersion($fileVersion);
+        $this->app->executeCommand($rescanFileCommand);
 
         $this->flash('success', t('The file has been rescanned.'));
 

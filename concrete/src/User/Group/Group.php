@@ -19,6 +19,7 @@ use Gettext\Translations;
 use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, \JsonSerializable
 {

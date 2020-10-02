@@ -40,7 +40,7 @@ class AddGroupCommandHandler
         $this->dispatcher = $dispatcher;
     }
 
-    public function handle(AddGroupCommand $command)
+    public function __invoke(AddGroupCommand $command)
     {
         $data = [
             'gName' => $command->getName(),

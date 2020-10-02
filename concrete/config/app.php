@@ -94,8 +94,10 @@ return [
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
+        /*
         'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
-        'core_bus' => '\Concrete\Core\Foundation\Command\DispatcherServiceProvider',
+        */
+        'core_messenger' => '\Concrete\Core\Foundation\Command\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
@@ -737,21 +739,15 @@ return [
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
 
-    'commands' => [
-        ['Concrete\Core\User\Command\UpdateUserAvatarCommand', 'Concrete\Core\User\Command\UpdateUserAvatarCommandHandler'],
+    'command_handlers' => [
+    ],
 
-        ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
-        ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
-        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
-        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler'],
-        ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler'],
+    'commands' => [
         ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler'],
         ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler'],
         ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler'],
         ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler'],
         ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
-        ['Concrete\Core\User\Group\Command\AddGroupCommand', 'Concrete\Core\User\Group\Command\AddGroupCommandHandler'],
-        ['Concrete\Core\User\Group\Command\DeleteGroupCommand', 'Concrete\Core\User\Group\Command\DeleteGroupCommandHandler'],
         ['Concrete\Core\Page\Container\Command\AddContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
         ['Concrete\Core\Page\Container\Command\UpdateContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
         ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],

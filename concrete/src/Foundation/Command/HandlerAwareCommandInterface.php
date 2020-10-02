@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Foundation\Command;
 
-interface HandlerAwareCommandInterface extends CommandInterface
+interface HandlerAwareCommandInterface
 {
 
     public static function getHandler() : string;
