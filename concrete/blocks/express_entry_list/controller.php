@@ -18,7 +18,9 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Result\ItemColumn;
+use Concrete\Core\Search\Result\ResultFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -187,21 +189,28 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
         if (is_object($entity)) {
+            $filterFields = [];
+            if ($this->filterFields) {
+                $filterFieldsUnserialized = unserialize($this->filterFields);
+                if (is_array($filterFieldsUnserialized)) {
+                    $filterFields = $filterFieldsUnserialized;
+                }
+            }
+            $searchProvider = new SearchProvider($entity, $entity->getAttributeKeyCategory(), $this->app->make('session'));
+            $queryFactory = new QueryFactory();
+            $resultFactory = new ResultFactory();
+            $query = $queryFactory->createQuery($searchProvider, $filterFields);
+            $result = $resultFactory->createFromQuery($searchProvider, $query);
+            $list = $result->getItemListObject();
+
+            /*
             $category = $entity->getAttributeKeyCategory();
             $list = new EntryList($entity);
             if ($this->displayLimit > 0) {
                 $list->setItemsPerPage(intval($this->displayLimit));
             }
-            
+
             // Filter by any pre-set search criteria
-            if ($this->filterFields) {
-                $filterFields = unserialize($this->filterFields);
-                if (is_array($filterFields)) {
-                    foreach($filterFields as $field) {
-                        $field->filterList($list);
-                    }
-                }
-            }
             $set = unserialize($this->columns);
             if (!$set) {
                 $set = new DefaultSet($category);
@@ -272,6 +281,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $this->set('pagination', $pagination);
                 $this->requireAsset('css', 'core/frontend/pagination');
             }
+
+            */
 
             $this->set('list', $list);
             $this->set('result', $result);
