@@ -2,9 +2,10 @@
 
 namespace Concrete\Core\Job\Command;
 
+use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
-class ExecuteJobItemCommand implements BatchableCommandInterface
+class ExecuteJobItemCommand extends Command implements BatchableCommandInterface
 {
     /**
      * @var string

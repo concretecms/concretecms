@@ -18,7 +18,7 @@ class DeleteBoardCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(DeleteBoardCommand $command)
+    public function __invoke(DeleteBoardCommand $command)
     {
         $board = $command->getBoard();
         $this->entityManager->remove($board);

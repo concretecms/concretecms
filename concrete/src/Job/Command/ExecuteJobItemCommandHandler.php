@@ -9,7 +9,7 @@ use Concrete\Core\Job\QueueableJob;
 class ExecuteJobItemCommandHandler
 {
 
-    public function handle(ExecuteJobItemCommand $command)
+    public function __invoke(ExecuteJobItemCommand $command)
     {
         /**
          * @var $job QueueableJob

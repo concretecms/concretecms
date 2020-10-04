@@ -25,7 +25,7 @@ class AddContentToBoardInstanceCommandHandler
         $this->app = $app;
     }
 
-    public function handle(AddContentToBoardInstanceCommand $command)
+    public function __invoke(AddContentToBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
 

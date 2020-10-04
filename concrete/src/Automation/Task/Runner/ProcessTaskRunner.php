@@ -5,11 +5,9 @@ namespace Concrete\Core\Automation\Task\Runner;
 use Concrete\Core\Automation\Task\Input\InputInterface;
 use Concrete\Core\Automation\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
-use Concrete\Core\Automation\Task\Runner\Response\TaskCompletedResponse;
 use Concrete\Core\Automation\Task\TaskInterface;
 use Concrete\Core\Entity\Automation\Process;
 use Concrete\Core\Foundation\Command\Command;
-use Concrete\Core\Foundation\Command\CommandInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -20,9 +18,9 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
 {
 
     /**
-     * @var CommandInterface
+     * @var object
      */
-    protected $command;
+    protected $message;
 
     /**
      * @var string
@@ -46,12 +44,12 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
 
     public function __construct(
         TaskInterface $task,
-        CommandInterface $command,
+        object $message,
         InputInterface $input,
         string $responseMessage
     ) {
         $this->task = $task;
-        $this->command = $command;
+        $this->message = $message;
         $this->responseMessage = $responseMessage;
         $this->input = $input;
     }
@@ -81,11 +79,11 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
     }
 
     /**
-     * @return CommandInterface
+     * @return object
      */
-    public function getCommand(): CommandInterface
+    public function getMessage(): object
     {
-        return $this->command;
+        return $this->message;
     }
 
     /**

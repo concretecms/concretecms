@@ -17,7 +17,7 @@ class ResetBoardCustomWeightingCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(ResetBoardCustomWeightingCommand $command)
+    public function __invoke(ResetBoardCustomWeightingCommand $command)
     {
         $board = $command->getBoard();
         if ($board->hasCustomWeightingRules()) {

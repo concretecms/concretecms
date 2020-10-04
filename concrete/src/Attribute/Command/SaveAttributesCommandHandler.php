@@ -5,7 +5,7 @@ namespace Concrete\Core\Attribute\Command;
 class SaveAttributesCommandHandler
 {
 
-    public function handle(SaveAttributesCommand $command)
+    public function __invoke(SaveAttributesCommand $command)
     {
         $keys = $command->getAttributeKeys();
         foreach($keys as $key) {

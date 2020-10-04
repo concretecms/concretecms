@@ -34,7 +34,7 @@ class CreateItemSelectorCustomElementCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(CreateItemSelectorCustomElementCommand $command)
+    public function __invoke(CreateItemSelectorCustomElementCommand $command)
     {
         if ($this->user->isRegistered()) {
             $author = $this->user->getUserInfoObject()->getEntityObject();

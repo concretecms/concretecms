@@ -18,7 +18,7 @@ class CreateBoardCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(CreateBoardCommand $command)
+    public function __invoke(CreateBoardCommand $command)
     {
         $board = new Board();
         $board->setSite($command->getSite());

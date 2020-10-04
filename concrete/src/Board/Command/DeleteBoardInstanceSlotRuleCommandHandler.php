@@ -28,7 +28,7 @@ class DeleteBoardInstanceSlotRuleCommandHandler
     }
     
     
-    public function handle(DeleteBoardInstanceSlotRuleCommand $command)
+    public function __invoke(DeleteBoardInstanceSlotRuleCommand $command)
     {
         $ruleID = $command->getRule()->getBoardInstanceSlotRuleID();
         $instance = $command->getRule()->getInstance();

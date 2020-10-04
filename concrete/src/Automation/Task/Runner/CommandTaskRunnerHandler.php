@@ -1,13 +1,8 @@
 <?php
 namespace Concrete\Core\Automation\Task\Runner;
 
-use Concrete\Core\Automation\Task\Response\ResponseInterface;
-use Concrete\Core\Automation\Task\Response\TaskCompletedResponse;
 use Concrete\Core\Automation\Task\TaskService;
-use Concrete\Core\Foundation\Command\Command;
-use Concrete\Core\Foundation\Command\CommandInterface;
-use Concrete\Core\Foundation\Command\DispatcherFactory;
-use Concrete\Core\Foundation\Command\SynchronousBus;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -15,27 +10,26 @@ class CommandTaskRunnerHandler
 {
 
     /**
-     * @var DispatcherFactory
+     * @var MessageBusInterface
      */
-    protected $dispatcherFactory;
+    protected $messageBus;
 
     /**
      * @var TaskService
      */
     protected $taskService;
 
-    public function __construct(TaskService $taskService, DispatcherFactory $dispatcherFactory)
+    public function __construct(TaskService $taskService, MessageBusInterface $messageBus)
     {
         $this->taskService = $taskService;
-        $this->dispatcherFactory = $dispatcherFactory;
+        $this->messageBus = $messageBus;
     }
 
-    public function handle(CommandTaskRunner $command)
+    public function __invoke(CommandTaskRunner $command)
     {
         $this->taskService->start($command->getTask());
 
-        $dispatcher = $this->dispatcherFactory->getDispatcher();
-        $dispatcher->dispatch($command->getCommand());
+        $this->messageBus->dispatch($command->getCommand());
 
         $this->taskService->complete($command->getTask());
 

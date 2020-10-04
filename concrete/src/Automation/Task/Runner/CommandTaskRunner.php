@@ -5,7 +5,6 @@ use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Automation\Task\Runner\Response\TaskCompletedResponse;
 use Concrete\Core\Automation\Task\TaskInterface;
 use Concrete\Core\Foundation\Command\Command;
-use Concrete\Core\Foundation\Command\CommandInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -16,7 +15,7 @@ class CommandTaskRunner extends Command implements TaskRunnerInterface
 {
 
     /**
-     * @var CommandInterface
+     * @var object
      */
     protected $command;
 
@@ -30,7 +29,7 @@ class CommandTaskRunner extends Command implements TaskRunnerInterface
      */
     protected $task;
 
-    public function __construct(TaskInterface $task, CommandInterface $command, string $responseMessage)
+    public function __construct(TaskInterface $task, object $command, string $responseMessage)
     {
         $this->task = $task;
         $this->command = $command;
@@ -46,9 +45,9 @@ class CommandTaskRunner extends Command implements TaskRunnerInterface
     }
 
     /**
-     * @return CommandInterface
+     * @return object
      */
-    public function getCommand(): CommandInterface
+    public function getCommand(): object
     {
         return $this->command;
     }

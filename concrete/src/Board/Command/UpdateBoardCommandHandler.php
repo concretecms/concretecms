@@ -18,7 +18,7 @@ class UpdateBoardCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(UpdateBoardCommand $command)
+    public function __invoke(UpdateBoardCommand $command)
     {
         $board = $command->getBoard();
         $board->setSite($command->getSite());

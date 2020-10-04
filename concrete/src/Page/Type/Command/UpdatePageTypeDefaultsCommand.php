@@ -3,9 +3,9 @@
 namespace Concrete\Core\Page\Type\Command;
 
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
-use League\Tactician\Bernard\QueueableCommand;
+use Concrete\Core\Foundation\Command\Command;
 
-class UpdatePageTypeDefaultsCommand implements BatchableCommandInterface
+class UpdatePageTypeDefaultsCommand extends Command implements BatchableCommandInterface
 {
     /**
      * @var int

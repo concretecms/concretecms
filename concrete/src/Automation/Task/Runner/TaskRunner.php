@@ -5,24 +5,24 @@ namespace Concrete\Core\Automation\Task\Runner;
 use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Foundation\Command\DispatcherFactory;
 use Concrete\Core\Foundation\Command\SynchronousBus;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class TaskRunner
 {
 
     /**
-     * @var DispatcherFactory
+     * @var MessageBusInterface
      */
-    protected $dispatcherFactory;
+    protected $messageBus;
 
-    public function __construct(DispatcherFactory $dispatcherFactory)
+    public function __construct(MessageBusInterface $messageBus)
     {
-        $this->dispatcherFactory = $dispatcherFactory;
+        $this->messageBus = $messageBus;
     }
 
     public function run(TaskRunnerInterface $runner): ResponseInterface
     {
-        $dispatcher = $this->dispatcherFactory->getDispatcher();
-        $dispatcher->dispatch($runner, SynchronousBus::getHandle());
+        $this->messageBus->dispatch($runner);
         return $runner->getTaskRunnerResponse();
     }
 

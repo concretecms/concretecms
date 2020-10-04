@@ -3,7 +3,6 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\Command\ValidatorInterface;
 
 class SetBoardCustomWeightingCommandValidator implements ValidatorInterface

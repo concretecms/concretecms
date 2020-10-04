@@ -4,7 +4,6 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;

@@ -139,7 +139,7 @@ class SitemapGenerator
         try {
             Cache::disableAll();
             $multilingualEnabled = $pageListGenerator->isMultilingualEnabled();
-            yield $this->app->make(SitemapHeader::class, [$multilingualEnabled]);
+            yield $this->app->make(SitemapHeader::class, ['isMultilingual' => $multilingualEnabled]);
             foreach ($pageListGenerator->generatePageList() as $page) {
                 yield $this->createSitemapPage($page, $multilingualEnabled);
             }

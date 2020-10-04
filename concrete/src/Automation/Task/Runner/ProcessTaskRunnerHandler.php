@@ -4,6 +4,7 @@ namespace Concrete\Core\Automation\Task\Runner;
 use Concrete\Core\Automation\Process\ProcessService;
 use Concrete\Core\Foundation\Command\AsynchronousBus;
 use Concrete\Core\Foundation\Command\DispatcherFactory;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -11,30 +12,27 @@ class ProcessTaskRunnerHandler
 {
 
     /**
-     * @var DispatcherFactory
+     * @var MessageBusInterface
      */
-    protected $dispatcherFactory;
+    protected $messageBus;
 
     /**
      * @var ProcessService
      */
     protected $processService;
 
-    public function __construct(ProcessService $processService, DispatcherFactory $dispatcherFactory)
+    public function __construct(ProcessService $processService, MessageBusInterface $messageBus)
     {
         $this->processService = $processService;
-        $this->dispatcherFactory = $dispatcherFactory;
+        $this->messageBus = $messageBus;
     }
 
-    public function handle(ProcessTaskRunner $runner)
+    public function __invoke(ProcessTaskRunner $runner)
     {
         $queue = 'default'; // @TODO: Return this from the dispatcher factory.
         $process = $this->processService->createProcess($runner->getTask(), $runner->getInput(), $queue);
 
-        $dispatcher = $this->dispatcherFactory->getDispatcher();
-        // @TODO: Simplify all this. I don't think we need these configurable buses. I dont' think we need handles
-        // and queues and all of that.
-        $dispatcher->dispatch($runner->getCommand(), AsynchronousBus::getHandle());
+        $this->messageBus->dispatch($runner->getMessage());
 
         $runner->setProcess($process);
 

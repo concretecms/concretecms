@@ -67,7 +67,7 @@ class ClearCacheCommandHandler
         $this->logger = $logger;
     }
 
-    public function handle(ClearCacheCommand $command)
+    public function __invoke(ClearCacheCommand $command)
     {
         $this->dispatcher->dispatch('on_cache_flush');
 

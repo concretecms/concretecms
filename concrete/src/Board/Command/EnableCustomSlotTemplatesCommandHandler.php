@@ -20,7 +20,7 @@ class CustomSlotTemplatesCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handleEnableCustomSlotTemplatesCommand(
+    public function __invoke(
         EnableCustomSlotTemplatesCommand $command)
     {
 
@@ -54,13 +54,4 @@ class CustomSlotTemplatesCommandHandler
         $this->entityManager->flush();
     }
 
-    public function handleDisableCustomSlotTemplatesCommand(
-        DisableCustomSlotTemplatesCommand $command)
-    {
-        $board = $command->getBoard();
-        $this->clearBoardTemplatesCollection($board);
-        $board->setHasCustomSlotTemplates(false);
-        $this->entityManager->persist($board);
-        $this->entityManager->flush();
-    }    
 }

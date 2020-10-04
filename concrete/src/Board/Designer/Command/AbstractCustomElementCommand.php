@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Designer\Command;
 
-abstract class AbstractCustomElementCommand
+use Concrete\Core\Foundation\Command\Command;
+
+abstract class AbstractCustomElementCommand extends Command
 {
 
     /**

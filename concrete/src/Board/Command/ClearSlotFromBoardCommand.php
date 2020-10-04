@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class ClearSlotFromBoardCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class ClearSlotFromBoardCommand extends Command
 {
 
     use BoardInstanceTrait;

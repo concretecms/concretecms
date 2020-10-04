@@ -18,7 +18,7 @@ class ClearBoardInstanceDataPoolCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(ClearBoardInstanceDataPoolCommand $command)
+    public function __invoke(ClearBoardInstanceDataPoolCommand $command)
     {
         $instance = $command->getInstance();
         foreach($instance->getItems() as $item) {

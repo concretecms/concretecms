@@ -6,6 +6,7 @@ use Concrete\Core\Calendar\Event\Command\CalendarEventCommand;
 
 class EnableCustomCalendarEventSummaryTemplatesCommand extends CalendarEventCommand
 {
+
     /**
      * @var int[]
      */

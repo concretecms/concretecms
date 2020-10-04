@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class UpdateBoardCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class UpdateBoardCommand extends Command
 {
     
     use BoardTrait;

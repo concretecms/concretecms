@@ -8,7 +8,7 @@ use Concrete\Core\Entity\Page\Summary\CustomPageTemplateCollection;
 use Concrete\Core\Entity\Summary\Template;
 use Doctrine\ORM\EntityManager;
 
-class CustomCalendarEventSummaryTemplatesCommandHandler
+class DisableCustomCalendarEventSummaryTemplatesCommandHandler
 {
 
     /**
@@ -41,29 +41,7 @@ class CustomCalendarEventSummaryTemplatesCommandHandler
         }
     }
 
-    public function handleEnableCustomCalendarEventSummaryTemplatesCommand(
-        EnableCustomCalendarEventSummaryTemplatesCommand $command)
-    {
-        $event = $this->eventService->getByID($command->getEventID());
-        $this->clearCustomCollection($command->getEventID());
-        $templateIDs = $command->getTemplateIDs();
-        $event->setHasCustomSummaryTemplates(true);
-        if (!empty($templateIDs)) {
-            foreach($templateIDs as $templateID) {
-                $template = $this->entityManager->find(Template::class,
-                    $templateID
-                );
-                if ($template) {
-                    $event->getSummaryTemplatesCollection()->add($template);
-                }
-            }
-        }
-
-        $this->entityManager->persist($event);
-        $this->entityManager->flush();
-    }
-
-    public function handleDisableCustomCalendarEventSummaryTemplatesCommand(
+    public function __invoke(
         DisableCustomCalendarEventSummaryTemplatesCommand $command)
     {
         $this->clearCustomCollection($command->getEventID());

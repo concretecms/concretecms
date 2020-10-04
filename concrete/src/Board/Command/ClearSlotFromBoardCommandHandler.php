@@ -26,7 +26,7 @@ class ClearSlotFromBoardCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(ClearSlotFromBoardCommand $command)
+    public function __invoke(ClearSlotFromBoardCommand $command)
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->delete(InstanceSlotRule::class, 'r')

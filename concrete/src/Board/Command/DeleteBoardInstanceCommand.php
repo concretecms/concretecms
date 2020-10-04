@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class DeleteBoardInstanceCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class DeleteBoardInstanceCommand extends Command
 {
     
     use BoardInstanceTrait;

@@ -3,9 +3,10 @@
 namespace Concrete\Core\Page\Container\Command;
 
 use Concrete\Core\Entity\Page\Container;
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-abstract class ContainerCommand implements CommandInterface
+
+abstract class ContainerCommand extends Command
 {
     /**
      * @var \Concrete\Core\Entity\Page\Container

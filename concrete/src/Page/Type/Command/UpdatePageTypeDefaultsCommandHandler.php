@@ -10,7 +10,7 @@ use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand;
 class UpdatePageTypeDefaultsCommandHandler
 {
 
-    public function handle(UpdatePageTypeDefaultsCommand $command)
+    public function __invoke(UpdatePageTypeDefaultsCommand $command)
     {
         $page = Page::getByID($command->getPageID(), $command->getCollectionVersionID());
 

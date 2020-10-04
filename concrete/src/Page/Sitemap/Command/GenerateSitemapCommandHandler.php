@@ -23,7 +23,7 @@ class GenerateSitemapCommandHandler
         $this->writer = $writer;
     }
 
-    public function handle(GenerateSitemapCommand $command)
+    public function __invoke(GenerateSitemapCommand $command)
     {
         $numPages = 0;
         $this->writer->generate(function (SitemapElement $data) use (&$numPages) {

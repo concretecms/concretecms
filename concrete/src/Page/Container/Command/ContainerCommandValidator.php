@@ -3,7 +3,6 @@
 namespace Concrete\Core\Page\Container\Command;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\Command\ValidatorInterface;
 use Concrete\Core\Utility\Service\Validation\Strings;
 

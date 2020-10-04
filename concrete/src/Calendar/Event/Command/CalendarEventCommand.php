@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\Calendar\Event\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-abstract class CalendarEventCommand implements CommandInterface
+abstract class CalendarEventCommand extends Command
 {
     /**
      * @var int

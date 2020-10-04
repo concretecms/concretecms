@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-abstract class BoardSlotCommand
+use Concrete\Core\Foundation\Command\Command;
+
+abstract class BoardSlotCommand extends Command
 {
 
     use BoardInstanceTrait;

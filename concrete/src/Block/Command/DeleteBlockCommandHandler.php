@@ -9,7 +9,7 @@ use Concrete\Core\Page\Page;
 class DeleteBlockCommandHandler
 {
 
-    public function handle(DeleteBlockCommand $command)
+    public function __invoke(DeleteBlockCommand $command)
     {
         $page = Page::getByID($command->getPageID(), $command->getCollectionVersionID());
         if ($page && !$page->isError()) {
