@@ -25,7 +25,6 @@ import '@concretecms/bedrock/assets/calendar/js/backend';
 
 // Advanced search and search bars
 import './search/advanced-search-launcher';
-import './search/field-selector';
 import './search/preset-selector';
 import './search/results-table';
 import './file-manager/file-manager';

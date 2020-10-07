@@ -396,7 +396,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      *
      * @return mixed
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         if (!$this->entryFormatter) {
             $this->entryFormatter = Application::getFacadeApplication()->make(EntryFormatterInterface::class);
@@ -410,7 +410,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
             $name = $this->entryFormatter->getLabel($this);
         }
 
-        return $name;
+        return (string) $name;
     }
 
     /**
