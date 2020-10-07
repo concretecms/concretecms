@@ -16,6 +16,7 @@ use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\SeoCanonical;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController implements UsesFeatureInterface
@@ -102,7 +103,14 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             }
         }
-        $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
+
+        $form = null;
+        try {
+            $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
+        } catch (Exception $e) {
+            $logger = $this->app->make('log/exceptions');
+            $logger->addEmergency($e->getMessage());
+        }
 
         if ($form) {
             $express = \Core::make('express');
