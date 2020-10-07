@@ -25,6 +25,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceWidth = "640";
     protected $btInterfaceHeight = "400";
     protected $btTable = 'btExpressEntryDetail';
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
 
     public function on_start()
     {
