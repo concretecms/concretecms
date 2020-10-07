@@ -131,7 +131,10 @@ class File extends TreeNode
         parent::move($newParent);
         $f = $this->getTreeNodeFileObject();
         if (is_object($f)) {
-            $f->setFileStorageLocation($newParent->getTreeNodeStorageLocationObject());
+            $storageLocation = $newParent->getTreeNodeStorageLocationObject();
+            if ($storageLocation) {
+                $f->setFileStorageLocation($storageLocation);
+            }
             $f->setFileFolder($newParent);
         }
     }
