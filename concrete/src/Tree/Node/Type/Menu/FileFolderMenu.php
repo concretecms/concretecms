@@ -18,7 +18,7 @@ class FileFolderMenu extends DropdownMenu
         if ($p->canEditTreeNode()) {
             $this->addItem(new EditFolderItem($folder));
         }
-        if ($p->canEditTreeNodePermissions() || $p->canDeleteTreeNode()) {
+        if ($p->canEditTreeNode() && ($p->canEditTreeNodePermissions() || $p->canDeleteTreeNode())) {
             $this->addItem(new DividerItem());
         }
         if ($p->canEditTreeNodePermissions() && \Config::get('concrete.permissions.model') != 'simple') {
