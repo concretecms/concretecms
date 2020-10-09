@@ -276,6 +276,7 @@ class SessionFactory implements SessionFactoryInterface
         // In case of anyone setting prefix on the redis server directly
         // Similar to how we do it on cache
         $prefix = array_get($options, 'prefix') ?: array_get($config, 'name') ?: 'CCM_SESSION';
+        $prefix = rtrim($prefix, ':') . ':';
 
         // We pass the prefix to the Redis Handler when we build it
         return $this->app->make(RedisSessionHandler::class, [$redis, ['prefix' => $prefix]]);
