@@ -12,7 +12,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class ConfigCommand extends Command
 {
-
     protected $description = 'Set or get configuration parameters.';
 
     protected $signature = 'c5:config 
@@ -23,22 +22,6 @@ class ConfigCommand extends Command
 
     /** @var Repository */
     protected $repository;
-
-    protected function configure()
-    {
-        $this
-            ->addEnvOption()
-            ->setHelp(<<<EOT
-When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
-For instance, with
-concrete5 %command.name% set concrete.test_item 1
-The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
-concrete5 %command.name% set concrete.test_item '1'
-
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
-EOT
-        );
-    }
 
     public function handle(Repository $config, Filesystem $filesystem)
     {
@@ -60,12 +43,28 @@ EOT
         }
     }
 
+    protected function configure()
+    {
+        $this
+            ->addEnvOption()
+            ->setHelp(<<<EOT
+When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
+For instance, with
+concrete5 %command.name% set concrete.test_item 1
+The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
+concrete5 %command.name% set concrete.test_item '1'
+
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
+EOT
+        );
+    }
+
     /**
      * @param mixed $value
      *
-     * @return string
-     *
      * @throws Exception
+     *
+     * @return string
      */
     protected function serialize($value)
     {
@@ -90,7 +89,7 @@ EOT
 
             case 'integer':
             case 'double':
-                $result = (string)$value;
+                $result = (string) $value;
                 break;
 
             case 'string':
@@ -121,22 +120,22 @@ EOT
     /**
      * @param string $value
      *
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     protected function unserialize($value)
     {
         $result = json_decode($value, true);
-        if (is_null($result) && trim(strtolower($value)) !== 'null') {
-            return (string)$value;
+        if ($result === null && trim(strtolower($value)) !== 'null') {
+            return (string) $value;
         }
 
         return $result;
     }
 
     /**
-     * Complete a requested get action
+     * Complete a requested get action.
      *
      * @param $repository
      * @param $item
@@ -147,7 +146,7 @@ EOT
     }
 
     /**
-     * Complete a requested set action
+     * Complete a requested set action.
      *
      * @param Repository $repository
      * @param string $item
@@ -165,6 +164,7 @@ EOT
     /**
      * @param \Concrete\Core\Config\Repository\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $filesystem
+     *
      * @return \Concrete\Core\Config\Repository\Repository
      */
     private function getRepository(Repository $config, Filesystem $filesystem)
