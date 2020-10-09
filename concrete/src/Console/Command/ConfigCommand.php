@@ -3,8 +3,8 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Config\DirectFileSaver;
-use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
+use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
 use Exception;
@@ -173,7 +173,8 @@ EOT
 
         $environment = $this->option('env') ?: $default_environment;
 
-        $file_loader = new FileLoader($filesystem);
+        $app = $this->getApplication()->getConcrete5();
+        $file_loader = $app->make(LoaderInterface::class);
         if ($this->option('generated-overrides')) {
             $file_saver = new FileSaver($filesystem);
         } else {
