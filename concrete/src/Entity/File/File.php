@@ -656,14 +656,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
 
     /**
      * Removes a file, including all of its versions.
-     *
-     * @param mixed $removeNode
-     *
+     **
      * @throws \Exception contains the exception type and message of why the deletion fails
      *
      * @return bool returns false if the on_file_delete event says not to proceed, returns true on success
      */
-    public function delete($removeNode = true)
+    public function delete()
     {
         // first, we remove all files from the drive
         $app = Application::getFacadeApplication();
@@ -697,13 +695,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
             }
 
             // Delete the tree node for the file.
-            if ($removeNode) {
-                $nodeID = $db->fetchColumn('SELECT treeNodeID FROM TreeFileNodes WHERE fID = ?', [$this->getFileID()]);
-
-                if ($nodeID) {
-                    $node = Node::getByID($nodeID);
-                    $node->delete();
-                }
+            $nodeID = $db->fetchColumn('SELECT treeNodeID FROM TreeFileNodes WHERE fID = ?', [$this->getFileID()]);
+            if ($nodeID) {
+                $node = Node::getByID($nodeID);
+                $node->delete();
             }
 
             $versions = $this->getVersionList();
