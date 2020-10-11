@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Controller\Board;
 
+use Concrete\Core\Entity\Board\Board;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Workflow\Workflow;
-use Concrete\Core\Calendar\Calendar;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Permissions extends \Concrete\Core\Controller\Controller
 {
@@ -50,14 +52,18 @@ class Permissions extends \Concrete\Core\Controller\Controller
         }
     }
 
-    public function processCalendar()
+    public function processBoard()
     {
-        $calendar = Calendar::getByID($this->request->request->get('caID'));
-        $cp = new \Permissions($calendar);
-        if ($cp->canEditCalendarPermissions()) {
+        $boardID = $this->request->request->get('boardID', $this->request->query->get('boardID'));
+        $board = $boardID ? $this->app->make(EntityManagerInterface::class)->find(Board::class, $boardID) : null;
+        if ($board === null) {
+            throw new UserMessageException(t('Failed to find the board requested.'));
+        }
+        $cp = new \Permissions($board);
+        if ($cp->canEditBoardPermissions()) {
             if ($_REQUEST['task'] == 'add_access_entity' && \Loader::helper("validation/token")->validate('add_access_entity')) {
                 $pk = \PermissionKey::getByID($_REQUEST['pkID']);
-                $pk->setPermissionObject($calendar);
+                $pk->setPermissionObject($board);
                 $pa = \PermissionAccess::getByID($_REQUEST['paID'], $pk);
                 $pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
                 $pd = PermissionDuration::getByID($_REQUEST['pdID']);
@@ -66,7 +72,7 @@ class Permissions extends \Concrete\Core\Controller\Controller
 
             if ($_REQUEST['task'] == 'remove_access_entity' && \Loader::helper("validation/token")->validate('remove_access_entity')) {
                 $pk = \PermissionKey::getByID($_REQUEST['pkID']);
-                $pk->setPermissionObject($calendar);
+                $pk->setPermissionObject($board);
                 $pa = \PermissionAccess::getByID($_REQUEST['paID'], $pk);
                 $pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
                 $pa->removeListItem($pe);
@@ -74,7 +80,7 @@ class Permissions extends \Concrete\Core\Controller\Controller
 
             if ($_REQUEST['task'] == 'save_permission' && \Loader::helper("validation/token")->validate('save_permission')) {
                 $pk = \PermissionKey::getByID($_REQUEST['pkID']);
-                $pk->setPermissionObject($calendar);
+                $pk->setPermissionObject($board);
                 $pa = \PermissionAccess::getByID($_REQUEST['paID'], $pk);
                 $pa->save($_POST);
                 $pa->clearWorkflows();
@@ -90,7 +96,7 @@ class Permissions extends \Concrete\Core\Controller\Controller
 
             if ($_REQUEST['task'] == 'display_access_cell' && \Loader::helper("validation/token")->validate('display_access_cell')) {
                 $pk = \PermissionKey::getByID($_REQUEST['pkID']);
-                $pk->setPermissionObject($calendar);
+                $pk->setPermissionObject($board);
                 $pa = \PermissionAccess::getByID($_REQUEST['paID'], $pk);
                 \Loader::element('permission/labels', array('pk' => $pk, 'pa' => $pa));
             }

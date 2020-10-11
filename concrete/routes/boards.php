@@ -14,4 +14,4 @@ $router->all('/ccm/system/board/element/preview/{elementID}', '\Concrete\Control
 
 /* Permissions Tools Hack */
 $router->all('/tools/required/permissions/categories/board_admin', '\Concrete\Controller\Board\Permissions::process');
-$router->all('/tools/required/permissions/categories/board', '\Concrete\Controller\Event\Permissions::processCalendar');
+$router->all('/tools/required/permissions/categories/board', '\Concrete\Controller\Board\Permissions::processBoard');
