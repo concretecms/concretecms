@@ -236,7 +236,7 @@ class Search extends DashboardPageController
                 if ($session->getFlashBag()->has('newFolderIds')) {
                     $highlightFolders = (array) $session->getFlashBag()->get('newFolderIds');
                 }
-                $this->set('highlightFolders', $highlightFolders);
+                $this->set('highlightResults', $highlightFolders);
                 $this->setCurrentFolder($folder);
                 return;
             }

@@ -82,7 +82,11 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             <tbody>
             <?php
             foreach ($result->getItems() as $item) { ?>
-                <tr data-details-url="javascript:void(0)" data-item-type="<?=$item->getItemType()?>" data-item-id="<?=$item->getItem()->getTreeNodeID()?>">
+                <tr data-details-url="javascript:void(0)"
+                    <?php if (isset($highlightResults)
+                        && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
+                            class="table-row-highlight"<?php } ?>
+                    >
                     <td class="ccm-search-results-checkbox">
                         <?php
                         if ($item->getResultFileID() > 0) { ?>
@@ -170,8 +174,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
         (function ($) {
             $(function () {
                 $('table[data-search-results=files]').concreteFileManagerTable({
-                    'folderID': '<?php echo $folderID; ?>',
-                    'highlightFolders': <?=json_encode($highlightFolders)?>
+                    'folderID': '<?php echo $folderID; ?>'
                 });
             });
         })(jQuery);

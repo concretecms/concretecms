@@ -24,7 +24,6 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         my.disableSelectAllOnInvalidNodeTypeSelection()
         my.setupFileUploads()
         my.setupBulkActions()
-        my.highlightChangedFolders()
         my.setupFolderActions()
     }
 
@@ -102,15 +101,6 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         } else {
             my.$downloadTarget = $('#ccm-file-manager-download-target')
         }
-    }
-
-    ConcreteFileManagerTable.prototype.highlightChangedFolders = function() {
-        var my = this
-        var highlightFolders = my.options.highlightFolders
-        highlightFolders.forEach(function(id) {
-            var $folder = $('tr[data-item-type=folder][data-item-id=' + id + ']')
-            $folder.addClass('table-success')
-        })
     }
 
     ConcreteFileManagerTable.prototype.handleSelectedBulkAction = function(value, type, $option, ids) {
