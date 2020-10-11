@@ -13,10 +13,8 @@
     "/js/features/navigation/frontend.js": "/js/features/navigation/frontend.js",
     "/js/fullcalendar.js": "/js/fullcalendar.js",
     "/css/ckeditor/concrete.css": "/css/ckeditor/concrete.css",
-    "/css/cms.css": "/css/cms.css",
     "/themes/concrete/main.css": "/themes/concrete/main.css",
     "/themes/elemental/main.css": "/themes/elemental/main.css",
-    "/themes/dashboard/main.css": "/themes/dashboard/main.css",
     "/css/features/boards/frontend.css": "/css/features/boards/frontend.css",
     "/css/features/navigation/frontend.css": "/css/features/navigation/frontend.css",
     "/css/features/search/frontend.css": "/css/features/search/frontend.css",
@@ -48,5 +46,7 @@
     "/images/ui-icons_777620_256x240.png": "/images/ui-icons_777620_256x240.png",
     "/images/ui-icons_777777_256x240.png": "/images/ui-icons_777777_256x240.png",
     "/images/ui-icons_cc0000_256x240.png": "/images/ui-icons_cc0000_256x240.png",
-    "/images/ui-icons_ffffff_256x240.png": "/images/ui-icons_ffffff_256x240.png"
+    "/images/ui-icons_ffffff_256x240.png": "/images/ui-icons_ffffff_256x240.png",
+    "/css/cms.css": "/css/cms.css",
+    "/themes/dashboard/main.css": "/themes/dashboard/main.css"
 }

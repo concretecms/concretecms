@@ -18,6 +18,18 @@ class Item extends SearchResultItem
         $this->populateDetails($item);
     }
 
+    public function getItemType(): string
+    {
+        $item = $this->getItem();
+        if ($item instanceof FileNode) {
+            return 'file';
+        }
+        if ($item instanceof FileFolder) {
+            return 'folder';
+        }
+        return '';
+    }
+
     public function getListingThumbnailImage()
     {
         $item = $this->getItem();

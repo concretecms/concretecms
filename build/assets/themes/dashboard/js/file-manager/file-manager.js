@@ -25,6 +25,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         my.setupFileUploads()
         my.setupBulkActions()
         my.highlightChangedFolders()
+        my.setupFolderActions()
     }
 
     ConcreteFileManagerTable.prototype = Object.create(ConcreteSearchResultsTable.prototype)
@@ -60,6 +61,13 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         my.$element.parent().concreteFileUploader(my.fileUploaderOptions);
     };
 
+    ConcreteFileManagerTable.prototype.setupFolderActions = function() {
+        var my = this
+        ConcreteEvent.subscribe('FileManagerJumpToFolder.concreteTree', function(e, r) {
+            var url = CCM_DISPATCHER_FILENAME + '/dashboard/files/search/folder/' + r.folderIDn
+            window.location.href = url
+        });
+    };
 
     ConcreteFileManagerTable.prototype.activateSearchResultMenus = function() {
         var my = this;
@@ -99,10 +107,11 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
     ConcreteFileManagerTable.prototype.highlightChangedFolders = function() {
         var my = this
         var highlightFolders = my.options.highlightFolders
-        console.log(highlightFolders)
+        highlightFolders.forEach(function(id) {
+            var $folder = $('tr[data-item-type=folder][data-item-id=' + id + ']')
+            $folder.addClass('table-success')
+        })
     }
-
-
 
     ConcreteFileManagerTable.prototype.handleSelectedBulkAction = function(value, type, $option, ids) {
         var my = this
