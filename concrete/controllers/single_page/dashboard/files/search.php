@@ -230,6 +230,13 @@ class Search extends DashboardPageController
                 $this->headerSearch->getElementController()->setHeaderSearchAction(
                     $this->app->make('url')->to('/dashboard/files/search', 'folder', $folder->getTreeNodeID())
                 );
+
+                $session = $this->app->make('session');
+                $highlightFolders = [];
+                if ($session->getFlashBag()->has('newFolderIds')) {
+                    $highlightFolders = (array) $session->getFlashBag()->get('newFolderIds');
+                }
+                $this->set('highlightFolders', $highlightFolders);
                 $this->setCurrentFolder($folder);
                 return;
             }

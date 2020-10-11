@@ -10,6 +10,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         options = $.extend({
             bulkParameterName: 'fID',
             folderID: 0,
+            highlightFolders: []
         }, options)
 
         my.$element = $element
@@ -23,6 +24,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         my.disableSelectAllOnInvalidNodeTypeSelection()
         my.setupFileUploads()
         my.setupBulkActions()
+        my.highlightChangedFolders()
     }
 
     ConcreteFileManagerTable.prototype = Object.create(ConcreteSearchResultsTable.prototype)
@@ -93,6 +95,13 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
             my.$downloadTarget = $('#ccm-file-manager-download-target')
         }
     }
+
+    ConcreteFileManagerTable.prototype.highlightChangedFolders = function() {
+        var my = this
+        var highlightFolders = my.options.highlightFolders
+        console.log(highlightFolders)
+    }
+
 
 
     ConcreteFileManagerTable.prototype.handleSelectedBulkAction = function(value, type, $option, ids) {

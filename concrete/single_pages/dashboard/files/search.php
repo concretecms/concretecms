@@ -134,7 +134,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()): ?>
         (function($) {
             $(function () {
                 $('table[data-search-results=files]').concreteFileManagerTable({
-                    'folderID': '<?php echo $folderID; ?>'
+                    'folderID': '<?php echo $folderID; ?>',
+                    'highlightFolders': <?=json_encode($highlightFolders)?>
                 });
             });
         })(jQuery);
