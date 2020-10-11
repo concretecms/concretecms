@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Express\Entry;
 
 use Concrete\Core\Application\Application;
@@ -48,7 +49,9 @@ class Manager implements EntryManagerInterface
      */
     protected function getNewDisplayOrder(Entity $entity)
     {
-        $query = $this->entityManager->createQuery('select max(e.exEntryDisplayOrder) as displayOrder from \Concrete\Core\Entity\Express\Entry e where e.entity = :entity');
+        $query = $this->entityManager->createQuery(
+            'select max(e.exEntryDisplayOrder) as displayOrder from \Concrete\Core\Entity\Express\Entry e where e.entity = :entity'
+        );
         $query->setParameter('entity', $entity);
         $displayOrder = $query->getOneOrNullResult(Query::HYDRATE_SINGLE_SCALAR);
         if (!$displayOrder) {
@@ -123,7 +126,7 @@ class Manager implements EntryManagerInterface
     {
         $submittedAttributeValues = [];
         foreach ($form->getControls() as $control) {
-            if($control instanceof AttributeKeyControl){
+            if ($control instanceof AttributeKeyControl) {
                 $attributeKey = $control->getAttributeKey();
                 $genericValue = $attributeKey->getController()->createAttributeValueFromRequest();
                 $attributeValue = new ExpressValue();

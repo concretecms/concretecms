@@ -23,6 +23,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         my.disableSelectAllOnInvalidNodeTypeSelection()
         my.setupFileUploads()
         my.setupBulkActions()
+        my.setupFolderActions()
     }
 
     ConcreteFileManagerTable.prototype = Object.create(ConcreteSearchResultsTable.prototype)
@@ -58,6 +59,13 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         my.$element.parent().concreteFileUploader(my.fileUploaderOptions);
     };
 
+    ConcreteFileManagerTable.prototype.setupFolderActions = function() {
+        var my = this
+        ConcreteEvent.subscribe('FileManagerJumpToFolder.concreteTree', function(e, r) {
+            var url = CCM_DISPATCHER_FILENAME + '/dashboard/files/search/folder/' + r.folderIDn
+            window.location.href = url
+        });
+    };
 
     ConcreteFileManagerTable.prototype.activateSearchResultMenus = function() {
         var my = this;
