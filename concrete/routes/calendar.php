@@ -44,5 +44,4 @@ $router->all('/ccm/calendar/dialogs/event/advanced_search/add_field', '\Concrete
 //$router->all('/ccm/calendar/dialogs/event/advanced_search/preset/delete/remove_search_preset', 'Preset\Delete::remove_search_preset');
 
 /* Permissions Tools Hack */
-$router->all('/tools/required/permissions/categories/calendar_admin', '\Concrete\Controller\Event\Permissions::process');
 $router->all('/tools/required/permissions/categories/calendar', '\Concrete\Controller\Event\Permissions::processCalendar');
