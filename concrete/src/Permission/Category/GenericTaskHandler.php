@@ -14,7 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-abstract class DefaultTaskHandler extends Controller implements TaskHandlerInterface
+/**
+ * Abstrct class for task handles that does not have a permission object.
+ */
+abstract class GenericTaskHandler extends Controller implements TaskHandlerInterface
 {
     /**
      * Should we save workflows when saving permissions?

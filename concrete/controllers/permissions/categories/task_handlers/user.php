@@ -4,7 +4,7 @@ namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Permission\Category\DefaultTaskHandler;
+use Concrete\Core\Permission\Category\GenericTaskHandler;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Workflow\Workflow;
@@ -12,19 +12,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class User extends DefaultTaskHandler
+class User extends GenericTaskHandler
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Permission\Category\DefaultTaskHandler::$hasWorkflows
+     * @see \Concrete\Core\Permission\Category\GenericTaskHandler::$hasWorkflows
      */
     protected $hasWorkflows = true;
 
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Permission\Category\DefaultTaskHandler::checkAccess()
+     * @see \Concrete\Core\Permission\Category\GenericTaskHandler::checkAccess()
      */
     protected function checkAccess(): void
     {
