@@ -3,48 +3,32 @@
 namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Area\Area as ConcreteArea;
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as ConcretePage;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Access\Access;
-use Concrete\Core\Permission\Access\Entity\Entity;
-use Concrete\Core\Permission\Category\TaskHandlerInterface;
+use Concrete\Core\Permission\Category\ObjectTaskHandler;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\ObjectInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Area extends Controller implements TaskHandlerInterface
+class Area extends ObjectTaskHandler
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Permission\Category\TaskHandlerInterface::handle()
+     * @see \Concrete\Core\Permission\Category\ObjectTaskHandler::getPermissionObject()
      */
-    public function handle(string $task, array $options): ?Response
-    {
-        $area = $this->getArea($options);
-        if ($area === null) {
-            throw new UserMessageException(t('Area not received'));
-        }
-        $method = lcfirst(camelcase($task));
-        if (!method_exists($this, $method)) {
-            throw new UserMessageException(t('Unknown permission task: %s', $task));
-        }
-
-        return $this->{$method}($area, $options);
-    }
-
-    protected function getArea(array $options): ?ConcreteArea
+    protected function getPermissionObject(array $options): ObjectInterface
     {
         $page = ConcretePage::getByID($options['cID']);
         $area = ConcreteArea::get($page, $options['arHandle']);
-        if (!$area) {
-            return null;
+        if (!$area || $area->isError()) {
+            throw new UserMessageException(t('Area not received'));
         }
         $ap = new Checker($area);
         if (!$ap->canEditAreaPermissions()) {
@@ -52,25 +36,13 @@ class Area extends Controller implements TaskHandlerInterface
         }
         if ($area->isGlobalArea()) {
             $stack = Stack::getByName($options['arHandle']);
-            $area = self::get($stack, STACKS_AREA_NAME);
-            if (!$area) {
-                return null;
+            $area = ConcreteArea::get($stack, STACKS_AREA_NAME);
+            if (!$area || $area->isError()) {
+                throw new UserMessageException(t('Area not received'));
             }
         }
 
         return $area;
-    }
-
-    protected function addAccessEntity(ConcreteArea $area, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($area);
-        $pa = Access::getByID($options['paID'], $pk);
-        $pe = Entity::getByID($options['peID']);
-        $pd = empty($options['pdID']) ? null : Duration::getByID($options['pdID']);
-        $pa->addListItem($pe, $pd, $options['accessType']);
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
     protected function revertToPagePermissions(ConcreteArea $area, array $options): ?Response
@@ -85,38 +57,6 @@ class Area extends Controller implements TaskHandlerInterface
         $area->overridePagePermissions();
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
-    }
-
-    protected function removeAccessEntity(ConcreteArea $area, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($area);
-        $pa = Access::getByID($options['paID'], $pk);
-        $pe = Entity::getByID($options['peID']);
-        $pa->removeListItem($pe);
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
-    }
-
-    protected function savePermission(ConcreteArea $area, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($area);
-        $pa = Access::getByID($options['paID'], $pk);
-        $pa->save($options);
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
-    }
-
-    protected function displayAccessCell(ConcreteArea $area, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($area);
-        $this->set('pk', $pk);
-        $this->set('pa', Access::getByID($options['paID'], $pk));
-        $this->setViewPath('/backend/permissions/labels');
-
-        return null;
     }
 
     protected function savePermissionAssignments(ConcreteArea $area, array $options): ?Response

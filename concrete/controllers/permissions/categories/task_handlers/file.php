@@ -2,52 +2,33 @@
 
 namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as ConcreteFile;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Permission\Access\Access;
-use Concrete\Core\Permission\Access\Entity\Entity;
-use Concrete\Core\Permission\Category\TaskHandlerInterface;
+use Concrete\Core\Permission\Category\ObjectTaskHandler;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Workflow\Workflow;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class File extends Controller implements TaskHandlerInterface
+class File extends ObjectTaskHandler
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Permission\Category\TaskHandlerInterface::handle()
+     * @see \Concrete\Core\Permission\Category\ObjectTaskHandler::getPermissionObject()
      */
-    public function handle(string $task, array $options): ?Response
+    protected function getPermissionObject(array $options): ObjectInterface
     {
-        $file = $this->getFile($options);
-        if ($file === null) {
-            throw new UserMessageException(t('File not received'));
-        }
-        $method = lcfirst(camelcase($task));
-        if (!method_exists($this, $method)) {
-            throw new UserMessageException(t('Unknown permission task: %s', $task));
-        }
-
-        return $this->{$method}($file, $options);
-    }
-
-    protected function getFile(array $options): ?ConcreteFile
-    {
-        $fileID = empty($options['fID']) ? 0 : (int) $options['fID'];
-        if ($fileID === 0) {
-            return null;
-        }
+        $fileID = $options['fID'] ?? null;
         $file = $this->app->make(EntityManagerInterface::class)->find(ConcreteFile::class, $fileID);
         if ($file === null) {
-            return null;
+            throw new UserMessageException(t('File not received'));
         }
         $fp = new Checker($file);
         if (!$fp->canEditFilePermissions()) {
@@ -55,18 +36,6 @@ class File extends Controller implements TaskHandlerInterface
         }
 
         return $file;
-    }
-
-    protected function addAccessEntity(ConcreteFile $file, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($file);
-        $pa = Access::getByID($options['paID'], $pk);
-        $pe = Entity::getByID($options['peID']);
-        $pd = empty($options['pdID']) ? null : Duration::getByID($options['pdID']);
-        $pa->addListItem($pe, $pd, $options['accessType']);
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
     protected function revertToGlobalFilePermissions(ConcreteFile $file, array $options): ?Response
@@ -81,38 +50,6 @@ class File extends Controller implements TaskHandlerInterface
         $file->resetPermissions(1);
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
-    }
-
-    protected function removeAccessEntity(ConcreteFile $file, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($file);
-        $pa = Access::getByID($options['paID'], $pk);
-        $pe = Entity::getByID($options['peID']);
-        $pa->removeListItem($pe);
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
-    }
-
-    protected function savePermission(ConcreteFile $file, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($file);
-        $pa = Access::getByID($options['paID'], $pk);
-        $pa->save($options);
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
-    }
-
-    protected function displayAccessCell(ConcreteFile $file, array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($file);
-        $this->set('pk', $pk);
-        $this->set('pa', Access::getByID($options['paID'], $pk));
-        $this->setViewPath('/backend/permissions/labels');
-
-        return null;
     }
 
     protected function savePermissionAssignments(ConcreteFile $file, array $options): ?Response
@@ -145,5 +82,7 @@ class File extends Controller implements TaskHandlerInterface
                 $pk->attachWorkflow($wf);
             }
         }
+
+        return null;
     }
 }
