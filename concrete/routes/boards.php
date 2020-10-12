@@ -13,5 +13,4 @@ $router->all('/ccm/system/board/instance/preview_rule/{boardInstanceSlotRuleID}'
 $router->all('/ccm/system/board/element/preview/{elementID}', '\Concrete\Controller\Backend\Board\Element\Preview::view');
 
 /* Permissions Tools Hack */
-$router->all('/tools/required/permissions/categories/board_admin', '\Concrete\Controller\Board\Permissions::process');
 $router->all('/tools/required/permissions/categories/board', '\Concrete\Controller\Board\Permissions::processBoard');
