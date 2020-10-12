@@ -4,7 +4,6 @@ namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Category\DefaultTaskHandler;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
@@ -18,6 +17,13 @@ class User extends DefaultTaskHandler
     /**
      * {@inheritdoc}
      *
+     * @see \Concrete\Core\Permission\Category\DefaultTaskHandler::$hasWorkflows
+     */
+    protected $hasWorkflows = true;
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Permission\Category\DefaultTaskHandler::checkAccess()
      */
     protected function checkAccess(): void
@@ -26,29 +32,6 @@ class User extends DefaultTaskHandler
         if (!$p->canAccessTaskPermissions()) {
             throw new UserMessageException(t('Access Denied.'));
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Permission\Category\DefaultTaskHandler::savePermission()
-     */
-    protected function savePermission(array $options): ?Response
-    {
-        $pk = Key::getByID($options['pkID']);
-        $pa = Access::getByID($options['paID'], $pk);
-        $pa->save($options);
-        $pa->clearWorkflows();
-        if (is_array($options['wfID'] ?? null)) {
-            foreach ($options['wfID'] as $wfID) {
-                $wf = Workflow::getByID($wfID);
-                if (is_object($wf)) {
-                    $pa->attachWorkflow($wf);
-                }
-            }
-        }
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
     protected function saveWorkflows(array $options): ?Response

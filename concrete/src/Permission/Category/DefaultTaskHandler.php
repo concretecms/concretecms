@@ -9,12 +9,20 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Workflow\Workflow;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 abstract class DefaultTaskHandler extends Controller implements TaskHandlerInterface
 {
+    /**
+     * Should we save workflows when saving permissions?
+     *
+     * @var bool
+     */
+    protected $hasWorkflows = false;
+
     /**
      * {@inheritdoc}
      *
@@ -62,6 +70,18 @@ abstract class DefaultTaskHandler extends Controller implements TaskHandlerInter
         $pk = Key::getByID($options['pkID']);
         $pa = Access::getByID($options['paID'], $pk);
         $pa->save($options);
+        if ($this->hasWorkflows) {
+            $pa->clearWorkflows();
+            $wfIDs = $options['wfID'] ?? null;
+            if (is_array($wfIDs)) {
+                foreach ($wfIDs as $wfID) {
+                    $wf = Workflow::getByID($wfID);
+                    if ($wf !== null) {
+                        $pa->attachWorkflow($wf);
+                    }
+                }
+            }
+        }
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
