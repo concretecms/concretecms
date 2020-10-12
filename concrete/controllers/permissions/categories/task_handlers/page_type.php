@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -8,18 +8,18 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as ConcretePage;
+use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\Category\TaskHandlerInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Workflow\Workflow;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class BasicWorkflow extends Controller implements TaskHandlerInterface
+class PageType extends Controller implements TaskHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -29,9 +29,9 @@ class BasicWorkflow extends Controller implements TaskHandlerInterface
     public function handle(string $task, array $options): ?Response
     {
         $this->checkAccess();
-        $workflow = $this->getWorkflow($options);
-        if ($workflow === null) {
-            throw new UserMessageException(t('Workflow not found.'));
+        $pageType = $this->getPageType($options);
+        if ($pageType === null) {
+            throw new UserMessageException(t('Page type not found.'));
         }
 
         $method = lcfirst(camelcase($task));
@@ -39,7 +39,7 @@ class BasicWorkflow extends Controller implements TaskHandlerInterface
             throw new UserMessageException(t('Unknown permission task: %s', $task));
         }
 
-        return $this->{$method}($workflow, $options);
+        return $this->{$method}($pageType, $options);
     }
 
     /**
@@ -47,7 +47,7 @@ class BasicWorkflow extends Controller implements TaskHandlerInterface
      */
     protected function checkAccess(): void
     {
-        $p = ConcretePage::getByPath('/dashboard/system/permissions/workflows');
+        $p = ConcretePage::getByPath('/dashboard/pages/types');
         if ($p && !$p->isError()) {
             $cp = new Checker($p);
             if ($cp->canViewPage()) {
@@ -57,17 +57,17 @@ class BasicWorkflow extends Controller implements TaskHandlerInterface
         throw new UserMessageException(t('Access Denied.'));
     }
 
-    protected function getWorkflow(array $options): ?Workflow
+    protected function getPageType(array $options): ?Type
     {
-        $workflowID = (int) ($options['wfID'] ?? '');
+        $pageTypeID = (int) ($options['ptID'] ?? '');
 
-        return $workflowID === 0 ? null : Workflow::getByID($workflowID);
+        return $pageTypeID === 0 ? null : Type::getByID($pageTypeID);
     }
 
-    protected function addAccessEntity(Workflow $workflow, array $options): ?Response
+    protected function addAccessEntity(Type $pageType, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($workflow);
+        $pk->setPermissionObject($pageType);
         $pa = Access::getByID($options['paID'], $pk);
         $pe = Entity::getByID($options['peID']);
         $pd = empty($options['pdID']) ? null : Duration::getByID($options['pdID']);
@@ -76,10 +76,10 @@ class BasicWorkflow extends Controller implements TaskHandlerInterface
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function removeAccessEntity(Workflow $workflow, array $options): ?Response
+    protected function removeAccessEntity(Type $pageType, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($workflow);
+        $pk->setPermissionObject($pageType);
         $pa = Access::getByID($options['paID'], $pk);
         $pe = Entity::getByID($options['peID']);
         $pa->removeListItem($pe);
@@ -87,20 +87,20 @@ class BasicWorkflow extends Controller implements TaskHandlerInterface
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function savePermission(Workflow $workflow, array $options): ?Response
+    protected function savePermission(Type $pageType, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($workflow);
+        $pk->setPermissionObject($pageType);
         $pa = Access::getByID($options['paID'], $pk);
         $pa->save($options);
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function displayAccessCell(Workflow $workflow, array $options): ?Response
+    protected function displayAccessCell(Type $pageType, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($workflow);
+        $pk->setPermissionObject($pageType);
         $this->set('pk', $pk);
         $this->set('pa', Access::getByID($options['paID'], $pk));
         $this->setViewPath('/backend/permissions/labels');

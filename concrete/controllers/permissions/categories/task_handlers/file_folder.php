@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 

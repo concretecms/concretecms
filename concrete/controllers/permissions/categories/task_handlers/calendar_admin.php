@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class BoardAdmin extends DefaultTaskHandler
+class CalendarAdmin extends DefaultTaskHandler
 {
     /**
      * {@inheritdoc}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Area\Area as ConcreteArea;
 use Concrete\Core\Block\Block as ConcreteBlock;

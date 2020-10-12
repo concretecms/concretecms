@@ -1,22 +1,25 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Controller\Controller;
-use Concrete\Core\Conversation\Conversation as ConcreteConversation;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Page\Page as ConcretePage;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\Category\TaskHandlerInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Workflow\Workflow;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Conversation extends Controller implements TaskHandlerInterface
+class BasicWorkflow extends Controller implements TaskHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -25,34 +28,46 @@ class Conversation extends Controller implements TaskHandlerInterface
      */
     public function handle(string $task, array $options): ?Response
     {
-        $conversation = $this->getConversation($options);
+        $this->checkAccess();
+        $workflow = $this->getWorkflow($options);
+        if ($workflow === null) {
+            throw new UserMessageException(t('Workflow not found.'));
+        }
+
         $method = lcfirst(camelcase($task));
         if (!method_exists($this, $method)) {
             throw new UserMessageException(t('Unknown permission task: %s', $task));
         }
 
-        return $this->{$method}($conversation, $options);
+        return $this->{$method}($workflow, $options);
     }
 
     /**
      * @throws \Concrete\Core\Error\UserMessageException
      */
-    protected function getConversation(array $options): ?ConcreteConversation
+    protected function checkAccess(): void
     {
-        $conversationID = (int) ($options['cnvID'] ?? 0);
-        $conversation = $conversationID > 0 ? ConcreteConversation::getByID($conversationID) : null;
-        $cpn = new Checker($conversation);
-        if (!$cpn->canEditConversationPermissions()) {
-            throw new UserMessageException(t('Access Denied.'));
+        $p = ConcretePage::getByPath('/dashboard/system/permissions/workflows');
+        if ($p && !$p->isError()) {
+            $cp = new Checker($p);
+            if ($cp->canViewPage()) {
+                return;
+            }
         }
-
-        return $conversation;
+        throw new UserMessageException(t('Access Denied.'));
     }
 
-    protected function addAccessEntity(?ConcreteConversation $conversation, array $options): ?Response
+    protected function getWorkflow(array $options): ?Workflow
+    {
+        $workflowID = (int) ($options['wfID'] ?? '');
+
+        return $workflowID === 0 ? null : Workflow::getByID($workflowID);
+    }
+
+    protected function addAccessEntity(Workflow $workflow, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($conversation);
+        $pk->setPermissionObject($workflow);
         $pa = Access::getByID($options['paID'], $pk);
         $pe = Entity::getByID($options['peID']);
         $pd = empty($options['pdID']) ? null : Duration::getByID($options['pdID']);
@@ -61,10 +76,10 @@ class Conversation extends Controller implements TaskHandlerInterface
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function removeAccessEntity(?ConcreteConversation $conversation, array $options): ?Response
+    protected function removeAccessEntity(Workflow $workflow, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($conversation);
+        $pk->setPermissionObject($workflow);
         $pa = Access::getByID($options['paID'], $pk);
         $pe = Entity::getByID($options['peID']);
         $pa->removeListItem($pe);
@@ -72,42 +87,24 @@ class Conversation extends Controller implements TaskHandlerInterface
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function savePermission(?ConcreteConversation $conversation, array $options): ?Response
+    protected function savePermission(Workflow $workflow, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($conversation);
+        $pk->setPermissionObject($workflow);
         $pa = Access::getByID($options['paID'], $pk);
         $pa->save($options);
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function displayAccessCell(?ConcreteConversation $conversation, array $options): ?Response
+    protected function displayAccessCell(Workflow $workflow, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($conversation);
+        $pk->setPermissionObject($workflow);
         $this->set('pk', $pk);
         $this->set('pa', Access::getByID($options['paID'], $pk));
         $this->setViewPath('/backend/permissions/labels');
 
         return null;
-    }
-
-    protected function savePermissionAssignments(?ConcreteConversation $conversation, array $options): ?Response
-    {
-        $permissions = Key::getList('conversations');
-        foreach ($permissions as $pk) {
-            $pk->setPermissionObject($conversation);
-            $pk->clearPermissionAssignment();
-            $paID = (int) ($options['pkID'][$pk->getPermissionKeyID()] ?? 0);
-            if ($paID > 0) {
-                $pa = Access::getByID($paID, $pk);
-                if ($pa !== null) {
-                    $pk->assignPermissionAccess($pa);
-                }
-            }
-        }
-
-        return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 }

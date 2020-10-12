@@ -9,6 +9,7 @@ use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Filesystem\FileLocator;
 
 class TaskLauncher extends Controller
 {
@@ -41,7 +42,15 @@ class TaskLauncher extends Controller
      */
     protected function getTaskHandler(Category $category): TaskHandlerInterface
     {
-        $className = core_class('Core\\Permission\\Category\\TaskHandler\\' . camelcase($category->getPermissionKeyCategoryHandle()), $category->getPackageHandle());
+        $path = '/permissions/categories/task_handlers/' . $category->getPermissionKeyCategoryHandle();
+        $packageHandle = (string) $category->getPackageHandle();
+        $locator = $this->app->make(FileLocator::class);
+        if ($packageHandle !== '') {
+            $locator->addLocation(new FileLocator\PackageLocation($packageHandle));
+        }
+        $r = $locator->getRecord($path . '.php');
+        $prefix = $r->override ? true : $packageHandle;
+        $className = core_class('Controller\\' . str_replace('/', '\\', camelcase($path, true)), $prefix);
         if (!class_exists($className)) {
             throw new UserMessageException(t('Unable to find the class %s', $className));
         }

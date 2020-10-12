@@ -1,25 +1,24 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
-
-defined('C5_EXECUTE') or die('Access Denied.');
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Entity\Calendar\Calendar as CalendarEntity;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Page\Page as ConcretePage;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\Category\TaskHandlerInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Workflow\Workflow;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class PageType extends Controller implements TaskHandlerInterface
+class Calendar extends Controller implements TaskHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -28,46 +27,37 @@ class PageType extends Controller implements TaskHandlerInterface
      */
     public function handle(string $task, array $options): ?Response
     {
-        $this->checkAccess();
-        $pageType = $this->getPageType($options);
-        if ($pageType === null) {
-            throw new UserMessageException(t('Page type not found.'));
+        $calendar = $this->getCalendar($options);
+        if ($calendar === null) {
+            throw new UserMessageException(t('Calendar not received'));
         }
-
         $method = lcfirst(camelcase($task));
         if (!method_exists($this, $method)) {
             throw new UserMessageException(t('Unknown permission task: %s', $task));
         }
 
-        return $this->{$method}($pageType, $options);
+        return $this->{$method}($calendar, $options);
     }
 
-    /**
-     * @throws \Concrete\Core\Error\UserMessageException
-     */
-    protected function checkAccess(): void
+    protected function getCalendar(array $options): ?CalendarEntity
     {
-        $p = ConcretePage::getByPath('/dashboard/pages/types');
-        if ($p && !$p->isError()) {
-            $cp = new Checker($p);
-            if ($cp->canViewPage()) {
-                return;
-            }
+        $calendarID = $options['caID'] ?? null;
+        $calendar = $calendarID ? $this->app->make(EntityManagerInterface::class)->find(CalendarEntity::class, $calendarID) : null;
+        if ($calendar === null) {
+            return null;
         }
-        throw new UserMessageException(t('Access Denied.'));
+        $cp = new Checker($calendar);
+        if (!$cp->canEditCalendarPermissions()) {
+            throw new UserMessageException(t('Access Denied.'));
+        }
+
+        return $calendar;
     }
 
-    protected function getPageType(array $options): ?Type
-    {
-        $pageTypeID = (int) ($options['ptID'] ?? '');
-
-        return $pageTypeID === 0 ? null : Type::getByID($pageTypeID);
-    }
-
-    protected function addAccessEntity(Type $pageType, array $options): ?Response
+    protected function addAccessEntity(CalendarEntity $calendar, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($pageType);
+        $pk->setPermissionObject($calendar);
         $pa = Access::getByID($options['paID'], $pk);
         $pe = Entity::getByID($options['peID']);
         $pd = empty($options['pdID']) ? null : Duration::getByID($options['pdID']);
@@ -76,10 +66,10 @@ class PageType extends Controller implements TaskHandlerInterface
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function removeAccessEntity(Type $pageType, array $options): ?Response
+    protected function removeAccessEntity(CalendarEntity $calendar, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($pageType);
+        $pk->setPermissionObject($calendar);
         $pa = Access::getByID($options['paID'], $pk);
         $pe = Entity::getByID($options['peID']);
         $pa->removeListItem($pe);
@@ -87,20 +77,30 @@ class PageType extends Controller implements TaskHandlerInterface
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function savePermission(Type $pageType, array $options): ?Response
+    protected function savePermission(CalendarEntity $calendar, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($pageType);
+        $pk->setPermissionObject($calendar);
         $pa = Access::getByID($options['paID'], $pk);
         $pa->save($options);
+        $pa->clearWorkflows();
+        $wfIDs = $options['wfID'] ?? null;
+        if (is_array($wfIDs)) {
+            foreach ($wfIDs as $wfID) {
+                $wf = Workflow::getByID($wfID);
+                if ($wf !== null) {
+                    $pa->attachWorkflow($wf);
+                }
+            }
+        }
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    protected function displayAccessCell(Type $pageType, array $options): ?Response
+    protected function displayAccessCell(CalendarEntity $calendar, array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->setPermissionObject($pageType);
+        $pk->setPermissionObject($calendar);
         $this->set('pk', $pk);
         $this->set('pa', Access::getByID($options['paID'], $pk));
         $this->setViewPath('/backend/permissions/labels');

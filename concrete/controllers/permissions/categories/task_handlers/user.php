@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class CalendarAdmin extends DefaultTaskHandler
+class User extends DefaultTaskHandler
 {
     /**
      * {@inheritdoc}
@@ -39,12 +39,27 @@ class CalendarAdmin extends DefaultTaskHandler
         $pa = Access::getByID($options['paID'], $pk);
         $pa->save($options);
         $pa->clearWorkflows();
-        $wfIDs = $options['wfID'] ?? null;
-        if (is_array($wfIDs)) {
-            foreach ($wfIDs as $wfID) {
+        if (is_array($options['wfID'] ?? null)) {
+            foreach ($options['wfID'] as $wfID) {
+                $wf = Workflow::getByID($wfID);
+                if (is_object($wf)) {
+                    $pa->attachWorkflow($wf);
+                }
+            }
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->json(true);
+    }
+
+    protected function saveWorkflows(array $options): ?Response
+    {
+        $pk = Key::getByID($options['pkID']);
+        $pk->clearWorkflows();
+        if (is_array($options['wfID'] ?? null)) {
+            foreach ($options['wfID'] as $wfID) {
                 $wf = Workflow::getByID($wfID);
                 if ($wf !== null) {
-                    $pa->attachWorkflow($wf);
+                    $pk->attachWorkflow($wf);
                 }
             }
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Permission\Category\TaskHandler;
+namespace Concrete\Controller\Permissions\Categories\TaskHandlers;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Permission\Category\DefaultTaskHandler;
@@ -8,7 +8,7 @@ use Concrete\Core\Permission\Checker;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class BlockType extends DefaultTaskHandler
+class Sitemap extends DefaultTaskHandler
 {
     /**
      * {@inheritdoc}
