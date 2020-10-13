@@ -17,7 +17,7 @@
     <?php 
     } else {
         ?>
-        <p><?=t('You cannot access task permissions.')?></p>
+        <p><?=t('You cannot access calendar permissions.')?></p>
     <?php 
     } ?>
 
