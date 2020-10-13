@@ -18,7 +18,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 	<?php
     } else {
         ?>
-		<p><?=t('You cannot access task permissions.')?></p>
+		<p><?=t('You cannot access user permissions.')?></p>
 	<?php
     } ?>
 
