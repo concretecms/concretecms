@@ -3,7 +3,10 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\File\Component\Chooser\ChooserConfiguration;
+use Concrete\Core\File\Component\Chooser\ChooserConfigurationInterface;
 use Concrete\Core\File\Filesystem;
+use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Checker;
 
 class Search extends BackendInterfaceController
@@ -24,6 +27,7 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
+        $this->set('configuration', $this->app->make(ChooserConfigurationInterface::class));
         $this->set('multipleSelection', $this->request->request->getBoolean('multipleSelection'));
     }
 
