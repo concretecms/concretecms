@@ -13,7 +13,7 @@
 		<?php
 		} else {
 			?>
-			<p><?=t('You cannot access task permissions.')?></p>
+			<p><?=t('You cannot access file permissions.')?></p>
 		<?php
 		} ?>
 
