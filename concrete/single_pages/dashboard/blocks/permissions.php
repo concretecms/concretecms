@@ -17,7 +17,7 @@ $help = ob_get_clean();
         View::element('permission/lists/block_type');
     } else {
         ?>
-        <p><?= t('You cannot access block permissions.') ?></p>
+        <p><?= t('You cannot access these permissions.') ?></p>
         <?php
     }
     ?>
