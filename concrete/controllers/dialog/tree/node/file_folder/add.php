@@ -97,7 +97,7 @@ class Add extends Node
             $folder = $filesystem->addFolder($this->getNode(), $folderName, $fslID);
 
             // Let's store the new folder IDs in session so we can highlight them on redirect.
-            $this->app->make('session')->getFlashBag()->set('newFolderIds', [$folder->getTreeNodeID()]);
+            $this->app->make('session')->getFlashBag()->set('file_manager.updated_nodes', [$folder->getTreeNodeID()]);
 
             // Redirect to the folder in the file manager, with date modified descending as our query.
             // Note, it'd be nice if it were easier to build this than simply hard coding the logic but

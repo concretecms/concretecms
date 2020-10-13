@@ -231,17 +231,22 @@ class Search extends DashboardPageController
                     $this->app->make('url')->to('/dashboard/files/search', 'folder', $folder->getTreeNodeID())
                 );
 
-                $session = $this->app->make('session');
-                $highlightFolders = [];
-                if ($session->getFlashBag()->has('newFolderIds')) {
-                    $highlightFolders = (array) $session->getFlashBag()->get('newFolderIds');
-                }
-                $this->set('highlightResults', $highlightFolders);
                 $this->setCurrentFolder($folder);
                 return;
             }
         }
         $this->view();
+    }
+
+    public function on_before_render()
+    {
+        parent::on_before_render();
+        $session = $this->app->make('session');
+        $highlightedNodes = [];
+        if ($session->getFlashBag()->has('file_manager.updated_nodes')) {
+            $highlightedNodes = (array) $session->getFlashBag()->get('file_manager.updated_nodes');
+        }
+        $this->set('highlightResults', $highlightedNodes);
     }
 
 

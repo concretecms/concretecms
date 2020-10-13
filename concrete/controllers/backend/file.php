@@ -833,12 +833,14 @@ class File extends Controller
                     foreach ($nodes as $node) {
                         /** @var FileFolder $treeNodeObject */
                         $treeNodeObject = $node["treeNodeObject"];
-
-                        $directories[] = [
-                            "directoryId" => $treeNodeObject->getTreeNodeID(),
-                            "directoryName" => $treeNodeObject->getTreeNodeName(),
-                            "directoryLevel" => $node["level"]
-                        ];
+                        $nodePermissions = new Checker($treeNodeObject);
+                        if ($nodePermissions->canAddFiles()) {
+                            $directories[] = [
+                                "directoryId" => $treeNodeObject->getTreeNodeID(),
+                                "directoryName" => $treeNodeObject->getTreeNodeName(),
+                                "directoryLevel" => $node["level"]
+                            ];
+                        }
                     }
                 }
             } else {
@@ -852,6 +854,49 @@ class File extends Controller
         $editResponse->setError($errors);
         $editResponse->setAdditionalDataAttribute("directories", $directories);
 
+        return $responseFactory->json($editResponse);
+    }
+
+    public function uploadComplete()
+    {
+        $files = $this->getRequestFiles();
+        $editResponse = new EditResponse();
+        $token = $this->app->make(Token::class);
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $errors = $this->app->make(ErrorList::class);
+
+        if (!$files[0]) {
+            $errors->add(t('Unable to retrieve file object from uploaded completion.'));
+        }
+
+        try {
+            if ($token->validate()) {
+
+                $nodes = [];
+                foreach($files as $file) {
+                    $node = $file->getFileNodeObject();
+                    if ($node) {
+                        $nodes[] = $node->getTreeNodeID();
+                    }
+                }
+
+                $this->app->make('session')->getFlashBag()->set('file_manager.updated_nodes', $nodes);
+
+                $folder = $files[0]->getFileFolderObject();
+                $redirectURL = (string) \Concrete\Core\Support\Facade\Url::to(
+                    '/dashboard/files/search/', 'folder', $folder->getTreeNodeID()
+                )->setQuery(['ccm_order_by' => 'dateModified', 'ccm_order_by_direction' => 'desc']);
+                $editResponse->setRedirectURL($redirectURL);
+
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
         return $responseFactory->json($editResponse);
     }
 

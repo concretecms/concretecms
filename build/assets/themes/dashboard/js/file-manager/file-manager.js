@@ -62,9 +62,32 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
 
     ConcreteFileManagerTable.prototype.setupFolderActions = function() {
         var my = this
-        ConcreteEvent.subscribe('FileManagerJumpToFolder.concreteTree', function(e, r) {
+        ConcreteEvent.subscribe('FileManagerJumpToFolder.concreteFileManagerTable', function(e, r) {
             var url = CCM_DISPATCHER_FILENAME + '/dashboard/files/search/folder/' + r.folderIDn
             window.location.href = url
+        });
+        ConcreteEvent.subscribe('FileManagerAddFilesComplete.concreteFileManagerTable', function(e, r) {
+            // Now it's time for us to get the redirect response in order to go to
+            // the proper spot in the file manager.
+            const fileIds = []
+
+            r.files.forEach(function(file) {
+                fileIds.push(file.fID)
+            })
+
+            $.concreteAjax({
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload_complete',
+                method: 'POST',
+                data: {
+                    ccm_token: CCM_SECURITY_TOKEN,
+                    fID: fileIds,
+                },
+                dataType: 'json',
+                success: function (response) {
+                    window.location.href = response.redirectURL
+                }
+            })
+
         });
     };
 

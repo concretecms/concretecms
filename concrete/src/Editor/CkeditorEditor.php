@@ -129,6 +129,7 @@ class CkeditorEditor implements EditorInterface
             'uploadUrl' => (string) URL::to('/ccm/system/file/upload'),
             'language' => $this->getLanguageOption(),
             'customConfig' => '',
+            'disableNativeSpellChecker' => false,
             'allowedContent' => true,
             'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
             'image2_captionedClass' => 'content-editor-image-captioned',
