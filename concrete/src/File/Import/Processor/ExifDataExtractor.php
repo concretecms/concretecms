@@ -36,11 +36,21 @@ class ExifDataExtractor implements PostProcessorInterface
      */
     protected $populateAdditionalAttributes;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Import\Processor\PostProcessorInterface::getPostProcessPriority()
+     */
     public function getPostProcessPriority()
     {
         return 0;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Import\Processor\ProcessorInterface::readConfiguration()
+     */
     public function readConfiguration(Repository $config)
     {
         $this->populateFileNameAttributes = $config->get('concrete.file_manager.images.use_exif_data_for_file_name_attribute');
@@ -51,6 +61,11 @@ class ExifDataExtractor implements PostProcessorInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Import\Processor\PostProcessorInterface::shouldPostProcess()
+     */
     public function shouldPostProcess(ImportingFile $file, ImportOptions $options, Version $importedVersion)
     {
         return
@@ -65,6 +80,11 @@ class ExifDataExtractor implements PostProcessorInterface
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Import\Processor\PostProcessorInterface::postProcess()
+     */
     public function postProcess(ImportingFile $file, ImportOptions $options, Version $importedVersion)
     {
         $app = Application::getFacadeApplication();
