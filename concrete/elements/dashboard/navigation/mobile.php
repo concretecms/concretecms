@@ -14,7 +14,7 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 <?php
 $walkNavigation = function(array $items) use (&$walkNavigation) {
     if (count($items)) { ?>
-        <ul class="nav flex-column mobile-menu">
+        <ul class="nav flex-column ccm-mobile-menu">
             <?php foreach($items as $item) { ?>
                 <li 
                   <?php if ($item->isActiveParent()) {?> class="nav-path-selected"<?php } ?>
@@ -103,7 +103,7 @@ if (!$dh->inDashboard()) {
                                 <ul class="list-unstyled">
                                     <?php
                                     $pagetype = PageType::getByID($c->getPageTypeID());
-                                    if (is_object($pagetype) && $cp->canEditPageContents()) {
+                                    if (is_object($pagetype) && $permissions->canEditPageContents()) {
                                         ?>
                                         <li>
                                             <a
