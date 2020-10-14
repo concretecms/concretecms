@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Tree;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Localization\Localization;
 use Gettext\Translations;
@@ -234,6 +235,17 @@ abstract class Tree extends ConcreteObject
     final public static function getByID($treeID)
     {
         $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/Tree/' . $treeID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $tree = null;
         $db = $app->make('database')->connection();
         $row = $db->fetchAssoc('select * from Trees where treeID = ?', [$treeID]);
         if ($row) {
@@ -242,9 +254,14 @@ abstract class Tree extends ConcreteObject
             $tree = $app->make($class);
             $tree->setPropertiesFromArray($row);
             $tree->loadDetails();
-
-            return $tree;
         }
+
+        if (is_object($tree) && isset($item) && $item->isMiss()) {
+            $item->set($tree);
+            $cache->save($item);
+        }
+
+        return $tree;
     }
 
     /**
