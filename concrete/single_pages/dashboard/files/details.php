@@ -40,7 +40,7 @@ $file = $fileVersion->getFile();
                     <a
                             class="btn btn-secondary dialog-launch"
                             dialog-title="<?= t('Swap') ?>"
-                            dialog-width="620" dialog-height="400"
+                            dialog-width="80%" dialog-height="600"
                             href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
                     ><?= t('Swap') ?></a>
                     <div class="text-muted">
