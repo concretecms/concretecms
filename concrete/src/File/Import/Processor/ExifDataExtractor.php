@@ -103,7 +103,10 @@ class ExifDataExtractor implements PostProcessorInterface
     {
         $categoryEntity = $this->categoryService->getByHandle('file');
         $category = $categoryEntity->getController();
+        /** @var \Concrete\Core\Attribute\Category\FileCategory $category */
         $setManager = $category->getSetManager();
+        /** @var \Concrete\Core\Attribute\StandardSetManager $setManager */
+        $set = null;
 
         $keywords = [];
 
@@ -125,14 +128,13 @@ class ExifDataExtractor implements PostProcessorInterface
                  *
                  * @see: https://www.exiv2.org/tags.html
                  */
-
                 case 'exif_image_original_raw_file_name':
                 case 'exif_image_reel_name':
                     if ($this->populateFileNameAttributes) {
                         $importedVersion->updateTitle($value);
                     }
-
                     break;
+
                 /*
                  * Use the following tags for populating the description:
                  * - Exif.Image.ImageDescription
@@ -140,51 +142,38 @@ class ExifDataExtractor implements PostProcessorInterface
                  *
                  * @see: https://www.exiv2.org/tags.html
                  */
-
                 case 'exif_image_image_description':
                 case 'exit_photo_user_comment':
                     if ($this->populateDescriptionAttributes) {
                         $importedVersion->updateDescription($value);
                     }
-
                     break;
-                // All other tags are added to additional file attributes
 
+                // All other tags are added to additional file attributes
                 default:
                     if ($this->populateAdditionalAttributes) {
                         $key = $category->getAttributeKeyByHandle($handle);
-
-                        if (!is_object($key)) {
+                        if ($key === null) {
                             // create attribute key
                             $key = new FileKey();
                             $key->setAttributeKeyHandle($handle);
                             $key->setAttributeKeyName($label);
                             $key->setIsAttributeKeySearchable(false);
-                            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
                             $key = $category->add('text', $key, null);
-
-                            $set = $this->setFactory->getByHandle('exit_tags');
-
-                            if (!$set instanceof Set) {
-                                // create set
-                                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-                                $set = $setManager->addSet('exit_tags', t('EXIF Tags'));
+                            if ($set === null) {
+                                $set = $this->setFactory->getByHandle('exit_tags');
+                                if ($set === null) {
+                                    $set = $setManager->addSet('exit_tags', t('EXIF Tags'));
+                                }
                             }
-
-                            // add attribute key to set
-                            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
                             $setManager->addKey($set, $key);
                         }
-
-                        // add attribute to file version
                         $importedVersion->setAttribute($key, $value);
                     }
-
                     break;
             }
         }
-
-        if (count($keywords) > 0) {
+        if ($keywords !== []) {
             $importedVersion->updateTags(str_replace(' ', ', ', implode(', ', $keywords)));
         }
     }
