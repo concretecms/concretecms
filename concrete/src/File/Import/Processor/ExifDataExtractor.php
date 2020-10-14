@@ -111,78 +111,76 @@ class ExifDataExtractor implements PostProcessorInterface
             // create a handle
             $handle = 'exif_' . str_replace(' ', '_', strtolower($label));
 
-            if (strlen(trim($value)) > 0) {
-                if (preg_match('/[a-zA-Z]/i', $value)) {
-                    // collect the keyword
-                    $keywords[] = $value;
-                }
+            if (preg_match('/[a-zA-Z]/i', $value)) {
+                // collect the keyword
+                $keywords[] = $value;
+            }
 
-                // process the current tag
-                switch ($handle) {
-                    /*
-                     * Use the following tags for populating the title:
-                     * - Exif.Image.ReelName
-                     * - Exif.Image.OriginalRawFileName
-                     *
-                     * @see: https://www.exiv2.org/tags.html
-                     */
+            // process the current tag
+            switch ($handle) {
+                /*
+                 * Use the following tags for populating the title:
+                 * - Exif.Image.ReelName
+                 * - Exif.Image.OriginalRawFileName
+                 *
+                 * @see: https://www.exiv2.org/tags.html
+                 */
 
-                    case 'exif_image_original_raw_file_name':
-                    case 'exif_image_reel_name':
-                        if ($this->populateFileNameAttributes) {
-                            $importedVersion->updateTitle($value);
-                        }
+                case 'exif_image_original_raw_file_name':
+                case 'exif_image_reel_name':
+                    if ($this->populateFileNameAttributes) {
+                        $importedVersion->updateTitle($value);
+                    }
 
-                        break;
-                    /*
-                     * Use the following tags for populating the description:
-                     * - Exif.Image.ImageDescription
-                     * - Exif.Photo.UserComment
-                     *
-                     * @see: https://www.exiv2.org/tags.html
-                     */
+                    break;
+                /*
+                 * Use the following tags for populating the description:
+                 * - Exif.Image.ImageDescription
+                 * - Exif.Photo.UserComment
+                 *
+                 * @see: https://www.exiv2.org/tags.html
+                 */
 
-                    case 'exif_image_image_description':
-                    case 'exit_photo_user_comment':
-                        if ($this->populateDescriptionAttributes) {
-                            $importedVersion->updateDescription($value);
-                        }
+                case 'exif_image_image_description':
+                case 'exit_photo_user_comment':
+                    if ($this->populateDescriptionAttributes) {
+                        $importedVersion->updateDescription($value);
+                    }
 
-                        break;
-                    // All other tags are added to additional file attributes
+                    break;
+                // All other tags are added to additional file attributes
 
-                    default:
-                        if ($this->populateAdditionalAttributes) {
-                            $key = $category->getAttributeKeyByHandle($handle);
+                default:
+                    if ($this->populateAdditionalAttributes) {
+                        $key = $category->getAttributeKeyByHandle($handle);
 
-                            if (!is_object($key)) {
-                                // create attribute key
-                                $key = new FileKey();
-                                $key->setAttributeKeyHandle($handle);
-                                $key->setAttributeKeyName($label);
-                                $key->setIsAttributeKeySearchable(false);
+                        if (!is_object($key)) {
+                            // create attribute key
+                            $key = new FileKey();
+                            $key->setAttributeKeyHandle($handle);
+                            $key->setAttributeKeyName($label);
+                            $key->setIsAttributeKeySearchable(false);
+                            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+                            $key = $category->add('text', $key, null);
+
+                            $set = $this->setFactory->getByHandle('exit_tags');
+
+                            if (!$set instanceof Set) {
+                                // create set
                                 /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-                                $key = $category->add('text', $key, null);
-
-                                $set = $this->setFactory->getByHandle('exit_tags');
-
-                                if (!$set instanceof Set) {
-                                    // create set
-                                    /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-                                    $set = $setManager->addSet('exit_tags', t('EXIF Tags'));
-                                }
-
-                                // add attribute key to set
-                                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-                                $setManager->addKey($set, $key);
+                                $set = $setManager->addSet('exit_tags', t('EXIF Tags'));
                             }
 
-                            // add attribute to file version
-                            $importedVersion->setAttribute($key, $value);
+                            // add attribute key to set
+                            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+                            $setManager->addKey($set, $key);
                         }
 
-                        break;
-                }
+                        // add attribute to file version
+                        $importedVersion->setAttribute($key, $value);
+                    }
+
+                    break;
             }
         }
 
@@ -206,7 +204,7 @@ class ExifDataExtractor implements PostProcessorInterface
               (?=[A-Z][a-z])  # and before upper-then-lower case.
             /x';
         foreach ($metadata->toArray() as $key => $value) {
-            if (substr($key, 0, 5) === 'exif.') {
+            if (substr($key, 0, 5) === 'exif.' && (string) $value !== '') {
                 $matches = preg_split($re, substr($key, 5));
                 $label = implode(' ', $matches);
                 yield $label => $value;
