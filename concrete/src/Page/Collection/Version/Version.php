@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Collection\Version;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
@@ -233,6 +234,17 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public static function get($c, $cvID)
     {
         $app = Facade::getFacadeApplication();
+
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/Page/Collection/' . $c->getCollectionID() . '/Version/' . $cvID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
         $db = $app->make('database')->connection();
         $now = $app->make('date')->getOverridableNow();
 
@@ -279,6 +291,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
 
         $cv->cID = $c->getCollectionID();
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($cv);
+            $cache->save($item);
+        }
 
         return $cv;
     }
