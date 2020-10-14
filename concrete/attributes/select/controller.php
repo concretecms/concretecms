@@ -297,7 +297,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         // list of SelectAttributeOption:ID items and new items.
                         $options = [];
                         if ($data['atSelectOptionValue']) {
-                            foreach (explode(',', $data['atSelectOptionValue']) as $value) {
+                            if (!is_array($data['atSelectOptionValue'])) {
+                                $data['atSelectOptionValue'] = explode(',', $data['atSelectOptionValue']);
+                            }
+
+                            foreach ($data['atSelectOptionValue'] as $value) {
                                 if (preg_match('/SelectAttributeOption\:(.+)/i', $value, $matches)) {
                                     $option = $this->getOptionByID($matches[1]);
                                 } else {
@@ -525,11 +529,20 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $values = [];
         // now, if the current instance of the attribute key allows us to do autocomplete, we return all the values
         if ($this->akSelectAllowOtherValues) {
-            $options = $this->getOptions($_GET['q']);
+            $term = $this->request->request->get("term");
+            $options = $this->getOptions($term);
             foreach ($options as $opt) {
                 $o = new \stdClass();
-                $o->id = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
+                $o->value = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
                 $o->text = $opt->getSelectAttributeOptionValue(false);
+                $values[] = $o;
+            }
+
+            // this is required so bootstrap-select can add the new value to its list
+            if (count($values) === 0) {
+                $o = new \stdClass();
+                $o->value = $term;
+                $o->text = $term;
                 $values[] = $o;
             }
         }
@@ -912,7 +925,7 @@ EOT
         } else {
             $values = $value;
         }
-        
+
         $response = [];
         foreach ($values as $value) {
             $value = trim($value);
