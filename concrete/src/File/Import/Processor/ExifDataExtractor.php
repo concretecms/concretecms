@@ -10,7 +10,6 @@ use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Import\ImportingFile;
 use Concrete\Core\File\Import\ImportOptions;
-use Concrete\Core\Support\Facade\Application;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use Imagine\Image\Metadata\MetadataBag;
 
@@ -35,6 +34,22 @@ class ExifDataExtractor implements PostProcessorInterface
      * @var bool
      */
     protected $populateAdditionalAttributes;
+
+    /**
+     * @var \Concrete\Core\Attribute\Category\CategoryService
+     */
+    protected $categoryService;
+
+    /**
+     * @var \Concrete\Core\Attribute\SetFactory
+     */
+    protected $setFactory;
+
+    public function __construct(CategoryService $categoryService, SetFactory $setFactory)
+    {
+        $this->categoryService = $categoryService;
+        $this->setFactory = $setFactory;
+    }
 
     /**
      * {@inheritdoc}
@@ -87,13 +102,8 @@ class ExifDataExtractor implements PostProcessorInterface
      */
     public function postProcess(ImportingFile $file, ImportOptions $options, Version $importedVersion)
     {
-        $app = Application::getFacadeApplication();
-        /** @var CategoryService $categoryService */
-        $categoryService = $app->make(CategoryService::class);
-        $categoryEntity = $categoryService->getByHandle('file');
+        $categoryEntity = $this->categoryService->getByHandle('file');
         $category = $categoryEntity->getController();
-        /** @var SetFactory $setFactory */
-        $setFactory = $app->make(SetFactory::class);
         $setManager = $category->getSetManager();
 
         $metadata = $importedVersion->hasImagineImage() ? $importedVersion->getImagineImage()->metadata() : null;
@@ -178,7 +188,7 @@ class ExifDataExtractor implements PostProcessorInterface
                                         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
                                         $key = $category->add('text', $key, null);
 
-                                        $set = $setFactory->getByHandle('exit_tags');
+                                        $set = $this->setFactory->getByHandle('exit_tags');
 
                                         if (!$set instanceof Set) {
                                             // create set
