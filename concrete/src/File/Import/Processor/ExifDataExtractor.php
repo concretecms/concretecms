@@ -16,13 +16,24 @@ use Imagine\Image\Metadata\MetadataBag;
 
 class ExifDataExtractor implements PostProcessorInterface
 {
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $populateFileNameAttributes;
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
     protected $populateDescriptionAttributes;
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
     protected $populateKeywordAttributes;
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
     protected $populateAdditionalAttributes;
 
     public function getPostProcessPriority()
@@ -42,7 +53,7 @@ class ExifDataExtractor implements PostProcessorInterface
 
     public function shouldPostProcess(ImportingFile $file, ImportOptions $options, Version $importedVersion)
     {
-        return (
+        return
             (
                 $this->populateFileNameAttributes ||
                 $this->populateDescriptionAttributes ||
@@ -50,8 +61,8 @@ class ExifDataExtractor implements PostProcessorInterface
                 $this->populateAdditionalAttributes
             ) &&
             ExifMetadataReader::isSupported() &&
-            $file->getFileType()->getName() === "JPEG"
-        );
+            $file->getFileType()->getName() === 'JPEG'
+        ;
     }
 
     public function postProcess(ImportingFile $file, ImportOptions $options, Version $importedVersion)
@@ -78,7 +89,7 @@ class ExifDataExtractor implements PostProcessorInterface
 
             // iterate tags
             foreach ($metadata->toArray() as $key => $value) {
-                if (substr($key, 0, 5) === "exif.") {
+                if (substr($key, 0, 5) === 'exif.') {
                     // transform camelcase to normal words
                     $re = '/(?#! splitCamelCase Rev:20140412)
                         # Split camelCase "words". Two global alternatives. Either g1of2:
@@ -89,20 +100,19 @@ class ExifDataExtractor implements PostProcessorInterface
                         /x';
 
                     $matches = preg_split($re, substr($key, 5));
-                    $label = implode(" ", $matches);
+                    $label = implode(' ', $matches);
 
                     // create a handle
-                    $handle = "exif_" . str_replace(" ", "_", strtolower($label));
+                    $handle = 'exif_' . str_replace(' ', '_', strtolower($label));
 
                     if (strlen(trim($value)) > 0) {
-                        if(preg_match("/[a-zA-Z]/i", $value)){
+                        if (preg_match('/[a-zA-Z]/i', $value)) {
                             // collect the keyword
                             $keywords[] = $value;
                         }
 
                         // process the current tag
                         switch ($handle) {
-
                             /*
                              * Use the following tags for populating the title:
                              * - Exif.Image.ReelName
@@ -111,14 +121,13 @@ class ExifDataExtractor implements PostProcessorInterface
                              * @see: https://www.exiv2.org/tags.html
                              */
 
-                            case "exif_image_original_raw_file_name":
-                            case "exif_image_reel_name":
+                            case 'exif_image_original_raw_file_name':
+                            case 'exif_image_reel_name':
                                 if ($this->populateFileNameAttributes) {
                                     $importedVersion->updateTitle($value);
                                 }
 
                                 break;
-
                             /*
                              * Use the following tags for populating the description:
                              * - Exif.Image.ImageDescription
@@ -127,21 +136,17 @@ class ExifDataExtractor implements PostProcessorInterface
                              * @see: https://www.exiv2.org/tags.html
                              */
 
-                            case "exif_image_image_description":
-                            case "exit_photo_user_comment":
+                            case 'exif_image_image_description':
+                            case 'exit_photo_user_comment':
                                 if ($this->populateDescriptionAttributes) {
                                     $importedVersion->updateDescription($value);
                                 }
 
                                 break;
-
-                            /*
-                             * All other tags are added to additional file attributes
-                             */
+                            // All other tags are added to additional file attributes
 
                             default:
                                 if ($this->populateAdditionalAttributes) {
-
                                     $key = $category->getAttributeKeyByHandle($handle);
 
                                     if (!is_object($key)) {
@@ -158,7 +163,7 @@ class ExifDataExtractor implements PostProcessorInterface
                                         if (!$set instanceof Set) {
                                             // create set
                                             /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-                                            $set = $setManager->addSet('exit_tags', t("EXIF Tags"));
+                                            $set = $setManager->addSet('exit_tags', t('EXIF Tags'));
                                         }
 
                                         // add attribute key to set
@@ -177,7 +182,7 @@ class ExifDataExtractor implements PostProcessorInterface
             }
 
             if (count($keywords) > 0) {
-                $importedVersion->updateTags(str_replace(" ", ", ", implode(", ", $keywords)));
+                $importedVersion->updateTags(str_replace(' ', ', ', implode(', ', $keywords)));
             }
         }
     }
