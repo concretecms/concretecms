@@ -22,7 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @ORM\Table(name="ExpressEntityEntries",
  *  *     indexes={
- *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"})
+ *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"}),
+ *         @ORM\Index(name="createdSort", columns={"exEntryDateCreated"}),
+ *         @ORM\Index(name="modifiedSort", columns={"exEntryDateModified"})
  *     }
  * )
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
