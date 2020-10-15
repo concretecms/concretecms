@@ -1,17 +1,16 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+use HtmlObject\Element;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Support\Facade\Application;
-use HtmlObject\Element;
 
 $app = Application::getFacadeApplication();
+/** @var Form $form */
+$form = $app->make(Form::class);
 
 /*
  * Checkbox list.
  */
 if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
-    /** @var Form $form */
-    $form = $app->make(Form::class);
-
     $options = $controller->getOptions();
     foreach ($options as $opt) {
         ?>
@@ -32,9 +31,6 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
  * Select Menu.
  */
 if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && !$akDisplayMultipleValuesOnSelect) {
-    /** @var Form $form */
-    $form = $app->make(Form::class);
-
     if (!$akHideNoneOption) {
         $options = array('' => t('** None'));
     }
@@ -53,9 +49,6 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && !$akDisplayMu
  * Radio list.
  */
 if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMultipleValuesOnSelect) {
-    /** @var Form $form */
-    $form = $app->make(Form::class);
-
     if (!$akHideNoneOption) {
         ?>
         <div class="radio"><label>
@@ -84,8 +77,6 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMul
  * Select2
  */
 if ($akSelectAllowOtherValues) {
-    /** @var Form $form */
-    $form = $app->make(Form::class);
     $options = [];
 
     if (is_array($selectedOptionIDs) && count($selectedOptionIDs)) {
@@ -118,7 +109,7 @@ if ($akSelectAllowOtherValues) {
                     ajax: {
                         url: "<?=$view->action('load_autocomplete_values');?>",
                         data: {
-                            term: "{{{q}}}",
+                            term: "{{{q}}}"
                         },
                     },
                     locale: {
