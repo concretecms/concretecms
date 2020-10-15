@@ -53,7 +53,12 @@ trait DashboardSelectableExpressEntryListTrait
             $entity = $r->findOneById($entityID);
         }
         if ($entity) {
-            $this->renderExpressEntryDefaultResults($entity);
+            $ep = new Checker($entity);
+            if ($ep->canViewExpressEntries()) {
+                $this->renderExpressEntryDefaultResults($entity);
+            } else {
+                throw new UserMessageException(t('Access Denied'));
+            }
         } else {
             throw new UserMessageException(t('Invalid express entity ID.'));
         }
