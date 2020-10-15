@@ -63,7 +63,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
     ConcreteFileManagerTable.prototype.setupFolderActions = function() {
         var my = this
         ConcreteEvent.subscribe('FileManagerJumpToFolder.concreteFileManagerTable', function(e, r) {
-            var url = CCM_DISPATCHER_FILENAME + '/dashboard/files/search/folder/' + r.folderIDn
+            var url = CCM_DISPATCHER_FILENAME + '/dashboard/files/search/folder/' + r.folderID
             window.location.href = url
         });
         ConcreteEvent.subscribe('FileManagerAddFilesComplete.concreteFileManagerTable', function(e, r) {
