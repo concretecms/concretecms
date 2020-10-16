@@ -72,10 +72,13 @@ echo $userInterface->tabs([
             <?php echo $form->label('enableSearch', t('Enable Search'), ["class" => "form-check-label"]) ?>
         </div>
 
-        <fieldset data-options="search">
-            <div class="form-check">
-                <?php echo $form->checkbox('enableKeywordSearch', 1, $enableKeywordSearch) ?>
-                <?php echo $form->label('enableKeywordSearch', t('Search by Keywords'), ["class" => "form-check-label"]) ?>
+        <div data-options="search">
+            <hr>
+            <div class="form-group">
+                <div class="form-check">
+                    <?php echo $form->checkbox('enableKeywordSearch', 1, $enableKeywordSearch) ?>
+                    <?php echo $form->label('enableKeywordSearch', t('Search by Keywords'), ["class" => "form-check-label"]) ?>
+                </div>
             </div>
 
             <div class="form-group">
@@ -89,7 +92,7 @@ echo $userInterface->tabs([
 
                 <div data-container="search-associations"></div>
             </div>
-        </fieldset>
+        </div>
     </div>
 
     <div class="tab-pane" id="filtering" role="tabpanel">
@@ -125,7 +128,7 @@ echo $userInterface->tabs([
     </div>
 
     <div class="tab-pane" id="design" role="tabpanel">
-        <fieldset>
+        <div>
             <div class="form-group">
                 <?php echo $form->label('tableName', t('Name')) ?>
                 <?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
@@ -135,9 +138,9 @@ echo $userInterface->tabs([
                 <?php echo $form->label('tableDescription', t('Description')) ?>
                 <?php echo $form->text('tableDescription', $tableDescription, array('maxlength' => '128')) ?>
             </div>
-        </fieldset>
+        </div>
 
-        <fieldset>
+        <div>
             <legend>
                 <?php echo t('Design') ?>
             </legend>
@@ -187,7 +190,7 @@ echo $userInterface->tabs([
                     <?php $color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate) ?>
                 </div>
             </div>
-        </fieldset>
+        </div>
     </div>
 </div>
 

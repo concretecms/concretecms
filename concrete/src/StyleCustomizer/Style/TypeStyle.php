@@ -23,10 +23,10 @@ class TypeStyle extends Style
         $app = Application::getFacadeApplication();
         $fh = $app->make('helper/form/font');
         $args = [];
-        if ($style) {
+        if (is_object($style)) {
             $args['fontFamily'] = $style->getFontFamily();
             $color = $style->getColor();
-            if ($color) {
+            if (is_object($color)) {
                 $args['color'] = $color->toStyleString();
             }
             $args['fontWeight'] = $style->getFontWeight();

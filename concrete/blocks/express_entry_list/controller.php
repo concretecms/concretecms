@@ -17,10 +17,17 @@ use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
+use Concrete\Core\Search\Field\AttributeKeyField;
+use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
+use Concrete\Core\Search\Query\QueryFactory;
+use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\ItemColumn;
+use Concrete\Core\Search\Result\ResultFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
@@ -73,6 +80,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $fieldManager = ManagerFactory::get('express');
         $fieldManager->setExpressCategory($entity->getAttributeKeyCategory());
         return $fieldManager;
+    }
+
+    protected function isSearchListRequest()
+    {
+        return $this->getAction() == 'view' && $this->request->query->has('search');
     }
 
     public function action_add_search_field($entityID = null)
@@ -187,49 +199,15 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
         if (is_object($entity)) {
-            $category = $entity->getAttributeKeyCategory();
-            $list = new EntryList($entity);
-            if ($this->displayLimit > 0) {
-                $list->setItemsPerPage(intval($this->displayLimit));
-            }
-            
-            // Filter by any pre-set search criteria
+            $filterFields = [];
             if ($this->filterFields) {
-                $filterFields = unserialize($this->filterFields);
-                if (is_array($filterFields)) {
-                    foreach($filterFields as $field) {
-                        $field->filterList($list);
-                    }
+                $filterFieldsUnserialized = unserialize($this->filterFields);
+                if (is_array($filterFieldsUnserialized)) {
+                    $filterFields = $filterFieldsUnserialized;
                 }
-            }
-            $set = unserialize($this->columns);
-            if (!$set) {
-                $set = new DefaultSet($category);
-            }
-            $defaultSortColumn = $set->getDefaultSortColumn();
-            if ($this->request->query->has($list->getQuerySortDirectionParameter())) {
-                $direction = $this->request->query->get($list->getQuerySortDirectionParameter());
-            } else {
-                $direction = $defaultSortColumn->getColumnDefaultSortDirection();
             }
 
-            if ($this->request->query->has($list->getQuerySortColumnParameter())) {
-                $value = $this->request->query->get($list->getQuerySortColumnParameter());
-                $column = $entity->getResultColumnSet();
-                $value = $column->getColumnByKey($value);
-                if (is_object($value)) {
-                    $list->sanitizedSortBy($value->getColumnKey(), $direction);
-                }
-            } else {
-                $list->sanitizedSortBy($defaultSortColumn->getColumnKey(), $direction);
-            }
-
-            if ($this->request->query->get('keywords') && $this->enableSearch) {
-                $keywords = preg_split('/\s+/', $this->request->query->get('keywords'), -1, PREG_SPLIT_NO_EMPTY);
-                foreach ($keywords  as $keyword) {
-                    $list->filterByKeywords($keyword);
-                }
-            }
+            $category = $entity->getAttributeKeyCategory();
 
             $tableSearchProperties = [];
             if ($this->searchProperties) {
@@ -241,11 +219,10 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $ak = $category->getAttributeKeyByID($akID);
                 if (is_object($ak)) {
                     $tableSearchProperties[] = $ak;
-                    $type = $ak->getAttributeType();
-                    $cnt = $type->getController();
-                    $cnt->setRequestArray($_REQUEST);
-                    $cnt->setAttributeKey($ak);
-                    $cnt->searchForm($list);
+                    if ($this->isSearchListRequest()) {
+                        $attributeKeyField = new AttributeKeyField($ak);
+                        $filterFields[] = $attributeKeyField;
+                    }
                 }
             }
 
@@ -259,14 +236,33 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $association = $this->entityManager->find(Association::class, $associationID);
                 if (is_object($association)) {
                     $tableSearchAssociations[] = $association;
-                    $field = new AssociationField($association);
-                    $field->loadDataFromRequest($this->getRequest()->query->all());
-                    $field->filterList($list);
+                    $associationField = new AssociationField($association);
+                    $associationField->loadDataFromRequest($this->getRequest()->query->all());
+                    $filterFields[] = $associationField;
                 }
             }
 
-            $result = new Result($set, $list);
-            $pagination = $list->getPagination();
+            if ($this->request->query->get('keywords') && $this->enableSearch) {
+                $keywordsField = new KeywordsField($this->request->query->get('keywords'));
+                $filterFields[] = $keywordsField;
+            }
+
+            $searchProvider = new SearchProvider($entity, $category, $this->app->make('session'));
+            $queryFactory = new QueryFactory();
+            $resultFactory = new ResultFactory();
+            $query = $queryFactory->createQuery($searchProvider, $filterFields);
+
+            $queryModifier = new QueryModifier();
+            $queryModifier->addModifier(new AutoSortColumnRequestModifier($searchProvider, $this->request, Request::METHOD_GET));
+            $query = $queryModifier->process($query);
+
+            $result = $resultFactory->createFromQuery($searchProvider, $query);
+            $list = $result->getItemListObject();
+            if ($this->displayLimit > 0) {
+                $list->setItemsPerPage(intval($this->displayLimit));
+            }
+            $result = new Result($result->getListColumns(), $list, $result->getBaseURL());
+            $pagination = $result->getPagination();
             if ($pagination->haveToPaginate()) {
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);

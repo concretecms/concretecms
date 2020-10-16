@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
+use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Support\Facade\Application;
 use HtmlObject\Element;
 
 class PresetColumn extends Column
@@ -12,8 +14,24 @@ class PresetColumn extends Column
      */
     public static function getByID($arLayoutColumnID)
     {
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/Area/LayoutColumn/PresetColumn/' . $arLayoutColumnID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
         $al = new static();
         $al->loadBasicInformation($arLayoutColumnID);
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($al);
+            $cache->save($item);
+        }
 
         return $al;
     }

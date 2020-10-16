@@ -1,6 +1,5 @@
 <?php
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Controller\Element\Navigation\DashboardMobileMenu;
 use Concrete\Controller\Panel\Dashboard as DashboardPanel;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -46,25 +45,6 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
     <div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) {
         ?>ccm-dashboard-my-account<?php
     } ?> ccm-ui">
-
-        <?php
-        /*
-        ?><div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard d-none d-sm-block d-md-none" style="height: calc(100vh - 48px);">
-            <div class="ccm-mobile-menu-main">
-                <ul class="ccm-mobile-menu-entries">
-                    <li>
-                        <?php
-                        //$dashboardMenu = $app->make(DashboardMobileMenu::class, [$c]);
-                        //$dashboardMenu->render();
-                        ?>
-                    </li>
-                    <li>
-                        <i class="fa fa-sign-out mobile-leading-icon"></i><a href="<?= URL::to('/login', 'do_logout', $valt->generate('do_logout')); ?>"><?= t('Sign Out'); ?></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <?php */ ?>
         <?=View::element('icons'); ?>
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : ''; ?> <?= $large_font ? 'large-font' : ''; ?>">
             <ul>
@@ -75,6 +55,10 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span><?=t('To My Website'); ?></span>
                     </a>
                 </li>
+								<?php
+								$mobileMenu = Element::get('dashboard/navigation/mobile');
+								$mobileMenu->render();
+								?>
                 <?php
                 $ihm = $app->make('helper/concrete/ui/menu');
                 $cih = $app->make('helper/concrete/ui');
@@ -120,7 +104,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
                     </a>
                 </li>
-                <li data-guide-toolbar-action="help" class="float-right hidden-xs">
+                <li data-guide-toolbar-action="help" class="float-right d-none d-sm-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
                     } ?> data-toggle="tooltip"
@@ -154,7 +138,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
         $dh = $app->make('helper/concrete/dashboard');
         if (!$hideDashboardPanel) {
             ?>
-            <div id="ccm-panel-dashboard" class="hidden-xs hidden-sm ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
+            <div id="ccm-panel-dashboard" class="d-none d-md-block ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
                 <div class="ccm-panel-content-wrapper ccm-ui">
                     <div class="ccm-panel-content ccm-panel-content-visible">
                       <?php

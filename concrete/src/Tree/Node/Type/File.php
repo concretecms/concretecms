@@ -74,10 +74,6 @@ class File extends TreeNode
 
     public function deleteDetails()
     {
-        $f = $this->getTreeNodeFileObject();
-        if (is_object($f)) {
-            $f->delete(false);
-        }
         $db = Loader::db();
         $db->Execute('delete from TreeFileNodes where treeNodeID = ?', array($this->treeNodeID));
     }
@@ -131,7 +127,10 @@ class File extends TreeNode
         parent::move($newParent);
         $f = $this->getTreeNodeFileObject();
         if (is_object($f)) {
-            $f->setFileStorageLocation($newParent->getTreeNodeStorageLocationObject());
+            $storageLocation = $newParent->getTreeNodeStorageLocationObject();
+            if ($storageLocation) {
+                $f->setFileStorageLocation($storageLocation);
+            }
             $f->setFileFolder($newParent);
         }
     }

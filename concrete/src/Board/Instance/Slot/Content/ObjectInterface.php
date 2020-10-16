@@ -2,9 +2,10 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Design\Tag\ProvidesTagsInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 
-interface ObjectInterface extends \JsonSerializable, DenormalizableInterface
+interface ObjectInterface extends \JsonSerializable, DenormalizableInterface, ProvidesTagsInterface
 {
 
     /**

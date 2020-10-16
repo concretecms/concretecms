@@ -308,7 +308,7 @@ if (!$dateFormat) {
         <div class="controls">
             <?php echo $form->textarea('fileExtensions', $fileExtensions) ?>
 
-            <?php if (isset($fileAccessFileTypesBlacklist) && $fileAccessFileTypesBlacklist !== '') { ?>
+            <?php if (isset($fileAccessFileTypesBlacklist) && is_array($fileAccessFileTypesBlacklist) && count($fileAccessFileTypesBlacklist) > 0) { ?>
                 <div class="text-muted small">
                     <?php echo t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $fileAccessFileTypesBlacklist) . '</code>') ?>
                     <br/>

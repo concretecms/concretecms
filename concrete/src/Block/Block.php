@@ -498,7 +498,6 @@ EOT
                 while ($row = $r->fetchRow()) {
                     $cArray[] = Page::getByID($row['cID'], 'RECENT');
                 }
-                $r->free();
             }
         }
 
@@ -701,6 +700,13 @@ EOT
      */
     public function isEditable()
     {
+        if ($this->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+            $controller = $this->getController();
+            $originalBlockID = $controller->getOriginalBlockID();
+            $originalBlock = self::getByID($originalBlockID);
+
+            return $originalBlock && $originalBlock->isEditable();
+        }
         $bv = new BlockView($this);
         $path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
         if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
@@ -1631,7 +1637,6 @@ EOT
                     true
                     );
             }
-            $r->free();
         }
 
         // we duplicate block-specific sub-content

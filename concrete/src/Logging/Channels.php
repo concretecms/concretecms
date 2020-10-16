@@ -121,6 +121,13 @@ class Channels
     const CHANNEL_BOARD = 'board';
 
     /**
+     * Channel identifier: files.
+     *
+     * @var string
+     */
+    const CHANNEL_FILES = 'files';
+
+    /**
      * Channel identifier: all – Do NOT use this to log to. This is a separate system channel that tells configuration
      * that you want to apply all configuration options to all channels, and listen to all of them.
      *
@@ -148,6 +155,7 @@ class Channels
             self::CHANNEL_USERS,
             self::CHANNEL_OPERATIONS,
             self::CHANNEL_API,
+            self::CHANNEL_FILES,
         ];
     }
 
@@ -201,6 +209,8 @@ class Channels
                 return tc('Log channel', 'API');
             case self::CHANNEL_BOARD:
                 return tc('Log channel', 'BOARD');
+            case self::CHANNEL_FILES:
+                return tc('Log channel', 'Files');
             default:
                 return tc('Log channel', $text->unhandle($channel));
         }

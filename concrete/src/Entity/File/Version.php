@@ -24,6 +24,8 @@ use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
@@ -1121,34 +1123,51 @@ class Version implements ObjectInterface
     public function delete($deleteFilesAndThumbnails = false)
     {
         $app = Application::getFacadeApplication();
+        /** @var Connection $db */
         $db = $app->make(Connection::class);
+        /** @var EntityManagerInterface $em */
         $em = $app->make(EntityManagerInterface::class);
+        /** @var LoggerFactory $loggerFactory */
+        $loggerFactory = $app->make(LoggerFactory::class);
+        $logger = $loggerFactory->createLogger(Channels::CHANNEL_FILES);
         $category = $this->getObjectAttributeCategory();
 
         foreach ($this->getAttributes() as $attribute) {
             $category->deleteValue($attribute);
         }
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $db->executeQuery('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
 
         if ($deleteFilesAndThumbnails) {
             if ($this->getTypeObject()->getGenericType() === FileType::T_IMAGE) {
                 $types = ThumbnailType::getVersionList();
+
                 foreach ($types as $type) {
                     $this->deleteThumbnail($type);
                 }
             }
+
             try {
                 $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
                 $fre = $this->getFileResource();
+
                 if ($fsl->has($fre->getPath())) {
                     $fsl->delete($fre->getPath());
                 }
+
             } catch (FileNotFoundException $e) {
             }
         }
+
         $em->remove($this);
         $em->flush();
+
+        try {
+            $logger->notice(t("File version %s of file %s successfully deleted.", $this->getFileVersionID(), $this->getFileName()));
+        } catch (Exception $err) {
+            // Skip any errors while logging to pass the automated tests
+        }
     }
 
     /**

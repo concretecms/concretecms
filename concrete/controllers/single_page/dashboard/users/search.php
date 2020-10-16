@@ -250,6 +250,7 @@ class Search extends DashboardPageController
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate('', $token)) {
                     $this->user->markValidated();
+                    $this->user->triggerActivate('register_activate', USER_SUPER_ID);
                     $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'email_validated');
                 }
                 break;
