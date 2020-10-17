@@ -29,8 +29,11 @@ class ProcessTaskRunnerHandler
 
     public function __invoke(ProcessTaskRunner $runner)
     {
-        $queue = 'default'; // @TODO: Return this from the dispatcher factory.
-        $process = $this->processService->createProcess($runner->getTask(), $runner->getInput(), $queue);
+        $process = $this->processService->createProcess(
+            $runner->getTask(),
+            $runner->getInput(),
+            $runner->getTransport()
+        );
 
         $this->messageBus->dispatch($runner->getMessage());
 

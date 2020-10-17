@@ -4,6 +4,7 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
 use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
@@ -47,6 +48,10 @@ class ApplicationServiceProvider extends ServiceProvider
             $env = Environment::get();
 
             return $env;
+        });
+
+        $this->app->bind(ContainerInterface::class, function() {
+            return $this->app;
         });
 
         /*

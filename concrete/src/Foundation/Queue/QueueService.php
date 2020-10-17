@@ -147,7 +147,7 @@ class QueueService
     }
     public function consumeBatchFromPoll(Batch $batch)
     {
-        if ($this->config->get('concrete.queue.listening') == 'manual') {
+        if ($this->config->get('concrete.messenger.consume.method') == 'worker') {
             return false; // The `concrete/bin/concrete5 queue:process` command is being run separately.
         }
 

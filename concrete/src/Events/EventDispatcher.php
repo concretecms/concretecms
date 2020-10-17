@@ -50,5 +50,14 @@ class EventDispatcher
         return $this->eventDispatcher->$name(...$arguments);
     }
 
+    /**
+     * @return SymfonyEventDispatcher
+     */
+    public function getEventDispatcher(): SymfonyEventDispatcher
+    {
+        return $this->eventDispatcher;
+    }
+
+
 
 }

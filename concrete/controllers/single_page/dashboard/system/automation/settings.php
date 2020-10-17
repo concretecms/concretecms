@@ -8,7 +8,7 @@ class Settings extends DashboardPageController
 
     public function view()
     {
-        $this->set('listening', (string) $this->app->make('config')->get('concrete.queue.listening'));
+        $this->set('listening', (string) $this->app->make('config')->get('concrete.messenger.consume.method'));
     }
 
     public function submit()
@@ -18,8 +18,8 @@ class Settings extends DashboardPageController
         }
         if (!$this->error->has()) {
             $config = $this->app->make('config');
-            $listening = $this->request->request->get('listening') === 'manual' ? 'manual' : 'automatic';
-            $config->save('concrete.queue.listening', $listening);
+            $listening = $this->request->request->get('listening') === 'worker' ? 'worker' : 'app';
+            $config->save('concrete.messenger.consume.method', $listening);
             $this->flash('success', t('Automation settings saved.'));
             return $this->buildRedirect([$this->getPageObject(), 'view']);
         }

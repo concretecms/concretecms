@@ -336,31 +336,22 @@ return [
      * Queue settings
      * ------------------------------------------------------------------------
      */
-    'queue' => [
+    'messenger' => [
 
-        /*
-         * Driver
-         *
-         * @var string (redis|database)
-         */
-        'driver' => 'database',
 
-        /**
-         * Listener. If set to automatic, then queueable operations like rescanning files and deleting bulk pages
-         * will be polled and executed through an in-page dialog window on demand only. If set to manual you must run
-         * `concrete/bin/concrete5 queue:process` from the command line. This command can be run multiple times to
-         * add additional queue workers for command processing.
-         *
-         * @var string (automatic|manual)
-         */
-        'listening' => 'automatic',
+        'consume' => [
 
-        /*
-         * Default queue to use
-         *
-         * @var string
-         */
-        'default' => 'default',
+            /**
+             * Listener. If set to app, then queueable operations like rescanning files and deleting bulk pages
+             * will be polled and executed through an in-page dialog window on demand only. If set to worker you must run
+             * `concrete/bin/messenger:consume` from the command line. This command can be run multiple times to
+             * add additional queue workers for command processing.
+             *
+             * @var string (app|worker)
+             */
+            'method' => 'app',
+
+        ],
 
         /*
          * If we're consuming the queue through polling, how many entries do we do at a time

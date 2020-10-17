@@ -41,7 +41,7 @@ class Process implements \JsonSerializable
     /**
      * @ORM\Column(type="string")
      */
-    protected $queue;
+    protected $transport;
 
     /**
      * @ORM\ManyToOne(targetEntity="Task")
@@ -112,17 +112,17 @@ class Process implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getQueue()
+    public function getTransport()
     {
-        return $this->queue;
+        return $this->transport;
     }
 
     /**
-     * @param mixed $queue
+     * @param mixed $transport
      */
-    public function setQueue($queue): void
+    public function setTransport($transport): void
     {
-        $this->queue = $queue;
+        $this->transport = $transport;
     }
 
     /**

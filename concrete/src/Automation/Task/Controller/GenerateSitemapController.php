@@ -24,7 +24,12 @@ class GenerateSitemapController extends AbstractController
 
     public function getTaskRunner(TaskInterface $task, InputInterface $input): TaskRunnerInterface
     {
-        return new ProcessTaskRunner($task, new GenerateSitemapCommand(), $input, t('Generation of sitemap.xml started.'));
+        return new ProcessTaskRunner(
+            $task,
+            new GenerateSitemapCommand(),
+            $input,
+            t('Generation of sitemap.xml started.')
+        );
     }
 
 

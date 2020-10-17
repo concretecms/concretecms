@@ -8,6 +8,7 @@ use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Automation\Task\TaskInterface;
 use Concrete\Core\Entity\Automation\Process;
 use Concrete\Core\Foundation\Command\Command;
+use Concrete\Core\Foundation\Command\MessengerServiceProvider;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -42,11 +43,17 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
      */
     protected $process;
 
+    /**
+     * @var string
+     */
+    protected $transport;
+
     public function __construct(
         TaskInterface $task,
         object $message,
         InputInterface $input,
-        string $responseMessage
+        string $responseMessage,
+        string $transport = MessengerServiceProvider::TRANSPORT_ASYNC
     ) {
         $this->task = $task;
         $this->message = $message;
@@ -106,5 +113,22 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
     {
         return $this->input;
     }
+
+    /**
+     * @return string
+     */
+    public function getTransport(): string
+    {
+        return $this->transport;
+    }
+
+    /**
+     * @param string $transport
+     */
+    public function setTransport(string $transport): void
+    {
+        $this->transport = $transport;
+    }
+
 
 }

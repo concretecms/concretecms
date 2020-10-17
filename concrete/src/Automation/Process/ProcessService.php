@@ -32,7 +32,7 @@ class ProcessService
         $this->entityManager = $entityManager;
     }
 
-    public function createProcess(Task $task, InputInterface $input, string $queue): Process
+    public function createProcess(Task $task, InputInterface $input, string $transport): Process
     {
         $this->taskService->start($task);
 
@@ -41,7 +41,7 @@ class ProcessService
         $process->setInput($input);;
         $process->setTask($task);
         $process->setUser($task->getLastRunBy());
-        $process->setQueue($queue);
+        $process->setTransport($transport);
 
         $this->entityManager->persist($process);
         $this->entityManager->flush();

@@ -3,13 +3,19 @@
 namespace Concrete\Core\Console;
 
 use Concrete\Core\Foundation\Service\Provider;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Tools\Console\Doctrine\ConsoleRunner as DeprecatedConsoleRunner;
 use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
 use Doctrine\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Messenger\Command as MessengerCommand;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\RoutableMessageBus;
 
 class ServiceProvider extends Provider
 {
@@ -63,6 +69,7 @@ class ServiceProvider extends Provider
         Command\Express\ExportCommand::class,
         Command\FixDatabaseForeignKeys::class,
         Command\ReindexCommand::class,
+        MessengerCommand\ConsumeMessagesCommand::class,
 
         /*
         MessengerCommand\FailedMessagesShowCommand::class,
@@ -109,6 +116,16 @@ class ServiceProvider extends Provider
 
             return $cli;
         });
+
+        $this->app->when(RoutableMessageBus::class)->needs(MessageBusInterface::class)->give('messenger/bus/command');
+        $this->app
+            ->when(MessengerCommand\ConsumeMessagesCommand::class)
+            ->needs(LoggerInterface::class)
+            ->give(function () {
+                $factory = $this->app->make(LoggerFactory::class);
+                return $factory->createLogger(Channels::CHANNEL_MESSENGER);
+            });
+
     }
 
     public function setupDoctrineCommands()
