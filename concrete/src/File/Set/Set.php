@@ -91,6 +91,10 @@ class Set
             $user = $app->make(User::class);
         }
 
+        if (!$user->isRegistered()) {
+            return [];
+        }
+
         /** @var $database \Concrete\Core\Database\Connection\Connection */
         $database = $app->make('database')->connection();
         $fileSets = array();
