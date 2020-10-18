@@ -193,7 +193,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public static function createCollection($data)
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
         $dh = Loader::helper('date');
         $cDate = $dh->getOverridableNow();
 
@@ -212,17 +214,20 @@ class Collection extends ConcreteObject implements TrackableInterface
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
 
         if (isset($data['cID'])) {
-            $res = $db->query(
-                'insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)',
-                [$data['cID'], $data['handle'], $cDate, $cDate]
-                );
+            $res = $db->insert('Collections', [
+                'cID' => $data['cID'],
+                'cHandle' => $data['handle'],
+                'cDateAdded' => $cDate,
+                'cDateModified' => $cDate
+            ]);
             $newCID = $data['cID'];
         } else {
-            $res = $db->query(
-                'insert into Collections (cHandle, cDateAdded, cDateModified) values (?, ?, ?)',
-                [$data['handle'], $cDate, $cDate]
-                );
-            $newCID = $db->Insert_ID();
+            $res = $db->insert('Collections', [
+                'cHandle' => $data['handle'],
+                'cDateAdded' => $cDate,
+                'cDateModified' => $cDate
+            ]);
+            $newCID = $db->lastInsertId();
         }
 
         $cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
@@ -246,29 +251,24 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         if ($res) {
             // now we add a pending version to the collectionversions table
-            $v2 = [
-                $newCID,
-                1,
-                $pTemplateID,
-                $data['name'],
-                $data['handle'],
-                $data['cDescription'],
-                $cDatePublic,
-                $cDate,
-                t(VERSION_INITIAL_COMMENT),
-                $data['uID'],
-                $cvIsApproved,
-                $cvIsNew,
-                $pThemeID,
-            ];
-            $q2 = 'insert into CollectionVersions (cID, cvID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            $r2 = $db->prepare($q2);
-            $res2 = $db->execute($r2, $v2);
+            $db->insert('CollectionVersions', [
+                'cID' => $newCID,
+                'cvID' => 1,
+                'pTemplateID' => $pTemplateID,
+                'cvName' => $data['name'],
+                'cvHandle' => $data['handle'],
+                'cvDescription' => $data['cDescription'],
+                'cvDatePublic' => $cDatePublic,
+                'cvDateCreated' => $cDate,
+                'cvComments' => t(VERSION_INITIAL_COMMENT),
+                'cvAuthorUID' => $data['uID'],
+                'cvIsApproved' => $cvIsApproved,
+                'cvIsNew' => $cvIsNew,
+                'pThemeID' => $pThemeID,
+            ]);
         }
 
-        $nc = self::getByID($newCID);
-
-        return $nc;
+        return self::getByID($newCID);
     }
 
     /**
