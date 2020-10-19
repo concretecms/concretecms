@@ -30,7 +30,7 @@
   "require": {
     "ext-PDO": "*",
     "php": ">=5.5.9",
-    "doctrine/dbal": "~2.5",
+    "doctrine/dbal": "~2.5 <2.11",
     "symfony/class-loader": "3.*",
     "symfony/http-foundation": "^3.4.17",
     "symfony/routing": "3.*",
