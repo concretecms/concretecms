@@ -25,7 +25,6 @@ import '@concretecms/bedrock/assets/calendar/js/backend';
 
 // Advanced search and search bars
 import './search/advanced-search-launcher';
-import './search/field-selector';
 import './search/preset-selector';
 import './search/results-table';
 import './file-manager/file-manager';
@@ -187,11 +186,9 @@ var setupHeaderMenu = function() {
 };
 
 var setupSiteListMenuItem = function() {
-    $('select[data-select=ccm-header-site-list]').show().selectize({
-        'onItemAdd': function(option) {
-            window.location.href = option;
-        }
-    });
+    $('select[data-select=ccm-header-site-list]').on('changed.bs.select', function() {
+        window.location.href = $(this).val()
+    })
 };
 
 setupTooltips();

@@ -10,6 +10,7 @@ use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Summary\Data\Extractor\Driver\BasicCalendarEventDriver;
 use Concrete\Core\Summary\Data\Extractor\Driver\CalendarEventThumbnailDriver;
 use Concrete\Core\Summary\Data\Extractor\Driver\PageThumbnailDriver;
@@ -40,7 +41,9 @@ class DriverCollectionTest extends TestCase
         $page->shouldReceive('getCollectionDescription')->once()->andReturn('asd');
         $page->shouldReceive('getCollectionDatePublicObject')->andReturn($date);
         $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
-        $driver = M::mock(BasicPageDriver::class)->makePartial();
+        $installationService = M::mock(InstallationService::class);
+        $installationService->shouldReceive('isMultisiteEnabled');
+        $driver = M::mock(BasicPageDriver::class, [$installationService])->makePartial();
         $driverCollection->addDriver($driver);
         $collection = $driverCollection->extractData($page);
         $this->assertCount(5, $collection->getFields());

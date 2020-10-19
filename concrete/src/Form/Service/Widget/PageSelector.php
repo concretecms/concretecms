@@ -96,7 +96,7 @@ EOL;
                 load: function(query, callback) {
                     if (!query.length) return callback();
                     $.ajax({
-                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/pages/autocomplete?key=" . $key . "&token=" . $token . "&term=' + encodeURIComponent(query),
+                        url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/autocomplete?key=" . $key . "&token=" . $token . "&term=' + encodeURIComponent(query),
                         type: 'GET',
 						dataType: 'json',
                         error: function() {

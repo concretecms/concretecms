@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Command\RescanEntityCommand;
 use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Tree\Node\Node;
@@ -102,7 +103,13 @@ class Entities extends DashboardPageController
     public function view()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $entities = $r->findAll(array(), array('name' => 'asc'));
+        $entities = [];
+        foreach($r->findAll(array(), array('name' => 'asc')) as $entity) {
+            $permissions = new Checker($entity);
+            if ($permissions->canViewExpressEntries()) {
+                $entities[] = $entity;
+            }
+        }
         $this->set('entities', $entities);
     }
 

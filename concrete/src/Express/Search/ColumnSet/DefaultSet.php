@@ -8,6 +8,7 @@ use Concrete\Core\Express\Search\ColumnSet\Column\DateLastModifiedColumn;
 use Concrete\Core\Express\Search\ColumnSet\Column\DisplayOrderColumn;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Column\ExpressAttributeKeyColumn;
 use Core;
 
 class DefaultSet extends ColumnSet
@@ -76,7 +77,7 @@ class DefaultSet extends ColumnSet
 
         $i = 0;
         foreach($category->getSearchableList() as $ak) {
-            $this->addColumn(new AttributeKeyColumn($ak));
+            $this->addColumn(new ExpressAttributeKeyColumn($ak));
             $i++;
             if ($i == 2) {
                 break;

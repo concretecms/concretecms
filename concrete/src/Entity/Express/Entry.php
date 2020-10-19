@@ -22,7 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @ORM\Table(name="ExpressEntityEntries",
  *  *     indexes={
- *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"})
+ *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"}),
+ *         @ORM\Index(name="createdSort", columns={"exEntryDateCreated"}),
+ *         @ORM\Index(name="modifiedSort", columns={"exEntryDateModified"})
  *     }
  * )
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
@@ -396,7 +398,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      *
      * @return mixed
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         if (!$this->entryFormatter) {
             $this->entryFormatter = Application::getFacadeApplication()->make(EntryFormatterInterface::class);
@@ -410,7 +412,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
             $name = $this->entryFormatter->getLabel($this);
         }
 
-        return $name;
+        return (string) $name;
     }
 
     /**

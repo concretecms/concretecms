@@ -17,6 +17,7 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Site\Service;
 use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use League\Csv\Writer;
 use Mockery as M;
@@ -179,12 +180,14 @@ class CsvWriterTest extends TestCase
         $dateFormatter = M::mock(Date::class);
         $dateFormatter->shouldReceive('formatCustom')->andReturn('not now');
 
+        $entityManager = M::mock(EntityManager::class);
+
         $siteService = M::mock(Service::class);
         $site = M::mock(Site::class);
         $siteService->shouldReceive('getSiteByExpressResultsNodeID')->withArgs([1122])->andReturn($site);
         $site->shouldReceive('getSiteHandle')->andReturn('foo');
 
-        $csvWriter = new CsvWriter($writer, $dateFormatter);
+        $csvWriter = new CsvWriter($writer, $dateFormatter, $entityManager);
         // Mock the site service
         $csvWriter->setSiteService($siteService);
         return array($entity, $list, $writer, $csvWriter);

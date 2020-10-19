@@ -61,7 +61,10 @@ class Chooser extends Controller
         $list = new FileList();
         $list->sortByDateAddedDescending();
         $list->setItemsPerPage(20);
-
+        $list->setPermissionsChecker(function ($file) {
+            $fp = new Checker($file);
+            return $fp->canViewFileInFileManager();
+        });
         return $this->buildFileListFractalResponse($list);
     }
 
@@ -82,6 +85,10 @@ class Chooser extends Controller
             if (is_object($set)) {
                 $list = new FileList();
                 $list->filterBySet($set);
+                $list->setPermissionsChecker(function ($file) {
+                    $fp = new Checker($file);
+                    return $fp->canViewFileInFileManager();
+                });
                 $list->sortBy('f.fDateAdded', 'desc');
                 $list->setItemsPerPage(20);
 
@@ -163,6 +170,10 @@ class Chooser extends Controller
     public function searchFiles($keyword)
     {
         $list = new FileList();
+        $list->setPermissionsChecker(function ($file) {
+            $fp = new Checker($file);
+            return $fp->canViewFileInFileManager();
+        });
         $list->filterByKeywords($keyword);
         $list->sortBy('f.fDateAdded', 'desc');
         $list->setItemsPerPage(20);

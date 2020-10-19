@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Tree\Node;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Package\PackageList;
 use Core;
@@ -54,14 +56,31 @@ class NodeType extends ConcreteObject
 
     public static function getByID($treeNodeTypeID)
     {
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/Tree/Note/Type/' . $treeNodeTypeID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $type = null;
         $db = Database::connection();
         $row = $db->GetRow('select * from TreeNodeTypes where treeNodeTypeID = ?', array($treeNodeTypeID));
         if (is_array($row) && $row['treeNodeTypeID']) {
             $type = new TreeNodeType();
             $type->setPropertiesFromArray($row);
-
-            return $type;
         }
+
+        if (is_object($type) && isset($item) && $item->isMiss()) {
+            $item->set($type);
+            $cache->save($item);
+        }
+
+        return $type;
     }
 
     public static function getByHandle($treeNodeTypeHandle)

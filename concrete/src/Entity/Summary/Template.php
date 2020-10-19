@@ -51,12 +51,19 @@ class Template implements \JsonSerializable
     protected $fields;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Design\DesignTag")
+     * @ORM\JoinTable(name="SummaryTemplateTags")
+     */
+    protected $tags;
+
+    /**
      * Template constructor.
      */
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->fields = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,6 +168,14 @@ class Template implements \JsonSerializable
     public function setFields($fields): void
     {
         $this->fields = $fields;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**

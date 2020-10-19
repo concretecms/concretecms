@@ -33,6 +33,7 @@ $router->post('/permissions/set_password', 'File\Permissions::setPassword');
 $router->post('/permissions/set_location', 'File\Permissions::setLocation');
 $router->all('/importers/imageeditor', 'File\Importer\ImageEditor::view');
 $router->all('/importers/thumbnail', 'File\Importer\Thumbnail::view');
+$router->all('/upload_complete', 'File::uploadComplete');
 
 $router->all('/chooser/recent', 'File\Chooser::getRecent');
 $router->all('/chooser/get_file_sets', 'File\Chooser::getFileSets');

@@ -123,5 +123,11 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/system/backend/dashboard')
             ->routes('backend/dashboard.php')
         ;
+
+        $router->buildGroup()
+            ->setNamespace('Concrete\Controller\Backend\Page\Type')
+            ->setPrefix('/ccm/system/page/type')
+            ->routes('backend/page_types.php')
+        ;   
     }
 }

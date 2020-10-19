@@ -19,7 +19,7 @@ if ($entity) { ?>
                         <?=$form->label('keywords', t('Keyword Search'))?>
                         <?=$form->text('keywords')?>
                     </div>
-                    <button type="submit" class="btn btn-primary" name="search"><?=t('Search')?></button>
+                    <button type="submit" class="btn btn-primary" name="search" value="search"><?=t('Search')?></button>
                     <?php if (count($tableSearchProperties)) { ?>
                         <a href="#" data-express-entry-list-advanced-search="<?=$bID?>"
                         class="ccm-block-express-entry-list-advanced-search"><?=t('Advanced Search')?></a>
