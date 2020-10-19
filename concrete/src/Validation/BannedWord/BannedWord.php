@@ -4,6 +4,9 @@ namespace Concrete\Core\Validation\BannedWord;
 use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 
+/**
+ * @deprecated This class will be migrated to Entity class from version 9.
+ */
 class BannedWord extends ConcreteObject
 {
     protected $id;
