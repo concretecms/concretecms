@@ -7,7 +7,7 @@ $enablePermissions = false;
 if (!$f->overrideFileFolderPermissions()) {
     ?>
 
-	<div class="alert alert-notice">
+	<div class="alert alert-info">
 	<p>
 	<?=t("Permissions for this file are currently dependent on its folder and global file permissions.")?>
 	</p>
@@ -20,7 +20,7 @@ if (!$f->overrideFileFolderPermissions()) {
     $enablePermissions = true;
     ?>
 
-	<div class="alert alert-notice">
+	<div class="alert alert-info">
 	<p><?=t("Permissions for this file currently override its sets and the global file permissions.")?></p>
 	<br/>
 	<a href="javascript:void(0)" class="btn btn-secondary btn-sm" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to Folder and Global Permissions')?></a>

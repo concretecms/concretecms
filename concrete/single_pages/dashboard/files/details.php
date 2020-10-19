@@ -78,12 +78,12 @@ $file = $fileVersion->getFile();
             }
             if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
                 ?>
-                <div>
+                <div class="mb-4">
                     <a
                             class="btn btn-secondary dialog-launch"
                             dialog-title="<?= t('Edit') ?>"
                             dialog-width="90%" dialog-height="75%"
-                            href="<?= REL_DIR_FILES_TOOLS_REQUIRED . '/files/edit?fID=' . $file->getFileID() ?>"
+                            href="<?= h($resolverManager->resolve(['/ccm/system/file/edit?fID=' . $file->getFileID()])) ?>"
                     ><?= t('Edit') ?></a>
                     <div class="text-muted">
                         <?php
@@ -95,6 +95,21 @@ $file = $fileVersion->getFile();
                         <?php
                         }
                         ?>
+                    </div>
+                </div>
+                <?php
+            }
+            if ($filePermissions->canEditFilePermissions()) {
+                ?>
+                <div>
+                    <a
+                        class="btn btn-secondary dialog-launch"
+                        dialog-title="<?= t('Permissions') ?>"
+                        dialog-width="520" dialog-height="500"
+                        href="<?=URL::to('/ccm/system/file/permissions?fID=' . $file->getFileID())?>"
+                    ><?= t('Permissions') ?></a>
+                    <div class="text-muted">
+                        <i><?= t('Configure who can view or edit this file.') ?></i>
                     </div>
                 </div>
                 <?php
