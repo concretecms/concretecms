@@ -947,6 +947,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="External File Providers" path="/dashboard/system/files/external_file_provider"
+              filename="/dashboard/system/files/external_file_provider.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>external, file, providers</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Export Options" path="/dashboard/system/files/export_options" filename="/dashboard/system/files/export_options.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">

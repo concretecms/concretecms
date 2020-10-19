@@ -2,19 +2,24 @@
 namespace Concrete\Core\File\Component\Chooser;
 
 use Concrete\Core\Entity\Search\SavedFileSearch;
+use Concrete\Core\File\Component\Chooser\Option\ExternalFileProviderOption;
 use Concrete\Core\File\Component\Chooser\Option\FileManagerOption;
 use Concrete\Core\File\Component\Chooser\Option\FileSetsOption;
 use Concrete\Core\File\Component\Chooser\Option\FileUploadOption;
 use Concrete\Core\File\Component\Chooser\Option\RecentUploadsOption;
 use Concrete\Core\File\Component\Chooser\Option\SavedSearchOption;
 use Concrete\Core\File\Component\Chooser\Option\SearchOption;
+use Concrete\Core\File\ExternalFileProvider\ExternalFileProviderFactory;
 use Concrete\Core\File\Set\Set;
 use Doctrine\ORM\EntityManager;
 
 class DefaultConfiguration implements ChooserConfigurationInterface
 {
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(
+        EntityManager $entityManager,
+        ExternalFileProviderFactory $externalFileProviderFactory
+    )
     {
         $sets = Set::getMySets();
         $searches = $entityManager->getRepository(SavedFileSearch::class)->findAll();
@@ -28,6 +33,11 @@ class DefaultConfiguration implements ChooserConfigurationInterface
             $this->addChooser(new SavedSearchOption());
         }
         $this->addUploader(new FileUploadOption());
+        // get external file providers
+        foreach($externalFileProviderFactory->fetchList() as $externalFileProvider) {
+            $this->addUploader(new ExternalFileProviderOption($externalFileProvider));
+
+        }
 
     }
 

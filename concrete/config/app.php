@@ -220,6 +220,7 @@ return [
         'workflow',
         'workflow_progress_category',
         'workflow_type',
+        'external_file_provider_type',
     ],
 
     'importer_routines' => [

@@ -44,6 +44,11 @@ class Manager extends CoreManager
         return new StorageLocationType();
     }
 
+    public function createExternalFileProviderTypeDriver()
+    {
+        return new ExternalFileProviderType();
+    }
+
     public function createAntispamLibraryDriver()
     {
         return new AntispamLibrary();
