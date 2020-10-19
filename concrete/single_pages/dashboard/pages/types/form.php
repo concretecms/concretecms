@@ -1,7 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
+$resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <div style="display: none">
@@ -39,7 +41,7 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFor
 		<div class="ccm-item-set card " data-page-type-composer-form-layout-control-set-id="<?= $set->getPageTypeComposerFormLayoutSetID() ?>">
 			<div class="card-header">
 				<ul class="ccm-item-set-controls" style=" float: right;">
-					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED ?>/page_types/composer/form/add_control?ptComposerFormLayoutSetID=<?= $set->getPageTypeComposerFormLayoutSetID() ?>" dialog-title="<?=t('Add Form Control') ?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fas fa-plus"></i></a></li>
+					<li><a href="<?= h($resolverManager->resolve(['/ccm/system/page/type/composer/form/add_control']) . '?ptComposerFormLayoutSetID=' . $set->getPageTypeComposerFormLayoutSetID()) ?>" dialog-title="<?=t('Add Form Control') ?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fas fa-plus"></i></a></li>
 					<li><a href="#" data-command="move_set" style="cursor: move"><i class="fas fa-arrows-alt"></i></a></li>
 					<li><a href="#" data-edit-set="<?= $set->getPageTypeComposerFormLayoutSetID() ?>"><i class="fas fa-edit"></i></a></li>
 					<li><a href="#" data-delete-set="<?= $set->getPageTypeComposerFormLayoutSetID() ?>"><i class="fas fa-trash-alt"></i></a></li>
