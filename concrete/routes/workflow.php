@@ -13,3 +13,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 $router->all('/categories/page/save_progress', 'Categories\Page::saveProgress');
 $router->all('/categories/user/save_progress', 'Categories\User::saveProgress');
+$router->all('/dialogs/approve_page_preview', 'Dialogs\ApprovePagePreview::view');
