@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application\UserInterface\Dashboard\Navigation;
 
 use Concrete\Core\Localization\Localization;
@@ -6,9 +7,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class AbstractNavigationCache
 {
-
-    abstract public function getIdentifier(): string;
-
     /**
      * @var Session
      */
@@ -25,12 +23,14 @@ abstract class AbstractNavigationCache
         $this->localization = $localization;
     }
 
+    abstract public function getIdentifier(): string;
+
     public function has()
     {
         return $this->session->has($this->getSessionIdentifier());
     }
 
-    public function set(Navigation $navigation)
+    public function set(Navigation $navigation): void
     {
         $this->session->set($this->getSessionIdentifier(), $navigation);
     }
@@ -40,7 +40,7 @@ abstract class AbstractNavigationCache
         return $this->session->get($this->getSessionIdentifier());
     }
 
-    public function clear()
+    public function clear(): void
     {
         $prefix = $this->getIdentifier() . '@';
         foreach (array_keys($this->session->all()) as $sessionKey) {
