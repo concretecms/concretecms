@@ -81,7 +81,7 @@ function getSkippablePaths()
         'themes/concrete/main.js',
         'themes/dashboard/main.css',
         'themes/dashboard/main.js',
-        'themes/elemental//main.js',
+        'themes/elemental/main.js',
         'themes/elemental/main.css',
     ].concat(
         listCopiedFiles(path.join(fsUtil.WEBROOT, 'build/node_modules/@fortawesome/fontawesome-free/webfonts'), 'css/webfonts')
