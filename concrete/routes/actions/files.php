@@ -39,3 +39,4 @@ $router->all('/chooser/search/{keyword}', 'File\Chooser::searchFiles');
 
 $router->all('/chooser/external_file_provider/{externalFileProviderId}/import_file/{fileId}', 'File\Chooser::importExternal');
 $router->all('/chooser/external_file_provider/{externalFileProviderId}/search/{keyword}', 'File\Chooser::searchExternal');
+$router->all('/chooser/external_file_provider/{externalFileProviderId}/get_file_types', 'File\Chooser::getExternalFileTypes');

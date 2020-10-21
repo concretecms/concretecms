@@ -14,7 +14,6 @@ trait ExternalFileProviderOptionTrait
                 'typeHandle' => $this->externalFileProvider->getTypeObject()->getHandle(),
                 'name' => $this->externalFileProvider->getName(),
                 'supportFileTypes' => $this->externalFileProvider->getConfigurationObject()->supportFileTypes(),
-                'fileTypes' => $this->externalFileProvider->getConfigurationObject()->getFileTypes(),
                 'hasCustomImportHandler' => $this->externalFileProvider->getConfigurationObject()->hasCustomImportHandler(),
             ],
         ];

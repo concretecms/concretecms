@@ -128,7 +128,7 @@ switch ($controller->getAction()) {
                 <?php foreach ($externalFileProviders as $externalFileProvider) { ?>
                     <li>
                         <a href="<?php echo $view->action('edit', $externalFileProvider->getID()); ?>">
-                            <i class="fa fa-hdd-o"></i> <?php echo $externalFileProvider->getDisplayName(); ?>
+                            <i class="fas fa-file-export"></i> <?php echo $externalFileProvider->getDisplayName(); ?>
                         </a>
                     </li>
                 <?php } ?>

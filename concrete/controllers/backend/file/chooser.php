@@ -270,6 +270,26 @@ class Chooser extends Controller
         }
     }
 
+    public function getExternalFileTypes($externalFileProviderId)
+    {
+
+        /** @var ExternalFileProviderFactory $externalFileProviderFactory */
+        $externalFileProviderFactory = $this->app->make(ExternalFileProviderFactory::class);
+        $externalFileProvider = $externalFileProviderFactory->fetchByID($externalFileProviderId);
+
+        if (!$externalFileProvider instanceof ExternalFileProvider) {
+            /** @var ErrorList $error */
+            $error = $this->app->make(ErrorList::class);
+            $error->add(t('The given file provider id is invalid.'));
+
+            return new JsonResponse($error);
+        }
+
+        $config = $externalFileProvider->getConfigurationObject();
+
+        return new JsonResponse($config->getFileTypes());
+    }
+
     public function searchExternal($externalFileProviderId, $keyword)
     {
         /** @var ExternalFileProviderFactory $externalFileProviderFactory */
@@ -309,8 +329,8 @@ class Chooser extends Controller
                     'sort_direction' => 'ccm_order_by_direction'
                 ],
                 'pagination' => [
-                    'total' => count($fileList->getFiles()),
-                    'count' => count($fileList->getFiles()),
+                    'total' => is_array($fileList->getFiles()) ? count($fileList->getFiles()) : 0,
+                    'count' => is_array($fileList->getFiles()) ? count($fileList->getFiles()) : 0,
                     'per_page' => 999999,
                     'current_page' => 1,
                     'total_pages' => 1,
