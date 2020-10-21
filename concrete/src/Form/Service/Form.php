@@ -416,6 +416,26 @@ class Form
         return $this->inputType($key, 'search', $valueOrMiscFields, $miscFields);
     }
 
+     /**
+     * Renders any previously unspecified input field type. Allows for adaptive update to any new HTML input types
+     * that are not covered by explicit methods. Browsers will either handle the specific input type or fallback
+     * to a text input.
+     *
+     * @param string $key the name/id of the element
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     *
+     * @return string
+     */
+    public function __call($name, $args)
+    {
+        $key = $args[0];
+        $valueOrMiscFields = $args[1];
+        $miscFields = array_slice($args,2);
+        return $this->inputType($key, $name, $valueOrMiscFields, $miscFields);
+    }
+    
+    
     /**
      * Renders a select field.
      *
