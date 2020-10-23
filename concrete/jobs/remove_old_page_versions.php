@@ -58,7 +58,7 @@ class RemoveOldPageVersions extends AbstractJob
         $pageCount = count($pagesAffected);
         Config::save('concrete.maintenance.version_job_page_num', $pNum);
 
-        //i18n: %1$d is the number of affected pages, %2$d is the number of versions deleted, %1$d is the number of affected pages, %3$d is the number of times that the Remove Old Page Versions job has been executed.
+        //i18n: %1$d is the number of affected pages, %2$d is the number of versions deleted, %3$d is the number of times that the Remove Old Page Versions job has been executed.
         return t2(
             '%2$d version(s) deleted from %1$d page (%3$s)',
             '%2$d version(s) deleted from %1$d pages (%3$s)',
