@@ -1112,6 +1112,11 @@ EOT
      */
     public function setBlockCachedOutput($content, $lifetime, $area)
     {
+        // We shouldn't create a cache for stack proxy
+        if ($this->getBlockTypeHandle() === BLOCK_HANDLE_STACK_PROXY) {
+            return false;
+        }
+
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
 
@@ -1161,6 +1166,11 @@ EOT
      */
     public function getBlockCachedOutput($area)
     {
+        // We shouldn't get a cache for stack proxy
+        if ($this->getBlockTypeHandle() === BLOCK_HANDLE_STACK_PROXY) {
+            return false;
+        }
+
         $db = Loader::db();
 
         $arHandle = $this->getAreaHandle();
