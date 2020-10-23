@@ -11,6 +11,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Permission\IpAccessControlService;
 use Concrete\Core\Permission\IPRangesCsvWriter;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use IPLib\Address\AddressInterface;
 use IPLib\Factory as IPFactory;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -42,7 +43,7 @@ class Range extends Blacklist
         }
         $this->set('type', $type);
         $this->set('service', $service);
-        $this->set('myIPAddress', IPFactory::addressFromString($this->app->make(Request::class)->getClientIp()));
+        $this->set('myIPAddress', $this->app->make(AddressInterface::class));
     }
 
     public function formatRangeRow(IpAccessControlRange $range)
@@ -78,7 +79,7 @@ class Range extends Blacklist
             throw new UserMessageException(t('Unable to find the requested category'));
         }
         if (!$this->request->request->get('force') && ($type & IpAccessControlService::IPRANGEFLAG_BLACKLIST) === IpAccessControlService::IPRANGEFLAG_BLACKLIST) {
-            $myIP = IPFactory::addressFromString($this->app->make(Request::class)->getClientIp());
+            $myIP = $this->app->make(AddressInterface::class);
             if ($range->contains($myIP)) {
                 if (!$service->isWhitelisted($myIP)) {
                     if ($range instanceof \IPLib\Range\Single) {
@@ -114,7 +115,7 @@ class Range extends Blacklist
             }
             $myIpWasWhitelisted = false;
             if (($type & IpAccessControlService::IPRANGEFLAG_WHITELIST) === IpAccessControlService::IPRANGEFLAG_WHITELIST) {
-                $myIP = IPFactory::addressFromString($this->app->make(Request::class)->getClientIp());
+                $myIP = $this->app->make(AddressInterface::class);
                 $range = $record->getIpRange();
                 if ($range->contains($myIP)) {
                     $myIpWasWhitelisted = true;

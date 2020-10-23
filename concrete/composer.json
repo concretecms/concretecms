@@ -72,7 +72,7 @@
     "lusitanian/oauth": "0.8.*",
     "concrete5/oauth-user-data": "~1.0",
     "mlocati/concrete5-translation-library": "^1.6.0",
-    "mlocati/ip-lib": "^1.3.0",
+    "mlocati/ip-lib": "^1.13.0",
     "league/url": "~3.3.5",
     "concrete5/doctrine-xml": "^1.2.0",
     "symfony/yaml":"3.*",
