@@ -187,6 +187,7 @@ class RouteGroupBuilder
     protected function sendFromGroupToRouter(RouteCollection $routeCollection, Router $router)
     {
         foreach($routeCollection->getIterator() as $name => $route) {
+            $route->setCustomName($name);
             $this->processRequirements($route);
             $this->processPrefix($route);
             $this->processMiddlewares($route);
