@@ -139,5 +139,10 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/system/workflow')
             ->routes('workflow.php')
         ;
+
+        $router->buildGroup()->setNamespace('Concrete\Controller\Frontend\Conversations')
+            ->setPrefix('/ccm/frontend/conversations')
+            ->routes('conversations.php')
+        ;
     }
 }
