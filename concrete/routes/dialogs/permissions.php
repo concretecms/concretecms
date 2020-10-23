@@ -23,3 +23,4 @@ $router->all('/miscellaneous', 'Miscellaneous::view');
 $router->all('/page_type', 'PageType::view');
 $router->all('/tree/node', 'Tree\Node::view');
 $router->all('/user', 'User::view');
+$router->get('/collection', 'Collection::view');
