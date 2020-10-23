@@ -79,7 +79,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?= $form->label('', t('Other Options')) ?>
         <div class="form-check">
             <?= $form->checkbox('use_exif_data_to_rotate_images', 1, $use_exif_data_to_rotate_images) ?>
-            <label for="use_exif_data_to_rotate_images">
+            <label for="use_exif_data_to_rotate_images" class="form-check-label">
                 <?= t('Use EXIF metadata to auto-rotate images uploaded images.') ?>
                 <?php
                 if (!$exif_reader_supported) {

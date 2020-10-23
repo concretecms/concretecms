@@ -110,7 +110,7 @@ class ExifDataExtractor implements PostProcessorInterface
 
         $keywords = [];
 
-        foreach ($this->listExitMetadata($importedVersion) as $label => $value) {
+        foreach ($this->listExifMetadata($importedVersion) as $label => $value) {
             // create a handle
             $handle = 'exif_' . str_replace(' ', '_', strtolower($label));
 
@@ -143,7 +143,7 @@ class ExifDataExtractor implements PostProcessorInterface
                  * @see: https://www.exiv2.org/tags.html
                  */
                 case 'exif_image_image_description':
-                case 'exit_photo_user_comment':
+                case 'exif_photo_user_comment':
                     if ($this->populateDescriptionAttributes) {
                         $importedVersion->updateDescription($value);
                     }
@@ -161,9 +161,9 @@ class ExifDataExtractor implements PostProcessorInterface
                             $key->setIsAttributeKeySearchable(false);
                             $key = $category->add('text', $key, null);
                             if ($set === null) {
-                                $set = $this->setFactory->getByHandle('exit_tags');
+                                $set = $this->setFactory->getByHandle('exif_tags');
                                 if ($set === null) {
-                                    $set = $setManager->addSet('exit_tags', t('EXIF Tags'));
+                                    $set = $setManager->addSet('exif_tags', t('EXIF Tags'));
                                 }
                             }
                             $setManager->addKey($set, $key);
@@ -181,7 +181,7 @@ class ExifDataExtractor implements PostProcessorInterface
     /**
      * @return \Generator
      */
-    protected function listExitMetadata(Version $importedVersion)
+    protected function listExifMetadata(Version $importedVersion)
     {
         $metadata = $this->getMetadataBag($importedVersion);
         // transform camelcase to normal words

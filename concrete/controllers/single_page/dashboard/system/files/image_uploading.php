@@ -33,10 +33,10 @@ class ImageUploading extends DashboardPageController
 
         $this->set('svg_processor_action', (string) $config->get('concrete.file_manager.images.svg_sanitization.action'));
         $this->set('svg_processor_actions', [
-            SvgProcessor::ACTION_DISABLED => t('do not perform any check'),
-            SvgProcessor::ACTION_CHECKVALIDITY => t('check only the XML validity'),
-            SvgProcessor::ACTION_SANITIZE => t('remove potentially harmfull elements'),
-            SvgProcessor::ACTION_REJECT => t('reject files containing potentially harmfull elements'),
+            SvgProcessor::ACTION_DISABLED => t('Do not perform any check.'),
+            SvgProcessor::ACTION_CHECKVALIDITY => t('Check only the XML validity.'),
+            SvgProcessor::ACTION_SANITIZE => t('Remove potentially harmful elements.'),
+            SvgProcessor::ACTION_REJECT => t('Reject files containing potentially harmful elements.'),
         ]);
 
         $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));

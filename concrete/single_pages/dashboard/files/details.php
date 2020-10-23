@@ -156,6 +156,24 @@ $file = $fileVersion->getFile();
                     <i><?= t('Search for files with these tags using the advanced search link in the file manager.') ?></i>
                 </div>
         </dd>
+        <dt><?= t('Size') ?></dt>
+        <dd>
+            <div>
+            <?php
+            echo sprintf(
+                '%s (%s)',
+                $fileVersion->getSize(),
+                t2(
+                /*i18n: %s is a number */
+                    '%s byte',
+                    '%s bytes',
+                    $fileVersion->getFullSize(),
+                    $number->format($fileVersion->getFullSize())
+                )
+            );
+            ?>
+                </div>
+        </dd>
         <?php
         foreach ($attributeKeys as $attributeKey) {
             ?>
