@@ -26,6 +26,7 @@ class RouteActionFactory implements RouteActionFactoryInterface
         $method = null;
         if (is_string($action)) {
             list($class, $method) = explode('::', $action);
+            $method = $method ?: '__invoke';
         } else {
             $class = $action[0];
             $method = $action[1];
