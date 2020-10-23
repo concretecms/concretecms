@@ -97,6 +97,14 @@ if (count($languages) > 0) {
             <?php
         }
         ?>
+        <dt>
+            <?php echo t('Home Folder') ?>
+        </dt>
+        <dd>
+            <div>
+                <?php echo isset($folderList[$user->getUserHomeFolderId()]) && $user->getUserHomeFolderId() !== null ? $folderList[$user->getUserHomeFolderId()] : t('None') ?>
+            </div>
+        </dd>
 
         <?php
         if (Config::get('concrete.user.registration.validate_email')) {
@@ -173,6 +181,12 @@ if (count($languages) > 0) {
                                             <?= $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
                                         </div>
                                     <?php } ?>
+                                <?php } ?>
+                                <?php if ($canEditHomeFileManagerFolderID) { ?>
+                                    <div class="form-group">
+                                        <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
+                                        <?php echo $form->select('uHomeFileManagerFolderID', $folderList, $user->getUserHomeFolderId()); ?>
+                                    </div>
                                 <?php } ?>
                             </fieldset>
                             <?php if ($canEditPassword) { ?>

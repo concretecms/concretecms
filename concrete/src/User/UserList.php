@@ -89,6 +89,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         'u.uLastLogin',
         'u.uNumLogins',
         'u.uLastOnline',
+        'u.uHomeFileManagerFolderID',
     ];
 
     /**
@@ -259,6 +260,13 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->includeInactiveUsers();
         $this->query->andWhere('u.uIsActive = :uIsActive');
         $this->query->setParameter('uIsActive', $isActive);
+    }
+
+    public function filterByHomeFolderID($uHomeFileManagerFolderID)
+    {
+        $this->includeInactiveUsers();
+        $this->query->andWhere('u.uHomeFileManagerFolderID = :uHomeFileManagerFolderID');
+        $this->query->setParameter('uHomeFileManagerFolderID', $uHomeFileManagerFolderID);
     }
 
     /**

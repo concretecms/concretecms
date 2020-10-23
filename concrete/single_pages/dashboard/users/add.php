@@ -53,6 +53,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </div>
             </div>
 		<?php } ?>
+
+        <div class="form-group">
+            <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
+            <?php echo $form->select('uHomeFileManagerFolderID', $folderList); ?>
+        </div>
 	</fieldset>
 
 <?php if (count($attribs) > 0) {

@@ -484,6 +484,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $passwordChangedOn = null;
             $fields = [];
             $values = [];
+            $nullFields = [];
             if (isset($data['uName'])) {
                 $fields[] = 'uName = ?';
                 $values[] = $data['uName'];
@@ -505,6 +506,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 $fields[] = 'uDefaultLanguage = ?';
                 $values[] = $data['uDefaultLanguage'];
             }
+            if (isset($data['uHomeFileManagerFolderID'])) {
+                if ($data['uHomeFileManagerFolderID'] == '') {
+                    $nullFields[] = 'uHomeFileManagerFolderID';
+                } else {
+                    $fields[] = 'uHomeFileManagerFolderID = ?';
+                    $values[] = $data['uHomeFileManagerFolderID'];
+                }
+            }
             if (isset($data['uPassword']) && (string) $data['uPassword'] !== '') {
                 if (isset($data['uPasswordConfirm']) && $data['uPassword'] === $data['uPasswordConfirm']) {
                     $passwordChangedOn = $this->application->make('date')->getOverridableNow();
@@ -525,6 +534,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     'update Users set  ' . implode(', ', $fields) . 'where uID = ? limit 1',
                     array_merge($values, [$uID])
                 );
+                if (!empty($nullFields)) {
+                    $nullFieldsStr = '';
+                    foreach($nullFields as $nullField) {
+                        $nullFieldsStr .= (strlen($nullFieldsStr) > 0 ? ", " : "" ) . $nullField . " = NULL";
+                    }
+                    $nullQuery = sprintf('update Users set %s where uID = ? limit 1', $nullFieldsStr);
+                    $this->connection->executeQuery($nullQuery, [$uID]);
+                }
                 if ($emailChanged) {
                     $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [$uID]);
                     $h = $this->application->make('helper/validation/identifier');
@@ -541,6 +558,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     }
                     if (isset($data['uDefaultLanguage'])) {
                         $session->set('uDefaultLanguage', $data['uDefaultLanguage']);
+                    }
+                    if (isset($data['uHomeFileManagerFolderID'])) {
+                        $session->set('uHomeFileManagerFolderID', $data['uHomeFileManagerFolderID']);
                     }
                     if ($passwordChangedOn !== null) {
                         $session->set('uLastPasswordChange', $passwordChangedOn);
@@ -897,6 +917,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function getUserEmail()
     {
         return $this->entity->getUserEmail();
+    }
+
+    /**
+     * @see \Concrete\Core\Entity\User\User::getHomeFileManagerFolderID()
+     */
+    public function getUserHomeFolderId()
+    {
+        return $this->entity->getHomeFileManagerFolderID();
     }
 
     /**

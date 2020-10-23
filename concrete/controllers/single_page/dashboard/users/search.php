@@ -6,6 +6,7 @@ use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Csv\WriterFactory;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization;
@@ -324,6 +325,10 @@ class Search extends DashboardPageController
                 $language = $this->request->request->get('uDefaultLanguage');
                 $data['uDefaultLanguage'] = $language;
             }
+            if ($this->canEditHomeFileManagerFolderID) {
+                $uHomeFileManagerFolderID = $this->request->request->get('uHomeFileManagerFolderID');
+                $data['uHomeFileManagerFolderID'] = $uHomeFileManagerFolderID;
+            }
             if ($this->canEditPassword && !empty($this->request->request->get('uPassword'))) {
                 $password = $this->request->request->get('uPassword');
                 $passwordConfirm = $this->request->request->get('uPasswordConfirm');
@@ -556,6 +561,23 @@ class Search extends DashboardPageController
             $headers);
     }
 
+    private function getFolderList()
+    {
+        $folderList = [];
+
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+
+        // fetch all folders from database
+        $rows = $db->fetchAll("SELECT tn.treeNodeId, tn.treeNodeName FROM TreeNodes AS tn LEFT JOIN TreeNodeTypes AS tnt ON (tn.treeNodeTypeID = tnt.treeNodeTypeID) WHERE tnt.treeNodeTypeHandle = 'file_folder' AND tn.treeNodeName != ''");
+
+        foreach ($rows as $row) {
+            $folderList[$row["treeNodeId"]] = $row["treeNodeName"];
+        }
+
+        return $folderList;
+    }
+
     protected function setupUser($uID)
     {
         $me = $this->app->make(User::class);
@@ -577,6 +599,7 @@ class Search extends DashboardPageController
             $this->canEditTimezone = $this->canEdit && $this->assignment->allowEditTimezone();
             $this->canEditEmail = $this->canEdit && $this->assignment->allowEditEmail();
             $this->canEditPassword = $this->canEdit && $this->assignment->allowEditPassword();
+            $this->canEditHomeFileManagerFolderID = $this->canEdit && $this->assignment->allowEditHomeFileManagerFolderID();
             $this->canSignInAsUser = $this->canEdit && $tp->canSudo() && $me->getUserID() != $ui->getUserID();
             $this->canDeleteUser = $this->canEdit && $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
             $this->canAddGroup = $this->canEdit && $tp->canAccessGroupSearch();
@@ -584,11 +607,14 @@ class Search extends DashboardPageController
             if ($this->canEdit) {
                 $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
             }
+            $folderList = ['' => t("** None")] + $this->getFolderList();
             $this->set('user', $ui);
+            $this->set('folderList', $folderList);
             $this->set('canEditAvatar', $this->canEditAvatar);
             $this->set('canEditUserName', $this->canEditUserName);
             $this->set('canEditEmail', $this->canEditEmail);
             $this->set('canEditPassword', $this->canEditPassword);
+            $this->set('canEditHomeFileManagerFolderID', $this->canEditHomeFileManagerFolderID);
             $this->set('canEditTimezone', $this->canEditTimezone);
             $this->set('canEditLanguage', $this->canEditLanguage);
             $this->set('canActivateUser', $this->canActivateUser);
