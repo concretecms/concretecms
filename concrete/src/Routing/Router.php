@@ -5,8 +5,6 @@ namespace Concrete\Core\Routing;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -232,7 +230,8 @@ class Router implements RouterInterface
         $host = '',
         $schemes = [],
         $methods = [],
-        $condition = null)
+        $condition = null
+    )
     {
         $route = new Route($this->normalizePath($path), [], $requirements, $options, $host, $schemes, $methods, $condition);
         $route->setAction($callback);
@@ -362,5 +361,4 @@ class Router implements RouterInterface
 
         return $result;
     }
-
 }
