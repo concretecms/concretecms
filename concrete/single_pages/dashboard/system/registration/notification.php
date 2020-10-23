@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 ?>
-<form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="POST" action="<?= $key->getPermissionAssignmentObject()->getPermissionKeyToolsURL() ?>">
+<form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="POST" action="<?= h($key->getPermissionAssignmentObject()->getPermissionKeyTaskURL()) ?>">
     <input type="hidden" name="paID" value="<?= $permissionAccess->getPermissionAccessID() ?>" />
 
     <div id="ccm-tab-content-access-types">
@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </form>
 
 <script>
-var ccm_permissionDialogURL = '<?= REL_DIR_FILES_TOOLS_REQUIRED ?>/permissions/dialogs/miscellaneous';
+var ccm_permissionDialogURL = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/miscellaneous';
 ccm_deleteAccessEntityAssignment = function(peID) {
     jQuery.fn.dialog.showLoader();
 
@@ -42,7 +42,7 @@ ccm_deleteAccessEntityAssignment = function(peID) {
         var qs = '?';
     }
 
-    $.get('<?= $key->getPermissionAssignmentObject()->getPermissionKeyToolsURL('remove_access_entity') ?>&paID=<?= $permissionAccess->getPermissionAccessID() ?>&peID=' + peID, function() {
+    $.get(<?= json_encode($key->getPermissionAssignmentObject()->getPermissionKeyTaskURL('remove_access_entity', ['paID' => $permissionAccess->getPermissionAccessID()])) ?> + '&peID=' + peID, function() {
         $.get(ccm_permissionDialogURL + qs + 'paID=<?= $permissionAccess->getPermissionAccessID() ?>&message=entity_removed&pkID=<?= $key->getPermissionKeyID()?>', function(r) {
             window.location.reload();
         });
@@ -59,7 +59,7 @@ ccm_addAccessEntity = function(peID, pdID, accessType) {
         var qs = '?';
     }
 
-    $.get('<?= $key->getPermissionAssignmentObject()->getPermissionKeyToolsURL('add_access_entity') ?>&paID=<?= $permissionAccess->getPermissionAccessID() ?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) {
+    $.get(<?= json_encode($key->getPermissionAssignmentObject()->getPermissionKeyTaskURL('add_access_entity', ['paID' => $permissionAccess->getPermissionAccessID()])) ?> + '&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) {
         $.get(ccm_permissionDialogURL + qs + 'paID=<?= $permissionAccess->getPermissionAccessID() ?>&message=entity_added&pkID=<?= $key->getPermissionKeyID() ?>', function(r) {
             window.location.reload();
         });

@@ -5,6 +5,7 @@ use Concrete\Core\User\UserList;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class GroupCombinationEntity extends Entity
 {
@@ -32,8 +33,7 @@ class GroupCombinationEntity extends Entity
      */
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED
-            . '/permissions/dialogs/access/entity/types/group_combination" '
+        $html = '<a href="' . h(app(ResolverManagerInterface::class)->resolve(['/ccm/system/dialogs/permissions/access/entity/types/group_combination'])) . '" '
             . 'dialog-width="400" dialog-height="300" class="dropdown-item dialog-launch" '
             . 'dialog-modal="false" dialog-title="'
             . t('Add Group Combination') . '">'
