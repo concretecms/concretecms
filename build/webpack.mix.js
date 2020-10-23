@@ -36,6 +36,11 @@ mix.options({
 
 mix.setPublicPath('../concrete');
 
+/********************************************************/
+/* IMPORTANT: when you add/remove a generated asset,    */
+/* remember to update libraries/git-skip.js accordingly */
+/********************************************************/
+
 /**
  * Copy pre-minified assets.
  */
