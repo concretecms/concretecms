@@ -60,10 +60,10 @@ class RemoveOldPageVersions extends AbstractJob
 
         //i18n: %1$d is the number of versions deleted, %2$d is the number of affected pages, %3$d is the number of times that the Remove Old Page Versions job has been executed.
         return t2(
-            '%1$d versions deleted from %2$d page (%3$s)',
-            '%1$d versions deleted from %2$d pages (%3$s)',
-            $versionCount,
+            '%2$d version(s) deleted from %1$d page (%3$s)',
+            '%2$d version(s) deleted from %1$d pages (%3$s)',
             $pageCount,
+            $versionCount,
             $pageCount,
             implode(',', $pagesAffected)
         );
