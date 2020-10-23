@@ -34,6 +34,9 @@ $router->post('/permissions/set_location', 'File\Permissions::setLocation');
 $router->all('/importers/imageeditor', 'File\Importer\ImageEditor::view');
 $router->all('/importers/thumbnail', 'File\Importer\Thumbnail::view');
 $router->all('/upload_complete', 'File::uploadComplete');
+$router->all('/get_favorite_folders', 'File::getFavoriteFolders');
+$router->all('/add_favorite_folder/{folderId}', 'File::addFavoriteFolder');
+$router->all('/remove_favorite_folder/{folderId}', 'File::removeFavoriteFolder');
 
 $router->all('/chooser/recent', 'File\Chooser::getRecent');
 $router->all('/chooser/get_file_sets', 'File\Chooser::getFileSets');

@@ -1,11 +1,15 @@
 <?php
+
 namespace Concrete\Core\File\Component\Chooser;
 
+use Concrete\Core\Entity\File\Folder\FavoriteFolder;
 use Concrete\Core\Entity\Search\SavedFileSearch;
+use Concrete\Core\Entity\User\User;
 use Concrete\Core\File\Component\Chooser\Option\ExternalFileProviderOption;
 use Concrete\Core\File\Component\Chooser\Option\FileManagerOption;
 use Concrete\Core\File\Component\Chooser\Option\FileSetsOption;
 use Concrete\Core\File\Component\Chooser\Option\FileUploadOption;
+use Concrete\Core\File\Component\Chooser\Option\FolderBookmarkOption;
 use Concrete\Core\File\Component\Chooser\Option\RecentUploadsOption;
 use Concrete\Core\File\Component\Chooser\Option\SavedSearchOption;
 use Concrete\Core\File\Component\Chooser\Option\SearchOption;
@@ -33,12 +37,27 @@ class DefaultConfiguration implements ChooserConfigurationInterface
             $this->addChooser(new SavedSearchOption());
         }
         $this->addUploader(new FileUploadOption());
+
         // get external file providers
-        foreach($externalFileProviderFactory->fetchList() as $externalFileProvider) {
+        foreach ($externalFileProviderFactory->fetchList() as $externalFileProvider) {
             $this->addUploader(new ExternalFileProviderOption($externalFileProvider));
 
         }
 
+        // get all favored folders
+        $user = new \Concrete\Core\User\User();
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+
+        $favoriteFolderEntries = $favoriteFolderRepository->findBy([
+            "owner" => $userEntity
+        ]);
+
+        foreach ($favoriteFolderEntries as $favoriteFolderEntry) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $this->addChooser(new FolderBookmarkOption($favoriteFolderEntry));
+        }
     }
 
     /**
@@ -76,8 +95,6 @@ class DefaultConfiguration implements ChooserConfigurationInterface
     {
         return $this->choosers;
     }
-
-
 
 
 }
