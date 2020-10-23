@@ -34,7 +34,7 @@ class PermissionServiceProvider extends ServiceProvider
                 $ip = $request->getClientIp();
             }
 
-            return IPFactory::addressFromString($ip);
+            return IPFactory::addressFromString($ip, true, true, true);
         });
 
         $this->app->bind('failed_login', function (Application $app) {
