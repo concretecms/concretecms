@@ -6,7 +6,7 @@ use Concrete\Core\Entity\User\User;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-final class Version20201023000000 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20201028143317 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
