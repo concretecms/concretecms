@@ -2,7 +2,6 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\Group\GroupRepository;
@@ -22,9 +21,6 @@ class Add extends DashboardPageController
         $gl = new GroupList();
         $gArray = $gl->getPagination()->setMaxPerPage(10000)->getCurrentPageResults();
 
-        $folderList = ['' => t("** None")] + $this->getFolderList();
-        $this->set('folderList', $folderList);
-
         $this->set('valc', $this->app->make('helper/concrete/validation'));
         $this->set('ih', $this->app->make('helper/concrete/ui'));
         $this->set('av', $this->app->make('helper/concrete/avatar'));
@@ -33,23 +29,6 @@ class Add extends DashboardPageController
         $this->set('assignment', $assignment);
         $this->set('locales', $locales);
         $this->set('attribs', $attribs);
-    }
-
-    private function getFolderList()
-    {
-        $folderList = [];
-
-        /** @var Connection $db */
-        $db = $this->app->make(Connection::class);
-
-        // fetch all folders from database
-        $rows = $db->fetchAll("SELECT tn.treeNodeId, tn.treeNodeName FROM TreeNodes AS tn LEFT JOIN TreeNodeTypes AS tnt ON (tn.treeNodeTypeID = tnt.treeNodeTypeID) WHERE tnt.treeNodeTypeHandle = 'file_folder' AND tn.treeNodeName != ''");
-
-        foreach ($rows as $row) {
-            $folderList[$row["treeNodeId"]] = $row["treeNodeName"];
-        }
-
-        return $folderList;
     }
 
     public function submit()

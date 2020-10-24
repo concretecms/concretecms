@@ -1,14 +1,20 @@
 <?php
 
-use Concrete\Core\Localization\Localization;
-
 defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Form\Service\Widget\FileFolderSelector;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * @var Concrete\Core\User\UserInfo $user
  */
 
-$dh = Core::make('helper/date');
+$app = Application::getFacadeApplication();
+/** @var FileFolderSelector $fileFolderSelector */
+$fileFolderSelector = $app->make(FileFolderSelector::class);
+
+$dh = $app->make('helper/date');
 // @var $dh \Concrete\Core\Localization\Service\Date
 $languages = Localization::getAvailableInterfaceLanguages();
 $locales = [];
@@ -49,6 +55,10 @@ if (count($languages) > 0) {
 </section>
 
 <hr class="mt-2 mb-4"/>
+
+<div id="folderSelectorSourceContainer" class="d-none">
+    <?php echo $fileFolderSelector->selectFileFolder('uHomeFileManagerFolderID', $user->getUserHomeFolderId()); ?>
+</div>
 
 <section data-section="account">
     <?php if ($canViewAccountModal) { ?>
@@ -185,7 +195,7 @@ if (count($languages) > 0) {
                                 <?php if ($canEditHomeFileManagerFolderID) { ?>
                                     <div class="form-group">
                                         <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
-                                        <?php echo $form->select('uHomeFileManagerFolderID', $folderList, $user->getUserHomeFolderId()); ?>
+                                        <div id="folderSelectorDestinationContainer"></div>
                                     </div>
                                 <?php } ?>
                             </fieldset>
@@ -411,5 +421,15 @@ if (count($languages) > 0) {
             });
         })
 
+        /*
+         * Small hack to get the folder selector running within a vue context.
+         * The folder selector contains a script tag which is not allowed within a vue context.
+         * So we render the component outside and swap the containers.
+         *
+         * Not a nice way - but it works.
+         *
+         * @todo: Create a vue version of file folder selector and replace this hacky workaround with the vue component
+         */
+        $("#folderSelectorDestinationContainer").before($("#folderSelectorSourceContainer").removeClass("d-none"));
     });
 </script>

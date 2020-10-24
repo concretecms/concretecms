@@ -2,12 +2,19 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Form\Service\Widget\FileFolderSelector;
+use Concrete\Core\Support\Facade\Application;
+
 /**
  * @var Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem $assignment
  * @var Concrete\Controller\SinglePage\Dashboard\Users\Add $controller
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Validation\CSRF\Token $token
  */
+$app = Application::getFacadeApplication();
+/** @var FileFolderSelector $fileFolderSelector */
+$fileFolderSelector = $app->make(FileFolderSelector::class);
+
 ?>
 
 <form method="post" action="<?= $view->action('submit'); ?>">
@@ -56,7 +63,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         <div class="form-group">
             <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
-            <?php echo $form->select('uHomeFileManagerFolderID', $folderList); ?>
+            <?php echo $fileFolderSelector->selectFileFolder('uHomeFileManagerFolderID'); ?>
         </div>
 	</fieldset>
 
