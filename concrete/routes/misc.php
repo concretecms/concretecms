@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var \Concrete\Core\Routing\Router $router
+ * @var Concrete\Core\Routing\Router $router
  */
 
 /*
@@ -46,3 +46,5 @@ $router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Contr
 $router->all('/ccm/system/heartbeat', '\Concrete\Controller\Frontend\Heartbeat::view');
 
 $router->all('/ccm/system/user/autocomplete', 'Concrete\Controller\Backend\User\Autocomplete::view');
+
+$router->all('/ccm/page/reindex_pending', 'Concrete\Controller\Frontend\Page\Index::reindexPending');
