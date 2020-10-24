@@ -48,6 +48,7 @@ class DefaultConfiguration implements ChooserConfigurationInterface
         $user = new \Concrete\Core\User\User();
         $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
         $userRepository = $entityManager->getRepository(User::class);
+        /** @var User $userEntity */
         $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
 
         $favoriteFolderEntries = $favoriteFolderRepository->findBy([

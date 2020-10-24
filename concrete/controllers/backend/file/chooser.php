@@ -258,7 +258,14 @@ class Chooser extends Controller
             return new JsonResponse($error);
         }
 
-        $fileVersion = $externalFileProvider->getConfigurationObject()->importFile($fileId);
+        $fileSystem = new Filesystem();
+        $uploadDirectoryId = $fileSystem->getRootFolder()->getTreeNodeID();
+
+        if ($this->request->request->has("uploadDirectoryId")) {
+            $uploadDirectoryId = $this->request->request->get("uploadDirectoryId");
+        }
+
+        $fileVersion = $externalFileProvider->getConfigurationObject()->importFile($fileId, $uploadDirectoryId);
 
         if ($fileVersion instanceof Version) {
             return new JsonResponse([

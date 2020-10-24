@@ -11,6 +11,7 @@ class EditUserPropertiesUserListItem extends UserListItem
     protected $allowEditUAvatar = 0;
     protected $allowEditTimezone = 0;
     protected $allowEditDefaultLanguage = 0;
+    protected $allowEditHomeFileManagerFolderID = 0;
 
     public function setAttributesAllowedPermission($permission)
     {
@@ -91,4 +92,15 @@ class EditUserPropertiesUserListItem extends UserListItem
     {
         return isset($this->allowEditUDefaultLanguage) ? $this->allowEditUDefaultLanguage : null;
     }
+
+    public function setAllowEditHomeFileManagerFolderID($allow)
+    {
+        $this->allowEditHomeFileManagerFolderID = $allow;
+    }
+
+    public function allowEditHomeFileManagerFolderID()
+    {
+        return isset($this->allowEditHomeFileManagerFolderID) ? $this->allowEditHomeFileManagerFolderID : null;
+    }
+
 }

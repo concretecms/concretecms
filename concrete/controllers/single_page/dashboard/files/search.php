@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
 use Concrete\Core\Entity\Search\Query;
@@ -9,6 +10,8 @@ use Concrete\Core\File\Search\Menu\MenuFactory;
 use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\Http\Response;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardFileManagerBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Field\Field\KeywordsField;
@@ -18,8 +21,11 @@ use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\User\User;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Symfony\Component\HttpFoundation\Request;
 
 class Search extends DashboardPageController
@@ -154,6 +160,17 @@ class Search extends DashboardPageController
 
     public function view()
     {
+        $user = new User();
+        $userRepository = $this->entityManager->getRepository(UserEntity::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var UserEntity $userEntry */
+        $userEntry = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+
+        if ($userEntry->getHomeFileManagerFolderID() !== null && $this->request->query->count() === 0) {
+            return $responseFactory->redirect((string)Url::to("/dashboard/files/search/folder/", $userEntry->getHomeFileManagerFolderID()), Response::HTTP_TEMPORARY_REDIRECT);
+        }
+
         $rootFolder = $this->getRootFolder();
         $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
             $this->getSearchKeywordsField(),
@@ -180,7 +197,7 @@ class Search extends DashboardPageController
         // search, then let's search all sub folders by default. In order to do that we have to add a folder field
         // into the advanced search (but again, only if the user hasn't done so themselves)
         $containsFolderField = false;
-        foreach($query->getFields() as $field) {
+        foreach ($query->getFields() as $field) {
             if ($field instanceof FolderField) {
                 $containsFolderField = true;
             }
@@ -244,7 +261,7 @@ class Search extends DashboardPageController
         $session = $this->app->make('session');
         $highlightedNodes = [];
         if ($session->getFlashBag()->has('file_manager.updated_nodes')) {
-            $highlightedNodes = (array) $session->getFlashBag()->get('file_manager.updated_nodes');
+            $highlightedNodes = (array)$session->getFlashBag()->get('file_manager.updated_nodes');
         }
         $this->set('highlightResults', $highlightedNodes);
     }
