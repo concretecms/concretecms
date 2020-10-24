@@ -1164,7 +1164,7 @@ class Version implements ObjectInterface
         $em->flush();
 
         try {
-            $logger->notice(t("File version %s of file %s successfully deleted.", $this->getFileVersionID(), $this->getFileName()));
+            $logger->notice(t('Version %1$s of file %2$s successfully deleted.', $this->getFileVersionID(), $this->getFileName()));
         } catch (Exception $err) {
             // Skip any errors while logging to pass the automated tests
         }

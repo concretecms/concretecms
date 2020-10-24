@@ -139,6 +139,7 @@ return [
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
+        'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -223,6 +224,7 @@ return [
         'workflow',
         'workflow_progress_category',
         'workflow_type',
+        'external_file_provider_type',
     ],
 
     'importer_routines' => [
@@ -380,6 +382,7 @@ return [
         'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
         'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
         'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
+        'ccm.image.exif_data' => Concrete\Core\File\Import\Processor\ExifDataExtractor::class,
     ],
 
     /*

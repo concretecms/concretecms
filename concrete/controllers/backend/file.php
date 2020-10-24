@@ -5,8 +5,10 @@ namespace Concrete\Controller\Backend;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Entity\File\Folder\FavoriteFolder;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
+use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
@@ -29,12 +31,14 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Url;
+use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Utility\Service\Number;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use FileSet;
 use GuzzleHttp\Client;
@@ -206,6 +210,125 @@ class File extends Controller
         }
 
         return $this->buildImportResponse($importedFileVersions, $errors, $replacingFile !== null);
+    }
+
+    public function getFavoriteFolders()
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+
+        if (!$userEntity instanceof User) {
+            $errors->add(t("You are not logged in."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $favoriteFolderList = [];
+
+            /** @var FavoriteFolder[] $favoriteFolderEntries */
+            $favoriteFolderEntries = $favoriteFolderRepository->findBy(["owner" => $userEntity]);
+
+            foreach ($favoriteFolderEntries as $favoriteFolderEntry) {
+                $favoriteFolderTreeNode = Node::getByID($favoriteFolderEntry->getTreeNodeFolderId());
+
+                if ($favoriteFolderTreeNode instanceof FileFolder) {
+                    $favoriteFolderList[$favoriteFolderTreeNode->getTreeNodeID()] = $favoriteFolderTreeNode->getTreeNodeName();
+                }
+            }
+
+            $editResponse->setAdditionalDataAttribute("favoriteFolders", $favoriteFolderList);
+        }
+
+        return $responseFactory->json($editResponse);
+    }
+
+    public function addFavoriteFolder($folderId)
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        $treeNode = Node::getByID($folderId);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+        $favoriteFolderItem = $favoriteFolderRepository->findOneBy(["owner" => $userEntity, "treeNodeFolderId" => $folderId]);
+
+        if (!$userEntity instanceof User) {
+            $errors->add(t("You are not logged in."));
+        }
+
+        if (!(is_object($treeNode) && $treeNode instanceof FileFolder)) {
+            $errors->add(t("The given folder is invalid."));
+        }
+
+        if ($favoriteFolderItem instanceof FavoriteFolder) {
+            $errors->add(t("The folder is already part of the favorite list."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $favoriteFolderItem = new FavoriteFolder();
+            $favoriteFolderItem->setOwner($userEntity);
+            $favoriteFolderItem->setTreeNodeFolderId($folderId);
+
+            $entityManager->persist($favoriteFolderItem);;
+            $entityManager->flush();
+
+            $editResponse->setTitle(t("Folder successfully added"));
+            $editResponse->setMessage(t("The folder has been successfully added to your favorite list."));
+        }
+
+        return $responseFactory->json($editResponse);
+    }
+
+    /** @noinspection DuplicatedCode */
+    public function removeFavoriteFolder($folderId)
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+        $favoriteFolderItem = $favoriteFolderRepository->findOneBy(["owner" => $userEntity, "treeNodeFolderId" => $folderId]);
+
+        if (!$favoriteFolderItem instanceof FavoriteFolder) {
+            $errors->add(t("The given folder is not part of your favorite list."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $entityManager->remove($favoriteFolderItem);;
+            $entityManager->flush();
+
+            $editResponse->setTitle(t("Folder successfully removed"));
+            $editResponse->setMessage(t("The folder has been successfully removed from the your favorite list."));
+        }
+
+        return $responseFactory->json($editResponse);
     }
 
     /**
@@ -638,12 +761,12 @@ class File extends Controller
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
-            $ip = IPFactory::addressFromString($host);
+            $ip = IPFactory::addressFromString($host, true, true, true);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
                 while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
                     $dns = array_shift($dnsList);
-                    $ip = IPFactory::addressFromString($dns['ip']);
+                    $ip = IPFactory::addressFromString($dns['ip'], true, true, true);
                 }
             }
             if ($ip !== null && !in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
@@ -679,7 +802,7 @@ class File extends Controller
             // got a filename (with extension)... use it
             $filename = $matches[1];
         } else {
-            foreach($response->getHeader('Content-Type') as $contentType) {
+            foreach ($response->getHeader('Content-Type') as $contentType) {
                 if (!empty($contentType)) {
                     list($mimeType) = explode(';', $contentType, 2);
                     $mimeType = trim($mimeType);
@@ -873,7 +996,7 @@ class File extends Controller
             if ($token->validate()) {
 
                 $nodes = [];
-                foreach($files as $file) {
+                foreach ($files as $file) {
                     $node = $file->getFileNodeObject();
                     if ($node) {
                         $nodes[] = $node->getTreeNodeID();
@@ -883,7 +1006,7 @@ class File extends Controller
                 $this->app->make('session')->getFlashBag()->set('file_manager.updated_nodes', $nodes);
 
                 $folder = $files[0]->getFileFolderObject();
-                $redirectURL = (string) \Concrete\Core\Support\Facade\Url::to(
+                $redirectURL = (string)\Concrete\Core\Support\Facade\Url::to(
                     '/dashboard/files/search/', 'folder', $folder->getTreeNodeID()
                 )->setQuery(['ccm_order_by' => 'dateModified', 'ccm_order_by_direction' => 'desc']);
                 $editResponse->setRedirectURL($redirectURL);

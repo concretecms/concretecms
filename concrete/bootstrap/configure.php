@@ -157,6 +157,7 @@ const DIRNAME_STYLE_CUSTOMIZER = 'style_customizer';
 const DIRNAME_STYLE_CUSTOMIZER_TYPES = 'types';
 const DIRNAME_STYLE_CUSTOMIZER_PRESETS = 'presets';
 const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
+const DIRNAME_EXTERNAL_FILE_PROVIDER_TYPES = 'external_file_provider_types';
 const DIRNAME_EXPRESS = 'express';
 const DIRNAME_EXPRESS_VIEW_CONTROLS = 'view';
 const DIRNAME_EXPRESS_CONTROL_OPTIONS = 'control';

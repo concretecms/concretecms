@@ -24,7 +24,7 @@ class BoardDesignerLockedSlotFormatter implements FormatterInterface
             $user = t('(Unknown User)');
         }
         $date = new \DateTime('@' . $rule->getDateCreated(), new \DateTimeZone($rule->getTimezone()));
-        return t('Locked by %s on %s', $user, $date->format('n/j/Y'));
+        return t(/*i18n: %1$s is a user name, %2$s is a date */'Locked by %1$s on %2$s', $user, $date->format('n/j/Y'));
     }
 
 

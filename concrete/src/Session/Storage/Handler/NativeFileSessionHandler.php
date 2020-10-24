@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Session\Storage\Handler;
 
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
+use SessionHandler;
 
 /**
  * NativeFileSessionHandler.
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandle
  * to. Those directories should be able to be warded off for security reasons using open_basedir restrictions. By
  * testing the existence of that directory such a restriction is useless as it will always generate a fatal error.
  */
-class NativeFileSessionHandler extends \SessionHandler
+class NativeFileSessionHandler extends SessionHandler
 {
     /**
      * Constructor.

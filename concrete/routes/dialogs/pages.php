@@ -45,7 +45,6 @@ $router->all('/edit_alias/submit', 'EditAlias::submit');
 $router->all('/edit_external', 'EditExternal::view');
 $router->all('/edit_external/submit', 'EditExternal::submit');
 $router->all('/location', 'Location::view');
-$router->all('/search', 'Search::view');
 $router->all('/seo', 'Seo::view');
 $router->all('/sitemap_selector', 'SitemapSelector::view');
 $router->all('/drag_request', 'DragRequest::view');

@@ -33,13 +33,17 @@ class ImageUploading extends DashboardPageController
 
         $this->set('svg_processor_action', (string) $config->get('concrete.file_manager.images.svg_sanitization.action'));
         $this->set('svg_processor_actions', [
-            SvgProcessor::ACTION_DISABLED => t('do not perform any check'),
-            SvgProcessor::ACTION_CHECKVALIDITY => t('check only the XML validity'),
-            SvgProcessor::ACTION_SANITIZE => t('remove potentially harmfull elements'),
-            SvgProcessor::ACTION_REJECT => t('reject files containing potentially harmfull elements'),
+            SvgProcessor::ACTION_DISABLED => t('Do not perform any check.'),
+            SvgProcessor::ACTION_CHECKVALIDITY => t('Check only the XML validity.'),
+            SvgProcessor::ACTION_SANITIZE => t('Remove potentially harmful elements.'),
+            SvgProcessor::ACTION_REJECT => t('Reject files containing potentially harmful elements.'),
         ]);
 
         $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));
+        $this->set('use_exif_data_for_file_name_attribute', (bool) $config->get('concrete.file_manager.images.use_exif_data_for_file_name_attribute'));
+        $this->set('use_exif_data_for_description_attribute', (bool) $config->get('concrete.file_manager.images.use_exif_data_for_description_attribute'));
+        $this->set('use_exif_data_for_keyword_attribute', (bool) $config->get('concrete.file_manager.images.use_exif_data_for_keyword_attribute'));
+        $this->set('use_exif_data_for_additional_attributes', (bool) $config->get('concrete.file_manager.images.use_exif_data_for_additional_attributes'));
         $this->set('exif_reader_supported', ExifMetadataReader::isSupported());
 
         $thumbnailOptionsURL = null;
@@ -120,12 +124,22 @@ class ImageUploading extends DashboardPageController
 
             $use_exif_data_to_rotate_images = (bool) $post->get('use_exif_data_to_rotate_images');
 
+            $use_exif_data_for_file_name_attribute = (bool) $post->get('use_exif_data_for_file_name_attribute');
+            $use_exif_data_for_description_attribute = (bool) $post->get('use_exif_data_for_description_attribute');
+            $use_exif_data_for_keyword_attribute = (bool) $post->get('use_exif_data_for_keyword_attribute');
+            $use_exif_data_for_additional_attributes = (bool) $post->get('use_exif_data_for_additional_attributes');
+
+
             if (!$this->error->has()) {
                 $bitmapFormat = $this->app->make(BitmapFormat::class);
                 $config->save('concrete.file_manager.images.manipulation_library', $manipulation_library);
                 $bitmapFormat->setDefaultJpegQuality($jpeg_quality);
                 $bitmapFormat->setDefaultPngCompressionLevel($png_compression);
                 $config->save('concrete.file_manager.images.use_exif_data_to_rotate_images', $use_exif_data_to_rotate_images);
+                $config->save('concrete.file_manager.images.use_exif_data_for_file_name_attribute', $use_exif_data_for_file_name_attribute);
+                $config->save('concrete.file_manager.images.use_exif_data_for_description_attribute', $use_exif_data_for_description_attribute);
+                $config->save('concrete.file_manager.images.use_exif_data_for_keyword_attribute', $use_exif_data_for_keyword_attribute);
+                $config->save('concrete.file_manager.images.use_exif_data_for_additional_attributes', $use_exif_data_for_additional_attributes);
                 $config->save('concrete.file_manager.restrict_max_width', $restrict_max_width);
                 $config->save('concrete.file_manager.restrict_max_height', $restrict_max_height);
                 $config->save('concrete.file_manager.images.svg_sanitization.action', (string) $post->get('svg_processor_action'));

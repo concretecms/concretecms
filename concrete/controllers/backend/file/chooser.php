@@ -3,7 +3,13 @@
 namespace Concrete\Controller\Backend\File;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Entity\File\ExternalFileProvider\ExternalFileProvider;
+use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Search\SavedFileSearch;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\File\ExternalFileProvider\ExternalFileList;
+use Concrete\Core\File\ExternalFileProvider\ExternalFileProviderFactory;
+use Concrete\Core\File\ExternalFileProvider\Type\Type;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FileTransformer;
@@ -237,5 +243,107 @@ class Chooser extends Controller
         $response = $this->manager->createData($collection);
 
         return JsonResponse::fromJsonString($response->toJson());
+    }
+
+    public function importExternal($externalFileProviderId, $fileId)
+    {
+        /** @var ExternalFileProviderFactory $externalFileProviderFactory */
+        $externalFileProviderFactory = $this->app->make(ExternalFileProviderFactory::class);
+        $externalFileProvider = $externalFileProviderFactory->fetchByID($externalFileProviderId);
+        /** @var ErrorList $error */
+        $error = $this->app->make(ErrorList::class);
+
+        if (!$externalFileProvider instanceof ExternalFileProvider) {
+            $error->add(t('The given file provider id is invalid.'));
+            return new JsonResponse($error);
+        }
+
+        $fileSystem = new Filesystem();
+        $uploadDirectoryId = $fileSystem->getRootFolder()->getTreeNodeID();
+
+        if ($this->request->request->has("uploadDirectoryId")) {
+            $uploadDirectoryId = $this->request->request->get("uploadDirectoryId");
+        }
+
+        $fileVersion = $externalFileProvider->getConfigurationObject()->importFile($fileId, $uploadDirectoryId);
+
+        if ($fileVersion instanceof Version) {
+            return new JsonResponse([
+                "importedFileId" => $fileVersion->getFileId()
+            ]);
+        } else {
+            $error->add(t('There was an error while importing the file.'));
+            return new JsonResponse($error);
+        }
+    }
+
+    public function getExternalFileTypes($externalFileProviderId)
+    {
+
+        /** @var ExternalFileProviderFactory $externalFileProviderFactory */
+        $externalFileProviderFactory = $this->app->make(ExternalFileProviderFactory::class);
+        $externalFileProvider = $externalFileProviderFactory->fetchByID($externalFileProviderId);
+
+        if (!$externalFileProvider instanceof ExternalFileProvider) {
+            /** @var ErrorList $error */
+            $error = $this->app->make(ErrorList::class);
+            $error->add(t('The given file provider id is invalid.'));
+
+            return new JsonResponse($error);
+        }
+
+        $config = $externalFileProvider->getConfigurationObject();
+
+        return new JsonResponse($config->getFileTypes());
+    }
+
+    public function searchExternal($externalFileProviderId, $keyword)
+    {
+        /** @var ExternalFileProviderFactory $externalFileProviderFactory */
+        $externalFileProviderFactory = $this->app->make(ExternalFileProviderFactory::class);
+        $externalFileProvider = $externalFileProviderFactory->fetchByID($externalFileProviderId);
+
+        if (!$externalFileProvider instanceof ExternalFileProvider) {
+            /** @var ErrorList $error */
+            $error = $this->app->make(ErrorList::class);
+            $error->add(t('The given file provider id is invalid.'));
+
+            return new JsonResponse($error);
+        }
+
+        $config = $externalFileProvider->getConfigurationObject();
+
+        $selectedFileType = null;
+
+        if ($config->supportFileTypes()) {
+            $selectedFileType = $this->request->query->get("selectedFileType");
+        }
+
+        $fileList = $config->searchFiles($keyword, $selectedFileType);
+
+        /*
+         * This code below is very proof of concept.
+         *
+         * @todo: create a item list with pagination adapter and use buildFileListFractalResponse() for building the response.
+         */
+
+        return new JsonResponse([
+            "data" => $fileList,
+            "meta" => [
+                'query_params' => [
+                    'pagination_page' => 'ccm_paging_fl',
+                    'sort_column' => 'ccm_order_by',
+                    'sort_direction' => 'ccm_order_by_direction'
+                ],
+                'pagination' => [
+                    'total' => is_array($fileList->getFiles()) ? count($fileList->getFiles()) : 0,
+                    'count' => is_array($fileList->getFiles()) ? count($fileList->getFiles()) : 0,
+                    'per_page' => 999999,
+                    'current_page' => 1,
+                    'total_pages' => 1,
+                    'links' => []
+                ]
+            ]
+        ]);
     }
 }

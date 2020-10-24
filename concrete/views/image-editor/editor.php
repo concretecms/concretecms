@@ -110,7 +110,7 @@ $url = $fv->getRelativePath();
         $(function () {
             _.defer(function () {
                 var defaults = {
-                    saveUrl: CCM_DISPATCHER_FILENAME + '/tools/required/files/importers/imageeditor',
+                    saveUrl: CCM_DISPATCHER_FILENAME + '/ccm/system/file/importers/imageeditor',
                     src: '<?=$url?>',
                     fID: <?= $fv->getFileID() ?>,
                     token: '<?= $token ?>',

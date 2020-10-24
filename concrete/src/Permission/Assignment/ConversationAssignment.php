@@ -80,13 +80,13 @@ class ConversationAssignment extends Assignment
         $pa->markAsInUse();
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        $cnvID = 0;
-        if (is_object($this->permissionObject)) {
-            $cnvID = $this->permissionObject->getConversationID();
-        }
-
-        return parent::getPermissionKeyToolsURL($task) . '&cnvID=' . $cnvID;
+        return parent::getPermissionKeyTaskURL($task, $options + ['cnvID' => is_object($this->permissionObject) ? $this->permissionObject->getConversationID() : 0]);
     }
 }

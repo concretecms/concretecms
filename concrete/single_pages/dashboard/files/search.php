@@ -10,8 +10,11 @@ use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\MenuInterface;
 use Concrete\Core\File\Search\ColumnSet\Column\NameColumn;
 use Concrete\Core\File\Search\Result\Result;
+use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Search\Result\Column;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 
 /** @var MenuInterface $menu */
 /** @var Result $result */
@@ -19,8 +22,12 @@ use Concrete\Core\Search\Result\Column;
 /** @var DropdownMenu $resultsBulkMenu */
 
 $fp = FilePermissions::getGlobal();
+$app = Application::getFacadeApplication();
+/** @var Form $form */
+$form = $app->make(Form::class);
 
 if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
+
     <div id="ccm-search-results-table">
         <table class="ccm-search-results-table" data-search-results="files">
             <thead>
@@ -104,6 +111,16 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                     <td class="ccm-search-results-icon">
                         <?php
                         echo $item->getListingThumbnailImage() ?>
+                    </td>
+
+                    <td class="ccm-search-results-favorite-switcher">
+                        <?php if ($item->getItem() instanceof FileFolder) { ?>
+                            <label class="ccm-fancy-checkbox">
+                                <?php echo $form->checkbox("", $item->getItem()->getTreeNodeId(), $item->isFavoredItem(), ["class" => "ccm-favorite-folder-switch"]); ?>
+                                <i class="fas fa-star checked"></i>
+                                <i class="far fa-star unchecked"></i>
+                            </label>
+                        <?php }?>
                     </td>
 
                     <?php

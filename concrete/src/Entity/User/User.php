@@ -128,6 +128,11 @@ class User implements UserEntityInterface, \JsonSerializable
      */
     protected $uIsPasswordReset = false;
 
+    /**
+     * @var int
+     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
+     */
+    protected $uHomeFileManagerFolderID = null;
 
     public function __construct()
     {
@@ -441,6 +446,22 @@ class User implements UserEntityInterface, \JsonSerializable
     public function setUserIsPasswordReset($uIsPasswordReset)
     {
         $this->uIsPasswordReset = $uIsPasswordReset;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHomeFileManagerFolderID()
+    {
+        return $this->uHomeFileManagerFolderID;
+    }
+
+    /**
+     * @param int $uHomeFileManagerFolderID
+     */
+    public function setHomeFileManagerFolderID($uHomeFileManagerFolderID)
+    {
+        $this->uHomeFileManagerFolderID = $uHomeFileManagerFolderID;
     }
 
     /**
