@@ -59,7 +59,7 @@ class NodeType extends ConcreteObject
         $app = Application::getFacadeApplication();
         /** @var RequestCache $cache */
         $cache = $app->make('cache/request');
-        $key = '/Tree/Note/Type/' . $treeNodeTypeID;
+        $key = '/Tree/Node/Type/' . $treeNodeTypeID;
         if ($cache->isEnabled()) {
             $item = $cache->getItem($key);
             if ($item->isHit()) {

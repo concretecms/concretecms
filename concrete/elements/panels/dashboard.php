@@ -68,7 +68,7 @@ if ($section) {
                         <?= t('Dashboard') ?>
                     </a>
 
-                    <h5><?=$section->getCollectionName()?></h5>
+                    <h5><?=h(t($section->getCollectionName()))?></h5>
                 </header>
 
                 <?php

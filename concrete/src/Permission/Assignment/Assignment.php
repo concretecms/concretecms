@@ -50,29 +50,26 @@ class Assignment
     }
 
     /**
-     * @param string|null|false $task
+     * Build the URL of a task (replaces the previous getPermissionKeyToolsURL method)
+     *
+     * @param string $task The task to be executed ('save_permission' if empty)
+     *
+     * @param array $options Optional arguments (will be added to the query string).
      *
      * @return string
      */
-    public function getPermissionKeyToolsURL($task = false)
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        $app = Application::getFacadeApplication();
-        if (!$task) {
-            $task = 'save_permission';
-        }
-        $uh = $app->make('helper/concrete/urls');
         $class = substr(get_class($this), 0, strrpos(get_class($this), 'PermissionAssignment'));
-        $handle = $app->make('helper/text')->uncamelcase($class);
-        if ($handle) {
-            $akc = PermissionKeyCategory::getByHandle($handle);
-        } else {
+        $handle = uncamelcase($class);
+        if ($handle === '') {
             $akc = PermissionKeyCategory::getByID($this->pk->getPermissionKeyCategoryID());
+        } else {
+            $akc = PermissionKeyCategory::getByHandle($handle);
         }
-        $url = $uh->getToolsURL('permissions/categories/' . $akc->getPermissionKeyCategoryHandle(), $akc->getPackageHandle());
-        $token = $app->make('helper/validation/token')->getParameter($task);
-        $url .= '?' . $token . '&task=' . $task . '&pkID=' . $this->pk->getPermissionKeyID();
+        $options += ['pkID' => $this->pk->getPermissionKeyID()];
 
-        return $url;
+        return $akc->getTaskURL($task, $options);
     }
 
     public function clearPermissionAssignment()

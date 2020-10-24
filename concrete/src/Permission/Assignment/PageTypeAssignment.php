@@ -29,8 +29,13 @@ class PageTypeAssignment extends Assignment
         $pa->markAsInUse();
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        return parent::getPermissionKeyToolsURL($task) . '&ptID=' . $this->getPermissionObject()->getPageTypeID();
+        return parent::getPermissionKeyTaskURL($task, $options + ['ptID' => $this->getPermissionObject()->getPageTypeID()]);
     }
 }

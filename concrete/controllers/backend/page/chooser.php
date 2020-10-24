@@ -82,12 +82,34 @@ class Chooser extends \Concrete\Core\Controller\Controller
      */
     protected function getSearchResponse($result)
     {
+        $pagination = $result->getPagination();
         $pages = $this->extractSearchResultPages($result);
 
         $collection = new Collection($pages, new PageTransformer());
 
         // Setting the paginator includes paging metadata in the result
-        $this->setPaginator($collection, $result->getPagination());
+        $this->setPaginator($collection, $pagination);
+
+        if ($pagination->getTotalPages() === -1) {
+            // Get the next and previous cursor
+            $itemlist = $result->getItemListObject();
+            $factory = $itemlist->getPagerVariableFactory();
+            $collection->setMeta([
+                'ccm' => [
+                    'pagination_mode' => 'cursor',
+                    'pagination_show' => $pagination->haveToPaginate(),
+                    'ccm_cursor_prev' => $pagination->hasPreviousPage() ? $factory->getPreviousCursorValue($pagination) : null,
+                    'ccm_cursor_next' => $pagination->hasNextPage() ? $factory->getNextCursorValue($pagination) : null,
+                ],
+            ]);
+        } else {
+            $collection->setMeta([
+                'ccm' => [
+                    'pagination_mode' => 'paging',
+                    'pagination_show' => $pagination->haveToPaginate(),
+                ],
+            ]);
+        }
 
         // Send the response to the client
         $scope = $this->manager->createData($collection);

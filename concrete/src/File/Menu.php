@@ -27,7 +27,7 @@ class Menu extends DropdownMenu
 
             if ($file->canView()) {
                 $this->addItem(new DialogLinkItem(
-                        REL_DIR_FILES_TOOLS_REQUIRED . '/files/view?fID=' . $file->getFileID(),
+                        \URL::to('/ccm/system/file/view?fID=' . $file->getFileID()),
                         t('View'), t('View'), '90%', '75%')
                 );
             }

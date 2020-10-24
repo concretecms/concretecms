@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var Concrete\Core\Page\Type\Composer\FormLayoutSetControl $control
@@ -10,6 +13,7 @@ $name = '';
 if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
     $name = $pto->getPageTypeComposerControlName() . ' ';
 }
+$resolverManager = app(ResolverManagerInterface::class);
 
 ?>
 <tr class="ccm-item-set-control" data-page-type-composer-form-layout-control-set-control-id="<?=$control->getPageTypeComposerFormLayoutSetControlID() ?>">
@@ -37,7 +41,7 @@ if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
 	<td style="text-align: right; white-space: nowrap;">
 		<ul class="ccm-item-set-controls">
 			<li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fas fa-arrows-alt"></i></a></li>
-			<li><a data-command="edit-form-set-control" href="<?=REL_DIR_FILES_TOOLS_REQUIRED; ?>/page_types/composer/form/edit_control?ptComposerFormLayoutSetControlID=<?= $control->getPageTypeComposerFormLayoutSetControlID() ?>" class="dialog-launch" dialog-width="400" dialog-height="auto" dialog-modal="true" dialog-title="<?= t('Edit Form Control') ?>"><i class="fas fa-edit"></i></a></li>
+			<li><a data-command="edit-form-set-control" href="<?= h($resolverManager->resolve(['/ccm/system/page/type/composer/form/edit_control']) . '?ptComposerFormLayoutSetControlID=' . $control->getPageTypeComposerFormLayoutSetControlID()) ?>" class="dialog-launch" dialog-width="400" dialog-height="auto" dialog-modal="true" dialog-title="<?= t('Edit Form Control') ?>"><i class="fas fa-edit"></i></a></li>
 			<li><a href="#" data-delete-set-control="<?=$control->getPageTypeComposerFormLayoutSetControlID() ?>"><i class="fas fa-trash-alt"></i></a></li>
 		</ul>
 

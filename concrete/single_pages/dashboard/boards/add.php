@@ -32,7 +32,7 @@ $buttonText = t("Add");
 
             <div class="form-check">
                 <?=$form->radio('sortBy', 'relevant_date_desc')?>
-                <label class="form-check-label" for="sortBy1">
+                <label class="form-check-label" for="sortBy2">
                     <?=t('Descending Date.')?>
                 </label>
             </div>

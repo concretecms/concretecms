@@ -31,7 +31,7 @@ class Logging extends DashboardPageController
                     $this->error->add(t("The log settings are invalid."));
                 }
             } else {
-                $this->error->add(t("The token is invalid."));
+                $this->error->add($this->token->getErrorMessage());
             }
         }
 

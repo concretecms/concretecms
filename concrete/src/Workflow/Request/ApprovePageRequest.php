@@ -11,6 +11,7 @@ use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use CollectionVersion;
 use Events;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
@@ -131,7 +132,7 @@ class ApprovePageRequest extends PageRequest
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
             $button->addWorkflowProgressActionButtonParameter('data-dismiss-alert', 'page-alert');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
-            $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/approve_page_preview?wpID=' . $wp->getWorkflowProgressID());
+            $button->setWorkflowProgressActionURL(app(ResolverManagerInterface::class)->resolve(['/ccm/system/workflow/dialogs/approve_page_preview']) . '?wpID=' . $wp->getWorkflowProgressID());
             $button->setWorkflowProgressActionStyleClass('dialog-launch');
             $buttons[] = $button;
         }

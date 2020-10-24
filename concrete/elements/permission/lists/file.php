@@ -7,7 +7,7 @@ $enablePermissions = false;
 if (!$f->overrideFileFolderPermissions()) {
     ?>
 
-	<div class="alert alert-notice">
+	<div class="alert alert-info">
 	<p>
 	<?=t("Permissions for this file are currently dependent on its folder and global file permissions.")?>
 	</p>
@@ -20,7 +20,7 @@ if (!$f->overrideFileFolderPermissions()) {
     $enablePermissions = true;
     ?>
 
-	<div class="alert alert-notice">
+	<div class="alert alert-info">
 	<p><?=t("Permissions for this file currently override its sets and the global file permissions.")?></p>
 	<br/>
 	<a href="javascript:void(0)" class="btn btn-secondary btn-sm" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to Folder and Global Permissions')?></a>
@@ -35,7 +35,7 @@ if (!$f->overrideFileFolderPermissions()) {
 
 <?php $cat = PermissionKeyCategory::getByHandle('file');?>
 
-<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&fID=<?=$f->getFileID()?>">
+<form method="post" id="ccm-permission-list-form" action="<?=h ($cat->getTaskURL('save_permission_assignments', ['fID' => $f->getFileID()])) ?>">
 
 <table class="ccm-permission-grid table table-striped">
 <?php
@@ -90,7 +90,7 @@ ccm_permissionLaunchDialog = function(link) {
 	}
 	jQuery.fn.dialog.open({
 		title: $(link).attr('dialog-title'),
-		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file?duplicate=' + dupe + '&fID=<?=$f->getFileID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+		href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/file?duplicate=' + dupe + '&fID=<?=$f->getFileID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
 		modal: true,
 		width: 500,
 		height: 380
@@ -112,14 +112,14 @@ $(function() {
 
 ccm_revertToGlobalFilePermissions = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("revert_to_global_file_permissions")?>&fID=<?=$f->getFileID()?>', function() { 
+	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('revert_to_global_file_permissions', ['fID' => $f->getFileID()])) ?>, function() { 
 		ccm_refreshFilePermissions();
 	});
 }
 
 ccm_setFilePermissionsToOverride = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("override_global_file_permissions")?>&fID=<?=$f->getFileID()?>', function() { 
+	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_global_file_permissions', ['fID' => $f->getFileID()])) ?>, function() { 
 		ccm_refreshFilePermissions();
 	});
 }

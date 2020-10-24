@@ -123,5 +123,26 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/system/backend/dashboard')
             ->routes('backend/dashboard.php')
         ;
+
+        $router->buildGroup()
+            ->setNamespace('Concrete\Controller\Backend\Page\Type')
+            ->setPrefix('/ccm/system/page/type')
+            ->routes('backend/page_types.php')
+        ;   
+
+        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Workflow')
+            ->setPrefix('/ccm/system/dialogs/workflow')
+            ->routes('dialogs/workflows.php')
+        ;
+
+        $router->buildGroup()->setNamespace('Concrete\Controller\Workflow')
+            ->setPrefix('/ccm/system/workflow')
+            ->routes('workflow.php')
+        ;
+
+        $router->buildGroup()->setNamespace('Concrete\Controller\Frontend\Conversations')
+            ->setPrefix('/ccm/frontend/conversations')
+            ->routes('conversations.php')
+        ;
     }
 }
