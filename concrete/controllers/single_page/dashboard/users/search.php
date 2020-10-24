@@ -327,6 +327,10 @@ class Search extends DashboardPageController
             }
             if ($this->canEditHomeFileManagerFolderID) {
                 $uHomeFileManagerFolderID = $this->request->request->get('uHomeFileManagerFolderID');
+                if ($uHomeFileManagerFolderID == 0) {
+                    $uHomeFileManagerFolderID = '';
+                }
+
                 $data['uHomeFileManagerFolderID'] = $uHomeFileManagerFolderID;
             }
             if ($this->canEditPassword && !empty($this->request->request->get('uPassword'))) {
