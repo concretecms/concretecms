@@ -53,7 +53,8 @@ interface ConfigurationInterface
 
     /**
      * @param $fileId
+     * @param $uploadDirectoryId
      * @return Version
      */
-    public function importFile($fileId);
+    public function importFile($fileId, $uploadDirectoryId);
 }
