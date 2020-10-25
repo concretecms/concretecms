@@ -318,10 +318,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                     var me = $(this),
                                         item = me.closest('.ccm-panel-add-clipboard-block-item');
 
-                                    $.post(CCM_TOOLS_PATH + '/pile_manager', {
-                                        task: 'delete',
-                                        pcID: item.data('pcid'),
-                                        cID: item.data('cid'),
+                                    $.post(CCM_DISPATCHER_FILENAME + '/ccm/system/block/process/remove_from_clipboard/' + item.data('pcid') + '/' + item.data('cid'), {
                                         ccm_token: item.data('token')
                                     }, function () {
                                         loadClipboardItems();
