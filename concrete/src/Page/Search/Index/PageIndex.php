@@ -30,7 +30,7 @@ class PageIndex extends AbstractIndex implements ApplicationAwareInterface
     protected function getIndexer()
     {
         if (!$this->indexDriver) {
-            $this->indexDriver = $this->app[PageIndexer::class];
+            $this->indexDriver = $this->app->make(PageIndexer::class);
         }
 
         return $this->indexDriver;

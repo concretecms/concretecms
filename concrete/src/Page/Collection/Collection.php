@@ -17,6 +17,7 @@ use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Command\ReindexPageCommand;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -148,28 +149,6 @@ class Collection extends ConcreteObject implements TrackableInterface
         if (isset($cObj)) {
             return $cObj;
         }
-    }
-
-    /**
-     * (Re)Index all the collections that are marked as to be (re)indexed.
-     *
-     * @return int returns the number of reindexed pages
-     */
-    public static function reindexPendingPages()
-    {
-        $app = Application::getFacadeApplication();
-
-        $indexStack = $app->make(IndexManagerInterface::class);
-
-        $num = 0;
-        $db = $app['database']->connection();
-        $r = $db->execute('select cID from PageSearchIndex where cRequiresReindex = 1');
-        while ($id = $r->fetchColumn()) {
-            $indexStack->index(\Concrete\Core\Page\Page::class, $id);
-        }
-        Config::save('concrete.misc.do_page_reindex_check', false);
-
-        return $num;
     }
 
     /**
@@ -416,46 +395,10 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
-        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
-            // Retrieve the attribute values for the current page
-            $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
-            $indexer = $category->getSearchIndexer();
-            $values = $category->getAttributeValues($this);
-            foreach ($values as $value) {
-                $indexer->indexEntry($category, $value, $this);
-            }
 
-            if ($index == false) {
-                $index = new IndexedSearch();
-            }
-
-            $index->reindexPage($this);
-
-            $db = \Database::connection();
-            $db->Replace(
-               'PageSearchIndex',
-               ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 0],
-               ['cID'],
-               false
-            );
-
-            $cache = PageCache::getLibrary();
-            $cache->purge($this);
-
-            $app = Facade::getFacadeApplication();
-            $populator = $app->make(Populator::class);
-            $populator->updateAvailableSummaryTemplates($this);
-
-        } else {
-            $db = Loader::db();
-            Config::save('concrete.misc.do_page_reindex_check', true);
-            $db->Replace(
-               'PageSearchIndex',
-               ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 1],
-               ['cID'],
-               false
-            );
-        }
+        $command = new ReindexPageCommand($this->getCollectionID());
+        $app = Facade::getFacadeApplication();
+        $app->executeCommand($command);
     }
 
     /**

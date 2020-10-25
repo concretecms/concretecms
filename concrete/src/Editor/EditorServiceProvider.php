@@ -31,8 +31,7 @@ class EditorServiceProvider extends ServiceProvider
                 $this->registerCorePlugins($pluginManager);
                 $pluginManager->select($this->resolveSelectedPlugins($activeSite, $config, $siteService));
 
-                $editor = $app->make(CkeditorEditor::class,
-                    ['config' => $config, 'pluginManager' => $pluginManager, 'styles' => $styles]);
+                $editor = new CkeditorEditor($config, $siteService, $pluginManager, $styles, $app);
                 $editor->setToken($app->make('token')->generate('editor'));
 
                 $filePermission = FilePermissions::getGlobal();

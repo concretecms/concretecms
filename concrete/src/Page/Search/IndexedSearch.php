@@ -169,45 +169,4 @@ class IndexedSearch
         return $text;
     }
 
-    /**
-     * Reindexes the search engine.
-     */
-    public function reindexAll($fullReindex = false)
-    {
-        Cache::disableAll();
-
-        /** @var IndexManagerInterface $indexStack */
-        $indexStack = Application::getFacadeApplication()->make(IndexManagerInterface::class);
-
-        $db = Loader::db();
-
-        if ($fullReindex) {
-            $db->Execute("truncate table PageSearchIndex");
-        }
-
-        $pl = new PageList();
-        $pl->ignoreAliases();
-        $pl->ignorePermissions();
-        $pl->sortByCollectionIDAscending();
-        $pl->filter(
-            false,
-            '(c.cDateModified > psi.cDateLastIndexed or UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(psi.cDateLastIndexed) > ' . $this->searchReindexTimeout . ' or psi.cID is null or psi.cDateLastIndexed is null)'
-        );
-        $pl->filter(false, '(ak_exclude_search_index is null or ak_exclude_search_index = 0)');
-        $pages = $pl->get($this->searchBatchSize);
-
-        $num = 0;
-        foreach ($pages as $c) {
-            $indexStack->index(Page::class, $c);
-        }
-
-        $pnum = Collection::reindexPendingPages();
-        $num = $num + $pnum;
-
-        Cache::enableAll();
-        $result = new stdClass();
-        $result->count = $num;
-
-        return $result;
-    }
 }

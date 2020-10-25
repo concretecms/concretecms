@@ -79,10 +79,6 @@ EOL;
 EOL;
         }
         $v->addFooterItem($js);
-
-        if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
-            $v->addFooterItem('<script type="text/javascript">$(function() { ConcretePageIndexer.reindexPendingPages(); });</script>');
-        }
         $cih = Loader::helper('concrete/ui');
         if (Localization::activeLanguage() != 'en') {
             $v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
