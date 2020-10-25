@@ -128,7 +128,7 @@ if ($editingJobSet !== null) {
                     <p><?= t('To run all the jobs in this Job Set, schedule this URL using cron or a similar system:') ?></p>
                     <?= $form->textarea(
                         '',
-                        (string) $urlResolver->resolve(["/tools/required/jobs?auth={$auth}&jsID={$editingJobSet->getJobSetID()}"]),
+                        (string) $urlResolver->resolve(["/ccm/system/jobs?auth={$auth}&jsID={$editingJobSet->getJobSetID()}"]),
                         [
                             'class' => 'ccm-default-jobs-url',
                             'rows' => '2',
