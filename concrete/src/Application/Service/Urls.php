@@ -47,30 +47,6 @@ class Urls
     }
 
     /**
-     * @deprecated
-     * Gets a URL to reference a script in the tools directory
-     *
-     * @param string $tool
-     * @param string $pkgHandle
-     *
-     * @return string Relative url to tool
-     */
-    public function getToolsURL($tool, $pkgHandle = null)
-    {
-        if ($pkgHandle != null) {
-            $url = REL_DIR_FILES_TOOLS_PACKAGES . '/' . $pkgHandle . '/' . $tool;
-
-            return $url;
-        } else {
-            if (file_exists(DIR_APPLICATION . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
-                return REL_DIR_FILES_TOOLS . '/' . $tool;
-            } else {
-                return REL_DIR_FILES_TOOLS_REQUIRED . '/' . $tool;
-            }
-        }
-    }
-
-    /**
      * Gets a full URL to an icon for a particular block type.
      *
      * @param \Concrete\Core\Entity\Block\BlockType\BlockType $bt
