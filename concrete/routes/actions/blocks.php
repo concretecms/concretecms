@@ -30,3 +30,11 @@ $router
         'bID' => '[1-9]\d*',
     ])
 ;
+$router
+    ->all('/process/remove_from_clipboard/{pcID}/{cID}', 'Block\Process::removeFromClipboard')
+    ->setRequirements([
+        'pcID' => '[1-9]\d*',
+        'cID' => '[1-9]\d*',
+    ])
+;
+    
