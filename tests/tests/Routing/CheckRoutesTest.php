@@ -61,7 +61,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function provideRouteWithDefaultParameters(): array
+    public function provideRouteWithDefaultParameters()
     {
         $app = ApplicationFacade::getFacadeApplication();
         $result = [];
@@ -81,7 +81,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideRouteWithDefaultParameters
      */
-    public function testRouteWithArguments(Application $app, bool $requestArgumentValue, bool $requestWithTrailingSlash, bool $routeWithTrailingShash, bool $routeWithDefaultArgumentValue): void
+    public function testRouteWithArguments(Application $app, $requestArgumentValue, $requestWithTrailingSlash, $routeWithTrailingShash, $routeWithDefaultArgumentValue)
     {
         $router = $app->build(Router::class);
         $request = Request::create('http://localhost/foo/bar' . ($requestArgumentValue ? '/custom-baz' : '') . ($requestWithTrailingSlash ? '/' : ''));
