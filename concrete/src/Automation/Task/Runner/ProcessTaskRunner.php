@@ -8,7 +8,7 @@ use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Automation\Task\TaskInterface;
 use Concrete\Core\Entity\Automation\Process;
 use Concrete\Core\Foundation\Command\Command;
-use Concrete\Core\Foundation\Command\MessengerServiceProvider;
+use Concrete\Core\Messenger\MessengerServiceProvider;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

@@ -97,7 +97,7 @@ return [
         /*
         'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
         */
-        'core_messenger' => '\Concrete\Core\Foundation\Command\MessengerServiceProvider',
+        'core_messenger' => '\Concrete\Core\Messenger\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',

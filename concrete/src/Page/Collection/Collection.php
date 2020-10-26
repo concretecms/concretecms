@@ -12,6 +12,7 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
+use Concrete\Core\Messenger\MessageBusManager;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
@@ -398,7 +399,7 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         $command = new ReindexPageCommand($this->getCollectionID());
         $app = Facade::getFacadeApplication();
-        $app->executeCommand($command);
+        $app->executeCommand($command, MessageBusManager::BUS_DEFAULT_ASYNC);
     }
 
     /**

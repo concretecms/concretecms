@@ -8,6 +8,7 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Messenger\MessageBusManager;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
@@ -43,16 +44,16 @@ class Application extends Container
     protected $packages = [];
 
     /**
-     * Dispatches a command/message on the command bus. If the command is executed immediately, the result is returned.
+     * Dispatches a command/message on the message bus. If the command is executed immediately, the result is returned.
      * This is a convenience method for mostly synchronous commands, and it uses the command bus.
      *
      * @param $command
      * @return mixed
      */
-    public function executeCommand($command)
+    public function executeCommand($command, $onBus = MessageBusManager::BUS_DEFAULT)
     {
-        $messenger = $this->app->make('messenger/bus/command');
-        $envelope = $messenger->dispatch($command);
+        $messageBus = $this->make(MessageBusManager::class)->getBus($onBus);
+        $envelope = $messageBus->dispatch($command);
         $handled = $envelope->last(HandledStamp::class);
         if ($handled instanceof HandledStamp) {
             return $handled->getResult();
