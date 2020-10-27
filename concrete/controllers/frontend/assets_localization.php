@@ -130,6 +130,7 @@ var ccmi18n = ' . json_encode([
     'fullArea' => t('This area is full!'),
     'progressiveOperationLoading' => t('Determining items remaining...'),
     'notifications' => t('Notifications'),
+    'selectNoResult' => t('No result for %s. Add it?', '{0}'),
 ]) . ';
 var ccmi18n_editor = ' . json_encode([
     'insertLinkToFile' => t('Insert Link to File'),
