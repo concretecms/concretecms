@@ -102,7 +102,7 @@ if ($akSelectAllowOtherValues) {
             $('select[data-select-and-add="<?=$akID?>"]').selectpicker(
                 {
                     liveSearch: true,
-                    selectOnTab: true,
+                    allowAdd: true,
                 }
             ).ajaxSelectPicker(
                 {
