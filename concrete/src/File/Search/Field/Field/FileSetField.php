@@ -55,7 +55,7 @@ class FileSetField extends AbstractField
             $sets[$set->getFileSetID()] = $set->getFileSetName();
         }
 
-        return $form->selectMultiple('fsID', $sets, $this->data['fsID'], ['class' => 'selectize-select']);
+        return $form->selectMultiple('fsID', $sets, $this->data['fsID'], ['class' => 'ccm-enhanced-select']);
     }
 
 
