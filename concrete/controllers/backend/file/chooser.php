@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\ExternalFileProvider\ExternalFileList;
 use Concrete\Core\File\ExternalFileProvider\ExternalFileProviderFactory;
+use Concrete\Core\File\ExternalFileProvider\ExternalSearchRequest;
 use Concrete\Core\File\ExternalFileProvider\Type\Type;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\Filesystem;
@@ -319,13 +320,23 @@ class Chooser extends Controller
             $selectedFileType = $this->request->query->get("selectedFileType");
         }
 
-        $fileList = $config->searchFiles($keyword, $selectedFileType);
+        $searchRequest = new ExternalSearchRequest();
 
-        /*
-         * This code below is very proof of concept.
-         *
-         * @todo: create a item list with pagination adapter and use buildFileListFractalResponse() for building the response.
-         */
+        $currentPage = (int)$this->request->query->get("ccm_paging_fl", 0);
+        $itemsPerPage = (int)$this->request->query->get("itemsPerPage", 20);
+        $orderBy = $this->request->query->get("ccm_order_by");
+        $orderByDirection = $this->request->query->get("ccm_order_by_direction", "ASC");
+
+        $searchRequest->setSearchTerm($keyword);
+        $searchRequest->setFileType($selectedFileType);
+        $searchRequest->setCurrentPage($currentPage);
+        $searchRequest->setItemsPerPage($itemsPerPage);
+        $searchRequest->setOrderBy($orderBy);
+        $searchRequest->setOrderByDirection($orderByDirection);
+
+        $fileList = $config->searchFiles($searchRequest);
+
+        $totalPages = (int)$fileList->getTotalFiles() / $itemsPerPage;
 
         return new JsonResponse([
             "data" => $fileList,
@@ -336,11 +347,11 @@ class Chooser extends Controller
                     'sort_direction' => 'ccm_order_by_direction'
                 ],
                 'pagination' => [
-                    'total' => is_array($fileList->getFiles()) ? count($fileList->getFiles()) : 0,
-                    'count' => is_array($fileList->getFiles()) ? count($fileList->getFiles()) : 0,
-                    'per_page' => 999999,
-                    'current_page' => 1,
-                    'total_pages' => 1,
+                    'total' => $fileList->getTotalFiles(),
+                    'count' => $fileList->getTotalFiles(),
+                    'per_page' => $itemsPerPage,
+                    'current_page' => $currentPage,
+                    'total_pages' => $totalPages,
                     'links' => []
                 ]
             ]
