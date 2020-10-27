@@ -5,6 +5,7 @@ namespace Concrete\Core\File\ExternalFileProvider\Configuration;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\File\ExternalFileProvider\ExternalFileList;
+use Concrete\Core\File\ExternalFileProvider\ExternalSearchRequest;
 use Concrete\Core\Http\Request;
 
 interface ConfigurationInterface
@@ -30,11 +31,10 @@ interface ConfigurationInterface
     public function getTypeObject();
 
     /**
-     * @param string $keyword
-     * @param string $selectedFileType
+     * @param ExternalSearchRequest $externalSearchRequest
      * @return ExternalFileList
      */
-    public function searchFiles($keyword, $selectedFileType);
+    public function searchFiles($externalSearchRequest);
 
     /**
      * @return bool
