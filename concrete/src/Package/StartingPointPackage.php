@@ -81,7 +81,6 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_jobs', 69, t('Installing automated jobs.')),
             new StartingPointInstallRoutine('install_dashboard', 78, t('Installing dashboard.')),
             new StartingPointInstallRoutine('install_required_single_pages', 79, t('Installing login and registration pages.')),
-            new StartingPointInstallRoutine('install_image_editor', 80, t('Adding image editor functionality.')),
             new StartingPointInstallRoutine('install_config', 81, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 82, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 83, t('Adding pages and content.')),
@@ -258,12 +257,6 @@ class StartingPointPackage extends Package
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/global.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/root.xml');
-    }
-
-    protected function install_image_editor()
-    {
-        $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/image_editor.xml');
     }
 
     /**
