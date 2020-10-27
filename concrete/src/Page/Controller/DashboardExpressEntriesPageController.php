@@ -109,7 +109,8 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
             $writer = $this->app->make(CsvWriter::class, [
                 $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
-                new Date()
+                new Date(),
+                $datetime_format
             ]);
             echo $bom;
             $writer->insertHeaders($entity);
