@@ -1,8 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 ?>
-<form method="POST" id="user-timezone-form" action="<?= $view->action('update'); ?>">
-    <?php $token->output('update_timezone'); ?>
+<form method="POST" id="user-timezone-form" action="<?= $view->action('update') ?>">
+    <?php $token->output('update_timezone') ?>
 
     <fieldset>
         <legend><?=t('Server Configuration'); ?></legend>

@@ -537,14 +537,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 $o->text = $opt->getSelectAttributeOptionValue(false);
                 $values[] = $o;
             }
-
-            // this is required so bootstrap-select can add the new value to its list
-            // if (count($values) === 0) {
-            //     $o = new \stdClass();
-            //     $o->value = $term;
-            //     $o->text = $term;
-            //     $values[] = $o;
-            // }
         }
 
         return new JsonResponse($values);
