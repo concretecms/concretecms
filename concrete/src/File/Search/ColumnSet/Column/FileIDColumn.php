@@ -43,7 +43,7 @@ class FileIDColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('f.fID %s :sortID', $sort);
         $query->setParameter('sortID', $mixed->getFileID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

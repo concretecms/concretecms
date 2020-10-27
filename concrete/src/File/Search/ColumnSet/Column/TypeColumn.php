@@ -50,7 +50,7 @@ class TypeColumn extends Column implements PagerColumnInterface
         $where = sprintf('(case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end, n.treeNodeID) %s (:sortType, :sortID)', $sort);
         $query->setParameter('sortType', $this->getTypeValue($mixed));
         $query->setParameter('sortID', $mixed->getTreeNodeID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

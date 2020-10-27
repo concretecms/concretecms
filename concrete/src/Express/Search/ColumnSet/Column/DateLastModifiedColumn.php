@@ -30,7 +30,7 @@ class DateLastModifiedColumn extends Column implements PagerColumnInterface
         $where = sprintf('(e.exEntryDateModified, e.exEntryID) %s (:sortDate, :sortID)', $sort);
         $query->setParameter('sortDate', $entry->getDateModified()->format('Y-m-d H:i:s'));
         $query->setParameter('sortID', $entry->getID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

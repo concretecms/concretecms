@@ -31,7 +31,7 @@ class HomeFolderColumn extends Column implements PagerColumnInterface
         $where = sprintf('(u.uHomeFileManagerFolderID, u.uID) %s (:sortName, :sortID)', $sort);
         $query->setParameter('sortName', $mixed->getUserHomeFolderId());
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

@@ -35,7 +35,7 @@ class NameColumn extends Column implements PagerColumnInterface
         }
         $query->setParameter('sortName', $name);
         $query->setParameter('sortID', $mixed->getTreeNodeID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

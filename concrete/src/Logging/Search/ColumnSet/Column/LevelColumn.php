@@ -37,7 +37,7 @@ class LevelColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('l.level %s :level', $sort);
         $query->setParameter('level', $mixed->getLevel());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

@@ -35,7 +35,7 @@ class DateModifiedColumn extends Column implements PagerColumnInterface
         }
         $query->setParameter('sortDate', $date);
         $query->setParameter('sortID', $mixed->getTreeNodeID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

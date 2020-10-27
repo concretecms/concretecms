@@ -30,7 +30,7 @@ class PageIDColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('p.cID %s :sortID', $sort);
         $query->setParameter('sortID', $mixed->getCollectionID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

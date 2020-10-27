@@ -30,7 +30,7 @@ class DateCreatedColumn extends Column implements PagerColumnInterface
         $where = sprintf('(e.exEntryDateCreated, e.exEntryID) %s (:sortDate, :sortID)', $sort);
         $query->setParameter('sortDate', $entry->getDateCreated()->format('Y-m-d H:i:s'));
         $query->setParameter('sortID', $entry->getID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

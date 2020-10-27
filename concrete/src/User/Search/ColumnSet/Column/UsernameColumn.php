@@ -31,7 +31,7 @@ class UsernameColumn extends Column implements PagerColumnInterface
         $where = sprintf('(u.uName, u.uID) %s (:sortName, :sortID)', $sort);
         $query->setParameter('sortName', $mixed->getUserName());
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

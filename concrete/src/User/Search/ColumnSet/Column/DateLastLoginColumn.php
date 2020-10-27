@@ -32,7 +32,7 @@ class DateLastLoginColumn extends Column implements PagerColumnInterface
         $date = $mixed->getLastLogin();
         $query->setParameter('sortDate', $date);
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

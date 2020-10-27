@@ -31,7 +31,7 @@ class SitemapDisplayOrderColumn extends Column implements PagerColumnInterface
         $where = sprintf('(p.cDisplayOrder, p.cID) %s (:sortOrder, :sortID)', $sort);
         $query->setParameter('sortOrder', $mixed->getCollectionDisplayOrder());
         $query->setParameter('sortID', $mixed->getCollectionID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

@@ -33,6 +33,6 @@ class FileAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnIn
         $where = sprintf('(' . $this->getColumnKey() . ', f.fID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);
         $query->setParameter('sortID', $mixed->getFileID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 }

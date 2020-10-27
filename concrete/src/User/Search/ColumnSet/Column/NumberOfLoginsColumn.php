@@ -31,7 +31,7 @@ class NumberOfLoginsColumn extends Column implements PagerColumnInterface
         $where = sprintf('(u.uNumLogins, u.uID) %s (:sortOrder, :sortID)', $sort);
         $query->setParameter('sortOrder', $mixed->getNumLogins());
         $query->setParameter('sortID', $mixed->getUSerID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }
