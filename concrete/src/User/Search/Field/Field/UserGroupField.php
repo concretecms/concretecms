@@ -55,7 +55,7 @@ class UserGroupField extends AbstractField
     {
         $gl = new GroupList();
         $g1 = $gl->getResults();
-        $html = '<div class="form-group"><select multiple name="gID[]" class="selectize-select">';
+        $html = '<div class="form-group"><select multiple name="gID[]" class="ccm-enhanced-select">';
         foreach ($g1 as $g) {
             $gp = new \Permissions($g);
             if ($gp->canSearchUsersInGroup($g)) {
