@@ -36,7 +36,7 @@ class Sitemap
     /**
      * @var bool|null
      */
-    protected $includeSystemPages;
+    protected $includeSystemPages = false;
 
     /**
      * Sitemap constructor.
@@ -61,11 +61,6 @@ class Sitemap
      */
     public function includeSystemPages()
     {
-        if ($this->includeSystemPages === null) {
-            $session = $this->app->make('session');
-            $this->includeSystemPages = (bool) $session->get('includeSystemPages');
-        }
-
         return $this->includeSystemPages;
     }
 
@@ -75,12 +70,6 @@ class Sitemap
     public function setIncludeSystemPages($systemPages)
     {
         $this->includeSystemPages = (bool) $systemPages;
-        $session = $this->app->make('session');
-        if ($systemPages) {
-            $session->set('includeSystemPages', true);
-        } else {
-            $session->remove('includeSystemPages');
-        }
     }
 
     /**
