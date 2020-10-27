@@ -26,5 +26,6 @@ class SitemapOverlay extends ElementController
         $this->set('overlayID', uniqid());
         $this->set('cParentID', (int) $this->request->query->get('cParentID'));
         $this->set('display', (string) $this->request->query->get('display'));
+        $this->set('includeSystemPages', (bool) $this->request->query->get('includeSystemPages'));
     }
 }

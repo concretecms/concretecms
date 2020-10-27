@@ -5,6 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string $overlayID
  * @var int $cParentID
  * @var string $display
+ * @var bool $includeSystemPages
  */
 ?>
 
@@ -23,6 +24,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             cParentID: <?= $cParentID; ?>,
             displayNodePagination: <?= $display === 'flat' ? 'true' : 'false' ?>,
             displaySingleLevel: <?= $display === 'flat' ? 'true' : 'false' ?>,
+            includeSystemPages: <?= $includeSystemPages ? 'true' : 'false' ?>,
             isSitemapOverlay: true,
         });
     });
