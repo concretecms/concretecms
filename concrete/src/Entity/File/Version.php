@@ -1649,6 +1649,12 @@ class Version implements ObjectInterface
                 if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                     $path_resolver = $app->make(Resolver::class);
                     $path = $path_resolver->getPath($this, $type);
+                    if ($path) {
+                        $url = $app->make('site')->getSite()->getSiteCanonicalURL();
+                        if ($url) {
+                            $path = $url . $path;
+                        }
+                    }
                 }
             }
         } else {
