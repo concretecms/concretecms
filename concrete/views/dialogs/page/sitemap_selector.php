@@ -1,13 +1,13 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
-<div class="ccm-ui" id="ccm-sitemap-search-selector">
+<div class="ccm-ui h-100" id="ccm-sitemap-search-selector">
     <div class="container-fluid h-100">
         <div class="row h-100">
             <div class="col-3 border-right">
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a data-toggle="tab" id="sitemap-sitemap-tab" href="#sitemap-sitemap" class="nav-link active"><?=t('Full Sitemap')?></a>
-                    </li>
+                    </li> 
                     <li class="nav-item">
                         <a data-toggle="tab" id="sitemap-explore-tab" href="#sitemap-explore" class="nav-link"><?=t('Flat Sitemap')?></a>
                     </li>
