@@ -39,7 +39,7 @@ class UserIdentifierColumn extends Column implements PagerColumnInterface
             $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
             $where = sprintf('l.uID %s :uID', $sort);
             $query->setParameter('uID', $mixed->getUser()->getUserID());
-            $query->andWhere($where);
+            $query->add('where', $where);
         }
     }
 

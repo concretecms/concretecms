@@ -15,6 +15,6 @@ class UserAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnIn
         $where = sprintf('(' . $this->getColumnKey() . ', u.uID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 }

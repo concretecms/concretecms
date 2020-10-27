@@ -38,7 +38,7 @@ class SizeColumn extends Column implements PagerColumnInterface
         }
         $query->setParameter('sortSize', $size);
         $query->setParameter('sortID', $mixed->getTreeNodeID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

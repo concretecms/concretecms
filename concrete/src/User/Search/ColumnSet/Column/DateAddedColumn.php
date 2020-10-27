@@ -31,7 +31,7 @@ class DateAddedColumn extends Column implements PagerColumnInterface
         $where = sprintf('(u.uDateAdded, u.uID) %s (:sortDate, :sortID)', $sort);
         $query->setParameter('sortDate', $mixed->getUserDateAdded()->format('Y-m-d H:i:s'));
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

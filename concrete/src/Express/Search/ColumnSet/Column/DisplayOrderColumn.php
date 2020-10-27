@@ -30,7 +30,7 @@ class DisplayOrderColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('e.exEntryDisplayOrder %s :sortID', $sort);
         $query->setParameter('sortID', $entry->getEntryDisplayOrder());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

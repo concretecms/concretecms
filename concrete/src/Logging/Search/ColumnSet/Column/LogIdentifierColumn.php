@@ -37,7 +37,7 @@ class LogIdentifierColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('l.logID %s :logID', $sort);
         $query->setParameter('logID', $mixed->getId());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

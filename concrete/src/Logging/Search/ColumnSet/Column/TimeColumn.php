@@ -39,7 +39,7 @@ class TimeColumn extends Column implements PagerColumnInterface
             $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
             $where = sprintf('l.time %s :time', $sort);
             $query->setParameter('time', $mixed->getTime()->getTimestamp());
-            $query->andWhere($where);
+            $query->add('where', $where);
         }
     }
 

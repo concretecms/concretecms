@@ -37,7 +37,7 @@ class ChannelColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('l.channel %s :channel', $sort);
         $query->setParameter('channel', $mixed->getChannel());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

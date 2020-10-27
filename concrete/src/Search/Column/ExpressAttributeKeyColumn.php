@@ -16,6 +16,6 @@ class ExpressAttributeKeyColumn extends AttributeKeyColumn implements PagerColum
         $where = sprintf('(' . $this->getColumnKey() . ', e.exEntryID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 }

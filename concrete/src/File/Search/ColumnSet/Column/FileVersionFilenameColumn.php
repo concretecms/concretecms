@@ -44,7 +44,7 @@ class FileVersionFilenameColumn extends Column implements PagerColumnInterface
         $where = sprintf('(fv.fvFilename, f.fID) %s (:sortName, :sortID)', $sort);
         $query->setParameter('sortName', $mixed->getFilename());
         $query->setParameter('sortID', $mixed->getFileID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

@@ -15,6 +15,6 @@ class CollectionAttributeKeyColumn extends AttributeKeyColumn implements PagerCo
         $where = sprintf('(' . $this->getColumnKey() . ', p.cID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);
         $query->setParameter('sortID', $mixed->getCollectionID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 }

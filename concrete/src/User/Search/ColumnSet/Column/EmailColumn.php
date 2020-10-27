@@ -31,7 +31,7 @@ class EmailColumn extends Column implements PagerColumnInterface
         $where = sprintf('(u.uEmail, u.uID) %s (:sortName, :sortID)', $sort);
         $query->setParameter('sortName', $mixed->getUserEmail());
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

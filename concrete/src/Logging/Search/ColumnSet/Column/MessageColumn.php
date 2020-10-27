@@ -37,7 +37,7 @@ class MessageColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('l.message %s :message', $sort);
         $query->setParameter('message', $mixed->getMessage());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

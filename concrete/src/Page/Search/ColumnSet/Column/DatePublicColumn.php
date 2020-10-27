@@ -31,7 +31,7 @@ class DatePublicColumn extends Column implements PagerColumnInterface
         $where = sprintf('(cv.cvDatePublic, p.cID) %s (:sortDate, :sortID)', $sort);
         $query->setParameter('sortDate', $mixed->getCollectionDatePublic());
         $query->setParameter('sortID', $mixed->getCollectionID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }

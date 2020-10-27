@@ -31,7 +31,7 @@ class CollectionVersionColumn extends Column implements PagerColumnInterface
         $where = sprintf('(cv.cvName, p.cID) %s (:sortName, :sortID)', $sort);
         $query->setParameter('sortName', $mixed->getCollectionName());
         $query->setParameter('sortID', $mixed->getCollectionID());
-        $query->andWhere($where);
+        $query->add('where', $where);
     }
 
 }
