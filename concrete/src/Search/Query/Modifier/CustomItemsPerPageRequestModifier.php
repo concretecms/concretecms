@@ -15,7 +15,7 @@ class CustomItemsPerPageRequestModifier extends AbstractRequestModifier
 
     public function __construct(int $maxPerPage, Request $request, $method = Request::METHOD_POST)
     {
-        $this->itemsPerPageOptions = $itemsPerPageOptions;
+        $this->maxPerPage = $maxPerPage;
         $this->method = $method;
         $this->request = $request;
     }
