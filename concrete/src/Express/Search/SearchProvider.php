@@ -97,6 +97,9 @@ class SearchProvider extends AbstractSearchProvider
     public function getItemList()
     {
         $list = new EntryList($this->entity);
+        if (!$this->entity->supportsEntrySpecificPermissions()) {
+            $list->ignorePermissions();
+        }
         $list->setupAutomaticSorting();
         return $list;
     }

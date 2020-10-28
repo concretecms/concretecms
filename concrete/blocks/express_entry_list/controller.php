@@ -21,6 +21,8 @@ use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
+use Concrete\Core\Search\Query\Modifier\ConfigurableItemsPerPageRequestModifier;
+use Concrete\Core\Search\Query\Modifier\ItemsPerPageRequestModifier;
 use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\ItemColumn;
@@ -254,12 +256,27 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             $queryModifier = new QueryModifier();
             $queryModifier->addModifier(new AutoSortColumnRequestModifier($searchProvider, $this->request, Request::METHOD_GET));
+            if ($this->enableItemsPerPageSelection) {
+                $maxItemsPerPage = max($this->getItemsPerPageOptions());
+                if ($this->request->query->get('itemsPerPage')) {
+                    $itemsPerPageSpecified = (int) $this->request->query->get('itemsPerPage');
+                    if ($itemsPerPageSpecified <= $maxItemsPerPage) {
+                        $queryModifier->addModifier(new ConfigurableItemsPerPageRequestModifier(
+                            $this->getItemsPerPageOptions(), $this->request, Request::METHOD_GET)
+                        );
+                    } else {
+                        unset($itemsPerPageSpecified);
+                    }
+                }
+            }
             $query = $queryModifier->process($query);
 
             $result = $resultFactory->createFromQuery($searchProvider, $query);
             $list = $result->getItemListObject();
-            if ($this->displayLimit > 0) {
-                $list->setItemsPerPage(intval($this->displayLimit));
+            if (!isset($itemsPerPageSpecified)) {
+                if ($this->displayLimit > 0) {
+                    $list->setItemsPerPage(intval($this->displayLimit));
+                }
             }
             $result = new Result($result->getListColumns(), $list, $result->getBaseURL());
             $pagination = $result->getPagination();
@@ -269,13 +286,34 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $this->requireAsset('css', 'core/frontend/pagination');
             }
 
+            if ($this->enableItemsPerPageSelection) {
+                $this->set('itemsPerPageOptions', $this->getItemsPerPageOptions());
+            }
             $this->set('list', $list);
             $this->set('result', $result);
             $this->set('entity', $entity);
+            $this->set('itemsPerPageSelected', $itemsPerPageSpecified ?: $this->displayLimit);
             $this->set('tableSearchProperties', $tableSearchProperties);
             $this->set('tableSearchAssociations', $tableSearchAssociations);
             $this->set('detailPage', $this->getDetailPageObject());
         }
+    }
+
+    protected function getItemsPerPageOptions()
+    {
+        $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
+        $category = $entity->getAttributeKeyCategory();
+        $category = $entity->getAttributeKeyCategory();
+        $itemsPerPageOptions = [];
+        $itemsPerPageOptions[] = $this->displayLimit;
+        $searchProvider = new SearchProvider($entity, $category, $this->app->make('session'));
+        foreach($searchProvider->getItemsPerPageOptions() as $option) {
+            if (!in_array($option, $itemsPerPageOptions)) {
+                $itemsPerPageOptions[] = $option;
+            }
+        }
+        sort($itemsPerPageOptions);
+        return $itemsPerPageOptions;
     }
 
     public function save($data)
