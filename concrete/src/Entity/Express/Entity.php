@@ -13,8 +13,6 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryResults;
 use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Export\Item\Express\Entity as EntityExporter;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Boolean;
-
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @ORM\Table(name="ExpressEntities")
