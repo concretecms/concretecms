@@ -2,6 +2,7 @@
 namespace Concrete\Core\Messenger;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Messenger\Registry\RegistryInterface;
 use Concrete\Core\Messenger\Transport\Sender\CoreDoctrineSendersLocator;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Symfony\Component\Messenger\MessageBus;
@@ -23,50 +24,22 @@ class MessengerServiceProvider extends ServiceProvider
     {
 
         $this->app->singleton(SerializerInterface::class, Serializer::class);
-        $this->app->singleton(MessageBusManager::class, function(Application $app) {
-            $manager = new MessageBusManager();
-            $manager->addBus(MessageBusManager::BUS_DEFAULT, function() use ($app) {
-                $bus = new MessageBus(
-                    [
-                        new AddBusNameStampMiddleware(MessageBusManager::BUS_DEFAULT),
-                        new RejectRedeliveredMessageMiddleware(),
-                        new DispatchAfterCurrentBusMiddleware(),
-                        new FailedMessageProcessingMiddleware(),
-                        new SendMessageMiddleware(new SendersLocator([], $app)),
-                        new HandleMessageMiddleware($app->make(HandlersLocator::class)),
-                    ]
-                );
-                return $bus;
-            });
 
-            $manager->addBus(MessageBusManager::BUS_DEFAULT_ASYNC, function() use ($app, $sendersLocator) {
-                $bus = new MessageBus(
-                    [
-                        new AddBusNameStampMiddleware(MessageBusManager::BUS_DEFAULT_ASYNC),
-                        new RejectRedeliveredMessageMiddleware(),
-                        new DispatchAfterCurrentBusMiddleware(),
-                        new FailedMessageProcessingMiddleware(),
-                        new SendMessageMiddleware($app->make(CoreDoctrineSendersLocator::class)),
-                        new HandleMessageMiddleware($app->make(HandlersLocator::class)),
-                    ]
-                );
-                return $bus;
-            });
+        $buses = (array) $this->app->make('config')->get('concrete.messenger.buses');
+        $this->app->singleton(MessageBusManager::class, function(Application $app) use ($buses) {
+            $manager = new MessageBusManager();
+            foreach ($buses as $handle => $registryClass) {
+                /**
+                 * @var $registry RegistryInterface
+                 */
+                $registry = $app->make($registryClass);
+                $manager->addBus($handle, $registry->getBusBuilder($handle));
+            }
             return $manager;
         });
 
         $this->app->singleton(MessageBusInterface::class, function(Application $app) {
             return $app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT);
         });
-
-
-        /*
-
-
-        $this->app->singleton('messenger/bus/command',
-            function ($app) use ($senders) {
-            }
-        );
-        */
     }
 }

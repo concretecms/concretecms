@@ -94,9 +94,6 @@ return [
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
-        /*
-        'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
-        */
         'core_messenger' => '\Concrete\Core\Messenger\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',

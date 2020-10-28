@@ -338,6 +338,12 @@ return [
      */
     'messenger' => [
 
+        'buses' => [
+            \Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT =>
+            \Concrete\Core\Messenger\Registry\CommandBus::class,
+            \Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT_ASYNC =>
+            \Concrete\Core\Messenger\Registry\AsyncBus::class
+        ],
 
         'consume' => [
 
