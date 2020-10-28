@@ -6,7 +6,6 @@ use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Utility\Service\Identifier;
-use View;
 
 class SiteLocaleSelector
 {
@@ -17,18 +16,18 @@ class SiteLocaleSelector
      * @param \Concrete\Core\Entity\Site\Site $site
      * @param \Concrete\Core\Entity\Site\Locale|null $selectedLocale
      * @param array $options Supported options are:
-     *     bool $allowNull Set to a non falsy value to allow users to choose "no" locale [default: false]
-     *     string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
-     *     bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
+     *                       bool $allowNull Set to a non falsy value to allow users to choose "no" locale [default: false]
+     *                       string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
+     *                       bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
      *
      * @return string
      */
-    public function selectLocale($fieldName, Site $site, Locale $selectedLocale = null, array $options = [])
+    public function selectLocale($fieldName, Site $site, ?Locale $selectedLocale = null, array $options = [])
     {
         $siteLocales = $site->getLocales()->toArray();
 
         $allowNull = !empty($options['allowNull']);
-        $nullText = isset($options['noLocaleText']) ? $options['noLocaleText'] : t('No Locale');
+        $nullText = $options['noLocaleText'] ?? t('No Locale');
         $displayLocaleCode = $this->shouldDisplayLocaleCode($options, $siteLocales);
 
         if ($selectedLocale === null && !$allowNull) {
@@ -67,7 +66,7 @@ class SiteLocaleSelector
             $localeHTML .= '</a></li>';
         }
 
-        $html = <<<EOL
+        return <<<EOL
         <input type="hidden" name="{$fieldName}" value="{$localeID}">
         <div class="btn-group" data-locale-selector="{$identifier}">
             <button type="button" class="btn btn-default" data-toggle="dropdown">
@@ -94,8 +93,6 @@ class SiteLocaleSelector
         </script>
 
 EOL;
-
-        return $html;
     }
 
     /**
@@ -105,8 +102,8 @@ EOL;
      * @param \Concrete\Core\Entity\Site\Site $site
      * @param \Concrete\Core\Entity\Site\Locale[]|string[]|int[] $selectedLocales
      * @param array $options Supported options are:
-     *     string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
-     *     bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
+     *                       string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
+     *                       bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
      *
      * @return string
      */
@@ -145,7 +142,7 @@ EOL;
             $htmlOptions .= ' data-content="' . $optionContent . '"';
 
             $searchToken = $displayLocaleCode ? htmlspecialchars($siteLocale->getLanguageText()) . ' ' . htmlspecialchars($siteLocale->getLocale()) : htmlspecialchars($siteLocale->getLanguageText());
-            $htmlOptions .= ' data-tokens="' .  $searchToken . '"';
+            $htmlOptions .= ' data-tokens="' . $searchToken . '"';
 
             $htmlOptions .= ' value="' . $siteLocale->getLocaleID() . '"';
             if (in_array($siteLocale, $actuallySelectedLocales, true)) {
@@ -163,7 +160,7 @@ EOL;
         return <<<EOL
 
 <select id="{$identifierHtml}" name="{$fieldNameHtml}" multiple="multiple" class="ccm-sitelocaleselector">
-    $htmlOptions
+    {$htmlOptions}
 </select>
 <script type="text/javascript">
 $(document).ready(function() {

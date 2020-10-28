@@ -1,15 +1,13 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-use HtmlObject\Element;
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Support\Facade\Application;
+use HtmlObject\Element;
 
 $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);
 
-/*
- * Checkbox list.
- */
+// Checkbox list.
 if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
     $options = $controller->getOptions();
     foreach ($options as $opt) {
@@ -27,12 +25,10 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
     }
 }
 
-/*
- * Select Menu.
- */
+// Select Menu.
 if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && !$akDisplayMultipleValuesOnSelect) {
     if (!$akHideNoneOption) {
-        $options = array('' => t('** None'));
+        $options = ['' => t('** None')];
     }
     foreach ($controller->getOptions() as $option) {
         $options[$option->getSelectAttributeOptionID()] = $option->getSelectAttributeOptionDisplayValue();
@@ -45,9 +41,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && !$akDisplayMu
 <?php
 }
 
-/*
- * Radio list.
- */
+// Radio list.
 if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMultipleValuesOnSelect) {
     if (!$akHideNoneOption) {
         ?>
@@ -72,10 +66,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMul
     <?php }
 }
 
-
-/*
- * Select2
- */
+// Select2
 if ($akSelectAllowOtherValues) {
     $options = [];
 
@@ -89,13 +80,13 @@ if ($akSelectAllowOtherValues) {
     }
 
     echo (string) new Element(
-        "span",
+        'span',
         $form->selectMultiple($view->field('atSelectOptionValue'), $options, count($selectedOptionIDs) ? $selectedOptionIDs : '', ['data-select-and-add' => $akID]),
         [
-            "class" => "ccm-select-values-selector",
-            "id" => "ccm-select-values-selector-" . $akID,
+            'class' => 'ccm-select-values-selector',
+            'id' => 'ccm-select-values-selector-' . $akID,
         ]
-        );
+    );
     ?>
     <script type="text/javascript">
         $(function() {
@@ -107,20 +98,20 @@ if ($akSelectAllowOtherValues) {
             ).ajaxSelectPicker(
                 {
                     ajax: {
-                        url: "<?=$view->action('load_autocomplete_values');?>",
+                        url: "<?=$view->action('load_autocomplete_values'); ?>",
                         data: {
                             term: "{{{q}}}"
                         },
                     },
                     locale: {
-                        currentlySelected: "<?=t("Currently Selected");?>",
-                        emptyTitle: "<?=t("Select and begin typing");?>",
-                        errorText: "<?=t("Unable to retrieve results");?>",
-                        searchPlaceholder: "<?=t("Search...");?>",
-                        statusInitialized: "<?=t("Start typing a search query");?>",
-                        statusNoResults: "<?=t("No Results");?>",
-                        statusSearching: "<?=t("Searching...");?>",
-                        statusTooShort: "<?=t("Please enter more characters");?>",
+                        currentlySelected: "<?=t('Currently Selected'); ?>",
+                        emptyTitle: "<?=t('Select and begin typing'); ?>",
+                        errorText: "<?=t('Unable to retrieve results'); ?>",
+                        searchPlaceholder: "<?=t('Search...'); ?>",
+                        statusInitialized: "<?=t('Start typing a search query'); ?>",
+                        statusNoResults: "<?=t('No Results'); ?>",
+                        statusSearching: "<?=t('Searching...'); ?>",
+                        statusTooShort: "<?=t('Please enter more characters'); ?>",
                     },
                     preserveSelected: true,
                     clearOnEmpty: false,

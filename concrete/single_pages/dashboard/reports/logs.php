@@ -8,15 +8,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\MenuInterface;
 use Concrete\Core\Logging\LogEntry;
+use Concrete\Core\Logging\Menu;
 use Concrete\Core\Logging\Search\Result\Column;
-use Concrete\Core\Logging\Search\Result\Result;
 use Concrete\Core\Logging\Search\Result\Item;
 use Concrete\Core\Logging\Search\Result\ItemColumn;
-use Concrete\Core\Logging\Menu;
+use Concrete\Core\Logging\Search\Result\Result;
 
-/* @var MenuInterface $menu */
-/* @var Result $result */
-/* @var DropdownMenu $resultsBulkMenu */
+// @var MenuInterface $menu
+// @var Result $result
+// @var DropdownMenu $resultsBulkMenu
 
 ?>
 <div id="ccm-search-results-table">
@@ -39,7 +39,7 @@ use Concrete\Core\Logging\Menu;
                             data-reference="parent">
 
                             <span class="sr-only">
-                                <?php echo t("Toggle Dropdown"); ?>
+                                <?php echo t('Toggle Dropdown'); ?>
                             </span>
                     </button>
 
@@ -49,25 +49,25 @@ use Concrete\Core\Logging\Menu;
                 </div>
             </th>
 
-            <?php foreach ($result->getColumns() as $column): ?>
+            <?php foreach ($result->getColumns() as $column) { ?>
                 <?php /** @var Column $column */ ?>
                 <th class="<?php echo $column->getColumnStyleClass(); ?>">
-                    <?php if ($column->isColumnSortable()): ?>
+                    <?php if ($column->isColumnSortable()) { ?>
                         <a href="<?php echo $column->getColumnSortURL(); ?>">
                             <?php echo $column->getColumnTitle(); ?>
                         </a>
-                    <?php else: ?>
+                    <?php } else { ?>
                         <span>
                             <?php echo $column->getColumnTitle(); ?>
                         </span>
-                    <?php endif; ?>
+                    <?php } ?>
                 </th>
-            <?php endforeach; ?>
+            <?php } ?>
         </tr>
         </thead>
 
         <tbody>
-        <?php foreach ($result->getItems() as $item): ?>
+        <?php foreach ($result->getItems() as $item) { ?>
             <?php
             /** @var Item $item */
             /** @var LogEntry $page */
@@ -75,24 +75,24 @@ use Concrete\Core\Logging\Menu;
             ?>
             <tr data-details-url="javascript:void(0)">
                 <td class="ccm-search-results-checkbox">
-                    <?php if ($logEntry instanceof LogEntry): ?>
+                    <?php if ($logEntry instanceof LogEntry) { ?>
                         <!--suppress HtmlFormInputWithoutLabel -->
                         <input data-search-checkbox="individual"
                                type="checkbox"
                                data-item-id="<?php echo $logEntry->getId(); ?>"/>
-                    <?php endif; ?>
+                    <?php } ?>
                 </td>
 
-                <?php foreach ($item->getColumns() as $column): ?>
+                <?php foreach ($item->getColumns() as $column) { ?>
                     <?php /** @var ItemColumn $column */ ?>
                     <td class="<?php echo $class; ?>">
                         <?php echo $column->getColumnValue(); ?>
                     </td>
-                <?php endforeach; ?>
+                <?php } ?>
 
                 <?php $menu = new Menu($logEntry); ?>
 
-                <?php if ($menu): ?>
+                <?php if ($menu) { ?>
                     <td class="ccm-search-results-menu-launcher">
                         <div class="dropdown" data-menu="search-result">
 
@@ -111,9 +111,9 @@ use Concrete\Core\Logging\Menu;
                             <?php echo $menu->getMenuElement(); ?>
                         </div>
                     </td>
-                <?php endif; ?>
+                <?php } ?>
             </tr>
-        <?php endforeach; ?>
+        <?php } ?>
         </tbody>
     </table>
 </div>

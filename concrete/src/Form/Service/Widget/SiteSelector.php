@@ -1,11 +1,8 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
-use Concrete\Core\Entity\Site\SiteTree;
-use Concrete\Core\Site\Tree\TreeInterface;
-use Core;
 use Page;
-use Permissions;
 
 class SiteSelector
 {
@@ -17,6 +14,9 @@ class SiteSelector
      *
      * @param $fieldName
      * @param bool|int $cID
+     * @param mixed $siteID
+     * @param mixed $includeCurrent
+     * @param mixed $includeAll
      *
      * @return string
      */
@@ -25,7 +25,7 @@ class SiteSelector
         $currentSelected = $siteID !== 'current' ? 'selected' : '';
         $allSelected = $siteID === 'all' ? 'selected' : '';
         $current = t('Current Site');
-        $all  = t('All Sites');
+        $all = t('All Sites');
         $defaults = t('Default');
         $specific = t('Sites');
 
@@ -52,9 +52,7 @@ class SiteSelector
             {$sites}
         </select>
 EOL;
-
         } else {
-
         $html = <<<EOL
         <select name="siteID" data-select="search-sites" class="form-control">
             <optgroup label="{$defaults}">
@@ -66,15 +64,12 @@ EOL;
             </optgroup>
         </select>
 EOL;
-
         }
 
-        $html .= <<<EOL
+        $html .= <<<'EOL'
         <script type="text/javascript">$(function() { $('select[data-select=search-sites]').selectpicker({width: '100%'}); });</script>
 EOL;
 
         return $html;
     }
-
-
 }

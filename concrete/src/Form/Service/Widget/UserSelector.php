@@ -57,7 +57,7 @@ class UserSelector
         }
 
         if ($selectedUID && $this->app->make(Numbers::class)->integer($selectedUID, 1)) {
-            $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int)$selectedUID);
+            $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int) $selectedUID);
         } else {
             $userInfo = null;
         }
@@ -158,8 +158,8 @@ EOL;
         $userList = [];
 
         if ($selectedUserId && $this->app->make(Numbers::class)->integer($selectedUserId, 1)) {
-            $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int)$selectedUserId);
-            $userList[(int)$selectedUserId] = $userInfo->getUserDisplayName();
+            $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int) $selectedUserId);
+            $userList[(int) $selectedUserId] = $userInfo->getUserDisplayName();
         } else {
             $userInfo = null;
         }
@@ -179,35 +179,35 @@ EOL;
             " $('#ccm-quick-user-selector-{$identifier} select').selectpicker({liveSearch: true}).ajaxSelectPicker(%s);\n" .
             "});\n" .
             "</script>\n",
-            (string)new Element(
-                "span",
+            (string) new Element(
+                'span',
                 $form->select($fieldName, $userList, $selectedUserId, $miscFields),
                 [
-                    "class" => "ccm-quick-user-selector",
-                    "id" => "ccm-quick-user-selector-" . $identifier
+                    'class' => 'ccm-quick-user-selector',
+                    'id' => 'ccm-quick-user-selector-' . $identifier,
                 ]
             ),
             json_encode([
-                "ajax" => [
-                    "url" => (string) $resolverManager->resolve(['/ccm/system/user/autocomplete']),
-                    "data" => [
-                        "term" => "{{{q}}}",
-                        "key" => $fieldName,
-                        "token" => $token
-                    ]
+                'ajax' => [
+                    'url' => (string) $resolverManager->resolve(['/ccm/system/user/autocomplete']),
+                    'data' => [
+                        'term' => '{{{q}}}',
+                        'key' => $fieldName,
+                        'token' => $token,
+                    ],
                 ],
-                "locale" => [
-                    "currentlySelected" => t("Currently Selected"),
-                    "emptyTitle" => t("Select and begin typing"),
-                    "errorText" => t("Unable to retrieve results"),
-                    "searchPlaceholder" => t("Search..."),
-                    "statusInitialized" => t("Start typing a search query"),
-                    "statusNoResults" => t("No Results"),
-                    "statusSearching" => t("Searching..."),
-                    "statusTooShort" => t("Please enter more characters")
+                'locale' => [
+                    'currentlySelected' => t('Currently Selected'),
+                    'emptyTitle' => t('Select and begin typing'),
+                    'errorText' => t('Unable to retrieve results'),
+                    'searchPlaceholder' => t('Search...'),
+                    'statusInitialized' => t('Start typing a search query'),
+                    'statusNoResults' => t('No Results'),
+                    'statusSearching' => t('Searching...'),
+                    'statusTooShort' => t('Please enter more characters'),
                 ],
-                "preserveSelected" => false,
-                "minLength" => 2
+                'preserveSelected' => false,
+                'minLength' => 2,
             ])
         );
     }

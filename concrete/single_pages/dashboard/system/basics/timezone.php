@@ -24,8 +24,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         <div class="form-group">
             <label class="control-label launch-tooltip" data-placement="right" title="<?= t(
-                'These two values must match, otherwise there will be date inconsistencies.'
-            ); ?>">
+    'These two values must match, otherwise there will be date inconsistencies.'
+); ?>">
                 <?php echo t('Status'); ?>
             </label>
             <div>
@@ -52,8 +52,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <legend><?=t('Settings'); ?></legend>
         <div class="form-group">
             <label class="control-label launch-tooltip" for="timezone" data-placement="right" title="<?= t(
-                'This will control the default timezone that will be used to display date/times.'
-            ); ?>">
+                    'This will control the default timezone that will be used to display date/times.'
+                ); ?>">
                 <?php echo t('Default Timezone'); ?>
             </label>
             <div class="row pl-3">

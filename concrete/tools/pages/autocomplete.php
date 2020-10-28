@@ -1,10 +1,10 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\PageList;
-use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validation\CSRF\Token;
 
 $app = Application::getFacadeApplication();
 /** @var Token $valt */
@@ -12,9 +12,9 @@ $valt = $app->make(Token::class);
 /** @var Request $request */
 $request = $app->make(Request::class);
 
-$key = $request->request->get("key");
-$token = $request->request->get("token");
-$term = $request->request->get("term");
+$key = $request->request->get('key');
+$token = $request->request->get('token');
+$term = $request->request->get('term');
 
 $pageNames = [];
 

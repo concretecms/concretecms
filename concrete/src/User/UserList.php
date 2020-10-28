@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\User;
 
 use Concrete\Core\Database\Query\LikeBuilder;
@@ -10,12 +11,10 @@ use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
-use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class UserList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
-
     /**
      * Determines whether the list should automatically always sort by a column that's in the automatic sort.
      * This is the default, but it's better to be able to use the AutoSortColumnRequestModifier on a search
@@ -26,56 +25,10 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     protected $enableAutomaticSorting = false;
 
-    public function __construct(StickyRequest $req = null)
-    {
-        $u = Application::getFacadeApplication()->make(User::class);
-        if ($u->isSuperUser()) {
-            $this->ignorePermissions();
-        }
-        parent::__construct($req);
-    }
-
     /**
-     * @return \Closure|int|null
+     * @var \Closure | integer | null
      */
-    public function getPermissionsChecker()
-    {
-        return $this->permissionsChecker;
-    }
-
-    public function getPagerVariableFactory()
-    {
-        return new VariableFactory($this, $this->getSearchRequest());
-    }
-
-    public function getPagerManager()
-    {
-        return new UserListPagerManager($this);
-    }
-
-    /** @var  \Closure | integer | null */
     protected $permissionsChecker;
-
-    public function setPermissionsChecker(\Closure $checker = null)
-    {
-        $this->permissionsChecker = $checker;
-    }
-
-    public function ignorePermissions()
-    {
-        $this->permissionsChecker = -1;
-    }
-
-    public function enablePermissions()
-    {
-        unset($this->permissionsChecker);
-    }
-
-
-    protected function getAttributeKeyClassName()
-    {
-        return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
-    }
 
     /**
      * Columns in this array can be sorted via the request.
@@ -106,18 +59,51 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     protected $includeUnvalidatedUsers = false;
 
-    protected function setBaseQuery()
+    /**
+     * @var UserInfoRepository|null
+     */
+    private $userInfoRepository;
+
+    public function __construct(?StickyRequest $req = null)
     {
-        $sql = '';
-        if ($this->sortUserStatus) {
-            // When uStatus column is selected, we also get the "status" column for
-            // multilingual sorting purposes.
-            $sql =
-                ", CASE WHEN u.uIsActive = 1 THEN '" . t('Active') . "' " .
-                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '" . t('Inactive') . "' " .
-                "ELSE '" . t('Unvalidated') . "' END AS uStatus";
+        $u = Application::getFacadeApplication()->make(User::class);
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
         }
-        $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
+        parent::__construct($req);
+    }
+
+    /**
+     * @return \Closure|int|null
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
+
+    public function getPagerManager()
+    {
+        return new UserListPagerManager($this);
+    }
+
+    public function setPermissionsChecker(?\Closure $checker = null)
+    {
+        $this->permissionsChecker = $checker;
+    }
+
+    public function ignorePermissions()
+    {
+        $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function getTotalResults()
@@ -129,22 +115,21 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
             // when we get total results, because we're resetting the select
             return $query->resetQueryParts([
                 'groupBy',
-                'orderBy'
+                'orderBy',
             ])->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
-        } else {
-            return -1; // unknown
         }
+
+            return -1; // unknown
     }
 
     public function getPaginationAdapter()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+        return new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
             // when we get total results, because we're resetting the select
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1);
         });
-        return $adapter;
     }
 
     public function checkPermissions($mixed)
@@ -152,19 +137,15 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (isset($this->permissionsChecker)) {
             if ($this->permissionsChecker === -1) {
                 return true;
-            } else {
-                return call_user_func_array($this->permissionsChecker, [$mixed]);
             }
+
+                return call_user_func_array($this->permissionsChecker, [$mixed]);
         }
 
         $cp = new \Permissions($mixed);
+
         return $cp->canViewUser();
     }
-
-    /**
-     * @var UserInfoRepository|null
-     */
-    private $userInfoRepository = null;
 
     /**
      * @param UserInfoRepository $value
@@ -222,7 +203,8 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->select('u.uID')
             ->from('Users', 'u')
             ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID')
-            ->groupBy('u.uID');
+            ->groupBy('u.uID')
+        ;
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -254,6 +236,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * but a little duplication is ok sometimes.
      *
      * @param $val
+     * @param mixed $isActive
      */
     public function filterByIsActive($isActive)
     {
@@ -349,48 +332,22 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
         $this->checkGroupJoin();
         $app = Application::getFacadeApplication();
-        /** @var $likeBuilder LikeBuilder */
+        /** @var LikeBuilder $likeBuilder */
         $likeBuilder = $app->make(LikeBuilder::class);
         $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
         $orX = $this->getQueryObject()->expr()->orX();
-        $query->select('u.uID')->from('Users','u')
-            ->leftJoin('u','UserGroups','ug','u.uID=ug.uID')
-            ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
-        $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPath_'.$group->getGroupID()));
-        $this->getQueryObject()->setParameter('groupPath_'.$group->getGroupID(),$likeBuilder->escapeForLike($group->getGroupPath()). '/%');
+        $query->select('u.uID')->from('Users', 'u')
+            ->leftJoin('u', 'UserGroups', 'ug', 'u.uID=ug.uID')
+            ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID')
+        ;
+        $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPath_' . $group->getGroupID()));
+        $this->getQueryObject()->setParameter('groupPath_' . $group->getGroupID(), $likeBuilder->escapeForLike($group->getGroupPath()) . '/%');
         $orX->add($this->getQueryObject()->expr()->eq('g.gID', $group->getGroupID()));
         $query->where($orX);
         if ($inGroup) {
             $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->in('u.uID', $query->getSQL()));
         } else {
             $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->notIn('u.uID', $query->getSQL()));
-        }
-
-    }
-
-    /**
-     * Function used to check if a group join has already been set
-     */
-    private function checkGroupJoin() {
-        $query = $this->getQueryObject();
-        $params = $query->getQueryPart('join');
-        $isGroupSet = false;
-        $isUserGroupSet = false;
-        // Loop twice as params returns an array of arrays
-        foreach ($params as $param) {
-            foreach ($param as $setTable)
-                if (in_array('ug', $setTable)) {
-                    $isUserGroupSet = true;
-                }
-            if (in_array('g', $setTable)) {
-                $isGroupSet = true;
-            }
-        }
-        if ($isUserGroupSet === false) {
-            $query->leftJoin('u', 'UserGroups', 'ug', 'ug.uID = u.uID');
-        }
-        if ($isGroupSet === false) {
-            $query->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'),'g', 'ug.gID = g.gID');
         }
     }
 
@@ -406,49 +363,53 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $groupIDs = [];
         $orX = $this->getQueryObject()->expr()->orX();
         $app = Application::getFacadeApplication();
-        /** @var $likeBuilder LikeBuilder */
+        /** @var LikeBuilder $likeBuilder */
         $likeBuilder = $app->make(LikeBuilder::class);
         $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
 
         foreach ($groups as $group) {
             if ($group instanceof \Concrete\Core\User\Group\Group) {
-                $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPathChild_'.$group->getGroupID()));
-                $this->getQueryObject()->setParameter('groupPathChild_'.$group->getGroupID(), $likeBuilder->escapeForLike($group->getGroupPath()). '/%');
+                $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPathChild_' . $group->getGroupID()));
+                $this->getQueryObject()->setParameter('groupPathChild_' . $group->getGroupID(), $likeBuilder->escapeForLike($group->getGroupPath()) . '/%');
 
                 $groupIDs[] = $group->getGroupID();
             }
         }
         if (is_array($groups) && count($groups) > 0) {
-            $query->select('u.uID')->from('Users','u')
-                ->leftJoin('u','UserGroups','ug','u.uID=ug.uID')
-                ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
+            $query->select('u.uID')->from('Users', 'u')
+                ->leftJoin('u', 'UserGroups', 'ug', 'u.uID=ug.uID')
+                ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID')
+            ;
             $orX->add($this->getQueryObject()->expr()->in('g.gID', $groupIDs));
             $query->where($orX)->andWhere($this->getQueryObject()->expr()->isNotNull('g.gID'));
             if ($inGroups) {
                 $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->in('u.uID', $query->getSQL()));
             } else {
                 $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->notIn('u.uID', $query->getSQL()));
-                $this->getQueryObject()->setParameter('groupIDs',$groupIDs, \Concrete\Core\Database\Connection\Connection::PARAM_INT_ARRAY);
+                $this->getQueryObject()->setParameter('groupIDs', $groupIDs, \Concrete\Core\Database\Connection\Connection::PARAM_INT_ARRAY);
             }
         }
-
-
-
     }
 
     /**
      * Filters by date added.
      *
      * @param string $date
+     * @param mixed $comparison
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison,
-            $this->query->createNamedParameter($date)));
+        $this->query->andWhere($this->query->expr()->comparison(
+            'u.uDateAdded',
+            $comparison,
+            $this->query->createNamedParameter($date)
+        ));
     }
 
     /**
      * Filters by Group ID.
+     *
+     * @param mixed $gID
      */
     public function filterByGroupID($gID)
     {
@@ -477,5 +438,50 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     {
         $this->query->addGroupBy('u.uDateAdded');
         $this->query->orderBy('u.uDateAdded', 'desc');
+    }
+
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
+    }
+
+    protected function setBaseQuery()
+    {
+        $sql = '';
+        if ($this->sortUserStatus) {
+            // When uStatus column is selected, we also get the "status" column for
+            // multilingual sorting purposes.
+            $sql =
+                ", CASE WHEN u.uIsActive = 1 THEN '" . t('Active') . "' " .
+                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '" . t('Inactive') . "' " .
+                "ELSE '" . t('Unvalidated') . "' END AS uStatus";
+        }
+        $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
+    }
+
+    /**
+     * Function used to check if a group join has already been set.
+     */
+    private function checkGroupJoin() {
+        $query = $this->getQueryObject();
+        $params = $query->getQueryPart('join');
+        $isGroupSet = false;
+        $isUserGroupSet = false;
+        // Loop twice as params returns an array of arrays
+        foreach ($params as $param) {
+            foreach ($param as $setTable)
+                if (in_array('ug', $setTable)) {
+                    $isUserGroupSet = true;
+                }
+            if (in_array('g', $setTable)) {
+                $isGroupSet = true;
+            }
+        }
+        if ($isUserGroupSet === false) {
+            $query->leftJoin('u', 'UserGroups', 'ug', 'ug.uID = u.uID');
+        }
+        if ($isGroupSet === false) {
+            $query->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID = g.gID');
+        }
     }
 }

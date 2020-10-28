@@ -1,17 +1,18 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
-use Core;
-use Page;
-use Permissions;
-use HtmlObject\Element;
-use Concrete\Core\Http\Request;
-use Concrete\Core\Form\Service\Form;
-use Concrete\Core\Entity\Site\SiteTree;
-use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Site\SiteTree;
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Utility\Service\Validation\Numbers;
+use Concrete\Core\Validation\CSRF\Token;
+use Core;
+use HtmlObject\Element;
+use Page;
+use Permissions;
 
 class PageSelector
 {
@@ -47,7 +48,7 @@ class PageSelector
     {
         $selectedCID = 0;
         if (isset($_REQUEST[$fieldName])) {
-            $selectedCID = intval($_REQUEST[$fieldName]);
+            $selectedCID = (int) ($_REQUEST[$fieldName]);
         } else {
             if ($cID > 0) {
                 $selectedCID = $cID;
@@ -76,6 +77,7 @@ $(function() {
 });
 </script>
 EOL;
+
         return $html;
     }
 
@@ -106,7 +108,7 @@ EOL;
         $pageList = [];
 
         if ($selectedCID && $this->app->make(Numbers::class)->integer($selectedCID, 1)) {
-            $page = $this->app->make(Page::class)->getByID((int)$selectedCID);
+            $page = $this->app->make(Page::class)->getByID((int) $selectedCID);
             $cp = new Permissions($page);
             if ($cp->canViewPage()) {
                 $pageList[(int) $selectedCID] = $page->getCollectionName();
@@ -125,49 +127,49 @@ EOL;
             "});\n" .
             "</script>\n",
             (string) new Element(
-                "span",
+                'span',
                 $form->select($key, $pageList, $selectedCID, $miscFields),
                 [
-                    "class" => "ccm-quick-page-selector",
-                    "id" => "ccm-quick-page-selector-" . $identifier,
+                    'class' => 'ccm-quick-page-selector',
+                    'id' => 'ccm-quick-page-selector-' . $identifier,
                 ]
             ),
             json_encode([
-                "ajax" => [
-                    "url" => REL_DIR_FILES_TOOLS_REQUIRED . '/pages/autocomplete',
-                    "data" => [
-                        "term" => "{{{q}}}",
-                        "key" => $key,
-                        "token" => $token,
+                'ajax' => [
+                    'url' => REL_DIR_FILES_TOOLS_REQUIRED . '/pages/autocomplete',
+                    'data' => [
+                        'term' => '{{{q}}}',
+                        'key' => $key,
+                        'token' => $token,
                     ],
                 ],
-                "locale" => [
-                    "currentlySelected" => t("Currently Selected"),
-                    "emptyTitle" => t("Select and begin typing"),
-                    "errorText" => t("Unable to retrieve results"),
-                    "searchPlaceholder" => t("Search..."),
-                    "statusInitialized" => t("Start typing a search query"),
-                    "statusNoResults" => t("No Results"),
-                    "statusSearching" => t("Searching..."),
-                    "statusTooShort" => t("Please enter more characters"),
+                'locale' => [
+                    'currentlySelected' => t('Currently Selected'),
+                    'emptyTitle' => t('Select and begin typing'),
+                    'errorText' => t('Unable to retrieve results'),
+                    'searchPlaceholder' => t('Search...'),
+                    'statusInitialized' => t('Start typing a search query'),
+                    'statusNoResults' => t('No Results'),
+                    'statusSearching' => t('Searching...'),
+                    'statusTooShort' => t('Please enter more characters'),
                 ],
-                "preserveSelected" => false,
-                "minLength" => 2,
+                'preserveSelected' => false,
+                'minLength' => 2,
             ])
         );
     }
 
-    public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = 'HOME_CID', $filters = array())
+    public function selectMultipleFromSitemap($field, $pages = [], $startingPoint = 'HOME_CID', $filters = [])
     {
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
 
         $args = new \stdClass();
-        $selected = array();
+        $selected = [];
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field]) && is_array($_POST[$field])) {
                 foreach ($_POST[$field] as $value) {
-                    $selected[] = intval($value);
+                    $selected[] = (int) $value;
                 }
             }
         } else {
@@ -199,7 +201,7 @@ EOL;
         return $html;
     }
 
-    public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', SiteTree $siteTree = null, $filters = array())
+    public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', ?SiteTree $siteTree = null, $filters = [])
     {
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
@@ -209,7 +211,7 @@ EOL;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field])) {
-                $selected = intval($_POST[$field]);
+                $selected = (int) ($_POST[$field]);
             }
         } elseif ($page) {
             $selected = is_object($page) ? $page->getCollectionID() : $page;

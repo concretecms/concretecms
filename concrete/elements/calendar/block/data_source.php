@@ -27,7 +27,8 @@ $calendars = array_filter(
     function ($calendar) {
         $permissionChecker = new Checker($calendar);
         $responseObject = $permissionChecker->getResponseObject();
-        return $responseObject->validate("view_calendar_in_edit_interface");
+
+        return $responseObject->validate('view_calendar_in_edit_interface');
     }
 );
 
@@ -65,17 +66,17 @@ if ($calendarAttributeKeyHandle) {
 ?>
 
 <div class="form-group">
-    <?php echo $form->label("chooseCalendar", t('Calendar')); ?>
+    <?php echo $form->label('chooseCalendar', t('Calendar')); ?>
 
     <div class="form-check">
-        <?php echo $form->radio('chooseCalendar', 'specific', $chooseCalendar, ["id" => "chooseCalendarSpecific", "name" => "chooseCalendar"]) ?>
-        <?php echo $form->label('chooseCalendarSpecific', t('Specific Calendar'), ["class" => "form-check-label"]) ?>
+        <?php echo $form->radio('chooseCalendar', 'specific', $chooseCalendar, ['id' => 'chooseCalendarSpecific', 'name' => 'chooseCalendar']) ?>
+        <?php echo $form->label('chooseCalendarSpecific', t('Specific Calendar'), ['class' => 'form-check-label']) ?>
     </div>
 
     <?php if (count($calendarAttributeKeys)) { ?>
         <div class="form-check">
-            <?php echo $form->radio('chooseCalendar', 'site', $chooseCalendar, ["id" => "chooseCalendarSite", "name" => "chooseCalendar"]) ?>
-            <?php echo $form->label('chooseCalendarSite', t('Site-wide Calendar'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('chooseCalendar', 'site', $chooseCalendar, ['id' => 'chooseCalendarSite', 'name' => 'chooseCalendar']) ?>
+            <?php echo $form->label('chooseCalendarSite', t('Site-wide Calendar'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div data-row="calendar-attribute">
@@ -89,12 +90,12 @@ if ($calendarAttributeKeyHandle) {
     <div data-row="specific-calendar">
         <div class="form-group">
             <?php
-            echo $form->label("calendarSelect", t('Calendar'));
+            echo $form->label('calendarSelect', t('Calendar'));
 
             if (isset($multiple) && $multiple) {
-                echo $form->selectMultiple('caID[]', $calendarSelect, $caID, ["id" => "calendarSelect", "name" => "caID[]"]);
+                echo $form->selectMultiple('caID[]', $calendarSelect, $caID, ['id' => 'calendarSelect', 'name' => 'caID[]']);
             } else {
-                echo $form->select('caID', $calendarSelect, $caID, ["id" => "calendarSelect", "name" => "caID"]);
+                echo $form->select('caID', $calendarSelect, $caID, ['id' => 'calendarSelect', 'name' => 'caID']);
             }
             ?>
         </div>
