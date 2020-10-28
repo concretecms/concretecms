@@ -1652,7 +1652,13 @@ class Version implements ObjectInterface
                     if ($path) {
                         $url = $app->make('site')->getSite()->getSiteCanonicalURL();
                         if ($url) {
-                            $path = $url . $path;
+                            // Note: this logic seems like the wrong place to put this. getThumbnailURL() should
+                            // definitely return a URL and not a relative path, so I don't have a problem with
+                            // changing what this method returns. However it seems like the thumbnail path resolver
+                            // itself should have an option to get a full URL, and we should be using that
+                            // method and move this canonical URL logic into the thumbnail path resolver instead.
+                            // @TODO - refactor this and make it more elegant, while retaining this URL behavior.
+                            $path = rtrim($url, '/') . $path;
                         }
                     }
                 }
