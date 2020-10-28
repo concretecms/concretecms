@@ -4,7 +4,6 @@ namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Controller\Controller;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Folder\FavoriteFolder;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
@@ -928,54 +927,6 @@ class File extends Controller
         return new UploadedFile($finalFilePath, $originalFile->getClientOriginalName());
     }
 
-    private function getDirectories($treeNodeParentId = null, $level = 1)
-    {
-        $directories = [];
-
-        if ($treeNodeParentId === null) {
-            $fs = new Filesystem();
-
-            $treeNodeParentId = $fs->getRootFolder()->getTreeNodeID();
-
-            $directories[] = [
-                "directoryId" => $treeNodeParentId,
-                "directoryName" => t("File Manager"),
-                "directoryLevel" => 0
-            ];
-        }
-
-        /** @var Connection $db */
-        $db = $this->app->make(Connection::class);
-        $qb = $db->createQueryBuilder();
-
-        $rows = $qb
-            ->select("tn.treeNodeId, tn.treeNodeName, tn.treeNodeParentId")
-            ->from("TreeNodes", "tn")
-            ->leftJoin("tn", "TreeNodeTypes", "tnt", "tn.treeNodeTypeID = tnt.treeNodeTypeID")
-            ->where($qb->expr()->andX(
-                $qb->expr()->eq('tnt.treeNodeTypeHandle', ':treeNodeTypeHandle'),
-                $qb->expr()->eq('tn.treeNodeParentId', ':treeNodeParentId')
-            ))
-            ->setParameter("treeNodeTypeHandle", "file_folder")
-            ->setParameter("treeNodeParentId", $treeNodeParentId)
-            ->execute()
-            ->fetchAll();
-
-        if (is_array($rows) && count($rows) > 0) {
-            foreach ($rows as $row) {
-                $directories[] = [
-                    "directoryId" => $row["treeNodeId"],
-                    "directoryName" => $row["treeNodeName"],
-                    "directoryLevel" => $level
-                ];
-
-                $directories = array_merge($directories, $this->getDirectories($row["treeNodeId"], $level + 1));
-            }
-        }
-
-        return $directories;
-    }
-
     public function fetchDirectories()
     {
         $directories = [];
@@ -990,7 +941,31 @@ class File extends Controller
 
         try {
             if ($token->validate()) {
-                $directories = $this->getDirectories();
+                $filesystem = new Filesystem();
+                $folder = $filesystem->getRootFolder();
+
+                if ($folder instanceof FileFolder) {
+                    $nodes = $folder->getHierarchicalNodesOfType(
+                        "file_folder",
+                        1,
+                        true,
+                        true,
+                        20
+                    );
+
+                    foreach ($nodes as $node) {
+                        /** @var FileFolder $treeNodeObject */
+                        $treeNodeObject = $node["treeNodeObject"];
+                        $nodePermissions = new Checker($treeNodeObject);
+                        if ($nodePermissions->canAddFiles()) {
+                            $directories[] = [
+                                "directoryId" => $treeNodeObject->getTreeNodeID(),
+                                "directoryName" => $treeNodeObject->getTreeNodeName(),
+                                "directoryLevel" => $node["level"]
+                            ];
+                        }
+                    }
+                }
             } else {
                 throw new UserMessageException($token->getErrorMessage(), 401);
             }
