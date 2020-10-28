@@ -792,7 +792,7 @@ EOT
         } else {
             $options = [];
             foreach ($value->getSelectedOptions() as $selectedOption) {
-                // @var SelectValueOption $selectedOption
+                /** @var SelectValueOption $selectedOption */
                 $options[] = $selectedOption->getSelectAttributeOptionValue();
             }
             $result = implode("\n", $options);
@@ -823,7 +823,7 @@ EOT
             }
         } else {
             $settings = $this->getAttributeKeySettings();
-            // @var SelectSettings $settings
+            /** @var SelectSettings $settings */
             if ($numOptions > 1 && !$settings->getAllowMultipleValues()) {
                 $warnings->add(t('The Select Attribute with handle "%s" does not support multiple options: only the first one will be imported', $this->attributeKey->getAttributeKeyHandle()));
                 $firstOptionText = array_shift($optionTexts);
@@ -880,7 +880,7 @@ EOT
 
     protected function load()
     {
-        // @var \Concrete\Core\Entity\Attribute\Key\SelectKey
+        /** @var \Concrete\Core\Entity\Attribute\Key\SelectKey */
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
             return false;
