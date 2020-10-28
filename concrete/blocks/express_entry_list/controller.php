@@ -21,7 +21,7 @@ use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
-use Concrete\Core\Search\Query\Modifier\ConfigurableItemsPerPageRequestModifier;
+use Concrete\Core\Search\Query\Modifier\CustomItemsPerPageRequestModifier;
 use Concrete\Core\Search\Query\Modifier\ItemsPerPageRequestModifier;
 use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
@@ -261,8 +261,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                 if ($this->request->query->get('itemsPerPage')) {
                     $itemsPerPageSpecified = (int) $this->request->query->get('itemsPerPage');
                     if ($itemsPerPageSpecified <= $maxItemsPerPage) {
-                        $queryModifier->addModifier(new ConfigurableItemsPerPageRequestModifier(
-                            $this->getItemsPerPageOptions(), $this->request, Request::METHOD_GET)
+                        $queryModifier->addModifier(new CustomItemsPerPageRequestModifier(
+                            $maxItemsPerPage, $this->request, Request::METHOD_GET)
                         );
                     } else {
                         unset($itemsPerPageSpecified);
