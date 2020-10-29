@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
@@ -8,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class NumberOfLoginsColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -31,7 +34,7 @@ class NumberOfLoginsColumn extends Column implements PagerColumnInterface
         $where = sprintf('(u.uNumLogins, u.uID) %s (:sortOrder, :sortID)', $sort);
         $query->setParameter('sortOrder', $mixed->getNumLogins());
         $query->setParameter('sortID', $mixed->getUSerID());
-        $query->add('where', $where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }

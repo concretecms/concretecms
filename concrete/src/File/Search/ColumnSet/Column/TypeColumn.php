@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
@@ -8,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class TypeColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -50,7 +53,7 @@ class TypeColumn extends Column implements PagerColumnInterface
         $where = sprintf('(case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end, n.treeNodeID) %s (:sortType, :sortID)', $sort);
         $query->setParameter('sortType', $this->getTypeValue($mixed));
         $query->setParameter('sortID', $mixed->getTreeNodeID());
-        $query->add('where', $where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }
