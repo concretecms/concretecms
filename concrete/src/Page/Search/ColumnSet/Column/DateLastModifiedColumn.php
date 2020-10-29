@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
@@ -8,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class DateLastModifiedColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -31,7 +34,7 @@ class DateLastModifiedColumn extends Column implements PagerColumnInterface
         $where = sprintf('(c.cDateModified, p.cID) %s (:sortDate, :sortID)', $sort);
         $query->setParameter('sortDate', $mixed->getCollectionDateLastModified());
         $query->setParameter('sortID', $mixed->getCollectionID());
-        $query->add('where', $where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Logging\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LogList;
 use Concrete\Core\Search\Column\Column;
@@ -11,6 +12,8 @@ use Concrete\Core\User\UserInfo;
 
 class UserIdentifierColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -39,7 +42,7 @@ class UserIdentifierColumn extends Column implements PagerColumnInterface
             $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
             $where = sprintf('l.uID %s :uID', $sort);
             $query->setParameter('uID', $mixed->getUser()->getUserID());
-            $query->add('where', $where);
+            $this->andWhereNotExists($query, $where);
         }
     }
 

@@ -1,12 +1,15 @@
 <?php
 namespace Concrete\Core\Express\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class DateCreatedColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -30,7 +33,7 @@ class DateCreatedColumn extends Column implements PagerColumnInterface
         $where = sprintf('(e.exEntryDateCreated, e.exEntryID) %s (:sortDate, :sortID)', $sort);
         $query->setParameter('sortDate', $entry->getDateCreated()->format('Y-m-d H:i:s'));
         $query->setParameter('sortID', $entry->getID());
-        $query->add('where', $where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }

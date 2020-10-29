@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
@@ -8,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class FileVersionFilenameColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -44,7 +47,7 @@ class FileVersionFilenameColumn extends Column implements PagerColumnInterface
         $where = sprintf('(fv.fvFilename, f.fID) %s (:sortName, :sortID)', $sort);
         $query->setParameter('sortName', $mixed->getFilename());
         $query->setParameter('sortID', $mixed->getFileID());
-        $query->add('where', $where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }
