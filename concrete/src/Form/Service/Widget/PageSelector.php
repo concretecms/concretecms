@@ -2,9 +2,9 @@
 namespace Concrete\Core\Form\Service\Widget;
 
 use Concrete\Core\Entity\Site\SiteTree;
-use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Core;
-use Page;
 use Permissions;
 
 class PageSelector
@@ -12,37 +12,45 @@ class PageSelector
     /**
      * Creates form fields and JavaScript page chooser for choosing a page. For use with inclusion in blocks.
      * <code>
-     *     $dh->selectPage('pageID', '1'); // prints out the home page and makes it selectable.
+     *     $dh->selectPage('pageID', 1); // prints out the home page and makes it selectable.
      * </code>.
      *
-     * @param $fieldName
-     * @param bool|int $cID
-     *
+     * @param string $fieldName
+     * @param int|null|false $cID
+     * @param array $options Supported keys are:<ul>
+     *     <li><code>includeSystemPages</code> [bool] display system pages? [default: false]
+     *     <li><code>askIncludeSystemPages</code> [bool] ask users if they want to display system pages? [default: false]
+     *     <li><code>chooseText</code> [string] The text to be displayed (default: 'Choose Page')
+     * </il>
      * @return string
      */
-    public function selectPage($fieldName, $cID = false)
+    public function selectPage($fieldName, $cID = false, array $options = [])
     {
-        $selectedCID = 0;
-        if (isset($_REQUEST[$fieldName])) {
-            $selectedCID = intval($_REQUEST[$fieldName]);
-        } else {
-            if ($cID > 0) {
-                $selectedCID = $cID;
+        $request = app(Request::class);
+        $selectedCID = $request->request->get($fieldName, $request->query->get($fieldName));
+        if ($selectedCID === null) {
+            $selectedCID = (int) $cID;
+        }
+        $pageIdProp = 0;
+        if ($selectedCID !== 0) {
+            $page = Page::getByID($selectedCID);
+            if ($page && $page->getError() !== COLLECTION_NOT_FOUND) {
+                $pageIdProp = $selectedCID;
             }
         }
-
-        $pageIdProp = 0;
-        if ($selectedCID && \Concrete\Core\Page\Page::getByID($selectedCID)->getError() !== COLLECTION_NOT_FOUND) {
-            $pageIdProp = $selectedCID;
-        }
-
-        $chooseText = t('Choose Page');
+        $options += [
+            'includeSystemPages' => false,
+            'askIncludeSystemPages' => false,
+            'chooseText' => t('Choose Page'),
+        ];
+        $options['includeSystemPages'] = $options['includeSystemPages'] ? 'true' : 'false';
+        $options['askIncludeSystemPages'] = $options['askIncludeSystemPages'] ? 'true' : 'false';
         $uniqid = uniqid();
         $html = <<<EOL
 <div data-concrete-page-input="{$uniqid}">
-    <concrete-page-input :page-id="{$pageIdProp}" choose-text="{$chooseText}" input-name="{$fieldName}"></concrete-page-input>
+    <concrete-page-input :page-id="{$pageIdProp}" input-name="{$fieldName}" choose-text="{$options['chooseText']}" :include-system-pages="{$options['includeSystemPages']}" :ask-include-system-pages="{$options['askIncludeSystemPages']}"></concrete-page-input>
 </div>
-<script type="text/javascript">
+<script>
 $(function() {
     Concrete.Vue.activateContext('cms', function (Vue, config) {
         new Vue({
