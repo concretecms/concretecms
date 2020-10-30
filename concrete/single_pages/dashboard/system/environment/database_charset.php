@@ -47,7 +47,7 @@ if (isset($set_connection_collation_warnings)) {
             <?= $form->select('collation', $charsetsAndCollations, $collation, ['required' => 'required']); ?>
         </div>
     </div>
-    
+
     <div class="alert alert-danger">
         <?= t('Warning: changing the character set may result in data loss!'); ?>
     </div>
@@ -55,7 +55,7 @@ if (isset($set_connection_collation_warnings)) {
     <div class="alert alert-info">
         <?= t('Changing the character set may require a lot of time. If the operation times out, you can re-apply the setting more times.'); ?>
     </div>
-    
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="float-right btn btn-primary" type="submit" ><?= t('Save'); ?></button>
@@ -68,9 +68,7 @@ if (isset($set_connection_collation_warnings)) {
 $(document).ready(function() {
     var submitted = false;
     $('#collation')
-        .selectize({
-    	   allowEmptyOption: false
-        })
+        .selectpicker()
         .closest('form')
             .on('submit', function(e) {
                 if (submitted) {

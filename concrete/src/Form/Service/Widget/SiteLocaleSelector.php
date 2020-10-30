@@ -6,7 +6,6 @@ use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Utility\Service\Identifier;
-use View;
 
 class SiteLocaleSelector
 {
@@ -17,18 +16,18 @@ class SiteLocaleSelector
      * @param \Concrete\Core\Entity\Site\Site $site
      * @param \Concrete\Core\Entity\Site\Locale|null $selectedLocale
      * @param array $options Supported options are:
-     *     bool $allowNull Set to a non falsy value to allow users to choose "no" locale [default: false]
-     *     string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
-     *     bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
+     *                       bool $allowNull Set to a non falsy value to allow users to choose "no" locale [default: false]
+     *                       string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
+     *                       bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
      *
      * @return string
      */
-    public function selectLocale($fieldName, Site $site, Locale $selectedLocale = null, array $options = [])
+    public function selectLocale($fieldName, Site $site, ?Locale $selectedLocale = null, array $options = [])
     {
         $siteLocales = $site->getLocales()->toArray();
 
         $allowNull = !empty($options['allowNull']);
-        $nullText = isset($options['noLocaleText']) ? $options['noLocaleText'] : t('No Locale');
+        $nullText = $options['noLocaleText'] ?? t('No Locale');
         $displayLocaleCode = $this->shouldDisplayLocaleCode($options, $siteLocales);
 
         if ($selectedLocale === null && !$allowNull) {
@@ -67,7 +66,7 @@ class SiteLocaleSelector
             $localeHTML .= '</a></li>';
         }
 
-        $html = <<<EOL
+        return <<<EOL
         <input type="hidden" name="{$fieldName}" value="{$localeID}">
         <div class="btn-group" data-locale-selector="{$identifier}">
             <button type="button" class="btn btn-default" data-toggle="dropdown">
@@ -94,8 +93,6 @@ class SiteLocaleSelector
         </script>
 
 EOL;
-
-        return $html;
     }
 
     /**
@@ -105,8 +102,8 @@ EOL;
      * @param \Concrete\Core\Entity\Site\Site $site
      * @param \Concrete\Core\Entity\Site\Locale[]|string[]|int[] $selectedLocales
      * @param array $options Supported options are:
-     *     string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
-     *     bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
+     *                       string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
+     *                       bool|string $displayLocaleCode Set to 'auto' to automatically determine it; set to a non falsy value to display the locale ID [default: 'auto']
      *
      * @return string
      */
@@ -134,13 +131,19 @@ EOL;
         }
         $htmlOptions = '';
         foreach ($siteLocales as $siteLocale) {
+            $optionContent = '<div>' . (string) Flag::getLocaleFlagIcon($siteLocale) . ' ' . htmlspecialchars($siteLocale->getLanguageText());
+            if ($displayLocaleCode) {
+                $optionContent .= ' <span class="text-muted small">' + htmlspecialchars($siteLocale->getLocale()) + '</span>';
+            }
+            $optionContent .= '</div>';
+
+            $optionContent = str_replace('"', "'", $optionContent);
             $htmlOptions .= '<option';
-            $htmlOptions .= ' data-locale="' . h(json_encode([
-                'localeID' => $siteLocale->getLocaleID(),
-                'localeCode' => $siteLocale->getLocale(),
-                'localeName' => $siteLocale->getLanguageText(),
-                'localeIcon' => (string) Flag::getLocaleFlagIcon($siteLocale),
-            ])) . '"';
+            $htmlOptions .= ' data-content="' . $optionContent . '"';
+
+            $searchToken = $displayLocaleCode ? htmlspecialchars($siteLocale->getLanguageText()) . ' ' . htmlspecialchars($siteLocale->getLocale()) : htmlspecialchars($siteLocale->getLanguageText());
+            $htmlOptions .= ' data-tokens="' . $searchToken . '"';
+
             $htmlOptions .= ' value="' . $siteLocale->getLocaleID() . '"';
             if (in_array($siteLocale, $actuallySelectedLocales, true)) {
                 $htmlOptions .= ' selected="selected"';
@@ -149,8 +152,6 @@ EOL;
         }
 
         $fieldNameHtml = h($fieldName . (substr($fieldName, -2) === '[]' ? '' : '[]'));
-        $placeholderJS = json_encode(isset($options['noLocaleText']) ? (string) $options['noLocaleText'] : t('No Locale'));
-        $displayLocaleCodeJS = json_encode($displayLocaleCode);
 
         $identifier = 'ccm-sitelocaleselector-' . trim(preg_replace('/\W+/', '_', $fieldName), '_') . '-' . (new Identifier())->getString(32);
         $identifierHtml = h($identifier);
@@ -159,34 +160,13 @@ EOL;
         return <<<EOL
 
 <select id="{$identifierHtml}" name="{$fieldNameHtml}" multiple="multiple" class="ccm-sitelocaleselector">
-    $htmlOptions
+    {$htmlOptions}
 </select>
 <script type="text/javascript">
 $(document).ready(function() {
-    var displayLocaleCode = {$displayLocaleCodeJS};
-    function render(data, escape) {
-        var html = '<div>' + data.localeIcon + ' ' + escape(data.localeName);
-        if (displayLocaleCode) {
-            html += ' <span class="text-muted small">' + escape(data.localeCode) + '</span>';
-        }
-        html += '</div>';
-        return html;
-    }
-    $('#' + {$identifierJS}).selectize({
-        placeholder: {$placeholderJS},
-        plugins: ['remove_button'],
-        valueField: 'localeID',
-        searchField: displayLocaleCode ? ['localeName', 'localeCode'] : ['localeName'],
-        persist: false,
-        dataAttr: 'data-locale',
-        sortField: [
-            {field: 'localeName'},
-            {field: 'localeCode'},
-        ],
-        render: {
-            item: render,
-            option: render
-        }
+    $('#' + {$identifierJS}).selectpicker({
+        liveSearch: true,
+		width: '100%'
     });
 });
 </script>
