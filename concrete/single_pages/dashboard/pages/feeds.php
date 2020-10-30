@@ -219,8 +219,6 @@ if ($controller->getAction() == 'add'
             var treeViewTemplate = $('.tree-view-template');
 
             $('select[name=customTopicAttributeKeyHandle]').on('change', function () {
-                var toolsURL = '<?= app('helper/concrete/urls')->getToolsURL('tree/load');
-                    ?>';
                 var chosenTree = $(this).find('option:selected').attr('data-topic-tree-id');
                 $('.tree-view-template').remove();
                 if (!chosenTree) {
