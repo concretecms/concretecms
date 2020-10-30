@@ -7,9 +7,9 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\MatchedRoute;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
+use Exception;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Throwable;
 
 class CheckRoutesTest extends PHPUnit_Framework_TestCase
 {
@@ -93,7 +93,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
         $marchError = null;
         try {
             $matchedRoute = $router->matchRoute($request);
-        } catch (Throwable $x) {
+        } catch (Exception $x) {
             $marchError = $x;
         }
         if ($requestArgumentValue === false && $routeWithDefaultArgumentValue === false) {
