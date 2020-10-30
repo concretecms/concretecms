@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
+use URL;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Concrete\Core\Validation\CSRF\Token;
@@ -44,11 +45,11 @@ class PageSelector
      *
      * @return string
      */
-    public function selectPage($fieldName, $cID = false)
+    public function selectPage($fieldName, $cID = false, array $options = [])
     {
         $selectedCID = 0;
         if (isset($_REQUEST[$fieldName])) {
-            $selectedCID = (int) ($_REQUEST[$fieldName]);
+            $selectedCID = (int)($_REQUEST[$fieldName]);
         } else {
             if ($cID > 0) {
                 $selectedCID = $cID;
@@ -87,7 +88,6 @@ $(function() {
 </script>
 EOL;
         return $html;
-
     }
 
     public function quickSelect($key, $cID = false, $miscFields = [])
@@ -117,55 +117,60 @@ EOL;
         $pageList = [];
 
         if ($selectedCID && $this->app->make(Numbers::class)->integer($selectedCID, 1)) {
-            $page = $this->app->make(Page::class)->getByID((int) $selectedCID);
+            $page = $this->app->make(Page::class)->getByID((int)$selectedCID);
             $cp = new Permissions($page);
             if ($cp->canViewPage()) {
-                $pageList[(int) $selectedCID] = $page->getCollectionName();
+                $pageList[(int)$selectedCID] = $page->getCollectionName();
             }
         } else {
             $page = null;
         }
 
         $selectedCID = (is_object($page) && !$page->isError()) ? $page->getCollectionID() : null;
-
-        return sprintf(
-            "%s\n" .
-            "<script>\n" .
-            "$(function() {\n" .
-            " $('#ccm-quick-page-selector-{$identifier} select').selectpicker({liveSearch: true}).ajaxSelectPicker(%s);\n" .
-            "});\n" .
-            "</script>\n",
-            (string) new Element(
-                'span',
-                $form->select($key, $pageList, $selectedCID, $miscFields),
-                [
-                    'class' => 'ccm-quick-page-selector',
-                    'id' => 'ccm-quick-page-selector-' . $identifier,
-                ]
-            ),
-            json_encode([
-                'ajax' => [
-                    'url' => CCM_DISPATCHER_FILENAME + '/ccm/system/page/autocomplete',
-                    'data' => [
-                        'term' => '{{{q}}}',
-                        'key' => $key,
-                        'token' => $token,
-                    ],
-                ],
-                'locale' => [
-                    'currentlySelected' => t('Currently Selected'),
-                    'emptyTitle' => t('Select and begin typing'),
-                    'errorText' => t('Unable to retrieve results'),
-                    'searchPlaceholder' => t('Search...'),
-                    'statusInitialized' => t('Start typing a search query'),
-                    'statusNoResults' => t('No Results'),
-                    'statusSearching' => t('Searching...'),
-                    'statusTooShort' => t('Please enter more characters'),
-                ],
-                'preserveSelected' => false,
-                'minLength' => 2,
-            ])
+        $element = (string)new Element(
+            'span',
+            $form->select($key, $pageList, $selectedCID, $miscFields),
+            [
+                'class' => 'ccm-quick-page-selector',
+                'id' => 'ccm-quick-page-selector-' . $identifier,
+            ]
         );
+
+        $args = [
+            'ajax' => [
+                'url' => (string) URL::to('/ccm/system/page/autocomplete'),
+                'data' => [
+                    'term' => '{{{q}}}',
+                    'key' => $key,
+                    'token' => $token,
+                ],
+            ],
+            'locale' => [
+                'currentlySelected' => t('Currently Selected'),
+                'emptyTitle' => t('Select and begin typing'),
+                'errorText' => t('Unable to retrieve results'),
+                'searchPlaceholder' => t('Search...'),
+                'statusInitialized' => t('Start typing a search query'),
+                'statusNoResults' => t('No Results'),
+                'statusSearching' => t('Searching...'),
+                'statusTooShort' => t('Please enter more characters'),
+            ],
+            'preserveSelected' => false,
+            'minLength' => 2,
+        ];
+
+        $args = json_encode($args);
+
+        $html = <<<EOL
+        $element
+        <script type="text/javascript">
+        $(function() {
+            $('#ccm-quick-page-selector-{$identifier} select').selectpicker({liveSearch: true}).ajaxSelectPicker({$args});
+        });
+        </script>
+EOL;
+
+        return $html;
     }
 
     public function selectMultipleFromSitemap($field, $pages = [], $startingPoint = 'HOME_CID', $filters = [])
@@ -178,7 +183,7 @@ EOL;
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field]) && is_array($_POST[$field])) {
                 foreach ($_POST[$field] as $value) {
-                    $selected[] = (int) $value;
+                    $selected[] = (int)$value;
                 }
             }
         } else {
@@ -210,8 +215,13 @@ EOL;
         return $html;
     }
 
-    public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', ?SiteTree $siteTree = null, $filters = [])
-    {
+    public function selectFromSitemap(
+        $field,
+        $page = null,
+        $startingPoint = 'HOME_CID',
+        ?SiteTree $siteTree = null,
+        $filters = []
+    ) {
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
 
@@ -220,7 +230,7 @@ EOL;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field])) {
-                $selected = (int) ($_POST[$field]);
+                $selected = (int)($_POST[$field]);
             }
         } elseif ($page) {
             $selected = is_object($page) ? $page->getCollectionID() : $page;
