@@ -53,6 +53,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     public $fID;
 
     /**
+     * @ORM\Column(type="string", options={"unsigned": true})
+     */
+    public $fUUID;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     public $fDateAdded;
@@ -209,9 +214,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @param StorageLocation\StorageLocation $newLocation
      *
+     * @return bool false if the storage location is the same
      * @throws \Exception
      *
-     * @return bool false if the storage location is the same
      */
     public function setFileStorageLocation(\Concrete\Core\Entity\File\StorageLocation\StorageLocation $newLocation)
     {
@@ -497,6 +502,41 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
+     * File UUID.
+     *
+     * @return string
+     */
+    public function getFileUUID()
+    {
+        return $this->fUUID;
+    }
+
+    public function generateFileUUID()
+    {
+        $this->fUUID = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+    }
+
+    public function resetFileUUID()
+    {
+        $this->fUUID = '';
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function hasFileUUID()
+    {
+        return strlen($this->fUUID) > 0;
+    }
+
+    /**
      * Folder to put the file in.
      *
      * @param FileFolder $folder
@@ -657,9 +697,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     /**
      * Removes a file, including all of its versions.
      **
+     * @return bool returns false if the on_file_delete event says not to proceed, returns true on success
      * @throws \Exception contains the exception type and message of why the deletion fails
      *
-     * @return bool returns false if the on_file_delete event says not to proceed, returns true on success
      */
     public function delete()
     {
@@ -788,8 +828,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         $qb
             ->select($x->count('ds.id'))
             ->from(DownloadStatistics::class, 'ds')
-            ->andWhere($x->eq('ds.file', $this->getFileID()))
-        ;
+            ->andWhere($x->eq('ds.file', $this->getFileID()));
 
         return (int)$qb->getQuery()->getSingleScalarResult();
     }
@@ -839,7 +878,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     public function trackDownload($rcID = null)
     {
         $u = Core::make(User::class);
-        $uID = (int) ($u->getUserID());
+        $uID = (int)($u->getUserID());
         $fv = $this->getApprovedVersion();
         $fvID = $fv->getFileVersionID();
         if (!isset($rcID) || !is_numeric($rcID)) {
