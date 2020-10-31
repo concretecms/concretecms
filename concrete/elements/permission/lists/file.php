@@ -126,7 +126,7 @@ ccm_setFilePermissionsToOverride = function() {
 
 ccm_refreshFilePermissions = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions?fID=<?=$f->getFileID()?>', function(r) { 
+	$.get(CCM_DISPATCHER_FILENAME + '/ccm/system/file/permissions?fID=<?= $f->getFileID() ?>', function(r) { 
 		jQuery.fn.dialog.replaceTop(r);
 		ccm_filePermissionsSetupButtons();
 		jQuery.fn.dialog.hideLoader();

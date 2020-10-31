@@ -1,14 +1,39 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\SiteTree;
-use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Http\Request;
+use URL;
+use Concrete\Core\Utility\Service\Identifier;
+use Concrete\Core\Utility\Service\Validation\Numbers;
+use Concrete\Core\Validation\CSRF\Token;
 use Core;
+use HtmlObject\Element;
 use Page;
 use Permissions;
 
 class PageSelector
 {
+    /**
+     * The application container instance.
+     *
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    /**
+     * Initialize the instance.
+     *
+     * @param \Concrete\Core\Application\Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Creates form fields and JavaScript page chooser for choosing a page. For use with inclusion in blocks.
      * <code>
@@ -20,29 +45,38 @@ class PageSelector
      *
      * @return string
      */
-    public function selectPage($fieldName, $cID = false)
+    public function selectPage($fieldName, $cID = false, array $options = [])
     {
         $selectedCID = 0;
         if (isset($_REQUEST[$fieldName])) {
-            $selectedCID = intval($_REQUEST[$fieldName]);
+            $selectedCID = (int)($_REQUEST[$fieldName]);
         } else {
             if ($cID > 0) {
                 $selectedCID = $cID;
             }
         }
-
         $pageIdProp = 0;
-        if ($selectedCID && \Concrete\Core\Page\Page::getByID($selectedCID)->getError() !== COLLECTION_NOT_FOUND) {
-            $pageIdProp = $selectedCID;
+        if ($selectedCID !== 0) {
+            $page = Page::getByID($selectedCID);
+            if ($page && $page->getError() !== COLLECTION_NOT_FOUND) {
+                $pageIdProp = $selectedCID;
+            }
         }
+        $options += [
+            'includeSystemPages' => false,
+            'askIncludeSystemPages' => false,
+            'chooseText' => t('Choose Page'),
+        ];
+        $options['includeSystemPages'] = $options['includeSystemPages'] ? 'true' : 'false';
+        $options['askIncludeSystemPages'] = $options['askIncludeSystemPages'] ? 'true' : 'false';
 
         $chooseText = t('Choose Page');
         $uniqid = uniqid();
         $html = <<<EOL
 <div data-concrete-page-input="{$uniqid}">
-    <concrete-page-input :page-id="{$pageIdProp}" choose-text="{$chooseText}" input-name="{$fieldName}"></concrete-page-input>
+    <concrete-page-input :page-id="{$pageIdProp}" input-name="{$fieldName}" choose-text="{$options['chooseText']}" :include-system-pages="{$options['includeSystemPages']}" :ask-include-system-pages="{$options['askIncludeSystemPages']}"></concrete-page-input>
 </div>
-<script type="text/javascript">
+<script>
 $(function() {
     Concrete.Vue.activateContext('cms', function (Vue, config) {
         new Vue({
@@ -56,77 +90,100 @@ EOL;
         return $html;
     }
 
-    public function quickSelect($key, $cID = false, $args = array())
+    public function quickSelect($key, $cID = false, $miscFields = [])
     {
-        $v = \View::getInstance();
-        $selectedCID = 0;
-        if (isset($_REQUEST[$key])) {
-            $selectedCID = $_REQUEST[$key];
+        $selectedCID = null;
+
+        /** @var Request $request */
+        $request = $this->app->make(Request::class);
+        /** @var Token $valt */
+        $valt = $this->app->make(Token::class);
+        /** @var Identifier $idHelper */
+        $idHelper = $this->app->make(Identifier::class);
+        /** @var Form $form */
+        $form = $this->app->make(Form::class);
+
+        if ($request->request->has($key)) {
+            $selectedCID = $request->request->get($key);
+        } elseif ($request->query->has($key)) {
+            $selectedCID = $request->query->get($key);
         } else {
-            if ($cID > 0) {
-                $selectedCID = $cID;
-            }
+            $selectedCID = $cID;
         }
 
-        $cName = '';
-        if ($selectedCID > 0) {
-            $oc = Page::getByID($selectedCID);
-            $cp = new Permissions($oc);
-            if ($cp->canViewPage()) {
-                $cName = $oc->getCollectionName();
-            }
-        }
-
-        $valt = Core::make('helper/validation/token');
         $token = $valt->generate('quick_page_select_' . $key);
-        $html = "
-		<script type=\"text/javascript\">
-		$(function () {
-			$('#ccm-quick-page-selector-" . $key . " input').unbind().selectize({
-                valueField: 'value',
-                labelField: 'label',
-                searchField: ['label'],";
+        $identifier = $idHelper->getString(32);
 
-        if ($selectedCID) {
-            $html .= "options: [{'label': '" . h($cName) . "', 'value': " . intval($selectedCID) . "}],
-				items: [" . intval($selectedCID) . "],";
+        $pageList = [];
+
+        if ($selectedCID && $this->app->make(Numbers::class)->integer($selectedCID, 1)) {
+            $page = $this->app->make(Page::class)->getByID((int)$selectedCID);
+            $cp = new Permissions($page);
+            if ($cp->canViewPage()) {
+                $pageList[(int)$selectedCID] = $page->getCollectionName();
+            }
+        } else {
+            $page = null;
         }
 
-        $html .= "maxItems: 1,
-                load: function(query, callback) {
-                    if (!query.length) return callback();
-                    $.ajax({
-                        url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/autocomplete?key=" . $key . "&token=" . $token . "&term=' + encodeURIComponent(query),
-                        type: 'GET',
-						dataType: 'json',
-                        error: function() {
-                            callback();
-                        },
-                        success: function(res) {
-                            callback(res);
-                        }
-                    });
-                }
-		    });
-		} );
-		</script>";
-        $form = \Core::make("helper/form");
-        $html .= '<span id="ccm-quick-page-selector-' . $key . '">'.$form->hidden($key, '', $args).'</span>';
+        $selectedCID = (is_object($page) && !$page->isError()) ? $page->getCollectionID() : null;
+        $element = (string)new Element(
+            'span',
+            $form->select($key, $pageList, $selectedCID, $miscFields),
+            [
+                'class' => 'ccm-quick-page-selector',
+                'id' => 'ccm-quick-page-selector-' . $identifier,
+            ]
+        );
+
+        $args = [
+            'ajax' => [
+                'url' => (string) URL::to('/ccm/system/page/autocomplete'),
+                'data' => [
+                    'term' => '{{{q}}}',
+                    'key' => $key,
+                    'token' => $token,
+                ],
+            ],
+            'locale' => [
+                'currentlySelected' => t('Currently Selected'),
+                'emptyTitle' => t('Select and begin typing'),
+                'errorText' => t('Unable to retrieve results'),
+                'searchPlaceholder' => t('Search...'),
+                'statusInitialized' => t('Start typing a search query'),
+                'statusNoResults' => t('No Results'),
+                'statusSearching' => t('Searching...'),
+                'statusTooShort' => t('Please enter more characters'),
+            ],
+            'preserveSelected' => false,
+            'minLength' => 2,
+        ];
+
+        $args = json_encode($args);
+
+        $html = <<<EOL
+        $element
+        <script type="text/javascript">
+        $(function() {
+            $('#ccm-quick-page-selector-{$identifier} select').selectpicker({liveSearch: true}).ajaxSelectPicker({$args});
+        });
+        </script>
+EOL;
 
         return $html;
     }
 
-    public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = 'HOME_CID', $filters = array())
+    public function selectMultipleFromSitemap($field, $pages = [], $startingPoint = 'HOME_CID', $filters = [])
     {
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
 
         $args = new \stdClass();
-        $selected = array();
+        $selected = [];
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field]) && is_array($_POST[$field])) {
                 foreach ($_POST[$field] as $value) {
-                    $selected[] = intval($value);
+                    $selected[] = (int)$value;
                 }
             }
         } else {
@@ -158,8 +215,13 @@ EOL;
         return $html;
     }
 
-    public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', SiteTree $siteTree = null, $filters = array())
-    {
+    public function selectFromSitemap(
+        $field,
+        $page = null,
+        $startingPoint = 'HOME_CID',
+        ?SiteTree $siteTree = null,
+        $filters = []
+    ) {
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
 
@@ -168,7 +230,7 @@ EOL;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field])) {
-                $selected = intval($_POST[$field]);
+                $selected = (int)($_POST[$field]);
             }
         } elseif ($page) {
             $selected = is_object($page) ? $page->getCollectionID() : $page;

@@ -41,7 +41,7 @@ class Node extends UserInterface
      */
     protected function getNode(): TreeNode
     {
-        $nodeID = $this->request->request->get('nodeID', $this->request->query->get('nodeID'));
+        $nodeID = $this->request->request->get('treeNodeID', $this->request->query->get('treeNodeID'));
         $nodeID = $this->app->make(Numbers::class)->integer($nodeID, 1) ? (int) $nodeID : null;
         $node = $nodeID === null ? null : TreeNode::getByID($nodeID);
         if ($node === null) {

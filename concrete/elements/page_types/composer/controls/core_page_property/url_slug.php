@@ -73,7 +73,6 @@ $resolverManager = app(ResolverManagerInterface::class);
                     $('.ccm-composer-url-slug-loading').show();
                     $.post(
                         <?= json_encode((string) $resolverManager->resolve(['/ccm/system/page/url_slug'])) ?>,
-                        '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug',
                         send,
                         function(r) {
                             $('.ccm-composer-url-slug-loading').hide();

@@ -42,7 +42,7 @@ class Menu extends DropdownMenu
         $this->addItem(new DividerItem());
 
 
-        if ($file->canEdit() && $fp->canEditFileContents()) {
+        if ($fp->canViewFileInFileManager()) {
             $this->addItem(new LinkItem(
                 \URL::to('/dashboard/files/details', $file->getFileID()),
                     t('Details')
