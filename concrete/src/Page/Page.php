@@ -177,11 +177,6 @@ class Page extends Collection implements CategoryMemberInterface,
         $this->loadError(COLLECTION_INIT); // init collection until we populate.
     }
 
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-
     /**
      * Get a page given its path.
      *
