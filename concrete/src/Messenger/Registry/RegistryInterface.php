@@ -12,6 +12,4 @@ interface RegistryInterface
      */
     public function getBusBuilder(string $handle): callable;
 
-    public function getReceivers(): iterable;
-
 }

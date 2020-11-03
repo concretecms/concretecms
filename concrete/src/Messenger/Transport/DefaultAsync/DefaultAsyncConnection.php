@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Messenger\Transport\Concrete;
+namespace Concrete\Core\Messenger\Transport\DefaultAsync;
 
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection as DoctrineTransportConnection;
 use Concrete\Core\Application\Application;
@@ -9,7 +9,7 @@ use Doctrine\DBAL\Connection as DoctrineConnection;
 /**
  * A decorator for the default Doctrine Transport Connection.
  */
-class Connection
+class DefaultAsyncConnection
 {
 
     /**

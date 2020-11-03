@@ -339,10 +339,17 @@ return [
     'messenger' => [
 
         'buses' => [
-            \Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT =>
-            \Concrete\Core\Messenger\Registry\CommandBus::class,
-            \Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT_ASYNC =>
-            \Concrete\Core\Messenger\Registry\AsyncBus::class
+            Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT =>
+            'Concrete\Core\Messenger\Registry\CommandBus',
+        ],
+
+        'routing' => [
+            'Concrete\Core\File\Command\RescanFileCommand' => ['async'],
+            'Concrete\Core\Page\Command\ReindexPageCommand' => ['async'],
+        ],
+
+        'transports' => [
+            'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncTransport',
         ],
 
         'consume' => [

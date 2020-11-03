@@ -3,13 +3,10 @@
 namespace Concrete\Core\File\Command;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\File\Importer;
-use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
-use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\File\Rescanner;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Entity\File\File as FileEntity;
+
 class RescanFileCommandHandler
 {
 

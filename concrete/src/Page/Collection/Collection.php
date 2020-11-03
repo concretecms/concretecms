@@ -399,7 +399,7 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         $command = new ReindexPageCommand($this->getCollectionID());
         $app = Facade::getFacadeApplication();
-        $app->executeCommand($command, MessageBusManager::BUS_DEFAULT_ASYNC);
+        $app->executeCommand($command);
     }
 
     /**

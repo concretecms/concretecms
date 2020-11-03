@@ -47,7 +47,8 @@ class Application extends Container
      * Dispatches a command/message on the message bus. If the command is executed immediately, the result is returned.
      * This is a convenience method for mostly synchronous commands, and it uses the command bus.
      *
-     * @param $command
+     * @param object $command
+     * @param string $onBus
      * @return mixed
      */
     public function executeCommand($command, $onBus = MessageBusManager::BUS_DEFAULT)

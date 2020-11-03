@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Messenger;
 
-use Concrete\Core\Messenger\Receiver\ReceiverLocator;
-use Concrete\Core\Messenger\Registry\RegistryInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -10,7 +8,6 @@ class MessageBusManager implements ContainerInterface
 {
 
     const BUS_DEFAULT = 'command';
-    const BUS_DEFAULT_ASYNC = 'async';
 
     protected $buses = [];
 

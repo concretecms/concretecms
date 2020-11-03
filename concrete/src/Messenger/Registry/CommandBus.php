@@ -33,16 +33,11 @@ class CommandBus implements RegistryInterface
                     new RejectRedeliveredMessageMiddleware(),
                     new DispatchAfterCurrentBusMiddleware(),
                     new FailedMessageProcessingMiddleware(),
-                    new SendMessageMiddleware(new SendersLocator([], $this->app)),
+                    new SendMessageMiddleware($this->app->make(SendersLocator::class)),
                     new HandleMessageMiddleware($this->app->make(HandlersLocator::class)),
                 ]
             );
             return $bus;
         };
-    }
-
-    public function getReceivers(): iterable
-    {
-        return [];
     }
 }

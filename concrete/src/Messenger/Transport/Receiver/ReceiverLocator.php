@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Messenger\Receiver;
+namespace Concrete\Core\Messenger\Transport\Receiver;
 
 use Psr\Container\ContainerInterface;
 
