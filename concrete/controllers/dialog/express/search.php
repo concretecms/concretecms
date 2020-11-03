@@ -1,38 +1,59 @@
 <?php
+
 namespace Concrete\Controller\Dialog\Express;
 
-use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Controller\Search\Express\Entries;
+use Concrete\Controller\Backend\UserInterface;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Permission\Checker;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
-class Search extends BackendInterfaceController
+class Search extends UserInterface
 {
     protected $viewPath = '/dialogs/express/entry/search';
+    /** @var EntityManagerInterface */
+    protected $entityManager;
 
     protected function canAccess()
     {
         $entity = $this->getEntity();
-        if (is_object($entity)) {
-            $ep = new \Permissions($entity);
-            return $ep->canViewExpressEntries();
+
+        if ($entity instanceof Entity) {
+            $permissionChecker = new Checker($entity);
+            $responseObject = $permissionChecker->getResponseObject();
+
+            try {
+                return $responseObject->validate("view_express_entries");
+            } catch (Exception $e) {
+                return false;
+            }
         }
+
         return false;
     }
 
+    public function on_start()
+    {
+        parent::on_start();
+        $this->entityManager = $this->app->make(EntityManagerInterface::class);
+    }
+
+    /**
+     * @return Entity|null
+     * @noinspection PhpInconsistentReturnPointsInspection
+     */
     protected function getEntity()
     {
-        $em = \Database::connection()->getEntityManager();
-        return $em->getRepository('Concrete\Core\Entity\Express\Entity')
-            ->findOneById($this->request->get('exEntityID'));
+        if ($this->request->query->has('exEntityID')) {
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+            return $this->entityManager
+                ->getRepository(Entity::class)
+                ->findOneById($this->request->query->get('exEntityID'));
+        }
     }
 
     public function entries()
     {
-        $search = new Entries();
-        $search->search($this->getEntity());
-        $result = json_encode($search->getSearchResultObject()->getJSONObject());
-        //$header = new Header($this->getEntity());
-        //$this->set('headerMenu', $header);
-        $this->set('result', $result);
-        $this->set('searchController', $search);
+        $this->set('entity', $this->getEntity());
     }
 }
