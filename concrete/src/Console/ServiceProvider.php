@@ -116,16 +116,6 @@ class ServiceProvider extends Provider
 
             return $cli;
         });
-
-        $this->app->when(RoutableMessageBus::class)->needs(MessageBusInterface::class)->give('messenger/bus/command');
-        $this->app
-            ->when(MessengerCommand\ConsumeMessagesCommand::class)
-            ->needs(LoggerInterface::class)
-            ->give(function () {
-                $factory = $this->app->make(LoggerFactory::class);
-                return $factory->createLogger(Channels::CHANNEL_MESSENGER);
-            });
-
     }
 
     public function setupDoctrineCommands()

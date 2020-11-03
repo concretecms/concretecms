@@ -41,4 +41,8 @@ class CommandBus implements RegistryInterface
         };
     }
 
+    public function getReceivers(): iterable
+    {
+        return [];
+    }
 }

@@ -1,9 +1,12 @@
 <?php
 namespace Concrete\Core\Messenger;
 
+use Concrete\Core\Messenger\Receiver\ReceiverLocator;
+use Concrete\Core\Messenger\Registry\RegistryInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class MessageBusManager
+class MessageBusManager implements ContainerInterface
 {
 
     const BUS_DEFAULT = 'command';
@@ -29,6 +32,16 @@ class MessageBusManager
     public function addBus(string $handle, callable $bus)
     {
         $this->buses[$handle] = $bus;
+    }
+
+    public function has($id)
+    {
+        return array_key_exists($id, $this->buses);
+    }
+
+    public function get($id)
+    {
+        return $this->getBus($id);
     }
 
 }
