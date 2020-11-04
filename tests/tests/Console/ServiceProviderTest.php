@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Controller;
+namespace Concrete\Tests\Console;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
