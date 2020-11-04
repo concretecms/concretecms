@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Api\OAuth\Client;
+namespace Concrete\Tests\Api\OAuth;
 
 use Concrete\Core\Api\OAuth\Scope\ScopeRegistry;
 use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
