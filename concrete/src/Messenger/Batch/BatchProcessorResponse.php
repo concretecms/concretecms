@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Foundation\Queue\Batch\Response;
+namespace Concrete\Core\Messenger\Batch;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 

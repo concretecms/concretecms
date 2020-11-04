@@ -3985,34 +3985,6 @@
     </field>
   </table>
 
-  <table name="Queues">
-    <field name="name" type="string">
-      <key/>
-    </field>
-  </table>
-
-  <table name="QueueMessages">
-    <field name="id" type="integer">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-      <notnull/>
-    </field>
-    <field name="queue" type="string">
-    </field>
-    <field name="message" type="text">
-    </field>
-    <field name="visible" type="boolean">
-      <default value="1"/>
-    </field>
-    <field name="sentAt" type="datetime"/>
-    <index name="originalCID">
-      <col>queue</col>
-      <col>sentAt</col>
-      <col>visible</col>
-    </index>
-  </table>
-
   <table name="QueuePageDuplicationRelations">
     <field name="queue_name" type="string" size="255">
       <notnull/>

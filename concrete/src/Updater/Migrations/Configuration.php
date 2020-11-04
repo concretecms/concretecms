@@ -153,7 +153,7 @@ class Configuration extends DoctrineMigrationConfiguration
     {
         $result = parent::getMigrationsToExecute($direction, $to);
         $forcedInitialMigration = $this->getForcedInitialMigration();
-        if ($forcedInitialMigration !== null && $direction === Version::DIRECTION_UP) {
+        if ($forcedInitialMigration !== null && $direction === 'up') {
             $allMigrations = $this->getMigrations();
             $allMigrationKeys = array_keys($allMigrations);
             $forcedInitialMigrationIndex = array_search($forcedInitialMigration->getVersion(), $allMigrationKeys, false);

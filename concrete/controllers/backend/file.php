@@ -11,7 +11,6 @@ use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
@@ -21,11 +20,9 @@ use Concrete\Core\File\Rescanner;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\File\ValidationService;
-use Concrete\Core\Foundation\Queue\Batch\BatchDispatcher;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Messenger\Batch\BatchProcessor;
+use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
@@ -115,9 +112,18 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('canEditFileContents');
-        $factory = new RescanFileBatchProcessFactory();
-        $processor = $this->app->make(Processor::class);
-        return $processor->process($factory, $files);
+        /**
+         * @var $processor BatchProcessor
+         */
+        $processor = $this->app->make(BatchProcessor::class);
+        $batch = $processor->createBatch(function() use ($files) {
+            foreach ($files as $file) {
+                yield new RescanFileCommand($file->getFileID());
+            }
+        }, t('Rescan Files'));
+        $batchProcess = $processor->dispatch($batch);
+        $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
+        return $responseFactory->createResponse($batchProcess);
     }
 
     public function approveVersion()

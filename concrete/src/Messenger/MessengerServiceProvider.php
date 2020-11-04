@@ -56,10 +56,13 @@ class MessengerServiceProvider extends ServiceProvider
             }
         );
 
+        $routing = (array) $config->get('concrete.messenger.routing');
+        $routing['Concrete\Core\Messenger\Batch\Command\HandleBatchMessageCommand'] = ['async'];
+
         $this->app
             ->when(SendersLocator::class)
             ->needs('$sendersMap')
-            ->give((array) $config->get('concrete.messenger.routing'));
+            ->give($routing);
         $this->app
             ->when(SendersLocator::class)
             ->needs(ContainerInterface::class)
