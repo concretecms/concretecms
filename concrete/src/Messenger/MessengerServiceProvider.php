@@ -16,6 +16,13 @@ use Symfony\Component\Messenger\RoutableMessageBus;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
 use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer as SymfonySerializer;
+use Symfony\Component\Serializer\SerializerInterface as SymfonySerializerInterface;
 
 class MessengerServiceProvider extends ServiceProvider
 {
@@ -23,6 +30,17 @@ class MessengerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(SerializerInterface::class, Serializer::class);
+
+
+        $this->app
+            ->when(Serializer::class)
+            ->needs(SymfonySerializerInterface::class)
+            ->give(function(Application $app) {
+                $encoders = [new XmlEncoder(), new JsonEncoder()];
+                $normalizers = [new CustomNormalizer(), new ArrayDenormalizer(), new ObjectNormalizer()];
+                $serializer = new SymfonySerializer($normalizers, $encoders);
+                return $serializer;
+            });
 
         $config = $this->app->make('config');
 

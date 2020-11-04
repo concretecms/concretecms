@@ -94,7 +94,8 @@
     "symfony/property-access": "^4",
     "theorchard/monolog-cascade": "0.5.x-dev",
     "commerceguys/addressing": "^1.0",
-    "sabre/vobject": "^4.3"
+    "sabre/vobject": "^4.3",
+    "symfony/property-info": "^5.1"
   },
   "extra": {
     "branch-alias": {
