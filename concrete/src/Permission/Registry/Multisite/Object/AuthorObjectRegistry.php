@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Permission\Registry\Object;
+namespace Concrete\Core\Permission\Registry\Multisite\Object;
 
 use Concrete\Core\Permission\Registry\AbstractObjectRegistry;
 use Concrete\Core\Permission\Registry\Entry\Object\Object\FileFolder;
