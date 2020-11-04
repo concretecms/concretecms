@@ -76,6 +76,18 @@ class Item extends SearchResultItem
      * Returns an integer for a file ID if the result is a file, otherwise returns null.
      * @return int
      */
+    public function getResultFileUUID()
+    {
+        if ($this->getItem() instanceof FileNode) {
+            return $this->getItem()->getTreeNodeFileUUID();
+        }
+        return null;
+    }
+
+    /**
+     * Returns an integer for a file ID if the result is a file, otherwise returns null.
+     * @return int
+     */
     public function getResultFileID()
     {
         if ($this->getItem() instanceof FileNode) {

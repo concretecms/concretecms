@@ -102,8 +102,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                                    type="checkbox"
                                    data-node-type="<?php
                                    echo $item->getItem()->getTreeNodeTypeHandle() ?>"
-                                   data-item-id="<?php
-                                   echo $item->getResultFileID() ?>"/>
+                                   data-item-uuid="<?php echo $item->getResultFileUUID() ?>"
+                                   data-item-id="<?php echo $item->getResultFileID() ?>"/>
                         <?php
                         } ?>
                     </td>

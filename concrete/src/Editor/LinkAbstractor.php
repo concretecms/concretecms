@@ -216,7 +216,12 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_DL_([0-9]+)}',
             function ($fID) use ($resolver, &$currentPage) {
                 if ($fID > 0) {
-                    $args = ['/download_file', 'view', $fID];
+                    $file = \Concrete\Core\File\File::getByID($fID);
+                    if ($file instanceof File && $file->hasFileUUID()) {
+                        $args = ['/download_file', 'view', $file->getFileUUID()];
+                    } else {
+                        $args = ['/download_file', 'view', $fID];
+                    }
                     if ($currentPage === null) {
                         $currentPage = Page::getCurrentPage();
                         if (!$currentPage || $currentPage->isError()) {
@@ -290,11 +295,21 @@ class LinkAbstractor extends ConcreteObject
                     }
                 }
 
-                $picture->outertext = '<img src="' . $resolver->resolve([
-                    '/download_file',
-                    'view_inline',
-                    $fID,
-                ]) . '" ' . $attrString . '/>';
+                $file = \Concrete\Core\File\File::getByID($fID);
+                if ($file instanceof File && $file->hasFileUUID()) {
+                    $picture->outertext = '<img src="' . $resolver->resolve([
+                            '/download_file',
+                            'view_inline',
+                            $file->getFileUUID(),
+                        ]) . '" ' . $attrString . '/>';
+                } else {
+                    $picture->outertext = '<img src="' . $resolver->resolve([
+                            '/download_file',
+                            'view_inline',
+                            $fID,
+                        ]) . '" ' . $attrString . '/>';
+                }
+
             }
 
             $text = (string) $r->restore_noise($r);
@@ -306,7 +321,12 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_([0-9]+)}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
-                    return $resolver->resolve(['/download_file', 'view_inline', $fID]);
+                    $file = \Concrete\Core\File\File::getByID($fID);
+                    if ($file instanceof File && $file->hasFileUUID()) {
+                        return $resolver->resolve(['/download_file', 'view_inline', $file->getFileUUID()]);
+                    } else {
+                        return $resolver->resolve(['/download_file', 'view_inline', $fID]);
+                    }
                 }
 
                 return '';
@@ -319,7 +339,12 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_DL_([0-9]+)}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
-                    return $resolver->resolve(['/download_file', 'view', $fID]);
+                    $file = \Concrete\Core\File\File::getByID($fID);
+                    if ($file instanceof File && $file->hasFileUUID()) {
+                        return $resolver->resolve(['/download_file', 'view', $file->getFileUUID()]);
+                    } else {
+                        return $resolver->resolve(['/download_file', 'view', $fID]);
+                    }
                 }
 
                 return '';

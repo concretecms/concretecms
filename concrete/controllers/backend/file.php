@@ -95,7 +95,7 @@ class File extends Controller
 
     public function rescan()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
+        $files = $this->getRequestFiles('edit_file_contents');
         $r = new FileEditResponse();
         $r->setFiles($files);
         $error = $this->app->make('error');
@@ -114,7 +114,7 @@ class File extends Controller
 
     public function rescanMultiple()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
+        $files = $this->getRequestFiles('edit_file_contents');
         $factory = new RescanFileBatchProcessFactory();
         $processor = $this->app->make(Processor::class);
         return $processor->process($factory, $files);
@@ -122,7 +122,7 @@ class File extends Controller
 
     public function approveVersion()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
+        $files = $this->getRequestFiles('edit_file_contents');
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
         $fv = $files[0]->getVersion($fvID);
@@ -139,7 +139,7 @@ class File extends Controller
     {
         $token = $this->app->make('token');
         if (!$token->validate('delete-version')) {
-            $files = $this->getRequestFiles('canEditFileContents');
+            $files = $this->getRequestFiles('edit_file_contents');
         }
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
@@ -449,7 +449,7 @@ class File extends Controller
 
     public function duplicate()
     {
-        $files = $this->getRequestFiles('canCopyFile');
+        $files = $this->getRequestFiles('copy_file');
         $r = new FileEditResponse();
         $newFiles = [];
         foreach ($files as $f) {
@@ -470,7 +470,7 @@ class File extends Controller
 
     public function download()
     {
-        $files = $this->getRequestFiles('canViewFileInFileManager');
+        $files = $this->getRequestFiles("view_file_in_file_manager", true);
         if (count($files) > 1) {
             $fh = $this->app->make('helper/file');
             $vh = $this->app->make('helper/validation/identifier');
@@ -521,7 +521,16 @@ class File extends Controller
         $rescanner->rescanFileVersion($fv);
     }
 
-    protected function getRequestFiles($permission = 'canViewFileInFileManager')
+    private function isValidUuid($uuid)
+    {
+        if (!is_string($uuid) || (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) !== 1)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function getRequestFiles($permissionKey = 'view_file_in_file_manager', $checkUUID = false)
     {
         $files = [];
         $fID = $this->request->request->get('fID', $this->request->query->get('fID'));
@@ -530,13 +539,28 @@ class File extends Controller
         } else {
             $fileIDs = [$fID];
         }
-        $em = $this->app->make(EntityManagerInterface::class);
         foreach ($fileIDs as $fID) {
-            $f = $fID ? $em->find(FileEntity::class, $fID) : null;
-            if ($f !== null) {
-                $fp = new ConcretePermissions($f);
-                if ($fp->$permission()) {
-                    $files[] = $f;
+            $fUUID = null;
+
+            if ($this->isValidUuid($fID)) {
+                $f = \Concrete\Core\File\File::getByUUID($fID);
+                $fUUID = $fID;
+            } else {
+                $f = \Concrete\Core\File\File::getByID($fID);
+            }
+
+            if ($f instanceof \Concrete\Core\Entity\File\File) {
+                if (!$checkUUID || !$f->hasFileUUID() || $f->getFileUUID() === $fUUID) {
+                    $permissionChecker = new Checker($f);
+                    $responseObject = $permissionChecker->getResponseObject();
+
+                    try {
+                        if ($responseObject->validate($permissionKey)) {
+                            $files[] = $f;
+                        }
+                    } catch (Exception $e) {
+                        // Do Nothing
+                    }
                 }
             }
         }
