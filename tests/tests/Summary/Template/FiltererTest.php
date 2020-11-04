@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Summary\Data\Extractor\Driver;
+namespace Concrete\Tests\Summary\Template;
 
 use Concrete\Core\Entity\Summary\Category;
 use Concrete\Core\Entity\Summary\Field;
