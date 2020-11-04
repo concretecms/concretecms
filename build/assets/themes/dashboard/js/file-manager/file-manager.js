@@ -164,7 +164,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
             e.preventDefault()
             var fUUID = $("input[data-item-id=" +fID + "]").data("item-uuid")
             window.frames['ccm-file-manager-download-target'].location =
-                CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fUUID
+                CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fUUID ? fUUID : fID
         })
         my.$searchResultMenu.find('a[data-file-manager-action=duplicate]').on('click', function() {
             var fID = $(this).data('file-id');
@@ -199,7 +199,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         if (value == 'download') {
             $.each(ids, function(i, id) {
                 var uuid = $("input[data-item-id=" + id + "]").data("item-uuid")
-                itemIDs.push({ name: 'fID[]', value: uuid })
+                itemIDs.push({ name: 'fID[]', value: uuid ? uuid : id })
             })
             my.$downloadTarget.get(0).src = CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?' + $.param(itemIDs)
         } else {
