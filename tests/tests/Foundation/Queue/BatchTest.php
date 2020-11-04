@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Foundation;
+namespace Concrete\Tests\Foundation\Queue;
 
 use Concrete\Core\Entity\Queue\Batch;
 use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
