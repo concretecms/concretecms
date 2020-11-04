@@ -136,6 +136,7 @@ return [
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
+        'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -318,9 +319,9 @@ return [
      * - handle of the package
      */
     'file_types' => [
-        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
-        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image', 'image'],
-        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image', 'image'],
+        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image'],
+        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image'],
+        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image'],
         'Windows Bitmap' => ['bmp', FileType::T_IMAGE, 'image'],
         'TIFF' => ['tif,tiff', FileType::T_IMAGE, 'image'],
         'HTML' => ['htm,html', FileType::T_IMAGE],
@@ -377,6 +378,7 @@ return [
         'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
         'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
         'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
+        'ccm.image.exif_data' => Concrete\Core\File\Import\Processor\ExifDataExtractor::class,
     ],
 
     /*

@@ -34,9 +34,9 @@ class Sitemap
     protected $isSitemapOverlay = false;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    protected $includeSystemPages;
+    protected $includeSystemPages = false;
 
     /**
      * Sitemap constructor.
@@ -61,11 +61,6 @@ class Sitemap
      */
     public function includeSystemPages()
     {
-        if (!isset($this->includeSystemPages)) {
-            $cookie = $this->app->make('cookie');
-            $this->includeSystemPages = $cookie->get('includeSystemPages');
-        }
-
         return $this->includeSystemPages;
     }
 
@@ -74,9 +69,7 @@ class Sitemap
      */
     public function setIncludeSystemPages($systemPages)
     {
-        $this->includeSystemPages = $systemPages;
-        $cookie = $this->app->make('cookie');
-        $cookie->set('includeSystemPages', $systemPages);
+        $this->includeSystemPages = (bool) $systemPages;
     }
 
     /**

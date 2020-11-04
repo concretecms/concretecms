@@ -185,17 +185,17 @@ class AreaAssignment extends Assignment
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyToolsURL()
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
      */
-    public function getPermissionKeyToolsURL($task = false)
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
         if ($this->stackAssignment !== null) {
-            return $this->stackAssignment->getPermissionKeyToolsURL();
+            return $this->stackAssignment->getPermissionKeyTaskURL($task, $options);
         }
         $area = $this->getPermissionObject();
         $c = $area->getAreaCollectionObject();
 
-        return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&arHandle=' . urlencode($area->getAreaHandle());
+        return parent::getPermissionKeyTaskURL($task, $options + ['cID' => $c->getCollectionID(), 'arHandle' => $area->getAreaHandle()]);
     }
 
     /**

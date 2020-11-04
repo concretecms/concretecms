@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var Concrete\Core\Page\Type\Composer\Control\Control $control
@@ -6,6 +9,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string $label
  * @var string $description
  */
+$resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <div class="form-group">
@@ -42,7 +46,7 @@ $(function() {
 			concreteComposerAddPageTimer = setTimeout(function() {
 				$('.ccm-composer-url-slug-loading').show();
 				$.post(
-					'<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug',
+					<?= json_encode((string) $resolverManager->resolve(['/ccm/system/page/url_slug'])) ?>,
 					send,
 					function(r) {
 						$('.ccm-composer-url-slug-loading').hide();

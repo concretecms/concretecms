@@ -11,5 +11,5 @@ $pk->setPermissionObject($node);
 <?php Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
 
 <script type="text/javascript">
-var ccm_permissionDialogURL = '<?=Loader::helper('concrete/urls')->getToolsURL('permissions/dialogs/tree/node')?>?treeNodeID=<?=$node->getTreeNodeID()?>';
+var ccm_permissionDialogURL = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/tree/node?treeNodeID=<?=$node->getTreeNodeID()?>';
 </script>

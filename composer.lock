@@ -3266,6 +3266,7 @@
                 "command-bus",
                 "tactician"
             ],
+            "abandoned": true,
             "time": "2016-10-30T13:36:21+00:00"
         },
         {
@@ -3549,16 +3550,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.9.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902"
+                "reference": "334de586c7894afd838be44d73e72d8e97e5b0ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
-                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/334de586c7894afd838be44d73e72d8e97e5b0ff",
+                "reference": "334de586c7894afd838be44d73e72d8e97e5b0ff",
                 "shasum": ""
             },
             "require": {
@@ -3595,13 +3596,25 @@
                 "addresses",
                 "ipv4",
                 "ipv6",
+                "manage",
+                "managing",
                 "matching",
                 "network",
                 "networking",
                 "range",
                 "subnet"
             ],
-            "time": "2019-09-20T08:26:10+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/mlocati",
+                    "type": "github"
+                },
+                {
+                    "url": "https://paypal.me/mlocati",
+                    "type": "other"
+                }
+            ],
+            "time": "2020-10-04T12:22:58+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -9200,6 +9213,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {

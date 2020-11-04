@@ -12,6 +12,7 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use Concrete\Core\Permission\Set as PermissionSet;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class ChangePagePermissionsRequest extends PageRequest
 {
@@ -77,7 +78,7 @@ class ChangePagePermissionsRequest extends PageRequest
             $button->addWorkflowProgressActionButtonParameter('dialog-title', t('Pending Permissions'));
             $button->addWorkflowProgressActionButtonParameter('dialog-width', '400');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '360');
-            $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/change_page_permissions?wpID=' . $wp->getWorkflowProgressID());
+            $button->setWorkflowProgressActionURL((string) app(ResolverManagerInterface::class)->resolve(['/ccm/system/dialogs/workflow/change_page_permissions', $wp->getWorkflowProgressID()]));
             $button->setWorkflowProgressActionStyleClass('dialog-launch');
             $buttons[] = $button;
         }

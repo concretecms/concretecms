@@ -102,9 +102,6 @@ class BlockRenderTest extends PageTestCase
 
     public function testBlockViewChangingScopeVariables()
     {
-
-        $this->markTestIncomplete('Not implemented - User singleton in UserServiceProvider breaks this test.');
-
         AuthenticationType::add('concrete', 'Concrete');
 
         // Add the user and enter it to the admin group

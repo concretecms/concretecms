@@ -104,9 +104,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // Define legacy urls, this may be the first thing that loads the entity manager
                 'initializeLegacyUrlDefinitions',
 
-                // Register legacy tools routes
-                'registerLegacyRoutes',
-
                 // Register legacy config values
                 'registerLegacyConfigValues',
 
@@ -210,25 +207,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $name = $this->getSiteService()->getSite()->getSiteName();
 
         $config->set('concrete.site', $name);
-    }
-
-    /**
-     * Register routes that power legacy functionality
-     * This includes `/tools/tool_handle` and `/tools/blocks/block_handle/tool_handle`.
-     *
-     * @deprecated In a future major version this will be part of HTTP middleware
-     *
-     * @return Response|void Returns a response if an error occurs
-     */
-    protected function registerLegacyRoutes()
-    {
-        $router = $this->getRouter();
-        $router->register(
-            '/tools/{tool}',
-            '\Concrete\Core\Legacy\Controller\ToolController::display',
-            'tool',
-            ['tool' => '[A-Za-z0-9_/.]+']
-        );
     }
 
     /**

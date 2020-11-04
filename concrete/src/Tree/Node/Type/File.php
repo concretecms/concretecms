@@ -12,7 +12,6 @@ class File extends TreeNode
 {
     protected $fID = null;
 
-
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\FileTreeNodeResponse';
@@ -30,6 +29,14 @@ class File extends TreeNode
     public function getTreeNodeTypeName()
     {
         return 'File';
+    }
+
+    public function getTreeNodeFileUUID()
+    {
+        $file = \Concrete\Core\File\File::getByID($this->fID);
+        if ($file instanceof \Concrete\Core\Entity\File\File) {
+            return $file->getFileUUID();
+        }
     }
 
     public function getTreeNodeFileID()

@@ -7,6 +7,8 @@ use JsonSerializable;
 class ExternalFileList implements JsonSerializable
 {
     protected $files;
+    /** @var @var int */
+    protected $totalFiles;
 
     /**
      * @param ExternalFileEntry $fileEntry
@@ -25,4 +27,24 @@ class ExternalFileList implements JsonSerializable
     {
         return $this->getFiles();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalFiles()
+    {
+        return $this->totalFiles;
+    }
+
+    /**
+     * @param mixed $totalFiles
+     * @return ExternalFileList
+     */
+    public function setTotalFiles($totalFiles)
+    {
+        $this->totalFiles = $totalFiles;
+        return $this;
+    }
+
+
 }
