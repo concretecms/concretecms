@@ -53,9 +53,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     public $fID;
 
     /**
-     * @ORM\Column(type="string", options={"unsigned": true}, nullable=true)
+     * @ORM\Column(type="string", options={"unsigned": true}, nullable=true, unique=true)
+     * @var string|null
      */
-    public $fUUID;
+    protected $fUUID;
 
     /**
      * @ORM\Column(type="datetime")
@@ -502,23 +503,37 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * File UUID.
+     * Get the file UUID.
      *
-     * @return string
+     * @return string|null
      */
     public function getFileUUID()
     {
         return $this->fUUID;
     }
 
-    public function generateFileUUID()
+    /**
+     * Assign a new UUID to this file.
+     *
+     * @return $this
+     */
+    public function generateFileUUID(): self
     {
         $this->fUUID = uuid_create(UUID_TYPE_DEFAULT);
+
+        return $this;
     }
 
-    public function resetFileUUID()
+    /**
+     * Remove the the UUID from this file.
+     *
+     * @return $this
+     */
+    public function resetFileUUID(): self
     {
-        $this->fUUID = '';
+        $this->fUUID = null;
+
+        return $this;
     }
 
     /**
@@ -527,7 +542,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      */
     public function hasFileUUID()
     {
-        return strlen($this->fUUID) > 0;
+        return $this->fUUID !== null;
     }
 
     /**
