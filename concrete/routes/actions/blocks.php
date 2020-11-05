@@ -21,7 +21,7 @@ $router->all('/action/edit/{cID}/{arHandle}/{bID}/{action}', 'Block\Action::edit
 ;
 $router->all('/action/add_composer/{ptComposerFormLayoutSetControlID}/{action}', 'Block\Action::add_composer');
 $router->all('/action/edit_composer/{cID}/{arHandle}/{ptComposerFormLayoutSetControlID}/{action}', 'Block\Action::edit_composer');
-$router->all('/process/alias/{cID}/{arHandle}/{pcID}/{dragAreaBlockID}', 'Block\Process::alias');
+$router->all('/process/alias/{cID}/{arHandle}/{pcID}/{dragAreaBlockID}/{orphanedBlockID}', 'Block\Process::alias');
 $router
     ->all('/process/copy/{cID}/{arHandle}/{bID}', 'Block\Process::copy')
     ->setRequirements([
