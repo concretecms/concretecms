@@ -28,7 +28,6 @@ use FileSet;
 use Loader;
 use Page;
 use PermissionKey;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -514,7 +513,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
 
     public function generateFileUUID()
     {
-        $this->fUUID = Uuid::uuid4()->toString();
+        $this->fUUID = uuid_create(UUID_TYPE_DEFAULT);
     }
 
     public function resetFileUUID()
