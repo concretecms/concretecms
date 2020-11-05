@@ -595,6 +595,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
 
         // duplicate the core file object
         $nf = clone $this;
+        if ($this->hasFileUUID()) {
+            $nf->generateFileUUID();
+        }
         $dh = Loader::helper('date');
         $date = $dh->getOverridableNow();
         $nf->fDateAdded = new Carbon($date);
